@@ -1,0 +1,28 @@
+To export a current (or older) version of GISMO
+
+1. Create folder GISMO_vXXX/GISMO where XXX is the SVN revision number
+2. Export appropriate version into this folder
+     
+3. rm conf, dav, db hooks, locks, format, README.txt, EXPORT_NOTES.txt (svn components)
+4. publish correlation cookbook to html (or copy old version)
+
+      copy: GISMO_OP\GISMO\contrib\correlation_cookbook\html -> new place
+      
+      or 
+      
+      newgismo = 'C:\Users\Michael West\Documents\mlcode\GISMO_v142\GISMO'
+      rmgismo
+      addpath(newgismo);
+      startup_GISMO
+      publish([newgismo '\contributed\correlation_cookbook\correlation_cookbook'],'html');
+ 
+5. zip GISMO_vXXX
+6. remove GISMO_vXXX if desired.
+
+7. Copy GISMO_vXXX.zip to WWW/GISMO/revisions
+
+8. Edit WWW/GISMO/downloads.html
+
+9. Transfer revision and html to web page
+     scp download.html dallcity:/usr/local/apache/htmldocs/Seis/EQ/tools/GISMO
+     scp revisions/GISMO_v130.zip dallcity:/usr/local/apache/htmldocs/Seis/EQ/tools/GISMO/revisions

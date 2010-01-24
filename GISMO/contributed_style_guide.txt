@@ -1,0 +1,71 @@
+
+Contents
+    1. Overview
+    2. Which code archive should I use?
+    3. Required elements
+    4. Recommended elements
+
+
+        
+###################################################################
+## 1. OVERVIEW
+
+The core tools in the GISMO suite have been designed more as building blocks than production software. The emphasis has been on designing robust tools to handle the routine manipulations of seismic data in a standardized fashion. The entire purpose of the project has been to provide the tools to allow users to develop more glamorous products without concerning themselves with the underlying "bookkeeping" inherent in waveform data. The contributed archives are designed to help users share higher level developments that built on the same foundation. When a code is of possible use by a wider audience (not project-specific), we strongly encourage users to become contributors and add these codes to the contributed archives. 
+
+This document provides a description of standard protocols for contributed software in the GISMO suite. The REQUIRED category describes the minimum standards for all contributed code. The RECOMMENDED category describes styles and features that are suggested, but not required. The contributed archive is self-policing, or at least follows the honor system. But the motivation for agreeing to a common set of protocols (even if they are not the best protocols) is to create an intuitive and self-consistent codebase that can be used by a wide audience without having to understand the inner workings of the archive.
+
+The contributed motto is "It should just work"
+
+
+
+###################################################################
+## 2. WHICH CONTRIBUTED ARCHIVE SHOULD I USE?
+
+
+** GISMO/contributed
+The contributed archive contains codes that have widespread use and have as their only dependencies the core elements of the GISMO suite. Contributed codes may also depend on other contributed codes. This is encouraged for efficiency, though authors should understand that not all contributed codes have the same level of documentation, error handling or bug testing as the core products. 
+
+** GISMO/contributed_antelope
+The contributed_antelope archive contains codes that may have widespread use and require access to the Antelope toolbox for Matlab in addition to GISMO tools. At startup, these tools are only added if the Antelope toolbox is already in the path.
+
+** GISMO/contributed_internal
+The contributed_internal archive contains codes that build on the GISMO suite but have additional requirements or functionality that limit their use to the GI, UAF or AVO.
+
+
+
+
+###################################################################
+## 3. REQUIRED ELEMENTS
+
+* Directory structure
+Each set of tools belongs in a contributed subdirectory with a descriptive name based on the functionality of the tools. In order to be included in the Matlab search path, all codes need to be in contributed subdirectories. Do not place files (including .txt, .doc, .pdf, etc.) directly in contributed/. This interferes with the startup routine and they may not be included in the path.
+
+* Documentation
+The success of the contributed GISMO code relies almost entirely on good documentation. Fortunately this is quite easy in Matlab. The only non-negotiable requirement for inclusion in the contributed archive is an unambiguous usage statement and a sufficiently detailed explanation of the input and output variables that others can actually use the code. This description must be written into the commented header of the M-files such that can be displayed by Matlab's HELP function. Several strongly suggested features of documentation are listed under the RECOMMENDED ELEMENT section.
+
+
+
+###################################################################
+## 4. RECOMMENDED ELEMENTS
+
+* Directory names
+Contributed subdirectories should have descriptive names that tell what the codes have in common. If they have nothing in common, consider placing them in multiple directories. Avoid vague names such as "tools", "seismic_codes" or "mikes_stuff".
+
+* Documentation
+In addition to the non-negotiable minimum requirements above, several simple features will make contributed codes easier to understand (and troubleshoot) by others. 
+   - Authors are encouraged to go beyond the function usage and summarize how the code actually works. When implementing a specific technique, it is best practice to include a reference to the paper(s) from which the technique is drawn. Authors are also encouraged to include their name, affiliation, and the contribution or revision date. This will assist with bug tracking and will encourage people to cite your work.
+   - The specific style of the usage and comments should follow the standards set by Matlab. By doing this, authors will ensure that their codes will be properly aggregated by documentation engines such as m2html and other that may not even exist yet.
+   - It goes without saying that comments embedded in the code will make it far easier for others to understand the exact procedure. 
+
+* Functions vs. scripts
+Contributed codes should generally be written as functions. There may be limited situations where an M-script might make sense, though even these can usually be converted to functions with the addition of a simple function line at the top. The resulting code however is more robust because it is more fully encapsulated. Scripts require, and produce, variables with specific names. Functions can accept arbitrary names. Functions also avoid variable name confusion because their variable declarations are internal to the function.
+
+
+
+
+
+
+
+
+
+

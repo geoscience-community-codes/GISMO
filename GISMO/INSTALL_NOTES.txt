@@ -1,0 +1,40 @@
+
+Contents
+   1. History and vision
+   2. Installation notes
+
+   
+###################################################################
+## 1. HISTORY AND VISION 
+
+The GISMO suite is a collection of matlab functions for seismic data that are built on a common foundation. GISMO stands for Geophysical Institute Seismology Matlab Objects. The core of the GISMO suite is the @waveform toolbox and associated matlab objects - @datasource, @scnlobject, @filterobject, and @spectralobject. These core contributions are largely authored by C. Reyes beginning in 2004. The waveform object quickly proved to be a strong code base for the development of more specific tools such as the @correlation toolbox developed by M. West beginning is 2006. By 2007, most all Matlab savvy seismologists in our group were using these codes in their seismic analyses. For the first time, we found ourselves working in a common environment with a common tool set. This led to the development of a proper code repository and the concept of "contributed" codes.
+
+The @waveform toolbox is maintained as its own entity by Celso Reyes and is distributed by itself to a wide audience on the Matlab Exchange:
+http://www.mathworks.com/matlabcentral/fileexchange/23809
+
+The GISMO suite is a somewhat looser assemblage which bundles @waveform and @correlation together with a variety of downstream codes. @correlation is distributed only as part of the GISMO suite. Current GISMO development is driven primarily by the needs of the GI Seismology Lab, the Alaska Volcano Observatory and collaborators. We make great efforts to ensure that the core codebase remains stable. However the GISMO suite is designed as a "bleeding edge" project. We do not issue official stable releases of GISMO. Instead we index code releases by the repository version number to highlight the ever-evolving nature of the code, particularly in the "contributed" sections.
+
+We believe strongly in the code, and in the shared development afforded by GISMO. We encourage wide use of the code and feedback is always welcomed. If you find yourself writing general codes that would be of interest to other users, we encourage you to read the style guide for contributed software (contributed_style_guide.txt) and contact us.
+
+mewest <at> alaska <dot> edu
+celso  <at> gi <dot> alaska <dot> edu
+glenn  <at> gi <dot> alaska <dot> edu
+
+
+
+###################################################################
+## 2. INSTALLATION NOTES
+
+To install the GISMO suite:
+
+add the following path to your matlab paths''
+/MY-PLACE-WHERE-GISMO-LIVES/GISMO
+
+This can be done via the Matlab path tool available on the desktop menu. Or by adding the following command to your startup.m file:
+addpath('/MY-PLACE-WHERE-GISMO-LIVES/GISMO')
+
+
+Once the GISMO suite is in your matlab path, just run the following program (or add it to your startup.m file)
+startup_GISMO.m
+
+This script will set up your GISMO environment. After this, browse the documentation and get started!
