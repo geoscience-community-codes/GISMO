@@ -21,7 +21,9 @@ function dd_collate(eventdat,varargin)
 %   DD_COLLATE(EVENT.DAT) is the same as
 %   DD_COLLATE(EVENT.DAT,'TMP_MATDD_CORR','dt.cc')
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

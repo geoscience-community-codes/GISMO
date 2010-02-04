@@ -17,7 +17,9 @@ function c = taper(c,varargin)
 % clear to me when/if this might ever be useful - MEW.
 %
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % READ & CHECK ARGUMENTS

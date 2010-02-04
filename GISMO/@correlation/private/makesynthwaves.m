@@ -3,7 +3,9 @@ function c = makesynthwaves(n);
 % Add N traces of synthetic data to a correlation object. Alters properties: waves, trig,
 % start, Fs.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % MAKE SINGLE SIGNAL

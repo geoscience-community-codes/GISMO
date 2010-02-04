@@ -1,10 +1,16 @@
 function d = xcorr1xr(d)
 
-% This function performs cross correlations of one correlation object against another. Traces from the second object are added and correlated one by one with the first.
-in sets by correlating one
-% trace against a row of traces at once. Generally it is faster than the
-% one at a time implimentation. All steps are included in this function.
+% This function performs cross correlations of one correlation object
+% against another. Traces from the second object are added and correlated
+% one by one with the first in sets by correlating one trace against a row
+% of traces at once. Generally it is faster than the one at a time
+% implimentation. All steps are included in this function.
 % That is, no calls to the Matlab built-in xcorr are used.
+
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
+
 
 % PREP NECESSARY TERMS
 [M,N] = size(d.w);

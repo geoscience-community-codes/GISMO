@@ -2,7 +2,9 @@ function dendrogramplot(c);
 
 % Private method. See ../plot for details.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

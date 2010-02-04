@@ -46,7 +46,9 @@ function c = adjusttrig(c,varargin);
 % While this may seem obvious the results can be counter-intuitive, especially 
 % for the LSQ solver.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

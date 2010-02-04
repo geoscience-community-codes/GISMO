@@ -4,7 +4,9 @@ function c = conv(c,varargin)
 % correlation object has traces that are 2*N-1 samples long, where the
 % original traces are of length N. Because all traces ...
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % READ & CHECK ARGUMENTS

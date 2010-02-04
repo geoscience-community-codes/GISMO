@@ -23,7 +23,9 @@ function c = norm(c,varargin)
 % INDEX. INDEX must appear as the third argument to NORM. 
 % 
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % READ & CHECK ARGUMENTS

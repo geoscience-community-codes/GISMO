@@ -28,7 +28,9 @@ function dd_make_scp(dbname,varargin)
 %   col 8       The maximum lag time required for inclusion
 %   col 9-10    Bandpass filter applied to waveforms before correlating
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

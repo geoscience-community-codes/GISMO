@@ -8,7 +8,9 @@ function c = norm(c,varargin)
 % Short hand for SORT(C,'TIME')
 %
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

@@ -29,7 +29,9 @@ function c=xcorr(c,varargin)
 % encounter a situation where this algorithm benchmarks faster than the
 % 1xr.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

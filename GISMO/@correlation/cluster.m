@@ -38,7 +38,9 @@ function c=cluster(c,varargin)
 %   c = CLUSTER(c,0.8)
 %	c = CLUSTER(c,'CUTOFF',0.2,'Criterion','distance')
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

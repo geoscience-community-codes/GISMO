@@ -21,7 +21,9 @@ function sitechan = db_get_sitechan_info(stalist,chanlist,datetime,dbname)
 %
 %
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 % TODO: Current version does not output ctype and descrip fields
 
 

@@ -16,7 +16,9 @@ function site = db_get_site_info(stalist,datetime,dbname)
 % 
 % 
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

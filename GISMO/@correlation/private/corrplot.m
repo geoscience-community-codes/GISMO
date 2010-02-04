@@ -2,7 +2,9 @@ function corrplot(c)
 
 % Called internally by correlation/plot to plot correlation matrix.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % PREP PLOT

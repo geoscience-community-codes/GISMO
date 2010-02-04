@@ -2,7 +2,9 @@ function occurrenceplot(c,scale,clusternum);
 
 % Private method. See ../plot for details.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 if ~strcmpi(class(c),'correlation')

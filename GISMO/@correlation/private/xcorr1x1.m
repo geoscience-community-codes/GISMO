@@ -5,7 +5,9 @@ function d = xcorr1x1(d);
 % row. It appears to run somewhat slower.
 % 
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % CREATE EMPTY CORRELATION AND LAG MATRICES

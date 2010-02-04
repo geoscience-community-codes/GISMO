@@ -32,7 +32,9 @@ function val = get(c,prop_name)
 %   Data:                    Matrix of raw trace data
 %                           (n traces) x (m samples)         
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 if nargin <= 1

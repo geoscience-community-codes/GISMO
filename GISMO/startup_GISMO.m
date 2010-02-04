@@ -6,7 +6,9 @@ function startup_GISMO
 % To add new paths to the contributed archives please
 % read 'contributed_style_guide.txt' in the GISMO directory.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % GET PATHS TO DIRECTORIES IN GISMO

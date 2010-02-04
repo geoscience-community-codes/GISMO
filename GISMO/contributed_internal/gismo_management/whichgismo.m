@@ -24,7 +24,9 @@ function whichgismo(sourceLocation)
 %
 % See also WHICHGISMO_PATHS, RMGISMO
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % LOAD PATH LIST

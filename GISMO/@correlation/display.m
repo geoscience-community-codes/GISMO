@@ -3,7 +3,9 @@ function display(c)
 % CORRELATION/DISPLAY Command window display of a correlation object
 % See help correlation for fields
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

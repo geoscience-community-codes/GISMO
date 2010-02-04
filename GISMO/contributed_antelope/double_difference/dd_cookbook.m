@@ -11,7 +11,9 @@
 %       correlation toolbox
 %       epoch2datenum.m
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 % TODO: This cookbook looks incomplete?
 
 %% Data sources

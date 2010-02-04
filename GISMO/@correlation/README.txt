@@ -1,3 +1,9 @@
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
+############################
+
+
 Contents
 	- Install notes
 	- Disclaimer

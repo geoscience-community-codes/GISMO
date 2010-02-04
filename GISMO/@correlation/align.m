@@ -14,7 +14,9 @@ function c = align(c,varargin)
 % different usage than waveform/align. The correlation version is
 % hardwired to align on the trigger time.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

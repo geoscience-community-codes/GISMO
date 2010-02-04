@@ -17,7 +17,9 @@ function c = subset(c,index)
 % single copy of trace 1.
 %
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

@@ -5,7 +5,9 @@ function c = diff(c)
 % C = DIFF(C) differentiate each trace through a call to WAVEFORM/DIFF.
 % See WAVEFORM/DIFF for details
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 c.W = diff(c.W);

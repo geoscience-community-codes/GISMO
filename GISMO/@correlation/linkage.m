@@ -24,7 +24,9 @@ function c = linkage(c,varargin);
 % 	c = LINKAGE(c,'average') % same as first use
 % 	c = LINKAGE(c,'single')  % useful for evolving waveforms
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 if nargin <= 0

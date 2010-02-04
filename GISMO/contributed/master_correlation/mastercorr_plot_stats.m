@@ -20,7 +20,9 @@ function mastercorr_plot_stats(W)
 % 
 % See also mastercorr_scan, mastercorr_extract
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % CHECK INPUTS

@@ -39,7 +39,9 @@ function c = minus(c,varargin)
 %   c_residual = minus(c)
 %   plot(c_residual,'raw');
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % READ & CHECK ARGUMENTS

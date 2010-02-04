@@ -19,7 +19,9 @@
 % [NOTE that the set(gcf,'Position',...) lines used repeatedly below are
 % just for display purposes in this document.]
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 %% Use traces from the demo dataset

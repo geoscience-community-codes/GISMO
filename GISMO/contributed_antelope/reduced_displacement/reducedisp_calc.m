@@ -12,7 +12,9 @@ function w = reducedisp_calc(w,dist,varargin)
 % be specified as either 'BODY' or 'SURF' to impliment the body wave or 
 % surface wave formulation.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

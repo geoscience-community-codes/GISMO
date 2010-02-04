@@ -19,7 +19,9 @@ function index = find(c,varargin)
 %   INDEX = FIND(c,'BIG',5)
 %
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % READ & CHECK ARGUMENTS

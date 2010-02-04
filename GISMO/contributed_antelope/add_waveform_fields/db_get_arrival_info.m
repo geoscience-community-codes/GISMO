@@ -9,7 +9,9 @@ function [arrival,assoc,origin,W] = db_get_arrival_info(INorigin,dbname,varargin
 % Unlike db_get_origin_info, there is currently no method for entering arrivals by time. 
 % arid's must be used.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

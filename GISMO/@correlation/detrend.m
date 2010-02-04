@@ -7,6 +7,8 @@ function c = detrend(c,varargin);
 % demeaned and detrended when they are loaded into a correlation object.
 % This is one of the assumptions of the correlation toolbox.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 c.W = detrend(c.W);

@@ -8,7 +8,9 @@ function c = cat(varargin)
 % CLUSTER fields. These fields will be empty. Data in c1,c2,c3,... must
 % have the same number of samples and sampling frequency.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

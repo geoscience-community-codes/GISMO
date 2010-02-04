@@ -3,7 +3,9 @@ function rmgismo()
 % RMGISMO(SOURCE) removes all existing paths containing the phrase
 % 'GISMO'.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
    
 % REMOVE EXISTING GISMO PATHS

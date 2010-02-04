@@ -10,7 +10,9 @@ function W = wf_fi(W,varargin)
 % plotting of thousands of waveforms. To plot specific waveforms one can
 % always use wf_fi(w(n)) where n is the index of the nth waveform.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 % Programming note: WF_FI could be folded into WF_FFT
 
 

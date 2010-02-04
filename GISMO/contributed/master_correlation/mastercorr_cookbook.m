@@ -5,7 +5,9 @@
 % DAILY IN LENGTH. LONGER WAVEFORMS SHOULD BE OK, BUT MEMORY MAY BECOME AN
 % ISSUE. THIS EXAMPLE USES SIX CONSECUTIVE 10-MINUTE DATA SEGMENTS.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 load mastercorr_cookbook_data

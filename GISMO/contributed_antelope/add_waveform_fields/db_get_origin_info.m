@@ -14,7 +14,9 @@ function [origin,W] = db_get_origin_info(INorigin,dbname,varargin)
 % [ORIGIN,WAVEFORM] = DB_GET_ORIGIN_INFO(EVENT,DATABASE_NAME,WAVEFORM) Add 
 % origin information as new fields in WAVEFORM object. 
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

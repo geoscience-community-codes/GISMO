@@ -9,7 +9,9 @@ function A = getval(OBJ,PROP)
 % value per waveform.
 %
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 A = [];

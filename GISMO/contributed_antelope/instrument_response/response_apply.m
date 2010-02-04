@@ -16,7 +16,9 @@ function w = response_apply(w,resp)
 % conjugate symmentric about N/2+1
 %
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

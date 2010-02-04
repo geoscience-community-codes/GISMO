@@ -7,7 +7,9 @@
 % reducedisp_plot - Reads a .wfmeas table and makes a simple plot of data
 %
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

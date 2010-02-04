@@ -31,7 +31,9 @@ function val = check(c,varargin)
 % traces are ignored).
 %
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % GET INPUT PARAMETERS

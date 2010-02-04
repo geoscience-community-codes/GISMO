@@ -7,7 +7,9 @@ function resp = response_read(sta,chan,dbname)
 %  for Antelope. RESPONSE_READ is really just a convenient wrapper.
 
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

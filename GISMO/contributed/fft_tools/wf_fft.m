@@ -9,7 +9,9 @@ function w = wf_fft(w);
 %   FFT_DOM is the scalar frequency of the maximum amplitude 
 %           peak (or dominant frequency. This could change)
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % CHECK ARGUMENTS

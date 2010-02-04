@@ -13,7 +13,9 @@ function c = agc(c,varargin)
 %  c=agc(c)    				apply agc using the default time window (0.5 s)
 %  c=agc(c,0.8)            	apply agc using a window of 0.8 s
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 if (length(varargin) >= 2)

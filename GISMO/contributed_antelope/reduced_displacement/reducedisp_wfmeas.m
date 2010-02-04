@@ -18,7 +18,9 @@ function reducedisp_wfmeas(varargin);
 %    algorithm = 'BODY';    % algorithm (BODY or SURF)
 %    reducedisp_wfmeas(starttime,endtime,scnl,dist,ds,dbout,filt,Tstep,algorithm);
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 if numel(varargin) ~= 9

@@ -45,7 +45,9 @@ function [c,t,i,CC,LL] = interferogram(c,varargin)
 % automatically placed in the first waveform however to fascilitate a quick
 % plotting option.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % GET INPUT PARAMETERS

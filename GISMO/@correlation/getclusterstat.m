@@ -18,6 +18,9 @@ function family=getclusterstat(c)
 % See also correlation/cluster
 
 % AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
+
 
 
 

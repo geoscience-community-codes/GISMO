@@ -13,7 +13,9 @@ function c = align(c,varargin)
 % C = COLORMAP(C,'LAG')
 % Specifies the lag plot colorscale.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % READ & CHECK ARGUMENTS

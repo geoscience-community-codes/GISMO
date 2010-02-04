@@ -3,7 +3,9 @@ function d = xcorrdec(d)
 % Same algorithm as xcorr1xr, except this function decomposes the complex
 % numbers into their real and imaginary parts before doing the math.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 % PREP NECESSARY TERMS
 [M,N] = size(d.w);

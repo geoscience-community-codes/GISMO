@@ -6,7 +6,9 @@ function correlation_dianostics(varargin)
 % Load and construct correlation objects in a variety of ways to test the
 % construction function.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

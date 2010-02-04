@@ -28,7 +28,9 @@ function c=getstat(c)
 % operating on more than a few hundred traces.
 
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 % TODO: needs better handling of xcorr=1 values (MEW - 11/20/06)
 %
 

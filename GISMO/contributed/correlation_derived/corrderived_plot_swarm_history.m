@@ -26,7 +26,9 @@ function corrderived_plot_swarm_history(c,varargin)
 %
 % See also correlation/linkage correlation/cluster
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % CHECK INPUTS

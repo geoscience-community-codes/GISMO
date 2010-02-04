@@ -5,7 +5,9 @@ function d = xcorr1xr(d)
 % one at a time implimentation. All steps are included in this function.
 % That is, no calls to the Matlab built-in xcorr are used.
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 % PREP NECESSARY TERMS

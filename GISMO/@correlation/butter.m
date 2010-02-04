@@ -16,7 +16,9 @@ function c = butter(c,varargin)
 %  c = BUTTER(c,'H',1)            high pass filter above 5 Hz (4 poles)
 %  c = BUTTER(c,...,2)            use 2 poles
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 % TODO: should check to ensure low cutoff period is >> trace length
 
 % GET INPUTS

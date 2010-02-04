@@ -7,7 +7,9 @@ function w = ideas2waveform(fileName)
 %   Example:
 %       w = open_infrasound('FAI200908205.mat')
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 

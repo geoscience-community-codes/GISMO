@@ -23,7 +23,9 @@ function w = loadsacfile(fileList)
 %
 % see also waveform datasource datasource/setfile
 
-% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 if ~isa(fileList,'cell')
