@@ -1,6 +1,45 @@
-To export a current (or older) version of GISMO
+METHOD FOR EXPORTING A VERSION OF GISMO FOR GENERAL DISTRIBUTION
+
+$LastChangedDate$
+$LastChangedRevision$
+$LastChangedBy$
+
+
+
+     
+1. Create folder GISMO_rXXX where XXX is the SVN revision number
+
+2. Export trunk (http://gismotools.googlecode.com/svn/trunk/) here.
+     
+3. rm README.txt, EXPORT_NOTES.txt 
+
+4. publish correlation cookbook to html (or copy old version)
+
+      copy: GISMO_OP\GISMO\contrib\correlation_cookbook\html -> new place
+      
+      or 
+      
+      newgismo = 'C:\Users\Michael West\Documents\mlcode\GISMO_r169\GISMO'
+      rmgismo
+      addpath(newgismo);
+      startup_GISMO
+      publish([newgismo '\contributed\correlation_cookbook\correlation_cookbook'],'html');
+ 
+5. zip GISMO_rXXX to GISMO_rXXX.zip
+
+6. remove GISMO_rXXX if desired.
+
+7. Upload archive on Google Tools site, adding summary. Add "Featured label"
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% OLD METHOD (PRE-GOOGLE CODE)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 1. Create folder GISMO_vXXX/GISMO where XXX is the SVN revision number
+
 2. Export appropriate version into this folder
      
 3. rm conf, dav, db hooks, locks, format, README.txt, EXPORT_NOTES.txt (svn components)
