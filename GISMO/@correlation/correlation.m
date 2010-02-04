@@ -158,8 +158,8 @@ function c = correlation(varargin)
 % See also datasource waveform scnlobject
 
 % AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-
-
+% $Date$
+% $Revision$
 
 
 

@@ -6,7 +6,7 @@ function [varargout] = ifft(s, v)
 %   See also SPECTRALOBJECT/FFT, FFT, FFT2, FFTN, FFTSHIFT, FFTW, IFFT2, IFFTN.
 
 %   Copyright 1984-2003 The MathWorks, Inc.
-%   $Revision: 5.11.4.3 $  $Date: 2004/04/16 22:04:46 $
+%   $Revision$  $Date$
 
 % VERSION: 1.0 of spectralobject
 % MODIFIED BY: Celso Reyes (celso@gi.alaska.edu)

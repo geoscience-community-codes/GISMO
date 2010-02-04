@@ -5,7 +5,7 @@ function w = uminus(w)
 %   B = UMINUS(A) is called for the syntax '-A' when A is an object.
 
 %   Copyright 1984-2005 The MathWorks, Inc.
-%   $Revision: 1.9.4.4 $  $Date: 2005/06/21 19:36:38 $
+%   $Revision$  $Date$
 
 % VERSION: 1.1 of waveform objects
 % AUTHOR: Celso Reyes (celso@gi.alaska.edu)
