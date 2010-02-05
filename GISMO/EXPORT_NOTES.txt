@@ -34,42 +34,24 @@ $LastChangedBy$
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% SETTING SVN PROPERTY KEYWORDS
+% MISC SVN SETTINGS AND POINTERS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% SET PROPERTIES FOR DYNAMIC FIELD UPDATES
  svn propset svn:keywords "Date Revision" GISMO_DEV/GISMO/*.m GISMO_DEV/GISMO/*/*.m GISMO_DEV/GISMO/*/*/*.m
 
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% OLD METHOD (PRE-GOOGLE CODE)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-1. Create folder GISMO_vXXX/GISMO where XXX is the SVN revision number
-
-2. Export appropriate version into this folder
-     
-3. rm conf, dav, db hooks, locks, format, README.txt, EXPORT_NOTES.txt (svn components)
-4. publish correlation cookbook to html (or copy old version)
-
-      copy: GISMO_OP\GISMO\contrib\correlation_cookbook\html -> new place
-      
-      or 
-      
-      newgismo = 'C:\Users\Michael West\Documents\mlcode\GISMO_v142\GISMO'
-      rmgismo
-      addpath(newgismo);
-      startup_GISMO
-      publish([newgismo '\contributed\correlation_cookbook\correlation_cookbook'],'html');
+% CREATE/DELETE A BRANCH FOR PERSONAL USE
+ svn copy https://gismotools.googlecode.com/svn/trunk \
+           https://gismotools.googlecode.com/svn/branches/mew \
+      -m "Creating a temporary branch of GISMO for M. West."
+ svn del https://gismotools.googlecode.com/svn/branches/mew-branch \
+      -m "Delete a branch"
  
-5. zip GISMO_vXXX
-6. remove GISMO_vXXX if desired.
-
-7. Copy GISMO_vXXX.zip to WWW/GISMO/revisions
-
-8. Edit WWW/GISMO/downloads.html
-
-9. Transfer revision and html to web page
-     scp download.html dallcity:/usr/local/apache/htmldocs/Seis/EQ/tools/GISMO
-     scp revisions/GISMO_v130.zip dallcity:/usr/local/apache/htmldocs/Seis/EQ/tools/GISMO/revisions
+ 
+ 
+ 
+ 
+ 
+ 
+ 

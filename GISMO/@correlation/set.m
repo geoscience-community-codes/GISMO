@@ -1,10 +1,9 @@
 function c = set(c, prop_name, val)
 
-% SET Set properties for correlation object
+%SET Set properties for correlation object
+%   c = SET(c,prop_name,val)
 %
-% c = SET(c,prop_name,val)
-%
-% see help correlation/get.m for valid property names
+%   see help correlation/get.m for valid property names
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
 % $Date$

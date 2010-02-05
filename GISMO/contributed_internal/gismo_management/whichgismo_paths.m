@@ -12,6 +12,6 @@ paths = {
     'LinuxNetDev'    '/home/admin/share/matlab/PACKAGES/GISMO_DEV/GISMO'
     'LinuxNetWest'    '/home/west/mlcode/GISMO'
     'LinuxNetOld'    '/home/admin/share/matlab/PACKAGES/GISMO'
-    'WestPC'         'C:\Users\Michael West\Documents\mlcode\GISMO_OP\GISMO'
-    'WestPCDev'      'C:\Users\Michael West\Documents\mlcode\GISMO_DEV\GISMO'
+    'WestPCDev'         'C:\Users\Michael West\Documents\mlcode\GISMO_DEV\GISMO'
+    'WestPCBranch'      'C:\Users\Michael West\Documents\mlcode\GISMO_BRANCH_MEW\GISMO'
 };
