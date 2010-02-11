@@ -1,42 +1,129 @@
-function W = rdivide(W,B)
+function W = rdivide(W,divisor)
 %RDIVIDE (./) Right array divide for WAVEFORMS.
-%     W./B denotes element-by-element division.  A and B
-%     must have the same dimensions unless one is a scalar.
-%     A scalar can be divided with anything.
+%     W./B denotes element-by-element division for waveform objects.
+%     W./B scales the data in waveform(s) W by dividing them by value(s) B
+%     The dividend (W) Must be one or more waveforms.  The divisor may be
+%     a scalar, a numeric array of the same size & shape as W, or a
+%     waveform with the same number of data values as W.
 %
-%     C = RDIVIDE(A,B) is called for the syntax 'W ./ B' when A or B is an
-%     object.
+%     If the divisor is a scalar, the resulting waveform(s) have all had
+%     their data scaled by dividing by the divisor.
 %
-% See also LDIVIDE, MLDIVIDE, MRDIVIDE.
+%     If the divisor is an array, then it must be of the same size as W.
+%     The data within each element of W will be divided by the
+%     corresponding element of divisor.
+%       i.e. for each element(n) of W , C(n) = W(n) ./ B(n)
+%
+%     If divisor is another waveform, each sample in W is divided by the
+%     corresponding sample in divisor.
+%        divisor & W must have the same # of data points.
+%
+%     C = RDIVIDE(A,B) is called for the syntax 'W ./ B' when A
+%     or B is a waveform object.
+%
+%     The returned values are waveforms of the same size as W
+%
+%     examples.
+%       C = W ./ 10 % scale all data values within W by dividing them by 10
+%
+%       Let W be a 1x3 waveform, let
+%       C = W ./ [1 2 3] % does nothing to first waveform, but scales the
+%                        % data within the second waveform by 1/2 and the
+%                        % third waveform by 1/3
+%
+%       C = W ./ max(abs(W)); % scale all waveforms to have
+%                             % values between -1 and 1.
+%
+%       Let Z be a waveform with the same # of elements as W.
+%       C = W ./ Z; % scale each data point within W by the corresponding
+%                   % data point within Z
+%
+% See also RDIVIDE, LDIVIDE, MLDIVIDE, MRDIVIDE.
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/15/2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
-if ~isa(W,'waveform')
+
+% ----------------------------------------------------------------------- %
+% Validation tests
+% --------------------------
+%
+% dividend check
+%   must be a waveform
+%
+% divisor checks
+%   for a WAVEFORM divisor
+%     must be scalar (1x1)
+%     must have same data length as all dividends
+%   for a NUMERIC divisor
+%     must be scalar OR
+%     must be same size (shape) as dividend OR
+%     must have same data length as all dividends
+%
+% ----------------------------------------------------------------------- %
+
+% Logical variables used in validating the RDIVIDE operation
+
+hasOneDivisorPerDividend = all(size(W) == size(divisor));
+elements_haveMatchingSize = ...
+    all(get(W,'data_length') == numel(double(divisor)));
+%-----------------------------------------------------------%
+
+if ~isa(W,'waveform');
     error('Waveform:rdivide:invalidDividendClass',...
-      'The dividend must be a waveform object');
+        'The dividend must be a waveform object');
 end
 
-if ~(isnumeric(B) || isa(B,'waveform'))
-    error('Waveform:rdivide:invalidDivisorClass',...
-      'The divisor must be either numeric or a single waveform object');
-end
-
-if isa(B,'waveform') && (~isscalar(B))
-    error('Waveform:rdivide:invalidDivisorSize',...
-      'The divisor may only be single waveform, not %s',num2str(size(B)));
-end
-
-for n = 1 : numel(W);
-    if isa(B,'waveform') %jiggle to get matrix dimensions correct
-        W(n) = set(W(n), 'data', get(W(n),'data') ./ double(B));
+if isa(divisor,'waveform')
+    if ~isscalar(divisor)
+        error('Waveform:rdivide:invalidDivisorSize',...
+            ['The divisor has too many elements.  '...
+            'It must be single (1x1) waveform object'])
     else
-        W(n) = set(W(n), 'data', double(W(n)) ./ double(B));
+        task = 'waveform_by_waveform';
     end
+elseif isnumeric(divisor)
+    if isscalar(divisor)
+        task = 'waveform_by_scalar';
+    elseif hasOneDivisorPerDividend
+        task = 'waveforms_by_element';
+    elseif elements_haveMatchingSize
+        task = 'sample_by_sample';
+    else
+        error('Waveform:rdivide:sizeMismatch',...
+            'Number of waveforms are incompatable with the number of divisors');
+    end
+else % divisor is of an unknown type
+    error('Waveform:rdivide:invalidDivisorClass',...
+        'The divisor must be either numeric or a single waveform object');
 end
-if isscalar(B) && (~isa(B,'waveform'))
-    W = addhistory(W,'Divided by %s', num2str(B));
-else
-    W = addhistory(W,'Divided by "%s" <%s>',inputname(2), class(B));
+
+% ----------------------------------------------------------------------- %
+switch task
+    case {'waveform_by_waveform', 'sample_by_sample'}
+        for n = 1 : numel(W);
+            W(n) = set(W(n), 'data', double(W(n)) ./ double(divisor(:)));
+        end
+        if isempty(inputname(2))
+            W = addhistory(W,'Divided by a constant <%s>', class(divisor));
+        else
+            W = addhistory(W,'Divided by "%s" <%s>',...
+                inputname(2), class(divisor));
+        end
+    case 'waveforms_by_element'
+        % each waveform has its own number to be divided by
+        for n=1:numel(W)
+            thisDivisor = double(divisor(n));
+            W(n) = set(W(n),'data',double(W(n)) ./ thisDivisor );
+            W(n) = addhistory(W(n),'Divided by %s', num2str(thisDivisor));
+        end
+    case 'waveform_by_scalar'
+        for n=1:numel(W)
+            W(n) = set(W(n),'data',double(W(n)) ./ divisor );
+            W(n) = addhistory(W(n),'Divided by %s', num2str(divisor));
+        end
+    otherwise
+        error('Waveform:rdivide:unknownoperation',...
+            'A rdivide operation was attempted that had no recognized task.');
 end
