@@ -8,25 +8,21 @@ function Y = std(w,flag)
 %
 %  Note: NaN values are ignored entirely
 %
-%  See also WAVEFORM/MEAN, WAVEFORM/MEDIAN, STD
+%  See also WAVEFORM/MEAN, WAVEFORM/MEDIAN, NANSTD
 
-% VERSION: 1.0 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/21/2008
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 Y = zeros(size(w));
 
 if (exist('flag','var') && (flag == 1))
     for n = 1:numel(Y)
-        d = double(w(n));
-        d = d(~isnan(d));
-        Y(n) = std(d,1);
+        Y(n) = nanstd(double(w(n)),1);
     end
 else
     for n = 1:numel(Y)
-        d = double(w(n));
-        d = d(~isnan(d));
-        Y(n) = std(d);
+        Y(n) = nanstd(double(w(n)));
     end
 end
         

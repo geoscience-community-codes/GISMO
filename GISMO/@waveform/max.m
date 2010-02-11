@@ -20,9 +20,9 @@ function [Y, I] = max(w)
 %   See also MAX, WAVEFORM/MIN, WAVEFORM/MEDIAN, WAVEFORM/MEAN, SORT.
 
 
-% VERSION: 1.0 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/21/2008
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 Y = nan(size(w));
 I = nan(size(w));

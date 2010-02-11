@@ -12,17 +12,13 @@ function y = mean(w)
 %
 %   NOTE: Values of NaN are ignored.
 %
-%   See also MEAN, WAVEFORM/MIN, WAVEFORM/MAX, WAVEFORM/MEDIAN, SORT.
+%   See also NANMEAN, WAVEFORM/MIN, WAVEFORM/MAX, WAVEFORM/MEDIAN, SORT.
 
-% VERSION: 1.0 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/21/2008
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 y = nan(size(w));
 for I = 1 : numel(w);
-    data_to_mean = get(w(I),'data');
-    data_to_mean = data_to_mean(~isnan(data_to_mean)); %ignore NaN values
-    if ~isempty(data_to_mean)
-        y(I) = mean( data_to_mean );
-    end
+        y(I) = nanmean( get(w(I),'data') );
 end
