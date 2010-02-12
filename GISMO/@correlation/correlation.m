@@ -201,9 +201,12 @@ elseif nargin==2 & isa(varargin{1},'correlation')
     c.link = [];
     c.clust = [];
     
-%% A CORAL STRUCTURE
-elseif isfield(varargin{1},'data') && isfield(varargin{1},'staCode') && isfield(varargin{1},'staChannel')
-    c = convert_coral(varargin{1});
+%% BUILD FROM A STRUCTURE (CORAL)
+elseif isa(varargin{1},'struct')
+    if isfield(varargin{1},'data') && isfield(varargin{1},'staCode') && isfield(varargin{1},'staChannel')
+        c = convert_coral(varargin{1});
+    end
+    % add other "struct" processing blocks here as an embedded elseif
 
 %% BUILD FROM A DATASOURCE
 elseif isa(varargin{1},'datasource')
