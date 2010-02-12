@@ -27,7 +27,7 @@ array_addition = all(size(w) == size(q));
 scalar_addition = isscalar(q);
 element_addition = isvector(q) && all(get(w(:),'data_length') == numel(q));
 
-for n = 1:length(w)
+for n = 1:numel(w)
     if isnumeric(q)
         % keep out characters and character arrays because they'd be
         % converted to their ascii equivelents.  Not good.
@@ -41,7 +41,8 @@ for n = 1:length(w)
             w(n) = set(w(n), 'data', get(w(n),'data') + double(q)  );
             w(n) = addhistory(w(n),'added %d', q);
         elseif array_addition
-            w(n) = set(w(n), 'data', get(w(n),'data') + double(q(n))  );
+            %w(n) = set(w(n), 'data', get(w(n),'data') + double(q(n))  );
+            w(n) = set(w(n), 'data',double(w(n)) + double(q(n))  );
             w(n) = addhistory(w(n),'added %d ', q(n));
         elseif element_addition
             w(n) = set(w(n), 'data', get(w(n),'data') + double(q(:))  );
