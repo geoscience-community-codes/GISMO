@@ -5,22 +5,33 @@ function [varargout] = fft(s, w)
 %       [v, f] = fft(s,w);  % get the fft & assoc. frequencies
 %       [v, f, Pyy] = fft(s,w); % get fft, frequencies, and Power Spectrum
 %
-%   See also SPECTRALOBJECT/IFFT, FFT, FFT2, FFTN, FFTSHIFT, FFTW, IFFT2, IFFTN.
+%   See also SPECTRALOBJECT/IFFT, FFT, FFT2, FFTN, FFTSHIFT, FFTW, IFFT2, IFFTN, WAVEFORM/FILLGAPS.
 
-% VERSION: 1.0 of spectralobject
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 2/7/2007
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 if nargin < 2
-    error('Not enough input arguments.  [out] = fft(spectralobject, waveform)');
+    error('Spectralobject:fft:insufficientArguments',...
+        'Not enough input arguments. [out]=fft(spectralobject, waveform)');
 end
 
 if ~isscalar(w)
-    error('waveform must be scalar (1x1)');
+    error('Spectralobject:fft:nonScalarWaveform',...
+        'waveform must be scalar (1x1)');
 end
 
 if ~isa(w,'waveform')
-    error('second argument expected to be WAVEFORM, but was [%s]', class(w));
+    error('Spectralobject:fft:invalidArgument',...
+        'second argument expected to be WAVEFORM, but was [%s]', class(w));
+end
+
+if any(isnan(double(w)))
+    warning('Spectralobject:fft:nanValue',...
+        ['This waveform has at least one NaN value, which returns NaN ',...
+        'results. Remove NaN values by either splitting up the ',...
+        'waveform into non-NaN sections or by using waveform/fillgaps',...
+        ' to replace the NaN values.']);
 end
 
 varargout{1} = builtin('fft', double(w));

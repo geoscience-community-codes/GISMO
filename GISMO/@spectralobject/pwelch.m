@@ -11,24 +11,38 @@ function varargout = pwelch(s,w, varargin)
 %       pwelch's defaults (8 averaged windows, 50% overlap)
 %   window is length of entire waveform..
 %
-% See also PWELCH for more detail
+%   NOTE: voltage offsets may cause a large spike for lowest Pxx value.
+%   NOTE: NaN values will result in blank
+%
+% See also pwelch, waveform/fillgaps
 
-% VERSION: 1.0 of spectralobject
-% AUTHOR: Celso Reyes
-% LASTUPDATE: 02/07/2007
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 %variables used
 
 if nargin < 2
-    error('usage: [out] = pwelch(spectralobject, waveform, [''default'']');
+    error('Spectralobject:pwelch:insufficientArguments',...
+        'usage: [out] = pwelch(spectralobject, waveform, [''default'']');
 end
 
 if ~isscalar(w)
-    error('waveform must be scalar (1x1)');
+    error('Spectralobject:pwelch:nonScalarWaveform',...
+        'waveform must be scalar (1x1)');
 end
 
 if ~isa(w,'waveform')
-    error('second argument expected to be WAVEFORM, but was [%s]', class(w));
+    error('Spectralobject:pwelch:invalidArgument',...
+        'second argument expected to be WAVEFORM, but was [%s]', class(w));
+end
+
+if any(isnan(double(w)))
+    warning('Spectralobject:pwelch:nanValue',...
+        ['This waveform has at least one NaN value. ',...
+        'Remove NaN values by either splitting up the',...
+        ' waveform into non-NaN sections or by using ',...
+        'waveform/fillgaps to replace the NaN values.']);
 end
 Fs = get(w,'fs');
 NFFT = get(s,'nfft');
@@ -44,13 +58,4 @@ if nargin == 3
     end
 end
 clear w
-switch nargout
-    case 0
-        pwelch(data,[],[],NFFT,Fs);
-    case 1
-        varargout{1} = pwelch(data,window,over,NFFT,Fs);
-    case 2
-        [varargout{1} varargout{2}] = pwelch(data,window,over,NFFT,Fs);
-    otherwise
-        disp('pbbtt!!!!')
-end
+[varargout{1:nargout}] =  pwelch(data,window,over,NFFT,Fs);

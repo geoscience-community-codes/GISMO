@@ -1,4 +1,4 @@
-function [varargout] = ifft(s, v)
+function [varargout] = ifft(s, w)
 %IFFT Inverse discrete Fourier transform.  OVERLOADED FOR Spectralobject
 %   IFFT(spectralobject, X) is the N-point inverse discrete Fourier
 %   transform of X, using the spectralobject's NFFT value for N.
@@ -8,24 +8,27 @@ function [varargout] = ifft(s, v)
 %   Copyright 1984-2003 The MathWorks, Inc.
 %   $Revision$  $Date$
 
-% VERSION: 1.0 of spectralobject
-% MODIFIED BY: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 2/7/2007
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 if nargin < 2
-    error('Not enough input arguments.  [out] = ifft(spectralobject, waveform)');
+    error('Spectralobject:ifft:insufficientArguments',...
+        'Not enough input arguments. [out]=ifft(spectralobject, waveform)');
 end
 
 if ~isscalar(w)
-    error('waveform must be scalar (1x1)');
+    error('Spectralobject:ifft:nonScalarWaveform',...
+        'waveform must be scalar (1x1)');
 end
 
 if ~isa(w,'waveform')
-    error('second argument expected to be WAVEFORM, but was [%s]', class(w));
+    error('Spectralobject:ifft:invalidArgument',...
+        'second argument expected to be WAVEFORM, but was [%s]', class(w));
 end
 
 if nargout == 0
-  builtin('ifft', double(v), get(s,'nfft'));
+  builtin('ifft', double(w), get(s,'nfft'));
 else
-  [varargout{1:nargout}] = builtin('ifft', double(v), get(s,'nfft'));
+  [varargout{1:nargout}] = builtin('ifft', double(w), get(s,'nfft'));
 end

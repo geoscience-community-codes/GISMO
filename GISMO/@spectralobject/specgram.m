@@ -27,11 +27,11 @@ function h = specgram(s, ws, varargin)
 %  ex. specgram(spectralobject, waveform,...
 %      'colormap', alternateMap,'xunit','h','yscale','log')
 %
-%  See also SPECTRALOBJECT/SPECGRAM2, WAVEFORM/PLOT
+%  See also SPECTRALOBJECT/SPECGRAM2, WAVEFORM/PLOT, WAVEFORM/FILLGAPS
 
-% VERSION: 1.0 of spectralobject
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 11/25/2008
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 global SPECTRAL_MAP
 
@@ -40,15 +40,17 @@ if ~isa(ws,'waveform')
   error('Second input argument should be a waveform, not a %s',class(ws));
 end
 
+
 %% The following xunit styling is swiped from waveform/plot
 
 
 hasExtraArg = mod(numel(varargin),2);
 if hasExtraArg
-  error('Spectralobject:DepricatedArgument',...
-    '%s/n%s/n%s','spectralobject/specgram now requires parameter pairs.',...
+  error('Spectralobject:specgram:DepricatedArgument',...
+    ['%s/n%s/n%s','spectralobject/specgram now requires parameter pairs.',...
     'See help spectralobject/specgram for new usage instructions',...
-    'most likely you tried to call specgram with an alternate color map without specifying the property ''colormap''');
+    'most likely you tried to call specgram with an alternate ',...
+    'color map without specifying the property ''colormap''']);
 else
   proplist=  parseargs(varargin);
 end
@@ -75,6 +77,14 @@ for j = 1:numel(ws) %added to handle arrays and vectors of waveforms
     subplot(size(ws,1),size(ws,2),j);
   end
 
+  if any(isnan(double(ws)))
+    warning('Spectralobject:specgram:nanValue',...
+        ['This waveform has at least one NaN value, which will blank',...
+        'the related spectrogram segment. ',...
+        'Remove NaN values by either splitting up the ',...
+        'waveform into non-NaN sections or by using waveform/fillgaps',...
+        ' to replace the NaN values.']);
+end
 
   w = ws(j);
 
@@ -97,7 +107,6 @@ for j = 1:numel(ws) %added to handle arrays and vectors of waveforms
       Xvalues = dl./ get(w,'freq') ./ xfactor;
   end
 
-  %%
 
   %%  once was function specgram(d, NYQ, nfft, noverlap, freqmax, dBlims)
 

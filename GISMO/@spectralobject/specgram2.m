@@ -30,24 +30,30 @@ function specgram2(s, ws, varargin)
 %
 %   See also SPECTRALOBJECT/SPECGRAM
 
-% VERSION: 1.0 of spectralobject
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 2/07/2007
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 
 %enforce input arguments.
 if ~isa(ws,'waveform')
-    error('Second input argument should be a waveform, not a %s',class(ws));
+    error('Spectralobject:specgram2:invalidArgument',...
+        'Second input argument should be a waveform, not a %s',class(ws));
 end
 
+if numel(ws) > 1
+    error('Spectralobject:specgram2:tooManyWaveforms',...
+        'specgram2 can only be used with individual waveforms, but was handed a waveform with %d elements. Either use SPECGRAM, or loop thorugh waveforms.',numel(ws));
+end
 
 hasExtraArg = mod(numel(varargin),2);
 if hasExtraArg
   error('Spectralobject:DepricatedArgument',...
-    '%s/n%s/n%s','spectralobject/specgram2 now requires parameter pairs.',...
-    'See help spectralobject/specgram for new usage instructions',...
-    'most likely you tried to call specgram with an axis without specifying the property ''axis''');
+    ['spectralobject/specgram2 now requires parameter ',...
+    'pairs.  Most likely, you tried to call spectrogram with an ',...
+    'axis without specifying the property ''axis''',...
+     ' See help spectralobject/specgram for new usage instructions.']);
 else
   proplist=  parseargs(varargin);
 end
@@ -74,7 +80,6 @@ if myaxis == 0,
     
 wavepos = [ pos(left), pos(bottom)+pos(height)*0.85,  pos(width) , pos(height) * 0.15] ;
 specpos = [ pos(left), pos(bottom), pos(width), pos(height) * 0.85 ];
-
 subplot('position',wavepos);
 plot(ws,'xunit',s.scaling,'autoscale',true);
 set(gca,'fontsize',8);

@@ -1,5 +1,5 @@
 function varargout = spwelch(s,w, varargin)
-% PWELCH   overloaded pwelch for spectralobjects
+% PWELCH   (* DEPRECATED*) overloaded pwelch for spectralobjects 
 %   spwelch(spectralobject, waveform) - plots the spectral density
 %       Pxx = pwelch(spectralobject, waveform) - returns the Power Spectral
 %           Density (PSD) estimate, Pxx, of a discrete-time signal 
@@ -11,34 +11,13 @@ function varargout = spwelch(s,w, varargin)
 %       pwelch's defaults (8 averaged windows, 50% overlap)
 %   window is length of entire waveform..
 %
-% see pwelch for more detail
+% THIS FUNCTION HAS BEEN REPLACED WITH PWELCH, and will be removed from
+% future versions.
 
-% VERSION: 1.0 of spectralobject
-% AUTHOR: Celso Reyes
-% LASTUPDATE: 1/30/2007
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
-%variables used
-Fs = get(w,'fs');
-NFFT = get(s,'nfft');
-over = get(s,'overlap');
-data = double(w);
-window = length(data);
-if nargin == 3
-    varargin{1}
-    if strcmpi(varargin{1}, 'DEFAULT')
-        %disp('defaulting')
-        window = [];
-        over = [];
-    end
-end
-clear w
-switch nargout
-    case 0
-        pwelch(data,[],[],NFFT,Fs);
-    case 1
-        varargout{1} = pwelch(data,window,over,NFFT,Fs);
-    case 2
-        [varargout{1} varargout{2}] = pwelch(data,window,over,NFFT,Fs);
-    otherwise
-        disp('pbbtt!!!!')
-end
+error('Spectralobject:spwelch:Depricated',...
+    ['spectralobject/spwelch has been deprecated. ',...
+    'Please use spectralobject/pwelch instead.  the syntax is the same']);
