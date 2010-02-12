@@ -57,9 +57,9 @@ function varargout = plot(w, varargin)
 %
 %  see also DATETICK, WAVEFORM/EXTRACT, PLOT
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: March 5, 2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 % modified 11/17/2008 by Jason Amundson (amundson@gi.alaska.edu) to allow
 % for "day of year" flag
@@ -77,9 +77,9 @@ else
 end
 
 %secs = 1;
-mins = 60;
-hrs = 3600;
-days = 3600*24;
+% mins = 60;
+% hrs = 3600;
+% days = 3600*24;
 
 %Look for an odd number of arguments beyond the first.  If there are an odd
 %number, then it is expected that the first argument is the formatting
@@ -94,26 +94,27 @@ end
 [isfound,useAutoscale,proplist] = getproperty('autoscale',proplist,false);
 [isfound,xunit,proplist] = getproperty('xunit',proplist,'s');
 
-switch lower(xunit)
-  case {'m','minutes'}
-    xunit = 'Minutes';
-    xfactor = mins;
-  case {'h','hours'}
-    xunit = 'Hours';
-    xfactor = hrs;
-  case {'d','days'}
-    xunit = 'Days';
-    xfactor = days;
-  case {'doy','day_of_year'}
-    xunit = 'Day of Year';
-    xfactor = days;
-  case 'date',
-    xunit = 'Date';
-    xfactor = 1 / get(w(1),'freq');
-  otherwise,
-    xunit = 'Seconds';
-    xfactor = 1;
-end
+[xunit, xfactor] = parse_xunit(xunit);
+% switch lower(xunit)
+%   case {'m','minutes'}
+%     xunit = 'Minutes';
+%     xfactor = mins;
+%   case {'h','hours'}
+%     xunit = 'Hours';
+%     xfactor = hrs;
+%   case {'d','days'}
+%     xunit = 'Days';
+%     xfactor = days;
+%   case {'doy','day_of_year'}
+%     xunit = 'Day of Year';
+%     xfactor = days;
+%   case 'date',
+%     xunit = 'Date';
+%     xfactor = 1 / get(w(1),'freq');
+%   otherwise,
+%     xunit = 'Seconds';
+%     xfactor = 1;
+% end
 
 
 switch lower(xunit)
