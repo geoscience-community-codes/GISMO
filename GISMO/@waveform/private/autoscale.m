@@ -1,7 +1,18 @@
 function newunit = autoscale(axishandle, oldunit)
+% will automatically find the correct y-unites with which to plot something
+
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
+
+if iscell(oldunit), oldunit = oldunit{1}; end;
 ah = axishandle;
-ydatamin = min(get(ah,'ydata'));
-ydatamax = max(get(ah,'ydata'));
+for n=numel(ah):-1:1
+    miny(n) = min(get(ah(n),'ydata'));
+    maxy(n) = max(get(ah(n),'ydata'));    
+end
+ydatamin = min(miny);
+ydatamax = max(maxy);
 knownunits = {'pm','nm','mm','cm','m','km'};
 knownvals = 10.^[-12,-6,-3,-2,0,3];
 biggest=  log10(max(abs([ydatamin, ydatamax])));
