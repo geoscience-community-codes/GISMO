@@ -10,19 +10,17 @@ function W = hilbert(W, n)
 %
 % See also FFT, IFFT, for details and the meaning of "N" see HILBERT
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/14/2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 for idx = 1:numel(W)
-    d = get(W(idx),'data');
+    d = W(idx).data;
     if exist('n','var'),
         d = abs(hilbert(d,n));
     else
         d = abs(hilbert(d));
     end
     W(idx) = set(W(idx),'data',d);
-    clear d;
-
-    W(idx) = addhistory(W(idx),'Hilbert transform');
 end
+W  = addhistory(W ,'Hilbert transform');

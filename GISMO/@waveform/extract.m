@@ -98,17 +98,12 @@ function outW = extract(w, method, startV, endV)
 %
 %   See also WAVEFORM/SET -- Sample_Length
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/14/2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
-%% Set up conditoin variables, and ensure validity of input
-if numel(w) > 1,
-  MULTIPLE_WAVES = true;
-else
-  MULTIPLE_WAVES = false;
-end
-
+%% Set up condition variables, and ensure validity of input
+MULTIPLE_WAVES = isscalar(w);
 
 %if either of our times are strings, it's 'cause they're actually dates
 if ischar(startV)
@@ -124,11 +119,7 @@ if numel(startV) ~= numel(endV)
 end
 
 % are we getting a series of extractions from each waveform?
-if numel(endV) > 1,
-  MULTIPLE_EXTRACTION = true;
-else
-  MULTIPLE_EXTRACTION = false;
-end
+MULTIPLE_EXTRACTION =  numel(endV) > 1;
 
 if MULTIPLE_WAVES && MULTIPLE_EXTRACTION
   w = w(:);
@@ -144,7 +135,7 @@ outW(numel(w),numel(startV)) = waveform;
 for m = 1: numel(startV) %loop through the number of extractions
   for n=1:numel(w); %loop through the waveforms
     inW = w(n);
-    myData = get(inW,'data');
+    myData = inW.data;
     
     switch lower(method)
       case 'time'

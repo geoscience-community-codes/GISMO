@@ -51,7 +51,7 @@ function w = set(w, varargin)
 
 %4/22/08 added synonym for sample_length of data_length
 
-global dep2mep
+%global dep2mep
 
 % check to see if history is bypassed
 UPDATE_HISTORY = ~strcmpi(varargin(end),'nohist');
@@ -59,13 +59,13 @@ UPDATE_HISTORY = ~strcmpi(varargin(end),'nohist');
 Vidx = 1 : numel(varargin);
 
 while numel(Vidx) >= 2
-  prop_name = varargin{Vidx(1)};
+  prop_name = upper(varargin{Vidx(1)});
   val = varargin{Vidx(2)};
   
   %for n = 1 : numel(w);
   %out = w(n);
   
-  switch upper(prop_name)
+  switch prop_name
     case 'SCNLOBJECT'
       if isa(val,'scnlobject')
         
@@ -148,17 +148,12 @@ while numel(Vidx) >= 2
         end
       end
       
-%     case out.misc_fields
-%       % One of the user-defined fields has been chosen
-%       for n=1:numel(w)
-%         mask = ismember(w(n).misc_fields, upper(prop_name));
-%         w(n).misc_values(mask) = {val};
-%       end
     otherwise
       for n=1:numel(w)
-        switch upper(prop_name)
+        switch prop_name
           case w(n).misc_fields
-            mask = ismember(w(n).misc_fields, upper(prop_name));
+            %mask = ismember(w(n).misc_fields, prop_name);
+            mask = strcmp(prop_name,w(n).misc_fields);
             w(n).misc_values(mask) = {val};
           otherwise
             error('Waveform:set:unknownProperty',...
@@ -167,9 +162,9 @@ while numel(Vidx) >= 2
       end %n
   end %switch
   
-  if ~strcmpi(prop_name,{'HISTORY', 'DATA'}) & UPDATE_HISTORY
+  if ~strcmp(prop_name,{'HISTORY', 'DATA'}) & UPDATE_HISTORY
     
-    w = addhistory(w,['Set ' upper(prop_name)]);
+    w = addhistory(w,['Set ' prop_name]);
   end
   
   Vidx(1:2) = []; %done with those parameters, move to the next ones...

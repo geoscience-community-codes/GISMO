@@ -103,7 +103,7 @@ end
 switch task
     case {'waveform_by_waveform', 'sample_by_sample'}
         for n = 1 : numel(W);
-            W(n) = set(W(n), 'data', double(W(n)) ./ double(divisor(:)));
+            W(n).data = W(n).data ./ double(divisor(:));
         end
         if isempty(inputname(2))
             W = addhistory(W,'Divided by a constant <%s>', class(divisor));
@@ -115,12 +115,12 @@ switch task
         % each waveform has its own number to be divided by
         for n=1:numel(W)
             thisDivisor = double(divisor(n));
-            W(n) = set(W(n),'data',double(W(n)) ./ thisDivisor );
+            W(n) = set(W(n),'data',W(n).data ./ thisDivisor );
             W(n) = addhistory(W(n),'Divided by %s', num2str(thisDivisor));
         end
     case 'waveform_by_scalar'
         for n=1:numel(W)
-            W(n) = set(W(n),'data',double(W(n)) ./ divisor );
+            W(n) = set(W(n),'data', W(n).data ./ double(divisor) );
             W(n) = addhistory(W(n),'Divided by %s', num2str(divisor));
         end
     otherwise

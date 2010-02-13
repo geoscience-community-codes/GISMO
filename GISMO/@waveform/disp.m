@@ -2,9 +2,9 @@ function disp(w)
 %DISP Waveform disp overloaded operator
 
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: Sep 2, 2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 if numel(w) > 1;
   disp(' ');
@@ -54,25 +54,32 @@ else %single waveform
     disp('    With misc fields...');
   end;
   for n= get(w,'misc_fields')
-    val = get(w,n{1}); %grab value associated with this misc_field
-    displayIF = (isnumeric(val) || islogical(val)) && (numel(val)<=6);
-    displayIF = displayIF || ischar(val);
-    
-    if ~displayIF
-      %must be some sort of object or multiple-value field
-      fprintf('    * %s: ',n{1});
-      fprintf('[%s] %s object\n',...
-        size2str(size(val)), class(val) );
-    else
-      fprintf('    * %s: ',n{1});
-      if ischar(val)
-        fprintf('%s',val);
+      val = get(w,n{1}); %grab value associated with this misc_field
+      displayIF = (isnumeric(val) || islogical(val)) && (numel(val)<=6);
+      displayIF = displayIF || ischar(val);
+      
+      if strcmp(n{1},'HISTORY'), %special case!
+          historycount =  size(val,1);
+          if historycount == 1, plural=''; else, plural = 's'; end
+          fprintf('    * HISTORY: [%d item%s], last modification: %s\n',...
+              historycount, plural, datestr(max([val{:,2}])));
       else
-        fprintf('%s',num2str(val));
+          if ~displayIF
+              %must be some sort of object or multiple-value field
+              fprintf('    * %s: ',n{1});
+              fprintf('[%s] %s object\n',...
+                  size2str(size(val)), class(val) );
+          else
+              fprintf('    * %s: ',n{1});
+              if ischar(val)
+                  fprintf('%s',val);
+              else
+                  fprintf('%s',num2str(val));
+              end
+              fprintf('\n');
+          end
       end
-      fprintf('\n');
-    end
-    
+      
   end
 end;
 

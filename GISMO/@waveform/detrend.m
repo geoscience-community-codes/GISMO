@@ -2,7 +2,7 @@ function w = detrend (w, varargin)
 %DETREND remove linear trend from a waveform
 %   waveform = detrend(waveform, [options])
 %   removes the linear trend from the waveform object(s).
-
+%
 %   Input Arguments
 %       WAVEFORM: a waveform object   N-DIMENSIONAL
 %       OPTIONS: optional parameters as described in matlab's DETREND
@@ -13,9 +13,9 @@ function w = detrend (w, varargin)
 %
 % See also DETREND for list of options
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/14/2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 Nmax = numel(w);
 warnedAboutNAN = false;
@@ -23,7 +23,7 @@ for I = 1 : Nmax
     
     if isempty(w(I)), continue, end
     
-    d = get(w(I),'data');
+    d = w(I).data;
     if ~warnedAboutNAN && any(isnan(d))
       warnedAboutNAN = true;
       warning('Waveform:detrend:NaNwarning',...

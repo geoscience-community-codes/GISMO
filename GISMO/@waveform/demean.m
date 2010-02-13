@@ -6,14 +6,21 @@ function w = demean (w)
 %   Input Arguments
 %       WAVEFORM: a waveform object   N-DIMENSIONAL
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/14/2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
-Nmax = numel(w);
+global WAVEFORM_HISTORY
 
-for I = 1 : Nmax
-    w(I) = w(I) - mean(w(I));
+m = mean(w);
+
+wh = WAVEFORM_HISTORY;
+WAVEFORM_HISTORY = false;
+
+w = w - m;
+
+WAVEFORM_HISTORY = wh;
+
+for n=1:numel(w)
+    w(n) = addhistory(w(n),'mean removed: %s',num2str(m(n)));
 end
-
-w = addhistory(w,'mean removed');

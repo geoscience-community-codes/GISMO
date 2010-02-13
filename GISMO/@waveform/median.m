@@ -20,5 +20,5 @@ function y = median(w)
 
 y = zeros(size(w));
 for I = 1 : numel(w);
-    y(I) = nanmedian(get(w(I),'data'));
+    y(I) = nanmedian(w(I).data);
 end

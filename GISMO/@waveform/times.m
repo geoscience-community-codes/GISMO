@@ -122,7 +122,7 @@ end
 switch task
     case {'waveform_by_waveform', 'sample_by_sample'}
         for n = 1 : numel(A);
-            A(n) = set(A(n), 'data', double(A(n)) .* double(B(:)));
+            A(n).data = A(n).data .* double(B(:)); %set(A(n), 'data', double(A(n)) .* double(B(:)));
         end
         if isempty(inputname(2))
             A = addhistory(A,'Multiplied by a constant <%s>', class(B));
@@ -134,14 +134,14 @@ switch task
         % each waveform has its own number to be multiplied by
         for n=1:numel(A)
             thisFactor = double(B(n));
-            A(n) = set(A(n),'data',double(A(n)) .* thisFactor );
+            A(n).data = A(n).data .* thisFactor; % set(A(n),'data',double(A(n)) .* thisFactor );
             A(n) = addhistory(A(n),'Multiplied by %s', num2str(thisFactor));
         end
     case 'waveform_by_scalar'
         for n=1:numel(A)
-            A(n) = set(A(n),'data',double(A(n)) .* B );
-            A(n) = addhistory(A(n),'Multiplied by %s', num2str(B));
+            A(n).data = A(n).data .* B; % = set(A(n),'data',double(A(n)) .* B );
         end
+        A = addhistory(A,'Multiplied by %s', num2str(B));
     otherwise
         error('Waveform:times:unknownoperation',...
             'A times operation was attempted that had no recognized task.');

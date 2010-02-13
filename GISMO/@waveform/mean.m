@@ -20,5 +20,5 @@ function y = mean(w)
 
 y = nan(size(w));
 for I = 1 : numel(w);
-        y(I) = nanmean( get(w(I),'data') );
+        y(I) = nanmean( w(I).data );
 end

@@ -11,14 +11,14 @@ function w = diff (w)
 %
 %   See also DIFF, WAVEFORM/INTEGRATE
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/14/2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 Nmax = numel(w);
 
 for I = 1 : Nmax
-    w(I) = set(w(I),'data',diff(double(w(I))) .* get(w(I),'freq'));
+    w(I) = set(w(I),'data',diff(w(I).data) .* get(w(I),'freq'));
     tempUnits = get(w(I),'units');
     whereInUnits = strfind(tempUnits,' * sec');
     if isempty(whereInUnits)

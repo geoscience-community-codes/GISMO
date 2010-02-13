@@ -4,9 +4,9 @@ function [results, loc] = ismember(mywave,anythingelse)
 %
 % TRUE for each waveform that matches any scnl in the anythingelse array.
 
-
-% disp(['first object is a ' class(mywave)]);
-% disp(['second object is a ' class(anythingelse)]);
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 if ~isa(anythingelse,'scnlobject')
   error('Waveform:ismember:classMismatch',...

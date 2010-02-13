@@ -28,9 +28,6 @@ w = waveform;
 allWaves = repmat(w,numel(allSCNLs),numel(sTime)); %preallocate
 allWaves = allWaves(:);
 
-%mep2dep must not be declared before the persistent variable, otherwise I
-%get bogus errors.
-global mep2dep
 sTime_epoch = mep2dep(sTime);
 eTime_epoch = mep2dep(eTime);
 
@@ -61,8 +58,6 @@ end
 function [w, successful] = getFromWinston(scnl,stime,etime,mydatasource)
 %include 
 successful = false;
-
-global dep2mep
 
 w = scnl2waveform(scnl);
 try

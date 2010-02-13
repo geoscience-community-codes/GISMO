@@ -9,6 +9,6 @@ function w = uminus(w)
 % $Revision$
 
 for n=1:numel(w)
-    w(n) = set(w(n),'data', - double(w(n)));
+    w(n).data = -w(n).data;
 end
 w = addhistory(w,'multiplied by -1');

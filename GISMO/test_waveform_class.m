@@ -92,7 +92,7 @@ results.constructor_copy = valid;
 
 
 %% test SET routines
-global mep2dep
+mep2dep = inline('(n - 719529) * 86400','n');
 set_test = {'station','freq','channel','data','units',...
     'start','start_epoch','data_length'};
 
@@ -122,7 +122,7 @@ end
 %% test math methods
 Ad = rand5000(1000); Bd = sindata;
 Ad = Ad(:); Bd = Bd(:);
-A = set(waveform,'data',Ad); B = set(waveform,'data',Bd);
+A = set(waveform,'data',Ad,'freq',100); B = set(waveform,'data',Bd,'freq',100);
 
 results.uminus = all(-Ad == double(-Ad));
 

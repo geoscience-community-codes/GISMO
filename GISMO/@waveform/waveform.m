@@ -67,7 +67,7 @@ if isempty(WaveformNamespaceIsLoaded)
   WaveformNamespaceIsLoaded = loadGlobalNamespace();
 end;
 
-global mep2dep dep2mep; %#ok<NUSED>
+%global mep2dep dep2mep; %#ok<NUSED>
 
 % do we combine waveforms, or not?  If NOT, then the last argument will be
 % 'nocombine'.

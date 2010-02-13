@@ -19,8 +19,12 @@ function w = plus(w,q)
 % $Date$
 % $Revision$
 
+% CODE WARNING: 
+% ASSUMES DATA is in w.data and is in a single column. MAY bypass GET & SET
+% for speed.
 if ~isa(w,'waveform'),
     n  = w; w = q; q = n;
+    clear n
 end
 
 array_addition = all(size(w) == size(q));
@@ -38,15 +42,14 @@ for n = 1:numel(w)
         
         
         if scalar_addition
-            w(n) = set(w(n), 'data', get(w(n),'data') + double(q)  );
-            w(n) = addhistory(w(n),'added %d', q);
+            w(n).data = w(n).data + double(q);
+            % MOVED OUTSIDE LOOP w(n) = addhistory(w(n),'added %d', q);
         elseif array_addition
-            %w(n) = set(w(n), 'data', get(w(n),'data') + double(q(n))  );
-            w(n) = set(w(n), 'data',double(w(n)) + double(q(n))  );
+            w(n).data = w(n).data + double(q(n));
             w(n) = addhistory(w(n),'added %d ', q(n));
         elseif element_addition
-            w(n) = set(w(n), 'data', get(w(n),'data') + double(q(:))  );
-            w(n) = addhistory(w(n),'Added a vector "%s"', inputname(2));
+            w(n).data = w(n).data + double(q(:));
+            %MOVED OUTSIDE LOOP w(n) = addhistory(w(n),'Added a vector "%s"', inputname(2));
         else
             if all(size(w) == size(q'))
                 error('Waveform:plus:sizeMismatch',...
@@ -63,9 +66,9 @@ for n = 1:numel(w)
 
 
     elseif isa(q,'waveform')
-        if  isscalar(q) && ( get(w(n),'data_length') == get(q,'data_length') )
-            w(n) = set(w(n),'data', get(w(n),'data') + get(q,'data'));
-            w = addhistory(w,['Added to another waveform ', inputname(2)]);
+        if  isscalar(q) && ( numel(w(n).data) == numel(q.data) )
+            w(n).data = w(n).data + q.data;
+            %moved outside loop w(n) = addhistory(w(n),['Added to another waveform ', inputname(2)]);
         else
             error('Waveform:plus:invalidDataLengths',...
                 'Invalid operation - data lengths are different or adding multiple waveforms');
@@ -75,3 +78,18 @@ for n = 1:numel(w)
           'unknown addition operation: %s + %s', class(w), class(q));
     end
 end
+
+if  isnumeric(q)
+    if scalar_addition
+        w = addhistory(w,'added %d ', q);
+    elseif array_addition
+        %do nothing. 
+        %this is important if numel(w) == numel(q) == numel(w(N).data)
+    elseif element_addition
+        w = addhistory(w,'Added a vector "%s"', inputname(2));
+    end
+elseif isa(q,'wavform')
+    %trusts to error messages above to avoid calling this uneccessarily
+    w = addhistory(w,['Added to another waveform ', inputname(2)]);    
+end
+    

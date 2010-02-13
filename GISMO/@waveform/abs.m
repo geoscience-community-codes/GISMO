@@ -8,11 +8,11 @@ function w = abs(w)
 %
 % See also ABS.
    
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/14/2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 for n=1:numel(w)
-    w(n) = set(w(n),'data',abs(get(w(n),'data')));
-    w(n) = addhistory(w(n), 'Absolute value of data');
+    w(n).data = abs(w(n).data);
 end
+w(n) = addhistory(w(n), 'Absolute value of data');

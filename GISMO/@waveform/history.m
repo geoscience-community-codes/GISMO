@@ -14,9 +14,9 @@ function [actions dates] = history(w)
 % HISTORY recording is controlled by global WAVEFORM_HISTORY from
 % waveform/waveform
 
-% VERSION: 1.0 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 2/6/2007
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 if numel(w) > 1
     error('Waveform:history:tooManyWaveforms',...

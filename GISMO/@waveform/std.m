@@ -18,11 +18,11 @@ Y = zeros(size(w));
 
 if (exist('flag','var') && (flag == 1))
     for n = 1:numel(Y)
-        Y(n) = nanstd(double(w(n)),1);
+        Y(n) = nanstd(w(n).data,1);
     end
 else
     for n = 1:numel(Y)
-        Y(n) = nanstd(double(w(n)));
+        Y(n) = nanstd(w(n).data);
     end
 end
         

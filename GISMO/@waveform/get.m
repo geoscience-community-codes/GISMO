@@ -42,18 +42,18 @@ function val = get(w,prop_name)
 %  field from the waveform object.  This is set with the constructor, and
 %  is used in load_obj.
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/14/2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
-global mep2dep
+%global mep2dep
 
 val_CELL = cell(size(w));
 val = val_CELL;
 prop_name = upper(prop_name);
 
-switch upper(prop_name)
+switch prop_name
   
   % IDENTIFICATION PROPERTIES
   case {'STATION','CHANNEL','NETWORK','LOCATION'} %type:CELL
@@ -137,12 +137,17 @@ switch upper(prop_name)
     %perhaps we're trying to get at one of the miscelleneous fields?
     for n = 1 : numel(w)
       %loc is the position...
-      [fieldwasfound, loc] = ismember(upper(prop_name), upper(w(n).misc_fields));
-      if fieldwasfound
-        val{n} = w(n).misc_values{loc};
+      %w(n).misc_fields should ALWAYS already be in uppercase
+      mask = strcmp(prop_name,w(n).misc_fields);
+      %fieldwasfound = any(mask);
+      %[fieldwasfound, loc] = ismember(prop_name, w(n).misc_fields);
+      if any(mask)
+          
+        val{n} = w(n).misc_values{mask};
+        %val{n} = w(n).misc_values{m};
       else
         warning('Waveform:get:unrecognizedProperty',...
-          'Unrecognized property name : %s',  upper(prop_name));
+          'Unrecognized property name : %s',  prop_name);
       end
     end
     %check to see if value can be returned as a numeric value instead

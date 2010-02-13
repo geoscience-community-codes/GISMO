@@ -227,7 +227,6 @@ function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, cr
 %  % finally, close up shop.
 %  dbclose(mydb)
 
-global mep2dep
 
 useExistingDatabasePtr =  isAntelopeDatabasePtr(database);
 
@@ -348,7 +347,7 @@ function allw = traceToWaveform(blankw,tr)
 % Note: this may return multiple waveform objects, depending upon
 % how many segments and/or scnl's.
 %
-global dep2mep
+
 % try to end up with a single waveform object
 try
   traceCount = dbnrecs(tr);

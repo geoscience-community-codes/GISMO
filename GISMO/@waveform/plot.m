@@ -95,27 +95,6 @@ end
 [isfound,xunit,proplist] = getproperty('xunit',proplist,'s');
 
 [xunit, xfactor] = parse_xunit(xunit);
-% switch lower(xunit)
-%   case {'m','minutes'}
-%     xunit = 'Minutes';
-%     xfactor = mins;
-%   case {'h','hours'}
-%     xunit = 'Hours';
-%     xfactor = hrs;
-%   case {'d','days'}
-%     xunit = 'Days';
-%     xfactor = days;
-%   case {'doy','day_of_year'}
-%     xunit = 'Day of Year';
-%     xfactor = days;
-%   case 'date',
-%     xunit = 'Date';
-%     xfactor = 1 / get(w(1),'freq');
-%   otherwise,
-%     xunit = 'Seconds';
-%     xfactor = 1;
-% end
-
 
 switch lower(xunit)
   case 'date'

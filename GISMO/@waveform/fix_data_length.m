@@ -30,16 +30,16 @@ function w = fix_data_length(w, maxlen)
 %
 % See also WAVEFORM/EXTRACT, WAVEFORM/DOUBLE, WAVEFORM/SET -- Sample_Length 
 
-% VERSION: 1.0 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 2/6/2007
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 Wcount = numel(w);
 
 if ~exist('maxlen','var')
     m(Wcount) = 0;
     for j = Wcount : -1 : 1
-        m(j) = get(w(j),'data_length');
+        m(j) = numel(w(j).data);
     end
     maxlen = max(m);
 end
@@ -53,8 +53,8 @@ else
 end
 
 for j = 1 : Wcount
-    D = get(w(j),'data');
-    if ed > get(w(j),'data_length')
+    D = w(j).data;
+    if ed > numel(D)
         D(ed) = 0;
     else
         D = D(st:ed);

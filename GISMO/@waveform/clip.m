@@ -13,9 +13,9 @@ function w = clip(w, vals)
 %
 % See also  WAVEFORM/DESPIKE
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/14/2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 if nargin < 2,
     vals = [];
@@ -52,10 +52,10 @@ switch numel(vals)
 end
 
 for N = 1: numel(w)
-    d = get(w(N),'data');
+    d = w(N).data;
     d(d < vals(1)) = vals(1);
     d(d > vals(2)) = vals(2);
-    w(N) = set(w(N), 'data', d);
+    w(N).data = d;
 end
 
 

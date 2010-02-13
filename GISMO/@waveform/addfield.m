@@ -72,7 +72,7 @@ end
 for n=1:numel(w)                % for each possible waveform
   miscF = w(n).misc_fields;   % grab the misc_fields (cell of fieldnames)
   
-  if ~ismember(fieldname,miscF) % if the field doesn't already exist...
+  if ~any(strcmp(fieldname,miscF)) % if the field doesn't already exist...
     w(n).misc_fields = [miscF, fieldname]; %add the fieldname to the list
   end
   if useHistory

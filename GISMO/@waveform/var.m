@@ -22,13 +22,11 @@ function Y = var(w,flag)
 Y = zeros(size(w));
 if exist('flag','var')
     for n = 1:numel(Y)
-        d = double(w(n));
-        d = d(~isnan(d));
-        Y(n) = nanvar(double(w(n)),flag);
+        Y(n) = nanvar(w(n).data,flag);
     end
 else
     for n = 1:numel(Y)
-        Y(n) = nanvar(double(w(n)));
+        Y(n) = nanvar(w(n).data);
     end
 end
         
