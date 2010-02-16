@@ -44,9 +44,10 @@ function w = addfield(w,fieldname,value,noHistOption)
 %
 % See also WAVEFORM/SET, WAVEFORM/GET
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/5/2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
+
 useHistory = exist('noHistOption','var') && strcmpi(noHistOption,'nohist');
 if isa(fieldname,'char')
   fieldname = {upper(fieldname)}; %convert to cell

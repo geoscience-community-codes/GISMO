@@ -17,9 +17,17 @@ function w = diff (w)
 
 Nmax = numel(w);
 
+allFreq = get(w,'freq');
+
+allUnits = get(w,'units'); %cell if numel(w)>1, char otherwise
+
+if ~isCell(allUnits)
+    allUnits = {allUnits};
+end
+
 for I = 1 : Nmax
-    w(I) = set(w(I),'data',diff(w(I).data) .* get(w(I),'freq'));
-    tempUnits = get(w(I),'units');
+    w(I) = set(w(I),'data',diff(w(I).data) .* allFreq(I));
+    tempUnits = allUnits{I};
     whereInUnits = strfind(tempUnits,' * sec');
     if isempty(whereInUnits)
         w(I) = set(w(I),'units', [tempUnits, ' / sec']);

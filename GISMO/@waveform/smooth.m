@@ -5,11 +5,11 @@ function W = smooth(W, varargin)
 %
 % See Also smooth
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/15/2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 for n = 1:numel(W)
-    W(n) = set(W(n),'data',smooth(double(W(n)),varargin{:}));
+    W(n) = set(W(n),'data',smooth(W(n).data,varargin{:}));
 end
 W = addhistory(W,{'Smoothed with these arguments',varargin});

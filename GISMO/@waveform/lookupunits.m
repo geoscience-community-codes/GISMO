@@ -12,10 +12,11 @@ function units = lookupunits(w,station,component)
 % Relies on antelope.  
 % See also antelope's DBSUBSET, DBLOOKUP, DBOPEN, DBGETV
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: March 5, 2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
+%This antelope specific routine belongs in contrib, not in waveform
 global MASTER_STATION_DBASE
 
 switch nargin

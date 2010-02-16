@@ -6,6 +6,7 @@ function w = abs(w)
 %   Input Argument
 %       WAVEFORM: waveform object       N-DIMENSIONAL
 %
+%  input waveform may be N-dimensional
 % See also ABS.
    
 % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks

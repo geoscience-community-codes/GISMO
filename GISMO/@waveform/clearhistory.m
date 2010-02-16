@@ -14,9 +14,13 @@ function w = clearhistory(w)
 %
 % See also WAVEFORM/ADDHISTORY, WAVEFORM/DELFIELD, WAVEFORM/ADDFIELD.
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/14/2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
+try
 w = set(w,'HISTORY',{});
+catch
+    w = addfield('HISTORY',{});
+end
 w = addhistory(w,'Cleared History');

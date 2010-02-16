@@ -103,7 +103,7 @@ function outW = extract(w, method, startV, endV)
 % $Revision$
 
 %% Set up condition variables, and ensure validity of input
-MULTIPLE_WAVES = isscalar(w);
+MULTIPLE_WAVES = ~isscalar(w);
 
 %if either of our times are strings, it's 'cause they're actually dates
 if ischar(startV)
@@ -119,7 +119,7 @@ if numel(startV) ~= numel(endV)
 end
 
 % are we getting a series of extractions from each waveform?
-MULTIPLE_EXTRACTION =  numel(endV) > 1;
+MULTIPLE_EXTRACTION = numel(endV) > 1;
 
 if MULTIPLE_WAVES && MULTIPLE_EXTRACTION
   w = w(:);
@@ -225,7 +225,7 @@ for m = 1: numel(startV) %loop through the number of extractions
         try
           myStart = sampTimes(goodTimes(1)); %first sample time is new waveform start
         catch
-          warning('Waveform:NoDataFound',...
+          warning('Waveform:extract:NoDataFound',...
             'no data');
           myStart = startV(1);
         end
@@ -246,4 +246,4 @@ end % m-loop (looping through extractions)
 
 %% the helper function
 function  [B,A] = swap(A,B)
-%do nothing
+%do nothing, just flip inputs & outputs

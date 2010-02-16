@@ -48,28 +48,7 @@ end
 hasSameArrayShape = all(size(A) == size(B));
 elements_haveMatchingSize = ...
     all(get(A,'data_length') == numel(double(B)));
-% 
-% for n = 1 : numel(A)
-%     % the following syntax guarentees B is a double.
-%     if isnumeric(B) || isa(B,'waveform'),
-%         if ~isscalar(B) && (numel(double(B(:))) ~= get(A(n),'data_length'))
-%             error('waveform''s sample count must match the length of numeric vector it is multiplied by.');
-%         end
-%         C(n) = set(A(n), 'data', get(A(n),'data') .* double(B(:)) );
-% 
-%         if isa(B,'waveform') 
-%             C(n) = addhistory(C(n),'multiplied by a waveform %s', inputname(2));
-%         else
-%             if ~isscalar(B),
-%                 C(n) = addhistory(C(n),'multiplied by vector %s', inputname(2));
-%             else
-%                 C(n) = addhistory(C(n),'multiplied by %s', num2str(B));
-%             end
-%         end
-%     else
-%         error('Must multiply by a numeric type or a waveform, not a %s',class(B));
-%     end
-% end
+
 
 %%
 % ----------------------------------------------------------------------- %

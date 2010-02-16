@@ -3,7 +3,8 @@ function val = get(w,prop_name)
 %   val = get(waveform,prop_name)
 %
 %   Valid property names:
-%       STATION, COMPONENT, FREQ, START_STR, END_STR, DATA, NYQ, PERIOD
+%       SCNLOBJECT, STATION, CHANNEL, NETWORK, LOCATION, FREQ, START_STR,
+%       END_STR, DATA, NYQ, PERIOD 
 %     also:
 %       START, END : return datenum format (MatLab's format)
 %       START_EPOCH, END_EPOCH : return epoch format.

@@ -20,17 +20,14 @@ function peakmask = getpeaks(w)
 %
 % See also WAVEFORM/HILBERT
 
-% 10/21/2005 - Completely changed.  If you need the original, let me know...
-
-% VERSION: 1.0 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 2/6/2007
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 if ~isscalar(w)
     error('Waveform:getpeaks:tooManyWaveforms',...
       'getpeaks can only be used with individual waveforms');
 end
-myData = get(w,'data');
-BiggerLeft = [(myData(1:end-1) >= myData(2:end)); true];
-BiggerRight = [true ; (myData(1:end-1) < myData(2:end))];
+BiggerLeft = [(w.data(1:end-1) >= w.data(2:end)); true];
+BiggerRight = [true ; (w.data(1:end-1) < w.data(2:end))];
 peakmask = (BiggerLeft & BiggerRight);

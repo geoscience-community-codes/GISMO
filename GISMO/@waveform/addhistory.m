@@ -30,9 +30,9 @@ function w = addhistory(w, whathappened,varargin)
 %
 % See also WAVEFORM/ADDFIELD, WAVEFORM/GET, WAVEFORM/HISTORY, SPRINTF
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/14/2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 
 
