@@ -1,16 +1,20 @@
-function w = align(w,alignTime, alignFreq)
+function w = align(w,alignTimes, alignFreq, alignMethod)
 %ALIGN resamples a waveform at over every specified interval
 %   w = align(waveform, AlignTime, AlignFrequency)
 %
 %   Input Arguments
 %       WAVEFORM: waveform object       N-dimensional
-%       ALIGNTIME: either a single matlab time or N times 
+%       ALIGNTIME: either a single matlab time or N times
 %          where N is the number of waveforms
+%       ALIGNFREQ: the frequency (Samples per Second) of the newly aligned
+%          waveforms
+%       ALIGNMETHOD: Any of the methods from function INTERP
+%          If omitted, then the DEFAULT IS 'pchip'
 %
 %   Output
 %       The output waveform has the new frequency alignFreq and a
-%       starttime calculated by PCHIP method, using matlab's INTERP1
-%       function.
+%       starttime calculated by the specified method, using matlab's
+%       INTERP1 function.
 %
 %   Examples of usefulness?  Particle motions, coordinate transformations.
 %   If used for particle motions, consider MatLab's plotmatrix command.
@@ -31,64 +35,92 @@ function w = align(w,alignTime, alignFreq)
 %
 % See also INTERP1, PLOTMATRIX
 
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 3/14/2009
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
-oneSecond = datenum('0/0/0 00:00:01.00');
-if isa(alignTime,'char'),
-    alignTime =  datenum(alignTime);
+
+if ~exist('alignMethod','var')
+    alignMethod = 'pchip';
 end
 
-if isscalar(alignTime) %use same align time for all waveforms
-    alignTime = repmat(alignTime,size(w));
-elseif numel(alignTime) ~= numel(w) %make sure 1:1 ratio for alignTime & waveform
-    error('Waveform:align:invalidAlignCount','either have a single alignTime, or one for each waveform');
+oneSecond = datenum([0 0 0 0 0 1]);
+if isa(alignTimes,'char'),
+    alignTimes =  datenum(alignTimes);
 end
 
-for n=1:numel(w)
-    myAlign = datenum(alignTime(n));
+hasSingleAlignTime = isscalar(alignTimes);
+
+if hasSingleAlignTime %use same align time for all waveforms
+    alignTimes = repmat(alignTimes,size(w));
+elseif isvector(alignTimes) && isvector(w)
+    if numel(alignTimes) ~= numel(w)
+        error('Waveform:align:invalidAlignSize',...
+            'The number of Align Times does not match the number of waveforms');
+    else
+        % this situation OK.
+        % ignore possibility that we're comparing a 1xN vs Nx1.
+    end
+elseif~all(size(alignTimes) == size(w)) %make sure 1:1 ratio for alignTime & waveform
+    if numel(alignTimes) == numel(w)
+        error('Waveform:align:invalidAlignSize',...
+            ['The alignTime matrix is of a different size than the waveform'...
+            ' Matrix.  ']);
+    end
+end
+
+
+newSamplesPerSec = 1 ./ alignFreq ;  %# samplesPerSecond
+timeStep = newSamplesPerSec * oneSecond;
+existingStarts = get(w,'start');
+existingEnds = get(w,'end');
+closestStartTime = offsetToNearestAlignedTime(existingStarts,alignTimes,timeStep);
+
+for n=1:numel(w)    
+    %disp(n)
+    newSampleTimes = closestStartTime(n):timeStep:existingEnds(n);
+  
+    %get rid of samples that lay entirely outside the existing waveform's
+    %range (ie, only interpolate values BETWEEN points)
+    newSampleTimes = newSampleTimes(newSampleTimes >= existingStarts(n) & ...
+        newSampleTimes <= existingEnds(n));
     
-    y = get(w(n),'data');
-    x = get(w(n),'timevector');
+   % display(['numel(newSampleTimes): ',num2str(numel(newSampleTimes))]);
     
-    dayBase = fix(x(1)); %get the day.
+    w(n).data = interp1(...
+        get(w(n),'timevector'),... original times (x)
+        w(n).data,...              original data (y)
+        newSampleTimes,...         new times (x1)
+        alignMethod);           %  method
+    w(n) = set(w(n),'start',newSampleTimes(1));    
     
-    % I subtract the dayBase from the time data so that we're not so far
-    % away from zero.  Later, I add it back in before putting it back into
-    % the waveform
-    
-    x = x - dayBase;
-    myAlign = myAlign - dayBase;
-    
-    alignPeriod = 1 ./ alignFreq ;
-    
-    timeStep = alignPeriod * oneSecond;
-    
-    %determine sample times at new frequency
-    xi = x(1)-(timeStep): timeStep :x(end)+timeStep;
-    %display(['numel(xi): ',num2str(numel(xi))]);
-    
-    [DeltaTime closestIdx] = min(abs(myAlign - xi));
-    DeltaTime = xi(closestIdx) - myAlign;
-       
-    %following line changed from + to - according to Mike W. 4/4/2007
-    xi = xi - DeltaTime; %time shift the times to make good alignment
-    
-    xi = xi(xi >= min(x) & xi <= max(x)); %only return those that are bounded
-    
-    %display(['numel(xi): ',num2str(numel(xi))]);
-    
-    yi = interp1(x,y,xi,'pchip');    %could be linear
-    
-    %display(['numel(yi): ',num2str(numel(yi))]);
-    
-    w(n) = set(w(n),'data',yi,'freq',alignFreq,'start',xi(1)+dayBase);
-    
+end
+w = set(w,'freq',alignFreq);
+
+%% update histories
+% if all waves were aligned to the same time, then handle all history here
+if hasSingleAlignTime
     %fancy way to get properly formatted time
-    timeStr = get(set(waveform,'start',myAlign+dayBase),'start_str');
-    
+    timeStr = get(set(waveform,'start',alignTimes),'start_str');
     %adjust history
     myHistory = sprintf('aligned data to %s at %f', timeStr, alignFreq);
-    w(n) = addhistory(w(n),myHistory);
+    w = addhistory(w,myHistory);
+else
+    for n=1:numel(w)
+         %fancy way to get properly formatted time
+        timeStr = get(set(waveform,'start',alignTimes(n)),'start_str');
+        
+        %adjust history
+        myHistory = sprintf('aligned data to %s at %f', timeStr, alignFreq);
+        w(n) = addhistory(w(n),myHistory);
+    end
 end
+
+
+function closestTime = offsetToNearestAlignedTime(existingStarts, AlignTimes, matlabTimePerSample)
+% calculate the offset of the closest "aligned" time, by projecting the
+% desired frequency rate and time
+deltaTime = existingStarts - AlignTimes;  % time in between
+% (-):alignTimes AFTER existingStarts, (+) alignTimes BEFORE existingStarts
+closestTime = existingStarts - rem(deltaTime,matlabTimePerSample);
+
