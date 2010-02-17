@@ -21,7 +21,7 @@ allFreq = get(w,'freq');
 
 allUnits = get(w,'units'); %cell if numel(w)>1, char otherwise
 
-if ~isCell(allUnits)
+if ~iscell(allUnits)
     allUnits = {allUnits};
 end
 
