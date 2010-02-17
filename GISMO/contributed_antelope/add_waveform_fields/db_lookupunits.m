@@ -13,8 +13,8 @@ function units = lookupunits(w,station,component)
 % See also antelope's DBSUBSET, DBLOOKUP, DBOPEN, DBGETV
 
 % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date$
-% $Revision$
+% $Date: 2010-02-16 14:55:19 -0900 (Tue, 16 Feb 2010) $
+% $Revision: 204 $
 
 %This antelope specific routine belongs in contrib, not in waveform
 global MASTER_STATION_DBASE
