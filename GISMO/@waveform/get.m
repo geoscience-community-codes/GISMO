@@ -134,6 +134,12 @@ switch prop_name
     val = [w.scnl];
     %must add network & location, too.
     
+  case {'HISTORY'}
+      val = cell(size(w));
+      for n=1:numel(w)
+          val(n) = {w(n).history};
+      end
+        
   otherwise
     %perhaps we're trying to get at one of the miscelleneous fields?
     for n = 1 : numel(w)

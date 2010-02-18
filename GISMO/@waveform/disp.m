@@ -50,6 +50,10 @@ else %single waveform
   fprintf('      data: %d samples\n', get(w,'data_length'));
   fprintf('      freq: %10.4f Hz\n',get(w,'Fs'));
   fprintf('     units: %s\n',get(w,'units'));
+            historycount =  size(get(w,'history'));
+          if historycount == 1, plural=''; else, plural = 's'; end
+  fprintf('   history: [%d item%s], last modification: %s\n',...
+              historycount, plural, datestr(max([w.history{:,2}])));
   if numel(get(w,'misc_fields')) > 0,
     disp('    With misc fields...');
   end;

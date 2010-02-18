@@ -148,6 +148,9 @@ while numel(Vidx) >= 2
         end
       end
       
+      case 'HISTORY'
+          w = addhistory(w, val);
+      
     otherwise
       for n=1:numel(w)
         switch prop_name

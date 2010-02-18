@@ -18,9 +18,5 @@ function w = clearhistory(w)
 % $Date$
 % $Revision$
 
-try
-w = set(w,'HISTORY',{});
-catch
-    w = addfield('HISTORY',{});
-end
+w.history = deal({})
 w = addhistory(w,'Cleared History');

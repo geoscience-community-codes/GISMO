@@ -65,11 +65,36 @@ else %a is an old version
       end
       
     case 1.1
-      %Current itteration, we shouldn't be here
       % Change to 1.1 means that SCNLOBJECTs are used.
+      %invoked, because station and channel fields exist?
+      
+      b = repmat(waveform,size(a));
+      for n=1:numel(b)
+          b(n).scnl = a(n).scnl;
+          b(n).Fs = a(n).Fs;
+          b(n).start = a(n).start;
+          b(n).data = a(n).data;
+          b(n).units = a(n).units;
+          b(n).version = 1.2;
+          for m=1:numel(a(n).misc_fields)
+              if strcmp(a(n).misc_fields{m},'HISTORY')
+                  b(n).history = a(n).misc_values{m};
+              else
+                  b(n) = addfield(b(n),a(n).misc_fields{m},a(n).misc_values{m});
+              end
+          end
+          %add history here
+          %remove history here
+      end
+      
+      case 1.2
+      %Current itteration, we shouldn't be here
+      % Change to 1.2 means that station and channel fields are removed.
+          
     otherwise
       error('Waveform:loadobj:unknownWaveformVersion',...
         'Unknown version of waveform object (%1.2f).  Current version is %1.2f',  a(1).version, THIS_VERSION);
   end
 end
 b = addhistory(b,['Updated to version ' num2str(THIS_VERSION)]);
+

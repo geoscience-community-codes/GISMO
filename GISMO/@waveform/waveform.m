@@ -305,7 +305,7 @@ function w = genericWaveform()
 %create a fresh waveform.  All calls to the waveform object, aside
 %from the "copy" call (case nargin==1) will be initated HERE.
 %Thereafter, the waveform will be modified by set/get.
-THIS_VERSION = 1.1;
+THIS_VERSION = 1.2;
 DEFAULT_UNIT = 'Counts';
 DEFAULT_FREQ = nan;
 DEFAULT_CHAN = '';
@@ -319,6 +319,7 @@ w.units = DEFAULT_UNIT; %units for data (nm? counts?)
 w.version = THIS_VERSION; %version of waveform object (internal)
 w.misc_fields = {}; %add'l fields, such as "comments", or "trig"
 w.misc_values = {}; %values for these fields
+w.history = {};
 w = class(w, 'waveform');
 
 w = addhistory(w,'CREATED');

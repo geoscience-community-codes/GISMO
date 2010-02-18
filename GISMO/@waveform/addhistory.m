@@ -41,15 +41,13 @@ if nargin > 2,
     whathappened = sprintf(whathappened, varargin{:});
 end
 if WAVEFORM_HISTORY
-modtime = now;
+    modtime = now;
     for N = 1 : numel(w);
         %History is stored in a cell, the format of which is [WHAT, WHEN]
-        isHistory = strcmp('HISTORY', w(N).misc_fields);
-        if any(isHistory) %ismember('HISTORY', get(w(N),'misc_fields'))
-            w(N).misc_values(isHistory) = {[w(N).misc_values{isHistory}; {whathappened, modtime}]};
+        if isempty(w(N).history)
+            w(N).history = {whathappened, modtime};
         else
-            newhist = {whathappened, now};
-            w(N) = addfield(w(N),'HISTORY', newhist);
+            w(N).history = [w(N).history; {whathappened, modtime}];
         end
     end
 end

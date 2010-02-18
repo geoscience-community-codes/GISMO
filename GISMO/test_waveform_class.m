@@ -165,6 +165,8 @@ results.diff = ...
 results.integrate = ...
     all(cumsum(Bd) ./ get(B,'freq') == double(integrate(B))) &&...
     strcmp(get(integrate(B),'units'), 'Counts * sec');
+results.integrate = results.integrate &&...    
+    all(cumtrapz(Bd) ./ get(B,'freq') == double(integrate(B,'trapz')));
 
 results.rms = ...
     all(rms(A)  == sqrt((sum(Ad .^2) / (numel(Ad)-1))));
@@ -187,6 +189,15 @@ results.detrend=  all(double(detrend(A)) == detrend(Ad));
 results.demean = all(double(demean(A)) == (Ad - mean(Ad)));
 results.hilbert = all(double(hilbert(A)) == abs(hilbert(Ad)));
 
+%% Test Functions: ensure they don't error & output size is correct
+results.taper = all(double(taper(A)) == double(taper(A,.2))) &&...
+all(double(taper(A,.2)) == double(taper(A,.2,'cosinE')));
+results.taper = results.taper && any(double(taper(A)) ~= double(taper(A,.5)));
+
+clippedAd = Ad; clippedAd(Ad>.3) = .3; clippedAD(Ad<-.2) = .2;
+results.clip = all(double(clip(A,[-.2,.3])) == clippedAd);
+
+results.stack = all(double(stack([A, A, A, A])) == Ad .* 4);
 %% Test HISTORY functions
 %   'addHistory','clearHistory','history'
 
@@ -240,8 +251,38 @@ else
     results.delfield = false;
 end
 
+%% try display functions
+try
+    disp(A); disp([A A]); disp([A A; A A; A A]);
+    results.disp = true;
+catch exception
+    results.disp = false;
+    disp(exception);
+end
+try
+    display(A); display([A A]); display([A A; A A; A A]);
+    results.display = true;
+catch exception
+    results.display = false;
+    disp(exception)
+end
+
+%% try plot functions
+try
+    f = figure;
+    plot(A); plot([A B]); plot([A B]','g.');
+    plot([A B B.*2 B.*7 set(B,'start',get(B,'start')+datenum(0,0,0,0,0,1))],'xunit','date','markersize',3);
+    results.plot = true;
+catch exception
+    results.plot = false;
+    rethrow(exception);
+end
+
 %% isEMPTY, double
 results.isempty = isempty(waveform) && ~isempty(set(waveform,'data',1));
+
+results.double = all(double(A) == Ad) && ...
+    all(all(double([A A]) == [Ad Ad])); %ADDITIONAL CHECKS REQUIRED
 
 %% DISPLAY RESULTS
 %clear A Ad B Bd w w2

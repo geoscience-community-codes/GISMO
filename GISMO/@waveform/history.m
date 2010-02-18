@@ -22,7 +22,7 @@ if numel(w) > 1
     error('Waveform:history:tooManyWaveforms',...
       'Can only get history for a single waveform at a time');
 end
-val = get(w,'history');
+val = w.history;
 actions = val(:,1);
 dates = datestr([val{:,2}]');
 
