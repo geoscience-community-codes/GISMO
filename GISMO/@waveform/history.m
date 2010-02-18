@@ -20,7 +20,7 @@ function [actions dates] = history(w)
 
 if numel(w) > 1
     error('Waveform:history:tooManyWaveforms',...
-      'Can only get history for a single waveform at a time');
+      '''waveform/history()'' can only retrieve history for individual waveforms');
 end
 val = w.history;
 actions = val(:,1);

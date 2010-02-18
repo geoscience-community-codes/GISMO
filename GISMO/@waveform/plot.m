@@ -118,7 +118,7 @@ switch lower(xunit)
     
   case 'day of year'
     startvec = datevec(get(w,'start'));
-    dec31 = datenum(startvec(1)-1,12,31); % 12/31/xxxx of previous year in Matlab format
+    dec31 = datenum([startvec(1)-1,12,31,0,0,0]); % 12/31/xxxx of previous year in Matlab format
     startdoy = datenum(get(w,'start')) - dec31;
     
     dl = zeros(size(w));

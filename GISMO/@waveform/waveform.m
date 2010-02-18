@@ -248,8 +248,8 @@ switch argCount
   case 8
     DEFAULT_CHAN = 'EHZ';
     DEFAULT_STATION = 'UNK';
-    DEFAULT_START = datenum('1/1/1970');
-    DEFAULT_END = DEFAULT_START + datenum(0,0,0,0,5,0); %five minutes
+    DEFAULT_START = datenum([1970 1 1 0 0 0]);
+    DEFAULT_END = DEFAULT_START + datenum([0,0,0,0,5,0]); %five minutes
     
     % the following are for WINSTON access...
     DEFAULT_NETWORK = '';
