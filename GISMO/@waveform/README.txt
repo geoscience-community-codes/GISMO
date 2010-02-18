@@ -51,10 +51,11 @@ Additional help, along with examples can be found online at
 
 = = = = = = = = = = = = = = = = = = = = = = = = 
 Notes about the current release
-r210
+r211
 
 Fixed a bug in R207 (introduced ~r190) where attempting to read in a recently saved waveform (structure v1.1) will cause an error.  This was caused by the removal of the station and channel fields (which had been depricated since the introduction of scnlobjects)
 Moved HISTORY out of miscelleneous fields and into its own proper field within the waveform structure.  This should save some speed overhead.
+Fixed sign(waveform), which was transposing the data column.
 
 r207
 
