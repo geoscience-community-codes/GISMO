@@ -1,5 +1,6 @@
-%function results = test_waveform_class
-
+% function results = test_waveform_class
+% $Date$
+% $Revision$
 %script that will test the waveform class FOR 1-D CASES!!!!
 lasterror('reset')
 totest = {... constructor methods
@@ -35,7 +36,11 @@ totest = {... constructor methods
     ... state functions
     'isempty',...
     ... display functions
-    'disp','display', 'plot'...
+    'disp','display', 'plot',...
+    ... loadobj function
+    'loadobj_v0', 'loadobj_v1_0', 'loadobj_v1_1', 'loadobj_current' ...
+    ... test w/ correlation
+    'correlation_cookbook'
     };
 clear results
 for n=1:numel(totest)
@@ -108,12 +113,12 @@ for N=1:numel(set_test)
     catch
         setresult.(set_test{N}) = true;
     end
-
+    
     %Make sure that corresponding VALID cases work
     setresult.(set_test{N}) = setresult.(set_test{N}) && ...
         all(get(set(w,set_test{N},set_VALID_vals{N}),set_test{N})...
         == set_VALID_vals{N});
-
+    
     results.set = results.set && setresult.(set_test{N});
 end
 
@@ -127,7 +132,7 @@ results.uminus = all(-Ad == double(-Ad));
 results.plus = ...
     all(double(A + B) == (Ad + Bd)) && ... test vector addition
     all(double(A + 1) == (Ad + 1)) && ...  test scalar addition
-    all(all(double([A, B]) + 1 == [Ad + 1, Bd + 1]));  %test 2x1 addition 
+    all(all(double([A, B]) + 1 == [Ad + 1, Bd + 1]));  %test 2x1 addition
 
 results.minus = all(double(A - B) == (Ad - Bd));
 results.mtimes = ...
@@ -164,7 +169,7 @@ results.diff = ...
 results.integrate = ...
     all(cumsum(Bd) ./ get(B,'freq') == double(integrate(B))) &&...
     strcmp(get(integrate(B),'units'), 'Counts * sec');
-results.integrate = results.integrate &&...    
+results.integrate = results.integrate &&...
     all(cumtrapz(Bd) ./ get(B,'freq') == double(integrate(B,'trapz')));
 
 results.rms = ...
@@ -190,7 +195,7 @@ results.hilbert = all(double(hilbert(A)) == abs(hilbert(Ad)));
 
 %% Test Functions: ensure they don't error & output size is correct
 results.taper = all(double(taper(A)) == double(taper(A,.2))) &&...
-all(double(taper(A,.2)) == double(taper(A,.2,'cosinE')));
+    all(double(taper(A,.2)) == double(taper(A,.2,'cosinE')));
 results.taper = results.taper && any(double(taper(A)) ~= double(taper(A,.5)));
 
 clippedAd = Ad; clippedAd(Ad>.3) = .3; clippedAD(Ad<-.2) = .2;
@@ -251,6 +256,7 @@ else
 end
 
 %% try display functions
+disp('testing display functions ---------------------------------------');
 try
     disp(A); disp([A A]); disp([A A; A A; A A]);
     results.disp = true;
@@ -265,6 +271,7 @@ catch exception
     results.display = false;
     disp(exception)
 end
+disp('end testing display functions -----------------------------------');
 
 %% try plot functions
 try
@@ -272,10 +279,12 @@ try
     plot(A); plot([A B]); plot([A B]','g.');
     plot([A B B.*2 B.*7 set(B,'start',get(B,'start')+datenum(0,0,0,0,0,1))],'xunit','date','markersize',3);
     results.plot = true;
+    title('test plot...');
 catch exception
     results.plot = false;
     rethrow(exception);
 end
+delete(f)
 
 %% isEMPTY, double
 results.isempty = isempty(waveform) && ~isempty(set(waveform,'data',1));
@@ -283,9 +292,79 @@ results.isempty = isempty(waveform) && ~isempty(set(waveform,'data',1));
 results.double = all(double(A) == Ad) && ...
     all(all(double([A A]) == [Ad Ad])); %ADDITIONAL CHECKS REQUIRED
 
+
+%% try load functions
+results.loadobj_v0 = true;
+try
+    dummy = load('v0_example_waveforms.mat');
+catch exception
+    disp(exception)
+    results.loadobj_v0 = false;
+end
+results.loadobj_v1_0 = true;
+try
+    dummy = load('v1.0_example_waveforms.mat');
+catch exception
+    disp(exception)
+    results.loadobj_v1_0 = false;
+end
+results.loadobj_v1_1 = true;
+try
+    dummy = load('v1.1_example_waveforms.mat');
+catch exception
+    disp(exception)
+    results.loadobj_v1_1 = false;
+end
+
+%% try saving and loading current version
+tmp_name = [tempname , '.mat'];
+
+wtesttemp = waveform;
+save(tmp_name,'wtesttemp')
+
+clear wtesttemp
+try
+    dummy = load(tmp_name);
+    results.loadobj_current = true;
+catch exception
+    disp(exception);
+    results.loadobj_current = false;
+end
+delete(tmp_name); %clean up
+clear dummy
+
+%% try the correlation cookbook
+% assumes we are in GISMO/contributed/test_scripts/waveform and that
+% correlation_cookbook is in GISMO/contributed/correlation_cookbook/
+ppp = pwd;
+cd ..
+cd ..
+cd correlation_cookbook
+pathname = '';
+pathname = '../../correlation_cookbook/';
+ fileName = 'correlation_cookbook.m';
+% [fileName, pathName] = uigetfile('*.m',...
+%     'locate the correlation_cookbook',...
+%     '../../correlation_cookbook/correlation_cookbook.m');
+if strcmpi(fileName,'correlation_cookbook.m')
+    results.correlation_cookbook = true;
+    oldchildren = get(0,'children');
+    try
+        correlation_cookbook;
+    catch
+        results.correlation_cookbook = false;
+    end
+    newchildren = get(0,'children');
+    todelete = newchildren(~ismember(newchildren,oldchildren));
+    delete(todelete); %clean up after it.
+end
+cd(ppp);
+
 %% DISPLAY RESULTS
 %clear A Ad B Bd w w2
-
+disp('');
+disp(' * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *');
+disp('');
 for n=1:numel(totest)
     switch (results.(totest{n}))
         case true
