@@ -2,6 +2,15 @@
 
 README Notes
 - - -
+Contents
+* Note from me
+* Zip file contents
+* Installation
+* Change notes
+* Previous version information
+* Acknowledgements
+
+- - -
 Thanks for trying out the waveform suite for MATLAB
 
 This code has been created in MATLAB 2009b, and has been briefly tested in 2008b.  Older versions of matlab may or may not support the more recent changes.  Prior to this release, I had tested to MATLAB 7.1.0 (R14SP3).
@@ -30,6 +39,7 @@ ZIP file contents:
     * uispecgram.fig UI component of the spectrogram generation program
     * uispecgram.m example of an interactive spectrogram generation program
 
+- - - - - - - - - - - - - - - - - - - - - - - - 
 Installation
 
 Unzip the files either into the MATLAB directory from which you work, or into another directory. The parent directory (the one that contains all the @whatever directories) must be on the MATLAB path.
@@ -39,7 +49,12 @@ Additional help, along with examples can be found online at
     * http://kiska.giseis.alaska.edu/Input/celso/matlabweb/waveform_suite/waveform_suite_example_index.html : several examples of the waveform suite in use http://kiska.giseis.alaska.edu/Input/celso/matlabweb/waveform_suite/waveform.html : the main waveform information page. Check the links on the left for information about the other features of waveform.
     * http://kiska.giseis.alaska.edu/Input/celso/matlabweb/waveform_suite/download.html : (this page)
 
-Notes about this release
+= = = = = = = = = = = = = = = = = = = = = = = = 
+Notes about the current release
+r210
+
+Fixed a bug in R207 (introduced ~r190) where attempting to read in a recently saved waveform (structure v1.1) will cause an error.  This was caused by the removal of the station and channel fields (which had been depricated since the introduction of scnlobjects)
+Moved HISTORY out of miscelleneous fields and into its own proper field within the waveform structure.  This should save some speed overhead.
 
 r207
 
@@ -75,6 +90,7 @@ Removed:
     * waveform/lookupunits.m has been removed from the waveform suite. Its use is antelope specific, and really doesn't belong with the distribution. Instead its name has been changed and is now located in the GISMO suite download contributed_antelope/add_waveform_fields/db_lookupunits.m
     * spectralobject/spwelch.m has been deprecated. Its functionality merely duplicated pwelch, and (perhaps) should not ever have been included in releases of the waveform suite.
 
+- - - - - - - - - - - - - - - - - - - - - - - - 
 Previous Versions
 
 v 1.12
@@ -88,6 +104,7 @@ Support for the importation of SEISAN files was added, too. However, the inheren
 
 scnlobjects were introduced as a way to make waveform more seed compliant, and to provide a robust way of handling the locales associated with each waveform. Other than the initial creation of scnlobjects necessary for the creation or importation of waveforms, this change is relatively transparent. That is to say, you can still access stations and channels through waveform's set/get routines without having to deal with the scnlobject contained within each waveform.
 
+- - - - - - - - - - - - - - - - - - - - - - - - 
 Acknowledgements
 
 In one form or another, the waveform suite has been around for roughly 5 years. I'd like to thank those that have helped me improve it throughout that time. I especially would like to recognize Jackie-Caplan Auerbach (for introducing me to MATLAB and inspiring this suite in the first place), Jason Amundson (a great debugger and source of addtional functionality), Micheal Thorne (who's SAC routines I thoroughly cannibalized), Glenn Thompson and Silvio DeAngelis (as testers and for SEISAN help), my advisor Steve McNutt (who let me get away with working on this stuff when, perhaps I should have been concentrating on the wiggles themselves), and Michael West (For plenty of discreet encouragement and great conversations on waveform philosophy... and author of the correlation toolbox, which is based upon the waveform object).
