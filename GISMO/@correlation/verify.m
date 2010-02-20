@@ -1,8 +1,9 @@
 function c = verify(c)
 
-% This function checks the length of waveforms in a correlation object and adjusts
-% them if they are not equal. Traces ends are trimmed or zero-padded to the mode 
-% length of all traces.
+%VERIFY
+%   C = VERIFY(C) checks the length of waveforms in a correlation object
+%   and adjusts them if they are not equal. Traces ends are trimmed or
+%   zero-padded to the mode length of all traces.
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
 % $Date$

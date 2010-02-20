@@ -2,7 +2,7 @@ function c = align(c,varargin)
 
 % c = ALIGN(c)
 % This function resamples the traces in a correlation object so that one
-% sample falls precisely on the trigger time. The aligning the samples in
+% sample falls precisely on the trigger time. By aligning the samples in
 % adjacent traces, traces can be stacked, differenced or otherwise
 % manipulated sample by sample. 
 % 
