@@ -44,28 +44,35 @@ end;
 
 
 % CROP EACH TRACES
+freqs = get(c,'Fs');
+wStarts = get(c.W,'start_matlab');
 imax = get(c,'Traces');
 Mo = get(c,'Data_Length');
-M = round(get(c,'Fs')*(posttrig-pretrig));
+M = round(freqs*(posttrig-pretrig));
+wstartrel = 86400*(wStarts-c.trig);	% relative start time, typically negative
+s1_all =round(freqs * (wstartrel - pretrig)); 
+samp_per_day = 86400 * freqs;
 %%start2 = zeros(imax,1);
 for i = 1:imax
     d = get(c.W(i),'DATA');                                     % extract trace
-	wstartrel = 86400*(get(c.W(i),'Start_Matlab')-c.trig(i));	% relative start time, typically negative
-    s1 = round(get(c,'Fs')*(wstartrel-pretrig));                % number of samples to pad or crop
+	%wstartrel = 86400*(wStarts(i)-c.trig(i));	% relative start time, typically negative
+    %s1 = round(freqs*(wstartrel(i)-pretrig));                % number of
+    %samples to pad or crop
     w2 = zeros(M,1);
-    if s1 > 0                         % beginning of traces must be PADDED
-        s2 =  min([Mo M-s1]);         % number of data samples to include
-        w2(s1+1:s1+s2) = d(1:s2);     % Pad beginning with zeros
-        start2 = get(c.W(i),'Start_Matlab')-(s1)/(86400*get(c,'Fs'));
-        c.W(i) = set(c.W(i),'DATA',w2);
-        c.W(i) = set(c.W(i),'Start',start2);
-    else        
-        s1 = -1*s1;                   % beginning of traces must be CLIPPED
+    if s1_all(i) > 0                         % beginning of traces must be PADDED
+        s2 =  min([Mo M-s1_all(i)]);         % number of data samples to include
+        w2(s1_all(i)+1:s1_all(i)+s2) = d(1:s2);     % Pad beginning with zeros
+        start2 = wStarts(i)-(s1_all(i))/samp_per_day;
+        c.W(i) = set(c.W(i),'DATA',w2,'nohist');
+        c.W(i) = set(c.W(i),'Start',start2,'nohist');
+    else       
+        s1 = -1*s1_all(i);                   % beginning of traces must be CLIPPED
         s2 =  min([Mo-s1 M]);         % number of data samples to include
         w2(1:s2) = d(s1+1:s1+s2);     % crop beginning
-        start2 = get(c.W(i),'Start_Matlab')+(s1)/(86400*get(c,'Fs'));
-        c.W(i) = set(c.W(i),'DATA',w2);
-        c.W(i) = set(c.W(i),'Start',start2);
+        start2 = wStarts(i)+(s1)/samp_per_day;
+        c.W(i) = set(c.W(i),'DATA',w2,'nohist');
+        c.W(i) = set(c.W(i),'Start',start2,'nohist');
     end;
 end;
+c.W = addhistory(c.W,'correlation/crop');
 

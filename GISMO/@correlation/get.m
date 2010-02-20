@@ -83,46 +83,44 @@ switch upper(prop_name)
         vals = get(c.W,'FS');  
         checkvals(vals);
         val = vals(1);
-    case {'PERIOD'}
-        val = get(c.W(1),'PERIOD');
-    case {'NYQ'}
-        val = get(c.W(1),'NYQ');
+%     case {'PERIOD'}
+%         val = get(c.W(1),'PERIOD');
+%     case {'NYQ'}
+%         val = get(c.W(1),'NYQ');
 
-    % FROM WAVEFORM/GET (VECTOR)
-    case {'STATION'}
+%     % FROM WAVEFORM/GET (VECTOR)
+    case {'STATION', 'STA'}
         val = get(c.W,'STATION');
-    case {'STA'}
-        val = get(c.W,'STATION');
-    case {'COMPONENT'}
+    case {'COMPONENT', 'CHAN'}
         val = get(c.W,'COMPONENT');
-    case {'CHAN'}
-        val = get(c.W,'COMPONENT');        
-
-    case {'START'}
-        val = get(c.W,'START_MATLAB');
-    case {'END'}
-        val = get(c.W,'END_MATLAB');
- 
-    case {'START_STR'}
-        val = get(c.W,'START_STR');
-    case {'START_MATLAB'}
-        val = get(c.W,'START_MATLAB');
-    case {'START_EPOCH'}
-        val = get(c.W,'START_EPOCH');
-
-    case {'END_STR'}
-        val = get(c.W,'END_STR');
-    case {'END_MATLAB'}
-        val = get(c.W,'END_MATLAB');
-    case {'END_EPOCH'}
-        val = get(c.W,'END_EPOCH');
-     
-    case {'DURATION_STR'}
-        val = get(c.W,'DURATION_STR');
-    case {'DURATION_MATLAB'}
-        val = get(c.W,'DURATION_MATLAB');
-    case {'DURATION_EPOCH'}
-        val = get(c.W,'DURATION_EPOCH');    
+%     case {'CHAN'}
+%         val = get(c.W,'COMPONENT');        
+% 
+%     case {'START'}
+%         val = get(c.W,'START_MATLAB');
+%     case {'END'}
+%         val = get(c.W,'END_MATLAB');
+%  
+%     case {'START_STR'}
+%         val = get(c.W,'START_STR');
+%     case {'START_MATLAB'}
+%         val = get(c.W,'START_MATLAB');
+%     case {'START_EPOCH'}
+%         val = get(c.W,'START_EPOCH');
+% 
+%     case {'END_STR'}
+%         val = get(c.W,'END_STR');
+%     case {'END_MATLAB'}
+%         val = get(c.W,'END_MATLAB');
+%     case {'END_EPOCH'}
+%         val = get(c.W,'END_EPOCH');
+%      
+%     case {'DURATION_STR'}
+%         val = get(c.W,'DURATION_STR');
+%     case {'DURATION_MATLAB'}
+%         val = get(c.W,'DURATION_MATLAB');
+%     case {'DURATION_EPOCH'}
+%         val = get(c.W,'DURATION_EPOCH');    
 
  % OTHER ROUTINES
     case {'DATA'}
@@ -130,7 +128,12 @@ switch upper(prop_name)
         
         
     otherwise
-        error([upper(prop_name) ' is not a valid argument for correlation/get']);
+        try 
+            % see if it is a valid waveform property
+            val = get(c.W,prop_name);
+        catch
+            error([upper(prop_name) ' is not a valid argument for correlation/get']);
+        end
 end;
 
 
@@ -140,12 +143,8 @@ end;
 
 function checkvals(vals)
 
-same = 1;
-for i = 2:length(vals)
-    if vals(i) ~= vals(1)
-        same = 0;
-    end;
-end;
+same = all(vals(:) == vals(1));
+
 if ~same
     % Warning is disabled because it gets called repeatedly (annoyingly)
     % from within other scripts

@@ -1,4 +1,4 @@
-% function results = test_waveform_class
+function results = test_waveform_class
 % $Date$
 % $Revision$
 %script that will test the waveform class FOR 1-D CASES!!!!
@@ -360,11 +360,25 @@ if strcmpi(fileName,'correlation_cookbook.m')
 end
 cd(ppp);
 
+% stress test
+w = get(c,'waveform'); %c is from teh correlation_cookbook.
+w = repmat(w,20,2); 
+dummy = w .* 3;
+todiv = rand(size(w));
+try
+    dummy = w ./ todiv;
+catch
+    for z=1:numel(w);
+        dummy(z) = w(z) ./ todiv(z);
+    end
+end
+dummy = w + 2;
+dummy = hilbert(w);
 %% DISPLAY RESULTS
 %clear A Ad B Bd w w2
-disp('');
-disp(' * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *');
-disp('');
+%disp('');
+%disp(' * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *');
+%disp('');
 for n=1:numel(totest)
     switch (results.(totest{n}))
         case true
@@ -375,5 +389,5 @@ for n=1:numel(totest)
             %do nothing
     end
 end
-disp('RESULTS for 1D waveform tests:');
-disp(results);
+%disp('RESULTS for 1D waveform tests:');
+%disp(results);

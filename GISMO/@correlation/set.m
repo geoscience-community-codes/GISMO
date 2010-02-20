@@ -15,10 +15,12 @@ if nargin <= 1
     error('Not enough inputs');
 end
 
-if ~strcmpi(class(c),'correlation')
+% if ~strcmpi(class(c),'correlation')
+%     error('First argument must be a correlation object');
+% end
+if ~isa(c,'correlation')
     error('First argument must be a correlation object');
 end
-
 
 switch upper(prop_name)
     case {'WAVEFORMS' 'WAVEFORM' 'WAVES'}
