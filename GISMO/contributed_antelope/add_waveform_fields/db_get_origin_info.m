@@ -60,6 +60,9 @@ if numel(varargin) == 1
 elseif numel(varargin) > 1
 	error('Too many arguments');
 end
+if nargout==2 && nargin~=3
+	error('Mismatched number of input and/or output arguments');
+end
 
 
 % GET ORIGIN TIME
