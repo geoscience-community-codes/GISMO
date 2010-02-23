@@ -95,7 +95,7 @@ if (mean(pretrig)~=pretrig(1)) || (mean(posttrig)~=posttrig(1))
     pretrig = center - (0.5 * get(c1,'DATA_LENGTH') * get(c1,'Period'));
     posttrig = pretrig + (get(c1,'DATA_LENGTH')+1) * get(c1,'Period');
     % is it the right length?
-    c1 = crop(c1,pretrig,posttrig);
+    c1 = crop(c1,pretrig(1),posttrig(1)); %should all have same pre & post
 end
 
 

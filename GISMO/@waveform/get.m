@@ -118,7 +118,7 @@ switch prop_name
     
   case {'TIMEVECTOR'} %type:CELL
     for N = 1 : numel(w)
-      Xvalues = linspace(get(w(N),'start'),get(w(N),'end'),length(w(N).data)+1);
+      Xvalues = linspace(w(N).start,get(w(N),'end'),length(w(N).data)+1);
       val{N} = Xvalues(1:end-1)';
     end
     
@@ -187,7 +187,7 @@ function val = grabEndTime(w)
 dlens = get(w,'data_length');
 dlens = dlens(:);
 
-myfrq = get(w,'Freq');
+myfrq = [w.Fs]; % get(w,'Freq');
 myfrq = myfrq(:);
 
 seclen = dlens ./ myfrq;
@@ -208,7 +208,7 @@ if isnan(myDate)
   val = 0;
   return
 end
-val = [datestr(myDate,31), datestr(myDate,'.FFF')];
+val = [datestr(myDate,'yyyy-mm-dd HH:MM:SS.FFF')];
 
 %%%%%%%%%%%%%%%%
 function val = durationDate(myDate)
@@ -227,5 +227,4 @@ val = '';
 if (yr+mo+da)>1,
   val = [val sprintf('%4d days ',fix(myDate))];
 end
-val = [val, datestr(myDate,15)];
-val = [val datestr(myDate,':SS.FFF')];
+val = [val datestr(myDate,'HH:MM:SS.FFF')];

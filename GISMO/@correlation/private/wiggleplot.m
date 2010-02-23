@@ -9,53 +9,42 @@ function wiggleplot(c,scale,ord,norm)
 
 % PREP PLOT
 figure('Color','w','Position',[50 50 850 1100]);
-box on; hold on;
-
-
-% GET MEAN TRACE AMPLITUDE FOR SCALING BELOW (when norm = 0)
-maxlist = [];
-for i = ord
-    maxlist(end+1) = max(abs( get(c.W(i),'DATA') ));
-end;
-normval = mean(maxlist);
-
+box on;
+% hold on;
 
 % LOOP THROUGH WAVEFORMS
-tmin =  999999;
-tmax = -999999;
-count = 0;
-for i = ord
-	count = count + 1;
-    d = get(c.W(i),'DATA');            %%%d = c.w(:,i);
-	if norm==0
-        d = scale * d/normval;			% do not normalize trace amplitudes
-    else
-        if max(abs(d))==0
-            d = scale * d;              	% ignore zero traces
-        else
-            d = scale * d/max(abs(d));		% normalize trace amplitudes
-        end
-    end
-    d = -1 * d; 				% because scale is reversed below
-	wstartrel = 86400*(get(c.W(i),'START_MATLAB')-c.trig(i));	% relative start time (trigger is at zero)
-	tr = wstartrel + [ 0:length(d)-1]'/get(c.W(i),'Fs'); 
-	plot(tr,d+count,'b-','LineWidth',1);
-    % save min and max relative trace times
-	if tr(1) < tmin
-		tmin = tr(1);
-	end;
-	if tr(end) > tmax
-		tmax = tr(end);
-	end;
-
+wstartrel = 86400 *( get(c.W(ord),'START_MATLAB') - c.trig(ord));% relative start time (trigger is at zero)
+freq = get(c.W(ord),'Fs');
+lengths = get(c.W(ord),'data_length');
+tr = nan(max(lengths),numel(ord)); %pre allocate with nan to not plot
+abs_max =  max(abs(c.W(ord)));
+for count = 1:numel(ord)
+    tr(1:lengths(count),ord(count)) = ...
+        wstartrel(count) + [ 0:lengths(count)-1]'/freq(count);
 end;
 
+% scale is negative because it is reversed below
+if norm==0
+    % GET MEAN TRACE AMPLITUDE FOR SCALING BELOW (when norm = 0)
+    maxlist = max(abs(c.W(ord)));
+    normval = mean(maxlist);
+    d =  double(c.W(ord) .*( -scale ./ normval)+ [1:numel(ord)]','nan'); % do not normalize trace amplitudes
+else
+    abs_max(abs_max==0) = 1; % ignore zero traces
+    
+    d = double(c.W(ord) .* (-scale ./ abs_max)+[1:numel(ord)]','nan'); % normalize trace amplitudes
+end
+
+plot(tr,d,'b-','LineWidth',1);
 
 % adjust figure
-axis([tmin tmax 0 length(ord)+1]);
-set(gca,'YDir','reverse');
-set(gca,'YTick',1:length(ord));
-set(gca,'YTickLabel',datestr(c.trig(ord)),'FontSize',6);
+%axis([tmin tmax 0 length(ord)+1]);
+axis([min(tr(:)) max(tr(:)) 0 length(ord)+1]);
+set(gca,'YDir','reverse',...
+    'YTick',1:length(ord),...
+    'YTickLabel',datestr(c.trig(ord)),...
+    'FontSize',6);
+
 xlabel('Relative Time,(s)','FontSize',8);
 
 
@@ -66,7 +55,7 @@ if ~check(c,'STA')
     chan = get(c,'CHAN');
     
     for i=1:get(c,'TRACES')
-       labels(i) = strcat( sta(i) , '_' , chan(i) );
+        labels(i) = strcat( sta(i) , '_' , chan(i) );
     end
     set( gca , 'YTick' , [1:1:get(c,'TRACES')] );
     set( gca , 'YTickLabel' , labels );

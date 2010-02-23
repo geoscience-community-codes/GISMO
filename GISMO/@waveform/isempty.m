@@ -19,4 +19,11 @@ if numel(w) == 0,
   TF = true; 
   return;
 end;
-TF = (get(w,'data_length') == 0) == 1;
+TF= false;
+for n=1:numel(w)
+    if ~isempty(w(n).data)
+        TF = true;
+        break
+    end
+end
+% originally: TF = (get(w,'data_length') == 0) == 1;

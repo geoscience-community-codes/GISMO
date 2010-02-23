@@ -55,21 +55,23 @@ Xc = conj(X);
 [MX,NX] = size(X);
 
 
-% TIME THE PROCESS
-starttime = now;
-tic;
-t0 = cputime;
-numcorr = ((length(d.trig))^2-length(d.trig))/2;
-count = 0;
+% TIME THE PROCESS  %(ALL timing seems unused - CR)
+%starttime = now;
+%tic;
+%t0 = cputime;
+%numcorr = ((length(d.trig))^2-length(d.trig))/2;
+%count = 0;
 
 
 % LOOP THROUGH ROWS OF SIMILARITY MATRIX
 for n = index
     cols = 1:N;
     % multiply fourier series and transform back to time domain
-    CC = (X(:,n) * ones(1,length(cols))) .* Xc(:,cols);
+    %CC = (X(:,n) * ones(1,length(cols))) .* Xc(:,cols);
+    CC = repmat(X(:,n),1,length(cols)) .* Xc(:,cols);
     corr = ifft(CC);
-    corr = [corr(end-M+2:end,:);corr(1:M,:)];
+    corr = corr([end-M+2,1:M],:);
+    %corr = [corr(end-M+2:end,:);corr(1:M,:)];
 
      % USE POLYNOMIAL INTERPOLATION
      [maxtest,indx1] = max(corr(2:end-1,:));

@@ -102,7 +102,11 @@ while numel(Vidx) >= 2
         error('Waveform:set:propertyTypeMismatch',...
           'Frequency should be numeric, not %s', class(val));
       end
-      [w.Fs] = deal(val(1));
+      if numel(w)==1
+          w.Fs = val(1);
+      else
+          [w.Fs] = deal(val(1));
+      end
       
     case {'START', 'START_MATLAB'}
       %AUTOMATICALLY figures out whether date is antelope or matlab
@@ -111,7 +115,11 @@ while numel(Vidx) >= 2
         error('Waveform:set:propertyTypeMismatch',...
           'Start time not assigned... Unknown value type: %s', class(val));
       end
-      [w.start] = deal(datenum(val));
+      if numel(w) == 1
+          w.start = datenum(val);
+      else
+          [w.start] = deal(datenum(val));
+      end
       
     case {'START_ANTELOPE', 'START_EPOCH'}
       if ~isnumeric(val),
@@ -125,7 +133,11 @@ while numel(Vidx) >= 2
         error('Waveform:set:propertyTypeMismatch',...
           'DATA should be numeric, not %s', class(val));
       end
-      [w.data] = deal(val(:)); %always a column
+      if numel(w) == 1
+          w.data = val(:);
+      else
+          [w.data] = deal(val(:)); %always a column
+      end
       
     case 'UNITS'
       if ~ischar(val)
