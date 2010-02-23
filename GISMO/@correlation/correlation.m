@@ -227,7 +227,7 @@ elseif isa(varargin{1},'datasource')
     
 %% DEMO DATASET
 elseif nargin==1 && strncmpi(varargin{1},'DEM',3)
-    load demo_data_100;
+    load demo_data_100; %stresstest
     
 %% OPEN HTML COOKBOOK
 elseif nargin==1 && strncmpi(varargin{1},'COO',3)

@@ -105,11 +105,11 @@ for n=1:numel(w)
     
    % display(['numel(newSampleTimes): ',num2str(numel(newSampleTimes))]);
     
-    w(n).data = interp1(...
+    w(n) = set(w(n),'data',interp1(...
         originalTimes,... original times (x)
         w(n).data,...              original data (y)
         newSampleTimes,...         new times (x1)
-        method);           %  method
+        method));           %  method
     w(n) = set(w(n),'start',newSampleTimes(1));    
     
 end

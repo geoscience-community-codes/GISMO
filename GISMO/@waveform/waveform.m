@@ -305,24 +305,24 @@ function w = genericWaveform()
 %create a fresh waveform.  All calls to the waveform object, aside
 %from the "copy" call (case nargin==1) will be initated HERE.
 %Thereafter, the waveform will be modified by set/get.
-THIS_VERSION = 1.2;
-DEFAULT_UNIT = 'Counts';
-DEFAULT_FREQ = nan;
-DEFAULT_CHAN = '';
-DEFAULT_STATION = '';
-DEFAULT_START = 719529; % which is equiv to datenum('1/1/1970');
-w.scnl = scnlobject(DEFAULT_STATION,DEFAULT_CHAN);
-w.Fs = DEFAULT_FREQ;
-w.start = DEFAULT_START;
+%THIS_VERSION = 1.2;
+%DEFAULT_UNIT = 'Counts';
+%DEFAULT_FREQ = nan;
+%DEFAULT_CHAN = '';
+%DEFAULT_STATION = '';
+%DEFAULT_START = 719529; % which is equiv to datenum('1/1/1970');
+w.scnl = scnlobject;%(DEFAULT_STATION,DEFAULT_CHAN);
+w.Fs = nan; 
+w.start = 719529;
 w.data = double([]);
-w.units = DEFAULT_UNIT; %units for data (nm? counts?)
-w.version = THIS_VERSION; %version of waveform object (internal)
+w.units = 'Counts'; %units for data (nm? counts?)
+w.version = 1.2; %version of waveform object (internal)
 w.misc_fields = {}; %add'l fields, such as "comments", or "trig"
 w.misc_values = {}; %values for these fields
-w.history = {};
+w.history = {'created', now};
 w = class(w, 'waveform');
 
-w = addhistory(w,'CREATED');
+%w = addhistory(w,'CREATED'); %got rid of "created" add-history.
 
 
 

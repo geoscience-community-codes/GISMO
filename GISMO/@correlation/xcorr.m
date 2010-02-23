@@ -80,7 +80,7 @@ if length(varargin)>1
 end;
 
     % CHECK ALGORITHM
-if length(varargin)>0
+if ~isempty(varargin)
     if ischar(varargin{end})
         algorithm = lower(varargin{end});
         varargin = varargin(1:end-1);
@@ -88,7 +88,7 @@ if length(varargin)>0
 end;
 
     % APPLY CROPPING
-if length(varargin)>0
+if ~isempty(varargin)
     if length(varargin{end})==2       % check for cropping values
         pretrig =  varargin{1}(1);
         posttrig = varargin{1}(2);
@@ -109,15 +109,16 @@ end;
 d.start = get(c1.W,'START_MATLAB');
 d.Fs    = get(c1.W(1),'Fs');
 d.trig  = c1.trig;
-d.w     = [];
-for i = 1:length(c1.W)
-    d.w(:,i) = get(c1.W(i),'DATA');
-end;
+d.w = double(c1.W);
+% d.w     = [];
+% for i = 1:length(c1.W)
+%     d.w(:,i) = get(c1.W(i),'DATA');
+% end;
 clear c1
 
 
 % EXECUTE CROSS CORRELATION
-if exist('pretrig') && exist('posttrig')
+if exist('pretrig','var') && exist('posttrig','var')
     disp(['using ' algorithm ' algorithm on the time interval [' num2str(pretrig) ' ' num2str(posttrig) '] ...' ]);
 else
     %disp(['using ' algorithm ' algorithm ...']);

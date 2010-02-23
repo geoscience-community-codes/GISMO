@@ -58,6 +58,7 @@ try
           'Forcing move to catch'); %force us to the catch section...
     end
     % simplest way of doing this
+    
         n = [W(:).data];
 catch %craps out if not all data lengths the same
 

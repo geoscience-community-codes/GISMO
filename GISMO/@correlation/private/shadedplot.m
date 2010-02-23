@@ -1,4 +1,4 @@
-function shadedplot(c,scale,ord);
+function shadedplot(c,scale,ord)
 
 % Private method. See ../plot for details.
 
@@ -16,9 +16,14 @@ box on; hold on;
 tmin =  999999;
 tmax = -999999;
 count = 0;
-for i = ord
-	wstartrel = 86400*(get(c.W(i),'START_MATLAB')-c.trig(i));	% relative start time (trigger is at zero)
-        tr = wstartrel + [ 0:get(c.W(i),'DATA_LENGTH')-1]'/get(c.W(i),'Fs'); 
+wstartrels = 86400 .* (get(c.W(ord),'START_MATLAB') - c.trig(ord));
+wlengths = get(c.W(ord),'DATA_LENGTH');
+wFs = get(c.W(ord),'Freq');
+
+for i = 1:numel(ord)
+	%wstartrel = 86400*(get(c.W(i),'START_MATLAB')-c.trig(i));	% relative start time (trigger is at zero)
+        %tr = wstartrel + [ 0:get(c.W(i),'DATA_LENGTH')-1]'/get(c.W(i),'Fs');      
+        tr = wstartrels(i) + [ 0:wlengths(i)-1]'/wFs(i); 
 
     % save min and max relative trace times
 	if tr(1) < tmin
@@ -31,22 +36,27 @@ end;
 
 
 % MAKE ALIGNED DATA MATRIX
-p = 1/get(c.W(1),'Fs');         % assumes all sampling periods are the same
-tmin = round(tmin*get(c.W(i),'Fs'))*p;      % round to nearest sample
-tmax = round(tmax*get(c.W(i),'Fs'))*p;
+%p = 1/get(c.W(1),'Fs');         % assumes all sampling periods are thesame
+p = 1/wFs(1);         % assumes all sampling periods are the same
+
+tmin = round(tmin*wFs(i))*p;      % round to nearest sample
+tmax = round(tmax*wFs(i))*p;
 N = 1:length(ord);
-T = [ tmin : p : tmax ];
+T =  tmin : p : tmax ;
 D = zeros(length(N),length(T));
 count = 0;
-for i = ord
+absmax = max(abs(c.W(ord)));
+absmax(absmax==0) = scale; %next line will be negated for zero-scale
+d = double(c.W(ord) .* (scale ./ absmax));
+for i = 1:numel(ord)
 	count = count + 1;
-    d = get(c.W(i),'DATA');            %%%d = c.w(:,i);
-    if (max(abs(d)) ~= 0)
-        d = scale * d/max(abs(d));		% apply a uniform amplitude scale;
-    end
-    wstartrel = 86400*(get(c.W(i),'START_MATLAB')-c.trig(i));	% relative start time (trigger is at zero)
-       [tmp,startindex] = min(abs(T-wstartrel));
-        D( count ,  startindex : (startindex+get(c.W(i),'DATA_LENGTH')-1) ) = d; 
+   %d = get(c.W(ord(i)),'DATA');            %%%d = c.w(:,i);
+    %if (max(abs(d)) ~= 0)
+    %    d = scale * d/max(abs(d));		% apply a uniform amplitude scale;
+    %end
+    % DONE ABOVE: wstartrel = 86400*(get(c.W(i),'START_MATLAB')-c.trig(i));	% relative start time (trigger is at zero)
+       [tmp,startindex] = min(abs(T-wstartrels(i)));
+        D( count ,  startindex : (startindex+wlengths(i)-1) ) = d(:,i); 
 end;
 imagesc(T,N,D);
 
@@ -75,10 +85,10 @@ colormap(cmap);
 if ~check(c,'STA')
     sta  = get(c,'STA');
     chan = get(c,'CHAN');
-    
-    for i=1:get(c,'TRACES')
-       labels(i) = strcat( sta(i) , '_' , chan(i) );
-    end
+    labels = strcat(sta,'_', chan);
+%     for i=1:get(c,'TRACES')
+%        labels(i) = strcat( sta(i) , '_' , chan(i) );
+%     end
     set( gca , 'YTick' , [1:1:get(c,'TRACES')] );
     set( gca , 'YTickLabel' , labels );
 end
