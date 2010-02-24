@@ -96,7 +96,9 @@ closestStartTime = existingStarts - rem(deltaTime,timeStep);
 for n=1:numel(w)    
     %disp(n)
     originalTimes = get(w(n),'timevector');
-    newSampleTimes = closestStartTime(n):timeStep:existingEnds(n);
+    %newSampleTimes MUST Be in a Single Column, else the DATA field becomes
+    %corrupt.
+    newSampleTimes = [closestStartTime(n):timeStep:existingEnds(n)]';
   
     %get rid of samples that lay entirely outside the existing waveform's
     %range (ie, only interpolate values BETWEEN points)
@@ -104,16 +106,16 @@ for n=1:numel(w)
         newSampleTimes > originalTimes(end)) = [];
     
    % display(['numel(newSampleTimes): ',num2str(numel(newSampleTimes))]);
-    
-    w(n) = set(w(n),'data',interp1(...
+
+    w(n).data = interp1(...
         originalTimes,... original times (x)
         w(n).data,...              original data (y)
         newSampleTimes,...         new times (x1)
-        method));           %  method
-    w(n) = set(w(n),'start',newSampleTimes(1));    
+        method);           %  method
+    w(n).start = newSampleTimes(1);  % assumes matlab number formatted time
     
 end
-w = set(w,'freq',newFrequency);
+w = set(w,'freq',newFrequency,'nohist');
 
 %% update histories
 % if all waves were aligned to the same time, then handle all history here

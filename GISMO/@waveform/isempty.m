@@ -13,16 +13,13 @@ function TF = isempty(w)
 % LASTUPDATE: 2/6/2007
 
 
-%If waveforms have no data, first comparison is false (false == 0, too)
-%second (outside) comparison makes sure that all waveforms contain no data
-if numel(w) == 0, 
-  TF = true; 
-  return;
-end;
-TF= false;
+%this rewrite short-circuits the check if any waveform is found that has no
+%data.
+
+TF = true;
 for n=1:numel(w)
     if ~isempty(w(n).data)
-        TF = true;
+        TF = false;
         break
     end
 end

@@ -98,10 +98,10 @@ if (mean(pretrig)~=pretrig(1)) || (mean(posttrig)~=posttrig(1))
     c1 = crop(c1,pretrig(1),posttrig(1)); %should all have same pre & post
 end
 
-
+toSubtract = get(c1.W(I),'Data'); %this trace will be subtracted from all
 for i = 1:length(c.trig)
     %c.W(i) = minus( c1.W(i) , c1.W(I) );
-    d = get(c1.W(i),'Data') - get(c1.W(I),'Data');
+    d = get(c1.W(i),'Data') - toSubtract;
     c.W(i) = set( c.W(i) , 'Data' , d);
     c.trig(i) = c1.trig(i);
 end
