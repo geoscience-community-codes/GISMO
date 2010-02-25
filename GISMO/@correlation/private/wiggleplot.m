@@ -19,7 +19,7 @@ lengths = get(c.W(ord),'data_length');
 tr = nan(max(lengths),numel(ord)); %pre allocate with nan to not plot
 abs_max =  max(abs(c.W(ord)));
 for count = 1:numel(ord)
-    tr(1:lengths(count),ord(count)) = ...
+    tr(1:lengths(count),count) = ...
         wstartrel(count) + [ 0:lengths(count)-1]'/freq(count);
 end;
 
