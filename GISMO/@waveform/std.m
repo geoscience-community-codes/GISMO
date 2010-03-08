@@ -16,13 +16,33 @@ function Y = std(w,flag)
 
 Y = zeros(size(w));
 
-if (exist('flag','var') && (flag == 1))
-    for n = 1:numel(Y)
-        Y(n) = nanstd(w(n).data,1);
+%if the statistics toolbox is installed, use the builtin nanstd function to
+%ignore NaN values during the variance calculation.
+if ~isempty(ver('stats'))
+    if (exist('flag','var') && (flag == 1))
+        for n = 1:numel(Y)
+            Y(n) = nanstd(w(n).data,1);
+        end
+    else
+        for n = 1:numel(Y)
+            Y(n) = nanstd(w(n).data);
+        end
     end
+    
 else
-    for n = 1:numel(Y)
-        Y(n) = nanstd(w(n).data);
+    % the statistics toolbox is not installed, so any nan values will have
+    % to be dealt with (ignored) manually.
+    if (exist('flag','var') && (flag == 1))
+        for n = 1:numel(Y)
+            d = w(n).data;
+            %d = d(~isnan(d));
+            Y(n) = std(d(~isnan(d)),1);
+        end
+    else
+        for n = 1:numel(Y)
+            d = w(n).data;
+            %d = d(~isnan(d));
+            Y(n) = std(d(~isnan(d)));
+        end
     end
 end
-        

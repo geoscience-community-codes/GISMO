@@ -8,7 +8,7 @@ function y = mean(w)
 %
 %   Output
 %       Y: array of same size as WAVEFORM, with each element corresponding
-%          to the mean value of the matching waveform 
+%          to the mean value of the matching waveform
 %
 %   NOTE: Values of NaN are ignored.
 %
@@ -19,6 +19,20 @@ function y = mean(w)
 % $Revision$
 
 y = nan(size(w));
-for I = 1 : numel(w);
+% if the statistics toolbox is installed, use the builtin nanmean function
+% to ignore NaN values during the variance calculation.
+if ~isempty(ver('stats'))
+    for I = 1 : numel(w);
         y(I) = nanmean( w(I).data );
+    end
+else
+    % the statistics toolbox is not installed, so any nan values will have
+    % to be dealt with (ignored) manually.
+    for I = 1 : numel(w);
+        d = w(I).data;
+        d = d(~isnan(d)); %ignore NaN values
+        if ~isempty(d)
+            y(I) = mean( d );
+        end
+    end
 end
