@@ -19,7 +19,7 @@ WAVEFORM_HISTORY = false;
 
 w = w - m;
 m = strcat('mean removed: ', num2str(m(:)));
-%WAVEFORM_HISTORY = wh;
+WAVEFORM_HISTORY = wh;
 
 for n=1:numel(w)
     % w(n) = addhistory(w(n),'mean removed: %s',num2str(m(n)));
