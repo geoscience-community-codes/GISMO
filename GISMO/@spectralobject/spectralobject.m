@@ -29,7 +29,7 @@ switch nargin
         s.over = s.nfft * 0.8;
         s.freqmax = 8; %
         s.dBlims = Default_lims;
-        s.scaling = 'm';
+        s.scaling = 's';
         s = class(s, 'spectralobject');
     case 1
         if isa(anyV, 'spectralobject')

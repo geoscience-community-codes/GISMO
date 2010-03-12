@@ -93,6 +93,7 @@ end
 
 [isfound,useAutoscale,proplist] = getproperty('autoscale',proplist,false);
 [isfound,xunit,proplist] = getproperty('xunit',proplist,'s');
+[isfound,currFontSize,proplist] = getproperty('fontsize',proplist,8);
 
 [xunit, xfactor] = parse_xunit(xunit);
 
@@ -163,22 +164,30 @@ if useAutoscale
   yunit = autoscale(h, yunit);
 end
 
-ylabel(yunit);
+yh = ylabel(yunit,'fontsize',currFontSize);
 
-xlabel(xunit);
+xh = xlabel(xunit,'fontsize',currFontSize);
 switch lower(xunit)
   case 'date'
     datetick('keepticks','keeplimits');
 end
 if isscalar(w)
-  title(sprintf('%s (%s) - starting %s',...
+  th = title(sprintf('%s (%s) - starting %s',...
     get(w,'station'),get(w,'channel'),get(w,'start_str')));
 else
-  title(sprintf('Multiple waves.  wave(1) = %s (%s) - starting %s',...
+  th = title(sprintf('Multiple waves.  wave(1) = %s (%s) - starting %s',...
     get(w(1),'station'),get(w(1),'channel'),get(w(1),'start_str')));
 end;
-
+set(th,'fontsize',currFontSize);
 %% return the graphics handles if desired
-if nargout == 1,
+if nargout >= 1,
   varargout(1) = {h};
+end
+
+% return additional information in a structure: when varargout ==2
+plothandles.title = th;
+plothandles.xunits = xh;
+plothandles.yunits = yh;
+if nargout ==2,
+    varargout(2) = {plothandles};
 end

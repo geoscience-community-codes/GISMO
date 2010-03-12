@@ -4,8 +4,8 @@ function [unitName, secondMultiplier] = parse_xunit(unitName)
 % [unitName, secondMultiplier] = parse_xunit(unitName)
 
 % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date$
-% $Revision$
+% $Date: 2010-02-11 16:11:49 -0900 (Thu, 11 Feb 2010) $
+% $Revision: 193 $
 
 mins = 60;
 hrs = 3600;

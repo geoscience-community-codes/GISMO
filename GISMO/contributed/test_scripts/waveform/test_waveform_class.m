@@ -197,7 +197,6 @@ results.demean = all(double(demean(A)) == (Ad - mean(Ad)));
 
 % WAVEFORM/HILBERT
 results.hilbert = all(double(hilbert(A)) == abs(hilbert(Ad)));
-A, B
 % WAVEFORM/FIX_DATA_LENGTH
 results.fix_data_length = ...
     get(fix_data_length(A, 5001),'data_length') == 5001 &&...

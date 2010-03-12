@@ -41,6 +41,7 @@ function h = specgram(s, ws, varargin)
 
 global SPECTRAL_MAP
 
+currFontSize = 8;
 %enforce input arguments.
 if ~isa(ws,'waveform')
     error('Second input argument should be a waveform, not a %s',class(ws));
@@ -61,7 +62,10 @@ else
 end
 
 [isfound, xChoice, proplist] =...
-    getproperty('xunit',proplist,'s'); %'s' is default value for xChoice
+    getproperty('xunit',proplist,s.scaling); %'s' is default value for xChoice
+
+[isfound, currFontSize, proplist] =...
+    getproperty('fontsize',proplist,currFontSize);%default font size or override?
 
 %%take care of additional parsing that affects all waveforms
 
@@ -77,12 +81,16 @@ logscale = strcmp(yscale,'log');
 %[isfound,colorbarpref,proplist] = getproperty('colorbar',proplist,'horiz');
 
 %%
+if numel(ws) > 1
+    allh = subdivide_axes(gca,size(ws));
+else
+    allh=gca;
+end
+
 for j = 1:numel(ws) %added to handle arrays and vectors of waveforms
-    if numel(ws) > 1
-        subplot(size(ws,1),size(ws,2),j);
-    end
+    axes(allh(j));
     
-    if any(isnan(double(ws)))
+    if any(isnan(double(ws(j))))
         warning('Spectralobject:specgram:nanValue',...
             ['This waveform has at least one NaN value, which will blank',...
             'the related spectrogram segment. ',...
@@ -93,7 +101,7 @@ for j = 1:numel(ws) %added to handle arrays and vectors of waveforms
     
     w = ws(j);
     
-    [xfactor, xunit] = xscaling(xChoice,(get(w,'freq')));
+    [xunit, xfactor] = parse_xunit(xChoice);
     
     switch lower(xunit)
         case 'date'
@@ -208,13 +216,15 @@ for j = 1:numel(ws) %added to handle arrays and vectors of waveforms
     else
         h = imagesc(Xvalues,F,y(nf1:length(F),:),s.dBlims);
     end
-    set(gca,'fontsize',8);
+    set(gca,'fontsize',currFontSize);
     if strcmpi(xunit,'date')
         datetick('x','keepticks');
     end
     %       colorbar_axis(dBlims,'horiz',clabel)
     titlename = [get(w,'Station') '-' get(w,'component') '  from:' get(w,'start_Str')];
+    %th = 
     title (titlename);
+    %set(th,'fontsize',currFontSize)
     axis xy;
     
     colormap(alternateMap);
@@ -222,33 +232,40 @@ for j = 1:numel(ws) %added to handle arrays and vectors of waveforms
     shading flat
     
     axis tight;
+    [thisr, thisc] = ind2sub(size(ws),j);
+    isFirstCol = thisc == 1;
+    if isFirstCol
     ylabel ('Frequency (Hz)')
-    xlabel(['Time - ',xunit])
+    end
+    isBottomrow = thisr==size(ws,1);
+    if isBottomrow
+        xlabel(['Time - ',xunit]);
+    end
     
     % colorbar_axis(s.dBlims,colorbarpref,clabel)
 end;
 %% local parameter stuff
-function [xfactor, xunit] = xscaling(xChoice, freq)
-
-secs = 1;
-mins = 60;
-hrs = 3600;
-days = 3600*24;
-
-switch lower(xChoice)
-    case {'m','minutes'},
-        xunit = 'Minutes';      xfactor = mins;
-    case {'h','hours'},
-        xunit = 'Hours';        xfactor = hrs;
-    case {'d','days'},
-        xunit = 'Days';         xfactor = days;
-    case {'doy','day_of_year'},
-        xunit = 'Day of Year';  xfactor = days;
-    case 'date',
-        xunit = 'Date';         xfactor = 1 / freq;
-    otherwise,
-        xunit = 'Seconds';      xfactor = secs;
-end
+% function [xfactor, xunit] = xscaling(xChoice, freq)
+% 
+% secs = 1;
+% mins = 60;
+% hrs = 3600;
+% days = 3600*24;
+% 
+% switch lower(xChoice)
+%     case {'m','minutes'},
+%         xunit = 'Minutes';      xfactor = mins;
+%     case {'h','hours'},
+%         xunit = 'Hours';        xfactor = hrs;
+%     case {'d','days'},
+%         xunit = 'Days';         xfactor = days;
+%     case {'doy','day_of_year'},
+%         xunit = 'Day of Year';  xfactor = days;
+%     case 'date',
+%         xunit = 'Date';         xfactor = 1 / freq;
+%     otherwise,
+%         xunit = 'Seconds';      xfactor = secs;
+% end
 
 %% added a series of functions that help with argument parsing.
 % These were ported from my waveform/plot function.

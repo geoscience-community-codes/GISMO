@@ -1,5 +1,5 @@
 
-function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2)
+function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)
 % COLORBAR - Display color bar (color scale).
 %
 %   This function differs from colorbar(loc,clabel,rlab1,rlab2) in that 
@@ -33,8 +33,10 @@ function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2)
 
 %return
 
-set (gca, 'FontSize', 10)
-
+%set (gca, 'FontSize', 8)
+if ~exist('fontsize','var')
+    fontsize = 8;
+end;
 if nargin<1, 
   echo ' Error:  vector of plot-axis limits required'
   echo '         else,  use: '
@@ -113,7 +115,7 @@ end
 if strcmp(get(gcf,'NextPlot'),'replace'),
   set(gcf,'NextPlot','add')
 end
-
+set(gca,'FontSize',fontsize);
 fsize=get(gca,'FontSize');          %get fontsize and shift if>16
 %vshift=0;
 %if fsize>16, vshift=.25; end
@@ -141,7 +143,7 @@ if loc(1)=='v',        % Append VERTICAL scale to right of current plot
   image([0 1],t,[1:n]'); set(ax,'Ydir','normal')
 
   if nargin>2,
-    set(ax,'ylabel',text(0,0,clabel, 'FontSize', 10));
+    set(ax,'ylabel',text(0,0,clabel, 'FontSize', fontsize));
   end
 
   xpos = get(ax,'Xlim');
@@ -271,9 +273,9 @@ else            % Append HORIZONTAL scale to bottom of current plot
   set(ax,'yticklabelmode','manual')
   set(ax,'yticklabel','')
 
-set (gca, 'FontSize', 10)
+set (gca, 'FontSize', fontsize)  %This sets the font size
   if nargin>2,
-   set(ax,'xlabel',text(0,0,clabel, 'FontSize', 10));
+   set(ax,'xlabel',text(0,0,clabel, 'FontSize', fontsize));
   end
 
   xpos = get(ax,'Xlim');
