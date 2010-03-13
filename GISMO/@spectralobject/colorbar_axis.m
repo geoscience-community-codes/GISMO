@@ -27,9 +27,9 @@ function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)
 %
 %
 
-% VERSION: 1.0 of spectralobject
-% AUTHOR: MatWorks?  modified by Someone (Guy Tytgat?), then Celso Reyes
-% LASTUPDATE: 1/30/2007
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
 
 %return
 
@@ -130,7 +130,7 @@ if loc(1)=='v',        % Append VERTICAL scale to right of current plot
     [az,el] = view;
     if all([az,el]==[0 90]), space = 0.05; else space = .1; end
     set(h,'Position',[pos(1) pos(2) pos(3)*(1-stripe-edge-space) pos(4)])
-    rect = [pos(1)+(1-stripe-edge)*pos(3) pos(2) stripe*pos(3)*.5* pos(4)];
+    rect = [pos(1)+(1-stripe-edge)*pos(3) pos(2) stripe*pos(3)*.5 pos(4)];
 
     % Create axes for stripe
     ax = axes('Position', rect);
@@ -159,9 +159,9 @@ if loc(1)=='v',        % Append VERTICAL scale to right of current plot
       text(xpos(1)-xshift,ypos(2)+yshift,0.,rlab2);
     end
   end
-  d=date;
+  %d=date;
   yshift=.12*(ypos(2)-ypos(1));
-  text(xpos(1)+2.0,ypos(1)-yshift,0.,d)
+%  text(xpos(1)+2.0,ypos(1)-yshift,0.,d)
 
   % Create color axis
   ylim = get(ax,'ylim');   % Note: axis ticlabel range will be truncated
@@ -173,6 +173,8 @@ if loc(1)=='v',        % Append VERTICAL scale to right of current plot
   yticks = get(ax,'ytick');
   ylabels = get(ax,'yticklabel');
   labels = []; width = [];
+  
+set (gca, 'FontSize', fontsize)  %This sets the font size
   for i=1:length(yticks),
     labels = [labels;text(1+0*xspace,yticks(i),deblank(ylabels(i,:)), ...
          'HorizontalAlignment','right', ...
@@ -180,8 +182,6 @@ if loc(1)=='v',        % Append VERTICAL scale to right of current plot
          'FontName',get(ax,'FontName'), ...
          'FontSize',get(ax,'FontSize'), ...
          'FontAngle',get(ax,'FontAngle'), ...
-         'FontStrikeThrough',get(ax,'FontStrikeThrough'), ...
-         'FontUnderline',get(ax,'FontUnderline'), ...
          'FontWeight',get(ax,'FontWeight'))];
     width = [width;get(labels(i),'Extent')];
   end
@@ -202,22 +202,19 @@ if loc(1)=='v',        % Append VERTICAL scale to right of current plot
          'FontName',get(ax,'FontName'), ...
          'FontSize',get(ax,'FontSize'), ...
          'FontAngle',get(ax,'FontAngle'), ...
-         'FontStrikeThrough',get(ax,'FontStrikeThrough'), ...
-         'FontUnderline',get(ax,'FontUnderline'), ...
          'FontWeight',get(ax,'FontWeight'));
     width = get(l,'Extent');
     text(width(3)-xspace,ylim(2)+3.2*yspace,num2str(ex), ...
          'FontName',get(ax,'ExpFontName'), ...
          'FontSize',get(ax,'ExpFontSize'), ...
          'FontAngle',get(ax,'ExpFontAngle'), ...
-         'FontStrikeThrough',get(ax,'ExpFontStrikeThrough'), ...
-         'FontUnderline',get(ax,'ExpFontUnderline'), ...
          'FontWeight',get(ax,'ExpFontWeight'));
   end
 
   set(ax,'yticklabelmode','manual','yticklabel','')
   set(ax,'xticklabelmode','manual','xticklabel','')
 
+%set(gca,'ytick',[])
 %------------------------------------------------------------------------
 %------------------------------------------------------------------------
 else            % Append HORIZONTAL scale to bottom of current plot
@@ -293,6 +290,8 @@ set (gca, 'FontSize', fontsize)  %This sets the font size
   d=date;
   xshift=.15*(xpos(2)-xpos(1));
 %  text(xpos(1)-xshift,ypos(1)-3.5,0.,d)
+
+%set(gca,'xtick',[])
 end
 %------------------------------------------------------------------------
 %------------------------------------------------------------------------

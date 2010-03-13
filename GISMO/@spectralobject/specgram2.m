@@ -1,36 +1,80 @@
 function specgram2(s, ws, varargin)
-%SPECGRAM2 - plots spectrogram of waveforms with waveform along top
+%SPECGRAM2 - plots spectrograms of waveforms with waveform along top
+%  h = specgram2(spectralobject, waveforms) generates a spectrogram from
+%  the waveform(s), overwriting the current figure.  The waveform will be
+%  displayed along the top of the spectrogram. The return value is a handle
+%  to the spectrogram, and is optional.
 %
-%      USAGE: specgram2(spectralobject, waveform, [parametername,parameterval],...,'axis',ax);
+%  The spectrograms will be created in the same shape as the passed
+%  waveforms.  ie, if W is a 2x3 matrix of waveforms, then
+%  specgram2(spectralobject,W) will generate a 2x3 plot of spectra. 
 %
-%      NOTE, usage has changed 11/27/2008.
-%      to clear the figure, use specgram2(spectralobject,waveform)
-%      to specify an axis, use specgram2(spectralobject,waveform,'axis',gca)
-%         --- instead of gca, you could pass any axis handle
-%      What works best is to set your current axis BEFORE using specgram2.
+%  Many additional behaviors can be modified through the passing of
+%  additional parameters, as listed further below.  These parameters are
+%  always passed in pairs, as such:
 %
-%      if you want to plot over the same axis, first define your axis, then
-%      use a command like axish = get(gca,'position') to keep track of where
-%      you are... then you can set your current axis back to axis(axish)
-%      before calling specgram2.
+%  specgram2(spectralobject, waveforms,'PARAM1',VALUE1,...,'PARAMn',VALUEn)
+%    Any number of these parameters may be passed to specgram2.
+% 
+%  specgram2(..., 'axis', AXIS_HANDLE)
+%    Specify the axis AXIS_HANDLE within which the spectrogram will be
+%    generated.  The boundary of the axis becomes the boundary for the
+%    entire spectra plot.  For a matrix of waveforms, this area is
+%    subdivided into NxM subplots, where N and M are the size of the
+%    waveform matrix.
 %
-%      A specific position can be specified with the parameter pair
-%      'position',[left,bottom,width,height]
+%  specgram2(..., 'xunit', XUNIT)
+%    Spedifies the x-unit scale to be used with the spectrogram.  The
+%    default unit is 'seconds'.  
+%    valid xunits:
+%     'seconds','minutes','hours','days','doy' (day of year),and 'date' 
 %
-%      Default values are NYQ = 50, nfft = 256, over = nfft/2 and
-%      freqmax = NYQ.  If you prefer not to input the specific dB limits,
-%      it will scale for you.
+%  specgram2(..., 'colormap', ALTERNATEMAP)
+%    Instead of using the default colormap, any colormap may be used.  An
+%    alternate way of setting the global map is by using the SETMAP
+%    function.  ALTERNATEMAP will either be a name (eg. grayscale) or an
+%    Nx3 numeric. Type HELP GRAPH3D to see additional useful colormaps.
 %
-%      Can either specify 'axis', or 'position'
-%      with 'axis', pass it an axis handle.
-%      with 'position', pass it [left,bottom,width,height]
 %
-%      The colormap I use is "spectral.map", but can be changed with SETMAP.
+%  specgram2(..., 'colorbar', COLORBAR_OPTION)
+%    Generates a spectrogram from the waveform and uses a specific map
+%    valid COLORBAR_OPTION values: 'horiz' (default),'vert','none',
+%      'HORIZ' places a single colorbar below all plots
+%      'VERT' places a single colorbar to the right of all plots 
+%      'NONE' supresses the colorbar placement 
 %
-%      Example:
-%      % create an arbitrary subplot, and then plot multiple spectra
-%      a = subplot(3,2,1);
-%      specgram2(spectralobject,waves,'axis',a); % waves is an NxM waveform
+%  specgram2(..., 'yscale', YSCALE)
+%    Choosing 'log' Allows the y-axis to be generated on a log-frequency
+%    scale, with uneven vertical cell spacing.  The default value is
+%    'normal', and provides the standard spectrogram view.
+%    valid yscales: 'normal', 'log' (see NOTE below)
+%
+%    NOTE: In order to use the log scale, UIMAGESC needs to be available on
+%    the matlab path.  This routine was created by Frederic Moisy, and may
+%    be downloaded from the maltabcentral fileexchange (File ID: 11368).
+%    If this routine is not found,then the original spectrogram will be
+%    created.
+%
+%  specgram2(..., 'fontsize', FONTSIZE)
+%    Specify the font size for a spectrogram.  The default font size is 8.
+%
+%  specgram2(..., 'innerLabels', SHOWINNERLABELS)
+%    Suppress the labling of the inside graphs by setting SHOWINNERLABELS
+%    to false.  If this is false, then the frequency label only shows on
+%    the leftmost spectrograms, and the X-unit label only shows on the
+%    bottommost spectrograms.
+%
+%  Example 1:
+%    % The following plots a waveform using an alternate mapping, an xunit of
+%    % of 'hours', and with the y-axis plotted using a log scale.
+%    specgram2(spectralobject, waveform,...
+%      'colormap', alternateMap,'xunit','h','yscale','log')
+%
+%
+%  Example 2:
+%    % create an arbitrary subplot, and then plot multiple spectra
+%    a = subplot(3,2,1);
+%    specgram2(spectralobject,waves,'axis',a); % waves is an NxM waveform
 %
 %   See also SPECTRALOBJECT/SPECGRAM
 
@@ -38,18 +82,10 @@ function specgram2(s, ws, varargin)
 % $Date$
 % $Revision$
 
-
-
-%enforce input arguments.
+%% enforce input arguments.
 if ~isa(ws,'waveform')
     error('Spectralobject:specgram2:invalidArgument',...
         'Second input argument should be a waveform, not a %s',class(ws));
-end
-
-if numel(ws) > 1
-    %h = subdivide_axes();
-%    error('Spectralobject:specgram2:tooManyWaveforms',...
- %       'specgram2 can only be used with individual waveforms, but was handed a waveform with %d elements. Either use SPECGRAM, or loop thorugh waveforms.',numel(ws));
 end
 
 hasExtraArg = mod(numel(varargin),2);
@@ -63,21 +99,43 @@ else
     proplist=  parseargs(varargin);
 end
 
+%% search for relevent property pairs passed as parameters
+
+% AXIS: a handle to the axis, defining the area to be used
 [isfound,myaxis,proplist] = getproperty('axis',proplist,0);
+
+% POSITION: 1x4 vector, specifying area in which to plot
+%          [left, bottom, width, height]
 [isfound,mypos,proplist] = getproperty('position',proplist,[]);
 
+% COLORBAR: Dictate the position of the colorbart relative to the plot
 [isfound,colorbarpref,proplist] = getproperty('colorbar',proplist,'horiz');
 
-
+% XUNIT: Specify the time units for the plot.  eg, hours, minutes, doy, etc.
 [isfound, xChoice, proplist] =...
-    getproperty('xunit',proplist,s.scaling); %'s' is default value for xChoice
+    getproperty('xunit',proplist,s.scaling);
 
-
+% FONTSIZE: specify the font size to be used for all labels within the plot
 [isfound, currFontSize, proplist] =...
-    getproperty('fontsize',proplist,8) %default font size or override?
+    getproperty('fontsize',proplist,8); %default font size or override?
 
-%find out area we've got to work in
-left=1; bottom=2; width=3; height=4;
+% YSCALE: either 'normal', or 'log'
+[isfound, yscale, proplist] = ...
+    getproperty('yscale',proplist,'normal'); %default yscale to 'normal'
+
+% SUPRESSINNERLABELS: true, false
+[isfound, suppressLabels, proplist] = ...
+    getproperty('innerlabels',proplist,false); %only show outside
+
+% SUPRESSXLABELS: true, false
+[isfound, useXlabel, proplist] = ...
+    getproperty('useXlabel',proplist,true); %show no x, y labels
+% SUPRESSXLABELS: true, false
+[isfound, useYlabel, proplist] = ...
+    getproperty('useYlabel',proplist,true); %show no x, y labels
+
+%% figure out exactly WHERE to plot the spectrogram(s)
+%find out area(axis) in which the spectrograms will be plotted
 clabel= 'Relative Amplitude  (dB)';
 
 if myaxis == 0,
@@ -89,35 +147,83 @@ end
 if ~isempty(mypos) %position
     pos = myaxis;
 end
-%myaxis
+
+left = pos(1); bottom=pos(2); width=pos(3); height=pos(4);
+
+%% If there are multiple waveforms...
+% subdivide the axis and loop through specgram2 with individual waveforms.
+
 if numel(ws) > 1
-    if myaxis== 0, myaxis = gca; end
-    h = subdivide_axes(myaxis,size(ws));
-    for n=1:numel(h)
-        specgram2(s,ws(n),'xunit',xChoice,'axis',h(n),'fontsize',currFontSize);
+    if myaxis== 0, 
+        myaxis = gca; 
     end
-    return
-end
-wavepos = [ pos(left), pos(bottom)+pos(height)*0.85,  pos(width) , pos(height) * 0.15] ;
-specpos = [ pos(left), pos(bottom), pos(width), pos(height) * 0.85 ];
-subplot('position',wavepos);
-[hpp] = plot(ws,'xunit',xChoice,'autoscale',true,'fontsize',currFontSize);
-set(gca,'fontsize',currFontSize);
-%set(gca,'xticklabel',[]);
-%xlabel('');
-set(gca,'fontsize',currFontSize);
-axis tight;
-ticnos = get(gca,'xtick');
-subplot('position',specpos);
-specgram(s,ws,'xunit',xChoice,'fontsize',currFontSize,varargin{:});
-set(gca,'xtick',ticnos);
-title('','fontsize',currFontSize);
+%create the colorbar if desired
 if ~strcmpi(colorbarpref,'none')
     hbar = colorbar_axis(s,colorbarpref,clabel,'','',currFontSize);
     set(hbar,'fontsize',currFontSize)
 end
 
-%%
+    h = subdivide_axes(myaxis,size(ws));
+    remainingproperties = property2varargin(proplist);
+    for n=1:numel(h)
+        keepYlabel =  ~suppressLabels || (n <= size(h,1));
+        keepXlabel = ~suppressLabels || (mod(n,size(h,2))==0);
+        specgram2(s,ws(n),...
+            'xunit',xChoice,...
+            'axis',h(n),...
+            'fontsize',currFontSize,...
+            'useXlabel',keepXlabel,...
+            'useYlabel',keepYlabel,...
+            'colorbar','none',...
+            remainingproperties{:});
+        
+    end
+    return
+end
+
+%% Plot the spectrogram with a wiggle on top and colorbar below
+
+% Define the area for both the wiggle and spectra
+wavepos = [ left, bottom + height * 0.85,  width , height * 0.15] ;
+specpos = [ left, bottom, width, height * 0.85 ];
+
+%plot the wiggle
+subplot('position',wavepos);
+plot(ws,'xunit',xChoice,'autoscale',true,'fontsize',currFontSize);
+
+% make the axis tight, and keep axis info for later use with spectra
+axis tight;
+xAxisLims = get(gca,'xlim');
+ticnos = get(gca,'xtick');
+
+%plot the spectra
+a = subplot('position',specpos);
+specgram(s,ws,...
+    'xunit',xChoice,...
+    'fontsize',currFontSize,...
+    'yscale',yscale,...
+    'colorbar','none',...
+    'axis',a,...
+    'suppressXlabel',useXlabel,...
+    'suppressYlabel',useYlabel,...
+    varargin{:});
+
+%make the axis match exactly with the waveform above
+set(gca,'xtick',ticnos);
+if ~strcmpi(yscale,'log')
+    % axis scaling doesn't work quite right at a log scale
+    xlim(xAxisLims);
+end
+
+title(''); %clear the title
+
+%create the colorbar if desired
+if ~strcmpi(colorbarpref,'none')
+    hbar = colorbar_axis(s,colorbarpref,clabel,'','',currFontSize);
+    set(hbar,'fontsize',currFontSize)
+end
+
+
 function [properties] = parseargs(arglist)
 % parse the incoming arguments, returning a cell with each parameter name
 % as well as a cell for each parameter value pair.  parseargs will also

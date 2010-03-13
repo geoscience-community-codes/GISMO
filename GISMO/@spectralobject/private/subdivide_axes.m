@@ -13,6 +13,9 @@ function sub_h = subdivide_axes(h,sizes)
 % axis h is cleared, then subaxes are created.  This function returns an
 % NxM array of handles to the subaxes.
 
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date: 2010-03-11 17:29:30 -0900 (Thu, 11 Mar 2010) $
+% $Revision: 226 $
 
 rect = get(h,'position');
 nCol = sizes(2);
@@ -44,7 +47,7 @@ delete(h);
 sub_h = zeros(nRow,nCol);
 for c = 1:nCol
     for r = 1:nRow
-        sub_h(r,c) = axes('position',...
+        sub_h(r,c) = subplot('position',...
             [left(c) bottom(r) newMaxWidth newMaxHeight]);
     end
 end

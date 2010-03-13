@@ -179,6 +179,7 @@ else
     get(w(1),'station'),get(w(1),'channel'),get(w(1),'start_str')));
 end;
 set(th,'fontsize',currFontSize);
+set(gca,'fontsize',currFontSize);
 %% return the graphics handles if desired
 if nargout >= 1,
   varargout(1) = {h};
