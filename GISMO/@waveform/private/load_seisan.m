@@ -14,7 +14,7 @@ if bytesToRead ~= 80
   fclose(fid);
   MACHINEFORMAT = 'b';
   %disp('Switching to Big Endian');
-  fid = fopen(fn{1},'r',MACHINEFORMAT);
+  fid = fopen(fn,'r',MACHINEFORMAT);
   bytesToRead = fread(fid,1,'uint32');
   if bytesToRead ~= 80
     

@@ -5,7 +5,7 @@ function results = test_waveform_class
 lasterror('reset')
 totest = {... constructor methods
     'constructor_default','constructor_manual','constructor_copy'...
-    'read_antelope','read_antelope_altDB',...
+    'read_antelope','read_antelope_altDB','read_sac',...
     'read_winston_avopub','read_winston_avofbx',...
     ... get functions
     'get', 'getm',...
@@ -327,6 +327,26 @@ catch exception
     disp(exception)
     results.loadobj_v1_1 = false;
 end
+
+%% try loading a sac file 
+% station: BYR, chan: BHZ_01, 2000/7/14 13:40 ~10 seconds
+dsac = datasource('sac','example_sacfile.sac');
+scnlSac(1) = scnlobject('*','*','*','*');
+scnlSac(2) = scnlobject('BYR','BHZ_01','*','*');
+sacwave = loadsac(waveform,'example_sacfile.sac');
+try
+results.load_sac  = get(sacwave,'data_length')==500 &&...
+    get(sacwave,'NZYEAR') == 2000 &&...
+    get(sacwave,'start') == datenum('2000-07-14 13:40:00.006');
+catch
+    disp('unable to check sac');
+    %unsuccesful
+end
+sacwave = waveform(dsac,scnlSac(1),'7/14/2000','7/15/2000');
+results.read_sac = get(sacwave,'data_length')==500 &&...
+    get(sacwave,'NZYEAR') == 2000 &&...
+    get(sacwave,'start') == datenum('2000-07-14 13:40:00.006');
+
 
 %% try saving and loading current version
 tmp_name = [tempname , '.mat'];
