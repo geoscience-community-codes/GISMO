@@ -19,7 +19,7 @@ function varargout = uispecgram(varargin)
 %
 % Edit the above text to modify the response to help uispecgram
 
-% Last Modified by GUIDE v2.5 06-May-2009 17:11:10
+% Last Modified by GUIDE v2.5 13-Mar-2010 15:24:21
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -88,8 +88,11 @@ if strcmp(get(hObject,'Visible'),'off')
   axis tight
   
   %draw the spectrogram
-  axes(handles.axes_specgram);
-  specgram(userData.spec,userData.wave);
+  %   axes(handles.axes_specgram);
+  specgram(userData.spec,userData.wave,...
+      'axis',handles.axes_specgram,...
+      'colorbar','none',...
+      'yscale',get(handles.checkbox_logy,'UserData'));
   handles.output = userData.spec;
   guidata(hObject,handles)
   title('');
@@ -262,9 +265,14 @@ userData.spec = set(userData.spec,'dblims', sort(dbls));
 
 axes(handles.axes_specgram);
 
-specgram(userData.spec,userData.wave,'xunit',get(handles.menu_xunits,'userdata'));
+specgram(userData.spec,userData.wave,...
+    'xunit',get(handles.menu_xunits,'userdata'),...
+    'axis', handles.axes_specgram,...
+    'colorbar','none',...
+    'yscale',get(handles.checkbox_logy,'UserData'));
 %specgram(userData.spec,userData.wave);
-colorbar('horiz');
+%colorbar('horiz');
+title('');
 set(handles.specgramfig,'userdata',userData);
 handles.output = userData.spec;
 guidata(hObject,handles);
@@ -335,9 +343,7 @@ function popupmenu_NFFT_Callback(hObject, eventdata, handles)
 % Hints: contents = get(hObject,'String') returns popupmenu3 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu3
 
-if get(handles.checkbox_AutoUpdate,'value')
-  uispecgram('pushbutton1_Callback',handles.pushbutton1,eventdata,handles)
-end
+autoUpdatePlot(eventdata,handles);
 
 % --- Executes during object creation, after setting all properties.
 function minDBLIMS_CreateFcn(hObject, eventdata, handles)
@@ -366,9 +372,7 @@ function minDBLIMS_Callback(hObject, eventdata, handles)
 set(hObject,'Value',round(get(hObject,'Value')));
 set(handles.edit_MIN,'string',num2str(get(hObject,'Value')),'value',get(hObject,'Value'));
 
-if get(handles.checkbox_AutoUpdate,'value')
-  uispecgram('pushbutton1_Callback',handles.pushbutton1,eventdata,handles)
-end
+autoUpdatePlot(eventdata,handles);
 
 % --- Executes during object creation, after setting all properties.
 function maxDBLIMS_CreateFcn(hObject, eventdata, handles)
@@ -398,9 +402,7 @@ function maxDBLIMS_Callback(hObject, eventdata, handles)
 set(hObject,'Value',round(get(hObject,'Value')));
 set(handles.edit_MAX,'string',num2str(get(hObject,'Value')),'value',get(hObject,'Value'));
 
-if get(handles.checkbox_AutoUpdate,'value')
-  uispecgram('pushbutton1_Callback',handles.pushbutton1,eventdata,handles)
-end
+autoUpdatePlot(eventdata,handles);
 
 % --- Executes during object creation, after setting all properties.
 function popupmenu_OVER_CreateFcn(hObject, eventdata, handles)
@@ -426,9 +428,7 @@ function popupmenu_OVER_Callback(hObject, eventdata, handles)
 % Hints: contents = get(hObject,'String') returns popupmenu_OVER contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu_OVER
 
-if get(handles.checkbox_AutoUpdate,'value')
-  uispecgram('pushbutton1_Callback',handles.pushbutton1,eventdata,handles)
-end
+autoUpdatePlot(eventdata,handles);
 
 % --- Executes during object creation, after setting all properties.
 function edit_MAX_CreateFcn(hObject, eventdata, handles)
@@ -508,9 +508,7 @@ function slider_FreqMax_Callback(hObject, eventdata, handles)
 set(hObject,'Value',round(get(hObject,'Value')));
 set(handles.edit_FreqMax,'string',num2str(get(hObject,'Value')),'value',get(hObject,'Value'));
 
-if get(handles.checkbox_AutoUpdate,'value')
-  uispecgram('pushbutton1_Callback',handles.pushbutton1,eventdata,handles)
-end
+autoUpdatePlot(eventdata,handles);
 
 % --- Executes during object creation, after setting all properties.
 function edit_FreqMax_CreateFcn(hObject, eventdata, handles)
@@ -544,7 +542,7 @@ function checkbox_AutoUpdate_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox_AutoUpdate
-
+autoUpdatePlot(eventdata,handles);
 
 % --------------------------------------------------------------------
 function Specgram2_Callback(hObject, eventdata, handles)
@@ -589,9 +587,18 @@ ent = get(userData.wave,'end');
 
 anS = inputdlg('Start time?','Waveform Starting time',1,{[datestr(stt,23) ' ' datestr(stt,13)]});
 %Answer = INPUTDLG(Prompt,Title,LineNo,DefAns
+if datenum(anS) > ent, ent = datenum(anS), end;  %default to new start time.
 anE = inputdlg('End time?','Waveform Ending time',1,{[datestr(ent,23) ' ' datestr(ent,13)]});
 
+try
 neww = waveform(userData.source,get(userData.wave,'scnlobject'),anS{1},anE{1});
+catch
+    disp('unable to access a waveform.  have a blank one instead');
+end
+if ~exist('neww','var') || isempty(neww)
+    neww = set(userData.wave,'start',anS{1},'data',[0 0 0]);
+    % return
+end
 if exist('neww','var')
   userData.wave = neww;
   set(handles.specgramfig,'userdata',userData);
@@ -609,11 +616,44 @@ function menuitem_changestation_Callback(hObject, eventdata, handles)
 % hObject    handle to menuitem_changestation (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 userData = get(handles.specgramfig,'userdata');
-scnl = uiscnlobject(get(userData.wave,'scnlobject'));
+if isunassigned(userData.source)
+    % no data source has been chosen
+    vnames = evalin('base','whos'); %get list of variables from main workspace
+    vnames = vnames(strcmp({vnames.class},'datasource')); %keep datasource
+    [selection, ok] = listdlg(...
+        'PromptString',...
+        'Choose a datasource variable, or the *new datasource*',...
+        'listsize',[220 300],...
+        'liststring', [{vnames.name},{'*new datasource*'}] );
+    if ~ok,
+        return
+    end
+    if selection > numel(vnames)
+        %create a datasource from scratch
+        answer = inputdlg('Type the datasource creation command.   ',...
+            'Create datasource',1,{'datasource(''file'',''filename'')'},'on');
+        if isempty(answer)
+            return;
+        end
+        try
+            userData.source = eval(answer);        
+            set(handles.specgramfig,'userdata',userData);
+        catch
+            errordlg(['Unable to create the datasource object'],'Problem creating datasource');
+        end
+    else
+        userData.source = evalin('base',vnames(selection).name);
+        set(handles.specgramfig,'userdata',userData);
+    end
+    
+    
+end
+scnl = uiscnlobject(get(userData.wave,'scnlobject'))
 pointerShape = getptr(gcf);
-neww = waveform(userData.source, scnl, get(userData.wave,'start'),get(userData.wave,'end'));
+neww = waveform(userData.source, scnl, ...
+    get(userData.wave,'start'),...
+    get(userData.wave,'end'));
 if numel(neww) == 0
   errordlg('No waveform was found','invalid station', 'modal');
 else
@@ -654,7 +694,11 @@ function specgram_Callback(hObject, eventdata, handles)
 h = figure;
 userData = get(handles.specgramfig,'userdata');
 figure(h);
-specgram(userData.spec,userData.wave,'xunit',get(handles.menu_xunits,'userdata'));
+specgram(userData.spec,userData.wave,...
+    'xunit',get(handles.menu_xunits,'UserData'),...
+    'axis',gca,...
+    'yscale',get(handles.checkbox_logy,'UserData')...
+    );
 drawnow;
 
 % --------------------------------------------------------------------
@@ -702,6 +746,7 @@ set(handles.menu_seconds,'checked','off');
 set(handles.menu_minutes,'checked','off');
 set(handles.menu_hours,'checked','off');
 set(handles.menu_date,'checked','off');
+set(handles.menu_doy,'checked','off');
 
 set(hObject,'checked','on');
 replot_waveform(handles);
@@ -713,3 +758,51 @@ userData = get(handles.specgramfig,'userdata');
 xunits = get(handles.menu_xunits,'userdata');
 plot(userData.wave,'xunit',xunits);
 axis tight
+
+
+% --- Executes on button press in checkbox_logy.
+function checkbox_logy_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_logy (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_logy
+if get(hObject,'value')
+    set(hObject,'UserData','log');
+else
+    set(hObject,'UserData','normal');
+end
+
+autoUpdatePlot(eventdata,handles);
+
+function autoUpdatePlot(eventdata,handles)
+% Automatically update the plot IF AutoUpdate is checked
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+if get(handles.checkbox_AutoUpdate,'value')
+  uispecgram('pushbutton1_Callback',handles.pushbutton1,eventdata,handles)
+end
+
+
+% --- Executes during object creation, after setting all properties.
+function checkbox_logy_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to checkbox_logy (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Check to see if we have to ability to create log spectrograms, if not,
+% then disable the log checkbox.
+
+if exist('uimagesc.m','file') ~= 0
+    set(hObject,'Enable','on');
+else
+    set(hObject,'Enable','off');
+end
+
+
+% --------------------------------------------------------------------
+function menu_about_Callback(hObject, eventdata, handles)
+% hObject    handle to menu_about (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+h = helpdlg('Version r228, by Celso G. Reyes, University of Alaska Fairbanks http://www.mathworks.com/matlabcentral/fileexchange/authors/53809','About uispecgram');
