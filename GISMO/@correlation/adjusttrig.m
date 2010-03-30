@@ -50,6 +50,11 @@ function c = adjusttrig(c,varargin);
 % $Date$
 % $Revision$
 
+% TODO: the current argument handling is done in a poor way that shows the
+% function's growth. It is currently not possible to use the MAXLAG argument
+% with the INDEX modifier. To change this, it would be best to rewrite the
+% argument handling.
+
 
 
 % CHECK ARGUMENTS
@@ -76,12 +81,13 @@ else
     else
         calctype = 'MIN';	% default
     end;
-    if length(varargin)==2
+    if strncmp(calctype,'MIN',3) && (length(varargin)==2)
         dosubset = varargin{2};
     else
         dosubset = 0;
     end;
-    c = adjusttriggers(c,calctype,dosubset);
+c
+c = adjusttriggers(c,calctype,dosubset);
 end
 
 
