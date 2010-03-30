@@ -13,6 +13,7 @@ function w = resample(w,method, val)
 %           'median' : mean value
 %           'absmax': absolute maximum value (greatest deviation from zero)
 %           'absmin': absolute minimum value (smallest deviation from zero)
+%           'builtin': Use MATLAB's built in resample routine
 %
 %       CRUNCHFACTOR : the number of samples making up the sample window
 %
@@ -72,6 +73,14 @@ for i=1:numel(w)
         case 'ABSMIN'
             w(i) = set(w(i),'data', min(abs(d),[],1));
             
+        case 'BUILTIN'
+            
+      % assume W is an existing waveform
+      ResampleD = resample(w(i).data,1,val);  % see matlab's RESAMPLE for specifics
+
+      %put back into waveform, but don't forget to update the frequency
+      w(i).data = ResampleD(:);
+      w(i) = set(w(i), 'Freq', get(w(i),'freq') ./ val); 
         otherwise
             error('Wafeform:resample:UnknownSampleMethod',...
               'Don''t know what you mean by resample via %s', method);

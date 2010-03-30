@@ -34,7 +34,9 @@ end
 %   warning('Datasource:multipleSCNL',...
 %     'An array of SCNL was passed as the argument.  Only search for a single SCNL at a time');
 % end
-
+if ischar(starttimes)
+    starttimes = {starttimes};
+end
 filename = cell(numel(scnls),numel(starttimes));
 
 if isempty(filename) %show the generic file name
@@ -62,7 +64,7 @@ else %get detailed file.for n=1:numel(scnls)
   for n=1:numel(scnls)
     scnl = scnls(n);
     for m = 1:numel(starttimes)
-      starttime = starttimes(m);
+      starttime = starttimes{m};
 
 
       %pull all the data that may be required to parse out files & directories
