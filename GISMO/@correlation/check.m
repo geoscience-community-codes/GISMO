@@ -90,9 +90,11 @@ tf = strncmpi(sta,sta(1),3);
 if length(find(tf)) ~= length(tf)
     val = 0;
 end
-
-
+if isempty([sta{:}])
+    val = 1;
+end
     
+
 %% Check channel codes
 function val = do_channels(c,val)
    
@@ -100,6 +102,9 @@ chan = get(c,'CHAN');
 tf = strcmpi(chan,chan(1));
 if length(find(tf)) ~= length(tf)
     val = 0;
+end
+if isempty([chan{:}])
+    val = 1;
 end
 
 
