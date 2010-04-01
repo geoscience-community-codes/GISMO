@@ -23,6 +23,11 @@ function [filename] = getfilename(ds, scnls, starttimes)
 %
 %
 % see also SETFILENAME
+
+% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+% $Date$
+% $Revision$
+
 if ~ds.usefile
   warning('Datasource:noAssociatedFiles','No files have been associated with this datasource');
   filename = [];
