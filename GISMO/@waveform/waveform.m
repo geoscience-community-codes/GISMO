@@ -108,8 +108,8 @@ switch argCount
       %endt = datenum(varargin{4});
       
       % ensure proper date formatting
-      startt = datenum(startt);
-      endt = datenum(endt);
+      startt = reshape(datenum(startt(:)),size(startt));
+      endt = reshape(datenum(endt(:)),size(endt));
       
       % -------------------------------------------------------------------
       % if there is no specifically assigned load function, then 

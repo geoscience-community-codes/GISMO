@@ -13,7 +13,7 @@ Contents
 - - -
 Thanks for trying out the waveform suite for MATLAB
 
-This code has been created in MATLAB 2009b, and has been briefly tested in 2008b.  Older versions of matlab may or may not support the more recent changes.  Prior to this release, I had tested to MATLAB 7.1.0 (R14SP3).
+This code has been created in MATLAB 2009b, and has been briefly tested in MATLAB 7.1.0 (R14SP3).  Older versions of MATLAB may or may not support the more recent changes.
 
 I offer the waveform suite in "as is" condition, with no real promises... yada yada... I won't take responsibility for your use or misuse of this collection of software... yada yada... please see the license as stated on the MATLAB Waveform Suite download page.  Oh, and ALWAYS back up your data (independent of whether or not you use this product, it's just smart.)
 
@@ -25,7 +25,7 @@ Also, feel free to send me a note with comments and suggestions, or just to let 
 
 Thank you,
 Celso Reyes
-February 2010
+April 2010
 
 - - - - - - - - - - - - - - - - - - - - - - - - 
 README Notes
@@ -49,10 +49,29 @@ Additional help, along with examples can be found online at
     * http://kiska.giseis.alaska.edu/Input/celso/matlabweb/waveform_suite/waveform_suite_example_index.html : several examples of the waveform suite in use http://kiska.giseis.alaska.edu/Input/celso/matlabweb/waveform_suite/waveform.html : the main waveform information page. Check the links on the left for information about the other features of waveform.
     * http://kiska.giseis.alaska.edu/Input/celso/matlabweb/waveform_suite/download.html : (this page)
 
+	
+To enable log spectral plotting, please download  uimagesc, by Frederic Moisy, available at: http://www.mathworks.com/matlabcentral/fileexchange/11368
+Then, extract it to a location along the MATLAB path.
+
+
 = = = = = = = = = = = = = = = = = = = = = = = = 
 Notes about the current release
-r211
+r234
+fixed error when non-vector dates passed to waveform. 
+added a legend function to waveform, which allows the creation of plot legends without having to use waveform/get each time.
+added "builtin" resamplemethod and fixed getfilename issue
+fixed problem with load_seisan (cell vs string)
 
+- - - - - - - - - - - - - - - - - - - - - - - - 
+previous releases
+r228
+enabled uispecgram to reproduce log plots
+spectralobject plotting methods updated alowing more colorbar flexibility and complex plotting ability
+demean no longer turns off history
+undid the nanstuff, 'cause it turned out to be specific to the statistics toolbox
+fixed waveform isempty
+
+r211
 Fixed a bug in R207 (introduced ~r190) where attempting to read in a recently saved waveform (structure v1.1) will cause an error.  This was caused by the removal of the station and channel fields (which had been depricated since the introduction of scnlobjects)
 Moved HISTORY out of miscelleneous fields and into its own proper field within the waveform structure.  This should save some speed overhead.
 Fixed sign(waveform), which was transposing the data column.
@@ -108,7 +127,7 @@ scnlobjects were introduced as a way to make waveform more seed compliant, and t
 - - - - - - - - - - - - - - - - - - - - - - - - 
 Acknowledgements
 
-In one form or another, the waveform suite has been around for roughly 5 years. I'd like to thank those that have helped me improve it throughout that time. I especially would like to recognize Jackie-Caplan Auerbach (for introducing me to MATLAB and inspiring this suite in the first place), Jason Amundson (a great debugger and source of addtional functionality), Micheal Thorne (who's SAC routines I thoroughly cannibalized), Glenn Thompson and Silvio DeAngelis (as testers and for SEISAN help), my advisor Steve McNutt (who let me get away with working on this stuff when, perhaps I should have been concentrating on the wiggles themselves), and Michael West (For plenty of discreet encouragement and great conversations on waveform philosophy... and author of the correlation toolbox, which is based upon the waveform object).
+In one form or another, the waveform suite has been around for roughly 5 years. I'd like to thank those that have helped me improve it throughout that time. I especially would like to recognize Jackie-Caplan Auerbach (for introducing me to MATLAB and inspiring this suite in the first place), Jason Amundson (a great debugger and source of additional functionality), Micheal Thorne (who's SAC routines I thoroughly cannibalized), Glenn Thompson and Silvio DeAngelis (as testers and for SEISAN help), my advisor Steve McNutt (who let me get away with working on this stuff when, perhaps I should have been concentrating on the wiggles themselves), and Michael West (For plenty of discreet encouragement and great conversations on waveform philosophy... and author of the correlation toolbox, which is based upon the waveform suite.
 
 I'm sure I'm leaving out important people; and I reserve the right to add them as they pop to mind.
 
