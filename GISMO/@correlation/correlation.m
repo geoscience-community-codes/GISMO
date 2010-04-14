@@ -90,7 +90,11 @@ function c = correlation(varargin)
 % the underlying WAVEFORM suite are not. A CORAL to CORRELATION conversion
 % should usually be easy. The other direction may be more challenging as
 % most correlation and waveform objects do not contain much of the "header"
-% info stored by CORAL.
+% info stored by CORAL. If the pPick field exists in the CORAL structure,
+% then it is used to set the trigger times inside the resulting correlation
+% object. NOTE that little error checking is performed on the CORAL
+% structure. If it is improperly constructed, then the conversion to a
+% correlation object may fail without an intelligible error message.
 %
 %
 %
@@ -203,6 +207,7 @@ elseif nargin==2 & isa(varargin{1},'correlation')
     
 %% BUILD FROM A STRUCTURE (CORAL)
 elseif isa(varargin{1},'struct')
+    %if isfield(varargin{1}(1),'data') && isfield(varargin{1}(1),'staCode') && isfield(varargin{1}(1),'staChannel')
     if isfield(varargin{1},'data') && isfield(varargin{1},'staCode') && isfield(varargin{1},'staChannel')
         c = convert_coral(varargin{1});
     end
@@ -523,13 +528,14 @@ for i = 1:length(coral)
     w(i) = set( w(i) , 'Channel' , coral(i).staChannel );
     w(i) = set( w(i) , 'Data' , coral(i).data );
     w(i) = set( w(i) , 'Start' , datenum(coral(i).recStartTime') );
-    w(i) = set( w(i) , 'FREQ' , 1/coral(i).recSampInt );    
-    if ~isempty(coral(i).pPick)
+    w(i) = set( w(i) , 'FREQ' , 1/coral(i).recSampInt );
+    if isfield(coral(i),'pPick')
         t(i) = datenum(coral(i).pPick');
     end
 end
 
 if length(find(t))==length(t)
+    disp('Trigger times are being applied from coral pPick field');
     c = correlation(w,t);
 else
     c = correlation(w);
