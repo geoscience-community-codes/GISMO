@@ -16,6 +16,9 @@ function dd_process_scp(dbname,scpfile,varargin)
 % $Date$
 % $Revision$
 
+% TODO: Code should consolidate ??E and ??N onto single channel. Not sure
+% that it does.
+
 
 
 % CHECK FOR VALID DATABASE
@@ -122,14 +125,16 @@ ar_time = epoch2datenum(ar_time);
 or_time = epoch2datenum(or_time);
 dbclose(db)
 
-% save
+%save
 
 % LOAD WAVEFORMS
 disp(['Loading ' STA '_' CHAN ' ' IPHASE ' phase (' num2str(numel(ar_time)) ' arrivals) ...']);
 W = [];
 for n = 1:numel(ar_time)
    try
-      w = waveform( sta{n} , chan{n} , ar_time(n)+(pretrig-3)/86400 , ar_time(n)+(posttrig+3)/86400 , dbname );
+      ds = datasource('antelope',dbname);
+      scnl = scnlobject( sta{n} , chan{n},'','');
+      w = waveform( ds , scnl , ar_time(n)+(pretrig-3)/86400 , ar_time(n)+(posttrig+3)/86400 );
       w = addfield(w,'ORID',orid(n));
       w = addfield(w,'ORIGIN_TIME',or_time(n));
       w = addfield(w,'ARRIVAL_TIME',ar_time(n));

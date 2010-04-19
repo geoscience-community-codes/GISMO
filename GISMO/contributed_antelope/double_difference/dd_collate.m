@@ -46,7 +46,7 @@ end
 
 % GET CORRELATION FILE NAMES
 files = dir([directoryname '/*.mat' ]);
-disp(files);
+disp(['Using ' num2str(numel(files)) ' correlation files ...']);
 
 
 % READ LIST OF EVENTNAME

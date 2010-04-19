@@ -1,7 +1,7 @@
 function corrderived_plot_swarm_history(c,varargin)
 
-%SEISMICSWARM_PLOT_HISTORY plots relevent details of seismic swarms
-% SEISMICSWARM_PLOT_HISTORY(C)reads correlation object C and plots various
+%CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms
+% CORRDERIVED_PLOT_SWARM_HISTORY(C)reads correlation object C and plots various
 % parameters to characterize the swarm. Typical input will be a correlation
 % object containing waveforms from a single station for numerous events. 
 % This function requires that the CLUST and WAVEFORM fields of the
@@ -12,7 +12,7 @@ function corrderived_plot_swarm_history(c,varargin)
 %    - An amplitude measure of all events
 %    - A plot showing the "lifespan" of each cluster
 %
-% SEISMICSWARM_PLOT_HISTORY(C,CLUSTERSIZE) specifies the minimum number of
+% CORRDERIVED_PLOT_SWARM_HISTORY(C,CLUSTERSIZE) specifies the minimum number of
 % events to be counted as a cluster. The default is 5. Note that the
 % clusters defined in the correaltion object may have a few as 1 event. For
 % analysis purposes however, the user will often want to set a minimum

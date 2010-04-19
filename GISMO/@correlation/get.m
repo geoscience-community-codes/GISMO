@@ -77,11 +77,11 @@ switch upper(prop_name)
     % FROM WAVEFORM/GET (SCALAR OUTPUT)
     case {'DATA_LENGTH'}
         vals = get(c.W,'DATA_LENGTH');  
-        checkvals(vals);
-        val = vals(1);   
+         %checkvals(vals);
+       val = vals(1);   
     case {'FS'}
         vals = get(c.W,'FS');  
-        checkvals(vals);
+        %checkvals(vals);
         val = vals(1);
 %     case {'PERIOD'}
 %         val = get(c.W(1),'PERIOD');
