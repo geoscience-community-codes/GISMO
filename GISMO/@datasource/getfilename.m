@@ -39,6 +39,13 @@ end
 %   warning('Datasource:multipleSCNL',...
 %     'An array of SCNL was passed as the argument.  Only search for a single SCNL at a time');
 % end
+if isnumeric(starttimes) && ~isempty(starttimes)
+    for n=1:numel(starttimes)
+        st(n) = {starttimes(n)};        
+    end
+    starttimes = st;
+    clear st
+end
 if ~iscell(starttimes)
     starttimes = {starttimes};
 end
