@@ -39,7 +39,7 @@ end
 %   warning('Datasource:multipleSCNL',...
 %     'An array of SCNL was passed as the argument.  Only search for a single SCNL at a time');
 % end
-if ischar(starttimes)
+if ~iscell(starttimes)
     starttimes = {starttimes};
 end
 filename = cell(numel(scnls),numel(starttimes));

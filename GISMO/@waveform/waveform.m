@@ -108,6 +108,8 @@ switch argCount
       %endt = datenum(varargin{4});
       
       % ensure proper date formatting
+      if ischar(startt), startt = {startt}; end
+      if ischar (endt), endt = {endt}; end;
       startt = reshape(datenum(startt(:)),size(startt));
       endt = reshape(datenum(endt(:)),size(endt));
       
