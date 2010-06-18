@@ -82,6 +82,18 @@ else %get detailed file.for n=1:numel(scnls)
       %pull all the data that may be required to parse out files & directories
       [year, month, day, hour, minute, second] = datevec(starttime);
       second = round(second);
+      
+      % The following few IF statements handle possible rounding issues
+      if second == 60
+         second = 0; minute = minute+1;
+      end
+      if minute == 60
+         minute = 0; hour = hour + 1;
+      end
+      if hour == 24
+         hour = 0; day = day + 1;
+      end
+      
       jday = datenum(year,month,day,0,0,0) - datenum(year-1,12,31,0,0,0);
       station = get(scnl,'station');
       channel = get(scnl,'channel');
