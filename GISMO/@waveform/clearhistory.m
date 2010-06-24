@@ -18,5 +18,6 @@ function w = clearhistory(w)
 % $Date$
 % $Revision$
 
-w.history = deal({});
+[w.history] = deal({});
+%w = addhistory(w,uint8(0));
 w = addhistory(w,'Cleared History');
