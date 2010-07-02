@@ -46,7 +46,7 @@ end
 
 % GET CORRELATION FILE NAMES
 files = dir([directoryname '/*.mat' ]);
-disp(['Using ' num2str(numel(files)) ' correlation files ...']);
+disp(files);
 
 
 % READ LIST OF EVENTNAME
@@ -67,16 +67,40 @@ event.time = event.time(index);
 event.orid = event.orid(index);
 
 
-% GET ALL XCORR LINES
+% LOAD ALL XCORR LINES
+disp('Loading correlation data files ...');
 linenums = [];
 linestrs = [];
+maximumLags = [];
+minimumCorrelations = [];
 for n = 1:numel(files)
     disp( [directoryname '/' files(n).name] );
     load( [directoryname '/' files(n).name] );
     clear C;
     linenums = cat(1,linenums,linenum);
     linestrs = cat(1,linestrs,linestr);
+    maximumLags = cat(1,maximumLags,maximumLag);
+    minimumCorrelations = cat(1,minimumCorrelations,minimumCorrelation);
 end
+clear linenum linestr maximumLag minimumCorrelation
+
+
+% SUBSET CORRELATIONS BASED ON SCP MinCorr AND MaxLag VALUE
+linestrLag = zeros(numel(linestrs),1);
+linestrCorWeighted = zeros(numel(linestrs),1);
+disp('Throwing out pairs that do not meet MaxCorr or MinLag values ...');
+for n = 1:length(linestrs)
+    linestrParsed = textscan(linestrs{n},'%s %n %n %s');
+    linestrLag(n) = linestrParsed{2};
+    linestrCorWeighted(n) = (linestrParsed{3});
+    if mod(n,100000)==0;
+        disp(['Completed ' num2str(n) ' of ' num2str(length(linestrs) ) ' (' num2str(100*n/length(linestrs),'%3.0f') '%) ...' ]);
+    end
+end
+f = find( abs(linestrLag)<maximumLags & linestrCorWeighted>(minimumCorrelations).^2 );
+linenumsSubset = linenums(f,:);
+linestrsSubset = linestrs(f);
+
 
 
 % LOOP THROUGH EVENTS
@@ -86,11 +110,11 @@ for n = 1:numevents-1
     disp(['orid: ' num2str(event.orid(n)) ' (' num2str(n) ' of ' num2str(numevents)    ') ...']);
     for m = n+1:numevents
         fprintf(fid,'# %8d %8d %5.1f\n',event.orid(n),event.orid(m),0);
-        f1 = find( event.orid(n)==linenums(:,1) & event.orid(m)==linenums(:,2) );
-        f2 = find( event.orid(n)==linenums(:,2) & event.orid(m)==linenums(:,1) );
+        f1 = find( event.orid(n)==linenumsSubset(:,1) & event.orid(m)==linenumsSubset(:,2) );
+        f2 = find( event.orid(n)==linenumsSubset(:,2) & event.orid(m)==linenumsSubset(:,1) );
         f = [f1 ; f2];
         for k = 1:numel(f)
-             fprintf(fid,'     %s\n',char(linestrs(f(k))) );
+             fprintf(fid,'     %s\n',char(linestrsSubset(f(k))) );
         end
     end
 end

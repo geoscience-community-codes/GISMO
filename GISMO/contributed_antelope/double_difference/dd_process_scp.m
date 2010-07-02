@@ -1,7 +1,5 @@
 function dd_process_scp(dbname,scpfile,varargin)
 
-%    dd_process_scp('dbclust','matdd_scp.txt')
-
 % DD_PROCESS_SCP(DBNAME,SCP_FILE) cross correlates arrivals for the same
 % phase and station. SCP_FILE follows the format written by the program
 % DD_MAKE_SCP. For each line in an SCP_FILE, DD_PROCESS_SCP reads all
@@ -14,10 +12,7 @@ function dd_process_scp(dbname,scpfile,varargin)
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
 % $Date$
-% $Revision$
-
-% TODO: Code should consolidate ??E and ??N onto single channel. Not sure
-% that it does.
+% $Revision$ 
 
 
 
@@ -65,8 +60,8 @@ iphase = C{3};
 npick = C{4};
 pretrig = C{5};
 posttrig = C{6};
-minC = C{7};
-maxL = C{8};
+minCorr = C{7};
+maxLag = C{8};
 hpf = C{9};
 lpf = C{10};
 clear C test1 test2 
@@ -84,8 +79,8 @@ end
 for n =1:length(sta)
     if npick(n)>3
         W = load_by_orid(dbname,sta{n},chan{n},iphase{n},pretrig(n),posttrig(n));
-        [linenum,linestr,C] = correlate(W,pretrig(n),posttrig(n),hpf(n),lpf(n),sta{n},iphase{n});
-        save([directoryname '/corr_' sta{n} '_' chan{n} '_' iphase{n}],'C','linenum','linestr');
+        [linenum,linestr,C,minimumCorrelation,maximumLag] = correlate(W,pretrig(n),posttrig(n),hpf(n),lpf(n),sta{n},iphase{n},minCorr(n),maxLag(n));
+        save([directoryname '/corr_' sta{n} '_' chan{n} '_' iphase{n}],'C','linenum','linestr','minimumCorrelation','maximumLag');
     end
 end
 
@@ -125,22 +120,24 @@ ar_time = epoch2datenum(ar_time);
 or_time = epoch2datenum(or_time);
 dbclose(db)
 
-%save
+ %save
 
 % LOAD WAVEFORMS
 disp(['Loading ' STA '_' CHAN ' ' IPHASE ' phase (' num2str(numel(ar_time)) ' arrivals) ...']);
 W = [];
+ds = datasource('antelope',dbname);
 for n = 1:numel(ar_time)
+    sc = scnlobject(sta{n},chan{n});
+    s = ar_time(n)+(pretrig-3)/86400;
+    e = ar_time(n)+(posttrig+3)/86400;
    try
-      ds = datasource('antelope',dbname);
-      scnl = scnlobject( sta{n} , chan{n},'','');
-      w = waveform( ds , scnl , ar_time(n)+(pretrig-3)/86400 , ar_time(n)+(posttrig+3)/86400 );
+      w = waveform(ds,sc,s,e);
       w = addfield(w,'ORID',orid(n));
       w = addfield(w,'ORIGIN_TIME',or_time(n));
       w = addfield(w,'ARRIVAL_TIME',ar_time(n));
       W = cat(1,W,w);
    catch
-      disp(['    Not able to load arrival at ' datestr(ar_time(n),31) ]);
+      disp(['    Not able to load arrival at ' datestr(ar_time(n),31) '   (no. ' num2str(n) ')' ]);
    end
 end
 
@@ -163,7 +160,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CORRELATE WAVEFORMS
 
-function [linenum,linestr,C] = correlate(W,pretrig,posttrig,hpf,lpf,sta,iphase)
+function [linenum,linestr,C,minimumCorrelation,maximumLag] = correlate(W,pretrig,posttrig,hpf,lpf,sta,iphase,minCorr,maxLag)
 
 orid = get(W,'ORID');
 ar_time = get(W,'ARRIVAL_TIME');
@@ -176,12 +173,18 @@ lag = get(C,'LAG');
 
 linestr = [];
 linenum = [];
+minimumCorrelation = [];
+maximumLag = [];
+
 for n = 1:length(orid)
     for m = n+1:length(orid)
         %params = [sta '    ' iphase '    ' num2str(lag(n,m),'%4.3f') '    ' num2str(corr(n,m),'%4.3f') ];
         params = sprintf('%-8s %6.3f %6.3f %-3s' , sta , lag(n,m) , (corr(n,m))^2 , iphase );
         linenum = cat(1,linenum,[orid(n) orid(m)] );
         linestr = cat(1,linestr,{params});
+        minimumCorrelation = cat(1,minimumCorrelation,minCorr);
+        maximumLag = cat(1,maximumLag,maxLag);
+
     end
 end
 
