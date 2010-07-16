@@ -104,9 +104,6 @@ disp(['Time step: ' num2str(tstep,'%4.3f') '    Window width: ' num2str(width,'%
 
 
 % CALC INTERFEROGRAM VOLUME
-% FYI: 3D matrix order is (Y,X,Z)
-n = size(get(c,'CORR'),1);
-[T,N1,N2] = meshgrid(t,1:n,1:n);
 CC = [];
 LL = [];
 times = [];
@@ -117,8 +114,6 @@ for i = 1:length(t);
     end
     ctmp = crop(c,t(i)-width,t(i)+width);
     ctmp = xcorr(ctmp,'row',trace);
-    %CC(:,i,:) = get(ctmp,'CORR');
-    %LL(:,i,:) = get(ctmp,'LAG');
     corr = get(ctmp,'CORR');
     lag  = get(ctmp,'LAG');
     CC(:,i) = corr(:,trace);

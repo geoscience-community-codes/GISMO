@@ -1,9 +1,16 @@
 function d = xcorr1xr(d,style)
 
-% This function performs cross correlations in sets by correlating one
-% trace against a row of traces at once. Generally it is faster than the
-% one at a time implimentation. All steps are included in this function.
-% That is, no calls to the Matlab built-in xcorr are used.
+%XCORR1XR Cross correlate 1 trace against all other traces at once.
+% D = XCORR1XR(D,STYLE) This private function performs cross correlations
+% in sets by correlating one trace against a row of traces at once.
+% Generally it is faster than the one at a time implimentation. All steps
+% are included in this function. That is, no calls to the Matlab built-in
+% xcorr are used. This structure is grandfathered in from early versions of
+% correlation which did use waveform objects. This structure is used only
+% within cross correlation routines where trace data needs to be pulled out
+% of waveform objects anyway. STYLE denotes whether or not polynomial
+% interpolation should be used to refine cross correlations to subsample
+% precision.
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
 % $Date$
@@ -39,14 +46,12 @@ count = 0;
 for n =1:N
     cols = n:N;
     % multiply fourier series and transform back to time domain
-    %CC = (X(:,n) * ones(1,length(cols))) .* Xc(:,cols);
     CC = repmat(X(:,n),1,length(cols)) .* Xc(:,cols);
     corr = ifft(CC);
     corr = corr([end-M+2:end,1:M],:);
-    %corr = [corr(end-M+2:end,:);corr(1:M,:)];
     
     
-    if style == 1       % WITH POLYNOMIAL INTERPOLATION
+    if style == 1       % USE POLYNOMIAL INTERPOLATION
         [maxtest,indx1] = max(corr(2:end-1,:));
         [mm,nn] = size(corr);
         indx2 = (indx1+1) + mm*[0:nn-1];                 % convert to matrix index
@@ -55,7 +60,11 @@ for n =1:N
         corrM  = corr([ indx2-1 ; indx2 ; indx2+1 ]);
         for z = 1:numel(cols)
             p = polyfit( lagM(:,z) , corrM(:,z) , 2 );
-            d.L(n,cols(z))  = -0.5*p(2)/p(1);
+            Ltmp = -0.5*p(2)/p(1);
+            if abs(Ltmp)<eps('single')
+                Ltmp = 0;
+            end
+            d.L(n,cols(z))  = Ltmp;
             d.C(n,cols(z)) = polyval( p , d.L(n,cols(z)) ) .* wcoeff(n) .* wcoeff(cols(z));
         end
     elseif style == 0     % NO POLYNOMIAL INTERPOLATION

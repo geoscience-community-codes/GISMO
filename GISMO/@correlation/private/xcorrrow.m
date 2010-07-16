@@ -1,11 +1,17 @@
 function d = xcorrrow(d,c,index)
 
-% This function performs cross correlations one trace against a full row of
-% traces at once. Generally this routine will take twice as long as the 1xr
-% for the full matrix. However it has the advantage of filling the entire
-% correlation matrix instead of just the upper triangle. This is useful
-% when the correlation and lag values of just a few traces need to be
-% calculated within a much larger correlation object.
+%XCORRROW Cross correlation for one or more traces.
+% D = XCORR1XR(D,C,STYLE) This private function performs cross correlations
+% for a subset of traces. It differs from the XCORR1XR algorithm in that it
+% fills both halves of the correlation matrix. While this is unnecessary
+% when correlating all waveforms, it is necessary when doing just a subset
+% of traces. This should be of little concern to most users. All steps are
+% included in this function. That is, no calls to the Matlab built-in xcorr
+% are used. This code is a little kludgy since it mixes both the original d
+% structure (predates the internal use of waveform objects) with the later
+% wave-based correlation objects. This is the reason it reads in both D and
+% C arguments. STYLE denotes whether or not polynomial interpolation should
+% be used to refine cross correlations to subsample precision.
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
 % $Date$
@@ -55,14 +61,6 @@ Xc = conj(X);
 [MX,NX] = size(X);
 
 
-% TIME THE PROCESS  %(ALL timing seems unused - CR)
-%starttime = now;
-%tic;
-%t0 = cputime;
-%numcorr = ((length(d.trig))^2-length(d.trig))/2;
-%count = 0;
-
-
 % LOOP THROUGH ROWS OF SIMILARITY MATRIX
 for n = index
     cols = 1:N;
@@ -70,25 +68,25 @@ for n = index
     %CC = (X(:,n) * ones(1,length(cols))) .* Xc(:,cols);
     CC = repmat(X(:,n),1,length(cols)) .* Xc(:,cols);
     corr = ifft(CC);
-    corr = corr([end-M+2,1:M],:);
-    %corr = [corr(end-M+2:end,:);corr(1:M,:)];
+    corr = corr([end-M+2:end,1:M],:);
+        
+    % USE POLYNOMIAL INTERPOLATION
+    [maxtest,indx1] = max(corr(2:end-1,:));
+    [mm,nn] = size(corr);
+    indx2 = (indx1+1) + mm*[0:nn-1];     % convert to matrix index
+    lag = repmat( l , 1 , size(corr,2) );  % replace size statement with nn
+    lagM   = lag([ indx2-1 ; indx2 ; indx2+1 ]) + repmat(pretrig(cols)'-pretrig(n)',3,1);
+    corrM  = corr([ indx2-1 ; indx2 ; indx2+1 ]);
+    for z = 1:numel(cols)
+        p = polyfit( lagM(:,z) , corrM(:,z) , 2 );
+        Ltmp = -0.5*p(2)/p(1);
+        if abs(Ltmp)<eps('single')
+            Ltmp = 0;
+        end
+        d.L(n,cols(z))  = Ltmp;
+        d.C(n,cols(z)) = polyval( p , d.L(n,cols(z)) ) .* wcoeff(n) .* wcoeff(cols(z));
+    end
 
-     % USE POLYNOMIAL INTERPOLATION
-     [maxtest,indx1] = max(corr(2:end-1,:));
-     [mm,nn] = size(corr);
-     indx2 = (indx1+1) + mm*[0:nn-1];                 % convert to matrix index
-     lag = repmat( l , 1 , size(corr,2) );
-     lagM   = lag([ indx2-1 ; indx2 ; indx2+1 ]) + repmat(pretrig(cols)'-pretrig(n)',3,1);
-     corrM  = corr([ indx2-1 ; indx2 ; indx2+1 ]);
-     for z = 1:numel(cols)
-         p = polyfit( lagM(:,z) , corrM(:,z) , 2 );
-         d.L(n,cols(z))  = -0.5*p(2)/p(1);
-         d.C(n,cols(z)) = polyval( p , d.L(n,cols(z)) ) .* wcoeff(n) .* wcoeff(cols(z));
-     end
-    % DON'T USE POLYNOMIAL INTERPOLATION
-%    [maxval,indx1] = max(corr);
-%    d.C(n,cols) = maxval .* wcoeff(n) .* wcoeff(cols);   % normalized maximum correlation
-%    d.L(n,cols) = l(indx1) + (pretrig(cols) - pretrig(n)); % lag in seconds
 end
 
 % FILL IN OTHER HALF OF MATRIX
@@ -96,14 +94,14 @@ d.C(:,index) = d.C(index,:)';
 
 if eraseL
     d.L = [];
-else 
+else
     d.L(:,index) = -1* d.L(index,:)';
 end
 
 
 if eraseC
     d.C = [];
-else 
+else
     d.C(:,index) = d.C(index,:)';
 end
 
