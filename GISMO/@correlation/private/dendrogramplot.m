@@ -41,7 +41,7 @@ xlabel('inter-cluster correlation','FontSize',16);
 % MODIFY Y AXIS LABELS
 if ~isempty(c.clust)
     YT = (get(gca,'YTickLabel'));
-    YT = strcat(YT,' (',num2str(c.clust),')');
+	%YT = strcat(YT,' (',num2str(c.clust(perm)),')');
     set(gca,'YTickLabel',YT);
     ylabel('event number (and cluster)','FontSize',16);
 end
