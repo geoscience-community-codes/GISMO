@@ -3,13 +3,6 @@ function cookbook(TC)
 % This cookbook contains sample code to illustrate the basic functions of
 % the threecomp toolbox.
 
-%% TEMPORARY
-clear
-clear classes
-rmgismo
-addpath('/home/field/GISMO_BRANCH/GISMO/');
-startup_GISMO
-
 
 %% Load demo data
 % Demo dataset consists of 14 stations of data from a single earthquake
