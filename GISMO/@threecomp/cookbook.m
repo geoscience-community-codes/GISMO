@@ -35,6 +35,7 @@ disp(TC(4));
 %% Plot object
 % PLOT operates on a single object at a time. 
 
+figure;
 plot(TC(4));
 
 
@@ -44,6 +45,7 @@ plot(TC(4));
 % plot. See DESCRIBE(THREECOMP) for reference frame specifics.
 
 TC = rotate(TC);
+figure;
 plot(TC(4))
 
 
