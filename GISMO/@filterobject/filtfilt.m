@@ -1,15 +1,15 @@
 function w =filtfilt(f, w, NYQ)
-%FILTFILT - filterobject implementation of FILTFILT, use on waveform Object 
+%FILTFILT - filterobject implementation of FILTFILT, use on waveform Object
 %   waveform = filtfilt(filterobject, waveform);
 %   waveform = filtfilt(filterobject, data, NYQ);
-% 
-%      'filtfilt' is a function that filters data at a specified  
-%      cutoff frequency with zero time shift.  
-% 
-%      INPUT values are as follows:   
+%
+%      'filtfilt' is a function that filters data at a specified
+%      cutoff frequency with zero time shift.
+%
+%      INPUT values are as follows:
 %        "filterobject" is a filter object
 %        "waveform" is one or more waveform objects
-%        "data" is any data vector (generally of type DOUBLE).  
+%        "data" is any data vector (generally of type DOUBLE).
 %        "NYQ" is the nyquist frequency
 %
 %
@@ -27,13 +27,21 @@ if isnumeric(w)
     
 elseif isa(w,'waveform')
     % check for gaps
-    if any(isnan(double(w)))
-        warning('Filterobject:filtfilt:hasNaN',...
-          ['Waveform(s) contain data gaps (NaN values). This '...
-    'will cause filtfilt to return an answer of all NaN.  To prevent '...
-    'this, use waveform/fillgaps to replace NaN with an appropriate'...
-    ' value.  \nSee help waveform/fillgaps.']);
+    HASGAP = 0;
+    for n = 1:numel(w)
+        if any(isnan(double(w(n))))
+            HASGAP = 1;
+        end
     end
+    if HASGAP
+        warning('Filterobject:filtfilt:hasNaN',...
+            ['Waveform(s) contain data gaps (NaN values). This '...
+            'will cause filtfilt to return an answer of all NaN.  To prevent '...
+            'this, use waveform/fillgaps to replace NaN with an appropriate'...
+            ' value.  \nSee help waveform/fillgaps.']);
+    end
+    
+    
     for n = 1 : numel(w);
         WN = f.cutoff / get(w(n),'NYQ');     %only one filter is assumed!
         [b, a] = getButter(f,WN);
@@ -47,11 +55,11 @@ w = addhistory(w,['Filtered: Type:', get(f,'type'), ' Cutoff: [',...
 
 %- - - -  helper function - - - - %
 function [b, a] = getButter(f, WN)
-    switch f.type
-        case 'H';
-            [b,a] = butter(f.poles, WN, 'high'); 
-        case 'B';
-            [b,a] = butter(f.poles, WN); 
-        case 'L';
-            [b,a] = butter(f.poles, WN); 
-    end;
+switch f.type
+    case 'H';
+        [b,a] = butter(f.poles, WN, 'high');
+    case 'B';
+        [b,a] = butter(f.poles, WN);
+    case 'L';
+        [b,a] = butter(f.poles, WN);
+end;
