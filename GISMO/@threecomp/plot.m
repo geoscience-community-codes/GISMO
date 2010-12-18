@@ -167,7 +167,7 @@ end
 
 % SET YAXIS AND ADD SCALE BAR
 set(gca,'YTick',[-0.5 0.5]);
-set(gca,'YTickLabel',num2str(normval*[-1 1]'));
+set(gca,'YTickLabel',num2str(normval*[-1 1]',3));
 xLimits = get(gca,'XLim');
 xLoc = xLimits(1) + 0.01 * (xLimits(2) - xLimits(1));
 plot([xLoc xLoc],[-0.5 0.5],'-','Color',[0.6 0.6 0.6]);
@@ -184,9 +184,9 @@ end
 % LABEL TRACES
 chan = get(w,'CHANNEL');
 orientation = TC.orientation;
-text(2*xLoc,-0.9,[chan{3} ' ' num2str(round(orientation(5)),' [%d') ' ' num2str(round(orientation(6)),'%d]')],'FontSize',14);
-text(2*xLoc,0.1,[chan{2} ' ' num2str(round(orientation(3)),' [%d') ' ' num2str(round(orientation(4)),'%d]')],'FontSize',14);
-text(2*xLoc,1.1,[chan{1} ' ' num2str(round(orientation(1)),' [%d') ' ' num2str(round(orientation(2)),'%d]')],'FontSize',14);
+text(2*xLoc,-0.8,[chan{3} ' ' num2str(round(orientation(5)),' [%d') ' ' num2str(round(orientation(6)),'%d]')],'FontSize',12);
+text(2*xLoc,0.2,[chan{2} ' ' num2str(round(orientation(3)),' [%d') ' ' num2str(round(orientation(4)),'%d]')],'FontSize',12);
+text(2*xLoc,1.2,[chan{1} ' ' num2str(round(orientation(1)),' [%d') ' ' num2str(round(orientation(2)),'%d]')],'FontSize',12);
 
 
 % SET TITLE

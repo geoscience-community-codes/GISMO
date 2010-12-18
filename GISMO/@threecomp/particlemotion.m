@@ -13,14 +13,14 @@ function TC = particlemotion(TC, varargin)
 % window. If these parameters are not included, the function estimates
 % appropriate values for the data.
 %
-% PARTICLEMOTION can accept traces that have been rotated in the
-% horizontal plane (i.e. type ZRT and Z21) so long as the orientation
-% field is filled in. This is accomplished internally by first rotating
-% these traces to type ZNE and then carrying out the particle motion
-% analysis. In other words, the particle motion coefficients are
-% independent of the orientation of the input traces. See
-% THREECOMP(DESCRIBE) for a complete description of the particle motion
-% fields.
+% PARTICLEMOTION can accept traces that have been rotated in the horizontal
+% plane (i.e. type ZRT and Z21) so long as the orientation field is filled
+% in. This is accomplished internally by first rotating these traces to
+% type ZNE and then carrying out the particle motion analysis. In other
+% words, the particle motion coefficients are relative to a fixed
+% geographic reference frame and are independent of the orientation of the
+% input traces. See THREECOMP(DESCRIBE) for a complete description of the
+% particle motion fields.
 %
 % see also threecomp/describe
 
@@ -84,12 +84,8 @@ fprintf('\n');
 function [rec, plan, energy, az, incl] = do_one(TC,dt,width)
 
 % TEMPORARILY ADJUST ORIENTATION IF NEEDED
-% if ~strcmpi(get(TC,'TYPE'),'ZNE')
-%     disp('temporarily rotating trace to Z-N-E for particle motion calculation ...');
-%     TC = rotate(TC,0);
-% end
 if any(TC.orientation~=[0 0 0 90 90 90]) 
-    disp('temporarily rotating trace to Z-N-E for particle motion calculation ...');
+    %disp('temporarily rotating trace to Z-N-E for particle motion calculation ...');
     TC = rotate(TC,0);
 end
 w = TC.traces;
