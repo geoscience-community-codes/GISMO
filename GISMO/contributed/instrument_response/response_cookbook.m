@@ -9,8 +9,8 @@
 % information.
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date: $
-% $Revision: $
+% $Date$
+% $Revision$
 
 % TODO:
 % Create NEW waveform for a good YAHTSE event for a couple of channels. DEMO+_PLUTONS
