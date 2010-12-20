@@ -52,7 +52,7 @@ frequencies = reshape(frequencies,1,numel(frequencies));
 try
     db = dbopen(dbName,'r');
 catch
-    error(['Could not open database: ' dbname]);
+    error(['Could not open database: ' dbName]);
 end
 dbSensor = dblookup_table(db, 'sensor');
 if ~dbquery(dbSensor,'dbTABLE_PRESENT')

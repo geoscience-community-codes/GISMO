@@ -86,6 +86,9 @@ end
 function val = do_stations(c,val)
    
 sta = get(c,'STA');
+if ~iscell(sta)
+   sta = {sta}; 
+end
 tf = strncmpi(sta,sta(1),3);
 if length(find(tf)) ~= length(tf)
     val = 0;
@@ -99,6 +102,9 @@ end
 function val = do_channels(c,val)
    
 chan = get(c,'CHAN');
+if ~iscell(sta)
+   sta = {sta}; 
+end
 tf = strcmpi(chan,chan(1));
 if length(find(tf)) ~= length(tf)
     val = 0;

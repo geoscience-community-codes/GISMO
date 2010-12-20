@@ -1,4 +1,4 @@
-function correlation_dianostics(varargin)
+function correlation_diagnostics(varargin)
 
 % Test correlation toolbox
 %

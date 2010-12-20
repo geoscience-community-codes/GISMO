@@ -8,7 +8,7 @@ function [WW,WWxc] = mastercorr_scan(WW,WWsnippet,threshold)
 % normalized cross-correlation function is derived in the process. Any
 % waveform segment which cross correlates with SNIPPET above a correlation
 % value of THRESHOLD is considered a successful match. These matches are
-% then saved as fields in W:
+% then saved as the following fields in W:
 %
 % MASTERCORR_TRIG       % "trigger" times of matches in Matlab date format
 % MASTERCORR_CORR       % value of the correlation. should be >= threshold

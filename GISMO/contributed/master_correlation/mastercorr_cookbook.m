@@ -1,9 +1,11 @@
 % Demonstration of the major features of the master waveform correlation
-% toolbox.
-
-% LOAD WAVEFORM DATA FROM ANY SOURCE IN ANY TIME LENGTH, LIKELY HOURLY TO
-% DAILY IN LENGTH. LONGER WAVEFORMS SHOULD BE OK, BUT MEMORY MAY BECOME AN
-% ISSUE. THIS EXAMPLE USES SIX CONSECUTIVE 10-MINUTE DATA SEGMENTS.
+% toolbox. This example uses a small set of included data. This data is six
+% 10-minute segments of data (1 hour total). MASTERCORR_SCAN can operate on
+% waveform objects from any source or any length. Loading data is a process 
+% left to the user. Individual segments exceeding a day or so in length may
+% run into computational issues.
+%
+% See also mastercorr_plot_stats, mastercorr_cookbook, mastercorr_extract
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
 % $Date$
