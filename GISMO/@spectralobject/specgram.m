@@ -183,11 +183,11 @@ left = pos(1); bottom=pos(2); width=pos(3); height=pos(4);
 %% If there are multiple waveforms...
 % subdivide the axis and loop through specgram2 with individual waveforms.
 
-
-if numel(ws) > 1
     if myaxis== 0,
         myaxis = gca;
     end
+
+if numel(ws) > 1
     %create the colorbar if desired
     if ~strcmpi(colorbarpref,'none')
         hbar = colorbar_axis(s,colorbarpref,clabel,'','',currFontSize);
