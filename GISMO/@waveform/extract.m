@@ -161,7 +161,7 @@ for m = 1: numel(startV) %loop through the number of extractions
         else
           %some aspect of this data must be represented by the waveform
           [myStartI myStartTime] = time2offset(inW,startV(m));
-          [myEndI] = time2offset(inW,endV(m));
+          [myEndI] = time2offset(inW,endV(m)) - 1;
           if isempty(myStartTime)
             %waveform starts sometime after requested start
             myStartTime = get(inW,'start');
@@ -209,7 +209,7 @@ for m = 1: numel(startV) %loop through the number of extractions
         myStart = sampTimes(1); %grab our starting date before hacking it
         
         sampTimes = sampTimes - sampTimes(1); %set first time to zero
-        count = sum(sampTimes <= endV(m));
+        count = sum(sampTimes <= endV(m)) -1;
         myData = myData(1:count);
         
         
