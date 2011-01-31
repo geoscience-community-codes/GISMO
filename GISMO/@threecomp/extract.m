@@ -10,7 +10,7 @@ function pm = extract(TC,varargin)
 % START and END.
 %
 % PM = EXTRACT(TC,[START END],[REC_THRESHOLD, PLAN_THRESHOLD]) The azimuth
-% and inclination coefficients only have meaning if the degfree of
+% and inclination coefficients only have meaning if the degree of
 % rectilinearity, and sometimes, planarity, is high. The threshold terms
 % allow users to set minimum rectilinearity and planarity values. The time
 % range set by START and END is scanned for sufficiently high

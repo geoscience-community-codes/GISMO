@@ -77,7 +77,8 @@ else
     
     % CROP TRACES IF NECESSARY
     if ~SAMETIMES || ~SAMEFREQUENCY
-        TC.traces = extract(TC.traces, 'TIME', max(startTime), min(endTime) );
+        samples = floor(get(TC.traces(1),'FREQ')*86400*(min(endTime) - max(startTime)));
+        TC.traces = extract(TC.traces, 'TIME&SAMPLES', max(startTime), samples);
     end
     
 end

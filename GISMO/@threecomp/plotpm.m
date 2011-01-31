@@ -97,5 +97,5 @@ set(gca,'XGrid','on')
 
 set(gcf, 'paperorientation', 'portrait');
 set(gcf, 'paperposition', [.25 .5 8 10] );
-print(gcf, '-depsc2', ['tmp.ps']);
+%print(gcf, '-depsc2', ['tmp.ps']);
 

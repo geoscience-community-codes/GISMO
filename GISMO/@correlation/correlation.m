@@ -387,21 +387,23 @@ function c = loadfromdatasource(ds,scnl,trig,pretrig,posttrig);
 
 % READ IN WAVEFORM OBJECTS
 good = ones(size(trig));
-fprintf('Creating matrix of waveforms ...');
+fprintf('Creating matrix of waveforms ...\n');
 w = waveform;
-for i = 1:length(trig)
-    try
-        w(i) = waveform(ds,scnl,trig(i)+pretrig/86400,trig(i)+posttrig/86400);
-        freq(i) = get(w(i),'Fs');
-        fprintf('.');
+nMax = length(trig);
+disp('     ');
+for n = 1:nMax
+try
+        w(n) = waveform(ds,scnl,trig(n)+pretrig/86400,trig(n)+posttrig/86400);
+        freq(n) = get(w(n),'Fs');
+        fprintf('\b\b\b\b\b\b%5.0f%%',n/nMax*100);
     catch
-        disp(' ');
         scnlstr = [get(scnl,'network') '_' get(scnl,'station') '_' get(scnl,'channel') '_' get(scnl,'location')];
-        disp([scnlstr ' at time ' datestr(trig(i),'mm/dd/yyyy HH:MM:SS') ' could not be loaded.']);
-        good(i) = 0;    % mark waveform as empty
+        disp([scnlstr ' at time ' datestr(trig(n),'mm/dd/yyyy HH:MM:SS') ' could not be loaded.']);
+        disp('     ');
+        good(n) = 0;    % mark waveform as empty
     end;
 end;
-disp(' ');
+fprintf('\n');
 %
 % CHECK TO SEE IF ANY DATA WAS READ IN
 if length(w)==0

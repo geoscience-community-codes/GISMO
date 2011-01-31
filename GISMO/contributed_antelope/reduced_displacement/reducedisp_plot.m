@@ -17,9 +17,6 @@ function reducedisp_plot(dbname)
 % >> which reducedisp_plot
 %    /[SomePathName]/reducedisp_plot
 % cp /[SomePathName]/reducedisp_plot .  (outside matlab)
-%
-% Currently not compatible with Linux 64-bit Matlab libraries
-% Use 32-bit version 
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
 % $Date$
@@ -27,7 +24,6 @@ function reducedisp_plot(dbname)
 
 
 
-%%%%%%%%%%%%%%%%%% 32 only %%%%%%%%%%%%%%%%%%%%
 
 db = dbopen(dbname,'r');
 db = dblookup(db,'','wfmeas','','');

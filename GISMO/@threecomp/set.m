@@ -27,13 +27,13 @@ end
 switch upper(fieldName)
     
     case {'WAVEFORM'}
-        if ~isa(val,'WAVEFORM')
+        if ~isa(val,'waveform')
             error('VALUE is not a waveform object');
         end
-        if numel(val)~=3
+        if size(val,2)~=3
             error('Input waveform must be nx3 in size');
         end
-        TC.traces = reshape(val,1,3);
+        TC.traces = reshape(val,[],3);
         
         
     case {'BACKAZIMUTH'}
