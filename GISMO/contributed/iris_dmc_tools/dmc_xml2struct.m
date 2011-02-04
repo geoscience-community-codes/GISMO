@@ -33,7 +33,7 @@ function [s,success] = dmc_xml2struct(file)
 %  Modifications here allow xml loading from URLs and return null 
 %  result when file or URL is invalid. 
 %
-%  AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+%  MODIFIED BY: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
 %  $Date: 2011-01-31 09:16:48 -0900 (Mon, 31 Jan 2011) $
 %  $Revision: 259 $
 
@@ -63,20 +63,12 @@ catch
     s = [];
     success = 0;
 end
-% 
-% %read the xml file
-% if VALID
-% else
-%    s = [];
-%    return;
-% end
-
-%parse xDoc into a MATLAB structure
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
-% ----- Subfunction parseChildNodes -----
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   Subfunction parseChildNodes 
 function [children,ptext] = parseChildNodes(theNode)
 % Recurse over node children.
 children = struct;
