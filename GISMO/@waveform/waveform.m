@@ -75,7 +75,7 @@ end;
 % by default.
 argCount = nargin;
 if argCount>0 && ischar(varargin{end}) && strcmpi(varargin{end},'nocombine')
-varargin = varargin(1:end-1);
+  varargin = varargin(1:end-1);
   COMBINE_WAVES = false;
   argCount = argCount -1;
 else
@@ -114,7 +114,7 @@ switch argCount
       endt = reshape(datenum(endt(:)),size(endt));
       
       % -------------------------------------------------------------------
-      % if there is no specifically assigned load function, then 
+      % if there is no specifically assigned load function, then
       % determine the load function based upon the datasource's type
       
       if isVoidInterpreter(ds)
@@ -125,14 +125,14 @@ switch argCount
           % file, sac, and seisan all do not require fancy handling.  The
           % load routine and interpreter will be set, and the waveform will
           % be loaded in the following section, along with any user-defined
-          % load functions.          
+          % load functions.
           case {'file','sac','seisan'}
             myLoadRoutine = eval(['@load_',ds_type]);
             ds = setinterpreter(ds,myLoadRoutine); %update interpeter funct
-          
-          % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-          % both winston and antelope are database types, which require
-          % fancier handling.  Their waveforms will be loaded right here.
+            
+            % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            % both winston and antelope are database types, which require
+            % fancier handling.  Their waveforms will be loaded right here.
           case {'winston'}
             myLoadRoutine = eval(['@load_',ds_type]);
             w = myLoadRoutine( makeDataRequest(ds,scnls,startt,endt) );
@@ -140,13 +140,13 @@ switch argCount
             myLoadRoutine = eval(['@load_',ds_type]);
             w = myLoadRoutine( makeDataRequest(ds,scnls,startt,endt) ,COMBINE_WAVES);
             
-          % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-          % Future pre-defined load types would have case statments here
-          % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-          
-          % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-          % There was no interpreter set, but there was no default type
-          % set, either.
+            % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            % Future pre-defined load types would have case statments here
+            % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            
+            % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            % There was no interpreter set, but there was no default type
+            % set, either.
           otherwise
             error('Waveform:waveform:noDatasourceInterpreter',...
               'user defined datasources should be associated with an interpreter');
@@ -173,11 +173,22 @@ switch argCount
           %load all waveforms for these files
           clear somew
           for i=1:numel(fn)
-            if ~exist(fn{i},'file'),
+            possiblefiles = dir(fn{i});
+            if isempty(possiblefiles)
               disp(['no file:',fn{i}]);
               continue,
             end
-            w = myLoadFunc(fn{i});
+            
+            %             if ~exist(fn{i},'file'),
+            %               disp(['no file:',fn{i}]);
+            %               continue,
+            %             end
+            %            w = myLoadFunc(fn{i});
+            
+            [PATHSTR,NAME,EXT] = fileparts(fn{i});
+            for nfiles = 1:numel(possiblefiles)
+              w(nfiles) = myLoadFunc(fullfile(PATHSTR,possiblefiles(nfiles).name));
+            end
             if isempty(w)
               warning('Waveform:waveform:noData','no data retrieved');
               return
@@ -298,10 +309,10 @@ tf = strcmpi(func2str(get(ds,'interpreter')),'void_interpreter');
 
 function datarequest = makeDataRequest(ds, scnls, st, ed)
 datarequest = struct(...
-        'dataSource', ds, ...
-        'scnls', scnls, ...
-        'startTimes', st,...
-        'endTimes',ed);
+  'dataSource', ds, ...
+  'scnls', scnls, ...
+  'startTimes', st,...
+  'endTimes',ed);
 
 function w = genericWaveform()
 %create a fresh waveform.  All calls to the waveform object, aside
@@ -314,7 +325,7 @@ function w = genericWaveform()
 %DEFAULT_STATION = '';
 %DEFAULT_START = 719529; % which is equiv to datenum('1/1/1970');
 w.scnl = scnlobject;%(DEFAULT_STATION,DEFAULT_CHAN);
-w.Fs = nan; 
+w.Fs = nan;
 w.start = 719529;
 w.data = double([]);
 w.units = 'Counts'; %units for data (nm? counts?)

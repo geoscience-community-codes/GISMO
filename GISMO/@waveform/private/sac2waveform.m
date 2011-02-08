@@ -58,9 +58,9 @@ end
 function scnl = getSCNL(header)
 %make scnl object from station channel and network.  no location info
 %exists
-scnl = scnlobject(header.KSTNM,... station
-  header.KCMPNM, ... channel
-  header.KNETWK); %network
+scnl = scnlobject(deblank(header.KSTNM),... station
+  deblank(header.KCMPNM), ... channel
+  deblank(header.KNETWK)); %network
 
 function mydate = getDate(header)
 mydate= datenum(header.NZYEAR, 0, header.NZJDAY, ...
