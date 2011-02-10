@@ -387,7 +387,7 @@ function c = loadfromdatasource(ds,scnl,trig,pretrig,posttrig);
 
 % READ IN WAVEFORM OBJECTS
 good = ones(size(trig));
-fprintf('Creating matrix of waveforms ...\n');
+fprintf('Reading waveforms into a correlation object ...\n');
 w = waveform;
 nMax = length(trig);
 disp('     ');

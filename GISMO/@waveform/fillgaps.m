@@ -38,7 +38,11 @@ if (isnan(gapvalue))
         else
             switch upper(value)
                 case 'MEANALL'
-                    w(N).data(isnan(w(N).data)) = mean(w(N));
+                    meanVal = mean(w(N));
+                    if isnan(meanVal)
+                       meanVal = 0; 
+                    end
+                    w(N).data(isnan(w(N).data)) = meanVal;
                 otherwise
                     disp('unimplemented fillgaps method');
             end
