@@ -76,7 +76,7 @@ end
 
 % PROCESS EACH WAVEFORM
 WWxc = WW;    % establishes the dimensions of WWxc
-fprintf('%s',['Processing ' num2str(numel([1:10])) ' waveforms  ']);
+fprintf('%s',['Processing ' num2str(numel(WW)) ' waveforms  ']);
 for n = 1:numel(WW)
     %disp(['Processing ' num2str(n) ' out of ' num2str(numel(WW)) ' waveforms ...')]);
     fprintf('%s','.');

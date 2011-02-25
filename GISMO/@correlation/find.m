@@ -91,7 +91,7 @@ function index = find_big(c,n);
 famsize = histc(c.clust,[0:max(c.clust)]+.5  );
 [famsize,fami] = sort(famsize,'descend');
 if n > max(famsize)
-   error(['There are no clusters with more than ' num2str(max(famsize)) ' traces']); 
+   warning(['There are no clusters with more than ' num2str(max(famsize)) ' traces']); 
 end
 index = [];
 

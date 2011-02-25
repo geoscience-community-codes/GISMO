@@ -68,11 +68,12 @@ end
 
 
 % STEP THROUGH EACH OBJECT
-for n = 1:numel(TC)
-    fprintf('.');
+disp('calculating particle motions ->      ');
+nMax = numel(TC);
+for n = 1:nMax;
+    fprintf('\b\b\b\b\b%4.0f%%',n/nMax*100);
     [TC(n).rectilinearity,TC(n).planarity,TC(n).energy,TC(n).azimuth,TC(n).inclination] = do_one(TC(n),dt,width); 
 end
-
 fprintf('\n');
 
 
