@@ -52,7 +52,7 @@ function [c,t,i,CC,LL] = interferogram(c,varargin)
 
 % GET INPUT PARAMETERS
 if ~isa(c,'correlation')
-    disp('First input parameter must be a correlation object');
+    error('First input parameter must be a correlation object');
 end
 
 

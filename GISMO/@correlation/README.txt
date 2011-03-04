@@ -16,7 +16,7 @@ Contents
 #     Install notes        #	
 ############################
 
-[ Most of the install notes have been superceded by including the correlation toolbox in the GISMO suite. If the GISMO suite if tools is being installed, then the correlation toolbox should install automatically. ]
+[ *** Most of the install notes have been superceded by including the correlation toolbox in the GISMO suite. If the GISMO suite if tools is being installed, then the correlation toolbox should install automatically. *** ]
 
 Uncompress the distribution into a directory where you keep matlab codes. The correlation toolbox is written according to the protocols of a matlab object. In order to use a matlab object, all directories beginning with "@" must be in the matlab path. This can be done one of three ways: (1) select the FILE pulldown menu and then SET PATH; (2) edit your startup.m files; or (3) use the addpath command to include the path for just a single matlab session. You can test whether the correct path is set by entering HELP CORRELATION. If you see the correlation help page then the path has been set correctly. If you have downloaded the waveform suite as well, it is important to first consult the waveform toolbox documentation (and test dat importing directly) to ensure that you have set up the necessary components to interface with your desired data source. The cookbook in @correlation/html/correlation_cookbook.html (or .pdf) provides an overview of basic features. Detailed useage information can be obtained from the help pages.
 
@@ -35,18 +35,20 @@ November 2007
 
 
 
-###############################
-#   Release 2.xx              #
-###############################
-GETCLUSTERSTAT function added to extract relevent parameters from the CLUSTER field. (January 2, 2009)
-
 
 ############################
-#   Release notes v2.0     #
+#   Release notes v2.0 +   #
 ############################
+
+For code modifications since 2009, see the SVN repository change log:
+https://code.google.com/p/gismotools/source/list
+
+
 June 2009
 
 Note that future updates to correlation will not be tracked through a formal release number. Following 2.0, changes in the correlation toolbox will be tracked by SVN revision number. This is a more honest accounting of how the correlation toolbox is actually maintained.
+
+GETCLUSTERSTAT function added to extract relevent parameters from the CLUSTER field. (January 2, 2009)
 
 This release warrants 2.0 because there have been substantial improvements to the correlation data calls and the actual CORRELATION constructor itself. Most of these changes have been made to make use of the new DATASOURCE and SCNLOBJECT objects and WAVEFORM version 1.8 which makes use of them. This allows much more flexible loading of waveforms and in many cases, vastly improved speed. Users are strongly encouraged to invest a few minutes to understand these tools. While these my appear to be more work on the surface, the power they bring justifies the code changes. Older function calls to CORRELATION work. However they are unlikely to be maintained in the future.
 
