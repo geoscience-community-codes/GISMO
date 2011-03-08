@@ -131,7 +131,7 @@ elseif calctype(1:3)=='IND'
     c.L = [];
 
 elseif calctype(1:3)=='CLU'
-    disp('CLUSTER OPTION NOT FUNCTIONAL YET');
+    error('CLUSTER OPTION NOT FUNCTIONAL YET');
     if size(c.link,1)==0
         c = linkage(c);
         DOLINK = 1;

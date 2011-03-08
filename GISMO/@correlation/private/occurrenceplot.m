@@ -1,4 +1,4 @@
-function occurrenceplot(c,scale,clusternum);
+function occurrenceplot(c,scale,clusternum)
 
 % Private method. See ../plot for details.
 

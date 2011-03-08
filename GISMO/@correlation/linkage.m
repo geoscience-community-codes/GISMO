@@ -37,6 +37,11 @@ if ~strcmpi(class(c),'correlation')
     error('First input must be a correlation object');
 end;
 
+if get(c,'TRACES')<2
+    error('correlationLinkageTooFewTraces','Correlation object must contain at least two traces to use the LINKAGE function');
+end;
+
+
 % if isempty(get(c,'LAG'))
 %     error('LAG field must be filled in input object');
 %     error('See correlation/linkage function');
