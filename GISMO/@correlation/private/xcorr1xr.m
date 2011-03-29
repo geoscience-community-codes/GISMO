@@ -84,6 +84,12 @@ for n =1:N
 end
 
 
+% REPLACE NaNs WITH ZEROS
+f = find(isnan(d.C));
+d.C(f) = 0;
+
+
+
 % FILL LOWER TRIANGULAR PART OF MATRICES
 d.C = d.C + d.C' - eye(size(d.C));
 d.L = d.L - d.L';

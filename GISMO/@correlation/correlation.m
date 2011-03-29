@@ -27,7 +27,7 @@ function c = correlation(varargin)
 % Create a correlation object from an existing waveform object and a column
 % vector of trigger times. These times can be in the matlab numeric time
 % format (serial day) or a recognized string format (see HELP DATENUM).
-% TRIG and WAVEFORM must be of the same length.
+% TRIG must be the same length as WAVEFORM or be a scalar value.
 %
 % CORRELATION('DEMO')
 % Opens the demo dataset for correlation. This dataset contains a single
@@ -286,6 +286,12 @@ elseif nargin==2 && isa(varargin{1},'waveform')
         c.trig = reshape(c.trig,length(c.trig),1);
     else
         error('Time format for TRIG field not recognized');
+    end
+    % adjust length of trigger field input
+    if numel(c.trig)==1
+        c.trig = c.trig*ones(size(c.W));
+    elseif  numel(c.trig)~=numel(c.W)
+        error('correlation:correlation:wrongTriggerLength','Trigger argument must be of length 1 or the same as the number of waveforms');
     end
     c.C = [];
     c.L = [];
