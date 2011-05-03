@@ -112,21 +112,25 @@ location = get(scnl,'location');
 
 critList.statment =  {};
 if exist('station','var') && ~isempty(station)
-  station = makecell(station);
-  for i=1:numel(station)
-    sta_crit(i) = makeCritListItem('sta','==',station{i});
-  end
+    station = expandwildcard(station);
+    station = makecell(station);
+    for i=1:numel(station)
+        sta_crit(i) = makeCritListItem('sta','=~',station{i});
+    end
 else
-  sta_crit = {};
+    error('Waveform:load_antelope:noStationTerm',...
+        'No stations were requested. To retrieve all stations use ''*''');
 end
 
 if exist('channel','var') && ~isempty(channel)
+  channel = expandwildcard(channel);
   channel = makecell(channel);
   for i=1:numel(channel)
-    cha_crit(i) = makeCritListItem('chan','==',channel{i});
+    cha_crit(i) = makeCritListItem('chan','=~',channel{i});
   end
 else
-  cha_crit = {};
+    error('Waveform:load_antelope:noChannelTerm',...
+        'No channels were requested. To retrieve all stations use ''*''');
 end
 
 for i=1:numel(sta_crit)
@@ -134,21 +138,26 @@ for i=1:numel(sta_crit)
   critList(i).group(2) = cha_crit(i);
 end
 
-
 if ~isempty(network)
+  network = expandwildcard(network);
   network = makecell(network);
   for i=1:numel(critList)
-    critList(i).group(end+1) = makeCritListItem('net','==',network{i});
+    critList(i).group(end+1) = makeCritListItem('net','=~',network{i});
   end
 end
 
 if ~isempty(location)
+  location = expandwildcard(location);
   location = makecell(location);
   for i=1:numel(critList)
-    critList(i).group(end+1) = makeCritListItem('loc','==',location{i}); %#ok<*AGROW>
+    critList(i).group(end+1) = makeCritListItem('loc','=~',location{i}); %#ok<*AGROW>
   end
 end
 critList = critList(:);
+
+function field = expandwildcard(field)
+% replace * with .* but leave any existing .* unchanged
+field = regexprep(field,'(?<!\.)\*','\.\*');
 
 function cl = makeCritListItem(field, relationship, data)
 cl.field = field;
@@ -158,7 +167,7 @@ cl.data = data;
 function cle = getCritListExpression(cl)
 switch class(cl.data)
   case('char')
-    cle = sprintf('%s %s "%s"',cl.field, cl.relationship, cl.data);
+    cle = sprintf('%s%s/%s/',cl.field, cl.relationship, cl.data);
   otherwise
     cle =  sprintf('%s %s %s',cl.field,cl.relationship,num2str(cl.data));
 end

@@ -2,7 +2,6 @@ function SCNLs = scnlobject(stations, channels, network, location)
 % scnl : object that holds the station, channel, network, and location for
 % a seismic trace.  This object is used by the datasource object.
 %
-%
 %  scnl = scnlobject(station, channel, network, location);
 %  scnl = scnlobject(); %default, blank scnl
 %  scnls = scnlobject(station, channels, network, location);
@@ -10,6 +9,28 @@ function SCNLs = scnlobject(stations, channels, network, location)
 %
 %  note, you can either assign multiple channels to a station or assign
 %  multiple stations with a single channel, not both.
+%
+%
+%  ----------- WILDCARDS ---------------------
+%  scnlobject is merely a storage unit for net-sta-chan-loc information. It
+%  is blind to wildcards. However, when used as an argument in WAVEFORM,
+%  wildcards in the scnlobject take on meaning that depends somewhat on the
+%  DATASOURCE type. In most cases, * wildcards are understood without 
+% issue. 
+% 
+%  scnlobject('R*','BHZ','XE','') match all stations begining with R
+%  scnlobject('MCK','*','XE','')  match all channels for MCK
+%  scnlobject('R*','*','XE','')   all R* stations. All channels
+%
+%  The uses above have been tested against Antelope data sources. Note that
+%  in Antelope it would be more common to use the literal wildcards 'R.*' 
+%  or '.*'. When waveform interprets scnlobjects, it considers these use
+%  the same.
+%
+%  Be careful what you ask for. Wildcards can return very large amounts of
+%  data!
+
+
 
 switch (nargin)
   case 0 %default
