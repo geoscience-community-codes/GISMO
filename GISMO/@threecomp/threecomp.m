@@ -252,12 +252,14 @@ classdef threecomp
                 TC = align(TC);
                 conflicts = verify(TC);
                 successMask = find(strcmp(conflicts,'0000000'));
+				
                 TC = TC(successMask);
-                if isempty(threecomp)
-                    return
+                if numel(TC) == 0 %isempty(TC) 
+                   return
                 end
-                addfield(TC(1).traces(1),'TMP_SUCCESSMASK',successMask);
-                addfield(TC(1).traces(1),'TMP_CONFLICTS',conflicts);
+				
+                TC(1).traces(1) = addfield(TC(1).traces(1),'TMP_SUCCESSMASK',successMask);
+                TC(1).traces(1) = addfield(TC(1).traces(1),'TMP_CONFLICTS',conflicts);
                 for n=1:length(TC)
                     TC(n).traces = detrend(TC(n).traces);
                     TC(n).traces = demean(TC(n).traces);
