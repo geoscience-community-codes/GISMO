@@ -102,8 +102,8 @@ end
 function val = do_channels(c,val)
    
 chan = get(c,'CHAN');
-if ~iscell(sta)
-   sta = {sta}; 
+if ~iscell(chan)
+   chan = {chan}; 
 end
 tf = strcmpi(chan,chan(1));
 if length(find(tf)) ~= length(tf)

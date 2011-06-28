@@ -22,6 +22,16 @@ function TC = particlemotion(TC, varargin)
 % input traces. See THREECOMP(DESCRIBE) for a complete description of the
 % particle motion fields.
 %
+% For an overview of this methodology see:
+%    Montalbetti, J. F. and Kanasewich, E. R. (1970), Enhancement 
+%    of Teleseismic Body Phases with a Polarization Filter. Geophys. 
+%    J. Royal Astro. Soc., 21, 119–129. 
+%    doi: 10.1111/j.1365-246X.1970.tb01771.x
+%
+%    Ereditato, D. and G. Luongo (1994) Volcanic tremor wave field 
+%    during quiescent and eruptive activity at Mt. Etna (Sicily), 
+%    J. Volcanol. Geotherm. Res., 61, 239–25.
+%
 % see also threecomp/describe
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
