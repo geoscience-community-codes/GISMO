@@ -31,7 +31,21 @@
 % should be given in degrees between -360 and 360 where 0 is north. Can be
 % used with or without TRIGGER argument.
 %
-% AUTOMATIC LOADING OF TRIGGER AND BACKAZIMUTH PROPERTIES TKTKTK
+% TC = THREECOMP(W,...,ORIENTATIONS,...) fills the orientation property in
+% each threecomp object. ORIENTATION must be an Nx6 vector of orientations
+% in which each row contains the azimuth and inclination of the three
+% compnents. For example, channels with orientations of 
+%     BHZ: [0 0]    BHN:[5 90]    BHE: [95 90]
+% would be specified as as the 1x6 matrix [0 0 5 90 95 90]. For a full
+% description of the coordinate system see threecomp/describe.
+%
+% indicating the direction from the station to the source. Backazimuths
+% should be given in degrees between -360 and 360 where 0 is north. Can be
+% used with or without TRIGGER argument.
+%
+% AUTOMATIC LOADING OF TRIGGER, BACKAZIMUTH AND ORIENTATION PROPERTIES
+% THREECOMP will attempt to read these properties from various waveform
+% fields automatically if they exist. For details see threecomp/describe.
 %
 % HOW TO HANDLE INCONSISTENCIES IN INPUT WAVEFORMS
 % 1x3 tuples in W that do not meet the minimum standards are not included in
@@ -119,9 +133,9 @@ classdef threecomp
             if ~INTERNAL
                 for n = 1:length(varargin)-1
                     vals = varargin{end};
-                    if min(size(vals))==1      % turn vectors to Nx1
-                        vals = reshape(vals,length(vals),1);
-                    end
+                    %if min(size(vals))==1      % turn vectors to Nx1
+                    %    vals = reshape(vals,length(vals),1);
+                    %end
                     if isa(vals,'double') && size(vals,1)==size(W,1)
                         if size(vals,2)==6
                             orientationList = mod(vals,360);

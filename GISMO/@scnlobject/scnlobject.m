@@ -16,7 +16,9 @@ function SCNLs = scnlobject(stations, channels, network, location)
 %  is blind to wildcards. However, when used as an argument in WAVEFORM,
 %  wildcards in the scnlobject take on meaning that depends somewhat on the
 %  DATASOURCE type. In most cases, * wildcards are understood without 
-% issue. 
+%  issue. Note that '*' differs from ''. The latter excludes this term from
+%  the search altogether. Station and channel cannot be excluded from the
+%  search.
 % 
 %  scnlobject('R*','BHZ','XE','') match all stations begining with R
 %  scnlobject('MCK','*','XE','')  match all channels for MCK

@@ -45,6 +45,7 @@ for eachSacFile = 1:numel(sacStructure)
       w = addfield(w,thisfield,headerDetails.(thisfield));
     end
   end
+ 
   w = set(w,'start',getDate(headerDetails));
   w = set(w,'data',sacInfo.amplitudes);
   w = set(w,'freq', 1 ./ headerDetails.DELTA); %doesn't take into account ODELTA (observed freq)

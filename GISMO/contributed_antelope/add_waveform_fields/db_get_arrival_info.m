@@ -45,8 +45,9 @@ for n = 1:length(arrival.arid);
 	db2 = dblookup_table(db,'origin');
 	db1 = dbjoin(db1,db2);
 	[ origin.lat(n),origin.lon(n),origin.depth(n),origin.time_epoch(n),origin.ml(n),origin.orid(n)] = dbgetv(db1,'origin.lat','origin.lon','origin.depth','origin.time','origin.ml','origin.orid');
+	[ arrival.sta{n},arrival.chan{n}] = dbgetv(db1,'arrival.sta','arrival.chan');
 	[ arrival.time(n),arrival.iphase(n),arrival.deltim(n)] = dbgetv(db1,'arrival.time','arrival.iphase','arrival.deltim');
-	[ assoc.delta(n),assoc.seaz(n),assoc.esaz(n),assoc.timeres(n) ] = dbgetv(db1,'assoc.delta','assoc.seaz','assoc.esaz','assoc.timeres');
+    [ assoc.delta(n),assoc.seaz(n),assoc.esaz(n),assoc.timeres(n) ] = dbgetv(db1,'assoc.delta','assoc.seaz','assoc.esaz','assoc.timeres');
 end
 dbclose(db);
 origin.lat = reshape( origin.lat , numel(origin.lat), 1 );
@@ -61,11 +62,15 @@ arrival.time_epoch = reshape( arrival.time , numel(arrival.time), 1 );
 arrival.time_matlab =  datenum(strtime(arrival.time_epoch));
 arrival.iphase = reshape( arrival.iphase , numel(arrival.iphase), 1 );
 arrival.deltim = reshape( arrival.deltim , numel(arrival.deltim), 1 );
+arrival.sta = reshape( arrival.sta , numel(arrival.sta), 1 );
+arrival.chan = reshape( arrival.chan , numel(arrival.chan), 1 );
+
 %
 assoc.delta = reshape( assoc.delta , numel(assoc.delta), 1 );
 assoc.seaz = reshape( assoc.seaz , numel(assoc.seaz), 1 );
 assoc.esaz = reshape( assoc.esaz , numel(assoc.esaz), 1 );
 assoc.timeres = reshape( assoc.timeres , numel(assoc.timeres), 1 );
+assoc.traveltime = arrival.time_matlab - origin.time_matlab;
 
 
 if exist('W')

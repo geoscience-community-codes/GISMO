@@ -49,7 +49,7 @@ function ds = datasource(whichsource, varargin)
 % in Fairbanks, could be set up as follows:
 %
 % ds = datasource('antelope', ...
-%      '/iwrun/op/db/archive/archive_%04d/archive_%04d_%02d_%02d',...
+%      '/aerun/sum/db/archive/archive_%04d/archive_%04d_%02d_%02d',...
 %      'year','year','month','day');
 %
 % 
@@ -139,7 +139,13 @@ else
       % now, the special cases -------------------------------
       
     case 'uaf_continuous'
-      %default in-house antelope file
+      %default in-house antelope databases
+      ds = datasource('antelope', ...
+        '/aerun/sum/db/archive/archive_%04d/archive_%04d_%02d_%02d',...
+        'year','year','month','day');
+
+    case 'uaf_continuous_op'
+      %default in-house antelope databases (prior to July 2011)
       ds = datasource('antelope', ...
         '/iwrun/op/db/archive/archive_%04d/archive_%04d_%02d_%02d',...
         'year','year','month','day');

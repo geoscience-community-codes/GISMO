@@ -37,7 +37,7 @@ function w = loadSacByFilenames(filename)
 % waveform denoted by w(N,M).  In the example above, loadSacByFilenames will return a
 % 1x3 waveform object, with all three files.
 %
-% Programming suggestion—select files using a dialog box, by using the
+% Programming suggestionï¿½select files using a dialog box, by using the
 % following code:
 %   % display the dialog box used for selecting files, and
 %   % allow for multiple selections
@@ -74,7 +74,8 @@ function w = loadSacByFilenames(filename)
 
 % VERSION: 1.1 of waveform objects
 % AUTHOR: Celso Reyes
-% LASTUPDATE: 3/14/2009
+% $Date$
+% $Revision$
 
 if ~iscell(filename)
   filename = {filename};
