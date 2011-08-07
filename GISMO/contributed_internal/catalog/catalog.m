@@ -98,7 +98,7 @@ classdef catalog
             
         function cobj = catalog(varargin)
             switch nargin
-                case {5, 6}, cobj = cobj.catalog1(varargin{:});
+                case {5, 6, 7}, cobj = cobj.catalog1(varargin{:});
                 case 10, cobj.catalog2(varargin{:});
                 case 11, cobj.catalog3(varargin{:});
                 otherwise, disp('Number of input arguments to constructor not recognized');
@@ -107,8 +107,8 @@ classdef catalog
 
 		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-		%function cobj = catalog1(someobj, snum, enum, magthresh, region, db, archiveformat) % 5 or 6 arguments
-        function cobj = catalog1(cobj, snum, enum, magthresh, region, db, archiveformat) % 5 or 6 arguments
+		%function cobj = catalog1(someobj, snum, enum, magthresh, region, db, archiveformat, subclass) % 5 or 6 arguments
+        function cobj = catalog1(cobj, snum, enum, magthresh, region, db, archiveformat, subclass) % 5 or 6 arguments
 			% This is the main, high-level constructor for a catalog object from an Antelope database
 			% This constructor is based on the m-file db2event and is used to load a catalog from an Antelope database
 			%
@@ -130,6 +130,8 @@ classdef catalog
 			%if ~antelope_exists
 			%	disp('Antelope not found');
 			%end
+           
+            
             
 			if nargin < 6
 				error('Not enough arguments');
@@ -167,13 +169,32 @@ classdef catalog
 			cobj.region = [leftlon rightlon lowerlat upperlat];
 			cobj.dbroot = db;
 			cobj.archiveformat = archiveformat;
+
+            
+            if exist('subclass', 'var')
+                    if ~isempty(subclass)
+
+                        index = findstr(cobj.etype, subclass);
+
+                        cobj.lat = cobj.lat(index);
+                        cobj.lon = cobj.lon(index);
+                        cobj.depth = cobj.depth(index);
+                        cobj.dnum = cobj.dnum(index);
+                        cobj.evid = cobj.evid(index);
+                        cobj.nass = cobj.nass(index);
+                        cobj.mag = cobj.mag(index);
+                        cobj.etype = cobj.etype(index);
+                        cobj.auth = {};
+                    end
+            end
+            
 		end
 
 
 
  		%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-		function cobj = catalog2(cobj, dbroot,archiveformat,snum,enum,leftlon,rightlon,lowerlat,upperlat,minz,maxz,minmag);
+		function cobj = catalog2(cobj, dbroot,archiveformat,snum,enum,leftlon,rightlon,lowerlat,upperlat,minz,maxz,minmag)
 			% This is called by both constructors above
 			% It is a copy of the old 'loadevent' function
 			%

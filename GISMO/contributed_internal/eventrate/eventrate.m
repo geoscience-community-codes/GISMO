@@ -258,7 +258,7 @@ classdef eventrate
 
             for cc = 1: numsubplots
                 if strcmp(field{cc},'energy')
-                    data = mag2eng(Obj(c).cum_mag);
+                    data = cumsum(mag2eng(Obj(c).cum_mag));
                 else
                     eval(  sprintf('data = Obj(c).%s;',field{cc} ) );
                 end
