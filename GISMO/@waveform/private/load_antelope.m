@@ -43,7 +43,7 @@ if ~exist('specificDatabase','var')
   for thisdatabaseN = 1 : numel(database)
     outputWaveforms(thisdatabaseN) = {load_antelope(datarequest, COMBINE_WAVEFORMS, database{thisdatabaseN})};
   end
-  outputWaveforms = [outputWaveforms{:}];
+  outputWaveforms = transpose(vertcat(outputWaveforms{:}));
   return;
 end
 
@@ -272,6 +272,7 @@ catch
 end
 %check to ensure wfdisk table exists and is populated
 if nrecs == 0,
+  databaseFileName = dbquery(mydb,'dbTABLE_FILENAME');
   closeIfAppropriate(mydb);
   warning('Waveform:load_antelope:databaseNotFound', ...
     'Database not found: %s', databaseFileName);

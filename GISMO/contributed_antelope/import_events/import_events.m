@@ -1,4 +1,4 @@
-function [ eqtc, varargout ] = import_events(dbname, chanfile, starttime, endtime, phase, delay, enddelay)
+function [ eqtc, varargout ] = import_events(dbname, chanfile, starttime, endtime, phase, delay, enddelay, varargin)
 %IMPORT_EVENTS Import waveforms associated with earthquake events.
 % EQTC = IMPORT_EVENTS(DBNAME, CHANFILE, STARTTIME, ENDTIME, ...
 %                      PHASE, DELAY, ENDDELAY) returns a cell array of
@@ -31,6 +31,13 @@ function [ eqtc, varargout ] = import_events(dbname, chanfile, starttime, endtim
 % EQWF.  These will be 1x1 waveforms for single-component data and 1x3
 % waveforms for three-component data (including those that could not be
 % converted to threecomp objects and are not present in EQTC).
+%
+% ... = IMPORT_EVENTS(..., DS) uses specified GISMO datasource DS to
+% retrieve the waveform data.  The earthquake catalogue and phase arrivals
+% are always taken from the Antelope database DBNAME, but actual waveform
+% data can be in any GISMO-readable format.  Examples: DS = 
+% datasource('uaf_continuous') or DS =
+% datasource('winston','myserver.uaf.edu',12345).
 %
 % RETURN VALUE EXAMPLES
 %
@@ -128,6 +135,15 @@ if ~all(isstrprop(phase,'alphanum'))
 	error('Argument phase must be an alphanumeric string.');
 end
 
+% Check if optional datasource object was provided
+switch size(varargin,2)
+	case 0
+		ds = datasource('antelope',dbname); % Standard antelope datasource
+	case 1
+		ds = varargin{1}; % User-supplied datasource
+	otherwise
+		error('Incorrect number of input arguments.');
+end
 
 %% Check output arguments
 
@@ -178,7 +194,7 @@ end
 
 %% Load the earthquake catalogue
 
-fprintf(2,'Loading earthquake catalogue...\n');
+fprintf(2,'Loading earthquake catalogue...');
 
 % Open database
 db = dbopen(dbname,'r');
@@ -224,7 +240,8 @@ unique_orids = dbgetv(db,'orid');
 dbclose(db);
 
 
-
+% Display counts
+fprintf(2,'%d origins, %d arrivals\n',numel(unique_orids),numel(atime));
 
 
 %% Arrange info from earthquake catalogue into a more useful format
@@ -264,8 +281,7 @@ end
 % We now have an array full of arrival times at stations.  We want to load
 % those waveforms into a cell array of the same shape.
 
-% Specify the datasource
-ds = datasource('antelope',dbname);
+
 
 % Allocate the array
 eqwf = cell(norigins,nstations);
@@ -297,9 +313,13 @@ for ns = 1:nstations
 	% Load waveforms for this station and channels
 	wtmp = waveform(ds,scnl,start_times,end_times);
 	
+	% Reshape to a Nx1 vector; sometimes waveform() returns unusual
+	% dimensions (???)
+	wtmp = wtmp(:);
+	
 	% If 3-component data, rearrange to put channels together
 	if is_tc
-		wtmp = reshape(wtmp,length(wtmp)/3,3);
+		wtmp = reshape(wtmp,size(wtmp,1)/3,3);
 	end
 	
 	% Store event arrival times in waveform objects, then store the
@@ -343,7 +363,12 @@ eqtc = cell(size(eqwf));
 for no = 1:norigins
 	for ns = 1:nstations
 		if length(eqwf{no,ns}) == 3 % If it's three-compoenent
-			eqtc{no,ns} = threecomp(eqwf{no,ns},eqtimes(no,ns));
+			try
+				eqtc{no,ns} = threecomp(eqwf{no,ns},eqtimes(no,ns));
+			catch me
+				warning(['Error converting earthquake (' num2str(no) ',' num2str(ns) ') to threecomp object.  Leaving empty.']);
+				eqtc{no,ns} = [];
+			end
 		else % If it's 1-component (or empty)...
 			eqtc{no,ns} = eqwf{no,ns}; % ...store the original value
 		end
