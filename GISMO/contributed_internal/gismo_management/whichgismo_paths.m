@@ -8,9 +8,8 @@
 
 % PREDEFINED PATH
 paths = {
-    'LinuxNet'          '/home/admin/share/matlab/PACKAGES/GISMO_OP/GISMO'
-    'LinuxNetDev'       '/home/admin/share/matlab/PACKAGES/GISMO_DEV/GISMO'
-    'LinuxNetWest'      '/home/west/mlcode/GISMO_WEST/GISMO'
-    'MacWest'           '/Users/west/mlcode/GISMO_DEV/GISMO'
+    'Op'                '/home/admin/share/matlab/PACKAGES/GISMO_OP/GISMO'
+    'Dev'               '/home/admin/share/matlab/PACKAGES/GISMO_DEV/GISMO'
+    'West'              '~/Repositories/GISMOTOOLS/GISMO'
     'Glenn'             '~/src/gismotools/GISMO'  % GT: I can use this on coho, bronco, elsewhere since I always put gismotools at ~/src/
 };
