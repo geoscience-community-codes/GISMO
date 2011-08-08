@@ -11,5 +11,6 @@ paths = {
     'Op'                '/home/admin/share/matlab/PACKAGES/GISMO_OP/GISMO'
     'Dev'               '/home/admin/share/matlab/PACKAGES/GISMO_DEV/GISMO'
     'West'              '~/Repositories/GISMOTOOLS/GISMO'
+    'WestBranch'        '~/Repositories/GISMOBRANCH/GISMO'
     'Glenn'             '~/src/gismotools/GISMO'  % GT: I can use this on coho, bronco, elsewhere since I always put gismotools at ~/src/
 };
