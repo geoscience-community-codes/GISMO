@@ -253,16 +253,17 @@ classdef catalog
 
 			if strcmp(archiveformat,'')
 				dbname = dbroot;
-				if exist(dbname,'file')
+				if exist(sprintf('%s.origin',dbname),'file')
 					cobj = cobj.css_import(snum, enum, dbname, leftlon, rightlon, lowerlat, upperlat, minz, maxz, minmag);
 				else
-					libgt.print_debug(sprintf('database %s not found',dbname),1);
+					fprintf('%s.origin not found',dbname);
 				end
 			else
 				if strcmp(archiveformat,'daily')
+      
 					for dnum=floor(snum):floor(enum-1/1440)
 						dbname = sprintf('%s_%s_%s_%s',dbroot,datestr(dnum, 'yyyy_mm_dd'));
-						if exist(dbname,'file')
+						if exist(sprintf('%s.origin',dbname),'file')
 							e = cobj.css_import(max([dnum snum]),min([dnum+1 enum]),dbname,leftlon,rightlon,lowerlat,upperlat,minz,maxz,minmag);
 							cobj.lon   = cat(1,cobj.lon,   e.lon);
 							cobj.lat   = cat(1,cobj.lat,   e.lat);
@@ -274,7 +275,7 @@ classdef catalog
 							cobj.etype  = cat(2,cobj.etype,  e.etype);
                             cobj.auth = cat(1, cobj.auth, e.auth);
 						else
-							libgt.print_debug(sprintf('database %s not found',dbname),1);
+							fprint('%s.origin not found',dbname);
 						end
 					end
 				else
@@ -283,7 +284,7 @@ classdef catalog
 						for mm=dnum2month(snum):1:dnum2month(enum)
 							dnum = datenum(yyyy,mm,1);
 							dbname = sprintf('%s%04d_%02d',dbroot,yyyy,mm);
-							if exist(dbname,'file')
+							if exist(sprintf('%s.origin',dbname),'file')
 								e = cobj.css_import(max([dnum snum]),min([ datenum(yyyy,mm+1,1) enum]),dbname,leftlon,rightlon,lowerlat,upperlat,minz,maxz,minmag);
 								cobj.lon   = cat(1,cobj.lon,   e.lon);
 								cobj.lat   = cat(1,cobj.lat,   e.lat);
@@ -295,7 +296,7 @@ classdef catalog
 								cobj.etype  = cat(1,cobj.etype,  e.etype);
                                 cobj.auth = cat(1, cobj.auth, e.auth);
 							else
-								libgt.print_debug(sprintf('database %s not found',dbname),1);
+								fprintf('%s.origin not found',dbname);
 							end
 						end
 					end
