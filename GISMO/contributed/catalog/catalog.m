@@ -32,13 +32,17 @@ classdef catalog
 %
 %    EXAMPLES: (these assume you are on the AVO Linux network)
 %
-%    1. Create a catalog object of the last 5 days of AEIC events greater than M=1.0 from the region latitude = 55.0 to 65.0, longitude = -170.0 to -135.0
-%    c = catalog(utnow-3, utnow, 1.0, [-170.0 -135.0 55.0 65.0] , '/aerun/sum/run/dbsum/dbsum', '');
+%    1. Create a catalog object of all AEIC events greater than M=4.0 in 2009 from the region latitude = 55.0 to 65.0, longitude = -170.0 to -135.0
+%    c = catalog(datenum(2009,1,1), datenum(2010,1,1), 4.0, [-170.0 -135.0 55.0 65.0] , '/Seis/catalogs/aeic/Total/Total', '');
 %
-%    2. Create a catalog object of all events (regardless of magnitude) in the last 3 days of data from Redoubt:
-%    c = catalog(utnow-3, utnow, [], 'redoubt', '/avort/oprun/events/antelope/events_antelope', '');
+%    2. Create a catalog object of all AEIC events greater than M=1.0 in August 2011 from the region latitude = 55.0 to 65.0, longitude = -170.0 to -135.0
+%       but this time, using the daily summary databases.
+%    c = catalog(datenum(2011,8,1), datenum(2011,9,1), 1.0, [-170.0 -135.0 55.0 65.0] , '/aerun/sum/run/dbsum/Quakes', 'daily');
 %
-%    3. Create a catalog object of all events recorded at Spurr between 1989 and 2006:
+%    3. Create a catalog object of all events (regardless of magnitude) in the last 3 days of data from Redoubt:
+%    c = catalog(libgt.utnow-3, libgt.utnow, [], 'redoubt', '/avort/oprun/events/antelope/events_antelope', '');
+%
+%    4. Create a catalog object of all events recorded at Spurr between 1989 and 2006:
 %    c = catalog(datenum(1989,1,1), datenum(2006,1,1), [], 'spurr', '/Seis/Kiska4/picks/Total/Total', '');
 %
 %    % ------- DESCRIPTION OF FIELDS IN CATALOG OBJECT ------------------
@@ -256,13 +260,13 @@ classdef catalog
 				if exist(sprintf('%s.origin',dbname),'file')
 					cobj = cobj.css_import(snum, enum, dbname, leftlon, rightlon, lowerlat, upperlat, minz, maxz, minmag);
 				else
-					fprintf('%s.origin not found',dbname);
+					fprintf('%s.origin not found\n',dbname);
 				end
 			else
 				if strcmp(archiveformat,'daily')
       
 					for dnum=floor(snum):floor(enum-1/1440)
-						dbname = sprintf('%s_%s_%s_%s',dbroot,datestr(dnum, 'yyyy_mm_dd'));
+						dbname = sprintf('%s_%s',dbroot,datestr(dnum, 'yyyy_mm_dd'));
 						if exist(sprintf('%s.origin',dbname),'file')
 							e = cobj.css_import(max([dnum snum]),min([dnum+1 enum]),dbname,leftlon,rightlon,lowerlat,upperlat,minz,maxz,minmag);
 							cobj.lon   = cat(1,cobj.lon,   e.lon);
@@ -275,7 +279,7 @@ classdef catalog
 							cobj.etype  = cat(2,cobj.etype,  e.etype);
                             cobj.auth = cat(1, cobj.auth, e.auth);
 						else
-							fprint('%s.origin not found',dbname);
+							fprintf('%s.origin not found\n',dbname);
 						end
 					end
 				else
@@ -296,7 +300,7 @@ classdef catalog
 								cobj.etype  = cat(1,cobj.etype,  e.etype);
                                 cobj.auth = cat(1, cobj.auth, e.auth);
 							else
-								fprintf('%s.origin not found',dbname);
+								fprintf('%s.origin not found\n',dbname);
 							end
 						end
 					end
