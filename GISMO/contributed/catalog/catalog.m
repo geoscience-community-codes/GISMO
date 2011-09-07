@@ -32,11 +32,11 @@ classdef catalog
 %
 %    EXAMPLES: (these assume you are on the AVO Linux network)
 %
-%    1. Create a catalog object of the last 5 days of AEIC events from the region latitude = 55.0 to 65.0, longitude = -170.0 to -135.0
-%    c = catalog(utnow-3, utnow, [], [-170.0 -135.0 55.0 65.0] , '/aerun/sum/run/dbsum/dbsum', 'daily');
+%    1. Create a catalog object of the last 5 days of AEIC events greater than M=1.0 from the region latitude = 55.0 to 65.0, longitude = -170.0 to -135.0
+%    c = catalog(utnow-3, utnow, 1.0, [-170.0 -135.0 55.0 65.0] , '/aerun/sum/run/dbsum/dbsum', '');
 %
-%    2. Create a catalog object of all events with magnitude > 0.2 in the last 3 days of data from Redoubt:
-%    c = catalog(utnow-3, utnow, 0.2, 'redoubt', '/avort/oprun/events/antelope/events_antelope', 'daily');
+%    2. Create a catalog object of all events (regardless of magnitude) in the last 3 days of data from Redoubt:
+%    c = catalog(utnow-3, utnow, [], 'redoubt', '/avort/oprun/events/antelope/events_antelope', '');
 %
 %    3. Create a catalog object of all events recorded at Spurr between 1989 and 2006:
 %    c = catalog(datenum(1989,1,1), datenum(2006,1,1), [], 'spurr', '/Seis/Kiska4/picks/Total/Total', '');
