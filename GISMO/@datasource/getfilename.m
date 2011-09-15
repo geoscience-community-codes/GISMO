@@ -28,6 +28,9 @@ function [filename] = getfilename(ds, scnls, starttimes)
 % $Date$
 % $Revision$
 
+% Day numbers at start of each month.  Used within to calculate "jday".
+monthadd = [ 0 31 59 90 120 151 181 212 243 273 304 334 ];
+
 if ~ds.usefile
   warning('Datasource:noAssociatedFiles','No files have been associated with this datasource');
   filename = [];
@@ -69,18 +72,31 @@ if isempty(filename) %show the generic file name
   if isempty(ds.file_args)
     filename = {stringToShow};
   else
-    z = strcat(',',ds.file_args); z = [z{:}];
-    filename = {eval(['sprintf(stringToShow',z,');'])};
+	z = cellfun(@eval,ds.file_args,'UniformOutput',false);
+	filename = {sprintf(stringToShow,z{:})};
   end
 else %get detailed file.for n=1:numel(scnls)
+	
   for n=1:numel(scnls)
     scnl = scnls(n);
+	station = get(scnl,'station');
+	channel = get(scnl,'channel');
+	location = get(scnl,'location');
+	network = get(scnl,'network');
+
     for m = 1:numel(starttimes)
-      starttime = starttimes{m};
+	  starttime = starttimes{m};
 
 
       %pull all the data that may be required to parse out files & directories
-      [year, month, day, hour, minute, second] = datevec(starttime);
+	  
+	  % If we have a datenum, use the fast built-in version of datevec
+      if isnumeric(starttime)
+		  [year, month, day, hour, minute, second] = datevecmx(starttime);
+	  else
+		  [year, month, day, hour, minute, second] = datevec(starttime);
+	  end
+	  
       second = round(second);
       
       % The following few IF statements handle possible rounding issues
@@ -92,20 +108,19 @@ else %get detailed file.for n=1:numel(scnls)
       end
       if hour == 24
          hour = 0; day = day + 1;
-      end
-      
-      jday = datenum(year,month,day,0,0,0) - datenum(year-1,12,31,0,0,0);
-      station = get(scnl,'station');
-      channel = get(scnl,'channel');
-      location = get(scnl,'location');
-      network = get(scnl,'network');
+	  end
+
+	  % Calculate day number
+	  leapadd = +((mod(year,400) == 0) | ((mod(year,4) == 0) & (mod(year,100) ~= 0)) & (month > 2));
+	  jday = monthadd(month) + day + leapadd;
+		
       stringToShow = ds.file_string;
       % build the file arg string
       if isempty(ds.file_args)
         filename = {stringToShow};
-      else
-        z = strcat(',',ds.file_args); z = [z{:}];
-        filename(n,m) = {eval(['sprintf(stringToShow',z,');'])};
+	  else
+		z = cellfun(@eval,ds.file_args,'UniformOutput',false);
+		filename(n,m) = {sprintf(stringToShow,z{:})};
       end
     end
   end

@@ -58,13 +58,18 @@ for i = 1:nCriteria
   %one tr exists for each timerequest within each scnl.
   w(numel(tr)).waves = blankWave;
   for traceidx = 1:numel(tr)
-    w_scnl = traceToWaveform(blankWave,tr(traceidx)); %create waveform list
-    if COMBINE_WAVEFORMS && numel(w_scnl) > 1, %combine all of this trace's records
-      w_scnl = combine(w_scnl);
-    end;
-    w(traceidx).waves = w_scnl(:)';
-    clear w_scnl;
-    trdestroy(tr(traceidx));
+	if ~isstruct(tr{traceidx}) % marker for no data
+		w_scnl = blankWave([]);
+	else
+		w_scnl = traceToWaveform(blankWave,tr{traceidx}); %create waveform list
+		trdestroy(tr{traceidx});
+	end
+	
+	if COMBINE_WAVEFORMS && numel(w_scnl) > 1, %combine all of this trace's records
+	  w_scnl = combine(w_scnl);
+	end;
+	w(traceidx).waves = w_scnl(:)';
+	clear w_scnl;
   end
   outputWaveforms = [outputWaveforms; [w.waves]'];
   clear w
@@ -245,7 +250,8 @@ if useExistingDatabasePtr
   catch
     warning('Waveform:load_antelope:databaseNotOpen', ...
       'a Database Pointer was passed to trace, but the database was not open');
-    tr = trnew; %return a new object, forcing the ability to destroy it later
+    %tr = trnew; %return a new object, forcing the ability to destroy it later
+	tr = { -1 };
     return;
   end
 end
@@ -276,7 +282,8 @@ if nrecs == 0,
   closeIfAppropriate(mydb);
   warning('Waveform:load_antelope:databaseNotFound', ...
     'Database not found: %s', databaseFileName);
-  tr = trnew; filteredDb = dbinvalid;
+  tr = { -1 };
+  filteredDb = dbinvalid;
   return;
 end;
 
@@ -306,7 +313,8 @@ if nrecs == 0
   closeIfAppropriate(mydb);
   warning('Waveform:load_antelope:dataNotFound', ...
     'No records found for criteria [%s].', allExp);
-  tr = trnew;
+  %tr = trnew;
+  tr = { -1 };
   filteredDb = dbinvalid;
   return;
 end;
@@ -319,10 +327,10 @@ filteredDb = mydb;
 for mytimeIDX = 1:numel(antelope_starts)
   someDataExists = any(antelope_starts(mytimeIDX)<= (ed) & antelope_ends(mytimeIDX) >= (st));
   if someDataExists
-    tr(mytimeIDX) = trload_css(mydb, antelope_starts(mytimeIDX), antelope_ends(mytimeIDX));
-    trsplice(tr(mytimeIDX),20);
+	tr{mytimeIDX} = trload_css(mydb, antelope_starts(mytimeIDX), antelope_ends(mytimeIDX));
+	trsplice(tr{mytimeIDX},20);
   else
-    tr(mytimeIDX) = trnew;
+	tr{mytimeIDX} = -1;
   end
 end %mytimeIDX
 closeIfAppropriate(mydb);
