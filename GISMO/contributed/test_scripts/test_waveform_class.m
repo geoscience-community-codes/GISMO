@@ -320,7 +320,7 @@ results.double = all(double(A) == Ad) && ...
 %% try load functions
 results.loadobj_v0 = true;
 try
-    fileName = fullfile(dataPath,test_data,'v0_example_waveforms.mat');
+    fileName = fullfile(dataPath,'test_data','v0_example_waveforms.mat');
     dummy = load(fileName);
 catch exception
     disp(exception)
@@ -328,7 +328,7 @@ catch exception
 end
 results.loadobj_v1_0 = true;
 try
-    fileName = fullfile(dataPath,test_data,'v1.0_example_waveforms.mat');
+    fileName = fullfile(dataPath,'test_data','v1.0_example_waveforms.mat');
     dummy = load(fileName);
 catch exception
     disp(exception)
@@ -336,7 +336,7 @@ catch exception
 end
 results.loadobj_v1_1 = true;
 try
-    fileName = fullfile(dataPath,test_data,'v1.1_example_waveforms.mat');
+    fileName = fullfile(dataPath,'test_data','v1.1_example_waveforms.mat');
     dummy = load(fileName);
 catch exception
     disp(exception)
@@ -345,11 +345,11 @@ end
 
 %% try loading a sac file 
 % station: BYR, chan: BHZ_01, 2000/7/14 13:40 ~10 seconds
-fileName = fullfile(dataPath,test_data,'example_sacfile.sac');
+fileName = fullfile(dataPath,'test_data','example_sacfile.sac');
 dsac = datasource('sac',fileName);
 scnlSac(1) = scnlobject('*','*','*','*');
 scnlSac(2) = scnlobject('BYR','BHZ_01','*','*');
-sacwave = loadsac(waveform,'example_sacfile.sac');
+sacwave = loadsac(waveform,fileName);
 try
 results.load_sac  = get(sacwave,'data_length')==500 &&...
     get(sacwave,'NZYEAR') == 2000 &&...
@@ -385,16 +385,9 @@ clear dummy
 % assumes we are in GISMO/contributed/test_scripts/waveform and that
 % correlation_cookbook is in GISMO/contributed/correlation_cookbook/
 ppp = pwd;
-cd ..
-cd ..
-cd correlation_cookbook
-pathname = '';
-pathname = '../../correlation_cookbook/';
- fileName = 'correlation_cookbook.m';
-% [fileName, pathName] = uigetfile('*.m',...
-%     'locate the correlation_cookbook',...
-%     '../../correlation_cookbook/correlation_cookbook.m');
-if strcmpi(fileName,'correlation_cookbook.m')
+[dataPathCorrelation,~,~] = fileparts(which('correlation'));
+cd(dataPathCorrelation)
+if exist('correlation_cookbook.m','file')
     results.correlation_cookbook = true;
     oldchildren = get(0,'children');
     try
@@ -409,7 +402,7 @@ end
 cd(ppp);
 
 % stress test
-w = get(c,'waveform'); %c is from teh correlation_cookbook.
+w = get(c,'waveform'); %c is from the correlation_cookbook.
 w = repmat(w,20,2); 
 dummy = w .* 3;
 todiv = rand(size(w));
