@@ -1,7 +1,19 @@
 function results = test_waveform_class
+
+%TEST_WAVEFORM_CLASS run numerous tests on the waveform class
+% TEST_WAVEFORM_CLASS runs a series of tests on 1-D waveforms and returns
+% results. Though not a fully comprehensive set of tests, it is a good way
+% to validate the integrity of the waveform class after modifications.
+
 % $Date$
 % $Revision$
+
 %script that will test the waveform class FOR 1-D CASES!!!!
+
+
+[dataPath,~,~] = fileparts(which('test_waveform_class'));
+
+
 lasterror('reset')
 totest = {... constructor methods
     'constructor_default','constructor_manual','constructor_copy'...
@@ -308,21 +320,24 @@ results.double = all(double(A) == Ad) && ...
 %% try load functions
 results.loadobj_v0 = true;
 try
-    dummy = load('v0_example_waveforms.mat');
+    fileName = fullfile(dataPath,test_data,'v0_example_waveforms.mat');
+    dummy = load(fileName);
 catch exception
     disp(exception)
     results.loadobj_v0 = false;
 end
 results.loadobj_v1_0 = true;
 try
-    dummy = load('v1.0_example_waveforms.mat');
+    fileName = fullfile(dataPath,test_data,'v1.0_example_waveforms.mat');
+    dummy = load(fileName);
 catch exception
     disp(exception)
     results.loadobj_v1_0 = false;
 end
 results.loadobj_v1_1 = true;
 try
-    dummy = load('v1.1_example_waveforms.mat');
+    fileName = fullfile(dataPath,test_data,'v1.1_example_waveforms.mat');
+    dummy = load(fileName);
 catch exception
     disp(exception)
     results.loadobj_v1_1 = false;
@@ -330,7 +345,8 @@ end
 
 %% try loading a sac file 
 % station: BYR, chan: BHZ_01, 2000/7/14 13:40 ~10 seconds
-dsac = datasource('sac','example_sacfile.sac');
+fileName = fullfile(dataPath,test_data,'example_sacfile.sac');
+dsac = datasource('sac',fileName);
 scnlSac(1) = scnlobject('*','*','*','*');
 scnlSac(2) = scnlobject('BYR','BHZ_01','*','*');
 sacwave = loadsac(waveform,'example_sacfile.sac');
