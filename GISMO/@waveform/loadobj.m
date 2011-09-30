@@ -3,8 +3,8 @@ function b = loadobj(a)
 % This handles the updated versions and gives a warning if you're trying to
 % load a newer version of a waveform object
 %
-% The newest version of CMO objects (including waveform) can be found at
-% /home/celso/CMO
+% The newest version of waveform can be found in the GISMOTOOLS repository:
+%  http://code.google.com/p/gismotools
 %
 % See also WAVEFORM/WAVEFORM
 

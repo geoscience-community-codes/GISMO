@@ -272,6 +272,7 @@ catch
 end
 lastwarn('') ;
 w = delfield(w,'abcd');
+disp('There SHOULD be a warning following this ...');
 get(w,'ABCD'); %should fail because it was deleted.
 if ~isempty(lastwarn)
     results.delfield = true;
