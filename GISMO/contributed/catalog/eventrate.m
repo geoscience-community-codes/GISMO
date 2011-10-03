@@ -18,7 +18,7 @@ classdef eventrate
 %    ER = EVENTRATE(CATALOG_OBJECT, BINSIZE) creates an eventrate object
 %    from a CATALOG object using non-overlapping bins of BINSIZE days. 
 %
-%    ER = EVENTRATE(CATALOG_OBJECT, BINSIZE, STEPSIZE) creates an eventrate object
+%    ER = EVENTRATE(CATALOG_OBJECT, BINSIZE, 'stepsize', STEPSIZE) creates an eventrate object
 %    using overlapping bins. If omitted STEPSIZE==BINSIZE.
 %
 %%   EXAMPLES:
@@ -26,7 +26,7 @@ classdef eventrate
 %       First create a catalog object from the demo database:
 %           dirname = fileparts(which('catalog')); % get the path to the catalog directory
 %           dbroot = [dirname,'/demo/avodb200903']; 
-%           cobj = catalog(datenum(2009,3,20),datenum(2009,3,23),[],'Redoubt',dbroot,'');
+%           cobj = catalog(dbroot, 'antelope', 'snum', datenum(2009,3,20), 'enum', datenum(2009,3,23), 'region','Redoubt');
 %
 %       (1) Create an eventrate object using a binsize of 1 day:
 %           erobj = eventrate(cobj, 1);
@@ -35,7 +35,7 @@ classdef eventrate
 %           erobj = eventrate(cobj, 1/24);
 %
 %       (3) Create an eventrate object using a binsize of 1 hour but a stepsize of 5 minutes:
-%           erobj = eventrate(cobj, 1/24, 5/1440);
+%           erobj = eventrate(cobj, 1/24, 'stepsize', 5/1440);
 %
 %
 %%   PROPERTIES
@@ -135,7 +135,7 @@ classdef eventrate
             switch class(varargin{1})
                 case 'catalog', Obj = Obj.catalog2eventrate(varargin{:});
                 case 'string', Obj = Obj.importswarmdb(dbname, auth, snum, enum);
-                otherwise, disp('Unknown first argument to constructor');
+                %otherwise, disp('Unknown first argument to constructor');
             end
         end 
         
@@ -623,10 +623,9 @@ classdef eventrate
            dirname = fileparts(which('catalog')); 
            dbroot = [dirname,'/demo/avodb200903']; 
 
-           str = sprintf('catalog(datenum(2009,3,20),datenum(2009,3,23),[],''Redoubt'',''%s'','''')',dbroot);
+           str = sprintf('catalog( ''%s'', ''antelope'', ''snum'', datenum(2009,3,20), ''enum'', datenum(2009,3,23),''region'',''Redoubt'')',dbroot);
            libgt.test_helper(sprintf('erobj = eventrate(%s,1)',str));
 
-           str = sprintf('catalog(datenum(2009,3,20),datenum(2009,3,23),[],''Redoubt'',''%s'','''')',dbroot);
            libgt.test_helper(sprintf('erobj = eventrate(%s,1,''stepsize'', 1/4)',str));
          end
 

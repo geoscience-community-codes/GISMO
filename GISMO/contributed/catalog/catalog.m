@@ -1,14 +1,77 @@
 classdef catalog
 %
-% CATALOG Seismic Catalog class constructor, version 1.0.
+% CATALOG Seismic Catalog class constructor, version 1.1.
 % 
 %    CATALOG is a class that for loading, manipulating and saving earthquake
 %    catalogs.
 %
-%    CATALOG imports catalog information from:
-%    (1) a CSS3.0 database - the default format used by Antelope/Datascope.
-%    (2) a Datascope database written in the "swarms1.0" schema, defined at AVO. 
-%        This is the format used by the swarm tracking system.
+%    CATALOG imports catalog information from a CSS3.0 database 
+%    - the default format used by Antelope/Datascope.
+%
+%%   USAGE
+%    cobj = catalog() creates an empty catalog object.
+%
+%    cobj = catalog(FILEPATH, FORMAT) loads the file at FILEPATH in the
+%    format FORMAT. The only FORMAT currently implemented is 'antelope'.
+%
+%    cobj = catalog(FILEPATH, 'antelope', 'dbeval', EXPRESSION) subsets the
+%    database with a dbeval EXPRESSION.
+%
+%    If the dbeval parameter name/value pair is omitted, a dbeval expression 
+%    can also be formed from other name/value pairs. These are:
+%       NAME       VALUE
+%       'snum'     a datenum denoting the minimum origin time
+%       'enum'     a datenum denoting the maximum origin time
+%       'minmag'   the minimum magnitude
+%       'mindepth' the minimum depth (in km)
+%       'maxdepth' the maximum depth (in km)
+%       'region'   a 4-element vector: [minlon maxlon minlat maxlat]
+%   
+%   'region' can also be entered as a volcano name like 'Redoubt' in which
+%   case the appropriate 4-element vector will be loaded from avo_volcs.pf
+%   in the demo directory.
+%
+%   If the database is stored in daily volumes, rather than a single
+%   database like somedir/mydb_YYYY_MM_DD then use the 'archiveformat'
+%   name/value pair, e.g.
+%   cobj = catalog('somedir/mydb', 'antelope', 'archiveformat', 'daily');
+%   For a monthly volume, set 'archiveformat' to 'monthly'.    
+%    
+%
+%%   READING FROM A CSS3.0 DATASCOPE DATABASE
+%
+%    COBJ = CATALOG(SNUM, ENUM, MINMAG, REGION, DBROOT, ARCHIVEFORMAT) creates
+%    a catalog object with preferred origins subsetted between SNUM and ENUM,
+%    above magnitude MINMAG, geographically filtered using REGION from the
+%    database DBROOT which is archived in ARCHIVEFORMAT.
+%    These variables are described in "FIELDS" section below. REGION can
+%    either be a 4-element vector [LONMIN LONMAX LATMIN LATMAX] or it can
+%    be a region described in avo_volcs.pf such as 'spurr' or 'redoubt'.
+%
+%    EXAMPLES: (2-5 assume you are connected to the Seislab computer network at UAF/GI)
+%
+%      (1) Reading data from the demo database
+%          dirname = fileparts(which('catalog')); % get the path to the catalog directory
+%          dbroot = [dirname,'/demo/avodb200903']; 
+%          cobj = catalog(dbroot, 'antelope', 'snum', datenum(2009,3,20), 'enum', datenum(2009,3,23), 'region', 'Redoubt')
+%
+%          Identical results could be obtained with:
+%           
+%          cobj = catalog(dbroot, 'antelope', 'dbeval','time >= "2009/3/20" && time <= "2009/3/23" && lon >= -153.0 && lon <= -152.2 && lat >= 60.3 && lat <= 60.7')
+%
+%      (2) Create a catalog object of all AEIC events greater than M=4.0 in 2009 from the region latitude = 55.0 to 65.0, longitude = -170.0 to -135.0
+%          cobj = catalog('/Seis/catalogs/aeic/Total/Total', 'antelope', 'snum', datenum(2009,1,1), 'enum', datenum(2010,1,1), 'minmag', 4.0, 'region', [-170.0 -135.0 55.0 65.0]);
+%
+%      (3) Create a catalog object of all AEIC events greater than M=1.0 in August 2011 from the region latitude = 55.0 to 65.0, longitude = -170.0 to -135.0
+%          but this time, using the daily summary databases.
+%          cobj = catalog('/aerun/sum/run/dbsum/Quakes', 'antelope', 'snum', datenum(2011,8,1), 'enum', datenum(2011,9,1), 'minmag', 1.0, 'region', [-170.0 -135.0 55.0 65.0], 'archiveformat', 'daily');
+%
+%      (4) Create a catalog object of all events (regardless of magnitude) in the last 3 days of data from Redoubt:
+%          cobj = catalog('/avort/oprun/events/antelope/events_antelope', 'antelope', 'snum', libgt.utnow-3, 'enum', libgt.utnow, 'region', 'redoubt');
+%
+%      (5) Create a catalog object of all AEIC events recorded within 10 km of Spurr [61.2989 -152.2539] between 1989 and 2006:
+%          cobj = catalog('/Seis/catalogs/aeic/Total/Total', 'antelope', 'dbeval', 'time > "1989/1/1" && time < "2006/1/1" && deg2km(distance(61.2989, -152.2539, lat, lon))<10.0');
+%
 %
 %%   PROPERTIES
 %
@@ -22,6 +85,7 @@ classdef catalog
 %      DEPTH:  origin depth
 %      NASS:   number of associated arrivals
 %      EVID:   a number which acts as an event identifier
+%      ORID:   a number which acts as an origin identifier
 %      AUTH:   a string which describes who or what computed the hypocenter
 %      MAG:    the magnitude.
 %      ETYPE:  the event type (subclassification). For example "t" = VT.
@@ -35,6 +99,12 @@ classdef catalog
 %      DBROOT: the root database name.
 %      ARCHIVEFORMAT:  Either '' for a single database, 'daily' for a daily
 %                      archive or 'monthly' for a monthly archive.
+%
+%     The final property is "ARRIVAL". This is a cell array containing 1
+%     structure per origin in the catalog. Normally it is left blank
+%     because it can be time consuming to load arrival data from big
+%     catalogs. To populate it for a CSS3.0 Datascope database, call:
+%       cobj=cobj.addArrivals();
 %
 %%   METHODS
 %
@@ -56,43 +126,9 @@ classdef catalog
 %    c = addfield(c, 'newfield', 'value):   - add a new field to a catalog
 %                                               object.
 %
-%%   STATIC METHODS (should probably be in libgt instead!)
-%    plotgrid(gridname):   - superimpose a detection grid (requires a grids 
-%                            database saved in places1.0 Datascope schema)  
-%    plotbox(volcano):     - superimpose the region 
-%
-%%   CREATING A BLANK CATALOG
-%    COBJ = CATALOG() creates an empty catalog object.
-%
-%%   READING FROM A CSS3.0 DATASCOPE DATABASE
-%
-%    COBJ = CATALOG(SNUM, ENUM, MINMAG, REGION, DBROOT, ARCHIVEFORMAT) creates
-%    a catalog object with preferred origins subsetted between SNUM and ENUM,
-%    above magnitude MINMAG, geographically filtered using REGION from the
-%    database DBROOT which is archived in ARCHIVEFORMAT.
-%    These variables are described in "FIELDS" section below. REGION can
-%    either be a 4-element vector [LONMIN LONMAX LATMIN LATMAX] or it can
-%    be a region described in avo_volcs.pf such as 'spurr' or 'redoubt'.
-%
-%    EXAMPLES: (2-5 assume you are connected to the Seislab computer network at UAF/GI)
-%
-%      (1) Reading data from the demo database
-%          dirname = fileparts(which('catalog')); % get the path to the catalog directory
-%          dbroot = [dirname,'/demo/avodb200903']; 
-%          cobj = catalog(datenum(2009,3,20),datenum(2009,3,23),[],'Redoubt',dbroot,'')
-%
-%      (2) Create a catalog object of all AEIC events greater than M=4.0 in 2009 from the region latitude = 55.0 to 65.0, longitude = -170.0 to -135.0
-%          cobj = catalog(datenum(2009,1,1), datenum(2010,1,1), 4.0, [-170.0 -135.0 55.0 65.0] , '/Seis/catalogs/aeic/Total/Total', '');
-%
-%      (3) Create a catalog object of all AEIC events greater than M=1.0 in August 2011 from the region latitude = 55.0 to 65.0, longitude = -170.0 to -135.0
-%          but this time, using the daily summary databases.
-%          cobj = catalog(datenum(2011,8,1), datenum(2011,9,1), 1.0, [-170.0 -135.0 55.0 65.0] , '/aerun/sum/run/dbsum/Quakes', 'daily');
-%
-%      (4) Create a catalog object of all events (regardless of magnitude) in the last 3 days of data from Redoubt:
-%          cobj = catalog(libgt.utnow-3, libgt.utnow, [], 'redoubt', '/avort/oprun/events/antelope/events_antelope', '');
-%
-%      (5) Create a catalog object of all events recorded at Spurr between 1989 and 2006:
-%          cobj = catalog(datenum(1989,1,1), datenum(2006,1,1), [], 'spurr', '/Seis/Kiska4/picks/Total/Total', '');
+%%   STATIC METHODS 
+%    test:  - a simple test suite for the catalog class
+%    css_import: - low-level routine for loading data from CSS3.0 database
 %
 %% See also EVENTRATE
 %
@@ -110,7 +146,11 @@ classdef catalog
 		dnum = [];    % Matlab datenumber marking event origin time
 		nass = [];	% number of associated arrivals
 		evid = [];	% event id
+        orid = []; % origin id
 		mag	= []; % magnitude
+        mb = [];
+        ml = [];
+        ms = [];
 		etype = '';	% event classification/type
         snum = []; % start time of catalog
         enum = [];% end time of catalog
@@ -121,6 +161,7 @@ classdef catalog
         archiveformat ='';
         misc_fields = {};
         misc_values = {};
+        arrival = {};
     end
     
     %% METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -128,54 +169,36 @@ classdef catalog
         
      	%------------------------------------------------------------------
         %% Constructor.    
-        function cobj = catalog(varargin)
-            % CATALOG constructor. HELP CATALOG for information.
+        function cobj = catalog(filepath, format, varargin)
+            % CATALOG/CATALOG
+            %   CATALOG constructor. HELP CATALOG for information.
             switch nargin
-                case {5, 6, 7}, cobj = cobj.css2catalog(varargin{:});
-                case 10, cobj.css_load(varargin{:});
-                case 11, cobj.css_import(varargin{:});
-                otherwise, disp('Number of input arguments to constructor not recognized');
-            end        
+                case 0, disp('Creating null catalog object'); return;
+                case 1, format = 'css3.0'
+            end
+            %cobj = catalog;
+            switch format
+                case {'css3.0','antelope', 'datascope'}
+                    cobj = cobj.css2catalog(filepath, varargin{:});
+                case 'seisan'
+                    cobj = cobj.seisan2catalog(filepath, varargin{:});
+                otherwise
+                    format
+                    fprintf('format %s unknown',format);
+            end      
         end
 
 		%------------------------------------------------------------------
         %% CSS2CATALOG
-        function cobj = css2catalog(cobj, snum, enum, magthresh, region, db, archiveformat, subclass) % 5 or 6 arguments
-            % CSS2CATALOG Load catalog object from CSS3.0 database
-            %
-			%   PARAMETERS:  
-			%     snum = start time/date in datenumber format  
-			%     enum = end time/date in datenumber format  
-			%     minmag will cut out events smaller than this magnitude  
-			%     region - examples are 'redoubt', 'spurr' and 'alaska' (defined in avo_volcs.pf) 
-			%     Alternatively region can be a 4-element vector like: [leftlon rightlon lowerlat upperlat].
-			%     dbroot - path of the database (root path to a monthly or daily database)
-			%     archiveformat	- leave blank if its a normal database, otherwise 'daily' for a daily archive, 'monthly' for a monthly archive
-            %     subclass - event tyoe/subclassification e.g.'*'=all,
-            %     'l'=long period, 'h'=hybrid, 't'=tectonic, 'r'=rockfall. 
-			% 
-			%   Example:
-            %     dirname = fileparts(which('catalog')); % get the path to the catalog directory
-            %     dbroot = [dirname,'/demo/avodb200903']; 
-            %     cobj = catalog;
-            %     cobj = cobj.css2catalog(datenum(2009,3,20),datenum(2009,3,23),[],'Redoubt',dbroot,'')
-			%
-			%   Author: Glenn Thompson, 2002-2009
-  
+        function cobj = css2catalog(cobj, dbpath, varargin)            
+            % CATALOG/CSS2CATALOG
+            %   Wrapper for loading CSS3.0 databases.
 			if ~antelope_exists
 				disp('Antelope not found');
-			end
+                return;
+            end
             
-			if nargin < 6
-				error('Not enough arguments');
-				return;
-			end
-  
-			if ~exist('archiveformat','var')  
-			    archiveformat = '';  
-			end
-
-			libgt.print_debug(sprintf('archive format is %s',archiveformat),5);
+            [dbeval, archiveformat, snum, enum, minmag, region, subclass, mindepth, maxdepth] = libgt.process_options(varargin, 'dbeval', '', 'archiveformat', '', 'snum', [], 'enum', [], 'minmag', [], 'region', [], 'subclass', '*', 'mindepth', [], 'maxdepth', []); 
   
 			% Check if region is a char (string) or double (array) class
 			if ischar(region)
@@ -186,28 +209,65 @@ classdef catalog
                     dirname = fileparts(which('catalog'));
                     pffile = [dirname,'/demo/avo_volcs.pf'];
                     [sourcelon, sourcelat, leftlon, rightlon, lowerlat, upperlat] = libgt.readavovolcs(region, pffile); 
-                end
-                    
+                    region = [leftlon rightlon lowerlat upperlat];
+                end                   
 			else
-				if strcmp(class(region),'double')
+				if strcmp(class(region),'double') & ~isempty(region)
 					leftlon = region(1); rightlon=region(2); lowerlat=region(3); upperlat=region(4);
 				end
-			end
-			mindepth = -3; % the minimum depth for an AVO catalog event
-			maxdepth = 800;
-			cobj = cobj.css_load(db, archiveformat, snum, enum, leftlon, rightlon, lowerlat, upperlat, mindepth, maxdepth, magthresh);
-
-			% Append input parameters to structure
-			cobj.snum = snum;
-			cobj.enum = enum;
-			cobj.minmag = magthresh;
-			cobj.region = [leftlon rightlon lowerlat upperlat];
-			cobj.dbroot = db;
+            end
+            
+            % Create a dbeval expression if not already set.
+            if isempty(dbeval)
+                if nargin > 2
+                    expr = '';
+                    if ~isempty(snum)
+                        expr = sprintf('%s && time >= %f',expr,datenum2epoch(snum));
+                    end 
+                    if ~isempty(enum)
+                        expr = sprintf('%s && time <= %f',expr,datenum2epoch(enum));
+                    end
+                    if ~isempty(minmag)
+                        expr = sprintf('%s && (ml >= %f || mb >= %f || ms >= %f)',expr,minmag,minmag,minmag);
+                    end
+                    if ~isempty(region)
+                        expr = sprintf('%s && (lat >= %f && lat <= %f && lon >= %f && lon <= %f)',expr,lowerlat, upperlat, leftlon, rightlon);
+                    end
+                    if ~isempty(mindepth)
+                        expr = sprintf('%s && (depth >= %f)', expr,mindepth); 
+                    end
+                    if ~isempty(maxdepth)
+                        expr = sprintf('%s && (depth <= %f)', expr,maxdepth); 
+                    end
+                    dbeval = expr(4:end);
+                    clear expr
+                end
+            end
+            
+ 			% Append input parameters to structure
+			if ~isempty(snum)
+                cobj.snum = snum;
+            else
+                cobj.snum = floor(now-7);
+            end
+			if ~isempty(enum)
+                cobj.enum = enum;
+            else
+                cobj.enum = ceil(now);
+            end            
+			cobj.minmag = minmag;
+			cobj.region = region;
+			cobj.dbroot = dbpath;
 			cobj.archiveformat = archiveformat;
+            
+            cobj = cobj.css_load(dbpath, archiveformat, dbeval);
+	
+            cobj.snum = min([cobj.snum min(cobj.dnum)]);
+            cobj.enum = max([cobj.enum max(cobj.dnum)]);            
 
             
             if exist('subclass', 'var')
-                    if ~isempty(subclass)
+                    if strcmp(subclass, '*')==0
 
                         index = findstr(cobj.etype, subclass);
 
@@ -216,13 +276,15 @@ classdef catalog
                         cobj.depth = cobj.depth(index);
                         cobj.dnum = cobj.dnum(index);
                         cobj.evid = cobj.evid(index);
+                        cobj.orid = cobj.orid(index);
                         cobj.nass = cobj.nass(index);
                         cobj.mag = cobj.mag(index);
                         cobj.etype = cobj.etype(index);
                         cobj.auth = {};
                     end
             end
-            
+            cobj = cobj.addfield('dbeval', dbeval);
+
         end
 
  
@@ -230,20 +292,19 @@ classdef catalog
 		%------------------------------------------------------------------
         %% PLOT
 		function plot(cobj, varargin)
+            % CATALOG/PLOT
+			%   Plot a catalog object as event magnitude versus time
+			%   plot(cobj) plots magnitude vs. date/time
+			%   plot(cobj, 'splitby', 'etype') plots the same, but with each event type in a separate subplot
+			%   plot(cobj, 'minmag', 1.0) plots magnitude vs. date/time after filtering out all events smaller than mag=1.0
+			%   If cobj is an array of event structures, each will be plotted on a separate figure
 
-			% Plot a catalog object as event magnitude versus time
-			% plot(cobj) plots magnitude vs. date/time
-			% plot(cobj, 'splitby', 'etype') plots the same, but with each event type in a separate subplot
-			% plot(cobj, 'magthresh', 1.0) plots magnitude vs. date/time after filtering out all events smaller than mag=1.0
-			% If cobj is an array of event structures, each will be plotted on a separate figure
-			%
-			% Author: Glenn Thompson
 			libgt.print_debug(sprintf('> %s', mfilename),2);
-			[splitby, magthresh] = libgt.process_options(varargin, 'splitby', 'none', 'magthresh', -999.0);
+			[splitby, minmag] = libgt.process_options(varargin, 'splitby', 'none', 'minmag', -999.0);
 
 
 			for c = 1 : length(cobj)
-				i = find(cobj(c).mag >= magthresh);
+				i = find(cobj(c).mag >= minmag);
 				figure(gcf+1);
 
 				if strcmp(splitby, 'none')
@@ -277,6 +338,11 @@ classdef catalog
 		%------------------------------------------------------------------
         %% VOLPLOT
 		function cobj = volplot(cobj, varargin)
+            % CATALOG/VOLPLOT(COBJ)
+            %   COBJ.VOLPLOT creates a figure inspired by Guy Tytgat's VOLPLOT layout
+            %   Optional name/value pairs are 'nsigma', 'volcano' and
+            %   'gridname'.
+            
             [nsigma, volcano, gridname] = libgt.process_options(varargin, 'nsigma', '5', 'volcano', '', 'gridname', '');
 
 			% find stations in this region
@@ -296,10 +362,10 @@ classdef catalog
 			axis(gca, cobj.region);
                         
             if ~isempty(volcano)
-                %plotbox(volcano)
+                %libgt.plotbox(volcano)
             end
             if ~isempty(gridname)
-                %plotbox(gridname)
+                %libgt.plotbox(gridname)
             end
 
 			% depth-longitude
@@ -363,6 +429,11 @@ classdef catalog
 		%% ------------------------------------------------------------------
         %% VOLPLOTDIFF
 		function volplotdiff(cobj1, cobj2)
+            % CATALOG/VOLPLOTDIFF(COBJ1, COBJ2)
+            %   Like CATALOG/VOLPLOT but plots differences between two
+            %   catalog objects. Event ids must match for events to be
+            %   considered the same event in the two catalog objects.
+            %   See also CATALOG/COMPARE  
 
             sta = db2stations(cobj1);
 
@@ -462,6 +533,8 @@ classdef catalog
         %------------------------------------------------------------------
         %% DB2STATIONS
         function sta = db2stations(cobj)
+            % CATALOG/DB2STATIONS(COBJ)
+            %   Load Alaska stations within COBJ.REGION
             stalon = []; stalat = []; stacode = [];
             
             DBMASTER = getenv('DBMASTER');
@@ -486,6 +559,11 @@ classdef catalog
 		%------------------------------------------------------------------
         %% COMPARE
         function [matches, total] = compare(cobj1, cobj2)
+            % CATALOG/COMPARE(COBJ1, COBJ2)
+            % Compares two catalog objects. Any events from the two
+            % catalog objects within 0.2 degrees and 10 seconds of each
+            % other are assumed to be alternate origins for the same event.
+            % It is these alternate origins that are compared.
             figure;
             hold on;
             xlabel('Mag1');
@@ -534,7 +612,7 @@ classdef catalog
         %------------------------------------------------------------------
 		%% PLOTDAILYMAGSTATS
         function plotdailymagstats(cobj)
-
+            % CATALOG/PLOTDAILYMAGSTATS(COBJ)
 			% plot the max, mean, min and various percentiles of the magnitude samples each day
 			day = floor(cobj.dnum);
 			c=1;
@@ -575,6 +653,10 @@ classdef catalog
         %------------------------------------------------------------------
         %% PLOTMAGDIFF
         function plotmagdiff(cobj1, cobj2)
+            % CATALOG/PLOTMAGDIFF
+            %  Plot the difference in magnitude for events with identical
+            %  event id.
+            %  See also CATALOG/VOLPLOTDIFF.
             figure;
             hold on;
             
@@ -638,7 +720,10 @@ classdef catalog
         %------------------------------------------------------------------
         %% PLOTSTATIONS
         function plotstations(cobj)
-            % SUPERIMPOSE STATIONS ON A MAP
+            % CATALOG/PLOTSTATIONS(COBJ)
+            %   Superimpose the stations within the cobj.region property on
+            %   a figure. Note this isn't designed to work if cobj.region
+            %   is not set.
             sta = db2stations(cobj);
 			if ~isempty(sta.lon)
 				hold on;
@@ -649,17 +734,62 @@ classdef catalog
         end
         
         %------------------------------------------------------------------
+        %% addArrivals
+        function cobj = addArrivals(cobj)
+            % CATALOG/ADDARRIVALS(COBJ) Populate the arrival property of a catalog object.
+            %   cobj = cobj.addArrivals()
+            %   WARNING: This can take a long time to run for big catalogs!
+            %   The arrival field is a cell array with one element per
+            %   origin in the catalog.
+            %   Each element of the arrival field cell array is a structure
+            %   with fields:
+            %       station = station names with picks for this origin
+            %       channel = channel names with picks for this origin
+            %       arid = arrival ids
+            %       atime = arrival times
+            %       iphase = arrival phase name (e.g. 'P', 'S') 
+            %       orid = the origin id this arrival element belongs to
+                subset_expr = cobj.get('dbeval')
+                if length(subset_expr) > 1                   
+                    arrivalStruct = toArrivals(cobj, subset_expr);  
+                else
+                    arrivalStruct = toArrivals(cobj);
+                end
+                arrival ={};
+                for c=1:length(cobj.orid)
+                    thisorid = cobj.orid(c);
+                    i = find(arrivalStruct.orid==thisorid);
+                    l = length(i);
+                    if l>0
+                        arrival{c}.station = {arrivalStruct.sta{i}};
+                        arrival{c}.channel = {arrivalStruct.chan{i}};
+                        arrival{c}.arid = arrivalStruct.arid(i);
+                        arrival{c}.atime = arrivalStruct.atime(i);
+                        arrival{c}.iphase = {arrivalStruct.iphase{i}};
+                        arrival{c}.orid = arrivalStruct.orid(i(1));
+                    end
+                end
+                cobj.arrival = arrival;
+        end
+        
+
+                
+        %------------------------------------------------------------------
         %% toArrivals
         function arrival = toArrivals(cobj, subset_expr)
+            % CATALOG/TOARRIVALS(COBJ, SUBSET_EXPR)
             % GET ARRIVALS CORRESPONDING TO A CATALOG OBJECT
             arrival.sta = {};
+            arrival.chan = {};
             arrival.atime   = [];
             arrival.otime = [];
             arrival.orid = [];
+            arrival.arid = [];
             arrival.etype = {};
             arrival.stype = {};
             arrival.seaz = [];
             arrival.unique_orids = [];
+            arrival.iphase = {};
 
 			libgt.print_debug(sprintf('archive format is %s',cobj.archiveformat),3);
 
@@ -677,7 +807,7 @@ classdef catalog
 			else
 				if strcmp(cobj.archiveformat,'daily')
       
-					for dnum=floor(snum):floor(enum-1/1440)
+					for dnum=floor(cobj.snum):floor(cobj.enum-1/1440)
 						dbname = sprintf('%s_%s',cobj.dbroot,datestr(dnum, 'yyyy_mm_dd'));
 						if exist(sprintf('%s.arrival',dbname),'file')
                             if exist('subset_expr', 'var')
@@ -685,22 +815,25 @@ classdef catalog
                             else
                                 a = load_arrivals(dbname); 
                             end
-                            arrival.sta = cat(2,cobj.sta,  a.sta);
+                            arrival.sta = cat(1,arrival.sta,  a.sta);
+                            arrival.chan = cat(1,arrival.chan,  a.chan);
 							arrival.atime   = cat(1,arrival.atime, a.atime);
                             arrival.otime   = cat(1,arrival.otime, a.otime);
                             arrival.orid   = cat(1,arrival.orid, a.orid);
-							arrival.stype  = cat(2,cobj.stype,  a.stype);
-							arrival.etype  = cat(2,cobj.etype,  a.etype);
-							arrival.seaz  = cat(1,cobj.seaz,  a.seaz);
-                            arrival.unique_orids  = cat(1,cobj.unique_orids,  a.unique_orids);
+                            arrival.arid   = cat(1,arrival.arid, a.arid);
+							arrival.stype  = cat(1,arrival.stype,  a.stype);
+							arrival.etype  = cat(1,arrival.etype,  a.etype);
+							arrival.seaz  = cat(1,arrival.seaz,  a.seaz);
+                            arrival.unique_orids  = cat(1,arrival.unique_orids,  a.unique_orids);
+                            arrival.iphase = cat(1,arrival.iphase,  a.iphase);                            
 						else
 							fprintf('%s.arrival not found\n',dbname);
 						end
 					end
 				else
 
-					for yyyy=dnum2year(snum):1:dnum2year(enum)
-						for mm=dnum2month(snum):1:dnum2month(enum)
+					for yyyy=dnum2year(cobj.snum):1:dnum2year(cobj.enum)
+						for mm=dnum2month(cobj.snum):1:dnum2month(cobj.enum)
 							dnum = datenum(yyyy,mm,1);
 							dbname = sprintf('%s%04d_%02d',cobj.dbroot,yyyy,mm);
 							if exist(sprintf('%s.arrival',dbname),'file')
@@ -709,14 +842,18 @@ classdef catalog
                                 else
                                     a = load_arrivals(dbname); 
                                 end
-                                arrival.sta = cat(2,cobj.sta,  a.sta);
+
+                                arrival.sta = cat(1,arrival.sta,  a.sta);
+                                arrival.chan = cat(1,arrival.chan,  a.chan);
                                 arrival.atime   = cat(1,arrival.atime, a.atime);
                                 arrival.otime   = cat(1,arrival.otime, a.otime);
                                 arrival.orid   = cat(1,arrival.orid, a.orid);
-                                arrival.stype  = cat(2,cobj.stype,  a.stype);
-                                arrival.etype  = cat(2,cobj.etype,  a.etype);
-                                arrival.seaz  = cat(1,cobj.seaz,  a.seaz);
-                                arrival.unique_orids  = cat(1,cobj.unique_orids,  a.unique_orids);
+                                arrival.arid   = cat(1,arrival.arid, a.arid);
+                                arrival.stype  = cat(1,arrival.stype,  a.stype);
+                                arrival.etype  = cat(1,arrival.etype,  a.etype);
+                                arrival.seaz  = cat(1,arrival.seaz,  a.seaz);
+                                arrival.unique_orids  = cat(1,arrival.unique_orids,  a.unique_orids);
+                                arrival.iphase = cat(1,arrival.iphase,  a.iphase);
                             else
                                 fprintf('%s.arrival not found\n',dbname);
                             end        
@@ -727,8 +864,9 @@ classdef catalog
         end
         
         %------------------------------------------------------------------
-        %% toWaveform
+        %% toWaveforms
         function toWaveforms(cobj, subset_expr)
+            % CATALOG/TOWAVEFORMS(COBJ, SUBSET_EXPR)
             if exist('subset_expr', 'var')
                 arrival = toArrivals(cobj, subset_expr);
             else
@@ -784,7 +922,7 @@ classdef catalog
                 error('catalog:addfield:invalidFieldname','fieldname must be a string')
             end
 
-            actualfields = upper(fieldnames(catalog(1))); %get the object's intrinsic fieldnames
+            actualfields = upper(fieldnames(cobj)); %get the object's intrinsic fieldnames
 
             if ismember(fieldname,actualfields)
                 cobj = set(cobj, fieldname{1}, value); %set the value of the actual field
@@ -830,6 +968,7 @@ classdef catalog
 		%       times
 		%       'NASS' - number of associated arrivals
 		%       'EVID' - event id
+        %       'ORID' - origin id
 		%       'MAG' - magnitude
 		%       'ETYPE' - event classification/type
         %       'SNUM' - start time of catalog in MATLAB datenum* format
@@ -932,7 +1071,16 @@ classdef catalog
                     end
                 end  
             
-                                    
+                % ORID
+                case 'ORID',
+                if isa(val,'double') || isinteger(val)
+                    if (val>=0 & val<=2^32)
+                        [cobj.orid] = deal(int32(val));
+                    else
+                        error('CATALOG:set:propertyTypeMismatch','Expected an INTEGER from 0 to %f',2^32);
+                    end
+                end  
+                                                
                 % MAG
                 case 'MAG',
                 if isa(val,'double') 
@@ -1018,7 +1166,7 @@ classdef catalog
                         switch prop_name
                             case cobj(n).misc_fields
                                 %mask = ismember(cobj(n).misc_fields, prop_name);
-                                mask = strcmp(prop_name,cobj(n).misc_fields)
+                                mask = strcmp(prop_name,cobj(n).misc_fields);
                                 cobj(n).misc_values(mask) = {val};
                             otherwise
                                 error('CATALOG:set:unknownProperty',...
@@ -1045,6 +1193,7 @@ classdef catalog
             %       times
             %       'NASS' - number of associated arrivals
             %       'EVID' - event id
+            %       'ORID' - origin id
             %       'MAG' - magnitude
             %       'ETYPE' - event classification/type
             %       'SNUM' - start time of catalog in MATLAB datenum* format
@@ -1084,6 +1233,7 @@ classdef catalog
                 case 'DNUM', val=cobj.dnum;
                 case 'NASS', val=cobj.nass;
                 case 'EVID', val=cobj.evid;
+                case 'ORID', val=cobj.orid;
                 case 'MAG', val=cobj.mag;
                 case 'ETYPE', val=cobj.etype;                    
                 case 'SNUM', val=cobj.snum;
@@ -1136,33 +1286,17 @@ classdef catalog
 
         end % function
 
-
+        function equal=eq(cobj1, cobj2)
+            equal = true;
+            if ((cobj1.lon ~= cobj2.lon) | (cobj1.lat ~= cobj2.lat) | (cobj1.depth ~= cobj2.depth) | (cobj1.mag ~= cobj2.mag))
+                equal = false;
+            end
+        end
     end % methods
     
     %% STATIC METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     methods(Static)
-        
-        %% PLOTGRID
-        function plotgrid(gridname)
-            [region, source, lon, lat] = readavogrids(gridname);
-			if length(region) > 0
-				hold on;
-				plot(source.lon, source.lat, 'b^');
-                plot([min(lon) max(lon) max(lon) min(lon) min(lon)], [min(lat) min(lat) max(lat) max(lat) min(lat)], '-');
-                %axis(gca, region);
-			end
-        end        
-        
-        %------------------------------------------------------------------
-        %% PLOTBOX
-        function plotbox(volcano)
-            [sourcelon, sourcelat, minlon, maxlon, minlat, maxlat] = libgt.readavovolcs(volcano);
-            hold on;
-            plot(sourcelon, sourcelat, 'r^');
-            text(sourcelon, sourcelat, volcano);
-            plot([minlon maxlon maxlon minlon minlon], [minlat minlat maxlat maxlat minlat], '-');
-        end
         
         %------------------------------------------------------------------
         %% TEST
@@ -1176,149 +1310,39 @@ classdef catalog
            dirname = fileparts(which('catalog')); 
            dbroot = [dirname,'/demo/avodb200903']; 
 
-           str = sprintf('cobj = catalog(datenum(2009,3,20),datenum(2009,3,23),[],''Redoubt'',''%s'','''')',dbroot);
+           str = sprintf('cobj = catalog(''%s'', ''antelope'', ''snum'', datenum(2009,3,20), ''enum'', datenum(2009,3,23), ''region'', ''Redoubt'')',dbroot)
            libgt.test_helper(str);
            
+           dbeval_expr = 'time > "2009/03/20" && time < "2009/03/23" && distance(lat, lon, 60.5, -152.6) < 0.2';
+           str = sprintf('cobj = catalog(''%s'', ''antelope'', ''dbeval'', ''%s'')',dbroot, dbeval_expr)
+           libgt.test_helper(str);
+           
+           str = 'cobj = catalog(''/avort/oprun/events/earthworm/events_earthworm'', ''antelope'' )'
+           libgt.test_helper(str);
+           
+           str = sprintf('cobj = catalog(''/avort/oprun/events/earthworm/events_earthworm'', ''antelope'', ''dbeval'', ''time > %f'' )', datenum2epoch(now-7))
+           libgt.test_helper(str);
          end
-
-    end % methods
-  
-    
-    %% PRIVATE METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    methods (Access=private)
-        
-        %% CSS_LOAD
-		function cobj = css_load(cobj, dbroot,archiveformat,snum,enum,leftlon,rightlon,lowerlat,upperlat,minz,maxz,minmag)
-            % CSS_LOAD Load catalog object from CSS3.0 database
+		%------------------------------------------------------------------
+        %% CSS_IMPORT
+		function [lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth] = css_import(dbname, dbeval)
+            % CSS_IMPORT Load event data object from CSS3.0 event database
+            %   [lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth] = css_import(dbname, dbeval)
             %
-			%   PARAMETERS:  
-			%     snum = start time/date in datenumber format  
-			%     enum = end time/date in datenumber format  
-			%     minmag will cut out events smaller than this magnitude  
-			%     region - examples are 'redoubt', 'spurr' and 'alaska' (defined in avo_volcs.pf) 
-			%     Alternatively region can be a 4-element vector like: [leftlon rightlon lowerlat upperlat].
-			%     dbroot - path of the database (root path to a monthly or daily database)
-			%     archiveformat	- leave blank if its a normal database, otherwise 'daily' for a daily archive, 'monthly' for a monthly archive
-            %     subclass - event tyoe/subclassification e.g.'*'=all,
-            %     'l'=long period, 'h'=hybrid, 't'=tectonic, 'r'=rockfall. 
+			%   INPUT:
+            %     dbname = path to database
+            %     dbeval = a dbeval expression. This can be '' if no
+            %     subsetting is desired.
+            %
 			% 
-			%   Example:
+			%   Example: Import all events from the demo database
             %     dirname = fileparts(which('catalog')); % get the path to the catalog directory
             %     dbroot = [dirname,'/demo/avodb200903']; 
-            %     cobj = catalog;
-            %     cobj = cobj.css2catalog(datenum(2009,3,20),datenum(2009,3,23),[],'Redoubt',dbroot,'')
-			%
-			%   Author: Glenn Thompson, 2002-2009
-			%
-			% INPUT:
-			%	dbroot			the path of the database
-			%	archiveformat		leave blank if its a normal database, otherwise 'daily' for a daily archive, 'monthly' for a monthly archive
-			%	snum,enum		start and end datenumbers (Matlab time format, see 'help datenum')
-			%	leftlon, rightlon	longitude range in decimal degrees (west is negative, range is -180 to 180)
-			%	lowerlat, upperlat	latitude range in decimal degrees (southern hemisphere is negative, range is -90 to 90)
-			%	minz, maxz		depth range (below sea level) in kilometres
-			%	minmag			minimum magnitude (mb, ml, ms)
-			%
-			%
-			% OUTPUT:
-			%	event			a structure containing the fields lat, lon, depth, time, evid, nass and mag for each event meeting the selection criteria
-			%
-			% Example:
-			%	e = css_load('dbseg/Quakes','daily',datenum(2009,1,25),datenum(2009,7,1),-179,179,-89,89,0,30,-0.5);
-			%
-			% Glenn Thompson, 2007-04-06
+            %     [lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth] = css_import(dbroot, '')
 
-			cobj.lon   = [];
-			cobj.lat   = [];
-			cobj.depth = [];
-			cobj.dnum  = [];
-			cobj.nass  = [];
-			cobj.evid  = [];
-			cobj.mag   = [];
-			cobj.etype  = '';
-            cobj.auth = {};
-
-			if ~exist('minmag','var')
-				minmag = -999.0;
-			end
-
-			libgt.print_debug(sprintf('archive format is %s',archiveformat),3);
-
-			if strcmp(archiveformat,'')
-				dbname = dbroot;
-				if exist(sprintf('%s.origin',dbname),'file')
-					cobj = cobj.css_import(snum, enum, dbname, leftlon, rightlon, lowerlat, upperlat, minz, maxz, minmag);
-				else
-					fprintf('%s.origin not found\n',dbname);
-				end
-			else
-				if strcmp(archiveformat,'daily')
-      
-					for dnum=floor(snum):floor(enum-1/1440)
-						dbname = sprintf('%s_%s',dbroot,datestr(dnum, 'yyyy_mm_dd'));
-						if exist(sprintf('%s.origin',dbname),'file')
-							e = cobj.css_import(max([dnum snum]),min([dnum+1 enum]),dbname,leftlon,rightlon,lowerlat,upperlat,minz,maxz,minmag);
-							cobj.lon   = cat(1,cobj.lon,   e.lon);
-							cobj.lat   = cat(1,cobj.lat,   e.lat);
-							cobj.depth = cat(1,cobj.depth, e.depth);
-							cobj.dnum  = cat(1,cobj.dnum,  e.dnum);
-							cobj.evid  = cat(1,cobj.evid,  e.evid);
-							cobj.nass  = cat(1,cobj.nass,  e.nass);
-							cobj.mag   = cat(1,cobj.mag,   e.mag);
-							cobj.etype  = cat(2,cobj.etype,  e.etype);
-                            cobj.auth = cat(1, cobj.auth, e.auth);
-						else
-							fprintf('%s.origin not found\n',dbname);
-						end
-					end
-				else
-
-					for yyyy=dnum2year(snum):1:dnum2year(enum)
-						for mm=dnum2month(snum):1:dnum2month(enum)
-							dnum = datenum(yyyy,mm,1);
-							dbname = sprintf('%s%04d_%02d',dbroot,yyyy,mm);
-							if exist(sprintf('%s.origin',dbname),'file')
-								e = cobj.css_import(max([dnum snum]),min([ datenum(yyyy,mm+1,1) enum]),dbname,leftlon,rightlon,lowerlat,upperlat,minz,maxz,minmag);
-								cobj.lon   = cat(1,cobj.lon,   e.lon);
-								cobj.lat   = cat(1,cobj.lat,   e.lat);
-								cobj.depth = cat(1,cobj.depth, e.depth);
-								cobj.dnum  = cat(1,cobj.dnum,  e.dnum);
-								cobj.evid  = cat(1,cobj.evid,  e.evid);
-								cobj.nass  = cat(1,cobj.nass,  e.nass);
-								cobj.mag   = cat(1,cobj.mag,   e.mag);
-								cobj.etype  = cat(1,cobj.etype,  e.etype);
-                                cobj.auth = cat(1, cobj.auth, e.auth);
-							else
-								fprintf('%s.origin not found\n',dbname);
-							end
-						end
-					end
-				end
-			end
-
-			% eliminate bogus magnitudes
-			cobj.mag(cobj.mag > 10.0)=NaN;
-		end
-
-		%------------------------------------------------------------------
-        % CSS_IMPORT
-		function cobj = css_import(cobj, snum,enum,dbname,leftlon,rightlon,lowerlat,upperlat,minz,maxz,minmag)
-
-			% This code was previously a separate function called dbimport2event
-			
-			lon=[];lat=[];depth=[];dnum=[];evid=[];nass=[];mag=[];etype=[];auth={};
-
-			% create blank event structure
-			cobj.lon   = lon;
-			cobj.lat   = lat;
-			cobj.depth = depth;
-			cobj.dnum  = dnum;
-			cobj.nass  = nass;
-			cobj.evid  = evid;
-			cobj.mag   = mag;
-			cobj.etype  = etype;
-            cobj.auth = auth;
+			numevents = 0;
+            [lat, lon, depth, dnum, time, evid, nass, mag, ml, mb, ms, etype, auth] = deal([]);
+            auth = {};
 
 			libgt.print_debug(sprintf('Loading data from %s',dbname),1);
 
@@ -1347,65 +1371,19 @@ classdef catalog
 			db = dbsubset(db, 'orid == prefor');
 			db = dbsort(db, 'time');
 
-			numprefors = dbquery(db,'dbRECORD_COUNT');
-			libgt.print_debug(sprintf('Got %d prefors prior to subsetting',numprefors),2);
+			numevents = dbquery(db,'dbRECORD_COUNT');
+			libgt.print_debug(sprintf('Got %d prefors prior to subsetting',numevents),2);
 	
 			% Do the subsetting
-			if exist('minmag','var')
-                if ~isempty(minmag)
-                    expression_mag  = sprintf(' mb    >= %f  || ml    >=  %f || ms >=  %f',minmag,minmag,minmag);
-                    db = dbsubset(db, expression_mag);
-                    numevents = dbquery(db,'dbRECORD_COUNT');
-                    libgt.print_debug(sprintf('Got %d prefors after mag subsetting (%s)',numevents, expression_mag),2);
-                end
+            if ~isempty(dbeval)
+                db = dbsubset(db, dbeval);
+                numevents = dbquery(db,'dbRECORD_COUNT');
+                libgt.print_debug(sprintf('Got %d prefors after subsetting',numevents),2);
 			end
-
-
-			minepoch = datenum2epoch(snum);
-			maxepoch = datenum2epoch(enum);
-			expression_time = sprintf('time  >= %f && time  <= %f',minepoch,maxepoch);
-			try
-				db = dbsubset(db, expression_time);
-			catch
-				error('%s: dbsubset: %s',mfilename, expression_time);
-			end
-
-
-			numevents = dbquery(db,'dbRECORD_COUNT');
-			libgt.print_debug(sprintf('Got %d prefors after time subsetting',numevents),2);
-			if exist('upperlat','var')
-				expression_lat  = sprintf('lat   >= %f  && lat   <= %f',lowerlat,upperlat);
-				db = dbsubset(db, expression_lat);
-			end
-
-			if exist('rightlon','var')
-				if (leftlon < rightlon) 
-					% does not span the 180 degree discontinuity
-					expression_lon  = sprintf('lon   >= %f  && lon   <= %f',leftlon,rightlon);
-				else
-					% does span the 180 degree discontinuity
-					expression_lon  = sprintf('lon   >= %f  || lon   <= %f',leftlon,rightlon);
-				end
-				db = dbsubset(db, expression_lon);
-			end
-
-
-			numevents = dbquery(db,'dbRECORD_COUNT');
-
-			libgt.print_debug(sprintf('Got %d prefors after region subsetting (%s && %s)',numevents,expression_lon,expression_lat),2);
-
-			if exist('maxz','var')
-				expression_z    = sprintf('depth >= %f    && depth <=  %f',minz,maxz);
-				db = dbsubset(db, expression_z);
-			end
-
-			numevents = dbquery(db, 'dbRECORD_COUNT');
-			libgt.print_debug(sprintf('Got %d prefors after depth subsetting (%s)',numevents,expression_z),2);
-			libgt.print_debug(sprintf('Reading %d events from %s between  %s and %s', numevents, dbname, datestr(snum,0), datestr(enum, 0)),1); 
-
 
 			if numevents>0
-				[lat, lon, depth, time, evid, nass, ml, mb, ms, auth] = dbgetv(db,'lat', 'lon', 'depth', 'time', 'evid', 'nass', 'ml', 'mb', 'ms', 'auth');
+
+                [lat, lon, depth, time, evid, orid, nass, ml, mb, ms, auth] = dbgetv(db,'lat', 'lon', 'depth', 'time', 'evid', 'orid', 'nass', 'ml', 'mb', 'ms', 'auth');
 				
                 etype0 = dbgetv(db,'etype');
      
@@ -1414,19 +1392,12 @@ classdef catalog
 			    else
   			     	% convert etypes
 					etype0=char(etype0);
-					%i=find(etype0=='a');
-					%etype(i)='t';
-					%i=find(etype0=='b');
-					%etype(i)='l';
-					%i=find(etype0=='-');
-					%etype(i)='u';  
-					%i=find(etype0==' ');
-					%etype(i)='u';
 					etype(etype0=='a')='t';
                     etype(etype0=='b')='l';
                     etype(etype0=='-')='u';
                     etype(etype0==' ')='u';
-  			  	end
+                end
+                etype = char(etype); % sometimes etype gets converted to ASCII numbers
 
 				% get mag
 				mag = max([ml mb ms], [], 2);
@@ -1439,18 +1410,86 @@ classdef catalog
 	
 			% close database
 			dbclose(db);
-
-			% create event structure
-			cobj.lon   = lon;
-			cobj.lat   = lat;
-			cobj.depth = depth;
-			cobj.dnum  = dnum;
-			cobj.nass  = nass;
-			cobj.evid  = evid;
-			cobj.mag   = mag;
-			cobj.etype  = etype;
-            cobj.auth = auth;
         end
+    end % methods
+  
+    
+    %% PRIVATE METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    methods (Access=private)
+        
+        %% CSS_LOAD
+        function cobj = css_load(cobj, dbroot, archiveformat, dbeval)
+            
+			if ~exist('minmag','var')
+				minmag = -999.0;
+			end
+
+			libgt.print_debug(sprintf('archive format is %s',archiveformat),3);
+
+			if strcmp(archiveformat,'')
+				dbname = dbroot;
+				if exist(sprintf('%s.origin',dbname),'file')
+					[cobj.lon, cobj.lat, cobj.depth, cobj.dnum, cobj.evid, cobj.orid, cobj.nass, cobj.mag, cobj.mb, cobj.ml, cobj.ms, cobj.etype, cobj.auth] = catalog.css_import(dbname, dbeval);                  
+				else
+					fprintf('%s.origin not found\n',dbname);
+				end
+			else
+				if strcmp(archiveformat,'daily')
+      
+					for dnum=floor(cobj.snum):floor(cobj.enum-1/1440)
+						dbname = sprintf('%s_%s',dbroot,datestr(dnum, 'yyyy_mm_dd'));
+						if exist(sprintf('%s.origin',dbname),'file')
+							[lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth] = catalog.css_import(dbname, dbeval);
+							cobj.lon   = cat(1,cobj.lon,   lon);
+							cobj.lat   = cat(1,cobj.lat,   lat);
+							cobj.depth = cat(1,cobj.depth, depth);
+							cobj.dnum  = cat(1,cobj.dnum,  dnum);
+							cobj.evid  = cat(1,cobj.evid,  evid);
+                            cobj.orid  = cat(1,cobj.orid,  orid);
+							cobj.nass  = cat(1,cobj.nass,  nass);
+							cobj.mag   = cat(1,cobj.mag,   mag);
+                            cobj.mb   = cat(1,cobj.mb,   mb);
+                            cobj.ml   = cat(1,cobj.ml,   ml);
+                            cobj.ms   = cat(1,cobj.ms,   ms);
+							cobj.etype  = cat(2,cobj.etype,  etype);
+                            cobj.auth = cat(1, cobj.auth, auth);
+						else
+							fprintf('%s.origin not found\n',dbname);
+						end
+					end
+				else
+
+					for yyyy=dnum2year(cobj.snum):1:dnum2year(cobj.enum)
+						for mm=dnum2month(cobj.snum):1:dnum2month(cobj.enum)
+							dnum = datenum(yyyy,mm,1);
+							dbname = sprintf('%s%04d_%02d',dbroot,yyyy,mm);
+							if exist(sprintf('%s.origin',dbname),'file')
+								[lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth] = catalog.css_import(dbname, dbeval);
+								cobj.lon   = cat(1,cobj.lon,   lon);
+								cobj.lat   = cat(1,cobj.lat,   lat);
+								cobj.depth = cat(1,cobj.depth, depth);
+								cobj.dnum  = cat(1,cobj.dnum,  dnum);
+								cobj.evid  = cat(1,cobj.evid,  evid);
+ 								cobj.orid  = cat(1,cobj.orid,  orid);
+								cobj.nass  = cat(1,cobj.nass,  nass);
+								cobj.mag   = cat(1,cobj.mag,   mag);
+                                cobj.mb   = cat(1,cobj.mb,   mb);
+                                cobj.ml   = cat(1,cobj.ml,   ml);
+                                cobj.ms   = cat(1,cobj.ms,   ms);
+								cobj.etype  = cat(1,cobj.etype,  etype);
+                                cobj.auth = cat(1, cobj.auth, auth);
+							else
+								fprintf('%s.origin not found\n',dbname);
+							end
+						end
+					end
+				end
+			end
+
+        end % function
+
+
    end % private methods
 end
 

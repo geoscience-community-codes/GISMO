@@ -29,7 +29,7 @@
 
 dirname = fileparts(which('catalog')); 
 dbpath = [dirname,'/demo/avodb200903']; 
-cobj = catalog(datenum(2009,3,20), datenum(2009,3,23), [], 'Redoubt', dbpath, '')
+cobj = catalog(dbpath, 'antelope', 'snum', datenum(2009,3,20), 'enum', datenum(2009,3,23), 'region', 'Redoubt')
 
 %% Magnitude-time plot
 % You should see that there are 1397 events in these 3 days. What are their
@@ -45,10 +45,15 @@ volplot(cobj)
 % For a look at various statistics of magnitude on a daily basis:
 plotdailymagstats(cobj)
 
+%% Adding arrivals to a catalog object
+% By default the arrival property of a catalog object is left blank.
+% To populate it do:
+cobj = cobj.addArrivals()
+
 %% Plots of earthquake counts
 % For a quick plot of earthquakes per hour, we create an eventrate object
 % and then plot it. Here our binsize is 1/24 days, i.e. 1 hour.
-erobj = eventrate(cobj, 1/24);
+erobj = eventrate(cobj, 1/24)
 plot(erobj);
 
 %% Event rates for overlapping time windows
@@ -101,8 +106,8 @@ plot(erobj2, 'metric', 'cum_mag')
 % functionality.
 % Both can also make use of the etype (event subclassification, e.g. lp,
 % vt, hybrid, rockfall) in making plots.
-% Both can handle vectors of objects.
-% CATALOG has useful methods to compare the hypocenters and magnitude
+%
+% CATALOG has preliminary methods to compare the hypocenters and magnitude
 % differences between two catalog objects.
 % CATALOG can also superimpose station locations, if an environment
 % variable called DBMASTER is set to point to the location of a master
