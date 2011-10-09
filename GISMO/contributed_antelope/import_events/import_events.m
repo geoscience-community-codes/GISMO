@@ -326,12 +326,22 @@ for ns = 1:nstations
 	% waveforms in our big cell array eqwf.  There doesn't seem to be an
 	% obvious way to vectorize these steps.
 	% Also store other fields retrieved from database
-	for na = 1:size(wtmp,1)
-		wtmp(na,:) = addfield(wtmp(na,:),'EVENT_START',satimes(na));
-		wtmp(na,:) = addfield(wtmp(na,:),'ETYPE',cell2mat(etype(eqindices(satime_indices(na),ns))));
- 		wtmp(na,:) = addfield(wtmp(na,:),'ORID',orid(eqindices(satime_indices(na),ns)));
-		wtmp(na,:) = addfield(wtmp(na,:),'OTIME',otime(eqindices(satime_indices(na),ns)));
-		wtmp(na,:) = addfield(wtmp(na,:),'SEAZ',seaz(eqindices(satime_indices(na),ns)));
+	skip_count = 0;
+	for na = 1:numel(satimes);
+		
+		% Check that the waveform is the one we expect; otherwise, skip to
+		% the next origin
+		wtime = get(wtmp(na-skip_count,1),'START');
+		if abs(wtime - start_times(na)) > 0.1/86400
+			skip_count = skip_count + 1;
+			continue;
+		end
+		
+		wtmp(na-skip_count,:) = addfield(wtmp(na-skip_count,:),'EVENT_START',satimes(na));
+		wtmp(na-skip_count,:) = addfield(wtmp(na-skip_count,:),'ETYPE',cell2mat(etype(eqindices(satime_indices(na),ns))));
+ 		wtmp(na-skip_count,:) = addfield(wtmp(na-skip_count,:),'ORID',orid(eqindices(satime_indices(na),ns)));
+		wtmp(na-skip_count,:) = addfield(wtmp(na-skip_count,:),'OTIME',otime(eqindices(satime_indices(na),ns)));
+		wtmp(na-skip_count,:) = addfield(wtmp(na-skip_count,:),'SEAZ',seaz(eqindices(satime_indices(na),ns)));
 
 		% Technically, there can be a different signal type for each picked
 		% arrival.  Here we make the assumption that the value of stype for
@@ -339,11 +349,11 @@ for ns = 1:nstations
 		% will need to be kept in mind if developing a classification
 		% routine that makes use of stype, and training catalogues designed
 		% accordingly.
-		wtmp(na,:) = addfield(wtmp(na,:),'STYPE',stype(eqindices(satime_indices(na),ns)));
+		wtmp(na-skip_count,:) = addfield(wtmp(na-skip_count,:),'STYPE',stype(eqindices(satime_indices(na),ns)));
 		
 		
 		% Store waveforms in cell array.
-		eqwf{satime_indices(na),ns} = wtmp(na,:);
+		eqwf{satime_indices(na),ns} = wtmp(na-skip_count,:);
 	end
 end
 
