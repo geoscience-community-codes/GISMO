@@ -1,15 +1,15 @@
 function depricated(currentMFile,varargin)
 
-%DEPRICATED(MFILENAME) issues a deprication warning
-% DEPRICATED warns the user that the current function has been depricated
-% and is slated for eventual removal from GISMO.
-%
-% HINT: In most cases the first argument can be short-handed using the
-% built-in function mfilename:
-%   depricated(mfilename);
+%DEPRICATED issue a deprication warning
+% DEPRICATED(MFILENAME) warns the user that the current function has 
+% been depricated and is slated for eventual removal from GISMO.
 %
 % DEPRICATED(CURRENTFUNCTION,NEWMFILE) points the user toward a newer
 % function intended to replace the depricated function.
+%
+% ** HINT: In most cases the first argument can be short-handed using the
+% built-in function mfilename:
+%   depricated(mfilename);
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
 % $Date: 2010-02-04 11:51:43 -0900 (Thu, 04 Feb 2010) $

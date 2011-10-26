@@ -1,7 +1,8 @@
 function remove
 
-% REMOVE removes all existing paths containing the phrase
-% 'GISMO'.
+%REMOVE remove all paths to GISMO
+% REMOVE Brute force function that removes any path in the path list
+% that contains the string 'GISMO'.
 %
 % See also admin.which admin.getpath admin.refresh
 
