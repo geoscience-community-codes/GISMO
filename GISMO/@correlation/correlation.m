@@ -302,7 +302,7 @@ elseif nargin==2 && isa(varargin{1},'waveform')
     
 %% FROM DEFAULT ANTELOPE ARCHIVE
 elseif nargin==5
-    warning('This call to correlation is depricated. Use the datasource and scnlobject as described in HELP CORRELATION.');
+    warning('This call to correlation is deprecated. Use the datasource and scnlobject as described in HELP CORRELATION.');
     stat = varargin{1};
     chan = varargin{2};
     trig = reshape(varargin{3},length(varargin{3}),1);
@@ -320,7 +320,7 @@ elseif nargin==5
     
 %% FROM CUSTOM ANTELOPE ARCHIVE
 elseif nargin==6
-    warning('This call to correlation is depricated. Use the datasource and scnlobject as described in HELP CORRELATION.');
+    warning('This call to correlation is deprecated. Use the datasource and scnlobject as described in HELP CORRELATION.');
     stat = varargin{1};
     chan = varargin{2};
     trig = reshape(varargin{3},length(varargin{3}),1);
@@ -339,7 +339,7 @@ elseif nargin==6
     
 %% FROM WINSTON WAVE SERVER
 elseif nargin==9
-    warning('This call to correlation is depricated. Use the datasource and scnlobject as described in HELP CORRELATION.');
+    warning('This call to correlation is deprecated. Use the datasource and scnlobject as described in HELP CORRELATION.');
     stat = varargin{1};
     chan = varargin{2};
     trig = reshape(varargin{3},1,length(varargin{3}));

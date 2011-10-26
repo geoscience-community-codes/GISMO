@@ -16,7 +16,7 @@ function W = wf_fi(W,varargin)
 % Programming note: WF_FI could be folded into WF_FFT
 
 
-%%% admin.depricated(mfilename,'wf.freqindex');
+%%% admin.deprecated(mfilename,'wf.freqindex');
 
 DOPLOT = 0;
 if length(varargin) == 1

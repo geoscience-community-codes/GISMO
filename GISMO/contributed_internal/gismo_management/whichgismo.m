@@ -31,7 +31,7 @@ function whichgismo(sourceLocation)
 
 
 
-admin.depricated(mfilename,'admin.which');
+admin.deprecated(mfilename,'admin.which');
 
 
 

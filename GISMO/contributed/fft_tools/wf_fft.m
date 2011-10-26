@@ -16,7 +16,7 @@ function w = wf_fft(w);
 
 
 
-%%% admin.depricated(mfilename,'wf.fft');
+%%% admin.deprecated(mfilename,'wf.fft');
 
 
 % CHECK ARGUMENTS

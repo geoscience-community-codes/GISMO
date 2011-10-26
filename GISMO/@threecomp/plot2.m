@@ -1,9 +1,9 @@
 function plot2(TC,varargin)
 
-%PLOT2 a figure of three component traces (depricated).
+%PLOT2 a figure of three component traces (deprecated).
 %  PLOT2(TC) Plots the three components of a threecomp object. Time axis is
 %  relative to the trigger time. Note that plot only operates on a single
-%  threecomp object at once. ** PLOT2 has been depricated and superceded by
+%  threecomp object at once. ** PLOT2 has been deprecated and superceded by
 %  PLOT which is follows mirrors waveform/plot. **
 %
 %  PLOT(TC,SCALE) scales the trace amplitudes by a factor of SCALE. Default
@@ -15,7 +15,7 @@ function plot2(TC,varargin)
 
 
 
-admin.depricated(mfilename,'threecomp/plot')
+admin.deprecated(mfilename,'threecomp/plot')
 
 
 if numel(TC)>1

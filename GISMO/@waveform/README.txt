@@ -72,7 +72,7 @@ undid the nanstuff, 'cause it turned out to be specific to the statistics toolbo
 fixed waveform isempty
 
 r211
-Fixed a bug in R207 (introduced ~r190) where attempting to read in a recently saved waveform (structure v1.1) will cause an error.  This was caused by the removal of the station and channel fields (which had been depricated since the introduction of scnlobjects)
+Fixed a bug in R207 (introduced ~r190) where attempting to read in a recently saved waveform (structure v1.1) will cause an error.  This was caused by the removal of the station and channel fields (which had been deprecated since the introduction of scnlobjects)
 Moved HISTORY out of miscelleneous fields and into its own proper field within the waveform structure.  This should save some speed overhead.
 Fixed sign(waveform), which was transposing the data column.
 

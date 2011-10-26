@@ -74,7 +74,7 @@ function plot(c,varargin)
 % PLOT(D,'den') plots a dendrogram image. Requires the LINK field to be
 % filled (see correlation/linkage).
 %
-% PLOT(C,'event') This routine has been depricated and will be removed in a
+% PLOT(C,'event') This routine has been deprecated and will be removed in a
 % future release. Use the occurence plot routine instead. The event routine
 % plots the time evolution of each event cluster together with a stack of
 % all of the traces in that cluster. No normalization is applied to the
@@ -162,7 +162,7 @@ elseif strncmpi(plottype,'STA',3)
 elseif strncmpi(plottype,'DEN',3)
     dendrogramplot(c);
 elseif strncmpi(plottype,'EVE',3)       % ord field has been co-opted 
-    warning('The event plot has been depricated. Use the "occurence" plot instead');
+    admin.deprecated('event plot','occurence plot')
     if length(ord) > 1
         ord = 4;
     end

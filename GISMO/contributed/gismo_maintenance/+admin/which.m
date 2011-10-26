@@ -1,12 +1,12 @@
 function which(sourceLocation)
 
-%WHICH Select from multiple GISMO archives.
-% 
+%WHICH manage and switch between multiple GISMO archives
 % WHICH displays the path to the current GISMO archive and lists all
 % the other optional paths that currently defined paths.
 % 
 % WHICH(NAME) removes all existing paths containing the phrase
-% 'GISMO'. New GISMO paths are then added based on predefined locations specified by NAME.
+% 'GISMO'. New GISMO paths are then added based on predefined locations 
+% specified by NAME.
 % Example names and paths are listed below. 
 %
 %    name          path

@@ -9,7 +9,7 @@ function rmgismo()
 
    
 
-admin.depricated(mfilename,'admin.remove');
+admin.deprecated(mfilename,'admin.remove');
 
 
 % REMOVE EXISTING GISMO PATHS

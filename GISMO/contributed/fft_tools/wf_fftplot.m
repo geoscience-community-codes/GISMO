@@ -10,7 +10,7 @@ function wf_fftplot(w);
 
 
 
-%%% admin.depricated(mfilename,'wf.fftplot');
+%%% admin.deprecated(mfilename,'wf.fftplot');
 
 
 % CHECK ARGUMENTS

@@ -12,7 +12,7 @@ function TF = antelope_exists()
 % $Revision: 178 $
 
 
-admin.depricated(mfilename,'admin.antelope_exists');
+admin.deprecated(mfilename,'admin.antelope_exists');
 
 
 
