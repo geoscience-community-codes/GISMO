@@ -11,6 +11,13 @@ function startup_GISMO
 % $Revision$
 
 
+% CHECK COMPATIBILITY
+% Should consider added a compatibility checkign mechanism at some point. 
+% Not clear how best to do this. But given that GISMO uses features from
+% recent releases and add-on toolboxes, it would be great to give users a
+% heads up about such.
+
+
 % GET PATHS TO DIRECTORIES IN GISMO
 gismofile = which('GISMO/startup_GISMO');
 gismopath = fileparts(gismofile); % first argout is the path

@@ -29,6 +29,12 @@ function whichgismo(sourceLocation)
 % $Revision$
 
 
+
+
+admin.depricated(mfilename,'admin.which');
+
+
+
 % LOAD PATH LIST
 whichgismo_paths;
 

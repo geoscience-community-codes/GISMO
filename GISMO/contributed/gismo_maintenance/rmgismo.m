@@ -8,6 +8,10 @@ function rmgismo()
 % $Revision$
 
    
+
+admin.depricated(mfilename,'admin.remove');
+
+
 % REMOVE EXISTING GISMO PATHS
 pathList = path;
 n = 1;

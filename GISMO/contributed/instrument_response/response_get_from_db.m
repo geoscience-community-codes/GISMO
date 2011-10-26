@@ -30,7 +30,7 @@ function [response] = response_get_from_db(station, channel, time, frequencies, 
 
 
 % CHECK ARGUMENTS
-% % % % % % if ~antelope_exists
+% % % % % % if ~admin.antelope_exists
 % % % % % %     error('This function requires Antelope');
 % % % % % % end
 if (nargin ~= 5)

@@ -193,7 +193,7 @@ classdef catalog
         function cobj = css2catalog(cobj, dbpath, varargin)            
             % CATALOG/CSS2CATALOG
             %   Wrapper for loading CSS3.0 databases.
-			if ~antelope_exists
+			if ~admin.antelope_exists
 				disp('Antelope not found');
                 return;
             end

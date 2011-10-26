@@ -30,7 +30,7 @@ function catalog = aeic_total_catalog(varargin)
 
 
 % CHECK ARGUMENTS
-if ~antelope_exists
+if ~admin.antelope_exists
     error('This function requires Antelope');
 end
 if numel(varargin)>0

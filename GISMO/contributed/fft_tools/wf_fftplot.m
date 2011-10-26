@@ -8,6 +8,11 @@ function wf_fftplot(w);
 % TODO: written pretty hastily and inefficiently - MEW 6/18/2007
 
 
+
+
+%%% admin.depricated(mfilename,'wf.fftplot');
+
+
 % CHECK ARGUMENTS
 if ~strcmpi(class(w),'waveform')
     error('First input must be a waveform object');

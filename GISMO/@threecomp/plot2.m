@@ -13,6 +13,11 @@ function plot2(TC,varargin)
 % $Date$
 % $Revision$
 
+
+
+admin.depricated(mfilename,'threecomp/plot')
+
+
 if numel(TC)>1
     error('Threecomp:plot:tooManyObjects', ...
         ['Plot only operates on a single threecomp object. ' ...

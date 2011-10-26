@@ -12,6 +12,9 @@ function TF = antelope_exists()
 % $Revision: 178 $
 
 
+admin.depricated(mfilename,'admin.antelope_exists');
+
+
 
 if exist('dbopen','file') && exist('trload_css','file');
     TF = 1;

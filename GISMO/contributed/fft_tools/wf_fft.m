@@ -14,6 +14,11 @@ function w = wf_fft(w);
 % $Revision$
 
 
+
+
+%%% admin.depricated(mfilename,'wf.fft');
+
+
 % CHECK ARGUMENTS
 if ~strcmpi(class(w),'waveform')
     error('First input must be a waveform object');
