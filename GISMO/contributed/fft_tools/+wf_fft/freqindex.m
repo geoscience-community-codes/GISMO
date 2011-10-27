@@ -1,22 +1,22 @@
-function W = wf_fi(W,varargin)
+function W = freqindex(W,varargin)
 
-% WAVEFORM = WF_FI(WAVEFORM) calculates the frequency index of a waveform.
-% The FI is stored as a new field called FI. 
+% WAVEFORM = FREQINDEX(WAVEFORM) calculates the frequency index of a waveform.
+% The FI is stored as a new field called FFT_FI. This function must be run after 
+% WF_FFT.COMPUTE so that the necessary spectral fields exist in advance
 %
-% WAVEFORM = WF_FI(WAVEFORM,1) includes a plot of the waveform, and the 
+% WAVEFORM = FREQINDEX(WAVEFORM,1) includes a plot of the waveform, and the 
 % frequency spectrum with the FI frequency bins shaded by their appropriate
 % heights. If WAVEFORM is a vector, plots will only be included for the
 % first five waveforms. This is a bit ad hoc, but it prevents accidental
 % plotting of thousands of waveforms. To plot specific waveforms one can
-% always use wf_fi(w(n)) where n is the index of the nth waveform.
+% always use freqindex(w(n)) where n is the index of the nth waveform.
+%
+% See also wf_fft.compute wf_fft.plot
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date$
-% $Revision$
-% Programming note: WF_FI could be folded into WF_FFT
+% $Date: 2010-02-04 11:51:43 -0900 (Thu, 04 Feb 2010) $
+% $Revision: 178 $
 
-
-admin.deprecated(mfilename,'wf_fft.freqindex');
 
 DOPLOT = 0;
 if length(varargin) == 1
@@ -35,7 +35,8 @@ for i = 1:length(W)
     F = get(W(i),'FFT_FREQ');
     A  = get(W(i),'FFT_AMP');
     if isempty(F) || isempty(A)
-        error(['Trace ' num2str(i) ' does not have FFT_FREQ or FFT_AMP fields. Run WF_FFT before WF_FI.' ]);
+    	%W(i) = wf_fft.compute(W(i));
+        error(['Trace ' num2str(i) ' does not have FFT_FREQ or FFT_AMP fields. Run WF_FFT.COMPUTE before WF_FFT.FREQINDEX' ]);
     end
     %A = A .* A;
     j = find(F >= 1 & F <= 2);

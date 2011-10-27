@@ -1,6 +1,7 @@
-function w = wf_fft(w);
+function w = compute(w);
 
-% WAVEFORM = WF_FFT(WAVEFORM)  calculate frequency spectrum of a waveform.
+%COMPUTE calculates the fast fourier transform of a waveform object
+% WAVEFORM = COMPUTE(WAVEFORM) calculate frequency spectrum of a waveform.
 % The results of the fast fourier transform is added as new fields
 % in the waveform:
 %   FFT_FREQ is a vector of frequencies with N samples
@@ -10,13 +11,8 @@ function w = wf_fft(w);
 %           peak (or dominant frequency. This could change)
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date$
-% $Revision$
-
-
-
-
-admin.deprecated(mfilename,'wf_fft.compute');
+% $Date: 2010-02-04 11:51:43 -0900 (Thu, 04 Feb 2010) $
+% $Revision: 178 $
 
 
 % CHECK ARGUMENTS

@@ -1,16 +1,16 @@
-function wf_fftplot(w);
+function plot(w)
 
-% WF_FFTPLOT(WAVEFORM) plot fourier transform of the data.
+%PLOT plot fourier transform of a waveform
+% PLOT(WAVEFORM) creates a simple plot of the frequency vs. amplitude 
+% spectrum of the traces in WAVEFORM. This function requires that the 
+% FFT_AMP and FFT_FREQ fields have been filled using WF_FFT.COMPUTE
+%
+% see also wf_fft.compute
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date$
-% $Revision$
+% $Date: 2010-02-04 11:51:43 -0900 (Thu, 04 Feb 2010) $
+% $Revision: 178 $
 % TODO: written pretty hastily and inefficiently - MEW 6/18/2007
-
-
-
-
-admin.deprecated(mfilename,'wf_fft.plot');
 
 
 % CHECK ARGUMENTS
@@ -25,7 +25,7 @@ end
 
 
 %if ~isfield(w,'FFT_AMP')
-%    error('waveform must contain FFT fields. Run WF_FFT first');
+%    error('waveform must contain FFT fields. Run WF_FFT.COMPUTE first');
 %end;
 
 
