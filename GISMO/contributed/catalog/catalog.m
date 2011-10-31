@@ -193,10 +193,10 @@ classdef catalog
         function cobj = css2catalog(cobj, dbpath, varargin)            
             % CATALOG/CSS2CATALOG
             %   Wrapper for loading CSS3.0 databases.
-			if ~admin.antelope_exists
-				disp('Antelope not found');
-                return;
-            end
+			%if ~admin.antelope_exists
+			%	disp('Antelope not found');
+            %    return;
+            %end
             
             [dbeval, archiveformat, snum, enum, minmag, region, subclass, mindepth, maxdepth] = libgt.process_options(varargin, 'dbeval', '', 'archiveformat', '', 'snum', [], 'enum', [], 'minmag', [], 'region', [], 'subclass', '*', 'mindepth', [], 'maxdepth', []); 
   
@@ -1340,7 +1340,7 @@ classdef catalog
             %     dbroot = [dirname,'/demo/avodb200903']; 
             %     [lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth] = css_import(dbroot, '')
 
-			numevents = 0;
+			numorigins = 0;
             [lat, lon, depth, dnum, time, evid, nass, mag, ml, mb, ms, etype, auth] = deal([]);
             auth = {};
 
@@ -1356,39 +1356,46 @@ classdef catalog
 					rethrow(ME);
 				end
  			   	return;
-			end
-
-			db = dblookup_table(db, 'origin');
-			if (dbquery(db, 'dbRECORD_COUNT')==0)
-				if ~exist([dbname,'.origin'], 'file')
-					libgt.print_debug(sprintf('%s.origin does not exist',dbname),1);
-				else
-					libgt.print_debug(sprintf('Could not open %s.origin',dbname),1);
-				end
+            end
+            
+            ORIGIN_TABLE_PRESENT = libgt.dbtable_present(dbname, 'origin');
+            EVENT_TABLE_PRESENT = libgt.dbtable_present(dbname, 'event');           
+            if (ORIGIN_TABLE_PRESENT)
+                db = dblookup_table(db, 'origin');
+            else
+				libgt.print_debug(sprintf('%s.origin does not exist, or contains 0 records',dbname),1);
 				return;
-			end
-			db = dbjoin(db, dblookup_table(db, 'event') );
-			db = dbsubset(db, 'orid == prefor');
-			db = dbsort(db, 'time');
+            end
+            if (EVENT_TABLE_PRESENT)
+                db = dbjoin(db, dblookup_table(db, 'event') );
+                db = dbsubset(db, 'orid == prefor');
+                db = dbsort(db, 'time');
+            else
+                disp('No event table. Cannot use prefor. Using all orids.');
+            end
 
-			numevents = dbquery(db,'dbRECORD_COUNT');
-			libgt.print_debug(sprintf('Got %d prefors prior to subsetting',numevents),2);
+			numorigins = dbquery(db,'dbRECORD_COUNT');
+			libgt.print_debug(sprintf('Got %d prefors prior to subsetting',numorigins),2);
 	
 			% Do the subsetting
             if ~isempty(dbeval)
                 db = dbsubset(db, dbeval);
-                numevents = dbquery(db,'dbRECORD_COUNT');
-                libgt.print_debug(sprintf('Got %d prefors after subsetting',numevents),2);
+                numorigins = dbquery(db,'dbRECORD_COUNT');
+                libgt.print_debug(sprintf('Got %d prefors after subsetting',numorigins),2);
 			end
 
-			if numevents>0
-
-                [lat, lon, depth, time, evid, orid, nass, ml, mb, ms, auth] = dbgetv(db,'lat', 'lon', 'depth', 'time', 'evid', 'orid', 'nass', 'ml', 'mb', 'ms', 'auth');
-				
+			if numorigins>0
+                if EVENT_TABLE_PRESENT
+                    [lat, lon, depth, time, evid, orid, nass, ml, mb, ms, auth] = dbgetv(db,'lat', 'lon', 'depth', 'time', 'evid', 'orid', 'nass', 'ml', 'mb', 'ms', 'auth');
+                else
+                    [lat, lon, depth, time, orid, nass, ml, mb, ms, auth] = dbgetv(db,'lat', 'lon', 'depth', 'time', 'orid', 'nass', 'ml', 'mb', 'ms', 'auth');  
+                    disp('No event table. Setting evid == orid');
+                    evid = orid;
+                end
                 etype0 = dbgetv(db,'etype');
      
  			   	if isempty(etype0)
-			        	etype = char(ones(numevents,1)*'R');
+			        	etype = char(ones(numorigins,1)*'R');
 			    else
   			     	% convert etypes
 					etype0=char(etype0);
@@ -1405,7 +1412,7 @@ classdef catalog
  			   	% convert time from epoch to Matlab datenumber
 				dnum = epoch2datenum(time);
 
-			end
+            end
 
 	
 			% close database
