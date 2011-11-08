@@ -456,6 +456,9 @@ segUnits = {'A','nm / sec / sec','acceleration';
   'v','volts','electric potential';
   'w','rad / sec', 'rotation rate';
   '-','null','null'};
+if isempty(segtype)
+  segtype=  '-';
+end
 if ~ismember(segtype,segTypes)
   segtype=  '-';
 end

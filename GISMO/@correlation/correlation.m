@@ -267,9 +267,9 @@ elseif nargin==1 && isa(varargin{1},'double')
 %% FROM A WAVEFORM WITHOUT TRIGGERS
 elseif nargin==1 && isa(varargin{1},'waveform')
     c.W = varargin{1};
-    c.W = reshape(c.W,length(c.W),1);
+    c.W = reshape(c.W,numel(c.W),1);
     c.trig = get(c.W,'START') + 0.25*(get(c.W,'END')-get(c.W,'START'));
-    c.trig = reshape(c.trig,length(c.trig),1);
+    c.trig = reshape(c.trig,numel(c.trig),1);
     c.C = [];
     c.L = [];
     c.stat = [];
@@ -280,10 +280,10 @@ elseif nargin==1 && isa(varargin{1},'waveform')
 %% FROM A WAVEFORM WITH TRIGGERS
 elseif nargin==2 && isa(varargin{1},'waveform')
     c.W = varargin{1};
-    c.W = reshape(c.W,length(c.W),1);
+    c.W = reshape(c.W,numel(c.W),1);
     if isa(varargin{2},'double')
         c.trig = varargin{2};
-        c.trig = reshape(c.trig,length(c.trig),1);
+        c.trig = reshape(c.trig,numel(c.trig),1);
     else
         error('Time format for TRIG field not recognized');
     end
