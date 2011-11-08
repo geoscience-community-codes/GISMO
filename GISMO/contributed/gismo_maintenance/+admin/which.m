@@ -59,6 +59,10 @@ else
         error('GISMO Source not recognized');
     end
     
+    if numel(f)==1
+        newSource = paths{f,2};
+    end
+    
 end
 
 
