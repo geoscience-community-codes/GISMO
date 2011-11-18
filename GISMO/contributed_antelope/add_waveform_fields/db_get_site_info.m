@@ -42,8 +42,8 @@ db = dblookup_table(db,'site');
 nlist = [];
 for n = 1:length(site.sta);
 	db1 = dbsubset(db,['sta==''' site.sta{n} '''']);
-    db1 = dbsubset(db1,['ondate<''' jday ''' ']);
-    db1 = dbsubset(db1,['offdate>''' jday ''' || offdate==NULL']);
+    db1 = dbsubset(db1,['ondate<=''' jday ''' ']);
+    db1 = dbsubset(db1,['offdate>=''' jday ''' || offdate==NULL']);
     recnum = dbquery(db1,'dbRECORD_COUNT');
 	[ site.ondate(n) , site.offdate(n) , site.lat(n) , site.lon(n) , site.elev(n) ] = dbgetv(db1,'ondate','offdate','lat','lon','elev');
 end

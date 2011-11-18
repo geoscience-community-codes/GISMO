@@ -43,7 +43,8 @@ function [c,t,i,CC,LL] = interferogram(c,varargin)
 % this ad hoc structure though, in many cases it may be better to simply
 % save the data straight out of the routine and handle it yourself. It is
 % automatically placed in the first waveform however to fascilitate a quick
-% plotting option.
+% plotting option. INTERFEROGRAM_TIME is given in units of seconds relative
+% to the trigger time.
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
 % $Date$
