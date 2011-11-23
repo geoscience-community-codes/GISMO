@@ -1,19 +1,19 @@
-function catalog = aeic_total_catalog(varargin)
+function catalog = get_total(varargin)
 
-%AEIC_TOTAL_CATALOG Read in the complete AEIC Total earthquake catalog
-%  CATALOG = AEIC_TOTAL_CATALOG reads the entire "Total" database of AEIC
+%GET_TOTAL Read in the complete AEIC Total earthquake catalog
+%  CATALOG = GET_TOTAL reads the entire "Total" database of AEIC
 %  earthquakes. The output field CATALOG is a structure containing field
 %  names that adhere farily closely to their database definitions and
 %  should be self explanatory. Origin time is given in Matlab date format.
 %
-% CATALOG = AEIC_TOTAL_CATALOG(DATABASE) specifies the path and name where
+% CATALOG = GET_TOTAL(DATABASE) specifies the path and name where
 % the database can be found. If not specified the DATABASE name defaults to
 % the location on the Seismology Linux Network. This function may work
 % generically on other databases. However the table requirements and the
 % preferred magnitude algorithm are tailoered specifically to the AEIC
 % Total database.
 %
-% For each event AEIC_TOTAL_CATALOG distills the multiple possible 
+% For each event GET_TOTAL distills the multiple possible 
 % magnitudes into a single creates a "preferred magnitude" based on the 
 % following order of preference:
 %        1. Hrvd Mw
@@ -29,8 +29,6 @@ function catalog = aeic_total_catalog(varargin)
 % $Revision:$
 
 
-admin.deprecated(mfilename,'aeic_catalog.get_total');
-
 % CHECK ARGUMENTS
 if ~admin.antelope_exists
     error('This function requires Antelope');
@@ -38,7 +36,7 @@ end
 if numel(varargin)>0
     dbName = varargin{1};
 else
-    dbName = '/home/admin/databases/AEIC_CATALOG/Total';
+    dbName = '/Seis/catalogs/aeic/Total/Total';
 end;
 
 
