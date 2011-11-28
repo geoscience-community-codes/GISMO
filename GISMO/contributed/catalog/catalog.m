@@ -615,6 +615,8 @@ classdef catalog
             % CATALOG/PLOTDAILYMAGSTATS(COBJ)
 			% plot the max, mean, min and various percentiles of the magnitude samples each day
 			day = floor(cobj.dnum);
+            i = find(cobj.mag < -9);
+            cobj.mag(i)=NaN;
 			c=1;
 			time=[];
 			for dnum=min(day):max(day)
@@ -1314,13 +1316,13 @@ classdef catalog
            libgt.test_helper(str);
            
            dbeval_expr = 'time > "2009/03/20" && time < "2009/03/23" && distance(lat, lon, 60.5, -152.6) < 0.2';
-           str = sprintf('cobj = catalog(''%s'', ''antelope'', ''dbeval'', ''%s'')',dbroot, dbeval_expr)
+           str = sprintf('cobj = catalog(''%s'', ''antelope'', ''dbeval'', ''%s'')',dbroot, dbeval_expr);
            libgt.test_helper(str);
            
-           str = 'cobj = catalog(''/avort/oprun/events/earthworm/events_earthworm'', ''antelope'' )'
+           str = 'cobj = catalog(''/avort/oprun/events/earthworm/events_earthworm'', ''antelope'' )';
            libgt.test_helper(str);
            
-           str = sprintf('cobj = catalog(''/avort/oprun/events/earthworm/events_earthworm'', ''antelope'', ''dbeval'', ''time > %f'' )', datenum2epoch(now-7))
+           str = sprintf('cobj = catalog(''/avort/oprun/events/earthworm/events_earthworm'', ''antelope'', ''dbeval'', ''time > %f'' )', datenum2epoch(now-7));
            libgt.test_helper(str);
          end
 		%------------------------------------------------------------------
@@ -1341,37 +1343,39 @@ classdef catalog
             %     [lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth] = css_import(dbroot, '')
 
 			numorigins = 0;
-            [lat, lon, depth, dnum, time, evid, nass, mag, ml, mb, ms, etype, auth] = deal([]);
+            [lat, lon, depth, dnum, time, evid, orid, nass, mag, ml, mb, ms, etype, auth] = deal([]);
             auth = {};
 
-			libgt.print_debug(sprintf('Loading data from %s',dbname),1);
-
-			% First, lets get a summary of origins
-			try
-				db = dbopen(dbname, 'r');
-            catch ME
-				if ~exist(dbname, 'file')
-					libgt.print_debug(sprintf('%s does not exist',dbname),1);
-				else
-					rethrow(ME);
-				end
- 			   	return;
-            end
-            
+			libgt.print_debug(sprintf('Loading data from %s',dbname),3);
+          
             ORIGIN_TABLE_PRESENT = libgt.dbtable_present(dbname, 'origin');
             EVENT_TABLE_PRESENT = libgt.dbtable_present(dbname, 'event');           
             if (ORIGIN_TABLE_PRESENT)
-                db = dblookup_table(db, 'origin');
+                db = dblookup_table(dbopen(dbname, 'r'), 'origin');
+                numorigins = dbquery(db,'dbRECORD_COUNT');
+                libgt.print_debug(sprintf('Got %d records from %s.origin',numorigins,dbname),1);
+                if numorigins > 0
+                    if (EVENT_TABLE_PRESENT)
+                        db = dbjoin(db, dblookup_table(db, 'event') );
+                        numorigins = dbquery(db,'dbRECORD_COUNT');
+                        if numorigins > 0
+                            db = dbsubset(db, 'orid == prefor');
+                            numorigins = dbquery(db,'dbRECORD_COUNT');
+                            libgt.print_debug(sprintf('Got %d records after joining event with %s.origin',numorigins,dbname),1);
+                            if numorigins > 0
+                                db = dbsort(db, 'time');
+                            else
+                                return
+                            end
+                        else
+                            return
+                        end
+                    end
+                else
+                    return
+                end
             else
-				libgt.print_debug(sprintf('%s.origin does not exist, or contains 0 records',dbname),1);
-				return;
-            end
-            if (EVENT_TABLE_PRESENT)
-                db = dbjoin(db, dblookup_table(db, 'event') );
-                db = dbsubset(db, 'orid == prefor');
-                db = dbsort(db, 'time');
-            else
-                disp('No event table. Cannot use prefor. Using all orids.');
+                return
             end
 
 			numorigins = dbquery(db,'dbRECORD_COUNT');
@@ -1431,8 +1435,6 @@ classdef catalog
 			if ~exist('minmag','var')
 				minmag = -999.0;
 			end
-
-			libgt.print_debug(sprintf('archive format is %s',archiveformat),3);
 
 			if strcmp(archiveformat,'')
 				dbname = dbroot;

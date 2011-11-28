@@ -6,20 +6,23 @@ function present=dbtable_present(dbpath, table)
 % AUTHOR: Glenn Thompson, UAF-GI
 % $Date:$
 % $Revision:$
+libgt.print_debug(sprintf('> %s',mfilename),3);
 present = 0;
-libgt.print_debug(sprintf('%s: checking %s.%s has > 0 rows\n',mfilename,dbpath,table),2);
 if exist(dbpath, 'file')
    db = dbopen(dbpath, 'r');
    try
        db = dblookup_table(db, table);
        numrows = dbquery(db, 'dbRECORD_COUNT');
        if numrows > 0
-          present = 1;
-          libgt.print_debug(sprintf('Success: %f rows\n',numrows),3);
+          present = numrows;
+          libgt.print_debug(sprintf('Success: %d rows',numrows),3);
        else
-          libgt.print_debug(sprintf('Failure: %f rows\n',numrows),3);           
+          libgt.print_debug(sprintf('Failure: %d rows',numrows),3);           
        end
     catch
-         libgt.print_debug(sprintf('Failure: could not open %s.%s\n',dbpath,table),3);
+         libgt.print_debug(sprintf('Failure: could not open %s.%s',dbpath,table),3);
     end
+else
+	libgt.print_debug(sprintf('Failure: could not find %s. The descriptor may be missing.',dbpath),3);
 end
+libgt.print_debug(sprintf('< %s',mfilename),3);
