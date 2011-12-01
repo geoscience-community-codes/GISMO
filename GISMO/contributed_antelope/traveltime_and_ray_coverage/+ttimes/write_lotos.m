@@ -55,7 +55,7 @@ fclose(fid);
 % WRITE STATION FILE
 fid = fopen('stat_ft.dat','w');
 for n = 1:max(site.stationNum)
-    fprintf(fid,'%15.5f%15.5f%15.5f%15s\n',site.lon(n),site.lat(n),-1*site.elev(n),site.sta{n});
+    fprintf(fid,'%15.5f%15.5f%15.5f%15s\n',site.lon(n),site.lat(n),site.elev(n),site.sta{n});
 end
 fclose(fid);
 

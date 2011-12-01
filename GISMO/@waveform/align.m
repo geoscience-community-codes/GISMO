@@ -36,7 +36,7 @@ function w = align(w,alignTime, newFrequency, method)
 %   If used for particle motions, consider MatLab's plotmatrix command.
 %
 %   example:
-%       scnl = sclobject('KDAK',{'BHZ','BHN','BHE'}); %grab all 3 channels
+%       scnl = sclnobject('KDAK',{'BHZ','BHN','BHE'}); %grab all 3 channels
 %       % for each component, grab winston data on Kurile Earthquake
 %       w = waveform(mydatasource,scnl,'1/13/2007 04:20:00',...
 %         '1/13/2007 04:30:00');

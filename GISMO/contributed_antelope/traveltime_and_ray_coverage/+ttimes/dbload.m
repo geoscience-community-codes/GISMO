@@ -11,7 +11,7 @@ function [origin,site,arrival,ray] = dbload(dbName)
 % -- OUTPUT ARGUMENTS --
 %
 % ORIGIN
-% This is a minimally poulated catalog object (see help catalog) that
+% This is a minimally populated catalog object (see help catalog) that
 % describes the earthquake hypocenters. It includes the fields lat, lon,
 % depth (km, positive down), origin time (Matlab datenum format) and origin
 % id (orid). One element for each earthquake.
