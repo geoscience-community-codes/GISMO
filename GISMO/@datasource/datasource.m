@@ -136,6 +136,9 @@ else
       ds.port_number = varargin{2};
       ds.type = whichsource;
       
+    case 'irisdmcws'
+      ds.type = whichsource;
+      
       % now, the special cases -------------------------------
       
     case 'uaf_continuous'

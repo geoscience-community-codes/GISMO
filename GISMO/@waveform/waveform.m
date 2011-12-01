@@ -147,6 +147,10 @@ switch argCount
             % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             % There was no interpreter set, but there was no default type
             % set, either.
+          case {'irisdmcws'}
+            myLoadRoutine = eval(['@load_',ds_type]);
+            w = myLoadRoutine( makeDataRequest(ds, scnls, startt, endt) , COMBINE_WAVES);
+                
           otherwise
             error('Waveform:waveform:noDatasourceInterpreter',...
               'user defined datasources should be associated with an interpreter');

@@ -29,7 +29,10 @@ else
     case 'winston'
       disp(['    server: ' get(ds,'server')]);
       disp(['      port: ' num2str(get(ds,'port'))]);
-
+      
+    case 'irisdmcws'
+         %do nothing
+         
     case {'file','sac','antelope','seisan'}
       filelist = getfilename(ds,[],[]);
       for n=1:numel(filelist)
