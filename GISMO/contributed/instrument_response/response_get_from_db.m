@@ -59,9 +59,9 @@ if ~dbquery(dbSensor,'dbTABLE_PRESENT')
     error('Database does not contain a sensor table.');
 end
 epochTime = datenum2epoch(time);
-db = dbsubset(dbSensor, sprintf('sta=="%s" && chan=="%s" && time<%f && endtime>%f',station, channel, epochTime, epochTime));
+db = dbsubset(dbSensor, sprintf('sta=="%s" && chan=="%s" && time<=%f && endtime>=%f',station, channel, epochTime, epochTime));
 if dbquery(db,'dbRECORD_COUNT')==0     % check for open channels
-    db = dbsubset(db, sprintf('sta=="%s" && chan=="%s" && time<%f',station, channel, epochTime));
+    db = dbsubset(db, sprintf('sta=="%s" && chan=="%s" && time<=%f',station, channel, epochTime));
 end
 dbInst = dblookup_table(db, 'instrument');
 if ~dbquery(dbInst,'dbTABLE_PRESENT')
@@ -73,7 +73,7 @@ if ~dbquery(dbCalib,'dbTABLE_PRESENT')
 end
 db = dbjoin(db, dbInst);
 db = dbjoin(db, dbCalib);
-
+db = dbsubset(db, sprintf('sta=="%s" && chan=="%s" && calibration.time<=%f &&  calibration.endtime>=%f',station, channel, epochTime, epochTime) );
 
 
 % HANDLE EXCEPTIONS

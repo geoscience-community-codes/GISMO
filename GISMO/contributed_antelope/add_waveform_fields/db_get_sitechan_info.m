@@ -64,12 +64,22 @@ nlist = [];
 for n = 1:length(sitechan.sta);
 	db1 = dbsubset(db,['sta==''' sitechan.sta{n} '''']);
     db1 = dbsubset(db1,['chan==''' sitechan.chan{n} '''']);
-    db1 = dbsubset(db1,['ondate<''' jday ''' ']);
-    db1 = dbsubset(db1,['offdate>''' jday ''' || offdate==NULL']);
+    db1 = dbsubset(db1,['ondate<=''' jday ''' ']);
+    db1 = dbsubset(db1,['offdate>=''' jday ''' || offdate==NULL']);
     recnum = dbquery(db1,'dbRECORD_COUNT');
     % can't load descrip field. Cell structure causes problems I don't want
     % to spend time on. Not sure how ctype field is handled.
-	%[ sitechan.ondate(n) , sitechan.offdate(n) , sitechan.ctype(n) , sitechan.hang(n) , sitechan.vang(n) , sitechan.descrip(n)] = dbgetv(db1,'ondate','offdate','ctype','hang','vang','descrip');
+    %[ sitechan.ondate(n) , sitechan.offdate(n) , sitechan.ctype(n) ,
+    %sitechan.hang(n) , sitechan.vang(n) , sitechan.descrip(n)] = dbgetv(db1,'ondate','offdate','ctype','hang','vang','descrip');
+   
+    
+    % HANDLE EXCEPTIONS
+    if dbquery(db1,'dbRECORD_COUNT')>1
+        warning(['Database contains more than one set of sitechan info ' sitechan.sta{n} '_'  sitechan.chan{n} ' at yearday ' jday  '. Using first one']);
+    elseif dbquery(db1,'dbRECORD_COUNT')==0
+        error(['Database does not contain sitechan info for ' sitechan.sta{n} '_'  sitechan.chan{n} ' at yearday ' jday  '.']);
+    end
+    db1.record = 0;
     [ sitechan.ondate(n) , sitechan.offdate(n) , sitechan.hang(n) , sitechan.vang(n)] = dbgetv(db1,'ondate','offdate','hang','vang');
 end
 dbclose(db);
