@@ -17,7 +17,13 @@ function c = cat(varargin)
 if nargin <= 1
     error('Not enough inputs');
 end
+
+
+
 for i = 1:nargin
+    if ~isa(varargin{i},'correlation')
+        error('All inputs must be correlation objects');
+    end
     if get(varargin{i},'Fs') ~= get(varargin{1},'Fs')
         error('All inputs must have the same sampling frequency');
     end
@@ -27,18 +33,15 @@ for i = 1:nargin
 end
 
 
+
 c = varargin{1};
 c.C = [];
 c.L = [];
 c.stat = [];
 c.link = [];
 c.clust = [];
+
 for i = 2:nargin
-    for i = 1:nargin
-        if ~isa(c,'correlation')
-            error('All inputs but be correlation objects');
-        end
-    end
     cin = varargin{i};
     c.W = cat(1,c.W,cin.W);    
     c.trig = cat(1,c.trig,cin.trig);
