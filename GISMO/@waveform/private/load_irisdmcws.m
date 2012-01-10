@@ -54,38 +54,39 @@ function ts = irisFetchTraces( network, station, location, channel, startDateStr
         quality = 'B';
     end
     
-    try 
-        traces = edu.iris.WsHelper.Fetch.TraceData.fetchTraces(network, station, location, channel, startDateStr, endDateStr, quality, verbosity);
+ %   try 
+        % traces = edu.iris.WsHelper.Fetch.TraceData.fetchTraces(network, station, location, channel, startDateStr, endDateStr, quality, verbosity);
+        traces = edu.iris.dmc.ws.extensions.fetch.TraceData.fetchTraces(network, station, location, channel, startDateStr, endDateStr, quality, verbosity);
         ts = convertTraces(traces);
         clear traces;
-    catch je
-        fprintf('Exception occured in IRIS Web Services Library: %s\n', je.message);
-    end
+  %  catch je
+   %     fprintf('Exception occured in IRIS Web Services Library: %s\n', je.message);
+   % end
 end
 
 
 function ws = convertTraces(traces)
    for i = 1:length(traces)
        w = waveform;
-       myscnl = scnlobject(char(traces(i).station), ...
-           char(traces(i).channel), ...
-           char(traces(i).network), ...
-           char(traces(i).location));
-       w = set(w,'scnlobject',myscnl,'freq',traces(i).sampleRate); %, 'start', datenum(startDateStr, 'yyyy-mm-dd HH:MM:SS.FFF'));
-       w = set(w,'start', char(traces(i).startTime.toString()));
-       w = addfield(w,'latitude',traces(i).latitude);
-       w = addfield(w,'longitude', traces(i).longitude);
-       w = addfield(w,'elevation',traces(i).elevation);
-       w = addfield(w,'depth',traces(i).depth);
-       w = addfield(w,'azimuth',traces(i).azimuth);
-       w = addfield(w,'dip',traces(i).dip);
-       w = addfield(w,'sensitivity',traces(i).sensitivity);
-       w = addfield(w,'sensitivityFrequency',traces(i).sensitivityFrequency);
-       w = addfield(w,'instrument',char(traces(i).instrument));
-       w = set(w,'units',char(traces(i).sensitivityUnits));
-       w = addfield(w,'calib',traces(i).sensitivity);
+       myscnl = scnlobject(char(traces(i).getStation), ...
+           char(traces(i).getChannel), ...
+           char(traces(i).getNetwork), ...
+           char(traces(i).getLocation));
+       w = set(w,'scnlobject',myscnl,'freq',traces(i).getSampleRate); %, 'start', datenum(startDateStr, 'yyyy-mm-dd HH:MM:SS.FFF'));
+       w = set(w,'start', char(traces(i).getStartTime.toString()));
+       w = addfield(w,'latitude',traces(i).getLatitude);
+       w = addfield(w,'longitude', traces(i).getLongitude);
+       w = addfield(w,'elevation',traces(i).getElevation);
+       w = addfield(w,'depth',traces(i).getDepth);
+       w = addfield(w,'azimuth',traces(i).getAzimuth);
+       w = addfield(w,'dip',traces(i).getDip);
+       w = addfield(w,'sensitivity',traces(i).getSensitivity);
+       w = addfield(w,'sensitivityFrequency',traces(i).getSensitivityFrequency);
+       w = addfield(w,'instrument',char(traces(i).getInstrument));
+       w = set(w,'units',char(traces(i).getSensitivityUnits));
+       w = addfield(w,'calib',traces(i).getSensitivity);
        w = addfield(w,'calib_applied','NO');
-       w = set(w,'data', traces(i).data);
+       w = set(w,'data', traces(i).getData);
        ws(i) = w;
    end
 end
