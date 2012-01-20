@@ -322,7 +322,8 @@ end
 %h = imagesc(t,F,y(nf1:length(F),:),s.dBlims);
 
 if logscale
-    t = (colindex-1)'/Fs;
+    %t = (colindex-1)'/Fs;
+    t = linspace(Xvalues(1), Xvalues(end),ncol); % Replaced by TCB - 01/18/2012
     try
         h = uimagesc(t,log10(F),y(nf1:length(F),:),s.dBlims);
     catch exception
