@@ -1,5 +1,5 @@
 function w = waveform(varargin)
-%WAVEFORM Creates or imports one or more waveform objects (seismic traces)
+%WAVEFORM Waveform Class constructor
 %   w = WAVEFORM(datasource, scnlobjects, starttimes, endtimes)
 %          loads waveform from the specified DATASOURCE
 %          SCNL stands for STATION-CHANNEL-NETWORK-LOCATION.
@@ -28,73 +28,35 @@ function w = waveform(varargin)
 %    that with the nocombine option, the returned value may include
 %    multiple waveforms for each starttime-endtime combination.
 %
-% 
-%  DATASOURCES
-%    Waveform can retrieve data from the following datasources, with
-%    caveats and requirements as noted below:
-%  
-%    FILE, SAC, SEISAN, ANTELOPE, WINSTON, IRISDMCWS, (plus user-defined)
+%    ---------- USING WAVEFORM WITH ANTELOPE ------------
+%    The Antelope Toolbox must be installed.
 %
-%    ANTELOPE  requires the Antelope Toolbox be installed.
+%    ---------- USING WAVEFORM WITH WINSTON -------------
+%    To use the waveform files with winston, you need to have the usgs.jar
+%    file. If you have already installed SWARM, then this .jar file already
+%    exist in your swarm/lib directory (or thereabouts).
 %
-%    WINSTON   requires usgs.jar (or equivalent), available through the
-%              winston wave server or from SWARM. See *JAR NOTE* below
+%    Edit Matlab's classpath.txt file (located in the toolbox/local
+%    directory) and add the location of this .jar files.
 %
-%              Winston data is not automatically adjusted instrument gain.
-%              To fix this, multiply it by the gain.  Ex.  W = W .* 6.67; 
-% 
-%    IRISDMCWS Accessing data from the IRIS-DMC requires the IRIS Web
-%              Services Java Library (IRIS-WS Library). For more
-%              information on integrating this into MATLAB, please visit
-%              http://www.iris.edu/manuals/javawslibrary/
+%    WINSTON WARNING: Currently, data received through winston is not adjusted
+%    for instrument gain, therefore, it is in COUNTS.  To fix this, you'll
+%    need to multiply it by the correct gain.  Ex.  W = W .* 6.67;  This
+%    merely scales the data...
 %
-%              See *JAR NOTE* below
-%      
+%    ------------ EXAMPLE USAGE --------------------------
+%    % This example gets a few minutes of data (starting a day ago) from
+%    % a ficticious winston server.  Data returned is for the EHZ channel
+%    % at each of the three selected stations.
 %
-%    *JAR NOTE* - using WAVEFORM with java libraries:
-%      Winston and IRIS-DMC access each require access to specific java
-%      archives (.jar files).  These may be added to the MATLAB search path
-%      dynamically with "javaaddpath"; doing so in the startup.m will make
-%      the .jar available each time MATLAB starts. 
-%   
-%      Another way to make a java library perminently available is
-%      to edit Matlab's classpath.txt file (located in the toolbox/local 
-%      directory) and add the full path to the appropriate .jar file.
+%    myStations = {'OKCF','PV6','SSLS'};  myChannels = 'EHZ';
+%    scnlList = scnlobject(myStations,myChannels,'AV','--');
 %
+%    mySource = datasource('winston','servername.here.edu',1255);
 %
-%  Examples of accessing waveform data
-%    Example:
-%      % Retrieve data stored in .mat files in a directory structure 
-%      % like this: /data/YYYY/MM/STATION_DD 
-%      ds = datasource('file','/data/%4d/%02d/%s_%02d','year','month','station','day');
-%      scnls = scnlobject('STA1','BHZ','AA','--');
-%      w = waveform(ds, scnls, '6/25/1998 08:00:00', '6/26/1998 09:00:00');
-%      
-%    
-%    Example:
-%      % Get a few minutes of data from a ficticious winston wave server.
-%      myStations = {'OKCF','PV6','SSLS'}; 
-%      myChannels = 'EHZ';
-%      scnls = scnlobject(myStations,myChannels,'AV','--');
-%      ds = datasource('winston','servername.here.edu',1255);
-%      w = waveform(ds, scnls, now - 1, now - .98);
+%    w = waveform(mySource, scnlList, now - 1, now - .98);
 %
-%    Example:
-%      % Get some data from IRIS, then plot it
-%      ds = datasource('irisdmcws');
-%      scnls = scnlobject('ANMO', '?HZ', 'IU', '*')
-%      w = waveform(ds, scnl, '2010-02-27 06:30:00','2010-02-27 07:30:00')
-%      plot(w)
-%
-%    More Examples are available in the datasource documentation.
-%
-%
-%  REFERENCE / CITATION:
-%     Reyes, C. G. and West, M. E., 2011. "The Waveform Suite: A Robust
-%     Platform for Manipulating Waveforms in MATLAB", SRL 82 (1) 104-110. 
-%  
-%
-% see also SCNLOBJECT, DATASOURCE, ADDPATH
+% see also SCNLOBJECT, DATASOURCE
 
 % VERSION: 1.1 of waveform objects
 % AUTHOR: Celso Reyes (celso@gi.alaska.edu)

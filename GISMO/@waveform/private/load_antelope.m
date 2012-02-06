@@ -14,6 +14,12 @@ function outputWaveforms = load_antelope(datarequest, COMBINE_WAVEFORMS, specifi
 
 %create a generic 1x1 and 0x0 waveforms for later use, so that the
 %constructor does not constantly need to be called
+
+% Modifications
+% Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data. Added try...catch..end to handle this. 
+% Glenn Thompson & Carl Tape, 2012/02/06: Fixed bug which ignored the time order of requested waveforms.
+% 	Now they come back in order.
+
 blankWave = waveform;
 emptyWave = blankWave([]);
 
@@ -38,7 +44,16 @@ database =  getfilename(datarequest.dataSource,datarequest.scnls, datarequest.st
 %if we have multiple databases to look in, then call this routine for each
 %one, then return the resulting waveforms.
 if ~exist('specificDatabase','var')
-  database = unique(database);
+  %%%%%
+  % Glenn Thompson & Carl Tape, 2012/02/06
+  % We were finding that the following command was sorting the database names, with the result that
+  % if you request waveform objects out of time order, they always come back in time order.
+  % Which is annoying. Objects should be returned in the order requested.
+  %database = unique(database)a
+  % Replacing with the following 2 lines retains the database order, and hence the waveform object order.
+  [~,inds] = unique(database);
+  database = database(sort(inds));
+  %%%%%
   outputWaveforms = cell(size(database)); %preallocate
   for thisdatabaseN = 1 : numel(database)
     outputWaveforms(thisdatabaseN) = {load_antelope(datarequest, COMBINE_WAVEFORMS, database{thisdatabaseN})};
@@ -241,6 +256,8 @@ function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, cr
 %  % finally, close up shop.
 %  dbclose(mydb)
 
+% Modifications
+%%% Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data. Added try...catch..end to handle this. 
 
 useExistingDatabasePtr =  isAntelopeDatabasePtr(database);
 
@@ -327,7 +344,27 @@ filteredDb = mydb;
 for mytimeIDX = 1:numel(antelope_starts)
   someDataExists = any(antelope_starts(mytimeIDX)<= (ed) & antelope_ends(mytimeIDX) >= (st));
   if someDataExists
-	tr{mytimeIDX} = trload_css(mydb, antelope_starts(mytimeIDX), antelope_ends(mytimeIDX));
+        %%% Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data. 
+	% This error needs to be handled. So adding a try..catch..end around the original instruction.
+	try
+		tr{mytimeIDX} = trload_css(mydb, antelope_starts(mytimeIDX), antelope_ends(mytimeIDX));
+	catch
+  		databaseFileName = dbquery(mydb,'dbTABLE_FILENAME');
+  		closeIfAppropriate(mydb);
+  		warning('Waveform:load_antelope:trload_css failed', ...
+    			'Database not found: %s', databaseFileName);
+  		tr = { -1 };
+  		filteredDb = dbinvalid;
+		database
+		allExp
+		starttimes = antelope_starts(mytimeIDX);
+		endtimes = antelope_ends(mytimeIDX);
+		fprintf('%.0f %.0f\n ',starttimes,endtimes);
+		datestr(epoch2datenum(starttimes))
+		datestr(epoch2datenum(endtimes))
+		fprintf('trload_css(mydb, starttimes, endtimes))\n');
+		return
+	end	
 	trsplice(tr{mytimeIDX},20);
   else
 	tr{mytimeIDX} = -1;
