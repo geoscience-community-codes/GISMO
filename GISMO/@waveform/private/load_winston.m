@@ -84,8 +84,12 @@ try
 catch
   warning('Waveform:load_winston:noServerAccess',...
     'Unable to access Winston Wave Server');
+%  try
+%     WWS.close;
+%  end
   rethrow(lasterror)
   return
+
 end
 
 if ~exist('d','var') || isempty(d)

@@ -6,12 +6,12 @@ function wavef = load_irisdmcws(dataRequest, combine_waves)
 %
 % http://www.iris.edu/manuals/javawslibrary/  
 %
-% 
+% See also javaaddpath waveform
 
 % Rich Karstens & Celso Reyes
 % IRIS DMC, December 2011
 
-[myDataSource, allSCNLs, sTime, eTime] = unpackDataRequest(dataRequest);
+[~, allSCNLs, sTime, eTime] = unpackDataRequest(dataRequest);
 disp('Requesting Data from the DMC...');
 offset = 0;
 for n=1:numel(allSCNLs)
@@ -23,7 +23,7 @@ for n=1:numel(allSCNLs)
     if numel(thisWaveform) == 1
         wavef(n+ offset) = thisWaveform;
     elseif numel(thisWaveform) > 1
-        thisEndIndex = n + offset + numel(thisWaveform) - 1
+        thisEndIndex = n + offset + numel(thisWaveform) - 1;
         wavef(n+offset : thisEndIndex) = thisWaveform;       
         offset = offset + numel(thisWaveform) - 1;
     end
@@ -54,14 +54,26 @@ function ts = irisFetchTraces( network, station, location, channel, startDateStr
         quality = 'B';
     end
     
- %   try 
+    try 
         % traces = edu.iris.WsHelper.Fetch.TraceData.fetchTraces(network, station, location, channel, startDateStr, endDateStr, quality, verbosity);
         traces = edu.iris.dmc.ws.extensions.fetch.TraceData.fetchTraces(network, station, location, channel, startDateStr, endDateStr, quality, verbosity);
         ts = convertTraces(traces);
         clear traces;
-  %  catch je
-   %     fprintf('Exception occured in IRIS Web Services Library: %s\n', je.message);
-   % end
+    catch je
+        switch je.identifier
+            case 'MATLAB:undefinedVarOrClass'
+                % The library was not found
+                error('WAVEFORM:load_irisdmcws:unableToAccessLibrary',...
+                    ['The IRIS-WS library was not found in the matlab ',...
+                    'path.  Please ensure it is on your system, and ',...
+                    'has been added to MATLAB''s java path.  For more ',...
+                    'information about using MATLAB with the IRIS-WS ',...
+                    'library, visit:\n\n',...
+                    '\thttp://www.iris.edu/manuals/javawslibrary/matlab/\n']);
+            otherwise
+                rethrow(je);
+        end
+    end
 end
 
 
