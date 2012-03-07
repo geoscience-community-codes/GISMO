@@ -80,7 +80,7 @@ for i=1:numel(w)
 
       %put back into waveform, but don't forget to update the frequency
       w(i).data = ResampleD(:);
-      w(i) = set(w(i), 'Freq', get(w(i),'freq') ./ val); 
+      %w(i) = set(w(i), 'Freq', get(w(i),'freq') ./ val); 
         otherwise
             error('Wafeform:resample:UnknownSampleMethod',...
               'Don''t know what you mean by resample via %s', method);
