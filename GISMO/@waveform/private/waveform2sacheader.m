@@ -104,7 +104,7 @@ w = addfield(w,'KCMPNM', get(w,'channel'));
 w = addfield(w,'KNETWK', get(w,'network'));
 
 [Y,M,D,h,m,s] = datevec( get(w,'start') );
-JD = datenum(Y,M,D,h,m,s) - datenum(Y-1,12,31,0,0,0);
+JD = floor(datenum(Y,M,D,h,m,s) - datenum(Y-1,12,31,0,0,0)); % modified per C. Tape, 2012/03/19
 w = addfield(w,'NZYEAR',Y);
 w = addfield(w,'NZJDAY',JD);
 w = addfield(w,'NZHOUR',h);

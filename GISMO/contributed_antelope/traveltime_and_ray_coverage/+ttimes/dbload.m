@@ -101,9 +101,15 @@ try
     db = dbjoin(db,db1);
     nArrivals = dbquery(db,'dbRECORD_COUNT');
     %disp(['Number of arrivals: ' num2str(nArrivals) ]);
-    [arrival.sta,arrival.iphase,arrival.time,arrival.timeres,arrival.orid] = dbgetv(db,'arrival.sta','arrival.iphase','arrival.time','timeres','orid');
+    [arrival.sta,arrival.iphase,arrival.time,arrival.originTime,arrival.timeres,arrival.orid] = dbgetv(db,'arrival.sta','arrival.iphase','arrival.time','origin.time','timeres','orid');
     arrival.time = epoch2datenum(arrival.time);
+    arrival.originTime = epoch2datenum(arrival.originTime);
+    arrival.travelTime = 86400*(arrival.time-arrival.originTime);
+    f = find(arrival.timeres==-999);
+    arrival.timeres(f) = NaN;
+    arrival.predTravelTime = arrival.travelTime + arrival.timeres;
 
+    
     % Ray view
     [ray.originLat,ray.originLon,ray.originDepth,ray.siteLat,ray.siteLon,ray.siteElev] = dbgetv(db,'origin.lat','origin.lon','origin.depth','site.lat','site.lon','site.elev');
     ray.siteElev = -1*ray.siteElev;
@@ -126,13 +132,13 @@ dbclose(db);
 
 
 
-% CREATE TRAVELTIME
-for n = 1:numel(origin.orid)
-    f = find(arrival.orid==origin.orid(n));
-    arrival.travelTime(f) = 86400*(arrival.time(f)-origin.dnum(n));
-end
-arrival.travelTime = arrival.travelTime';
-arrival.predTravelTime = arrival.travelTime + arrival.timeres;
+% % CREATE TRAVELTIME
+% for n = 1:numel(origin.orid)
+%     f = find(arrival.orid==origin.orid(n));
+%     arrival.travelTime(f) = 86400*(arrival.time(f)-origin.dnum(n));
+% end
+% arrival.travelTime = arrival.travelTime';
+% arrival.predTravelTime = arrival.travelTime + arrival.timeres;
 
 
 

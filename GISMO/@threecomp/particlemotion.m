@@ -172,14 +172,20 @@ end
   
 % SET THREECOMP PROPERTIES
 basicWave = waveform(get(w(1),'station'),'JUNK',1/dt,Tstart,[]);
-rec = set(basicWave,'channel','Rectilinearity','data',pm.Rec,'units','(arbitrary units)');
+rec = set(basicWave,'channel','Rectilinearity','data',pm.Rec,'units','Fraction 0-1 (arbitrary units. Range 0-1)');
 rec = addfield(rec,'THREECOMP_WINDOW',width);
-plan = set(basicWave,'channel','Planarity','data',pm.Plan,'units','(arbitrary units)');
+
+plan = set(basicWave,'channel','Planarity','data',pm.Plan,'units','(arbitrary units. Range 0-1)');
 plan = addfield(plan,'THREECOMP_WINDOW',width);
-energy = set(basicWave,'channel','Energy','data',pm.Ener,'units','energy (arbitrary units)');
+
+waveformUnits = get(waveform(TC),'UNITS');
+energyUnits = ['(' waveformUnits{1} ')^2'];
+energy = set(basicWave,'channel','Energy','data',pm.Ener,'units',energyUnits);
 energy = addfield(energy,'THREECOMP_WINDOW',width);
+
 az = set(basicWave,'channel','Azimuth','data',pm.Az,'units','degrees');
 az = addfield(az,'THREECOMP_WINDOW',width);
+
 incl = set(basicWave,'channel','Incidence','data',pm.Inc,'units','degrees');
 incl = addfield(incl,'THREECOMP_WINDOW',width);
 

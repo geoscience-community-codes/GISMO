@@ -43,7 +43,7 @@ arrival.phaseNum = arrival.phaseNum';
 fid = fopen('rays.dat','w');
 for n = 1:numel(origin.orid)
     f = find(arrival.orid==origin.orid(n));
-    fprintf(fid,'%15.5f%15.5f%15.5f%15.0f\n',origin.lon(n),origin.lat(n),origin.depth(n),numel(f));
+    fprintf(fid,'%15.5f%15.5f%15.5f%15.0f     %s\n',origin.lon(n),origin.lat(n),origin.depth(n),numel(f),datestr(origin.dnum(n),'yyyy-mm-dd HH:MM:SS'));
     for nArr = 1:numel(f)
         index = f(nArr);
         fprintf(fid,'%15.0f%8.0f%12.5f\n',arrival.phaseNum(index),arrival.stationNum(index),arrival.travelTime(index));

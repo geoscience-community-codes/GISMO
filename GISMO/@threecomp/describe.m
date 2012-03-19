@@ -87,12 +87,22 @@ function describe(threecomp)
 % of these directions. Conceptually, rectilinearity expresseses the
 % relative dominance of the largest eigenvalue (range is 0 to 1). Planarity
 % is the degree to which the largest two eigenvalues dominate (range is 0
-% to 1). Energy is the trace of the eigenvalue matrix. Azimuth and
-% inclination give the spherical polar orientation of the largest
-% eigenvector. It is important to note that azimuth and inclination only
-% have meaning if the waveforms show a high degree of rectilinearity or in
-% some orientations, planarity. It makes sense - think about it!
+% to 1). Azimuth and inclination give the spherical polar orientation of
+% the largest eigenvector. It is important to note that azimuth and
+% inclination only have meaning if the waveforms show a high degree of
+% rectilinearity or in some orientations, planarity. It makes sense - think
+% about it!
 %
+% Energy is computed from the trace of the eigenvalue matrix. The
+% calculation is performed independent of the data type. The term "energy"
+% should be treated carefully however. This term is essentially just the
+% square of the total particle velocity. The "energy" units are the square
+% of whatever units the input waveforms had. IF the input traces are in
+% velocity, then the energy term is the seismic kenetic energy density,
+% (smoothed over size of the sliding time window). If the input traces are
+% not velocity, then the output cannot be used as a proxy for physical
+% energy.
+
 % As defined here, the azimuth range is 0 to 360 degrees measured from
 % north. Inclination ranges from 0 (up) to 90 (horizontal). This reference
 % frame differs from some in the literature, but is used here because it is

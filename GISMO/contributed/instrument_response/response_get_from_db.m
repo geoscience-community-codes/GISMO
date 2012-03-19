@@ -1,7 +1,7 @@
 function [response] = response_get_from_db(station, channel, time, frequencies, dbName)
 
-%DB_GET_RESPONSE Get instrument response from database.
-%  RESPONSE = DB_GET_RESPONSE(STATION, CHANNEL,TIME, FREQUENCIES, DBNAME) 
+%RESPONSE_GET_FROM_DB Get instrument response from database.
+%  RESPONSE = RESPONSE_DB_GET_RESPONSE(STATION, CHANNEL,TIME, FREQUENCIES, DBNAME) 
 %  returns a structure which contains the full instrument response for the
 %  input STATION and CHANNEL at the given TIME. TIME is specified in
 %  standard Matlab serial date (output of DATENUM). FREQUENCIES is a vector

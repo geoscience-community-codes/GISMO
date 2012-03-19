@@ -36,8 +36,8 @@ nP = hist(arrival.stationNum(f),site.stationNum);
 f = find(strcmp(arrival.iphase,'S'));
 nS = hist(arrival.stationNum(f),site.stationNum);
 h = bar(site.stationNum,[nP' nS'],1.8)
-set(h(1),'FaceColor',[0.7 0.7 0.7]);
-set(h(2),'FaceColor','r');
+set(h(1),'FaceColor','r');
+set(h(2),'FaceColor',[0.7 0.7 0.7]);
 legend('P wave arrivals','S wave arrivals')
 xlabel('Station name');
 ylabel('No. of phase arrivals');
