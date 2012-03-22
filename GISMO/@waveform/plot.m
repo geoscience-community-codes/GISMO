@@ -173,11 +173,14 @@ switch lower(xunit)
 end
 if isscalar(w)
   th = title(sprintf('%s (%s) - starting %s',...
-    get(w,'station'),get(w,'channel'),get(w,'start_str')));
+    get(w,'station'),get(w,'channel'),get(w,'start_str')),'interpreter','none');
 else
   th = title(sprintf('Multiple waves.  wave(1) = %s (%s) - starting %s',...
-    get(w(1),'station'),get(w(1),'channel'),get(w(1),'start_str')));
+    get(w(1),'station'),get(w(1),'channel'),get(w(1),'start_str')),'interpreter','none');
 end;
+
+
+
 set(th,'fontsize',currFontSize);
 set(gca,'fontsize',currFontSize);
 %% return the graphics handles if desired
