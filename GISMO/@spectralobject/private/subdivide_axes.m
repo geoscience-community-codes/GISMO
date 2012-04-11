@@ -14,8 +14,8 @@ function sub_h = subdivide_axes(h,sizes)
 % NxM array of handles to the subaxes.
 
 % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date: 2010-03-11 17:29:30 -0900 (Thu, 11 Mar 2010) $
-% $Revision: 226 $
+% $Date$
+% $Revision$
 
 rect = get(h,'position');
 nCol = sizes(2);

@@ -4,8 +4,8 @@ function w = remove_calib(w)
 % The unit of output waveform will be in "COUNT"
 
 % AUTHOR: Yun Wang
-% $Date: 2010-02-16 14:55:19 -0900 (Tue, 16 Feb 2010) $
-% $Revision: 204 $
+% $Date$
+% $Revision$
 
 % CHECK WAVEFORM
 if ~strcmpi(class(w),'waveform')
@@ -13,7 +13,7 @@ if ~strcmpi(class(w),'waveform')
         'Input must be a waveform object');
 end
 
-nrec = length(w);
+nrec = numel(w);
 for i = 1:nrec
     if(strcmp(get(w(i),'CALIBRATION_APPLIED'),'YES'))
        calib = get(w(i),'CALIB');

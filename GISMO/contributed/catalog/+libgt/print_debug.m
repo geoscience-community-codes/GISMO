@@ -19,8 +19,8 @@ function print_debug(the_text, level)
 %    See also set_debug, setpref, getpref.
 
 % AUTHOR: Ronni Grapenthin and Glenn Thompson, UAF-GI
-% $Date:$
-% $Revision:$
+% $Date$
+% $Revision$
 % Modified by Glenn Thompson: 2010-03-10: Added error handling for case that runmode pref hasn't been set
 % Modified by Glenn Thompson: 2010-03-10: To use multiple levels of debug (0 = none, 1 = some, 2 = higher):
 

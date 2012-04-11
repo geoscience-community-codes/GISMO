@@ -24,8 +24,8 @@ function [dnum_bin, counts_per_bin, sum_per_bin, smallest_per_bin, median_per_bi
 %    See also: 
 
 % AUTHOR: Glenn Thompson
-% $Date:$
-% $Revision:$
+% $Date$
+% $Revision$
 libgt.print_debug(sprintf('> %s', mfilename),2);
 l1=length(dnum);
 l2=length(data);

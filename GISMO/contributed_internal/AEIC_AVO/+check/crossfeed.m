@@ -19,7 +19,7 @@ function crossfeed(varargin)
 % examine.
 %
 % Using CROSSFEED with no arguments is equivalent to:
-%    CROSSFEED( now , 30 , 0.7 , 'AV' )
+%    CROSSFEED( floor(now)-0.5 , 30 , 0.7 , 'AV' )
 %
 % Note that "now" is returned in local time. So the default data examined
 % is 8 to 9 hours old, assuming AKST/AKDT.
@@ -36,7 +36,7 @@ function crossfeed(varargin)
 if numel(varargin)>=1
     startTime = varargin{1};
 else
-     startTime = now;
+     startTime = floor(now)-0.5;
 end
 
 if numel(varargin)>=2
@@ -142,19 +142,22 @@ for n = 1:max(clust(index))
     set(gcf,'DefaultAxesFontSize',14)
     
     % RAW TRACE FIGURE
-    wOrig = demean(detrend(w(f)));
-    wOrig = set(wOrig,'UNITS','normalized scale');
+
+    wOrig = set(w(f),'UNITS','normalized scale');
     wOrigCrop = extract(wOrig,'TIME',startTime+5/86400,startTime+25/86400);
-    for i = 1:numel(wOrig)
+    wOrigCrop = demean(detrend(wOrigCrop));
+    for i = 1:numel(wOrigCrop)
        wOrigCrop(i) = 0.25 * wOrigCrop(i) ./ std(wOrigCrop(i)) + i; 
     end
+    wOrigCrop = set(wOrigCrop,'UNITS','normalized scale');
+
     subplot(2,1,1)
     plot(wOrigCrop);
     legend(wOrigCrop);
     xlim([0 20]);
     ylim([0 numel(wOrig)+1]);
     text(19.3,0.05 *(numel(wOrig)+1),['correlation threshold: ' num2str(threshold)],'HorizontalAlignment','Right','FontSize',12);
-    text(19.3,0.10 *(numel(wOrig)+1),['trace duration: ' num2str(duration) 's'],'HorizontalAlignment','Right','FontSize',12);
+    text(19.3,0.10 *(numel(wOrig)+1),['trace duration: ' num2str(duration*86400) 's'],'HorizontalAlignment','Right','FontSize',12);
     text(19.3,0.15 *(numel(wOrig)+1),'Raw traces','HorizontalAlignment','Right','FontSize',12,'FontWeight','Bold');
 
     
@@ -173,7 +176,7 @@ for n = 1:max(clust(index))
     ylim([-0.8 0.8]);
     text(2.9,-0.75,'Filtered on 2-12 Hz','HorizontalAlignment','Right','FontSize',12,'FontWeight','Bold');
 
-    %
+    % WRITE OUT FIGURES
     subSta = get(wFilt,'STATION');
     subChan = get(wFilt,'CHANNEL');
     scList = [];
@@ -191,7 +194,7 @@ for n = 1:max(clust(index))
         scList = [scList subSta{i} ':' subChan{i} ','];
     end
     scList = scList(1:end-1);
-    disp(scList);
+    disp(['sc ' scList]);
 end
 disp(['ts ' datestr(startTime,'yyyy/mm/dd HH:MM:SS')]);
 

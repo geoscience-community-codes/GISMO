@@ -915,8 +915,8 @@ classdef catalog
 
             % AUTHOR: Glenn Thompson, based entirely on WAVEFORM/ADDFIELD by
             % Celso Reyes
-            % $Date: $
-            % $Revision: $
+            % $Date$
+            % $Revision$
 
             if isa(fieldname,'char')
                 fieldname = {upper(fieldname)}; %convert to cell
@@ -1223,8 +1223,8 @@ classdef catalog
             %   See also CATALOG/SET, CATALOG/ADDFIELD, WAVEFORM/GET
 
             % AUTHOR: Glenn Thompson, Geophysical Institute, Univ. of Alaska Fairbanks
-            % $Date: $
-            % $Revision: $
+            % $Date$
+            % $Revision$
 
             prop_name = upper(prop_name);
             switch prop_name

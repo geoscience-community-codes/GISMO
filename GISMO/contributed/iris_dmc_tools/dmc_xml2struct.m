@@ -34,8 +34,8 @@ function [s,success] = dmc_xml2struct(file)
 %  result when file or URL is invalid. 
 %
 %  MODIFIED BY: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-%  $Date: 2011-01-31 09:16:48 -0900 (Mon, 31 Jan 2011) $
-%  $Revision: 259 $
+%  $Date$
+%  $Revision$
 
 
 

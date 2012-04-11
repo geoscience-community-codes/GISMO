@@ -23,8 +23,8 @@ function [response] = response_get_from_db(station, channel, time, frequencies, 
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
 %         (includes ideas borrowed from G. Thompson's db2response.m)
-% $Date:  $
-% $Revision: $ 
+% $Date$
+% $Revision$ 
 
 
 

@@ -6,7 +6,7 @@ function d = xcorr1xr(d,style)
 % Generally it is faster than the one at a time implimentation. All steps
 % are included in this function. That is, no calls to the Matlab built-in
 % xcorr are used. This structure is grandfathered in from early versions of
-% correlation which did use waveform objects. This structure is used only
+% correlation which did not use waveform objects. This structure is used only
 % within cross correlation routines where trace data needs to be pulled out
 % of waveform objects anyway. STYLE denotes whether or not polynomial
 % interpolation should be used to refine cross correlations to subsample

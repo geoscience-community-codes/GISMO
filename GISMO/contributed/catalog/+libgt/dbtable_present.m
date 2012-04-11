@@ -4,8 +4,8 @@ function present=dbtable_present(dbpath, table)
 %    PRESENT = DBTABLE_PRESENT(DBPATH, TABLE)
 
 % AUTHOR: Glenn Thompson, UAF-GI
-% $Date:$
-% $Revision:$
+% $Date$
+% $Revision$
 libgt.print_debug(sprintf('> %s',mfilename),3);
 present = 0;
 if exist(dbpath, 'file')

@@ -6,8 +6,8 @@ function str = camelcase2underscore(str)
 %    See also underscore2camelcase
 
 % AUTHOR: Glenn Thompson
-% $Date:$
-% $Revision:$
+% $Date$
+% $Revision$
 
 %str = firstalgorithm(str);
 str = secondalgorithm(str);

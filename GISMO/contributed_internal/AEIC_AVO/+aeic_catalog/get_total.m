@@ -25,8 +25,8 @@ function catalog = get_total(varargin)
 % not currently considered (I believe tall Md magnitudes also have an ml).
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date:$
-% $Revision:$
+% $Date$
+% $Revision$
 
 
 % CHECK ARGUMENTS

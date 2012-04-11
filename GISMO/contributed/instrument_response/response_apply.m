@@ -19,8 +19,8 @@ function wNew = response_apply(w,filterObj,sourceType,source)
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
 %         (borrowing liberally from codes written by M. Haney)
-% $Date:  $
-% $Revision: $
+% $Date$
+% $Revision$
 
 
 % CHECK INPUTS

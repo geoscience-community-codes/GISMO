@@ -17,8 +17,8 @@ function [c1,c2] = match(c1,c2,varargin)
 % same trigger time, a match for each one will be found in C2.
 
 % AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date:$
-% $Revision:$
+% $Date$
+% $Revision$
 
 
 

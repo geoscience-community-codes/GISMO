@@ -18,8 +18,8 @@ function varargout = legend(wave, varargin)
 %  see also legend
 
 % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date: 2010-03-12 17:48:49 -0900 (Fri, 12 Mar 2010) $
-% $Revision: 227 $
+% $Date$
+% $Revision$
 
 if nargin == 1
     % automatically determine the legend

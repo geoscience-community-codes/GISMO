@@ -16,8 +16,8 @@ function eng=mag2eng(mag);
 %   See also eng2mag
 
 % AUTHOR: Glenn Thompson
-% $Date:$
-% $Revision:$
+% $Date$
+% $Revision$
 
 % for events without a magnitude, change it to -0.5 for energy calculation purposes
 

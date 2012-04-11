@@ -8,8 +8,8 @@ function arrival_histogram(dbName)
 
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date: 2010-07-02 14:24:55 -0800 (Fri, 02 Jul 2010) $
-% $Revision: 242 $ 
+% $Date$
+% $Revision$ 
 
 
 

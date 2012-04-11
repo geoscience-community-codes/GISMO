@@ -18,8 +18,8 @@ function writedb(c,dbOut,varargin)
 
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date: $
-% $Revision: $
+% $Date$
+% $Revision$
 
 
 

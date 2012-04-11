@@ -8,8 +8,8 @@
 % See also mastercorr.plot_stats, mastercorr.cookbook, mastercorr.extract
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date: 2010-12-20 07:40:19 -0900 (Mon, 20 Dec 2010) $
-% $Revision: 256 $
+% $Date$
+% $Revision$
 
 
 

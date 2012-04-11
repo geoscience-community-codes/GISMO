@@ -7,8 +7,8 @@ function W = load_cookbook_data
 % See also mastercorr.cookbook
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date: 2010-12-20 07:40:19 -0900 (Mon, 20 Dec 2010) $
-% $Revision: 256 $
+% $Date$
+% $Revision$
 
 
 

@@ -19,8 +19,8 @@ function cmatrix=catmatrices(matrix2,matrix1);
 %    See also cat
 
 % AUTHOR: Glenn Thompson
-% $Date:$
-% $Revision:$
+% $Date$
+% $Revision$
 
 libgt.print_debug(sprintf('> %s', mfilename),3);
 if size(matrix1)~=[0 0]

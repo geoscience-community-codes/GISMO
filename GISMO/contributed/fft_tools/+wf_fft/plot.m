@@ -8,8 +8,8 @@ function plot(w)
 % see also wf_fft.compute
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date: 2010-02-04 11:51:43 -0900 (Thu, 04 Feb 2010) $
-% $Revision: 178 $
+% $Date$
+% $Revision$
 % TODO: written pretty hastily and inefficiently - MEW 6/18/2007
 
 

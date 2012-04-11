@@ -16,8 +16,8 @@ function mag=eng2mag(eng);
 %   See also mag2eng
 
 % AUTHOR: Glenn Thompson
-% $Date:$
-% $Revision:$
+% $Date$
+% $Revision$
 
 
 	mag = (log10(eng) - 4.7) / 1.5; 	
