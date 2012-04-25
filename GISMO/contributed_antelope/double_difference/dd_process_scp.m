@@ -141,20 +141,6 @@ for n = 1:numel(ar_time)
    end
 end
 
-%%%%%%%% TESTING ONLY
-% c = correlation('demo');
-% r = round(48*rand(1))+2;
-% r = round(98*rand(r,1))+2;
-% c = subset(c,r);
-% c = adjusttrig(c,2);
-% c = crop(c,pretrig-3,posttrig+3);
-% W = get(c,'WAVEFORM');
-% ntrace = length(W);
-% for n = 1:ntrace
-%    W(n) = addfield(W(n),'ORID',3002012+n); 
-% end
-
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -169,23 +155,30 @@ C = butter(C,[hpf lpf]);
 C = xcorr(C,[pretrig posttrig],'interp');
 corr = get(C,'CORR');
 lag = get(C,'LAG');
-%plot(C,'corr');
 
-linestr = [];
-linenum = [];
-minimumCorrelation = [];
-maximumLag = [];
 
+% PRE-ALLOCATE ARRAYS
+numberOfRows = sum(1:numel(orid)-1);
+linestr = repmat({'placeHolder'},[numberOfRows 1]);
+linenum = zeros(numberOfRows,1);
+minimumCorrelation = -999 * ones(numberOfRows,1);
+maximumLag = -999 * ones(numberOfRows,1);
+
+
+% WRITE STRINGS OF CORRELATION VALUES
+rowNumber = 0;
+fprintf('   writing cross correlation pairs:       ');
 for n = 1:length(orid)
     for m = n+1:length(orid)
-        %params = [sta '    ' iphase '    ' num2str(lag(n,m),'%4.3f') '    ' num2str(corr(n,m),'%4.3f') ];
+        rowNumber = rowNumber+1;
         params = sprintf('%-8s %6.3f %6.3f %-3s' , sta , lag(n,m) , (corr(n,m))^2 , iphase );
-        linenum = cat(1,linenum,[orid(n) orid(m)] );
-        linestr = cat(1,linestr,{params});
-        minimumCorrelation = cat(1,minimumCorrelation,minCorr);
-        maximumLag = cat(1,maximumLag,maxLag);
-
+        linenum(rowNumber,1:2) = [orid(n) orid(m)];
+        linestr(rowNumber) = {params};
+        minimumCorrelation(rowNumber) = minCorr;
+        maximumLag(rowNumber) = maxLag;
     end
+    fprintf('\b\b\b\b\b\b%5.0f%%',rowNumber/numberOfRows*100);
 end
+fprintf('\n');
 
 
