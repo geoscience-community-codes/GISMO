@@ -126,7 +126,7 @@ switch argCount
           % load routine and interpreter will be set, and the waveform will
           % be loaded in the following section, along with any user-defined
           % load functions.
-          case {'file','sac','seisan'}
+          case {'file','sac','seisan','obspy'}
             myLoadRoutine = eval(['@load_',ds_type]);
             ds = setinterpreter(ds,myLoadRoutine); %update interpeter funct
             

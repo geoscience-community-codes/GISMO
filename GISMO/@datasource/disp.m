@@ -33,7 +33,7 @@ else
     case 'irisdmcws'
          %do nothing
          
-    case {'file','sac','antelope','seisan'}
+    case {'file','sac','antelope','seisan','obspy'}
       filelist = getfilename(ds,[],[]);
       for n=1:numel(filelist)
         disp(sprintf('  location: %s',filelist{n}));

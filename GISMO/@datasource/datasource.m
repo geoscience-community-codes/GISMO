@@ -111,7 +111,7 @@ else
           ds.type = whichsource;
       end
       
-    case {'file','sac', 'seisan'}
+    case {'file','sac', 'seisan', 'obspy'}
       if numel(varargin) == 0
         error('when setting the datasource to %s the filesource must be declared',upper(whichsource));
       end
@@ -155,6 +155,6 @@ else
       % end special cases ------------------------------------
       
     otherwise
-      error('Current valid datasources are: ANTELOPE, SAC, FILE, WINSTON, SEISAN, or a function handle to an interpeter function');
+      error('Current valid datasources are: ANTELOPE, SAC, FILE, WINSTON, SEISAN, OBSPY, or a function handle to an interpeter function');
   end
 end
