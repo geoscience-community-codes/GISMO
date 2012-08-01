@@ -23,7 +23,9 @@ for i=1:numel(uniquescnls)
   w = waveformlist(scnlmembers == i);
   w = timesort(w);
   for j=(numel(w)-1):-1:1
-    w(j) = piece_together(w(j:j+1));
+    if ~(w(j)==w(j+1))
+        w(j) = piece_together(w(j:j+1));
+    end
     w(j+1) = waveform;
   end
   combined_waveforms(i) = w(1);
@@ -76,12 +78,14 @@ w= addhistory(w,'SPLICEPOINT: %s, removed %d points (overlap)',...
   datestr(get(w2,'start')),samplesRemoved);
 
 function result = overlaps(dt, sampleInterval)
-result = (dt- sampleInterval .* 1.25) < 0;
+result = (dt- sampleInterval .* 1.25) < 0
 
 function t = dt_seconds(w1,w2)
 %  w1----] t [----w2
 firstsampleT = get(w2,'start');
-lastsampleT = get(w1,'timevector'); lastsampleT = lastsampleT(end);
+lastsampleT = get(w1,'timevector');
+lastsampleT = lastsampleT(end);
+
 t = firstsampleT*86400 - lastsampleT * 86400;
 
 function w = timesort(w)

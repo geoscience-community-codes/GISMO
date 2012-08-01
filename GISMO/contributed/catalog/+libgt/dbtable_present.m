@@ -8,6 +8,7 @@ function present=dbtable_present(dbpath, table)
 % $Revision$
 libgt.print_debug(sprintf('> %s',mfilename),3);
 present = 0;
+
 if exist(dbpath, 'file')
    db = dbopen(dbpath, 'r');
    try
@@ -17,12 +18,22 @@ if exist(dbpath, 'file')
           present = numrows;
           libgt.print_debug(sprintf('Success: %d rows',numrows),3);
        else
-          libgt.print_debug(sprintf('Failure: %d rows',numrows),3);           
+          if exist(sprintf('%s.origin',dbpath)) 
+            if numrows > 0
+                present = numrows;
+                libgt.print_debug(sprintf('Success: %d rows',numrows),3); 
+            else
+                libgt.print_debug(sprintf('Failure: %d rows',numrows),3);
+            end
+          else
+                libgt.print_debug(sprintf('Failure: %d rows',numrows),3);
+          end
+          
        end
     catch
-         libgt.print_debug(sprintf('Failure: could not open %s.%s',dbpath,table),3);
+         libgt.print_debug(sprintf('Failure: could not open %s.%s. Does it open with dbe?',dbpath,table),0);
     end
 else
-	libgt.print_debug(sprintf('Failure: could not find %s. The descriptor may be missing.',dbpath),3);
+	libgt.print_debug(sprintf('Failure: could not find %s. Is the descriptor missing? A database is Antelope must have a descriptor, otherwise MATLAB cannot load it.',dbpath),0);
 end
 libgt.print_debug(sprintf('< %s',mfilename),3);

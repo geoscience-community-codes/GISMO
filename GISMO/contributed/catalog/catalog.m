@@ -11,8 +11,8 @@ classdef catalog
 %%   USAGE
 %    cobj = catalog() creates an empty catalog object.
 %
-%    cobj = catalog(FILEPATH, FORMAT) loads the file at FILEPATH in the
-%    format FORMAT. The only FORMAT currently implemented is 'antelope'.
+%    cobj = catalog(FILEPATH, DATAFORMAT) loads the file at FILEPATH in the
+%    format DATAFORMAT.
 %
 %    cobj = catalog(FILEPATH, 'antelope', 'dbeval', EXPRESSION) subsets the
 %    database with a dbeval EXPRESSION.
@@ -40,13 +40,15 @@ classdef catalog
 %
 %%   READING FROM A CSS3.0 DATASCOPE DATABASE
 %
-%    COBJ = CATALOG(SNUM, ENUM, MINMAG, REGION, DBROOT, ARCHIVEFORMAT) creates
-%    a catalog object with preferred origins subsetted between SNUM and ENUM,
-%    above magnitude MINMAG, geographically filtered using REGION from the
-%    database DBROOT which is archived in ARCHIVEFORMAT.
-%    These variables are described in "FIELDS" section below. REGION can
-%    either be a 4-element vector [LONMIN LONMAX LATMIN LATMAX] or it can
-%    be a region described in avo_volcs.pf such as 'spurr' or 'redoubt'.
+%    COBJ = CATALOG(DBNAME, DATAFORMAT) where DATAFORMAT is 'antelope', 'datascope' or
+%    'css3.0' will attempt to load the full origin table for the database
+%    described by the path DBNAME.
+%
+%    As described above the database can either be subsetted by using
+%    parameter name/value pairs (snum, enum, minmag, mindepth, maxdepth,
+%    region). Or by the 'dbeval' name/value pair. If you use both, the
+%    dbeval EXPRESSION will be used, and the other name/value pairs
+%    ignored.
 %
 %    EXAMPLES: (2-5 assume you are connected to the Seislab computer network at UAF/GI)
 %
@@ -156,7 +158,7 @@ classdef catalog
         enum = [];% end time of catalog
         minmag =[]; % mag threshold of catalog
         auth = {};
-        region = [];
+        region = [-179.9999 179.9999 -90 90];
         dbroot = '';
         archiveformat ='';
         misc_fields = {};
@@ -169,22 +171,21 @@ classdef catalog
         
      	%------------------------------------------------------------------
         %% Constructor.    
-        function cobj = catalog(filepath, format, varargin)
+        function cobj = catalog(filepath, dataformat, varargin)
             % CATALOG/CATALOG
             %   CATALOG constructor. HELP CATALOG for information.
             switch nargin
                 case 0, disp('Creating null catalog object'); return;
-                case 1, format = 'css3.0'
+                case 1, dataformat = 'css3.0';
             end
             %cobj = catalog;
-            switch format
+            switch dataformat
                 case {'css3.0','antelope', 'datascope'}
                     cobj = cobj.css2catalog(filepath, varargin{:});
                 case 'seisan'
                     cobj = cobj.seisan2catalog(filepath, varargin{:});
                 otherwise
-                    format
-                    fprintf('format %s unknown',format);
+                    fprintf('format %s unknown',dataformat);
             end      
         end
 
@@ -193,30 +194,33 @@ classdef catalog
         function cobj = css2catalog(cobj, dbpath, varargin)            
             % CATALOG/CSS2CATALOG
             %   Wrapper for loading CSS3.0 databases.
-			%if ~admin.antelope_exists
-			%	disp('Antelope not found');
-            %    return;
-            %end
+			if ~admin.antelope_exists
+				disp('Antelope not found');
+                return;
+            end
             
             [dbeval, archiveformat, snum, enum, minmag, region, subclass, mindepth, maxdepth] = libgt.process_options(varargin, 'dbeval', '', 'archiveformat', '', 'snum', [], 'enum', [], 'minmag', [], 'region', [], 'subclass', '*', 'mindepth', [], 'maxdepth', []); 
   
 			% Check if region is a char (string) or double (array) class
-			if ischar(region)
+			if (ischar(region) || iscell(region))
+                if iscell(region)
+                   region=region{1};
+                end
                 if strcmp(region(end-2:end), '_lo')
                     [region, source, lon, lat] = readavogrids(region);
                     leftlon = region(1); rightlon=region(2); lowerlat=region(3); upperlat=region(4);
                 else
                     dirname = fileparts(which('catalog'));
-                    pffile = [dirname,'/demo/avo_volcs.pf'];
-                    [sourcelon, sourcelat, leftlon, rightlon, lowerlat, upperlat] = libgt.readavovolcs(region, pffile); 
+                    pffile = [dirname,'/demo/avo_volcs.pf']
+                    [sourcelon, sourcelat, leftlon, rightlon, lowerlat, upperlat] = libgt.readavovolcs(region, pffile) 
                     region = [leftlon rightlon lowerlat upperlat];
                 end                   
-			else
+            else
 				if strcmp(class(region),'double') & ~isempty(region)
 					leftlon = region(1); rightlon=region(2); lowerlat=region(3); upperlat=region(4);
 				end
             end
-            
+
             % Create a dbeval expression if not already set.
             if isempty(dbeval)
                 if nargin > 2
@@ -243,17 +247,18 @@ classdef catalog
                     clear expr
                 end
             end
+            disp(sprintf('dbeval expression: %s',dbeval))
             
  			% Append input parameters to structure
 			if ~isempty(snum)
                 cobj.snum = snum;
             else
-                cobj.snum = floor(now-7);
+                cobj.snum = 0;
             end
 			if ~isempty(enum)
                 cobj.enum = enum;
             else
-                cobj.enum = ceil(now);
+                cobj.enum = ceil(libgt.utnow());
             end            
 			cobj.minmag = minmag;
 			cobj.region = region;
@@ -346,13 +351,18 @@ classdef catalog
             [nsigma, volcano, gridname] = libgt.process_options(varargin, 'nsigma', '5', 'volcano', '', 'gridname', '');
 
 			% find stations in this region
-            sta = db2stations(cobj);
+            sta = db2stations(cobj)
 
 			figure;
-
+            symsize = cobj.mag * 2 + 2;
+            symsize(symsize<2)=2;
 			% lon-lat
 			axes('position',[0.05 0.45 0.5 0.5]);
-			plot(cobj.lon, cobj.lat,'*');
+            for symnum = 1:length(cobj.lon)
+                hold on
+                plot(cobj.lon(symnum), cobj.lat(symnum), 'o', 'MarkerSize', symsize(symnum));
+            end
+			%plot(cobj.lon, cobj.lat,'*');
 			grid on;
 			if ~isempty(sta.lon)
 				hold on;
@@ -370,7 +380,12 @@ classdef catalog
 
 			% depth-longitude
 			axes('position',[0.05 0.05 0.5 0.35]);
-			plot(cobj.lon, cobj.depth, '*');
+            
+            for symnum = 1:length(cobj.lon)
+                hold on
+                plot(cobj.lon(symnum), cobj.depth(symnum), 'o', 'MarkerSize', symsize(symnum));
+            end
+			%plot(cobj.lon, cobj.depth, '*');
 			ylabel('Depth (km)');
 			xlabel('Longitude');
 			grid on;
@@ -379,7 +394,11 @@ classdef catalog
 
 			% depth-lat
 			axes('position',[0.6 0.45 0.35 0.5]);
-			plot(cobj.depth, cobj.lat, '*');
+            for symnum = 1:length(cobj.lon)
+                hold on
+                plot(cobj.depth(symnum), cobj.lat(symnum), 'o', 'MarkerSize', symsize(symnum));
+            end
+			%plot(cobj.depth, cobj.lat, '*');
 			xlabel('Depth (km)');
 			set(gca, 'XDir', 'reverse');
 			ylabel('Latitude');
@@ -388,7 +407,11 @@ classdef catalog
 
 			% time-depth
 			figure;
-			plot(cobj.dnum, cobj.depth, '*');
+			%plot(cobj.dnum, cobj.depth, '*');
+            for symnum = 1:length(cobj.lon)
+                hold on
+                plot(cobj.dnum(symnum), cobj.depth(symnum), 'o', 'MarkerSize', symsize(symnum));
+            end
 			datetick('x');
 			xlabel('Date');
 			ylabel('Depth (km)');
@@ -536,7 +559,6 @@ classdef catalog
             % CATALOG/DB2STATIONS(COBJ)
             %   Load Alaska stations within COBJ.REGION
             stalon = []; stalat = []; stacode = [];
-            
             DBMASTER = getenv('DBMASTER');
             
             if ~isempty(DBMASTER)
@@ -1431,18 +1453,17 @@ classdef catalog
         
         %% CSS_LOAD
         function cobj = css_load(cobj, dbroot, archiveformat, dbeval)
-            
 			if ~exist('minmag','var')
 				minmag = -999.0;
 			end
 
 			if strcmp(archiveformat,'')
 				dbname = dbroot;
-				if exist(sprintf('%s.origin',dbname),'file')
+				%if exist(sprintf('%s.origin',dbname),'file')
 					[cobj.lon, cobj.lat, cobj.depth, cobj.dnum, cobj.evid, cobj.orid, cobj.nass, cobj.mag, cobj.mb, cobj.ml, cobj.ms, cobj.etype, cobj.auth] = catalog.css_import(dbname, dbeval);                  
-				else
-					fprintf('%s.origin not found\n',dbname);
-				end
+				%else
+				%	fprintf('%s.origin not found\n',dbname);
+				%end
 			else
 				if strcmp(archiveformat,'daily')
       
