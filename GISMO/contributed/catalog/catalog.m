@@ -1380,37 +1380,47 @@ classdef catalog
                     if (EVENT_TABLE_PRESENT)
                         db = dbjoin(db, dblookup_table(db, 'event') );
                         numorigins = dbquery(db,'dbRECORD_COUNT');
+                        libgt.print_debug(sprintf('Got %d records after joining event with %s.origin',numorigins,dbname),1);
                         if numorigins > 0
                             db = dbsubset(db, 'orid == prefor');
                             numorigins = dbquery(db,'dbRECORD_COUNT');
-                            libgt.print_debug(sprintf('Got %d records after joining event with %s.origin',numorigins,dbname),1);
+                            libgt.print_debug(sprintf('Got %d records after subsetting with orid==prefor',numorigins),1);
                             if numorigins > 0
                                 db = dbsort(db, 'time');
                             else
+				% got no origins after subsetting for prefors - already reported
+                                libgt.print_debug(sprintf('Got %d records after subsetting with orid==prefor - catalog object will be blank',numorigins),0);
                                 return
                             end
                         else
+			    % got no origins after joining event to origin table - already reported
+                            libgt.print_debug(sprintf('Got %d records after joining event table with origin table - catalog object will be blank',numorigins),0);
                             return
                         end
+		    else
+                        libgt.print_debug('no event table found, so just using origin table',0);
                     end
                 else
+		    % got no origins after opening origin table - already reported
+                    libgt.print_debug(sprintf('origin table has %d records - catalog object will be blank',numorigins),0);
                     return
                 end
             else
+                libgt.print_debug('no origin table found - will create blank catalog object',0);
                 return
             end
 
-			numorigins = dbquery(db,'dbRECORD_COUNT');
-			libgt.print_debug(sprintf('Got %d prefors prior to subsetting',numorigins),2);
+	    numorigins = dbquery(db,'dbRECORD_COUNT');
+	    libgt.print_debug(sprintf('Got %d prefors prior to subsetting',numorigins),2);
 	
 			% Do the subsetting
             if ~isempty(dbeval)
                 db = dbsubset(db, dbeval);
                 numorigins = dbquery(db,'dbRECORD_COUNT');
                 libgt.print_debug(sprintf('Got %d prefors after subsetting',numorigins),2);
-			end
+        	end
 
-			if numorigins>0
+	    if numorigins>0
                 if EVENT_TABLE_PRESENT
                     [lat, lon, depth, time, evid, orid, nass, ml, mb, ms, auth] = dbgetv(db,'lat', 'lon', 'depth', 'time', 'evid', 'orid', 'nass', 'ml', 'mb', 'ms', 'auth');
                 else

@@ -9,7 +9,7 @@ function present=dbtable_present(dbpath, table)
 libgt.print_debug(sprintf('> %s',mfilename),3);
 present = 0;
 
-if exist(dbpath, 'file')
+if exist(dbpath, 'file') || exist(sprintf('%s.%s',dbpath,table), 'file')
    db = dbopen(dbpath, 'r');
    try
        db = dblookup_table(db, table);
