@@ -247,27 +247,20 @@ classdef catalog
                     clear expr
                 end
             end
-            disp(sprintf('dbeval expression: %s',dbeval))
             
  			% Append input parameters to structure
-			if ~isempty(snum)
                 cobj.snum = snum;
-            else
-                cobj.snum = 0;
-            end
-			if ~isempty(enum)
                 cobj.enum = enum;
-            else
-                cobj.enum = ceil(libgt.utnow());
-            end            
 			cobj.minmag = minmag;
 			cobj.region = region;
 			cobj.dbroot = dbpath;
 			cobj.archiveformat = archiveformat;
             
             cobj = cobj.css_load(dbpath, archiveformat, dbeval);
-	
+		% do we want snum and enum to default to first and last event times, or the start of the day of the first event time, and the end of the day of the last event time (if not set explicitly by user)
+            %cobj.snum = min([cobj.snum floor(min(cobj.dnum))]);
             cobj.snum = min([cobj.snum min(cobj.dnum)]);
+            %cobj.enum = max([cobj.enum ceil(max(cobj.dnum))]);            
             cobj.enum = max([cobj.enum max(cobj.dnum)]);            
 
             
@@ -1371,12 +1364,13 @@ classdef catalog
 			libgt.print_debug(sprintf('Loading data from %s',dbname),3);
           
             ORIGIN_TABLE_PRESENT = libgt.dbtable_present(dbname, 'origin');
-            EVENT_TABLE_PRESENT = libgt.dbtable_present(dbname, 'event');           
+
             if (ORIGIN_TABLE_PRESENT)
                 db = dblookup_table(dbopen(dbname, 'r'), 'origin');
                 numorigins = dbquery(db,'dbRECORD_COUNT');
                 libgt.print_debug(sprintf('Got %d records from %s.origin',numorigins,dbname),1);
                 if numorigins > 0
+                    EVENT_TABLE_PRESENT = libgt.dbtable_present(dbname, 'event');           
                     if (EVENT_TABLE_PRESENT)
                         db = dbjoin(db, dblookup_table(db, 'event') );
                         numorigins = dbquery(db,'dbRECORD_COUNT');
@@ -1389,24 +1383,24 @@ classdef catalog
                                 db = dbsort(db, 'time');
                             else
 				% got no origins after subsetting for prefors - already reported
-                                libgt.print_debug(sprintf('Got %d records after subsetting with orid==prefor - catalog object will be blank',numorigins),0);
+                                libgt.print_debug(sprintf('Creating blank catalog object (%d records after subsetting with orid==prefor)',numorigins),0);
                                 return
                             end
                         else
 			    % got no origins after joining event to origin table - already reported
-                            libgt.print_debug(sprintf('Got %d records after joining event table with origin table - catalog object will be blank',numorigins),0);
+                            libgt.print_debug(sprintf('Creating blank catalog object (%d records after joining event table with origin table)',numorigins),0);
                             return
                         end
 		    else
-                        libgt.print_debug('no event table found, so just using origin table',0);
+                        libgt.print_debug('No event table found, so will use all origins from origin table, not just prefors',0);
                     end
                 else
 		    % got no origins after opening origin table - already reported
-                    libgt.print_debug(sprintf('origin table has %d records - catalog object will be blank',numorigins),0);
+                    libgt.print_debug(sprintf('Creating blank catalog object (origin table has %d records)',numorigins),0);
                     return
                 end
             else
-                libgt.print_debug('no origin table found - will create blank catalog object',0);
+                libgt.print_debug('Creating blank catalog object (no origin table found)',0);
                 return
             end
 
@@ -1425,7 +1419,7 @@ classdef catalog
                     [lat, lon, depth, time, evid, orid, nass, ml, mb, ms, auth] = dbgetv(db,'lat', 'lon', 'depth', 'time', 'evid', 'orid', 'nass', 'ml', 'mb', 'ms', 'auth');
                 else
                     [lat, lon, depth, time, orid, nass, ml, mb, ms, auth] = dbgetv(db,'lat', 'lon', 'depth', 'time', 'orid', 'nass', 'ml', 'mb', 'ms', 'auth');  
-                    disp('No event table. Setting evid == orid');
+                    disp('Setting evid == orid');
                     evid = orid;
                 end
                 etype0 = dbgetv(db,'etype');
@@ -1475,6 +1469,10 @@ classdef catalog
 				%	fprintf('%s.origin not found\n',dbname);
 				%end
 			else
+				if isempty(cobj.snum) || isempty(cobj.enum)
+					disp(sprintf('Failure: you must set values for \"snum\" and \"enum\" parameters when \"archiveformat\" is set to \"daily\" or \"monthly\"'));
+					return;
+				end
 				if strcmp(archiveformat,'daily')
       
 					for dnum=floor(cobj.snum):floor(cobj.enum-1/1440)

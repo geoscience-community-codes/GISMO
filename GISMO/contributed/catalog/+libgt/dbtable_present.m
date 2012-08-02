@@ -10,7 +10,12 @@ libgt.print_debug(sprintf('> %s',mfilename),3);
 present = 0;
 
 if exist(dbpath, 'file') || exist(sprintf('%s.%s',dbpath,table), 'file')
-   db = dbopen(dbpath, 'r');
+   try
+     db = dbopen(dbpath, 'r');
+   catch
+     libgt.print_debug(sprintf('Failure: database exists but dbopen fails'),0);
+     return;
+   end
    try
        db = dblookup_table(db, table);
        numrows = dbquery(db, 'dbRECORD_COUNT');
@@ -31,9 +36,9 @@ if exist(dbpath, 'file') || exist(sprintf('%s.%s',dbpath,table), 'file')
           
        end
     catch
-         libgt.print_debug(sprintf('Failure: could not open %s.%s. Does it open with dbe?',dbpath,table),0);
+         libgt.print_debug(sprintf('Failure: dblookup_table fails for %s.%s',dbpath,table),0);
     end
 else
-	libgt.print_debug(sprintf('Failure: could not find %s. Is the descriptor missing? A database is Antelope must have a descriptor, otherwise MATLAB cannot load it.',dbpath),0);
+	libgt.print_debug(sprintf('Failure: cannot find %s or %s.%s on this computer.',dbpath,dbpath,table),0);
 end
 libgt.print_debug(sprintf('< %s',mfilename),3);
