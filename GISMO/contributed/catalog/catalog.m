@@ -1098,54 +1098,58 @@ classdef catalog
                     end
                 end  
                                                 
-                % MAG
+                % MAGa - verification commented out because Helena's was running into problems when ressetting whole vectors
                 case 'MAG',
                 if isa(val,'double') 
-                    if (val>=-2.0 & val<=9.9) | isnan(val) | (val==-999.0)
+                    %if (val>=-2.0 & val<=9.9) | isnan(val) | (val==-999.0)
                         [cobj.mag] = deal(val);
                     else
-                        error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');
-                    end
+                        error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE');
+                    %else
+                      %  error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');
+                    %end
                 end  
             
                 % MB
                 case 'MB',
                 if isa(val,'double') 
-                    if (val>=-2.0 & val<=9.9) | isnan(val) | (val==-999.0)
+                    %if (val>=-2.0 & val<=9.9) | isnan(val) | (val==-999.0)
                         [cobj.mb] = deal(val);
                     else
-                        error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');
-                    end
+                        error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE');
+                    %else
+                       % error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');
+                    %end
                 end  
                                                 
                 % ML
                 case 'ML',
                 if isa(val,'double') 
-                    if (val>=-2.0 & val<=9.9) | isnan(val) | (val==-999.0)
+                    %if (val>=-2.0 & val<=9.9) | isnan(val) | (val==-999.0)
                         [cobj.ml] = deal(val);
                     else
-                        error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');
-                    end
+                        error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE');
+                    %else
+                     %   error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');
+                    %end
                 end 
  
                 % MS
                 case 'MS',
                 if isa(val,'double') 
-                    if (val>=-2.0 & val<=9.9) | isnan(val) | (val==-999.0)
+                    %if (val>=-2.0 & val<=9.9) | isnan(val) | (val==-999.0)
                         [cobj.ms] = deal(val);
                     else
-                        error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');
-                    end
+                        error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE');
+                    %end
                 end  
 
                 % ETYPE
                 case 'ETYPE',
                 if isa(val,'char') 
-                    %if (length(val)==1)
-                        [cobj.etype] = deal(val);
-                    %else
-                    %    error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');
-                    %end
+                    [cobj.etype] = deal(val);
+		else
+                    error('CATALOG:set:propertyTypeMismatch','Expected a CHAR');
                 end  
             
             
