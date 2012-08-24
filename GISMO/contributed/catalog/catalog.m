@@ -1108,7 +1108,36 @@ classdef catalog
                     end
                 end  
             
+                % MB
+                case 'MB',
+                if isa(val,'double') 
+                    if (val>=-2.0 & val<=9.9)
+                        [cobj.mb] = deal(val);
+                    else
+                        error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');
+                    end
+                end  
                                                 
+                % ML
+                case 'ML',
+                if isa(val,'double') 
+                    if (val>=-2.0 & val<=9.9)
+                        [cobj.ml] = deal(val);
+                    else
+                        error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');
+                    end
+                end 
+ 
+                % MS
+                case 'MS',
+                if isa(val,'double') 
+                    if (val>=-2.0 & val<=9.9)
+                        [cobj.ms] = deal(val);
+                    else
+                        error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');
+                    end
+                end  
+
                 % ETYPE
                 case 'ETYPE',
                 if isa(val,'char') 
