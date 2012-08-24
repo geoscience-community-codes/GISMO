@@ -1069,7 +1069,7 @@ classdef catalog
                         
                 % NASS
                 case 'NASS',
-                if isa(val,'double') || isinteger(val)
+                if isa(val,'double') | isinteger(val)
                     if (val>=0 & val<=999)
                         [cobj.nass] = deal(int16(val));
                     else
@@ -1080,7 +1080,7 @@ classdef catalog
                         
                 % EVID
                 case 'EVID',
-                if isa(val,'double') || isinteger(val)
+                if isa(val,'double') | isinteger(val)
                     if (val>=0 & val<=2^32)
                         [cobj.evid] = deal(int32(val));
                     else
@@ -1090,7 +1090,7 @@ classdef catalog
             
                 % ORID
                 case 'ORID',
-                if isa(val,'double') || isinteger(val)
+                if isa(val,'double') | isinteger(val)
                     if (val>=0 & val<=2^32)
                         [cobj.orid] = deal(int32(val));
                     else
@@ -1101,7 +1101,7 @@ classdef catalog
                 % MAG
                 case 'MAG',
                 if isa(val,'double') 
-                    if (val>=-2.0 & val<=9.9) || isnan(val) || (val==-999.0)
+                    if (val>=-2.0 & val<=9.9) | isnan(val) | (val==-999.0)
                         [cobj.mag] = deal(val);
                     else
                         error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');
@@ -1111,7 +1111,7 @@ classdef catalog
                 % MB
                 case 'MB',
                 if isa(val,'double') 
-                    if (val>=-2.0 & val<=9.9) || isnan(val) || (val==-999.0)
+                    if (val>=-2.0 & val<=9.9) | isnan(val) | (val==-999.0)
                         [cobj.mb] = deal(val);
                     else
                         error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');
@@ -1121,7 +1121,7 @@ classdef catalog
                 % ML
                 case 'ML',
                 if isa(val,'double') 
-                    if (val>=-2.0 & val<=9.9) || isnan(val) || (val==-999.0)
+                    if (val>=-2.0 & val<=9.9) | isnan(val) | (val==-999.0)
                         [cobj.ml] = deal(val);
                     else
                         error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');
@@ -1131,7 +1131,7 @@ classdef catalog
                 % MS
                 case 'MS',
                 if isa(val,'double') 
-                    if (val>=-2.0 & val<=9.9) || isnan(val) || (val==-999.0)
+                    if (val>=-2.0 & val<=9.9) | isnan(val) | (val==-999.0)
                         [cobj.ms] = deal(val);
                     else
                         error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');
