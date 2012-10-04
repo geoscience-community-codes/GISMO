@@ -54,7 +54,7 @@ h2 = subplot(2,2,3);
 plot([ray.originLon(f) ray.siteLon(f)]',[ray.originDepth(f) ray.siteElev(f)]','-','Color',[0.7 0.7 0.7],'LineWidth',0.5)
 hold on;
 plot(origin.lon,origin.depth,'ko','MarkerFaceColor','r','MarkerSize',4)
-plot(site.lon,site.elev,'kv','MarkerFaceColor',[0 0 1],'MarkerSize',9)
+plot(site.lon,site.elev,'kv','MarkerFaceColor','c','MarkerSize',9)
 set(gca,'YDir','reverse');
 ylim([depthmin depthmax]);
 xlabel('Longitude');
@@ -96,7 +96,7 @@ h2 = subplot(2,2,4);
 plot([ray.originLon(f) ray.siteLon(f)]',[ray.originDepth(f) ray.siteElev(f)]','-','Color',[0.7 0.7 0.7],'LineWidth',0.5)
 hold on;
 plot(origin.lon,origin.depth,'ko','MarkerFaceColor','r','MarkerSize',4)
-plot(site.lon,site.elev,'kv','MarkerFaceColor',[0 0 1],'MarkerSize',9)
+plot(site.lon,site.elev,'kv','MarkerFaceColor','c','MarkerSize',9)
 set(gca,'YDir','reverse');
 ylim([depthmin depthmax]);
 xlabel('Longitude');
@@ -116,9 +116,9 @@ elseif xWidth2>xWidth1
     position(1) = 0.75 - position(3)/2;
     set(h2,'Position',position);
     set(h2,'xlim',xLim2);
-end
-%
-set(gcf, 'paperorientation', 'landscape');
-set(gcf, 'paperposition', [.5 .5 10 6.5] );
-print(gcf, '-dpsc2', 'FIG_depth_section.ps');
+ end
+ %
+ set(gcf, 'paperorientation', 'landscape');
+ set(gcf, 'paperposition', [.5 .5 10 6.5] );
+ print(gcf, '-dpsc2', 'FIG_depth_section.ps');
 

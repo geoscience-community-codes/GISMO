@@ -39,13 +39,19 @@ h = bar(site.stationNum,[nP' nS'],1.8)
 set(h(1),'FaceColor','r');
 set(h(2),'FaceColor',[0.7 0.7 0.7]);
 legend('P wave arrivals','S wave arrivals')
-xlabel('Station name');
+%xlabel('Station name');
 ylabel('No. of phase arrivals');
-set(gca,'XTick',site.stationNum);
-set(gca,'XTickLabel',site.sta);
 
-%set('XTickLabel',get(gca,'XTickLabel'),'Rotation',90)
-
+% place rotated x-axis labels
+set(gca,'XTick',1:12,'XTickLabel','') 
+xAxisHandle = get(gca,'XLabel'); 
+set(xAxisHandle,'Units','data'); 
+pos = get(xAxisHandle,'Position'); 
+y = pos(2); 
+for n = 1:size(site.sta,1) 
+t(n) = text(site.stationNum(n),y,site.sta(n,:)); 
+end 
+set(t,'Rotation',90,'HorizontalAlignment','right') 
 
 set(gcf, 'paperorientation', 'landscape');
 set(gcf, 'paperposition', [.5 .5 10 6.5] );

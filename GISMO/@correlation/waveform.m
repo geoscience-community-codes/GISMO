@@ -1,10 +1,13 @@
-function w = waveform(c)
+function w = waveform(c,varargin)
 
 %WAVEFORM Extract a waveform object.
 %
 % W = WAVEFORM(C) Extracts a waveform object from inside a correlation
 % object. This is really just intuitive shorthand for W =
 % GET(C,'WAVEFORM').
+%
+% W = WAVEFORM(C,INDEX) returns a waveform object W that includes only the
+% traces specified by INDEX, where INDEX is a vector of trace indices.
 %
 % This function is particularly useful for manipulating waveforms using
 % tools outside the correlation toolbox. 
@@ -24,4 +27,18 @@ function w = waveform(c)
 % $Revision$
 
 
-w = c.W;
+
+if numel(varargin)==1
+    if ~isa(varargin{1},'double')
+       error('correlation:waveform','argument must be a numeric double'); 
+    end
+    index = varargin{1};
+else
+    index = 1:numel(c.W);
+end
+if max(index)>numel(c.W)
+	error('correlation:waveform','index exceeds the number of traces'); 
+end
+
+
+w = c.W(index);

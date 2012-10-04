@@ -85,7 +85,6 @@ else
     else
         dosubset = 0;
     end;
-c
 c = adjusttriggers(c,calctype,dosubset);
 end
 

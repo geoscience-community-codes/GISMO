@@ -13,8 +13,8 @@ function [origin,site,arrival,ray] = dbload(dbName)
 % ORIGIN
 % This is a minimally populated catalog object (see help catalog) that
 % describes the earthquake hypocenters. It includes the fields lat, lon,
-% depth (km, positive down), origin time (Matlab datenum format) and origin
-% id (orid). One element for each earthquake.
+% depth (km, positive down), origin time (Matlab datenum format), magnitude
+% (Ml) and origin id (orid). One element for each earthquake.
 %
 % ARRIVAL
 % This structure describes the phase arrivals. Fields include station name
@@ -86,10 +86,12 @@ try
     nEvents = dbquery(db,'dbRECORD_COUNT');
     oridList = dbgetv(db,'orid');
     %disp(['Number of origins: ' num2str(nEvents) ]);
-    [tmp.lat,tmp.lon,tmp.depth,tmp.time,tmp.orid] = dbgetv(db,'origin.lat','origin.lon','origin.depth','origin.time','origin.orid');
+    [tmp.lat,tmp.lon,tmp.depth,tmp.time,tmp.ml,tmp.orid,tmp.nass] = dbgetv(db,'origin.lat','origin.lon','origin.depth','origin.time','origin.ml','origin.orid','origin.nass');
     tmp.time = epoch2datenum(tmp.time);
+    f = find(tmp.ml < -2);
+    tmp.ml(f)=-2;
     origin = catalog;
-    origin = set(origin,'LAT',tmp.lat,'LON',tmp.lon,'DEPTH',tmp.depth,'DNUM',tmp.time,'ORID',tmp.orid);
+    origin = set(origin,'LAT',tmp.lat,'LON',tmp.lon,'DEPTH',tmp.depth,'DNUM',tmp.time,'mag',tmp.ml,'ORID',tmp.orid,'NASS',tmp.nass);
     
     % Arrival view
     db1 = dblookup_table(db,'assoc');
