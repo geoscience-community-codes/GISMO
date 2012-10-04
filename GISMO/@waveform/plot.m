@@ -83,7 +83,7 @@ end
 
 %Look for an odd number of arguments beyond the first.  If there are an odd
 %number, then it is expected that the first argument is the formatting
-%string. ass uch.
+%string. 
 hasExtraArg = mod(numel(varargin),2);
 if hasExtraArg
   proplist=  parseargs(varargin(2:end));
@@ -91,9 +91,12 @@ else
   proplist=  parseargs(varargin);
 end
 
+
+
 [isfound,useAutoscale,proplist] = getproperty('autoscale',proplist,false);
 [isfound,xunit,proplist] = getproperty('xunit',proplist,'s');
 [isfound,currFontSize,proplist] = getproperty('fontsize',proplist,8);
+
 
 [xunit, xfactor] = parse_xunit(xunit);
 

@@ -15,9 +15,9 @@ end;
 %     error('LINK field must be filled in input object');
 % end;
 
-if isempty(get(c,'CORR'))
-    error('CORR field must be filled in input object');
-end;
+% if isempty(get(c,'CORR'))
+%     error('CORR field must be filled in input object');
+% end;
 
 if isempty(get(c,'CLUST'))
     error('CLUST field must be filled in input object');

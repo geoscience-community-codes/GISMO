@@ -3,7 +3,7 @@ function catalog = get_total(varargin)
 %GET_TOTAL Read in the complete AEIC Total earthquake catalog
 %  CATALOG = GET_TOTAL reads the entire "Total" database of AEIC
 %  earthquakes. The output field CATALOG is a structure containing field
-%  names that adhere farily closely to their database definitions and
+%  names that adhere fairly closely to their database definitions and
 %  should be self explanatory. Origin time is given in Matlab date format.
 %
 % CATALOG = GET_TOTAL(DATABASE) specifies the path and name where
@@ -22,7 +22,7 @@ function catalog = get_total(varargin)
 %        4. AEIC mb
 %        5. AEIC ml
 % Events with no magnitude are removed from the catalog. Md magnitudes are
-% not currently considered (I believe tall Md magnitudes also have an ml).
+% not currently considered (I believe all Md magnitudes also have an ml).
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
 % $Date$

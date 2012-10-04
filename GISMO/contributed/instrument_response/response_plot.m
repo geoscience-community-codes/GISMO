@@ -25,12 +25,13 @@ colorList = jet;
 if numel(response)==1
     row = 1;
 else
-    row = 1 + round([0:numel(response)-1] ./ (numel(response)-1) * (size(colorList,1)-1));
+    row = 1 + round([0:numel(response)-1] ./ (numel(response)-1) * (size(colorList,1)-1)); % for jet
+    %row = 1 + round([0:numel(response)-1] ./ (numel(response)) * (size(colorList,1)-1));   % for hsv
 end
 
 
 subplot(2,1,1);
-hold on; box on;
+hold on; box on; grid on;
 for n = 1:numel(response)
     plot( response(n).frequencies , angle(response(n).values)*180/pi , '-' , 'Color' , colorList(row(n),:) )
 end
@@ -45,7 +46,7 @@ ylabel('Phase (degrees)');
 
 
 subplot(2,1,2);
-hold on; box on;
+hold on; box on; grid on;
 for n = 1:numel(response)
     plot(response(n).frequencies,abs(response(n).values),'-','Color',colorList(row(n),:) )
 end
