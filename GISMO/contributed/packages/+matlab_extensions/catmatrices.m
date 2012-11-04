@@ -22,7 +22,6 @@ function cmatrix=catmatrices(matrix2,matrix1);
 % $Date$
 % $Revision$
 
-libgt.print_debug(sprintf('> %s', mfilename),3);
 if size(matrix1)~=[0 0]
     s1=size(matrix1);
     s2=size(matrix2);
@@ -44,4 +43,3 @@ else
     cmatrix=matrix2;
 end
 
-libgt.print_debug(sprintf('< %s', mfilename),3);

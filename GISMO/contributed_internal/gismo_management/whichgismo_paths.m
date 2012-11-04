@@ -12,5 +12,5 @@ paths = {
     'Dev'               '/home/admin/share/matlab/PACKAGES/GISMO_DEV/GISMO'
     'West'              '~/Repositories/GISMOTOOLS/GISMO'
     'WestBranch'        '~/Repositories/GISMOBRANCH/GISMO'
-    'Glenn'             '/home/glen/src/gismotools/GISMO'  % GT: I can use this on coho, bronco, elsewhere since I always put gismotools at ~/src/
+    'Glenn'             '/home/glenn/src/gismotools/GISMO'  % GT: I can use this on coho, bronco, elsewhere since I always put gismotools at ~/src/
 };

@@ -140,7 +140,7 @@ classdef eventrate
         end 
         
         function Obj = catalog2eventrate(Obj, catalogObj, binsize, varargin)
-           [stepsize, etypes] = libgt.process_options(varargin, 'stepsize', binsize, 'etypes', {'*'});       
+           [stepsize, etypes] = matlab_extensions.process_options(varargin, 'stepsize', binsize, 'etypes', {'*'});       
            if (stepsize > binsize)
               disp(sprintf('Invalid value for stepsize (%f). Cannot be greater than binsize (%f).',stepsize, binsize));
               return;
@@ -190,7 +190,7 @@ classdef eventrate
         %
         %   If eventrate_object is an array of eventrate structures (e.g. one per etype), each is plotted on a separate figure
 
-        [metric] = libgt.process_options(varargin, 'metric', {'counts'});
+        [metric] = matlab_extensions.process_options(varargin, 'metric', {'counts'});
         if ~iscell(metric)
             metric = {metric};
         end
@@ -201,13 +201,13 @@ classdef eventrate
 
             for cc = 1: numsubplots
                 if strcmp(metric{cc},'energy')
-                    data = cumsum(libgt.mag2eng(Obj(c).cum_mag));
+                    data = cumsum(magnitude.mag2eng(Obj(c).cum_mag));
                 else
                     eval(  sprintf('data = Obj(c).%s;',metric{cc} ) );
                 end
                 subplot(numsubplots,1,cc), bar( Obj(c).dnum, data );
                 datetick('x','keeplimits');
-                ymax = nanmax(libgt.catmatrices(1, data));
+                ymax = nanmax(matlab_extensions.catmatrices(1, data));
                 set(gca, 'YLim', [0 ymax]);
                 ylabel(metric{cc});
             end
@@ -258,12 +258,12 @@ classdef eventrate
             end
             db = dbsubset(db, sprintf('auth ~= /.*%s.*/',auth));
             numrows = dbquery(db,'dbRECORD_COUNT');
-            libgt.print_debug(sprintf('Got %d rows after auth subset',numrows),2);
+            debug.print_debug(sprintf('Got %d rows after auth subset',numrows),2);
             sepoch = datenum2epoch(snum);
             eepoch = datenum2epoch(enum);
             db = dbsubset(db, sprintf('timewindow_starttime >= %f && timewindow_endtime <= %f',sepoch,eepoch));
             numrows = dbquery(db,'dbRECORD_COUNT');
-            libgt.print_debug(sprintf('Got %d rows after time subset',numrows),2);
+            debug.print_debug(sprintf('Got %d rows after time subset',numrows),2);
 
             if numrows > 0
                 % Note that metrics are only saved when mean_rate >= 1.
@@ -587,18 +587,18 @@ classdef eventrate
         fprintf('Found %d matching events', length(j));
 
         if Obj.total_counts > 0
-            [dnum_bin, counts_per_bin, sum_per_bin, smallest, median_per_bin, std_per_bin, median_time_interval] = libgt.bin_irregular(catalogObj.dnum(j), libgt.mag2eng(catalogObj.mag(j)), binsize, catalogObj.snum, catalogObj.enum, stepsize);
+            [dnum_bin, counts_per_bin, sum_per_bin, smallest, median_per_bin, std_per_bin, median_time_interval] = matlab_extensions.bin_irregular(catalogObj.dnum(j), magnitude.mag2eng(catalogObj.mag(j)), binsize, catalogObj.snum, catalogObj.enum, stepsize);
             Obj.numbins = length(dnum_bin);
         	Obj.dnum = dnum_bin;
         	Obj.counts = counts_per_bin;
-        	Obj.cum_mag = libgt.eng2mag(sum_per_bin);
+        	Obj.cum_mag = magnitude.eng2mag(sum_per_bin);
         	Obj.cum_mag(sum_per_bin==0) = NaN; % replace -Inf values (0 values in sum_per_bin) as they mess up plots
-        	Obj.mean_mag = libgt.eng2mag(sum_per_bin./counts_per_bin); % mean energy as a magnitude
-        	Obj.median_mag = libgt.eng2mag(median_per_bin); % median energy as a magnitude
+        	Obj.mean_mag = magnitude.eng2mag(sum_per_bin./counts_per_bin); % mean energy as a magnitude
+        	Obj.median_mag = magnitude.eng2mag(median_per_bin); % median energy as a magnitude
         	Obj.mean_rate = counts_per_bin / (24 * binsize);
         	Obj.median_rate = 1 ./ (median_time_interval * 24);
-        	Obj.detection_threshold = libgt.eng2mag(smallest);
-        	Obj.total_mag = libgt.eng2mag(sum(libgt.mag2eng(catalogObj.mag)));
+        	Obj.detection_threshold = magnitude.eng2mag(smallest);
+        	Obj.total_mag = magnitude.eng2mag(sum(magnitude.mag2eng(catalogObj.mag)));
 
         end
         end % function
@@ -616,17 +616,17 @@ classdef eventrate
         %   A basic test suite to ensure EVENTRATE still works following
         %   updates
 
-           libgt.test_helper('erobj = eventrate');
+           catalog.test_helper('erobj = eventrate');
            
-           libgt.test_helper('erobj = eventrate(catalog,1)');
+           catalog.test_helper('erobj = eventrate(catalog,1)');
            
            dirname = fileparts(which('catalog')); 
            dbroot = [dirname,'/demo/avodb200903']; 
 
            str = sprintf('catalog( ''%s'', ''antelope'', ''snum'', datenum(2009,3,20), ''enum'', datenum(2009,3,23),''region'',''Redoubt'')',dbroot);
-           libgt.test_helper(sprintf('erobj = eventrate(%s,1)',str));
+           catalog.test_helper(sprintf('erobj = eventrate(%s,1)',str));
 
-           libgt.test_helper(sprintf('erobj = eventrate(%s,1,''stepsize'', 1/4)',str));
+           catalog.test_helper(sprintf('erobj = eventrate(%s,1,''stepsize'', 1/4)',str));
          end
 
     end % methods

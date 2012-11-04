@@ -6,9 +6,9 @@ function set_debug(debuglevel)
 %    
 %    EXAMPLE:
 %    Set the debug level to 1:
-%        libgt.set_debug(1)
+%        debug.set_debug(1)
 % 
-%    See also print_debug, setpref.
+%    See also debug.get_debug, debug.print_debug, setpref.
 
 % AUTHOR: Ronni Grapenthin and Glenn Thompson, UAF-GI
 % $Date$

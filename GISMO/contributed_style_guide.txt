@@ -58,7 +58,10 @@ In addition to the non-negotiable minimum requirements above, several simple fea
    - It goes without saying that comments embedded in the code will make it far easier for others to understand the exact procedure. 
 
 * Functions vs. scripts
-Contributed codes should generally be written as functions or objects. There may be limited situations where an M-script might make sense, though even these can usually be converted to functions with the addition of a simple function line at the top. The resulting code however is more robust because it is more fully encapsulated. Scripts require, and produce, variables with specific names. Functions can accept arbitrary names. Functions also avoid variable name confusion because their variable declarations are internal to the function.
+Contributed codes should generally be written as functions or classes. There may be limited situations where an M-script might make sense, though even these can usually be converted to functions with the addition of a simple function line at the top. The resulting code however is more robust because it is more fully encapsulated. Scripts require, and produce, variables with specific names. Functions can accept arbitrary names. Functions also avoid variable name confusion because their variable declarations are internal to the function.
+
+* Packages
+To prevent namespace clashes, you are encouraged to make use of MATLAB packages. These are identified by a directory name that begins with "+". For example, an m-file called set_debug.m in the directory contributed/catalog/+libgt is only known to the MATLAB interpreter if you explicitly call libgt/set_debug(). 
 
 
 
