@@ -11,9 +11,9 @@ function station = getStationsWithinDist(lon, lat, distkm, dbstations, maxsta)
 %	name - the station name
 %	channel - the channel
 %	scnl - station name, channel, network as a scnlobject
-%	site.lon	- station longitude
-%	site.lat	- station latitude
-%	site.elev	- station elevation
+%	longitude	- station longitude
+%	latitude	- station latitude
+%	elev	- station elevation
 %	distance	- distance (in km) from input (LON, LAT)
 
 % AUTHOR: Glenn Thompson, UAF-GI
@@ -23,7 +23,6 @@ function station = getStationsWithinDist(lon, lat, distkm, dbstations, maxsta)
 if ~exist('maxsta', 'var')
 	maxsta = 999;
 end
-
 db = dbopen(dbstations, 'r');
 db = dblookup_table(db, 'site');
 db = dbsubset(db, sprintf('distance(lon, lat, %.4f, %.4f)<%.4f',lon,lat,km2deg(distkm)));
@@ -33,13 +32,21 @@ db2 = dbsubset(db2, '(chan=~/[BES]H[ENZ]/  || chan=~/BDF/) && offdate == NULL');
 db2 = dbjoin(db, db2);
 db3 = dblookup_table(db, 'snetsta');
 db3 = dbjoin(db2, db3);
-%db3 = dbsubset(db3, 'snet=~/A[KTV]/');
+net = dbgetv(db3, 'snet');
+if ~iscell(net)
+	net = {net};
+end
 latitude = dbgetv(db3, 'lat');
 longitude = dbgetv(db3, 'lon');
 elev = dbgetv(db3, 'elev');
 staname = dbgetv(db3, 'sta');
+if ~iscell(staname)
+	staname = {staname};
+end
 channame = dbgetv(db3, 'chan');
-net = dbgetv(db3, 'snet');
+if ~iscell(channame)
+	channame = {channame};
+end
 dbclose(db);
 
 numstations = length(latitude);
@@ -54,9 +61,9 @@ while ((c<=numstations) && (stadist(i(c)) < distkm))
 	station(c).name = staname{i(c)};
 	station(c).channel = channame{i(c)};
 	station(c).scnl = scnlobject(station(c).name, station(c).channel, net{i(c)});
-	station(c).site.lon = longitude(i(c));
-	station(c).site.lat = latitude(i(c));
-	station(c).site.elev = elev(i(c));
+	station(c).longitude = longitude(i(c));
+	station(c).latitude = latitude(i(c));
+	station(c).elev = elev(i(c));
 	station(c).distance = stadist(i(c));
 	c = c + 1;
 end

@@ -21,7 +21,6 @@ The contributed motto is "It should just work" - C. Reyes
 ###################################################################
 ## 2. WHICH CONTRIBUTED ARCHIVE SHOULD I USE?
 
-
 ** GISMO/contributed
 The contributed archive contains codes that have widespread use and have as their only dependencies the core elements of the GISMO suite. Contributed codes may also depend on other contributed codes. This is encouraged for efficiency, though authors should understand that not all contributed codes have the same level of documentation, error handling or bug testing as the core products. 
 
@@ -30,9 +29,6 @@ The contributed_antelope archive contains codes that may have widespread use and
 
 ** GISMO/contributed_internal
 The contributed_internal archive contains codes that build on the GISMO suite but have additional requirements or functionality that limit their use to the GI, UAF or AVO.
-
-
-
 
 ###################################################################
 ## 3. REQUIRED ELEMENTS
@@ -60,8 +56,19 @@ In addition to the non-negotiable minimum requirements above, several simple fea
 * Functions vs. scripts
 Contributed codes should generally be written as functions or classes. There may be limited situations where an M-script might make sense, though even these can usually be converted to functions with the addition of a simple function line at the top. The resulting code however is more robust because it is more fully encapsulated. Scripts require, and produce, variables with specific names. Functions can accept arbitrary names. Functions also avoid variable name confusion because their variable declarations are internal to the function.
 
+
+###################################################################
+## 5. PACKAGES AND CLASSES
+
 * Packages
-To prevent namespace clashes, you are encouraged to make use of MATLAB packages. These are identified by a directory name that begins with "+". For example, an m-file called set_debug.m in the directory contributed/catalog/+libgt is only known to the MATLAB interpreter if you explicitly call libgt/set_debug(). 
+To prevent namespace clashes, you are encouraged to make use of MATLAB packages. These are identified by a directory name that begins with "+". For example, an m-file called set_debug.m in the directory +debug is only known to the MATLAB interpreter if you explicitly call debug.set_debug(). This differentiates it from any other function on the MATLAB path called set_debug.
+
+* Classes
+Object-oriented MATLAB programming is encouraged. If you find yourself using a structure to aggregate related data, e.g. earthquake latitudes, longitudes, origin times, Ml, etc., you will find that a class is what you really want (e.g. the CATALOG class). Functions that operate on the structure become methods in your class. You will see that waveform, scnlobject and filterobject are examples of classes in GISMO that use the old-style of MATLAB class definition, where each method is in a separate m-file, and the directory name containing them begins with "@". The preferred style for class definitions now is to create a single m-file with all the methods defined within it (however, this can be cumbersome if you add a lot of methods to your class). Anyway, please feel free to use classes. Follow some of the examples in GISMO for guideance. 
+
+
+
+
 
 
 

@@ -11,8 +11,11 @@ function w = resample(w,method, val)
 %           'min' : minimum value
 %           'mean': average value
 %           'median' : mean value
+%           'rms' : rms value (added 2011/06/01)
 %           'absmax': absolute maximum value (greatest deviation from zero)
 %           'absmin': absolute minimum value (smallest deviation from zero)
+%           'absmean' : mean deviation from zero (added 2011/06/01)
+%           'absmedian' : median deviation from zero (added 2011/06/01)
 %           'builtin': Use MATLAB's built in resample routine
 %
 %       CRUNCHFACTOR : the number of samples making up the sample window
@@ -39,6 +42,14 @@ function w = resample(w,method, val)
 % VERSION: 1.1 of waveform objects
 % AUTHOR: Celso Reyes (celso@gi.alaska.edu)
 % LASTUPDATE: 3/15/2009
+% 
+% 7/6/2011: Glenn Thompson: Made all methods NaN tolerant (replace max with nanmax etc) - checks for statistics toolbox
+% 6/1/2011: Glenn Thompson: Added methods for ABSMEAN, ABSMEDIAN and RMS
+persistent STATS_INSTALLED;
+
+if isempty(STATS_INSTALLED)
+  STATS_INSTALLED = ~isempty(ver('stats'));
+end
 
 if ~(round(val) == val) 
     disp ('val needs to be an integer');
@@ -53,34 +64,80 @@ for i=1:numel(w)
     end;
     
     d = reshape(w(i).data,val,rowcount); % produces ( val x rowcount) matrix
-    
     switch upper(method)
-        case 'MAX'
-            w(i) = set(w(i),'data', max(d, [], 1));
+        
+    	case 'MAX'a
+		if STATS_INSTALLED
+            		w(i) = set(w(i),'data', nanmax(d, [], 1));
+		else
+            		w(i) = set(w(i),'data', max(d, [], 1));
+		end
             
-        case 'MIN'
-            w(i) = set(w(i),'data', min(d, [], 1));
+       	case 'MIN'
+		if STATS_INSTALLED
+            		w(i) = set(w(i),'data', nanmin(d, [], 1));
+		else
+            		w(i) = set(w(i),'data', min(d, [], 1));
+		end
             
         case 'MEAN'
-            w(i) = set(w(i),'data', mean(d, 1));
+		if STATS_INSTALLED
+            		w(i) = set(w(i),'data', nanmean(d, 1));
+		else
+            		w(i) = set(w(i),'data', mean(d, 1));
+		end
             
         case 'MEDIAN'
-            w(i) = set(w(i),'data', median(d, 1));
-            
+		if STATS_INSTALLED
+            		w(i) = set(w(i),'data', nanmedian(d, 1));
+		else
+            		w(i) = set(w(i),'data', median(d, 1));
+		end
+
+        case 'RMS'
+		if STATS_INSTALLED
+            		w(i) = set(w(i),'data', nanstd(d, [], 1));
+		else
+            		w(i) = set(w(i),'data', std(d, [], 1));
+		end
+                       
         case 'ABSMAX'
-            w(i) = set(w(i),'data', max(abs(d),[],1));
+		if STATS_INSTALLED
+            		w(i) = set(w(i),'data', nanmax(abs(d),[],1));
+		else
+            		w(i) = set(w(i),'data', max(abs(d),[],1));
+		end
+
             
         case 'ABSMIN'
-            w(i) = set(w(i),'data', min(abs(d),[],1));
+		if STATS_INSTALLED
+            		w(i) = set(w(i),'data', nanmin(abs(d),[],1));
+		else	
+            		w(i) = set(w(i),'data', min(abs(d),[],1));
+		end
+          
+        case 'ABSMEAN'
+		if STATS_INSTALLED
+            		w(i) = set(w(i),'data', nanmean(abs(d), 1));
+		else
+            		w(i) = set(w(i),'data', mean(abs(d), 1));
+		end
             
+        case 'ABSMEDIAN'
+		if STATS_INSTALLED
+            		w(i) = set(w(i),'data', nanmedian(abs(d), 1));
+            	else
+			w(i) = set(w(i),'data', median(abs(d), 1));
+		end
+
         case 'BUILTIN'
             
-      % assume W is an existing waveform
+      	% assume W is an existing waveform
       ResampleD = resample(w(i).data,1,val);  % see matlab's RESAMPLE for specifics
 
       %put back into waveform, but don't forget to update the frequency
       w(i).data = ResampleD(:);
-      %w(i) = set(w(i), 'Freq', get(w(i),'freq') ./ val); 
+      w(i) = set(w(i), 'Freq', get(w(i),'freq') ./ val); 
         otherwise
             error('Wafeform:resample:UnknownSampleMethod',...
               'Don''t know what you mean by resample via %s', method);

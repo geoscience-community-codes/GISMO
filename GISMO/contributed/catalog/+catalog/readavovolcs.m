@@ -25,7 +25,8 @@ debug.print_debug(sprintf('> %s', mfilename),4)
 if ~exist('pffile', 'var') 
 	pffile=(['pf/avo_volcs.pf']);
 	if ~exist('pffile', 'file') 
-		pffile=(['/avort/oprun/pf/avo_volcs.pf']);
+        classdir = fileparts(which('catalog'));
+		pffile=matlab_extensions.catpath(classdir, 'demo', 'avo_volcs.pf');
 	end
 end
 if exist(pffile, 'file')
@@ -40,6 +41,7 @@ if exist(pffile, 'file')
 			sourcelat = A.data(c, 1);
 			minlon = A.data(c, 5);
 			maxlon = A.data(c, 6);
+            
 			minlat = A.data(c, 3);
 			maxlat = A.data(c, 4);
 		end
