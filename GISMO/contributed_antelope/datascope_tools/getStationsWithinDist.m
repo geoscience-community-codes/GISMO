@@ -19,7 +19,6 @@ function station = getStationsWithinDist(lon, lat, distkm, dbstations, maxsta)
 % AUTHOR: Glenn Thompson, UAF-GI
 % $Date: $
 % $Revision: -1 $
-
 if ~exist('maxsta', 'var')
 	maxsta = 999;
 end
@@ -28,7 +27,7 @@ db = dblookup_table(db, 'site');
 db = dbsubset(db, sprintf('distance(lon, lat, %.4f, %.4f)<%.4f',lon,lat,km2deg(distkm)));
 db = dbsubset(db, sprintf('offdate == NULL'));
 db2 = dblookup_table(db, 'sitechan');
-db2 = dbsubset(db2, '(chan=~/[BES]H[ENZ]/  || chan=~/BDF/) && offdate == NULL');
+db2 = dbsubset(db2, '(chan=~/[BES]H[ENZ]/  || chan=~/BD[FL]/) && offdate == NULL');
 db2 = dbjoin(db, db2);
 db3 = dblookup_table(db, 'snetsta');
 db3 = dbjoin(db2, db3);
