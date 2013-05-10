@@ -64,7 +64,7 @@ for dsi=1:length(ds)
 	if strcmp(get(ds(dsi), 'type'), 'antelope')
         % if dbopen command not recognised it means Antelope not installed
         % - skip to next datasource
-        dummy = help('dbopen')
+        dummy = help('dbopen');
         if isempty(dummy)
             continue;
         end
