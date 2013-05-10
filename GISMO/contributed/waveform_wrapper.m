@@ -62,6 +62,12 @@ for dsi=1:length(ds)
 	% for informational purposes only, record where we get data from
 	datapath='';
 	if strcmp(get(ds(dsi), 'type'), 'antelope')
+        % if dbopen command not recognised it means Antelope not installed
+        % - skip to next datasource
+        dummy = help('dbopen')
+        if isempty(dummy)
+            continue;
+        end
 		datapath = getfilename(ds(dsi), scnl(1), snum);
 	else
 		datapath = get(ds(dsi), 'server');

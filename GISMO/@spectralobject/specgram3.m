@@ -1,4 +1,4 @@
-function result=specgram3(s, w, spectrogramFraction)
+function result=specgram3(s, w, spectrogramFraction, mycmap)
 % SPECGRAM3 produce an multi-channel spectrogram plot in the style of
 % AVO web (IceWeb) spectrograms
 %
@@ -34,12 +34,18 @@ end
 if ~exist('spectrogramFraction','var')
 	spectrogramFraction = 1;
 end
+if ~exist('mycmap', 'var')
+    mycmap = jet; % should be using SPECTRAL_MAP here?
+end
+%s = spectralobject(1024, 924, 10, [40 140]);
+
 
 debug.print_debug(sprintf('%d waveform objects',numel(w)),0);
 
 % draw spectrogram using Celso's 
 try
-	sg = specgram(s, w, 'xunit', 'date', 'colorbar', 'none', 'yscale', 'normal', 'colormap', 'jet'); % default for colormap is SPECTRAL_MAP
+    setmap(s, mycmap)
+	sg = specgram(s, w, 'xunit', 'date', 'colorbar', 'none', 'yscale', 'normal'); % default for colormap is SPECTRAL_MAP
 
 catch
 	debug.print_debug('specgram failed on waveform vector. Trying again, using nonempty rather than fillempty',0);
@@ -47,7 +53,7 @@ catch
 	if numel(w)>0
 		debug.print_debug(sprintf('%d waveform objects after removing empty waveform objects',numel(w)),0);
 		try
-			sg = specgram(s, w, 'xunit', 'date', 'colorbar', 'none', 'yscale', 'normal', 'colormap', 'jet'); % default for colormap is SPECTRAL_MAP
+ 			sg = specgram(s, w, 'xunit', 'date', 'colorbar', 'none', 'yscale', 'normal'); % default for colormap is SPECTRAL_MAP           
 		catch
 			disp('specgram3 crashed again');
 		end	
@@ -56,6 +62,8 @@ catch
 		return;
 	end	
 end
+
+% To get a colorbar, stop the function here and set colorbar option to vert
 
 % Get axis handles
 ha = get(gcf, 'Children');
