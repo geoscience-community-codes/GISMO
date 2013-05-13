@@ -66,7 +66,7 @@ for i=1:numel(w)
     d = reshape(w(i).data,val,rowcount); % produces ( val x rowcount) matrix
     switch upper(method)
         
-    	case 'MAX'a
+    	case 'MAX'
 		if STATS_INSTALLED
             		w(i) = set(w(i),'data', nanmax(d, [], 1));
 		else
