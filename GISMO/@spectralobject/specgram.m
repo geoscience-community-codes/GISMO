@@ -279,7 +279,7 @@ B_ = rowindex(:, ones(1, ncol)    )    ;
 y(:) = d(fix(A_ + B_ -1));
 clear A_ B_
 
-for k = 1:ncol;		%  remove the mean from each column of y
+for k = 1:ncol;         %  remove the mean from each column of y
     y(:,k) = y(:,k)-mean(y(:,k));
 end
 
@@ -432,3 +432,4 @@ function c = property2varargin(properties)
 c = {};
 c(1:2:numel(properties.name)*2) = properties.name;
 c(2:2:numel(properties.name)*2) = properties.val;
+
