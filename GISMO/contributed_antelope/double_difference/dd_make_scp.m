@@ -1,7 +1,9 @@
 function dd_make_scp(dbname,varargin)
 
-% dd_make_scp('dbclust')
-
+%DD_MAKE_SCP Create a draft control file for the correlation process
+%
+% DD_MAKE_SCP('dbclust')
+%
 % DD_MAKE_SCP(DBNAME) reads database DBNAME and writes out a text
 % files OUTFILE containing one row for each unique combination of station,
 % channel and iphase in the database. The database must contain a the

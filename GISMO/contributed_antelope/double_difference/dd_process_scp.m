@@ -1,5 +1,7 @@
 function dd_process_scp(dbname,scpfile,varargin)
 
+%DD_PROCESS_SCP Process correlations by station and channel
+%
 % DD_PROCESS_SCP(DBNAME,SCP_FILE) cross correlates arrivals for the same
 % phase and station. SCP_FILE follows the format written by the program
 % DD_MAKE_SCP. For each line in an SCP_FILE, DD_PROCESS_SCP reads all
@@ -76,9 +78,11 @@ end
 % CYCLE THROUGH ALL SCP LINES
 for n =1:length(sta)
     if npick(n)>3
-        W = load_by_orid(dbname,sta{n},chan{n},iphase{n},pretrig(n),posttrig(n));
-        [linenum,linestr,C,minimumCorrelation,maximumLag] = correlate(W,pretrig(n),posttrig(n),hpf(n),lpf(n),sta{n},iphase{n},minCorr(n),maxLag(n));
-        save([directoryname '/corr_' sta{n} '_' chan{n} '_' iphase{n}],'C','linenum','linestr','minimumCorrelation','maximumLag');
+        [W,tracesFound] = load_by_orid(dbname,sta{n},chan{n},iphase{n},pretrig(n),posttrig(n));
+        if tracesFound && ~isempty(W)
+            [linenum,linestr,C,minimumCorrelation,maximumLag] = correlate(W,pretrig(n),posttrig(n),hpf(n),lpf(n),sta{n},iphase{n},minCorr(n),maxLag(n));
+            save([directoryname '/corr_' sta{n} '_' chan{n} '_' iphase{n}],'C','linenum','linestr','minimumCorrelation','maximumLag');
+        end
     end
 end
 
@@ -89,8 +93,10 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % LOAD DATA FOR AN INDIVIDUAL STATION, CHANNEL, IPHASE TRIPLET
 
-function W = load_by_orid(dbname,STA,CHAN,IPHASE,pretrig,posttrig)
+function [W,tracesFound] = load_by_orid(dbname,STA,CHAN,IPHASE,pretrig,posttrig)
 
+
+W = [];
 
 % LOAD VALUES FROM DATABASE
 try
@@ -110,9 +116,15 @@ end
 % subset required rows
 db = dbsubset(db,['sta=="' STA '"']);
 db = dbsubset(db,['iphase=="' IPHASE '"']);
+tracesFound= dbquery(db,'dbRECORD_COUNT')
+if tracesFound == 0
+    warning(['No arrivals found. Skipping ' STA '_' CHAN ' ' IPHASE']);
+    return
+end
 
+    
 % nrecords = dbquery(db,'dbRECORD_COUNT')
-[sta,chan,or_time,orid,ar_time,arid,iphase] = dbgetv(db,'sta','chan','origin.time','orid','arrival.time','arid','iphase');
+[or_time,orid,ar_time] = dbgetv(db,'origin.time','orid','arrival.time');
 ar_time = epoch2datenum(ar_time);
 or_time = epoch2datenum(or_time);
 dbclose(db)
@@ -121,10 +133,9 @@ dbclose(db)
 
 % LOAD WAVEFORMS
 disp(['Loading ' STA '_' CHAN ' ' IPHASE ' phase (' num2str(numel(ar_time)) ' arrivals) ...']);
-W = [];
 ds = datasource('antelope',dbname);
 for n = 1:numel(ar_time)
-    scnl = scnlobject(sta{n},chan{n});
+    scnl = scnlobject(STA,CHAN);
     startTime = ar_time(n)+(pretrig-3)/86400;
     endTime = ar_time(n)+(posttrig+3)/86400;
    try
