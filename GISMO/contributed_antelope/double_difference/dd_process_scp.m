@@ -34,9 +34,6 @@ else
     error('Incorrect number of inputs');
 end
 
-% directoryname = 'TMP_MATDD_CORR';
-% scpfile = 'matdd_scp.txt';
-
 
 % READ AND PARSE SCP FILE
 try
@@ -44,6 +41,7 @@ try
 catch
    error(['Unable to open scp file: ' scpfile]); 
 end
+% check for header file
 C = textscan(fid,'%s %s %s %s %s %s %s %s %s %s',1);
 test1 = C{4};
 test2 = C{8};
@@ -111,7 +109,6 @@ end
 
 % subset required rows
 db = dbsubset(db,['sta=="' STA '"']);
-db = dbsubset(db,['chan=="' CHAN '"']);
 db = dbsubset(db,['iphase=="' IPHASE '"']);
 
 % nrecords = dbquery(db,'dbRECORD_COUNT')
@@ -120,18 +117,18 @@ ar_time = epoch2datenum(ar_time);
 or_time = epoch2datenum(or_time);
 dbclose(db)
 
- %save
+
 
 % LOAD WAVEFORMS
 disp(['Loading ' STA '_' CHAN ' ' IPHASE ' phase (' num2str(numel(ar_time)) ' arrivals) ...']);
 W = [];
 ds = datasource('antelope',dbname);
 for n = 1:numel(ar_time)
-    sc = scnlobject(sta{n},chan{n});
-    s = ar_time(n)+(pretrig-3)/86400;
-    e = ar_time(n)+(posttrig+3)/86400;
+    scnl = scnlobject(sta{n},chan{n});
+    startTime = ar_time(n)+(pretrig-3)/86400;
+    endTime = ar_time(n)+(posttrig+3)/86400;
    try
-      w = waveform(ds,sc,s,e);
+      w = waveform(ds,scnl,startTime,endTime);
       w = addfield(w,'ORID',orid(n));
       w = addfield(w,'ORIGIN_TIME',or_time(n));
       w = addfield(w,'ARRIVAL_TIME',ar_time(n));

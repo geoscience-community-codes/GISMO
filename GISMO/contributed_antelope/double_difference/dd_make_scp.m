@@ -36,7 +36,7 @@ function dd_make_scp(dbname,varargin)
 
 
 %% SET CONSTANTS
-if nargin==4
+if nargin==9
     pretrig = varargin{1};
     posttrig = varargin{2};
     minC = varargin{3};
@@ -82,7 +82,7 @@ stalist = unique(sta);
 
 
 
-%% ADJUST HORIZONTAL CHANNELS TO THE "PREFFERED" CHANNEL
+%% ADJUST HORIZONTAL CHANNELS TO THE "PREFERRED" CHANNEL
 %load junk
 
 chanchar = char(chan);
