@@ -94,7 +94,6 @@ switch argCount
       % INPUT: waveform (station)
       w = anyV;
     end;
-    
   case 4
     if isa(varargin{1},'datasource')
       % invoke the "standard" way of importing a waveform
@@ -116,7 +115,7 @@ switch argCount
       % -------------------------------------------------------------------
       % if there is no specifically assigned load function, then
       % determine the load function based upon the datasource's type
-      
+
       if isVoidInterpreter(ds)
         ds_type  = get(ds,'type');
         switch lower(ds_type)
@@ -129,7 +128,7 @@ switch argCount
           case {'file','sac','seisan','obspy'}
             myLoadRoutine = eval(['@load_',ds_type]);
             ds = setinterpreter(ds,myLoadRoutine); %update interpeter funct
-            
+           
             % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             % both winston and antelope are database types, which require
             % fancier handling.  Their waveforms will be loaded right here.
@@ -138,8 +137,8 @@ switch argCount
             w = myLoadRoutine( makeDataRequest(ds,scnls,startt,endt) );
           case {'antelope'}
             myLoadRoutine = eval(['@load_',ds_type]);
-            w = myLoadRoutine( makeDataRequest(ds,scnls,startt,endt) ,COMBINE_WAVES);
-            
+            %makeDataRequest(ds,scnls,startt,endt)
+            w = myLoadRoutine( makeDataRequest(ds,scnls,startt,endt) ,COMBINE_WAVES);  
             % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             % Future pre-defined load types would have case statments here
             % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -240,28 +239,178 @@ switch argCount
     end
     
   case 5
-    if ischar(varargin{5})
+   % currently three options if there is a fifth argument
+   % 1. logical: 'true' use Yun Wang's modification to not exit for databases with errors
+   %             'false' can be set to check the slow-down caused by this procedure,
+   %             but it will only work if there are no database errors
+   % 2. string:  specify alternate directory
+   % 3. real:    vector of data 
+      
+   if islogical(varargin{5})     
+       if isa(varargin{1},'datasource')
+          % invoke the "standard" way of importing a waveform
+          % eg. w = waveform(datasource,scnlobjects,startTimes,endTimes)
+
+          % reassign the function arguments into meaningful variables
+          [ds, scnls, startt, endt, bwkaround] = deal(varargin{:});
+          %ds = varargin{1};
+          %scnls = varargin{2};
+          %startt = datenum(varargin{3});
+          %endt = datenum(varargin{4});
+
+          % ensure proper date formatting
+          if ischar(startt), startt = {startt}; end
+          if ischar (endt), endt = {endt}; end;
+          startt = reshape(datenum(startt(:)),size(startt));
+          endt = reshape(datenum(endt(:)),size(endt));
+
+          % -------------------------------------------------------------------
+          % if there is no specifically assigned load function, then
+          % determine the load function based upon the datasource's type
+
+          if isVoidInterpreter(ds)
+            ds_type  = get(ds,'type');
+            switch lower(ds_type)
+
+              % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+              % file, sac, and seisan all do not require fancy handling.  The
+              % load routine and interpreter will be set, and the waveform will
+              % be loaded in the following section, along with any user-defined
+              % load functions.
+              case {'file','sac','seisan'}
+                myLoadRoutine = eval(['@load_',ds_type]);
+                ds = setinterpreter(ds,myLoadRoutine); %update interpeter funct
+
+                % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+                % both winston and antelope are database types, which require
+                % fancier handling.  Their waveforms will be loaded right here.
+              case {'winston'}
+                myLoadRoutine = eval(['@load_',ds_type]);
+                w = myLoadRoutine( makeDataRequest(ds,scnls,startt,endt) );
+              case {'antelope'}
+                myLoadRoutine = eval(['@load_',ds_type]);
+                if bwkaround
+                    myLoadRoutine = eval(['@load_','antelope_workaround']);
+                end
+                %makeDataRequest(ds,scnls,startt,endt)
+                w = myLoadRoutine( makeDataRequest(ds,scnls,startt,endt) ,COMBINE_WAVES);  
+                % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+                % Future pre-defined load types would have case statments here
+                % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+                % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+                % There was no interpreter set, but there was no default type
+                % set, either.
+              case {'irisdmcws'}
+                myLoadRoutine = eval(['@load_',ds_type]);
+                w = myLoadRoutine( makeDataRequest(ds, scnls, startt, endt) , COMBINE_WAVES);
+
+              otherwise
+                error('Waveform:waveform:noDatasourceInterpreter',...
+                  'user defined datasources should be associated with an interpreter');
+            end
+          end
+
+          % -------------------------------------------------------------------
+          % if the datasource is file based, or if it requires a user-defined
+          % intepreter function, then do what follows.  Otherwise, we're done
+
+          if ~isVoidInterpreter(ds)
+            myLoadFunc = get(ds,'interpreter');
+
+            %user_defined datasource
+            for j = 1:numel(startt)
+              myStartTime = startt(j);
+              myEndTime = endt(j);
+
+              % grab all files for date range, discarding duplicates
+              fn = getfilename(ds, scnls,subdivide_files_by_date(ds,myStartTime, myEndTime));
+              fn = unique(fn);
+
+              %load all waveforms for these files
+              clear somew
+              for i=1:numel(fn)
+                possiblefiles = dir(fn{i});
+                if isempty(possiblefiles)
+                  disp(['no file:',fn{i}]);
+                  continue,
+                end
+
+                %             if ~exist(fn{i},'file'),
+                %               disp(['no file:',fn{i}]);
+                %               continue,
+                %             end
+                %            w = myLoadFunc(fn{i});
+
+                [PATHSTR,NAME,EXT] = fileparts(fn{i});
+                for nfiles = 1:numel(possiblefiles)
+                  w(nfiles) = myLoadFunc(fullfile(PATHSTR,possiblefiles(nfiles).name));
+                end
+                if isempty(w)
+                  warning('Waveform:waveform:noData','no data retrieved');
+                  return
+                end
+                %combine and get rid of exterreneous waveforms
+                w = w(ismember(w,scnls)); %keep only appropriate station/chan
+                if isempty(w)
+                  warning('Waveform:waveform:noData','no relevent data retrieved');
+                  return
+                end
+                % subset and consolidate
+                [wstarts, wends] = gettimerange(w);
+                w = w(wstarts < myEndTime & wends > myStartTime);
+                if numel(w) > 0 %9/23/2009 condition
+                  w = extract(w,'time',myStartTime,myEndTime);
+                  somew(i) = {w(:)'};
+                else
+                  disp('empty waveform')
+                  continue;
+                end
+              end
+              if ~exist('somew','var')
+                w = waveform; w = w([]);
+              else
+                if COMBINE_WAVES,
+                  w = combine([somew{:}]);
+                else
+                  w = [somew{:}];
+                end
+              end
+              allw(j) = {w};
+            end %each start time
+            w = [allw{:}];
+
+          end %~isVoidInterpreter
+
+       else
+          %old waveform way of doing things
+          warning(updateWarningID,updateWarningMessage);
+          w = waveform(datasource('uaf_continuous'),...
+            scnlobject(varargin{1},varargin{2}),...
+            datenum(varargin{3}),...
+            datenum(varargin{4}));
+       end %isa(varargin{1},'datasource')
+    
+   elseif ischar(varargin{5})       % 5th argument is a directory
       
       warning(updateWarningID,updateWarningMessage);
       ds = datasource('antelope',varargin{5});
       scnl = scnlobject(varargin{1},varargin{2});
-      % INPUT: waveform (station, channel, starttime, endtime,
-      % alternatedirectory)
+      % INPUT: waveform (station, channel, starttime, endtime, alternate directory)
       w = waveform(ds,scnl,varargin{3}, varargin{4});
       
-    else
+   else                             % 5th argument is real data
       % Building a waveform from input pieces
-      % INPUT: waveform (station, channel, frequency, starttime,
-      % data)
-      
+      % INPUT: waveform (station, channel, frequency, starttime, data)
       w = set(waveform,...
         'station',  varargin{1},...
         'channel',varargin{2},...
         'Freq',     varargin{3},...
         'start',    varargin{4},...
         'data',     varargin{5});
-    end;
-    w = addhistory(set(w,'history',{}),'CREATED');
+   end
+   w = addhistory(set(w,'history',{}),'CREATED');
+    
   case 8
     DEFAULT_CHAN = 'EHZ';
     DEFAULT_STATION = 'UNK';
@@ -307,7 +456,6 @@ switch argCount
     disp('   w = WAVEFORM(station, channel, samplefreq, starttime, data)');
 end
 
-%%
 function tf = isVoidInterpreter(ds)
 tf = strcmpi(func2str(get(ds,'interpreter')),'void_interpreter');
 
@@ -340,8 +488,6 @@ w.history = {'created', now};
 w = class(w, 'waveform');
 
 %w = addhistory(w,'CREATED'); %got rid of "created" add-history.
-
-
 
 function s = updateWarningMessage()
 
