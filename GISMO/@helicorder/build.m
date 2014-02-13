@@ -60,7 +60,8 @@ function varargout = build(h)
 B.fh = figure('Name','Helicorder');        % New helicorder figure handle
 B.ax = axes('position',[.10 .07 .83 .86]); % New helicorder axes handle
 title(B.ax,'Building Helicorder...','FontSize',12)
-refresh(B.fh)
+%refresh(B.fh)
+refresh(gcf)
 pause(.1)
 
 %% INITIALIZE BUILDER STRUCTURE FIELDS
