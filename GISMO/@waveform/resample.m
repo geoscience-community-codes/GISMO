@@ -132,14 +132,14 @@ for i=1:numel(w)
 
         case 'BUILTIN'
             
-      	% assume W is an existing waveform
-      ResampleD = resample(w(i).data,1,val);  % see matlab's RESAMPLE for specifics
-
-      %put back into waveform, but don't forget to update the frequency
-      w(i).data = ResampleD(:);
-      w(i) = set(w(i), 'Freq', get(w(i),'freq') ./ val); 
+        % assume W is an existing waveform
+        ResampleD = resample(w(i).data,1,val);  % see matlab's RESAMPLE for specifics
+        w(i).data = ResampleD(:);
+        % (frequency is already updated below)
+        %w(i) = set(w(i), 'Freq', get(w(i),'freq') ./ val); 
+      
         otherwise
-            error('Wafeform:resample:UnknownSampleMethod',...
+            error('Waveform:resample:UnknownSampleMethod',...
               'Don''t know what you mean by resample via %s', method);
             
     end;
