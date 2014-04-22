@@ -12,7 +12,7 @@ function [bool] = isvertical(W)
 % $Date$
 % $Revision$
 
-if ~isa(w,'waveform')
+if ~isa(W,'waveform')
     error('isvertical: waveform object input required')
 end
 
