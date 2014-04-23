@@ -26,54 +26,88 @@ function station = getStationsWithinDist(lon, lat, distkm, dbstations, maxsta, s
 if ~exist('maxsta', 'var')
 	maxsta = 999;
 end
+if ~exist(sprintf('%s.site',dbstations))
+    dbstations = input('Please enter master stations path', 's')
+end
+disp(sprintf('master stations db is %s',dbstations))
 db = dbopen(dbstations, 'r');
 
 % Filter the site table
 db = dblookup_table(db, 'site');
+nrecs = dbquery(db, 'dbRECORD_COUNT');
+disp(sprintf('Site table has %d records', nrecs));
 db = dbsubset(db, sprintf('distance(lon, lat, %.4f, %.4f)<%.4f',lon,lat,km2deg(distkm)));
+nrecs = dbquery(db, 'dbRECORD_COUNT');
+disp(sprintf('After distance subset to lat %f and lon %f: %d records', lat, lon, nrecs));
+
 if ~exist('snum', 'var')
     % No start time given, so assume we just want sites that exist today.
     % Remove any sites that have been decommissioned
     db = dbsubset(db, sprintf('offdate == NULL'));
 else
     % Remove any sites that were decommissioned before the start time
+    disp(sprintf('offdate == NULL || offdate > %s',datenum2julday(snum)));
     db = dbsubset(db, sprintf('offdate == NULL || offdate > %s',datenum2julday(snum)));
 end
 % Remove any sites that were installed after the end time (this may remove
 % some sites that exist today)
 if exist('enum', 'var')
+    disp(sprintf('ondate  < %s',datenum2julday(enum)));
     db = dbsubset(db, sprintf('ondate  < %s',datenum2julday(enum)));
 end
+nrecs = dbquery(db, 'dbRECORD_COUNT');
+disp(sprintf('After time subset: %d records', nrecs));
 
 % Filter the sitechan table
 db2 = dblookup_table(db, 'sitechan');
+nrecs = dbquery(db2, 'dbRECORD_COUNT');
+disp(sprintf('sitechan has %d records', nrecs));
+
 db2 = dbsubset(db2, 'chan=~/[BES]H[ENZ]/  || chan=~/BD[FL]/');
+nrecs = dbquery(db2, 'dbRECORD_COUNT');
+disp(sprintf('After chan subset: %d records', nrecs));
+
 if ~exist('snum', 'var')
     % No start time given, so assume we just want sites that exist today.
     % Remove any sites that have been decommissioned
     db2 = dbsubset(db2, sprintf('offdate == NULL'));
 else
     % Remove any sites that were decommissioned before the start time
+    disp(sprintf('offdate == NULL || offdate > %s',datenum2julday(snum)));
     db2 = dbsubset(db2, sprintf('offdate == NULL || offdate > %s',datenum2julday(snum)));
 end
 % Remove any sites that were installed after the end time (this may remove
 % some sites that exist today)
 if exist('enum', 'var')
+    disp(sprintf('ondate  < %s',datenum2julday(enum)));
     db2 = dbsubset(db2, sprintf('ondate  < %s',datenum2julday(enum)));
 end
+nrecs = dbquery(db2, 'dbRECORD_COUNT');
+disp(sprintf('After time subset: %d records', nrecs));
 
 % Join site and sitechan
 db2 = dbjoin(db, db2);
+nrecs = dbquery(db2, 'dbRECORD_COUNT');
+disp(sprintf('After join site-sitechan %d records', nrecs));
 
 % Join to snetsta
 db3 = dblookup_table(db, 'snetsta');
+nrecs = dbquery(db3, 'dbRECORD_COUNT');
+disp(sprintf('snetsta has %d records', nrecs));
 db3 = dbjoin(db2, db3);
+nrecs = dbquery(db3, 'dbRECORD_COUNT');
+disp(sprintf('After join site-sitechan-snetsta: %d records', nrecs));
 
-% Read data
+% Read net vector 
+if nrecs == 0
+    station = [];
+    return
+end
 net = dbgetv(db3, 'snet');
 if ~iscell(net)
-	net = {net};
+    net = {net};
 end
+
 latitude = dbgetv(db3, 'lat');
 longitude = dbgetv(db3, 'lon');
 elev = dbgetv(db3, 'elev');
