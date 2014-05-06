@@ -430,31 +430,34 @@ classdef eventrate
                 % DNUM
                 case 'DNUM'
                 if isa(val,'double')
-		    [erobj.dnum] = deal(val);
-		    if (val(1) < erobj.snum || val(end) > erobj.enum)
-			% Expand data vector too
-			disp('Could expand vectors here as in mergecounts/er_expand')
-		    end
-		     % Here would be good to have a method that also changes the data vectors if dnum range is being contracted
-		    [erobj.snum] = deal(val(1));
-		    [erobj.enum] = deal(val(end));
-		
+                    [erobj.dnum] = deal(val);
+                    if (val(1) < erobj.snum || val(end) > erobj.enum)
+                        % Expand data vector too
+                        disp('Could expand vectors here as in mergecounts/er_expand')
+                    end
+                     % Here would be good to have a method that also changes the data vectors if dnum range is being contracted
+                    [erobj.snum] = deal(val(1));
+                    [erobj.enum] = deal(val(end));
                 end  
   
                 % COUNTS
                 case 'COUNTS'
                 if isa(val,'double')
-
-		    if (size(val)==size(erobj.dnum))
-		    	[erobj.counts] = deal(val);
-		    else
+                    if (size(val)==size(erobj.dnum))
+                        [erobj.counts] = deal(val);
+                    else
                         error('EVENTRATE:set:COUNTS','counts must be the same size as dnum');
-		
-		    end
-		else
+                    end
+                else
                         error('EVENTRATE:set:propertyTypeMismatch','Expected a DOUBLE');
 		
-                end    
+                end 
+                
+                % ETYPE
+                case 'ETYPE'
+                if isa(val,'char')
+                    erobj.etype = val;
+                end 
                 
                 otherwise
                     for n=1:numel(erobj)
