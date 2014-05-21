@@ -87,7 +87,8 @@ end
 % REPLACE NaNs WITH ZEROS
 f = find(isnan(d.C));
 d.C(f) = 0;
-
+f = find(isnan(d.L));
+d.L(f) = 0;
 
 
 % FILL LOWER TRIANGULAR PART OF MATRICES
