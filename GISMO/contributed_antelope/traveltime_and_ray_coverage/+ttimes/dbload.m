@@ -90,6 +90,8 @@ try
     tmp.time = epoch2datenum(tmp.time);
     f = find(tmp.ml < -2);
     tmp.ml(f)=-2;
+    f = find(tmp.nass < 0);
+    tmp.nass(f)=0;
     origin = catalog;
     origin = set(origin,'LAT',tmp.lat,'LON',tmp.lon,'DEPTH',tmp.depth,'DNUM',tmp.time,'mag',tmp.ml,'ORID',tmp.orid,'NASS',tmp.nass);
     
