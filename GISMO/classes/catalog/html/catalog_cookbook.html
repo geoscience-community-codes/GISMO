@@ -1,0 +1,255 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>CATALOG and EVENTRATE cookbook</title><meta name="generator" content="MATLAB 8.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-06-14"><meta name="DC.source" content="catalog_cookbook.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>CATALOG and EVENTRATE cookbook</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Introduction</a></li><li><a href="#2">Loading event catalogs</a></li><li><a href="#3">PLOTTING HYPOCENTERS</a></li><li><a href="#4">Magnitude-time plot</a></li><li><a href="#5">3D-Hypocenters</a></li><li><a href="#6">PLOTTING B-VALUES &amp; ESTIMATING MAGNITUDE OF COMPLETENESS</a></li><li><a href="#7">PLOTTING EVENT COUNTS &amp; ENERGY RELEASE RATES</a></li><li><a href="#8">Event rates for overlapping time windows</a></li><li><a href="#9">Plots of other event rate metrics</a></li></ul></div><h2>Introduction<a name="1"></a></h2><p>This is a short demonstration of some of the methods of the CATALOG and EVENTRATE classes.</p><p>It is assumed that you already have GISMO on your MATLAB path.</p><p>This cookbook is written as an M-file and is converted to HTML using the PUBLISH command.</p><p>Author: Glenn Thompson, Geophysical Institute, Univ. of Alaska Fairbanks</p><h2>Loading event catalogs<a name="2"></a></h2><p>The catalog class is for loading, plotting and analysing event catalogs. For a detailed description, read HELP CATALOG.M.</p><p>For the purpose of this exercise we will be using data from Redoubt volcano from 2009/03/20 to 2009/03/23. We will use two catalogs:</p><div><ol><li>The real-time catalog, produced using Antelope (rtdb200903).</li><li>The analyst-reviewed offical AVO catalog (avodb200903), produced using Earthworm, XPick and Hypoellipse, later converted to an Antelope database.</li></ol></div><p>Both catalog segments are distributed in the "demo" directory.</p><p>We will now load the real-time catalog into a catalog object. First, because we don't know where GISMO is on your system, we have to construct the path to the demo directory based on where CATALOG.M resides:</p><pre class="codeinput">dirname = fileparts(which(<span class="string">'Catalog'</span>));
+dbpath = [dirname,<span class="string">'/demo/avodb200903'</span>];
+
+<span class="comment">% Now read the events into a Catalog object. Only two parameters are</span>
+<span class="comment">% needed, the database path (dbpath) and the data format ('antelope'):</span>
+cobj = readEvents(<span class="string">'datascope'</span>, <span class="string">'dbpath'</span>, dbpath);
+
+<span class="comment">% This should load 1441 events. What if we only want events within 15km of</span>
+<span class="comment">% Redoubt volcano? The parameter-value pair 'dbeval' can be used, with an</span>
+<span class="comment">% appropriate Datascope expression, e.g.</span>
+
+cobj = readEvents(<span class="string">'datascope'</span>, <span class="string">'dbpath'</span>, dbpath, <span class="string">'dbeval'</span>, <span class="keyword">...</span>
+    <span class="string">'deg2km(distance(lat, lon, 60.4853, -152.7431))&lt;15.0'</span>);
+
+<span class="comment">% where 60.4853 is the latitude of Redoubt and -152.7431 is the longitude.</span>
+<span class="comment">% Now there should only be 1397 events.</span>
+</pre><pre class="codeoutput">Loading data from /Users/thompsong/run_tremor/GISMO/event/demo/avodb200903
+Success: 1441 rows
+Got 1441 records from /Users/thompsong/run_tremor/GISMO/event/demo/avodb200903.origin
+Success: 1441 rows
+Got 1441 records after joining event with /Users/thompsong/run_tremor/GISMO/event/demo/avodb200903.origin
+Got 1441 records after subsetting with orid==prefor
+Got 1441 prefors prior to subsetting
+Loading data from /Users/thompsong/run_tremor/GISMO/event/demo/avodb200903
+Success: 1441 rows
+Got 1441 records from /Users/thompsong/run_tremor/GISMO/event/demo/avodb200903.origin
+Success: 1441 rows
+Got 1441 records after joining event with /Users/thompsong/run_tremor/GISMO/event/demo/avodb200903.origin
+Got 1441 records after subsetting with orid==prefor
+Got 1441 prefors prior to subsetting
+Got 1397 prefors after subsetting
+</pre><h2>PLOTTING HYPOCENTERS<a name="3"></a></h2><h2>Magnitude-time plot<a name="4"></a></h2><p>You should see that there are 1441 events in these 3 days. What are their depths and magnitudes as a function of time?</p><pre class="codeinput">cobj.plot_time()
+</pre><img vspace="5" hspace="5" src="catalog_cookbook_01.png" alt=""> <h2>3D-Hypocenters<a name="5"></a></h2><p>For a 3D hypocenter map, use plot3:</p><pre class="codeinput">cobj.plot3()
+</pre><img vspace="5" hspace="5" src="catalog_cookbook_02.png" alt=""> <h2>PLOTTING B-VALUES &amp; ESTIMATING MAGNITUDE OF COMPLETENESS<a name="6"></a></h2><p>Code from "ZMap" (written by Stefan Wiemer and others) has been added to Catalog to compute and plot bvalues. Use the bvalue method:</p><pre class="codeinput">cobj.bvalue()
+<span class="comment">% This will give a menu of techniques available to compute b-value (b) and</span>
+<span class="comment">% magnitude of complteness (Mc)</span>
+cobj.bvalue(1)
+<span class="comment">% will use technique 1</span>
+</pre><pre class="codeoutput">--------------------------------------------------------
+ERROR: Usage is: Catalog.bvalue(mcType). mcType not specified
+--------------------------------------------------------
+mcType can be:
+1: Maximum curvature
+2: Fixed Mc = minimum magnitude (Mmin)
+3: Mc90 (90% probability)
+4: Mc95 (95% probability)
+5: Best combination (Mc95 - Mc90 - maximum curvature)
+</pre><pre class="codeoutput">Attempted to access xt3(1); index out of bounds because numel(xt3)=0.
+
+Error in Catalog/bvalue (line 695)
+            mag_hi = xt3(1);
+
+Error in catalog_cookbook (line 64)
+cobj.bvalue(1)
+</pre><h2>PLOTTING EVENT COUNTS &amp; ENERGY RELEASE RATES<a name="7"></a></h2><p>For a quick plot of earthquakes per hour, we create an eventrate object and then plot it. Here our binsize is 1/24 days, i.e. 1 hour.</p><pre class="codeinput">erobj = EventRate(cobj, 1/24)
+plot(erobj);
+</pre><h2>Event rates for overlapping time windows<a name="8"></a></h2><p>Sometimes it is desirable to compute event rate metrics for sliding - i.e. overlapping - time windows. This is easily done with the 'stepsize' parameter. If omitted, stepsize defaults to the binsize - which is the length of the time window. So in the previous example, both binsize and stepsize were 1.0 hours. But we can just as easily compute an eventrate object for the same catalog object with a binsize of 1 hour, and stepsize of just 5 minutes.</p><pre class="codeinput">erobj2 = EventRate(cobj, 1/24, <span class="string">'stepsize'</span>,  5/1440)
+erobj2.plot()
+</pre><h2>Plots of other event rate metrics<a name="9"></a></h2><p>erobj.plot() is actually equivalent to typing:   erobj.plot(), 'metric', 'counts');</p><p>The full list of metrics that can be plotted are: * counts * mean_rate * median_rate * cum_mag * mean_mag * median_mag * energy</p><p>All of these are properties of an eventrate object except for energy, which is computed from <i>cum_mag</i> on-the-fly.</p><p>Several can be plotted at once in subplots of the same figure using a cell array:</p><pre class="language-matlab">plot(erobj2, <span class="string">'metric'</span>, {<span class="string">'mean_rate'</span>; <span class="string">'median_rate'</span>; <span class="string">'mean_mag'</span>; <span class="string">'cum_mag'</span>});
+</pre><p>Or they can of course be plotted in separate figure windows:</p><pre class="codeinput">erobj2.plot(<span class="string">'metric'</span>, <span class="string">'mean_rate'</span>)
+erobj2.plot(<span class="string">'metric'</span>, <span class="string">'median_rate'</span>)
+erobj2.plot(<span class="string">'metric'</span>, <span class="string">'mean_mag'</span>)
+erobj2.plot(<span class="string">'metric'</span>, <span class="string">'cum_mag'</span>)
+</pre><p>These are the same metrics, binsize and stepsize used by the AVO swarm tracking system. See: &lt; <a href="http://www.aeic.alaska.edu/input/west/papers/2009_srl_thompson_redoubtSwarms.pdf">http://www.aeic.alaska.edu/input/west/papers/2009_srl_thompson_redoubtSwarms.pdf</a> &gt; for details.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% CATALOG and EVENTRATE cookbook
+%
+
+%% Introduction
+% This is a short demonstration of some of the methods of the CATALOG and EVENTRATE classes.
+%
+% It is assumed that you already have GISMO on your MATLAB path.
+%
+% This cookbook is written as an M-file and is converted to HTML using the PUBLISH command.
+%
+% Author: Glenn Thompson, Geophysical Institute, Univ. of Alaska Fairbanks
+
+%% Loading event catalogs
+% The catalog class is for loading, plotting and analysing event catalogs.
+% For a detailed description, read HELP CATALOG.M.
+%
+% For the purpose of this exercise we will be using data from Redoubt volcano
+% from 2009/03/20 to 2009/03/23. We will use two catalogs:
+%
+% # The real-time catalog, produced using Antelope (rtdb200903).
+% # The analyst-reviewed offical AVO catalog (avodb200903), produced using 
+% Earthworm, XPick and Hypoellipse, later converted to an Antelope
+% database.
+%
+% Both catalog segments are distributed in the "demo" directory.
+%
+% We will now load the real-time catalog into a catalog object. First,
+% because we don't know where GISMO is on your system, we have to construct the
+% path to the demo directory based on where CATALOG.M resides:
+
+dirname = fileparts(which('Catalog')); 
+dbpath = [dirname,'/demo/avodb200903'];
+
+% Now read the events into a Catalog object. Only two parameters are
+% needed, the database path (dbpath) and the data format ('antelope'): 
+cobj = readEvents('datascope', 'dbpath', dbpath);
+
+% This should load 1441 events. What if we only want events within 15km of
+% Redoubt volcano? The parameter-value pair 'dbeval' can be used, with an
+% appropriate Datascope expression, e.g.
+
+cobj = readEvents('datascope', 'dbpath', dbpath, 'dbeval', ...
+    'deg2km(distance(lat, lon, 60.4853, -152.7431))<15.0');
+
+% where 60.4853 is the latitude of Redoubt and -152.7431 is the longitude.
+% Now there should only be 1397 events.
+
+%% PLOTTING HYPOCENTERS
+%% Magnitude-time plot
+% You should see that there are 1441 events in these 3 days. What are their
+% depths and magnitudes as a function of time?
+cobj.plot_time()
+
+%% 3D-Hypocenters
+% For a 3D hypocenter map, use plot3:
+cobj.plot3()
+
+%% PLOTTING B-VALUES & ESTIMATING MAGNITUDE OF COMPLETENESS
+% Code from "ZMap" (written by Stefan Wiemer and others) has been added
+% to Catalog to compute and plot bvalues. Use the bvalue method:
+cobj.bvalue()
+% This will give a menu of techniques available to compute b-value (b) and
+% magnitude of complteness (Mc)
+cobj.bvalue(1)
+% will use technique 1
+
+%% PLOTTING EVENT COUNTS & ENERGY RELEASE RATES
+% For a quick plot of earthquakes per hour, we create an eventrate object
+% and then plot it. Here our binsize is 1/24 days, i.e. 1 hour.
+erobj = EventRate(cobj, 1/24)
+plot(erobj);
+
+%% Event rates for overlapping time windows
+% Sometimes it is desirable to compute event rate metrics for sliding -
+% i.e. overlapping - time windows. This is easily done with the 'stepsize'
+% parameter. If omitted, stepsize defaults to the binsize - which is the
+% length of the time window. So in the previous example, both binsize and
+% stepsize were 1.0 hours. But we can just as easily compute an eventrate
+% object for the same catalog object with a binsize of 1 hour, and stepsize
+% of just 5 minutes. 
+erobj2 = EventRate(cobj, 1/24, 'stepsize',  5/1440)
+erobj2.plot()
+
+%% Plots of other event rate metrics
+% erobj.plot() is actually equivalent to typing:
+%   erobj.plot(), 'metric', 'counts');
+% 
+% The full list of metrics that can be plotted are:
+% * counts
+% * mean_rate
+% * median_rate
+% * cum_mag
+% * mean_mag
+% * median_mag
+% * energy
+% 
+% All of these are properties of an eventrate object except for energy,
+% which is computed from _cum_mag_ on-the-fly.
+%
+% Several can be plotted at once in subplots of the same figure using a cell array:
+%
+%   plot(erobj2, 'metric', {'mean_rate'; 'median_rate'; 'mean_mag'; 'cum_mag'});
+%
+% Or they can of course be plotted in separate figure windows:
+erobj2.plot('metric', 'mean_rate')
+erobj2.plot('metric', 'median_rate')
+erobj2.plot('metric', 'mean_mag')
+erobj2.plot('metric', 'cum_mag')
+%%
+% These are the same metrics, binsize and stepsize used by the AVO swarm tracking system.
+% See: < <http://www.aeic.alaska.edu/input/west/papers/2009_srl_thompson_redoubtSwarms.pdf> >
+% for details.
+
+
+
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
