@@ -36,6 +36,7 @@ addContributed(gismopath,'contributed_internal');
 % ADD A PATH TO CLASSES (Added by Glenn Thompson)
 addpath(fullfile(gismopath,'classes'));
 addpath(fullfile(gismopath,'classes','catalog'));
+addpath(fullfile(gismopath,'classes','rsam'));
 
 %%
 function addContributed(gismopath, contribDir)
