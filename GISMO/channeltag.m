@@ -27,8 +27,8 @@ classdef channeltag
    %        error because stations (1x2) not same size as channels (2x1)
    %
    %
-   %  NOTE: WILDCARDS, BELOW, NOT IMPLEMENTED as of 2015-07-31!!!!!
-   %
+   %  NOTE: WILDCARDS,  NOT IMPLEMENTED as of 2015-07-31!!!!!
+   
    %  ----------- WILDCARDS --------------------- 
    %  channeltag is merely a storage unit for net-sta-chan-loc information. It
    %  is blind to wildcards. However, when used as an argument in WAVEFORM,
@@ -270,13 +270,23 @@ classdef channeltag
             end
          end
          
-         function s = getDelimitedString(thischaTag)
-            s = [thischaTag.network, delim, thischaTag.station, delim,...
-                     thischaTag.location, delim, thischaTag.channel];
+         function s = getDelimitedString(chaTag)
+            s = [chaTag.network, delim, chaTag.station, delim,...
+                     chaTag.location, delim, chaTag.channel];
          end
-            
       end
       
+      function res = validate(chaTag)
+         % make sure channeltag roughly conforms to SEED
+         nslc_is_char = [ischar(chaTag.network), ischar(chaTag.channel),...
+             ischar(chaTag.station), ischar(chaTag.location)];
+         nslc_valid_length = [numel(chaTag.network) == 2,...
+            numel(chaTag.station) <= 5 && numel(chaTag.station) > 0, ...
+            numel(chaTag.location) == 2, ...
+            numel(chaTag.channel) == 3];
+         res = all(nslc_is_char & nslc_valid_length);
+      end
+            
    end%methods
    
    methods(Static)
@@ -336,6 +346,47 @@ classdef channeltag
                end
          end
       end
-   end
+      
+      function test()
+         % default channeltag
+         c = channeltag();
+         assert(strcmp(c.network,'') && strcmp(c.station,'')...
+            && strcmp(c.location,'') && strcmp(c.channel,''))
+         % copy
+         c(2) = channeltag();
+         assert(c(1) == c(2)) % test eq for an empty channeltag
+         % check array creation
+         c1 = channeltag();
+         c1.network = 'N1'; c1.station = 'S1'; c1.location = 'L1'; c1.channel = 'C1';
+         c2 = c1;
+         c2.network = 'N2'; c2.station = 'S2'; c2.location = 'L2'; c2.channel = 'C2';
+         assert(c2 ~= c1)
+         tags_fieldcells = channeltag.array({'N1','N2'},{'S1','S2'},{'L1','L2'},{'C1','C2'});
+         tags_textcells = channeltag.array({'N1.S1.L1.C1','N2.S2.L2.C2'});
+         tags_textarray = channeltag.array(['N1.S1.L1.C1';'N2.S2.L2.C2']);
+         assert(tags_fieldcells(1) == c1)  
+         assert(tags_textcells(1) == c1)
+         assert(tags_textarray(1) == c1)
+         assert(tags_fieldcells(2) == c2)
+         assert(tags_textcells(2) == c2)
+         assert(tags_textarray(2) == c2)
+         
+         c = channeltag.array('N',{'S1','S2'},'L',{'C1','C2'});
+         assert(numel(c) == 2)
+         assert(strcmp(c(2).station,'S2') && strcmp(c(2).channel,'C2')...
+            && strcmp([c.network], 'NN') && strcmp([c.location], 'LL'))
+         tags = channeltag.array('NW','STA1','00', {'A','B','C','D'});
+         tags2 = channeltag.array('NW','STA1','00', {'F','C','A','E'});
+         sortedtags = sort(tags2);
+         assert(sortedtags(1).channel == 'A' && sortedtags(5).channel == 'F')
+         % ismember 
+         assert(ismember(channeltag('NW.STA1.00.B'), tags));
+         
+         
+         % 
+      end %test
+         
+         
+   end %static methods
 end %classdef
 
