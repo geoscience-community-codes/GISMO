@@ -6,15 +6,4 @@ function [B,I,J] = unique(A)
 % 
 %
 % see also UNIQUE
-scnlstrs = scnl2str(A);
-[B I J] = unique(scnlstrs);
-B = A(I);
-
-
-function s = scnl2str(scnls)
-ss = struct2cell(scnls);
-pound_bounded = strcat([strcat(ss,'##')]);
-s = cell(size(scnls));
-for i=1:numel(scnls)
-  s(i) = {strcat([pound_bounded{:,i}])};
-end
+[B, I, J] = unique([A.tag]);

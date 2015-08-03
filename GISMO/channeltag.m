@@ -85,9 +85,8 @@ classdef channeltag
          % chaTag = channeltag('IU', 'ANMO', '00', 'BHZ'); % net, sta, loc, cha
          % chaTag = channeltag('IU.ANMO.00.BHZ');
          %
-         
          % to create multiple channeltags at once, use channeltag.array()
-         %
+         
          % By removing the ability to create many at once, we ensure it won't
          % be done accidentally.
          %
@@ -104,9 +103,13 @@ classdef channeltag
                chaTag.location = L; 
                chaTag.channel = C;
             case 1
+               if isa(N,'channeltag')
+                  chaTag = N;
+               else
                [chaTag.network, chaTag.station, ...
                   chaTag.location, chaTag.channel] = ...
                   channeltag.parsechaTag(N);
+               end
             case 0
                return
             otherwise
@@ -378,7 +381,7 @@ classdef channeltag
          tags = channeltag.array('NW','STA1','00', {'A','B','C','D'});
          tags2 = channeltag.array('NW','STA1','00', {'F','C','A','E'});
          sortedtags = sort(tags2);
-         assert(sortedtags(1).channel == 'A' && sortedtags(5).channel == 'F')
+         assert(sortedtags(1).channel == 'A' && sortedtags(4).channel == 'F')
          % ismember 
          assert(ismember(channeltag('NW.STA1.00.B'), tags));
          

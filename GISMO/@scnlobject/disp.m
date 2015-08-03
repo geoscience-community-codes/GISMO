@@ -16,8 +16,8 @@ if numel(sncl) > 1;
     disp('    network');
     disp('   location');
 else    
-    disp(['   station: ' sncl.station]);
-    disp(['   channel: ' sncl.channel]);
-    disp(['   network: ' sncl.network]);
-    disp(['  location: ' sncl.location]);
+    disp(['   station: ' sncl.tag.station]);
+    disp(['   channel: ' sncl.tag.channel]);
+    disp(['   network: ' sncl.tag.network]);
+    disp(['  location: ' sncl.tag.location]);
 end;
