@@ -30,8 +30,7 @@ if ~isa(w,'waveform')
     %yipes.  we have a number minus a waveform
     errtext = [sprintf('subtracting a <waveform> from a <%s> leads to ambiguous answer type\n',class(w)), ...
         sprintf('  for a numerical result, try: <%s> - double(<waveform>)\n',class(w)), ...
-        sprintf('  for a waveform result, try:  -<waveform> + <%s>\n',class(w)),...
-        sprintf('\t and don''t forget to modify the waveform''s history if appropriate\n')];
+        sprintf('  for a waveform result, try:  -<waveform> + <%s>\n',class(w))];
     error('Waveform:minus:invalidClass','Error attempting: <%s> - <%s>\n%s', class(w),class(q),errtext);
 end
 try

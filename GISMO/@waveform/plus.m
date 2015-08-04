@@ -78,18 +78,3 @@ for n = 1:numel(w)
           'unknown addition operation: %s + %s', class(w), class(q));
     end
 end
-
-if  isnumeric(q)
-    if scalar_addition
-        w = addhistory(w,'added %d ', q);
-    elseif array_addition
-        %do nothing. 
-        %this is important if numel(w) == numel(q) == numel(w(N).data)
-    elseif element_addition
-        w = addhistory(w,'Added a vector "%s"', inputname(2));
-    end
-elseif isa(q,'wavform')
-    %trusts to error messages above to avoid calling this uneccessarily
-    w = addhistory(w,['Added to another waveform ', inputname(2)]);    
-end
-    

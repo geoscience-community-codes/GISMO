@@ -23,4 +23,3 @@ for idx = 1:numel(W)
     end
     W(idx) = set(W(idx),'data',d);
 end
-W  = addhistory(W ,'Hilbert transform');

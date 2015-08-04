@@ -36,5 +36,3 @@ for I = 1 : Nmax
         
     w(I) = set(w(I),'data',detrend(d,varargin{:}));
 end
-
-w = addhistory(w,'trend removed');

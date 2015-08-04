@@ -96,5 +96,4 @@ for n=1: numel(w) %fname is a cell array
   sacHeader = waveform2sacheader(w(n));
   outputFileName = fullfile(direc,fname{n});
   writesac(outputFileName,sacHeader, get(w,'data'));
-  w(n) = addhistory(w(n),'Saved SAC file as: %s',outputFileName);
 end

@@ -293,20 +293,30 @@ classdef channeltag
    end%methods
    
    methods(Static)
-      function  [N, S, L, C] = parsechaTag(chaTagtextrep)
+      function  [N, S, L, C] = parsechaTag(chaTag)
          % parsechaTag parses a period-delimeted string
          % [N, S, L, C] = channeltag.parsechaTag('net.sta.loc.cha')
-               delims = find(chaTagtextrep == '.');
+         if isstruct(chaTag)
+            N = chaTag.network;
+            S = chaTag.station;
+            L = chaTag.location;
+            C = chaTag.channel;
+         elseif ischar(chaTag)
+               delims = find(chaTag == '.');
         
                if numel(delims) ~= 3
                   error('CHANNELTAG:parsechaTag:UnexpectedParam',...
                      'Expected ''NET.STA.LOC.CHA'' (using 3 "." delimeters)');
                end
                
-               N = chaTagtextrep(1 : delims(1)-1);
-               S = chaTagtextrep(delims(1)+1 : delims(2)-1);
-               L = chaTagtextrep(delims(2)+1 : delims(3)-1);
-               C = chaTagtextrep(delims(3)+1 : end);
+               N = chaTag(1 : delims(1)-1);
+               S = chaTag(delims(1)+1 : delims(2)-1);
+               L = chaTag(delims(2)+1 : delims(3)-1);
+               C = chaTag(delims(3)+1 : end);
+         else
+            error('CHANNELTAG:parsechaTag:unknownClass',...
+               'unknown how to parse: %s', class(chaTag));
+         end
       end
       
       function cha_tags = array(varargin)

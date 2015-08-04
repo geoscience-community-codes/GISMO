@@ -52,18 +52,17 @@ function val = get(w,prop_name)
 
 %val_CELL = cell(size(w));
 %val = val_CELL;
-prop_name = upper(prop_name);
 usedcell = false;
 singleWave = isscalar(w);
-switch prop_name
+switch upper(prop_name)
     
     % IDENTIFICATION PROPERTIES
     case {'STATION','CHANNEL','NETWORK','LOCATION'} %type:CELL
-        val = get([w.scnl],prop_name);
+        val = get([w.cha_tag],prop_name);
         usedcell = true;
         
     case {'COMPONENT'} %type:CELL   GRANDFATHERED IN...
-        val = get([w.scnl],'channel');
+        val = get([w.cha_tag],'channel');
         usedcell = true;
         
         % DATA DESCRIBING PROPERTIES
@@ -153,8 +152,10 @@ switch prop_name
         val = w(1).version;
         
     case {'SCNLOBJECT'}
-        val = [w.scnl];
+        val = scnlobject([w.cha_tag]);
         %must add network & location, too.
+   case {'CHANNELTAG'}
+      val = [w.cha_tag];
         
     case {'HISTORY'}
         val = cell(size(w));

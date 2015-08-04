@@ -11,4 +11,3 @@ function w = uminus(w)
 for n=1:numel(w)
     w(n).data = -w(n).data;
 end
-w = addhistory(w,'multiplied by -1');

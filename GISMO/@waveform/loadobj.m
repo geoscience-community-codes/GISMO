@@ -4,7 +4,7 @@ function b = loadobj(a)
 % load a newer version of a waveform object
 %
 % The newest version of waveform can be found in the GISMOTOOLS repository:
-%  http://code.google.com/p/gismotools
+%  OBSOLETE: http://code.google.com/p/gismotools
 %
 % See also WAVEFORM/WAVEFORM
 
@@ -49,7 +49,7 @@ else %a is an old version
             b = repmat(waveform,size(a)); %create a default waveform array
             for n=1: numel(b)
                 % waveform contains "station" and "channel" fields.
-                scnl = scnlobject(a(n).station, a(n).channel,...
+                scnl = channeltag(a(n).station, a(n).channel,...
                     a(n).misc_values(strcmpi(a(n).misc_fields,'network')),...
                     a(n).misc_values(strcmpi(a(n).misc_fields,'location')));
                 b(n) = set(b(n),'start',a(n).start);
@@ -73,7 +73,7 @@ else %a is an old version
             
             b = repmat(waveform,size(a));
             for n=1:numel(b)
-                b(n).scnl = a(n).scnl;
+                b(n).scnl = channeltag(a(n).scnl);
                 b(n).Fs = a(n).Fs;
                 b(n).start = a(n).start;
                 b(n).data = a(n).data;
@@ -90,8 +90,28 @@ else %a is an old version
             end
             
         case 1.2
-            %Current itteration, we shouldn't be here
-            % Change to 1.2 means that station and channel fields are removed.
+           % prior to channeltags.
+           
+            b = repmat(waveform,size(a));
+            for n=1:numel(b)
+                b(n).cha_tag = channeltag(a(n).scnl);
+                b(n).Fs = a(n).Fs;
+                b(n).start = a(n).start;
+                b(n).data = a(n).data;
+                b(n).units = a(n).units;
+                for m=1:numel(a(n).misc_fields)
+                    if strcmp(a(n).misc_fields{m},'HISTORY')
+                        b(n).history = a(n).misc_values{m};
+                    else
+                        b(n) = addfield(b(n),a(n).misc_fields{m},a(n).misc_values{m});
+                    end
+                end
+                %add history here
+                %remove history here
+            end
+           
+       case 2.0
+          %current itteration
             
         otherwise
             error('Waveform:loadobj:unknownWaveformVersion',...

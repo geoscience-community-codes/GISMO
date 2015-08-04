@@ -54,7 +54,6 @@ function w = set(w, varargin)
 %global dep2mep
 
 % check to see if history is bypassed
-UPDATE_HISTORY = ~strcmpi(varargin(end),'nohist');
 
 Vidx = 1 : numel(varargin);
 
@@ -79,23 +78,10 @@ while numel(Vidx) >= 2
         error('Waveform:set:propertyTypeMismatch',...
           '%s should be a string not a %s', prop_name,class(val));
       end
-      allscnls = set([w.scnl],prop_name,val);
+      all_chantags = set([w.cha_tag],prop_name,val);
       for n=1:numel(w)
-        w(n).scnl = allscnls(n);
+        w(n).cha_tag = all_chantags(n);
       end
-      
-    case {'COMPONENT'} %grandfather case, supplanted by 'CHANNEL'
-      if ~isa(val,'char')
-        error('Waveform:set:propertyTypeMismatch',...
-        'Channel should be a string not a %s', class(val));
-      end
-      for n=1:numel(w)
-        w(n).scnl = set(w(n).scnl,'channel',val);
-      end
-      warning('Waveform:set:preferChannel',...
-        ['Please use ''channel'' instead of ''component'''...
-        '  no harm, no foul']);
-      
       
     case {'FS', 'FREQ'}
       if ~isnumeric(val)
@@ -176,11 +162,6 @@ while numel(Vidx) >= 2
         end %switch
       end %n
   end %switch
-  
-  if ~strcmp(prop_name,{'HISTORY', 'DATA'}) & UPDATE_HISTORY
-    
-    w = addhistory(w,['Set ' prop_name]);
-  end
   
   Vidx(1:2) = []; %done with those parameters, move to the next ones...
   

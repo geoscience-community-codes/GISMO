@@ -105,23 +105,15 @@ switch task
         for n = 1 : numel(W);
             W(n).data = W(n).data ./ double(divisor(:));
         end
-        if isempty(inputname(2))
-            W = addhistory(W,'Divided by a constant <%s>', class(divisor));
-        else
-            W = addhistory(W,'Divided by "%s" <%s>',...
-                inputname(2), class(divisor));
-        end
     case 'waveforms_by_element'
         % each waveform has its own number to be divided by
         for n=1:numel(W)
             thisDivisor = double(divisor(n));
             W(n) = set(W(n),'data',W(n).data ./ thisDivisor );
-            W(n) = addhistory(W(n),'Divided by %s', num2str(thisDivisor));
         end
     case 'waveform_by_scalar'
         for n=1:numel(W)
             W(n) = set(W(n),'data', W(n).data ./ double(divisor) );
-            W(n) = addhistory(W(n),'Divided by %s', num2str(divisor));
         end
     otherwise
         error('Waveform:rdivide:unknownoperation',...

@@ -12,4 +12,3 @@ function W = smooth(W, varargin)
 for n = 1:numel(W)
     W(n) = set(W(n),'data',smooth(W(n).data,varargin{:}));
 end
-W = addhistory(W,{'Smoothed with these arguments',varargin});

@@ -147,5 +147,4 @@ for i=1:numel(w)
     %adjust the frequency
     w(i) = set(w(i),'Freq', get(w(i),'Freq') ./ val);
     
-end;
-w = addhistory(w,['Resampled as ', method, ': ', num2str(val)]);
+end

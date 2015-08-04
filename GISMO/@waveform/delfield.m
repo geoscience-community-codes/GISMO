@@ -35,7 +35,3 @@ for n=1:numel(w)
     w(n).misc_fields = w(n).misc_fields(mask);
     w(n).misc_values = w(n).misc_values(mask);
 end
-
-if ~exist('nohistory','var') || ~nohistory
-  w = addhistory(w,['Removed Field: ' field_to_delete{:}]);
-end
