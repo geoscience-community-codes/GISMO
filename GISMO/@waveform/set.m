@@ -68,7 +68,7 @@ while numel(Vidx) >= 2
     case 'SCNLOBJECT'
       if isa(val,'scnlobject')
         
-        [w.scnl] = deal(val);
+        [w.cha_tag] = deal(channeltag(char(val)));
       else
         error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT');
       end

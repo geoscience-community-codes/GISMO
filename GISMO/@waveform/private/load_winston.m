@@ -1,4 +1,4 @@
-function allWaves = load_winston(dataRequest)
+function allWaves = load_winston(dataRequest, COMBINE_WAVEFORMS)
 % LOAD_WINSTON handles retrieval of data from a winston waveserver.
 %  all times are matlab formatted datenums
 %  allWaves = load_winston(allSCNLs, sTime, eTime, server, port)

@@ -162,9 +162,9 @@ classdef channeltag
          Y = cha_tags(I);
       end
       
-      function result = eq(chaTag, anythingelse)
+      function result = eq(A, B)
          % expect that both parts are channeltags
-         result = strcmp(chaTag.string,anythingelse.string);
+         result = strcmp(A.string(), B.string());
       end%eq
       
       function result = ne(chaTag, anythingelse)
@@ -238,6 +238,10 @@ classdef channeltag
          end
       end
       
+      function c = char(chaTag)
+         c = chaTag.string([],'nocell');
+      end
+         
       function s = string(chaTag, delim, option)
          % string returns string representation of the nscltag(s)
          % s = chaTag.string()  will return the string representation 

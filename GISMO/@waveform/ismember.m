@@ -7,10 +7,12 @@ function [results, loc] = ismember(mywave,anythingelse)
 % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
 % $Date$
 % $Revision$
-
-if ~isa(anythingelse,'scnlobject')
-  error('Waveform:ismember:classMismatch',...
-    'Waveform does not know how to determine if it is a member of a %s class',...
-    class(anythingelse));
+c = class(anythingelse);
+switch c
+   case {'scnlobject','channeltag'}
+      [results, loc]  = ismember(get(mywave,'scnlobject'),anythingelse);
+   otherwise
+      error('Waveform:ismember:classMismatch',...
+         'Waveform does not know how to determine if it is a member of a %s class',...
+         c);
 end
-[results, loc]  = ismember(get(mywave,'scnlobject'),anythingelse);

@@ -28,8 +28,8 @@ function SCNLs = scnlobject(stations, channels, networks, locations)
    % initialize defaults
    defaultStation = '';
    defaultChannel = '';
-   defaultNetwork = '--';
-   defaultLocation = '--';
+   defaultNetwork = ''; %changed default from '--'
+   defaultLocation = '';%changed default from '--' 
    
    % assign default if it seems appropriate
    if ~exist('stations','var') || isempty(stations)

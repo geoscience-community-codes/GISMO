@@ -27,6 +27,7 @@ function stuff = get(scnl, prop_name)
          end
       case {'channeltag'}
          stuff = [scnl.tag];
+         return
       otherwise
          error('SCNLOBJECT:get:UnrecognizedProperty',...
             'Unrecognized property name : %s',  prop_name);

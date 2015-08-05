@@ -49,14 +49,14 @@ else %a is an old version
             b = repmat(waveform,size(a)); %create a default waveform array
             for n=1: numel(b)
                 % waveform contains "station" and "channel" fields.
-                scnl = channeltag(a(n).station, a(n).channel,...
-                    a(n).misc_values(strcmpi(a(n).misc_fields,'network')),...
-                    a(n).misc_values(strcmpi(a(n).misc_fields,'location')));
+                b(n) = set(b(n),'station', a(n).station);
+                b(n) = set(b(n),'channel', a(n).channel);
+                b(n) = set(b(n),'network', a(n).misc_values{strcmpi(a(n).misc_fields,'network')});
+                b(n) = set(b(n),'location', a(n).misc_values{strcmpi(a(n).misc_fields,'location')});
                 b(n) = set(b(n),'start',a(n).start);
-                b(n) = set(b(n),'scnlobject',scnl,'nohist');
-                b(n) = set(b(n),'freq',a(n).Fs,'nohist');
-                b(n) = set(b(n),'data',a(n).data,'nohist');
-                b(n) = set(b(n),'units',a(n).units,'nohist');
+                b(n) = set(b(n),'freq',a(n).Fs);
+                b(n) = set(b(n),'data',a(n).data);
+                b(n) = set(b(n),'units',a(n).units);
                 for myfieldnum = numel(a(n).misc_fields)
                     if strcmp(a(n).misc_fields{myfieldnum},'HISTORY')
                         b(n).history = a(n).misc_values{myfieldnum};
@@ -73,7 +73,12 @@ else %a is an old version
             
             b = repmat(waveform,size(a));
             for n=1:numel(b)
-                b(n).scnl = channeltag(a(n).scnl);
+               if isstruct(a(n).scnl)
+                  scnl = a(n).scnl;
+                  b(n).cha_tag = channeltag(scnl.network,scnl.station,scnl.location,scnl.channel);
+               else
+                b(n).cha_tag = channeltag(a(n).scnl);
+               end
                 b(n).Fs = a(n).Fs;
                 b(n).start = a(n).start;
                 b(n).data = a(n).data;
