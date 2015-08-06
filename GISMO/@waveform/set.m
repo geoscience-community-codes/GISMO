@@ -66,13 +66,33 @@ while numel(Vidx) >= 2
   
   switch prop_name
     case 'SCNLOBJECT'
-      if isa(val,'scnlobject')
-        
-        [w.cha_tag] = deal(channeltag(char(val)));
-      else
-        error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT');
-      end
+        switch class(val)
+          case 'scnlobject'
+            [w.cha_tag] = deal(channeltag(char(val)));
+          case 'channeltag'
+            [w.cha_tag] = deal(val);
+          case 'char'
+            [w.cha_tag] = deal(channeltag(val));
+           otherwise
+            % try it!
+              [w.cha_tag] = deal(channeltag(val));
+            % error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT or CHANNELTAG');
+        end
+        warning('Use set(channeltag) instead') % TODO: Decide if better generic name exists
       
+    case 'CHANNELINFO'
+        switch class(val)
+          case 'scnlobject'
+            [w.cha_tag] = deal(channeltag(char(val)));
+          case 'channeltag'
+            [w.cha_tag] = deal(val);
+          case 'char'
+            [w.cha_tag] = deal(channeltag(val));
+          otherwise
+            % try it!
+              [w.cha_tag] = deal(channeltag(val));
+            % error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT or CHANNELTAG');
+        end
     case {'STATION','NETWORK', 'CHANNEL','LOCATION'}
       if ~isa(val,'char')
         error('Waveform:set:propertyTypeMismatch',...
