@@ -170,7 +170,7 @@ switch upper(prop_name)
         for n = 1 : numel(w)
             %loc is the position...
             %w(n).misc_fields should ALWAYS already be in uppercase
-            mask = strcmp(prop_name,w(n).misc_fields);
+            mask = strcmp(upper(prop_name),w(n).misc_fields);
             %fieldwasfound = any(mask);
             %[fieldwasfound, loc] = ismember(prop_name, w(n).misc_fields);
             if any(mask)

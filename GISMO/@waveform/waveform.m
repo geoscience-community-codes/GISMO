@@ -97,7 +97,7 @@ function w = waveform(varargin)
                arg2 = asChanneltag(arg2);
             otherwise
                arg1 = asChanneltag(arg1);
-               w = waveformFromParts(arg1, arg2, arg3, arg4, 'Unk');
+               w = waveformFromParts(arg1, arg2, arg3, arg4, 'Counts');
                return;
          end
          
@@ -192,7 +192,7 @@ function w = waveform(varargin)
                if ischar(arg1) && ischar(arg2) %given station, channel
                   warning('ancient usage');
                   arg1 = ['.' arg1 '..' arg2];
-                  [arg2, arg3, arg4, arg5] = deal(arg3, arg4, arg5, 'Unk');
+                  [arg2, arg3, arg4, arg5] = deal(arg3, arg4, arg5, 'Counts');
                end
                arg1 = asChanneltag(arg1);
                w = waveformFromParts(arg1, arg2, arg3, arg4, arg5);
@@ -217,7 +217,7 @@ function w = waveform(varargin)
       w.Fs = nan;
       w.start = 719529; % datenum for 1970-01-01
       w.data = double([]);
-      w.units = 'Unk';
+      w.units = 'Counts';
       w.version = waveformversion; %version of waveform object (internal)
       w.misc_fields = {}; %add'l fields, such as "comments", or "trig"
       w.misc_values = {}; %values for these fields
