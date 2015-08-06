@@ -68,11 +68,11 @@ while numel(Vidx) >= 2
     case 'SCNLOBJECT'
         switch class(val)
           case 'scnlobject'
-            [w.cha_tag] = deal(channeltag(char(val)));
+            [w.cha_tag] = deal(get(val,'channeltag'));
           case 'channeltag'
             [w.cha_tag] = deal(val);
           case 'char'
-            [w.cha_tag] = deal(channeltag(val));
+            [w.cha_tag] = deal(channeltag.parse(val));
            otherwise
             % try it!
               [w.cha_tag] = deal(channeltag(val));

@@ -162,7 +162,8 @@ function w = waveform(varargin)
                
                for i=1:numel(fn)
                   w = load_from_file(myLoadFunc,fn{i},ALLOW_MULTIPLE, ERROR_ON_EMPTY);
-                  w = w(ismember([w.cha_tag],[chans])); %keep only appropriate station/chan
+                  %w = w(ismember([w.cha_tag],[chans])); %keep only appropriate station/chan
+                  w = w(w.cha_tag.matching(chans)); %Not 100% sure about this one
                   w = filter_by_time(w, myStartTime, myEndTime);
                   if numel(w) > 0
                      somew(i) = {w};
@@ -303,7 +304,7 @@ function w = load_from_file(myLoadFunc, fname, allowMultiple, ErrorOnEmpty)
    mydir = fileparts(fname); %fileparts returns [path, name, ext]
    myfiles = fullfile(mydir, {possiblefiles(:).name});
    w(numel(myfiles)) = waveform; %best-guess preinitialization (candidate for trouble!)
-   startindex = 1;
+   startindex = 0;
    while ~isempty(myfiles)
       [f, myfiles] = peel(myfiles);
       tmp = myLoadFunc(f);

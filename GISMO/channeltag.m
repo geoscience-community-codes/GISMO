@@ -108,7 +108,7 @@ classdef channeltag
                else
                [chaTag.network, chaTag.station, ...
                   chaTag.location, chaTag.channel] = ...
-                  channeltag.parsechaTag(N);
+                  channeltag.parse(N);
                end
             case 0
                return
@@ -133,22 +133,25 @@ classdef channeltag
          %    cha_tags.matching('IU.ANMO..BHZ') 
          % will match BOTH
          %   'IU.ANMO.00.BHZ' and 'IU.ANMO.01.BHZ'
-         
-         if nargin == 2 && any(N=='.')
-            % query used single string : 'net.sta.loc.cha'
-            [N, S, L, C] = channeltag.parsechaTag(N);
+         if nargin == 2
+            if (ischar(N) && any(N == '.')) || isa(N,'channeltag')
+               % query used single string : 'net.sta.loc.cha'
+               [N, S, L, C] = channeltag.parse(N);
+            else
+               error('CHANNELTAG:matching:unknownmatchtype','don''t know how to match it');
+            end
          end
          IDX = true(size(cha_tags));
-         if ~isempty(N)
+         if ~isempty(N) && all(N ~= '*')
             IDX = strcmp({cha_tags.network}, N);
          end
-         if exist('S', 'var') && ~isempty(S)
+         if exist('S', 'var') && ~isempty(S) && all(S ~= '*')
             IDX = IDX & strcmp({cha_tags.station}, S);
          end
-         if exist('L', 'var')  && ~isempty(L)
+         if exist('L', 'var')  && ~isempty(L) && all(L ~= '*')
             IDX = IDX & strcmp({cha_tags.location}, L);
          end
-         if exist('C', 'var') && ~isempty(C)
+         if exist('C', 'var') && ~isempty(C) && all(C ~= '*')
             IDX = IDX & strcmp({cha_tags.channel}, C);
          end
          if nargout == 2
@@ -297,10 +300,10 @@ classdef channeltag
    end%methods
    
    methods(Static)
-      function  [N, S, L, C] = parsechaTag(chaTag)
-         % parsechaTag parses a period-delimeted string
-         % [N, S, L, C] = channeltag.parsechaTag('net.sta.loc.cha')
-         if isstruct(chaTag)
+      function  [N, S, L, C] = parse(chaTag)
+         % parse parses a period-delimeted string
+         % [N, S, L, C] = channeltag.parse('net.sta.loc.cha')
+         if isstruct(chaTag) || isa(chaTag,'channeltag')
             N = chaTag.network;
             S = chaTag.station;
             L = chaTag.location;

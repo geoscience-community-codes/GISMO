@@ -212,10 +212,14 @@ end;
 
 %%%%%%%%%%%%%%%%
 function val = grabEndTime(w)
+   if isempty(w)
+      val = [];
+      return
+   end
 dlens = get(w,'data_length');
 dlens = dlens(:);
 
-myfrq = [w.Fs]; % get(w,'Freq');
+myfrq = [w.Fs];
 myfrq = myfrq(:);
 
 seclen = dlens ./ myfrq;
