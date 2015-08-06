@@ -103,12 +103,15 @@ classdef channeltag
                chaTag.location = L; 
                chaTag.channel = C;
             case 1
-               if isa(N,'channeltag')
+               if isa(N,'channeltag') % && numel(chaTag == 1)
                   chaTag = N;
-               else
-               [chaTag.network, chaTag.station, ...
-                  chaTag.location, chaTag.channel] = ...
-                  channeltag.parse(N);
+               elseif ischar(N) || (iscell(N) && numel(N) == 1)
+                     [chaTag.network, chaTag.station, ...
+                        chaTag.location, chaTag.channel] = ...
+                        channeltag.parse(N);
+               elseif iscell(N)
+                  error('CHANNELTAG:arrayInitializationAttempt',...
+                     'Tried to create multiple channeltags without using channeltag.array()');
                end
             case 0
                return
@@ -117,6 +120,17 @@ classdef channeltag
          end
       end
       
+      %{
+      function s = get.network(obj)
+         if numel(obj) > 1
+            s=cell(size(obj));
+            s(:) = {obj.network};
+         else
+            s = obj.network;
+         end
+         whos
+      end
+      %}
       function [IDX, cha_tags] = matching(cha_tags, N, S, L, C)
          % matching does field-by-field comparison
          %
@@ -192,8 +206,10 @@ classdef channeltag
                stuff = {chaTag.(prop_name)};
             case {'nscl_string'}
                %stuff = chaTag.string;
-               warning('s = get(''nsclstring'') obsolete. Use s = chaTag.string(). notice the order switch.');
-               stuff=strcat({obj.network},'_',{obj.station},'_',{obj.channel},'_',{obj.location});
+               warning('CHANNELTAG:get:obsoleteUsage',...
+                  ['get(''nsclstring'') obsolete. Use chaTag.string().\n'...
+                  '  notice it will return N.S.L.C instead of N_S_C_L']);
+               stuff=strcat({chaTag.network},'_',{chaTag.station},'_',{chaTag.channel},'_',{chaTag.location});
             otherwise
                error('CHANNELTAG:UnrecognizedProperty',...
                   'Unrecognized property name : %s',  upper(prop_name));
@@ -203,6 +219,8 @@ classdef channeltag
          %cell of strings.
          if numel(stuff) == 1
             stuff = stuff{1};
+         else
+            stuff = reshape(stuff,size(chaTag));
          end
       end%get
       
@@ -223,7 +241,7 @@ classdef channeltag
                      val = val{1};
                      warning('CHANNELTAG:tooManyValues','Too many property values, only the first will be used');
                   end
-                  [chaTag.(lower(prop_name))]=deal(val);
+                  [chaTag.(lower(prop_name))] = deal(val);
                otherwise
                   error('CHANNELTAG:UnrecognizedProperty',...
                      'Unrecognized property name : %s',  upper(prop_name));
@@ -309,11 +327,17 @@ classdef channeltag
             L = chaTag.location;
             C = chaTag.channel;
          elseif ischar(chaTag)
+               chaTag = strtrim(chaTag);
                delims = find(chaTag == '.');
         
                if numel(delims) ~= 3
+                  if size(chaTag,1) > 1
+                  error('CHANNELTAG:parsechaTag:UnexpectedParam',...
+                     'Expected a single NET.STA.LOC.CHA. For parsing multiple, use channeltag.array()');
+                  else
                   error('CHANNELTAG:parsechaTag:UnexpectedParam',...
                      'Expected ''NET.STA.LOC.CHA'' (using 3 "." delimeters)');
+                  end
                end
                
                N = chaTag(1 : delims(1)-1);
