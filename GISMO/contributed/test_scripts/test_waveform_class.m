@@ -391,11 +391,11 @@ cd(dataPathCorrelation)
 if exist('correlation_cookbook.m','file')
     results.correlation_cookbook = true;
     oldchildren = get(0,'children');
-    try
+    % try
         correlation_cookbook;
-    catch
+    % catch
         results.correlation_cookbook = false;
-    end
+    % end
     newchildren = get(0,'children');
     todelete = newchildren(~ismember(newchildren,oldchildren));
     delete(todelete); %clean up after it.

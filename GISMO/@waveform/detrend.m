@@ -24,7 +24,7 @@ for I = 1 : Nmax
     if isempty(w(I)), continue, end
     
     d = w(I).data;
-    if ~warnedAboutNAN && any(isnan(d))
+    if ~warnedAboutNAN && any(d)
       warnedAboutNAN = true;
       warning('Waveform:detrend:NaNwarning',...
         ['NAN values exist in one or more waveforms.',...
@@ -34,5 +34,5 @@ for I = 1 : Nmax
         '  "demean", however, should work fine.']);
     end
         
-    w(I) = set(w(I),'data',detrend(d,varargin{:}));
+    w(I).data = detrend(d,varargin{:});
 end

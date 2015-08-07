@@ -1,4 +1,4 @@
-function w = delfield(w,field_to_delete, nohistory)
+function w = delfield(w,field_to_delete, ignoredvalue)
 %DELFIELD removes fields from waveform object(s)
 %   w = delfield(waveform, fieldname)
 %       if a user-defined field exists whose name matches the string within

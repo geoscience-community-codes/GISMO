@@ -8,7 +8,7 @@ function [ result ] = eq( w1, w2 )
 % $Date: $
 % $Revision: $
 
-
+assert(isa(w1,'waveform') || isa(w2, 'waveform'));
 
 result = false;
 if w1.cha_tag == w2.cha_tag

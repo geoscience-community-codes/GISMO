@@ -55,12 +55,19 @@ function w = set(w, varargin)
 
 % check to see if history is bypassed
 
+idx = numel(varargin);
+while idx > 1
+   prop_name = upper(varargin{idx-1});
+   val = varargin{idx};
+   idx = idx - 2;
+%{
 Vidx = 1 : numel(varargin);
 
 while numel(Vidx) >= 2
   prop_name = upper(varargin{Vidx(1)});
   val = varargin{Vidx(2)};
-  
+%}
+
   %for n = 1 : numel(w);
   %out = w(n);
   
@@ -116,7 +123,27 @@ while numel(Vidx) >= 2
       
     case {'START', 'START_MATLAB'}
       %AUTOMATICALLY figures out whether date is antelope or matlab
-      %format
+      %format;
+      if numel(val) == 1
+         %expecting a number
+         if numel(w) == 1
+            w.start = val;
+         else
+            [w.start] = deal(val);
+         end
+      else
+         %might be char, might be vector. give it a shot.
+         if numel(w) == 1
+            w.start = datenum(val);
+         else
+            [w.start] = deal(datenum(val));
+         end
+     % else
+     %   error('Waveform:set:propertyTypeMismatch',...
+     %    'Start time not assigned... Unknown value type: %s', class(val));
+      end
+
+      %{
       if ~(isnumeric(val) || isa(val,'char'))
         error('Waveform:set:propertyTypeMismatch',...
           'Start time not assigned... Unknown value type: %s', class(val));
@@ -126,7 +153,7 @@ while numel(Vidx) >= 2
       else
           [w.start] = deal(datenum(val));
       end
-      
+      %}
     case {'START_ANTELOPE', 'START_EPOCH'}
       if ~isnumeric(val),
         error('Waveform:set:propertyTypeMismatch',...
@@ -183,6 +210,7 @@ while numel(Vidx) >= 2
       end %n
   end %switch
   
-  Vidx(1:2) = []; %done with those parameters, move to the next ones...
+  % Vidx(1:2) = []; %done with those parameters, move to the next ones...
   
-end;
+end
+end

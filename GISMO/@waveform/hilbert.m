@@ -15,11 +15,11 @@ function W = hilbert(W, n)
 % $Revision$
 
 for idx = 1:numel(W)
-    d = W(idx).data;
+    % d = W(idx).data;
     if exist('n','var'),
-        d = abs(hilbert(d,n));
+        W(idx).data = abs(hilbert(W(idx).data,n));
     else
-        d = abs(hilbert(d));
+        W(idx).data = abs(hilbert(W(idx).data));
     end
-    W(idx) = set(W(idx),'data',d);
+    % W(idx) = set(W(idx),'data',d);
 end

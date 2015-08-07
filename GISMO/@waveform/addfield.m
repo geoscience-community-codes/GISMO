@@ -5,8 +5,6 @@ function w = addfield(w,fieldname,value,noHistOption)
 %   included value.  If fieldname exists, it will overwrite the existing
 %   value.
 %
-%   waveform = addfield(...'nohist') overrides history tracking
-%
 %   Input Arguments
 %       WAVEFORM: a waveform object   N-DIMENSIONAL
 %       FIELDNAME: a string name
@@ -61,7 +59,7 @@ if ismember(fieldname,actualfields)
   if useHistory
     w = set(w, fieldname{1}, value); %set the value of the actual field
   else
-    w = set(w, fieldname{1}, value,'nohist'); %set the value of the actual field
+    w = set(w, fieldname{1}, value); %set the value of the actual field
   end
   warning('Waveform:addfield:fieldExists',...
     'Attempted to add intrinsic field.\nNo field added, but Values changed anyway');
@@ -79,6 +77,6 @@ for n=1:numel(w)                % for each possible waveform
   if useHistory
     w(n) = set(w(n), fieldname{1},value);
   else
-    w(n) = set(w(n), fieldname{1},value,'nohist');
+    w(n) = set(w(n), fieldname{1},value);
   end
 end

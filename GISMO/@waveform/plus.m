@@ -43,13 +43,10 @@ for n = 1:numel(w)
         
         if scalar_addition
             w(n).data = w(n).data + double(q);
-            % MOVED OUTSIDE LOOP w(n) = addhistory(w(n),'added %d', q);
         elseif array_addition
             w(n).data = w(n).data + double(q(n));
-            w(n) = addhistory(w(n),'added %d ', q(n));
         elseif element_addition
             w(n).data = w(n).data + double(q(:));
-            %MOVED OUTSIDE LOOP w(n) = addhistory(w(n),'Added a vector "%s"', inputname(2));
         else
             if all(size(w) == size(q'))
                 error('Waveform:plus:sizeMismatch',...
@@ -68,7 +65,6 @@ for n = 1:numel(w)
     elseif isa(q,'waveform')
         if  isscalar(q) && ( numel(w(n).data) == numel(q.data) )
             w(n).data = w(n).data + q.data;
-            %moved outside loop w(n) = addhistory(w(n),['Added to another waveform ', inputname(2)]);
         else
             error('Waveform:plus:invalidDataLengths',...
                 'Invalid operation - data lengths are different or adding multiple waveforms');

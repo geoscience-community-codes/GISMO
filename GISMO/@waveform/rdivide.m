@@ -109,11 +109,11 @@ switch task
         % each waveform has its own number to be divided by
         for n=1:numel(W)
             thisDivisor = double(divisor(n));
-            W(n) = set(W(n),'data',W(n).data ./ thisDivisor );
+            W(n).data = W(n).data ./ thisDivisor;
         end
     case 'waveform_by_scalar'
         for n=1:numel(W)
-            W(n) = set(W(n),'data', W(n).data ./ double(divisor) );
+            W(n).data = W(n).data ./ double(divisor);
         end
     otherwise
         error('Waveform:rdivide:unknownoperation',...
