@@ -2,7 +2,7 @@
 Geophysical Institute Seismic Matlab Objects - a seismological data analysis toolbox for MATLAB. 
 
 <h3>Project Website</h3>
-<a href="http://www.giseis.alaska.edu/Seis/EQ/tools/GISMO/">UAF GISMO site</a>. 
+The legacy website is at <a href="http://www.giseis.alaska.edu/Seis/EQ/tools/GISMO/">UAF GISMO site</a>. 
 <br/>This is being phased out as we migrate to <a href="http://giseislab.github.io/gismotools/">GISMO website on GitHub</a>
 
 <h3>Description</h3>
