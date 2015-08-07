@@ -6,7 +6,7 @@ Geophysical Institute Seismic Matlab Objects - a seismological data analysis too
 <br/>This is being phased out as we migrate to the new <a href="http://giseislab.github.io/gismotools/">GISMO website on GitHub</a>
 
 <h3>Description</h3>
-The GISMO suite is an object-oriented Matlab toolbox for seismic data analysis. The GISMO toolbox consists of: (1) an object-oriented set of low-level classes which describe seismic waveform data and seismic event catalogs ; (2) a set of higher level classes (e.g. the correlation class) which build on the core classes ; and (3) an ever-evolving set of contributed codes developed from these core products. Users are strongly encouraged to join the <a href="http://groups.google.com/group/gismotools/">GISMOTOOLS user group</a> for advice and updates.
+The GISMO suite is an object-oriented Matlab toolbox for seismic data analysis. The GISMO toolbox consists of: (1) a set of low-level classes which describe seismic waveform data and seismic event catalogs ; (2) a set of higher level classes (e.g. the correlation class) which build on the core classes ; and (3) an ever-evolving set of contributed codes developed from these core products. Users are strongly encouraged to join the <a href="http://groups.google.com/group/gismotools/">GISMOTOOLS user group</a> for advice and updates.
 
 <h3>Other Resources</h3>
 The waveform suite, part of the GISMO toolbox, is also available for download from <a href="http://www.mathworks.com/matlabcentral/fileexchange/23809-the-waveform-suite-for-matlab">MATLAB Central's File Exchange</a>. <a href="http://kiska.giseis.alaska.edu/Input/celso/matlabweb/waveform_suite/waveform.html">waveform examples and help files can be found here</a>
