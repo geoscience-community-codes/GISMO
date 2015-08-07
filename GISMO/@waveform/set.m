@@ -78,7 +78,7 @@ while numel(Vidx) >= 2
               [w.cha_tag] = deal(channeltag(val));
             % error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT or CHANNELTAG');
         end
-        warning('Use set(channeltag) instead') % TODO: Decide if better generic name exists
+        % warning('Use set(channeltag) instead') % TODO: Decide if better generic name exists
       
     case 'CHANNELINFO'
         switch class(val)

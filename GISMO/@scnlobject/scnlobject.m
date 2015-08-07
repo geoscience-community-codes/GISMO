@@ -1,5 +1,5 @@
 function SCNLs = scnlobject(stations, channels, networks, locations)
-   % scnl (deprecated) : object that holds the station, channel, network, and location for
+   % scnl (deprecated) : object that holds the stations, channel, network, and location for
    % a seismic trace.  This object is used by the datasource object.
    % SCNLOBJECT has been replaced by CHANNELTAG
    %
@@ -10,20 +10,30 @@ function SCNLs = scnlobject(stations, channels, networks, locations)
    
    switch (nargin)
       case 0 %default
-      case 4 %station, channel, network, location
-      case 3 %station, channel, network
-      case 2 %station, channel
-      case 1 %waveform % Added by Glenn Thompson 2014/10/15 (removed by celso 2015-07-31)
-         if isa(stations,'channeltag')
-            % create from one or more channeltags.
-            for i = numel(stations): -1 : 1
-               SCNLs(i).tag = stations(i);
-            end
-            SCNLs = class(SCNLs,'scnlobject');
-            return
+      case 4 %stations, channel, network, location
+      case 3 %stations, channel, network
+      case 2 %stations, channel
+      case 1 %
+         switch class(stations)
+            case 'channeltag'
+               for i = numel(stations): -1 : 1
+                  SCNLs(i).tag = stations(i);
+               end
+               SCNLs = class(SCNLs,'scnlobject');
+               return
+            case 'scnlobject'
+               SCNLs = stations;
+               return
+            otherwise
+               tags = channeltag.array(stations);
+               for i = numel(tags) : -1 : 1
+                  SCNLs(i).tag = tags(i);
+               end
+               SCNLs = class(SCNLs,'scnlobject');
+               return
          end
-         error('please use waveform''s get(w,''scnlobject'')');
    end
+   
    
    % initialize defaults
    defaultStation = '';

@@ -29,6 +29,7 @@ classdef channeltag
    %
    %  NOTE: WILDCARDS,  NOT IMPLEMENTED as of 2015-07-31!!!!!
    
+   %{
    %  ----------- WILDCARDS --------------------- 
    %  channeltag is merely a storage unit for net-sta-chan-loc information. It
    %  is blind to wildcards. However, when used as an argument in WAVEFORM,
@@ -52,6 +53,7 @@ classdef channeltag
    %   chaTag=channeltag(s,c,n,L); %  returns a 1x2 channeltag:
    %    chaTag(1) contains ANMO, IU, 00, BHZ
    %    chaTag(2) contains ANTO, IU, 00, BHE
+   %}
    
    % Programming notes:
    %   This is intended as a stand-alone class. It should know nothing about
@@ -78,60 +80,63 @@ classdef channeltag
    end
    
    methods
-      function chaTag = channeltag(N, S, L, C)
+      function obj = channeltag(varargin)
          % construct a channeltag from a string or 4 strings.
-         % any of these may be empty ([] or '').
-         %
          % chaTag = channeltag('IU', 'ANMO', '00', 'BHZ'); % net, sta, loc, cha
          % chaTag = channeltag('IU.ANMO.00.BHZ');
          %
+         % any of these may be empty ([] or '').
          % to create multiple channeltags at once, use channeltag.array()
+         %
+         % See also: channeltag.array
          
          % By removing the ability to create many at once, we ensure it won't
          % be done accidentally.
-         %
-         % See also: channeltag.array
          
          switch nargin
             case 4
                % inputsThatAreCells = cellfun(@iscell,{N,S,L,C});
-               if any(cellfun(@iscell,{N,S,L,C}))
-                  error('expected strings but received cells');
+               % if any(cellfun(@iscell,{N,S,L,C}))
+               if any(cellfun(@iscell,varargin))
+                  error('channeltag:InvalidConversion',...
+                     ['expected strings but received cells.\n', ...
+                     'To create multiple channeltags, use channeltag.array()']);
                end
-               chaTag.network = N; 
-               chaTag.station = S; 
-               chaTag.location = L; 
-               chaTag.channel = C;
+               [obj.network, obj.station, obj.location, obj.channel] = deal(varargin{:});
             case 1
-               if isa(N,'channeltag') % && numel(chaTag == 1)
-                  chaTag = N;
-               elseif ischar(N) || (iscell(N) && numel(N) == 1)
-                     [chaTag.network, chaTag.station, ...
-                        chaTag.location, chaTag.channel] = ...
-                        channeltag.parse(N);
-               elseif iscell(N)
-                  error('CHANNELTAG:arrayInitializationAttempt',...
-                     'Tried to create multiple channeltags without using channeltag.array()');
+               inObj = varargin{1};
+               switch class(inObj)
+                  case 'channeltag'
+                     obj = inObj;
+                  case 'char'
+                     if size(inObj,1) == 1
+                     [obj.network, obj.station, obj.location, obj.channel] = ...
+                        channeltag.parse(inObj);
+                     else
+                        error('channeltag:InvalidConversion',...
+                           'To create multiple channeltags, use channeltag.array()');
+                     end
+                        
+                  case 'cell'
+                     if numel(inObj) == 1
+                        [obj.network, obj.station, obj.location, obj.channel] = ...
+                           channeltag.parse(inObj);
+                     else
+                        error('channeltag:InvalidConversion',...
+                           'To create multiple channeltags, use channeltag.array()');
+                     end
+                  otherwise
+                     error ('channeltag:InvalidConversion','Invalid number of arguments');
                end
+               
             case 0
                return
             otherwise
-               error ('CHANNELTAG:InvalidNumberOfInputs','Invalid number of arguments');
+               error ('channeltag:InvalidConversion','Invalid number of arguments');
          end
       end
       
-      %{
-      function s = get.network(obj)
-         if numel(obj) > 1
-            s=cell(size(obj));
-            s(:) = {obj.network};
-         else
-            s = obj.network;
-         end
-         whos
-      end
-      %}
-      function [IDX, cha_tags] = matching(cha_tags, N, S, L, C)
+      function [IDX, objs] = matching(objs, N, S, L, C)
          % matching does field-by-field comparison
          %
          % idx = cha_tags.matching(Net, Sta, Loc, Cha);
@@ -152,24 +157,24 @@ classdef channeltag
                % query used single string : 'net.sta.loc.cha'
                [N, S, L, C] = channeltag.parse(N);
             else
-               error('CHANNELTAG:matching:unknownmatchtype','don''t know how to match it');
+               error('CHANNELTAG:matching:UnknownMatchType','don''t know how to match it');
             end
          end
-         IDX = true(size(cha_tags));
+         IDX = true(size(objs));
          if ~isempty(N) && all(N ~= '*')
-            IDX = strcmp({cha_tags.network}, N);
+            IDX = strcmp({objs.network}, N);
          end
          if exist('S', 'var') && ~isempty(S) && all(S ~= '*')
-            IDX = IDX & strcmp({cha_tags.station}, S);
+            IDX = IDX & strcmp({objs.station}, S);
          end
          if exist('L', 'var')  && ~isempty(L) && all(L ~= '*')
-            IDX = IDX & strcmp({cha_tags.location}, L);
+            IDX = IDX & strcmp({objs.location}, L);
          end
          if exist('C', 'var') && ~isempty(C) && all(C ~= '*')
-            IDX = IDX & strcmp({cha_tags.channel}, C);
+            IDX = IDX & strcmp({objs.channel}, C);
          end
          if nargout == 2
-            cha_tags = cha_tags(IDX);
+            objs = objs(IDX);
          end
       end
       
@@ -184,11 +189,11 @@ classdef channeltag
          result = strcmp(A.string(), B.string());
       end%eq
       
-      function result = ne(chaTag, anythingelse)
-         result = ~strcmp(chaTag.string,anythingelse.string);
+      function result = ne(A, B)
+         result = ~strcmp(A.string,B.string);
       end
       
-      function stuff = get(chaTag, prop_name)
+      function val = get(obj, prop)
          %GET for the chaTag object
          %  result = get(channeltag, property), where PROPERTY is one of the
          %  following:
@@ -198,72 +203,73 @@ classdef channeltag
          % Otherwise, a cell of values will be returned.
          
          
-         prop_name = lower(prop_name);
+         prop = lower(prop);
          
-         switch prop_name
-            
+         switch prop
             case{'station','channel','network','location'}
-               stuff = {chaTag.(prop_name)};
+               val = {obj.(prop)};
             case {'nscl_string'}
                %stuff = chaTag.string;
                warning('CHANNELTAG:get:obsoleteUsage',...
                   ['get(''nsclstring'') obsolete. Use chaTag.string().\n'...
                   '  notice it will return N.S.L.C instead of N_S_C_L']);
-               stuff=strcat({chaTag.network},'_',{chaTag.station},'_',{chaTag.channel},'_',{chaTag.location});
+               val=strcat({obj.network},'_',{obj.station},'_',{obj.channel},'_',{obj.location});
             otherwise
-               error('CHANNELTAG:UnrecognizedProperty',...
-                  'Unrecognized property name : %s',  upper(prop_name));
+               error('CHANNELTAG:get:UnrecognizedProperty',...
+                  'Unrecognized property name : %s',  upper(prop));
          end
          
          %if a single chaTag, then return the string representation, else return a
          %cell of strings.
-         if numel(stuff) == 1
-            stuff = stuff{1};
+         if numel(val) == 1
+            val = val{1};
          else
-            stuff = reshape(stuff,size(chaTag));
+            val = reshape(val,size(obj));
          end
       end%get
       
-      function chaTag = set(chaTag, varargin)
+      function obj = set(obj, varargin)
          %SET - Set properties for channeltag
          %       s = Set(s,prop_name, val, ...)
          %       Valid property names:
          %       STATION, LOCATION, NETWORK, CHANNEL
          
-         Vidx = 1 : numel(varargin); %Vidx is the index for 'varargin'
-         
-         while numel(Vidx) >= 2  % for each property
-            prop_name = varargin{Vidx(1)};
-            val = varargin{Vidx(2)};
-            switch upper(prop_name)
+         idx = [1 2];
+         while numel(varargin) > 1 % for each property
+            [prop, val] = deal(varargin{idx});
+            varargin(idx) = []; % remove the prop and val
+            switch upper(prop)
                case {'STATION','LOCATION','NETWORK','CHANNEL'}
                   if iscell(val) && numel(val) > 1
                      val = val{1};
-                     warning('CHANNELTAG:tooManyValues','Too many property values, only the first will be used');
+                     warning('channeltag:set:TooManyValues',...
+                        'Too many property values, only the first will be used');
                   end
-                  [chaTag.(lower(prop_name))] = deal(val);
+                  [obj.(lower(prop))] = deal(val);
                otherwise
-                  error('CHANNELTAG:UnrecognizedProperty',...
-                     'Unrecognized property name : %s',  upper(prop_name));
+                  error('channeltag:set:UnrecognizedProperty',...
+                     'Unrecognized property name : %s',  upper(prop));
             end; %switch
-            
-            Vidx(1:2) = []; % done with those parameters, move to the next ones...
          end; %each property
+         if ~isempty(varargin)
+            error('channeltag:set:PropertyValueMismatch',...
+               'Each property should have a value. [%s] has no matching value', varargin{1});
+         end
       end
       
-      function s = fixedlengthstrings(cha_tags, netLen, staLen, locLen, chaLen)
+      function s = fixedlengthstrings(objs, netLen, staLen, locLen, chaLen)
          strformat = sprintf('%%-%ds.%%-%ds.%%-%ds.%%-%ds',netLen,staLen,locLen,chaLen);
-         for n = numel(cha_tags) : -1 : 1
-            chaTag = cha_tags(n);
+         for n = numel(objs) : -1 : 1
+            chaTag = objs(n);
             s(n) = {sprintf(strformat,chaTag.network,chaTag.station,chaTag.location,chaTag.channel)};
          end
       end
       
-      function c = char(chaTag)
-         c = chaTag.string([],'nocell');
+      function c = char(obj)
+         c = obj.string([],'nocell');
       end
          
-      function s = string(chaTag, delim, option)
+      function s = string(obj, delim, option)
          % string returns string representation of the nscltag(s)
          % s = chaTag.string()  will return the string representation 
          %      (1xn char) in the format NET.STA.LOC.CHA
@@ -281,72 +287,79 @@ classdef channeltag
          if ~exist('delim','var') || isempty(delim)
             delim = '.';
          end
-         if numel(chaTag) == 1
-            s = getDelimitedString(chaTag);
+         if numel(obj) == 1
+            s = getDelimitedString(obj, delim);
          else
             if exist('option','var') && strcmpi(option,'nocell')
                s = '';
-               for n=1 : numel(chaTag)
-                  tmp = getDelimitedString(chaTag(n));
+               for n=1 : numel(obj)
+                  tmp = getDelimitedString(obj(n), delim);
                   s(n,1:numel(tmp)) = tmp;
                end
             else
-               s = cell(size(chaTag));
-               for n=1 : numel(chaTag)
-                  s(n) = {getDelimitedString(chaTag(n))};
+               s = cell(size(obj));
+               for n=1 : numel(obj)
+                  s(n) = {getDelimitedString(obj(n), delim)};
                end
             end
          end
          
-         function s = getDelimitedString(chaTag)
-            s = [chaTag.network, delim, chaTag.station, delim,...
-                     chaTag.location, delim, chaTag.channel];
+         function s = getDelimitedString(obj, delim)
+            s = [obj.network, delim, obj.station, delim,...
+                     obj.location, delim, obj.channel];
          end
       end
       
-      function res = validate(chaTag)
+      function res = validate(obj)
          % make sure channeltag roughly conforms to SEED
-         nslc_is_char = [ischar(chaTag.network), ischar(chaTag.channel),...
-             ischar(chaTag.station), ischar(chaTag.location)];
-         nslc_valid_length = [numel(chaTag.network) == 2,...
-            numel(chaTag.station) <= 5 && numel(chaTag.station) > 0, ...
-            numel(chaTag.location) == 2, ...
-            numel(chaTag.channel) == 3];
+         nslc_is_char = [ischar(obj.network), ischar(obj.channel),...
+             ischar(obj.station), ischar(obj.location)];
+         nslc_valid_length = [numel(obj.network) == 2,...
+            numel(obj.station) <= 5 && numel(obj.station) > 0, ...
+            numel(obj.location) == 2, ...
+            numel(obj.channel) == 3];
          res = all(nslc_is_char & nslc_valid_length);
       end
             
    end%methods
    
    methods(Static)
-      function  [N, S, L, C] = parse(chaTag)
+      function  [N, S, L, C] = parse(val)
          % parse parses a period-delimeted string
          % [N, S, L, C] = channeltag.parse('net.sta.loc.cha')
-         if isstruct(chaTag) || isa(chaTag,'channeltag')
-            N = chaTag.network;
-            S = chaTag.station;
-            L = chaTag.location;
-            C = chaTag.channel;
-         elseif ischar(chaTag)
-               chaTag = strtrim(chaTag);
-               delims = find(chaTag == '.');
-        
-               if numel(delims) ~= 3
-                  if size(chaTag,1) > 1
-                  error('CHANNELTAG:parsechaTag:UnexpectedParam',...
-                     'Expected a single NET.STA.LOC.CHA. For parsing multiple, use channeltag.array()');
-                  else
-                  error('CHANNELTAG:parsechaTag:UnexpectedParam',...
-                     'Expected ''NET.STA.LOC.CHA'' (using 3 "." delimeters)');
-                  end
-               end
-               
-               N = chaTag(1 : delims(1)-1);
-               S = chaTag(delims(1)+1 : delims(2)-1);
-               L = chaTag(delims(2)+1 : delims(3)-1);
-               C = chaTag(delims(3)+1 : end);
+         if isstruct(val) || isa(val,'channeltag')
+            N = val.network;
+            S = val.station;
+            L = val.location;
+            C = val.channel;
+         elseif ischar(val)
+            % test validity, then split.  in R2015a+ strsplit() could do
+            % this. But, this is being designed on R2012a.
+            parts =  strsplit(val, '.');
+            if numel(parts) ~= 4
+               error('channeltag:parse:InvalidFieldCount',...
+                  'Expected ''A.B.C.D'' (4 fields), but received %d.', numel(parts));
+            end
+            if any(val == ' '), 
+               parts = strtrim(parts); 
+            end
+            [N, S, L, C] = deal(parts{:});
          else
-            error('CHANNELTAG:parsechaTag:unknownClass',...
-               'unknown how to parse: %s', class(chaTag));
+            error('channeltag:parse:UnknownClass',...
+               'unknown how to parse: %s', class(val));
+         end
+         
+         function  C = strsplit(s, delim)
+            % C = strsplit(str, delim) returns cell created from string
+            %  ex. C = strsplit('A.B..D','.') -> {'A', 'B', '', 'D'}
+            % can (probably) be commented out or removed in r2015a+
+            splitpts = find(s == delim);
+            starts = [1, splitpts+1];
+            ends = [splitpts-1, numel(s)];
+            C = cell(1,numel(starts));
+            for n = 1:numel(starts)
+               C(n) = {s(starts(n):ends(n))};
+            end
          end
       end
       
@@ -374,16 +387,15 @@ classdef channeltag
                      cha_tags(1,n) = channeltag(strtrim(char_array(n,:)));
                   end
                else
-                  error('CHANNELTAG:array:UnknownInput','expected cell of strings or a char array');
+                  error('channeltag:array:UnknownInput','expected cell of strings or a char array');
                end
             case 4
                % expect 1xN char OR arbitrary-sized CELL of 1xN char
                % if multiple cells, then they should all be same size
-               N = varargin{1}; S = varargin{2}; L = varargin{3}; C = varargin{4};
                inputsThatAreCells = cellfun(@iscell,varargin);
                if any(inputsThatAreCells)
                   %make a cell array of N.S.L.C
-                  A = strcat(N,'.',S,'.',L,'.',C);
+                  A = strcat(varargin{1},'.',varargin{2},'.',varargin{3},'.',varargin{4});
                end
                for n = numel(A): -1 : 1
                   cha_tags(n) = channeltag(A{n});
@@ -426,8 +438,6 @@ classdef channeltag
          % ismember 
          assert(ismember(channeltag('NW.STA1.00.B'), tags));
          
-         
-         % 
       end %test
          
          
