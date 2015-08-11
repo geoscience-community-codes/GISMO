@@ -1,4 +1,4 @@
-function print_debug(the_text, level)
+function print_debug(level, varargin)
 % PRINT_DEBUG optionally display text based on the debug level.
 %
 %    PRINT_DEBUG is useful for controlling the level of verboseness in a MATLAB application.
@@ -6,9 +6,11 @@ function print_debug(the_text, level)
 %    
 %    EXAMPLE:
 %
-%    debug.print_debug('Welcome to MyApp', 1)
+%
+%    libgt.print_debug(1, 'Welcome to MyApp')
 %    outfile = 'myapp.txt';
-%    debug.print_debug(sprintf('output filename = %s',outfile), 3)
+%    libgt.print_debug(3, 'output filename = %s',outfile)
+%
 %
 %    If the debug level is set at 0, nothing will display.
 %    If set at 1 (or 2), 'Welcome to MyApp' would display.
@@ -18,19 +20,30 @@ function print_debug(the_text, level)
 % 
 %    See also debug.set_debug, debug.printfunctionstack, debug.get_debug, setpref, getpref.
 
-% AUTHOR: Ronni Grapenthin and Glenn Thompson, UAF-GI
+% AUTHOR: Ronni Grapenthin and Glenn Thompson and Celso Reyes, UAF-GI
 % $Date: 2012-04-11 08:15:09 -0800 (Wed, 11 Apr 2012) $
 % $Revision: 348 $
 % Modified by Glenn Thompson: 2010-03-10: Added error handling for case that runmode pref hasn't been set
 % Modified by Glenn Thompson: 2010-03-10: To use multiple levels of debug (0 = none, 1 = some, 2 = higher):
+% Modified by Celso Reyes: 2015: made value persistent to speed up,flipped
+% arguments, allowed for multiple arguments to make calling routines easier
+% to read.
+% function.
 
-   try	
-    	if(getpref('runmode', 'debug') >= level)
-     		disp(the_text);
-        end
-   catch
-	% the runmode preference probably has not been set, so set it here
-	setpref('runmode', 'debug', 0);
+persistent Lev
+   if isempty(Lev)
+      try
+         Lev = getpref('runmode', 'debug');
+      catch
+         setpref('runmode','debug', 0); % might wish to alert user, or set it in a more gismo-sounding location.
+         Lev = 0;
+      end
    end
-
-return 
+   if level >= Lev
+      if numel(varargin) == 1
+         disp(varargin{:})
+      else
+         fprintf(varargin{:})
+      end
+   end
+end

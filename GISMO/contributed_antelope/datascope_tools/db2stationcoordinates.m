@@ -17,7 +17,7 @@ site.elev = NaN;
 % GET THE CORRECT STATION RECORD FORM THE SITE TABLE
 db = dbopen(sitedb, 'r');
 db = dblookup_table(db, 'site');
-debug.print_debug(sprintf('Processing %s',staname),4);
+debug.print_debug(4, 'Processing %s',staname);
 if exist('epochdate', 'var')
     db2 = dbsubset(db, sprintf('(sta == "%s") && (ondate <= %f) && (offdate >= %f)',staname,epochdate,epochdate));
     if dbquery(db2, 'dbRECORD_COUNT')==0
