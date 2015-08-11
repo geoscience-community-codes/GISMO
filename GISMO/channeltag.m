@@ -102,6 +102,7 @@ classdef channeltag
                      ['expected strings but received cells.\n', ...
                      'To create multiple channeltags, use channeltag.array()']);
                end
+               varargin = strtrim(varargin);
                [obj.network, obj.station, obj.location, obj.channel] = deal(varargin{:});
             case 1
                inObj = varargin{1};
@@ -120,7 +121,7 @@ classdef channeltag
                   case 'cell'
                      if numel(inObj) == 1
                         [obj.network, obj.station, obj.location, obj.channel] = ...
-                           channeltag.parse(inObj);
+                           channeltag.parse(inObj{1});
                      else
                         error('channeltag:InvalidConversion',...
                            'To create multiple channeltags, use channeltag.array()');
