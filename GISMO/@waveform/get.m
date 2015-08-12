@@ -178,7 +178,7 @@ switch upper(prop_name)
                 val{n} = w(n).misc_values{mask};
                 %val{n} = w(n).misc_values{m};
             else
-                warning('Waveform:get:unrecognizedProperty',...
+                error('Waveform:get:unrecognizedProperty',...
                     'Unrecognized property name : %s',  prop_name);
             end
         end
