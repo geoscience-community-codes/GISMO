@@ -297,7 +297,7 @@ classdef catalog
 			%   plot(cobj, 'minmag', 1.0) plots magnitude vs. date/time after filtering out all events smaller than mag=1.0
 			%   If cobj is an array of event structures, each will be plotted on a separate figure
 
-			debug.print_debug(sprintf('> %s', mfilename),2);
+			debug.print_debug(2, '> %s', mfilename);
 			[splitby, minmag] = matlab_extensions.process_options(varargin, 'splitby', 'none', 'minmag', -999.0);
 
 
@@ -808,7 +808,7 @@ classdef catalog
             arrival.unique_orids = [];
             arrival.iphase = {};
 
-			debug.print_debug(sprintf('archive format is %s',cobj.archiveformat),3);
+			debug.print_debug(3, 'archive format is %s',cobj.archiveformat);
 
 			if strcmp(cobj.archiveformat,'')
 				dbname = cobj.dbroot;

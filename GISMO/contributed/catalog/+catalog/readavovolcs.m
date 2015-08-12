@@ -20,7 +20,7 @@ function [sourcelon, sourcelat, minlon, maxlon, minlat, maxlat] = readavovolcs(v
 
 % Author: Glenn Thompson
 
-debug.print_debug(sprintf('> %s', mfilename),4)
+debug.print_debug(4,'> %s', mfilename)
 
 if ~exist('pffile', 'var') 
 	pffile=(['pf/avo_volcs.pf']);
@@ -32,7 +32,7 @@ end
 if exist(pffile, 'file')
 	volcano = camelcase2underscore(volcano);
 	
-	debug.print_debug(sprintf('Trying to read %s for %s\n', pffile,volcano),2)
+	debug.print_debug(2, 'Trying to read %s for %s\n', pffile,volcano)
 	A=importdata(pffile);
 	
 	for c=1:length(A.rowheaders)
@@ -50,7 +50,7 @@ else
 	error(sprintf('%s: %s does not exist',mfilename, pffile));
 end
 
-debug.print_debug(sprintf('< %s', mfilename),4)
+debug.print_debug(4, '< %s', mfilename)
 
 function str = camelcase2underscore(str)
 str = strcat(str(1) ,regexprep(str(2:end), '[A-Z]', '_$0') );
