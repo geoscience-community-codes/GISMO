@@ -1,9 +1,12 @@
-function results = eq(mywave, anythingelse)
-% unimplemented scnlobject equals.  use ismember instead.
-disp(['first object is a ' class(mywave)]);
-disp(['second object is a ' class(anythingelse)]);
-
-if isa(anythingelse,'scnlobject')
-  disp('doing the scnl thing...')
+function results = eq(A, B)
+   % when using wildcards, use ismember
+   switch class(B)
+      case 'scnlobject'
+         results = [A.tag] == [B.tag];
+      case 'channeltag'
+         results = [A.tag] == [B];
+      otherwise
+         error('scnlobject:eq:UnrecognizedComparison',...
+            'Don''t know how to compare scnlobject with %s\n',class(B));
+   end
 end
-  

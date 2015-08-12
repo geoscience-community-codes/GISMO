@@ -11,5 +11,3 @@ if ~(isnumeric(B))
 end
 
 C = set(W, 'data', get(W,'data') / double(B));
-
-C = addhistory(C, ['Divided by ' num2str(B)]);

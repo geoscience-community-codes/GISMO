@@ -24,40 +24,40 @@ function varargout = legend(wave, varargin)
 if nargin == 1
     % automatically determine the legend
     total_waves = numel(wave);
-    scnls = get(wave,'scnlobject');
-    nscnls = numel(unique(scnls));
-    if nscnls == 1
-        % all scnls represent the same station
+    cha_tags = get(wave,'channeltag');
+    ncha_tags = numel(unique(cha_tags));
+    if ncha_tags == 1
+        % all cha_tags represent the same station
         items = get(wave,'start_str');
     else
-        uniquestations = unique(get(scnls,'station'));
+        uniquestations = unique(get(cha_tags,'station'));
         stationsareunique = numel(uniquestations) == total_waves;
         issinglestation = isscalar(uniquestations);
         
-        uniquechannels = unique(get(scnls,'channel'));        
+        uniquechannels = unique(get(cha_tags,'channel'));        
         channelsareunique = numel(uniquechannels) == total_waves;
         issinglechannel = isscalar(uniquechannels);    
     
     if stationsareunique
         if issinglechannel
-            items = get(scnls,'station');
+            items = get(cha_tags,'station');
         else
-            items = strcat(get(scnls,'station'),':',get(scnls,'channel'));
+            items = strcat(get(cha_tags,'station'),':',get(cha_tags,'channel'));
         end
     elseif issinglestation
         if issinglechannel
             items = get(wave,'start_str');
         elseif channelsareunique
-            items = get(scnls,'channel');
+            items = get(cha_tags,'channel');
         else
             % 1 station, mixed channels
-            items = strcat(get(scnls,'channel'),': ',get(wave,'start_str'));
+            items = strcat(get(cha_tags,'channel'),': ',get(wave,'start_str'));
         end
     else %mixed stations
         if issinglechannel
-            items = strcat(get(scnls,'station'),': ',get(wave,'start_str'));
+            items = strcat(get(cha_tags,'station'),': ',get(wave,'start_str'));
         else
-            items = strcat(get(scnls,'station'),':',get(scnls,'channel'));
+            items = strcat(get(cha_tags,'station'),':',get(cha_tags,'channel'));
         end        
     end
                 
@@ -69,15 +69,7 @@ else
     %let the provided fieldnames determine the legend.
     items = get(wave,varargin{1});
     items = anything2textCell(items);
-%         if isnumeric(items)
-%             items=num2str(items);
-%         elseif iscell(items)
-%             if isnumeric(items{1})
-%                 for n=1 1:numel(items)
-%                     items(n) = {num2str(items{n})};
-%                 end
-%             end
-%         end
+    
     for n=2:nargin-1
         nextitems = get(wave,varargin{n});
         items = strcat(items,':',anything2textCell(nextitems));

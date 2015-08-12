@@ -236,10 +236,8 @@ for m = 1: numel(startV) %loop through the number of extractions
     
     if MULTIPLE_EXTRACTION
       outW(n,m) = set(inW,'start',myStart, 'data', myData);
-      outW(n,m) = addhistory(outW(n,m) ,['Extracted, using ' method]);
     else
       outW(n) = set(inW,'start',myStart, 'data', myData);
-      outW(n) = addhistory(outW(n),['Extracted, using ' method]);
     end
   end % n-loop (looping through waveforms)
 end % m-loop (looping through extractions)

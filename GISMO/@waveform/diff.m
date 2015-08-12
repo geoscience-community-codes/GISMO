@@ -36,5 +36,3 @@ for I = 1 : Nmax
         w(I) = set(w(I),'units',tempUnits);
     end
 end
-
-w = addhistory(w,'Differentiated');

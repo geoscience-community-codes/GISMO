@@ -16,4 +16,3 @@ function w = abs(w)
 for n=1:numel(w)
     w(n).data = abs(w(n).data);
 end
-w(n) = addhistory(w(n), 'Absolute value of data');

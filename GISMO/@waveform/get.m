@@ -52,18 +52,17 @@ function val = get(w,prop_name)
 
 %val_CELL = cell(size(w));
 %val = val_CELL;
-prop_name = upper(prop_name);
 usedcell = false;
 singleWave = isscalar(w);
-switch prop_name
+switch upper(prop_name)
     
     % IDENTIFICATION PROPERTIES
     case {'STATION','CHANNEL','NETWORK','LOCATION'} %type:CELL
-        val = get([w.scnl],prop_name);
+        val = get([w.cha_tag],prop_name);
         usedcell = true;
         
     case {'COMPONENT'} %type:CELL   GRANDFATHERED IN...
-        val = get([w.scnl],'channel');
+        val = get([w.cha_tag],'channel');
         usedcell = true;
         
         % DATA DESCRIBING PROPERTIES
@@ -153,8 +152,10 @@ switch prop_name
         val = w(1).version;
         
     case {'SCNLOBJECT'}
-        val = [w.scnl];
+        val = scnlobject([w.cha_tag]);
         %must add network & location, too.
+   case {'CHANNELTAG'}
+      val = [w.cha_tag];
         
     case {'HISTORY'}
         val = cell(size(w));
@@ -169,7 +170,7 @@ switch prop_name
         for n = 1 : numel(w)
             %loc is the position...
             %w(n).misc_fields should ALWAYS already be in uppercase
-            mask = strcmp(prop_name,w(n).misc_fields);
+            mask = strcmp(upper(prop_name),w(n).misc_fields);
             %fieldwasfound = any(mask);
             %[fieldwasfound, loc] = ismember(prop_name, w(n).misc_fields);
             if any(mask)
@@ -177,7 +178,7 @@ switch prop_name
                 val{n} = w(n).misc_values{mask};
                 %val{n} = w(n).misc_values{m};
             else
-                warning('Waveform:get:unrecognizedProperty',...
+                error('Waveform:get:unrecognizedProperty',...
                     'Unrecognized property name : %s',  prop_name);
             end
         end
@@ -211,10 +212,14 @@ end;
 
 %%%%%%%%%%%%%%%%
 function val = grabEndTime(w)
+   if isempty(w)
+      val = [];
+      return
+   end
 dlens = get(w,'data_length');
 dlens = dlens(:);
 
-myfrq = [w.Fs]; % get(w,'Freq');
+myfrq = [w.Fs];
 myfrq = myfrq(:);
 
 seclen = dlens ./ myfrq;

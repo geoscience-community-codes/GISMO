@@ -23,4 +23,3 @@ end
 for n=1:numel(A);
     A(n) = set(A(n),'data',A(n).data * double(B));
 end
-A = addhistory(A,'multiplied (*) by %s', num2str(B));

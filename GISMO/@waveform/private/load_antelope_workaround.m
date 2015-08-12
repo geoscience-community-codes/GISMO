@@ -470,12 +470,12 @@ for seg = 1:traceCount
   tr.record = seg - 1;
   s = db2struct(tr); %do once, get one for each segment
   
-  tempw = set(allw(seg),'station',s.sta,'channel',s.chan,'start', dep2mep(s.time),'freq',s.samprate,'nohist');
+  tempw = set(allw(seg),'station',s.sta,'channel',s.chan,'start', dep2mep(s.time),'freq',s.samprate);
   % s(seg).loc doesn't exist... allw(seg) = addfield(allw(seg),'loc',s(seg).loc);
-  tempw = addfield(tempw,'calibration_applied','NO','nohist');
+  tempw = addfield(tempw,'calibration_applied','NO');
   sunit = segtype2units(s.segtype); %not bothering to get the unit detail
-  tempw = set(tempw,'units',sunit,'nohist');
-  allw(seg) = addfield(tempw,'calib',s.calib,'nohist');
+  tempw = set(tempw,'units',sunit);
+  allw(seg) = addfield(tempw,'calib',s.calib);
   a = trextract_data(tr);
   %get rid of dataspikes
   badmask(seg).mask =(abs(a) >= maxAllowableSignal) | isinf(a);
@@ -489,7 +489,7 @@ for seg = 1:traceCount
   tr.record = seg - 1;
   a = trextract_data(tr);
   a(badmask(seg).mask) = nan;
-  allw(seg) = set(allw(seg),'data',a,'nohist');
+  allw(seg) = set(allw(seg),'data',a);
 end
 
 function validCalibMask = hasValidCalib(w)

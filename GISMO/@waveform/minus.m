@@ -30,8 +30,7 @@ if ~isa(w,'waveform')
     %yipes.  we have a number minus a waveform
     errtext = [sprintf('subtracting a <waveform> from a <%s> leads to ambiguous answer type\n',class(w)), ...
         sprintf('  for a numerical result, try: <%s> - double(<waveform>)\n',class(w)), ...
-        sprintf('  for a waveform result, try:  -<waveform> + <%s>\n',class(w)),...
-        sprintf('\t and don''t forget to modify the waveform''s history if appropriate\n')];
+        sprintf('  for a waveform result, try:  -<waveform> + <%s>\n',class(w))];
     error('Waveform:minus:invalidClass','Error attempting: <%s> - <%s>\n%s', class(w),class(q),errtext);
 end
 try
@@ -57,34 +56,3 @@ catch caughtvalue
     end
 end
 return;
-
-% %% below is previous implementation of minus
-% for n=1: numel(w)
-%     if isnumeric(q)
-%         % keep out characters and character arrays because they'd be
-%         % converted to their ascii equivelents.  Not good.
-%         %
-%         % other numeric types, such as int32  must be converted explicetly
-%         % to double before the action takes place.  Also, these must be in
-%         % the same shape as the data column (thus the "q(:)")
-%         w(n) = set(w(n), 'data', get(w(n),'data') - double(q(:))  );
-%
-%         if isscalar(q)
-%             w(n) = addhistory(w(n),['Subtracted ' num2str(q)]);
-%         else
-%             w(n) = addhistory(w(n),'Subtracted a vector "%s"', inputname(2));
-%         end
-%
-%     elseif isa(q,'waveform')
-%         if  isscalar(q) && ( get(w(n),'data_length') == get(q,'data_length') )
-%             w(n) = set(w(n),'data', get(w(n),'data') - get(q,'data'));
-%             w = addhistory(w,['Subtracted by another waveform ', inputname(2)]);
-%         else
-%             warning('Waveform:minus:invalidDataLengths',...
-%                 'Invalid operation - data lengths are different or subtracting multiple waveforms');
-%         end;
-%     else
-%         error('Waveform:minus:invalidClass',...
-%           'unknown subtraction operation: "%s - %s"',class(w),class(q));
-%     end;
-% end

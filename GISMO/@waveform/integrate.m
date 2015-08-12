@@ -55,5 +55,3 @@ for I = 1 : Nmax
     end
     %w(I) = set(w(I),'units', [get(w(I),'units'), ' * sec']);
 end
-
-w = addhistory(w,'Integrated');

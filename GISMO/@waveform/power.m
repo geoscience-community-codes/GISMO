@@ -19,13 +19,6 @@ end
 if ~(isnumeric(b) || isa(b,'waveform'))
     error('Waveform:power:invalidPower','Usage: waveform .^ double');
 end
-
 for N = 1:numel(a)
-    a(N) = set(a(N),'data', double(a(N)) .^ double(b));
-end
-
-if isnumeric(b) && isscalar(b),
-a = addhistory(a,'Raised to power: %s', num2str(b));
-else
-a = addhistory(a,'Raised to power: %s', inputname(2));
+    a(N).data(:) = a(N).data .^ double(b);
 end

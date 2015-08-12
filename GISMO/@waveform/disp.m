@@ -9,8 +9,7 @@ function disp(w)
 if numel(w) > 1;
   disp(' ');
   fprintf('[%s] %s object with fields:\n', size2str(size(w)), class(w));
-  disp('     station');
-  disp('     channel');
+  disp('     channeltag');
   disp('     start');
   disp('     freq');
   disp('     data');
@@ -42,22 +41,19 @@ else %single waveform
       get(w,'data_length')==0;
     disp('  (incomplete or empty waveform)');
   end
-  fprintf('   station: %6s\t\t network: %2s\n',...
-    get(w,'station'),get(w,'network'));
-  fprintf('   channel: %6s\t\tlocation: %2s\n',...
-    get(w,'channel'),get(w,'location'));
-  fprintf('     start: %s\n',get(w,'start_str'));
-  fprintf('            duration(%s)\n' , get(w,'duration_str'));
-  fprintf('      data: %d samples\n', get(w,'data_length'));
-  fprintf('      freq: %10.4f Hz\n',get(w,'Fs'));
-  fprintf('     units: %s\n',get(w,'units'));
+  fprintf(' channeltag: %-15s   [network.station.location.channel]\n', w.cha_tag.string);
+  fprintf('      start: %s\n',get(w,'start_str'));
+  fprintf('             duration(%s)\n' , get(w,'duration_str'));
+  fprintf('       data: %d samples\n', numel(w.data));
+  fprintf('       freq: %-10.4f Hz\n',get(w,'freq'));
+  fprintf('      units: %s\n',get(w,'units'));
             historycount =  size(get(w,'history'));
           if historycount == 1
               plural=''; 
           else
               plural = 's';
           end
-  fprintf('   history: [%d item%s], last modification: %s\n',...
+  fprintf('    history: [%d item%s], last modification: %s\n',...
               historycount(1), plural, datestr(max([w.history{:,2}])));
   if numel(get(w,'misc_fields')) > 0,
     disp('    With misc fields...');

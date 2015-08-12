@@ -67,17 +67,17 @@ for i = 1:imax
         s2 =  min([Mo M-s1_all(i)]);         % number of data samples to include
         w2(s1_all(i)+1:s1_all(i)+s2) = d(1:s2,i);     % Pad beginning with zeros
         start2 = wStarts(i)-(s1_all(i))/samp_per_day;
-        %c.W(i) = set(c.W(i),'DATA',w2,'start',start2,'nohist');
-        %c.W(i) = set(c.W(i),'Start',start2,'nohist');
+        %c.W(i) = set(c.W(i),'DATA',w2,'start',start2);
+        %c.W(i) = set(c.W(i),'Start',start2);
     else       
         s1 = -1*s1_all(i);                   % beginning of traces must be CLIPPED
         s2 =  min([Mo-s1 M]);         % number of data samples to include
         w2(1:s2) = d(s1+1:s1+s2,i);     % crop beginning
         start2 = wStarts(i)+(s1)/samp_per_day;
-        %c.W(i) = set(c.W(i),'DATA',w2,'nohist');
-        %c.W(i) = set(c.W(i),'Start',start2,'nohist');
+        %c.W(i) = set(c.W(i),'DATA',w2);
+        %c.W(i) = set(c.W(i),'Start',start2);
     end;
-        c.W(i) = set(c.W(i),'DATA',w2,'start',start2,'nohist');
+        c.W(i) = set(c.W(i),'DATA',w2,'start',start2);
 end;
 c.W = addhistory(c.W,'correlation/crop');
 

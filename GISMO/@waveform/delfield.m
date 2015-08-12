@@ -1,4 +1,4 @@
-function w = delfield(w,field_to_delete, nohistory)
+function w = delfield(w,field_to_delete, ignoredvalue)
 %DELFIELD removes fields from waveform object(s)
 %   w = delfield(waveform, fieldname)
 %       if a user-defined field exists whose name matches the string within
@@ -34,8 +34,4 @@ for n=1:numel(w)
     mask = ~strcmp(miscF, field_to_delete);
     w(n).misc_fields = w(n).misc_fields(mask);
     w(n).misc_values = w(n).misc_values(mask);
-end
-
-if ~exist('nohistory','var') || ~nohistory
-  w = addhistory(w,['Removed Field: ' field_to_delete{:}]);
 end

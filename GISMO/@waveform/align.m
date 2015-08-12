@@ -115,7 +115,7 @@ for n=1:numel(w)
     w(n).start = newSampleTimes(1);  % assumes matlab number formatted time
     
 end
-w = set(w,'freq',newFrequency,'nohist');
+w = set(w,'freq',newFrequency);
 
 %% update histories
 % if all waves were aligned to the same time, then handle all history here
@@ -127,13 +127,14 @@ if hasSingleAlignTime
         timeStr, newFrequency);
     w = addhistory(w,myHistory);
 else
+   dummyw = waveform;
     for n=1:numel(w)
          %fancy way to get properly formatted time
-        timeStr = get(set(waveform,'start',alignTime(n)),'start_str');
-        
+         dummyw.start = alignTime(n);
+        %timeStr = get(set(dummyw,'start',alignTime(n)),'start_str');
         %adjust history
         myHistory = sprintf('aligned data to %s at %f samples/sec',...
-            timeStr, newFrequency);
+            get(dummyw,'start_str'), newFrequency);
         w(n) = addhistory(w(n),myHistory);
     end
 end

@@ -54,48 +54,61 @@ function w = set(w, varargin)
 %global dep2mep
 
 % check to see if history is bypassed
-UPDATE_HISTORY = ~strcmpi(varargin(end),'nohist');
 
+idx = numel(varargin);
+while idx > 1
+   prop_name = upper(varargin{idx-1});
+   val = varargin{idx};
+   idx = idx - 2;
+%{
 Vidx = 1 : numel(varargin);
 
 while numel(Vidx) >= 2
   prop_name = upper(varargin{Vidx(1)});
   val = varargin{Vidx(2)};
-  
+%}
+
   %for n = 1 : numel(w);
   %out = w(n);
   
   switch prop_name
     case 'SCNLOBJECT'
-      if isa(val,'scnlobject')
-        
-        [w.scnl] = deal(val);
-      else
-        error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT');
-      end
+        switch class(val)
+          case 'scnlobject'
+            [w.cha_tag] = deal(get(val,'channeltag'));
+          case 'channeltag'
+            [w.cha_tag] = deal(val);
+          case 'char'
+            [w.cha_tag] = deal(channeltag.parse(val));
+           otherwise
+            % try it!
+              [w.cha_tag] = deal(channeltag(val));
+            % error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT or CHANNELTAG');
+        end
+        % warning('Use set(channeltag) instead') % TODO: Decide if better generic name exists
       
+    case 'CHANNELINFO'
+        switch class(val)
+          case 'scnlobject'
+            [w.cha_tag] = deal(channeltag(char(val)));
+          case 'channeltag'
+            [w.cha_tag] = deal(val);
+          case 'char'
+            [w.cha_tag] = deal(channeltag(val));
+          otherwise
+            % try it!
+              [w.cha_tag] = deal(channeltag(val));
+            % error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT or CHANNELTAG');
+        end
     case {'STATION','NETWORK', 'CHANNEL','LOCATION'}
       if ~isa(val,'char')
         error('Waveform:set:propertyTypeMismatch',...
           '%s should be a string not a %s', prop_name,class(val));
       end
-      allscnls = set([w.scnl],prop_name,val);
+      all_chantags = set([w.cha_tag],prop_name,val);
       for n=1:numel(w)
-        w(n).scnl = allscnls(n);
+        w(n).cha_tag = all_chantags(n);
       end
-      
-    case {'COMPONENT'} %grandfather case, supplanted by 'CHANNEL'
-      if ~isa(val,'char')
-        error('Waveform:set:propertyTypeMismatch',...
-        'Channel should be a string not a %s', class(val));
-      end
-      for n=1:numel(w)
-        w(n).scnl = set(w(n).scnl,'channel',val);
-      end
-      warning('Waveform:set:preferChannel',...
-        ['Please use ''channel'' instead of ''component'''...
-        '  no harm, no foul']);
-      
       
     case {'FS', 'FREQ'}
       if ~isnumeric(val)
@@ -110,7 +123,27 @@ while numel(Vidx) >= 2
       
     case {'START', 'START_MATLAB'}
       %AUTOMATICALLY figures out whether date is antelope or matlab
-      %format
+      %format;
+      if numel(val) == 1
+         %expecting a number
+         if numel(w) == 1
+            w.start = val;
+         else
+            [w.start] = deal(val);
+         end
+      else
+         %might be char, might be vector. give it a shot.
+         if numel(w) == 1
+            w.start = datenum(val);
+         else
+            [w.start] = deal(datenum(val));
+         end
+     % else
+     %   error('Waveform:set:propertyTypeMismatch',...
+     %    'Start time not assigned... Unknown value type: %s', class(val));
+      end
+
+      %{
       if ~(isnumeric(val) || isa(val,'char'))
         error('Waveform:set:propertyTypeMismatch',...
           'Start time not assigned... Unknown value type: %s', class(val));
@@ -120,7 +153,7 @@ while numel(Vidx) >= 2
       else
           [w.start] = deal(datenum(val));
       end
-      
+      %}
     case {'START_ANTELOPE', 'START_EPOCH'}
       if ~isnumeric(val),
         error('Waveform:set:propertyTypeMismatch',...
@@ -177,11 +210,7 @@ while numel(Vidx) >= 2
       end %n
   end %switch
   
-  if ~strcmp(prop_name,{'HISTORY', 'DATA'}) & UPDATE_HISTORY
-    
-    w = addhistory(w,['Set ' prop_name]);
-  end
+  % Vidx(1:2) = []; %done with those parameters, move to the next ones...
   
-  Vidx(1:2) = []; %done with those parameters, move to the next ones...
-  
-end;
+end
+end
