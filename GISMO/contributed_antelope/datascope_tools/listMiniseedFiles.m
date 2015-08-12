@@ -14,7 +14,7 @@ for c=1:length(scnl)
 	mseedfiles(c).filepath={};
 	mseedfiles(c).exists=[];
 	try
-		debug.print_debug('Calling getfilename',5);
+		debug.print_debug(5, 'Calling getfilename');
 		dbname = getfilename(ds, scnl(c), snum)
 	catch
 		disp('getfilename failed');
@@ -22,14 +22,14 @@ for c=1:length(scnl)
 	end
 	if exist(dbname{1}, 'file')
 		try
-			debug.print_debug(sprintf('Opening database %s',dbname{1}),5);
+			debug.print_debug(5,'Opening database %s',dbname{1});
 			db=dbopen(dbname{1},'r');
 		catch
 			disp(sprintf('Failed on dbopen database %s',dbname{1}));
 			continue;
 		end
 		try
-			debug.print_debug(sprintf('Opening database %s.wfdisc',dbname{1}),5);
+			debug.print_debug(5,'Opening database %s.wfdisc',dbname{1});
 			db=dblookup_table(db,'wfdisc');
 		catch
 			disp('Failed on dblookup_table wfdisc');
@@ -37,23 +37,23 @@ for c=1:length(scnl)
 		end
 		expr = sprintf('sta=="%s" && chan=="%s" && time <= %f && endtime >= %f',get(scnl(c),'station'),get(scnl(c),'channel'),datenum2epoch(enum),datenum2epoch(snum));
 		try
-			debug.print_debug(sprintf('Trying dbsubset with: %s',expr),5);
+			debug.print_debug(5, 'Trying dbsubset with: %s',expr);
 			db=dbsubset(db,expr);
 		catch
 			disp('Failed on dbsubset');
 			continue;
 		end
 		try
-			debug.print_debug(sprintf('Trying dbquery for RECORD_COUNT'),5);
+			debug.print_debug(5,'Trying dbquery for RECORD_COUNT');
 			nrecs = dbquery(db, 'dbRECORD_COUNT');
 		catch
 			disp('Failed on dbquery');
 			continue;
 		end
-		debug.print_debug(sprintf('Number of records = %d',nrecs),5);
+		debug.print_debug(5, 'Number of records = %d',nrecs);
 		if nrecs>0
 			try
-				debug.print_debug(sprintf('Getting dir, dfile, time, endtime'),5);
+				debug.print_debug(5, 'Getting dir, dfile, time, endtime');
 				[ddir, ddfile] = dbgetv(db, 'dir', 'dfile', 'time', 'endtime');
 			catch
 				disp('Failed on dbgetv');

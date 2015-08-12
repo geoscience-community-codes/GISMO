@@ -258,12 +258,12 @@ classdef eventrate
             end
             db = dbsubset(db, sprintf('auth ~= /.*%s.*/',auth));
             numrows = dbquery(db,'dbRECORD_COUNT');
-            debug.print_debug(sprintf('Got %d rows after auth subset',numrows),2);
+            debug.print_debug(2,'Got %d rows after auth subset',numrows);
             sepoch = datenum2epoch(snum);
             eepoch = datenum2epoch(enum);
             db = dbsubset(db, sprintf('timewindow_starttime >= %f && timewindow_endtime <= %f',sepoch,eepoch));
             numrows = dbquery(db,'dbRECORD_COUNT');
-            debug.print_debug(sprintf('Got %d rows after time subset',numrows),2);
+            debug.print_debug(2,'Got %d rows after time subset',numrows);
 
             if numrows > 0
                 % Note that metrics are only saved when mean_rate >= 1.
