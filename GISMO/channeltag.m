@@ -109,7 +109,7 @@ classdef channeltag
                switch class(inObj)
                   case 'channeltag'
                      obj = inObj;
-                  case 'char'
+                  case {'char','struct'}
                      if size(inObj,1) == 1
                      [obj.network, obj.station, obj.location, obj.channel] = ...
                         channeltag.parse(inObj);

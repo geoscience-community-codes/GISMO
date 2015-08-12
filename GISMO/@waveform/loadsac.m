@@ -1,5 +1,8 @@
 function w = loadsac(w, filename)
 %LOADSAC  creates a waveform from a SAC file
+% 
+% old usage, use waveform with a datasource instead
+%
 % waveform = loadsac(waveform, filename);
 % To call, the first argument must be a waveform.  However this waveform
 % will never be accessed-- it will be overwritten by the SAC information.
@@ -77,7 +80,5 @@ function w = loadsac(w, filename)
 % VERSION: 1.1 of waveform objects
 % AUTHOR: Celso Reyes
 % LASTUPDATE: 3/14/2009
-warning('Waveform:loadsac:OldUsage',...
-  ['For more flexability, please use the waveform function\n'...
-  '  with a datasource object.\n']);
+
 w = load_sac(filename);

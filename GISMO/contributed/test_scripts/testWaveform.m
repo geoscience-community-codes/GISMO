@@ -40,13 +40,10 @@ classdef testWaveform < TestCase
          STATIONVALUE = 'STAtION';
          CHANNELVALUE = 'CHAnNEL';
          
-         %manual constructor
-         w = waveform(STATIONVALUE,CHANNELVALUE,rfreq, stt,Ad);
-         assertEqual(get(w,'station'), STATIONVALUE);
-         assertEqual(get(w,'channel'), CHANNELVALUE) ;
-         assertEqual(get(w,'freq'), rfreq);
-         assertEqual(get(w,'start'), stt);
-         assertEqual(get(w,'data'), Ad(:));
+         %manual constructor now gives error
+         assertExceptionThrown(@() waveform(STATIONVALUE,CHANNELVALUE,rfreq, stt,Ad),...
+            'Waveform:waveform:oldUsage');
+         w = waveform(obj.chanTag, rfreq, stt, obj.Dt);
          
          % copy constructor
          w2 = w;
@@ -65,7 +62,7 @@ classdef testWaveform < TestCase
       
       function testSetGets(obj)
          %% test SET routines
-          %TODO: Update to use TestCase syntax
+         %TODO: Update to use TestCase syntax
          mep2dep = inline('(n - 719529) * 86400','n');
          set_test = {'station','freq','channel','data','units',...
             'start','start_epoch','data_length'};
@@ -146,7 +143,7 @@ classdef testWaveform < TestCase
       end
       
       function testIntegrate(obj)
-         d = sin(1:0.01:1000) .* 100; 
+         d = sin(1:0.01:1000) .* 100;
          d = d(:) + randn(size(d(:)));
          w = waveform('NW.STA.LO.CHA',20,fix(now),d,'Counts');
          assertEqual(cumsum(d) ./ get(w,'freq'), double(integrate(w)), 'default (CUMSUM) integration');
@@ -280,7 +277,7 @@ classdef testWaveform < TestCase
          %results.clearhistory = isempty(Z);
          
       end
-     
+      
       function testIsEmpty(obj)
          w = waveform;
          assertTrue(isempty(w), 'generic waveform should be empty');
@@ -305,27 +302,35 @@ classdef testWaveform < TestCase
          
          function load_v0()
             fileName = fullfile(obj.dataPath,'test_data','v0_example_waveforms.mat');
+            assertEqual(exist(fileName,'file'), 2, 'test data for v0 does not exist');
             dummy = load(fileName);
             assertTrue(isa(dummy.w,'waveform'), 'converting single v0 waveform failed');
             assertTrue(isa(dummy.ww,'waveform'), 'converting multiple v0 waveforms failed');
+            assertEqual(numel(dummy.ww),10);
          end
          function load_v1_0()
             % test file has two variables w & ww
             fileName = fullfile(obj.dataPath,'test_data','v1.0_example_waveforms.mat');
+            assertEqual(exist(fileName,'file'), 2, 'test data for v1.0 does not exist');
             dummy = load(fileName);
             assertTrue(isa(dummy.w,'waveform'), 'converting single v1.0 waveform failed');
             assertTrue(isa(dummy.ww,'waveform'), 'converting multiple v1.0 waveforms failed');
+            assertEqual(numel(dummy.ww),10);
          end
          function load_v1_1()
-            w = waveform;
             fileName = fullfile(obj.dataPath,'test_data','v1.1_example_waveforms.mat');
+            assertEqual(exist(fileName,'file'),2,'test data for v1.1 does not exist');
             dummy = load(fileName);
             assertTrue(isa(dummy.w,'waveform'), 'converting multiple v1.1 waveform failed');
+            assertEqual(numel(dummy.w),100);
          end
          function load_v1_2()
             fileName = fullfile(obj.dataPath,'test_data','v1.2_example_waveforms.mat');
+            assertEqual(exist(fileName,'file'),2,'test data for v1.2 does not exist');
             dummy = load(fileName);
-            assertTrue(isa(dummy,'waveform'));
+            assertTrue(isa(dummy.w,'waveform'), 'converting single v1.2 waveform failed');
+            assertTrue(isa(dummy.ww,'waveform'), 'converting multiple v1.2 waveforms failed');
+            assertEqual(numel(dummy.ww),2);
          end
       end
       
@@ -367,7 +372,7 @@ classdef testWaveform < TestCase
       end
       
       %{
-      function testDisp(obj)
+function testDisp(obj)
          
          A = obj.wf;
          % try display functions
@@ -388,13 +393,13 @@ classdef testWaveform < TestCase
       end
       %}
       
-   end
-   methods(Static)
-       function testCorrelationCookbook()
+      function testCorrelationCookbook(obj)
          % probably doesn't belong in this class
          %% try the correlation cookbook
          % assumes we are in GISMO/contributed/test_scripts/waveform and that
          % correlation_cookbook is in GISMO/contributed/correlation_cookbook/
+         disp('skipping testCorrelationCookbook')
+         return
          ppp = pwd;
          [dataPathCorrelation,~,~] = fileparts(which('correlation'));
          cd(dataPathCorrelation)
@@ -422,6 +427,6 @@ classdef testWaveform < TestCase
          end
          w + 2;
          hilbert(w);
-       end
+      end
    end
 end

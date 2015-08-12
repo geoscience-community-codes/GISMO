@@ -62,33 +62,35 @@ classdef testScnlobject < TestCase
          assertFalse(A == C);
       end
       
-      %{
-      function testSort(self)
-         % unimiplemented by scnlobject
-         ct = scnlobject('S',{'CCC','BBB','AAA'},'A','L');
-         s = sort(ct);
-         assert(strcmp(s(1).channel,'AAA'));
-         assert(strcmp(s(3).channel, 'CCC'));
-         ct = scnlobject('S',{'C1','C2'},{'N2','N1'},'L');
-         s = sort(ct);
-         assert(strcmp(s(1).network,'N1') && strcmp(s(1).channel,'C2'));
-         assert(strcmp(s(2).network,'N2') && strcmp(s(2).channel,'C1'));
-      end
-      %}
-      
       function testStringConversions(self)
          nslc = 'IU.ANMO.00.LOG';
          ct = scnlobject(nslc);
-         assert(strcmp(get(ct,'string'),nslc));               % test basic string
-         %assert(strcmp(ct.string('_'),'IU_ANMO_00_LOG')); % test delimeter
-         %assert(strcmp(ct.char(),ct.string()));          % test string vs char
+         assertEqual(get(ct,'nscl_string'),'IU_ANMO_LOG_00');
       end
       
       function testIsmember(self)
-         % not implemented
+         A = scnlobject('N.S.L.C');
+         B = scnlobject('N1.S1.L1.C1');
+         C = scnlobject('N2.S2.L2.C2');
+         assertEqual(ismember(A,[A, A, B]), true)
+         assertEqual(ismember([A, A, B],A), [true true false]);
+         [LTA, LTB]   = ismember([A A B C],  [A scnlobject() B; B scnlobject() scnlobject()]);
+         [NumA, NumB] = ismember([ 1 1 2 3], [1 0 2;2 0 0]);
+         assertEqual(LTA, NumA)
+         assertEqual(LTB, NumB)
       end
+      
       function  testMatching(self)
-         % not implemented
+         wildcardString = '*.*.*.*';
+         A = scnlobject('N.S.L.C');
+         B = scnlobject('N1.S1.L1.C1');
+         % C = scnlobject('N2.S2.L2.C2');
+         W = scnlobject(wildcardString);
+         assertTrue(ismember(scnlobject,wildcardString), 'Wildcards are not recognized');
+         assertExceptionThrown(@() ismember(A,B),'somexception')
+         assertTrue(ismember(A,W))
+         assertEqual(ismember([A, A, B],W), [true true true]);
+         assertTrue(ismember(A, [A A W]));
       end
    end
    
