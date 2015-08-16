@@ -37,6 +37,8 @@ addContributed(gismopath,'contributed_internal');
 addpath(fullfile(gismopath,'classes'));
 addpath(fullfile(gismopath,'classes','catalog'));
 addpath(fullfile(gismopath,'classes','rsam'));
+addpath(fullfile(gismopath,'classes','channeltag'));
+addpath(fullfile(gismopath,'classes','measurementunit'));
 
 %%
 function addContributed(gismopath, contribDir)
