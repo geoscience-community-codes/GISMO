@@ -1217,7 +1217,7 @@ classdef rsam
             
         end    
         function [aw,tt1, tt2, tmc, mag_zone]=bvalue(this, mcType, method)
-            %BVALUE evaluate b-value, a-value and magnitude of compcobj.magleteness
+            %BVALUE evaluate b-value, a-value and magnitude of completeness
             % of an earthquake catalog stored in a Catalog object.
             %
             % BVALUE(COBJ, MCTYPE) produces a Gutenberg-Richter type plot 
@@ -1254,7 +1254,7 @@ classdef rsam
 
             if nargin < 2
                 disp('--------------------------------------------------------')
-                disp('ERROR: Usage is: Catalog.bvalue(mcType). mcType not specified')
+                disp('ERROR: Usage is: bvalue(cobj, mcType). mcType not specified')
                 disp('--------------------------------------------------------')
                 disp('mcType can be:')
                 disp('1: Maximum curvature')

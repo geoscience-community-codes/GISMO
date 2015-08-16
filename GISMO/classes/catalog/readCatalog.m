@@ -15,16 +15,19 @@ function self = readCatalog(data_source, varargin)
 %             a hierarchy of Event, Origin and Magnitude objects. Each of
 %             these classes is styled after classes available in ObsPy. See
 %             http://docs.obspy.org/packages/autogen/obspy.core.event.html
-%             for details.
+%             for details. However, it possibly mkes more sense to migrate
+%	      them on CSS3.0 format.
+%	      * SKELETON *
+
 %% MODES
 %
 %   Data can be loaded in "fast" or "slow" RUNMODE (default is "fast").
-%   In "slow" RUNMODE, a Catalog object is constructed consisting of Event,
+%   In "slow" RUNMODE, a Catalog_full object is constructed consisting of Event,
 %   Origin and Magnitude objects (and perhaps others as this is expanded
 %   to describe a catalog in more detail).
 %   In "fast" RUNMODE, a Catalog_lite object is constructed. It has no
 %   underlying Event, Origin or Magnitude objects.
-%   Catalog and Catalog_lite have a lot of common functionality as they
+%   Catalog_full and Catalog_lite have a lot of common functionality as they
 %   derive from the same superclass, Catalog_base.
 %   To load data in "slow" RUNMODE, include the additional parameter-value
 %   pair:
@@ -281,7 +284,7 @@ function self = load_datascope_events(varargin)
         end
 
         % CREATE CATALOG OBJECT
-        self = Catalog(event_list);
+        self = Catalog_full(event_list);
 
     elseif strcmp(p.Results.RUNMODE, 'fast')
         %%% FAST MODE %%%
@@ -466,7 +469,7 @@ function self = convert_irisFetch_to_Catalog(ev)
     
     % CREATE CATALOG OBJECT
     self = ...
-        Catalog( ...
+        Catalog_full( ...
             event_list, ...
             'description', '' ...
         ); 
@@ -615,7 +618,7 @@ function self = import_aef_file(dirpath, yyyy, mm, snum, enum, RUNMODE)
             end
 
             % CREATE CATALOG OBJECT
-            self = Catalog( event_list );
+            self = Catalog_full( event_list );
         elseif strcmp(RUNMODE, 'fast')
             % FAST MODE
             self = Catalog_lite([], [], [], dnum, mag, etype); 
@@ -762,7 +765,7 @@ s(i)
         end
 
         % CREATE CATALOG OBJECT
-        self = Catalog(event_list);
+        self = Catalog_full(event_list);
     elseif strcmp(RUNMODE, 'fast')
         % FAST MODE
         self = Catalog_lite([], [], [], dnum, mag, etype);

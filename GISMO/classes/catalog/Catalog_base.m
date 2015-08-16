@@ -1,31 +1,9 @@
 classdef Catalog_base
-%CATALOG: A class that serves as a container for EVENT objects.
-% 
-% Catalog is modelled after the ObsPy Catalog class:
-%   http://docs.obspy.org/packages/autogen/obspy.core.event.Catalog.html
+%CATALOG_BASE: A base class that serves as a container for EVENT objects.
+% This class is not to be used directly. Instead it is inherited by
+% Catalog_lite and Catalog_full
 %
-%% USAGE
-%   cobj = Catalog(event_list)
-%      where event_list is a vector of Event objects.
-%
-%% EXAMPLE
-%
-%   % create an Origin object
-%   lat = 62.5; lon = -120.0; depth = 15.2; time = now;
-%   o = Origin(time, lon, lat, depth);
-%   
-%   % create an Event object
-%   e = Event([o]); % [o] is a vector of Origin objects
-%
-%   % create a Catalog object
-%   c = Catalog([e]); % [e] is a vector of Event objects
-%
-%   This is a trivial example with only 1 origin and 1 event. In general,
-%   a Catalog contains multiple Event objects, and each Event object may
-%   contain multiple Origin objects. 
-%                 
-% 
-%% See also EVENT, ORIGIN, EVENTRATE, READEVENTS, CATALOG_COOKBOOK
+%% See also Catalog_lite, Catalog_full, ReadCatalog, Event 
 %
 % Author: Glenn Thompson (glennthompson1971@gmail.com)
 % $Date: $
@@ -184,7 +162,7 @@ classdef Catalog_base
             %       values from these can be retrieved using the fieldname
             %
             %       Example: Create a Catalog, get 'lon', add a field, then get the field
-            %           cobj = Catalog_old;
+            %           cobj = Catalog;
             %           cobj = cobj.get('lon')
             %           cobj = cobj.addfield('closest_station', 'MBLG');
             %           cs = cobj.get('closest_station'); 
@@ -620,7 +598,7 @@ classdef Catalog_base
         
         function erobj=eventrate(cobj, varargin)
             %eventrate    
-            % Create an EventRate object from a Catalog or Catalog_lite
+            % Create an EventRate object from a Catalog
             % object, with a binsize determined automatically.
             %   erobj = cobj.eventrate()
             %

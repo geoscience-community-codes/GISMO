@@ -1,11 +1,8 @@
-classdef Catalog < Catalog_base
-%CATALOG: A class that serves as a container for EVENT objects.
+classdef Catalog_full < Catalog_base
+%CATALOG_FULL: A class that serves as a container for EVENT objects.
 % 
-% Catalog is modelled after the ObsPy Catalog class:
-%   http://docs.obspy.org/packages/autogen/obspy.core.event.Catalog.html
-%
 %% USAGE
-%   cobj = Catalog(event_list)
+%   cobj = Catalog_full(event_list)
 %      where event_list is a vector of Event objects.
 %
 %% EXAMPLE
@@ -17,11 +14,11 @@ classdef Catalog < Catalog_base
 %   % create an Event object
 %   e = Event([o]); % [o] is a vector of Origin objects
 %
-%   % create a Catalog object
-%   c = Catalog([e]); % [e] is a vector of Event objects
+%   % create a Catalog_full object
+%   c = Catalog_full([e]); % [e] is a vector of Event objects
 %
 %   This is a trivial example with only 1 origin and 1 event. In general,
-%   a Catalog contains multiple Event objects, and each Event object may
+%   a Catalog_full contains multiple Event objects, and each Event object may
 %   contain multiple Origin objects. 
 %                 
 % 
@@ -39,7 +36,7 @@ classdef Catalog < Catalog_base
         % I set these private properties so that I can define get.property
         % functions to get these from event_list.origins
         % These cannot be defined in Catalog_base as could not then define
-        % getters for them in Catalog
+        % getters for them in Catalog_full
         lat;
         lon;
         depth;
@@ -48,7 +45,7 @@ classdef Catalog < Catalog_base
         etype;
     end
     methods
-        function obj = Catalog(event_list, varargin)
+        function obj = Catalog_full(event_list, varargin)
             % Parse required, optional and param-value pair arguments,
             % set default values, and add validation conditions
             p = inputParser;
