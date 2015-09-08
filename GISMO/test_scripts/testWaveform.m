@@ -1,4 +1,4 @@
-classdef testWaveform < TestCase
+classdef testWaveform < matlab.unittest.TestCase
    % TESTWAVEFORM validates the funcionality of Waveform
    %
    % requires xUnit
