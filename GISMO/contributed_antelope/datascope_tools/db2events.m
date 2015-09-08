@@ -32,57 +32,57 @@ function [lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth]
             return;
 	    end
 
-      	    debug.print_debug(sprintf('Loading data from %s',dbname),3);
+      	    debug.print_debug(3, 'Loading data from %s',dbname);
           
             ORIGIN_TABLE_PRESENT = dbtable_present(dbname, 'origin');
 
             if (ORIGIN_TABLE_PRESENT)
                 db = dblookup_table(dbopen(dbname, 'r'), 'origin');
                 numorigins = dbquery(db,'dbRECORD_COUNT');
-                debug.print_debug(sprintf('Got %d records from %s.origin',numorigins,dbname),1);
+                debug.print_debug(1, 'Got %d records from %s.origin',numorigins,dbname);
                 if numorigins > 0
                     EVENT_TABLE_PRESENT = dbtable_present(dbname, 'event');           
                     if (EVENT_TABLE_PRESENT)
                         db = dbjoin(db, dblookup_table(db, 'event') );
                         numorigins = dbquery(db,'dbRECORD_COUNT');
-                        debug.print_debug(sprintf('Got %d records after joining event with %s.origin',numorigins,dbname),1);
+                        debug.print_debug('Got %d records after joining event with %s.origin',numorigins,dbname);
                         if numorigins > 0
                             db = dbsubset(db, 'orid == prefor');
                             numorigins = dbquery(db,'dbRECORD_COUNT');
-                            debug.print_debug(sprintf('Got %d records after subsetting with orid==prefor',numorigins),1);
+                            debug.print_debug(1,'Got %d records after subsetting with orid==prefor',numorigins);
                             if numorigins > 0
                                 db = dbsort(db, 'time');
                             else
 				% got no origins after subsetting for prefors - already reported
-                                debug.print_debug(sprintf('%d records after subsetting with orid==prefor',numorigins),0);
+                                debug.print_debug(0,'%d records after subsetting with orid==prefor',numorigins);
                                 return
                             end
                         else
 			    % got no origins after joining event to origin table - already reported
-                            debug.print_debug(sprintf('%d records after joining event table with origin table',numorigins),0);
+                            debug.print_debug(0,'%d records after joining event table with origin table',numorigins);
                             return
                         end
 		    else
-                        debug.print_debug('No event table found, so will use all origins from origin table, not just prefors',0);
+                        debug.print_debug(0,'No event table found, so will use all origins from origin table, not just prefors');
                     end
                 else
 		    % got no origins after opening origin table - already reported
-                    debug.print_debug(sprintf('origin table has %d records',numorigins),0);
+                    debug.print_debug(0,'origin table has %d records',numorigins);
                     return
                 end
             else
-                debug.print_debug('no origin table found',0);
+                debug.print_debug(0, 'no origin table found');
                 return
             end
 
 	    numorigins = dbquery(db,'dbRECORD_COUNT');
-	    debug.print_debug(sprintf('Got %d prefors prior to subsetting',numorigins),2);
+	    debug.print_debug(2,'Got %d prefors prior to subsetting',numorigins);
 	
 			% Do the subsetting
             if ~isempty(dbeval)
                 db = dbsubset(db, dbeval);
                 numorigins = dbquery(db,'dbRECORD_COUNT');
-                debug.print_debug(sprintf('Got %d prefors after subsetting',numorigins),2);
+                debug.print_debug(2,'Got %d prefors after subsetting',numorigins);
         	end
 
 	    if numorigins>0

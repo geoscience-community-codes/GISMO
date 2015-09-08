@@ -33,6 +33,12 @@ end
 % ADD A PATH TO EACH DIRCTORY IN CONTRIBUTED_INTERNAL
 addContributed(gismopath,'contributed_internal');
 
+% ADD A PATH TO CLASSES (Added by Glenn Thompson)
+addpath(fullfile(gismopath,'classes'));
+addpath(fullfile(gismopath,'classes','catalog'));
+addpath(fullfile(gismopath,'classes','rsam'));
+addpath(fullfile(gismopath,'classes','channeltag'));
+addpath(fullfile(gismopath,'classes','measurementunit'));
 
 %%
 function addContributed(gismopath, contribDir)

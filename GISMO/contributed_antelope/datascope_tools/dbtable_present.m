@@ -12,7 +12,7 @@ if exist(dbpath, 'file') || exist(sprintf('%s.%s',dbpath,table), 'file')
    try
      db = dbopen(dbpath, 'r');
    catch
-     debug.print_debug(sprintf('Failure: database exists but dbopen fails'),0);
+     debug.print_debug(0, 'Failure: database exists but dbopen fails');
      return;
    end
    try
@@ -20,23 +20,23 @@ if exist(dbpath, 'file') || exist(sprintf('%s.%s',dbpath,table), 'file')
        numrows = dbquery(db, 'dbRECORD_COUNT');
        if numrows > 0
           present = numrows;
-          debug.print_debug(sprintf('Success: %d rows',numrows),3);
+          debug.print_debug(3, 'Success: %d rows',numrows);
        else
           if exist(sprintf('%s.origin',dbpath)) 
             if numrows > 0
                 present = numrows;
-                debug.print_debug(sprintf('Success: %d rows',numrows),3); 
+                debug.print_debug(3, 'Success: %d rows',numrows); 
             else
-                debug.print_debug(sprintf('Failure: %d rows',numrows),3);
+                debug.print_debug(3, 'Failure: %d rows',numrows);
             end
           else
-                debug.print_debug(sprintf('Failure: %d rows',numrows),3);
+                debug.print_debug(3,'Failure: %d rows',numrows);
           end
           
        end
     catch
-         debug.print_debug(sprintf('Failure: dblookup_table fails for %s.%s',dbpath,table),0);
+         debug.print_debug(0, 'Failure: dblookup_table fails for %s.%s',dbpath,table);
     end
 else
-	debug.print_debug(sprintf('Failure: cannot find %s or %s.%s on this computer.',dbpath,dbpath,table),0);
+	debug.print_debug(0,'Failure: cannot find %s or %s.%s on this computer.',dbpath,dbpath,table);
 end
