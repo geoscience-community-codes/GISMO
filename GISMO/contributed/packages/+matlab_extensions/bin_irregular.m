@@ -1,8 +1,8 @@
-function [dnum_bin, counts_per_bin, sum_per_bin, smallest_per_bin, median_per_bin, std_per_bin, median_time_interval] = bin_irregular(dnum, data, binsize, snum, enum, stepsize)
+function [dnum_bin, counts_per_bin, sum_per_bin, smallest_per_bin, biggest_per_bin, median_per_bin, std_per_bin, median_time_interval] = bin_irregular(dnum, data, binsize, snum, enum, stepsize)
 % BIN_IRREGULAR bin an irregularly-sampled timeseries (like earthquake origin times).
 %
 %    Usage:
-%      [dnum_bin, counts_per_bin, sum_per_bin, smallest_per_bin, median_per_bin, std_per_bin, median_time_interval] = bin_irregular(dnum, data, binsize, snum, enum, [stepsize])
+%      [dnum_bin, counts_per_bin, sum_per_bin, smallest_per_bin, biggest_per_bin, median_per_bin, std_per_bin, median_time_interval] = bin_irregular(dnum, data, binsize, snum, enum, [stepsize])
 %
 %    INPUTS:
 %      dnum            - irregular spaced date vector in datenum format
@@ -17,6 +17,7 @@ function [dnum_bin, counts_per_bin, sum_per_bin, smallest_per_bin, median_per_bi
 %      counts_per_bin  	- number of values per bin
 %      sum_per_bin     	- sum of all values in each bin
 %      smallest_per_bin 	- smallest data value in each bin
+%      biggest_per_bin 	- biggest data value in each bin
 %      median_per_bin  	- median value in each bin
 %      std_per_bin     	- standard deviation of all values in each bin
 %      median_time_interval - median time interval between values in each bin
@@ -32,6 +33,7 @@ dnum_bin = [];
 counts_per_bin = [];
 sum_per_bin = [];
 smallest_per_bin = [];
+biggest_per_bin = [];
 median_per_bin = [];
 std_per_bin = [];
 median_time_interval = [];
@@ -50,6 +52,7 @@ if (l1==l2)
 		median_per_bin(c)=nanmedian(d);
 		std_per_bin(c) = std(d);
         	smallest_per_bin(c)=min(d);
+        	biggest_per_bin(c)=max(d);
 		median_time_interval(c)=median(thisdnum(2:end)-thisdnum(1:end-1));
 	else
 		counts_per_bin(c) = 0;
@@ -57,6 +60,7 @@ if (l1==l2)
 		std_per_bin(c) = 0;
 		median_per_bin(c) = NaN;
 		smallest_per_bin(c)=NaN;
+		biggest_per_bin(c)=NaN;
 	end
     end
 else
