@@ -28,6 +28,7 @@ function w = clean(w)
 % $Date$
 % $Revision$
 
+<<<<<<< HEAD
 % now that it is part of waveform, we have special access which allows us 
 % to manipulate the data in place,significantly reducing the memory
 % footprint. 
@@ -36,6 +37,18 @@ function w = clean(w)
     for i=1:numel(w)
        nans = isnan(w(i).data); %since logical,(1/8) memory footprint
         if sum(~nans) > max([3 numel(nans)*0.2]) % at least 20% must be non-nan
+=======
+	% Check input is a waveform object
+	if ~isa(w, 'waveform')
+		warning('Not a waveform object')
+		return
+    end
+    
+    % Remove linear trend discontinuously, from one gap (NaN) to another
+    for i=1:numel(w)
+        data = get(w(i),'data');
+        if size(find(~isnan(data))) > max([3 length(data)*0.2]) % at least 20% must be non-nan
+>>>>>>> Candidate programs added from broken branch: rest moved to new repo gismo_addons
             % Here we remove continguous NaNs because otherwise we get an out
             % of memory error. So when we meet a sequence like [3.4 NaN NaN NaN
             % 2.3] we keep the NaN bookends, but then put zeros between
@@ -45,6 +58,7 @@ function w = clean(w)
             % get detrended as a single unit, rather than as thousands of
             % separate segments (which takes forever and causes out of memory
             % errors).
+<<<<<<< HEAD
             
             firstNans = find(diff([false,nans]) == 1);
             lastNans = find(diff([nans, false]) == -1);
@@ -83,6 +97,24 @@ function w = clean(w)
                    'unable to remove trend from each line segment'], i)
             end
             
+=======
+            bp = find(isnan(data));
+            if length(bp)>=3
+                for c=2:length(bp)-1
+                    if bp(c)==bp(c-1)+1;
+                        data(bp(c))=0;
+                    end
+                end
+            end
+            try
+                data = detrend(data, 'linear', bp);
+            catch
+                warning('out of memory: unable to remove trend from each line segment')
+            end
+            if ~all(isnan(d))
+                w(i) = set(w(i), 'data', data);
+            end
+>>>>>>> Candidate programs added from broken branch: rest moved to new repo gismo_addons
         end
     end
     
