@@ -1,4 +1,4 @@
-function startup_GISMO
+function startup_GISMO(gismopath)
 % STARTUP_GISMO recursively adds paths for contributed codes that build on
 % the GISMO suite. If the Antelope toolbox is already in the Matlab path,
 % then the codes with Antelope dependencies are added as well.
@@ -19,8 +19,10 @@ function startup_GISMO
 
 
 % GET PATHS TO DIRECTORIES IN GISMO
-gismofile = which('GISMO/startup_GISMO');
-gismopath = fileparts(gismofile); % first argout is the path
+if ~exist('gismopath', 'var')
+	gismofile = which('GISMO/startup_GISMO');
+	gismopath = fileparts(gismofile); % first argout is the path
+end
 
 % ADD A PATH TO EACH DIRCTORY IN CONTRIBUTED
 addContributed(gismopath,'contributed');
@@ -37,8 +39,8 @@ addContributed(gismopath,'contributed_internal');
 addpath(fullfile(gismopath,'classes'));
 addpath(fullfile(gismopath,'classes','catalog'));
 addpath(fullfile(gismopath,'classes','rsam'));
-addpath(fullfile(gismopath,'classes','channeltag'));
-addpath(fullfile(gismopath,'classes','measurementunit'));
+%addpath(fullfile(gismopath,'classes','channeltag'));
+%addpath(fullfile(gismopath,'classes','measurementunit'));
 
 %%
 function addContributed(gismopath, contribDir)
