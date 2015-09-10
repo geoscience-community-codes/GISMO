@@ -1,14 +1,28 @@
 function w = clean(w)
-%CLEAN Clean a waveform by filling gaps with the mean value, and then
-%detrending. This makes the waveform ready for filtering, etc.
+%CLEAN Discontinuously detrend (between NaN values) and fillgaps with 0, to prepare waveform objects for filtering etc.
 %   w = clean(waveform)
-%   returns a waveform containing a cleaned version of the waveform data
 %
 %   Input Arguments
 %       WAVEFORM: waveform object   N-DIMENSIONAL
 %
 %   Output
 %       W: array of same size as WAVEFORM
+%
+%   Seismic waveform data often has missing samples, and these are represented by NaN in MATLAB. But most functions to
+%   analyze seismic data in MATLAB will generate an error if there are NaN values in the data, or simple return NaN as the
+%   answer. So the scientist must choose how to handle NaN values in the data.
+%
+%   Often a first step in analyzing any time series data is to detrend the data. But data cannot be detrended if it contains
+%   NaN values. So typically the scientist will decide to replace NaN values with the nanmean value of the whole data set, or
+%   with a zero. But either of these choices will artifically introduce a spike into the data, which adds a very broad noise
+%   signal in the frequency domain. So a better choice (there is no perfect choice) is to detrend each continuous segment of
+%   data between NaN values. This is called discontinuous detrending. Following this process, the mean of the data should be
+%   zero. So the second step is to replace NaN values with zero. 
+%
+%   An alternative approach is to use linear interpolation to fill missing values, and then detrend the result, e.g.
+%	w = fillgaps(w, 'interp');
+%       w = detrend(w)
+%
 
 % AUTHOR: Glenn Thompson
 % $Date$
