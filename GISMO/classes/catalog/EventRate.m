@@ -68,6 +68,7 @@ classdef EventRate
 %        mean_mag		     % (array) mean magnitude of events in each bin 
 %        median_mag          % (array) median magnitude of events in each bin
 %        min_mag             % (array) smallest magnitude in each bin
+%        max_mag             % (array) largest magnitude in each bin
 %
 %    SUMMARY DATA:
 %        numbins             % (scalar) number of bins used for grouping
@@ -115,6 +116,7 @@ classdef EventRate
         dnum = [];           % (array) 	
         numbins = [];        % (scalar)
         min_mag = [];
+        max_mag = [];
         etype = '*';
         snum = 0;
         enum = now;
@@ -129,7 +131,7 @@ classdef EventRate
 	methods
         %% CONSTRUCTOR
         function self = EventRate(dnum, counts, energy, median_energy, ...
-                smallest_energy, median_time_interval, total_counts, ...
+                smallest_energy, biggest_energy, median_time_interval, total_counts, ...
                 snum, enum, etypes, binsize, stepsize, numbins);
             self.counts = counts;          
             self.median_rate = 1 ./ (median_time_interval * 24); 
@@ -141,6 +143,7 @@ classdef EventRate
             self.dnum = dnum; 	
             self.numbins = numbins;
             self.min_mag = magnitude.eng2mag(smallest_energy);
+            self.max_mag = magnitude.eng2mag(biggest_energy);
             self.etype = etypes;
             self.snum = snum;
             self.enum = enum;
