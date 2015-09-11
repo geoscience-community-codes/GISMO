@@ -58,7 +58,7 @@ classdef Catalog_lite < Catalog_base
             fields = fieldnames(p.Results);
             for i=1:length(fields)
                 field=fields{i};
-                val = eval(sprintf('p.Results.%s;',field));
+                val = p.Results.(field);
                 obj = obj.set(field, val);
             end
         end
@@ -93,7 +93,8 @@ classdef Catalog_lite < Catalog_base
                 cobj = cobj1; 
                 props = {'time';'mag';'lat';'lon';'depth';'etype'};
                 for i=1:length(props)
-                    eval(sprintf('cobj.%s = [cobj1.%s cobj2.%s];',props{i},props{i},props{i}));
+                    prop = props{i};
+                    cobj.(prop) = [cobj1.(prop) cobj2.(prop)];
                 end
             end
         end

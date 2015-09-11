@@ -306,7 +306,8 @@ classdef EventRate
                     figure
                     set(gcf,'Color', [1 1 1]);
                     for cc = 1: numsubplots % number of metrics to plot
-                        eval(  sprintf('data = obj(c).%s;',metric{cc} ) );
+                        %eval(  sprintf('data = obj(c).%s;',metric{cc} ) );
+                        data = obj(c).(metric{cc});
                         % replace -Inf values as they mess up plots
                         ydata = data; % ydata is the data we will plot, but we keep data for cumulative energy etc.
                         if smoothbins > 1
@@ -366,7 +367,8 @@ classdef EventRate
                             data = (magnitude.mag2eng(obj(cc).cum_mag));
 
                         else
-                            eval(  sprintf('data = obj(cc).%s;',metric{c} ) );
+                            % eval(  sprintf('data = obj(cc).%s;',metric{c} ) );
+                            data = obj(cc).(metric{c});
                         end
                         if smoothbins > 1
                             data = smooth(data, smoothbins);
@@ -413,7 +415,8 @@ classdef EventRate
                             %data = cumsum(magnitude.mag2eng(obj(cc).cum_mag));
                             data = (magnitude.mag2eng(obj(cc).cum_mag));
                         else
-                            eval(  sprintf('data = obj(cc).%s;',metric{c} ) );
+                            % eval(  sprintf('data = obj(cc).%s;',metric{c} ) );
+                            data = obj(cc).(metric{c});
                         end
                         
                         if smoothbins > 1
@@ -443,7 +446,8 @@ classdef EventRate
                         if strcmp(metric{c},'energy')
                             data = (magnitude.mag2eng(obj(cc).cum_mag));
                         else
-                            eval(  sprintf('data(:,cc) = obj(cc).%s;',metric{c} ) );
+                            %eval(  sprintf('data(:,cc) = obj(cc).%s;',metric{c} ) );
+                            data(:,cc) = obj(cc).(metric{c});
                             if findstr(metric{c}, 'mag')
                                 disp('Warning: It is meaningless to stack magnitude data');
                                 data(data<0)=0;
@@ -764,7 +768,8 @@ classdef EventRate
                     i = find(mask);
                     prop_name = mc.PropertyList(i).Name;
                     if isempty(mc.PropertyList(i).GetMethod)
-                        eval(sprintf('obj.%s=val;',prop_name));
+                        %eval(sprintf('obj.%s=val;',prop_name));
+                        obj.(prop_name) = val;
                     else
                         warning('Property %s is a derived property and cannot be set',prop_name);
                     end
@@ -797,7 +802,8 @@ classdef EventRate
 
             mask = strcmp(prop_name, properties(obj));
             if any(mask)
-                eval(sprintf('val=obj.%s;',prop_name));
+                % eval(sprintf('val=obj.%s;',prop_name));
+                val = obj.(prop_name);
             else
                 mask = strcmp(upper(prop_name),obj.misc_fields);
                 if any(mask)

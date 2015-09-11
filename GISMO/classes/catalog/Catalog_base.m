@@ -129,7 +129,7 @@ classdef Catalog_base
                     if isempty(mc.PropertyList(i).GetMethod)
                         % The properties here need to have
                         % SetAccess==public
-                        eval(sprintf('cobj.%s=val;',prop_name));
+                        cobj.(prop_name) = val;
                         % This should work for SetAccess=private but
                         % actually causes a segmentation fault
                         %eval(sprintf('cobj = cobj.set(''%s'', val);',prop_name));
@@ -171,7 +171,7 @@ classdef Catalog_base
 
             mask = strcmp(prop_name, properties(cobj));
             if any(mask)
-                eval(sprintf('val=cobj.%s;',prop_name));
+                val=cobj.(prop_name);
             else
                 mask = strcmp(upper(prop_name),cobj.misc_fields);
                 if any(mask)
@@ -875,7 +875,7 @@ classdef Catalog_base
                         fieldlist = fields(thisorigin);
                         for fieldindex = 1:numel(fieldlist)
                             thisfield = fieldlist{fieldindex};
-                            eval(sprintf('thisvalue = thisorigin.%s;',thisfield));
+                            thisvalue = thisorigin.(thisfield);
                             if strcmp(thisfield,'time')
                                 thisvalue=datenum2epoch(thisvalue);
                             end
@@ -913,7 +913,7 @@ classdef Catalog_base
                     fieldlist = fields(thisevent);
                     for fieldindex = 1:numel(fieldlist)
                         thisfield = fieldlist{fieldindex};
-                        eval(sprintf('thisvalue = thisevent.%s;',thisfield));
+                        thisvalue = thisevent.(thisfield);
                         if isnumeric(thisvalue)
                             if ~isnan(thisvalue)
                                 if numel(thisvalue)==1
