@@ -114,9 +114,9 @@ function w = waveform(varargin)
          if isVoidInterpreter(ds)
             ds_type  = get(ds,'type');
             if strcmp(ds_type,'antelope') && NOEXIT_OPTION && bwkaround
-               myLoadRoutine = eval('@load_antelope_workaround');
+               myLoadRoutine = @load_antelope_workaround;
             else
-               myLoadRoutine = eval(['@load_', ds_type]);
+               myLoadRoutine = str2func(['load_', ds_type]);
             end
             switch lower(ds_type)
                
@@ -366,39 +366,33 @@ function [optExists, value, vargs] = peelOption(vargs, searchValue, searchClass,
 end
 
 function w = winstonAccess(varargin)
-   DEFAULT_CHAN = 'EHZ';
-   DEFAULT_STATION = 'UNK';
-   DEFAULT_START = datenum([1970 1 1 0 0 0]);
-   DEFAULT_END = DEFAULT_START + datenum([0,0,0,0,5,0]); %five minutes
+   p.channel = 'EHZ';
+   p.station = 'UNK';
+   p.tStart = datenum(1970, 1, 1, 0 ,0, 0);
+   p.tEnd = datenum(1970, 1, 1, 0, 5, 0);
+   p.network = '';
+   p.location = ''; %should this be '--' ?
+   p.server = 'churchill.giseis.alaska.edu';
+   p.port = 16022;
    
-   % the following are for WINSTON access...
-   DEFAULT_NETWORK = '';
-   DEFAULT_LOCATION = '';
-   DEFAULT_SERVER = 'churchill.giseis.alaska.edu';
-   DEFAULT_PORT = 16022;
    warning(updateWarningID,updateWarningMessage);
    
    % INPUT: waveform (station, channel, start, end, network,
    %                  location, server, port)
-   MyDefaults = {DEFAULT_STATION, DEFAULT_CHAN, DEFAULT_START, ...
-      DEFAULT_END, DEFAULT_NETWORK, DEFAULT_LOCATION,...
-      DEFAULT_SERVER, DEFAULT_PORT}; %#ok<NASGU>
    
-   MyVars = {'station', 'channel', 'Tstart', 'Tend', 'netwk', ...
+   MyVars = {'station', 'channel', 'tStart', 'tEnd', 'network', ...
       'location', 'server', 'port'};
    
    %Fill in all the variables with the appropriate default values
    for N = 1:argCount
-      if isempty(varargin{N}),
-         eval([MyVars{N},' = MyDefaults{N};'])
-      else
-         eval([MyVars{N},' = varargin{N};'])
+      if ~isempty(varargin{N}),
+         p.(MyVars{N}) = varargin{N};
       end
    end
-   thesechans = channeltag(station,channel,netwk,location);
+   thesechans = channeltag(p.station,p.channel,p.network,p.location);
    
-   mydatasource = datasource('winston',server,port);
-   w = waveform(mydatasource,thesechans,datenum(Tstart),datenum(Tend));
+   mysource = datasource('winston',p.server,p.port);
+   w = waveform(mysource, thesechans, datenum(p.tStart), datenum(p.tEnd));
 end
 
 function obj = asChanneltag(obj)

@@ -174,7 +174,8 @@ function self = load_datascope_events(varargin)
     fields = fieldnames(p.Results);
     for i=1:length(fields)
         field=fields{i};
-        val = eval(sprintf('p.Results.%s;',field));
+        % val = eval(sprintf('p.Results.%s;',field));
+        val = p.Results.(field);
         eval(sprintf('%s = val;',field));
     end 
 
@@ -531,10 +532,12 @@ function self = load_aef(varargin)
     p.addParamValue('maxdepth', [], @isnumeric);
     p.addParamValue('RUNMODE', 'fast', @isstr);
     p.parse(varargin{:});
+    
     fields = fieldnames(p.Results);
     for i=1:length(fields)
         field=fields{i};
-        val = eval(sprintf('p.Results.%s;',field));
+        % val = eval(sprintf('p.Results.%s;',field));
+        val = p.Results.(field);
         eval(sprintf('%s = val;',field));
     end
     if ~exist(dbpath, 'dir')
@@ -675,7 +678,8 @@ function self = load_seisandb(varargin)
     fields = fieldnames(p.Results);
     for i=1:length(fields)
         field=fields{i};
-        val = eval(sprintf('p.Results.%s;',field));
+        % val = eval(sprintf('p.Results.%s;',field));
+        val = p.Results.field;
         eval(sprintf('%s = val;',field));
     end
     
@@ -860,9 +864,10 @@ function s=read_sfile(sfiledir, sfilebase,sta,chan);
 
     % Validate    
     fullpath = fullfile(sfiledir, sfilebase);
-    if ~isstr(fullpath) | ~exist(fullpath)
-        warning(sprintf('%s not found',fullpath));
-        eval(['help ' mfilename]);
+    if ~ischar(fullpath) || ~exist(fullpath)
+        warning('catalog:readCatalog:notFound','%s not found',fullpath));
+        % eval(['help ' mfilename]);
+        help(mfilename);
     end
 
     % initialize

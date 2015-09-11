@@ -55,7 +55,7 @@ classdef Catalog_full < Catalog_base
             fields = fieldnames(p.Results);
             for i=1:length(fields)
                 field=fields{i};
-                val = eval(sprintf('p.Results.%s',field));
+                val = p.Results.(field);
                 obj = obj.set(field, val);
             end
         end

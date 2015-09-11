@@ -64,7 +64,7 @@ classdef Event
             fields = fieldnames(p.Results);
             for i=1:length(fields)
                 field=fields{i};
-                val = eval(sprintf('p.Results.%s;',field));
+                val = p.Results(field);
                 obj = obj.set(field, val);
             end 
         end
@@ -88,7 +88,7 @@ classdef Event
                     if isempty(mc.PropertyList(i).GetMethod)
                         % The properties here need to have
                         % SetAccess==public
-                        eval(sprintf('self.%s=val;',prop_name));
+                        self.(prop_name) = val;
                     else
                         warning('Property %s is a derived property and cannot be set',prop_name);
                     end

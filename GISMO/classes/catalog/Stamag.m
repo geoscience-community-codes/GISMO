@@ -39,7 +39,8 @@ classdef Stamag
             p.parse(sta, magnitude, varargin{:});
             for i=1:length(fields)
                 field=fields{i};
-                val = eval(sprintf('p.Results.%s;',field));
+                % val = eval(sprintf('p.Results.%s;',field));
+                p.Results.(field);
                 obj = obj.set(field, val);
             end
         end
