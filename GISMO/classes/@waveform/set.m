@@ -101,7 +101,7 @@ while numel(Vidx) >= 2
             % error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT or CHANNELTAG');
         end
     case {'STATION','NETWORK', 'CHANNEL','LOCATION'}
-      if ~isa(val,'char')
+      if ~ischar(val)
         error('Waveform:set:propertyTypeMismatch',...
           '%s should be a string not a %s', prop_name,class(val));
       end

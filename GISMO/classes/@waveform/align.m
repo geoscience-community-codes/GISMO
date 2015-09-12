@@ -49,17 +49,20 @@ function w = align(w,alignTime, newFrequency, method)
 % $Date$
 % $Revision$
 
+persistent oneSecond
+if isempty(oneSecond)
+   oneSecond = datenum([0 0 0 0 0 1]);
+end
 
 if ~exist('method','var')
     method = 'pchip';
 end
 
-oneSecond = datenum([0 0 0 0 0 1]);
-if isa(alignTime,'char'),
+if ischar(alignTime),
     alignTime =  datenum(alignTime);
 end
 
-hasSingleAlignTime = isscalar(alignTime);
+hasSingleAlignTime = numel(alignTime) == 1;
 
 if hasSingleAlignTime %use same align time for all waveforms
     alignTime = repmat(alignTime,size(w));
@@ -71,7 +74,7 @@ elseif isvector(alignTime) && isvector(w)
         % this situation OK.
         % ignore possibility that we're comparing a 1xN vs Nx1.
     end
-elseif~all(size(alignTime) == size(w)) %make sure 1:1 ratio for alignTime & waveform
+elseif ~all(size(alignTime) == size(w)) %make sure 1:1 ratio for alignTime & waveform
     if numel(alignTime) == numel(w)
         error('Waveform:align:invalidAlignSize',...
             ['The alignTime matrix is of a different size than the '...
@@ -80,61 +83,50 @@ elseif~all(size(alignTime) == size(w)) %make sure 1:1 ratio for alignTime & wave
 end
 
 
-newSamplesPerSec = 1 ./ newFrequency ;  %# samplesPerSecond
+newSamplesPerSec = 1 / newFrequency ;  %# samplesPerSecond
 timeStep = newSamplesPerSec * oneSecond;
 existingStarts = get(w,'start');
 existingEnds = get(w,'end');
-
 
 % calculate the offset of the closest "aligned" time, by projecting the
 % desired frequency rate and time forward or backward onto these waveforms'
 % start time.
 deltaTime = existingStarts - alignTime;  % time in between
-% (-):alignTime AFTER existingStarts, (+) alignTime BEFORE existingStarts
+% if deltatime (-):alignTime AFTER existingStarts, 
+% if deltatime (+):alignTime BEFORE existingStarts
 closestStartTime = existingStarts - rem(deltaTime,timeStep);
 
 for n=1:numel(w)    
-    %disp(n)
-    originalTimes = get(w(n),'timevector');
-    %newSampleTimes MUST Be in a Single Column, else the DATA field becomes
-    %corrupt.
-    newSampleTimes = [closestStartTime(n):timeStep:existingEnds(n)]';
+    origTimes = get(w(n),'timevector');
+    % newTimes MUST be in one column, else DATA field gets corrupted
+    newTimes = ( closestStartTime(n):timeStep:existingEnds(n) )';
   
     %get rid of samples that lay entirely outside the existing waveform's
     %range (ie, only interpolate values BETWEEN points)
-    newSampleTimes(newSampleTimes < originalTimes(1) | ...
-        newSampleTimes > originalTimes(end)) = [];
-    
-   % display(['numel(newSampleTimes): ',num2str(numel(newSampleTimes))]);
+    newTimes(newTimes < origTimes(1) | newTimes > origTimes(end)) = [];
 
     w(n).data = interp1(...
-        originalTimes,... original times (x)
-        w(n).data,...              original data (y)
-        newSampleTimes,...         new times (x1)
+        origTimes,...     original times (x)
+        w(n).data,...         original data (y)
+        newTimes,...    new times (x1)
         method);           %  method
-    w(n).start = newSampleTimes(1);  % assumes matlab number formatted time
-    
+    w(n).start = newTimes(1); % must be a datenum
 end
 w = set(w,'freq',newFrequency);
 
 %% update histories
 % if all waves were aligned to the same time, then handle all history here
 if hasSingleAlignTime
-    %fancy way to get properly formatted time
-    timeStr = get(set(waveform,'start',alignTime(1)),'start_str');
-    %adjust history
-    myHistory = sprintf('aligned data to %s at %f samples/sec',...
-        timeStr, newFrequency);
-    w = addhistory(w,myHistory);
+   noteRealignment(w, alignTime(1), newFrequency);
 else
-   dummyw = waveform;
     for n=1:numel(w)
-         %fancy way to get properly formatted time
-         dummyw.start = alignTime(n);
-        %timeStr = get(set(dummyw,'start',alignTime(n)),'start_str');
-        %adjust history
-        myHistory = sprintf('aligned data to %s at %f samples/sec',...
-            get(dummyw,'start_str'), newFrequency);
-        w(n) = addhistory(w(n),myHistory);
+       w(n) = noteRealignment(w(n), alignTime(n), newFrequency);
     end
+end
+end
+
+function w = noteRealignment(w, startt, freq)
+   timeStr = datestr(startt,'yyyy-mm-dd HH:MM:SS.FFF');
+   myHistory = sprintf('aligned data to %s at %f samples/sec', timeStr, freq);
+   w = addhistory(w,myHistory);
 end

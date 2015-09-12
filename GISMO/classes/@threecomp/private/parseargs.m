@@ -22,7 +22,7 @@ properties.val = arglist(2:2:argcount);
 
 %
 for i=1:numel(properties.name)
-  if ~isa(properties.name{i},'char')
+  if ~ischar(properties.name{i})
     error('Waveform:parseargs:invalidPropertyName',...
       'All property names must be strings.');
   end

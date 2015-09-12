@@ -26,10 +26,10 @@ end
 if ~isa(w,'waveform')
     error('First input must be a waveform object');
 end
-if ~isa(testField,'char') && ~isa(testField,'cell')
+if ~ischar(testField) && ~iscell(testField)
     error('Second argument must be a string or cell array of strings');
 end
-if isa(testField,'char')
+if ischar(testField)
     testField = {testField};
 end
 if numel(w)>1 && numel(testField)>1
