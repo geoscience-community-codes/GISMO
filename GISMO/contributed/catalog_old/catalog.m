@@ -933,7 +933,7 @@ classdef catalog
             % $Date$
             % $Revision$
 
-            if isa(fieldname,'char')
+            if ischar(fieldname)
                 fieldname = {upper(fieldname)}; %convert to cell
             else
                 error('catalog:addfield:invalidFieldname','fieldname must be a string')
@@ -1028,8 +1028,8 @@ classdef catalog
             
                 % LON
                 case 'LON',
-                if isa(val,'double')
-                    if (val>=-180.0 & val<=180.0)
+                if isnumeric(val)
+                    if (val>=-180.0 && val<=180.0)
                         [cobj.lon] = deal(val);
                     else
                         error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -180.0 to 180.0');
@@ -1038,8 +1038,8 @@ classdef catalog
             
                 % LAT
                 case 'LAT',
-                if isa(val,'double')
-                    if (val>=-90.0 & val<=90.0)
+                if isnumeric(val)
+                    if (val>=-90.0 && val<=90.0)
                         [cobj.lat] = deal(val);
                     else
                         error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -90.0 to 90.0');
@@ -1048,8 +1048,8 @@ classdef catalog
             
                 % DEPTH
                 case 'DEPTH',
-                if isa(val,'double')
-                    if (val>=-13.0 & val<=999.0)
+                if isnumeric(val)
+                    if (val>=-13.0 && val<=999.0)
                         [cobj.depth] = deal(val);
                     else
                         error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -13.0 to 999.0');
@@ -1059,8 +1059,8 @@ classdef catalog
             
                 % DNUM
                 case 'DNUM',
-                if isa(val,'double')
-                    if (val>=datenum(1900,1,1) & val<=datenum(2030,1,1))
+                if isnumeric(val)
+                    if (val>=datenum(1900,1,1) && val<=datenum(2030,1,1))
                         [cobj.dnum] = deal(val);
                     else
                         error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from %f to %f',datenum(1900,1,1),datenum(2030,1,1));
@@ -1069,8 +1069,8 @@ classdef catalog
                         
                 % NASS
                 case 'NASS',
-                if isa(val,'double') | isinteger(val)
-                    if (val>=0 & val<=999)
+                if isnumeric(val)
+                    if (val>=0 && val<=999)
                         [cobj.nass] = deal(int16(val));
                     else
                         error('CATALOG:set:propertyTypeMismatch','Expected an INTEGER from 0 to 999');
@@ -1080,29 +1080,33 @@ classdef catalog
                         
                 % EVID
                 case 'EVID',
-                if isa(val,'double') | isinteger(val)
-                    if (val>=0 & val<=2^32)
-                        [cobj.evid] = deal(int32(val));
+                if isnumeric(val)
+                   % was int32 which didn't match the original 2^32 maximum
+                   ui32max = intmax('uint32');
+                    if (val>=0 && val<=intmax('uint32'))
+                        [cobj.evid] = deal(uint32(val));
                     else
-                        error('CATALOG:set:propertyTypeMismatch','Expected an INTEGER from 0 to %f',2^32);
+                        error('CATALOG:set:propertyTypeMismatch','Expected an INTEGER from 0 to %f',ui32max);
                     end
                 end  
             
                 % ORID
                 case 'ORID',
-                if isa(val,'double') | isinteger(val)
-                    if (val>=0 & val<=2^32)
-                        [cobj.orid] = deal(int32(val));
+                if isnumeric(val)
+                   % was int32 which didn't match the original 2^32 maximum
+                   ui32max = intmax('uint32');
+                    if (val>=0 && val<=ui32max)
+                        [cobj.orid] = deal(uint32(val));
                     else
-                        error('CATALOG:set:propertyTypeMismatch','Expected an INTEGER from 0 to %f',2^32);
+                        error('CATALOG:set:propertyTypeMismatch','Expected an INTEGER from 0 to %f',ui32max);
                     end
                 end  
                                                 
                 % MAGa - verification commented out because Helena's was running into problems when ressetting whole vectors
                 case 'MAG',
-                if isa(val,'double') 
+                if isnumeric(val) 
                     %if (val>=-2.0 & val<=9.9) | isnan(val) | (val==-999.0)
-                        [cobj.mag] = deal(val);
+                        [cobj.mag] = deal(double(val));
                     else
                         error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE');
                     %else
@@ -1112,9 +1116,9 @@ classdef catalog
             
                 % MB
                 case 'MB',
-                if isa(val,'double') 
+                if isnumeric(val) 
                     %if (val>=-2.0 & val<=9.9) | isnan(val) | (val==-999.0)
-                        [cobj.mb] = deal(val);
+                        [cobj.mb] = deal(double(val));
                     else
                         error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE');
                     %else

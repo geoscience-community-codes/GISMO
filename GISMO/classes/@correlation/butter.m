@@ -22,7 +22,7 @@ function c = butter(c,varargin)
 % TODO: should check to ensure low cutoff period is >> trace length
 
 % GET INPUTS
-if isa(varargin{1},'char')       % set filter type
+if ischar(varargin{1})       % set filter type
     type = varargin{1};
     varargin = varargin(2:end);
 else

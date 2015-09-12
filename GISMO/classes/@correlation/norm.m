@@ -35,7 +35,7 @@ function c = norm(c,varargin)
    
    
    % CHECK FOR RANGE
-   if (length(varargin)==3) && isa(varargin{2},'double') && isa(varargin{3},'double')
+   if (length(varargin)==3) && isnumeric(varargin{2}) && isnumeric(varargin{3})
       c2 = crop(c,varargin{2},varargin{3});
       varargin = varargin(1:end-2);
    else
@@ -44,7 +44,7 @@ function c = norm(c,varargin)
    
    
    % CHECK FOR INDEX LIST
-   if (length(varargin)==2) && isa(varargin{1},'double')
+   if (length(varargin)==2) && isnumeric(varargin{1})
       index  = varargin{2};
       varargin = varargin(1:end-1);
    else
@@ -53,9 +53,9 @@ function c = norm(c,varargin)
    
    
    % CHOOSE NORMALIZATION TYPE
-   if (length(varargin)==1) && isa(varargin{1},'char')
+   if (length(varargin)==1) && ischar(varargin{1})
       method = varargin{1};
-   elseif  (length(varargin)==1) && isa(varargin{1},'double')
+   elseif  (length(varargin)==1) && isnumeric(varargin{1})
       method = 'sca';
       scale = varargin{1};
    elseif  (nargin==1)

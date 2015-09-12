@@ -22,7 +22,7 @@ end
 % CHOOSE SORT TYPE
 if nargin==1
     type = 'TIM';
-elseif isa(varargin{1},'char')
+elseif ischar(varargin{1})
     type = varargin{1};
 else
     error('Incorrect inputs');

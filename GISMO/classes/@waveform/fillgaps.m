@@ -15,54 +15,40 @@ function w = fillgaps(w,value, gapvalue)
 % FILLGAPS is designed to replace NaN values.  However, if if you use
 % W = fillgaps(W,number, gapvalue), then ALL data points with the value
 % GAPVALUE will be replaced by NUMBER.
-%
 
-% VERSION: 1.0 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: 4/16/2008
-
-
-if ~(isa(value,'numeric') && (isscalar(value) || isempty(value)) || ischar(value))
+if ~(isnumeric(value) && (isscalar(value) || isempty(value)) || ischar(value))
     warning('Waveform:fillgaps:invalidGapValue',...
         'Value to replace data with must be string or scalar or []');
 end
 
-if ~exist('gapvalue','var')
-    gapvalue = nan;
+if ~exist('gapvalue','var') || isnan(gapvalue)
+   getgaps = @(x) isnan(x.data);
+else
+   getgaps = @(x) x.data == gapvalue;
 end;
 
-if (isnan(gapvalue))
-    for N = 1:numel(w)
-        if (isa(value,'numeric'))
-            w(N).data(isnan(w(N).data)) = value;
-        else
-            switch upper(value)
-                case 'MEANALL'
-                    meanVal = mean(w(N));
-                    if isnan(meanVal)
-                       meanVal = 0; 
-                    end
-                    w(N).data(isnan(w(N).data)) = meanVal;
-                otherwise
-                    disp('unimplemented fillgaps method');
-            end
-        end
-    end
+if ischar(value)
+   fillmethod = lower(value);
 else
-    for N = 1:numel(w)
-        if (isa(value,'numeric'))
-            w(N).data(w(N).data == gapvalue) = value;
-        else
-            switch upper(value)
-                case 'MEANALL'
-                    %two step process so that we don't interfere with our
-                    %own mean calculation.
-                    w(N).data(w(N).data == gapvalue) = nan;
-                    w(N).data(isnan(w(N).data)) = mean(w(N));
-                otherwise
-                    disp('unimplemented fillgaps method');
-            end
-                    
-        end
-    end
+   fillmethod = 'number';
+end
+
+switch fillmethod
+   case 'meanall'
+      for N = 1:numel(w);
+         allgaps = getgaps(w(N));
+         % do not include the values to be replaced
+         meanVal = mean(w(N).data(~allgaps));
+         if isnan(meanVal)
+            meanVal = 0;
+         end
+         w(N).data(allgaps) = meanVal;
+      end
+   case 'number'
+      for N = 1:numel(w);
+         w(N).data(getgaps(w(N))) = value;
+      end
+   otherwise
+      error('waveform:fillgaps:unimplementedMethod',...
+         'Unimplemented fillgaps method [%s]', fillmethod);
 end

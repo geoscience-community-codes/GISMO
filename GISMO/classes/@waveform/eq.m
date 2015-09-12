@@ -10,13 +10,9 @@ function [ result ] = eq( w1, w2 )
 
 assert(isa(w1,'waveform') || isa(w2, 'waveform'));
 
-result = false;
-if w1.cha_tag == w2.cha_tag
-   if (get(w1,'timevector') == get(w2,'timevector'))
-      if (get(w1, 'data') == get(w2, 'data'))
-         result = true;
-      end
-   end
-end
+result = w1.cha_tag == w2.cha_tag &&...
+   w1.start == w2.start && ...
+   w1.freq == w2.freq && ...
+   all(w1.data == w2.data);
 
 

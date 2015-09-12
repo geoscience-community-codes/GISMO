@@ -17,7 +17,7 @@ function w = delfield(w,field_to_delete, ignoredvalue)
 % $Date$
 % $Revision$
 
-if isa(field_to_delete,'char')
+if ischar(field_to_delete)
     field_to_delete = {upper(field_to_delete)}; %convert to cell
 else
     if isempty(field_to_delete)

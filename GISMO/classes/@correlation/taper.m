@@ -31,7 +31,7 @@ end
 % GET TAPER STYLE
 style = 'cosine';
 if length(varargin)>0 
-    if isa(varargin{end},'char')
+    if ischar(varargin{end})
         style = varargin{end};
         varargin = varargin(1:end-1);
     end

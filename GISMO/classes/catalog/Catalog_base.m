@@ -63,7 +63,7 @@ classdef Catalog_base
 
             % AUTHOR: Glenn Thompson
 
-            if isa(fieldname,'char')
+            if ischar(fieldname)
                 mask = strcmp(fieldname, properties(cobj));
                 if any(mask)
                     cobj = cobj.set(fieldname, val);
@@ -890,7 +890,7 @@ classdef Catalog_base
                                         end
                                     end
                                 end
-                            elseif strcmp(class(thisvalue),'char')
+                            elseif ischar(thisvalue)
                                 if ~isempty(thisvalue)
                                     try
                                         dbputv(dbo, thisfield, thisvalue);
@@ -925,7 +925,7 @@ classdef Catalog_base
                                     end
                                 end
                             end
-                        elseif strcmp(class(thisvalue),'char')
+                        elseif ischar(thisvalue)
                             if ~isempty(thisvalue)
                                 try
                                     dbputv(dbe, thisfield, thisvalue);

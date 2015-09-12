@@ -20,7 +20,7 @@ end
 if ~isa(TC,'threecomp')
     error('First argument must be a threecomp object');
 end
-if ~isa(fieldName,'char')
+if ~ischar(fieldName)
     error('Second argument must be a character string');
 end
 
