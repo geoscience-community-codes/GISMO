@@ -203,7 +203,8 @@ classdef eventrate
                 if strcmp(metric{cc},'energy')
                     data = cumsum(magnitude.mag2eng(Obj(c).cum_mag));
                 else
-                    eval(  sprintf('data = Obj(c).%s;',metric{cc} ) );
+                    % eval(  sprintf('data = Obj(c).%s;',metric{cc} ) );
+                    data = Obj(c).(metric{cc});
                 end
                 subplot(numsubplots,1,cc), bar( Obj(c).dnum, data );
                 datetick('x','keeplimits');

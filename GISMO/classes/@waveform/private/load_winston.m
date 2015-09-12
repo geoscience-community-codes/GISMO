@@ -53,8 +53,6 @@ if nWaves < numel(allWaves)
 end
 
 
-
-%%
 function [w, successful] = getFromWinston(scnl,stime,etime,mydatasource)
 %include 
 successful = false;
@@ -76,20 +74,15 @@ try
   mynet = get(scnl,'network');
   mysta = get(scnl,'station');
   myloc = get(scnl,'location');
-  %don't know why "eval" works and the line below doesn't...
-  %d = javaMethod(getRawData,WWS,mysta,mychan,mynet,myloc,stime,etime);
-  d = eval('WWS.getRawData(mysta,mychan,mynet,myloc,stime,etime)');
-
+  d = WWS.getRawData(mysta,mychan,mynet,myloc,stime,etime);
   WWS.close;
-catch
+catch er
   warning('Waveform:load_winston:noServerAccess',...
     'Unable to access Winston Wave Server');
 %  try
 %     WWS.close;
 %  end
-  rethrow(lasterror)
-  return
-
+  rethrow(er)
 end
 
 if ~exist('d','var') || isempty(d)
@@ -150,16 +143,7 @@ if t2 > (t1 + (24 *60 * 60))
 end
 
 function w = scnl2waveform(scnl)
-%w = set(waveform,'station',get(scnl,'station'),...
-%  'channel',get(scnl,'channel'));
 w = set(waveform,'scnlobject',scnl);
-%w = addfield(w,'net',get(scnl,'network'));
-%w = addfield(w,'loc',get(scnl,'location'));
-
-% w = set(waveform,'station',scnl.station,...
-%   'channel',scnl.channel);
-% w = addfield(w,'net',scnl.network);
-% w = addfield(w,'loc',scnl.location);
 
 
 %% Adding the Java path
@@ -191,7 +175,7 @@ if introuble
 
   surrogate_jar = 'http://www.avo.alaska.edu/Input/celso/swarmstuff/usgs.jar';
 
-  [s,success] = urlread(surrogate_jar);%can we read the usgs.jar? if not don't bother to add it.
+  [~,success] = urlread(surrogate_jar);%can we read the usgs.jar? if not don't bother to add it.
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % MODIFY FOLLOWING LINE TO POINT TO YOUR LOCAL Swarm/lib/usgs.jar
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
