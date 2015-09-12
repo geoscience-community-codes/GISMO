@@ -18,7 +18,7 @@ p.parse(filepath, dataformat, varargin{:});
 fields = fieldnames(p.Results);
 for i=1:length(fields)
 	field=fields{i};
-	val = eval(sprintf('p.Results.%s',field));
+   val = p.Results.(field);
 	cobj = cobj.set(field, val);
 end
 

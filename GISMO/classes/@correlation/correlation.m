@@ -188,11 +188,11 @@ if nargin==0
         c = class(c,'correlation');
         
 %% ANOTHER CORRELATION OBJECT
-elseif nargin==1 & isa(varargin{1},'correlation')
+elseif nargin==1 && isa(varargin{1},'correlation')
     c = varargin{1};
         
 %% REPLACE WAVEFORM IN EXISTING CORRELATION OBJECT
-elseif nargin==2 & isa(varargin{1},'correlation')
+elseif nargin==2 && isa(varargin{1},'correlation')
     c = varargin{1};
     w = varargin{2};
     if get(c,'TRACES') ~= numel(w)
@@ -392,27 +392,32 @@ function c = loadfromdatasource(ds,scnl,trig,pretrig,posttrig);
 % improve the spead considerably. - MEW, May 25, 2009.
 
 % READ IN WAVEFORM OBJECTS
-good = ones(size(trig));
+good = true(size(trig));
 fprintf('Reading waveforms into a correlation object ...\n');
 w = waveform;
 nMax = length(trig);
 disp('     ');
+
+%all requests for waveforms are the same, and depend upon various triggers.
+wgetter = @(tr) waveform(ds, scnl, tr+pretrig/86400, tr+posttrig/86400);
+
+loaderrmsg = [get(scnl,'nscl_string'), ' at time %s could not be loaded\n     \n'];
+updatemsg.good = @(n) fprintf('\b\b\b\b\b\b%5.0f%%',n/nMax*100);
+updatemsg.bad = @(dv) fprintf(loaderrmsg, datestr(dv,'mm/dd/yyyy HH:MM:SS'));
+
 for n = 1:nMax
-try
-        w(n) = waveform(ds,scnl,trig(n)+pretrig/86400,trig(n)+posttrig/86400);
-        freq(n) = get(w(n),'Fs');
-        fprintf('\b\b\b\b\b\b%5.0f%%',n/nMax*100);
-    catch
-        scnlstr = [get(scnl,'network') '_' get(scnl,'station') '_' get(scnl,'channel') '_' get(scnl,'location')];
-        disp([scnlstr ' at time ' datestr(trig(n),'mm/dd/yyyy HH:MM:SS') ' could not be loaded.']);
-        disp('     ');
-        good(n) = 0;    % mark waveform as empty
-    end;
+   try
+      w(n) = wgetter(trig(n));
+      updatemsg.good(n);
+   catch
+      updatemsg.bad(trig(n));
+      good(n) = false;    % mark waveform as empty
+   end;
 end;
 fprintf('\n');
 %
 % CHECK TO SEE IF ANY DATA WAS READ IN
-if length(w)==0
+if numel(w)==0
 	error('This data is not available from the specified database.');
 end
 
@@ -421,9 +426,8 @@ end
 
 %
 % STORE ONLY GOOD TRACES
-w = w(find(good));
-trig = trig(find(good));
-freq = freq(find(good));
+w = w(good);
+trig = trig(good);
 %
 % FILL CORRELATION STRUCTURE
 c.W = reshape(w,length(w),1);
@@ -434,12 +438,13 @@ c.trig = reshape(trig,length(trig),1);
 %% FUNCTION: LOAD AN ANTELOPE DATABASE 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function c = loadfromantelope(stat,chan,trig,pretrig,posttrig,archive);
+function c = loadfromantelope(stat,chan,trig,pretrig,posttrig,archive)
 
 % READ IN WAVEFORM OBJECTS
-good = ones(size(trig));
+good =true(size(trig));
 fprintf('Creating matrix of waveforms ...');
 w = waveform;
+
 for i = 1:length(trig)
     try
 	if ~isnan(archive)
@@ -452,7 +457,7 @@ for i = 1:length(trig)
     catch
         disp(' ');
         disp([stat '_' chan ' at time ' datestr(trig(i),'mm/dd/yyyy HH:MM:SS.FFF') ' could not be loaded.']);
-        good(i) = 0;    % mark waveform as empty
+        good(i) = false;    % mark waveform as empty
     end;
 end;
 disp(' ');
@@ -463,9 +468,9 @@ if length(w)==0
 end
 %
 % STORE ONLY GOOD TRACES
-w = w(find(good));
-trig = trig(find(good));
-freq = freq(find(good));
+w = w(good);
+trig = trig(good);
+freq = freq(good);
 %
 % FILL CORRELATION STRUCTURE
 c.W = reshape(w,length(w),1);
@@ -481,7 +486,7 @@ c.trig = reshape(trig,length(trig),1);
 function c = loadfromwinston(stat,chan,trig,pretrig,posttrig,netwk,loc,server,port);
 
 % READ IN WAVEFORM OBJECTS
-good = ones(size(trig));
+good = true(size(trig));
 fprintf('Creating matrix of waveforms ...');
 w = waveform;
 for i = 1:length(trig)
@@ -492,7 +497,7 @@ for i = 1:length(trig)
     catch
         disp(' ');
         disp([stat '_' chan ' at time ' datestr(trig(i),'mm/dd/yyyy HH:MM:SS.FFF') ' could not be loaded.']);
-        good(i) = 0;    % mark waveform as empty
+        good(i) = false;    % mark waveform as empty
     end;
 end;
 disp(' ');
@@ -503,9 +508,9 @@ if length(w)==0
 end
 %
 % STORE ONLY GOOD TRACES
-w = w(find(good));
-trig = trig(find(good));
-freq = freq(find(good));
+w = w(good);
+trig = trig(good);
+freq = freq(good);
 %
 % RESAMPLE TRACES TO MAXIMUM FREQUENCY
 fmax = round(max(freq))

@@ -40,7 +40,8 @@ classdef Netmag
             fields = fieldnames(p.Results);
             for i=1:length(fields)
                 field=fields{i};
-                val = eval(sprintf('p.Results.%s;',field));
+                %val = eval(sprintf('p.Results.%s;',field));
+                val = p.Results.(field);
                 self = self.set(field, val);
             end                        
         end
@@ -56,7 +57,7 @@ classdef Netmag
             while numel(Vidx) >= 2
                 prop_name = upper(varargin{Vidx(1)});
                 val = varargin{Vidx(2)};
-                mask = strcmp(upper(prop_name),upper(properties(self)));
+                mask = strcmpi(prop_name, properties(self));
                 if any(mask)
                     mc = metaclass(self);
                     i = find(mask);
@@ -64,7 +65,8 @@ classdef Netmag
                     if isempty(mc.PropertyList(i).GetMethod)
                         % The properties here need to have
                         % SetAccess==public
-                        eval(sprintf('self.%s=val;',prop_name));
+                        % eval(sprintf('self.%s=val;',prop_name));
+                        self.(prop_name) = val;
                     else
                         warning('Property %s is a derived property and cannot be set',prop_name);
                     end
