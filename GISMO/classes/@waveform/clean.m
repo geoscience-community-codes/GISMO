@@ -14,16 +14,14 @@ function w = clean(w)
 % $Date$
 % $Revision$
 
-	% Check input is a waveform object
-	if ~isa(w, 'waveform')
-		warning('Not a waveform object')
-		return
-    end
-    
+% now that it is part of waveform, we have special access which allows us 
+% to manipulate the data in place,significantly reducing the memory
+% footprint. 
+
     % Remove linear trend discontinuously, from one gap (NaN) to another
     for i=1:numel(w)
-        data = get(w(i),'data');
-        if size(find(~isnan(data))) > max([3 length(data)*0.2]) % at least 20% must be non-nan
+       nans = isnan(w(i)); %since logical,(1/8) memory footprint
+        if sum(~nans) > max([3 numel(nans)*0.2]) % at least 20% must be non-nan
             % Here we remove continguous NaNs because otherwise we get an out
             % of memory error. So when we meet a sequence like [3.4 NaN NaN NaN
             % 2.3] we keep the NaN bookends, but then put zeros between
@@ -33,22 +31,44 @@ function w = clean(w)
             % get detrended as a single unit, rather than as thousands of
             % separate segments (which takes forever and causes out of memory
             % errors).
-            bp = find(isnan(data));
+            
+            firstNans = find(diff([false,nans]) == 1);
+            lastNans = find(diff([nans, false]) == -1);
+            assert(numel(firstNans) == numel(lastNans))
+            nContiguousNans = lastNans - firstNans + 1;
+            
+            % keep only stretches of 3 or more
+            firstNans(nContiguousNans < 3) = [];
+            lastNans(nContiguousNans < 3) = [];
+            
+            % replace values in between those stretches with zero
+            firstNans = firstNans + 1;
+            lastNans = lastNans - 1;
+            for c=1:numel(firstNans)
+               w(i).data(firstNans(c):lastNans(c)) = 0;
+            end
+            
+            %{ 
+            % the following logic has been replaced
+            bp = find(allnans);
             if length(bp)>=3
                 for c=2:length(bp)-1
                     if bp(c)==bp(c-1)+1;
-                        data(bp(c))=0;
+                        w(i).data(bp(c))=0;
                     end
                 end
             end
+            %}
             try
-                data = detrend(data, 'linear', bp);
-            catch
-                warning('out of memory: unable to remove trend from each line segment')
+                w(i).data = detrend(w(i).data, 'linear', bp);
+            catch er
+               %it's all messed up, so put w(i) back the way it was
+               w(i).data(nans) = nan;
+                warning(er.identifier,[message,...
+                   '\n detrending w(%d): ',...
+                   'unable to remove trend from each line segment'], i)
             end
-            if ~all(isnan(d))
-                w(i) = set(w(i), 'data', data);
-            end
+            
         end
     end
     
