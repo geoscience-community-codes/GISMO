@@ -1,5 +1,5 @@
 function combined_waveforms = combine (waveformlist)
-%COMBINE merges waveforms based on start/end times and SCNL info.
+%COMBINE merges waveforms based on start/end times and channeltag info.
 % combined_waveforms = combine (waveformlist) takes a vector of waveforms
 % and combines them based on SCNL information and start/endtimes.
 % DOES NO OTHER CHECKS
@@ -13,8 +13,8 @@ if numel(waveformlist) == 0  %nothing to do
   return
 end
 
-scnls = get(waveformlist,'scnlobject');
-[uniquescnls, idx, scnlmembers] = unique(scnls);
+channelinfo = get(waveformlist,'channeltag');
+[uniquescnls, idx, scnlmembers] = unique(channelinfo);
 
 %preallocate
 combined_waveforms = repmat(waveform,size(uniquescnls));
@@ -85,6 +85,6 @@ lastsampleT = get(w1,'timevector'); lastsampleT = lastsampleT(end);
 t = firstsampleT*86400 - lastsampleT * 86400;
 
 function w = timesort(w)
-[Y, I] = sort(get(w,'start'));
+[~, I] = sort(get(w,'start'));
 w = w(I);
 

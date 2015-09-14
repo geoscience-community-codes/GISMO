@@ -3,7 +3,9 @@ function val = get(w,prop_name)
 %   val = get(waveform,prop_name)
 %
 %   Valid property names:
-%       SCNLOBJECT, STATION, CHANNEL, NETWORK, LOCATION, FREQ, START_STR,
+%       CHANNELTAG, NETWORK, STATION, LOCATION, CHANNEL,
+%       CHANNELINFO : (gets the info as a string 'Net.Sta.Loc.Cha')
+%       FREQ, START_STR,
 %       END_STR, DATA, NYQ, PERIOD
 %     also:
 %       START, END : return datenum format (MatLab's format)
@@ -151,11 +153,21 @@ switch upper(prop_name)
     case {'WAVEFORM_OBJECT_VERSION'}
         val = w(1).version;
         
-    case {'SCNLOBJECT'}
+    case {'SCNLOBJECT'} % legacy only
+       % I'm making this whiny for now so it is obvious when things need to
+       % be changed.  This warning should probably be pulled out once we
+       % rerelease this.
+       warning('waveform:get:scnlobjectsAreDepricated',...
+          ['any usage of scnlobject should be replaced by ', ...
+          '''channelinfo'' which uses the new channeltag class']);
         val = scnlobject([w.cha_tag]);
         %must add network & location, too.
+        
    case {'CHANNELTAG'}
       val = [w.cha_tag];
+      
+   case {'CHANNELINFO'}
+      val = string([w.cha_tag]);
         
     case {'HISTORY'}
         val = cell(size(w));
