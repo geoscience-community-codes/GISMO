@@ -63,3 +63,4 @@ function w = zero2nan(w,mgl)
       w(nw) = set(w(nw),'data',dat);
    end
    %}
+end

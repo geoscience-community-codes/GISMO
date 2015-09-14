@@ -12,7 +12,6 @@ function writesac(outfilename, header, data)
    % VERSION: 1.1 of waveform objects
    %    modified from Michael Thorne (4/2004)
    % MODIFICATIONS: Celso Reyes
-   % LASTUPDATE: 9/2/2009
    
    %---------------------------------------------------------------------------
    %    Default byte-order

@@ -7,24 +7,24 @@ function [unitName, secondMultiplier] = parse_xunit(unitName)
    % $Date$
    % $Revision$
    
-   mins = 60;
-   hrs = 3600;
-   days = 3600*24;
+   secsPerMinute = 60;
+   secsPerHour = 3600;
+   secsPerDay = 3600*24;
    
    
    switch lower(unitName)
       case {'m','minutes'}
          unitName = 'Minutes';
-         secondMultiplier = mins;
+         secondMultiplier = secsPerMinute;
       case {'h','hours'}
          unitName = 'Hours';
-         secondMultiplier = hrs;
+         secondMultiplier = secsPerHour;
       case {'d','days'}
          unitName = 'Days';
-         secondMultiplier = days;
+         secondMultiplier = secsPerDay;
       case {'doy','day_of_year'}
          unitName = 'Day of Year';
-         secondMultiplier = days;
+         secondMultiplier = secsPerDay;
       case 'date',
          unitName = 'Date';
          secondMultiplier = nan; %inconsequential!
