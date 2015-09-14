@@ -28,3 +28,4 @@ endtimes = get(obj,'end');
 %interpret file
 %keep scnls only
 
+end

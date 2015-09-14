@@ -158,3 +158,4 @@ else
       error('Current valid datasources are: ANTELOPE, SAC, FILE, WINSTON, SEISAN, OBSPY, or a function handle to an interpeter function');
   end
 end
+end

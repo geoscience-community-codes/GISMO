@@ -77,7 +77,7 @@ for thisfile = 1 : numel(allfilen)
   
 end
 allObj = [allObj{:}];
-
+end
 
 function hasValidRange = isWithinTimeRange(myObj,startt,endt)
 
@@ -103,6 +103,7 @@ function hasValidRange = isWithinTimeRange(myObj,startt,endt)
     %add objects that match the criteria to the OK list
     hasValidRange = hasValidRange | (validStarts & validEnds);
   end
+end
 
 
 function mObj = myObjectsFromCells(searchClass, mycell)
@@ -116,3 +117,4 @@ for i=1:numel(mycell);
   end
 end
   mObj= [mycell{myObjectMask}];
+end

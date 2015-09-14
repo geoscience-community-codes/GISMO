@@ -7,3 +7,4 @@ if ~isa(funchandle,'function_handle')
 end
 
 ds = datasource(funchandle,ds.file_string,ds.file_args{:});
+end
