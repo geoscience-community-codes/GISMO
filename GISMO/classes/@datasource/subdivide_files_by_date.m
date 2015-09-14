@@ -53,3 +53,4 @@ allDatesToCheck = [allDatesToCheck(:); datesToCheck(:)];
 end %timesnip
 
 allDatesToCheck = unique(allDatesToCheck);
+end

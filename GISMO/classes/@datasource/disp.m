@@ -50,10 +50,11 @@ else
         'unanticipated datasource type');
   end
 end;
-
+end
 function DispStr = size2str(sizeval)
 % helper function that changes the way we view the size
 %   from : [1 43 2 6] (numeric)  to  '1x43x2x6' (char)
 
 DispStr = sprintf('x%d', sizeval);
 DispStr = DispStr(2:end);
+end

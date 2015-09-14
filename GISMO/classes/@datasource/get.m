@@ -12,3 +12,4 @@ switch lower (propertyname)
     warning('Datasource:unknownProperty','%s is not a known property name', propertyname);
     val = [];
 end
+end
