@@ -79,11 +79,14 @@ else %get detailed file.for n=1:numel(scnls)
 	
   for n=1:numel(scnls)
     scnl = scnls(n);
-	station = get(scnl,'station');
-	channel = get(scnl,'channel');
-	location = get(scnl,'location');
-	network = get(scnl,'network');
-
+% 	station = get(scnl,'station');
+% 	channel = get(scnl,'channel');
+% 	location = get(scnl,'location');
+% 	network = get(scnl,'network');
+ 	station = scnl.station;
+ 	channel = scnl.channel;
+ 	location = scnl.location;
+ 	network = scnl.network;
     for m = 1:numel(starttimes)
 	  starttime = starttimes{m};
 

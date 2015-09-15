@@ -72,3 +72,4 @@ function scnl = singleSCNL(sta, cha, net, loc)
    scnl.tag = channeltag(net, sta, loc, cha);
    scnl = class(scnl,'scnlobject');
 end
+
