@@ -40,15 +40,8 @@ function w = clean(w)
 	if ~isa(w, 'waveform')
 		warning('Not a waveform object')
 		return
-    end
+    	end
     
-    % Remove linear trend discontinuously, from one gap (NaN) to another
-    for i=1:numel(w)
-        data = get(w(i),'data');
-        if size(find(~isnan(data))) > max([3 length(data)*0.2]) % at least 20% must be non-nan
-    % Remove linear trend discontinuously, from one gap (NaN) to another
-    for i=1:numel(w)
-       nans = isnan(w(i)); %since logical,(1/8) memory footprint
         if sum(~nans) > max([3 numel(nans)*0.2]) % at least 20% must be non-nan
             % Here we remove continguous NaNs because otherwise we get an out
             % of memory error. So when we meet a sequence like [3.4 NaN NaN NaN
