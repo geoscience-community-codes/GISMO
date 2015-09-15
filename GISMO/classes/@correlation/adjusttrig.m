@@ -57,7 +57,7 @@ function c = adjusttrig(c,varargin)
 
 
 % CHECK ARGUMENTS
-if ~strcmpi(class(c),'correlation')
+if ~isa(c,'correlation')
     error('First input must be a correlation object');
 end;
 if length(varargin)>2

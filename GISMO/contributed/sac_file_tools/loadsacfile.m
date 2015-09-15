@@ -28,7 +28,7 @@ function w = loadsacfile(fileList)
 % $Revision$
 
 
-if ~isa(fileList,'cell')
+if iscell(fileList)
     error('File names must be cells');
 end
 

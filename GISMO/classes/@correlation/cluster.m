@@ -48,7 +48,7 @@ if nargin <= 1
     error('Not enough inputs');
 end
 
-if ~strcmpi(class(c),'correlation')
+if ~isa(c,'correlation')
     error('First input must be a correlation object');
 end
 

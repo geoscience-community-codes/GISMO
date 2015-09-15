@@ -24,7 +24,7 @@ function c = crop(c,varargin)
 
 
 % READ & CHECK ARGUMENTS
-if ~strcmpi(class(c),'correlation')
+if ~isa(c,'correlation')
     error('First input must be a correlation object');
 end
 

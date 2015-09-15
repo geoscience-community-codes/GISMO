@@ -37,11 +37,8 @@ function A = times(A,B)
    % $Revision$
    
    
-   if ~isa(A,'waveform') %either A or B MUST be a waveform to get this far...
-      D = A;
-      A = B; %A is the waveform
-      B = D; %B is either a waveform or numeric
-      clear D
+   if ~isa(A,'waveform') % either A or B is assured to be a waveform
+      [A, B] = swap(A, B);
    end
    
    % at this point A is guarenteed to be a waveform, while B may be anything
@@ -117,4 +114,8 @@ function A = times(A,B)
          error('Waveform:times:unknownoperation',...
             'A times operation was attempted that had no recognized task.');
    end
+end
+
+function [a, b] = swap(b, a)
+   % do nothing, it swaps a and b!
 end

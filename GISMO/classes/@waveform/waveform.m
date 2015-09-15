@@ -214,6 +214,7 @@ function w = waveform(varargin)
             '   w = WAVEFORM(datasource, channeltag, starttimes, endtimes)\n',...
             '   w = WAVEFORM(channeltag, samplefreq, starttime, data, units)\n']);
    end
+   
    function w = genericWaveform()
       %create a fresh waveform.  All calls to the waveform object, aside
       %from the "copy" call (case nargin==1) will be initated HERE.
@@ -228,6 +229,7 @@ function w = waveform(varargin)
       w.history = {'created',now};
       w = class(w, 'waveform');
    end
+   
    function w = waveformFromParts(chaTag, freq, starttime, data, units)
       w.cha_tag = chaTag;%(DEFAULT_STATION,DEFAULT_CHAN);
       w.Fs = freq;

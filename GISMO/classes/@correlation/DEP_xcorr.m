@@ -96,16 +96,17 @@ if exist('pretrig') && exist('posttrig')
     disp(['using ' algorithm ' algorithm on the time interval [' num2str(pretrig) ' ' num2str(posttrig) '] ...' ]);
 else
     disp(['using ' algorithm ' algorithm ...']);
-end    
-if strcmp(algorithm,'1x1')==1
-	d = xcorr1x1(d);
-  elseif strcmp(algorithm,'1xr')
-  	d = xcorr1xr(d);
-  elseif strcmp(algorithm,'dec')
-  	d = xcorrdec(d);
-  elseif strcmp(algorithm,'cxc')
-  	d = xcorrcxc(d);
-end;
+end
+switch algorithm
+   case '1x1'
+      d = xcorr1x1(d);
+   case '1xr'
+      d = xcorr1xr(d);
+   case 'dec'
+      d = xcorrdec(d);
+   case 'cxc'
+      d = xcorrcxc(d);
+end
 
 
 % ASSIGN CORRELATION PARAMETERS TO ORIGINAL DATA

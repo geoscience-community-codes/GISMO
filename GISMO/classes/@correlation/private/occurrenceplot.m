@@ -7,7 +7,7 @@ function occurrenceplot(c,scale,clusternum)
 % $Revision$
 
 
-if ~strcmpi(class(c),'correlation')
+if ~isa(c,'correlation')
     error('First input must be a correlation object');
 end;
 

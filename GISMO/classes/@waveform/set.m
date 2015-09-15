@@ -144,17 +144,6 @@ while numel(Vidx) >= 2
                %    'Start time not assigned... Unknown value type: %s', class(val));
             end
             
-            %{
-      if ~(isnumeric(val) || isa(val,'char'))
-        error('Waveform:set:propertyTypeMismatch',...
-          'Start time not assigned... Unknown value type: %s', class(val));
-      end
-      if numel(w) == 1
-          w.start = datenum(val);
-      else
-          [w.start] = deal(datenum(val));
-      end
-            %}
          case {'START_ANTELOPE', 'START_EPOCH'}
             if ~isnumeric(val),
                error('Waveform:set:propertyTypeMismatch',...
