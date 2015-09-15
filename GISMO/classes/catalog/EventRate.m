@@ -704,7 +704,7 @@ classdef EventRate
 
             % AUTHOR: Glenn Thompson
 
-            if isa(fieldname,'char')
+            if ischar(fieldname)
                 mask = strcmp(fieldname, properties(obj));
                 if any(mask)
                     obj = obj.set(fieldname, val);

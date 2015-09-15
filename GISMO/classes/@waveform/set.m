@@ -1,149 +1,150 @@
 function w = set(w, varargin)
-%SET Set properties for waveform object(s)
-%   w = Set(w,prop_name, val, [prop_name, val])
-%   SET is one of the two gateway functions of an object, such as waveform.
-%   Properties that are changed through SET are typechecked and otherwise
-%   scrutinized before being stored within the waveform object.  This
-%   ensures that the other waveform methods are all retrieving valid data,
-%   thereby increasing the reliability of the code.
-%
-%   Another strong advantage to using SET and GET to change  and retrieve
-%   properties, rather than just assigning them to the waveform directly,
-%   is that the underlying data structure can change and grow without
-%   harming the code that is written based on the waveform object.
-%
-%   Valid property names:
-%
-%       STATION, CHANNEL, FREQ, DATA, UNITS: self explanatory
-%       START :         Set the start-time using matlab format or string
-%       START_EPOCH:    Set the start-time using epoch (antelope) time
-%       SAMPLE_LENGTH : adjusts the length of the data to length VAL.
-%                       If this number is shorter than existing data, SET
-%                       truncates after sample VAL.  If it is longer, then
-%                       SET will pad the end with zeroes to get length VAL.
-%
-%       If user-defined fields were added to the waveform (ie, through
-%       addField), these fieldnames are also available through set.
-%
-%       for example
-%           % create a waveform object, and add a field called DUMMY with
-%           % the value 12
-%           w = addfield(waveform,'DUMMY',12);
-%
-%           % change the value of the DUMMY field
-%           w = set(w,'DUMMY',32);
-%
-%           % change the station and channel at once
-%           w = set(w,'Station','YCK', 'Channel', 'BHZ');
-%
-%   Batch changes can be made if input w is a matrix (use with care!)
-%
-%   NOTE: There is no set support for "version".  This is handled entirely
-%         within the waveform constructor and the loadobj function.
-%
-% NOTE: To avoid logging the history, append the argument 'nohist'
-%
-%  See also WAVEFORM/GET
-
-% VERSION: 1.1 of waveform objects
-% AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-% LASTUPDATE: March 15, 2009
-
-%4/22/08 added synonym for sample_length of data_length
-
-%global dep2mep
-
-% check to see if history is bypassed
-
-idx = numel(varargin);
-while idx > 1
-   prop_name = upper(varargin{idx-1});
-   val = varargin{idx};
-   idx = idx - 2;
-%{
+   %SET Set properties for waveform object(s)
+   %   w = Set(w,prop_name, val, [prop_name, val])
+   %   SET is one of the two gateway functions of an object, such as waveform.
+   %   Properties that are changed through SET are typechecked and otherwise
+   %   scrutinized before being stored within the waveform object.  This
+   %   ensures that the other waveform methods are all retrieving valid data,
+   %   thereby increasing the reliability of the code.
+   %
+   %   Another strong advantage to using SET and GET to change  and retrieve
+   %   properties, rather than just assigning them to the waveform directly,
+   %   is that the underlying data structure can change and grow without
+   %   harming the code that is written based on the waveform object.
+   %
+   %   Valid property names:
+   %
+   %       STATION, CHANNEL, FREQ, DATA, UNITS: self explanatory
+   %       START :         Set the start-time using matlab format or string
+   %       START_EPOCH:    Set the start-time using epoch (antelope) time
+   %       SAMPLE_LENGTH : adjusts the length of the data to length VAL.
+   %                       If this number is shorter than existing data, SET
+   %                       truncates after sample VAL.  If it is longer, then
+   %                       SET will pad the end with zeroes to get length VAL.
+   %
+   %       If user-defined fields were added to the waveform (ie, through
+   %       addField), these fieldnames are also available through set.
+   %
+   %       for example
+   %           % create a waveform object, and add a field called DUMMY with
+   %           % the value 12
+   %           w = addfield(waveform,'DUMMY',12);
+   %
+   %           % change the value of the DUMMY field
+   %           w = set(w,'DUMMY',32);
+   %
+   %           % change the station and channel at once
+   %           w = set(w,'Station','YCK', 'Channel', 'BHZ');
+   %
+   %   Batch changes can be made if input w is a matrix (use with care!)
+   %
+   %   NOTE: There is no set support for "version".  This is handled entirely
+   %         within the waveform constructor and the loadobj function.
+   %
+   % NOTE: To avoid logging the history, append the argument 'nohist'
+   %
+   %  See also WAVEFORM/GET
+   
+   % VERSION: 1.1 of waveform objects
+   % AUTHOR: Celso Reyes (celso@gi.alaska.edu)
+   % LASTUPDATE: March 15, 2009
+   
+   %4/22/08 added synonym for sample_length of data_length
+   
+   %global dep2mep
+   
+   % check to see if history is bypassed
+   
+   idx = numel(varargin);
+   while idx > 1
+      prop_name = upper(varargin{idx-1});
+      val = varargin{idx};
+      idx = idx - 2;
+      %{
 Vidx = 1 : numel(varargin);
 
 while numel(Vidx) >= 2
   prop_name = upper(varargin{Vidx(1)});
   val = varargin{Vidx(2)};
-%}
-
-  %for n = 1 : numel(w);
-  %out = w(n);
-  
-  switch prop_name
-    case 'SCNLOBJECT'
-        switch class(val)
-          case 'scnlobject'
-            [w.cha_tag] = deal(get(val,'channeltag'));
-          case 'channeltag'
-            [w.cha_tag] = deal(val);
-          case 'char'
-            [w.cha_tag] = deal(channeltag.parse(val));
-           otherwise
-            % try it!
-              [w.cha_tag] = deal(channeltag(val));
-            % error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT or CHANNELTAG');
-        end
-        % warning('Use set(channeltag) instead') % TODO: Decide if better generic name exists
+      %}
       
-    case 'CHANNELINFO'
-        switch class(val)
-          case 'scnlobject'
-            [w.cha_tag] = deal(channeltag(char(val)));
-          case 'channeltag'
-            [w.cha_tag] = deal(val);
-          case 'char'
-            [w.cha_tag] = deal(channeltag(val));
-          otherwise
-            % try it!
-              [w.cha_tag] = deal(channeltag(val));
-            % error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT or CHANNELTAG');
-        end
-    case {'STATION','NETWORK', 'CHANNEL','LOCATION'}
-      if ~isa(val,'char')
-        error('Waveform:set:propertyTypeMismatch',...
-          '%s should be a string not a %s', prop_name,class(val));
-      end
-      all_chantags = set([w.cha_tag],prop_name,val);
-      for n=1:numel(w)
-        w(n).cha_tag = all_chantags(n);
-      end
+      %for n = 1 : numel(w);
+      %out = w(n);
       
-    case {'FS', 'FREQ'}
-      if ~isnumeric(val)
-        error('Waveform:set:propertyTypeMismatch',...
-          'Frequency should be numeric, not %s', class(val));
-      end
-      if numel(w)==1
-          w.Fs = val(1);
-      else
-          [w.Fs] = deal(val(1));
-      end
-      
-    case {'START', 'START_MATLAB'}
-      %AUTOMATICALLY figures out whether date is antelope or matlab
-      %format;
-      if numel(val) == 1
-         %expecting a number
-         if numel(w) == 1
-            w.start = val;
-         else
-            [w.start] = deal(val);
-         end
-      else
-         %might be char, might be vector. give it a shot.
-         if numel(w) == 1
-            w.start = datenum(val);
-         else
-            [w.start] = deal(datenum(val));
-         end
-     % else
-     %   error('Waveform:set:propertyTypeMismatch',...
-     %    'Start time not assigned... Unknown value type: %s', class(val));
-      end
-
-      %{
+      switch prop_name
+         case 'SCNLOBJECT'
+            switch class(val)
+               case 'scnlobject'
+                  [w.cha_tag] = deal(get(val,'channeltag'));
+               case 'channeltag'
+                  [w.cha_tag] = deal(val);
+               case 'char'
+                  [w.cha_tag] = deal(channeltag.parse(val));
+               otherwise
+                  % try it!
+                  [w.cha_tag] = deal(channeltag(val));
+                  % error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT or CHANNELTAG');
+            end
+            % whine while we refractor
+            warning('Use set(channeltag) instead') % TODO: Decide if better generic name exists
+            
+         case {'CHANNELINFO', 'CHANNELTAG'}
+            switch class(val)
+               case 'scnlobject'
+                  [w.cha_tag] = deal(channeltag(char(val)));
+               case 'channeltag'
+                  [w.cha_tag] = deal(val);
+               case 'char'
+                  [w.cha_tag] = deal(channeltag(val));
+               otherwise
+                  % try it!
+                  [w.cha_tag] = deal(channeltag(val));
+                  % error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT or CHANNELTAG');
+            end
+         case {'STATION','NETWORK', 'CHANNEL','LOCATION'}
+            if ~ischar(val)
+               error('Waveform:set:propertyTypeMismatch',...
+                  '%s should be a string not a %s', prop_name,class(val));
+            end
+            all_chantags = set([w.cha_tag],prop_name,val);
+            for n=1:numel(w)
+               w(n).cha_tag = all_chantags(n);
+            end
+            
+         case {'FS', 'FREQ'}
+            if ~isnumeric(val)
+               error('Waveform:set:propertyTypeMismatch',...
+                  'Frequency should be numeric, not %s', class(val));
+            end
+            if numel(w)==1
+               w.Fs = val(1);
+            else
+               [w.Fs] = deal(val(1));
+            end
+            
+         case {'START', 'START_MATLAB'}
+            %AUTOMATICALLY figures out whether date is antelope or matlab
+            %format;
+            if numel(val) == 1
+               %expecting a number
+               if numel(w) == 1
+                  w.start = val;
+               else
+                  [w.start] = deal(val);
+               end
+            else
+               %might be char, might be vector. give it a shot.
+               if numel(w) == 1
+                  w.start = datenum(val);
+               else
+                  [w.start] = deal(datenum(val));
+               end
+               % else
+               %   error('Waveform:set:propertyTypeMismatch',...
+               %    'Start time not assigned... Unknown value type: %s', class(val));
+            end
+            
+            %{
       if ~(isnumeric(val) || isa(val,'char'))
         error('Waveform:set:propertyTypeMismatch',...
           'Start time not assigned... Unknown value type: %s', class(val));
@@ -153,64 +154,64 @@ while numel(Vidx) >= 2
       else
           [w.start] = deal(datenum(val));
       end
-      %}
-    case {'START_ANTELOPE', 'START_EPOCH'}
-      if ~isnumeric(val),
-        error('Waveform:set:propertyTypeMismatch',...
-          'Epoch time should be numeric, not %s', class(val));
-      end
-      [w.start] = deal(datenum(dep2mep(val)));
+            %}
+         case {'START_ANTELOPE', 'START_EPOCH'}
+            if ~isnumeric(val),
+               error('Waveform:set:propertyTypeMismatch',...
+                  'Epoch time should be numeric, not %s', class(val));
+            end
+            [w.start] = deal(datenum(dep2mep(val)));
+            
+         case 'DATA'
+            if ~isnumeric(val)
+               error('Waveform:set:propertyTypeMismatch',...
+                  'DATA should be numeric, not %s', class(val));
+            end
+            if numel(w) == 1
+               w.data = val(:);
+            else
+               [w.data] = deal(val(:)); %always a column
+            end
+            
+         case 'UNITS'
+            if ~ischar(val)
+               error('Waveform:set:propertyTypeMismatch',...
+                  'UNITS should be a string, not %s',class(val));
+            end
+            [w.units] = deal(val);
+            
+            
+         case {'SAMPLE_LENGTH','DATA_LENGTH'} % chop data or zero pad to specific length
+            if ~isnumeric(val),
+               error('Waveform:set:propertyTypeMismatch',...
+                  'SAMPLE_LENGTH should be numeric, not %s',class(val));
+            end
+            for n=1:numel(w);
+               if numel(w(n).data) >= val
+                  w(n).data = w(n).data(1:val,1);  % shrink the data
+               else
+                  w(n).data(numel(w(n).data)+1 :val , 1) = 0; %zero pad
+               end
+            end
+            
+         case 'HISTORY'
+            w = addhistory(w, val);
+            
+         otherwise
+            for n=1:numel(w)
+               switch prop_name
+                  case w(n).misc_fields
+                     %mask = ismember(w(n).misc_fields, prop_name);
+                     mask = strcmp(prop_name,w(n).misc_fields);
+                     w(n).misc_values(mask) = {val};
+                  otherwise
+                     error('Waveform:set:unknownProperty',...
+                        'can''t understand property name : %s', prop_name);
+               end %switch
+            end %n
+      end %switch
       
-    case 'DATA'
-      if ~isnumeric(val)
-        error('Waveform:set:propertyTypeMismatch',...
-          'DATA should be numeric, not %s', class(val));
-      end
-      if numel(w) == 1
-          w.data = val(:);
-      else
-          [w.data] = deal(val(:)); %always a column
-      end
+      % Vidx(1:2) = []; %done with those parameters, move to the next ones...
       
-    case 'UNITS'
-      if ~ischar(val)
-        error('Waveform:set:propertyTypeMismatch',...
-          'UNITS should be a string, not %s',class(val));
-      end
-      [w.units] = deal(val);
-      
-      
-    case {'SAMPLE_LENGTH','DATA_LENGTH'} % chop data or zero pad to specific length
-      if ~isnumeric(val),
-        error('Waveform:set:propertyTypeMismatch',...
-          'SAMPLE_LENGTH should be numeric, not %s',class(val));
-      end
-      for n=1:numel(w);
-        if numel(w(n).data) >= val
-          w(n).data = w(n).data(1:val,1);  % shrink the data
-        else
-          w(n).data(numel(w(n).data)+1 :val , 1) = 0; %zero pad
-        end
-      end
-      
-      case 'HISTORY'
-          w = addhistory(w, val);
-      
-    otherwise
-      for n=1:numel(w)
-        switch prop_name
-          case w(n).misc_fields
-            %mask = ismember(w(n).misc_fields, prop_name);
-            mask = strcmp(prop_name,w(n).misc_fields);
-            w(n).misc_values(mask) = {val};
-          otherwise
-            error('Waveform:set:unknownProperty',...
-              'can''t understand property name : %s', prop_name);
-        end %switch
-      end %n
-  end %switch
-  
-  % Vidx(1:2) = []; %done with those parameters, move to the next ones...
-  
-end
+   end
 end

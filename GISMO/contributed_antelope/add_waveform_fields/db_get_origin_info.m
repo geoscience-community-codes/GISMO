@@ -37,9 +37,9 @@ function [origin,W] = db_get_origin_info(INorigin,dbname,varargin)
 
 
 
-if isa(INorigin,'double')
+if isnumeric(INorigin)
 	origin.orid = reshape( INorigin , numel(INorigin), 1 );
-elseif isa(INorigin,'char')
+elseif ischar(INorigin)
 	for n = 1:size(INorigin,1)
 		tmp(n) = str2epoch(INorigin(n,:));
 	end

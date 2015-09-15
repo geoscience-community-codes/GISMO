@@ -26,7 +26,7 @@ if nargin~=2
     error('Incorrect number of arguments');
 end
 property = varargin{1};
-if ~isa(property,'char')
+if ~ischar(property)
     error('Second argument must be a character string');
 end
 

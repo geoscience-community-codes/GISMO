@@ -73,6 +73,7 @@ catch
 end
 isSuccessful = true;
 return
+end
 
 function wh = waveheader(w)
 % create a soundheader from this info
@@ -116,4 +117,5 @@ wh = [...
     ];
 catch
     wh = [0];
+end
 end
