@@ -39,7 +39,7 @@ function mulplt(w, alignWaveforms)
     width=0.8;
     for wavnum = 1:nwaveforms
         data=get(w(wavnum),'data');
-        dnum=datenum(w(wavnum)); 
+        dnum=get(w(wavnum),'timevector'); 
         sta=get(w(wavnum),'station');
         chan=get(w(wavnum),'channel');
         ax(wavnum)=axes('Position',[left 0.95-wavnum*trace_height width trace_height]);   
@@ -47,35 +47,66 @@ function mulplt(w, alignWaveforms)
             plot((dnum-min(dnum))*SECSPERDAY, data,'-k');
             set(gca, 'XLim', [0 maxduration*SECSPERDAY]);
         else
-            plot(dnum, data,'-k');
-            set(gca, 'XLim', [snum enum]);
+            plot((dnum-snum)*SECSPERDAY, data,'-k');
+            set(gca, 'XLim', [0 enum-snum]*SECSPERDAY);
         end
+%         xlim = get(gca, 'XLim');
+%         set(gca,'XTick', linspace(xlim(1), xlim(2), 11));
         ylabel(sprintf('%s\n%s ',sta,chan),'FontSize',10,'Rotation',90);
         set(gca,'YTick',[],'YTickLabel',['']);
         if wavnum<nwaveforms;
            set(gca,'XTickLabel',['']);
         end
-%         if wavnum==1
-%            title('','FontSize',10);
-%         end
-        %axis tight;
         
         % display mean on left, max on right
-        a=axis;
-        tpos=a(1)+(a(2)-a(1))*.02;
-        dpos=a(3)+(a(4)-a(3))*.85;
-        text(tpos,dpos,sprintf('%5.0f',nanmean(data)),'FontSize',10,'Color','b');
-        tpos=a(1)+(a(2)-a(1))*.4;
-        text(tpos,dpos,sprintf(' %s',datestr(starttimes(wavnum),30)),'FontSize',10,'Color','g');
-        tpos=a(1)+(a(2)-a(1))*.9;
-        text(tpos,dpos,sprintf('%5.0f',nanmax(abs(data))),'FontSize',10,'Color','r');
+        text(0.02,0.85, sprintf('%5.0f',nanmean(abs(data))),'FontSize',10,'Color','b','units','normalized');
+        text(0.4,0.85,sprintf(' %s',datestr(starttimes(wavnum),30)),'FontSize',10,'Color','g','units','normalized');
+        text(0.9,0.85,sprintf('%5.0f',nanmax(abs(data))),'FontSize',10,'Color','r','units','normalized');
     end
+    
     if exist('ax','var')
         linkaxes(ax,'x');
-        %samexaxis();
-        %hlink = linkprop(ax,'XLim');
-        if ~alignWaveforms
-            datetick('x', 'keeplimits');
-        end
+        
+        % enable update x tick labels after zoom
+%         h = zoom(gcf);
+%         set(h,'ActionPostCallback',{@myzoomcallback,ax});
+%         set(h,'Enable','on');
+
     end
+    
+    originalXticks = get(gca,'XTickLabels');
+    
+    f = uimenu('Label','X-Ticks');
+%     uimenu(f,'Label','seconds since start time','Callback',{@secondssince, originalXticks});
+%     uimenu(f,'Label','absolute time','Callback',{@datetickplot, snum, SECSPERDAY});
+    uimenu(f,'Label','time range','Callback',{@daterange, snum, SECSPERDAY});
+    uimenu(f,'Label','quit','Callback','disp(''exit'')',... 
+           'Separator','on','Accelerator','Q');
 end
+
+% function myzoomcallback(obj,evd,AX)
+%     %datetick(AX,'x',20,'keeplimits');
+%     xlim = get(AX(1),'XLim');
+%     xticks = linspace(xlim(1), xlim(2), 11);
+%     set(AX(end),'XTick', xticks, 'XTickLabels', xticks);    
+% end
+
+% function secondssince(obj, evt, originalXticks)
+%     set(gca, 'xtickLabels', originalXticks);
+% end
+% 
+% 
+% function datetickplot(obj, evt, snum, SECSPERDAY)
+%     xticks = get(gca, 'xtick');
+%     ticklabels = datestr(snum + xticks/SECSPERDAY, 15);
+%     set(gca, 'xtickLabels', ticklabels);
+% end
+
+function daterange(obj, evt, snum, SECSPERDAY)
+    xlim = get(gca, 'xlim');
+    xticks = linspace(xlim(1), xlim(2), 11);
+    dnum = snum + xlim/SECSPERDAY;
+    datestr(dnum,'yyyy-mm-dd HH:MM:SS.FFF')
+end
+
+

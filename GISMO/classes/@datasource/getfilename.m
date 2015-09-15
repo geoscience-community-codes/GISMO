@@ -45,6 +45,70 @@ function [filename] = getfilename(ds, scnls, starttimes)
    if isnumeric(starttimes) && ~isempty(starttimes)
       for n=1:numel(starttimes)
          st(n) = {starttimes(n)};
+
+    end
+    starttimes = st;
+    clear st
+end
+if ~iscell(starttimes)
+    starttimes = {starttimes};
+end
+filename = cell(numel(scnls),numel(starttimes));
+
+if isempty(filename) %show the generic file name
+  %return a THEORETICAL filename
+  year = '[YEAR]';
+  jday ='[JDAY]';
+  month ='[MONTH]';
+  day ='[DAY]';
+  hour ='[HOUR]';
+  minute ='[MINUTE]';
+  second ='[SECOND]';
+  station = '[STATION]';
+  channel = '[CHANNEL]';
+  location = '[LOCATION]';
+  network = '[NETWORK]';
+  stringToShow = regexprep(ds.file_string,'(%|%0)(\d|)d','%s');
+  % build the file arg string
+  if isempty(ds.file_args)
+    filename = {stringToShow};
+  else
+	z = cellfun(@eval,ds.file_args,'UniformOutput',false);
+	filename = {sprintf(stringToShow,z{:})};
+  end
+else %get detailed file.for n=1:numel(scnls)
+	
+  for n=1:numel(scnls)
+    scnl = scnls(n);
+% 	station = get(scnl,'station');
+% 	channel = get(scnl,'channel');
+% 	location = get(scnl,'location');
+% 	network = get(scnl,'network');
+ 	station = scnl.station;
+ 	channel = scnl.channel;
+ 	location = scnl.location;
+ 	network = scnl.network;
+    for m = 1:numel(starttimes)
+	  starttime = starttimes{m};
+
+
+      %pull all the data that may be required to parse out files & directories
+	  
+	  % If we have a datenum, use the fast built-in version of datevec
+      if isnumeric(starttime)
+		  [year, month, day, hour, minute, second] = datevecmx(starttime);
+	  else
+		  [year, month, day, hour, minute, second] = datevec(starttime);
+	  end
+	  
+      second = round(second);
+      
+      % The following few IF statements handle possible rounding issues
+      if second == 60
+         second = 0; minute = minute+1;
+      end
+      if minute == 60
+         minute = 0; hour = hour + 1;
       end
       starttimes = st;
       clear st
