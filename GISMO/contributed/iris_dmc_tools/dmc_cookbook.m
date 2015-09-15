@@ -6,9 +6,11 @@ disp('UNDER CONSTRUCTION ...');
 
 % CREATE WAVEFORMS
 % These waveforms are empty but contain network_station_channel info
-scnl = scnlobject({'CKN' 'CGL' 'CRP' 'CRP' 'CRP' 'CRP' 'SPU' 'CKL' 'CKT' 'BGL' 'NCG' 'JUNK'},'EHZ','AV','');
-for n = 1:numel(scnl)
-   w(n) = set(waveform,'SCNLOBJECT',scnl(n));
+stas = {'CKN' 'CGL' 'CRP' 'CRP' 'CRP' 'CRP' 'SPU' 'CKL' 'CKT' 'BGL' 'NCG' 'JUNK'};
+
+chanTags = channeltag.array('AV',stas,'--','EHZ');
+for n = numel(chantags) : -1 : 1;
+   w(n) = set(waveform,'channelinfo',chanTags(n));
    w(n) = set(w(n),'DATA',rand(1)*sin(2*pi*rand(1):.05:100));
    w(n) = set(w(n),'FREQ',20);
    w(n) = set(w(n),'START',randi([datenum('2008/01/01') datenum('2011/01/01')]));

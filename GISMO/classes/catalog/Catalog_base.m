@@ -63,7 +63,7 @@ classdef Catalog_base
 
             % AUTHOR: Glenn Thompson
 
-            if isa(fieldname,'char')
+            if ischar(fieldname)
                 mask = strcmp(fieldname, properties(cobj));
                 if any(mask)
                     cobj = cobj.set(fieldname, val);
@@ -129,7 +129,7 @@ classdef Catalog_base
                     if isempty(mc.PropertyList(i).GetMethod)
                         % The properties here need to have
                         % SetAccess==public
-                        eval(sprintf('cobj.%s=val;',prop_name));
+                        cobj.(prop_name) = val;
                         % This should work for SetAccess=private but
                         % actually causes a segmentation fault
                         %eval(sprintf('cobj = cobj.set(''%s'', val);',prop_name));
@@ -171,7 +171,7 @@ classdef Catalog_base
 
             mask = strcmp(prop_name, properties(cobj));
             if any(mask)
-                eval(sprintf('val=cobj.%s;',prop_name));
+                val=cobj.(prop_name);
             else
                 mask = strcmp(upper(prop_name),cobj.misc_fields);
                 if any(mask)
@@ -652,7 +652,7 @@ classdef Catalog_base
                 total_counts = length(cobj(i).dnum);
                 numbins = numel(dnum);
                 erobj(i) = EventRate(dnum, counts, energy, median_energy, ...
-                    smallest_energy, median_time_interval, total_counts, ...
+                    smallest_energy, biggest_energy, median_time_interval, total_counts, ...
                     cobj(i).snum, cobj(i).enum, etypes, binsize, stepsize, numbins);
             end
         end
@@ -875,7 +875,7 @@ classdef Catalog_base
                         fieldlist = fields(thisorigin);
                         for fieldindex = 1:numel(fieldlist)
                             thisfield = fieldlist{fieldindex};
-                            eval(sprintf('thisvalue = thisorigin.%s;',thisfield));
+                            thisvalue = thisorigin.(thisfield);
                             if strcmp(thisfield,'time')
                                 thisvalue=datenum2epoch(thisvalue);
                             end
@@ -890,7 +890,7 @@ classdef Catalog_base
                                         end
                                     end
                                 end
-                            elseif strcmp(class(thisvalue),'char')
+                            elseif ischar(thisvalue)
                                 if ~isempty(thisvalue)
                                     try
                                         dbputv(dbo, thisfield, thisvalue);
@@ -913,7 +913,7 @@ classdef Catalog_base
                     fieldlist = fields(thisevent);
                     for fieldindex = 1:numel(fieldlist)
                         thisfield = fieldlist{fieldindex};
-                        eval(sprintf('thisvalue = thisevent.%s;',thisfield));
+                        thisvalue = thisevent.(thisfield);
                         if isnumeric(thisvalue)
                             if ~isnan(thisvalue)
                                 if numel(thisvalue)==1
@@ -925,7 +925,7 @@ classdef Catalog_base
                                     end
                                 end
                             end
-                        elseif strcmp(class(thisvalue),'char')
+                        elseif ischar(thisvalue)
                             if ~isempty(thisvalue)
                                 try
                                     dbputv(dbe, thisfield, thisvalue);

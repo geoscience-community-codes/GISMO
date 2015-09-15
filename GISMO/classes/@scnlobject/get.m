@@ -2,7 +2,8 @@ function stuff = get(scnl, prop_name)
    %GET for the scnl object
    %  result = get(scnlobject, property), where PROPERTY is one of the
    %  following:
-   %    'network', 'station', 'locatin', 'channel'
+   %    'network', 'station', 'location', 'channel'
+   %    'channeltag'
    %
    % If the results of a single SCNL are requested, then a string is returned.
    % Otherwise, a cell of values will be returned.

@@ -16,7 +16,9 @@ function print_debug(level, varargin)
 %    If set at 1 (or 2), 'Welcome to MyApp' would display.
 %    if set at 3 (or higher) 'Welcome to My App', 'output filename = myapp.txt' would display.
 %
-%    To set the debug level, use set_debug.
+%    To set the default debug level, use set_debug (only applicable after restart or "clear functions".
+%    To change the level temporarily call with only the new level.
+%    libgt.print_debug(NewLevel);
 % 
 %    See also debug.set_debug, debug.printfunctionstack, debug.get_debug, setpref, getpref.
 
@@ -38,6 +40,10 @@ persistent Lev
          setpref('runmode','debug', 0); % might wish to alert user, or set it in a more gismo-sounding location.
          Lev = 0;
       end
+   end
+   if numel(varargin) == 0
+      Lev = level;
+      return
    end
    if level >= Lev
       if numel(varargin) == 1
