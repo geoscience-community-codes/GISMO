@@ -66,7 +66,7 @@ end;
 
 
 % SELECT SUBROUTINE
-if length(varargin)>=1 && isa(varargin{1},'double')      % use shifttriggers
+if length(varargin)>=1 && isnumeric(varargin{1})      % use shifttriggers
     trigshift = varargin{1};
     c = shifttriggers(c,trigshift);
 else
@@ -75,7 +75,7 @@ else
         error('LAG field must be filled in input object');
         error('See correlation/adjusttrig function');
     end;
-    if length(varargin)>=1 && isa(varargin{1},'char')
+    if length(varargin)>=1 && ischar(varargin{1})
         calctype = upper(varargin{1});
     else
         calctype = 'MIN';	% default

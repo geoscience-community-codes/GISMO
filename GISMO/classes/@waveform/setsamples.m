@@ -13,3 +13,4 @@ function w = setsamples(w, index, values)
    %   w = setsamples(w, double(w) == something, newvalue);
    
    w.data(index) = values;
+end

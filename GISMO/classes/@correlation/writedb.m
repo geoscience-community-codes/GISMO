@@ -42,7 +42,7 @@ if ~isa(c,'correlation')
     disp('First input parameter must be a correlation object');
 end
 
-if ~isa(dbOut,'char')
+if ~ischar(dbOut)
     disp('Second input parameter must be a text string');
 end
 
