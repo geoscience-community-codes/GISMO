@@ -32,15 +32,15 @@ function w = clean(w)
 % to manipulate the data in place,significantly reducing the memory
 % footprint. 
 
+	% Check input is a waveform object
+	%if ~isa(w, 'waveform')
+	%	warning('Not a waveform object')
+	%	return
+    	%end
+
     % Remove linear trend discontinuously, from one gap (NaN) to another
     for i=1:numel(w)
        nans = isnan(w(i).data); %since logical,(1/8) memory footprint
-        if sum(~nans) > max([3 numel(nans)*0.2]) % at least 20% must be non-nan
-	% Check input is a waveform object
-	if ~isa(w, 'waveform')
-		warning('Not a waveform object')
-		return
-    	end
     
         if sum(~nans) > max([3 numel(nans)*0.2]) % at least 20% must be non-nan
             % Here we remove continguous NaNs because otherwise we get an out
@@ -90,24 +90,6 @@ function w = clean(w)
                    'unable to remove trend from each line segment'], i)
             end
             
-            bp = find(isnan(data));
-            if length(bp)>=3
-                for c=2:length(bp)-1
-                    if bp(c)==bp(c-1)+1;
-                        w(i).data(bp(c))=0;
-                    end
-                end
-            end
-            %}
-            try
-                w(i).data = detrend(w(i).data, 'linear', bp);
-            catch er
-               %it's all messed up, so put w(i) back the way it was
-               w(i).data(nans) = nan;
-                warning(er.identifier,[message,...
-                   '\n detrending w(%d): ',...
-                   'unable to remove trend from each line segment'], i)
-            end
         end
     end
     
