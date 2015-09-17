@@ -163,7 +163,8 @@ function w = waveform(varargin)
    function w = waveformFromDatasource(ds, chans, startt, endt)
          startt = ensure_dateformat(startt);
          endt = ensure_dateformat(endt);
-         w = load_from_datasource(ds, chans, startt, endt, COMBINE_WAVES);
+         usewkaround = NOEXIT_OPTION && bwkaround;
+         w = load_from_datasource(ds, chans, startt, endt, COMBINE_WAVES, usewkaround);
    end
 end
 

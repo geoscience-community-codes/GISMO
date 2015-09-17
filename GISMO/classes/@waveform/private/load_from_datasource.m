@@ -1,11 +1,12 @@
-function w = load_from_datasource(ds, chans, startt, endt, COMBINE_WAVES)
+function w = load_from_datasource(ds, chans, startt, endt, COMBINE_WAVES, usewkaround)
    %load_from_datasource
    %
    % w = load_from_datasource(ds, chans, startt, endt, COMBINE_WAVES)
    
    % determine the load function based upon the datasource's type
+   
    if isVoidInterpreter(ds)
-      ds = setinterpreter(ds, get_load_routine(ds));
+      ds = setinterpreter(ds, get_load_routine(ds, usewkaround));
    end
    request = makeDataRequest(ds, chans, startt, endt);
    getter = get(ds,'interpreter');

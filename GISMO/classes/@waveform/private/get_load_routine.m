@@ -1,4 +1,4 @@
-function myLoadRoutine = get_load_routine(ds)
+function myLoadRoutine = get_load_routine(ds, use_wkaround)
       % determine the load function based upon the datasource's type
    switch lower(get(ds,'type'))
       case 'sac'
@@ -10,7 +10,7 @@ function myLoadRoutine = get_load_routine(ds)
       case 'file'
          myLoadRoutine = @load_matfile; %same as type 'matfile'
       case 'antelope' 
-         if strcmp(ds_type,'antelope') && NOEXIT_OPTION && bwkaround
+         if use_wkaround
             myLoadRoutine = @load_antelope_workaround;
          else
             myLoadRoutine = @load_antelope;
