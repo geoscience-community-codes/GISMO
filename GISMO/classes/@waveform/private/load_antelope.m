@@ -9,15 +9,9 @@ function outputWaveforms = load_antelope(request, COMBINE_WAVEFORMS, specificDat
    %   database is the antelope database
    
    % AUTHOR: Celso Reyes
+   % MODIFICATIONS: Glenn Thompson, Carl Tape
    
-   %create a generic 1x1 and 0x0 waveforms for later use, so that the
-   %constructor does not constantly need to be called
-   
-   % Modifications
-   % Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data. Added try...catch..end to handle this.
-   % Glenn Thompson & Carl Tape, 2012/02/06: Fixed bug which ignored the time order of requested waveforms.
-   % 	Now they come back in order.
-   
+   TRY_MULTIDAY = false;
    wBlank = waveform;
    wEmpty = wBlank([]);
    
@@ -25,33 +19,20 @@ function outputWaveforms = load_antelope(request, COMBINE_WAVEFORMS, specificDat
       'Waveform:load_antelope:startEndMismatch', 'Unequal number of start and end times');
    
    [criteria, nCriteria] = buildAntelopeCriteria(request.chanInfo);
-   dbDatesToCheck = subdivide_files_by_date( ...
-      request.dataSource,...
-      request.startTimes,...
-      request.endTimes);
-   
    database =  getfilename(request.dataSource,request.chanInfo, request.startTimes);
    
-   % the next line enables multiday data retrieval. However, splicing them may be tricky.
-   %database =  getfilename(request.dataSource,request.chanInfo, dbDatesToCheck);
+   if TRY_MULTIDAY
+      % the next 2 lines enable multiday data retrieval. However, splicing them may be tricky.
+      dbDatesToCheck = subdivide_files_by_date(request.dataSource,request.startTimes, request.endTimes); %#ok<UNRCH>
+      database =  getfilename(request.dataSource,request.chanInfo, dbDatesToCheck);
+   end
    
-   %if we have multiple databases to look in, then call this routine for each
-   %one, then return the resulting waveforms.
+   %for multiple databases, call this routine for each one, then return the waveforms.
    if ~exist('specificDatabase','var')
-      %%%%%
-      % Glenn Thompson & Carl Tape, 2012/02/06
-      % We were finding that the following command was sorting the database names, with the result that
-      % if you request waveform objects out of time order, they always come back in time order.
-      % Which is annoying. Objects should be returned in the order requested.
-      %database = unique(database)a
-      % Replacing with the following 2 lines retains the database order, and hence the waveform object order.
-      [~,inds] = unique(database);
-      database = database(sort(inds));
-      %%%%%
-      outputWaveforms = cell(size(database)); %preallocate
-      for thisdatabaseN = 1 : numel(database)
-         outputWaveforms(thisdatabaseN) = {load_antelope(request, COMBINE_WAVEFORMS, database{thisdatabaseN})};
-      end
+      % [~,inds] = unique(database); database = database(sort(inds)); % no longer necessary as of r2012a
+      database = unique(database, 'stable'); %  avoid changing requested order
+      antelope_load_fn = @(oneDB) load_antelope(request, COMBINE_WAVEFORMS, oneDB);
+      outputWaveforms = cellfun(antelope_load_fn, database, 'uniformOutput',false); % each cell
       outputWaveforms = transpose(vertcat(outputWaveforms{:}));
       return;
    end
@@ -61,10 +42,14 @@ function outputWaveforms = load_antelope(request, COMBINE_WAVEFORMS, specificDat
    outputWaveforms = wEmpty;
    for i = 1:nCriteria
       %if multiple traces will result, then there may be multiple records for tr
-      [tr, database, fdb] = ...
-         get_antelope_traces(request.startTimes,request.endTimes,criteria(i).group, database);
+      [tr, database, fdb] = get_antelope_traces(...
+         request.startTimes,request.endTimes,criteria(i).group, database);
+      w = cycleThroughTraces(tr, COMBINE_WAVEFORMS);
       %one tr exists for each timerequest within each scnl.
-      w(numel(tr)).waves = wBlank;
+      %{
+      % the use of "clear" multiple times in this block is a sure sign that
+      % it belongs in functions instead.
+      w(numel(tr)).waves = wBlank; %#ok<AGROW>
       for traceidx = 1:numel(tr)
          if ~isstruct(tr{traceidx}) % marker for no data
             w_scnl = wBlank([]);
@@ -79,13 +64,34 @@ function outputWaveforms = load_antelope(request, COMBINE_WAVEFORMS, specificDat
          w(traceidx).waves = w_scnl(:)';
          clear w_scnl;
       end
-      outputWaveforms = [outputWaveforms; [w.waves]'];
-      clear w
+      %}
+      outputWaveforms = [outputWaveforms; [w.waves]']; %#ok<AGROW>
+      % clear w
    end
-   
    dbclose(fdb);
 end
 
+function w = cycleThroughTraces(tr, COMBINE_WAVEFORMS)
+   w(numel(tr)).waves = waveform;
+   for traceidx = 1:numel(tr)
+      w(traceidx) = wavesfromtraces(tr, traceindex, COMBINE_WAVEFORMS);
+   end
+end
+
+function w_scnl = wavesfromtraces(tr, traceidx, COMBINE_WAVEFORMS)
+   if ~isstruct(tr{traceidx}) % marker for no data
+      wBlank = waveform;
+      w_scnl.waves = wBlank([]);
+   else
+      w_scnl.waves = traceToWaveform(tr{traceidx}); %create waveform list
+      trdestroy(tr{traceidx});
+   end
+   if COMBINE_WAVEFORMS && numel(w_scnl.waves) > 1, %combine all of this trace's records
+      w_scnl.waves = combine(w_scnl.waves);
+   end;
+   w_scnl.waves = reshape(w_scnl.waves, 1, numel(w_scnl.waves));
+end
+   
 %% helper functions
 
 function [critList, nCrit] = buildAntelopeCriteria(chanTag)
@@ -119,7 +125,7 @@ function [critList, nCrit] = buildAntelopeCriteria(chanTag)
    % in subsetting the antelope database.
    %
    
-   for N = 1 : numel(chanTag)
+   for N = numel(chanTag) : -1: 1
       critList(N).group(1) = grabCritList('sta', chanTag(N).station);
       critList(N).group(2) = grabCritList('net', chanTag(N).network);
       critList(N).group(3) = grabCritList('chan', chanTag(N).channel);
@@ -147,7 +153,7 @@ function A = grabCritList(key, value)
    if ~isempty(value)
       value = regexprep(value,'(?<!\.)\*','\.\*'); %replace * with .*, but leave existing .* alone
       value = makecell(value);
-      for i=1:numel(value)
+      for i = numel(value) : -1 : 1
          A(i).field = key;
          A(i).relationship = '=~';
          A(i).value = value{i};
@@ -290,7 +296,7 @@ function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, cr
          %%% Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data.
          % This error needs to be handled. So adding a try..catch..end around the original instruction.
          try
-            tr{mytimeIDX} = trload_css(mydb, antelope_starts(mytimeIDX), antelope_ends(mytimeIDX));
+            tr{mytimeIDX} = trload_css(mydb, antelope_starts(mytimeIDX), antelope_ends(mytimeIDX)); %#ok<AGROW>
          catch
             cleanUpFail('Waveform:load_antelope:trload_css failed', ...
                'Database not found: %s', dbquery(mydb,'dbTABLE_FILENAME'));
@@ -306,7 +312,7 @@ function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, cr
          end
          trsplice(tr{mytimeIDX},20);
       else
-         tr{mytimeIDX} = -1;
+         tr{mytimeIDX} = -1; %#ok<AGROW>
       end
    end %mytimeIDX
    closeIfAppropriate(mydb, onFinishCloseDB);
@@ -321,20 +327,18 @@ function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, cr
 end
 
 function allExp = getAsExpressions(criteria)
-   for i=numel(criteria): -1 : 1
-      eachExp(i) = {crit2expression(criteria(i))};
-   end
+   eachExp = arrayfun(crit2expression, criteria);
    allExp = eachExp{1};
    for i= 2 : (numel(eachExp))
-      allExp = [allExp,' && ', eachExp{i}];
+      allExp = [allExp,' && ', eachExp{i}]; %#ok<AGROW>
    end
 end
 
 function cle = crit2expression(cl)
    if ischar(cl.data)
-      cle = sprintf('%s%s/%s/',cl.field, cl.relationship, cl.data);
+      cle = {sprintf('%s%s/%s/',cl.field, cl.relationship, cl.data)};
    else
-      cle =  sprintf('%s %s %s',cl.field,cl.relationship,num2str(cl.data));
+      cle =  {sprintf('%s %s %s',cl.field,cl.relationship,num2str(cl.data))};
    end
 end
 
