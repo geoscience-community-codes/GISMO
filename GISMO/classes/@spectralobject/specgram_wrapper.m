@@ -1,16 +1,15 @@
-function result=specgram_iceweb(s, w, spectrogramFraction, mycolormap)
-% SPECGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of
-% AVO web (IceWeb) spectrograms, by wrapping gismotools specgram function
+function result=specgram_wrapper(s, w, spectrogramFraction, mycolormap)
+% SPECGRAM_WRAPPER produce an multi-channel spectrogram plot in the style of
+% AVO web (IceWeb) spectrograms, but by wrapping gismotools specgram function
 %
 % Usage:
-% 	result=specgram_iceweb(s, w, spectrogramFraction, mycolormap)
+% 	result=specgram_wrapper(s, w, spectrogramFraction)
 %
 % Inputs:
 %	w - a vector of waveform objects
 %	s - a spectralobject
 %	spectrogramFraction - fraction of a panel height the spectrogram should take up (default: 0.8). 
 %			The waveform trace takes up the remaining fraction.
-%	mycolormap - (Optional) a user-defined colormap
 %
 % Outputs:
 %	(other than a figure on the screen)
@@ -19,10 +18,9 @@ function result=specgram_iceweb(s, w, spectrogramFraction, mycolormap)
 % waveform should already have had zero-length waveform objects replaced by zero vectors 
 
 % AUTHOR: Glenn Thompson, University of Alaska Fairbanks
+% $Date$
+% $Revision$
 
-debug.printfunctionstack('>');
-
-save lastspecgramcall.mat s w spectrogramFraction mycolormap
 
 result = 0;
 
@@ -42,52 +40,33 @@ end
 %s = spectralobject(1024, 924, 10, [40 140]);
 
 
-debug.print_debug(2, sprintf('%d waveform objects',numel(w)));
+debug.print_debug(sprintf('%d waveform objects',numel(w)),0);
 
 % draw spectrogram using Celso's 
-%try
-	% Default colormap is JET. Override that here.
-  
-	if exist('mycolormap', 'var')
-    		setmap(s, mycolormap);      
-	end
+try
+    setmap(s, mycolormap)
+	sg = specgram_local(s, w, 'xunit', 'date', 'colorbar', 'none', 'yscale', 'normal'); % default for colormap is SPECTRAL_MAP
 
-	% Call the default specgram function
-	sg = specgram(s, w, 'xunit', 'date', 'colorbar', 'none', 'yscale', 'normal'); % default for colormap is SPECTRAL_MAP
-
-% catch
-% 	debug.print_debug(2, 'specgram failed on waveform vector. Trying again, using nonempty rather than fillempty');
-% 	%w = waveform_nonempty(w);
-%     w = removeempty(w);
-% 	if numel(w)>0
-% 		debug.print_debug(0, sprintf('%d waveform objects after removing empty waveform objects',numel(w)));
-% 		try
-%  			sg = specgram(s, w, 'xunit', 'date', 'colorbar', 'none', 'yscale', 'normal'); % default for colormap is SPECTRAL_MAP           
-% 		catch
-% 			debug.print_debug(0, 'call to specgram failed');
-% 		end	
-% 	else
-% 		debug.print_debug(0, 'specgram failed on waveform vector. Tried nonempty rather than fillempty, but looks like all waveform objects were empty, so skipping');
-% 		return;
-% 	end	
-% end
+catch
+	debug.print_debug('specgram failed on waveform vector. Trying again, using nonempty rather than fillempty',0);
+	w = waveform_nonempty(w);
+	if numel(w)>0
+		debug.print_debug(sprintf('%d waveform objects after removing empty waveform objects',numel(w)),0);
+		try
+ 			sg = specgram_local(s, w, 'xunit', 'date', 'colorbar', 'none', 'yscale', 'normal'); % default for colormap is SPECTRAL_MAP           
+		catch
+			disp('specgram_wrapper crashed again');
+		end	
+	else
+		debug.print_debug('specgram failed on waveform vector. Tried nonempty rather than fillempty, but looks like all waveform objects were empty, so skipping',0);
+		return;
+	end	
+end
 
 % To get a colorbar, stop the function here and set colorbar option to vert
 
 % Get axis handles
 ha = get(gcf, 'Children');
-% for cc=1:numel(ha)
-%     set(ha(cc))
-%     try
-%         hxl = get(ha(cc), 'XLabel');
-%         set(hxl, 'String', '');
-%         hyl = get(ha(cc), 'YLabel');
-%         hyl_string = sprintf('%s.%s',get(w(numw-c+1), 'station'), get(w(numw-c+1), 'channel'));
-%         set(hyl, 'String', hyl_string,'FontSize',10);      
-%         ht = get(ha(cc), 'Title');
-%         set(ht, 'String', '');
-%     end
-% end
 
 % Change X-Labels
 hxl = get(ha, 'XLabel');
@@ -111,9 +90,9 @@ for c=1:numw
 	ht = get(ha(c), 'Title');
 	set(ht, 'String', '');
 end
-if exist('titlestr','var')
-	set(ht,'String',titlestr,'Color',[0 0 0],'FontSize',[14], 'FontWeight',['bold']');
-end
+%if exist('titlestr','var')
+%	set(ht,'String',titlestr,'Color',[0 0 0],'FontSize',[14], 'FontWeight',['bold']');
+%end
 
 % Set appropriate date ticks
 [wsnum, wenum]=gettimerange(w);
@@ -143,11 +122,10 @@ for c=1:numw
 	end
 end
 result = 1;
-debug.printfunctionstack('<');
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function plotTrace(tracePosition, data, freqSamp, Xtickmarks, timewindow, mycolormap, s, thissta, thischan);
-debug.printfunctionstack('>');
 snum =timewindow.start;
 
 % set axes position
@@ -185,27 +163,26 @@ if ~isnan(maxAmpl) % make sure it is not NaN else will crash
 	fprintf('%s: %s.%s: Max amplitude %.1e nm/s (%d dB)\n',mfilename, thissta, thischan, maxAmpl,round(decibels)); 
 	axis(traceRange);
 end
-debug.printfunctionstack('<');
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function rgb = amplitude2tracecolor(maxAmpl, mycolormap, s);
-debug.printfunctionstack('>');
 a = 20 * log10(maxAmpl) + eps;
 dBlims = get(s, 'dBlims');
 index = round( ( (a - dBlims(1)) / (dBlims(2) - dBlims(1)) ) * (length(mycolormap)-1) ) + 1;
 index=max([index 1]);
 index=min([index length(mycolormap)]);
 rgb = mycolormap(index, :);
-debug.printfunctionstack('<');
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [Xtickmarks,Xticklabels]=findMinuteMarks(timewindow);
-debug.printfunctionstack('>');
 
 % calculate where minute marks should be, and labels
 snum = matlab_extensions.ceilminute(timewindow.start);
 enum = matlab_extensions.floorminute(timewindow.stop);
+
 
 % Number of minute marks should be no greater than 20
 numMins = (enum - snum) * 1440;
@@ -218,13 +195,13 @@ stepMins = stepMinOptions(c);
 
 Xtickmarks = snum:stepMins/1440:enum;
 Xticklabels = datestr(Xtickmarks,15); 
-debug.printfunctionstack('<');
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 function [panelPosition, tracePosition] = calculatePanelPositions(numframes, frameNum, fractionalPanelHeight, panelWidth, panelHeight);
-debug.printfunctionstack('>');
+
 frameHeight 		= panelHeight/numframes;
 fractionalAxesHeight 	= fractionalPanelHeight * frameHeight;
 traceHeight 		= (1 - fractionalPanelHeight) * frameHeight; 
@@ -233,5 +210,5 @@ panelLeft		= 0.08;
 panelBase		= 0.025 + (1 - panelHeight)/2;
 panelPosition 	= [panelLeft, panelBase + (frameHeight * (frameNum - 1)), panelWidth, fractionalAxesHeight];
 tracePosition 		= [panelLeft, panelBase + (frameHeight * (frameNum - 1)) + fractionalAxesHeight, panelWidth, traceHeight];
-debug.printfunctionstack('<');
+
 

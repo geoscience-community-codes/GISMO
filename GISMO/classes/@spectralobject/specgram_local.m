@@ -82,8 +82,6 @@ function h = specgram(s, ws, varargin)
 
 % Thanks to Jason Amundson for providing the way to do log scales
 
-debug.printfunctionstack('>')
-
 global SPECTRAL_MAP
 
 currFontSize = 8;
@@ -281,7 +279,7 @@ B_ = rowindex(:, ones(1, ncol)    )    ;
 y(:) = d(fix(A_ + B_ -1));
 clear A_ B_
 
-for k = 1:ncol;         %  remove the mean from each column of y
+for k = 1:ncol;		%  remove the mean from each column of y
     y(:,k) = y(:,k)-mean(y(:,k));
 end
 
@@ -311,9 +309,12 @@ NF = s.nfft/2+1;
 nf1=round(f(1)/NYQ*NF);                     %frequency window
 if nf1==0, nf1=1; end
 nf2=NF;
+thissta = get(ws, 'station');
+thischan = get(ws, 'channel');
 
+fprintf('%s: %s.%s Max vel = %.1e, Mean = %.1e\n',mfilename, thissta, thischan, nanmax(abs(d)), nanmean(d)); 
 y = 20*log10(abs(y(nf1:nf2,:)));
-
+fprintf('%s: %s.%s Max dB = %.1f, Min dB = %.1f\n',mfilename, thissta, thischan, nanmax(nanmax(y)), nanmin(nanmin(y))); 
 F = f(f <= s.freqmax);
 
 
@@ -380,10 +381,6 @@ end
 %% added a series of functions that help with argument parsing.
 % These were ported from my waveform/plot function.
 
-
-debug.printfunctionstack('<')
-
-
 function [properties] = parseargs(arglist)
 % parse the incoming arguments, returning a cell with each parameter name
 % as well as a cell for each parameter value pair.  parseargs will also
@@ -404,7 +401,7 @@ properties.val = arglist(2:2:argcount);
 
 %
 for i=1:numel(properties.name)
-    if ~ischar(properties.name{i})
+    if ~isa(properties.name{i},'char')
         error('ParseArgs:invalidPropertyName',...
             'All property names must be strings.');
     end
@@ -438,4 +435,3 @@ function c = property2varargin(properties)
 c = {};
 c(1:2:numel(properties.name)*2) = properties.name;
 c(2:2:numel(properties.name)*2) = properties.val;
-

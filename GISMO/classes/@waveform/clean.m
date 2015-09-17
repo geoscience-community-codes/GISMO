@@ -52,7 +52,7 @@ function w = clean(w)
             % get detrended as a single unit, rather than as thousands of
             % separate segments (which takes forever and causes out of memory
             % errors).
-            
+            save nans.mat nans w
             firstNans = find(diff([false,nans]) == 1);
             lastNans = find(diff([nans, false]) == -1);
             assert(numel(firstNans) == numel(lastNans))
