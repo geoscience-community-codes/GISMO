@@ -1,15 +1,14 @@
-function w = load_sac(dataRequest)
+function w = load_sac(dataRequest, combinewaves)
    %LOAD_SAC loads a waveform from SAC files
-   
-   % VERSION: 1.1 of waveform objects
+   % combineWaves isn't currently used!
+   %
    % AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-   % LASTUPDATE: 9/2/2009
    if isstruct(dataRequest)
-      thisSource = dataReques.dataSource;
+      thisSource = dataRequest.dataSource;
       
       for i=1:numel(dataRequest.scnls)
          thisScnl = dataRequest.scnls(i);
-         for j=1:numel(dataRequest.myStartTimes)
+         for j=1:numel(dataRequest.startTimes)
             thisTime = dataRequest.startTimes(j);
             thisfilename = getfilename(thisSource,thisScnl,thisTime);
             w(i,j) = loadSacByFilenames(thisfilename);

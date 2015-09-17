@@ -5,6 +5,6 @@ function ds = setinterpreter(ds,funchandle)
    if ~isa(funchandle,'function_handle')
       error('Trying to set a function handle to a %s',class(funchandle));
    end
-   
-   ds = datasource(funchandle,ds.file_string,ds.file_args{:});
+   ds.interpreter = funchandle;
+   % ds = datasource(funchandle,ds.file_string,ds.file_args{:});
 end

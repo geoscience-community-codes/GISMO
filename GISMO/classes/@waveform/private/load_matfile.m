@@ -1,4 +1,4 @@
-function w = load_file(dataRequest)
+function w = load_matfile(dataRequest, combinewaves)
    %LOAD_FILE
    % uses the DATASOURCE class
    

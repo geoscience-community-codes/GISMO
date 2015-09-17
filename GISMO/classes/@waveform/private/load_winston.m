@@ -53,11 +53,11 @@ function allWaves = load_winston(dataRequest, COMBINE_WAVEFORMS)
    end
 end
 
-function [w, successful] = getFromWinston(scnl,stime,etime,mydatasource)
+function [w, successful] = getFromWinston(chanTag,stime,etime,mydatasource)
    %include
    successful = false;
    
-   w = scnl2waveform(scnl);
+   w = channelInfo2waveform(chanTag);
    try
       
       WWS=gov.usgs.winston.server.WWSClient(get(mydatasource,'server'),get(mydatasource,'port'));
@@ -70,10 +70,10 @@ function [w, successful] = getFromWinston(scnl,stime,etime,mydatasource)
    
    %grab the winston data, then close the database
    try
-      mychan = get(scnl,'channel');
-      mynet = get(scnl,'network');
-      mysta = get(scnl,'station');
-      myloc = get(scnl,'location');
+      mychan = chanTag.channel;
+      mynet = chanTag.network;
+      mysta = chanTag.station;
+      myloc = chanTag.location;
       d = WWS.getRawData(mysta,mychan,mynet,myloc,stime,etime);
       WWS.close;
    catch er
@@ -146,8 +146,8 @@ function tf = timesAreOK (t1, t2)
    end
 end
 
-function w = scnl2waveform(scnl)
-   w = set(waveform,'scnlobject',scnl);
+function w = channelInfo2waveform(chanInfo)
+   w = set(waveform,'channeltag',chanInfo);
 end
 
 %% Adding the Java path

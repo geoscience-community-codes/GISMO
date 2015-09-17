@@ -67,10 +67,10 @@ end
 %}
 
 function chanT = getChanneltag(header)
-   chanT = scnlobject(deblank(header.KNETWK), ... network
+   chanT = channeltag(deblank(header.KNETWK), ... network
       deblank(header.KSTNM),... station
       deblank(header.KHOLE), ... location
-      deblank(header.KCMPNM)); %network
+      deblank(header.KCMPNM)); % channel
 end
 
 function mydate = getDate(header)

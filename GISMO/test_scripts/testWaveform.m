@@ -11,39 +11,34 @@ classdef testWaveform < matlab.unittest.TestCase
       wf% = waveform(testWaveform.chanTag, 20, fix(now), D, 'm / sec');
    end
    
-   methods
-      function self = testWaveform(name)
-         self = self@TestCase(name);
-         
-         self.Dt = rand(1,1001) .* 1000 - 500;
-         self.chanTag = channeltag('IU.ANMO.00.BHZ');
-         self.wf = waveform(self.chanTag, 20, fix(now), self.Dt, 'm / sec');
-      end
-      
-      function SetUp(self)
+   methods(TestMethodSetup)
+      function SetUp(testCase)
          % not sure this is working in any way.
-         self.Dt = rand(1,1001) .* 1000 - 500;
-         self.chanTag = channeltag('IU.ANMO.00.BHZ');
-         self.wf = waveform(self.chanTag, 20, fix(now), D, 'm / sec');
+         testCase.Dt = rand(1,1001) .* 1000 - 500;
+         testCase.chanTag = channeltag('IU.ANMO.00.BHZ');
+         testCase.wf = waveform(testCase.chanTag, 20, fix(now), testCase.Dt, 'm / sec');
       end
+   end
+   
+   methods(Test)      
       
-      function testConstructors(obj)
+      function testConstructors(testCase)
          %% first, try the different methods of loading up waveforms
          %default constructor
          w = waveform; %create an empty waveform
          assert(isa(w,'waveform'));
          
          rfreq = rand(1) * 200;
-         Ad = obj.Dt;
+         Ad = testCase.Dt;
          stt = now - rand(1) * 1500;
          clear w
          STATIONVALUE = 'STAtION';
          CHANNELVALUE = 'CHAnNEL';
          
          %manual constructor now gives error
-         assertExceptionThrown(@() waveform(STATIONVALUE,CHANNELVALUE,rfreq, stt,Ad),...
+         verifyWarning(testCase, @() waveform(STATIONVALUE,CHANNELVALUE,rfreq, stt,Ad),...
             'Waveform:waveform:oldUsage');
-         w = waveform(obj.chanTag, rfreq, stt, obj.Dt);
+         w = waveform(testCase.chanTag, rfreq, stt, testCase.Dt);
          
          % copy constructor
          w2 = w;
@@ -52,15 +47,59 @@ classdef testWaveform < matlab.unittest.TestCase
          for n=1:numel(fn)
             switch (class(s1.(fn{n})))
                case {'char', 'double', 'logical'}
-                  assertEqual(s1.(fn{n}), s2.(fn{n}));
+                  testCase.verifyEqual(s1.(fn{n}), s2.(fn{n}));
                otherwise
                   % fprintf('field <%s> of type <%s> uncompared\n',fn{n},class(s1.(fn{n})));
             end
          end
-         
       end
       
-      function testSetGets(obj)
+      function testWinstonCall(testCase)
+         ds = datasource('winston','pubavo1.wr.usgs.gov',16022);
+         chanInfo = channeltag.array('AV.ACH.--.EHE');
+         w = waveform(ds,chanInfo,now-1,now-0.995);
+         testCase.verifyNumElements(w,1);
+         testCase.verifyInstanceOf(w,'waveform');
+      end
+      
+      function testWaveformCalls(testCase)
+         data = 1:(10*60*60*2.5);
+         st_mat = now-1;
+         st_txt = '5/5/2014';
+         et_mat = now-0.98;
+         et_txt = '5/5/2004 01:00:00';
+         sta = 'XXXX';
+         net = 'NW';
+         cha = 'BHZ';
+         loc = '00';
+         nslctxt = [net, '.', sta, '.', loc, '.', cha];
+         hz = 20;
+         unit = 'CNT';
+         scnl = scnlobject(sta,cha,net,loc);
+         tag = channeltag(net,sta,loc,cha);
+         ds = datasource;
+         disp('CREATE: default')
+         w = waveform()
+         disp('CREATE: copy')
+         w2 = w
+         disp('CREATE: sta cha hz st data')
+         w = waveform(sta,       cha,  hz,      st_mat,  data);
+         disp('CREATE: scnl hz st data unit')
+         w(2) = waveform(scnl,      hz,   st_mat,  data,    unit);
+         disp('CREATE: nscltxt hz st data unit')
+         w(3) = waveform(nslctxt,   hz,   st_mat,  data,    unit);
+         disp('CREATE: tag hz st data unit')
+         w(4) = waveform(tag,       hz,   st_mat,  data,    unit);
+         disp('CREATE: scnl hz st data')
+         w(5) = waveform(scnl,      hz,   st_mat,  data);
+         disp('CREATE: nscltxt hz st data')
+         w(6) = waveform(nslctxt,   hz,   st_mat,  data);
+         disp('CREATE: tag hz st data')
+         w(7) = waveform(tag,       hz,   st_mat,  data);
+         disp('CREATE: tag hz st data unit nocombine')
+         w = waveform(tag,       hz,   st_mat,  data,    unit, 'nocombine');
+      end
+      function testSetGets(testCase)
          %% test SET routines
          %TODO: Update to use TestCase syntax
          mep2dep = inline('(n - 719529) * 86400','n');
@@ -71,7 +110,7 @@ classdef testWaveform < matlab.unittest.TestCase
          
          set_INVALID_vals = {5,'a',5,ones(5,5),3,'a','a',-1};
          
-         w =  obj.wf;
+         w =  testCase.wf;
          results.set = true;
          for N=1:numel(set_test)
             %Make sure that INVALID cases don't slip thorugh
@@ -86,137 +125,142 @@ classdef testWaveform < matlab.unittest.TestCase
             setresult.(set_test{N}) = setresult.(set_test{N}) && ...
                all(get(set(w,set_test{N},set_VALID_vals{N}),set_test{N})...
                == set_VALID_vals{N});
-            assertTrue(setresult.(set_test{N}), set_test{N})
+            testCase.verifyTrue(setresult.(set_test{N}), set_test{N})
          end
       end
       
-      function testBasicMath(obj)
+      function testBasicMath(testCase)
          % basic math functions
          %   'uminus','plus','minus'
          %   'times','mtimes','rdivide','mrdivide','power'
-         w = obj.wf;
-         D = obj.Dt(:);
+         w = testCase.wf;
+         D = testCase.Dt(:);
          % identities
-         assertEqual(w + 0, w);
-         assertEqual(w ./ 1, w);
-         assertEqual(w - 0, w);
-         assertEqual(w * 1, w);
-         assertEqual(w .* 1, w);
-         assertEqual(w .^ 1, w);
+         testCase.verifyEqual(w + 0, w);
+         testCase.verifyEqual(w ./ 1, w);
+         testCase.verifyEqual(w - 0, w);
+         testCase.verifyEqual(w * 1, w);
+         testCase.verifyEqual(w .* 1, w);
+         testCase.verifyEqual(w .^ 1, w);
          
          % comparing operations
-         assertEqual(w + w, w * 2);    % plus, times, vector addition
-         assertEqual(w - w, w .* 0);    % minus, mtimes, vector subtraction
-         assertEqual(w ./ 2, w .* 0.5); % rdivide, times
-         assertEqual(w .^ 2, w .* w);  % power, vector multiplication
-         assertEqual(D .* D, double(w .* D));
-         assertEqual(w .* 5, w * 5);   % mtimes, times
-         assertEqual(w + -w, w .* 0);  % uminus
+         testCase.verifyEqual(w + w, w * 2);    % plus, times, vector addition
+         testCase.verifyEqual(w - w, w .* 0);    % minus, mtimes, vector subtraction
+         testCase.verifyEqual(w ./ 2, w .* 0.5); % rdivide, times
+         testCase.verifyEqual(w .^ 2, w .* w);  % power, vector multiplication
+         testCase.verifyEqual(D .* D, double(w .* D));
+         testCase.verifyEqual(w .* 5, w * 5);   % mtimes, times
+         testCase.verifyEqual(w + -w, w .* 0);  % uminus
          
          % communicative
-         assertEqual(w + 100, 100 + w);
-         assertEqual(w .* 5, 5 .* w);
+         testCase.verifyEqual(w + 100, 100 + w);
+         testCase.verifyEqual(w .* 5, 5 .* w);
          
-         assertEqual(double(w + 5 .* w), D + 5 .* D);
-         assertEqual(double((7 .* w) + (w ./ 5) - w.^3), (D .* 7)+(D ./ 5) - D.^3);
+         testCase.verifyEqual(double(w + 5 .* w), D + 5 .* D);
+         testCase.verifyEqual(double((7 .* w) + (w ./ 5) - w.^3), (D .* 7)+(D ./ 5) - D.^3);
          
-         assertEqual(double(w / 2), (D / 2));
+         testCase.verifyEqual(double(w / 2), (D / 2));
       end
       
-      function testAdvancedMath(obj)
+      function testAdvancedMath(testCase)
          % sign, abs, diff, integrate
-         D = obj.Dt(:);
-         w = obj.wf;
+         D = testCase.Dt(:);
+         w = testCase.wf;
          
-         assertEqual(double(sign(w)),  sign(D));
-         assertEqual(abs(w),           sign(w) .* w);
-         assertEqual(double(abs(w)),   abs(D));
+         testCase.verifyEqual(double(sign(w)),  sign(D));
+         testCase.verifyEqual(abs(w),           sign(w) .* w);
+         testCase.verifyEqual(double(abs(w)),   abs(D));
       end
       
-      function testDiff(obj)
-         dW = diff(obj.wf);
-         dd = diff(obj.Dt(:)) * get(obj.wf,'freq'); %scaled!
-         assertEqual(double(dW), dd,  'differentiation values');
+      function testDiff(testCase)
+         dW = diff(testCase.wf);
+         dd = diff(testCase.Dt(:)) * get(testCase.wf,'freq'); %scaled!
+         testCase.verifyEqual(double(dW), dd,  'differentiation values');
          
-         expectedUnits = [get(obj.wf,'units'), ' / sec'];
-         assertEqual(get(dW,'units'), expectedUnits, 'unit check');
+         expectedUnits = [get(testCase.wf,'units'), ' / sec'];
+         testCase.verifyEqual(get(dW,'units'), expectedUnits, 'unit check');
       end
       
-      function testIntegrate(obj)
+      function testIntegrate(testCase)
          d = sin(1:0.01:1000) .* 100;
          d = d(:) + randn(size(d(:)));
          w = waveform('NW.STA.LO.CHA',20,fix(now),d,'Counts');
-         assertEqual(cumsum(d) ./ get(w,'freq'), double(integrate(w)), 'default (CUMSUM) integration');
-         assertEqual(get(integrate(w),'units'), 'Counts * sec');
-         assertEqual(cumsum(d) ./ get(w,'freq'), double(integrate(w, 'cumsum')), 'CUMSUM integration');
-         assertEqual(cumtrapz(d) ./ get(w,'freq'), double(integrate(w,'trapz')), 'TRAPZ integration');
+         testCase.verifyEqual(cumsum(d) ./ get(w,'freq'), double(integrate(w)), 'default (CUMSUM) integration');
+         testCase.verifyEqual(get(integrate(w),'units'), 'Counts * sec');
+         testCase.verifyEqual(cumsum(d) ./ get(w,'freq'), double(integrate(w, 'cumsum')), 'CUMSUM integration');
+         testCase.verifyEqual(cumtrapz(d) ./ get(w,'freq'), double(integrate(w,'trapz')), 'TRAPZ integration');
          %}
       end
       
-      function testStatisticalMath(obj)
+      function testStatisticalMath(testCase)
          % 'min','max','mean', 'median','std','var'
-         D = obj.Dt(:);
-         w = obj.wf;
+         D = testCase.Dt(:);
+         w = testCase.wf;
          
-         assertEqual(min(D), min(w));
-         assertEqual(max(D), max(w));
-         assertEqual(mean(D), mean(w));
-         assertEqual(median(D), median(w));
-         assertEqual(std(D), std(w));
-         assertEqual(var(D), var(w));
+         testCase.verifyEqual(min(D), min(w));
+         testCase.verifyEqual(max(D), max(w));
+         testCase.verifyEqual(mean(D), mean(w));
+         testCase.verifyEqual(median(D), median(w));
+         testCase.verifyEqual(std(D), std(w));
+         testCase.verifyEqual(var(D), var(w));
       end
       
-      function testTransforms(obj)
+      function testTransforms(testCase)
          % transform functions
          % 'rms','hilbert','detrend','demean','taper','stack','fix_data_length'
          
          % todo: rms
          % WAVEFORM/RMS
-         w = obj.wf;
-         D = obj.Dt(:);
+         w = testCase.wf;
+         D = testCase.Dt(:);
          
-         
-         assertEqual(rms(w), sqrt((sum(D .^2) / (numel(D)-1))));
+         % define tolerance
+         tol = 1e-10;
+         testCase.verifyEqual(rms(w), sqrt((sum(D .^2) / (numel(D)-1))));
          % WAVEFORM/DETREND
-         assertEqual(double(detrend(w)), detrend(D));
+         
+         testCase.verifyEqual(double(detrend(w)), detrend(D));
          
          % WAVEFORM/DEMEAN
-         assertEqual(double(demean(w)), (D - mean(D)));
+         testCase.verifyEqual(double(demean(w)), (D - mean(D)));
          
          % WAVEFORM/HILBERT
-         assertEqual(double(hilbert(w)), abs(hilbert(D)));
+         testCase.verifyEqual(double(hilbert(w)), abs(hilbert(D)));
          
          % WAVEFORM/STACK
          %TODO:waveform/stack ***** NOT IMPLEMENTED ****
          
          % WAVEFORM/FIX_DATA_LENGTH
          % TOO: doublecheck the replacement values
-         assertEqual(get(fix_data_length(w, 5001),'data_length'), 5001);
-         assertEqual(get(fix_data_length(w, 301),'data_length'), 301);
+         testCase.verifyEqual(get(fix_data_length(w, 5001),'data_length'), 5001);
+         testCase.verifyEqual(get(fix_data_length(w, 301),'data_length'), 301);
          twoWs = fix_data_length([w,set(w,'data',2:100)]);
-         assertEqual(get(twoWs,'data_length'), get([w w],'data_length'));
+         testCase.verifyEqual(get(twoWs,'data_length'), get([w w],'data_length'));
       end
       
-      function testSacLoad(obj)
+      function testSacLoad(testCase)
          % station: BYR, chan: BHZ_01, 2000/7/14 13:40 ~10 seconds
-         fileName = fullfile(obj.dataPath,'test_data','example_sacfile.sac');
+         fileName = fullfile(testCase.dataPath,'test_data','example_sacfile.sac');
          dsac = datasource('sac',fileName);
-         scnlSac(1) = scnlobject('*','*','*','*');
-         scnlSac(2) = scnlobject('BYR','BHZ_01','*','*');
+         chanTag(1) = channeltag('...');
+         chanTag(2) = channeltag('.BYR..BHZ_01')
+         %scnlSac(1) = scnlobject('*','*','*','*');
+         %scnlSac(2) = scnlobject('BYR','BHZ_01','*','*');
          
          sacwave = loadsac(waveform,fileName);
-         assertEqual(get(sacwave,'data_length'), 500);
-         assertEqual(get(sacwave,'NZYEAR'), 2000);
-         assertEqual(get(sacwave,'start'), datenum('2000-07-14 13:40:00.006'));
+         testCase.verifyEqual(get(sacwave,'data_length'), 500);
+         testCase.verifyEqual(get(sacwave,'NZYEAR'), 2000);
+         testCase.verifyEqual(get(sacwave,'start'), datenum('2000-07-14 13:40:00.006'));
          
-         sacwave = waveform(dsac,scnlSac(1),'7/14/2000','7/15/2000');
-         assertEqual(get(sacwave,'data_length'), 500);
-         assertEqual(get(sacwave,'NZYEAR'), 2000);
-         assertEqual(get(sacwave,'start'), datenum('2000-07-14 13:40:00.006'));
+         %sacwave = waveform(dsac,scnlSac(1),'7/14/2000','7/15/2000');
+         sacwave = waveform(dsac,chanTag(1),'7/14/2000','7/15/2000');
+         testCase.verifyEqual(get(sacwave,'data_length'), 500);
+         testCase.verifyEqual(get(sacwave,'NZYEAR'), 2000);
+         testCase.verifyEqual(get(sacwave,'start'), datenum('2000-07-14 13:40:00.006'));
       end
       
-      function testPlot(obj)
-         A = obj.wf;
+      function testPlot(testCase)
+         A = testCase.wf;
          B = waveform('SY.SIN..BHZ',20,fix(now),sin(1:.001:100),'Counts');
          F = figure;
          plot(A);
@@ -229,116 +273,116 @@ classdef testWaveform < matlab.unittest.TestCase
          delete(F)
       end
       
-      function testUserDefinedFields(obj)
+      function testUserDefinedFields(testCase)
          % User Defined Fields
-         w = obj.wf;
+         w = testCase.wf;
          w = addfield(w,'ABCD','hello');
-         assertEqual(get(w,'abCD'),'hello');
+         testCase.verifyEqual(get(w,'abCD'),'hello');
          w = set(w,'ABcD',5);
-         assertEqual(get(w,'AbCD'), 5);
+         testCase.verifyEqual(get(w,'AbCD'), 5);
          
          %make sure field was deleted
          w = delfield(w,'abcd');
-         assertFalse(ismember('ABCD',get(w,'misc_fields')));
-         assertExceptionThrown(@() get(w,'ABCD'),'Waveform:get:unrecognizedProperty');
+         testCase.verifyFalse(ismember('ABCD',get(w,'misc_fields')));
+         testCase.verifyError(@() get(w,'ABCD'),'Waveform:get:unrecognizedProperty');
       end
       
-      function testHistory(obj)
+      function testHistory(testCase)
          %addhistory, clearhistory, clearhistory
          % test ADDHISTORY
-         w = obj.wf;
+         w = testCase.wf;
          w = addhistory(w,'StringTest');
          w = addhistory(w,'[%s]<%02d>','ABCDEFG',3);
          w = addhistory(w,{3});
          fullhist = get(w,'history');
          
-         assertEqual(numel(fullhist(:,1)), 4);
-         assertEqual(numel(fullhist(1,:)), 2);
-         assertEqual(fullhist{1,1}, 'created');
-         assertEqual(fullhist{2,1},'StringTest');
-         assertEqual(fullhist{3,1}, '[ABCDEFG]<03>');
-         assertEqual(fullhist{4,1}{1}, 3);
+         testCase.verifyEqual(numel(fullhist(:,1)), 4);
+         testCase.verifyEqual(numel(fullhist(1,:)), 2);
+         testCase.verifyEqual(fullhist{1,1}, 'created');
+         testCase.verifyEqual(fullhist{2,1},'StringTest');
+         testCase.verifyEqual(fullhist{3,1}, '[ABCDEFG]<03>');
+         testCase.verifyEqual(fullhist{4,1}{1}, 3);
          
          [~, dates] = history(w);
          
          %test HISTORY
-         assertEqual(datenum(datestr([fullhist{:,2}])), datenum(dates));
+         testCase.verifyEqual(datenum(datestr([fullhist{:,2}])), datenum(dates));
          
          %test CLEARHISTORY
          Z = get(clearhistory(w),'History');
          n = now;
          onesecond = datenum(0,0,0,0,0,1);
-         assertTrue(abs(Z{2} - n) < onesecond, 'last event expected within past second');
-         assertEqual(size(Z), [1 2])
-         assertTrue(ischar(Z{1}));
-         assertTrue(isa(Z{2},'double'));
-         assertEqual(Z{1},'Cleared History');
+         testCase.verifyTrue(abs(Z{2} - n) < onesecond, 'last event expected within past second');
+         testCase.verifyEqual(size(Z), [1 2])
+         testCase.verifyTrue(ischar(Z{1}));
+         testCase.verifyTrue(isa(Z{2},'double'));
+         testCase.verifyEqual(Z{1},'Cleared History');
          
          %results.clearhistory = isempty(Z);
          
       end
       
-      function testIsEmpty(obj)
+      function testIsEmpty(testCase)
          w = waveform;
-         assertTrue(isempty(w), 'generic waveform should be empty');
+         testCase.verifyTrue(isempty(w), 'generic waveform should be empty');
          w = set(w,'data',1);
-         assertFalse(isempty(w),'waveform with one byte should not be empty');
+         testCase.verifyFalse(isempty(w),'waveform with one byte should not be empty');
          w = set(w,'data',[]);
-         assertTrue(isempty(w), 'data set to [] should be empty');
+         testCase.verifyTrue(isempty(w), 'data set to [] should be empty');
       end
       
-      function testDouble(obj)
-         A = obj.wf;
-         Ad = obj.Dt(:);
-         assertEqual(double(A), Ad);
-         assertEqual(double([A A]), [Ad Ad]);
+      function testDouble(testCase)
+         A = testCase.wf;
+         Ad = testCase.Dt(:);
+         testCase.verifyEqual(double(A), Ad);
+         testCase.verifyEqual(double([A A]), [Ad Ad]);
       end
       
-      function testLoadobj(obj)
+      function testLoadobj(testCase)
          load_v0()
          load_v1_0()
          load_v1_1()
          load_v1_2()
          
          function load_v0()
-            fileName = fullfile(obj.dataPath,'test_data','v0_example_waveforms.mat');
-            assertEqual(exist(fileName,'file'), 2, 'test data for v0 does not exist');
+            fileName = fullfile(testCase.dataPath,'test_data','v0_example_waveforms.mat');
+            testCase.verifyEqual(exist(fileName,'file'), 2, 'test data for v0 does not exist');
             dummy = load(fileName);
-            assertTrue(isa(dummy.w,'waveform'), 'converting single v0 waveform failed');
-            assertTrue(isa(dummy.ww,'waveform'), 'converting multiple v0 waveforms failed');
-            assertEqual(numel(dummy.ww),10);
+            testCase.verifyTrue(isa(dummy.w,'waveform'), 'converting single v0 waveform failed');
+            testCase.verifyTrue(isa(dummy.ww,'waveform'), 'converting multiple v0 waveforms failed');
+            testCase.verifyEqual(numel(dummy.ww),10);
          end
          function load_v1_0()
             % test file has two variables w & ww
-            fileName = fullfile(obj.dataPath,'test_data','v1.0_example_waveforms.mat');
-            assertEqual(exist(fileName,'file'), 2, 'test data for v1.0 does not exist');
+            fileName = fullfile(testCase.dataPath,'test_data','v1.0_example_waveforms.mat');
+            testCase.verifyEqual(exist(fileName,'file'), 2, 'test data for v1.0 does not exist');
             dummy = load(fileName);
-            assertTrue(isa(dummy.w,'waveform'), 'converting single v1.0 waveform failed');
-            assertTrue(isa(dummy.ww,'waveform'), 'converting multiple v1.0 waveforms failed');
-            assertEqual(numel(dummy.ww),10);
+            testCase.verifyTrue(isa(dummy.w,'waveform'), 'converting single v1.0 waveform failed');
+            testCase.verifyTrue(isa(dummy.ww,'waveform'), 'converting multiple v1.0 waveforms failed');
+            testCase.verifyEqual(numel(dummy.ww),10);
          end
          function load_v1_1()
-            fileName = fullfile(obj.dataPath,'test_data','v1.1_example_waveforms.mat');
-            assertEqual(exist(fileName,'file'),2,'test data for v1.1 does not exist');
+            fileName = fullfile(testCase.dataPath,'test_data','v1.1_example_waveforms.mat');
+            testCase.verifyEqual(exist(fileName,'file'),2,'test data for v1.1 does not exist');
             dummy = load(fileName);
-            assertTrue(isa(dummy.w,'waveform'), 'converting multiple v1.1 waveform failed');
-            assertEqual(numel(dummy.w),100);
+            testCase.verifyTrue(isa(dummy.w,'waveform'), 'converting multiple v1.1 waveform failed');
+            testCase.verifyEqual(numel(dummy.w),100);
          end
          function load_v1_2()
-            fileName = fullfile(obj.dataPath,'test_data','v1.2_example_waveforms.mat');
-            assertEqual(exist(fileName,'file'),2,'test data for v1.2 does not exist');
+            fileName = fullfile(testCase.dataPath,'test_data','v1.2_example_waveforms.mat');
+            testCase.verifyEqual(exist(fileName,'file'),2,'test data for v1.2 does not exist');
             dummy = load(fileName);
-            assertTrue(isa(dummy.w,'waveform'), 'converting single v1.2 waveform failed');
-            assertTrue(isa(dummy.ww,'waveform'), 'converting multiple v1.2 waveforms failed');
-            assertEqual(numel(dummy.ww),2);
+            testCase.verifyTrue(isa(dummy.w,'waveform'), 'converting single v1.2 waveform failed');
+            testCase.verifyTrue(isa(dummy.ww,'waveform'), 'converting multiple v1.2 waveforms failed');
+            testCase.verifyEqual(numel(dummy.ww),2);
          end
       end
       
-      function testSave(obj)
+      function testSave(testCase)
          % try saving and loading current version
          tmp_name = [tempname , '.mat'];
          
-         wtesttemp = obj.wf;
+         wtesttemp = testCase.wf;
          save(tmp_name,'wtesttemp')
          
          clear wtesttemp
@@ -347,34 +391,34 @@ classdef testWaveform < matlab.unittest.TestCase
          delete(tmp_name); %clean up
       end
       
-      function testTaper(obj)
-         A = obj.wf;
+      function testTaper(testCase)
+         A = testCase.wf;
          % Test Functions: ensure they don't error & output size is correct
-         assertEqual(double(taper(A)), double(taper(A,.2)));
-         assertEqual(double(taper(A,.2)), double(taper(A,.2,'cosine')));
+         testCase.verifyEqual(double(taper(A)), double(taper(A,.2)));
+         testCase.verifyEqual(double(taper(A,.2)), double(taper(A,.2,'cosine')));
          assert(any(double(taper(A)) ~= double(taper(A,.5))));
       end
       
-      function testClip(obj)
-         A = obj.wf;
-         Ad = obj.Dt;
+      function testClip(testCase)
+         A = testCase.wf;
+         Ad = testCase.Dt;
          
          clippedAd = Ad(:);
          clippedAd(Ad>.3) = .3;
          clippedAd(Ad<-.2) = -.2;
-         assertEqual(double(clip(A,[-.2,.3])), clippedAd);
+         testCase.verifyEqual(double(clip(A,[-.2,.3])), clippedAd);
       end
       
-      function testStack(obj)
-         A = obj.wf;
-         Ad = obj.Dt;
-         assertEqual(double(stack([A, A, A, A])), Ad(:) .* 4);
+      function testStack(testCase)
+         A = testCase.wf;
+         Ad = testCase.Dt;
+         testCase.verifyEqual(double(stack([A, A, A, A])), Ad(:) .* 4);
       end
       
       %{
-function testDisp(obj)
+function testDisp(testCase)
          
-         A = obj.wf;
+         A = testCase.wf;
          % try display functions
          try
             disp(A); disp([A A]); disp([A A; A A; A A]);
@@ -393,7 +437,7 @@ function testDisp(obj)
       end
       %}
       
-      function testCorrelationCookbook(obj)
+      function testCorrelationCookbook(testCase)
          % probably doesn't belong in this class
          %% try the correlation cookbook
          % assumes we are in GISMO/contributed/test_scripts/waveform and that
