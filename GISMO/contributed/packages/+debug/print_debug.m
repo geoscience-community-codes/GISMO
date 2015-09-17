@@ -7,9 +7,9 @@ function print_debug(level, varargin)
 %    EXAMPLE:
 %
 %
-%    libgt.print_debug(1, 'Welcome to MyApp')
+%    debug.print_debug(1, 'Welcome to MyApp')
 %    outfile = 'myapp.txt';
-%    libgt.print_debug(3, 'output filename = %s',outfile)
+%    debug.print_debug(3, 'output filename = %s',outfile)
 %
 %
 %    If the debug level is set at 0, nothing will display.
