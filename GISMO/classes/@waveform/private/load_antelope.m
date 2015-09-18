@@ -46,27 +46,7 @@ function outputWaveforms = load_antelope(request, COMBINE_WAVEFORMS, specificDat
          request.startTimes,request.endTimes,criteria(i).group, database);
       w = cycleThroughTraces(tr, COMBINE_WAVEFORMS);
       %one tr exists for each timerequest within each scnl.
-      %{
-      % the use of "clear" multiple times in this block is a sure sign that
-      % it belongs in functions instead.
-      w(numel(tr)).waves = wBlank; %#ok<AGROW>
-      for traceidx = 1:numel(tr)
-         if ~isstruct(tr{traceidx}) % marker for no data
-            w_scnl = wBlank([]);
-         else
-            w_scnl = traceToWaveform(tr{traceidx}); %create waveform list
-            trdestroy(tr{traceidx});
-         end
-         
-         if COMBINE_WAVEFORMS && numel(w_scnl) > 1, %combine all of this trace's records
-            w_scnl = combine(w_scnl);
-         end;
-         w(traceidx).waves = w_scnl(:)';
-         clear w_scnl;
-      end
-      %}
       outputWaveforms = [outputWaveforms; [w.waves]']; %#ok<AGROW>
-      % clear w
    end
    dbclose(fdb);
 end
