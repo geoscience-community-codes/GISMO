@@ -188,7 +188,7 @@ enum = matlab_extensions.floorminute(timewindow.stop);
 numMins = (enum - snum) * 1440;
 stepMinOptions = [1 2 3 5 10 15 20 30 60 120 180 240 360 480 720 1440];
 c = 1;
-while (numMins / stepMinOptions(c) > 20)
+while (numMins / stepMinOptions(c) > 12)
 	c = c + 1;
 end
 stepMins = stepMinOptions(c);
