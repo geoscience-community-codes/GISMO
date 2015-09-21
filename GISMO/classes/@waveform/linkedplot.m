@@ -1,18 +1,16 @@
-function mulplt(w, alignWaveforms)
-%MULPLT Plot multiple waveform objects in a figure. is inspired by the 
-%Seisan program of the same name
-%   mulplt(w, alignWaveforms) 
+function linkedplot(w, alignWaveforms)
+%LINKEDPLOT Plot multiple waveform objects as separate linked panels
+%   linkedplot(w, alignWaveforms) 
 %   where:
 %       w = a vector of waveform objects
 %       alignWaveforms is either true or false (default)
-%   mulplt(w) will plot a record section, i.e. each waveform is plotted
+%   linkedplot(w) will plot a record section, i.e. each waveform is plotted
 %   against absolute time.
-%   mulplt(w, true) will align the waveforms on their start times.
+%   linkedplot(w, true) will align the waveforms on their start times.
 
 % Glenn Thompson 2014/11/05, generalized after a function I wrote in 2000
 % to operate on Seisan files only
 
-    %w = waveform_nonempty(w); % get rid of empty waveform objects
     if numel(w)==0
         warning('no waveforms to plot')
         return

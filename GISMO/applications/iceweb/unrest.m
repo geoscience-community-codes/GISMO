@@ -2,14 +2,14 @@ mins=60;
 
 
 
-%% Sakurajima
-chanmatch = 'chan=~/[BESH]H[ENZ]/  || chan=~/BD[FL123]/';
-%chanmatch = 'chan=~/HH[ZNE]/';
-ds = datasource('antelope', ...
-       '/raid/data/sakurajima/Seismic_Infrasound/SAK_dbs/GT/dbSAK_GT');
-setup_lite('Sakurajima', datenum(2015,5,18), datenum(2015,6,7), 'pf/setup_Sakurajima.pf', chanmatch)
-iceweb(ds, 'thissubnet', 'Sakurajima', 'snum', datenum(2015,5,18), 'enum', datenum(2015,6,7), 'delaymins', 0, 'matfile', 'pf/Sakurajima.mat', 'nummins', mins, 'mode', 'archive');
-%iceweb(ds, 'thissubnet', 'Sakurajima', 'snum', datenum(2015,6,3,16,0,0), 'enum', datenum(2015,6, 3,18,0,0), 'delaymins', 0, 'matfile', 'pf/Sakurajima.mat', 'nummins', mins, 'mode', 'archive');
+% %% Sakurajima
+% chanmatch = 'chan=~/[BESH]H[ENZ]/  || chan=~/BD[FL123]/';
+% %chanmatch = 'chan=~/HH[ZNE]/';
+% ds = datasource('antelope', ...
+%        '/raid/data/sakurajima/Seismic_Infrasound/SAK_dbs/GT/dbSAK_GT');
+% setup_lite('Sakurajima', datenum(2015,5,18), datenum(2015,6,7), 'pf/setup_Sakurajima.pf', chanmatch)
+% iceweb(ds, 'thissubnet', 'Sakurajima', 'snum', datenum(2015,5,18), 'enum', datenum(2015,6,7), 'delaymins', 0, 'matfile', 'pf/Sakurajima.mat', 'nummins', mins, 'mode', 'archive');
+% %iceweb(ds, 'thissubnet', 'Sakurajima', 'snum', datenum(2015,6,3,16,0,0), 'enum', datenum(2015,6, 3,18,0,0), 'delaymins', 0, 'matfile', 'pf/Sakurajima.mat', 'nummins', mins, 'mode', 'archive');
 
 %% Montserrat
 % chanmatch = 'chan=~/[BESH]H[ENZ]/  || chan=~/BD[FL123]/';

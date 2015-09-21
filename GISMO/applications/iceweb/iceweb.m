@@ -169,7 +169,7 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
             %% PRE_PROCESS DATA
             
             % Eliminate empty waveform objects
-            w = removeempty(w);
+            w = waveform_remove_empty(w);
             if numel(w)==0
                 debug.print_debug(0, 'No waveform data returned - skipping');
                 continue
@@ -197,7 +197,7 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
             
             %% CREATE & SAVE WAVEFORM PLOT
             close all
-            mulplt(w)
+            linkedplot(w)
             %s = input('continue?');
             [spdir,spbase,spext] = fileparts(spectrogramFilename);
             mulpltFilename = fullfile(spdir, sprintf('mulplt_%s%s',spbase,spext));
