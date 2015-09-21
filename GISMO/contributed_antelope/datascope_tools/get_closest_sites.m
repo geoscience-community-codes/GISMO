@@ -181,6 +181,7 @@ while ((c<=numsites) && (stadist(i(c)) < distkm))
     chan = channame{i(c)};
     net = stanetmap(sta);
     sites(c).channeltag = channeltag(net, sta, '', chan);
+    sites(c).string = string(sites(c).channeltag);
 	sites(c).longitude = longitude(i(c));
 	sites(c).latitude = latitude(i(c));
 	sites(c).elev = elev(i(c));
@@ -193,8 +194,8 @@ while ((c<=numsites) && (stadist(i(c)) < distkm))
 end
 
 % remove any duplicate sites
-%[~,j]=unique({sites.name});
-%sites = sites(sort(j));
+[~,j]=unique({sites.string});
+sites = sites(j);
 
 % limit the number of sites
 numsites = min([maxsta numel(sites)]);

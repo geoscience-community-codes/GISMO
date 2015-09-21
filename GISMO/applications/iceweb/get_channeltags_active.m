@@ -7,14 +7,8 @@ function goodsites = get_channeltags_active(sites, snum)
             k = k + 1;
             goodsites(k) = sites(c);
             disp(sprintf('Keeping %s',sites(c).channeltag.string()));
-%             sites(c).ondnum
-%             sites(c).offdnum
-%             snum
         else
             disp(sprintf('Rejecting %s',sites(c).channeltag.string()));
-            sites(c).ondnum
-            sites(c).offdnum
-            snum
         end
     end
     if k==0

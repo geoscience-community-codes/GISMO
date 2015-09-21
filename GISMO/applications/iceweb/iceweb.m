@@ -157,10 +157,10 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
 
             % Have we already process this timewindow?
             spectrogramFilename = get_spectrogram_filename(paths,subnet,enum);
-%             if exist(spectrogramFilename, 'file')
-%                 fprintf('%s already exists - skipping\n',spectrogramFilename);
-%                 continue
-%             end
+             if exist(spectrogramFilename, 'file')
+                 fprintf('%s already exists - skipping\n',spectrogramFilename);
+                 continue
+             end
             
             %% Get waveform data
             debug.print_debug(0, sprintf('%s %s: Getting waveforms for %s from %s to %s at %s',mfilename, datestr(utnow), subnet , datestr(snum), datestr(enum)));
@@ -288,7 +288,11 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
                             downsampled_meanf(k) = nanmean(MEAN_F(p));  
                             downsampled_findex(k) = nanmean(F_INDEX(p));
                             suby = thisY(:,p);
-                            max_in_each_freq_band(:,k) = max(suby');
+			    if size(suby,2) == 1
+                            	max_in_each_freq_band(:,k) = suby;
+			    else
+                            	max_in_each_freq_band(:,k) = max(suby');
+			     end
                         end
 
         %                 % Plot for verification

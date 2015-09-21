@@ -20,6 +20,7 @@ ds = datasource('antelope', ...
         'year','month','day');
 setup_lite('Montserrat', datenum(1995,7,1), datenum(2009,1,1), 'pf/setup_Montserrat.pf', chanmatch)
 montserrat_remove_analog_sites
+%iceweb(ds, 'thissubnet', 'Montserrat', 'snum', datenum(2000,1,3), 'enum', datenum(2000,1,3,5,0,0), 'delaymins', 0, 'matfile', 'pf/Montserrat.mat', 'nummins', mins, 'mode', 'archive');
 iceweb(ds, 'thissubnet', 'Montserrat', 'snum', datenum(2000,1,1), 'enum', datenum(2008,1,1), 'delaymins', 0, 'matfile', 'pf/Montserrat.mat', 'nummins', mins, 'mode', 'archive');
 iceweb(ds, 'thissubnet', 'Montserrat', 'snum', datenum(1996,10,1), 'enum', datenum(2000,1,1), 'delaymins', 0, 'matfile', 'pf/Montserrat.mat', 'nummins', mins, 'mode', 'archive');
 
