@@ -1,4 +1,4 @@
-function result=specgram_iceweb(s, w, spectrogramFraction, mycolormap)
+function [result,Xvalues,F,y,nf1] = specgram_iceweb(s, w, spectrogramFraction, mycolormap)
 % SPECGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of
 % AVO web (IceWeb) spectrograms, by wrapping gismotools specgram function
 %
@@ -53,7 +53,7 @@ debug.print_debug(2, sprintf('%d waveform objects',numel(w)));
 	end
 
 	% Call the default specgram function
-	sg = specgram(s, w, 'xunit', 'date', 'colorbar', 'none', 'yscale', 'normal'); % default for colormap is SPECTRAL_MAP
+	[handle_sg, Xvalues,F,y,nf1] = specgram(s, w, 'xunit', 'date', 'colorbar', 'none', 'yscale', 'normal'); % default for colormap is SPECTRAL_MAP
 
 % catch
 % 	debug.print_debug(2, 'specgram failed on waveform vector. Trying again, using nonempty rather than fillempty');
@@ -62,7 +62,7 @@ debug.print_debug(2, sprintf('%d waveform objects',numel(w)));
 % 	if numel(w)>0
 % 		debug.print_debug(0, sprintf('%d waveform objects after removing empty waveform objects',numel(w)));
 % 		try
-%  			sg = specgram(s, w, 'xunit', 'date', 'colorbar', 'none', 'yscale', 'normal'); % default for colormap is SPECTRAL_MAP           
+%  			handle_sg = specgram(s, w, 'xunit', 'date', 'colorbar', 'none', 'yscale', 'normal'); % default for colormap is SPECTRAL_MAP           
 % 		catch
 % 			debug.print_debug(0, 'call to specgram failed');
 % 		end	

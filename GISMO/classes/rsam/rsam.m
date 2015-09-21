@@ -106,9 +106,9 @@ classdef rsam
                 self.data = data;
                 if nargin>2
                           
-                    [self.sta, self.chan, self.measure, self.seismogram_type, self.units] = ...
+                    [self.sta, self.chan, self.measure, self.seismogram_type, self.units, self.snum, self.enum] = ...
                         matlab_extensions.process_options(varargin, 'sta', self.sta, ...
-                        'chan', self.chan, 'measure', self.measure, 'seismogram_type', self.seismogram_type, 'units', self.units);
+                        'chan', self.chan, 'measure', self.measure, 'seismogram_type', self.seismogram_type, 'units', self.units, 'snum', self.snum, 'enum', self.enum);
             
                 end
             end
@@ -158,13 +158,13 @@ classdef rsam
    
                 % Substitute for year        
                 files(filenum).file = regexprep(files(filenum).file, 'YYYY', sprintf('%04d',yyyy) );
-                fprintf('Looking for file: %s',files(filenum).file);
+                debug.print_debug(2,sprintf('Output file: %s',files(filenum).file))
   
                 if exist(files(filenum).file, 'file')
                     files(filenum).found = true;
-                    fprintf(' - found\n');
+                    debug.print_debug(3,' - found\n');
                 else
-                    fprintf(' - not found\n');
+                    debug.print_debug(2,' - not found\n');
                 end
             end
             self.files = files;
@@ -211,8 +211,8 @@ classdef rsam
             
             if f.found    
                 % file found
-                debug.print_debug(sprintf( 'Loading data from %s, position %d to %d of %d', ...
-                     f.file, startsample,(startsample+nsamples-1),(datapointsperday*days) ),3); 
+                debug.print_debug(3, sprintf( 'Loading data from %s, position %d to %d of %d', ...
+                     f.file, startsample,(startsample+nsamples-1),(datapointsperday*days) )); 
    
                 fid=fopen(f.file,'r', 'l'); % big-endian for Sun, little-endian for PC
 
@@ -223,7 +223,7 @@ classdef rsam
                 % Read the data
                 [data,numlines] = fread(fid, nsamples, 'float32');
                 fclose(fid);
-                debug.print_debug(sprintf('mean of data loaded is %e',nanmean(data)),1);
+                debug.print_debug(1, sprintf('mean of data loaded is %e',nanmean(data)));
    
                 % Transpose to give same dimensions as dnum
                 data=data';
@@ -239,7 +239,7 @@ classdef rsam
             self.data = matlab_extensions.catmatrices(data, self.data);
 
             if ~datafound
-                debug.print_debug(sprintf('%s: No data loaded from file %s',mfilename,f.file),1);
+                debug.print_debug(1, sprintf('%s: No data loaded from file %s',mfilename,f.file));
             end
 
             % eliminate any data outside range asked for - MAKE THIS A
@@ -296,7 +296,7 @@ classdef rsam
             % % GTHO 2009/10/26 Changed legend position to -0.2
             [yaxisType, h, addgrid, addlegend, fillbelow] = ...
                 matlab_extensions.process_options(varargin, ...
-                'yaxisType', 'linear', 'h', [], 'addgrid', false, ...
+                'yaxisType', 'logarithmic', 'h', [], 'addgrid', false, ...
                 'addlegend', false, 'fillbelow', false);
             legend_ypos = -0.2;
 
@@ -310,7 +310,7 @@ classdef rsam
                 t = self.dnum;
                 y = self.data;
 
-                debug.print_debug(sprintf('Data length: %d',length(y)),10);
+                debug.print_debug(10,sprintf('Data length: %d',length(y)));
 
                 if strcmp(yaxisType,'logarithmic')
                     % make a logarithmic plot, with a marker size and add the station name below the x-axis like a legend
@@ -328,6 +328,10 @@ classdef rsam
                         end
                         set(gca, 'YLim', [min(Ytickmarks) max(Ytickmarks)],'YTick',Ytickmarks,'YTickLabel',Yticklabels);
                     end
+                    axis tight
+                    datetick('x','keeplimits')
+                    xlabel(sprintf('Date/Time starting at %s',datestr(self.snum)))
+                    ylabel(sprintf('log(%s)',self.units))
                 else
 
                     % plot on a linear axis, with station name as a y label
@@ -342,15 +346,15 @@ classdef rsam
                         set(gca,'XTickLabel','');
                     end
 
-                    yt=get(gca,'YTick');
-                    ytinterval = (yt(2)-yt(1))/2; 
-                    yt = yt(1) + ytinterval: ytinterval: yt(end);
-                    ytl = yt';
-                    ylim = get(gca, 'YLim');
-                    set(gca, 'YLim', [0 ylim(2)],'YTick',yt);
-                    %ylabelstr = sprintf('%s.%s %s (%s)', self.sta, self.chan, self.measure, self.units);
-                    ylabelstr = sprintf('%s', self.sta);
-                    ylabel(ylabelstr);
+%                     yt=get(gca,'YTick');
+%                     ytinterval = (yt(2)-yt(1))/2; 
+%                     yt = yt(1) + ytinterval: ytinterval: yt(end);
+%                     ytl = yt';
+%                     ylim = get(gca, 'YLim');
+%                     set(gca, 'YLim', [0 ylim(2)],'YTick',yt);
+%                     %ylabelstr = sprintf('%s.%s %s (%s)', self.sta, self.chan, self.measure, self.units);
+%                     ylabelstr = sprintf('%s', self.sta);
+%                     ylabel(ylabelstr);
                     datetick('x','keeplimits');
                 end
 
@@ -446,7 +450,7 @@ classdef rsam
                             try
                                     self.data = self.data .* sqrt(r * wavelength); % cm^2
                             catch
-                                    debug.print_debug('mean wavelength instead',5)
+                                    debug.print_debug(5, 'mean wavelength instead')
                                     self.data = self.data * sqrt(r * mean(wavelength)); % cm^2            
                             end
                             self.units = 'cm^2';
@@ -592,93 +596,109 @@ classdef rsam
             end
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%      
-        function save(self, file)
-            dnum = self.dnum;
-            data = self.data;
+        function save(self, filepattern)
+            % RSAM/SAVE - save an rsam-like object to an RSAM/BOB binary
+            % file
+            %
+            %
+            % Examples:
+            %   1. save data to myfile.bob
+            %       r.save('myfile.bob')
+            %
+            %   2. save to file like YEAR_STATION_CHANNEL_MEASURE.bob
+            %       r.save('YYYY_SSSS_CCC_MMMM.bob')
+            %
             
-            % substitute for station
-            file = regexprep(file, 'SSSS', self.sta);
-            
-            % substitute for channel
-            file = regexprep(file, 'CCC', self.chan);
-            
-            % substitute for measure
-            file = regexprep(file, 'MMMM', self.measure);             
-                
-            % since dnum may not be ordered and contiguous, this function
-            % should write data based on dnum only
-            
-            if length(dnum)~=length(data)
-                    disp(sprintf('%s: Cannot save to %s because data and time vectors are different lengths',mfilename,filename));
-                    size(dnum)
-                    size(data)
+            for c=1:numel(self)
+
+                dnum = self(c).dnum;
+                data = self(c).data;
+                file = filepattern; 
+
+                % substitute for station
+                file = regexprep(file, 'SSSS', upper(self(c).sta));
+
+                % substitute for channel
+                file = regexprep(file, 'CCC', upper(self(c).chan));
+
+                % substitute for measure
+                file = regexprep(file, 'MMMM', self(c).measure);             
+
+                % since dnum may not be ordered and contiguous, this function
+                % should write data based on dnum only
+
+                if length(dnum)~=length(data)
+                        debug.print_debug(0,sprintf('%s: Cannot save to %s because data and time vectors are different lengths',mfilename,filename));
+                        size(dnum)
+                        size(data)
+                        return;
+                end
+
+                if length(data)<1
+                        debug.print_debug(0,'No data. Aborting');
                     return;
-            end
+                end
 
-            if length(data)<1
-                    disp('No data. Aborting');
-                return;
-            end
-            
-            % filename
+                % filename
 
-            % set start year and month, and end year and month
-            [yyyy sm]=datevec(self.snum);
-            [eyyy em]=datevec(self.enum);
-            
-            if yyyy~=eyyy
-                error('can only save RSAM data to BOB file if all data within 1 year');
-            end 
-            
-            % how many days in this year?
-            daysperyear = 365;
-            if (mod(yyyy,4)==0)
-                    daysperyear = 366;
-            end
-            
-            % Substitute for year        
-            fname = regexprep(file, 'YYYY', sprintf('%04d',yyyy) );
-            fprintf('Looking for file: %s\n',fname);
+                % set start year and month, and end year and month
+                [yyyy sm]=datevec(self(c).snum);
+                [eyyy em]=datevec(self(c).enum);
 
-            if ~exist(fname,'file')
-                    debug.print_debug(['Creating ',fname],2)
-                    rsam.makebobfile(fname, daysperyear);
-            end            
+                if yyyy~=eyyy
+                    error('can only save RSAM data to BOB file if all data within 1 year');
+                end 
 
-            datapointsperday = 1440;
+                % how many days in this year?
+                daysperyear = 365;
+                if (mod(yyyy,4)==0)
+                        daysperyear = 366;
+                end
 
-            % round times to minute
-            dnum = round((dnum-1/86400) * 1440) / 1440;
+                % Substitute for year        
+                fname = regexprep(file, 'YYYY', sprintf('%04d',yyyy) );
+                debug.print_debug(2,sprintf('Looking for file: %s\n',fname));
 
-            % find the next contiguous block of data
-            diff=dnum(2:end) - dnum(1:end-1);
-            i = find(diff > 1.5/1440 | diff < 0.5/1440);        
+                if ~exist(fname,'file')
+                        debug.print_debug(2, ['Creating ',fname])
+                        rsam.makebobfile(fname, daysperyear);
+                end            
 
-            if length(i)>0
-                % slow mode
+                datapointsperday = 1440;
 
-                for c=1:length(dnum)
+                % round times to minute
+                dnum = round((dnum-1/86400) * 1440) / 1440;
+
+                % find the next contiguous block of data
+                diff=dnum(2:end) - dnum(1:end-1);
+                i = find(diff > 1.5/1440 | diff < 0.5/1440);        
+
+                if length(i)>0
+                    % slow mode
+
+                    for c=1:length(dnum)
+
+                        % write the data
+                        startsample = round((dnum(c) - datenum(yyyy,1,1)) * datapointsperday);
+                        offset = startsample*4;
+                        fid = fopen(fname,'r+');
+                        fseek(fid,offset,'bof');
+                        debug.print_debug(3, sprintf('saving to %s, position %d',fname,startsample))
+                        fwrite(fid,data(c),'float32');
+                        fclose(fid);
+                    end
+                else
+                    % fast mode
 
                     % write the data
-                    startsample = round((dnum(c) - datenum(yyyy,1,1)) * datapointsperday);
+                    startsample = round((dnum(1) - datenum(yyyy,1,1)) * datapointsperday);
                     offset = startsample*4;
-                    fid = fopen(fname,'r+');
+                    fid = fopen(fname,'r+','l'); % little-endian. Anything written on a PC is little-endian by default. Sun is big-endian.
                     fseek(fid,offset,'bof');
-                    debug.print_debug(sprintf('saving to %s, position %d',fname,startsample),3)
-                    fwrite(fid,data(c),'float32');
+                    debug.print_debug(3, sprintf('saving to %s, position %d of %d',fname,startsample,(datapointsperday*daysperyear)))
+                    fwrite(fid,data,'float32');
                     fclose(fid);
                 end
-            else
-                % fast mode
-
-                % write the data
-                startsample = round((dnum(1) - datenum(yyyy,1,1)) * datapointsperday);
-                offset = startsample*4;
-                fid = fopen(fname,'r+','l'); % little-endian. Anything written on a PC is little-endian by default. Sun is big-endian.
-                fseek(fid,offset,'bof');
-                debug.print_debug(sprintf('saving to %s, position %d of %d',fname,startsample,(datapointsperday*daysperyear)),3)
-                fwrite(fid,data,'float32');
-                fclose(fid);
             end
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                
@@ -750,7 +770,7 @@ classdef rsam
                 end
                 
                 if crunchfactor > 1
-                    debug.print_debug(sprintf('Changing sampling interval to %d', minutes),3)
+                    debug.print_debug(3, sprintf('Changing sampling interval to %d', minutes))
                 
                     rowcount = ceil(length(self(i).data) / crunchfactor);
                     maxcount = rowcount * crunchfactor;
@@ -1043,177 +1063,177 @@ classdef rsam
             % Use different method depending on whether it is a
             % power law or exponential.
             
-                % define x and y
+            % define x and y
+            switch law
+                case {'exponential'}
+                    x = threshold;
+                    xlabelstr = 'RMS Displacement(nm)';
+                case {'power'}
+                    x = log10(threshold);
+                    xlabelstr = 'log10(RMS Displacement(nm))';
+                otherwise
+                    error('law unknown')
+            end
+            y=log10(frequency);
+
+            % plot duration-amplitude data as circles
+            figure
+            plot(x,y,'o');
+            xlabel(xlabelstr);
+            ylabel('log10(Cumulative Minutes)');
+            hold on;
+            %set(gca,'XLim',[xmin xmax]);
+
+            lambda=0;
+            r2=0;
+
+            % check if we have pre-set the magnitude range, effectively
+            % our x1 and x2 click points with ginput
+            if exist('mag_zone','var') % no user select
                 switch law
-                    case {'exponential'}
-                        x = threshold;
-                        xlabelstr = 'RMS Displacement(nm)';
                     case {'power'}
-                        x = log10(threshold);
-                        xlabelstr = 'log10(RMS Displacement(nm))';
+                        x1=min(mag_zone);
+                        x2=max(mag_zone);
+                    case {'exponential'}
+                        x1=10^min(mag_zone);
+                        x2=10^max(mag_zone);
+
                     otherwise
                         error('law unknown')
+                end      
+                if x1<min(x)
+                    x2=min(x);
                 end
-                y=log10(frequency);
+                y1=interp1(x,y,x1);
+                if x2>max(x)
+                    x2=max(x);
+                end
+                y2=interp1(x,y,x2); 
 
-                % plot duration-amplitude data as circles
-                figure
-                plot(x,y,'o');
-                xlabel(xlabelstr);
-                ylabel('log10(Cumulative Minutes)');
-                hold on;
-                %set(gca,'XLim',[xmin xmax]);
+                % draw a dotted line to show where user selected	
+                %plot([x1 x2], [y1 y2], '-.');
 
-                lambda=0;
-                r2=0;
+                % select requested data range and do a least squares fit
+                ii = find(x >= x1 & x <= x2);
+                wx = x(ii);
+                wy = y(ii);
+                [p,S]=polyfit(wx,wy,1);
+                yfit = polyval(p,wx);
+                thiscorr = corrcoef(wy, yfit)
+                %try
+                if numel(thiscorr)>1
+                    r2 = thiscorr(1,2);
 
-                % check if we have pre-set the magnitude range, effectively
-                % our x1 and x2 click points with ginput
-                if exist('mag_zone','var') % no user select
+                    % compute lambda
                     switch law
-                        case {'power'}
-                            x1=min(mag_zone);
-                            x2=max(mag_zone);
                         case {'exponential'}
-                            x1=10^min(mag_zone);
-                            x2=10^max(mag_zone);
-
+                            lambda = -p(1)/log10(exp(1));
+                        case {'power'}
+                            lambda = -p(1); 
                         otherwise
                             error('law unknown')
-                    end      
-                    if x1<min(x)
-                        x2=min(x);
                     end
-                    y1=interp1(x,y,x1);
-                    if x2>max(x)
-                        x2=max(x);
-                    end
-                    y2=interp1(x,y,x2); 
-                    
-                    % draw a dotted line to show where user selected	
-                    %plot([x1 x2], [y1 y2], '-.');
 
-                    % select requested data range and do a least squares fit
-                    ii = find(x >= x1 & x <= x2);
-                    wx = x(ii);
-                    wy = y(ii);
-                    [p,S]=polyfit(wx,wy,1);
-                    yfit = polyval(p,wx);
-                    thiscorr = corrcoef(wy, yfit)
-                    %try
-                    if numel(thiscorr)>1
-                        r2 = thiscorr(1,2);
+                    disp(sprintf('characteristic D_R_S=%.2f cm^2, R^2=%.2f',lambda,r2));
 
-                        % compute lambda
-                        switch law
-                            case {'exponential'}
-                                lambda = -p(1)/log10(exp(1));
-                            case {'power'}
-                                lambda = -p(1); 
-                            otherwise
-                                error('law unknown')
-                        end
+                    % draw the fitted line
+                    xf = [min(wx) max(wx)];
+                    yf = xf * p(1) + p(2);
+                    plot(xf, yf,'-');
 
-                        disp(sprintf('characteristic D_R_S=%.2f cm^2, R^2=%.2f',lambda,r2));
-
-                        % draw the fitted line
-                        xf = [min(wx) max(wx)];
-                        yf = xf * p(1) + p(2);
-                        plot(xf, yf,'-');
-
-                        %ylabel('log10(t/t0)');
-                        %xlabel(sprintf('D_R_S (%s) (cm^2)',measure));
+                    %ylabel('log10(t/t0)');
+                    %xlabel(sprintf('D_R_S (%s) (cm^2)',measure));
 
 
-                        % Add legend
-                        yrange=get(gca,'YLim');
-                        xlim = get(gca,'XLim');
-                        xmax=max(xlim);
+                    % Add legend
+                    yrange=get(gca,'YLim');
+                    xlim = get(gca,'XLim');
+                    xmax=max(xlim);
 
-                        xpos = xmax*0.65;
-                        ypos = (yrange(2)-yrange(1))*0.8;
-                        r2str=sprintf('%.2f',r2);
-                        lambdastr=sprintf('%.2f',lambda);
-                        if strcmp(law,'exponential')
-                            tstr = [' \lambda=',lambdastr,' R^2=',r2str];
-                        else
-                            tstr = [' \gamma=',lambdastr,' R^2=',r2str];
-                        end
-
-                        text(xpos, ypos, tstr, ...
-                            'FontName','Helvetica','FontSize',[14],'FontWeight','bold');   
+                    xpos = xmax*0.65;
+                    ypos = (yrange(2)-yrange(1))*0.8;
+                    r2str=sprintf('%.2f',r2);
+                    lambdastr=sprintf('%.2f',lambda);
+                    if strcmp(law,'exponential')
+                        tstr = [' \lambda=',lambdastr,' R^2=',r2str];
                     else
-                        lambda=NaN;
-                        r2=NaN;
+                        tstr = [' \gamma=',lambdastr,' R^2=',r2str];
                     end
-                    
+
+                    text(xpos, ypos, tstr, ...
+                        'FontName','Helvetica','FontSize',[14],'FontWeight','bold');   
                 else
+                    lambda=NaN;
+                    r2=NaN;
+                end
 
-                    % user select a range of data
-                    disp('Left-click Select lowest X, any other mouse button to ignore this station')
-                    [x1, y1, button1]=ginput(1);
-                    if button1==1
-                        disp('Left-click Select highest X, any other mouse button to ignore this station')
-                        [x2, y2, button2]=ginput(1);    
-                        if button2==1
-                            if x2>x1
-                               % draw a dotted line to show where user selected	
-                                plot([x1 x2], [y1 y2], '-.');
+            else
 
-                                % select requested data range and do a least squares fit
-                                ii = find(x >= x1 & x <= x2);
-                                wx = x(ii);
-                                wy = y(ii);
-                                [p,S]=polyfit(wx,wy,1);
-                                yfit = polyval(p,wx);
-                                thiscorr = corrcoef(wy, yfit)
- 
-                                r2 = thiscorr(1,2);
+                % user select a range of data
+                disp('Left-click Select lowest X, any other mouse button to ignore this station')
+                [x1, y1, button1]=ginput(1);
+                if button1==1
+                    disp('Left-click Select highest X, any other mouse button to ignore this station')
+                    [x2, y2, button2]=ginput(1);    
+                    if button2==1
+                        if x2>x1
+                           % draw a dotted line to show where user selected	
+                            plot([x1 x2], [y1 y2], '-.');
 
-                                    % compute lambda
-                                    switch law
-                                        case {'exponential'}
-                                            lambda = -p(1)/log10(exp(1));
-                                        case {'power'}
-                                            lambda = -p(1); 
-                                        otherwise
-                                            error('law unknown')
-                                    end
+                            % select requested data range and do a least squares fit
+                            ii = find(x >= x1 & x <= x2);
+                            wx = x(ii);
+                            wy = y(ii);
+                            [p,S]=polyfit(wx,wy,1);
+                            yfit = polyval(p,wx);
+                            thiscorr = corrcoef(wy, yfit)
 
-                                    disp(sprintf('characteristic D_R_S=%.2f cm^2, R^2=%.2f',lambda,r2));
+                            r2 = thiscorr(1,2);
 
-                                    % draw the fitted line
-                                    xf = [min(wx) max(wx)];
-                                    yf = xf * p(1) + p(2);
-                                    plot(xf, yf,'-');
-
-                                    %ylabel('log10(t/t0)');
-                                    %xlabel(sprintf('D_R_S (%s) (cm^2)',measure));
-
-
-                                    % Add legend
-                                    yrange=get(gca,'YLim');
-                                    xlim = get(gca,'XLim');
-                                    xmax=max(xlim);
-
-                                    xpos = xmax*0.65;
-                                    ypos = (yrange(2)-yrange(1))*0.8;
-                                    r2str=sprintf('%.2f',r2);
-                                    lambdastr=sprintf('%.2f',lambda);
-                                    if strcmp(law,'exponential')
-                                        tstr = [self.sta,' \lambda=',lambdastr,' R^2=',r2str];
-                                    else
-                                        tstr = [self.sta,' \gamma=',lambdastr,' R^2=',r2str];
-                                    end
-
-                                    text(xpos, ypos, tstr, ...
-                                        'FontName','Helvetica','FontSize',[14],'FontWeight','bold');
-
-
+                            % compute lambda
+                            switch law
+                                case {'exponential'}
+                                    lambda = -p(1)/log10(exp(1));
+                                case {'power'}
+                                    lambda = -p(1); 
+                                otherwise
+                                    error('law unknown')
                             end
+
+                            disp(sprintf('characteristic D_R_S=%.2f cm^2, R^2=%.2f',lambda,r2));
+
+                            % draw the fitted line
+                            xf = [min(wx) max(wx)];
+                            yf = xf * p(1) + p(2);
+                            plot(xf, yf,'-');
+
+                            %ylabel('log10(t/t0)');
+                            %xlabel(sprintf('D_R_S (%s) (cm^2)',measure));
+
+
+                            % Add legend
+                            yrange=get(gca,'YLim');
+                            xlim = get(gca,'XLim');
+                            xmax=max(xlim);
+
+                            xpos = xmax*0.65;
+                            ypos = (yrange(2)-yrange(1))*0.8;
+                            r2str=sprintf('%.2f',r2);
+                            lambdastr=sprintf('%.2f',lambda);
+                            if strcmp(law,'exponential')
+                                tstr = [self.sta,' \lambda=',lambdastr,' R^2=',r2str];
+                            else
+                                tstr = [self.sta,' \gamma=',lambdastr,' R^2=',r2str];
+                            end
+
+                            text(xpos, ypos, tstr, ...
+                                'FontName','Helvetica','FontSize',[14],'FontWeight','bold');
+
+
                         end
                     end
-                end	
+                end
+            end	
             
         end    
         function [aw,tt1, tt2, tmc, mag_zone]=bvalue(this, mcType, method)
@@ -1489,6 +1509,9 @@ classdef rsam
             datapointsperday = 1440;
             samplesperyear = days*datapointsperday;
             a = zeros(samplesperyear,1);
+            % ensure host directory exists
+            mkdir(fileparts(outfile));
+            % write blank file
             fid = fopen(outfile,'w');
             fwrite(fid,a,'float32');
             fclose(fid);

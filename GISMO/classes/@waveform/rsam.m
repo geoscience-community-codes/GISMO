@@ -37,15 +37,16 @@ if ~exist('samplingPeriod', 'var')
     samplingPeriod = 60;
 end
 
-% detrend data and fill gaps
-w = clean(w);
+% detrend data after fill gaps to get rid of NaNs marking missing values
+w = fillgaps(w, 'interp');
+w = detrend(w);
 
-for i = numel(w)
+for i = 1:numel(w)
     Wsamplingperiod = 1.0 / get(w(i), 'freq');
     % either set to whatever samplingPeriod seconds of data are, or the
     % length of data if less
     crunchfactor = min([round(samplingPeriod / Wsamplingperiod) numel(get(w(i),'data'))]);
-    w(i) = set(w(i), 'data', abs(get(w(i),'data')) );
-    w(i) = resample(w(i), method, crunchfactor);
-    s(i) = rsam(datenum(w(i)), get(w(i),'data')', 'sta', get(w(i), 'station'), get(w(i), 'channel'));
+    wabs = set(w(i), 'data', abs(get(w(i),'data')) );
+    wresamp = resample(wabs, method, crunchfactor);
+    s(i) = rsam(get(wresamp,'timevector'), get(wresamp,'data')', 'sta', get(wresamp, 'station'), 'chan', get(wresamp, 'channel'), 'units', get(wresamp, 'units'), 'snum', get(wresamp, 'start'), 'enum', get(wresamp, 'end'));
 end
