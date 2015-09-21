@@ -24,7 +24,7 @@ function w = detrend (w, varargin)
       if isempty(w(I)), continue, end
       
       d = w(I).data;
-      if ~warnedAboutNAN && any(d)
+      if ~warnedAboutNAN && any(isnan(d))
          warnedAboutNAN = true;
          warning('Waveform:detrend:NaNwarning',...
             ['NAN values exist in one or more waveforms.',...
