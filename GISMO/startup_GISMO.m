@@ -42,6 +42,9 @@ addpath(fullfile(gismopath,'classes','rsam'));
 %addpath(fullfile(gismopath,'classes','channeltag'));
 %addpath(fullfile(gismopath,'classes','measurementunit'));
 
+% ADD A PATH TO APPLICATIONS e.g. IceWeb
+addpath(genpath(fullfile(gismopath,'applications')));
+
 %%
 function addContributed(gismopath, contribDir)
 % add each subdirectory within gismopath/contribDir/ to the matlab path
