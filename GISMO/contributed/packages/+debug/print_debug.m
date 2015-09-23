@@ -33,23 +33,32 @@ function print_debug(level, varargin)
 % function.
 
 persistent Lev
-   if isempty(Lev)
-      try
-         Lev = getpref('runmode', 'debug');
-      catch
-         setpref('runmode','debug', 0); % might wish to alert user, or set it in a more gismo-sounding location.
-         Lev = 0;
-      end
-   end
-   if numel(varargin) == 0
-      Lev = level;
-      return
-   end
-   if level >= Lev
-      if numel(varargin) == 1
+% GT 20150916 this part does not seem to work
+%    if isempty(Lev)
+%       try
+%          Lev = getpref('runmode', 'debug');
+%       catch
+%          setpref('runmode','debug', 0); % might wish to alert user, or set it in a more gismo-sounding location.
+%          Lev = 0;
+%       end
+%    end
+% GT 20150916 replacing above with this
+    if isempty(Lev)
+        Lev = 0;
+    end
+    if numel(varargin) == 0
+        Lev = level;
+        return
+    end
+    % GT 20150916 this part seems to be wrong. only if Lev>=level should we
+    % display debug statement
+    %if level >= Lev
+    if level <= Lev
+        if numel(varargin) == 1
          disp(varargin{:})
-      else
+        else
          fprintf(varargin{:})
-      end
-   end
+         fprintf('\n');
+        end
+    end
 end

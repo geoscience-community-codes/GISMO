@@ -18,7 +18,7 @@ function setmap(s, alternateMap)
 
 
 global SPECTRAL_MAP
-size(SPECTRAL_MAP)
+%size(SPECTRAL_MAP)
 sizecheck = size(alternateMap);
 if sizecheck(2) ~= 3,
     warning('Map ignored.  alternateMap has  incorrect # columns; should be 3');

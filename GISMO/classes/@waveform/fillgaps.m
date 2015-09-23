@@ -7,10 +7,16 @@ function w = fillgaps(w,value, gapvalue)
    %   resulting timing issues are NOT corrected for!
    %
    % W = fillgaps(W,'method') replaces data using an interpolation method of
-   % your choice. intended methods include:
-   % 'meanAll',
-   % 'meanEndpoints'  CURRENTLY UNIMPLEMENTED.
-   % or some such equivalent undreamed of by me.
+   % your choice. Methods are:
+   %
+   %    'meanall' - replace missing values with the mean of the whole
+   %    dataset
+   %
+   %    'number' - replace missing value with a numeric value of your
+   %    choice (can also be Inf, -Inf, NaN)
+   %
+   %    'interp' - assuming missing values are marked by NaN, this will use
+   %    cubic interpolation to estimate the missing values
    %
    % FILLGAPS is designed to replace NaN values.  However, if if you use
    % W = fillgaps(W,number, gapvalue), then ALL data points with the value
@@ -48,6 +54,12 @@ function w = fillgaps(w,value, gapvalue)
          for N = 1:numel(w);
             w(N).data(getgaps(w(N))) = value;
          end
+       case 'interp' % blame Glenn, inspired by http://www.mathworks.com/matlabcentral/fileexchange/8225-naninterp by E Rodriguez
+           for N = 1:numel(w);
+               X = get(w(N),'data');
+               X(isnan(X)) = interp1(find(~isnan(X)), X(~isnan(X)), find(isnan(X)),'cubic');
+               w(N) = set(w(N),'data',X);
+           end
       otherwise
          error('waveform:fillgaps:unimplementedMethod',...
             'Unimplemented fillgaps method [%s]', fillmethod);

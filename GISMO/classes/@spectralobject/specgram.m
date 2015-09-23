@@ -82,6 +82,8 @@ function h = specgram(s, ws, varargin)
 
 % Thanks to Jason Amundson for providing the way to do log scales
 
+debug.printfunctionstack('>')
+
 global SPECTRAL_MAP
 
 currFontSize = 8;
@@ -377,6 +379,10 @@ end
 
 %% added a series of functions that help with argument parsing.
 % These were ported from my waveform/plot function.
+
+
+debug.printfunctionstack('<')
+
 
 function [properties] = parseargs(arglist)
 % parse the incoming arguments, returning a cell with each parameter name
