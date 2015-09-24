@@ -73,7 +73,7 @@ end
 function ws = convertTraces(traces)
    for i = 1:length(traces)
       w = waveform;
-      chaninfo = locationobject(char(traces(i).getNetwork), ...
+      chaninfo = channeltag(char(traces(i).getNetwork), ...
          char(traces(i).getStation), ...
          char(traces(i).getLocation), ...
          char(traces(i).getChannel));
@@ -91,7 +91,7 @@ function ws = convertTraces(traces)
       w = set(w,'units',char(traces(i).getSensitivityUnits));
       w = addfield(w,'calib',1 ./ traces(i).getSensitivity);
       w = addfield(w,'calib_applied','NO');
-      w = set(w,'data', traces(i).getData);
+      w = set(w,'data', traces(i).getAsDouble()); % was traces(i).getData();
       ws(i) = w;
    end
 end
