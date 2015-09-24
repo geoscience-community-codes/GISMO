@@ -16,7 +16,7 @@ function myLoadRoutine = get_load_routine(ds, use_wkaround)
             myLoadRoutine = @load_antelope;
          end
       case 'irisdmcws'
-         myLoadRoutine = @load_irsdmcws;
+         myLoadRoutine = @load_irisdmcws;
       case 'winston'
          myLoadRoutine = @load_winston;
       case 'seisan'

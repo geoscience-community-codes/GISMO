@@ -46,7 +46,10 @@ function ts = irisFetchTraces( network, station, location, channel, startDateStr
    
    try
       % traces = edu.iris.WsHelper.Fetch.TraceData.fetchTraces(network, station, location, channel, startDateStr, endDateStr, quality, verbosity);
-      traces = edu.iris.dmc.ws.extensions.fetch.TraceData.fetchTraces(network, station, location, channel, startDateStr, endDateStr, quality, verbosity);
+      fetcher = edu.iris.dmc.extensions.fetch.TraceData();
+      appName           = ['MATLAB:waveformsuite/2.0']; %used as useragent of queries'
+      fetcher.setAppName(appName);
+      traces = fetcher.fetchTraces(network, station, location, channel, startDateStr, endDateStr, quality, false);
       ts = convertTraces(traces);
       clear traces;
    catch je

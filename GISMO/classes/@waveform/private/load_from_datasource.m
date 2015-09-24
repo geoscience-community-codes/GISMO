@@ -8,7 +8,7 @@ function w = load_from_datasource(ds, chans, startt, endt, combine_waves, usewka
    if isVoidInterpreter(ds)
       ds = setinterpreter(ds, get_load_routine(ds, usewkaround));
    end
-   request = makeDataRequest(ds, chans, startt, endt, combine_waves);
+   request = packDataRequest(ds, chans, startt, endt, combine_waves);
    getter = get(ds,'interpreter');
    %w = getter(request, combine_waves);
    w = getter(request);
