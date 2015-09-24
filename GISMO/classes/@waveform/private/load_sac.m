@@ -1,16 +1,14 @@
-function w = load_sac(dataRequest, combinewaves)
+function w = load_sac(request)
    %LOAD_SAC loads a waveform from SAC files
    % combineWaves isn't currently used!
-   %
-   % AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-   if isstruct(dataRequest)
-      thisSource = dataRequest.dataSource;
-      
-      for i=1:numel(dataRequest.scnls)
-         thisScnl = dataRequest.scnls(i);
-         for j=1:numel(dataRequest.startTimes)
-            thisTime = dataRequest.startTimes(j);
-            thisfilename = getfilename(thisSource,thisScnl,thisTime);
+   
+   % request.combineWaves is ignored
+   
+   if isstruct(request)
+      [thisSource, chanInfo, startTimes, ~, ~] = unpackDataRequest(request);
+      for i=1:numel(chanInfo)
+         for j=1:numel(startTimes)
+            thisfilename = getfilename(thisSource,chanInfo(i),startTimes(j));
             w(i,j) = loadSacByFilenames(thisfilename);
          end
       end
@@ -18,7 +16,7 @@ function w = load_sac(dataRequest, combinewaves)
       
    else
       %dataRequest should be a filename
-      w = loadSacByFilenames(dataRequest);
+      w = loadSacByFilenames(request);
    end
 end
 
@@ -71,11 +69,6 @@ function w = loadSacByFilenames(filename)
    % For more information about the SAC header, and the interpretation of the
    % fields, check out Lawrence Livermore's web site.  Search for "seismic
    % sac" and you'll find it.
-   
-   % VERSION: 1.1 of waveform objects
-   % AUTHOR: Celso Reyes
-   % $Date$
-   % $Revision$
    
    if ~iscell(filename)
       filename = {filename};

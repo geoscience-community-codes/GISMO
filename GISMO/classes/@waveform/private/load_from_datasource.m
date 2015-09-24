@@ -1,16 +1,17 @@
-function w = load_from_datasource(ds, chans, startt, endt, COMBINE_WAVES, usewkaround)
+function w = load_from_datasource(ds, chans, startt, endt, combine_waves, usewkaround)
    %load_from_datasource
    %
-   % w = load_from_datasource(ds, chans, startt, endt, COMBINE_WAVES)
+   % w = load_from_datasource(ds, chans, startt, endt, combine_waves)
    
    % determine the load function based upon the datasource's type
    
    if isVoidInterpreter(ds)
       ds = setinterpreter(ds, get_load_routine(ds, usewkaround));
    end
-   request = makeDataRequest(ds, chans, startt, endt);
+   request = makeDataRequest(ds, chans, startt, endt, combine_waves);
    getter = get(ds,'interpreter');
-   w = getter(request, COMBINE_WAVES);
+   %w = getter(request, combine_waves);
+   w = getter(request);
    
    % TODO: Trim waveform to request
    % maybe we're already done?
@@ -50,7 +51,7 @@ function w = load_from_datasource(ds, chans, startt, endt, COMBINE_WAVES, usewka
          if ~exist('somew','var')
             w = waveform; w = w([]);
          else
-            if COMBINE_WAVES,
+            if combine_waves,
                w = combine([somew{:}]);
             else
                w = [somew{:}];
@@ -64,14 +65,4 @@ end
 
 function tf = isVoidInterpreter(ds)
    tf = strcmpi(func2str(get(ds,'interpreter')),'void_interpreter');
-end
-
-function datarequest = makeDataRequest(ds, chans, st, ed)
-   %makeDataRequest 
-   % move to datasource?
-   datarequest = struct(...
-      'dataSource', ds, ...
-      'scnls', chans, ...
-      'startTimes', st,...
-      'endTimes',ed);
 end

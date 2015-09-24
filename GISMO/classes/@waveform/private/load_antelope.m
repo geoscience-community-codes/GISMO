@@ -1,37 +1,40 @@
-function outputWaveforms = load_antelope(request, COMBINE_WAVEFORMS, specificDatabase)
+function outputWaveforms = load_antelope(request, specificDatabase)
    % load a waveform from antelope
-   %  w = load_antelope(request, COMBINE_WAVEFORMS, specificDatabase)
+   %  w = load_antelope(request, specificDatabase)
    %   CRITERIA is the search criteria, created with buildAntelopeCriteria
    %   request.sTime is the startTimes
-   %   request.endTimes is the endTimes
-   %   COMBINE_WAVEFORMS is a logical value:
+   %   endTimes is the endTimes
+   %   combineWaves is a logical value:
    %     Should segmented waveforms be combined,(within requested timerange)?
    %   database is the antelope database
    
    % AUTHOR: Celso Reyes
    % MODIFICATIONS: Glenn Thompson, Carl Tape
    
+   
+   %TODO: maybe order of operations can be changed to avoid unpacking
+   %request when unnecessary.
    TRY_MULTIDAY = false;
    wBlank = waveform;
    wEmpty = wBlank([]);
-   
-   assert(numel(request.startTimes) == numel(request.endTimes),...
+   [ds, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request);
+   assert(numel(startTimes) == numel(endTimes),...
       'Waveform:load_antelope:startEndMismatch', 'Unequal number of start and end times');
    
-   [criteria, nCriteria] = buildAntelopeCriteria(request.chanInfo);
-   database =  getfilename(request.dataSource,request.chanInfo, request.startTimes);
+   [criteria, nCriteria] = buildAntelopeCriteria(chanInfo);
+   database =  getfilename(ds,chanInfo, startTimes);
    
    if TRY_MULTIDAY
       % the next 2 lines enable multiday data retrieval. However, splicing them may be tricky.
-      dbDatesToCheck = subdivide_files_by_date(request.dataSource,request.startTimes, request.endTimes); %#ok<UNRCH>
-      database =  getfilename(request.dataSource,request.chanInfo, dbDatesToCheck);
+      dbDatesToCheck = subdivide_files_by_date(ds,startTimes, endTimes); %#ok<UNRCH>
+      database =  getfilename(ds,chanInfo, dbDatesToCheck);
    end
    
    %for multiple databases, call this routine for each one, then return the waveforms.
    if ~exist('specificDatabase','var')
       % [~,inds] = unique(database); database = database(sort(inds)); % no longer necessary as of r2012a
       database = unique(database, 'stable'); %  avoid changing requested order
-      antelope_load_fn = @(oneDB) load_antelope(request, COMBINE_WAVEFORMS, oneDB);
+      antelope_load_fn = @(oneDB) load_antelope(request, oneDB);
       outputWaveforms = cellfun(antelope_load_fn, database, 'uniformOutput',false); % each cell
       outputWaveforms = transpose(vertcat(outputWaveforms{:}));
       return;
@@ -43,8 +46,8 @@ function outputWaveforms = load_antelope(request, COMBINE_WAVEFORMS, specificDat
    for i = 1:nCriteria
       %if multiple traces will result, then there may be multiple records for tr
       [tr, database, fdb] = get_antelope_traces(...
-         request.startTimes,request.endTimes,criteria(i).group, database);
-      w = cycleThroughTraces(tr, COMBINE_WAVEFORMS);
+         startTimes,endTimes,criteria(i).group, database);
+      w = cycleThroughTraces(tr, combineWaves);
       %one tr exists for each timerequest within each scnl.
       outputWaveforms = [outputWaveforms; [w.waves]']; %#ok<AGROW>
    end

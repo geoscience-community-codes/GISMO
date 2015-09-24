@@ -1,24 +1,19 @@
-function w = load_obspy(dataRequest)
+function w = load_obspy(request)
    %LOAD_OBSPY loads matlab files that were saved by ObsPy as per the ObsPy tutorial
    % it expects one waveform per file, with variables stored individually, not
    % as a struct.
    %
    % uses the DATASOURCE class
    
-   % VERSION: 1.1 of waveform objects
-   % AUTHOR: Celso Reyes (celso@iris.washington.edu)
-   % LASTUPDATE: 3/5/2009
+   % request.combineWaves is ignored
+   
    w = waveform; w = w();
-   if isstruct(dataRequest)
-      ds = dataRequest.dataSource;
-      w = load_objects_from_file(ds,...
-         'waveform',...
-         dataRequest.scnls,...
-         dataRequest.startTimes,...
-         dataRequest.endTimes);
+   if isstruct(request)
+      [ds, chanInfo, startTimes, endTimes, ~]  = unpackDataRequest(request);
+      w = load_objects_from_file(ds, 'waveform', chanInfo, startTimes, endTimes);
       w = w(:);
    else
-      filen = dataRequest;
+      filen = request;
       
       if ~exist(filen,'file')
          disp(['unable to find file: ', filen]);

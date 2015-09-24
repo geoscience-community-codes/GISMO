@@ -1,4 +1,4 @@
-function wavef = load_irisdmcws(dataRequest, combine_waves)
+function wavef = load_irisdmcws(request)
    
    % LOAD_IRISDMCWS loads waveforms using the IRIS Web Services Java Library
    % For more information about the IRIS Web Services Library for Java,
@@ -7,36 +7,26 @@ function wavef = load_irisdmcws(dataRequest, combine_waves)
    % http://www.iris.edu/manuals/javawslibrary/
    %
    % See also javaaddpath waveform
+   % request.combineWaves is ignored
    
-   % Rich Karstens & Celso Reyes
-   % IRIS DMC, December 2011
+   % Based on work by: Rich Karstens & Celso Reyes IRIS DMC, December 2011
    
-   [~, allSCNLs, sTime, eTime] = unpackDataRequest(dataRequest);
+   [~, allChanInfo, sTime, eTime, ~] = unpackDataRequest(request);
    disp('Requesting Data from the DMC...');
-   offset = 0;
-   for n=1:numel(allSCNLs)
-      scnl = allSCNLs(n);
-      thisWaveform=irisFetchTraces(get(scnl,'network'), get(scnl,'station'), ...
-         get(scnl,'location'), get(scnl,'channel'), ...
-         datestr(sTime,'yyyy-mm-dd HH:MM:SS.FFF'), ...
-         datestr(eTime,'yyyy-mm-dd HH:MM:SS.FFF'));
-      if numel(thisWaveform) == 1
-         wavef(n+ offset) = thisWaveform;
-      elseif numel(thisWaveform) > 1
-         thisEndIndex = n + offset + numel(thisWaveform) - 1;
-         wavef(n+offset : thisEndIndex) = thisWaveform;
-         offset = offset + numel(thisWaveform) - 1;
-      end
+   
+   datefmt = @(dt) datestr(dt, 'yyyy-mm-dd HH:MM:SS.FFF');
+   idx = 0;
+   for tag = allChanInfo
+      thisWave = irisFetchTraces(...
+         tag.network, tag.station, tag.location, tag.channel, datefmt(sTime), datefmt(eTime));
+      nWaves = numel(thisWave);
+      if nWaves > 0
+         wavef(idx + 1 : idx + nWaves) = thisWave;
+         idx = numel(wavef);
+      end;
    end
    
-   wavef = addhistory(clearhistory(wavef),'Imported from IRIS');
-end
-
-function [dataSource, scnls, startTimes, endTimes] = unpackDataRequest(dataRequest)
-   dataSource = dataRequest.dataSource;
-   scnls = dataRequest.scnls;
-   startTimes = dataRequest.startTimes;
-   endTimes = dataRequest.endTimes;
+   wavef = addhistory(clearhistory(wavef),'Imported from IRIS DMC');
 end
 
 function ts = irisFetchTraces( network, station, location, channel, startDateStr, endDateStr, quality, verbosity )

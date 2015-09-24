@@ -1,21 +1,14 @@
-function w = load_file(dataRequest)
+function w = load_file(request)
    %LOAD_FILE
    % uses the DATASOURCE class
    
-   % VERSION: 1.1 of waveform objects
-   % AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-   
    w = waveform; w = w();
-   if isstruct(dataRequest)
-      ds = dataRequest.dataSource;
-      w = load_objects_from_file(ds,...
-         'waveform',...
-         dataRequest.scnls,...
-         dataRequest.startTimes,...
-         dataRequest.endTimes);
+   if isstruct(request)
+      [ds, chanInfo, startTimes, endTimes, ~] = unpackDataRequest(request);
+      w = load_objects_from_file(ds, 'waveform', chanInfo, startTimes, endTimes);
       w = w(:);
    else
-      filen = dataRequest;
+      filen = request;
       
       if ~exist(filen,'file')
          disp(['unable to find file: ', filen]);

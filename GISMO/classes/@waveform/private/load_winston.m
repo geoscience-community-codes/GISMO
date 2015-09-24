@@ -1,4 +1,4 @@
-function allWaves = load_winston(dataRequest, COMBINE_WAVEFORMS)
+function allWaves = load_winston(request)
    % LOAD_WINSTON handles retrieval of data from a winston waveserver.
    %  all times are matlab formatted datenums
    %  allWaves = load_winston(allSCNLs, sTime, eTime, server, port)
@@ -20,7 +20,7 @@ function allWaves = load_winston(dataRequest, COMBINE_WAVEFORMS)
          'failed to access winston');
    end
    
-   [myDataSource, channelInfo, sTime, eTime] = unpackDataRequest(dataRequest);
+   [ds, channelInfo, sTime, eTime, ~] = unpackDataRequest(request);
    validTimes = eTime > sTime;
    sTime = sTime(validTimes);
    eTime = eTime(validTimes);
@@ -28,7 +28,7 @@ function allWaves = load_winston(dataRequest, COMBINE_WAVEFORMS)
    sTime_epoch = mep2dep(sTime);
    eTime_epoch = mep2dep(eTime);
    
-   timefn = @(t1, t2) grab_for_time(channelInfo, t1, t2, myDataSource);
+   timefn = @(t1, t2) grab_for_time(channelInfo, t1, t2, ds);
    allWaves = arrayfun(timefn, sTime_epoch, eTime_epoch, 'uniformoutput',false);
    allWaves = [allWaves{:}];
 end
@@ -123,12 +123,4 @@ function success = getWinstonWorking()
       %}
    end;
    success = ~introuble;
-end
-
-
-function [dataSource, scnls, startTimes, endTimes] = unpackDataRequest(dataRequest)
-   dataSource = dataRequest.dataSource;
-   scnls = dataRequest.scnls;
-   startTimes = dataRequest.startTimes;
-   endTimes = dataRequest.endTimes;
 end
