@@ -16,16 +16,17 @@ function wavef = load_irisdmcws(request)
    
    datefmt = @(dt) datestr(dt, 'yyyy-mm-dd HH:MM:SS.FFF');
    idx = 0;
+   for d = 1 : numel(sTime);
    for tag = allChanInfo
       thisWave = irisFetchTraces(...
-         tag.network, tag.station, tag.location, tag.channel, datefmt(sTime), datefmt(eTime));
+         tag.network, tag.station, tag.location, tag.channel, datefmt(sTime(d)), datefmt(eTime(d)));
       nWaves = numel(thisWave);
       if nWaves > 0
          wavef(idx + 1 : idx + nWaves) = thisWave;
          idx = numel(wavef);
       end;
    end
-   
+   end
    wavef = addhistory(clearhistory(wavef),'Imported from IRIS DMC');
 end
 
@@ -63,7 +64,16 @@ function ts = irisFetchTraces( network, station, location, channel, startDateStr
                'information about using MATLAB with the IRIS-WS ',...
                'library, visit:\n\n',...
                '\thttp://www.iris.edu/manuals/javawslibrary/matlab/\n']);
+         case 'MATLAB:Java:GenericException'
+            if isa(je.ExceptionObject,'edu.iris.dmc.service.NoDataFoundException')
+               fprintf('no data found for:\n%s.%s.%s.%s %s %s\n',network, station,...
+                  location, channel, startDateStr, endDateStr);
+               ts = [];
+            else
+               rethrow(je);
+            end
          otherwise
+            disp(je.identifier)
             rethrow(je);
       end
    end

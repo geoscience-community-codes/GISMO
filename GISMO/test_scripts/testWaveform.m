@@ -338,6 +338,37 @@ classdef testWaveform < matlab.unittest.TestCase
          testCase.verifyEqual(double([A A]), [Ad Ad]);
       end
       
+      function testLoadWinston(testCase)
+         import matlab.unittest.constraints.HasSize;
+         import matlab.unittest.constraints.IsEqualTo;
+         import matlab.unittest.constraints.IsGreaterThan;
+         
+         testCase.assumeThat(...
+            exist('gov.usgs.winston.server.WWSClient', 'class'),IsEqualTo(8), ...
+            'Winston does not seem to be installed');
+         ds = datasource('winston','pubavo1.wr.usgs.gov',16022);
+         ch = channeltag('AV.ACH.--.EHZ');
+         st = now -2;
+         ed = st - datenum(0,0,0,0,1,0); % one minute later
+         w = waveform(ds, ch, st, ed);
+         testCase.verifyThat(w, HasSize([1 1]));
+         testCase.verifyThat(~isempty(double(w)));
+         n = get(w(1),'data_length');
+         testCase.verifyThat(double(w(1)), HasSize([n, 1])); %data is in cols
+      end
+      
+      function testLoadIRIS(testCase)
+         chanInfo = channeltag('IU.ANMO.00.BHZ');
+         ds = datasource('irisdmcws');
+         st = now - [5 1 -3]; %5 days ago, 1 day ago, 3 days in the future
+         et = st + datenum(0,0,0,0,1,0);
+         w = waveform(ds,chanInfo,st,et);
+         testCase.verifyThat(w, HasSize([1 2]));
+         testCase.verifyThat(~isempty(double(w)));
+         n = get(w(1),'data_length');
+         testCase.verifyThat(double(w(1)), HasSize([n, 1])); %data is in cols
+      end
+      
       function testLoadobj(testCase)
          load_v0()
          load_v1_0()
