@@ -1,10 +1,8 @@
 function allWaves = load_winston(request)
    % LOAD_WINSTON handles retrieval of data from a winston waveserver.
    %  all times are matlab formatted datenums
-   %  allWaves = load_winston(allSCNLs, sTime, eTime, server, port)
-   
-   % INPUT: waveform (station, channel, start, end, network,
-   %                  location, server, port)
+   %  allWaves = load_winston(request)
+   %  server and port are dictatd by the datasource included within the request. 
    
    % 2015 - CR refractored.  winstonNotWorking is now an error, so this
    % should be used within some try-catch statement.
