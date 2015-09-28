@@ -35,7 +35,7 @@ function w = load_seisan(fn)%dataRequest)
       if bytesToRead == 80
          st(1:80) = fread(fid,80,'char');
          if i== 1
-            h = parseSeisamHeader(st);
+            h = parseSeisanHeader(st);
             nsta = h.stationCount;
          end
          
@@ -71,7 +71,7 @@ function w = load_seisan(fn)%dataRequest)
    fclose(fid);
 end
 
-function h = parseSeisamHeader(headerBlock)
+function h = parseSeisanHeader(headerBlock)
    
    hFieldName = {'network','stationCount','centuryCode','year','doy','month','day','hr','min','sec','totalTime'};
    hFieldpos = {2:30,31:33,34,35:36,38:40,42:43,45:46,48:49,51:52,54:59,61:69};
