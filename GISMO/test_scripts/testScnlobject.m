@@ -1,22 +1,10 @@
-classdef testScnlobject < TestCase
-   % testScnlobject validates the funcionality of scnlobject
-   %
-   % requires xUnit 
-   % see also xUnit, scnlobject
-   
-   properties
-   end
-   methods
-      function self = testScnlobject(name)
-         self = self@TestCase(name);
-      end
-      
-      function SetUp(self)
-         %nothing to set up
-      end
-      
+classdef testScnlobject < matlab.unittest.TestCase
+   % testScnlobject validates the funcionality of scnlobject using matlab's
+   % built in unit tests
+ 
+   methods (Test)
       %---- test methods follow. each starts with "test" ---
-      function testSimpleConstructors(self)
+      function testSimpleConstructors(testCase)
          % make sure these throw no error
          reftag = testScnlobject.createReference('N','S','L','C');
          assert(reftag == scnlobject('S', 'C', 'N', 'L'));  % 4 string constructor
@@ -26,7 +14,7 @@ classdef testScnlobject < TestCase
          assertEqual(reftag,scnlobject({'N.S.L.C'}));         % cell constructor
       end
       
-      function testWhitespaceConstructors(self)
+      function testWhitespaceConstructors(testCase)
          reftag = testScnlobject.createReference('N','S','L','C');
          ct = scnlobject('  N .S . L. C ');
          assertEqual(reftag, ct);
@@ -34,7 +22,7 @@ classdef testScnlobject < TestCase
          assertEqual(reftag, ct);
       end
       
-      function testArrayConstruction(self)
+      function testArrayConstruction(testCase)
          reftag = testScnlobject.createReference('N','S','L','C');
          ct = scnlobject({'N .S . L. C ',' N. S . L.C '});
          assertEqual(reftag, ct(1));
@@ -53,7 +41,7 @@ classdef testScnlobject < TestCase
          assertEqual(get(ct(2),'station'), 'S2');
       end
       
-      function testEqNe(self)
+      function testEqNe(testCase)
          A = testScnlobject.createReference('NW','STA','LOC','CHA');
          B = testScnlobject.createReference('NW','STA','LOC','CHA');
          C = testScnlobject.createReference('NW','STA','LOC','CHAN');
@@ -62,13 +50,13 @@ classdef testScnlobject < TestCase
          assertFalse(A == C);
       end
       
-      function testStringConversions(self)
+      function testStringConversions(testCase)
          nslc = 'IU.ANMO.00.LOG';
          ct = scnlobject(nslc);
          assertEqual(get(ct,'nscl_string'),'IU_ANMO_LOG_00');
       end
       
-      function testIsmember(self)
+      function testIsmember(testCase)
          A = scnlobject('N.S.L.C');
          B = scnlobject('N1.S1.L1.C1');
          C = scnlobject('N2.S2.L2.C2');
@@ -80,7 +68,7 @@ classdef testScnlobject < TestCase
          assertEqual(LTB, NumB)
       end
       
-      function  testMatching(self)
+      function  testMatching(testCase)
          wildcardString = '*.*.*.*';
          A = scnlobject('N.S.L.C');
          B = scnlobject('N1.S1.L1.C1');

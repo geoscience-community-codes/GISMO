@@ -1,4 +1,4 @@
-classdef testChanneltag < TestCase
+classdef testChanneltag < matlab.unittest.TestCase
    % TESTCHANNELTAG validates the funcionality of channeltag
    %
    % requires xUnit 
