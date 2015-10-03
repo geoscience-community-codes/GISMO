@@ -70,7 +70,7 @@ function iceweb(ds, varargin)
                    
                 % subset to channels active for today according to
                 % site/sitechan db
-                todaysites = get_channeltags_active(sites, snum); % subset to channeltags valid
+                todaysites = get_channeltags_active(sites, dnum); % subset to channeltags valid
                 if isempty(todaysites)
                     continue;
                 end
@@ -216,9 +216,7 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
             
             % Pad all waveforms to same start/end
             [wsnum wenum] = gettimerange(w); % assume gaps already filled, signal
-datestr(wenum)
-w(1)
-            w = pad(w, min(wsnum), max(wenum), 0);
+            w = pad(w, min([snum wsnum]), max([enum wenum]), 0);
             
             % Save RSAM data
             rsamobj = rsam(w);
