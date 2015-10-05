@@ -12,5 +12,7 @@ a = spectralobject;
 for n=fn;
     try
         a = set(n{:},b.(n{:}));
+    catch 
+       % do nothing
     end
 end
