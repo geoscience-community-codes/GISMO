@@ -93,8 +93,17 @@ for c=1:length(chantag)
 % 				mseedfiles(c).filepath{k} = uniquefile{k};
 % 				mseedfiles(c).exists(k) = exist(mseedfiles(c).filepath{k}, 'file');
 % 			end
+try
             mseedfiles(c).filepath = uniquefile{1};
             mseedfiles(c).exists = exist(uniquefile{1}, 'file');
+catch
+		uniquefile
+continue
+            mseedfiles(c).filepath = {};
+            mseedfiles(c).exists(k) = 0;
+
+
+end
         else
             mseedfiles(c).filepath = {};
             mseedfiles(c).exists(k) = 0;

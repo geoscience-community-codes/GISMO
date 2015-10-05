@@ -1,7 +1,7 @@
 function iceweb(ds, varargin)
     debug.printfunctionstack('>');
     % Process arguments
-    [thismode, snum, enum, nummins, delaymins, thissubnet, matfile] = matlab_extensions.process_options(varargin, 'mode', 'archive', 'snum', 0, 'enum', 0, 'nummins', 10, 'delaymins', 0, 'subnet', '', 'matfile', 'pf/tremor_runtime.mat');
+    [thismode, snum, enum, nummins, delaymins, thissubnet, matfile] = matlab_extensions.process_options(varargin, 'mode', 'archive', 'snum', 0, 'enum', 0, 'nummins', 10, 'delaymins', 0, 'thissubnet', '', 'matfile', 'pf/tremor_runtime.mat');
     if exist(matfile, 'file')
         load(matfile);
         PARAMS.mode = thismode;
@@ -9,6 +9,15 @@ function iceweb(ds, varargin)
     else
         warning(sprintf('matfile %s not found',matfile))
         return
+    end
+
+    % load state
+    statefile = sprintf('iceweb_%s_state.mat',thissubnet);
+    if exist(statefile, 'file')
+        load(statefile)
+        if strcmp(thissubnet, subnet0)
+		snum = snum0;
+	end
     end
 
     % subset on thissubnet
@@ -54,14 +63,14 @@ function iceweb(ds, varargin)
         for c=1:numel(subnets)
             sites = subnets(c).sites;
             for dnum = floor(snum):ceil(enum)
-                
+                disp(datestr(dnum))
 %                 for ccc=1:numel(sites)
 %                     disp(sites(ccc).channeltag.string())
 %                 end
                    
                 % subset to channels active for today according to
                 % site/sitechan db
-                todaysites = get_channeltags_active(sites, snum); % subset to channeltags valid
+                todaysites = get_channeltags_active(sites, dnum); % subset to channeltags valid
                 if isempty(todaysites)
                     continue;
                 end
@@ -89,8 +98,8 @@ function iceweb(ds, varargin)
 %                     disp(sites(ccc).channeltag.string())
 %                 end
 
-                % loop over timewindows backwards, thereby prioritizing most recent data
-                for count = length(tw.start) : -1 : 1
+                % loop over timewindows
+                for count = 1:length(tw.start)
                     thistw.start = tw.start(count);	
                     thistw.stop = tw.stop(count);	
                     iceweb_helper(paths, PARAMS, newsubnets, thistw, ds);
@@ -120,6 +129,8 @@ end
 
 function iceweb_helper(paths, PARAMS, subnets, tw, ds)
     debug.printfunctionstack('>');
+
+    MILLISECOND_IN_DAYS = (1 / 86400000);
 
     makeSamFiles = false;
     makeSoundFiles = true; 
@@ -153,7 +164,23 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
         for twcount = 1:length(tw.start)
 
             snum = tw.start(twcount);
-            enum = tw.stop(twcount);
+            enum = tw.stop(twcount) - MILLISECOND_IN_DAYS; % try to skip last sample
+
+	    % load state
+	    statefile = sprintf('iceweb_%s_state.mat',subnet);
+	    if exist(statefile, 'file')
+		load(statefile)
+		if strcmp(subnet, subnet0)
+			if snum < snum0 % skip
+				continue
+			end
+		end
+	    end
+		
+	    % save state
+	    ds0=ds; sites0=sites; snum0=snum; enum0=enum; subnet0 = subnet;
+	    save(statefile, 'ds0', 'sites0', 'snum0', 'enum0', 'subnet0');
+	    clear ds0 sites0 snum0 enum0 subnet0
 
             % Have we already process this timewindow?
             spectrogramFilename = get_spectrogram_filename(paths,subnet,enum);
@@ -189,7 +216,7 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
             
             % Pad all waveforms to same start/end
             [wsnum wenum] = gettimerange(w); % assume gaps already filled, signal
-            w = pad(w, min(wsnum), max(wenum), 0);
+            w = pad(w, min([snum wsnum]), max([enum wenum]), 0);
             
             % Save RSAM data
             rsamobj = rsam(w);

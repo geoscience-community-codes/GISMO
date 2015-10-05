@@ -170,7 +170,7 @@ classdef rsam
             self.files = files;
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
-        function self = load(self, f)
+        function self = load(self)
         % Purpose:
         %    Loads derived data from a binary file in the BOB RSAM format
         %    The pointer position at which to reading from the binary file is determined from f.snum 
@@ -186,6 +186,8 @@ classdef rsam
             datafound=false;
             dnum=[];
             data=[];
+            
+            f = self.files;
 
             [yyyy mm]=datevec(f.snum);
             days=365;
@@ -196,9 +198,9 @@ classdef rsam
             datapointsperday = 1440;
             headersamples = 0;
             tz=0;
-            if strfind(f.file,'RSAM')
-                headersamples=datapointsperday;
-                tz=-4;
+            if strfind(f.file,'RSAM') 
+                headersamples=datapointsperday;% for PC-SEIS RSAM data there is a 1 day header
+                tz=-4;% for Montserrat RSAM data time zone is off by 4 hours
             end
             startsample = ceil( (f.snum-datenum(yyyy,1,1))*datapointsperday)+headersamples;
             endsample   = (f.enum-datenum(yyyy,1,1)) *datapointsperday + headersamples;
@@ -211,7 +213,7 @@ classdef rsam
             
             if f.found    
                 % file found
-                debug.print_debug(3, sprintf( 'Loading data from %s, position %d to %d of %d', ...
+                debug.print_debug(0, sprintf( 'Loading data from %s, position %d to %d of %d', ...
                      f.file, startsample,(startsample+nsamples-1),(datapointsperday*days) )); 
    
                 fid=fopen(f.file,'r', 'l'); % big-endian for Sun, little-endian for PC
@@ -223,7 +225,7 @@ classdef rsam
                 % Read the data
                 [data,numlines] = fread(fid, nsamples, 'float32');
                 fclose(fid);
-                debug.print_debug(1, sprintf('mean of data loaded is %e',nanmean(data)));
+                debug.print_debug(0, sprintf('mean of data loaded is %e',nanmean(data)));
    
                 % Transpose to give same dimensions as dnum
                 data=data';
@@ -232,6 +234,8 @@ classdef rsam
                 if length(find(data>0)) > 0
                     datafound=true;
                 end    
+            else
+               debug.print_debug(0, sprintf('File %s not found', f.file));
             end
             
             % Now paste together the matrices
@@ -239,7 +243,7 @@ classdef rsam
             self.data = matlab_extensions.catmatrices(data, self.data);
 
             if ~datafound
-                debug.print_debug(1, sprintf('%s: No data loaded from file %s',mfilename,f.file));
+                debug.print_debug(0, sprintf('%s: No data loaded from file %s',mfilename,f.file));
             end
 
             % eliminate any data outside range asked for - MAKE THIS A
@@ -312,7 +316,7 @@ classdef rsam
 
                 debug.print_debug(10,sprintf('Data length: %d',length(y)));
 
-                if strcmp(yaxisType,'logarithmic')
+                if ~strcmp(rsam_vector(c).units, 'Hz')
                     % make a logarithmic plot, with a marker size and add the station name below the x-axis like a legend
                     y = log10(y);  % use log plots
 
@@ -330,6 +334,7 @@ classdef rsam
                     end
                     axis tight
                     datetick('x','keeplimits')
+%
                     xlabel(sprintf('Date/Time starting at %s',datestr(self.snum)))
                     ylabel(sprintf('log(%s)',self.units))
                 else
@@ -683,7 +688,7 @@ classdef rsam
                         offset = startsample*4;
                         fid = fopen(fname,'r+');
                         fseek(fid,offset,'bof');
-                        debug.print_debug(3, sprintf('saving to %s, position %d',fname,startsample))
+                        debug.print_debug(0, sprintf('saving data with mean of %e from to file %s, starting at position %d',nanmean(data),fname,startsample,(datapointsperday*daysperyear)))
                         fwrite(fid,data(c),'float32');
                         fclose(fid);
                     end
@@ -695,7 +700,7 @@ classdef rsam
                     offset = startsample*4;
                     fid = fopen(fname,'r+','l'); % little-endian. Anything written on a PC is little-endian by default. Sun is big-endian.
                     fseek(fid,offset,'bof');
-                    debug.print_debug(3, sprintf('saving to %s, position %d of %d',fname,startsample,(datapointsperday*daysperyear)))
+                    debug.print_debug(0, sprintf('saving data with mean of %e from to file %s, starting at position %d/%d',nanmean(data),fname,startsample,(datapointsperday*daysperyear)))
                     fwrite(fid,data,'float32');
                     fclose(fid);
                 end
