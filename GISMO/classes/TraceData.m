@@ -17,8 +17,17 @@ classdef TraceData
    end
    
    methods
+      
+      
+      % Mathamatical
+      function obj = set.data(obj, values)
+         % set.data ensures that data is always stored in a column
+         disp('in set data')
+         obj.data = values(:);
+      end
+      
       function obj = plus(obj, B)
-         if ~isa(obj, TraceData)
+         if ~isa(obj, 'TraceData')
             [obj, B] = deal(B, obj);
          end
          if isnumeric(B)
