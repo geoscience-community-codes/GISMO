@@ -3,16 +3,31 @@ classdef TraceData
    %   Tracedata might be considered a "light" version of the timeseries
    %   class. Whereas the timeseries class has lots of functionality, it
    %   suffers from much slower execution times.
+   %
+   %
+   % About TraceData vs Waveform
+   %   Because of the ability to reference fields directly, several
+   %   functions no longer are included. These include:
+   %   MIN, MAX, MEDIAN, MEAN,
+   %   Let T be a TraceData object, and let W be a waveform object
+   %   BEFORE: 
+   %      m = min(W)
+   %   NOW:
+   %      m = min(T.data);
+   %   
+   %  if T is an array of TraceData objects
+   %      m = 
    
    % trying new tactic.  I won't try to anticipate all the various ways
    % someone can provide incompatible data. Instead, I'm going to provide a
    % comment with my expectations which will show up automatically in the
    % displayed error.
    
+   
    properties
-      data
-      freq
-      units
+      data % time-series data, kept in a column
+      samplefreq % sample frequency of the time-series data in samples/sec
+      units % text description of data units
    end
    
    properties(Hidden=true)
@@ -22,15 +37,28 @@ classdef TraceData
    end
    
    methods
-      
-      
-      
+      function obj = TraceData(varargin)
+         switch nargin
+            case 1
+               if isa(varargin{1}, 'waveform')
+                  obj.samplefreq = get(varargin{1},'freq');
+                  obj.data = get(varargin{1},'data');
+                  obj.units = get(varargin{1}, 'units');
+               end
+            case 3 % TraceData(data, samplefreq, units);
+               obj.data = varargin{1};
+               obj.samplefreq = varargin{2};
+               obj.units = varargin{3};
+         end %switch
+      end
+         
       function obj = set.data(obj, values)
          % set.data ensures that data is always stored in a column
             obj.data = values(:);
       end
-      %% Mathamatical - BASIC
-      function obj = plus(obj, B)
+      
+      %% Mathamatical - BASIC OPERATIONS
+      function A = plus(A, B)
          % PLUS add something to the TraceData's data,
          %   This will return a TraceData object
          %
@@ -43,27 +71,20 @@ classdef TraceData
          %     slightly more efficient when TraceData is first.
          %     e.g.   TD + X   instead of   X + TD
          
-         if ~isa(obj, 'TraceData')
-            [obj, B] = deal(B, obj); % swap values
+         if ~isa(A, 'TraceData')
+            [A, B] = deal(B, A); % swap values
          end
+         
+         % A is guaranteed to be TraceData
          if isnumeric(B)
-            obj.data = obj.data + B; % add to either a scalar or a COLUMN of numbers (same length as TraceData's data)
-         else
-            switch class(B)
-               case 'TraceData'
-                  assert(numel(obj.data) == numel(B.data), 'TraceData:plus:incorrectSize', 'Both data fields need to be the same size')
-                  assert(isempty(B.units) || strcmp(obj.units, B.units), 'TraceData:plus:missmatchedUnits', 'TraceData only adds items with the same units');
-                  assert(abs(A.freq - B.freq) < (min(A.freq, B.freq) / 100),...
-                     'TraceData:plus:incompatibleFrequencies','Frequencies should be the same');
-                  obj.data = obj.data + B.data;
-               case 'waveform'
-                  disp('mix and match of TraceData and waveform. Not really recommended');
-                  assert(get(B,'data_length') == numel(obj.data), 'TraceData:plus:incorrectSize',...
-                     'waveform''s data has to be same size as TraceData (%d vs %d',get(w,'data_length'), numel(obj.data));
-                  obj.data = obj.data + get(B,'data'); 
-               otherwise
-                  error('TraceData:plus:unknownClass','do not know how to add a %s to a TraceData object', class(B));
+            for n = 1: numel(A)
+               A(n).data = A(n).data + B; % add to either a scalar or a COLUMN of numbers (same length as TraceData's data)
             end
+         elseif isa(B,'TraceData')
+            A.SizeSampfreqUnitAssertion(B)
+            A.data = A.data + B.data;
+         else
+            error('TraceData:plus:unknownClass','do not know how to add a %s to a TraceData object', class(B));
          end
       end
        
@@ -84,20 +105,11 @@ classdef TraceData
          else
             assert(isa(A,'TraceData'),'TraceData:minus:invalidSubtraction',...
                'in A - B, B cannot be a TraceData object unless both A & B are TraceData objects');
-            switch class(B)
-               case 'TraceData'
-                  assert(numel(A.data) == numel(B.data), 'TraceData:minus:incorrectSize', 'Both data fields need to be the same size');
-                  assert(isempty(B.units) || strcmp(A.units, B.units), 'TraceData:minus:missmatchedUnits', 'TraceData only subtracts items with the same units');
-                  assert(abs(A.freq - B.freq) < (min(A.freq, B.freq) / 100),...
-                     'TraceData:plus:incompatibleFrequencies','Frequencies should be the same')
+            if isa(B, 'TraceData')
+                  A.SizeSampfreqUnitAssertion(B)
                   A.data = A.data - B.data;
-               case 'waveform'
-                  disp('mix and match of TraceData and waveform. Not really recommended');
-                  assert(get(B,'data_length') == numel(A.data), 'TraceData:minus:incorrectSize',...
-                     'waveform''s data has to be same size as TraceData (%d vs %d',get(w,'data_length'), numel(A.data));
-                  A.data = A.data - get(B,'data'); 
-               otherwise
-                  error('TraceData:minus:unknownClass','do not know how to subtract a %s from a TraceData object', class(B));
+            else
+               error('TraceData:minus:unknownClass','do not know how to subtract a %s from a TraceData object', class(B));
             end
          end
       end
@@ -112,25 +124,20 @@ classdef TraceData
             A.data = A.data .* B;
          else
             if ~isa(A,'TraceData')
-            [A, B] = deal(B, A); % swap values
+               [A, B] = deal(B, A); % swap values
             end
-            switch class(B)
-               case 'TraceData'
-                  % multiply the elements of a Trace Data with the elements
-                  % of another TraceData
-                  assert(numel(A.data) == numel(B.data), 'TraceData:minus:incorrectSize', 'Both data fields need to be the same size');
-                  assert(abs(A.freq - B.freq) < (min(A.freq, B.freq) / 100),...
-                     'TraceData:plus:incompatibleFrequencies','Frequencies should be the same')
-                  A.data = A.data .* B.data;
-                  if isempty(B.units)
-                     % do no unit stuff
-                  elseif isempty(A.units)
-                     A.units = B.units;
-                  else % multiplying units together
-                     A.units = [A.units, ' * ', B.units];
-                  end
-               otherwise
-                  error('TraceData:minus:unknownClass','do not know how to multiply a %s with a TraceData object', class(B));
+            if  isa(B,'TraceData')
+               A.SizeSampfreqAssertion(B)
+               A.data = A.data .* B.data;
+               if isempty(B.units)
+                  % do no unit stuff
+               elseif isempty(A.units)
+                  A.units = B.units;
+               else % multiplying units together
+                  A.units = [A.units, ' * ', B.units];
+               end
+            else
+               error('TraceData:minus:unknownClass','do not know how to multiply a %s with a TraceData object', class(B));
             end
          end
       end
@@ -146,34 +153,35 @@ classdef TraceData
          %   numeric   (scalar or vector same size as A.data)
          %   TraceData (note: also the units will be affected)
          
-         if isnumeric(B) 
+         if isnumeric(B)
             % A is guaranteed to be a TraceData
             A.data = A.data ./ B; % subtract either a scalar or a COLUMN of numbers (same length as TraceData's data)
          else
             assert(isa(A,'TraceData'),'TraceData:rdivide:invalidSubtraction',...
                'in A ./ B, B cannot be a TraceData object unless both A & B are TraceData objects');
-            switch class(B)
-               case 'TraceData'
-                  assert(numel(A.data) == numel(B.data), 'TraceData:rdivide:incorrectSize', 'Both data fields need to be the same size');
-                  assert(abs(A.freq - B.freq) < (min(A.freq, B.freq) / 100),...
-                     'TraceData:plus:incompatibleFrequencies','Frequencies should be the same')
-                  A.data = A.data ./ B.data;
-                  if isempty(B.units)
-                     % do no unit stuff
-                  elseif isempty(A.units)
-                     A.units = B.units;
-                  else % multiplying units together
-                     A.units = [A.units, ' / (', B.units, ')'];
-                  end
-               case 'waveform'
-                  disp('mix and match of TraceData and waveform. Not really recommended');
-                  assert(get(B,'data_length') == numel(A.data), 'TraceData:rdivide:incorrectSize',...
-                     'waveform''s data has to be same size as TraceData (%d vs %d', get(w,'data_length'), numel(A.data));
-                  A.data = A.data ./ get(B,'data'); 
-               otherwise
-                  error('TraceData:rdivide:unknownClass','do not know how to divide a %s from a TraceData object', class(B));
+            if isa(B,'TraceData')
+               A.SizeSampfreqAssertion(B)
+               A.data = A.data ./ B.data;
+               if isempty(B.units)
+                  % do no unit stuff
+               elseif isempty(A.units)
+                  A.units = B.units;
+               else % multiplying units together
+                  A.units = [A.units, ' / (', B.units, ')'];
+               end
+            else
+               error('TraceData:rdivide:unknownClass','do not know how to divide a %s from a TraceData object', class(B));
             end
          end
+      end
+      
+      function A = power(A, B)
+         % .^ Array Power
+         assert(isa(A,'TraceData'),'TraceData:power:invalidType',...
+            'for A .^ B, B cannot be a TraceData object');
+         assert(isnumeric(B),'TraceData:power:invalidType',...
+            'for A .^ B, B must be numeric');
+         A.data = A.data .^ B; % B should be scalar or same length as A
       end
       
       function A = uminus(A)
@@ -195,7 +203,7 @@ classdef TraceData
          % FREQUENCY is not considered!
          % otherwise, would be X = diff(X) .* Freq
          if isempty(varargin)
-            A.data = diff(A).data .* A.freq;
+            A.data = diff(A.data) .* A.samplefreq;
             A.data = diff(A.data);
          else
             error('not implemented yet');
@@ -222,7 +230,29 @@ classdef TraceData
       
                
    end
-   
+   methods(Access=protected)
+      function tf = comparefreqs(A, B, TOL)
+         tf = ismembertol(A.samplefreq,B.samplefreq, TOL);
+      end
+      function SizeSampfreqUnitAssertion(A,B)
+         assert(numel(A.data) == numel(B.data),...
+            'TraceData:incorrectSize', 'Both data fields need to be the same size');
+         assert(isempty(B.units) || strcmp(A.units, B.units),...
+            'TraceData:missmatchedUnits', 'opration works only on items with the same units');
+         assert(isempty(A.samplefreq) || isempty(B.samplefreq) ||...
+            ismembertol(A.samplefreq,B.samplefreq, 10e-2),...
+            'TraceData:incompatibleFrequencies','Frequencies should be the same')
+      end
+      
+      function SizeSampfreqAssertion(A,B)
+         assert(numel(A.data) == numel(B.data),...
+            'TraceData:incorrectSize', 'Both data fields need to be the same size');
+         assert(isempty(A.samplefreq) || isempty(B.samplefreq) ||...
+            ismembertol(A.samplefreq,B.samplefreq, 10e-2),...
+            'TraceData:incompatibleFrequencies','Frequencies should be the same')
+      end
+      
+   end
    methods(Static)
       function set_parameter(name, val)
          % set_parameter changes state behavior for the TraceData objects
