@@ -1,4 +1,5 @@
 function montserrat_remove_analog_sites
+debug.printfunctionstack('>')
     load pf/Montserrat.mat
     sites = subnets.sites;
     k = 0;
@@ -13,7 +14,7 @@ function montserrat_remove_analog_sites
     end
     subnets.sites = goodsites;
     clear c k goodsites sta sites site
-    subnets.sites
     save pf/Montserrat.mat
+debug.printfunctionstack('<')
 end        
     
