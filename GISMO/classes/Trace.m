@@ -2,6 +2,12 @@ classdef Trace < TraceData
    % Trace is the new waveform
    properties
       channelInfo % channelTag
+      history
+      miscFields = {}
+   end
+   properties(Hidden)
+      misc_fields
+      misc_values
    end
    
    methods

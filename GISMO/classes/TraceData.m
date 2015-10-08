@@ -114,9 +114,11 @@ classdef TraceData
          %
          % see also testCompatibility, assertCompatibility
          
-         if isnumeric(B) 
+         if isnumeric(B)
             % A is guaranteed to be a TraceData
-            A.data = A.data - B; % subtract either a scalar or a COLUMN of numbers (same length as TraceData's data)
+            for n = 1:numel(A)
+               A(n).data = A(n).data - B; % subtract either a scalar or a COLUMN of numbers (same length as TraceData's data)
+            end
          else
                error('TraceData:minus:unknownClass','do not know how to subtract a %s from a TraceData object', class(B));
          end
@@ -136,10 +138,14 @@ classdef TraceData
          %
          % see also testCompatibility, assertCompatibility
          if isnumeric(B)
-            A.data = A.data .* B; % B should be either scalar or same size as obj.data
+            for n=1:numel(A)
+               A(n).data = A(n).data .* B; % B should be either scalar or same size as obj.data
+            end
          elseif isnumeric(A)
             [A, B] = deal(B, A); % swap values
-            A.data = A.data .* B;
+            for n=1:numel(A)
+               A(n).data = A(n).data .* B; % B should be either scalar or same size as obj.data
+            end
          else
             error('TraceData:times:unknownClass','do not know how to multiply a %s with a TraceData object', class(B));
          end
@@ -170,7 +176,9 @@ classdef TraceData
          
          if isnumeric(B)
             % A is guaranteed to be a TraceData
-            A.data = A.data ./ B; % subtract either a scalar or a COLUMN of numbers (same length as TraceData's data)
+            for n=1:numel(A)
+            A(n).data = A(n).data ./ B; % subtract either a scalar or a COLUMN of numbers (same length as TraceData's data)
+            end
          else
             error('TraceData:rdivide:unknownClass','do not know how to divide a %s from a TraceData object', class(B));
          end
@@ -182,21 +190,31 @@ classdef TraceData
             'for A .^ B, B cannot be a TraceData object');
          assert(isnumeric(B),'TraceData:power:invalidType',...
             'for A .^ B, B must be numeric');
-         A.data = A.data .^ B; % B should be scalar or same length as A
+         for n=1:numel(A)
+         A(n).data = A(n).data .^ B; % B should be scalar or same length as A
+         end
       end
       
       function A = uminus(A)
-         A.data = -A.data;
+         % unary minus (-) for traces
+         for n=1:numel(A)
+            A(n).data = -A(n).data;
+         end
       end
-     
+      
       function A = abs(A)
-         A.data = abs(A.data);
-         A.units = ['abs (', A.units, ')'];
+         for n=1:numel(A)
+            A(n).data = abs(A(n).data);
+            A(n).units = ['abs (', A(n).units, ')'];
+         end
       end
       
       function A = sign(A)
-         A.data = sign(A.data);
-         A.units = ['sign(', A.units, ')'];
+         %sign get signum for data in A
+         for n=1:numel(A)
+            A(n).data = sign(A(n).data);
+            A(n).units = ['sign(', A(n).units, ')'];
+         end
       end
                
       %% more complicated 
@@ -228,11 +246,15 @@ classdef TraceData
       end
                
       function A = demean(A)
-         A = A - mean(A.data);
+         for n=1:numel(A);
+            A(n) = A(n) - mean(A(n).data);
+         end
       end
       
       function A = detrend(A, varargin)
-         A.data = detrend(A.data,varargin{:});
+         for n=1:numel(A);
+            A(n).data = detrend(A(n).data,varargin{:});
+         end
       end
       
       %% extended functionality
@@ -401,6 +423,45 @@ classdef TraceData
          end
       end
       
+      function T = zero2nan(T,mgl)
+         %ZERO2NAN: This function takes a waveform with gaps that have been filled
+         %   with zeros and converts them to NaN values. This is the inverse of w =
+         %   fillgaps(w,0). An input mgl defines the minimum gap length to be
+         %   converted to NaN gaps, i.e. if only 5 consecutive zero values exist in
+         %   a given small gap, they will be converted to NaN values if mgl <= 5 and
+         %   left as zero values if mgl > 5
+         %
+         %USAGE: w = zero2nan(w,mgl)
+         %
+         %REQUIRED INPUTS:
+         %   w - waveform object with zero-value gaps to be converted to NaN gaps
+         %   mgl - minimum gap length (datapoints) to convert to NaN values
+         %
+         %OUTPUTS: w - waveform with gaps converted to NaN
+         
+         % Author: Dane Ketner, Alaska Volcano Observatory
+         % Modified: Celso Reyes: rewrote algorithm to elimenate looping (2x faster)
+         %                        results differ because old method converted
+         %                        5 zeros only if mgl <5 (not <=5)
+         
+         for nw = 1:numel(T)
+            closeToZero = abs(T(nw).data) < 0.1; % 0.1 was already chosen -CR
+            
+            % --- the logic below should be pulled into a new function, since it is
+            % shared across a couple different areas, such as waveform/clean -- %
+            firstZeros = find(diff([false; closeToZero(:)]) == 1);
+            lastZeros = find(diff([closeToZero(:); false]) == -1);
+            assert(numel(firstZeros) == numel(lastZeros));
+            nContiguousZeros = lastZeros - firstZeros + 1;
+            firstZeros(nContiguousZeros < mgl) = [];
+            lastZeros(nContiguousZeros < mgl) = [];
+            
+            for c=1:numel(firstZeros)
+               T(nw).data(firstZeros(c) : lastZeros(c)) = NaN;
+            end
+         end
+      end
+
       function t = fix_data_length(t, maxlen)
          %FIX_DATA_LENGTH adjust length of waveform data to allow batch processing
          %   trace = fix_data_length(traces)
@@ -559,12 +620,14 @@ classdef TraceData
       end
       
       function A = smooth(A, varargin)
-         % SMOOTH is not found in this version of matlab!
-         error('no smoothing function');
+         % smooth requires the signal fitting toolbox
+         % see smooth
+         for n = 1:numel(A)
+            A(n).data = smooth(A(n).data,varargin{:});
+         end
       end
       
       function T = taper(T, R, style)
-         
          % trace = TAPER(trace,R) applies a cosine taper to the ends of a
          % trace where r is the ratio of tapered to constant sections and is between
          % 0 and 1. For example, if R = 0.1 then the taper at each end of the trace
