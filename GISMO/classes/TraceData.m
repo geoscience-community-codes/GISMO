@@ -23,6 +23,17 @@ classdef TraceData
    % comment with my expectations which will show up automatically in the
    % displayed error.
    
+   % Waveform functions included in Tracedata:
+   %  - functions that manipulate the data itself
+   %
+   % Waveform functions NOT added to Tracedata:
+   %  - functions that require knowledge of time
+   %  - functions that require knowledge of location
+   %  - function that access user defined fields
+   %  - functions that access history
+   %  - simple statistical functions: probably min, max, median, std, var
+   %  - additinal not-so-sure-we-need-these functions
+   %    : getpeaks
    
    properties
       data % time-series data, kept in a column
@@ -269,10 +280,6 @@ classdef TraceData
          %
          % See also  despike
          
-         % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
-         % $Date$
-         % $Revision$
-         
          if nargin < 2,
             vals = [];
          end
@@ -394,6 +401,241 @@ classdef TraceData
          end
       end
       
+      function t = fix_data_length(t, maxlen)
+         %FIX_DATA_LENGTH adjust length of waveform data to allow batch processing
+         %   trace = fix_data_length(traces)
+         %       adjusts all traces to the length of the largest, while
+         %       zero-padding all shorter traces
+         %
+         %   trace = fix_data_length(traces, maxlength)
+         %       sets all data lengths to maxlength, padding with zero or
+         %       truncating as necessary.
+         %
+         %  examples
+         %       % let traces be a 1x2 TraceData object
+         %       % 3000 samples in traces(1)
+         %       % 10025 samples in traces(2)
+         %
+         %       % set both waves' data to a length of to 10025 while padding the
+         %       % smaller of the two with zeroes.
+         %       outTraces = fix_data_length(traces)
+         %
+         %       % set both sample lengths to 500 truncating both of them...
+         %       outTraces = fix_data_length(traces, 500)
+         datalengths = arrayfun(@(x) numel(x.data), t);
+         if ~exist('maxlen','var')
+            maxlen = max(datalengths);
+         end
+         
+         for n=find(datalengths < maxlen)
+            t(n).data(maxlen) = 0;
+         end
+         
+         for n=find(datalengths > maxlen);
+            t(n).data = t(n).data(1:maxlen);
+         end
+      end
+
+      function T = hilbert(T, n)
+         %HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.
+         %   waveform = hilbert(waveform)
+         %   waveform = hilbert(waveform, N);
+         %
+         % THIS version only returns the abs value in the waveform.  If you want to
+         % keep the imaginary values, then you should use the built-in hilbert
+         % transform.  ie.  Don't feed it a trace, feed it a vector... - CR
+         %
+         %
+         % See also FFT, IFFT, for details and the meaning of "N" see HILBERT
+         
+         if nargin==2
+            T = arrayfun(@myHilbertN,T);
+         else
+            T = arrayfun(@myHilbert,T);
+         end
+         
+         function Tr = myHilbert(Tr)
+            Tr.data = abs(hilbert(Tr.data));
+            Tr.units = 'abs(hilbert)';
+         end
+         
+         function Tr = myHilbertN(Tr)
+            Tr.data = abs(hilbert(Tr.data, n));
+            Tr.units = 'abs(hilbert)';
+         end
+      end
+      
+      function T = resample(T, method, crunchFactor)
+         %RESAMPLE resamples a waveform at over every specified interval
+         %   w = resample(waveform, method, crunchfactor)
+         %
+         %   Input Arguments
+         %       WAVEFORM: waveform object       N-dimensional
+         %
+         %       METHOD: which method of sampling to perform within each sample
+         %                window
+         %           'max' : maximum value
+         %           'min' : minimum value
+         %           'mean': average value
+         %           'median' : mean value
+         %           'rms' : rms value (added 2011/06/01)
+         %           'absmax': absolute maximum value (greatest deviation from zero)
+         %           'absmin': absolute minimum value (smallest deviation from zero)
+         %           'absmean' : mean deviation from zero (added 2011/06/01)
+         %           'absmedian' : median deviation from zero (added 2011/06/01)
+         %           'builtin': Use MATLAB's built in resample routine
+         %
+         %       CRUNCHFACTOR : the number of samples making up the sample window
+         %
+         % For example, resample(T,'max',5) would grab the max value of every 5
+         % samples and return that in a waveform of adjusted frequency.  as a
+         % result, the waveform will have 1/5 of the samples
+         %
+         %
+         % To use matlab's built-in RESAMPLE method...
+         %       % assume T is an existing waveform
+         %       D = double(T);
+         %       ResampleD = resample(D,P,Q);  % see matlab's RESAMPLE for specifics
+         %
+         %       %put back into waveform, but don't forget to update the frequency
+         %       T.data = ResampleD; 
+         %       T.samplefreq = NewFrequency;
+         %
+         % See also RESAMPLE, MIN, MAX, MEAN, MEDIAN.
+         
+         % AUTHOR: Celso Reyes (celso@gi.alaska.edu)
+         % 10/2015: Celso Reyes: put in TraceData and restructured
+         % 7/6/2011: Glenn Thompson: Made all methods NaN tolerant (replace max with nanmax etc) - checks for statistics toolbox
+         % 6/1/2011: Glenn Thompson: Added methods for ABSMEAN, ABSMEDIAN and RMS
+         
+         persistent STATS_INSTALLED;
+         if isempty(STATS_INSTALLED)
+            STATS_INSTALLED = ~isempty(ver('stats'));
+         end
+         
+         if ~(round(crunchFactor) == crunchFactor)
+            disp ('val needs to be an integer');
+            return;
+         end;
+         method = lower(method);
+         
+         % determine which function to use on the data.  This will
+         % automatically determine whether it can use the NaN-safe version
+         if ~strcmp(method,'builtin')
+            if STATS_INSTALLED
+               methodfn = str2func(['nan', method]);
+            else
+               methodfn = str2func(method);
+            end
+         end
+         
+         for i=1:numel(T)
+            nRows = ceil(length(T(i).data) / crunchFactor);
+            totVals = nRows * crunchFactor; % total number of values that can be accomodated
+            if length(T(i).data) < totVals
+               T(i).data(end+1:totVals) = mean(T(i).data((nRows-1)*totVals : end)); %pad it with the avg value
+            end;
+            
+            d = reshape(T(i).data,crunchFactor,nRows); % produces ( val x rowcount) matrix
+            switch upper(method)
+               case {'MAX', 'MIN', 'RMS'}
+                  T(i).data = methodfn(d, [], 1);
+               case {'MEAN', 'MEDIAN'}
+                  T(i).data = methodfn(d, 1);
+               case {'ABSMAX', 'ABSMIN'}
+                  T(i).data = methodfn(abs(d),[],1);
+               case {'ABSMEAN', 'ABSMEDIAN'}
+                  T(i).data = methodfn(abs(d), 1);
+               case 'BUILTIN'
+                  % assume T is an existing trace
+                  ResampleD = resample(T(i).data,1,crunchFactor);  % see matlab's RESAMPLE for specifics
+                  T(i).data = ResampleD(:);
+               otherwise
+                  error('TraceData:resample:UnknownSampleMethod',...
+                     'Don''t know what you mean by resample via %s', method);
+            end;
+            T(i).samplefreq = T(i).samplefreq ./ crunchFactor;
+         end
+      end
+      
+      function A = smooth(A, varargin)
+         % SMOOTH is not found in this version of matlab!
+         error('no smoothing function');
+      end
+      
+      function T = taper(T, R, style)
+         
+         % trace = TAPER(trace,R) applies a cosine taper to the ends of a
+         % trace where r is the ratio of tapered to constant sections and is between
+         % 0 and 1. For example, if R = 0.1 then the taper at each end of the trace
+         % is 5% of the total trace length. R can be either a scalar or the same
+         % size as TRACE. If R is a scalar, it is applied uniformly to each
+         % waveform. Note that if R is set to 1 the resulting taper is a hanning
+         % window.
+         %
+         % trace = TAPER(trace) same as above with a default taper of R = 0.2.
+         %
+         % TODO: Currently, only cosine tapers are supported. The code is set up to
+         % accept other window shapes as a final argument, e.g.
+         % taper(trace,R,'cosine'). However other window shapes have not yet been
+         % implimented. - MEW
+         
+         % AUTHOR: Michael West
+         % Modified: Celso Reyes
+         
+                  
+         if ~exist('R','var') || isempty(R)
+            R = 0.2; %assign default taper
+         elseif ~isnumeric(R)
+            error('TraceData:taper:InvalidRValue',...
+               'R, if specified, must be numeric');
+         end
+         
+         if ~exist('style','var') || isempty(style)
+            style = 'COSINE';
+         end
+         
+         
+         if isscalar(R)
+            R = repmat(R,size(T));
+         end
+         
+         if (isvector(R) && isvector(T)) && numel(R) == numel(T)
+            if all(size(T)) ~= size(R)
+               % same number of elements, but R is Nx1 and w is 1xN or vice-versa
+               warning('TraceData:taper:columnsVsRows',...
+                  ['One input (either R or the wavform) is arranged in '...
+                  'columns while the other is arranged in Rows.  While they '...
+                  'should be the same shape, taper is continuing with R''']);
+               R = R';
+            end
+         end
+         
+         if ~all(size(T) == size(R))
+            error('TraceData:taper:InvalidRSize',...
+               'R must either be a scalar value, or must be the same size as the input waveforms');
+         end
+         
+         switch upper(style)
+            case 'COSINE'
+               for n=1:numel(T)
+                  T(n) = docosine(T(n),R(n));
+               end
+            case 'GAUSSIAN'
+               %not implemented, placeholder only.
+               error('TraceData:taper:invalidTaperType',...
+                  'Gaussian taper is not yet implimented');
+            otherwise
+               error('TraceData:taper:invalidTaperType',...
+                  'This style of taper is not recognized.');
+         end;
+         
+         function T = docosine(T,r)
+            %applied to individual traces only
+            T = T .* tukeywin( numel(T.data) , r );
+         end
+      end
+
       function [tf, msg] = testCompatibility(A, B)
          % testCompatibility confirms matching units, samplefreq, and data length
          % tf = testCompatibility(A, B) will make sure that A and B have

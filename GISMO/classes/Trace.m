@@ -21,6 +21,26 @@ classdef Trace < TraceData
       
       %function stack
       %function binstack
+      %function combine
+      %function extract
+      %function gettimerange
+      %function ismember
+      %function isvertical (?) don't like this.
+      
+      %function calib_apply
+      %function calib_remove
+      
+      %function plot
+      %function legend
+      %function linkedplot
+      
+      %function addfield
+      %function delfield
+      %function isfield
+      %
+      %function addhistory
+      %function clearhistory
+      %function history
       
    end
 end
