@@ -18,6 +18,8 @@ function sites = get_closest_sites(lon, lat, distkm, sitesdb, maxsta, snum, enum
 % AUTHOR: Glenn Thompson, UAF-GI
 % $Date: $
 % $Revision: -1 $
+debug.printfunctionstack('>')
+warning(sprintf('%s assumes every station has a calibration - those without are missed',mfilename))
 if ~exist('maxsta', 'var')
 	maxsta = 999;
 end
@@ -52,7 +54,7 @@ if exist('enum', 'var')
 end
 nrecs = dbquery(dbptr_site, 'dbRECORD_COUNT');
 debug.print_debug(2,sprintf('After time subset: %d records', nrecs));
-%dbgetv(db, 'sta')
+dbgetv(dbptr_site, 'sta')
 
 % Filter the sitechan table
 dbptr_sitechan = dblookup_table(dbptr, 'sitechan');
@@ -82,13 +84,13 @@ if exist('enum', 'var')
 end
 nrecs = dbquery(dbptr_sitechan, 'dbRECORD_COUNT');
 debug.print_debug(2,sprintf('After time subset: %d records', nrecs));
-%dbgetv(dbptr_sitechan, 'sta')
+dbgetv(dbptr_sitechan, 'sta')
 
 % Join site and sitechan
 dbptr_sitechan = dbjoin(dbptr_site, dbptr_sitechan);
 nrecs = dbquery(dbptr_sitechan, 'dbRECORD_COUNT');
 debug.print_debug(2,sprintf('After join site-sitechan %d records', nrecs));
-%dbgetv(dbptr_sitechan, 'sta')
+dbgetv(dbptr_sitechan, 'sta')
 
 % Read snetsta to get network code
 dbptr_snetsta = dblookup_table(dbptr, 'snetsta');
@@ -204,3 +206,4 @@ sites = sites(1:numsites);
 
 
 
+debug.printfunctionstack('<')

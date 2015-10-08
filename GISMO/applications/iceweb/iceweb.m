@@ -1,11 +1,11 @@
 function iceweb(ds, varargin)
     debug.printfunctionstack('>');
     % Process arguments
-    [thismode, snum, enum, nummins, delaymins, thissubnet, matfile] = matlab_extensions.process_options(varargin, 'mode', 'archive', 'snum', 0, 'enum', 0, 'nummins', 10, 'delaymins', 0, 'thissubnet', '', 'matfile', 'pf/tremor_runtime.mat');
+    [thisrunmode, snum, enum, nummins, delaymins, thissubnet, matfile] = matlab_extensions.process_options(varargin, 'runmode', 'archive', 'snum', 0, 'enum', 0, 'nummins', 10, 'delaymins', 0, 'thissubnet', '', 'matfile', 'pf/tremor_runtime.mat');
     if exist(matfile, 'file')
         load(matfile);
-        PARAMS.mode = thismode;
-        clear thismode;
+        PARAMS.runmode = thisrunmode;
+        clear thisrunmode;
     else
         warning(sprintf('matfile %s not found',matfile))
         return
@@ -13,7 +13,7 @@ function iceweb(ds, varargin)
 
     % load state
     statefile = sprintf('iceweb_%s_state.mat',thissubnet);
-    if exist(statefile, 'file')
+    if exist(statefile, 'file') && ~strcmp(PARAMS.runmode, 'test')
         load(statefile)
         if strcmp(thissubnet, subnet0)
 		snum = snum0;
@@ -30,7 +30,7 @@ function iceweb(ds, varargin)
         end
         if index > 0
             subnets = subnets(index);
-            debug.print_debug(0, 'subnet found')
+            debug.print_debug(1, 'subnet found')
         else
             warning('subnet not found')
             return;
@@ -57,16 +57,16 @@ function iceweb(ds, varargin)
         % create timewindows for that day
         % call iceweb_helper for each time window
         
-    % NEW STUFF TO IMPLEMENT ABOVE SUGGESTION - MIGHT NOT WORK    
+    % NEW STUFF TO IMPLEMENT ABOVE SUGGESTION - MIGHT NOT WORK   %%% NOTE THIS ASSUMES MINISEED FILES THROUGH ANTELOPE %%%%%%%%%% 
     if exist('ds','var') & strcmp(get(ds,'type'),'antelope')
 
         for c=1:numel(subnets)
+		debug.print_debug(1,'Sites from MAT file - should be all in range')
             sites = subnets(c).sites;
+	    show_sites(sites)
+datestr([snum enum])
             for dnum = floor(snum):ceil(enum)
                 disp(datestr(dnum))
-%                 for ccc=1:numel(sites)
-%                     disp(sites(ccc).channeltag.string())
-%                 end
                    
                 % subset to channels active for today according to
                 % site/sitechan db
@@ -74,12 +74,12 @@ function iceweb(ds, varargin)
                 if isempty(todaysites)
                     continue;
                 end
-                chantag = [todaysites.channeltag];
-%                 for ccc=1:numel(chantag)
-%                     disp(chantag(ccc).string())
-%                 end             
+		debug.print_debug(1,'Subsetting to sites active today')
+		show_sites(todaysites)
+
                 % change channel tag if this is MV network because channels in wfdisc table
                 % are like SHZ_--
+                chantag = [todaysites.channeltag];
                 for cc=1:numel(chantag)
                     if strcmp(chantag(cc).network, 'MV')
                         chantag(cc).channel = sprintf('%s_--',chantag(cc).channel);
@@ -91,20 +91,22 @@ function iceweb(ds, varargin)
                 m = listMiniseedFiles(ds, chantag, dnum, dnum+1);
                 todaysites = todaysites([m.exists]==2);
                 tw = get_timewindow(min([enum dnum+1]), nummins, max([dnum snum]));
+		debug.print_debug(1,'Subsetting to sites with miniseed files')
+		show_sites(todaysites)
 
                 newsubnets = subnets(c);
                 newsubnets.sites = todaysites;
-%                 for ccc=1:numel(todaysites)
-%                     disp(sites(ccc).channeltag.string())
-%                 end
 
-                % loop over timewindows
-                for count = 1:length(tw.start)
-                    thistw.start = tw.start(count);	
-                    thistw.stop = tw.stop(count);	
-                    iceweb_helper(paths, PARAMS, newsubnets, thistw, ds);
-                end
-            end
+
+            	if ~strcmp(PARAMS.runmode,'test')
+            	    % loop over timewindows
+            	    for count = 1:length(tw.start)
+            	        thistw.start = tw.start(count);	
+            	        thistw.stop = tw.stop(count);	
+            	        iceweb_helper(paths, PARAMS, newsubnets, thistw, ds);
+            	    end
+            	end
+	    end	
         end
     else
         % THE WAY WE USED TO DO IT
@@ -120,7 +122,9 @@ function iceweb(ds, varargin)
         for count = length(tw.start) : -1 : 1
             thistw.start = tw.start(count);	
             thistw.stop = tw.stop(count);	
-            iceweb_helper(paths, PARAMS, subnets, thistw);
+            if ~strcmp(runmode,'test')
+            	iceweb_helper(paths, PARAMS, subnets, thistw);
+            end
         end
     end
     debug.printfunctionstack('<');
@@ -183,7 +187,7 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
 	    clear ds0 sites0 snum0 enum0 subnet0
 
             % Have we already process this timewindow?
-            spectrogramFilename = get_spectrogram_filename(paths,subnet,enum);
+            spectrogramFilename = get_spectrogram_filename(paths,subnet,snum);
              if exist(spectrogramFilename, 'file')
                  fprintf('%s already exists - skipping\n',spectrogramFilename);
                  continue
@@ -193,6 +197,12 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
             debug.print_debug(0, sprintf('%s %s: Getting waveforms for %s from %s to %s at %s',mfilename, datestr(utnow), subnet , datestr(snum), datestr(enum)));
             w = waveform_wrapper([sites.channeltag], snum, enum, ds);
 
+w = combine(w);
+size(w)
+size(sites)
+if size(w)~=size(sites)
+error('barf')
+end
             %% PRE_PROCESS DATA
             
             % Eliminate empty waveform objects
@@ -250,7 +260,7 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
 % % 
 % %                 Error in unrest (line 20)
 % %                 iceweb(ds, 'thissubnet', 'Sakurajima', 'snum', datenum(2015,6,3), 'enum', datenum(2015,6, 7), 'delaymins', 0, 'matfile', 'pf/Sakurajima.mat',
-% %                 'nummins', mins, 'mode', 'archive');               
+% %                 'nummins', mins, 'runmode', 'archive');               
 %                 close all
 %                 heliplot = helicorder(w);
 %                 build(heliplot)
@@ -347,7 +357,8 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
                         r3.save(fullfile('spectrograms', subnet, 'SSSS.CCC.YYYY.findex')) 
 
                         specdatafilename = fullfile('spectrograms', subnet, datestr(min(dnum),'yyyy/mm/dd'), sprintf( '%s_%s_%s.mat', datestr(min(dnum),30), sta, chan) );
-                        mkdir(fileparts(specdatafilename)); % make the directory in case it does not exist
+                        specdatadir = fileparts(specdatafilename); % make the directory in case it does not exist
+                        mkdir(specdatadir); % make the directory in case it does not exist
                         save(specdatafilename, 'dnum', 'max_in_each_freq_band') 
                         clear r1 r2 r3 k p   downsampled_peakf downsampled_meanf ...
                             downsampled_findex fUpperIndices fLowerIndices flower ...
@@ -364,8 +375,11 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
                         % php script can match spectrogram panel with appropriate wav file 
                         % 20121101 GTHO COmment: Could replace use of bnameroot below with strrep, since it is just used to change file extensions
                         % e.g. strrep(spectrogramFilename, '.png', sprintf('_%s_%s.wav', sta, chan)) 
-                        [bname, dname, bnameroot, bnameext] = matlab_extensions.basename(spectrogramFilename);
-                        fsound = fopen(sprintf('%s%s%s.sound', dname, filesep, bnameroot),'a');
+                        %[bname, dname, bnameroot, bnameext] = matlab_extensions.basename(spectrogramFilename);
+                        [dname, bnameroot, bnameext] = fileparts(spectrogramFilename);
+                        %fsound = fopen(sprintf('%s%s%s.sound', dname, filesep, bnameroot),'a');
+                        soundfilelist = fullfile(dname, filesep, [bnameroot,'.sound']);
+                        fsound = fopen(soundfilelist,'a');
                         for c=1:length(w)
                             soundfilename = fullfile(dname, sprintf('%s_%s_%s.wav',bnameroot, get(w(c),'station'), get(w(c), 'channel')  ) );
                             fprintf(fsound,'%s\n', soundfilename);  
@@ -387,14 +401,4 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
 
     debug.printfunctionstack('<');
 end
-
-
-
-	
-
-
-
-
-
-
 

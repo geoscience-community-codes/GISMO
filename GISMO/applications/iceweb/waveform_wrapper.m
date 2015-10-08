@@ -1,6 +1,6 @@
 function w=waveform_wrapper(chantag, snum, enum, ds);
 % WAVEFORM_WRAPPER try multiple datasource objects in 
-% "all" and "single" modes, until we either have a waveform
+% "all" and "single" extractmodes, until we either have a waveform
 % for each chantag between times given, or have exhausted all
 % options.
 %
@@ -65,7 +65,7 @@ function w=waveform_wrapper(chantag, snum, enum, ds);
 
 
     %% loop over all data sources until some data found
-    % - all station mode for speed
+    % - all station extractmode for speed
     debug.print_debug(2,'- ALL STATIONS MODE');
     finished = false;
     for dsi=1:length(ds)
@@ -101,6 +101,7 @@ function w=waveform_wrapper(chantag, snum, enum, ds);
                 %print_waveform_call(snum, enum, chantagtoget, ds(dsi))
                 save lastwaveformcall.mat ds chantag snum enum
                 w_new = waveform(ds(dsi), chantagtoget, snum, enum); 
+		w_new = combine(w_new);
             else
                 continue;
             end
@@ -114,7 +115,7 @@ function w=waveform_wrapper(chantag, snum, enum, ds);
         end
     end	
 
-    % - individual station mode to fill in blanks
+    % - individual station extractmode to fill in blanks
     if ~finished 
         debug.print_debug(2,'- SINGLE CHANNEL MODE');
         for dsi=1:length(ds)
@@ -146,6 +147,7 @@ function w=waveform_wrapper(chantag, snum, enum, ds);
                             %debug.print_debug(sprintf('- Attempting to load waveform data for %s-%s from %s to %s',get(scnl(c),'station'),get(scnl(c),'channel'),datestr(snum,31),datestr(enum,31)),0);
                             save lastwaveformcall.mat ds chantag snum enum chantagtoget c
                             w_new = waveform(ds(dsi), chantag(c), snum, enum); 
+			    w_new = combine(w_new);
                         else
                             continue;
                         end
@@ -169,9 +171,9 @@ function w=waveform_wrapper(chantag, snum, enum, ds);
         sta0 = get(w(i), 'station');
         chan0 = get(w(i), 'channel');
         %ds0 = get(w(i), 'ds');
-        %mode0 = get(w(i), 'mode');
+        %extractmode0 = get(w(i), 'extractmode');
         dl0 = get(w(i), 'data_length');
-        %debug.print_debug(sprintf('- waveform %d: got %d samples for %s-%s from %s in mode %s',i,dl0,sta0,chan0,ds0,mode0),2);
+        %debug.print_debug(sprintf('- waveform %d: got %d samples for %s-%s from %s in extractmode %s',i,dl0,sta0,chan0,ds0,extractmode0),2);
         debug.print_debug(2,sprintf('- waveform %d: got %d samples for %s-%s',i,dl0,sta0,chan0));
     end
     debug.print_debug(1,sprintf('- Got %d waveform objects\n', length(w)));
@@ -181,7 +183,7 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [w,chantaggot] = deal_waveforms(w, w_new, chantaggot, mode, datapath)
+function [w,chantaggot] = deal_waveforms(w, w_new, chantaggot, extractmode, datapath)
 % take arrays of waveforms we just got, and waveforms we already have 
     for i=1:numel(w)
         sta = get(w(i), 'station');
@@ -196,7 +198,7 @@ function [w,chantaggot] = deal_waveforms(w, w_new, chantaggot, mode, datapath)
                 % w_new(j) corresponds to chantag(i)
                 nsamp_before = get(w(i), 'data_length');
                 if (nsamp > nsamp_before) 
-                    w(i) = addfield(w_new(j), 'mode', mode);
+                    w(i) = addfield(w_new(j), 'extractmode', extractmode);
                     w(i) = addfield(w(i), 'ds', datapath);
                     if (nsamp > 0.99 * nsamp_expected)
                         chantaggot(i)=1;
