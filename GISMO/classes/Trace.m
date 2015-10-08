@@ -12,8 +12,15 @@ classdef Trace < TraceData
                if isa(varargin{1}, 'waveform')
                   obj.channelInfo = get(varargin{1},'channeltag');
                end
-               
          end %switch
       end
+      
+      function obj = align(obj, alignTime, newFrequency, method)
+         error('unimplemented function');
+      end
+      
+      %function stack
+      %function binstack
+      
    end
 end
