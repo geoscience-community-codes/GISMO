@@ -106,7 +106,7 @@ function self = readCatalog(data_source, varargin)
 %         obj = readCatalog('irisfetch', 'MinimumMagnitude', 7.0);
 %
 %   (4) Read all events within 20 km of Redoubt volcano from IRIS DMC:
-%         obj = readCatalog('irisfetch','radialcoordinates', [60.4853 -152.7431 deg2rad(20)]); 
+%         obj = readCatalog('irisfetch','radialcoordinates', [60.4853 -152.7431 km2deg(20)]); 
 % 
 %   (5) Read Alaska Earthquake Center events greater than M=4.0 in 2009
 %       within rectangular region lat = 55 to 65, lon = -170 to -135 from
