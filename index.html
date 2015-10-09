@@ -36,6 +36,117 @@
 
 <p>The GISMO suite is a MATLAB toolbox for seismic data analysis. GISMO stands for Geophysical Institute Seismology Matlab Objects, signifying that it is an object-oriented toolbox originally created at the University of Alaska Fairbanks' Geophysical Institute, but now used globally. Anybody can contribute to GISMO. GISMO consists of: (1) a set of low level classes that describe types of seismic data, e.g. seismic waveform data, seismic event catalogs, etc.; (2) a set of higher level classes that describe common forms of seismic data analysis, e.g. correlation of waveform objects; and (3) an ever-evolving set of contributed codes developed from these core products. The core products include the waveform suite and correlation toolbox, detailed below.</p>
 
+<div id="page-data" class="clearfix"><div><div style="display: block; opacity: 0.5;" id="outerToc" contenteditable="false"> <div id="outerTocTitle"> <a href="#"> Table of Contents, or Click for Page Top</a></div><div style="display: none;" id="innerToc" contenteditable="false"><ul><li><a href="#Welcome_to_GISMO">Welcome to GISMO</a></li><ul><li><a href="#What_is_GISMO_">1.  What is GISMO?</a></li><li><a href="#Getting_started">2.  Getting started</a></li><ul><li><a href="#Requirements">2.1.  Requirements</a></li><li><a href="#Downloading">2.2.  Downloading</a></li><li><a href="#Installation">2.3.  Installation</a></li><li><a href="#Testing_your_installation">2.4.  Testing your installation</a></li><li><a href="#Stay_Informed">2.5.  Stay Informed</a></li></ul><li><a href="#Documentation">3.  Documentation</a></li><li><a href="#Tutorial">4.  Tutorial</a></li><li><a href="#Cookbooks">5.  Cookbooks</a></li><li><a href="#Examples_REAL_AMP_Applications_that_use_GISMO">6.  Examples &amp; Applications that use GISMO</a></li><li><a href="#Educational_courses_built_around_GISMO">7.  Educational courses built around GISMO</a></li><ul><li><a href="#Welcome_to_GISMO_2">Welcome to GISMO</a></li><li><a href="#Download_GISMO_Zip_file">Download GISMO Zip file</a></li><li><a href="#The_Waveform_Suite">The Waveform Suite</a></li><li><a href="#The_Correlation_Class">The Correlation Class</a></li></ul></ul></ul></div></div><div id="outerToc-static" class="opaque" contenteditable="false"><div id="toc-static"><ul><li><a href="#Welcome_to_GISMO">Welcome to GISMO</a></li><ul><li><a href="#What_is_GISMO_">1.  What is GISMO?</a></li><li><a href="#Getting_started">2.  Getting started</a></li><ul><li><a href="#Requirements">2.1.  Requirements</a></li><li><a href="#Downloading">2.2.  Downloading</a></li><li><a href="#Installation">2.3.  Installation</a></li><li><a href="#Testing_your_installation">2.4.  Testing your installation</a></li><li><a href="#Stay_Informed">2.5.  Stay Informed</a></li></ul><li><a href="#Documentation">3.  Documentation</a></li><li><a href="#Tutorial">4.  Tutorial</a></li><li><a href="#Cookbooks">5.  Cookbooks</a></li><li><a href="#Examples_REAL_AMP_Applications_that_use_GISMO">6.  Examples &amp; Applications that use GISMO</a></li><li><a href="#Educational_courses_built_around_GISMO">7.  Educational courses built around GISMO</a></li><ul><li><a href="#Welcome_to_GISMO_2">Welcome to GISMO</a></li><li><a href="#Download_GISMO_Zip_file">Download GISMO Zip file</a></li><li><a href="#The_Waveform_Suite">The Waveform Suite</a></li><li><a href="#The_Correlation_Class">The Correlation Class</a></li></ul></ul></ul></div></div></div>
+					<div class="icon_edit_section" style="display:none;"><a href="tiki-editpage.php?page=GISMO+-+a+MATLAB+toolbox+for+seismic+data+analysis&amp;hdr=1"><img src="img/icons/page_edit_section.png" alt="Edit Section" title="Edit Section" class="icon" height="16" width="16"></a></div><h1 style="text-align: center;" class="showhide_heading" id="Welcome_to_GISMO">Welcome to GISMO</h1>
+<div class="icon_edit_section" style="display:none;"><a href="tiki-editpage.php?page=GISMO+-+a+MATLAB+toolbox+for+seismic+data+analysis&amp;hdr=2"><img src="img/icons/page_edit_section.png" alt="Edit Section" title="Edit Section" class="icon" height="16" width="16"></a></div><h2 class="showhide_heading" id="What_is_GISMO_">1.  What is GISMO?</h2>
+<p>GISMO is an open-source MATLAB toolbox that facilities analysis of seismic waveform and event catalog data. It provides parsers for common seismic waveform (e.g. SAC, Seisan, Antelope/Datascope - Miniseed will be added soon) and catalog file formats (Seisan, Antelope/Datascope - hypoellipse and hypoinverse will be added soon), and also wraps the irisfetch.m program to fetch waveform and catalog data directly from the IRIS Data Management Center.
+</p>
+
+<p>The goal of the GISMO project is to promote community development of an integrated set of codes and accompanying documentation that will enhance scientific progress in seismology. Much of the problem with making progress in seismology today is writing and debugging code to read large numbers of seismic data files and from a variety of seismic data formats. GISMO simplifies this - everything becomes a waveform or a catalog object. So researchers only need then to write code that manipulates these objects. Many common processing and plotting methods are also included, and there is an extensive set of tools for correlation analysis.
+</p>
+
+<p>GISMO aids the repeatability of science by providing a common platform on which to develop and share research codes. Contributed codes are an important feature of GISMO.
+</p>
+
+<p>GISMO does not intend to compete with ObsPy, which is a superb open-source toolbox for Seismology written in Python. But if you are a seismologist using MATLAB rather than Python - perhaps because you are not a Python programmer, or because you are trying to integrate with other codes written in MATLAB, you will probably find GISMO very helpful.
+</p>
+
+<div class="icon_edit_section" style="display:none;"><a href="tiki-editpage.php?page=GISMO+-+a+MATLAB+toolbox+for+seismic+data+analysis&amp;hdr=3"><img src="img/icons/page_edit_section.png" alt="Edit Section" title="Edit Section" class="icon" height="16" width="16"></a></div><h2 class="showhide_heading" id="Getting_started">2.  Getting started</h2>
+<div class="icon_edit_section" style="display:none;"><a href="tiki-editpage.php?page=GISMO+-+a+MATLAB+toolbox+for+seismic+data+analysis&amp;hdr=4"><img src="img/icons/page_edit_section.png" alt="Edit Section" title="Edit Section" class="icon" height="16" width="16"></a></div><h3 class="showhide_heading" id="Requirements">2.1.  Requirements</h3>
+<p>To use GISMO you will need MATLAB (at least which version?). Some of the code might be compatible with Octave, but this has not been tested.
+</p>
+
+<div class="icon_edit_section" style="display:none;"><a href="tiki-editpage.php?page=GISMO+-+a+MATLAB+toolbox+for+seismic+data+analysis&amp;hdr=5"><img src="img/icons/page_edit_section.png" alt="Edit Section" title="Edit Section" class="icon" height="16" width="16"></a></div><h3 class="showhide_heading" id="Downloading">2.2.  Downloading</h3>
+<p>The GISMO repository can be found on github at <a target="_blank" class="wiki external" href="http://github..com/giseislab/gismotools">http://github..com/giseislab/gismotools<img src="img/icons/external_link.gif" alt=" " title=" " class="icon" height="14" width="15"></a>
+</p>
+
+<p>If you are familiar with git (a source code version control system), you can download this with:
+</p>
+
+<p>git clone <a target="_blank" class="wiki external" href="http://github..com/giseislab/gismotools.git">http://github..com/giseislab/gismotools.git<img src="img/icons/external_link.gif" alt=" " title=" " class="icon" height="14" width="15"></a> gismotools
+</p>
+
+<p>This will create a copy of the repository in a local directory 'gismotools'.
+</p>
+
+<p>If you do not know git, then you can just download the zip file from:
+</p>
+
+<p><a target="_blank" class="wiki external" href="http://github.com/giseislab/gismotools/archive/master.zip">http://github.com/giseislab/gismotools/archive/master.zip<img src="img/icons/external_link.gif" alt=" " title=" " class="icon" height="14" width="15"></a>
+</p>
+
+<p>and uncompress it.
+</p>
+
+<p>Move the gismotools directory to somewhere sensible, e.g.:
+</p>
+
+<p>/home/username/src/gismotools on a Linux/Mac, or
+</p>
+
+<p>\Users\username\src\gismotools on Windows
+</p>
+
+<p>from now on we will assume the directory is /home/username/src/gismotools
+</p>
+
+<div class="icon_edit_section" style="display:none;"><a href="tiki-editpage.php?page=GISMO+-+a+MATLAB+toolbox+for+seismic+data+analysis&amp;hdr=6"><img src="img/icons/page_edit_section.png" alt="Edit Section" title="Edit Section" class="icon" height="16" width="16"></a></div><h3 class="showhide_heading" id="Installation">2.3.  Installation</h3>
+<p>Start MATLAB. At the MATLAB prompt, type:
+</p>
+
+<p>edit startup.m
+</p>
+
+<p>This file may or may not already exist. If it does - add these two lines to the end. If not, the file will be blank, so just add these two lines:
+</p>
+
+<p>addpath('/home/username/src/gismotools/GISMO')
+</p>
+
+<p>startup_GISMO
+</p>
+
+<p>Save this file, then execute it:
+</p>
+
+<p>startup
+</p>
+
+<p>If you have installed GISMO correctly, the follow command:
+</p>
+
+<p>which readCatalog
+</p>
+
+<p>should return
+</p>
+
+<p>/home/username/src/gismotools/GISMO/classes/catalog/readCatalog.m
+</p>
+
+<div class="icon_edit_section" style="display:none;"><a href="tiki-editpage.php?page=GISMO+-+a+MATLAB+toolbox+for+seismic+data+analysis&amp;hdr=7"><img src="img/icons/page_edit_section.png" alt="Edit Section" title="Edit Section" class="icon" height="16" width="16"></a></div><h3 class="showhide_heading" id="Testing_your_installation">2.4.  Testing your installation</h3>
+<p>Put some stuff here...
+</p>
+
+<div class="icon_edit_section" style="display:none;"><a href="tiki-editpage.php?page=GISMO+-+a+MATLAB+toolbox+for+seismic+data+analysis&amp;hdr=8"><img src="img/icons/page_edit_section.png" alt="Edit Section" title="Edit Section" class="icon" height="16" width="16"></a></div><h3 class="showhide_heading" id="Stay_Informed">2.5.  Stay Informed</h3>
+<p>If you are using GISMO we strongly recommend you join the GISMO Users mailing list. <a class="wiki" href="WHERE IS THIS?" rel="">WHERE IS THIS?</a>. Any questions relating to GISMO can be posted there. If you want to contribute code to GISMO - and we strongly encourage this - IS THERE A SEPARATE LIST?
+</p>
+
+<div class="icon_edit_section" style="display:none;"><a href="tiki-editpage.php?page=GISMO+-+a+MATLAB+toolbox+for+seismic+data+analysis&amp;hdr=9"><img src="img/icons/page_edit_section.png" alt="Edit Section" title="Edit Section" class="icon" height="16" width="16"></a></div><h2 class="showhide_heading" id="Documentation">3.  Documentation</h2>
+<p>Documentation generated with m2html is available at:
+</p>
+
+<div class="icon_edit_section" style="display:none;"><a href="tiki-editpage.php?page=GISMO+-+a+MATLAB+toolbox+for+seismic+data+analysis&amp;hdr=10"><img src="img/icons/page_edit_section.png" alt="Edit Section" title="Edit Section" class="icon" height="16" width="16"></a></div><h2 class="showhide_heading" id="Tutorial">4.  Tutorial</h2>
+<p>The official tutorial can be found at...
+</p>
+
+<div class="icon_edit_section" style="display:none;"><a href="tiki-editpage.php?page=GISMO+-+a+MATLAB+toolbox+for+seismic+data+analysis&amp;hdr=11"><img src="img/icons/page_edit_section.png" alt="Edit Section" title="Edit Section" class="icon" height="16" width="16"></a></div><h2 class="showhide_heading" id="Cookbooks">5.  Cookbooks</h2>
+<p>Cookbooks are executable snippets of the tutorials.
+</p>
+
+<div class="icon_edit_section" style="display:none;"><a href="tiki-editpage.php?page=GISMO+-+a+MATLAB+toolbox+for+seismic+data+analysis&amp;hdr=12"><img src="img/icons/page_edit_section.png" alt="Edit Section" title="Edit Section" class="icon" height="16" width="16"></a></div><h2 class="showhide_heading" id="Examples_REAL_AMP_Applications_that_use_GISMO">6.  Examples &amp; Applications that use GISMO</h2>
+<div class="icon_edit_section" style="display:none;"><a href="tiki-editpage.php?page=GISMO+-+a+MATLAB+toolbox+for+seismic+data+analysis&amp;hdr=13"><img src="img/icons/page_edit_section.png" alt="Edit Section" title="Edit Section" class="icon" height="16" width="16"></a></div><h2 class="showhide_heading" id="Educational_courses_built_around_GISMO">7.  Educational courses built around GISMO</h2>
+
 
 <h3>
 <a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="http://github.com/giseislab/gismotools/archive/master.zip">Download GISMO Zip file</a></h3>
