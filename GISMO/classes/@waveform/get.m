@@ -234,25 +234,14 @@ function val = grabEndTime(w)
    myfrq = [w.Fs];
    myfrq = myfrq(:);
    
-% GT: This function returns incorrect end time
-% Replacing:
-%   seclen = dlens ./ myfrq;
-
-
-   
-%   to_add = datenum([zeros(numel(w),5) seclen])';
-%   
-%   svals = [w(:).start];
-%   val = svals +  to_add;
-%   
-%   %endvec = datevec([w.start]) + [0 0 0 0 0 length(w.data)/w.Fs];
-%   %endvec = datevec([w.start]) + [0 0 0 0 0 get(w,'data_length') ./ get(w,'Freq')];
-%   %val = datenum(endvec);
-
-% with:
-   seclen = (dlens-1) ./ myfrq;
+   seclen = dlens ./ myfrq;
+   to_add = datenum([zeros(numel(w),5) seclen])';
    svals = [w(:).start];
-   val = svals + (seclen/86400)';
+   val = svals +  to_add;
+   
+   %endvec = datevec([w.start]) + [0 0 0 0 0 length(w.data)/w.Fs];
+   %endvec = datevec([w.start]) + [0 0 0 0 0 get(w,'data_length') ./ get(w,'Freq')];
+   %val = datenum(endvec);
 
 end
 %%%%%%%%%%%%%%%%
