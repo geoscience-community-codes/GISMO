@@ -106,7 +106,7 @@ function self = readCatalog(data_source, varargin)
 %         obj = readCatalog('irisfetch', 'MinimumMagnitude', 7.0);
 %
 %   (4) Read all events within 20 km of Redoubt volcano from IRIS DMC:
-%         obj = readCatalog('irisfetch','radialcoordinates', [60.4853 -152.7431 deg2rad(20)]); 
+%         obj = readCatalog('irisfetch','radialcoordinates', [60.4853 -152.7431 km2deg(20)]); 
 % 
 %   (5) Read Alaska Earthquake Center events greater than M=4.0 in 2009
 %       within rectangular region lat = 55 to 65, lon = -170 to -135 from
@@ -422,7 +422,9 @@ function self = convert_irisFetch_to_Catalog(ev)
     % Create an Event object for each longitude in the list
     event_list = [];
     for i=1:length(ev) % Loop over each element in vector
-        try
+
+
+       % try
             magnitude_obj = [Netmag(NaN)];
             if ~isnan(ev(i).PreferredMagnitudeValue)
                 magnitude_obj = ...
@@ -445,6 +447,7 @@ function self = convert_irisFetch_to_Catalog(ev)
                     );
                 evid = ev(i).PreferredOrigin.ContributorEventId;
             end
+
             if isnumeric(evid)
                 event_list = ...
                     [event_list ...
@@ -462,10 +465,10 @@ function self = convert_irisFetch_to_Catalog(ev)
                     ];               
             end
             
-        catch ME
-            ev(i)
-            rethrow(ME);
-        end
+        %catch ME
+        %    ev(i)
+        %    rethrow(ME);
+        %end
     end
     
     % CREATE CATALOG OBJECT
@@ -865,7 +868,7 @@ function s=read_sfile(sfiledir, sfilebase,sta,chan);
     % Validate    
     fullpath = fullfile(sfiledir, sfilebase);
     if ~ischar(fullpath) || ~exist(fullpath)
-        warning('catalog:readCatalog:notFound','%s not found',fullpath));
+        warning(sprintf('catalog:readCatalog:notFound','%s not found',fullpath));
         % eval(['help ' mfilename]);
         help(mfilename);
     end
@@ -1091,6 +1094,52 @@ function sfilednum=sfile2dnum(sfile)
         error(sprintf('Could not convert %s to a datenum for sfile=%s. Returning 0', datestring, sfile));
     end
 end
+
+function self=read_vdap(filename)
+%READ_VDAP read Hypoellipse summary files and PHA pickfiles
+%   based on Montserrat analog network
+%   cobj = read_vdap(filename) will read the catalog file, and create a
+%   Catalog object
+%
+%   Summary file has lines like:
+%
+%   PHA phase file has lines like:
+%   MGHZEP 1 950814071436.76
+%   MSPTIPU0 950814071437.96
+%   MGATEPU0 950814071437.92                                              00011
+%   MLGT PD0 950814071438.09       39.41 S 2
+%   MWHTEPD1 950814071437.61       38.78 S 2                              00009
+%   1-4: sta code
+%   5:   E or I
+%   6:   P (or blank)
+%   7:   U or D
+%   8:   quality 0-4
+%  10-24: YYMMDDhhmmss.ii for P
+%  31-35: ss.ii for S
+%  37:   S (or blank)
+%  39:   quality 0-4
+% Glenn Thompson 2014/11/14
+
+    %% read the headers and data
+    fid = fopen(phafilename);
+    tline = fgetl(fid);
+    while ischar(tline)
+        tline = fgetl(fid);
+        stacode = tline(1:4);
+        p_eori = tline(5);
+        p = tline(6);
+        p_uord = tline(7);
+        p_qual = tline(8);
+        p_datetime = tline(10:24);
+        s_datetime = tline(31:35);
+        s = tline(37);
+        s_qual = tline(39);
+    end
+    fclose(fid);
+
+
+end
+
 
 function self=read_SRU(filename)
 %READ_SRU read a catalog sent by Seismic Research Unit, University of West

@@ -60,11 +60,11 @@ classdef Event
             p.addParamValue('evname', '', @isstr);
             p.addParamValue('prefor', NaN, @(i) floor(i)==i);
             p.addParamValue('auth', '', @isstr);
-            p.parse(origins, varargin{:});
+            p.parse(origins, varargin{:})
             fields = fieldnames(p.Results);
             for i=1:length(fields)
                 field=fields{i};
-                val = p.Results(field);
+                val = p.Results.(field);
                 obj = obj.set(field, val);
             end 
         end

@@ -45,6 +45,9 @@ addpath(fullfile(gismopath,'classes','rsam'));
 % ADD A PATH TO APPLICATIONS e.g. IceWeb
 addpath(genpath(fullfile(gismopath,'applications')));
 
+% ADD A PATH TO JAR FILES
+javaaddpath('contributed/iris_dmc_tools/IRIS-WS-2.0.15.jar')
+
 %%
 function addContributed(gismopath, contribDir)
 % add each subdirectory within gismopath/contribDir/ to the matlab path
