@@ -696,7 +696,7 @@ classdef rsam
 	                        offset = startsample*4;
 	                        fid = fopen(fname,'r+');
 	                        fseek(fid,offset,'bof');
-	                        debug.print_debug(0, sprintf('saving data with mean of %e from to file %s, starting at position %d',nanmean(datay),fname,startsample,(datapointsperday*daysperyear)))
+	                        debug.print_debug(2, sprintf('saving data with mean of %e from to file %s, starting at position %d',nanmean(datay),fname,startsample,(datapointsperday*daysperyear)))
 	                        fwrite(fid,datay(c),'float32');
 	                        fclose(fid);
 	                    end
@@ -708,7 +708,7 @@ classdef rsam
 	                    offset = startsample*4;
 	                    fid = fopen(fname,'r+','l'); % little-endian. Anything written on a PC is little-endian by default. Sun is big-endian.
 	                    fseek(fid,offset,'bof');
-	                    debug.print_debug(0, sprintf('saving data with mean of %e from to file %s, starting at position %d/%d',nanmean(datay),fname,startsample,(datapointsperday*daysperyear)))
+	                    debug.print_debug(2, sprintf('saving data with mean of %e from to file %s, starting at position %d/%d',nanmean(datay),fname,startsample,(datapointsperday*daysperyear)))
 	                    fwrite(fid,datay,'float32');
 	                    fclose(fid);
 	                end
