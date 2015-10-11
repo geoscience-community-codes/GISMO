@@ -2,22 +2,30 @@ classdef Trace < TraceData
    % Trace is the new waveform
    
    properties(Dependent)
-      network
-      station
-      location
-      channel
-      start
+      network % network code
+      station % station code
+      location % location code
+      channel % channel code
+      start % start time (text)
    end
    
    properties
-      history = {}
+      history = {'created', now}; % history for Trace {'what', when}
+      UserData = struct(); % structure containing user-defined fields
    end
    
    properties(Hidden)
-      mat_starttime
+      mat_starttime % start time in matlab-time
       channelInfo % channelTag
-      misc_fields = {}
-      misc_values = {}
+                    %struct that mirrors UserData, but contains two fields:
+                    %   allowed_type: a class name (or empty). If this
+                    %   exist, then when data is assigned to UserData, it
+                    %   will be type-checked.
+                    %   min_count, max_count: if empty,any sized array can be
+                    %   assigned to this field.  If a single number, then
+                    %   eac assignment must have exactly this number of values.
+                    %   if [min max], then any number of values between min
+      UserDataRules %   and max inclusive may be assigned to this.
    end
    
    methods
@@ -31,7 +39,7 @@ classdef Trace < TraceData
                   obj.history = get(varargin{1},'history');
                   miscFields = get(varargin{1},'misc_fields');
                   for n = 1: numel(miscFields)
-                     obj.misc_values(n,1:2) = {miscFields{n}, get(varargin{1},miscFields{n})};
+                     obj.UserData.(miscFields{n})= get(varargin{1},miscFields{n});
                   end
                end
          end %switch
@@ -57,6 +65,23 @@ classdef Trace < TraceData
          T = datestr(obj.mat_starttime,'yyyy-mm-dd HH:MM:SS.FFF');
       end
       
+      function T = set.UserData(T, val)
+         %sets UserData fields for a trace object
+         % T.UserData.myfield = value;
+         % 
+         % to impose constraings on the values that this field can
+         % retrieve, use: Trace.SetUserDataRule(myfield,...)
+         %
+         % to delete the field:
+         % T.UserData = rmfield(T.UserData, 'fieldToRemove');
+         % see also Trace.SetUserDataRule, rmfield
+         fn = fieldnames(val);
+         for f = 1:numel(fn);
+            testUserField(T, fn{f}, val.(fn{f}))
+         end
+         T.UserData = val;
+      end
+      
       function obj = align(obj, alignTime, newFrequency, method)
          error('unimplemented function');
       end
@@ -76,10 +101,129 @@ classdef Trace < TraceData
       %function legend
       %function linkedplot
       
-      %function addfield
-      %function delfield
-      %function isfield
-      %
+      function testUserField(obj, fn, value)
+         if ~isfield(obj.UserDataRules,fn) 
+            return;
+         end
+         if ~isfield(obj.UserData,fn)
+            if exist('value','var')
+               % continue on
+            else
+               return
+            end
+         end
+               
+         
+         rules = obj.UserDataRules.(fn);
+         if ~rules.inUse
+            return
+         end
+         if ~exist('value','var')
+           value = obj.UserData.(fn);
+         end
+         % test the type
+         if ~isempty(rules.allowed_type) && ...
+               ~isa(value, rules.allowed_type)
+            error('User-defined field [%s] requires input of class [%s], but value was a [%s]',...
+               fn, rules.allowed_type, class(value));
+         end
+         % test the number of items
+         if ~isempty(rules.min_count) && numel(value) < rules.min_count
+            error('User-defined field [%s]: Size of value [%d] is too small. Min allowed size is %d',...
+               fn, numel(value), rules.min_count);
+         end
+         if ~isempty(rules.max_count) && numel(value) > rules.max_count
+            error('User-defined field [%s]: Size of value [%d] is too big. Max allowed size is %d',...
+               fn, numel(value), rules.max_count);
+         end
+         % test the value (only works for numeric types)
+         if ~isempty(rules.min_value) && value < rules.min_value
+            error('User-defined field [%s]: Assigned value [%f] is too small. Min allowed is %f',...
+               fn, value, rules.min_value);
+         end
+         if ~isempty(rules.max_value) && value >rules.max_value
+            error('User-defined field [%s]: Assigned value [%f] is too big. Max allowed is %f',...
+               fn, value, rules.max_value);
+         end
+      end
+      
+      function T = setUserDataRule(T, fieldname, allowedType, allowedCount, allowedRange) 
+         % setUserDataRule creates rules that govern setting various userdata fields.
+         % T = T.setUserData(fieldname, classname) will have the class
+         % checked each time a value is assigned to the UserData
+         % field T.UserData.fieldname.
+         %
+         % T = T.setUserDataRule(fieldname, classname, count) controls the
+         % array size for any assignments to T.UserData.fieldname.  count
+         % may be a single number N or a range [nMin nMax]
+         % for any value assigned to T.UserData.fieldname,
+         %    numel(value) == N or Nmin <= numel(value) <= Nmax
+         %
+         % T = T.setUserDataRule(fieldname, classname, count, range)
+         % for numeric classes, range will specify the min/max values. 
+         %
+         % T = T.setUserDataRule(fieldname) will clear the constraints.
+         % examples:
+         % T = T.setUserDataRule('height','double',1, [0 inf]); will ensure
+         % that height will always be a scalar positive double
+         % ...setUserDataRule('code','char',[1 4]) will ensure that any
+         % assignments to T.UserData.code will be a string between 1 and 4
+         % characters in length.
+         %
+         assert(ischar(fieldname))
+         if ~exist('allowedType', 'var')
+            T.UserDataRules.(fieldname).inUse = false;
+            return
+         else
+            T.UserDataRules.(fieldname).inUse = true;
+         end
+         %add the rules to UserDataRules
+         if ischar(allowedType) || isempty(allowedType)
+            T.UserDataRules.(fieldname).allowed_type = allowedType;
+         else
+            error('AllowedType must be a class name or empty');
+         end
+         
+         if ~exist('allowedCount', 'var')
+            allowedCount = [];
+         end
+         if isnumeric(allowedCount)
+            switch numel(allowedCount)
+               case 0
+                  T.UserDataRules.(fieldname).min_count = -inf;
+                  T.UserDataRules.(fieldname).max_count = inf;
+               case 1
+                  T.UserDataRules.(fieldname).min_count = allowedCount;
+                  T.UserDataRules.(fieldname).max_count = allowedCount;
+               case 2
+                  T.UserDataRules.(fieldname).min_count = allowedCount(1);
+                  T.UserDataRules.(fieldname).max_count = allowedCount(2);
+               otherwise
+                  error('allowedCount must be either empty, or numeric with 1 or 2 values');
+            end
+         else
+            error('allowedCount must be either empty, or numeric with 1 or 2 values');
+         end
+         
+         if ~exist('allowedRange', 'var') || strcmp(allowedType,'char') 
+            allowedRange = [];
+         end
+         if isnumeric(allowedRange)
+            switch numel(allowedRange)
+               case 0
+                  T.UserDataRules.(fieldname).min_value = [];
+                  T.UserDataRules.(fieldname).max_value = [];
+               case 2
+                  T.UserDataRules.(fieldname).min_value = allowedRange(1);
+                  T.UserDataRules.(fieldname).max_value = allowedRange(2);
+               otherwise
+                  error('allowedRange must be either empty, or [min max]');
+            end
+         else
+            error('allowedRange must be either empty, or [min max]');
+         end
+      end
+         
       %function addhistory
       %function clearhistory
       %function history
@@ -87,7 +231,7 @@ classdef Trace < TraceData
          %PLOT plots a waveform object
          %   h = plot(waveform)
          %   Plots a waveform object, handling the title and axis labeling.  The
-         %   output parameter h is optional.  If used, the handle to the waveform
+         %      output parameter h is optional.  If u, thto the waveform
          %   plots will be returned.  These can be used to change properties of the
          %   plotted waveforms.
          %
