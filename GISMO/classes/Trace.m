@@ -7,6 +7,7 @@ classdef Trace < TraceData
       location % location code
       channel % channel code
       start % start time (text)
+      sampletimes
    end
    
    properties
@@ -65,10 +66,34 @@ classdef Trace < TraceData
          T = datestr(obj.mat_starttime,'yyyy-mm-dd HH:MM:SS.FFF');
       end
       
+ 
+      function val = get.sampletimes(obj)
+         assert(numel(obj) == 1, 'only works on one at a time');
+         sampPerSec = obj.samplefreq;
+         matstep = datenum(0,0,0,0,0, 1 / sampPerSec);
+         val = (0:(numel(obj.data)-1)) .* matstep + obj.mat_starttime;
+         val = val(:);
+      end
+      
+      function obj = align(obj, alignTime, newFrequency, method)
+         error('unimplemented function');
+      end
+      
+      %% Handling User-defined fields
+      %TODO: Guarentee or document how the userfield things work for
+      %multiple trace objects. First thought: They should be performed
+      %individually, on a single object
+      %
+      % waveform/delfield has been replaced by using matlab's rmfield:
+      % T.UserData = rmfield(T.UserData, 'fieldToDelete');
+      
+      % isfield is not implemented because matlab's can be used:
+      % isfield(T.UserData,'something');
+      
       function T = set.UserData(T, val)
          %sets UserData fields for a trace object
          % T.UserData.myfield = value;
-         % 
+         %
          % to impose constraings on the values that this field can
          % retrieve, use: Trace.SetUserDataRule(myfield,...)
          %
@@ -82,25 +107,6 @@ classdef Trace < TraceData
          T.UserData = val;
       end
       
-      function obj = align(obj, alignTime, newFrequency, method)
-         error('unimplemented function');
-      end
-      
-      %function stack
-      %function binstack
-      %function combine
-      %function extract
-      %function gettimerange
-      %function ismember
-      %function isvertical (?) don't like this.
-      
-      %function calib_apply
-      %function calib_remove
-      
-      %function plot
-      %function legend
-      %function linkedplot
-      
       function testUserField(obj, fn, value)
          if ~isfield(obj.UserDataRules,fn) 
             return;
@@ -112,8 +118,6 @@ classdef Trace < TraceData
                return
             end
          end
-               
-         
          rules = obj.UserDataRules.(fn);
          if ~rules.inUse
             return
@@ -223,10 +227,28 @@ classdef Trace < TraceData
             error('allowedRange must be either empty, or [min max]');
          end
       end
+      
+      %%
+      %function stack
+      %function binstack
+      %function combine
+      %function extract
+      %function gettimerange
+      %function ismember
+      %function isvertical (?) don't like this.
+      
+      %function calib_apply
+      %function calib_remove
+      
+      %function plot
+      %function legend
+      %function linkedplot
+      
          
       %function addhistory
       %function clearhistory
       %function history
+      
       function varargout = plot(T, varargin)
          %PLOT plots a waveform object
          %   h = plot(waveform)
@@ -317,9 +339,8 @@ classdef Trace < TraceData
          switch lower(xunit)
             case 'date'
                % we need the actual times...
-               tv = get(T,'timevector');
-               if ~isa(tv,'cell')
-                  tv = {tv}; %make it a cell for ease of use...
+               for n=1:numel(T)
+                  tv(n) = {T(n).sampletimes};
                end
                % preAllocate Xvalues
                tvl = zeros(size(tv));
@@ -383,10 +404,10 @@ classdef Trace < TraceData
          end
          if isscalar(T)
             th = title(sprintf('%s (%s) - starting %s',...
-               get(T,'station'),get(T,'channel'),get(T,'start_str')),'interpreter','none');
+               T.station, T.channel, T.start),'interpreter','none');
          else
             th = title(sprintf('Multiple waves.  wave(1) = %s (%s) - starting %s',...
-               get(T(1),'station'),get(T(1),'channel'),get(T(1),'start_str')),'interpreter','none');
+               T(1).station, T(1).channel, T(1).start),'interpreter','none');
          end;
          
          
@@ -438,11 +459,13 @@ classdef Trace < TraceData
             hasExtraArg = mod(numel(arglist),2);
             if hasExtraArg
                proplist =  parseargs(arglist(2:end));
+            formString = arglist{1};
             else
                proplist =  parseargs(arglist);
+               formString = '';
             end
-            formString = arglist{1};
          end
+         
          function c = property2varargin(properties)
             %PROPERTY2VARARGIN makes a cell array from properties
             %  c = property2varargin(properties)

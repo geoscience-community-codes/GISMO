@@ -343,9 +343,23 @@ classdef TraceData
          end
       end
       
-      function d = double(obj)
+      function d = double(obj,option)
          % double get TraceData data as zero-padded columns
-         d=[];
+         if nargin == 1
+            createDefaultArray = @zeros;
+         else
+            if ischar(option)
+               createDefaultArray = str2func(option);
+            elseif isa(option,'function_handle')
+               createDefaultArray = option;
+            else
+               error('waveform:double:invalidOption',...
+                  '''option'' must be either a function handle or function name.');
+            end
+         end
+         dlens = arrayfun(@(x) numel(x.data), obj);
+         maxlen = max(dlens(:));
+         d = createDefaultArray(maxlen,numel(obj));
          for n = obj
             d(1:numel(n.data),end+1) = double(n.data);
          end
