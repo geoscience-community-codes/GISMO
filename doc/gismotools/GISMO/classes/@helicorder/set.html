@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of set</title>
+  <meta name="keywords" content="set">
+  <meta name="description" content="SET: Set helicorder properties">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@helicorder</a> &gt; set.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@helicorder&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>set
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>SET: Set helicorder properties</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function h = set(h,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SET: Set helicorder properties
+   val = get(helicorder,prop_name,prop_val)
+
+   Valid property names:
+       WAVE, E_SST, MPL, TRACE_COLOR, EVENT_COLOR, DISPLAY, SCALE
+
+   See also <a href="helicorder.html" class="code" title="function h = helicorder(varargin)">HELICORDER</a>, HELICORDER/SET
+
+ Author: Dane Ketner, Alaska Volcano Observatory
+ $Date$
+ $Revision$</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="build.html" class="code" title="function varargout = build(h)">build</a>	BUILD: Helicorder builder function. A helicorder object (h) contains no</li><li><a href="helicorder.html" class="code" title="function h = helicorder(varargin)">helicorder</a>	HELICORDER: Helicorder generates a multi-line display of input waveform</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function h = set(h,varargin)</a>
+0002 <span class="comment">%SET: Set helicorder properties</span>
+0003 <span class="comment">%   val = get(helicorder,prop_name,prop_val)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   Valid property names:</span>
+0006 <span class="comment">%       WAVE, E_SST, MPL, TRACE_COLOR, EVENT_COLOR, DISPLAY, SCALE</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   See also HELICORDER, HELICORDER/SET</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% Author: Dane Ketner, Alaska Volcano Observatory</span>
+0011 <span class="comment">% $Date$</span>
+0012 <span class="comment">% $Revision$</span>
+0013 
+0014 <span class="keyword">if</span> ~isa(h,<span class="string">'helicorder'</span>)
+0015    error(<span class="string">'HELICORDER/SET: Not a valid helicorder object'</span>)
+0016 <span class="keyword">end</span>
+0017 
+0018 <span class="keyword">if</span> ~rem(nargin-1,2) == 0
+0019       error([<span class="string">'HELICORDER/SET: Arguments after h must appear in '</span>,<span class="keyword">...</span>
+0020              <span class="string">'property name/val pairs'</span>])
+0021 <span class="keyword">end</span>
+0022 
+0023 <span class="keyword">for</span> n = 1:2:nargin-2
+0024    nw = numel(h.wave); <span class="comment">% Number of waveforms in h</span>
+0025    pn = varargin{n};   <span class="comment">% Property name</span>
+0026    pv = varargin{n+1}; <span class="comment">% Property value</span>
+0027    nv = numel(pv);     <span class="comment">% Number of elements in property value</span>
+0028    sv = size(pv);      <span class="comment">% Size of property value</span>
+0029    
+0030    <span class="keyword">switch</span> lower(pn)
+0031       <span class="keyword">case</span> <span class="string">'wave'</span>
+0032          <span class="keyword">if</span> ~isa(pv,<span class="string">'waveform'</span>)
+0033             error(<span class="string">'HELICORDER/SET: wave property is not a waveform'</span>)
+0034          <span class="keyword">end</span>
+0035          <span class="keyword">if</span> numel(pv)~=nw
+0036             error([<span class="string">'HELICORDER/SET: new waveform dimensions must match'</span>,<span class="keyword">...</span>
+0037                    <span class="string">' existing waveform dimensions'</span>])
+0038          <span class="keyword">end</span>
+0039          h.wave = pv;
+0040          
+0041       <span class="keyword">case</span> <span class="string">'e_sst'</span>
+0042          <span class="keyword">if</span> isnumeric(pv) &amp;&amp; (sv(2)==2) &amp;&amp; (nw==1) 
+0043             pv={pv};
+0044             nv = 1;
+0045          <span class="keyword">end</span>
+0046          <span class="keyword">if</span> iscell(pv)
+0047             <span class="keyword">for</span> m = 1:nv
+0048                sub = pv{m};
+0049                <span class="keyword">if</span> (isnumeric(sub) &amp;&amp; (size(sub,2)==2))||isempty(sub)
+0050                <span class="keyword">elseif</span> iscell(sub)
+0051                   <span class="keyword">for</span> mm = 1:numel(sub)
+0052                      subsub = sub{mm};
+0053                      <span class="keyword">if</span> ~(isnumeric(subsub) &amp;&amp; (size(subsub,2)==2))
+0054                         error(<span class="string">'HELICORDER/SET: wrong e_sst format'</span>)
+0055                      <span class="keyword">end</span>
+0056                   <span class="keyword">end</span>                     
+0057                <span class="keyword">else</span>
+0058                   error(<span class="string">'HELICORDER/SET: wrong e_sst format'</span>)
+0059                <span class="keyword">end</span>
+0060             <span class="keyword">end</span>
+0061             h.e_sst = pv;
+0062          <span class="keyword">elseif</span> isempty(pv)
+0063             <span class="keyword">for</span> m = 1:nw
+0064                h.e_sst{m} = []; <span class="comment">% Set all e_sst to empty</span>
+0065             <span class="keyword">end</span>
+0066          <span class="keyword">else</span>
+0067             error(<span class="string">'HELICORDER/SET: wrong e_sst format'</span>)
+0068          <span class="keyword">end</span>
+0069          
+0070       <span class="keyword">case</span> <span class="string">'mpl'</span>
+0071          <span class="keyword">if</span> isnumeric(pv) &amp;&amp; nv==1
+0072             h.mpl = pv;
+0073          <span class="keyword">else</span>
+0074             error(<span class="string">'HELICORDER/SET: wrong mpl format'</span>)
+0075          <span class="keyword">end</span>
+0076          
+0077       <span class="keyword">case</span> <span class="string">'ytick'</span>
+0078          <span class="keyword">if</span> isnumeric(pv) &amp;&amp; nv==1
+0079             h.ytick = pv;
+0080          <span class="keyword">else</span>
+0081             error(<span class="string">'HELICORDER/SET: wrong ytick format'</span>)
+0082          <span class="keyword">end</span>   
+0083          
+0084       <span class="keyword">case</span> <span class="string">'trace_color'</span>
+0085          <span class="keyword">if</span> sv(2)==3 &amp;&amp; isnumeric(pv)
+0086             pv = {pv};
+0087             nv = 1;
+0088          <span class="keyword">end</span>
+0089          <span class="keyword">if</span> (nw==nv) &amp;&amp; iscell(pv)
+0090             <span class="keyword">for</span> m = 1:nv
+0091                <span class="keyword">if</span> size(pv{m},2)==3
+0092                   <span class="keyword">for</span> mm = 1:numel(pv{m})
+0093                      <span class="keyword">if</span> ~(pv{m}(mm)&lt;=1 &amp;&amp; pv{m}(mm)&gt;=0)
+0094                         error([<span class="string">'HELICORDER/SET: trace_color RGB values must '</span>,<span class="keyword">...</span>
+0095                            <span class="string">'be between 0 and 1'</span>])
+0096                      <span class="keyword">end</span>
+0097                   <span class="keyword">end</span>
+0098                <span class="keyword">end</span>
+0099             <span class="keyword">end</span>
+0100             h.trace_color = pv;
+0101          <span class="keyword">else</span>
+0102             error(<span class="string">'HELICORDER/SET: wrong trace_color format'</span>)
+0103          <span class="keyword">end</span>
+0104          
+0105       <span class="keyword">case</span> <span class="string">'event_color'</span>
+0106          h.event_color = pv;
+0107          
+0108       <span class="keyword">case</span> <span class="string">'display'</span>
+0109          h.display = pv;
+0110          
+0111       <span class="keyword">case</span> <span class="string">'scale'</span>
+0112          <span class="keyword">if</span> isnumeric(pv) &amp;&amp; nv==nw
+0113             h.scale = pv;
+0114          <span class="keyword">elseif</span> isnumeric(pv) &amp;&amp; nv==1
+0115             h.scale = pv*ones(1,nw);
+0116          <span class="keyword">else</span>
+0117             error(<span class="string">'HELICORDER/SET: wrong scale format'</span>)
+0118          <span class="keyword">end</span>   
+0119 
+0120       <span class="keyword">otherwise</span>
+0121          error(<span class="string">'HELICORDER/GET: Not a valid helicorder property'</span>)
+0122     <span class="keyword">end</span>
+0123 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

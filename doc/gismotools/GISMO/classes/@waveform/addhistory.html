@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of addhistory</title>
+  <meta name="keywords" content="addhistory">
+  <meta name="description" content="ADDHISTORY function in charge of adding history to a waveform">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; addhistory.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>addhistory
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>ADDHISTORY function in charge of adding history to a waveform</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = addhistory(w, whathappened,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">ADDHISTORY function in charge of adding history to a waveform
+   waveform = addhistory(waveform, whathappened);
+   waveform = addhistory(waveform, formatString, [variables...])
+
+   Mostly, addhistory is internal to the waveform methods, and will be
+   updated automatically when you change the waveform.  Things like
+   filtering, taking a hilbert envelope, or detrending will automatically
+   drop notes into the waveform's HISTORY field.
+
+   The second way of using addhistory follows the syntax of sprintf
+
+   Input Arguments
+       WAVEFORM: a waveform object   N-DIMENSIONAL
+       WHATHAPPENED: absolutely anything.  Really.
+
+   AddHistory appends not only what happened, but also keeps track of WHEN
+   it happened.
+
+   Control of whether or not history is added automatically lies within
+   the waveform constructor (in a global variable called WAVEFORM_HISTORY)
+
+   example
+       w = waveform; %create a blank waveform
+       w = addhistory(w,'the following procedures done by DoIt.m');
+       N = 1; M = 'Today'
+       w = addhistory(w,'this is sample #%d date:%s',N,M);
+       % output: &quot;this is sample #1 date:Today&quot;
+
+
+ See also WAVEFORM/ADDFIELD, WAVEFORM/GET, WAVEFORM/HISTORY, SPRINTF</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="align.html" class="code" title="function w = align(w,alignTime, newFrequency, method)">align</a>	ALIGN resamples a waveform at over a specified interval</li><li><a href="clearhistory.html" class="code" title="function w = clearhistory(w)">clearhistory</a>	CLEARHISTORY reset history of a waveform</li><li><a href="clip.html" class="code" title="function w = clip(w, vals)">clip</a>	CLIP clips a waveform's data at a particular max/min value range</li><li><a href="combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and channeltag info.</li><li><a href="loadobj.html" class="code" title="function b = loadobj(a)">loadobj</a>	LOADOBJ updates older versions of waveform class upon loading</li><li><a href="remove_calib.html" class="code" title="function w = remove_calib(w)">remove_calib</a>	WAVEFORM = REMOVE_CALIB(WAVEFORM) removes calibration factor</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="stack.html" class="code" title="function out = stack(w)">stack</a>	STACK stacks data from array of waveforms</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = addhistory(w, whathappened,varargin)</a>
+0002    <span class="comment">%ADDHISTORY function in charge of adding history to a waveform</span>
+0003    <span class="comment">%   waveform = addhistory(waveform, whathappened);</span>
+0004    <span class="comment">%   waveform = addhistory(waveform, formatString, [variables...])</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">%   Mostly, addhistory is internal to the waveform methods, and will be</span>
+0007    <span class="comment">%   updated automatically when you change the waveform.  Things like</span>
+0008    <span class="comment">%   filtering, taking a hilbert envelope, or detrending will automatically</span>
+0009    <span class="comment">%   drop notes into the waveform's HISTORY field.</span>
+0010    <span class="comment">%</span>
+0011    <span class="comment">%   The second way of using addhistory follows the syntax of sprintf</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">%   Input Arguments</span>
+0014    <span class="comment">%       WAVEFORM: a waveform object   N-DIMENSIONAL</span>
+0015    <span class="comment">%       WHATHAPPENED: absolutely anything.  Really.</span>
+0016    <span class="comment">%</span>
+0017    <span class="comment">%   AddHistory appends not only what happened, but also keeps track of WHEN</span>
+0018    <span class="comment">%   it happened.</span>
+0019    <span class="comment">%</span>
+0020    <span class="comment">%   Control of whether or not history is added automatically lies within</span>
+0021    <span class="comment">%   the waveform constructor (in a global variable called WAVEFORM_HISTORY)</span>
+0022    <span class="comment">%</span>
+0023    <span class="comment">%   example</span>
+0024    <span class="comment">%       w = waveform; %create a blank waveform</span>
+0025    <span class="comment">%       w = addhistory(w,'the following procedures done by DoIt.m');</span>
+0026    <span class="comment">%       N = 1; M = 'Today'</span>
+0027    <span class="comment">%       w = addhistory(w,'this is sample #%d date:%s',N,M);</span>
+0028    <span class="comment">%       % output: &quot;this is sample #1 date:Today&quot;</span>
+0029    <span class="comment">%</span>
+0030    <span class="comment">%</span>
+0031    <span class="comment">% See also WAVEFORM/ADDFIELD, WAVEFORM/GET, WAVEFORM/HISTORY, SPRINTF</span>
+0032    
+0033    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0034    <span class="comment">% $Date$</span>
+0035    <span class="comment">% $Revision$</span>
+0036    
+0037    
+0038    
+0039    <span class="keyword">global</span> WAVEFORM_HISTORY
+0040    <span class="keyword">if</span> nargin &gt; 2,
+0041       whathappened = sprintf(whathappened, varargin{:});
+0042    <span class="keyword">end</span>
+0043    <span class="keyword">if</span> WAVEFORM_HISTORY
+0044       modtime = now;
+0045       <span class="keyword">for</span> N = 1 : numel(w);
+0046          <span class="comment">%History is stored in a cell, the format of which is [WHAT, WHEN]</span>
+0047          <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(w(N).history)
+0048             w(N).history = {whathappened, modtime};
+0049          <span class="keyword">else</span>
+0050             w(N).history = [w(N).history; {whathappened, modtime}];
+0051          <span class="keyword">end</span>
+0052       <span class="keyword">end</span>
+0053    <span class="keyword">end</span>
+0054 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

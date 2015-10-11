@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of stack</title>
+  <meta name="keywords" content="stack">
+  <meta name="description" content="STACK stacks data from array of waveforms">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; stack.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>stack
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>STACK stacks data from array of waveforms</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function out = stack(w) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">STACK stacks data from array of waveforms
+   StackedWave = stack(waveforms)
+   ASSUMES frequencies are the same. data does not need to be the same
+   length, but shorter waveforms will be padded with zeros at the end
+   prior to stacking.
+
+   Stacks all waves, regardless of waveform's dimension
+
+   Data is summed, but the average is not taken, nor is it normalized. You
+   may wish to change the station and/or channel names to reflect the
+   properties of this waveform.  Possibly change the units, also, if that
+   makes sense.
+
+   Output retains the same info as the very first waveform (minus history)
+   the station name becomes the original name with &quot;- stack&quot; tacked onto
+   the end.
+
+
+   To ensure frequency and time matching, use ALIGN
+
+   See also WAVEFORM/ALIGN</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>	ADDHISTORY function in charge of adding history to a waveform</li><li><a href="clearhistory.html" class="code" title="function w = clearhistory(w)">clearhistory</a>	CLEARHISTORY reset history of a waveform</li><li><a href="double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="bin_stack.html" class="code" title="function stk = bin_stack(w,bin,ovr)">bin_stack</a>	BIN_STACK: Stack input waveforms with N waveforms per stack. The number N</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function out = stack(w)</a>
+0002    <span class="comment">%STACK stacks data from array of waveforms</span>
+0003    <span class="comment">%   StackedWave = stack(waveforms)</span>
+0004    <span class="comment">%   ASSUMES frequencies are the same. data does not need to be the same</span>
+0005    <span class="comment">%   length, but shorter waveforms will be padded with zeros at the end</span>
+0006    <span class="comment">%   prior to stacking.</span>
+0007    <span class="comment">%</span>
+0008    <span class="comment">%   Stacks all waves, regardless of waveform's dimension</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">%   Data is summed, but the average is not taken, nor is it normalized. You</span>
+0011    <span class="comment">%   may wish to change the station and/or channel names to reflect the</span>
+0012    <span class="comment">%   properties of this waveform.  Possibly change the units, also, if that</span>
+0013    <span class="comment">%   makes sense.</span>
+0014    <span class="comment">%</span>
+0015    <span class="comment">%   Output retains the same info as the very first waveform (minus history)</span>
+0016    <span class="comment">%   the station name becomes the original name with &quot;- stack&quot; tacked onto</span>
+0017    <span class="comment">%   the end.</span>
+0018    <span class="comment">%</span>
+0019    <span class="comment">%</span>
+0020    <span class="comment">%   To ensure frequency and time matching, use ALIGN</span>
+0021    <span class="comment">%</span>
+0022    <span class="comment">%   See also WAVEFORM/ALIGN</span>
+0023    
+0024    <span class="comment">% VERSION: 1.1 of waveform objects</span>
+0025    <span class="comment">% AUTHOR: Celso Reyes (celso@gi.alaska.edu)</span>
+0026    <span class="comment">% LASTUPDATE: 3/15/2009</span>
+0027    
+0028    out = w(1);
+0029    out = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(out,<span class="string">'station'</span>,[<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(out,<span class="string">'station'</span>) <span class="string">' - stack'</span>]);
+0030    out = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(out,<span class="string">'data'</span>,sum(<a href="double.html" class="code" title="function n = double(W, option)">double</a>(w),2));
+0031    out = <a href="clearhistory.html" class="code" title="function w = clearhistory(w)">clearhistory</a>(out);
+0032    out = <a href="addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>(out,[<span class="string">'Stack of '</span>, num2str(numel(w)), <span class="string">'waveforms'</span>]);
+0033 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dbload</title>
+  <meta name="keywords" content="dbload">
+  <meta name="description" content="DBLOAD extracts travel times from a database">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">contributed_antelope</a> &gt; <a href="#">traveltime_and_ray_coverage</a> &gt; <a href="index.html">+ttimes</a> &gt; dbload.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>dbload
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>DBLOAD extracts travel times from a database</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function [origin,site,arrival,ray] = dbload(dbName) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DBLOAD extracts travel times from a database
+ [ORIGIN,SITE,ARRIVAL,RAY] = DBLOAD(DBNAME) reads an Antelope database
+ DBNAME and creates structures with information needed to explore the
+ traveltime and ray coverage of an earthquake catalog. DBNAME must contain
+ the following tables: origin, event, assoc, arrival and site Antelope
+ database tables.
+ 
+
+ -- OUTPUT ARGUMENTS --
+
+ ORIGIN
+ This is a minimally populated catalog object (see help catalog) that
+ describes the earthquake hypocenters. It includes the fields lat, lon,
+ depth (km, positive down), origin time (Matlab datenum format), magnitude
+ (Ml) and origin id (orid). One element for each earthquake.
+
+ ARRIVAL
+ This structure describes the phase arrivals. Fields include station name
+ (sta), phase name (iphase), travel time (seconds), timeRes (modeled
+ travel time residual. specifically it is the observed travel time minus
+ the model predicted travel time) and orid. One element for each pahse
+ arrival.
+
+ RAY
+ This structure crudely describes the ray path coverage. It's elements are
+ the same length as the elements of arrival. They include originLat,
+ otiginLon, originDepth (km, positive down), siteLat, siteLon, siteElev
+ (km, positive down) and flatDist (the horizontal distance in km between
+ the origin and and site. RAY contains information that is redundant to
+ other structures. it exists to allow faster plotting of ray paths.
+
+ STATION
+ This structure descibes the stations. Fields include sta (station name),
+ lat, lon, elevation. STATION has one element for each station. Only
+ stations that have at least one phase arrival are included.
+
+
+ CAVEATS
+ Only P and S phase arrivals are loaded from the database since the goal
+ of the ttimes package is to prepare local/regional scale tomography data.
+ Because there are so many ways users might wish to cull the dataset, this
+ is best done directly on the database before final application of this
+ function. No subsetting functions are included here.
+ 
+ See also ttimes.<a href="map.html" class="code" title="function map(dbName)">map</a> ttimes.<a href="depth_section.html" class="code" title="function depth_section(dbName)">depth_section</a> ttimes.<a href="tt_curve.html" class="code" title="function traveltime(dbName,varargin)">tt_curve</a>
+ ttimes.<a href="arrival_histogram.html" class="code" title="function arrival_histogram(dbName)">arrival_histogram</a> ttimes.<a href="write_lotos.html" class="code" title="function write_lotos(dbName)">write_lotos</a> ttimes.<a href="do_all.html" class="code" title="function do_all(dbName)">do_all</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [origin,site,arrival,ray] = dbload(dbName)</a>
+0002 
+0003 <span class="comment">%DBLOAD extracts travel times from a database</span>
+0004 <span class="comment">% [ORIGIN,SITE,ARRIVAL,RAY] = DBLOAD(DBNAME) reads an Antelope database</span>
+0005 <span class="comment">% DBNAME and creates structures with information needed to explore the</span>
+0006 <span class="comment">% traveltime and ray coverage of an earthquake catalog. DBNAME must contain</span>
+0007 <span class="comment">% the following tables: origin, event, assoc, arrival and site Antelope</span>
+0008 <span class="comment">% database tables.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% -- OUTPUT ARGUMENTS --</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% ORIGIN</span>
+0014 <span class="comment">% This is a minimally populated catalog object (see help catalog) that</span>
+0015 <span class="comment">% describes the earthquake hypocenters. It includes the fields lat, lon,</span>
+0016 <span class="comment">% depth (km, positive down), origin time (Matlab datenum format), magnitude</span>
+0017 <span class="comment">% (Ml) and origin id (orid). One element for each earthquake.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% ARRIVAL</span>
+0020 <span class="comment">% This structure describes the phase arrivals. Fields include station name</span>
+0021 <span class="comment">% (sta), phase name (iphase), travel time (seconds), timeRes (modeled</span>
+0022 <span class="comment">% travel time residual. specifically it is the observed travel time minus</span>
+0023 <span class="comment">% the model predicted travel time) and orid. One element for each pahse</span>
+0024 <span class="comment">% arrival.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% RAY</span>
+0027 <span class="comment">% This structure crudely describes the ray path coverage. It's elements are</span>
+0028 <span class="comment">% the same length as the elements of arrival. They include originLat,</span>
+0029 <span class="comment">% otiginLon, originDepth (km, positive down), siteLat, siteLon, siteElev</span>
+0030 <span class="comment">% (km, positive down) and flatDist (the horizontal distance in km between</span>
+0031 <span class="comment">% the origin and and site. RAY contains information that is redundant to</span>
+0032 <span class="comment">% other structures. it exists to allow faster plotting of ray paths.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% STATION</span>
+0035 <span class="comment">% This structure descibes the stations. Fields include sta (station name),</span>
+0036 <span class="comment">% lat, lon, elevation. STATION has one element for each station. Only</span>
+0037 <span class="comment">% stations that have at least one phase arrival are included.</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">% CAVEATS</span>
+0041 <span class="comment">% Only P and S phase arrivals are loaded from the database since the goal</span>
+0042 <span class="comment">% of the ttimes package is to prepare local/regional scale tomography data.</span>
+0043 <span class="comment">% Because there are so many ways users might wish to cull the dataset, this</span>
+0044 <span class="comment">% is best done directly on the database before final application of this</span>
+0045 <span class="comment">% function. No subsetting functions are included here.</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">% See also ttimes.map ttimes.depth_section ttimes.tt_curve</span>
+0048 <span class="comment">% ttimes.arrival_histogram ttimes.write_lotos ttimes.do_all</span>
+0049 
+0050 
+0051 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0052 <span class="comment">% $Date$</span>
+0053 <span class="comment">% $Revision$</span>
+0054 
+0055 
+0056 
+0057 <span class="comment">% CHECK FOR VALID DATABASE</span>
+0058 <span class="keyword">if</span> ~admin.antelope_exists
+0059    error(<span class="string">'This function requires the Antelope toolbox for Matlab'</span>); 
+0060 <span class="keyword">end</span>
+0061 
+0062 
+0063 <span class="keyword">try</span>
+0064     db = dbopen(dbName,<span class="string">'r'</span>);
+0065     dbclose(db);
+0066 <span class="keyword">catch</span>
+0067     error([<span class="string">'Could not open database: '</span> dbName]);
+0068 <span class="keyword">end</span>
+0069 
+0070 
+0071 <span class="comment">% FOR DEBUGGING</span>
+0072 <span class="comment">%  dbName = '/Users/west/FIELDDATA/doc/database/origin/2009april-2010april/reviewed';</span>
+0073 <span class="comment">%  [origin,site,arrival,ray] = ttimes.dbload(dbName);</span>
+0074 
+0075 <span class="comment">%% ACCESS DATABASE</span>
+0076 <span class="comment">% CREATE DATABASE VIEW</span>
+0077 <span class="keyword">try</span>
+0078     <span class="comment">% Entire database</span>
+0079     db = dbopen(dbName,<span class="string">'r'</span>);
+0080     
+0081     <span class="comment">% Event view</span>
+0082     db = dblookup_table(db,<span class="string">'origin'</span>);
+0083     db1 = dblookup_table(db,<span class="string">'event'</span>);
+0084     db = dbjoin(db,db1);
+0085     db = dbsubset(db,<span class="string">'orid==prefor'</span>);
+0086     nEvents = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0087     oridList = dbgetv(db,<span class="string">'orid'</span>);
+0088     <span class="comment">%disp(['Number of origins: ' num2str(nEvents) ]);</span>
+0089     [tmp.lat,tmp.lon,tmp.depth,tmp.time,tmp.ml,tmp.orid,tmp.nass] = dbgetv(db,<span class="string">'origin.lat'</span>,<span class="string">'origin.lon'</span>,<span class="string">'origin.depth'</span>,<span class="string">'origin.time'</span>,<span class="string">'origin.ml'</span>,<span class="string">'origin.orid'</span>,<span class="string">'origin.nass'</span>);
+0090     tmp.time = epoch2datenum(tmp.time);
+0091     f = find(tmp.ml &lt; -2);
+0092     tmp.ml(f)=-2;
+0093     f = find(tmp.nass &lt; 0);
+0094     tmp.nass(f)=0;
+0095     origin = catalog;
+0096     origin = set(origin,<span class="string">'LAT'</span>,tmp.lat,<span class="string">'LON'</span>,tmp.lon,<span class="string">'DEPTH'</span>,tmp.depth,<span class="string">'DNUM'</span>,tmp.time,<span class="string">'mag'</span>,tmp.ml,<span class="string">'ORID'</span>,tmp.orid,<span class="string">'NASS'</span>,tmp.nass);
+0097     
+0098     <span class="comment">% Arrival view</span>
+0099     db1 = dblookup_table(db,<span class="string">'assoc'</span>);
+0100     db = dbjoin(db,db1);
+0101     db1 = dblookup_table(db,<span class="string">'arrival'</span>);
+0102     db = dbjoin(db,db1);
+0103     db = dbsubset(db,<span class="string">'iphase==&quot;S&quot; || iphase==&quot;P&quot;'</span>);
+0104     db1 = dblookup_table(db,<span class="string">'site'</span>);
+0105     db = dbjoin(db,db1);
+0106     nArrivals = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0107     <span class="comment">%disp(['Number of arrivals: ' num2str(nArrivals) ]);</span>
+0108     [arrival.sta,arrival.iphase,arrival.time,arrival.originTime,arrival.timeres,arrival.orid] = dbgetv(db,<span class="string">'arrival.sta'</span>,<span class="string">'arrival.iphase'</span>,<span class="string">'arrival.time'</span>,<span class="string">'origin.time'</span>,<span class="string">'timeres'</span>,<span class="string">'orid'</span>);
+0109     arrival.time = epoch2datenum(arrival.time);
+0110     arrival.originTime = epoch2datenum(arrival.originTime);
+0111     arrival.travelTime = 86400*(arrival.time-arrival.originTime);
+0112     f = find(arrival.timeres==-999);
+0113     arrival.timeres(f) = NaN;
+0114     arrival.predTravelTime = arrival.travelTime + arrival.timeres;
+0115 
+0116     
+0117     <span class="comment">% Ray view</span>
+0118     [ray.originLat,ray.originLon,ray.originDepth,ray.siteLat,ray.siteLon,ray.siteElev] = dbgetv(db,<span class="string">'origin.lat'</span>,<span class="string">'origin.lon'</span>,<span class="string">'origin.depth'</span>,<span class="string">'site.lat'</span>,<span class="string">'site.lon'</span>,<span class="string">'site.elev'</span>);
+0119     ray.siteElev = -1*ray.siteElev;
+0120     ray.flatDist = deg2km(distance(ray.originLat,ray.originLon,ray.siteLat,ray.siteLon));
+0121     
+0122     
+0123     <span class="comment">% Site view</span>
+0124     [tmp.sta,tmp.lon,tmp.lat,tmp.elev] = dbgetv(db,<span class="string">'site.sta'</span>,<span class="string">'site.lon'</span>,<span class="string">'site.lat'</span>,<span class="string">'site.elev'</span>);
+0125     tmp.elev = -1*tmp.elev;
+0126     site = [];
+0127     [site.sta,m,~] = unique(tmp.sta);
+0128     site.lat = tmp.lat(m);
+0129     site.lon = tmp.lon(m);
+0130     site.elev = tmp.elev(m);
+0131 
+0132 <span class="keyword">catch</span>
+0133     error([<span class="string">'Problems with one or more database tables (origin, event, assoc, arrival, site)'</span>]);
+0134 <span class="keyword">end</span>
+0135 dbclose(db);
+0136 
+0137 
+0138 
+0139 <span class="comment">% % CREATE TRAVELTIME</span>
+0140 <span class="comment">% for n = 1:numel(origin.orid)</span>
+0141 <span class="comment">%     f = find(arrival.orid==origin.orid(n));</span>
+0142 <span class="comment">%     arrival.travelTime(f) = 86400*(arrival.time(f)-origin.dnum(n));</span>
+0143 <span class="comment">% end</span>
+0144 <span class="comment">% arrival.travelTime = arrival.travelTime';</span>
+0145 <span class="comment">% arrival.predTravelTime = arrival.travelTime + arrival.timeres;</span>
+0146 
+0147 
+0148</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

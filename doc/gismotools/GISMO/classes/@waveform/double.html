@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of double</title>
+  <meta name="keywords" content="double">
+  <meta name="description" content="DOUBLE returns a waveform's data as a double type">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; double.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>double
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>DOUBLE returns a waveform's data as a double type</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function n = double(W, option) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DOUBLE returns a waveform's data as a double type
+   N = double(waveform  [, option] )
+   this is just a fancy way of saying get(W,'data')
+   but can handle vectors of W. The data lengths of the vectors do not
+   need to be the same.  By default it will zero-pad the end of all short
+   vectors.  Using the OPTION, you can specify a NaN padding instead.
+
+   Input Arguments
+       WAVEFORM: a waveform object   assumed as 1xN DIMENSIONAL
+               (If not, it will be treated as though it were 1xN!)
+       OPTION: Handle to any function that creates an array of a
+               dictated size.  The chosen function should work like:
+               A = (nRows,nCols); and return a double array of the
+               appropriate size. ex. @ones, @zeros, @nan.
+
+   Output Arguments
+       N: the columns of data
+
+   example:
+       % let W(1) be a waveform with data [0 1 2 5 3]
+       % let W(2) be a waveform with data [2 5]
+
+       Y = double(W);
+       % Y is now [[ 0 2; 1 5; 2 0; 5 0; 3 0]
+
+       Z = double(W,@nan); pads with NaN instead of zeros
+       % Z is now [ 0 2; 1 5; 2 NaN; 5 NaN; 3 NaN]
+
+ See also WAVEFORM/GET, NAN</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and channeltag info.</li><li><a href="mrdivide.html" class="code" title="function C = mrdivide(W,B)">mrdivide</a>	MRDIVIDE (/) Slash or right matrix divide for WAVEFORMS.</li><li><a href="mtimes.html" class="code" title="function A = mtimes(A, B)">mtimes</a>	MTIMES (*) Overloaded Matrix multiply for waveforms (UNIMPLEMENTED!).</li><li><a href="plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="plus.html" class="code" title="function w = plus(w,q)">plus</a>	PLUS (+) waveform addition     w + q</li><li><a href="power.html" class="code" title="function a = power(a, b)">power</a>	POWER (.^) waveform implementation of element-by-element power (.^)</li><li><a href="rdivide.html" class="code" title="function W = rdivide(W,divisor)">rdivide</a>	RDIVIDE (./) Right array divide for WAVEFORMS.</li><li><a href="stack.html" class="code" title="function out = stack(w)">stack</a>	STACK stacks data from array of waveforms</li><li><a href="times.html" class="code" title="function A = times(A,B)">times</a>	TIMES (.*) overloaded Array multiply for WAVEFORM objects.</li><li><a href="waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="waveform2sound.html" class="code" title="function isSuccessful = waveform2sound(w, outfile, speedup)">waveform2sound</a>	WAVEFORM2SOUND generate a wav file from the existing waveform</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function n = double(W, option)</a>
+0002    <span class="comment">%DOUBLE returns a waveform's data as a double type</span>
+0003    <span class="comment">%   N = double(waveform  [, option] )</span>
+0004    <span class="comment">%   this is just a fancy way of saying get(W,'data')</span>
+0005    <span class="comment">%   but can handle vectors of W. The data lengths of the vectors do not</span>
+0006    <span class="comment">%   need to be the same.  By default it will zero-pad the end of all short</span>
+0007    <span class="comment">%   vectors.  Using the OPTION, you can specify a NaN padding instead.</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">%   Input Arguments</span>
+0010    <span class="comment">%       WAVEFORM: a waveform object   assumed as 1xN DIMENSIONAL</span>
+0011    <span class="comment">%               (If not, it will be treated as though it were 1xN!)</span>
+0012    <span class="comment">%       OPTION: Handle to any function that creates an array of a</span>
+0013    <span class="comment">%               dictated size.  The chosen function should work like:</span>
+0014    <span class="comment">%               A = (nRows,nCols); and return a double array of the</span>
+0015    <span class="comment">%               appropriate size. ex. @ones, @zeros, @nan.</span>
+0016    <span class="comment">%</span>
+0017    <span class="comment">%   Output Arguments</span>
+0018    <span class="comment">%       N: the columns of data</span>
+0019    <span class="comment">%</span>
+0020    <span class="comment">%   example:</span>
+0021    <span class="comment">%       % let W(1) be a waveform with data [0 1 2 5 3]</span>
+0022    <span class="comment">%       % let W(2) be a waveform with data [2 5]</span>
+0023    <span class="comment">%</span>
+0024    <span class="comment">%       Y = double(W);</span>
+0025    <span class="comment">%       % Y is now [[ 0 2; 1 5; 2 0; 5 0; 3 0]</span>
+0026    <span class="comment">%</span>
+0027    <span class="comment">%       Z = double(W,@nan); pads with NaN instead of zeros</span>
+0028    <span class="comment">%       % Z is now [ 0 2; 1 5; 2 NaN; 5 NaN; 3 NaN]</span>
+0029    <span class="comment">%</span>
+0030    <span class="comment">% See also WAVEFORM/GET, NAN</span>
+0031    
+0032    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0033    <span class="comment">% $Date$</span>
+0034    <span class="comment">% $Revision$</span>
+0035    
+0036    <span class="keyword">if</span> numel(W) &lt;= 1
+0037       n = W.data; <span class="comment">%  assumption --&gt; data is already a column of double!</span>
+0038       <span class="keyword">return</span>
+0039    <span class="keyword">end</span>
+0040    
+0041    <span class="keyword">if</span> nargin == 1
+0042       createDefaultArray = @zeros;
+0043    <span class="keyword">else</span>
+0044       <span class="keyword">if</span> ischar(option)
+0045          createDefaultArray = str2func(option);
+0046       <span class="keyword">elseif</span> isa(option,<span class="string">'function_handle'</span>)
+0047          createDefaultArray = option;
+0048       <span class="keyword">else</span>
+0049          error(<span class="string">'waveform:double:invalidOption'</span>,<span class="keyword">...</span>
+0050             <span class="string">'''option'' must be either a function handle or function name.'</span>);
+0051       <span class="keyword">end</span>
+0052    <span class="keyword">end</span>
+0053    
+0054    m = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(W,<span class="string">'data_length'</span>);
+0055    <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(m)
+0056       n = [];
+0057       <span class="keyword">return</span>
+0058    <span class="keyword">end</span>
+0059    
+0060    m=m(:);
+0061    <span class="keyword">if</span> all(m == m(1))
+0062       n = [W(:).data]; <span class="comment">% easy-peazy since all data is of same length.</span>
+0063    <span class="keyword">else</span>
+0064       n = createDefaultArray(<a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>(m),numel(W));
+0065       <span class="keyword">for</span> x=1:numel(W)
+0066          n(1:m(x),x) = W(x).data; <span class="comment">% assumes that data is a column of double!</span>
+0067       <span class="keyword">end</span>
+0068    <span class="keyword">end</span>
+0069 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

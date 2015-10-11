@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of minus</title>
+  <meta name="keywords" content="minus">
+  <meta name="description" content="MINUS (-) Overloaded waveform subtraction    w - q">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; minus.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>minus
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>MINUS (-) Overloaded waveform subtraction    w - q</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = minus(w,q) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MINUS (-) Overloaded waveform subtraction    w - q
+   w is an N-DIMENSIONAL waveform.
+   if q is 1x1, it is subtracted from all data values of all waveforms
+
+   if q is numeric, and has the same size &amp; shape as w, then each q is
+     subtracted from the appropriate w  ie.  result(n) = w(n) + q(n)
+
+   if q is a vector, it should be of same length as waveform's data
+     sample-by-sample subtracted from each waveform
+
+   if q is waveform, data from q are subtracted from w, assuming both
+   waveforms have the same number of samples
+
+   If q is numeric, and w is of type waveform, then the operation
+   q - w is invalid.  This is because of a possible ambiguous result type.
+   Instead:
+       for a numeric result, use the synatax:
+              q  - double(w)
+       for a waveform result, use the syntax:
+              q + -w             or              -w + q
+
+ See also: <a href="minus.html" class="code" title="function w = minus(w,q)">minus</a>, wavform/plus, <a href="uminus.html" class="code" title="function w = uminus(w)">uminus</a>, <a href="fix_data_length.html" class="code" title="function w = fix_data_length(w, maxlen)">fix_data_length</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = minus(w,q)</a>
+0002    <span class="comment">%MINUS (-) Overloaded waveform subtraction    w - q</span>
+0003    <span class="comment">%   w is an N-DIMENSIONAL waveform.</span>
+0004    <span class="comment">%   if q is 1x1, it is subtracted from all data values of all waveforms</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">%   if q is numeric, and has the same size &amp; shape as w, then each q is</span>
+0007    <span class="comment">%     subtracted from the appropriate w  ie.  result(n) = w(n) + q(n)</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">%   if q is a vector, it should be of same length as waveform's data</span>
+0010    <span class="comment">%     sample-by-sample subtracted from each waveform</span>
+0011    <span class="comment">%</span>
+0012    <span class="comment">%   if q is waveform, data from q are subtracted from w, assuming both</span>
+0013    <span class="comment">%   waveforms have the same number of samples</span>
+0014    <span class="comment">%</span>
+0015    <span class="comment">%   If q is numeric, and w is of type waveform, then the operation</span>
+0016    <span class="comment">%   q - w is invalid.  This is because of a possible ambiguous result type.</span>
+0017    <span class="comment">%   Instead:</span>
+0018    <span class="comment">%       for a numeric result, use the synatax:</span>
+0019    <span class="comment">%              q  - double(w)</span>
+0020    <span class="comment">%       for a waveform result, use the syntax:</span>
+0021    <span class="comment">%              q + -w             or              -w + q</span>
+0022    <span class="comment">%</span>
+0023    <span class="comment">% See also: minus, wavform/plus, uminus, fix_data_length</span>
+0024    
+0025    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0026    <span class="comment">% $Date$</span>
+0027    <span class="comment">% $Revision$</span>
+0028    
+0029    <span class="keyword">if</span> ~isa(w,<span class="string">'waveform'</span>)
+0030       <span class="comment">%yipes.  we have a number minus a waveform</span>
+0031       errtext = [sprintf(<span class="string">'subtracting a &lt;waveform&gt; from a &lt;%s&gt; leads to ambiguous answer type\n'</span>,class(w)), <span class="keyword">...</span>
+0032          sprintf(<span class="string">'  for a numerical result, try: &lt;%s&gt; - double(&lt;waveform&gt;)\n'</span>,class(w)), <span class="keyword">...</span>
+0033          sprintf(<span class="string">'  for a waveform result, try:  -&lt;waveform&gt; + &lt;%s&gt;\n'</span>,class(w))];
+0034       error(<span class="string">'Waveform:minus:invalidClass'</span>,<span class="string">'Error attempting: &lt;%s&gt; - &lt;%s&gt;\n%s'</span>, class(w),class(q),errtext);
+0035    <span class="keyword">end</span>
+0036    <span class="keyword">try</span>
+0037       w = w + (-q);
+0038    <span class="keyword">catch</span> caughtvalue
+0039       <span class="comment">%NOTE, it is important to keep this section in sync with waveform/plus</span>
+0040       <span class="keyword">switch</span> caughtvalue.identifier
+0041          <span class="keyword">case</span> <span class="string">'Waveform:plus:unknownOperation'</span>
+0042             wsize = num2str(size(w),<span class="string">'%dx'</span>); wsize = wsize(1:end-1);
+0043             qsize = num2str(size(q),<span class="string">'%dx'</span>); qsize = qsize(1:end-1);
+0044             error(<span class="string">'Waveform:minus:unknownOperation'</span>,<span class="keyword">...</span>
+0045                [<span class="string">'unknown waveform subtraction operation:\n'</span>,<span class="keyword">...</span>
+0046                <span class="string">'&lt; %s %s&gt;  - &lt;%s %s&gt;'</span>],wsize, class(w), qsize, class(q));
+0047          <span class="keyword">case</span> <span class="string">'Waveform:plus:sizeMismatch'</span>
+0048             error(<span class="string">'Waveform:minus:sizeMismatch'</span>,<span class="keyword">...</span>
+0049                [<span class="string">'error in dimensions: [NxM] - [MxN].\nOne possible'</span><span class="keyword">...</span>
+0050                <span class="string">' fix would be to transpose ('') one of the terms '</span>])
+0051          <span class="keyword">case</span> <span class="string">'Waveform:plus:invalidClass'</span>
+0052             error(<span class="string">'Waveform:minus:invalidClass'</span>,<span class="keyword">...</span>
+0053                <span class="string">'unknown subtraction operation: %s - %s'</span>, class(w), class(q));
+0054          <span class="keyword">otherwise</span>
+0055             rethrow(caughtvalue);
+0056       <span class="keyword">end</span>
+0057    <span class="keyword">end</span>
+0058    <span class="keyword">return</span>;
+0059 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

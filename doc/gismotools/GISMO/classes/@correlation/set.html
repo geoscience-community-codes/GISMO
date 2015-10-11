@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of set</title>
+  <meta name="keywords" content="set">
+  <meta name="description" content="SET Set properties for correlation object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@correlation</a> &gt; set.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>set
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>SET Set properties for correlation object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = set(c, prop_name, val) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SET Set properties for correlation object
+   c = SET(c,prop_name,val)
+
+   see help correlation/get.m for valid property names</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="DEP_xcorr.html" class="code" title="function c=xcorr(c,varargin)">DEP_xcorr</a>	C = XCORR(C)</li><li><a href="agc.html" class="code" title="function c = agc(c,varargin)">agc</a>	This function applies automatic gain control (AGC) to each trace. This</li><li><a href="conv.html" class="code" title="function c = conv(c,varargin)">conv</a>	c = CONV(c) convolves all traces with the final trace. By default the new</li><li><a href="correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="crop.html" class="code" title="function c = crop(c,varargin)">crop</a>	c = CROP(c,[PRETRIG POSTTRIG])</li><li><a href="deconv.html" class="code" title="function c = deconv(c,varargin)">deconv</a>	c = DECONV(c) convolves all traces with the final trace. By default the new</li><li><a href="minus.html" class="code" title="function c = minus(c,varargin)">minus</a>	C = MINUS(C,I)</li><li><a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li><li><a href="verify.html" class="code" title="function c = verify(c)">verify</a>	VERIFY</li><li><a href="xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	C = XCORR(C)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = set(c, prop_name, val)</a>
+0002 
+0003 <span class="comment">%SET Set properties for correlation object</span>
+0004 <span class="comment">%   c = SET(c,prop_name,val)</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%   see help correlation/get.m for valid property names</span>
+0007 
+0008 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0009 <span class="comment">% $Date$</span>
+0010 <span class="comment">% $Revision$</span>
+0011 
+0012 
+0013 
+0014 <span class="keyword">if</span> nargin &lt;= 1
+0015     error(<span class="string">'Not enough inputs'</span>);
+0016 <span class="keyword">end</span>
+0017 
+0018 <span class="comment">% if ~strcmpi(class(c),'correlation')</span>
+0019 <span class="comment">%     error('First argument must be a correlation object');</span>
+0020 <span class="comment">% end</span>
+0021 <span class="keyword">if</span> ~isa(c,<span class="string">'correlation'</span>)
+0022     error(<span class="string">'First argument must be a correlation object'</span>);
+0023 <span class="keyword">end</span>
+0024 
+0025 <span class="keyword">switch</span> upper(prop_name)
+0026     <span class="keyword">case</span> {<span class="string">'WAVEFORMS'</span> <span class="string">'WAVEFORM'</span> <span class="string">'WAVES'</span>}
+0027         c.W = reshape(val,length(val),1);
+0028     <span class="keyword">case</span> {<span class="string">'TRIG'</span>}
+0029         c.trig = reshape(val,length(val),1);
+0030     <span class="keyword">case</span> {<span class="string">'CORR'</span>}
+0031         c.C = val;
+0032     <span class="keyword">case</span> {<span class="string">'LAG'</span>}
+0033         c.L = val;
+0034     <span class="keyword">case</span> {<span class="string">'STAT'</span>}
+0035         c.stat = val;
+0036     <span class="keyword">case</span> {<span class="string">'LINK'</span>}
+0037         c.link = val;
+0038     <span class="keyword">case</span> {<span class="string">'CLUST'</span>}
+0039         c.clust = val;
+0040     <span class="keyword">otherwise</span>
+0041         warning(<span class="string">'can''t understand property name'</span>);
+0042         help <a href="correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>/<a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>
+0043 <span class="keyword">end</span>;
+0044 
+0045</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

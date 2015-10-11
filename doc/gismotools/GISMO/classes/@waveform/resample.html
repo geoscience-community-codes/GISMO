@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of resample</title>
+  <meta name="keywords" content="resample">
+  <meta name="description" content="RESAMPLE resamples a waveform at over every specified interval">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; resample.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>resample
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>RESAMPLE resamples a waveform at over every specified interval</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = resample(w,method, val) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">RESAMPLE resamples a waveform at over every specified interval
+   w = resample(waveform, method, crunchfactor)
+
+   Input Arguments
+       WAVEFORM: waveform object       N-dimensional
+
+       METHOD: which method of sampling to perform within each sample
+                window
+           'max' : maximum value
+           'min' : minimum value
+           'mean': average value
+           'median' : mean value
+           'rms' : rms value (added 2011/06/01)
+           'absmax': absolute maximum value (greatest deviation from zero)
+           'absmin': absolute minimum value (smallest deviation from zero)
+           'absmean' : mean deviation from zero (added 2011/06/01)
+           'absmedian' : median deviation from zero (added 2011/06/01)
+           'builtin': Use MATLAB's built in resample routine
+
+       CRUNCHFACTOR : the number of samples making up the sample window
+
+ For example, resample(w,'max',5) would grab the max value of every 5
+ samples and return that in a waveform of adjusted frequency.  as a
+ result, the waveform will have 1/5 of the samples
+
+
+ To use matlab's built-in RESAMPLE method...
+       % assume W is an existing waveform
+       D = double(W);
+       ResampleD = resample(D,P,Q);  % see matlab's RESAMPLE for specifics
+
+       %put back into waveform, but don't forget to update the frequency
+       W = set(W,'data',ResampleD, 'Freq', NewFrequency);
+
+       % and for good measure... update the waveform's history
+       W = addHistory('Resampled data outside of waveform object');
+
+
+ See also <a href="resample.html" class="code" title="function w = resample(w,method, val)">RESAMPLE</a>, <a href="min.html" class="code" title="function [Y, I] = min(w)">MIN</a>, <a href="max.html" class="code" title="function [Y, I] = max(w)">MAX</a>, <a href="mean.html" class="code" title="function y = mean(w)">MEAN</a>, <a href="median.html" class="code" title="function y = median(w)">MEDIAN</a>.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="median.html" class="code" title="function y = median(w)">median</a>	MEDIAN middlemost value of waveform's sorted data.</li><li><a href="min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="resample.html" class="code" title="function w = resample(w,method, val)">resample</a>	RESAMPLE resamples a waveform at over every specified interval</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="std.html" class="code" title="function Y = std(w,flag)">std</a>	STD Standard deviation of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="resample.html" class="code" title="function w = resample(w,method, val)">resample</a>	RESAMPLE resamples a waveform at over every specified interval</li><li><a href="rsam.html" class="code" title="function s = rsam(w, method, samplingPeriod)">rsam</a>	RSAM create an RSAM-like object from a waveform object</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = resample(w,method, val)</a>
+0002    <span class="comment">%RESAMPLE resamples a waveform at over every specified interval</span>
+0003    <span class="comment">%   w = resample(waveform, method, crunchfactor)</span>
+0004    <span class="comment">%</span>
+0005    <span class="comment">%   Input Arguments</span>
+0006    <span class="comment">%       WAVEFORM: waveform object       N-dimensional</span>
+0007    <span class="comment">%</span>
+0008    <span class="comment">%       METHOD: which method of sampling to perform within each sample</span>
+0009    <span class="comment">%                window</span>
+0010    <span class="comment">%           'max' : maximum value</span>
+0011    <span class="comment">%           'min' : minimum value</span>
+0012    <span class="comment">%           'mean': average value</span>
+0013    <span class="comment">%           'median' : mean value</span>
+0014    <span class="comment">%           'rms' : rms value (added 2011/06/01)</span>
+0015    <span class="comment">%           'absmax': absolute maximum value (greatest deviation from zero)</span>
+0016    <span class="comment">%           'absmin': absolute minimum value (smallest deviation from zero)</span>
+0017    <span class="comment">%           'absmean' : mean deviation from zero (added 2011/06/01)</span>
+0018    <span class="comment">%           'absmedian' : median deviation from zero (added 2011/06/01)</span>
+0019    <span class="comment">%           'builtin': Use MATLAB's built in resample routine</span>
+0020    <span class="comment">%</span>
+0021    <span class="comment">%       CRUNCHFACTOR : the number of samples making up the sample window</span>
+0022    <span class="comment">%</span>
+0023    <span class="comment">% For example, resample(w,'max',5) would grab the max value of every 5</span>
+0024    <span class="comment">% samples and return that in a waveform of adjusted frequency.  as a</span>
+0025    <span class="comment">% result, the waveform will have 1/5 of the samples</span>
+0026    <span class="comment">%</span>
+0027    <span class="comment">%</span>
+0028    <span class="comment">% To use matlab's built-in RESAMPLE method...</span>
+0029    <span class="comment">%       % assume W is an existing waveform</span>
+0030    <span class="comment">%       D = double(W);</span>
+0031    <span class="comment">%       ResampleD = resample(D,P,Q);  % see matlab's RESAMPLE for specifics</span>
+0032    <span class="comment">%</span>
+0033    <span class="comment">%       %put back into waveform, but don't forget to update the frequency</span>
+0034    <span class="comment">%       W = set(W,'data',ResampleD, 'Freq', NewFrequency);</span>
+0035    <span class="comment">%</span>
+0036    <span class="comment">%       % and for good measure... update the waveform's history</span>
+0037    <span class="comment">%       W = addHistory('Resampled data outside of waveform object');</span>
+0038    <span class="comment">%</span>
+0039    <span class="comment">%</span>
+0040    <span class="comment">% See also RESAMPLE, MIN, MAX, MEAN, MEDIAN.</span>
+0041    
+0042    <span class="comment">% VERSION: 1.1 of waveform objects</span>
+0043    <span class="comment">% AUTHOR: Celso Reyes (celso@gi.alaska.edu)</span>
+0044    <span class="comment">% LASTUPDATE: 3/15/2009</span>
+0045    <span class="comment">%</span>
+0046    <span class="comment">% 7/6/2011: Glenn Thompson: Made all methods NaN tolerant (replace max with nanmax etc) - checks for statistics toolbox</span>
+0047    <span class="comment">% 6/1/2011: Glenn Thompson: Added methods for ABSMEAN, ABSMEDIAN and RMS</span>
+0048    <span class="keyword">persistent</span> STATS_INSTALLED;
+0049    
+0050    <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(STATS_INSTALLED)
+0051       STATS_INSTALLED = ~<a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(ver(<span class="string">'stats'</span>));
+0052    <span class="keyword">end</span>
+0053    
+0054    <span class="keyword">if</span> ~(round(val) == val)
+0055       <a href="disp.html" class="code" title="function disp(w)">disp</a> (<span class="string">'val needs to be an integer'</span>);
+0056       <span class="keyword">return</span>;
+0057    <span class="keyword">end</span>;
+0058    
+0059    <span class="keyword">for</span> i=1:numel(w)
+0060       rowcount = ceil(length(w(i).data) / val);
+0061       maxcount = rowcount * val;
+0062       <span class="keyword">if</span> length(w(i).data) &lt; maxcount
+0063          w(i).data(end+1:maxcount) = <a href="mean.html" class="code" title="function y = mean(w)">mean</a>(w(i).data((rowcount-1)*maxcount : end)); <span class="comment">%pad it with the avg value</span>
+0064       <span class="keyword">end</span>;
+0065       
+0066       d = reshape(w(i).data,val,rowcount); <span class="comment">% produces ( val x rowcount) matrix</span>
+0067       <span class="keyword">switch</span> upper(method)
+0068          
+0069          <span class="keyword">case</span> <span class="string">'MAX'</span>
+0070             <span class="keyword">if</span> STATS_INSTALLED
+0071                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, nanmax(d, [], 1));
+0072             <span class="keyword">else</span>
+0073                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, <a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>(d, [], 1));
+0074             <span class="keyword">end</span>
+0075             
+0076          <span class="keyword">case</span> <span class="string">'MIN'</span>
+0077             <span class="keyword">if</span> STATS_INSTALLED
+0078                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, nanmin(d, [], 1));
+0079             <span class="keyword">else</span>
+0080                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, <a href="min.html" class="code" title="function [Y, I] = min(w)">min</a>(d, [], 1));
+0081             <span class="keyword">end</span>
+0082             
+0083          <span class="keyword">case</span> <span class="string">'MEAN'</span>
+0084             <span class="keyword">if</span> STATS_INSTALLED
+0085                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, nanmean(d, 1));
+0086             <span class="keyword">else</span>
+0087                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, <a href="mean.html" class="code" title="function y = mean(w)">mean</a>(d, 1));
+0088             <span class="keyword">end</span>
+0089             
+0090          <span class="keyword">case</span> <span class="string">'MEDIAN'</span>
+0091             <span class="keyword">if</span> STATS_INSTALLED
+0092                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, nanmedian(d, 1));
+0093             <span class="keyword">else</span>
+0094                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, <a href="median.html" class="code" title="function y = median(w)">median</a>(d, 1));
+0095             <span class="keyword">end</span>
+0096             
+0097          <span class="keyword">case</span> <span class="string">'RMS'</span>
+0098             <span class="keyword">if</span> STATS_INSTALLED
+0099                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, nanstd(d, [], 1));
+0100             <span class="keyword">else</span>
+0101                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, <a href="std.html" class="code" title="function Y = std(w,flag)">std</a>(d, [], 1));
+0102             <span class="keyword">end</span>
+0103             
+0104          <span class="keyword">case</span> <span class="string">'ABSMAX'</span>
+0105             <span class="keyword">if</span> STATS_INSTALLED
+0106                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, nanmax(<a href="abs.html" class="code" title="function w = abs(w)">abs</a>(d),[],1));
+0107             <span class="keyword">else</span>
+0108                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, <a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="abs.html" class="code" title="function w = abs(w)">abs</a>(d),[],1));
+0109             <span class="keyword">end</span>
+0110             
+0111             
+0112          <span class="keyword">case</span> <span class="string">'ABSMIN'</span>
+0113             <span class="keyword">if</span> STATS_INSTALLED
+0114                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, nanmin(<a href="abs.html" class="code" title="function w = abs(w)">abs</a>(d),[],1));
+0115             <span class="keyword">else</span>
+0116                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, <a href="min.html" class="code" title="function [Y, I] = min(w)">min</a>(<a href="abs.html" class="code" title="function w = abs(w)">abs</a>(d),[],1));
+0117             <span class="keyword">end</span>
+0118             
+0119          <span class="keyword">case</span> <span class="string">'ABSMEAN'</span>
+0120             <span class="keyword">if</span> STATS_INSTALLED
+0121                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, nanmean(<a href="abs.html" class="code" title="function w = abs(w)">abs</a>(d), 1));
+0122             <span class="keyword">else</span>
+0123                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, <a href="mean.html" class="code" title="function y = mean(w)">mean</a>(<a href="abs.html" class="code" title="function w = abs(w)">abs</a>(d), 1));
+0124             <span class="keyword">end</span>
+0125             
+0126          <span class="keyword">case</span> <span class="string">'ABSMEDIAN'</span>
+0127             <span class="keyword">if</span> STATS_INSTALLED
+0128                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, nanmedian(<a href="abs.html" class="code" title="function w = abs(w)">abs</a>(d), 1));
+0129             <span class="keyword">else</span>
+0130                w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'data'</span>, <a href="median.html" class="code" title="function y = median(w)">median</a>(<a href="abs.html" class="code" title="function w = abs(w)">abs</a>(d), 1));
+0131             <span class="keyword">end</span>
+0132             
+0133          <span class="keyword">case</span> <span class="string">'BUILTIN'</span>
+0134             
+0135             <span class="comment">% assume W is an existing waveform</span>
+0136             ResampleD = <a href="resample.html" class="code" title="function w = resample(w,method, val)">resample</a>(w(i).data,1,val);  <span class="comment">% see matlab's RESAMPLE for specifics</span>
+0137             w(i).data = ResampleD(:);
+0138             <span class="comment">% (frequency is already updated below)</span>
+0139             <span class="comment">%w(i) = set(w(i), 'Freq', get(w(i),'freq') ./ val);</span>
+0140             
+0141          <span class="keyword">otherwise</span>
+0142             error(<span class="string">'Waveform:resample:UnknownSampleMethod'</span>,<span class="keyword">...</span>
+0143                <span class="string">'Don''t know what you mean by resample via %s'</span>, method);
+0144             
+0145       <span class="keyword">end</span>;
+0146       
+0147       <span class="comment">%adjust the frequency</span>
+0148       w(i) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i),<span class="string">'Freq'</span>, <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(i),<span class="string">'Freq'</span>) ./ val);
+0149    <span class="keyword">end</span>
+0150 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of taper</title>
+  <meta name="keywords" content="taper">
+  <meta name="description" content="WAVEFORM = TAPER(WAVEFORM,R) applies a cosine taper to the ends of a">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; taper.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>taper
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>WAVEFORM = TAPER(WAVEFORM,R) applies a cosine taper to the ends of a</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = taper(w,R, style) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> WAVEFORM = TAPER(WAVEFORM,R) applies a cosine taper to the ends of a
+ trace where r is the ratio of tapered to constant sections and is between
+ 0 and 1. For example, if R = 0.1 then the taper at each end of the trace
+ is 5% of the total trace length. R can be either a scalar or the same
+ size as WAVEFORM. If R is a scalar, it is applied uniformly to each
+ waveform. Note that if R is set to 1 the resulting taper is a hanning
+ window.
+
+ WAVEFORM = TAPER(WAVEFORM) same as above with a default taper of R = 0.2.
+
+ TODO: Currently, only cosine tapers are supported. The code is set up to
+ accept other window shapes as a final argument, e.g.
+ taper(waveform,R,'cosine'). However other window shapes have not yet been
+ implimented. - MEW</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function w = docosine(w,r)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = taper(w,R, style)</a>
+0002    
+0003    <span class="comment">% WAVEFORM = TAPER(WAVEFORM,R) applies a cosine taper to the ends of a</span>
+0004    <span class="comment">% trace where r is the ratio of tapered to constant sections and is between</span>
+0005    <span class="comment">% 0 and 1. For example, if R = 0.1 then the taper at each end of the trace</span>
+0006    <span class="comment">% is 5% of the total trace length. R can be either a scalar or the same</span>
+0007    <span class="comment">% size as WAVEFORM. If R is a scalar, it is applied uniformly to each</span>
+0008    <span class="comment">% waveform. Note that if R is set to 1 the resulting taper is a hanning</span>
+0009    <span class="comment">% window.</span>
+0010    <span class="comment">%</span>
+0011    <span class="comment">% WAVEFORM = TAPER(WAVEFORM) same as above with a default taper of R = 0.2.</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">% TODO: Currently, only cosine tapers are supported. The code is set up to</span>
+0014    <span class="comment">% accept other window shapes as a final argument, e.g.</span>
+0015    <span class="comment">% taper(waveform,R,'cosine'). However other window shapes have not yet been</span>
+0016    <span class="comment">% implimented. - MEW</span>
+0017    
+0018    <span class="comment">% AUTHOR: Michael West</span>
+0019    <span class="comment">% $Date$</span>
+0020    <span class="comment">% $Revision$</span>
+0021    <span class="comment">% Modified: Celso Reyes</span>
+0022    
+0023    
+0024    <span class="comment">% CHECK WAVEFORM</span>
+0025    <span class="keyword">if</span> ~strcmpi(class(w),<span class="string">'waveform'</span>)
+0026       error(<span class="string">'Waveform:taper:missingWaveform'</span>,<span class="keyword">...</span>
+0027          <span class="string">'First input must be a waveform object'</span>);
+0028    <span class="keyword">end</span>
+0029    
+0030    <span class="keyword">if</span> ~exist(<span class="string">'R'</span>,<span class="string">'var'</span>) || <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(R)
+0031       R = 0.2; <span class="comment">%assign default taper</span>
+0032    <span class="keyword">elseif</span> ~isnumeric(R)
+0033       error(<span class="string">'Waveform:taper:InvalidRValue'</span>,<span class="keyword">...</span>
+0034          <span class="string">'R, if specified, must be numeric'</span>);
+0035    <span class="keyword">end</span>
+0036    
+0037    <span class="keyword">if</span> ~exist(<span class="string">'style'</span>,<span class="string">'var'</span>) || <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(style)
+0038       style = <span class="string">'COSINE'</span>;
+0039    <span class="keyword">end</span>
+0040    
+0041    
+0042    <span class="keyword">if</span> isscalar(R)
+0043       R = repmat(R,size(w));
+0044    <span class="keyword">end</span>
+0045    
+0046    <span class="keyword">if</span> (isvector(R) &amp;&amp; isvector(w)) &amp;&amp; numel(R) == numel(w)
+0047       <span class="keyword">if</span> all(size(w)) ~= size(R)
+0048          <span class="comment">% same number of elements, but R is Nx1 and w is 1xN or vice-versa</span>
+0049          warning(<span class="string">'Waveform:taper:columnsVsRows'</span>,<span class="keyword">...</span>
+0050             [<span class="string">'One input (either R or the wavform) is arranged in '</span><span class="keyword">...</span>
+0051             <span class="string">'columns while the other is arranged in Rows.  While they '</span><span class="keyword">...</span>
+0052             <span class="string">'should be the same shape, taper is continuing with R'''</span>]);
+0053          R = R';
+0054       <span class="keyword">end</span>
+0055    <span class="keyword">end</span>
+0056    
+0057    <span class="keyword">if</span> ~all(size(w) == size(R))
+0058       error(<span class="string">'Waveform:taper:InvalidRSize'</span>,<span class="keyword">...</span>
+0059          <span class="string">'R must either be a scalar value, or must be the same size as the input waveforms'</span>);
+0060    <span class="keyword">end</span>
+0061    
+0062    <span class="keyword">switch</span> upper(style)
+0063       <span class="keyword">case</span> <span class="string">'COSINE'</span>
+0064          <span class="keyword">for</span> n=1:numel(w)
+0065             w(n) = <a href="#_sub1" class="code" title="subfunction w = docosine(w,r)">docosine</a>(w(n),R(n));
+0066          <span class="keyword">end</span>
+0067       <span class="keyword">case</span> <span class="string">'GAUSSIAN'</span>
+0068          <span class="comment">%not implemented, placeholder only.</span>
+0069          error(<span class="string">'Waveform:taper:invalidTaperType'</span>,<span class="keyword">...</span>
+0070             <span class="string">'Gaussian taper is not yet implimented'</span>);
+0071       <span class="keyword">otherwise</span>
+0072          error(<span class="string">'Waveform:taper:invalidTaperType'</span>,<span class="keyword">...</span>
+0073             <span class="string">'This style of taper is not recognized.'</span>);
+0074    <span class="keyword">end</span>;
+0075 <span class="keyword">end</span>
+0076 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0077 <span class="comment">% apply cosine taper to waveforms</span>
+0078 <a name="_sub1" href="#_subfunctions" class="code">function w = docosine(w,r)</a>
+0079    <span class="comment">%applied to individual waveforms only</span>
+0080    w = w .* tukeywin( numel(w.data) , r );
+0081 <span class="keyword">end</span>
+0082 
+0083 
+0084</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plot</title>
+  <meta name="keywords" content="plot">
+  <meta name="description" content="PLOT plots a threecomp object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@threecomp</a> &gt; plot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@threecomp&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>plot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>PLOT plots a threecomp object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = plot(TC, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">PLOT plots a threecomp object
+   H = PLOT(TC, ...) creates a simple plot of the three traces contained in the
+   threecomp object TC. Only one threecomp object can be plotted in a
+   single function call. It is possible however to overlay subsequent
+   threecomp objects on the same axes. Trace amplitudes are scaled
+   independently for each event, but accurately reflect the relative
+   amplitudes between components. The default x-axis displays time in
+   seconds relative to the trigger time. This can be overridden however
+   using any of the waveform time scale options. See WAVEFORM/PLOT. If
+   included, H returns a 3x1 vector of handles - one for each trace. These
+   can used to further customize the plot. See GET(H) for options that can
+   be set.
+
+   PLOT(TC,...,'scale',AMP,...) scales the trace amplitudes by a factor of
+   AMP. Default AMP value is 1.
+
+   PLOT(TC,...,'xunit',XVALUE,...) sets the units for the xaxis.
+   Possible values for XVALUE are
+     'seconds' or 's':         seconds
+     'minutes' or 'm':         minutes
+     'hours' or 'h':           hours
+     'day_of_year' or 'doy':   day of year
+     'date':                   full date
+
+   PLOT(TC, ...,'PROPERTYNAME',PROPERTYVALUE,...) accepts the standard
+   options allowed by the native Matlab plot function to set colors, line
+   styles, widths, etc. For example, to make a very ugly plot, try:
+       h = plot(TC(1),'--','LineWidth',5,'Color',[1 .5 .5])
+
+  see also waveform/plot</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="plot2.html" class="code" title="function plot2(TC,varargin)">plot2</a>	PLOT2 a figure of three component traces (deprecated).</li><li><a href="plotpm.html" class="code" title="function plotpm(TC);">plotpm</a>	PLOTPM Plot particle motion coefficients.</li><li><a href="spin.html" class="code" title="function [TC,c2, c3] = spin(TCin,varargin)">spin</a>	SPIN rotate and plot horizontal components</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = plot(TC, varargin)</a>
+0002 
+0003 <span class="comment">%PLOT plots a threecomp object</span>
+0004 <span class="comment">%   H = PLOT(TC, ...) creates a simple plot of the three traces contained in the</span>
+0005 <span class="comment">%   threecomp object TC. Only one threecomp object can be plotted in a</span>
+0006 <span class="comment">%   single function call. It is possible however to overlay subsequent</span>
+0007 <span class="comment">%   threecomp objects on the same axes. Trace amplitudes are scaled</span>
+0008 <span class="comment">%   independently for each event, but accurately reflect the relative</span>
+0009 <span class="comment">%   amplitudes between components. The default x-axis displays time in</span>
+0010 <span class="comment">%   seconds relative to the trigger time. This can be overridden however</span>
+0011 <span class="comment">%   using any of the waveform time scale options. See WAVEFORM/PLOT. If</span>
+0012 <span class="comment">%   included, H returns a 3x1 vector of handles - one for each trace. These</span>
+0013 <span class="comment">%   can used to further customize the plot. See GET(H) for options that can</span>
+0014 <span class="comment">%   be set.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%   PLOT(TC,...,'scale',AMP,...) scales the trace amplitudes by a factor of</span>
+0017 <span class="comment">%   AMP. Default AMP value is 1.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%   PLOT(TC,...,'xunit',XVALUE,...) sets the units for the xaxis.</span>
+0020 <span class="comment">%   Possible values for XVALUE are</span>
+0021 <span class="comment">%     'seconds' or 's':         seconds</span>
+0022 <span class="comment">%     'minutes' or 'm':         minutes</span>
+0023 <span class="comment">%     'hours' or 'h':           hours</span>
+0024 <span class="comment">%     'day_of_year' or 'doy':   day of year</span>
+0025 <span class="comment">%     'date':                   full date</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%   PLOT(TC, ...,'PROPERTYNAME',PROPERTYVALUE,...) accepts the standard</span>
+0028 <span class="comment">%   options allowed by the native Matlab plot function to set colors, line</span>
+0029 <span class="comment">%   styles, widths, etc. For example, to make a very ugly plot, try:</span>
+0030 <span class="comment">%       h = plot(TC(1),'--','LineWidth',5,'Color',[1 .5 .5])</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%  see also waveform/plot</span>
+0033 
+0034 <span class="comment">% Code borrowed heavily from waveform/plot by C. Reyes. In particular the</span>
+0035 <span class="comment">% argument handling was lifted directly from waveform/plot, including the</span>
+0036 <span class="comment">% necessary private functions. This was done to provide a comparable style</span>
+0037 <span class="comment">% of argument handling and axis options.</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0040 <span class="comment">% $Date$</span>
+0041 <span class="comment">% $Revision$</span>
+0042 
+0043 
+0044 <span class="keyword">if</span> isscalar(TC),
+0045   yunit = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces(1),<span class="string">'units'</span>);
+0046     w = TC.traces;
+0047 <span class="keyword">else</span>
+0048     error(<span class="string">'Threecomp:plot:tooManyObjects'</span>, <span class="keyword">...</span>
+0049         [<span class="string">'Plot only operates on a single threecomp object. '</span> <span class="keyword">...</span>
+0050         <span class="string">'Select a single object using an index such as TC(n).'</span>]);
+0051 <span class="keyword">end</span>
+0052 
+0053 
+0054 <span class="comment">% CHECK TO SEE IF THERE IS A FORMATTING STRING (VARARGIN IS ODD)</span>
+0055 hasExtraArg = mod(numel(varargin),2);
+0056 <span class="keyword">if</span> hasExtraArg
+0057   proplist=  parseargs(varargin(2:end));
+0058 <span class="keyword">else</span>
+0059   proplist=  parseargs(varargin);
+0060 <span class="keyword">end</span>
+0061 
+0062 
+0063 <span class="comment">% CHECK FOR CUSTOM PROPERTIES</span>
+0064 [isfound,xunit,proplist] = getproperty(<span class="string">'xunit'</span>,proplist,<span class="string">'s'</span>);
+0065 [isfound,scale,proplist] = getproperty(<span class="string">'scale'</span>,proplist,1);
+0066 
+0067 
+0068 <span class="comment">% GET SCALING FACTOR FOR X AXIS</span>
+0069 mins = 60;
+0070 hrs = 3600;
+0071 days = 3600*24;
+0072 <span class="keyword">switch</span> lower(xunit)
+0073   <span class="keyword">case</span> {<span class="string">'m'</span>,<span class="string">'minutes'</span>}
+0074     xunit = <span class="string">'Minutes'</span>;
+0075     xfactor = mins;
+0076   <span class="keyword">case</span> {<span class="string">'h'</span>,<span class="string">'hours'</span>}
+0077     xunit = <span class="string">'Hours'</span>;
+0078     xfactor = hrs;
+0079   <span class="keyword">case</span> {<span class="string">'d'</span>,<span class="string">'days'</span>}
+0080     xunit = <span class="string">'Days'</span>;
+0081     xfactor = days;
+0082   <span class="keyword">case</span> {<span class="string">'doy'</span>,<span class="string">'day_of_year'</span>}
+0083 <span class="comment">% GET A SCALING FACTOR FOR</span>
+0084     xunit = <span class="string">'Day of Year'</span>;
+0085     xfactor = days;
+0086   <span class="keyword">case</span> <span class="string">'date'</span>,
+0087     xunit = <span class="string">'Date'</span>;
+0088     xfactor = 1 / <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(1),<span class="string">'freq'</span>);
+0089   <span class="keyword">otherwise</span>,
+0090     xunit = <span class="string">'Seconds'</span>;
+0091     xfactor = 1;
+0092 <span class="keyword">end</span>
+0093 
+0094 
+0095 <span class="comment">% CREATE TIME VECTORS</span>
+0096 <span class="keyword">switch</span> lower(xunit)
+0097   <span class="keyword">case</span> <span class="string">'date'</span>
+0098     <span class="comment">% we need the actual times...</span>
+0099     tv = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w,<span class="string">'timevector'</span>);
+0100     <span class="keyword">if</span> ~isa(tv,<span class="string">'cell'</span>)
+0101       tv = {tv}; <span class="comment">%make it a cell for ease of use...</span>
+0102     <span class="keyword">end</span>
+0103     tvl = zeros(size(tv));
+0104     <span class="keyword">for</span> n=1:numel(tv)
+0105       tvl(n) = numel(tv{n}); <span class="comment">%tvl : TimeVectorLength</span>
+0106     <span class="keyword">end</span>
+0107     Xvalues = nan(max(tvl),numel(w)); <span class="comment">%fill empties with NaN (no plot)</span>
+0108     <span class="keyword">for</span> n=1:numel(tv)
+0109       Xvalues(1:tvl(n),n) = tv{n};
+0110     <span class="keyword">end</span>
+0111     
+0112   <span class="keyword">case</span> <span class="string">'day of year'</span>
+0113     startvec = datevec(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w,<span class="string">'start'</span>));
+0114     dec31 = datenum(startvec(1)-1,12,31); <span class="comment">% 12/31/xxxx of previous year in Matlab format</span>
+0115     startdoy = datenum(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w,<span class="string">'start'</span>)) - dec31;
+0116     dl = zeros(size(w));
+0117     <span class="keyword">for</span> n=1:numel(w)
+0118       dl(n) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(n),<span class="string">'data_length'</span>); <span class="comment">%dl : DataLength</span>
+0119     <span class="keyword">end</span>
+0120     Xvalues = nan(max(dl),numel(w));
+0121     freqs = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w,<span class="string">'freq'</span>);
+0122     <span class="keyword">for</span> n=1:numel(w)
+0123       Xvalues(1:dl(n),n) = (1:dl(n))./ freqs(n) ./ <span class="keyword">...</span>
+0124         xfactor + startdoy(n) - 1./freqs(n)./xfactor;
+0125     <span class="keyword">end</span>
+0126     
+0127   <span class="keyword">otherwise</span>,
+0128     dl = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w,<span class="string">'data_length'</span>);
+0129     Xvalues = nan(max(dl),numel(w));
+0130     freqs = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w,<span class="string">'freq'</span>);
+0131     <span class="keyword">for</span> n=1:numel(w)
+0132       Xvalues(1:dl(n),n) = (1:dl(n))./ freqs(n) ./ xfactor;
+0133     <span class="keyword">end</span>
+0134     timeOffset = 86400 / xfactor * (TC.trigger - <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(1),<span class="string">'START'</span>));
+0135     Xvalues = Xvalues - timeOffset;
+0136 <span class="keyword">end</span>
+0137 
+0138 
+0139 <span class="comment">% PASS ALONG PROPERTY ARGUMENTS</span>
+0140 <span class="keyword">if</span> hasExtraArg
+0141   varargin = [varargin(1),property2varargin(proplist)];
+0142 <span class="keyword">else</span>
+0143   varargin = property2varargin(proplist);
+0144 <span class="keyword">end</span>
+0145 
+0146 
+0147 <span class="comment">% PLOT TRACES</span>
+0148 hold on; box on;
+0149 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gcf,<span class="string">'Color'</span>,<span class="string">'w'</span>);
+0150 normval = max(max(abs(w)));
+0151 w = scale * w./normval;            <span class="comment">% do not normalize trace amplitudes</span>
+0152 w(1) = w(1)+1;
+0153 w(2) = w(2)+0;
+0154 w(3) = w(3)-1;
+0155 h = <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(Xvalues, double(w,<span class="string">'nan'</span>) , varargin{:} );
+0156 xlim([min(Xvalues(:,1)) max(Xvalues(:,1))]);
+0157 
+0158 
+0159 <span class="comment">% ADJUST DEFAULT TRACE COLORS</span>
+0160 colors = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(h,<span class="string">'color'</span>);
+0161 <span class="keyword">if</span> all(colors{1}==[0 0 1]) &amp;&amp; all(colors{2}==[0 0.5 0]) &amp;&amp; all(colors{3}==[1 0 0])
+0162     <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(h(1),<span class="string">'Color'</span>,[0 0 0.4]);
+0163     <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(h(2),<span class="string">'Color'</span>,[0.4 0 0]);
+0164     <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(h(3),<span class="string">'Color'</span>,[0 0.4 0]);
+0165 <span class="keyword">end</span>
+0166 
+0167 
+0168 <span class="comment">% SET YAXIS AND ADD SCALE BAR</span>
+0169 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'YTick'</span>,[-0.5 0.5]);
+0170 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'YTickLabel'</span>,num2str(normval*[-1 1]',3));
+0171 xLimits = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(gca,<span class="string">'XLim'</span>);
+0172 xLoc = xLimits(1) + 0.01 * (xLimits(2) - xLimits(1));
+0173 <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>([xLoc xLoc],[-0.5 0.5],<span class="string">'-'</span>,<span class="string">'Color'</span>,[0.6 0.6 0.6]);
+0174 
+0175 
+0176 <span class="comment">% LABEL DATA AXIS IF NECESSARY</span>
+0177 xlabel(xunit);
+0178 <span class="keyword">switch</span> lower(xunit)
+0179   <span class="keyword">case</span> <span class="string">'date'</span>
+0180     datetick(<span class="string">'keepticks'</span>,<span class="string">'keeplimits'</span>);
+0181 <span class="keyword">end</span>
+0182 
+0183 
+0184 <span class="comment">% LABEL TRACES</span>
+0185 chan = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w,<span class="string">'CHANNEL'</span>);
+0186 orientation = TC.orientation;
+0187 text(2*xLoc,-0.8,[chan{3} <span class="string">' '</span> num2str(round(orientation(5)),<span class="string">' [%d'</span>) <span class="string">' '</span> num2str(round(orientation(6)),<span class="string">'%d]'</span>)],<span class="string">'FontSize'</span>,12);
+0188 text(2*xLoc,0.2,[chan{2} <span class="string">' '</span> num2str(round(orientation(3)),<span class="string">' [%d'</span>) <span class="string">' '</span> num2str(round(orientation(4)),<span class="string">'%d]'</span>)],<span class="string">'FontSize'</span>,12);
+0189 text(2*xLoc,1.2,[chan{1} <span class="string">' '</span> num2str(round(orientation(1)),<span class="string">' [%d'</span>) <span class="string">' '</span> num2str(round(orientation(2)),<span class="string">'%d]'</span>)],<span class="string">'FontSize'</span>,12);
+0190 
+0191 
+0192 <span class="comment">% SET TITLE</span>
+0193 NSCL = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC,<span class="string">'NSCL'</span>);
+0194 titleStr = ([ NSCL{1} <span class="string">'     at '</span> datestr(TC.trigger,<span class="string">'yyyy/mm/dd HH:MM:SS.FFF'</span>)]);
+0195 <span class="keyword">if</span> isfield(w(1),<span class="string">'ORIGIN_ORID'</span>)
+0196     orid = num2str(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(1),<span class="string">'ORIGIN_ORID'</span>));
+0197     titleStr = [titleStr <span class="string">'      orid: '</span> orid];
+0198 <span class="keyword">else</span>
+0199     title(titleStr,<span class="string">'FontSize'</span>,14,<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0200 <span class="keyword">end</span>
+0201     
+0202 
+0203 <span class="comment">% RETURN HANDLE</span>
+0204 <span class="keyword">if</span> nargout == 1,
+0205   varargout(1) = {h};
+0206 <span class="keyword">end</span>
+0207 
+0208 
+0209 <span class="comment">% PREP PRINT OUT</span>
+0210 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gcf, <span class="string">'paperorientation'</span>, <span class="string">'landscape'</span>);
+0211 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gcf, <span class="string">'paperposition'</span>, [.5 2 10 4.5] );
+0212 <span class="comment">%print(gcf, '-depsc2', 'FIG_THREECOMP_PLOT.ps');</span>
+0213 
+0214</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

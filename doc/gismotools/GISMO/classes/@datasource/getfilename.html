@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getfilename</title>
+  <meta name="keywords" content="getfilename">
+  <meta name="description" content="GETFILENAME returns a filename that is associated with a single SCNL">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@datasource</a> &gt; getfilename.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@datasource&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>getfilename
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>GETFILENAME returns a filename that is associated with a single SCNL</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [filename] = getfilename(ds, scnls, starttimes) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GETFILENAME returns a filename that is associated with a single SCNL
+  filename= getfilename(ds, scnlobject, starttime)
+    where:
+    DS is the datasource object
+    SCNLOBJECT is a scnlobject with station/channel/network/location
+    information.
+    STARTTIME is a matlab formatted time, or a string
+
+ getfile is capable of traversing directory trees.
+
+ [filename] = getfilename(ds, [],[],[]) will return a sample-string.
+ ex.
+  &gt;&gt; ds = datasource('file','myfiles/%04d/%02d/thisfile%04d_%s%s.dat',...
+      'year', 'month','day','station','channel');
+  &gt;&gt; getfile(ds,[],[])
+  ans =
+     myfiles/[YEAR]/[MONTH]/thisfile[DAY]_[STATION][CHANNEL].dat
+
+  &gt;&gt; getfilename(ds,scnlobject('OKCF','EHZ'),'12/31/2008 04:03:21')
+  ans =
+     myfiles/2008/12/thisfile0031_OKCFEHZ.dat
+
+
+ see also SETFILENAME</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="load_file.html" class="code" title="function allObj = load_file(ds,searchClass,scnl,startt,endt)">load_file</a>	grab all the variables in a matlab file, and flip through them, returning</li><li><a href="load_objects_from_file.html" class="code" title="function allObj = load_objects_from_file(ds,searchClass,scnl,startt,endt)">load_objects_from_file</a>	grab all the variables in a matlab file, and flip through them, returning</li><li><a href="subdivide_files_by_date.html" class="code" title="function allDatesToCheck = subdivide_files_by_date(ds,startt,endt)">subdivide_files_by_date</a>	SUBDIVIDE_FILES_BY_DATE given a datasource and daterange return list of files</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [filename] = getfilename(ds, scnls, starttimes)</a>
+0002    <span class="comment">%GETFILENAME returns a filename that is associated with a single SCNL</span>
+0003    <span class="comment">%  filename= getfilename(ds, scnlobject, starttime)</span>
+0004    <span class="comment">%    where:</span>
+0005    <span class="comment">%    DS is the datasource object</span>
+0006    <span class="comment">%    SCNLOBJECT is a scnlobject with station/channel/network/location</span>
+0007    <span class="comment">%    information.</span>
+0008    <span class="comment">%    STARTTIME is a matlab formatted time, or a string</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">% getfile is capable of traversing directory trees.</span>
+0011    <span class="comment">%</span>
+0012    <span class="comment">% [filename] = getfilename(ds, [],[],[]) will return a sample-string.</span>
+0013    <span class="comment">% ex.</span>
+0014    <span class="comment">%  &gt;&gt; ds = datasource('file','myfiles/%04d/%02d/thisfile%04d_%s%s.dat',...</span>
+0015    <span class="comment">%      'year', 'month','day','station','channel');</span>
+0016    <span class="comment">%  &gt;&gt; getfile(ds,[],[])</span>
+0017    <span class="comment">%  ans =</span>
+0018    <span class="comment">%     myfiles/[YEAR]/[MONTH]/thisfile[DAY]_[STATION][CHANNEL].dat</span>
+0019    <span class="comment">%</span>
+0020    <span class="comment">%  &gt;&gt; getfilename(ds,scnlobject('OKCF','EHZ'),'12/31/2008 04:03:21')</span>
+0021    <span class="comment">%  ans =</span>
+0022    <span class="comment">%     myfiles/2008/12/thisfile0031_OKCFEHZ.dat</span>
+0023    <span class="comment">%</span>
+0024    <span class="comment">%</span>
+0025    <span class="comment">% see also SETFILENAME</span>
+0026    
+0027    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0028    <span class="comment">% $Date$</span>
+0029    <span class="comment">% $Revision$</span>
+0030    
+0031    <span class="comment">% Day numbers at start of each month.  Used within to calculate &quot;jday&quot;.</span>
+0032    monthadd = [ 0 31 59 90 120 151 181 212 243 273 304 334 ];
+0033    
+0034    <span class="keyword">if</span> ~ds.usefile
+0035       warning(<span class="string">'Datasource:noAssociatedFiles'</span>,<span class="string">'No files have been associated with this datasource'</span>);
+0036       filename = [];
+0037       <span class="keyword">return</span>
+0038    <span class="keyword">end</span>
+0039    
+0040    <span class="comment">%</span>
+0041    <span class="comment">% if numel(scnl) &gt; 1</span>
+0042    <span class="comment">%   warning('Datasource:multipleSCNL',...</span>
+0043    <span class="comment">%     'An array of SCNL was passed as the argument.  Only search for a single SCNL at a time');</span>
+0044    <span class="comment">% end</span>
+0045    <span class="keyword">if</span> isnumeric(starttimes) &amp;&amp; ~isempty(starttimes)
+0046       <span class="keyword">for</span> n=1:numel(starttimes)
+0047          st(n) = {starttimes(n)};
+0048       <span class="keyword">end</span>
+0049       starttimes = st;
+0050       clear st
+0051    <span class="keyword">end</span>
+0052    <span class="keyword">if</span> ~iscell(starttimes)
+0053       starttimes = {starttimes};
+0054    <span class="keyword">end</span>
+0055    filename = cell(numel(scnls),numel(starttimes));
+0056    
+0057    <span class="keyword">if</span> isempty(filename) <span class="comment">%show the generic file name</span>
+0058       <span class="comment">%return a THEORETICAL filename</span>
+0059       year = <span class="string">'[YEAR]'</span>;
+0060       jday =<span class="string">'[JDAY]'</span>;
+0061       month =<span class="string">'[MONTH]'</span>;
+0062       day =<span class="string">'[DAY]'</span>;
+0063       hour =<span class="string">'[HOUR]'</span>;
+0064       minute =<span class="string">'[MINUTE]'</span>;
+0065       second =<span class="string">'[SECOND]'</span>;
+0066       station = <span class="string">'[STATION]'</span>;
+0067       channel = <span class="string">'[CHANNEL]'</span>;
+0068       location = <span class="string">'[LOCATION]'</span>;
+0069       network = <span class="string">'[NETWORK]'</span>;
+0070       stringToShow = regexprep(ds.file_string,<span class="string">'(%|%0)(\d|)d'</span>,<span class="string">'%s'</span>);
+0071       <span class="comment">% build the file arg string</span>
+0072       <span class="keyword">if</span> isempty(ds.file_args)
+0073          filename = {stringToShow};
+0074       <span class="keyword">else</span>
+0075          z = cellfun(@eval,ds.file_args,<span class="string">'UniformOutput'</span>,false);
+0076          filename = {sprintf(stringToShow,z{:})};
+0077       <span class="keyword">end</span>
+0078    <span class="keyword">else</span> <span class="comment">%get detailed file.for n=1:numel(scnls)</span>
+0079       
+0080       <span class="keyword">for</span> n=1:numel(scnls)
+0081          scnl = scnls(n);
+0082          station = <a href="get.html" class="code" title="function val = get(ds, propertyname)">get</a>(scnl,<span class="string">'station'</span>);
+0083          channel = <a href="get.html" class="code" title="function val = get(ds, propertyname)">get</a>(scnl,<span class="string">'channel'</span>);
+0084          location = <a href="get.html" class="code" title="function val = get(ds, propertyname)">get</a>(scnl,<span class="string">'location'</span>);
+0085          network = <a href="get.html" class="code" title="function val = get(ds, propertyname)">get</a>(scnl,<span class="string">'network'</span>);
+0086          
+0087          <span class="keyword">for</span> m = 1:numel(starttimes)
+0088             starttime = starttimes{m};
+0089             
+0090             
+0091             <span class="comment">%pull all the data that may be required to parse out files &amp; directories</span>
+0092             
+0093             <span class="comment">% If we have a datenum, use the fast built-in version of datevec</span>
+0094             <span class="keyword">if</span> isnumeric(starttime)
+0095                [year, month, day, hour, minute, second] = datevecmx(starttime);
+0096             <span class="keyword">else</span>
+0097                [year, month, day, hour, minute, second] = datevec(starttime);
+0098             <span class="keyword">end</span>
+0099             
+0100             second = round(second);
+0101             
+0102             <span class="comment">% The following few IF statements handle possible rounding issues</span>
+0103             <span class="keyword">if</span> second == 60
+0104                second = 0; minute = minute+1;
+0105             <span class="keyword">end</span>
+0106             <span class="keyword">if</span> minute == 60
+0107                minute = 0; hour = hour + 1;
+0108             <span class="keyword">end</span>
+0109             <span class="keyword">if</span> hour == 24
+0110                hour = 0; day = day + 1;
+0111             <span class="keyword">end</span>
+0112             
+0113             <span class="comment">% Calculate day number</span>
+0114             leapadd = +((mod(year,400) == 0) | ((mod(year,4) == 0) &amp; (mod(year,100) ~= 0)) &amp; (month &gt; 2));
+0115             jday = monthadd(month) + day + leapadd;
+0116             
+0117             stringToShow = ds.file_string;
+0118             <span class="comment">% build the file arg string</span>
+0119             <span class="keyword">if</span> isempty(ds.file_args)
+0120                filename = {stringToShow};
+0121             <span class="keyword">else</span>
+0122                z = cellfun(@eval,ds.file_args,<span class="string">'UniformOutput'</span>,false);
+0123                filename(n,m) = {sprintf(stringToShow,z{:})};
+0124             <span class="keyword">end</span>
+0125          <span class="keyword">end</span>
+0126       <span class="keyword">end</span>
+0127       
+0128    <span class="keyword">end</span>
+0129    filename = filename(:);
+0130    <span class="comment">%basic location of all archives</span>
+0131 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

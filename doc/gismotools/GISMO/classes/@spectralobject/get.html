@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of get</title>
+  <meta name="keywords" content="get">
+  <meta name="description" content="GET - Get properties for spectralobject">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@spectralobject</a> &gt; get.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@spectralobject&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>get
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>GET - Get properties for spectralobject</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function out = get(s, prop_name) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GET - Get properties for spectralobject
+   value = Get(s,prop_name)
+   Valid property names:
+   nfft, over, dBlims, freqmax
+
+   If N-dimensional spectralobject used, then output is an N-dimensional
+   cell.
+
+  See also SPECTRALOBJECT/SET</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="colorbar_axis.html" class="code" title="function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)">colorbar_axis</a>	COLORBAR - Display color bar (color scale).</li><li><a href="display.html" class="code" title="function display(s)">display</a>	DISPLAY - spectralobject display overloaded operator</li><li><a href="fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>	FFT Discrete Fourier transform.  OVERLOADED for waveform & Spectralobject</li><li><a href="ifft.html" class="code" title="function [varargout] = ifft(s, w)">ifft</a>	IFFT Inverse discrete Fourier transform.  OVERLOADED FOR Spectralobject</li><li><a href="pwelch.html" class="code" title="function varargout = pwelch(s,w, varargin)">pwelch</a>	PWELCH   overloaded pwelch for spectralobjects</li><li><a href="specgram.html" class="code" title="function h = specgram(s, ws, varargin)">specgram</a>	SPECGRAM - plots spectrogram of waveforms</li><li><a href="specgram2.html" class="code" title="function specgram2(s, ws, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function out = get(s, prop_name)</a>
+0002 <span class="comment">%GET - Get properties for spectralobject</span>
+0003 <span class="comment">%   value = Get(s,prop_name)</span>
+0004 <span class="comment">%   Valid property names:</span>
+0005 <span class="comment">%   nfft, over, dBlims, freqmax</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%   If N-dimensional spectralobject used, then output is an N-dimensional</span>
+0008 <span class="comment">%   cell.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%  See also SPECTRALOBJECT/SET</span>
+0011 
+0012 <span class="comment">% VERSION: 1.1 of spectralobject</span>
+0013 <span class="comment">% AUTHOR: Celso Reyes</span>
+0014 <span class="comment">% LASTUPDATE: 6/20/2007</span>
+0015 
+0016 <span class="keyword">switch</span> upper(prop_name)
+0017     <span class="keyword">case</span> {<span class="string">'DBLIMS'</span>}
+0018         out = cell(size(s));
+0019     <span class="keyword">otherwise</span>
+0020         out = NaN(size(s));
+0021 <span class="keyword">end</span>
+0022 
+0023 <span class="keyword">for</span> N = 1 : numel(s)
+0024     <span class="keyword">switch</span> upper(prop_name)
+0025         <span class="keyword">case</span> <span class="string">'NFFT'</span>
+0026             
+0027             out(N) = [s(N).nfft];
+0028         <span class="keyword">case</span> {<span class="string">'OVER'</span>, <span class="string">'OVERLAP'</span>}
+0029             out(N) = [s(N).over];
+0030         <span class="keyword">case</span> <span class="string">'DBLIMS'</span>
+0031             out(N) = {s(N).dBlims};
+0032         <span class="keyword">case</span> <span class="string">'FREQMAX'</span>
+0033             out(N) = [s(N).freqmax];
+0034         <span class="keyword">case</span> <span class="string">'SCALING'</span>
+0035             out{N} = {s(N).scaling};
+0036         <span class="keyword">otherwise</span>
+0037             warning([<span class="string">'unrecognized property name...'</span> upper(prop_name)]);
+0038             out = {[]};
+0039     <span class="keyword">end</span>;
+0040 <span class="keyword">end</span>
+0041 
+0042 <span class="keyword">if</span> numel(s) == 1 &amp;&amp; iscell(out)
+0043     out = out{1}; <span class="comment">% return the actual value, not a cell array</span>
+0044 <span class="keyword">end</span>
+0045 
+0046 <span class="comment">%% changelog</span>
+0047 <span class="comment">%{</span>
+0048 6/20/2007 fixed issue with cells 
+0049 <span class="comment">%}</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

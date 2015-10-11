@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of catalog_cookbook</title>
+  <meta name="keywords" content="catalog_cookbook">
+  <meta name="description" content="% CATALOG and EVENTRATE cookbook">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">catalog_old</a> &gt; catalog_cookbook.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/catalog_old&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>catalog_cookbook
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>% CATALOG and EVENTRATE cookbook</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% CATALOG and EVENTRATE cookbook</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="catalog.html" class="code" title="">catalog</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%% CATALOG and EVENTRATE cookbook</span>
+0002 <span class="comment">%</span>
+0003 
+0004 <span class="comment">%% Introduction</span>
+0005 <span class="comment">% This is a short demonstration of some of the methods of the CATALOG and EVENTRATE classes.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% It is assumed that you already have GISMO on your MATLAB path.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% This cookbook is written as an M-file and is converted to HTML using the PUBLISH command.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Author: Glenn Thompson, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0012 
+0013 <span class="comment">%% Loading event catalogs</span>
+0014 <span class="comment">% The catalog class is for loading, plotting and analysing event catalogs.</span>
+0015 <span class="comment">% For a detailed description, read HELP CATALOG.M.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% For the purpose of this exercise we will be using data from Redoubt volcano</span>
+0018 <span class="comment">% from 2009/03/20 to 2009/03/23. We will use two catalogs:</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% # The real-time catalog, produced using Antelope.</span>
+0021 <span class="comment">% # The analyst-reviewed offical AVO catalog, produced using Earthworm,</span>
+0022 <span class="comment">% XPick and Hypoellipse (and then later converted to an Antelope database).</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Both catalog segments are distributed in the &quot;demo&quot; directory.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% We will now load the real-time catalog into a catalog object. First,</span>
+0027 <span class="comment">% because we don't know where GISMO is on your system, we have to construct the</span>
+0028 <span class="comment">% path to the demo directory based on where CATALOG.M resides:</span>
+0029 
+0030 dirname = fileparts(which(<span class="string">'catalog'</span>)); 
+0031 dbpath = [dirname,<span class="string">'/demo/avodb200903'</span>]; 
+0032 cobj = <a href="catalog.html" class="code" title="">catalog</a>(dbpath, <span class="string">'antelope'</span>, <span class="string">'snum'</span>, datenum(2009,3,20), <span class="string">'enum'</span>, datenum(2009,3,23), <span class="string">'region'</span>, <span class="string">'Redoubt'</span>)
+0033 
+0034 <span class="comment">%% Magnitude-time plot</span>
+0035 <span class="comment">% You should see that there are 1397 events in these 3 days. What are their</span>
+0036 <span class="comment">% magnitudes? For a simple magnitude versus time plot, just call plot on</span>
+0037 <span class="comment">% the catalog object:</span>
+0038 plot(cobj)
+0039 
+0040 <span class="comment">%% Volplot</span>
+0041 <span class="comment">% For a map view, lat-depth, lon-depth and time-depth section, use volplot:</span>
+0042 volplot(cobj)
+0043 
+0044 <span class="comment">%% Magnitude statistics</span>
+0045 <span class="comment">% For a look at various statistics of magnitude on a daily basis:</span>
+0046 plotdailymagstats(cobj)
+0047 
+0048 <span class="comment">%% Adding arrivals to a catalog object</span>
+0049 <span class="comment">% By default the arrival property of a catalog object is left blank.</span>
+0050 <span class="comment">% To populate it do:</span>
+0051 cobj = cobj.addArrivals()
+0052 
+0053 <span class="comment">%% Plots of earthquake counts</span>
+0054 <span class="comment">% For a quick plot of earthquakes per hour, we create an eventrate object</span>
+0055 <span class="comment">% and then plot it. Here our binsize is 1/24 days, i.e. 1 hour.</span>
+0056 erobj = eventrate(cobj, 1/24)
+0057 plot(erobj);
+0058 
+0059 <span class="comment">%% Event rates for overlapping time windows</span>
+0060 <span class="comment">% Sometimes it is desirable to compute event rate metrics for sliding -</span>
+0061 <span class="comment">% i.e. overlapping - time windows. This is easily done with the 'stepsize'</span>
+0062 <span class="comment">% parameter. If omitted, stepsize defaults to the binsize - which is the</span>
+0063 <span class="comment">% length of the time window. So in the previous example, both binsize and</span>
+0064 <span class="comment">% stepsize were 1.0 hours. But we can just as easily compute an eventrate</span>
+0065 <span class="comment">% object for the same catalog object with a binsize of 1 hour, and stepsize</span>
+0066 <span class="comment">% of just 5 minutes.</span>
+0067 erobj2 = eventrate(cobj, 1/24, <span class="string">'stepsize'</span>,  5/1440)
+0068 plot(erobj2)
+0069 
+0070 <span class="comment">%% Plots of other event rate metrics</span>
+0071 <span class="comment">% &gt;&gt; plot(erobj) is actually equivalent to typing:</span>
+0072 <span class="comment">%</span>
+0073 <span class="comment">% &gt;&gt; plot(erobj, 'metric', 'counts');</span>
+0074 <span class="comment">%</span>
+0075 <span class="comment">% The full list of metrics that can be plotted are:</span>
+0076 <span class="comment">%%</span>
+0077 <span class="comment">%</span>
+0078 <span class="comment">% * counts</span>
+0079 <span class="comment">% * mean_rate</span>
+0080 <span class="comment">% * median_rate</span>
+0081 <span class="comment">% * cum_mag</span>
+0082 <span class="comment">% * mean_mag</span>
+0083 <span class="comment">% * median_mag</span>
+0084 <span class="comment">% * energy</span>
+0085 <span class="comment">%</span>
+0086 <span class="comment">% All of these are properties of an eventrate object except for energy,</span>
+0087 <span class="comment">% which is computed from cum_mag on-the-fly.</span>
+0088 <span class="comment">%</span>
+0089 <span class="comment">% Several can be plotted at once in subplots of the same figure using a cell array:</span>
+0090 <span class="comment">%</span>
+0091 <span class="comment">% &gt;&gt;plot(erobj2, 'metric', {'mean_rate'; 'median_rate'; 'mean_mag'; 'cum_mag'});</span>
+0092 <span class="comment">%</span>
+0093 <span class="comment">% Or they can of course be plotted in separate figure windows:</span>
+0094 plot(erobj2, <span class="string">'metric'</span>, <span class="string">'mean_rate'</span>)
+0095 plot(erobj2, <span class="string">'metric'</span>, <span class="string">'median_rate'</span>)
+0096 plot(erobj2, <span class="string">'metric'</span>, <span class="string">'mean_mag'</span>)
+0097 plot(erobj2, <span class="string">'metric'</span>, <span class="string">'cum_mag'</span>)
+0098 <span class="comment">%%</span>
+0099 <span class="comment">% These are the same metrics, binsize and stepsize used by the AVO swarm tracking system.</span>
+0100 <span class="comment">% See: &lt;http://www.aeic.alaska.edu/input/west/papers/2009_srl_thompson_redoubtSwarms.pdf&gt;</span>
+0101 <span class="comment">% for details.</span>
+0102 
+0103 
+0104 <span class="comment">%% Other methods</span>
+0105 <span class="comment">% This has really only skimmed the surface of CATALOG and EVENTRATE class</span>
+0106 <span class="comment">% functionality.</span>
+0107 <span class="comment">% Both can also make use of the etype (event subclassification, e.g. lp,</span>
+0108 <span class="comment">% vt, hybrid, rockfall) in making plots.</span>
+0109 <span class="comment">%</span>
+0110 <span class="comment">% CATALOG has preliminary methods to compare the hypocenters and magnitude</span>
+0111 <span class="comment">% differences between two catalog objects.</span>
+0112 <span class="comment">% CATALOG can also superimpose station locations, if an environment</span>
+0113 <span class="comment">% variable called DBMASTER is set to point to the location of a master</span>
+0114 <span class="comment">% stations database.</span>
+0115 <span class="comment">%</span>
+0116 <span class="comment">% For further information, feel free to email: gthompson@alaska.edu</span>
+0117 
+0118 
+0119 
+0120 
+0121 
+0122</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

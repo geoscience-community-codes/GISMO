@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of utnow</title>
+  <meta name="keywords" content="utnow">
+  <meta name="description" content="UTNOW">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">contributed_antelope</a> &gt; <a href="index.html">time_utilities</a> &gt; utnow.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_antelope/time_utilities&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>utnow
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>UTNOW</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function utdnum=utnow() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> UTNOW
+    ut_datenum = utnow()
+    Return a MATLAB datenum corresponding to the current UT time/date.
+    Uses Unix date command, so should work on Linux, Solaris &amp; MacOS.  
+
+    It is a convenient way to compute UTC regardless of whether summer
+    time applies.
+
+    Caveats: 
+    Currently only configured for 'AKDT' and 'AKST'. If your Unix
+    timezone is anything else, you need to add cases.
+
+    See also datenum, now</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function utdnum=utnow()</a>
+0002 <span class="comment">% UTNOW</span>
+0003 <span class="comment">%    ut_datenum = utnow()</span>
+0004 <span class="comment">%    Return a MATLAB datenum corresponding to the current UT time/date.</span>
+0005 <span class="comment">%    Uses Unix date command, so should work on Linux, Solaris &amp; MacOS.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    It is a convenient way to compute UTC regardless of whether summer</span>
+0008 <span class="comment">%    time applies.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    Caveats:</span>
+0011 <span class="comment">%    Currently only configured for 'AKDT' and 'AKST'. If your Unix</span>
+0012 <span class="comment">%    timezone is anything else, you need to add cases.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    See also datenum, now</span>
+0015 
+0016 <span class="comment">%    Author: Glenn Thompson</span>
+0017 <span class="keyword">if</span> isunix
+0018     [status, unixnowstr] = system(<span class="string">'date +&quot;%Y-%m-%d %H:%M:%S&quot;'</span>);
+0019     unixnow = datenum(unixnowstr);
+0020     [status, unixnowTZ] = system(<span class="string">'date +&quot;%Z&quot;'</span>); 
+0021     unixnowTZ = unixnowTZ(1:end-1); <span class="comment">% chomp</span>
+0022     <span class="keyword">switch</span> unixnowTZ
+0023         <span class="keyword">case</span> <span class="string">'AKDT'</span>
+0024             utdnum = unixnow + 8/24;
+0025         <span class="keyword">case</span> <span class="string">'AKST'</span>
+0026             utdnum = unixnow + 9/24;
+0027         <span class="keyword">otherwise</span>
+0028             utdnum = unixnow;
+0029     <span class="keyword">end</span>
+0030 <span class="keyword">else</span>
+0031     disp(<span class="string">'utnow: Sorry, your system does not support the Unix date command.'</span>)
+0032 <span class="keyword">end</span>
+0033</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

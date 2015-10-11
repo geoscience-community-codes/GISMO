@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of legend</title>
+  <meta name="keywords" content="legend">
+  <meta name="description" content="legend creates a legend for a waveform graph">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; legend.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>legend
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>legend creates a legend for a waveform graph</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = legend(wave, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">legend creates a legend for a waveform graph
+  legend(wave) attempts to automatically create a legend based upon
+  unique values within the waveforms.  in order, the legend will
+  preferentially use station, channel, start time.
+
+  legend(wave, field1, [field2, [..., fieldn]]) will create a legend,
+  using the fieldnames.
+
+  h = legend(...) returns the handle for the created legend.  this handle
+  can be used to later modify the legend entry (such as setting the
+  location, etc.)
+
+  Note: for additional control, use matlab's legend function by passing it
+  cells &amp; strings instead of a waveform.
+    (hint:useful functions include waveform/get, strcat, sprintf, num2str)
+
+  see also <a href="legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>	legend creates a legend for a waveform graph</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>	legend creates a legend for a waveform graph</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function stuff = anything2textCell(stuff)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = legend(wave, varargin)</a>
+0002    <span class="comment">%legend creates a legend for a waveform graph</span>
+0003    <span class="comment">%  legend(wave) attempts to automatically create a legend based upon</span>
+0004    <span class="comment">%  unique values within the waveforms.  in order, the legend will</span>
+0005    <span class="comment">%  preferentially use station, channel, start time.</span>
+0006    <span class="comment">%</span>
+0007    <span class="comment">%  legend(wave, field1, [field2, [..., fieldn]]) will create a legend,</span>
+0008    <span class="comment">%  using the fieldnames.</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">%  h = legend(...) returns the handle for the created legend.  this handle</span>
+0011    <span class="comment">%  can be used to later modify the legend entry (such as setting the</span>
+0012    <span class="comment">%  location, etc.)</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">%  Note: for additional control, use matlab's legend function by passing it</span>
+0015    <span class="comment">%  cells &amp; strings instead of a waveform.</span>
+0016    <span class="comment">%    (hint:useful functions include waveform/get, strcat, sprintf, num2str)</span>
+0017    <span class="comment">%</span>
+0018    <span class="comment">%  see also legend</span>
+0019    
+0020    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0021    <span class="comment">% $Date$</span>
+0022    <span class="comment">% $Revision$</span>
+0023    
+0024    <span class="keyword">if</span> nargin == 1
+0025       <span class="comment">% automatically determine the legend</span>
+0026       total_waves = numel(wave);
+0027       cha_tags = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(wave,<span class="string">'channeltag'</span>);
+0028       ncha_tags = numel(unique(cha_tags));
+0029       <span class="keyword">if</span> ncha_tags == 1
+0030          <span class="comment">% all cha_tags represent the same station</span>
+0031          items = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(wave,<span class="string">'start_str'</span>);
+0032       <span class="keyword">else</span>
+0033          uniquestations = unique(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(cha_tags,<span class="string">'station'</span>));
+0034          stationsareunique = numel(uniquestations) == total_waves;
+0035          issinglestation = isscalar(uniquestations);
+0036          
+0037          uniquechannels = unique(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(cha_tags,<span class="string">'channel'</span>));
+0038          channelsareunique = numel(uniquechannels) == total_waves;
+0039          issinglechannel = isscalar(uniquechannels);
+0040          
+0041          <span class="keyword">if</span> stationsareunique
+0042             <span class="keyword">if</span> issinglechannel
+0043                items = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(cha_tags,<span class="string">'station'</span>);
+0044             <span class="keyword">else</span>
+0045                items = strcat(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(cha_tags,<span class="string">'station'</span>),<span class="string">':'</span>,<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(cha_tags,<span class="string">'channel'</span>));
+0046             <span class="keyword">end</span>
+0047          <span class="keyword">elseif</span> issinglestation
+0048             <span class="keyword">if</span> issinglechannel
+0049                items = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(wave,<span class="string">'start_str'</span>);
+0050             <span class="keyword">elseif</span> channelsareunique
+0051                items = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(cha_tags,<span class="string">'channel'</span>);
+0052             <span class="keyword">else</span>
+0053                <span class="comment">% 1 station, mixed channels</span>
+0054                items = strcat(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(cha_tags,<span class="string">'channel'</span>),<span class="string">': '</span>,<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(wave,<span class="string">'start_str'</span>));
+0055             <span class="keyword">end</span>
+0056          <span class="keyword">else</span> <span class="comment">%mixed stations</span>
+0057             <span class="keyword">if</span> issinglechannel
+0058                items = strcat(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(cha_tags,<span class="string">'station'</span>),<span class="string">': '</span>,<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(wave,<span class="string">'start_str'</span>));
+0059             <span class="keyword">else</span>
+0060                items = strcat(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(cha_tags,<span class="string">'station'</span>),<span class="string">':'</span>,<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(cha_tags,<span class="string">'channel'</span>));
+0061             <span class="keyword">end</span>
+0062          <span class="keyword">end</span>
+0063          
+0064       <span class="keyword">end</span>
+0065       
+0066       
+0067       
+0068    <span class="keyword">else</span>
+0069       <span class="comment">%let the provided fieldnames determine the legend.</span>
+0070       items = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(wave,varargin{1});
+0071       items = <a href="#_sub1" class="code" title="subfunction stuff = anything2textCell(stuff)">anything2textCell</a>(items);
+0072       
+0073       <span class="keyword">for</span> n=2:nargin-1
+0074          nextitems = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(wave,varargin{n});
+0075          items = strcat(items,<span class="string">':'</span>,<a href="#_sub1" class="code" title="subfunction stuff = anything2textCell(stuff)">anything2textCell</a>(nextitems));
+0076       <span class="keyword">end</span>
+0077    <span class="keyword">end</span>
+0078    
+0079    h = <a href="legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>(items);
+0080    <span class="keyword">if</span> nargout == 1
+0081       varargout = {h};
+0082    <span class="keyword">end</span>
+0083 <span class="keyword">end</span>
+0084 <a name="_sub1" href="#_subfunctions" class="code">function stuff = anything2textCell(stuff)</a>
+0085    
+0086    <span class="keyword">if</span> isnumeric(stuff)
+0087       stuff=num2str(stuff);
+0088    <span class="keyword">elseif</span> iscell(stuff)
+0089       <span class="keyword">if</span> isnumeric(stuff{1})
+0090          <span class="keyword">for</span> n=1 : numel(stuff)
+0091             stuff(n) = {num2str(stuff{n})};
+0092          <span class="keyword">end</span>
+0093       <span class="keyword">end</span>
+0094    <span class="keyword">end</span>
+0095 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

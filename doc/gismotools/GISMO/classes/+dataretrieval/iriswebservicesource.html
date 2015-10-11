@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of iriswebservicesource</title>
+  <meta name="keywords" content="iriswebservicesource">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">+dataretrieval</a> &gt; iriswebservicesource.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/+dataretrieval&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>iriswebservicesource
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="iriswebservicesource.html" class="code" title="">iriswebservicesource</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="iriswebservicesource.html" class="code" title="">iriswebservicesource</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function waves = retrieve(obj, where_, from_ , until_)</a></li><li><a href="#_sub2" class="code">function ts = getTraces( chanInfo, fromStr, untilStr, quality, verbosity )</a></li><li><a href="#_sub3" class="code">function ws = translate(traces)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="iriswebservicesource.html" class="code" title="">iriswebservicesource</a> &lt; dataretrieval.spatiotemporal_database
+0002    <span class="comment">%UNTITLED2 Summary of this class goes here</span>
+0003    <span class="comment">%   Detailed explanation goes here</span>
+0004    
+0005    properties
+0006    <span class="keyword">end</span>
+0007    
+0008    methods
+0009       <a name="_sub0" href="#_subfunctions" class="code">function waves = retrieve(obj, where_, from_ , until_)</a>
+0010          disp(<span class="string">'Requesting Data from the DMC...'</span>);
+0011          offset = 0;
+0012          <span class="keyword">for</span> n = 1 : numel(where_)
+0013             chanTag = where_(n);
+0014             
+0015             thisTrace = dataretrieval.iriswebservicesource.getTraces(chanTag, <span class="keyword">...</span>
+0016                datestr(from_,<span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>), <span class="keyword">...</span>
+0017                datestr(until_,<span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>));
+0018             
+0019             <span class="keyword">if</span> numel(thisTrace) == 1
+0020                waves(n+ offset) = thisTrace;
+0021             <span class="keyword">elseif</span> numel(thisTrace) &gt; 1
+0022                thisEndIndex = n + offset + numel(thisTrace) - 1;
+0023                waves(n+offset : thisEndIndex) = thisTrace;
+0024                offset = offset + numel(thisTrace) - 1;
+0025             <span class="keyword">end</span>
+0026          <span class="keyword">end</span>
+0027       <span class="keyword">end</span>
+0028    <span class="keyword">end</span>
+0029    methods (Static, Access=protected)
+0030       <a name="_sub1" href="#_subfunctions" class="code">function ts = getTraces( chanInfo, fromStr, untilStr, quality, verbosity )</a>
+0031          <span class="comment">% getTraces returns an array of Matlab trace structures based on standard waveform criteria</span>
+0032          
+0033          <span class="comment">% % Load up that jar if necessary</span>
+0034          
+0035          <span class="keyword">if</span> ~exist(<span class="string">'verbosity'</span>, <span class="string">'var'</span>)
+0036             verbosity = false;
+0037          <span class="keyword">end</span>
+0038          
+0039          <span class="keyword">if</span> ~exist(<span class="string">'quality'</span>, <span class="string">'var'</span>)
+0040             quality = <span class="string">'B'</span>;
+0041          <span class="keyword">end</span>
+0042          
+0043          <span class="keyword">try</span>
+0044             tdclass = edu.iris.dmc.extensions.fetch.TraceData;
+0045             <span class="comment">% traces = edu.iris.WsHelper.Fetch.TraceData.fetchTraces(network, station, location, channel, startDateStr, endDateStr, quality, verbosity);</span>
+0046             traces = tdclass.fetchTraces(<span class="keyword">...</span>
+0047                chanInfo.network, chanInfo.station, chanInfo.location, chanInfo.channel,<span class="keyword">...</span>
+0048                fromStr, untilStr, quality, verbosity);
+0049          <span class="keyword">catch</span> je
+0050             <span class="keyword">switch</span> je.identifier
+0051                <span class="keyword">case</span> <span class="string">'MATLAB:undefinedVarOrClass'</span>
+0052                   <span class="comment">% The library was not found</span>
+0053                   error(<span class="string">'WAVEFORM:load_irisdmcws:unableToAccessLibrary'</span>,<span class="keyword">...</span>
+0054                      [<span class="string">'The IRIS-WS library was not found in the matlab '</span>,<span class="keyword">...</span>
+0055                      <span class="string">'path.  Please ensure it is on your system, and '</span>,<span class="keyword">...</span>
+0056                      <span class="string">'has been added to MATLAB''s java path.  For more '</span>,<span class="keyword">...</span>
+0057                      <span class="string">'information about using MATLAB with the IRIS-WS '</span>,<span class="keyword">...</span>
+0058                      <span class="string">'library, visit:\n\n'</span>,<span class="keyword">...</span>
+0059                      <span class="string">'\thttp://www.iris.edu/manuals/javawslibrary/matlab/\n'</span>]);
+0060                <span class="keyword">otherwise</span>
+0061                   rethrow(je);
+0062             <span class="keyword">end</span>
+0063             
+0064          <span class="keyword">end</span>
+0065          ts = dataretrieval.iriswebservicesource.translate(traces);
+0066          clear traces
+0067          clear td
+0068       <span class="keyword">end</span>
+0069       
+0070       <a name="_sub2" href="#_subfunctions" class="code">function ws = translate(traces)</a>
+0071          <span class="keyword">for</span> i = 1:length(traces)
+0072             w = waveform;
+0073             chaninfo = channeltag(char(traces(i).getNetwork), <span class="keyword">...</span>
+0074                char(traces(i).getStation), <span class="keyword">...</span>
+0075                char(traces(i).getLocation), <span class="keyword">...</span>
+0076                char(traces(i).getChannel));
+0077             w = set(w,<span class="string">'channelinfo'</span>,chaninfo,<span class="string">'freq'</span>,traces(i).getSampleRate); <span class="comment">%, 'start', datenum(startDateStr, 'yyyy-mm-dd HH:MM:SS.FFF'));</span>
+0078             w = set(w,<span class="string">'start'</span>, char(traces(i).getStartTime.toString()));
+0079             w = addfield(w,<span class="string">'latitude'</span>,traces(i).getLatitude);
+0080             w = addfield(w,<span class="string">'longitude'</span>, traces(i).getLongitude);
+0081             w = addfield(w,<span class="string">'elevation'</span>,traces(i).getElevation);
+0082             w = addfield(w,<span class="string">'depth'</span>,traces(i).getDepth);
+0083             w = addfield(w,<span class="string">'azimuth'</span>,traces(i).getAzimuth);
+0084             w = addfield(w,<span class="string">'dip'</span>,traces(i).getDip);
+0085             w = addfield(w,<span class="string">'sensitivity'</span>,traces(i).getSensitivity);
+0086             w = addfield(w,<span class="string">'sensitivityFrequency'</span>,traces(i).getSensitivityFrequency);
+0087             w = addfield(w,<span class="string">'instrument'</span>,char(traces(i).getInstrument));
+0088             w = set(w,<span class="string">'units'</span>,char(traces(i).getSensitivityUnits));
+0089             w = addfield(w,<span class="string">'calib'</span>,1 ./ traces(i).getSensitivity);
+0090             w = addfield(w,<span class="string">'calib_applied'</span>,<span class="string">'NO'</span>);
+0091             w = set(w,<span class="string">'data'</span>, traces(i).getAsDouble()); <span class="comment">% might need more flexability here</span>
+0092             ws(i) = w;
+0093          <span class="keyword">end</span>
+0094       <span class="keyword">end</span>
+0095       
+0096    <span class="keyword">end</span>
+0097    
+0098 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of depth_section</title>
+  <meta name="keywords" content="depth_section">
+  <meta name="description" content="DEPTH_SECTION plot depth sections of ray coverage.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">contributed_antelope</a> &gt; <a href="#">traveltime_and_ray_coverage</a> &gt; <a href="index.html">+ttimes</a> &gt; depth_section.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>depth_section
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>DEPTH_SECTION plot depth sections of ray coverage.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function depth_section(dbName) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEPTH_SECTION plot depth sections of ray coverage.
+ DEPTH_SECTION(dbName) creates depth section views of straight line ray
+ coverage, hypocenters and stations for database dbName. There is one
+ latitude and one longitude depth section each for P and S wave coverage.
+ Postscript version of figure is written utomatically as 
+
+ see also ttimes.<a href="dbload.html" class="code" title="function [origin,site,arrival,ray] = dbload(dbName)">dbload</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function depth_section(dbName)</a>
+0002 
+0003 <span class="comment">%DEPTH_SECTION plot depth sections of ray coverage.</span>
+0004 <span class="comment">% DEPTH_SECTION(dbName) creates depth section views of straight line ray</span>
+0005 <span class="comment">% coverage, hypocenters and stations for database dbName. There is one</span>
+0006 <span class="comment">% latitude and one longitude depth section each for P and S wave coverage.</span>
+0007 <span class="comment">% Postscript version of figure is written utomatically as</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% see also ttimes.dbload</span>
+0010 
+0011 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0012 <span class="comment">% $Date$</span>
+0013 <span class="comment">% $Revision$</span>
+0014 
+0015 
+0016 <span class="comment">% LOAD DATABASE</span>
+0017 [origin,site,arrival,ray] = ttimes.dbload(dbName);
+0018 
+0019 
+0020 
+0021 <span class="comment">% PREP MAP PARAMETERS</span>
+0022 latmin = min([ray.originLat ;  ray.siteLat]);
+0023 latmax = max([ray.originLat ;  ray.siteLat]);
+0024 lonmin = min([ray.originLon ;  ray.siteLon]);
+0025 lonmax = max([ray.originLon ;  ray.siteLon]);
+0026 depthmin = min([ray.originDepth ;  ray.siteElev]);
+0027 depthmax = max([ray.originDepth ;  ray.siteElev]);
+0028 
+0029 
+0030 
+0031 <span class="comment">%% PLOT CROSS SECTIONS</span>
+0032 figure(<span class="string">'Position'</span>,[0 0 850 1100],<span class="string">'Color'</span>,<span class="string">'w'</span>);
+0033 set(gcf,<span class="string">'DefaultAxesFontSize'</span>,14);
+0034 set(gcf,<span class="string">'DefaultAxesLineWidth'</span>,0.5);
+0035 
+0036 
+0037 <span class="comment">% P WAVES</span>
+0038 f = find(strcmp(arrival.iphase,<span class="string">'P'</span>));
+0039 h1 = subplot(2,2,1);
+0040 plot([ray.originLat(f) ray.siteLat(f)]',[ray.originDepth(f) ray.siteElev(f)]',<span class="string">'-'</span>,<span class="string">'Color'</span>,[0.7 0.7 0.7],<span class="string">'LineWidth'</span>,0.5)
+0041 hold on;
+0042 plot(origin.lat,origin.depth,<span class="string">'ko'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerSize'</span>,4)
+0043 plot(site.lat,site.elev,<span class="string">'kv'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'c'</span>,<span class="string">'MarkerSize'</span>,9)
+0044 set(gca,<span class="string">'YDir'</span>,<span class="string">'reverse'</span>);
+0045 ylim([depthmin depthmax]);
+0046 xlabel(<span class="string">'Latitude'</span>);
+0047 ylabel(<span class="string">'Depth (km)'</span>);
+0048 xLim1 = get(gca,<span class="string">'Xlim'</span>);
+0049 xWidth1 = xLim1(2) - xLim1(1);
+0050 title(<span class="string">'P wave depth coverage'</span>);
+0051 
+0052 <span class="comment">%</span>
+0053 h2 = subplot(2,2,3);
+0054 plot([ray.originLon(f) ray.siteLon(f)]',[ray.originDepth(f) ray.siteElev(f)]',<span class="string">'-'</span>,<span class="string">'Color'</span>,[0.7 0.7 0.7],<span class="string">'LineWidth'</span>,0.5)
+0055 hold on;
+0056 plot(origin.lon,origin.depth,<span class="string">'ko'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerSize'</span>,4)
+0057 plot(site.lon,site.elev,<span class="string">'kv'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'c'</span>,<span class="string">'MarkerSize'</span>,9)
+0058 set(gca,<span class="string">'YDir'</span>,<span class="string">'reverse'</span>);
+0059 ylim([depthmin depthmax]);
+0060 xlabel(<span class="string">'Longitude'</span>);
+0061 ylabel(<span class="string">'Depth (km)'</span>);
+0062 xLim2 = get(gca,<span class="string">'Xlim'</span>);
+0063 xWidth2 = (xLim2(2)-xLim2(1)) * cosd(mean(xLim1));
+0064 <span class="comment">%</span>
+0065 <span class="keyword">if</span> xWidth1&gt;xWidth2
+0066     position = get(gca,<span class="string">'Position'</span>);
+0067     position(3) = position(3) * xWidth2/xWidth1;
+0068     position(1) = 0.25 - position(3)/2;
+0069     set(h2,<span class="string">'Position'</span>,position);
+0070     set(h2,<span class="string">'xlim'</span>,xLim2);
+0071 <span class="keyword">elseif</span> xWidth2&gt;xWidth1
+0072     position = get(gca,<span class="string">'Position'</span>);
+0073     position(3) = position(3) * xWidth1/xWidth2;
+0074     position(1) = 0.25 - position(3)/2;
+0075     set(h2,<span class="string">'Position'</span>,position);
+0076     set(h2,<span class="string">'xlim'</span>,xLim2);
+0077 <span class="keyword">end</span>
+0078 
+0079 
+0080 <span class="comment">% S WAVES</span>
+0081 f = find(strcmp(arrival.iphase,<span class="string">'S'</span>));
+0082 h1 = subplot(2,2,2);
+0083 plot([ray.originLat(f) ray.siteLat(f)]',[ray.originDepth(f) ray.siteElev(f)]',<span class="string">'-'</span>,<span class="string">'Color'</span>,[0.7 0.7 0.7],<span class="string">'LineWidth'</span>,0.5)
+0084 hold on;
+0085 plot(origin.lat,origin.depth,<span class="string">'ko'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerSize'</span>,4)
+0086 plot(site.lat,site.elev,<span class="string">'kv'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'c'</span>,<span class="string">'MarkerSize'</span>,9)
+0087 set(gca,<span class="string">'YDir'</span>,<span class="string">'reverse'</span>);
+0088 ylim([depthmin depthmax]);
+0089 xlabel(<span class="string">'Latitude'</span>);
+0090 ylabel(<span class="string">'Depth (km)'</span>);
+0091 xLim1 = get(gca,<span class="string">'Xlim'</span>);
+0092 xWidth1 = xLim1(2) - xLim1(1);
+0093 title(<span class="string">'S wave depth coverage'</span>);
+0094 <span class="comment">%</span>
+0095 h2 = subplot(2,2,4);
+0096 plot([ray.originLon(f) ray.siteLon(f)]',[ray.originDepth(f) ray.siteElev(f)]',<span class="string">'-'</span>,<span class="string">'Color'</span>,[0.7 0.7 0.7],<span class="string">'LineWidth'</span>,0.5)
+0097 hold on;
+0098 plot(origin.lon,origin.depth,<span class="string">'ko'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerSize'</span>,4)
+0099 plot(site.lon,site.elev,<span class="string">'kv'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'c'</span>,<span class="string">'MarkerSize'</span>,9)
+0100 set(gca,<span class="string">'YDir'</span>,<span class="string">'reverse'</span>);
+0101 ylim([depthmin depthmax]);
+0102 xlabel(<span class="string">'Longitude'</span>);
+0103 ylabel(<span class="string">'Depth (km)'</span>);
+0104 xLim2 = get(gca,<span class="string">'Xlim'</span>);
+0105 xWidth2 = (xLim2(2)-xLim2(1)) * cosd(mean(xLim1));
+0106 <span class="comment">%</span>
+0107 <span class="keyword">if</span> xWidth1&gt;xWidth2
+0108     position = get(gca,<span class="string">'Position'</span>);
+0109     position(3) = position(3) * xWidth2/xWidth1;
+0110     position(1) = 0.75 - position(3)/2;
+0111     set(h2,<span class="string">'Position'</span>,position);
+0112     set(h2,<span class="string">'xlim'</span>,xLim2);
+0113 <span class="keyword">elseif</span> xWidth2&gt;xWidth1
+0114     position = get(gca,<span class="string">'Position'</span>);
+0115     position(3) = position(3) * xWidth1/xWidth2;
+0116     position(1) = 0.75 - position(3)/2;
+0117     set(h2,<span class="string">'Position'</span>,position);
+0118     set(h2,<span class="string">'xlim'</span>,xLim2);
+0119  <span class="keyword">end</span>
+0120  <span class="comment">%</span>
+0121  set(gcf, <span class="string">'paperorientation'</span>, <span class="string">'landscape'</span>);
+0122  set(gcf, <span class="string">'paperposition'</span>, [.5 .5 10 6.5] );
+0123  print(gcf, <span class="string">'-dpsc2'</span>, <span class="string">'FIG_depth_section.ps'</span>);
+0124</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

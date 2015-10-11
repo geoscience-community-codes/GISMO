@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getm</title>
+  <meta name="keywords" content="getm">
+  <meta name="description" content="GETM Get MULTIPLE waveform properties">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; getm.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>getm
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>GETM Get MULTIPLE waveform properties</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = getm(w,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GETM Get MULTIPLE waveform properties
+   a = getm(waveform, propertyA)
+   [a b c ...] = getm(waveform, propA [, propB] [, propC] [, ...])
+
+   Input Arguments
+       WAVEFORM: a waveform object   N-DIMENSIONAL
+       PROPERTYA, PROPERTYB, etc.: string containing a valid waveform
+       property.  For valid properties, check out waveform/get
+
+   Output Arguments
+       a, b, c, etc... : variables for receiving the values from get.
+
+   This routine is basically a glorified gofer and will call get for as
+   many properties as you give it.  If you are using an N-dimensional
+   waveform, then each variable will return it's variables in the same
+   sized variable.
+
+   example:
+      [s c d] = getm(w, 'station', 'component', 'start')
+      % returns station name in s, component in c, startdate in d
+      % this saves the overhead with many calls to the get function.
+
+   Note, Must have as many output variables as requested properties
+
+
+   See also WAVEFORM/GET for valid properties and such</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = getm(w,varargin)</a>
+0002    <span class="comment">%GETM Get MULTIPLE waveform properties</span>
+0003    <span class="comment">%   a = getm(waveform, propertyA)</span>
+0004    <span class="comment">%   [a b c ...] = getm(waveform, propA [, propB] [, propC] [, ...])</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">%   Input Arguments</span>
+0007    <span class="comment">%       WAVEFORM: a waveform object   N-DIMENSIONAL</span>
+0008    <span class="comment">%       PROPERTYA, PROPERTYB, etc.: string containing a valid waveform</span>
+0009    <span class="comment">%       property.  For valid properties, check out waveform/get</span>
+0010    <span class="comment">%</span>
+0011    <span class="comment">%   Output Arguments</span>
+0012    <span class="comment">%       a, b, c, etc... : variables for receiving the values from get.</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">%   This routine is basically a glorified gofer and will call get for as</span>
+0015    <span class="comment">%   many properties as you give it.  If you are using an N-dimensional</span>
+0016    <span class="comment">%   waveform, then each variable will return it's variables in the same</span>
+0017    <span class="comment">%   sized variable.</span>
+0018    <span class="comment">%</span>
+0019    <span class="comment">%   example:</span>
+0020    <span class="comment">%      [s c d] = getm(w, 'station', 'component', 'start')</span>
+0021    <span class="comment">%      % returns station name in s, component in c, startdate in d</span>
+0022    <span class="comment">%      % this saves the overhead with many calls to the get function.</span>
+0023    <span class="comment">%</span>
+0024    <span class="comment">%   Note, Must have as many output variables as requested properties</span>
+0025    <span class="comment">%</span>
+0026    <span class="comment">%</span>
+0027    <span class="comment">%   See also WAVEFORM/GET for valid properties and such</span>
+0028    
+0029    <span class="comment">% VERSION: 1.0 of waveform objects</span>
+0030    <span class="comment">% AUTHOR: Celso Reyes (celso@gi.alaska.edu)</span>
+0031    <span class="comment">% LASTUPDATE: 2/6/2007</span>
+0032    
+0033    error (nargoutchk(nargin, nargin, nargout+1));
+0034    
+0035    <span class="keyword">for</span> n = 1 : nargin-1;
+0036       varargout{n} = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,varargin{n});
+0037    <span class="keyword">end</span>
+0038 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

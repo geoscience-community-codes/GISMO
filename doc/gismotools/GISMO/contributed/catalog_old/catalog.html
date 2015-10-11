@@ -1,0 +1,1486 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of catalog</title>
+  <meta name="keywords" content="catalog">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">catalog_old</a> &gt; catalog.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/catalog_old&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>catalog
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="catalog.html" class="code" title="">catalog</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="catalog.html" class="code" title="">catalog</a>	</li><li><a href="catalog_cookbook.html" class="code" title="">catalog_cookbook</a>	% CATALOG and EVENTRATE cookbook</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function cobj = catalog(filepath, dataformat, varargin)</a></li><li><a href="#_sub2" class="code">function cobj = css2catalog(cobj, dbpath, varargin)</a></li><li><a href="#_sub3" class="code">function plot(cobj, varargin)</a></li><li><a href="#_sub4" class="code">function cobj = volplot(cobj, varargin)</a></li><li><a href="#_sub5" class="code">function volplotdiff(cobj1, cobj2)</a></li><li><a href="#_sub6" class="code">function sta = db2stations(cobj)</a></li><li><a href="#_sub7" class="code">function [matches, total] = compare(cobj1, cobj2)</a></li><li><a href="#_sub8" class="code">function plotdailymagstats(cobj)</a></li><li><a href="#_sub9" class="code">function plotmagdiff(cobj1, cobj2)</a></li><li><a href="#_sub10" class="code">function plotbvalue(cobj);</a></li><li><a href="#_sub11" class="code">function mapexample(cobj)</a></li><li><a href="#_sub12" class="code">function plotstations(cobj)</a></li><li><a href="#_sub13" class="code">function cobj = addArrivals(cobj)</a></li><li><a href="#_sub14" class="code">function arrival = toArrivals(cobj, subset_expr)</a></li><li><a href="#_sub15" class="code">function toWaveforms(cobj, subset_expr)</a></li><li><a href="#_sub16" class="code">function cobj = addfield(cobj,fieldname,value)</a></li><li><a href="#_sub17" class="code">function cobj = set(cobj, varargin)</a></li><li><a href="#_sub18" class="code">function val = get(cobj,prop_name)</a></li><li><a href="#_sub19" class="code">function equal=eq(cobj1, cobj2)</a></li><li><a href="#_sub20" class="code">function cobj = css_load(cobj, dbroot, archiveformat, dbeval)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="catalog.html" class="code" title="">catalog</a>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% CATALOG Seismic Catalog class constructor, version 1.1.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    CATALOG is a class that for loading, manipulating and saving earthquake</span>
+0006 <span class="comment">%    catalogs.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%    CATALOG imports catalog information from a CSS3.0 database</span>
+0009 <span class="comment">%    - the default format used by Antelope/Datascope.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%%   USAGE</span>
+0012 <span class="comment">%    cobj = catalog() creates an empty catalog object.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    cobj = catalog(FILEPATH, DATAFORMAT) loads the file at FILEPATH in the</span>
+0015 <span class="comment">%    format DATAFORMAT.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%    cobj = catalog(FILEPATH, 'antelope', 'dbeval', EXPRESSION) subsets the</span>
+0018 <span class="comment">%    database with a dbeval EXPRESSION.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%    If the dbeval parameter name/value pair is omitted, a dbeval expression</span>
+0021 <span class="comment">%    can also be formed from other name/value pairs. These are:</span>
+0022 <span class="comment">%       NAME       VALUE</span>
+0023 <span class="comment">%       'snum'     a datenum denoting the minimum origin time</span>
+0024 <span class="comment">%       'enum'     a datenum denoting the maximum origin time</span>
+0025 <span class="comment">%       'minmag'   the minimum magnitude</span>
+0026 <span class="comment">%       'mindepth' the minimum depth (in km)</span>
+0027 <span class="comment">%       'maxdepth' the maximum depth (in km)</span>
+0028 <span class="comment">%       'region'   a 4-element vector: [minlon maxlon minlat maxlat]</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%   'region' can also be entered as a volcano name like 'Redoubt' in which</span>
+0031 <span class="comment">%   case the appropriate 4-element vector will be loaded from avo_volcs.pf</span>
+0032 <span class="comment">%   in the demo directory.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%   If the database is stored in daily volumes, rather than a single</span>
+0035 <span class="comment">%   database like somedir/mydb_YYYY_MM_DD then use the 'archiveformat'</span>
+0036 <span class="comment">%   name/value pair, e.g.</span>
+0037 <span class="comment">%   cobj = catalog('somedir/mydb', 'antelope', 'archiveformat', 'daily');</span>
+0038 <span class="comment">%   For a monthly volume, set 'archiveformat' to 'monthly'.</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%%   READING FROM A CSS3.0 DATASCOPE DATABASE</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">%    COBJ = CATALOG(DBNAME, DATAFORMAT) where DATAFORMAT is 'antelope', 'datascope' or</span>
+0044 <span class="comment">%    'css3.0' will attempt to load the full origin table for the database</span>
+0045 <span class="comment">%    described by the path DBNAME.</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">%    As described above the database can either be subsetted by using</span>
+0048 <span class="comment">%    parameter name/value pairs (snum, enum, minmag, mindepth, maxdepth,</span>
+0049 <span class="comment">%    region). Or by the 'dbeval' name/value pair. If you use both, the</span>
+0050 <span class="comment">%    dbeval EXPRESSION will be used, and the other name/value pairs</span>
+0051 <span class="comment">%    ignored.</span>
+0052 <span class="comment">%</span>
+0053 <span class="comment">%    EXAMPLES: (2-5 assume you are connected to the Seislab computer network at UAF/GI)</span>
+0054 <span class="comment">%</span>
+0055 <span class="comment">%      (1) Reading data from the demo database</span>
+0056 <span class="comment">%          dirname = fileparts(which('catalog')); % get the path to the catalog directory</span>
+0057 <span class="comment">%          dbroot = [dirname,'/demo/avodb200903'];</span>
+0058 <span class="comment">%          cobj = catalog(dbroot, 'antelope', 'snum', datenum(2009,3,20), 'enum', datenum(2009,3,23), 'region', 'Redoubt')</span>
+0059 <span class="comment">%</span>
+0060 <span class="comment">%          Identical results could be obtained with:</span>
+0061 <span class="comment">%</span>
+0062 <span class="comment">%          cobj = catalog(dbroot, 'antelope', 'dbeval','time &gt;= &quot;2009/3/20&quot; &amp;&amp; time &lt;= &quot;2009/3/23&quot; &amp;&amp; lon &gt;= -153.0 &amp;&amp; lon &lt;= -152.2 &amp;&amp; lat &gt;= 60.3 &amp;&amp; lat &lt;= 60.7')</span>
+0063 <span class="comment">%</span>
+0064 <span class="comment">%      (2) Create a catalog object of all AEIC events greater than M=4.0 in 2009 from the region latitude = 55.0 to 65.0, longitude = -170.0 to -135.0</span>
+0065 <span class="comment">%          cobj = catalog('/Seis/catalogs/aeic/Total/Total', 'antelope', 'snum', datenum(2009,1,1), 'enum', datenum(2010,1,1), 'minmag', 4.0, 'region', [-170.0 -135.0 55.0 65.0]);</span>
+0066 <span class="comment">%</span>
+0067 <span class="comment">%      (3) Create a catalog object of all AEIC events greater than M=1.0 in August 2011 from the region latitude = 55.0 to 65.0, longitude = -170.0 to -135.0</span>
+0068 <span class="comment">%          but this time, using the daily summary databases.</span>
+0069 <span class="comment">%          cobj = catalog('/aerun/sum/run/dbsum/Quakes', 'antelope', 'snum', datenum(2011,8,1), 'enum', datenum(2011,9,1), 'minmag', 1.0, 'region', [-170.0 -135.0 55.0 65.0], 'archiveformat', 'daily');</span>
+0070 <span class="comment">%</span>
+0071 <span class="comment">%      (4) Create a catalog object of all events (regardless of magnitude) in the last 3 days of data from Redoubt:</span>
+0072 <span class="comment">%          cobj = catalog('/avort/oprun/events/antelope/events_antelope', 'antelope', 'snum', utnow-3, 'enum', utnow, 'region', 'redoubt');</span>
+0073 <span class="comment">%</span>
+0074 <span class="comment">%      (5) Create a catalog object of all AEIC events recorded within 10 km of Spurr [61.2989 -152.2539] between 1989 and 2006:</span>
+0075 <span class="comment">%          cobj = catalog('/Seis/catalogs/aeic/Total/Total', 'antelope', 'dbeval', 'time &gt; &quot;1989/1/1&quot; &amp;&amp; time &lt; &quot;2006/1/1&quot; &amp;&amp; deg2km(distance(61.2989, -152.2539, lat, lon))&lt;10.0');</span>
+0076 <span class="comment">%</span>
+0077 <span class="comment">%</span>
+0078 <span class="comment">%%   PROPERTIES</span>
+0079 <span class="comment">%</span>
+0080 <span class="comment">%    For a list of properties type properties(catalog)</span>
+0081 <span class="comment">%</span>
+0082 <span class="comment">%    The following are vectors, containing one element per origin:</span>
+0083 <span class="comment">%</span>
+0084 <span class="comment">%      DNUM:   a MATLAB datenum corresponding to origin time</span>
+0085 <span class="comment">%      LON:    origin longitude</span>
+0086 <span class="comment">%      LAT:    origin latitude</span>
+0087 <span class="comment">%      DEPTH:  origin depth</span>
+0088 <span class="comment">%      NASS:   number of associated arrivals</span>
+0089 <span class="comment">%      EVID:   a number which acts as an event identifier</span>
+0090 <span class="comment">%      ORID:   a number which acts as an origin identifier</span>
+0091 <span class="comment">%      AUTH:   a string which describes who or what computed the hypocenter</span>
+0092 <span class="comment">%      MAG:    the magnitude.</span>
+0093 <span class="comment">%      ETYPE:  the event type (subclassification). For example &quot;t&quot; = VT.</span>
+0094 <span class="comment">%</span>
+0095 <span class="comment">%     The following describe the catalog data source:</span>
+0096 <span class="comment">%</span>
+0097 <span class="comment">%      SNUM:   a datenum describing the start date/time of the catalog.</span>
+0098 <span class="comment">%      ENUM:   a datenum describing the end date/time of the catalog.</span>
+0099 <span class="comment">%      MINMAG: a magnitude threshold applied to catalog.</span>
+0100 <span class="comment">%      REGION: a [minlon maxlon minlat maxlat] filter applied to the catalog.</span>
+0101 <span class="comment">%      DBROOT: the root database name.</span>
+0102 <span class="comment">%      ARCHIVEFORMAT:  Either '' for a single database, 'daily' for a daily</span>
+0103 <span class="comment">%                      archive or 'monthly' for a monthly archive.</span>
+0104 <span class="comment">%</span>
+0105 <span class="comment">%     The final property is &quot;ARRIVAL&quot;. This is a cell array containing 1</span>
+0106 <span class="comment">%     structure per origin in the catalog. Normally it is left blank</span>
+0107 <span class="comment">%     because it can be time consuming to load arrival data from big</span>
+0108 <span class="comment">%     catalogs. To populate it for a CSS3.0 Datascope database, call:</span>
+0109 <span class="comment">%       cobj=cobj.addArrivals();</span>
+0110 <span class="comment">%</span>
+0111 <span class="comment">%%   METHODS</span>
+0112 <span class="comment">%</span>
+0113 <span class="comment">%    For a list of methods type methods(catalog)</span>
+0114 <span class="comment">%</span>
+0115 <span class="comment">%    plot(c):              - event magnitude versus time plot</span>
+0116 <span class="comment">%    volplot(c):           - basic lat-lon, lon-depth, lat-depth and depth-time plots.</span>
+0117 <span class="comment">%    volplotdiff(c1, c2):  - show the differences between origins in two</span>
+0118 <span class="comment">%                            catalog objects (based on matching evid)</span>
+0119 <span class="comment">%    plotmagdiff(c1, c2):  - show the differences between magnitudes in two</span>
+0120 <span class="comment">%                            catalog objects (based on matching evid)</span>
+0121 <span class="comment">%    plotdailymagstats(c): - plot max, min, mean and median magnitudes for</span>
+0122 <span class="comment">%                            each day in catalog.</span>
+0123 <span class="comment">%    compare(c1, c2):      - attempt to match origins in two catalogs based on</span>
+0124 <span class="comment">%                            small differences in hypocenter and origin time</span>
+0125 <span class="comment">%    sta = db2stations(region): - return a list of stations based on a region</span>
+0126 <span class="comment">%    plotbvalue(c):        - simple b-value plot for catalog.</span>
+0127 <span class="comment">%    plotstations(c):      - superimpose the locations of stations</span>
+0128 <span class="comment">%    c = addfield(c, 'newfield', 'value):   - add a new field to a catalog</span>
+0129 <span class="comment">%                                               object.</span>
+0130 <span class="comment">%</span>
+0131 <span class="comment">%%   STATIC METHODS</span>
+0132 <span class="comment">%    test:  - a simple test suite for the catalog class</span>
+0133 <span class="comment">%    css_import: - low-level routine for loading data from CSS3.0 database</span>
+0134 <span class="comment">%</span>
+0135 <span class="comment">%% See also EVENTRATE</span>
+0136 <span class="comment">%</span>
+0137 <span class="comment">%% AUTHOR: Glenn Thompson</span>
+0138 
+0139 <span class="comment">% $Date$</span>
+0140 <span class="comment">% $Revision$</span>
+0141 
+0142 <span class="comment">%% PROPERTIES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0143 
+0144     properties (SetAccess=private)
+0145         lon    = [];<span class="comment">% longitude</span>
+0146         lat    = []; <span class="comment">% latitude</span>
+0147         depth = [];    <span class="comment">% depth (-ve is above sea level, +ve below)</span>
+0148         dnum = [];    <span class="comment">% Matlab datenumber marking event origin time</span>
+0149         nass = [];    <span class="comment">% number of associated arrivals</span>
+0150         evid = [];    <span class="comment">% event id</span>
+0151         orid = []; <span class="comment">% origin id</span>
+0152         mag    = []; <span class="comment">% magnitude</span>
+0153         mb = [];
+0154         ml = [];
+0155         ms = [];
+0156         etype = <span class="string">''</span>;    <span class="comment">% event classification/type</span>
+0157         snum = []; <span class="comment">% start time of catalog</span>
+0158         enum = [];<span class="comment">% end time of catalog</span>
+0159         minmag =[]; <span class="comment">% mag threshold of catalog</span>
+0160         auth = {};
+0161         region = [-179.9999 179.9999 -90 90];
+0162         dbroot = <span class="string">''</span>;
+0163         archiveformat =<span class="string">''</span>;
+0164         misc_fields = {};
+0165         misc_values = {};
+0166         arrival = {};
+0167     <span class="keyword">end</span>
+0168     
+0169     <span class="comment">%% METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0170     methods
+0171         
+0172          <span class="comment">%------------------------------------------------------------------</span>
+0173         <span class="comment">%% Constructor.</span>
+0174         <a name="_sub0" href="#_subfunctions" class="code">function cobj = catalog(filepath, dataformat, varargin)</a>
+0175             <span class="comment">% CATALOG/CATALOG</span>
+0176             <span class="comment">%   CATALOG constructor. HELP CATALOG for information.</span>
+0177             <span class="keyword">switch</span> nargin
+0178                 <span class="keyword">case</span> 0, disp(<span class="string">'Creating null catalog object'</span>); <span class="keyword">return</span>;
+0179                 <span class="keyword">case</span> 1, dataformat = <span class="string">'css3.0'</span>;
+0180             <span class="keyword">end</span>
+0181             <span class="comment">%cobj = catalog;</span>
+0182             <span class="keyword">switch</span> dataformat
+0183                 <span class="keyword">case</span> {<span class="string">'css3.0'</span>,<span class="string">'antelope'</span>, <span class="string">'datascope'</span>}
+0184                     cobj = cobj.css2catalog(filepath, varargin{:});
+0185                 <span class="keyword">case</span> <span class="string">'seisan'</span>
+0186                     cobj = cobj.seisan2catalog(filepath, varargin{:});
+0187                 <span class="keyword">otherwise</span>
+0188                     fprintf(<span class="string">'format %s unknown'</span>,dataformat);
+0189             <span class="keyword">end</span>      
+0190         <span class="keyword">end</span>
+0191 
+0192         <span class="comment">%------------------------------------------------------------------</span>
+0193         <span class="comment">%% CSS2CATALOG</span>
+0194         <a name="_sub1" href="#_subfunctions" class="code">function cobj = css2catalog(cobj, dbpath, varargin)            </a>
+0195             <span class="comment">% CATALOG/CSS2CATALOG</span>
+0196             <span class="comment">%   Wrapper for loading CSS3.0 databases.</span>
+0197             <span class="keyword">if</span> ~admin.antelope_exists
+0198                 disp(<span class="string">'Antelope not found'</span>);
+0199                 <span class="keyword">return</span>;
+0200             <span class="keyword">end</span>
+0201             
+0202             [dbeval, archiveformat, snum, enum, minmag, region, subclass, mindepth, maxdepth] = matlab_extensions.process_options(varargin, <span class="string">'dbeval'</span>, <span class="string">''</span>, <span class="string">'archiveformat'</span>, <span class="string">''</span>, <span class="string">'snum'</span>, [], <span class="string">'enum'</span>, [], <span class="string">'minmag'</span>, [], <span class="string">'region'</span>, [], <span class="string">'subclass'</span>, <span class="string">'*'</span>, <span class="string">'mindepth'</span>, [], <span class="string">'maxdepth'</span>, []); 
+0203   
+0204             <span class="comment">% Check if region is a char (string) or double (array) class</span>
+0205             <span class="keyword">if</span> (ischar(region) || iscell(region))
+0206                 <span class="keyword">if</span> iscell(region)
+0207                    region=region{1};
+0208                 <span class="keyword">end</span>
+0209                 <span class="keyword">if</span> strcmp(region(end-2:end), <span class="string">'_lo'</span>)
+0210                     [region, source, lon, lat] = readavogrids(region);
+0211                     leftlon = region(1); rightlon=region(2); lowerlat=region(3); upperlat=region(4);
+0212                 <span class="keyword">else</span>
+0213                     dirname = fileparts(which(<span class="string">'catalog'</span>));
+0214                     pffile = [dirname,<span class="string">'/demo/avo_volcs.pf'</span>]
+0215                     [sourcelon, sourcelat, leftlon, rightlon, lowerlat, upperlat] = catalog.readavovolcs(region, pffile) 
+0216                     region = [leftlon rightlon lowerlat upperlat];
+0217                 <span class="keyword">end</span>                   
+0218             <span class="keyword">else</span>
+0219                 <span class="keyword">if</span> strcmp(class(region),<span class="string">'double'</span>) &amp; ~isempty(region)
+0220                     leftlon = region(1); rightlon=region(2); lowerlat=region(3); upperlat=region(4);
+0221                 <span class="keyword">end</span>
+0222             <span class="keyword">end</span>
+0223 
+0224             <span class="comment">% Create a dbeval expression if not already set.</span>
+0225             <span class="keyword">if</span> isempty(dbeval)
+0226                 <span class="keyword">if</span> nargin &gt; 2
+0227                     expr = <span class="string">''</span>;
+0228                     <span class="keyword">if</span> ~isempty(snum)
+0229                         expr = sprintf(<span class="string">'%s &amp;&amp; time &gt;= %f'</span>,expr,datenum2epoch(snum));
+0230                     <span class="keyword">end</span> 
+0231                     <span class="keyword">if</span> ~isempty(enum)
+0232                         expr = sprintf(<span class="string">'%s &amp;&amp; time &lt;= %f'</span>,expr,datenum2epoch(enum));
+0233                     <span class="keyword">end</span>
+0234                     <span class="keyword">if</span> ~isempty(minmag)
+0235                         expr = sprintf(<span class="string">'%s &amp;&amp; (ml &gt;= %f || mb &gt;= %f || ms &gt;= %f)'</span>,expr,minmag,minmag,minmag);
+0236                     <span class="keyword">end</span>
+0237                     <span class="keyword">if</span> ~isempty(region)
+0238                         expr = sprintf(<span class="string">'%s &amp;&amp; (lat &gt;= %f &amp;&amp; lat &lt;= %f &amp;&amp; lon &gt;= %f &amp;&amp; lon &lt;= %f)'</span>,expr,lowerlat, upperlat, leftlon, rightlon);
+0239                     <span class="keyword">end</span>
+0240                     <span class="keyword">if</span> ~isempty(mindepth)
+0241                         expr = sprintf(<span class="string">'%s &amp;&amp; (depth &gt;= %f)'</span>, expr,mindepth); 
+0242                     <span class="keyword">end</span>
+0243                     <span class="keyword">if</span> ~isempty(maxdepth)
+0244                         expr = sprintf(<span class="string">'%s &amp;&amp; (depth &lt;= %f)'</span>, expr,maxdepth); 
+0245                     <span class="keyword">end</span>
+0246                     dbeval = expr(4:end);
+0247                     clear expr
+0248                 <span class="keyword">end</span>
+0249             <span class="keyword">end</span>
+0250             
+0251              <span class="comment">% Append input parameters to structure</span>
+0252                 cobj.snum = snum;
+0253                 cobj.enum = enum;
+0254             cobj.minmag = minmag;
+0255             cobj.region = region;
+0256             cobj.dbroot = dbpath;
+0257             cobj.archiveformat = archiveformat;
+0258             
+0259             cobj = cobj.css_load(dbpath, archiveformat, dbeval);
+0260         <span class="comment">% do we want snum and enum to default to first and last event times, or the start of the day of the first event time, and the end of the day of the last event time (if not set explicitly by user)</span>
+0261             <span class="comment">%cobj.snum = min([cobj.snum floor(min(cobj.dnum))]);</span>
+0262             cobj.snum = min([cobj.snum min(cobj.dnum)]);
+0263             <span class="comment">%cobj.enum = max([cobj.enum ceil(max(cobj.dnum))]);</span>
+0264             cobj.enum = max([cobj.enum max(cobj.dnum)]);            
+0265 
+0266             
+0267             <span class="keyword">if</span> exist(<span class="string">'subclass'</span>, <span class="string">'var'</span>)
+0268                     <span class="keyword">if</span> strcmp(subclass, <span class="string">'*'</span>)==0
+0269 
+0270                         index = findstr(cobj.etype, subclass);
+0271 
+0272                         cobj.lat = cobj.lat(index);
+0273                         cobj.lon = cobj.lon(index);
+0274                         cobj.depth = cobj.depth(index);
+0275                         cobj.dnum = cobj.dnum(index);
+0276                         cobj.evid = cobj.evid(index);
+0277                         cobj.orid = cobj.orid(index);
+0278                         cobj.nass = cobj.nass(index);
+0279                         cobj.mag = cobj.mag(index);
+0280                         cobj.etype = cobj.etype(index);
+0281                         cobj.auth = {};
+0282                     <span class="keyword">end</span>
+0283             <span class="keyword">end</span>
+0284             cobj = cobj.addfield(<span class="string">'dbeval'</span>, dbeval);
+0285 
+0286         <span class="keyword">end</span>
+0287 
+0288  
+0289 
+0290         <span class="comment">%------------------------------------------------------------------</span>
+0291         <span class="comment">%% PLOT</span>
+0292         <a name="_sub2" href="#_subfunctions" class="code">function plot(cobj, varargin)</a>
+0293             <span class="comment">% CATALOG/PLOT</span>
+0294             <span class="comment">%   Plot a catalog object as event magnitude versus time</span>
+0295             <span class="comment">%   plot(cobj) plots magnitude vs. date/time</span>
+0296             <span class="comment">%   plot(cobj, 'splitby', 'etype') plots the same, but with each event type in a separate subplot</span>
+0297             <span class="comment">%   plot(cobj, 'minmag', 1.0) plots magnitude vs. date/time after filtering out all events smaller than mag=1.0</span>
+0298             <span class="comment">%   If cobj is an array of event structures, each will be plotted on a separate figure</span>
+0299 
+0300             debug.print_debug(2, <span class="string">'&gt; %s'</span>, mfilename);
+0301             [splitby, minmag] = matlab_extensions.process_options(varargin, <span class="string">'splitby'</span>, <span class="string">'none'</span>, <span class="string">'minmag'</span>, -999.0);
+0302 
+0303 
+0304             <span class="keyword">for</span> c = 1 : length(cobj)
+0305                 i = find(cobj(c).mag &gt;= minmag);
+0306                 figure(gcf+1);
+0307 
+0308                 <span class="keyword">if</span> strcmp(splitby, <span class="string">'none'</span>)
+0309 
+0310                     <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>( cobj(c).dnum(i), cobj(c).mag(i), <span class="string">'bo'</span> );
+0311                     fprintf(<span class="string">'Plotting mag vs dnum for %d events'</span>,length(i));
+0312                     datetick(<span class="string">'x'</span>, <span class="string">'keeplimits'</span>);
+0313                     ymax = nanmax(matlab_extensions.catmatrices(1, cobj(c).mag(i)));
+0314                     <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'YLim'</span>, [0 ymax]);
+0315                     ylabel(<span class="string">'mag'</span>);
+0316                 <span class="keyword">else</span>
+0317                     <span class="keyword">if</span> strcmp(splitby, <span class="string">'etype'</span>)
+0318                         etypes = unique(cobj(c).etype(i));
+0319                         numetypes = length(etypes); 
+0320 
+0321                         <span class="keyword">for</span> count=1:numetypes
+0322                             j=find(ismember(cobj(c).etype(i), etypes(count))==1);
+0323                             subplot(numetypes, 1, count), <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>( cobj(c).dnum(j), cobj(c).mag(j), <span class="string">'bo'</span> );
+0324                             <span class="comment">%disp(sprintf('Plotting mag vs dnum for %d events for etype %s',length(j),etypes(count)));</span>
+0325                             datetick(<span class="string">'x'</span>, <span class="string">'keeplimits'</span>);
+0326                             ymax = nanmax(matlab_extensions.catmatrices(1, cobj(c).mag(j)));
+0327                             <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'YLim'</span>, [0 ymax]);
+0328                             ylabel(<span class="string">'mag'</span>);
+0329                             title(etypes(count));
+0330                         <span class="keyword">end</span>
+0331                     <span class="keyword">end</span>
+0332                 <span class="keyword">end</span>
+0333             <span class="keyword">end</span>
+0334         <span class="keyword">end</span>
+0335 
+0336         <span class="comment">%------------------------------------------------------------------</span>
+0337         <span class="comment">%% VOLPLOT</span>
+0338         <a name="_sub3" href="#_subfunctions" class="code">function cobj = volplot(cobj, varargin)</a>
+0339             <span class="comment">% CATALOG/VOLPLOT(COBJ)</span>
+0340             <span class="comment">%   COBJ.VOLPLOT creates a figure inspired by Guy Tytgat's VOLPLOT layout</span>
+0341             <span class="comment">%   Optional name/value pairs are 'nsigma', 'volcano' and</span>
+0342             <span class="comment">%   'gridname'.</span>
+0343             
+0344             [nsigma, volcano, gridname] = matlab_extensions.process_options(varargin, <span class="string">'nsigma'</span>, <span class="string">'5'</span>, <span class="string">'volcano'</span>, <span class="string">''</span>, <span class="string">'gridname'</span>, <span class="string">''</span>);
+0345 
+0346             <span class="comment">% find stations in this region</span>
+0347             sta = <a href="#_sub6" class="code" title="subfunction sta = db2stations(cobj)">db2stations</a>(cobj)
+0348 
+0349             figure;
+0350             symsize = cobj.mag * 2 + 2;
+0351             symsize(symsize&lt;2)=2;
+0352             <span class="comment">% lon-lat</span>
+0353             axes(<span class="string">'position'</span>,[0.05 0.45 0.5 0.5]);
+0354             <span class="keyword">for</span> symnum = 1:length(cobj.lon)
+0355                 hold on
+0356                 <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(cobj.lon(symnum), cobj.lat(symnum), <span class="string">'o'</span>, <span class="string">'MarkerSize'</span>, symsize(symnum));
+0357             <span class="keyword">end</span>
+0358             <span class="comment">%plot(cobj.lon, cobj.lat,'*');</span>
+0359             grid on;
+0360             <span class="keyword">if</span> ~isempty(sta.lon)
+0361                 hold on;
+0362                 <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(sta.lon, sta.lat, <span class="string">'rv'</span>);
+0363                 text(sta.lon, sta.lat, sta.code);
+0364             <span class="keyword">end</span>
+0365             axis(gca, cobj.region);
+0366                         
+0367             <span class="keyword">if</span> ~isempty(volcano)
+0368                 <span class="comment">%catalog.plotbox(volcano)</span>
+0369             <span class="keyword">end</span>
+0370             <span class="keyword">if</span> ~isempty(gridname)
+0371                 <span class="comment">%catalog.plotbox(gridname)</span>
+0372             <span class="keyword">end</span>
+0373 
+0374             <span class="comment">% depth-longitude</span>
+0375             axes(<span class="string">'position'</span>,[0.05 0.05 0.5 0.35]);
+0376             
+0377             <span class="keyword">for</span> symnum = 1:length(cobj.lon)
+0378                 hold on
+0379                 <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(cobj.lon(symnum), cobj.depth(symnum), <span class="string">'o'</span>, <span class="string">'MarkerSize'</span>, symsize(symnum));
+0380             <span class="keyword">end</span>
+0381             <span class="comment">%plot(cobj.lon, cobj.depth, '*');</span>
+0382             ylabel(<span class="string">'Depth (km)'</span>);
+0383             xlabel(<span class="string">'Longitude'</span>);
+0384             grid on;
+0385             <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'YDir'</span>, <span class="string">'reverse'</span>);
+0386             <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'XLim'</span>, [cobj.region(1) cobj.region(2)]);
+0387 
+0388             <span class="comment">% depth-lat</span>
+0389             axes(<span class="string">'position'</span>,[0.6 0.45 0.35 0.5]);
+0390             <span class="keyword">for</span> symnum = 1:length(cobj.lon)
+0391                 hold on
+0392                 <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(cobj.depth(symnum), cobj.lat(symnum), <span class="string">'o'</span>, <span class="string">'MarkerSize'</span>, symsize(symnum));
+0393             <span class="keyword">end</span>
+0394             <span class="comment">%plot(cobj.depth, cobj.lat, '*');</span>
+0395             xlabel(<span class="string">'Depth (km)'</span>);
+0396             <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'XDir'</span>, <span class="string">'reverse'</span>);
+0397             ylabel(<span class="string">'Latitude'</span>);
+0398             grid on;
+0399             <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'YLim'</span>, [cobj.region(3) cobj.region(4)]);
+0400 
+0401             <span class="comment">% time-depth</span>
+0402             figure;
+0403             <span class="comment">%plot(cobj.dnum, cobj.depth, '*');</span>
+0404             <span class="keyword">for</span> symnum = 1:length(cobj.lon)
+0405                 hold on
+0406                 <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(cobj.dnum(symnum), cobj.depth(symnum), <span class="string">'o'</span>, <span class="string">'MarkerSize'</span>, symsize(symnum));
+0407             <span class="keyword">end</span>
+0408             datetick(<span class="string">'x'</span>);
+0409             xlabel(<span class="string">'Date'</span>);
+0410             ylabel(<span class="string">'Depth (km)'</span>);
+0411             <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'YDir'</span>, <span class="string">'reverse'</span>);
+0412             grid on;
+0413 
+0414             <span class="comment">% change region</span>
+0415             <span class="comment">%latrangeinkm = 111 * (cobj.region(4) - cobj.region(3));</span>
+0416             <span class="comment">%lonrangeinkm = 111 * (cobj.region(2) - cobj.region(1)) * cos(mean(  cobj.region(3:4) ));</span>
+0417             medianlat = median(cobj.lat);
+0418             medianlon = median(cobj.lon);
+0419             cosine = cos(medianlat);
+0420             stdevlat = std(cobj.lat);
+0421             stdevlon = std(cobj.lon);
+0422             rangeindeg = max([stdevlat stdevlon*cosine]) * nsigma;
+0423             cobj.region = [(medianlon - rangeindeg/2) (medianlon + rangeindeg/2) (medianlat - rangeindeg/2) (medianlat + rangeindeg/2)];
+0424 
+0425             <span class="comment">% some other potential useful mapping ideas</span>
+0426             <span class="comment">%latmin = min(cobj1.lat) - latrange/20;</span>
+0427             <span class="comment">%lonmin = min(cobj1.lon) - lonrange/20;</span>
+0428             <span class="comment">%latmax = max(cobj1.lat) + latrange/20;</span>
+0429             <span class="comment">%lonmax = max(cobj1.lon) + lonrange/20;</span>
+0430             <span class="comment">%h = worldmap([latmin latmax],[lonmin lonmax])</span>
+0431             <span class="comment">%load coast</span>
+0432             <span class="comment">%plotm(lat, long)</span>
+0433             <span class="comment">% Add some standard datasets from Matlab</span>
+0434             <span class="comment">%geoshow('landareas.shp', 'FaceColor', [0.15 0.5 0.15])</span>
+0435             <span class="comment">%geoshow('worldlakes.shp', 'FaceColor', 'cyan')</span>
+0436             <span class="comment">%geoshow('worldrivers.shp', 'Color', 'blue')</span>
+0437             <span class="comment">%geoshow('worldcities.shp', 'Marker', '.',...</span>
+0438                 <span class="comment">%'MarkerEdgeColor', 'red')</span>
+0439             <span class="comment">% Add features with textm, e.g.</span>
+0440             <span class="comment">% textm(64.83778, -147.71639, 'Fairbanks')</span>
+0441             <span class="comment">% plotm(64.83778, -147.71639, 'ro')</span>
+0442             <span class="comment">%plotm(cobj1.lat, cobj1.lon, '*');</span>
+0443         <span class="keyword">end</span>
+0444 
+0445         <span class="comment">%% ------------------------------------------------------------------</span>
+0446         <span class="comment">%% VOLPLOTDIFF</span>
+0447         <a name="_sub4" href="#_subfunctions" class="code">function volplotdiff(cobj1, cobj2)</a>
+0448             <span class="comment">% CATALOG/VOLPLOTDIFF(COBJ1, COBJ2)</span>
+0449             <span class="comment">%   Like CATALOG/VOLPLOT but plots differences between two</span>
+0450             <span class="comment">%   catalog objects. Event ids must match for events to be</span>
+0451             <span class="comment">%   considered the same event in the two catalog objects.</span>
+0452             <span class="comment">%   See also CATALOG/COMPARE</span>
+0453 
+0454             sta = <a href="#_sub6" class="code" title="subfunction sta = db2stations(cobj)">db2stations</a>(cobj1);
+0455 
+0456             figure;
+0457 
+0458             <span class="comment">% lon-lat</span>
+0459             l=1;
+0460             axes(<span class="string">'position'</span>,[0.05 0.45 0.5 0.5]);
+0461             <span class="keyword">for</span> i=1:length(cobj1.evid)
+0462                 j=find(cobj2.evid==cobj1.evid(i));
+0463                 <span class="keyword">if</span> length(j)==1
+0464                     hold on;
+0465                     <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(cobj1.lon(i), cobj1.lat(i), <span class="string">'ro'</span>);
+0466                     <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(cobj2.lon(j), cobj2.lat(j), <span class="string">'cs'</span>);
+0467                     <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>([cobj1.lon(i) cobj2.lon(j)], [cobj1.lat(i) cobj2.lat(j)], <span class="string">'k:'</span>);
+0468                         diff.lon(l) = cobj2.lon(j) - cobj1.lon(i);
+0469                         diff.lat(l) = cobj2.lat(j) - cobj1.lat(i);
+0470                         diff.depth(l) = cobj2.depth(j) - cobj1.depth(i);
+0471                         l=l+1;
+0472                 <span class="keyword">else</span>
+0473                     fprintf(<span class="string">'there are %d evids in %s matching evid %d in %s'</span>,length(j),cobj2.dbroot,cobj1.evid(i),cobj1.dbroot);
+0474                 <span class="keyword">end</span>
+0475             <span class="keyword">end</span>
+0476             <span class="keyword">if</span> ~isempty(sta.lon)
+0477                 hold on;
+0478                 <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(sta.lon, sta.lat, <span class="string">'bv'</span>);
+0479                 text(sta.lon, sta.lat, sta.code);
+0480             <span class="keyword">end</span>
+0481             axis(gca, cobj1.region);
+0482 
+0483             <span class="comment">% lon-depth</span>
+0484             axes(<span class="string">'position'</span>,[0.05 0.05 0.5 0.35]);
+0485             <span class="keyword">for</span> i=1:length(cobj1.evid)
+0486                 j=find(cobj2.evid==cobj1.evid(i));
+0487                 <span class="keyword">if</span> length(j)==1
+0488                     hold on;
+0489                     <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(cobj1.lon(i), cobj1.depth(i), <span class="string">'ro'</span>);
+0490                     <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(cobj2.lon(j), cobj2.depth(j), <span class="string">'cs'</span>);
+0491                     <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>([cobj1.lon(i) cobj2.lon(j)], [cobj1.depth(i) cobj2.depth(j)], <span class="string">'k:'</span>);
+0492                 <span class="keyword">end</span>
+0493             <span class="keyword">end</span>
+0494             ylabel(<span class="string">'Depth (km)'</span>);
+0495             xlabel(<span class="string">'Longitude'</span>);
+0496             <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'YDir'</span>, <span class="string">'reverse'</span>);
+0497             <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'XLim'</span>, [cobj1.region(1) cobj1.region(2)]);
+0498 
+0499             <span class="comment">% depth-lat</span>
+0500             axes(<span class="string">'position'</span>,[0.6 0.45 0.35 0.5]);
+0501             <span class="keyword">for</span> i=1:length(cobj1.evid)
+0502                 j=find(cobj2.evid==cobj1.evid(i));
+0503                 <span class="keyword">if</span> length(j)==1
+0504                     hold on;
+0505                     <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(cobj1.depth(i), cobj1.lat(i), <span class="string">'ro'</span>);
+0506                     <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(cobj2.depth(j), cobj2.lat(j), <span class="string">'cs'</span>);
+0507                     <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>([cobj1.depth(i) cobj2.depth(j)], [cobj1.lat(i) cobj2.lat(j)], <span class="string">'k:'</span>);
+0508                 <span class="keyword">end</span>
+0509             <span class="keyword">end</span>
+0510             xlabel(<span class="string">'Depth (km)'</span>);
+0511             <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'XDir'</span>, <span class="string">'reverse'</span>);
+0512             ylabel(<span class="string">'Latitude'</span>);
+0513             <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'YLim'</span>, [cobj1.region(3) cobj1.region(4)]);
+0514 
+0515             figure;
+0516             [dummy,ii,jj]=intersect(cobj1.evid,cobj2.evid);
+0517             <span class="keyword">if</span> exist(<span class="string">'diff'</span>,<span class="string">'var'</span>)
+0518                 subplot(2,1,1), <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(diff.lon, diff.lat, <span class="string">'*'</span>); xlabel(<span class="string">'dLongitude'</span>); ylabel(<span class="string">'dLatitude'</span>); axis equal;axis square;
+0519                 subplot(2,1,2), <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(diff.depth, cobj1.depth(ii), <span class="string">'*'</span>); xlabel(<span class="string">'dDepth'</span>); ylabel(<span class="string">'Depth'</span>); <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'YDir'</span>, <span class="string">'reverse'</span>); <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'XDir'</span>, <span class="string">'reverse'</span>);
+0520                 difflonmean = mean(diff.lon);
+0521                 difflonstd = std(diff.lon);
+0522                 difflatmean = mean(diff.lat);
+0523                 difflatstd = std(diff.lat);
+0524                 diffdepthmean = mean(diff.depth);
+0525                 diffdepthstd = std(diff.depth);
+0526                 fprintf(<span class="string">'Average change in longitude was %.2f km (std: %.2f km)'</span>,difflonmean*cos(deg2rad(cobj1.lat(1)))*111.0,difflonstd*cos(deg2rad(cobj1.lat(1)))*111.0);
+0527                 fprintf(<span class="string">'Average change in latitude was %.2f km (std: %.2f km)'</span>,difflatmean*111.0,difflatstd*111.0);
+0528                 fprintf(<span class="string">'Average change in depth was %.2f km (std: %.2f km)'</span>,diffdepthmean,diffdepthstd);
+0529                 lonmean1 = mean(cobj1.lon(ii));
+0530                 lonmean2 = mean(cobj2.lon(jj));
+0531                 latmean1 = mean(cobj1.lat(ii));
+0532                 latmean2 = mean(cobj2.lat(jj));
+0533                 depthmean1 = mean(cobj1.depth(ii));
+0534                 depthmean2 = mean(cobj2.depth(jj));
+0535                 lonstd1 = std(cobj1.lon(ii))*cos(deg2rad(latmean1))*111.0;
+0536                 lonstd2 = std(cobj2.lon(jj))*cos(deg2rad(latmean1))*111.0;
+0537                 latstd1 = std(cobj1.lat(ii))*111.0;
+0538                 latstd2 = std(cobj2.lat(jj))*111.0;
+0539                 depthstd1 = std(cobj1.depth(ii));
+0540                 depthstd2 = std(cobj2.depth(jj));
+0541                 fprintf(<span class="string">'Average event moved from %.4f, %.4f, %.2f km to %.4f %.4f %.2f km'</span>, lonmean1, latmean1, depthmean1, lonmean2, latmean2, depthmean2);
+0542                 fprintf(<span class="string">'std in longitude changed from %.2f km to %.2f km'</span>,lonstd1,lonstd2);
+0543                 fprintf(<span class="string">'std in latitude changed from %.2f km to %.2f km'</span>,latstd1,latstd2);
+0544                 fprintf(<span class="string">'std in depth changed from %.2f km to %.2f km'</span>,depthstd1,depthstd2);
+0545                 fprintf(<span class="string">'source volume corresponding to 3d-std changed from %.3f km^3 to %.3f km^3'</span>, lonstd1*latstd1*depthstd1, lonstd2*latstd2*depthstd2);
+0546             <span class="keyword">end</span>
+0547         <span class="keyword">end</span>
+0548         
+0549         <span class="comment">%------------------------------------------------------------------</span>
+0550         <span class="comment">%% DB2STATIONS</span>
+0551         <a name="_sub5" href="#_subfunctions" class="code">function sta = db2stations(cobj)</a>
+0552             <span class="comment">% CATALOG/DB2STATIONS(COBJ)</span>
+0553             <span class="comment">%   Load Alaska stations within COBJ.REGION</span>
+0554             stalon = []; stalat = []; stacode = [];
+0555             DBMASTER = getenv(<span class="string">'DBMASTER'</span>);
+0556             
+0557             <span class="keyword">if</span> ~isempty(DBMASTER)
+0558                 <span class="keyword">if</span> exist(DBMASTER, <span class="string">'file'</span>)
+0559                     db = dbopen(DBMASTER, <span class="string">'r'</span>);
+0560                     db = dblookup_table(db, <span class="string">'site'</span>);
+0561                     db = dbsubset(db, <span class="string">'offdate==NULL'</span>);
+0562                     db = dbsubset(db, sprintf(<span class="string">'lat &gt; %f &amp;&amp; lat &lt; %f'</span>, cobj.region(3), cobj.region(4)));
+0563                     db = dbsubset(db, sprintf(<span class="string">'lon &gt; %f &amp;&amp; lon &lt; %f'</span>, cobj.region(1), cobj.region(2)));
+0564                     nstations = dbquery(db, <span class="string">'dbRECORD_COUNT'</span>);
+0565                     <span class="keyword">if</span> nstations &gt; 0
+0566                         fprintf(<span class="string">'%d stations were found in this cobj1.region'</span>,nstations);
+0567                         [stalon, stalat, stacode] = dbgetv(db, <span class="string">'lon'</span>, <span class="string">'lat'</span>, <span class="string">'sta'</span>);
+0568                     <span class="keyword">end</span>
+0569                 <span class="keyword">end</span>
+0570             <span class="keyword">end</span>
+0571             sta.lon = stalon; sta.lat = stalat; sta.code = stacode;
+0572         <span class="keyword">end</span> <span class="comment">% function</span>
+0573         
+0574         <span class="comment">%------------------------------------------------------------------</span>
+0575         <span class="comment">%% COMPARE</span>
+0576         <a name="_sub6" href="#_subfunctions" class="code">function [matches, total] = compare(cobj1, cobj2)</a>
+0577             <span class="comment">% CATALOG/COMPARE(COBJ1, COBJ2)</span>
+0578             <span class="comment">% Compares two catalog objects. Any events from the two</span>
+0579             <span class="comment">% catalog objects within 0.2 degrees and 10 seconds of each</span>
+0580             <span class="comment">% other are assumed to be alternate origins for the same event.</span>
+0581             <span class="comment">% It is these alternate origins that are compared.</span>
+0582             figure;
+0583             hold on;
+0584             xlabel(<span class="string">'Mag1'</span>);
+0585             ylabel(<span class="string">'Mag2'</span>);
+0586             matches = 0; total = 0;
+0587             mag_matched = [];
+0588             mag_unmatched = [];
+0589             <span class="keyword">for</span> c1=1:length(cobj1.evid)
+0590                 total = total + 1;
+0591                 s = sprintf(<span class="string">'Event %d (%d): %s %.3f %.3f %.1f'</span>,c1, cobj1.evid(c1), datestr(cobj1.dnum(c1),31), cobj1.lon(c1), cobj1.lat(c1), cobj1.mag(c1));
+0592                 x = deg2km(distance(cobj1.lat(c1), cobj1.lon(c1), cobj2.lat, cobj2.lon));
+0593                 i = find(x &lt; 20); <span class="comment">% within .2 degrees (20 km)</span>
+0594                 <span class="comment">%s = sprintf('%s\n There are %d events within 0.2 degrees of event %d', s, length(i), c1);</span>
+0595                 <span class="keyword">if</span> ~isempty(i)
+0596                     t = abs(cobj1.dnum(c1) - cobj2.dnum(i));
+0597                     j = find(t * 86400 &lt; 10); <span class="comment">% within 10s</span>
+0598                     <span class="comment">%s = sprintf('%s: Of these, %d are within 10 seconds', s, length(j));</span>
+0599                     <span class="keyword">if</span> ~isempty(j)
+0600                         matches = matches + 1;
+0601                         <span class="keyword">if</span> length(j)==1
+0602                             s = sprintf(<span class="string">'%s\n= Event %d (%d): %s %.3f %.3f %.1f'</span>,s, i(j), cobj2.evid(i(j)), datestr(cobj2.dnum(i(j)),31), cobj2.lon(i(j)), cobj2.lat(i(j)), cobj2.mag(i(j)));
+0603                             s = sprintf(<span class="string">'%s (%.2f km, %.2f s)'</span>, s, x(i(j)), t(j));
+0604                             <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(cobj1.mag(c1), cobj2.mag(i(j)), <span class="string">'o'</span>);
+0605                         <span class="keyword">else</span>
+0606                             s = sprintf(<span class="string">'%s. More than 1 match\n'</span>,s);
+0607                         <span class="keyword">end</span>
+0608                         mag_matched = [mag_matched cobj1.mag(c1)];
+0609                     <span class="keyword">else</span>
+0610                         s = sprintf(<span class="string">'%s. No time match'</span>,s);
+0611                         mag_unmatched = [mag_unmatched cobj1.mag(c1)];
+0612                     <span class="keyword">end</span>
+0613                     
+0614                 <span class="keyword">else</span>
+0615                     s = sprintf(<span class="string">'%s. No distance match'</span>,s);
+0616                     mag_unmatched = [mag_unmatched cobj1.mag(c1)];
+0617                 <span class="keyword">end</span>
+0618                 disp(s);
+0619             <span class="keyword">end</span>
+0620             <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'XLim'</span>, [-1 3], <span class="string">'YLim'</span>, [-1 3]);
+0621             <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>([-1 3], [-1 3], <span class="string">':'</span>);
+0622             figure;
+0623             subplot(2,1,1), hist(mag_matched, -1:0.25:3), xlabel(<span class="string">'Mag1'</span>),title(<span class="string">'Matched events'</span>);
+0624             subplot(2,1,2), hist(mag_unmatched, -1:0.25:3),xlabel(<span class="string">'Mag1'</span>),title(<span class="string">'Unmatched events'</span>);
+0625         <span class="keyword">end</span>
+0626                               
+0627         <span class="comment">%------------------------------------------------------------------</span>
+0628         <span class="comment">%% PLOTDAILYMAGSTATS</span>
+0629         <a name="_sub7" href="#_subfunctions" class="code">function plotdailymagstats(cobj)</a>
+0630             <span class="comment">% CATALOG/PLOTDAILYMAGSTATS(COBJ)</span>
+0631             <span class="comment">% plot the max, mean, min and various percentiles of the magnitude samples each day</span>
+0632             day = floor(cobj.dnum);
+0633             i = find(cobj.mag &lt; -9);
+0634             cobj.mag(i)=NaN;
+0635             c=1;
+0636             time=[];
+0637             <span class="keyword">for</span> dnum=min(day):max(day)
+0638                 i = find(day == dnum);
+0639                 <span class="keyword">if</span> (~isempty(i))
+0640                     minmag(c)=nanmin(cobj.mag(i));
+0641                     maxmag(c)=nanmax(cobj.mag(i));
+0642                     meanmag(c)=nanmean(cobj.mag(i));
+0643                     stdev(c)=std(cobj.mag(i));
+0644                     med(c)=nanmedian(cobj.mag(i));
+0645                     p95(c)=prctile(cobj.mag(i),95);
+0646                     p5(c)=prctile(cobj.mag(i),5);
+0647                 <span class="keyword">else</span>
+0648                     minmag(c)=NaN;
+0649                     maxmag(c)=NaN;
+0650                     meanmag(c)=NaN;
+0651                     stdev(c)=NaN;
+0652                     med(c)=NaN;
+0653                     p95(c)=NaN;
+0654                         p5(c)=NaN;
+0655                 <span class="keyword">end</span>
+0656                 time(c)=dnum;
+0657                 c=c+1;
+0658             <span class="keyword">end</span>
+0659             <span class="keyword">if</span> ~isempty(time)
+0660                 <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(time,maxmag,time,p95,time,meanmag,time,med,time,p5,time,minmag);
+0661                 ylabel(<span class="string">'mag'</span>);
+0662                 legend(<span class="string">'maximum'</span>,<span class="string">'95th%ile'</span>,<span class="string">'mean'</span>,<span class="string">'median'</span>,<span class="string">'5th%ile'</span>,<span class="string">'minimum'</span>);
+0663                 datetick(<span class="string">'x'</span>);
+0664                 <span class="comment">%plot(time,stdev);</span>
+0665                 <span class="comment">%dateticklabel('x');</span>
+0666                 <span class="comment">%title('standard deviation in mag');ylabel('mag');</span>
+0667             <span class="keyword">end</span>
+0668         <span class="keyword">end</span>
+0669         
+0670         <span class="comment">%------------------------------------------------------------------</span>
+0671         <span class="comment">%% PLOTMAGDIFF</span>
+0672         <a name="_sub8" href="#_subfunctions" class="code">function plotmagdiff(cobj1, cobj2)</a>
+0673             <span class="comment">% CATALOG/PLOTMAGDIFF</span>
+0674             <span class="comment">%  Plot the difference in magnitude for events with identical</span>
+0675             <span class="comment">%  event id.</span>
+0676             <span class="comment">%  See also CATALOG/VOLPLOTDIFF.</span>
+0677             figure;
+0678             hold on;
+0679             
+0680             diff=[];
+0681              <span class="keyword">for</span> i=1:length(cobj1.evid)
+0682                 j=find(cobj2.evid==cobj1.evid(i));
+0683                 <span class="keyword">if</span> length(j)==1
+0684                     <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(cobj1.mag(i), cobj2.mag(j),<span class="string">'*'</span>);
+0685                     diff = [diff (cobj2.mag(j)-cobj1.mag(i))];
+0686                 <span class="keyword">end</span>
+0687             <span class="keyword">end</span>
+0688             xlabel(<span class="string">'First magnitude'</span>);
+0689             ylabel(<span class="string">'Second magnitude'</span>);
+0690             xlim = <a href="#_sub18" class="code" title="subfunction val = get(cobj,prop_name)">get</a>(gca, <span class="string">'XLim'</span>);
+0691             ylim = <a href="#_sub18" class="code" title="subfunction val = get(cobj,prop_name)">get</a>(gca, <span class="string">'YLim'</span>);
+0692             axmin = min([xlim ylim]);
+0693             axmax = max([xlim ylim]);
+0694             <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>([axmin axmax],[axmin axmax],<span class="string">':'</span>);
+0695             fprintf(<span class="string">'Change: mean=%.1f, median=%.1f, std=%.1f, max=%.1f'</span>,mean(diff),median(diff),std(diff),max(diff));
+0696         <span class="keyword">end</span>
+0697         
+0698         <span class="comment">%------------------------------------------------------------------</span>
+0699         <span class="comment">%% PLOTBVALUE</span>
+0700         <a name="_sub9" href="#_subfunctions" class="code">function plotbvalue(cobj);</a>
+0701             minmag = floor(min(cobj.mag) * 10)/10;
+0702             maxmag = floor(max(cobj.mag) * 10)/10;
+0703             threshold = minmag:0.1:maxmag;
+0704             sortmag = sort(cobj.mag);
+0705             <span class="keyword">for</span> c=1:length(threshold)
+0706                 count(c)=sum(find(sortmag &gt; threshold(c)));
+0707             <span class="keyword">end</span>
+0708             figure;
+0709             <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(threshold, count); 
+0710         <span class="keyword">end</span>
+0711         
+0712         <span class="comment">%------------------------------------------------------------------</span>
+0713         <span class="comment">%% MAPEXAMPLE</span>
+0714         <a name="_sub10" href="#_subfunctions" class="code">function mapexample(cobj)</a>
+0715             <span class="comment">% simple epicentral plot</span>
+0716             figure;
+0717             close all
+0718             h = worldmap([latmin latmax],[lonmin lonmax]);
+0719             load coast
+0720             plotm(lat, long)
+0721 
+0722             <span class="comment">% Add some standard datasets from Matlab</span>
+0723             geoshow(<span class="string">'landareas.shp'</span>, <span class="string">'FaceColor'</span>, [0.15 0.5 0.15])
+0724             geoshow(<span class="string">'worldlakes.shp'</span>, <span class="string">'FaceColor'</span>, <span class="string">'cyan'</span>)
+0725             geoshow(<span class="string">'worldrivers.shp'</span>, <span class="string">'Color'</span>, <span class="string">'blue'</span>)
+0726             geoshow(<span class="string">'worldcities.shp'</span>, <span class="string">'Marker'</span>, <span class="string">'.'</span>,<span class="keyword">...</span>
+0727                 <span class="string">'MarkerEdgeColor'</span>, <span class="string">'red'</span>)
+0728 
+0729 
+0730             <span class="comment">% Add features with textm, e.g.</span>
+0731             <span class="comment">% textm(64.83778, -147.71639, 'Fairbanks')</span>
+0732             <span class="comment">% plotm(64.83778, -147.71639, 'ro')</span>
+0733 
+0734             plotm(cobj.lat, cobj.lon, <span class="string">'*'</span>);
+0735         <span class="keyword">end</span>
+0736         
+0737         <span class="comment">%------------------------------------------------------------------</span>
+0738         <span class="comment">%% PLOTSTATIONS</span>
+0739         <a name="_sub11" href="#_subfunctions" class="code">function plotstations(cobj)</a>
+0740             <span class="comment">% CATALOG/PLOTSTATIONS(COBJ)</span>
+0741             <span class="comment">%   Superimpose the stations within the cobj.region property on</span>
+0742             <span class="comment">%   a figure. Note this isn't designed to work if cobj.region</span>
+0743             <span class="comment">%   is not set.</span>
+0744             sta = <a href="#_sub6" class="code" title="subfunction sta = db2stations(cobj)">db2stations</a>(cobj);
+0745             <span class="keyword">if</span> ~isempty(sta.lon)
+0746                 hold on;
+0747                 <a href="#_sub3" class="code" title="subfunction plot(cobj, varargin)">plot</a>(sta.lon, sta.lat, <span class="string">'bv'</span>);
+0748                 text(sta.lon, sta.lat, sta.code);
+0749             <span class="keyword">end</span>
+0750             axis(gca, cobj.region);
+0751         <span class="keyword">end</span>
+0752         
+0753         <span class="comment">%------------------------------------------------------------------</span>
+0754         <span class="comment">%% addArrivals</span>
+0755         <a name="_sub12" href="#_subfunctions" class="code">function cobj = addArrivals(cobj)</a>
+0756             <span class="comment">% CATALOG/ADDARRIVALS(COBJ) Populate the arrival property of a catalog object.</span>
+0757             <span class="comment">%   cobj = cobj.addArrivals()</span>
+0758             <span class="comment">%   WARNING: This can take a long time to run for big catalogs!</span>
+0759             <span class="comment">%   The arrival field is a cell array with one element per</span>
+0760             <span class="comment">%   origin in the catalog.</span>
+0761             <span class="comment">%   Each element of the arrival field cell array is a structure</span>
+0762             <span class="comment">%   with fields:</span>
+0763             <span class="comment">%       station = station names with picks for this origin</span>
+0764             <span class="comment">%       channel = channel names with picks for this origin</span>
+0765             <span class="comment">%       arid = arrival ids</span>
+0766             <span class="comment">%       atime = arrival times</span>
+0767             <span class="comment">%       iphase = arrival phase name (e.g. 'P', 'S')</span>
+0768             <span class="comment">%       orid = the origin id this arrival element belongs to</span>
+0769                 subset_expr = cobj.get(<span class="string">'dbeval'</span>)
+0770                 <span class="keyword">if</span> length(subset_expr) &gt; 1                   
+0771                     arrivalStruct = <a href="#_sub14" class="code" title="subfunction arrival = toArrivals(cobj, subset_expr)">toArrivals</a>(cobj, subset_expr);  
+0772                 <span class="keyword">else</span>
+0773                     arrivalStruct = <a href="#_sub14" class="code" title="subfunction arrival = toArrivals(cobj, subset_expr)">toArrivals</a>(cobj);
+0774                 <span class="keyword">end</span>
+0775                 arrival ={};
+0776                 <span class="keyword">for</span> c=1:length(cobj.orid)
+0777                     thisorid = cobj.orid(c);
+0778                     i = find(arrivalStruct.orid==thisorid);
+0779                     l = length(i);
+0780                     <span class="keyword">if</span> l&gt;0
+0781                         arrival{c}.station = {arrivalStruct.sta{i}};
+0782                         arrival{c}.channel = {arrivalStruct.chan{i}};
+0783                         arrival{c}.arid = arrivalStruct.arid(i);
+0784                         arrival{c}.atime = arrivalStruct.atime(i);
+0785                         arrival{c}.iphase = {arrivalStruct.iphase{i}};
+0786                         arrival{c}.orid = arrivalStruct.orid(i(1));
+0787                     <span class="keyword">end</span>
+0788                 <span class="keyword">end</span>
+0789                 cobj.arrival = arrival;
+0790         <span class="keyword">end</span>
+0791         
+0792 
+0793                 
+0794         <span class="comment">%------------------------------------------------------------------</span>
+0795         <span class="comment">%% toArrivals</span>
+0796         <a name="_sub13" href="#_subfunctions" class="code">function arrival = toArrivals(cobj, subset_expr)</a>
+0797             <span class="comment">% CATALOG/TOARRIVALS(COBJ, SUBSET_EXPR)</span>
+0798             <span class="comment">% GET ARRIVALS CORRESPONDING TO A CATALOG OBJECT</span>
+0799             arrival.sta = {};
+0800             arrival.chan = {};
+0801             arrival.atime   = [];
+0802             arrival.otime = [];
+0803             arrival.orid = [];
+0804             arrival.arid = [];
+0805             arrival.etype = {};
+0806             arrival.stype = {};
+0807             arrival.seaz = [];
+0808             arrival.unique_orids = [];
+0809             arrival.iphase = {};
+0810 
+0811             debug.print_debug(3, <span class="string">'archive format is %s'</span>,cobj.archiveformat);
+0812 
+0813             <span class="keyword">if</span> strcmp(cobj.archiveformat,<span class="string">''</span>)
+0814                 dbname = cobj.dbroot;
+0815                 <span class="keyword">if</span> exist(sprintf(<span class="string">'%s.arrival'</span>,dbname),<span class="string">'file'</span>)
+0816                     <span class="keyword">if</span> exist(<span class="string">'subset_expr'</span>, <span class="string">'var'</span>)
+0817                         arrival = load_arrivals(dbname, subset_expr);
+0818                     <span class="keyword">else</span>
+0819                         arrival = load_arrivals(dbname); 
+0820                     <span class="keyword">end</span>
+0821                 <span class="keyword">else</span>
+0822                     fprintf(<span class="string">'%s.arrival not found\n'</span>,dbname);
+0823                 <span class="keyword">end</span>
+0824             <span class="keyword">else</span>
+0825                 <span class="keyword">if</span> strcmp(cobj.archiveformat,<span class="string">'daily'</span>)
+0826       
+0827                     <span class="keyword">for</span> dnum=floor(cobj.snum):floor(cobj.enum-1/1440)
+0828                         dbname = sprintf(<span class="string">'%s_%s'</span>,cobj.dbroot,datestr(dnum, <span class="string">'yyyy_mm_dd'</span>));
+0829                         <span class="keyword">if</span> exist(sprintf(<span class="string">'%s.arrival'</span>,dbname),<span class="string">'file'</span>)
+0830                             <span class="keyword">if</span> exist(<span class="string">'subset_expr'</span>, <span class="string">'var'</span>)
+0831                                 a = load_arrivals(dbname, subset_expr);
+0832                             <span class="keyword">else</span>
+0833                                 a = load_arrivals(dbname); 
+0834                             <span class="keyword">end</span>
+0835                             arrival.sta = cat(1,arrival.sta,  a.sta);
+0836                             arrival.chan = cat(1,arrival.chan,  a.chan);
+0837                             arrival.atime   = cat(1,arrival.atime, a.atime);
+0838                             arrival.otime   = cat(1,arrival.otime, a.otime);
+0839                             arrival.orid   = cat(1,arrival.orid, a.orid);
+0840                             arrival.arid   = cat(1,arrival.arid, a.arid);
+0841                             arrival.stype  = cat(1,arrival.stype,  a.stype);
+0842                             arrival.etype  = cat(1,arrival.etype,  a.etype);
+0843                             arrival.seaz  = cat(1,arrival.seaz,  a.seaz);
+0844                             arrival.unique_orids  = cat(1,arrival.unique_orids,  a.unique_orids);
+0845                             arrival.iphase = cat(1,arrival.iphase,  a.iphase);                            
+0846                         <span class="keyword">else</span>
+0847                             fprintf(<span class="string">'%s.arrival not found\n'</span>,dbname);
+0848                         <span class="keyword">end</span>
+0849                     <span class="keyword">end</span>
+0850                 <span class="keyword">else</span>
+0851 
+0852                     <span class="keyword">for</span> yyyy=dnum2year(cobj.snum):1:dnum2year(cobj.enum)
+0853                         <span class="keyword">for</span> mm=dnum2month(cobj.snum):1:dnum2month(cobj.enum)
+0854                             dnum = datenum(yyyy,mm,1);
+0855                             dbname = sprintf(<span class="string">'%s%04d_%02d'</span>,cobj.dbroot,yyyy,mm);
+0856                             <span class="keyword">if</span> exist(sprintf(<span class="string">'%s.arrival'</span>,dbname),<span class="string">'file'</span>)
+0857                                 <span class="keyword">if</span> exist(<span class="string">'subset_expr'</span>, <span class="string">'var'</span>)
+0858                                     a = load_arrivals(dbname, subset_expr);
+0859                                 <span class="keyword">else</span>
+0860                                     a = load_arrivals(dbname); 
+0861                                 <span class="keyword">end</span>
+0862 
+0863                                 arrival.sta = cat(1,arrival.sta,  a.sta);
+0864                                 arrival.chan = cat(1,arrival.chan,  a.chan);
+0865                                 arrival.atime   = cat(1,arrival.atime, a.atime);
+0866                                 arrival.otime   = cat(1,arrival.otime, a.otime);
+0867                                 arrival.orid   = cat(1,arrival.orid, a.orid);
+0868                                 arrival.arid   = cat(1,arrival.arid, a.arid);
+0869                                 arrival.stype  = cat(1,arrival.stype,  a.stype);
+0870                                 arrival.etype  = cat(1,arrival.etype,  a.etype);
+0871                                 arrival.seaz  = cat(1,arrival.seaz,  a.seaz);
+0872                                 arrival.unique_orids  = cat(1,arrival.unique_orids,  a.unique_orids);
+0873                                 arrival.iphase = cat(1,arrival.iphase,  a.iphase);
+0874                             <span class="keyword">else</span>
+0875                                 fprintf(<span class="string">'%s.arrival not found\n'</span>,dbname);
+0876                             <span class="keyword">end</span>        
+0877                         <span class="keyword">end</span>
+0878                     <span class="keyword">end</span>
+0879                 <span class="keyword">end</span>
+0880             <span class="keyword">end</span>
+0881         <span class="keyword">end</span>
+0882         
+0883         <span class="comment">%------------------------------------------------------------------</span>
+0884         <span class="comment">%% toWaveforms</span>
+0885         <a name="_sub14" href="#_subfunctions" class="code">function toWaveforms(cobj, subset_expr)</a>
+0886             <span class="comment">% CATALOG/TOWAVEFORMS(COBJ, SUBSET_EXPR)</span>
+0887             <span class="keyword">if</span> exist(<span class="string">'subset_expr'</span>, <span class="string">'var'</span>)
+0888                 arrival = <a href="#_sub14" class="code" title="subfunction arrival = toArrivals(cobj, subset_expr)">toArrivals</a>(cobj, subset_expr);
+0889             <span class="keyword">else</span>
+0890                 arrival = <a href="#_sub14" class="code" title="subfunction arrival = toArrivals(cobj, subset_expr)">toArrivals</a>(cobj);      
+0891             <span class="keyword">end</span>
+0892             [sta_index, orid_index, eqtimes, eqindices, nstations, norigins] = arrivals_rearrange(arrivals, arrivals.sta);
+0893             eqwf = arrival2waveform(arrivals, norigins, nstations, chanlist);
+0894         <span class="keyword">end</span>
+0895         
+0896         <span class="comment">%------------------------------------------------------------------</span>
+0897         <span class="comment">%% ADDFIELD</span>
+0898         <a name="_sub15" href="#_subfunctions" class="code">function cobj = addfield(cobj,fieldname,value)</a>
+0899             <span class="comment">%ADDFIELD add fields and values to CATALOG object(s)</span>
+0900             <span class="comment">%   cobj = addfield(cobj, fieldname, value)</span>
+0901             <span class="comment">%   This function creates a new user defined field, and fills it with the</span>
+0902             <span class="comment">%   included value.  If fieldname exists, it will overwrite the existing</span>
+0903             <span class="comment">%   value.</span>
+0904             <span class="comment">%</span>
+0905             <span class="comment">%   Input Arguments</span>
+0906             <span class="comment">%       COBJ: a catalog object   N-DIMENSIONAL</span>
+0907             <span class="comment">%       FIELDNAME: a string name</span>
+0908             <span class="comment">%       VALUE: a value to be added for those fields.  Value can be anything</span>
+0909             <span class="comment">%</span>
+0910             <span class="comment">%   CATALOG objects can hold user-defined fields.  To access the contents,</span>
+0911             <span class="comment">%   use catalog/get.</span>
+0912             <span class="comment">%</span>
+0913             <span class="comment">%   Example:</span>
+0914             <span class="comment">%       cobj = catalog(); %start with a blank catalog object.</span>
+0915             <span class="comment">%       N = 1:45;     %create a variable containing the numbers 1-45</span>
+0916             <span class="comment">%       S = 'Thursday'; %create a string variable</span>
+0917             <span class="comment">%       C = {'first', 'second', N, S}; % create a cell aray with a variety</span>
+0918             <span class="comment">%                                               % of data</span>
+0919             <span class="comment">%</span>
+0920             <span class="comment">%       % add a field called &quot;TESTFIELD&quot;, containing the numbers 1-45</span>
+0921             <span class="comment">%       cobj = addfield(cobj,'TestField',N);</span>
+0922             <span class="comment">%</span>
+0923             <span class="comment">%       % add another field called &quot;MISHMOSH&quot; containing the cell 'C'</span>
+0924             <span class="comment">%       cobj = addfield(cobj,'mishmosh',C);</span>
+0925             <span class="comment">%</span>
+0926             <span class="comment">%       % see the result</span>
+0927             <span class="comment">%       disp(cobj)</span>
+0928             <span class="comment">%</span>
+0929             <span class="comment">% See also CATALOG/SET, CATALOG/GET, WAVEFORM/ADDFIELD</span>
+0930 
+0931             <span class="comment">% AUTHOR: Glenn Thompson, based entirely on WAVEFORM/ADDFIELD by</span>
+0932             <span class="comment">% Celso Reyes</span>
+0933             <span class="comment">% $Date$</span>
+0934             <span class="comment">% $Revision$</span>
+0935 
+0936             <span class="keyword">if</span> ischar(fieldname)
+0937                 fieldname = {upper(fieldname)}; <span class="comment">%convert to cell</span>
+0938             <span class="keyword">else</span>
+0939                 error(<span class="string">'catalog:addfield:invalidFieldname'</span>,<span class="string">'fieldname must be a string'</span>)
+0940             <span class="keyword">end</span>
+0941 
+0942             actualfields = upper(fieldnames(cobj)); <span class="comment">%get the object's intrinsic fieldnames</span>
+0943 
+0944             <span class="keyword">if</span> ismember(fieldname,actualfields)
+0945                 cobj = <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(cobj, fieldname{1}, value); <span class="comment">%set the value of the actual field</span>
+0946                 warning(<span class="string">'catalog:addfield:fieldExists'</span>,<span class="keyword">...</span>
+0947                     <span class="string">'Attempted to add intrinsic field.\nNo field added, but Values changed anyway'</span>);
+0948                 <span class="keyword">return</span>
+0949             <span class="keyword">end</span>
+0950 
+0951             <span class="comment">% Fieldname isn't one that is intrinsic to the catalog object</span>
+0952 
+0953             <span class="keyword">for</span> n=1:numel(cobj)                
+0954                 miscF = cobj(n).misc_fields;   <span class="comment">% grab the misc_fields (cell of fieldnames)</span>
+0955   
+0956                 <span class="keyword">if</span> ~any(strcmp(fieldname,miscF)) <span class="comment">% if the field doesn't already exist...</span>
+0957                     cobj(n).misc_fields = [miscF, fieldname]; <span class="comment">%add the fieldname to the list</span>
+0958                 <span class="keyword">end</span>
+0959                 cobj(n) = <a href="#_sub17" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(cobj(n), fieldname{1},value);
+0960             <span class="keyword">end</span>
+0961         <span class="keyword">end</span>
+0962     
+0963         <span class="comment">%------------------------------------------------------------------</span>
+0964         <span class="comment">%% SET</span>
+0965         <a name="_sub16" href="#_subfunctions" class="code">function cobj = set(cobj, varargin)</a>
+0966         <span class="comment">%SET Set properties for catalog object(s)</span>
+0967         <span class="comment">%   cobj = set(cobj,'property_name', val, ['property_name2', val2])</span>
+0968         <span class="comment">%   SET is one of the two gateway functions of an object, such as catalog.</span>
+0969         <span class="comment">%   Properties that are changed through SET are typechecked and otherwise</span>
+0970         <span class="comment">%   scrutinized before being stored within the catalog object.  This</span>
+0971         <span class="comment">%   ensures that the other waveform methods are all retrieving valid data,</span>
+0972         <span class="comment">%   thereby increasing the reliability of the code.</span>
+0973         <span class="comment">%</span>
+0974         <span class="comment">%   Another strong advantage to using SET and GET to change  and retrieve</span>
+0975         <span class="comment">%   properties, rather than just assigning them to catalog object directly,</span>
+0976         <span class="comment">%   is that the underlying data structure can change and grow without</span>
+0977         <span class="comment">%   harming the code that is written based on the catalog object.</span>
+0978         <span class="comment">%</span>
+0979         <span class="comment">%   Valid property names:</span>
+0980         <span class="comment">%</span>
+0981         <span class="comment">%       'LON'    - longitude</span>
+0982         <span class="comment">%       'LAT'    - latitude</span>
+0983         <span class="comment">%       'DEPTH' - in km (-ve is above sea level, +ve below)</span>
+0984         <span class="comment">%       'DNUM'  - Vector of MATLAB datenum times denoting origin</span>
+0985         <span class="comment">%       times</span>
+0986         <span class="comment">%       'NASS' - number of associated arrivals</span>
+0987         <span class="comment">%       'EVID' - event id</span>
+0988         <span class="comment">%       'ORID' - origin id</span>
+0989         <span class="comment">%       'MAG' - magnitude</span>
+0990         <span class="comment">%       'ETYPE' - event classification/type</span>
+0991         <span class="comment">%       'SNUM' - start time of catalog in MATLAB datenum* format</span>
+0992         <span class="comment">%       'ENUM' - end time of catalog</span>
+0993         <span class="comment">%       'MINMAG' - magnitude threshold of catalog (events with</span>
+0994         <span class="comment">%       smaller magnitude are/have been filtered out)</span>
+0995         <span class="comment">%       'AUTH' - Name of the person, algorithm or method that</span>
+0996         <span class="comment">%       created/classified/located the event.</span>
+0997         <span class="comment">%       'REGION' - A vector of [MINLON MAXLON MINLAT MAXLAT]</span>
+0998         <span class="comment">%</span>
+0999         <span class="comment">%       If user-defined fields were added to the catalog object (ie, through</span>
+1000         <span class="comment">%       addField), these fieldnames are also available through set.</span>
+1001         <span class="comment">%</span>
+1002         <span class="comment">%       for example</span>
+1003         <span class="comment">%           % create a catalog object, and add a field called CLOSEST_STATION with</span>
+1004         <span class="comment">%           % the value 'MBLG'</span>
+1005         <span class="comment">%           cobj = addfield(catalog,'CLOSEST_STATION','MBLG');</span>
+1006         <span class="comment">%</span>
+1007         <span class="comment">%           % change the value of the CLOSEST_STATION field to 'MBWH'</span>
+1008         <span class="comment">%           cobj = set(cobj,'CLOSEST_STATION','MBWH');</span>
+1009         <span class="comment">%</span>
+1010         <span class="comment">%           % change the event type to 'h' (for hybrid) and</span>
+1011         <span class="comment">%           magnitude to 2.3:</span>
+1012         <span class="comment">%           cobj = set(cobj,'etype','h', 'mag', 2.3);</span>
+1013         <span class="comment">%</span>
+1014         <span class="comment">%   Batch changes can be made if input cobj is a matrix (use with care!)</span>
+1015         <span class="comment">%</span>
+1016         <span class="comment">%  See also CATALOG/GET, WAVEFORM/SET</span>
+1017 
+1018         <span class="comment">% AUTHOR: Glenn Thompson</span>
+1019         <span class="comment">% LASTUPDATE: September 26, 2011</span>
+1020 
+1021         Vidx = 1 : numel(varargin);
+1022 
+1023         <span class="keyword">while</span> numel(Vidx) &gt;= 2
+1024             prop_name = upper(varargin{Vidx(1)});
+1025             val = varargin{Vidx(2)};
+1026   
+1027             <span class="keyword">switch</span> prop_name
+1028             
+1029                 <span class="comment">% LON</span>
+1030                 <span class="keyword">case</span> <span class="string">'LON'</span>,
+1031                 <span class="keyword">if</span> isnumeric(val)
+1032                     <span class="keyword">if</span> (val&gt;=-180.0 &amp;&amp; val&lt;=180.0)
+1033                         [cobj.lon] = deal(val);
+1034                     <span class="keyword">else</span>
+1035                         error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'Expected a DOUBLE from -180.0 to 180.0'</span>);
+1036                     <span class="keyword">end</span>
+1037                 <span class="keyword">end</span>
+1038             
+1039                 <span class="comment">% LAT</span>
+1040                 <span class="keyword">case</span> <span class="string">'LAT'</span>,
+1041                 <span class="keyword">if</span> isnumeric(val)
+1042                     <span class="keyword">if</span> (val&gt;=-90.0 &amp;&amp; val&lt;=90.0)
+1043                         [cobj.lat] = deal(val);
+1044                     <span class="keyword">else</span>
+1045                         error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'Expected a DOUBLE from -90.0 to 90.0'</span>);
+1046                     <span class="keyword">end</span>
+1047                 <span class="keyword">end</span>    
+1048             
+1049                 <span class="comment">% DEPTH</span>
+1050                 <span class="keyword">case</span> <span class="string">'DEPTH'</span>,
+1051                 <span class="keyword">if</span> isnumeric(val)
+1052                     <span class="keyword">if</span> (val&gt;=-13.0 &amp;&amp; val&lt;=999.0)
+1053                         [cobj.depth] = deal(val);
+1054                     <span class="keyword">else</span>
+1055                         error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'Expected a DOUBLE from -13.0 to 999.0'</span>);
+1056                     <span class="keyword">end</span>
+1057                 <span class="keyword">end</span>            
+1058             
+1059             
+1060                 <span class="comment">% DNUM</span>
+1061                 <span class="keyword">case</span> <span class="string">'DNUM'</span>,
+1062                 <span class="keyword">if</span> isnumeric(val)
+1063                     <span class="keyword">if</span> (val&gt;=datenum(1900,1,1) &amp;&amp; val&lt;=datenum(2030,1,1))
+1064                         [cobj.dnum] = deal(val);
+1065                     <span class="keyword">else</span>
+1066                         error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'Expected a DOUBLE from %f to %f'</span>,datenum(1900,1,1),datenum(2030,1,1));
+1067                     <span class="keyword">end</span>
+1068                 <span class="keyword">end</span>  
+1069                         
+1070                 <span class="comment">% NASS</span>
+1071                 <span class="keyword">case</span> <span class="string">'NASS'</span>,
+1072                 <span class="keyword">if</span> isnumeric(val)
+1073                     <span class="keyword">if</span> (val&gt;=0 &amp;&amp; val&lt;=999)
+1074                         [cobj.nass] = deal(int16(val));
+1075                     <span class="keyword">else</span>
+1076                         error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'Expected an INTEGER from 0 to 999'</span>);
+1077                     <span class="keyword">end</span>
+1078                 <span class="keyword">end</span>    
+1079             
+1080                         
+1081                 <span class="comment">% EVID</span>
+1082                 <span class="keyword">case</span> <span class="string">'EVID'</span>,
+1083                 <span class="keyword">if</span> isnumeric(val)
+1084                    <span class="comment">% was int32 which didn't match the original 2^32 maximum</span>
+1085                    ui32max = intmax(<span class="string">'uint32'</span>);
+1086                     <span class="keyword">if</span> (val&gt;=0 &amp;&amp; val&lt;=intmax(<span class="string">'uint32'</span>))
+1087                         [cobj.evid] = deal(uint32(val));
+1088                     <span class="keyword">else</span>
+1089                         error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'Expected an INTEGER from 0 to %f'</span>,ui32max);
+1090                     <span class="keyword">end</span>
+1091                 <span class="keyword">end</span>  
+1092             
+1093                 <span class="comment">% ORID</span>
+1094                 <span class="keyword">case</span> <span class="string">'ORID'</span>,
+1095                 <span class="keyword">if</span> isnumeric(val)
+1096                    <span class="comment">% was int32 which didn't match the original 2^32 maximum</span>
+1097                    ui32max = intmax(<span class="string">'uint32'</span>);
+1098                     <span class="keyword">if</span> (val&gt;=0 &amp;&amp; val&lt;=ui32max)
+1099                         [cobj.orid] = deal(uint32(val));
+1100                     <span class="keyword">else</span>
+1101                         error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'Expected an INTEGER from 0 to %f'</span>,ui32max);
+1102                     <span class="keyword">end</span>
+1103                 <span class="keyword">end</span>  
+1104                                                 
+1105                 <span class="comment">% MAGa - verification commented out because Helena's was running into problems when ressetting whole vectors</span>
+1106                 <span class="keyword">case</span> <span class="string">'MAG'</span>,
+1107                 <span class="keyword">if</span> isnumeric(val) 
+1108                     <span class="comment">%if (val&gt;=-2.0 &amp; val&lt;=9.9) | isnan(val) | (val==-999.0)</span>
+1109                         [cobj.mag] = deal(double(val));
+1110                     <span class="keyword">else</span>
+1111                         error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'Expected a DOUBLE'</span>);
+1112                     <span class="comment">%else</span>
+1113                       <span class="comment">%  error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');</span>
+1114                     <span class="comment">%end</span>
+1115                 <span class="keyword">end</span>  
+1116             
+1117                 <span class="comment">% MB</span>
+1118                 <span class="keyword">case</span> <span class="string">'MB'</span>,
+1119                 <span class="keyword">if</span> isnumeric(val) 
+1120                     <span class="comment">%if (val&gt;=-2.0 &amp; val&lt;=9.9) | isnan(val) | (val==-999.0)</span>
+1121                         [cobj.mb] = deal(double(val));
+1122                     <span class="keyword">else</span>
+1123                         error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'Expected a DOUBLE'</span>);
+1124                     <span class="comment">%else</span>
+1125                        <span class="comment">% error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');</span>
+1126                     <span class="comment">%end</span>
+1127                 <span class="keyword">end</span>  
+1128                                                 
+1129                 <span class="comment">% ML</span>
+1130                 <span class="keyword">case</span> <span class="string">'ML'</span>,
+1131                 <span class="keyword">if</span> isa(val,<span class="string">'double'</span>) 
+1132                     <span class="comment">%if (val&gt;=-2.0 &amp; val&lt;=9.9) | isnan(val) | (val==-999.0)</span>
+1133                         [cobj.ml] = deal(val);
+1134                     <span class="keyword">else</span>
+1135                         error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'Expected a DOUBLE'</span>);
+1136                     <span class="comment">%else</span>
+1137                      <span class="comment">%   error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from -2.0 to 9.9');</span>
+1138                     <span class="comment">%end</span>
+1139                 <span class="keyword">end</span> 
+1140  
+1141                 <span class="comment">% MS</span>
+1142                 <span class="keyword">case</span> <span class="string">'MS'</span>,
+1143                 <span class="keyword">if</span> isa(val,<span class="string">'double'</span>) 
+1144                     <span class="comment">%if (val&gt;=-2.0 &amp; val&lt;=9.9) | isnan(val) | (val==-999.0)</span>
+1145                         [cobj.ms] = deal(val);
+1146                     <span class="keyword">else</span>
+1147                         error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'Expected a DOUBLE'</span>);
+1148                     <span class="comment">%end</span>
+1149                 <span class="keyword">end</span>  
+1150 
+1151                 <span class="comment">% ETYPE</span>
+1152                 <span class="keyword">case</span> <span class="string">'ETYPE'</span>,
+1153                 <span class="keyword">if</span> isa(val,<span class="string">'char'</span>) 
+1154                     [cobj.etype] = deal(val);
+1155         <span class="keyword">else</span>
+1156                     error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'Expected a CHAR'</span>);
+1157                 <span class="keyword">end</span>  
+1158             
+1159             
+1160                 <span class="comment">% SNUM - results in data being filtered</span>
+1161                 <span class="keyword">case</span> <span class="string">'SNUM'</span>,
+1162                 <span class="keyword">if</span> isa(val,<span class="string">'double'</span>)
+1163                     <span class="keyword">if</span> (val&gt;=cobj.snum &amp; val&lt;cobj.enum)
+1164                         [cobj.snum] = deal(val);
+1165                         <span class="comment">% cobj = filterdata(cobj, 'snum', cobj.snum);</span>
+1166                     <span class="keyword">else</span>
+1167                         error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'Expected a DOUBLE from %f to %f'</span>,cobj.snum,cobj.enum);
+1168                     <span class="keyword">end</span>
+1169                 <span class="keyword">end</span>       
+1170             
+1171             
+1172                 <span class="comment">% ENUM - results in data being filtered</span>
+1173                 <span class="keyword">case</span> <span class="string">'ENUM'</span>,
+1174                 <span class="keyword">if</span> isa(val,<span class="string">'double'</span>)
+1175                     <span class="keyword">if</span> (val&gt;cobj.snum &amp; val&lt;=cobj.enum)
+1176                         [cobj.enum] = deal(val);
+1177                         <span class="comment">% cobj = filterdata(cobj, 'enum', cobj.enum);</span>
+1178                     <span class="keyword">else</span>
+1179                         error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'Expected a DOUBLE from %f to %f'</span>,cobj.snum,cobj.enum);
+1180                     <span class="keyword">end</span>
+1181                 <span class="keyword">end</span>    
+1182             
+1183             
+1184                 <span class="comment">% MINMAG - results in data being filtered</span>
+1185                 <span class="keyword">case</span> <span class="string">'MINMAG'</span>,
+1186                 <span class="keyword">if</span> isa(val,<span class="string">'double'</span>)
+1187                     <span class="keyword">if</span> (val&gt;cobj.minmag &amp; val&lt;=9.9)
+1188                         [cobj.minmag] = deal(val);
+1189                         <span class="comment">% cobj = filterdata(cobj, 'minmag', cobj.minmag);</span>
+1190                     <span class="keyword">else</span>
+1191                         error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'Expected a DOUBLE from %f to %f'</span>,cobj.minmag,9.9);
+1192                     <span class="keyword">end</span>
+1193                 <span class="keyword">end</span>               
+1194             
+1195                 <span class="comment">% AUTH</span>
+1196                 <span class="keyword">case</span> <span class="string">'AUTH'</span>,
+1197                 <span class="keyword">if</span> isa(val,<span class="string">'cell'</span>)
+1198                     <span class="comment">%if (val&gt;cobj.minmag &amp;&amp; val&lt;=9.9)</span>
+1199                         [cobj.auth] = deal(val);
+1200                     <span class="comment">%else</span>
+1201                     <span class="comment">%    error('CATALOG:set:propertyTypeMismatch','Expected a DOUBLE from %f to %f',cobj.minmag,9.9);</span>
+1202                     <span class="comment">%end</span>
+1203                 <span class="keyword">end</span>  
+1204             
+1205                 <span class="comment">% REGION</span>
+1206                 <span class="keyword">case</span> <span class="string">'REGION'</span>,
+1207                 <span class="keyword">if</span> isa(val,<span class="string">'double'</span>)
+1208                     <span class="keyword">if</span> (length(val)==4)
+1209                         <span class="keyword">if</span> (  (val(1)&gt;=cobj.region(1)) &amp; (val(2)&lt;=cobj.region(2)) &amp; (val(3)&gt;=cobj.region(3)) &amp; (val(4)&lt;=cobj.region(4)) )
+1210                             [cobj.region] = deal(val);
+1211                         <span class="keyword">else</span>
+1212                             error(<span class="string">'CATALOG:set:propertyTypeMismatch'</span>,<span class="string">'REGION must be a subset of existing region'</span>);
+1213                         <span class="keyword">end</span>
+1214                     <span class="keyword">end</span>
+1215                 <span class="keyword">end</span>            
+1216            
+1217       
+1218                 <span class="keyword">otherwise</span>
+1219                     <span class="keyword">for</span> n=1:numel(cobj)
+1220                         <span class="keyword">switch</span> prop_name
+1221                             <span class="keyword">case</span> cobj(n).misc_fields
+1222                                 <span class="comment">%mask = ismember(cobj(n).misc_fields, prop_name);</span>
+1223                                 mask = strcmp(prop_name,cobj(n).misc_fields);
+1224                                 cobj(n).misc_values(mask) = {val};
+1225                             <span class="keyword">otherwise</span>
+1226                                 error(<span class="string">'CATALOG:set:unknownProperty'</span>,<span class="keyword">...</span>
+1227                                     <span class="string">'can''t understand property name : %s'</span>, prop_name);
+1228                         <span class="keyword">end</span> <span class="comment">%switch</span>
+1229                     <span class="keyword">end</span> <span class="comment">%n</span>
+1230             <span class="keyword">end</span> <span class="comment">%switch</span>
+1231   
+1232             Vidx(1:2) = []; <span class="comment">%done with those parameters, move to the next ones...</span>
+1233         <span class="keyword">end</span> <span class="comment">% while loop</span>
+1234         <span class="keyword">end</span> <span class="comment">% function</span>
+1235         
+1236         <span class="comment">%------------------------------------------------------------------</span>
+1237         <span class="comment">%% GET</span>
+1238         <a name="_sub17" href="#_subfunctions" class="code">function val = get(cobj,prop_name)</a>
+1239             <span class="comment">%GET Get catalog properties</span>
+1240             <span class="comment">%   val = get(catalog_object,'property_name')</span>
+1241             <span class="comment">%</span>
+1242             <span class="comment">%   Valid property names:</span>
+1243             <span class="comment">%       'LON'    - longitude</span>
+1244             <span class="comment">%       'LAT'    - latitude</span>
+1245             <span class="comment">%       'DEPTH' - in km (-ve is above sea level, +ve below)</span>
+1246             <span class="comment">%       'DNUM'  - Vector of MATLAB datenum times denoting origin</span>
+1247             <span class="comment">%       times</span>
+1248             <span class="comment">%       'NASS' - number of associated arrivals</span>
+1249             <span class="comment">%       'EVID' - event id</span>
+1250             <span class="comment">%       'ORID' - origin id</span>
+1251             <span class="comment">%       'MAG' - magnitude</span>
+1252             <span class="comment">%       'ETYPE' - event classification/type</span>
+1253             <span class="comment">%       'SNUM' - start time of catalog in MATLAB datenum* format</span>
+1254             <span class="comment">%       'ENUM' - end time of catalog</span>
+1255             <span class="comment">%       'MINMAG' - magnitude threshold of catalog (events with</span>
+1256             <span class="comment">%       smaller magnitude are/have been filtered out)</span>
+1257             <span class="comment">%       'AUTH' - Name of the person, algorithm or method that</span>
+1258             <span class="comment">%       created/classified/located the event.</span>
+1259             <span class="comment">%       'REGION' - A vector of [MINLON MAXLON MINLAT MAXLAT]</span>
+1260             <span class="comment">%</span>
+1261             <span class="comment">%</span>
+1262             <span class="comment">%   If catalog_object is N-dimensional, then VAL will be a cell of the same</span>
+1263             <span class="comment">%   dimensions.  If GET would return single-values for the property, then</span>
+1264             <span class="comment">%   VAL will be a matrix of type DOUBLE, arranged in the same dimensions.</span>
+1265             <span class="comment">%</span>
+1266             <span class="comment">%       If additional fields were added to catalog using ADDFIELD, then</span>
+1267             <span class="comment">%       values from these can be retrieved using the fieldname</span>
+1268             <span class="comment">%</span>
+1269             <span class="comment">%       Example: Create a catalog, get 'LON', add a field, then get the field</span>
+1270             <span class="comment">%           cobj = catalog;</span>
+1271             <span class="comment">%           cobj = get(cobj, 'LON')</span>
+1272             <span class="comment">%           cobj = addfield(cobj,'closest_station', 'MBLG');</span>
+1273             <span class="comment">%           cs = get(cobj,'closest_station');</span>
+1274             <span class="comment">%</span>
+1275             <span class="comment">%   See also CATALOG/SET, CATALOG/ADDFIELD, WAVEFORM/GET</span>
+1276 
+1277             <span class="comment">% AUTHOR: Glenn Thompson, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+1278             <span class="comment">% $Date$</span>
+1279             <span class="comment">% $Revision$</span>
+1280 
+1281             prop_name = upper(prop_name);
+1282             <span class="keyword">switch</span> prop_name
+1283                 
+1284                 <span class="keyword">case</span> <span class="string">'LON'</span>, val=cobj.lon;
+1285                 <span class="keyword">case</span> <span class="string">'LAT'</span>, val=cobj.lat;
+1286                 <span class="keyword">case</span> <span class="string">'DEPTH'</span>, val=cobj.depth;
+1287                 <span class="keyword">case</span> <span class="string">'DNUM'</span>, val=cobj.dnum;
+1288                 <span class="keyword">case</span> <span class="string">'NASS'</span>, val=cobj.nass;
+1289                 <span class="keyword">case</span> <span class="string">'EVID'</span>, val=cobj.evid;
+1290                 <span class="keyword">case</span> <span class="string">'ORID'</span>, val=cobj.orid;
+1291                 <span class="keyword">case</span> <span class="string">'MAG'</span>, val=cobj.mag;
+1292                 <span class="keyword">case</span> <span class="string">'ETYPE'</span>, val=cobj.etype;                    
+1293                 <span class="keyword">case</span> <span class="string">'SNUM'</span>, val=cobj.snum;
+1294                 <span class="keyword">case</span> <span class="string">'ENUM'</span>, val=cobj.enum;
+1295                 <span class="keyword">case</span> <span class="string">'MINMAG'</span>, val=cobj.minmag;
+1296                 <span class="keyword">case</span> <span class="string">'AUTH'</span>, val=cobj.auth;    
+1297                 <span class="keyword">case</span> <span class="string">'REGION'</span>, val=cobj.region;
+1298 
+1299                 <span class="keyword">otherwise</span>
+1300                     <span class="comment">%perhaps we're trying to get at one of the miscelleneous fields?</span>
+1301                     val = cell(size(cobj));
+1302                     <span class="keyword">for</span> n = 1 : numel(cobj)
+1303                         <span class="comment">%loc is the position...</span>
+1304                         <span class="comment">%w(n).misc_fields should ALWAYS already be in uppercase</span>
+1305                         mask = strcmp(prop_name,cobj(n).misc_fields);
+1306                         <span class="comment">%fieldwasfound = any(mask);</span>
+1307                         <span class="comment">%[fieldwasfound, loc] = ismember(prop_name, cobj(n).misc_fields);</span>
+1308                         <span class="keyword">if</span> any(mask)
+1309                 
+1310                             val{n} = cobj(n).misc_values{mask};
+1311                             <span class="comment">%val{n} = cobj(n).misc_values{m};</span>
+1312                         <span class="keyword">else</span>
+1313                             warning(<span class="string">'CATALOG:get:unrecognizedProperty'</span>,<span class="keyword">...</span>
+1314                                 <span class="string">'Unrecognized property name : %s'</span>,  prop_name);
+1315                         <span class="keyword">end</span>
+1316                     <span class="keyword">end</span>
+1317         
+1318                     <span class="comment">%check to see if value can be returned as a numeric value instead</span>
+1319                     <span class="comment">%of cell.  Only if all values are numeric AND scalar</span>
+1320                     numberize = true;
+1321                     <span class="keyword">for</span> n=1:numel(val)
+1322                         <span class="keyword">if</span> ~(isnumeric(val{n}) &amp;&amp; isscalar(val{n}))
+1323                             numberize = false;
+1324                             usedcell = true;
+1325                             <span class="keyword">break</span>
+1326                         <span class="keyword">end</span>
+1327                     <span class="keyword">end</span>
+1328                     <span class="keyword">if</span> numberize,
+1329                         Z = val;
+1330                         val = nan(size(Z));
+1331                         <span class="keyword">for</span> n=1:numel(Z)
+1332                             val(n) = Z{n};
+1333                         <span class="keyword">end</span>
+1334                     <span class="keyword">end</span>
+1335         
+1336             <span class="keyword">end</span> <span class="comment">% switch</span>
+1337             <span class="keyword">if</span> (numel(val) == numel(cobj)) 
+1338                 val = reshape(val,size(cobj)); <span class="comment">%return values in proper shape</span>
+1339             <span class="keyword">end</span>
+1340 
+1341         <span class="keyword">end</span> <span class="comment">% function</span>
+1342 
+1343         <a name="_sub18" href="#_subfunctions" class="code">function equal=eq(cobj1, cobj2)</a>
+1344             equal = true;
+1345             <span class="keyword">if</span> ((cobj1.lon ~= cobj2.lon) | (cobj1.lat ~= cobj2.lat) | (cobj1.depth ~= cobj2.depth) | (cobj1.mag ~= cobj2.mag))
+1346                 equal = false;
+1347             <span class="keyword">end</span>
+1348         <span class="keyword">end</span>
+1349     <span class="keyword">end</span> <span class="comment">% methods</span>
+1350     
+1351     <span class="comment">%% STATIC METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1352     
+1353     methods(Static)
+1354 
+1355     <span class="keyword">end</span> <span class="comment">% methods</span>
+1356   
+1357     
+1358     <span class="comment">%% PRIVATE METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1359     
+1360     methods (Access=private)
+1361         
+1362         <span class="comment">%% CSS_LOAD</span>
+1363         <a name="_sub19" href="#_subfunctions" class="code">function cobj = css_load(cobj, dbroot, archiveformat, dbeval)</a>
+1364             <span class="keyword">if</span> ~exist(<span class="string">'minmag'</span>,<span class="string">'var'</span>)
+1365                 minmag = -999.0;
+1366             <span class="keyword">end</span>
+1367 
+1368             <span class="keyword">if</span> strcmp(archiveformat,<span class="string">''</span>)
+1369                 dbname = dbroot;
+1370                 <span class="comment">%if exist(sprintf('%s.origin',dbname),'file')</span>
+1371                     [cobj.lon, cobj.lat, cobj.depth, cobj.dnum, cobj.evid, cobj.orid, cobj.nass, cobj.mag, cobj.mb, cobj.ml, cobj.ms, cobj.etype, cobj.auth] = db2events(dbname, dbeval);                  
+1372                 <span class="comment">%else</span>
+1373                 <span class="comment">%    fprintf('%s.origin not found\n',dbname);</span>
+1374                 <span class="comment">%end</span>
+1375             <span class="keyword">else</span>
+1376                 <span class="keyword">if</span> isempty(cobj.snum) || isempty(cobj.enum)
+1377                     disp(sprintf(<span class="string">'Failure: you must set values for \&quot;snum\&quot; and \&quot;enum\&quot; parameters when \&quot;archiveformat\&quot; is set to \&quot;daily\&quot; or \&quot;monthly\&quot;'</span>));
+1378                     <span class="keyword">return</span>;
+1379                 <span class="keyword">end</span>
+1380                 <span class="keyword">if</span> strcmp(archiveformat,<span class="string">'daily'</span>)
+1381       
+1382                     <span class="keyword">for</span> dnum=floor(cobj.snum):floor(cobj.enum-1/1440)
+1383                         dbname = sprintf(<span class="string">'%s_%s'</span>,dbroot,datestr(dnum, <span class="string">'yyyy_mm_dd'</span>));
+1384                         <span class="keyword">if</span> exist(sprintf(<span class="string">'%s.origin'</span>,dbname),<span class="string">'file'</span>)
+1385                             [lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth] = catalog.css_import(dbname, dbeval);
+1386                             cobj.lon   = cat(1,cobj.lon,   lon);
+1387                             cobj.lat   = cat(1,cobj.lat,   lat);
+1388                             cobj.depth = cat(1,cobj.depth, depth);
+1389                             cobj.dnum  = cat(1,cobj.dnum,  dnum);
+1390                             cobj.evid  = cat(1,cobj.evid,  evid);
+1391                             cobj.orid  = cat(1,cobj.orid,  orid);
+1392                             cobj.nass  = cat(1,cobj.nass,  nass);
+1393                             cobj.mag   = cat(1,cobj.mag,   mag);
+1394                             cobj.mb   = cat(1,cobj.mb,   mb);
+1395                             cobj.ml   = cat(1,cobj.ml,   ml);
+1396                             cobj.ms   = cat(1,cobj.ms,   ms);
+1397                             cobj.etype  = cat(2,cobj.etype,  etype);
+1398                             cobj.auth = cat(1, cobj.auth, auth);
+1399                         <span class="keyword">else</span>
+1400                             fprintf(<span class="string">'%s.origin not found\n'</span>,dbname);
+1401                         <span class="keyword">end</span>
+1402                     <span class="keyword">end</span>
+1403                 <span class="keyword">else</span>
+1404 
+1405                     <span class="keyword">for</span> yyyy=dnum2year(cobj.snum):1:dnum2year(cobj.enum)
+1406                         <span class="keyword">for</span> mm=dnum2month(cobj.snum):1:dnum2month(cobj.enum)
+1407                             dnum = datenum(yyyy,mm,1);
+1408                             dbname = sprintf(<span class="string">'%s%04d_%02d'</span>,dbroot,yyyy,mm);
+1409                             <span class="keyword">if</span> exist(sprintf(<span class="string">'%s.origin'</span>,dbname),<span class="string">'file'</span>)
+1410                                 [lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth] = catalog.css_import(dbname, dbeval);
+1411                                 cobj.lon   = cat(1,cobj.lon,   lon);
+1412                                 cobj.lat   = cat(1,cobj.lat,   lat);
+1413                                 cobj.depth = cat(1,cobj.depth, depth);
+1414                                 cobj.dnum  = cat(1,cobj.dnum,  dnum);
+1415                                 cobj.evid  = cat(1,cobj.evid,  evid);
+1416                                  cobj.orid  = cat(1,cobj.orid,  orid);
+1417                                 cobj.nass  = cat(1,cobj.nass,  nass);
+1418                                 cobj.mag   = cat(1,cobj.mag,   mag);
+1419                                 cobj.mb   = cat(1,cobj.mb,   mb);
+1420                                 cobj.ml   = cat(1,cobj.ml,   ml);
+1421                                 cobj.ms   = cat(1,cobj.ms,   ms);
+1422                                 cobj.etype  = cat(1,cobj.etype,  etype);
+1423                                 cobj.auth = cat(1, cobj.auth, auth);
+1424                             <span class="keyword">else</span>
+1425                                 fprintf(<span class="string">'%s.origin not found\n'</span>,dbname);
+1426                             <span class="keyword">end</span>
+1427                         <span class="keyword">end</span>
+1428                     <span class="keyword">end</span>
+1429                 <span class="keyword">end</span>
+1430             <span class="keyword">end</span>
+1431 
+1432         <span class="keyword">end</span> <span class="comment">% function</span>
+1433 
+1434 
+1435    <span class="keyword">end</span> <span class="comment">% private methods</span>
+1436 <span class="keyword">end</span>
+1437</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

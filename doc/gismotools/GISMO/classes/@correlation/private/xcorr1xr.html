@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of xcorr1xr</title>
+  <meta name="keywords" content="xcorr1xr">
+  <meta name="description" content="XCORR1XR Cross correlate 1 trace against all other traces at once.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@correlation</a> &gt; <a href="index.html">private</a> &gt; xcorr1xr.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>xcorr1xr
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>XCORR1XR Cross correlate 1 trace against all other traces at once.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function d = xcorr1xr(d,style) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">XCORR1XR Cross correlate 1 trace against all other traces at once.
+ D = XCORR1XR(D,STYLE) This private function performs cross correlations
+ in sets by correlating one trace against a row of traces at once.
+ Generally it is faster than the one at a time implimentation. All steps
+ are included in this function. That is, no calls to the Matlab built-in
+ xcorr are used. This structure is grandfathered in from early versions of
+ correlation which did not use waveform objects. This structure is used only
+ within cross correlation routines where trace data needs to be pulled out
+ of waveform objects anyway. STYLE denotes whether or not polynomial
+ interpolation should be used to refine cross correlations to subsample
+ precision.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function d = xcorr1xr(d,style)</a>
+0002 
+0003 <span class="comment">%XCORR1XR Cross correlate 1 trace against all other traces at once.</span>
+0004 <span class="comment">% D = XCORR1XR(D,STYLE) This private function performs cross correlations</span>
+0005 <span class="comment">% in sets by correlating one trace against a row of traces at once.</span>
+0006 <span class="comment">% Generally it is faster than the one at a time implimentation. All steps</span>
+0007 <span class="comment">% are included in this function. That is, no calls to the Matlab built-in</span>
+0008 <span class="comment">% xcorr are used. This structure is grandfathered in from early versions of</span>
+0009 <span class="comment">% correlation which did not use waveform objects. This structure is used only</span>
+0010 <span class="comment">% within cross correlation routines where trace data needs to be pulled out</span>
+0011 <span class="comment">% of waveform objects anyway. STYLE denotes whether or not polynomial</span>
+0012 <span class="comment">% interpolation should be used to refine cross correlations to subsample</span>
+0013 <span class="comment">% precision.</span>
+0014 
+0015 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0016 <span class="comment">% $Date$</span>
+0017 <span class="comment">% $Revision$</span>
+0018 
+0019 
+0020 <span class="comment">% PREP NECESSARY TERMS</span>
+0021 [M,N] = size(d.w);
+0022 pretrig = 86400*(d.trig-d.start);   <span class="comment">% time between trace start and trigger</span>
+0023 l = (1./d.Fs)*[-M+1:M-1]';        <span class="comment">% lag vector</span>
+0024 <span class="comment">% next two lines are equivalent ways to get normalization coefficients</span>
+0025 wcoeff = 1./sqrt(sum(d.w.*d.w));
+0026 <span class="comment">%for i = 1:size(d.w,2), wcoeff(i) = 1./norm(d.w(:,i)); end;</span>
+0027 d.C = eye(length(d.trig),<span class="string">'single'</span>);
+0028 d.L = zeros(length(d.trig),<span class="string">'single'</span>);
+0029 
+0030 
+0031 <span class="comment">% GET FFT OF TRACES</span>
+0032 X = fft(d.w,2^nextpow2(2*M-1));
+0033 Xc = conj(X);
+0034 [MX,NX] = size(X);
+0035 
+0036 
+0037 <span class="comment">% TIME THE PROCESS</span>
+0038 starttime = now;
+0039 tic;
+0040 t0 = cputime;
+0041 numcorr = ((length(d.trig))^2-length(d.trig))/2;
+0042 count = 0;
+0043 
+0044 
+0045 <span class="comment">% LOOP THROUGH ROWS OF SIMILARITY MATRIX</span>
+0046 <span class="keyword">for</span> n =1:N
+0047     cols = n:N;
+0048     <span class="comment">% multiply fourier series and transform back to time domain</span>
+0049     CC = repmat(X(:,n),1,length(cols)) .* Xc(:,cols);
+0050     corr = ifft(CC);
+0051     corr = corr([end-M+2:<span class="keyword">end</span>,1:M],:);
+0052     
+0053     
+0054     <span class="keyword">if</span> style == 1       <span class="comment">% USE POLYNOMIAL INTERPOLATION</span>
+0055         [maxtest,indx1] = max(corr(2:end-1,:));
+0056         [mm,nn] = size(corr);
+0057         indx2 = (indx1+1) + mm*[0:nn-1];                 <span class="comment">% convert to matrix index</span>
+0058         lag = repmat( l , 1 , size(corr,2) );
+0059         lagM   = lag([ indx2-1 ; indx2 ; indx2+1 ]) + repmat(pretrig(cols)'-pretrig(n)',3,1);
+0060         corrM  = corr([ indx2-1 ; indx2 ; indx2+1 ]);
+0061         <span class="keyword">for</span> z = 1:numel(cols)
+0062             p = polyfit( lagM(:,z) , corrM(:,z) , 2 );
+0063             Ltmp = -0.5*p(2)/p(1);
+0064             <span class="keyword">if</span> abs(Ltmp)&lt;eps(<span class="string">'single'</span>)
+0065                 Ltmp = 0;
+0066             <span class="keyword">end</span>
+0067             d.L(n,cols(z))  = Ltmp;
+0068             d.C(n,cols(z)) = polyval( p , d.L(n,cols(z)) ) .* wcoeff(n) .* wcoeff(cols(z));
+0069         <span class="keyword">end</span>
+0070     <span class="keyword">elseif</span> style == 0     <span class="comment">% NO POLYNOMIAL INTERPOLATION</span>
+0071         [maxval,indx1] = max(corr);
+0072         d.C(n,cols) = maxval .* wcoeff(n) .* wcoeff(cols);   <span class="comment">% normalized maximum correlation</span>
+0073         d.L(n,cols) = l(indx1) + (pretrig(cols) - pretrig(n)); <span class="comment">% lag in seconds</span>
+0074     <span class="keyword">end</span>
+0075 
+0076     <span class="keyword">if</span> (n==100) | (n==1000)
+0077         tclock = toc/86400;
+0078         completed = sum(N-n:N-1)/((N*N-N)/2);
+0079         fin = datestr(starttime + tclock/completed,16);
+0080         <span class="keyword">if</span> completed&lt;0.5
+0081             disp([num2str(100*completed,<span class="string">'%2.0f'</span>) <span class="string">'% completed. Estimated completion at '</span> fin <span class="string">'...'</span>]);
+0082         <span class="keyword">end</span>;
+0083     <span class="keyword">end</span>;
+0084 <span class="keyword">end</span>
+0085 
+0086 
+0087 <span class="comment">% REPLACE NaNs WITH ZEROS</span>
+0088 f = find(isnan(d.C));
+0089 d.C(f) = 0;
+0090 f = find(isnan(d.L));
+0091 d.L(f) = 0;
+0092 
+0093 
+0094 <span class="comment">% FILL LOWER TRIANGULAR PART OF MATRICES</span>
+0095 d.C = d.C + d.C' - eye(size(d.C));
+0096 d.L = d.L - d.L';
+0097 
+0098 
+0099 <span class="comment">% DISPLAY RUN TIMES</span>
+0100 tclock = toc;
+0101 tcpu = cputime-t0;
+0102 <span class="keyword">if</span> tclock&gt;20
+0103     disp([<span class="string">'Clock time to complete correlations: '</span> num2str(tclock,<span class="string">'%5.1f'</span>) <span class="string">' s'</span>]);
+0104     disp([<span class="string">'CPU time to complete correlations:   '</span> num2str(tcpu,<span class="string">'%5.1f'</span>) <span class="string">' s'</span>]);
+0105 <span class="keyword">end</span>;
+0106 
+0107</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

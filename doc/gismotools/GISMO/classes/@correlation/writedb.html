@@ -1,0 +1,239 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of writedb</title>
+  <meta name="keywords" content="writedb">
+  <meta name="description" content="WRITEDB write antelope database tables">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@correlation</a> &gt; writedb.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>writedb
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>WRITEDB write antelope database tables</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function writedb(c,dbOut,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">WRITEDB write antelope database tables
+  WRITEDB(C,DBOUT) writes an arrival table into the database DBOUT. The
+  arrival contains the station and channel names. The phase arrival time
+  is set to the trigger field in the correlation object. If the cluster
+  field is filled in C, then the phase names are assigned as cXX where XX
+  is the cluster number. If the cluster field is not filled, a default
+  phase name of P is assigned. If the table DBOUT.arrival already exists,
+  new entries are appended to it. Duplicate entries to the database will
+  NOT be skipped.
+
+  WRITEDB(C,DBOUT,PHASENAME) Assign an explicit PHASENAME. PHASENAME is
+  a cell array containing character phase names. The cell array must be
+  of length 1 or of length N, where N is the number of traces in the
+  corelation object.
+ 
+  WRITEDB(C,DBOUT,'detection') Writes a detection table instead of an
+  arrival table. The filter field is left null by default. Rows for
+  detection ON and OFF states are not included. On state='D' rows are
+  written.
+
+  WRITEDB(C,DBOUT,'detection','filterString') Fills the filter field on
+  the detection table with the string given by filterString.
+
+  WRITEDB checks for the Antelope toolbox for Matlab. If it does not
+  exist, WRITEDB writes a simple text file DBOUT.txt which contains
+  station, channel, arrival times and phase names.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function writedb(c,dbOut,varargin)</a>
+0002 
+0003 <span class="comment">%WRITEDB write antelope database tables</span>
+0004 <span class="comment">%  WRITEDB(C,DBOUT) writes an arrival table into the database DBOUT. The</span>
+0005 <span class="comment">%  arrival contains the station and channel names. The phase arrival time</span>
+0006 <span class="comment">%  is set to the trigger field in the correlation object. If the cluster</span>
+0007 <span class="comment">%  field is filled in C, then the phase names are assigned as cXX where XX</span>
+0008 <span class="comment">%  is the cluster number. If the cluster field is not filled, a default</span>
+0009 <span class="comment">%  phase name of P is assigned. If the table DBOUT.arrival already exists,</span>
+0010 <span class="comment">%  new entries are appended to it. Duplicate entries to the database will</span>
+0011 <span class="comment">%  NOT be skipped.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%  WRITEDB(C,DBOUT,PHASENAME) Assign an explicit PHASENAME. PHASENAME is</span>
+0014 <span class="comment">%  a cell array containing character phase names. The cell array must be</span>
+0015 <span class="comment">%  of length 1 or of length N, where N is the number of traces in the</span>
+0016 <span class="comment">%  corelation object.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%  WRITEDB(C,DBOUT,'detection') Writes a detection table instead of an</span>
+0019 <span class="comment">%  arrival table. The filter field is left null by default. Rows for</span>
+0020 <span class="comment">%  detection ON and OFF states are not included. On state='D' rows are</span>
+0021 <span class="comment">%  written.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%  WRITEDB(C,DBOUT,'detection','filterString') Fills the filter field on</span>
+0024 <span class="comment">%  the detection table with the string given by filterString.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%  WRITEDB checks for the Antelope toolbox for Matlab. If it does not</span>
+0027 <span class="comment">%  exist, WRITEDB writes a simple text file DBOUT.txt which contains</span>
+0028 <span class="comment">%  station, channel, arrival times and phase names.</span>
+0029 
+0030 
+0031 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0032 <span class="comment">% $Date$</span>
+0033 <span class="comment">% $Revision$</span>
+0034 
+0035 
+0036 
+0037 <span class="comment">% READ &amp; CHECK ARGUMENTS</span>
+0038 <span class="keyword">if</span> numel(varargin)&gt;2
+0039     error(<span class="string">'Wrong number of inputs'</span>);
+0040 <span class="keyword">end</span>;
+0041 <span class="keyword">if</span> ~isa(c,<span class="string">'correlation'</span>)
+0042     disp(<span class="string">'First input parameter must be a correlation object'</span>);
+0043 <span class="keyword">end</span>
+0044 
+0045 <span class="keyword">if</span> ~ischar(dbOut)
+0046     disp(<span class="string">'Second input parameter must be a text string'</span>);
+0047 <span class="keyword">end</span>
+0048 
+0049 <span class="keyword">if</span> ~isempty(<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'LAG'</span>))
+0050     disp(<span class="string">'Note: Time corrections from LAG field have not been applied to traces. Consider using ADJUSTTRIG prior to writing out'</span>);
+0051     disp(<span class="string">' '</span>);
+0052 <span class="keyword">end</span>;
+0053 
+0054 
+0055 <span class="comment">% SELECT TABLE TYPE</span>
+0056 ISDETECTION = 0;
+0057 <span class="keyword">if</span> numel(varargin)&gt;=1 || ~admin.antelope_exists
+0058     <span class="keyword">if</span> strcmpi(varargin{1},<span class="string">'detection'</span>)
+0059         ISDETECTION = 1;
+0060     <span class="keyword">end</span>
+0061 <span class="keyword">end</span>
+0062 
+0063 
+0064 <span class="comment">% ASSIGN ARGUMENTS FOR ARRIVAL TABLE</span>
+0065 <span class="keyword">if</span> ~ISDETECTION
+0066     <span class="keyword">if</span> numel(varargin)==1
+0067         phaseList = varargin{1};
+0068         <span class="keyword">if</span> numel(phaseList)==<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'TRACES'</span>)
+0069             phaseList = phaseList;
+0070         <span class="keyword">elseif</span> numel(phaseList)~=<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'TRACES'</span>) &amp;&amp; numel(phaseList)~=1
+0071             error(<span class="string">'phase list argument must be cell array of length 1 or N, where N is the number of traces in the correlation object'</span>);
+0072         <span class="keyword">elseif</span> numel(phaseList)==1
+0073             <span class="keyword">if</span> ischar(phaseList)
+0074                 phaseList = {phaseList};
+0075             <span class="keyword">end</span>
+0076             phaseList = repmat(phaseList,<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'TRACES'</span>),1);
+0077         <span class="keyword">end</span>
+0078     <span class="keyword">elseif</span> ~isempty(<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'CLUST'</span>))
+0079         disp(<span class="string">'assigning phase names based on cluster field'</span>);
+0080         clust = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'CLUST'</span>);
+0081         phaseList = cell(size(clust));
+0082         <span class="keyword">for</span> n = 1:numel(clust)
+0083             phaseList(n) = {[<span class="string">'c'</span> num2str(clust(n),<span class="string">'%02.0f'</span>)]};
+0084         <span class="keyword">end</span>
+0085     <span class="keyword">else</span>
+0086         disp(<span class="string">'assigning default phase name &quot;P&quot;'</span>);
+0087         phaseList = repmat({<span class="string">'P'</span>},<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'TRACES'</span>),1);
+0088     <span class="keyword">end</span>;
+0089     
+0090 <span class="keyword">end</span>
+0091 
+0092     
+0093     
+0094 <span class="comment">% ASSIGN ARGUMENTS FOR DETECTION TABLE</span>
+0095 <span class="keyword">if</span> ISDETECTION
+0096     <span class="keyword">if</span> numel(varargin)&gt;=2
+0097         <span class="keyword">if</span> ischar(varargin{2})
+0098             filterString = varargin(2);
+0099         <span class="keyword">elseif</span> iscell(varargin{2}) &amp;&amp; (numel(varargin{2})==1)
+0100             filterString = varargin{2};
+0101         <span class="keyword">end</span>
+0102     <span class="keyword">else</span>
+0103         filterString = <span class="string">'not_specified'</span>;
+0104     <span class="keyword">end</span>
+0105 <span class="keyword">end</span>
+0106 
+0107         
+0108         
+0109 
+0110 <span class="comment">% WRITE ARRIVAL TABLE OR TEXT FILE</span>
+0111 <span class="keyword">if</span> ~ISDETECTION
+0112     trig = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'TRIG'</span>);
+0113     sta = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'STATION'</span>); <span class="comment">%sta = sta{1};</span>
+0114     chan = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'CHANNEL'</span>); <span class="comment">%chan = chan{1};</span>
+0115     <span class="keyword">if</span> admin.antelope_exists
+0116         <span class="comment">% TODO: check for database table</span>
+0117         disp([<span class="string">'Writing database table '</span> dbOut <span class="string">'.arrival'</span>]);
+0118         db = dbopen(dbOut,<span class="string">'r+'</span>);
+0119         db = dblookup(db,<span class="string">''</span>,<span class="string">'arrival'</span>,<span class="string">''</span>,<span class="string">''</span>);
+0120         nMax = length(trig);
+0121         disp(<span class="string">'     '</span>);
+0122         <span class="keyword">for</span> n = 1:nMax
+0123             arid = dbnextid( db,<span class="string">'arid'</span>);
+0124             db.record = dbaddv(db,<span class="string">'sta'</span>,sta{n},<span class="string">'chan'</span>,chan{n},<span class="string">'time'</span>,datenum2epoch(trig(n)),<span class="string">'iphase'</span>,phaseList{n},<span class="string">'auth'</span>,<span class="string">'corr/writedb'</span>);
+0125             fprintf(<span class="string">'\b\b\b\b\b\b%5.0f%%'</span>,n/nMax*100);
+0126         <span class="keyword">end</span>
+0127         fprintf(<span class="string">'\n'</span>);
+0128         dbclose(db);
+0129     <span class="keyword">else</span>
+0130         <span class="comment">% write out a simple text file</span>
+0131         disp([<span class="string">'Antelope toolbox not found. Writing text file '</span> dbOut <span class="string">'.txt instead'</span>]);
+0132         fid = fopen([dbOut <span class="string">'.txt'</span>],<span class="string">'w'</span>);
+0133         <span class="keyword">for</span> n = 1:numel(trig)
+0134             fprintf(fid,<span class="string">'%-7s %-7s %-s %5s\n'</span>,sta,chan,datestr(trig(n),<span class="string">'yyyy/mm/dd HH:MM:SS.FFF'</span>),phaseList{n});
+0135         <span class="keyword">end</span>
+0136         fclose(fid);
+0137     <span class="keyword">end</span>
+0138 <span class="keyword">end</span>
+0139 
+0140 
+0141 
+0142 <span class="comment">% WRITE DETECTION TABLE</span>
+0143 <span class="keyword">if</span> ISDETECTION
+0144     trig = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'TRIG'</span>);
+0145     sta = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'STATION'</span>);
+0146     chan = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'CHANNEL'</span>);
+0147     <span class="comment">% TODO: check for database table</span>
+0148     disp([<span class="string">'Writing database table '</span> dbOut <span class="string">'.detection'</span>]);
+0149     db = dbopen(dbOut,<span class="string">'r+'</span>);
+0150     db = dblookup(db,<span class="string">''</span>,<span class="string">'detection'</span>,<span class="string">''</span>,<span class="string">''</span>);
+0151     nMax = length(trig);
+0152     disp(<span class="string">'     '</span>);
+0153     <span class="keyword">for</span> n = 1:nMax
+0154         arid = dbnextid( db,<span class="string">'arid'</span>);
+0155         db.record = dbaddv(db,<span class="string">'sta'</span>,sta{n},<span class="string">'chan'</span>,chan{n},<span class="string">'time'</span>,datenum2epoch(trig(n)),<span class="string">'state'</span>,<span class="string">'D'</span>,<span class="string">'filter'</span>,filterString);
+0156         fprintf(<span class="string">'\b\b\b\b\b\b%5.0f%%'</span>,n/nMax*100);
+0157     <span class="keyword">end</span>
+0158     fprintf(<span class="string">'\n'</span>);
+0159     dbclose(db);
+0160     
+0161     
+0162     
+0163 <span class="keyword">end</span>
+0164 
+0165 
+0166 
+0167</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

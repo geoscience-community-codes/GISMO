@@ -1,0 +1,274 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of set_sacheader</title>
+  <meta name="keywords" content="set_sacheader">
+  <meta name="description" content="set_sacheader    modify sac header variables">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; set_sacheader.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>set_sacheader
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>set_sacheader    modify sac header variables</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function header = set_sacheader(header,property, val) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">set_sacheader    modify sac header variables
+  modifiedheader = set_sacheader(originalheader, property, value)
+  The properties are standards sac variables, and are not repeated here.
+   examples: DELTA, B, NZYEAR, LEVEN, etc...
+
+    See also: waveform/private/readsacfile, waveform/private/sac2waveform,
+    waveform/private/waveform2sacheader, waveform/private/writesac</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="waveform2sacheader.html" class="code" title="function header = waveform2sacheader(w)">waveform2sacheader</a>	WAVEFORM2SACHEADER generates a SAC header from a waveform object</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function header = set_sacheader(header,property, val)</a>
+0002    <span class="comment">%set_sacheader    modify sac header variables</span>
+0003    <span class="comment">%  modifiedheader = set_sacheader(originalheader, property, value)</span>
+0004    <span class="comment">%  The properties are standards sac variables, and are not repeated here.</span>
+0005    <span class="comment">%   examples: DELTA, B, NZYEAR, LEVEN, etc...</span>
+0006    <span class="comment">%</span>
+0007    <span class="comment">%    See also: waveform/private/readsacfile, waveform/private/sac2waveform,</span>
+0008    <span class="comment">%    waveform/private/waveform2sacheader, waveform/private/writesac</span>
+0009    
+0010    <span class="comment">% VERSION: 1.1 of waveform objects</span>
+0011    <span class="comment">% AUTHOR: Celso Reyes (celso@gi.alaska.edu)</span>
+0012    <span class="comment">%    modified from Michael Thorne (4/2004)</span>
+0013    <span class="comment">% LASTUPDATE: 9/2/2009</span>
+0014    
+0015    
+0016    property = deblank(upper(property));
+0017    
+0018    <span class="keyword">switch</span> property
+0019       <span class="keyword">case</span> <span class="string">'DELTA'</span>, header(1) = val;
+0020       <span class="keyword">case</span> <span class="string">'DEPMIN'</span>, header(2) = val;
+0021       <span class="keyword">case</span> <span class="string">'DEPMAX'</span>, header(3) = val;
+0022       <span class="keyword">case</span> <span class="string">'SCALE'</span>, header(4) = val;
+0023       <span class="keyword">case</span> <span class="string">'ODELTA'</span>, header(5) = val;
+0024       <span class="keyword">case</span> <span class="string">'B'</span>, header(6) = val;
+0025       <span class="keyword">case</span> <span class="string">'E'</span>, header(7) = val;
+0026       <span class="keyword">case</span> <span class="string">'O'</span>, header(8) = val;
+0027       <span class="keyword">case</span> <span class="string">'A'</span>, header(9) = val;
+0028       <span class="keyword">case</span> <span class="string">'T0'</span>, header(11) = val;
+0029       <span class="keyword">case</span> <span class="string">'T1'</span>, header(12) = val;
+0030       <span class="keyword">case</span> <span class="string">'T2'</span>, header(13) = val;
+0031       <span class="keyword">case</span> <span class="string">'T3'</span>, header(14) = val;
+0032       <span class="keyword">case</span> <span class="string">'T4'</span>, header(15) = val;
+0033       <span class="keyword">case</span> <span class="string">'T5'</span>, header(16) = val;
+0034       <span class="keyword">case</span> <span class="string">'T6'</span>, header(17) = val;
+0035       <span class="keyword">case</span> <span class="string">'T7'</span>, header(18) = val;
+0036       <span class="keyword">case</span> <span class="string">'T8'</span>, header(19) = val;
+0037       <span class="keyword">case</span> <span class="string">'T9'</span>, header(20) = val;
+0038       <span class="keyword">case</span> <span class="string">'F'</span>, header(21) = val;
+0039       <span class="keyword">case</span> <span class="string">'RESP0'</span>, header(22) = val;
+0040       <span class="keyword">case</span> <span class="string">'RESP1'</span>, header(23) = val;
+0041       <span class="keyword">case</span> <span class="string">'RESP2'</span>, header(24) = val;
+0042       <span class="keyword">case</span> <span class="string">'RESP3'</span>, header(25) = val;
+0043       <span class="keyword">case</span> <span class="string">'RESP4'</span>, header(26) = val;
+0044       <span class="keyword">case</span> <span class="string">'RESP5'</span>, header(27) = val;
+0045       <span class="keyword">case</span> <span class="string">'RESP6'</span>, header(28) = val;
+0046       <span class="keyword">case</span> <span class="string">'RESP7'</span>, header(29) = val;
+0047       <span class="keyword">case</span> <span class="string">'RESP8'</span>, header(30) = val;
+0048       <span class="keyword">case</span> <span class="string">'RESP9'</span>, header(31) = val;
+0049       <span class="keyword">case</span> <span class="string">'STLA'</span>, header(32) = val;
+0050       <span class="keyword">case</span> <span class="string">'STLO'</span>, header(33) = val;
+0051       <span class="keyword">case</span> <span class="string">'STEL'</span>, header(34) = val;
+0052       <span class="keyword">case</span> <span class="string">'STDP'</span>, header(35) = val;
+0053       <span class="keyword">case</span> <span class="string">'EVLA'</span>, header(36) = val;
+0054       <span class="keyword">case</span> <span class="string">'EVLO'</span>, header(37) = val;
+0055       <span class="keyword">case</span> <span class="string">'EVEL'</span>, header(38) = val;
+0056       <span class="keyword">case</span> <span class="string">'EVDP'</span>, header(39) = val;
+0057       <span class="keyword">case</span> <span class="string">'MAG'</span>, header(40) = val;
+0058       <span class="keyword">case</span> <span class="string">'USER0'</span>, header(41) = val;
+0059       <span class="keyword">case</span> <span class="string">'USER1'</span>, header(42) = val;
+0060       <span class="keyword">case</span> <span class="string">'USER2'</span>, header(43) = val;
+0061       <span class="keyword">case</span> <span class="string">'USER3'</span>, header(44) = val;
+0062       <span class="keyword">case</span> <span class="string">'USER4'</span>, header(45) = val;
+0063       <span class="keyword">case</span> <span class="string">'USER5'</span>, header(46) = val;
+0064       <span class="keyword">case</span> <span class="string">'USER6'</span>, header(47) = val;
+0065       <span class="keyword">case</span> <span class="string">'USER7'</span>, header(48) = val;
+0066       <span class="keyword">case</span> <span class="string">'USER8'</span>, header(49) = val;
+0067       <span class="keyword">case</span> <span class="string">'USER9'</span>, header(50) = val;
+0068       <span class="keyword">case</span> <span class="string">'DIST'</span>, header(51) = val;
+0069       <span class="keyword">case</span> <span class="string">'AZ'</span>, header(52) = val;
+0070       <span class="keyword">case</span> <span class="string">'BAZ'</span>, header(53) = val;
+0071       <span class="keyword">case</span> <span class="string">'GCARC'</span>, header(54) = val;
+0072       <span class="keyword">case</span> <span class="string">'DEPMEN'</span>, header(57) = val;
+0073       <span class="keyword">case</span> <span class="string">'CMPAZ'</span>, header(58) = val;
+0074       <span class="keyword">case</span> <span class="string">'CMPINC'</span>, header(59) = val;
+0075       <span class="keyword">case</span> <span class="string">'XMINIMUM'</span>, header(60) = val;
+0076       <span class="keyword">case</span> <span class="string">'XMAXIMUM'</span>, header(61) = val;
+0077       <span class="keyword">case</span> <span class="string">'YMINIMUM'</span>, header(62) = val;
+0078       <span class="keyword">case</span> <span class="string">'YMAXIMUM'</span>, header(63) = val;
+0079          
+0080       <span class="keyword">case</span> <span class="string">'NZYEAR'</span>, header(71) = val;
+0081       <span class="keyword">case</span> <span class="string">'NZJDAY'</span>, header(72) = val;
+0082       <span class="keyword">case</span> <span class="string">'NZHOUR'</span>, header(73) = val;
+0083       <span class="keyword">case</span> <span class="string">'NZMIN'</span>, header(74) = val;
+0084       <span class="keyword">case</span> <span class="string">'NZSEC'</span>, header(75) = val;
+0085       <span class="keyword">case</span> <span class="string">'NZMSEC'</span>, header(76) = val;
+0086       <span class="keyword">case</span> <span class="string">'NVHDR'</span>, header(77) = val;
+0087       <span class="keyword">case</span> <span class="string">'NORID'</span>, header(78) = val;
+0088       <span class="keyword">case</span> <span class="string">'NEVID'</span>, header(79) = val;
+0089       <span class="keyword">case</span> <span class="string">'NPTS'</span>, header(80) = val;
+0090       <span class="keyword">case</span> <span class="string">'NWFID'</span>, header(82) = val;
+0091       <span class="keyword">case</span> <span class="string">'NXSIZE'</span>, header(83) = val;
+0092       <span class="keyword">case</span> <span class="string">'NYSIZE'</span>, header(84) = val;
+0093       <span class="keyword">case</span> <span class="string">'IFTYPE'</span>, header(86) = val;
+0094       <span class="keyword">case</span> <span class="string">'IDEP'</span>, header(87) = val;
+0095       <span class="keyword">case</span> <span class="string">'IZTYPE'</span>, header(88) = val;
+0096       <span class="keyword">case</span> <span class="string">'IINST'</span>, header(90) = val;
+0097       <span class="keyword">case</span> <span class="string">'ISTREG'</span>, header(91) = val;
+0098       <span class="keyword">case</span> <span class="string">'IEVREG'</span>, header(92) = val;
+0099       <span class="keyword">case</span> <span class="string">'IEVTYP'</span>, header(93) = val;
+0100       <span class="keyword">case</span> <span class="string">'IQUAL'</span>, header(94) = val;
+0101       <span class="keyword">case</span> <span class="string">'ISYNTH'</span>, header(95) = val;
+0102       <span class="keyword">case</span> <span class="string">'IMAGTYP'</span>, header(96) = val;
+0103       <span class="keyword">case</span> <span class="string">'IMAGSRC'</span>, header(97) = val;
+0104          
+0105       <span class="keyword">case</span> <span class="string">'LEVEN'</span>, header(106) = val;
+0106       <span class="keyword">case</span> <span class="string">'LPSPOL'</span>, header(107) = val;
+0107       <span class="keyword">case</span> <span class="string">'LOVROK'</span>, header(108) = val;
+0108       <span class="keyword">case</span> <span class="string">'LCALDA'</span>, header(109) = val;
+0109          
+0110       <span class="keyword">case</span> <span class="string">'KSTNM'</span>;
+0111          newname = double(val);
+0112          <span class="keyword">if</span> size(newname) &lt; 8;
+0113             newname((length(val)+1):8) = 32;
+0114          <span class="keyword">end</span>
+0115          header(111:118) = newname(1:8)';
+0116       <span class="keyword">case</span> <span class="string">'KEVNM'</span>;
+0117          newname = double(val);
+0118          <span class="keyword">if</span> size(newname) &lt; 16;
+0119             newname((length(val)+1):16) = 32;
+0120          <span class="keyword">end</span>
+0121          header(119:134) = newname(1:16)';
+0122       <span class="keyword">case</span> <span class="string">'KHOLE'</span>;
+0123          newname = double(val);
+0124          <span class="keyword">if</span> size(newname) &lt; 8;
+0125             newname((length(val)+1):8) = 32;
+0126          <span class="keyword">end</span>
+0127          header(135:142) = newname(1:8)';
+0128       <span class="keyword">case</span> <span class="string">'KO'</span>;
+0129          newname = double(val);
+0130          <span class="keyword">if</span> size(newname) &lt; 8;
+0131             newname((length(val)+1):8) = 32;
+0132          <span class="keyword">end</span>
+0133          header(143:150) = newname(1:8)';
+0134       <span class="keyword">case</span> <span class="string">'KA'</span>;
+0135          newname = double(val);
+0136          <span class="keyword">if</span> size(newname) &lt; 8;
+0137             newname((length(val)+1):8) = 32;
+0138          <span class="keyword">end</span>
+0139          header(151:158) = newname(1:8)';
+0140       <span class="keyword">case</span> <span class="string">'KT0'</span>;
+0141          newname = double(val);
+0142          <span class="keyword">if</span> size(newname) &lt; 8;
+0143             newname((length(val)+1):8) = 32;
+0144          <span class="keyword">end</span>
+0145          header(159:166) = newname(1:8)';
+0146       <span class="keyword">case</span> <span class="string">'KT1'</span>;
+0147          newname = double(val);
+0148          <span class="keyword">if</span> size(newname) &lt; 8;
+0149             newname((length(val)+1):8) = 32;
+0150          <span class="keyword">end</span>
+0151          header(167:174) = newname(1:8)';
+0152       <span class="keyword">case</span> <span class="string">'KT2'</span>;
+0153          newname = double(val);
+0154          <span class="keyword">if</span> size(newname) &lt; 8;
+0155             newname((length(val)+1):8) = 32;
+0156          <span class="keyword">end</span>
+0157          header(175:182) = newname(1:8)';
+0158       <span class="keyword">case</span> <span class="string">'KT3'</span>;
+0159          newname = double(val);
+0160          <span class="keyword">if</span> size(newname) &lt; 8;
+0161             newname((length(val)+1):8) = 32;
+0162          <span class="keyword">end</span>
+0163          header(183:190) = newname(1:8)';
+0164       <span class="keyword">case</span> <span class="string">'KT4'</span>;
+0165          newname = double(val);
+0166          <span class="keyword">if</span> size(newname) &lt; 8; newname((length(val)+1):8) = 32; <span class="keyword">end</span>
+0167          header(191:198) = newname(1:8)';
+0168       <span class="keyword">case</span> <span class="string">'KT5'</span>;
+0169          newname = double(val);
+0170          <span class="keyword">if</span> size(newname) &lt; 8; newname((length(val)+1):8) = 32; <span class="keyword">end</span>
+0171          header(199:206) = newname(1:8)';
+0172       <span class="keyword">case</span> <span class="string">'KT6'</span>;
+0173          newname = double(val);
+0174          <span class="keyword">if</span> size(newname) &lt; 8; newname((length(val)+1):8) = 32; <span class="keyword">end</span>
+0175          header(207:214) = newname(1:8)';
+0176       <span class="keyword">case</span> <span class="string">'KT7'</span>;
+0177          newname = double(val);
+0178          <span class="keyword">if</span> size(newname) &lt; 8; newname((length(val)+1):8) = 32; <span class="keyword">end</span>
+0179          header(215:222) = newname(1:8)';
+0180       <span class="keyword">case</span> <span class="string">'KT8'</span>;
+0181          newname = double(val);
+0182          <span class="keyword">if</span> size(newname) &lt; 8; newname((length(val)+1):8) = 32; <span class="keyword">end</span>
+0183          header(223:230) = newname(1:8)';
+0184       <span class="keyword">case</span> <span class="string">'KT9'</span>;
+0185          newname = double(val);
+0186          <span class="keyword">if</span> size(newname) &lt; 8; newname((length(val)+1):8) = 32; <span class="keyword">end</span>
+0187          header(231:238) = newname(1:8)';
+0188       <span class="keyword">case</span> <span class="string">'KF'</span>;
+0189          newname = double(val);
+0190          <span class="keyword">if</span> size(newname) &lt; 8; newname((length(val)+1):8) = 32; <span class="keyword">end</span>
+0191          header(239:246) = newname(1:8)';
+0192       <span class="keyword">case</span> <span class="string">'KUSER0'</span>;
+0193          newname = double(val);
+0194          <span class="keyword">if</span> size(newname) &lt; 8; newname((length(val)+1):8) = 32; <span class="keyword">end</span>
+0195          header(247:254) = newname(1:8)';
+0196       <span class="keyword">case</span> <span class="string">'KUSER1'</span>;
+0197          newname = double(val);
+0198          <span class="keyword">if</span> size(newname) &lt; 8; newname((length(val)+1):8) = 32; <span class="keyword">end</span>
+0199          header(255:262) = newname(1:8)';
+0200       <span class="keyword">case</span> <span class="string">'KUSER2'</span>;
+0201          newname = double(val);
+0202          <span class="keyword">if</span> size(newname) &lt; 8; newname((length(val)+1):8) = 32; <span class="keyword">end</span>
+0203          header(263:270) = newname(1:8)';
+0204       <span class="keyword">case</span> <span class="string">'KCMPNM'</span>;
+0205          newname = double(val);
+0206          <span class="keyword">if</span> size(newname) &lt; 8; newname((length(val)+1):8) = 32; <span class="keyword">end</span>
+0207          header(271:278) = newname(1:8)';
+0208       <span class="keyword">case</span> <span class="string">'KNETWK'</span>;
+0209          newname = double(val);
+0210          <span class="keyword">if</span> size(newname) &lt; 8; newname((length(val)+1):8) = 32; <span class="keyword">end</span>
+0211          header(279:286) = newname(1:8)';
+0212       <span class="keyword">case</span> <span class="string">'KDATRD'</span>;
+0213          newname = double(val);
+0214          <span class="keyword">if</span> size(newname) &lt; 8; newname((length(val)+1):8) = 32; <span class="keyword">end</span>
+0215          header(287:294) = newname(1:8)';
+0216       <span class="keyword">case</span> <span class="string">'KINST'</span>;
+0217          newname = double(val);
+0218          <span class="keyword">if</span> size(newname) &lt; 8; newname((length(val)+1):8) = 32; <span class="keyword">end</span>
+0219          header(295:302) = newname(1:8)';
+0220    <span class="keyword">end</span> <span class="comment">%switch</span>
+0221 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

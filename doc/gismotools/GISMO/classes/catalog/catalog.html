@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of catalog</title>
+  <meta name="keywords" content="catalog">
+  <meta name="description" content="CATALOG">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">catalog</a> &gt; catalog.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>catalog
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>CATALOG</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function cobj = catalog(filepath, dataformat, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CATALOG
+ This is a &quot;skin&quot; added to provide a bridge between the old catalog class and the new catalog family of classes
+ which comprises of Catalog_lite and Catalog_full which both inherit Catalog_base
+ 
+ The idea is to support the old calls to catalog by translating them into calls to readCatalog
+ 
+ TO DO:
+     Also need to translate attributes and methods</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="readCatalog.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog</a>	READCATALOG: Read seismic events from common file formats & data sources.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function cobj = catalog(filepath, dataformat, varargin)</a>
+0002 <span class="comment">%CATALOG</span>
+0003 <span class="comment">% This is a &quot;skin&quot; added to provide a bridge between the old catalog class and the new catalog family of classes</span>
+0004 <span class="comment">% which comprises of Catalog_lite and Catalog_full which both inherit Catalog_base</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% The idea is to support the old calls to catalog by translating them into calls to readCatalog</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% TO DO:</span>
+0009 <span class="comment">%     Also need to translate attributes and methods</span>
+0010 
+0011 
+0012 <span class="comment">% Parse required, optional and param-value pair arguments,</span>
+0013 <span class="comment">% set default values, and add validation conditions</span>
+0014 p = inputParser;
+0015 p.addRequired(<span class="string">'filepath'</span>, @isstr);
+0016 p.addRequired(<span class="string">'dataformat'</span>, @isstr);
+0017 p.parse(filepath, dataformat, varargin{:});
+0018 fields = fieldnames(p.Results);
+0019 <span class="keyword">for</span> i=1:length(fields)
+0020     field=fields{i};
+0021    val = p.Results.(field);
+0022     cobj = cobj.set(field, val);
+0023 <span class="keyword">end</span>
+0024 
+0025 <span class="comment">% Calls to Antelope</span>
+0026 <span class="comment">%    Reading an Antelope database using name/value pairs:</span>
+0027 <span class="comment">%        OLD:</span>
+0028 <span class="comment">%            cobj = catalog('/Seis/catalogs/aeic/Total/Total', 'antelope', 'snum', datenum(2009,1,1), 'enum', datenum(2010,1,1), 'minmag', 4.0, 'region', [-170.0 -135.0 55.0 65.0]);</span>
+0029 <span class="comment">%        NEW:</span>
+0030 <span class="comment">%            cobj = readCatalog('datascope', 'dbpath', '/Seis/catalogs/aeic/Total/Total', 'snum', datenum(2009,1,1), 'enum', datenum(2010,1,1), 'minmag', 4.0, 'region', [-170.0 -135.0 55.0 65.0]);</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%    Reading an Antelope database using a subset expression:</span>
+0033 <span class="comment">%        OLD:</span>
+0034 <span class="comment">%            cobj = catalog('/Seis/catalogs/aeic/Total/Total', 'antelope', 'dbeval', 'time &gt; &quot;1989/1/1&quot; &amp;&amp; time &lt; &quot;2006/1/1&quot; &amp;&amp; deg2km(distance(61.2989, -152.2539, lat, lon))&lt;10.0');</span>
+0035 <span class="comment">%        NEW:</span>
+0036             cobj = <a href="readCatalog.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog</a>(<span class="string">'datascope'</span>, <span class="string">'dbpath'</span>, <span class="string">'/Seis/catalogs/aeic/Total/Total'</span>, <span class="string">'subset_expression'</span>, <span class="string">'time &gt; &quot;2009/1/1&quot; &amp; time &lt; &quot;2010/1/1&quot;'</span> &amp; ml &gt; 4 &amp; lon &gt; -170.0 &amp; lon &lt; -135.0 &amp; lat &gt; 55.0 &amp; lat &lt; 65.0');
+0037 
+0038 <span class="keyword">if</span> strcmp(dataformat, <span class="string">'antelope'</span>)
+0039     <span class="comment">% Check if 'dbeval' name-value pair exists</span>
+0040     <span class="comment">% SKELETON: need to replace dbeval in field array and replace with subset_expression</span>
+0041     <span class="comment">% then find out if name-value pairs translate from old to new catalog</span>
+0042     <span class="keyword">if</span> exists(<span class="string">'p.Results.dbeval'</span>,<span class="string">'var'</span>) 
+0043         <span class="comment">%cobj = readCatalog('datascope', 'dbpath', filepath, 'subset_expression', p.Results.dbeval, varargin{:})</span>
+0044     <span class="keyword">else</span>
+0045         <span class="comment">%cobj = readCatalog('datascope', 'dbpath', filepath, vargarin{:})</span>
+0046     <span class="keyword">end</span>
+0047 <span class="keyword">end</span>
+0048 
+0049 
+0050</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

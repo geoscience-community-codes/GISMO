@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of delfield</title>
+  <meta name="keywords" content="delfield">
+  <meta name="description" content="DELFIELD removes fields from waveform object(s)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; delfield.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>delfield
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>DELFIELD removes fields from waveform object(s)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = delfield(w,field_to_delete, ignoredvalue) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DELFIELD removes fields from waveform object(s)
+   w = delfield(waveform, fieldname)
+       if a user-defined field exists whose name matches the string within
+       FIELDNAME exists, then it will be deleted from the waveform(s).
+       This will not remove fields intrinsic to the waveform object.
+
+       If the field does NOT exist, no error or warning will occur.
+
+   Input Arguments
+       WAVEFORM: a waveform object    N-DIMENSIONAL
+       FIELDNAME: case insensitive string name of the field to delete.
+
+   See also WAVEFORM/ADDFIELD, WAVEFORM/GET -- 'misc_fields'</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="remove_calib.html" class="code" title="function w = remove_calib(w)">remove_calib</a>	WAVEFORM = REMOVE_CALIB(WAVEFORM) removes calibration factor</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = delfield(w,field_to_delete, ignoredvalue)</a>
+0002    <span class="comment">%DELFIELD removes fields from waveform object(s)</span>
+0003    <span class="comment">%   w = delfield(waveform, fieldname)</span>
+0004    <span class="comment">%       if a user-defined field exists whose name matches the string within</span>
+0005    <span class="comment">%       FIELDNAME exists, then it will be deleted from the waveform(s).</span>
+0006    <span class="comment">%       This will not remove fields intrinsic to the waveform object.</span>
+0007    <span class="comment">%</span>
+0008    <span class="comment">%       If the field does NOT exist, no error or warning will occur.</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">%   Input Arguments</span>
+0011    <span class="comment">%       WAVEFORM: a waveform object    N-DIMENSIONAL</span>
+0012    <span class="comment">%       FIELDNAME: case insensitive string name of the field to delete.</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">%   See also WAVEFORM/ADDFIELD, WAVEFORM/GET -- 'misc_fields'</span>
+0015    
+0016    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0017    <span class="comment">% $Date$</span>
+0018    <span class="comment">% $Revision$</span>
+0019    
+0020    <span class="keyword">if</span> ischar(field_to_delete)
+0021       field_to_delete = {upper(field_to_delete)}; <span class="comment">%convert to cell</span>
+0022    <span class="keyword">else</span>
+0023       <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(field_to_delete)
+0024          warning(<span class="string">'Waveform:delfield:emptyFieldName'</span>,<span class="string">'empty field name'</span>)
+0025          <span class="keyword">return</span>
+0026       <span class="keyword">else</span>
+0027          error(<span class="string">'Waveform:delfield:invalidFieldName'</span>,<span class="keyword">...</span>
+0028             <span class="string">'fieldname must be a string, not a %s'</span>, class(field_to_delete));
+0029       <span class="keyword">end</span>
+0030    <span class="keyword">end</span>
+0031    
+0032    <span class="keyword">for</span> n=1:numel(w)
+0033       miscF = w(n).misc_fields;
+0034       mask = ~strcmp(miscF, field_to_delete);
+0035       w(n).misc_fields = w(n).misc_fields(mask);
+0036       w(n).misc_values = w(n).misc_values(mask);
+0037    <span class="keyword">end</span>
+0038 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

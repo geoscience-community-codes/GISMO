@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Netmag</title>
+  <meta name="keywords" content="Netmag">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">catalog</a> &gt; Netmag.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>Netmag
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Netmag.html" class="code" title="">Netmag</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Netmag.html" class="code" title="">Netmag</a>	</li><li><a href="readCatalog.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog</a>	READCATALOG: Read seismic events from common file formats & data sources.</li><li><a href="readCatalog2.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog2</a>	READCATALOG: Read seismic events from common file formats & data sources.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = Netmag(magnitude, varargin);</a></li><li><a href="#_sub2" class="code">function self = set(self, varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="Netmag.html" class="code" title="">Netmag</a>
+0002     <span class="comment">% Netmag</span>
+0003     properties
+0004         magid;
+0005         net;
+0006         orid;
+0007         evid;
+0008         magtype;
+0009         nsta;
+0010         magnitude;
+0011         uncertainty;
+0012         auth;
+0013         stamags;
+0014     <span class="keyword">end</span>
+0015     methods
+0016         <a name="_sub0" href="#_subfunctions" class="code">function self = Netmag(magnitude, varargin);</a>
+0017             <span class="comment">% Parse required, optional and param-value pair arguments,</span>
+0018             <span class="comment">% set default values, and add validation conditions</span>
+0019             <span class="keyword">persistent</span> magid;
+0020             <span class="keyword">if</span> isempty(magid)
+0021                 magid = 1;
+0022             <span class="keyword">else</span>
+0023                 magid = magid + 1;
+0024             <span class="keyword">end</span>  
+0025             p = inputParser;
+0026             <span class="keyword">if</span> magnitude==-999 <span class="comment">% deal with Antelope NULL value</span>
+0027                 magnitude=NaN;
+0028             <span class="keyword">end</span>
+0029             p.addRequired(<span class="string">'magnitude'</span>, @(m) (m&gt;-3 &amp; m&lt;10) | isnan(m));
+0030             p.addParamValue(<span class="string">'magid'</span>, magid, @(i) floor(i)==i);
+0031             p.addParamValue(<span class="string">'net'</span>, <span class="string">'_'</span>, @isstr);
+0032             p.addParamValue(<span class="string">'orid'</span>, NaN, @(i) floor(i)==i);
+0033             p.addParamValue(<span class="string">'evid'</span>, NaN, @(i) floor(i)==i); 
+0034             p.addParamValue(<span class="string">'magtype'</span>, <span class="string">''</span>, @isstr);
+0035             p.addParamValue(<span class="string">'nsta'</span>, NaN, @(i) floor(i)==i);
+0036             p.addParamValue(<span class="string">'uncertainty'</span>, NaN, @isnumeric);  
+0037             p.addParamValue(<span class="string">'auth'</span>, <span class="string">''</span>, @isstr);
+0038             p.addParamValue(<span class="string">'stamags'</span>, []);          
+0039             p.parse(magnitude, varargin{:});
+0040             fields = fieldnames(p.Results);
+0041             <span class="keyword">for</span> i=1:length(fields)
+0042                 field=fields{i};
+0043                 <span class="comment">%val = eval(sprintf('p.Results.%s;',field));</span>
+0044                 val = p.Results.(field);
+0045                 self = self.set(field, val);
+0046             <span class="keyword">end</span>                        
+0047         <span class="keyword">end</span>
+0048         <span class="comment">%% SET</span>
+0049         <a name="_sub1" href="#_subfunctions" class="code">function self = set(self, varargin)</a>
+0050             <span class="comment">%SET Set properties</span>
+0051             <span class="comment">%   self = set(self,'property_name', val, ['property_name2', val2])</span>
+0052             <span class="comment">%   For a list of valid property names, type:</span>
+0053             <span class="comment">%       properties(self)</span>
+0054 
+0055             Vidx = 1 : numel(varargin);
+0056 
+0057             <span class="keyword">while</span> numel(Vidx) &gt;= 2
+0058                 prop_name = upper(varargin{Vidx(1)});
+0059                 val = varargin{Vidx(2)};
+0060                 mask = strcmpi(prop_name, properties(self));
+0061                 <span class="keyword">if</span> any(mask)
+0062                     mc = metaclass(self);
+0063                     i = find(mask);
+0064                     prop_name = mc.PropertyList(i).Name;
+0065                     <span class="keyword">if</span> isempty(mc.PropertyList(i).GetMethod)
+0066                         <span class="comment">% The properties here need to have</span>
+0067                         <span class="comment">% SetAccess==public</span>
+0068                         <span class="comment">% eval(sprintf('self.%s=val;',prop_name));</span>
+0069                         self.(prop_name) = val;
+0070                     <span class="keyword">else</span>
+0071                         warning(<span class="string">'Property %s is a derived property and cannot be set'</span>,prop_name);
+0072                     <span class="keyword">end</span>
+0073                 <span class="keyword">end</span>
+0074                 Vidx(1:2) = []; <span class="comment">%done with those parameters, move to the next ones...</span>
+0075             <span class="keyword">end</span> 
+0076         <span class="keyword">end</span> 
+0077     <span class="keyword">end</span>
+0078 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

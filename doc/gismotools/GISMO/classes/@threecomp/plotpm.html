@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plotpm</title>
+  <meta name="keywords" content="plotpm">
+  <meta name="description" content="PLOTPM Plot particle motion coefficients.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@threecomp</a> &gt; plotpm.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@threecomp&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>plotpm
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>PLOTPM Plot particle motion coefficients.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function plotpm(TC); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">PLOTPM Plot particle motion coefficients.
+ PLOTPM(TC) Plot the particple motion coefficients from threecompcomp
+ object TC.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="diagnostic.html" class="code" title="function diagnostic(threecomp)">diagnostic</a>	DIAGNOSTIC check for accurate behavior of threecomp object.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function plotpm(TC);</a>
+0002 
+0003 <span class="comment">%PLOTPM Plot particle motion coefficients.</span>
+0004 <span class="comment">% PLOTPM(TC) Plot the particple motion coefficients from threecompcomp</span>
+0005 <span class="comment">% object TC.</span>
+0006 <span class="comment">%</span>
+0007 
+0008 <span class="keyword">if</span> numel(TC)&gt;1
+0009     error(<span class="string">'Threecomp:plotpm:tooManyObjects'</span>, <span class="keyword">...</span>
+0010         [<span class="string">'Plot only operates on a single threecomp object. '</span> <span class="keyword">...</span>
+0011         <span class="string">'Select a single object using an index such as TC(n).'</span>]);
+0012 <span class="keyword">end</span>
+0013 
+0014 <span class="keyword">if</span> <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC,<span class="string">'COMPLETENESS'</span>)~=2
+0015     error(<span class="string">'Threecomp:plotpm:emptyFields'</span>,<span class="string">'Necessary threecomp fields are not filled'</span>);
+0016 <span class="keyword">end</span>
+0017     
+0018     
+0019 figure(<span class="string">'Position'</span>,[50 0 900 1200],<span class="string">'Color'</span>,<span class="string">'w'</span>);
+0020 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gcf,<span class="string">'DefaultLineLineWidth'</span>,1);
+0021 
+0022 <span class="comment">% plot Z, N, E</span>
+0023 subplot(3,1,1);
+0024 scale = 0.75;
+0025 D = double(TC.traces(1:3));
+0026 normval = max(max(abs(D)));
+0027 D = scale * D./normval;            <span class="comment">% do not normalize trace amplitudes</span>
+0028 t = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces(1),<span class="string">'timevector'</span>); 
+0029 t = (t-t(1))*86400;
+0030 hold on; box on;
+0031 <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(t,D(:,1)+1,<span class="string">'-'</span>,<span class="string">'Color'</span>,[0 0 0.3]);
+0032 <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(t,D(:,2)+0,<span class="string">'-'</span>,<span class="string">'Color'</span>,[0 0.3 0]);
+0033 <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(t,D(:,3)-1,<span class="string">'-'</span>,<span class="string">'Color'</span>,[0.3 0 0]);
+0034 ylim([-1-scale 1+scale]);
+0035 xlabel(<span class="string">''</span>);
+0036 title([<span class="string">'Station: '</span> <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces(1),<span class="string">'station'</span>) <span class="string">'   Starting at '</span> datestr(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces(1),<span class="string">'start'</span>),<span class="string">'yyyy/mm/dd HH:MM:SS.FFF'</span>) ]);
+0037 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'YGrid'</span>,<span class="string">'on'</span>); <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'XGrid'</span>,<span class="string">'on'</span>);
+0038 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>( gca , <span class="string">'YTick'</span> , [-1:1] );
+0039 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>( gca , <span class="string">'YTickLabel'</span> , fliplr(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces,<span class="string">'CHANNEL'</span>)) );
+0040 <span class="comment">%</span>
+0041 <span class="comment">% set title</span>
+0042 titlestr = ([<span class="string">'Station: '</span> <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces(1),<span class="string">'station'</span>) <span class="string">'      Starting at '</span> datestr(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces(1),<span class="string">'start'</span>),<span class="string">'yyyy/mm/dd HH:MM:SS.FFF'</span>)]);
+0043 <span class="comment">% orid = num2str(get(TC.traces(1),'ORIGIN_ORID'));</span>
+0044 <span class="comment">% if ~isempty(orid)</span>
+0045 <span class="comment">%     titlestr = [titlestr '      orid: ' orid];</span>
+0046 <span class="comment">% end</span>
+0047 title(titlestr,<span class="string">'FontSize'</span>,14);
+0048 
+0049 
+0050 <span class="comment">% plot energy</span>
+0051 subplot(6,1,3);
+0052 <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(TC.energy,<span class="string">'k-'</span>);
+0053 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'YScale'</span>,<span class="string">'linear'</span>);
+0054 d = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.energy,<span class="string">'Data'</span>);
+0055 ylim([0 1.1*max(d)]);
+0056 legend(<span class="string">'Energy'</span>,1);
+0057 title(<span class="string">''</span>);
+0058 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'XTickLabel'</span>,[]);
+0059 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'XGrid'</span>,<span class="string">'on'</span>)
+0060 
+0061 
+0062 <span class="comment">% plot rectilinearity and planarity</span>
+0063 subplot(6,1,4);
+0064 <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(TC.rectilinearity,<span class="string">'ko'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>);
+0065 hold on;
+0066 <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(TC.planarity,<span class="string">'ko'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'y'</span>);
+0067 xlabel(<span class="string">''</span>)
+0068 ylim([0 1]);
+0069 legend(<span class="string">'Rectilinearity'</span>,<span class="string">'Planarity'</span>,1);
+0070 title(<span class="string">''</span>);
+0071 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'XTickLabel'</span>,[]);
+0072 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'XGrid'</span>,<span class="string">'on'</span>)
+0073 
+0074 
+0075 <span class="comment">% plot azimuth</span>
+0076 subplot(6,1,5);
+0077 <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(TC.azimuth,<span class="string">'ko'</span>,<span class="string">'MarkerFaceColor'</span>,[1 .7 0]);
+0078 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'YTick'</span>,[-360:90:360]);
+0079 ylim([-1 361]);
+0080 xlabel(<span class="string">''</span>)
+0081 legend(<span class="string">'Azimuth'</span>,1);
+0082 title(<span class="string">''</span>);
+0083 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'XTickLabel'</span>,[]);
+0084 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'XGrid'</span>,<span class="string">'on'</span>)
+0085 
+0086 
+0087 <span class="comment">% plot inclination</span>
+0088 subplot(6,1,6);
+0089 <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(TC.inclination,<span class="string">'ko'</span>,<span class="string">'MarkerFaceColor'</span>,[1 .7 0]);
+0090 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'YTick'</span>,[-90:30:90]);
+0091 ylim([-1 91]);
+0092 xlabel(<span class="string">''</span>)
+0093 legend(<span class="string">'Inclination'</span>,1);
+0094 title(<span class="string">''</span>);
+0095 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'XGrid'</span>,<span class="string">'on'</span>)
+0096 
+0097 
+0098 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gcf, <span class="string">'paperorientation'</span>, <span class="string">'portrait'</span>);
+0099 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gcf, <span class="string">'paperposition'</span>, [.25 .5 8 10] );
+0100 <span class="comment">%print(gcf, '-depsc2', ['tmp.ps']);</span>
+0101</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

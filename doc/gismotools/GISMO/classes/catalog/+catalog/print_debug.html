@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of print_debug</title>
+  <meta name="keywords" content="print_debug">
+  <meta name="description" content="PRINT_DEBUG optionally display text based on the debug level.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">catalog</a> &gt; <a href="index.html">+catalog</a> &gt; print_debug.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog/+catalog&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>print_debug
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>PRINT_DEBUG optionally display text based on the debug level.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function print_debug(the_text, level) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> PRINT_DEBUG optionally display text based on the debug level.
+
+    PRINT_DEBUG is useful for controlling the level of verboseness in a MATLAB application.
+    You use it to specify the debug level (an integer) at which to display a certain message.
+    
+    EXAMPLE:
+
+    libgt.print_debug('Welcome to MyApp', 1)
+    outfile = 'myapp.txt';
+    libgt.print_debug(sprintf('output filename = %s',outfile), 3)
+
+    If the debug level is set at 0, nothing will display.
+    If set at 1 (or 2), 'Welcome to MyApp' would display.
+    if set at 3 (or higher) 'Welcome to My App', 'output filename = myapp.txt' would display.
+
+    To set the debug level, use set_debug.
+ 
+    See also set_debug, setpref, getpref.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function print_debug(the_text, level)</a>
+0002 <span class="comment">% PRINT_DEBUG optionally display text based on the debug level.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    PRINT_DEBUG is useful for controlling the level of verboseness in a MATLAB application.</span>
+0005 <span class="comment">%    You use it to specify the debug level (an integer) at which to display a certain message.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    EXAMPLE:</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%    libgt.print_debug('Welcome to MyApp', 1)</span>
+0010 <span class="comment">%    outfile = 'myapp.txt';</span>
+0011 <span class="comment">%    libgt.print_debug(sprintf('output filename = %s',outfile), 3)</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%    If the debug level is set at 0, nothing will display.</span>
+0014 <span class="comment">%    If set at 1 (or 2), 'Welcome to MyApp' would display.</span>
+0015 <span class="comment">%    if set at 3 (or higher) 'Welcome to My App', 'output filename = myapp.txt' would display.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%    To set the debug level, use set_debug.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%    See also set_debug, setpref, getpref.</span>
+0020 
+0021 <span class="comment">% AUTHOR: Ronni Grapenthin and Glenn Thompson, UAF-GI</span>
+0022 <span class="comment">% $Date: 2012-04-11 12:15:09 -0400 (Wed, 11 Apr 2012) $</span>
+0023 <span class="comment">% $Revision: 348 $</span>
+0024 <span class="comment">% Modified by Glenn Thompson: 2010-03-10: Added error handling for case that runmode pref hasn't been set</span>
+0025 <span class="comment">% Modified by Glenn Thompson: 2010-03-10: To use multiple levels of debug (0 = none, 1 = some, 2 = higher):</span>
+0026 
+0027    <span class="keyword">try</span>    
+0028         <span class="keyword">if</span>(getpref(<span class="string">'runmode'</span>, <span class="string">'debug'</span>) &gt;= level)
+0029              disp(the_text);
+0030         <span class="keyword">end</span>
+0031    <span class="keyword">catch</span>
+0032     <span class="comment">% the runmode preference probably has not been set, so set it here</span>
+0033     setpref(<span class="string">'runmode'</span>, <span class="string">'debug'</span>, 0);
+0034    <span class="keyword">end</span>
+0035 
+0036 <span class="keyword">return</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

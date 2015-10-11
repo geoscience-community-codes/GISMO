@@ -1,0 +1,246 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of xcorr</title>
+  <meta name="keywords" content="xcorr">
+  <meta name="description" content="C = XCORR(C)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@correlation</a> &gt; xcorr.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>xcorr
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>C = XCORR(C)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c=xcorr(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> C = XCORR(C)
+ This function calculates and fills in the correlation and lag fields in a
+ correlation object. The input is a correlation object, presumeably with
+ empty correlation and lag fields. c.C is a matrix of maximum correlation
+ values normalized so that autocorrelations are 1. c.L is the lag time in
+ between the two waveforms required for maximum correlation. To acheive
+ maximum alignment, the value in position (i,j) should be added to the
+ trigger time of trace j, or subtracted from trigger i. Traces can be
+ aligned with the routine ADJUSTTRIG.
+ 
+ By default, peak cross correlation values and lag times are NOT
+ interpolated for sub-sample lag time because this requires a 30-40%
+ increase in CPU time. For some uses, such as relative earthquake
+ locations and coda wave interferometry, such precision is necessary. In
+ these cases, consider the INTERP option below.
+
+ C = XCORR(C,[PRETRIG POSTTRIG]);
+ Perform cross correlation on a cropped portion of the data only. This is 
+ useful when you wish to keep the entire waveform but align the traces based on 
+ the correlation of a particular wavelet. PRETRIG and POSTTRIG are the
+ time in seconds relative to the trigger time. Note that PRETRIG is
+ negative for times before the trigger.
+
+ C = XCORR(C,...,'1xr') Use single trace against one row algorithm
+ (default).
+
+ C = XCORR(C,...,'interp') Perform 2nd-order polynomial fitting to
+ estimate sub-sample lag time. Sub-sample alignment requires an addition
+ 30-40% CPU time but results in highest precision lag times possible.
+
+ C = XCORR(C,...,'row',INDEX) Run correlation only on the traces specified
+ by INDEX. Each trace of INDEX is correlated against the entire set of
+ waveforms. This is useful if a small number of traces has been added to a
+ large correlation matrix. Insead of recomputing the entire correlation
+ and lag matrices, the routine allows only the &quot;added&quot; lines to be filled
+ in. The syntax is a bit clunky. This routine requires the 'row' algorithm
+ and the INDEX list. The two must be used together. Polynomial
+ interpolation of lag values is always used with this algorithm.
+
+
+ -- DEPRICATED ALGORITHMS ---------------------------------------------
+ Because these algorithms seem to have little or no advantages over the
+ '1xr' algorithm they will likely not be updated or improved.
+
+ C = XCORR(C,...,'dec') Same as 1xr but decomposes complex numbers for
+ calculation. Mathworks suggests this approach may be faster in some
+ circumstances. However, initial testing found it slower that the 1xr
+ algorithm.
+
+ C = XCORR(C,...,'1x1') Use single trace against single trace algorithm.
+ Conceivably faster when memory is very limited. In practice I have yet to
+ encounter a situation where this algorithm benchmarks faster than the
+ 1xr.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="crop.html" class="code" title="function c = crop(c,varargin)">crop</a>	c = CROP(c,[PRETRIG POSTTRIG])</li><li><a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="interferogram.html" class="code" title="function [c,t,i,CC,LL] = interferogram(c,varargin)">interferogram</a>	C = INTERFEROGRAM(C)</li><li><a href="stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c=xcorr(c,varargin)</a>
+0002 
+0003 <span class="comment">% C = XCORR(C)</span>
+0004 <span class="comment">% This function calculates and fills in the correlation and lag fields in a</span>
+0005 <span class="comment">% correlation object. The input is a correlation object, presumeably with</span>
+0006 <span class="comment">% empty correlation and lag fields. c.C is a matrix of maximum correlation</span>
+0007 <span class="comment">% values normalized so that autocorrelations are 1. c.L is the lag time in</span>
+0008 <span class="comment">% between the two waveforms required for maximum correlation. To acheive</span>
+0009 <span class="comment">% maximum alignment, the value in position (i,j) should be added to the</span>
+0010 <span class="comment">% trigger time of trace j, or subtracted from trigger i. Traces can be</span>
+0011 <span class="comment">% aligned with the routine ADJUSTTRIG.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% By default, peak cross correlation values and lag times are NOT</span>
+0014 <span class="comment">% interpolated for sub-sample lag time because this requires a 30-40%</span>
+0015 <span class="comment">% increase in CPU time. For some uses, such as relative earthquake</span>
+0016 <span class="comment">% locations and coda wave interferometry, such precision is necessary. In</span>
+0017 <span class="comment">% these cases, consider the INTERP option below.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% C = XCORR(C,[PRETRIG POSTTRIG]);</span>
+0020 <span class="comment">% Perform cross correlation on a cropped portion of the data only. This is</span>
+0021 <span class="comment">% useful when you wish to keep the entire waveform but align the traces based on</span>
+0022 <span class="comment">% the correlation of a particular wavelet. PRETRIG and POSTTRIG are the</span>
+0023 <span class="comment">% time in seconds relative to the trigger time. Note that PRETRIG is</span>
+0024 <span class="comment">% negative for times before the trigger.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% C = XCORR(C,...,'1xr') Use single trace against one row algorithm</span>
+0027 <span class="comment">% (default).</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% C = XCORR(C,...,'interp') Perform 2nd-order polynomial fitting to</span>
+0030 <span class="comment">% estimate sub-sample lag time. Sub-sample alignment requires an addition</span>
+0031 <span class="comment">% 30-40% CPU time but results in highest precision lag times possible.</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% C = XCORR(C,...,'row',INDEX) Run correlation only on the traces specified</span>
+0034 <span class="comment">% by INDEX. Each trace of INDEX is correlated against the entire set of</span>
+0035 <span class="comment">% waveforms. This is useful if a small number of traces has been added to a</span>
+0036 <span class="comment">% large correlation matrix. Insead of recomputing the entire correlation</span>
+0037 <span class="comment">% and lag matrices, the routine allows only the &quot;added&quot; lines to be filled</span>
+0038 <span class="comment">% in. The syntax is a bit clunky. This routine requires the 'row' algorithm</span>
+0039 <span class="comment">% and the INDEX list. The two must be used together. Polynomial</span>
+0040 <span class="comment">% interpolation of lag values is always used with this algorithm.</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">% -- DEPRICATED ALGORITHMS ---------------------------------------------</span>
+0044 <span class="comment">% Because these algorithms seem to have little or no advantages over the</span>
+0045 <span class="comment">% '1xr' algorithm they will likely not be updated or improved.</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">% C = XCORR(C,...,'dec') Same as 1xr but decomposes complex numbers for</span>
+0048 <span class="comment">% calculation. Mathworks suggests this approach may be faster in some</span>
+0049 <span class="comment">% circumstances. However, initial testing found it slower that the 1xr</span>
+0050 <span class="comment">% algorithm.</span>
+0051 <span class="comment">%</span>
+0052 <span class="comment">% C = XCORR(C,...,'1x1') Use single trace against single trace algorithm.</span>
+0053 <span class="comment">% Conceivably faster when memory is very limited. In practice I have yet to</span>
+0054 <span class="comment">% encounter a situation where this algorithm benchmarks faster than the</span>
+0055 <span class="comment">% 1xr.</span>
+0056 
+0057 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0058 <span class="comment">% $Date$</span>
+0059 <span class="comment">% $Revision$</span>
+0060 
+0061 
+0062 
+0063 <span class="comment">% GET INPUT PARAMETERS</span>
+0064 <span class="keyword">if</span> ~isa(c,<span class="string">'correlation'</span>)
+0065     disp(<span class="string">'First input parameter must be a correlation object'</span>);
+0066 <span class="keyword">end</span>
+0067 algorithm = <span class="string">'1xr'</span>;
+0068 c1 = <a href="correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>;
+0069 c1 = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(c1,<span class="string">'WAVEFORM'</span>, <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'WAVEFORM'</span>) );
+0070 c1 = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(c1,<span class="string">'TRIG'</span>, <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'TRIG'</span>) );
+0071 
+0072 
+0073 
+0074 <span class="comment">% CHECK FOR TRACE SUBSET</span>
+0075 <span class="keyword">if</span> length(varargin)&gt;1
+0076     <span class="keyword">if</span> isa(varargin{end},<span class="string">'double'</span>) 
+0077         index = varargin{end};
+0078         varargin = varargin(1:end-1);
+0079     <span class="keyword">end</span>;
+0080 <span class="keyword">end</span>;
+0081 
+0082     <span class="comment">% CHECK ALGORITHM</span>
+0083 <span class="keyword">if</span> ~isempty(varargin)
+0084     <span class="keyword">if</span> ischar(varargin{end})
+0085         algorithm = lower(varargin{end});
+0086         varargin = varargin(1:end-1);
+0087     <span class="keyword">end</span>;
+0088 <span class="keyword">end</span>;
+0089 
+0090     <span class="comment">% APPLY CROPPING</span>
+0091 <span class="keyword">if</span> ~isempty(varargin)
+0092     <span class="keyword">if</span> length(varargin{end})==2       <span class="comment">% check for cropping values</span>
+0093         pretrig =  varargin{1}(1);
+0094         posttrig = varargin{1}(2);
+0095         c1 = <a href="crop.html" class="code" title="function c = crop(c,varargin)">crop</a>(c,pretrig,posttrig);      
+0096     <span class="keyword">end</span>
+0097 <span class="keyword">end</span>;
+0098 
+0099     
+0100     
+0101 <span class="comment">% CREATE MATRIX OF DATA FROM WAVEFORM ARRAY</span>
+0102 <span class="comment">% The correlation object is modified here into a Matlab structure that</span>
+0103 <span class="comment">% shares similar fields to the object except that the the trace data is</span>
+0104 <span class="comment">% stored in a matrix instead of in a waveform object. This structure is</span>
+0105 <span class="comment">% passed to the correlation subroutines as 'd'. The matrix structure</span>
+0106 <span class="comment">% improves computation speed because fft and other routines are optomized</span>
+0107 <span class="comment">% for matrices. This structure is based on the correlation object version</span>
+0108 <span class="comment">% 0.</span>
+0109 d.start = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1.W,<span class="string">'START_MATLAB'</span>);
+0110 d.Fs    = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1.W(1),<span class="string">'Fs'</span>);
+0111 d.trig  = c1.trig;
+0112 d.w = double(c1.W);
+0113 <span class="comment">% d.w     = [];</span>
+0114 <span class="comment">% for i = 1:length(c1.W)</span>
+0115 <span class="comment">%     d.w(:,i) = get(c1.W(i),'DATA');</span>
+0116 <span class="comment">% end;</span>
+0117 clear c1
+0118 
+0119 
+0120 <span class="comment">% EXECUTE CROSS CORRELATION</span>
+0121 <span class="keyword">if</span> exist(<span class="string">'pretrig'</span>,<span class="string">'var'</span>) &amp;&amp; exist(<span class="string">'posttrig'</span>,<span class="string">'var'</span>)
+0122     disp([<span class="string">'using '</span> algorithm <span class="string">' algorithm on the time interval ['</span> num2str(pretrig) <span class="string">' '</span> num2str(posttrig) <span class="string">'] ...'</span> ]);
+0123 <span class="keyword">else</span>
+0124     <span class="comment">%disp(['using ' algorithm ' algorithm ...']);</span>
+0125 <span class="keyword">end</span>    
+0126 <span class="keyword">if</span> strcmp(algorithm,<span class="string">'1x1'</span>)==1
+0127     d = xcorr1x1(d);
+0128   <span class="keyword">elseif</span> strcmp(algorithm,<span class="string">'1xr'</span>)
+0129       d = xcorr1xr(d,0);
+0130   <span class="keyword">elseif</span> strncmpi(algorithm,<span class="string">'int'</span>,3)
+0131       d = xcorr1xr(d,1);
+0132   <span class="keyword">elseif</span> strcmp(algorithm,<span class="string">'dec'</span>)
+0133       d = xcorrdec(d);
+0134   <span class="keyword">elseif</span> strcmp(algorithm,<span class="string">'row'</span>)
+0135       d = xcorrrow(d,c,index);
+0136 <span class="keyword">else</span>
+0137     error(<span class="string">'Correlation algorithm not recognized'</span>);
+0138 <span class="keyword">end</span>;
+0139 
+0140 
+0141 <span class="comment">% ASSIGN CORRELATION PARAMETERS TO ORIGINAL DATA</span>
+0142 c = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( c , <span class="string">'CORR'</span> , d.C );
+0143 c = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( c , <span class="string">'LAG'</span>  , d.L  );
+0144 clear d
+0145 
+0146 
+0147</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

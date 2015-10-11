@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of db_get_site_info</title>
+  <meta name="keywords" content="db_get_site_info">
+  <meta name="description" content="SITE = DB_GET_SITE_INFO(STATION_LIST,DATE,DATABASE_NAME) This">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">contributed_antelope</a> &gt; <a href="index.html">add_waveform_fields</a> &gt; db_get_site_info.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_antelope/add_waveform_fields&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>db_get_site_info
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>SITE = DB_GET_SITE_INFO(STATION_LIST,DATE,DATABASE_NAME) This</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function site = db_get_site_info(stalist,datetime,dbname) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> SITE = DB_GET_SITE_INFO(STATION_LIST,DATE,DATABASE_NAME) This
+ This function takes a list of stations and returns a structure containing
+ relavent fields from the site table. The database must include a
+ site table. The DATE field is required to resolve conflicts when a
+ station configuration has changed through time. Typically the date will
+ match waveform, origin or arrival data that is being extracted from the
+ database. The date should be given is a string format recognized by
+ antelope, or as a matlab-format numeric time.
+
+
+ Example:
+    site = db_get_site_info({'AUL' 'AUH' 'AUW'},'7/1/2007','dbtmp')</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function site = db_get_site_info(stalist,datetime,dbname)</a>
+0002 
+0003 
+0004 <span class="comment">% SITE = DB_GET_SITE_INFO(STATION_LIST,DATE,DATABASE_NAME) This</span>
+0005 <span class="comment">% This function takes a list of stations and returns a structure containing</span>
+0006 <span class="comment">% relavent fields from the site table. The database must include a</span>
+0007 <span class="comment">% site table. The DATE field is required to resolve conflicts when a</span>
+0008 <span class="comment">% station configuration has changed through time. Typically the date will</span>
+0009 <span class="comment">% match waveform, origin or arrival data that is being extracted from the</span>
+0010 <span class="comment">% database. The date should be given is a string format recognized by</span>
+0011 <span class="comment">% antelope, or as a matlab-format numeric time.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Example:</span>
+0015 <span class="comment">%    site = db_get_site_info({'AUL' 'AUH' 'AUW'},'7/1/2007','dbtmp')</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%</span>
+0018 
+0019 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0020 <span class="comment">% $Date$</span>
+0021 <span class="comment">% $Revision$</span>
+0022 
+0023 
+0024 
+0025 <span class="comment">% FORMAT INPUT</span>
+0026 <span class="keyword">if</span> ischar(stalist)
+0027    stalist = cellstr(stalist); 
+0028 <span class="keyword">end</span>
+0029 site.sta = reshape( stalist , numel(stalist), 1 );
+0030 
+0031 
+0032 <span class="comment">% PREP DAY OF YEAR</span>
+0033 <span class="keyword">if</span> isreal(datetime)
+0034    datetime = datestr(datetime,<span class="string">'mm/dd/yy HH:MM:SS.FFF'</span>); 
+0035 <span class="keyword">end</span>
+0036 jday = num2str(yearday(str2epoch(datetime)));
+0037 
+0038 
+0039 <span class="comment">% GET SITE INFO</span>
+0040 db = dbopen(dbname,<span class="string">'r'</span>);
+0041 db = dblookup_table(db,<span class="string">'site'</span>);
+0042 nlist = [];
+0043 <span class="keyword">for</span> n = 1:length(site.sta);
+0044     db1 = dbsubset(db,[<span class="string">'sta=='''</span> site.sta{n} <span class="string">''''</span>]);
+0045     db1 = dbsubset(db1,[<span class="string">'ondate&lt;='''</span> jday <span class="string">''' '</span>]);
+0046     db1 = dbsubset(db1,[<span class="string">'offdate&gt;='''</span> jday <span class="string">''' || offdate==NULL'</span>]);
+0047     recnum = dbquery(db1,<span class="string">'dbRECORD_COUNT'</span>);
+0048     [ site.ondate(n) , site.offdate(n) , site.lat(n) , site.lon(n) , site.elev(n) ] = dbgetv(db1,<span class="string">'ondate'</span>,<span class="string">'offdate'</span>,<span class="string">'lat'</span>,<span class="string">'lon'</span>,<span class="string">'elev'</span>);
+0049 <span class="keyword">end</span>
+0050 dbclose(db);
+0051 site.ondate = reshape( site.ondate , numel(site.ondate), 1 );
+0052 site.offdate = reshape( site.offdate , numel(site.offdate), 1 );
+0053 site.lat = reshape( site.lat , numel(site.lat), 1 );
+0054 site.lon = reshape( site.lon , numel(site.lon), 1 );
+0055 site.elev = reshape( site.elev , numel(site.elev), 1 );
+0056 
+0057 
+0058 
+0059 <span class="comment">% plot(correlation(w));</span>
+0060 <span class="comment">%figure</span>
+0061 <span class="comment">%plot(w(1),'b')</span>
+0062 <span class="comment">%hold on;</span>
+0063 <span class="comment">%plot(w1(1),'g')</span>
+0064 <span class="comment">%plot(w2(1),'r')</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

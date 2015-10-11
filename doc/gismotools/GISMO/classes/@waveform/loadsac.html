@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of loadsac</title>
+  <meta name="keywords" content="loadsac">
+  <meta name="description" content="LOADSAC  creates a waveform from a SAC file">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; loadsac.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>loadsac
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>LOADSAC  creates a waveform from a SAC file</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = loadsac(w, filename) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">LOADSAC  creates a waveform from a SAC file
+
+ old usage, use waveform with a datasource instead
+
+ waveform = loadsac(waveform, filename);
+ To call, the first argument must be a waveform.  However this waveform
+ will never be accessed-- it will be overwritten by the SAC information.
+ Therefore, you can use &quot;waveform&quot; as your first argument, so that a
+ generic waveform object will be created for you
+
+ If the filename is a cell of several SAC file names, such as:
+ fn = {'BOB.SHZ.AV','TOM.EHZ.AV','HARRY.EHZ.AV'}
+ then, w = loadsac(waveform,fn) will return a matrix of waveforms, the
+ same size and shape  as fn.   fn(N,M) will be the SAC file name for the
+ waveform denoted by w(N,M).  In the example above, loadsac will return a
+ 1x3 waveform object, with all three files.
+
+ Programming suggestion?select files using a dialog box, by using the
+ following code:
+   % display the dialog box used for selecting files, and
+   % allow for multiple selections
+   [f,d] = uigetfile({'*.*','all Files (*.*)'}, 'MultiSelect', 'on');
+
+   % f will have one or more file names, so concatenate them
+   % with the directory
+   filename = strcat(d,f);
+
+   %call loadsac to load all these files into waveform objects
+   w = loadsac(waveform, filename);
+
+ The SAC header is parsed out, with the following equivelent fields used
+ by waveform:
+ _waveform_     _sac_
+ STATION        KSTNM
+ CHANNEL        KCMPNM
+ FREQUENCY        1 / DELTA (ODELTA is not used)
+ START            NZYEAR, NZJDAY, NZHOUR, NZMIN, NZSEC, NZMSEC, B
+ UNITS            IDEP is parsed.  IUNK becomes &quot;Counts&quot;
+ All header fields with values - that is, header fields that do not
+ contain the value  -12345 (either numeric or text) - are put into
+ user-defined fields within the waveform.
+ These fields can then be accessed via get/set.  User-defined fields
+ does not include those that are parsed into waveform's predefined  fields
+
+ For more information about the SAC header, and the interpretation of the
+ fields, check out Lawrence Livermore's web site.  Search for &quot;seismic
+ sac&quot; and you'll find it.
+
+ -------------------------------------------------------------------------
+ The functionality of loadsac has been redistributed to the datasource
+ class.  This will allow greater flexibility in traversing directory/file
+ structures and loading arbitrary time-ranges from the SAC files.
+ -------------------------------------------------------------------------
+
+  Here are examples of loading sac files using the datasource class
+  sacfile of interest: &quot;2008/myfile.MSOM.035.sac&quot;
+
+ % here is a datasource that finds files such as:&quot;2008/myfile.MSOM.035.sac&quot;
+ ds = datasource('sac',...        % type of data
+    '%04d/myfile.%s.%03d.sac',... % filename described in sprintf terms
+    'year','station','jday');     % used to determine filename at runtime
+
+ %  and here is a datasource tied to a specific file
+ ds2 = datasource('sac','specificpath/specificfilename');
+
+ %     Here's a scnlobject filled with wildcards,
+ %     that will grab any station or channel
+ anyscnl = scnlobject('*','*','*','*');
+
+ %     and here's one that is specific to our station of interest
+ scnl = scnlobject('MSOM','BHZ','AV'); %% specific station
+
+ % load any station for a timespan of interest
+ w = waveform(ds,anyscnl,'2/4/2008 04:40','2/4/2008 04:53');
+    or
+ % load our specific sacfile, making sure to grab the whole thing
+ w = waveform(ds2,anyscnl,'1/1/2000','12/31/2009');</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = loadsac(w, filename)</a>
+0002    <span class="comment">%LOADSAC  creates a waveform from a SAC file</span>
+0003    <span class="comment">%</span>
+0004    <span class="comment">% old usage, use waveform with a datasource instead</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">% waveform = loadsac(waveform, filename);</span>
+0007    <span class="comment">% To call, the first argument must be a waveform.  However this waveform</span>
+0008    <span class="comment">% will never be accessed-- it will be overwritten by the SAC information.</span>
+0009    <span class="comment">% Therefore, you can use &quot;waveform&quot; as your first argument, so that a</span>
+0010    <span class="comment">% generic waveform object will be created for you</span>
+0011    <span class="comment">%</span>
+0012    <span class="comment">% If the filename is a cell of several SAC file names, such as:</span>
+0013    <span class="comment">% fn = {'BOB.SHZ.AV','TOM.EHZ.AV','HARRY.EHZ.AV'}</span>
+0014    <span class="comment">% then, w = loadsac(waveform,fn) will return a matrix of waveforms, the</span>
+0015    <span class="comment">% same size and shape  as fn.   fn(N,M) will be the SAC file name for the</span>
+0016    <span class="comment">% waveform denoted by w(N,M).  In the example above, loadsac will return a</span>
+0017    <span class="comment">% 1x3 waveform object, with all three files.</span>
+0018    <span class="comment">%</span>
+0019    <span class="comment">% Programming suggestion?select files using a dialog box, by using the</span>
+0020    <span class="comment">% following code:</span>
+0021    <span class="comment">%   % display the dialog box used for selecting files, and</span>
+0022    <span class="comment">%   % allow for multiple selections</span>
+0023    <span class="comment">%   [f,d] = uigetfile({'*.*','all Files (*.*)'}, 'MultiSelect', 'on');</span>
+0024    <span class="comment">%</span>
+0025    <span class="comment">%   % f will have one or more file names, so concatenate them</span>
+0026    <span class="comment">%   % with the directory</span>
+0027    <span class="comment">%   filename = strcat(d,f);</span>
+0028    <span class="comment">%</span>
+0029    <span class="comment">%   %call loadsac to load all these files into waveform objects</span>
+0030    <span class="comment">%   w = loadsac(waveform, filename);</span>
+0031    <span class="comment">%</span>
+0032    <span class="comment">% The SAC header is parsed out, with the following equivelent fields used</span>
+0033    <span class="comment">% by waveform:</span>
+0034    <span class="comment">% _waveform_     _sac_</span>
+0035    <span class="comment">% STATION        KSTNM</span>
+0036    <span class="comment">% CHANNEL        KCMPNM</span>
+0037    <span class="comment">% FREQUENCY        1 / DELTA (ODELTA is not used)</span>
+0038    <span class="comment">% START            NZYEAR, NZJDAY, NZHOUR, NZMIN, NZSEC, NZMSEC, B</span>
+0039    <span class="comment">% UNITS            IDEP is parsed.  IUNK becomes &quot;Counts&quot;</span>
+0040    <span class="comment">% All header fields with values - that is, header fields that do not</span>
+0041    <span class="comment">% contain the value  -12345 (either numeric or text) - are put into</span>
+0042    <span class="comment">% user-defined fields within the waveform.</span>
+0043    <span class="comment">% These fields can then be accessed via get/set.  User-defined fields</span>
+0044    <span class="comment">% does not include those that are parsed into waveform's predefined  fields</span>
+0045    <span class="comment">%</span>
+0046    <span class="comment">% For more information about the SAC header, and the interpretation of the</span>
+0047    <span class="comment">% fields, check out Lawrence Livermore's web site.  Search for &quot;seismic</span>
+0048    <span class="comment">% sac&quot; and you'll find it.</span>
+0049    <span class="comment">%</span>
+0050    <span class="comment">% -------------------------------------------------------------------------</span>
+0051    <span class="comment">% The functionality of loadsac has been redistributed to the datasource</span>
+0052    <span class="comment">% class.  This will allow greater flexibility in traversing directory/file</span>
+0053    <span class="comment">% structures and loading arbitrary time-ranges from the SAC files.</span>
+0054    <span class="comment">% -------------------------------------------------------------------------</span>
+0055    <span class="comment">%</span>
+0056    <span class="comment">%  Here are examples of loading sac files using the datasource class</span>
+0057    <span class="comment">%  sacfile of interest: &quot;2008/myfile.MSOM.035.sac&quot;</span>
+0058    <span class="comment">%</span>
+0059    <span class="comment">% % here is a datasource that finds files such as:&quot;2008/myfile.MSOM.035.sac&quot;</span>
+0060    <span class="comment">% ds = datasource('sac',...        % type of data</span>
+0061    <span class="comment">%    '%04d/myfile.%s.%03d.sac',... % filename described in sprintf terms</span>
+0062    <span class="comment">%    'year','station','jday');     % used to determine filename at runtime</span>
+0063    <span class="comment">%</span>
+0064    <span class="comment">% %  and here is a datasource tied to a specific file</span>
+0065    <span class="comment">% ds2 = datasource('sac','specificpath/specificfilename');</span>
+0066    <span class="comment">%</span>
+0067    <span class="comment">% %     Here's a scnlobject filled with wildcards,</span>
+0068    <span class="comment">% %     that will grab any station or channel</span>
+0069    <span class="comment">% anyscnl = scnlobject('*','*','*','*');</span>
+0070    <span class="comment">%</span>
+0071    <span class="comment">% %     and here's one that is specific to our station of interest</span>
+0072    <span class="comment">% scnl = scnlobject('MSOM','BHZ','AV'); %% specific station</span>
+0073    <span class="comment">%</span>
+0074    <span class="comment">% % load any station for a timespan of interest</span>
+0075    <span class="comment">% w = waveform(ds,anyscnl,'2/4/2008 04:40','2/4/2008 04:53');</span>
+0076    <span class="comment">%    or</span>
+0077    <span class="comment">% % load our specific sacfile, making sure to grab the whole thing</span>
+0078    <span class="comment">% w = waveform(ds2,anyscnl,'1/1/2000','12/31/2009');</span>
+0079    
+0080    <span class="comment">% VERSION: 1.1 of waveform objects</span>
+0081    <span class="comment">% AUTHOR: Celso Reyes</span>
+0082    <span class="comment">% LASTUPDATE: 3/14/2009</span>
+0083    
+0084    w = load_sac(filename);
+0085 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

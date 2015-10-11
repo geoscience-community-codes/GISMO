@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of test_waveform_constructor</title>
+  <meta name="keywords" content="test_waveform_constructor">
+  <meta name="description" content="test waveform creation">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../index.html">GISMO</a> &gt; <a href="index.html">test_scripts</a> &gt; test_waveform_constructor.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/test_scripts&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>test_waveform_constructor
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>test waveform creation</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> test waveform creation</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% test waveform creation</span>
+0002 
+0003 data = 1:(10*60*60*2.5);
+0004 st_mat = now-1;
+0005 st_txt = <span class="string">'5/5/2014'</span>;
+0006 et_mat = now-0.98;
+0007 et_txt = <span class="string">'5/5/2004 01:00:00'</span>;
+0008 sta = <span class="string">'XXXX'</span>;
+0009 net = <span class="string">'NW'</span>;
+0010 cha = <span class="string">'BHZ'</span>;
+0011 loc = <span class="string">'00'</span>;
+0012 nscltxt = [net, <span class="string">'.'</span>, sta, <span class="string">'.'</span>, loc, <span class="string">'.'</span>, cha];
+0013 hz = 20;
+0014 unit = <span class="string">'CNT'</span>;
+0015 scnl = scnlobject(sta,cha,net,loc);
+0016 tag = channeltag(net,sta,loc,cha);
+0017 ds = datasource;
+0018 
+0019 disp(<span class="string">'************* starting test  **********'</span>);
+0020 disp(<span class="string">'CREATE: default'</span>)
+0021 w = waveform()
+0022 disp(<span class="string">'CREATE: copy'</span>)
+0023 w2 = w
+0024 disp(<span class="string">'CREATE: sta cha hz st data'</span>)
+0025 w = waveform(sta,       cha,  hz,      st_mat,  data)
+0026 disp(<span class="string">'CREATE: scnl hz st data unit'</span>)
+0027 w = waveform(scnl,      hz,   st_mat,  data,    unit)
+0028 disp(<span class="string">'CREATE: nscltxt hz st data unit'</span>)
+0029 w = waveform(nscltxt,   hz,   st_mat,  data,    unit)
+0030 disp(<span class="string">'CREATE: tag hz st data unit'</span>)
+0031 w = waveform(tag,       hz,   st_mat,  data,    unit)
+0032 disp(<span class="string">'CREATE: scnl hz st data'</span>)
+0033 w = waveform(scnl,      hz,   st_mat,  data)
+0034 disp(<span class="string">'CREATE: nscltxt hz st data'</span>)
+0035 w = waveform(nscltxt,   hz,   st_mat,  data)
+0036 disp(<span class="string">'CREATE: tag hz st data'</span>)
+0037 w = waveform(tag,       hz,   st_mat,  data)
+0038 
+0039 
+0040 disp(<span class="string">'CREATE: tag hz st data unit nocombine'</span>)
+0041 w = waveform(tag,       hz,   st_mat,  data,    unit, <span class="string">'nocombine'</span>)
+0042 
+0043 disp(<span class="string">'** done **'</span>);
+0044 
+0045</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of corrplot</title>
+  <meta name="keywords" content="corrplot">
+  <meta name="description" content="Called internally by correlation/plot to plot correlation matrix.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@correlation</a> &gt; <a href="index.html">private</a> &gt; corrplot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>corrplot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Called internally by correlation/plot to plot correlation matrix.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function corrplot(c) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Called internally by correlation/plot to plot correlation matrix.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function corrplot(c)</a>
+0002 
+0003 <span class="comment">% Called internally by correlation/plot to plot correlation matrix.</span>
+0004 
+0005 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0006 <span class="comment">% $Date$</span>
+0007 <span class="comment">% $Revision$</span>
+0008 
+0009 
+0010 <span class="comment">% PREP PLOT</span>
+0011 figure(<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'Position'</span>,[50 50 600 500]);
+0012 set(gcf,<span class="string">'DefaultAxesFontSize'</span>,14);
+0013 imagesc(c.C);
+0014 title(<span class="string">'Maximum correlation coefficient'</span>);
+0015 
+0016 
+0017 <span class="comment">% ADD DATES TO AXES</span>
+0018 n = length(c.trig);
+0019 set(gca,<span class="string">'XTick'</span>,[1:round(n/25):n]);
+0020 set(gca,<span class="string">'YTick'</span>,[1:round(n/25):n]);
+0021 yt = get(gca,<span class="string">'YTick'</span>);
+0022 set(gca,<span class="string">'YTickLabel'</span>,datestr(c.trig(yt),<span class="string">'yyyy-mm-dd HH:MM'</span>),<span class="string">'FontSize'</span>,6);
+0023 
+0024 <span class="comment">%xt = get(gca,'XTick');</span>
+0025 <span class="comment">%set(gca,'XTickLabel',datestr(c.trig(xt),'yyyy-mm-dd HH:MM'),'FontSize',6,'Rotation',90);</span>
+0026 
+0027 
+0028 <span class="comment">% DRESS UP THE FIGURE</span>
+0029 caxis([0 1]);
+0030 cmap = load(<span class="string">'colormap_corr.txt'</span>);
+0031 colormap(cmap);
+0032 colorbar;
+0033 xlabel(<span class="string">'Event number'</span>);
+0034 ylabel(<span class="string">'Event date'</span>);
+0035 
+0036 
+0037 <span class="comment">%PRINT OUT FIGURE</span>
+0038 set(gcf, <span class="string">'paperorientation'</span>, <span class="string">'portrait'</span>);
+0039 set(gcf, <span class="string">'paperposition'</span>, [1.25 2.5 6 6] );
+0040 <span class="comment">%print(gcf, '-depsc2', 'FIG_tartan.ps');</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

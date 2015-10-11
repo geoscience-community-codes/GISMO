@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of waveform2sound</title>
+  <meta name="keywords" content="waveform2sound">
+  <meta name="description" content="WAVEFORM2SOUND generate a wav file from the existing waveform">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; waveform2sound.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>waveform2sound
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>WAVEFORM2SOUND generate a wav file from the existing waveform</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function isSuccessful = waveform2sound(w, outfile, speedup) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">WAVEFORM2SOUND generate a wav file from the existing waveform
+   Success = waveform2sound(waveform, outfile, speedup)
+
+   Input Arguments
+       WAVEFORM - a single waveform produces a mono output.  Two waveforms
+                produce stereo, with waveform(1)=Left, waveform(2)=Right
+       OUTFILE - complete path and filename for output (*.wav) file
+       SPEEDUP - speed factor.  Typically, 100.  this brings 
+               Other speedup factors might produce funny sounding intros
+
+   Output Argument
+       SUCCESS - a logical value (true/false) indicating on whether this
+               worked or not
+
+   See also WAVREAD, WAVWRITE</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="demean.html" class="code" title="function w = demean (w)">demean</a>	DEMEAN remove offset voltage from signal</li><li><a href="disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="fix_data_length.html" class="code" title="function w = fix_data_length(w, maxlen)">fix_data_length</a>	FIX_DATA_LENGTH adjust length of waveform data to allow batch processing</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="getpeaks.html" class="code" title="function peakmask = getpeaks(w)">getpeaks</a>	GETPEAKS return mask for peak values for a waveform</li><li><a href="hilbert.html" class="code" title="function W = hilbert(W, n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li><li><a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function wh = waveheader(w)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function isSuccessful = waveform2sound(w, outfile, speedup)</a>
+0002 <span class="comment">%WAVEFORM2SOUND generate a wav file from the existing waveform</span>
+0003 <span class="comment">%   Success = waveform2sound(waveform, outfile, speedup)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   Input Arguments</span>
+0006 <span class="comment">%       WAVEFORM - a single waveform produces a mono output.  Two waveforms</span>
+0007 <span class="comment">%                produce stereo, with waveform(1)=Left, waveform(2)=Right</span>
+0008 <span class="comment">%       OUTFILE - complete path and filename for output (*.wav) file</span>
+0009 <span class="comment">%       SPEEDUP - speed factor.  Typically, 100.  this brings</span>
+0010 <span class="comment">%               Other speedup factors might produce funny sounding intros</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%   Output Argument</span>
+0013 <span class="comment">%       SUCCESS - a logical value (true/false) indicating on whether this</span>
+0014 <span class="comment">%               worked or not</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%   See also WAVREAD, WAVWRITE</span>
+0017 
+0018 <span class="comment">%references to filter object was removed: waveform is independent of filter</span>
+0019 <span class="comment">%and need no nothing about it.  Prefilter instead!</span>
+0020 
+0021 <span class="comment">% VERSION: 1.0 of waveform objects</span>
+0022 <span class="comment">% AUTHOR: Celso Reyes (celso@gi.alaska.edu)</span>
+0023 <span class="comment">% LASTUPDATE: 4/6/2009</span>
+0024 
+0025 <span class="comment">%our conventions</span>
+0026 LEFT = 1;
+0027 RIGHT = 2;
+0028 
+0029 <span class="keyword">if</span> numel(w) &gt; 2 <span class="comment">%too many waveforms, we'll use first two for stereo</span>
+0030     warning(<span class="string">'Waveform:waveform2sound:tooManyWaveforms'</span>,<span class="string">'Only using first two waveforms!'</span>);
+0031     w = [w(1) w(2)];
+0032 <span class="keyword">elseif</span> isscalar(w)
+0033     w = [w(1) w(1)];
+0034 <span class="keyword">end</span>
+0035 
+0036 w = <a href="demean.html" class="code" title="function w = demean (w)">demean</a>(w); <span class="comment">%make sure we're centered about zero...</span>
+0037 
+0038 <span class="keyword">for</span> n = 1 : numel(w)
+0039     loudestSample = <a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="abs.html" class="code" title="function w = abs(w)">abs</a>(<a href="double.html" class="code" title="function n = double(W, option)">double</a>(w(n))));
+0040     w(n) = w(n) ./ loudestSample; <span class="comment">% normalize.</span>
+0041     
+0042     <span class="comment">% adjust sound level</span>
+0043     h = <a href="hilbert.html" class="code" title="function W = hilbert(W, n)">hilbert</a>(w(n)); <span class="comment">%grab the hilbert envelope</span>
+0044     peakmask = <a href="getpeaks.html" class="code" title="function peakmask = getpeaks(w)">getpeaks</a>(h); <span class="comment">%get the location of the envelope's peaks</span>
+0045     h = <a href="double.html" class="code" title="function n = double(W, option)">double</a>(h); <span class="comment">%grab the actual data</span>
+0046     avgAmp = <a href="mean.html" class="code" title="function y = mean(w)">mean</a>(h(peakmask));<span class="comment">%average of the peaks of the envelope (whew!)</span>
+0047     w(n) = w(n) ./ (avgAmp .* 2); <span class="comment">%set the average peak amplitude to 1/2 max</span>
+0048     clear h loudestSample peakmask avgAmp
+0049 <span class="keyword">end</span>
+0050 w = <a href="fix_data_length.html" class="code" title="function w = fix_data_length(w, maxlen)">fix_data_length</a>(w);     <span class="comment">%make our waveforms the same length</span>
+0051 
+0052 <span class="comment">%grab the headers (the &quot;voice&quot; that announces station and time)</span>
+0053 whL = <a href="#_sub1" class="code" title="subfunction wh = waveheader(w)">waveheader</a>(w(LEFT));
+0054 whR = <a href="#_sub1" class="code" title="subfunction wh = waveheader(w)">waveheader</a>(w(RIGHT));
+0055 
+0056 <span class="comment">%grab longest file and make both same size. (or data will be out of synch)</span>
+0057 maxheader = <a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>(length(whL),length(whR));
+0058 whL(maxheader,1) = 0;
+0059 whR(maxheader,1) = 0;
+0060 
+0061 <span class="comment">%calculate frequency of the new wavefile</span>
+0062 newspeed = speedup .* <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(1),<span class="string">'fs'</span>);  <span class="comment">% for 100x speedup, 100 Hz sampling -- 100Hz * 100 = 10000</span>
+0063 
+0064 LeftChannel = [whL; <a href="double.html" class="code" title="function n = double(W, option)">double</a>(w(LEFT))];
+0065 RightChannel = [whR; <a href="double.html" class="code" title="function n = double(W, option)">double</a>(w(RIGHT))];
+0066 clear w whL whR
+0067 
+0068 <span class="keyword">try</span>
+0069     wavwrite([LeftChannel, RightChannel], newspeed, outfile)
+0070 <span class="keyword">catch</span>
+0071     isSuccessful = false;
+0072     <span class="keyword">return</span> 
+0073 <span class="keyword">end</span>
+0074 isSuccessful = true;
+0075 <span class="keyword">return</span>
+0076 <span class="keyword">end</span>
+0077 
+0078 <a name="_sub1" href="#_subfunctions" class="code">function wh = waveheader(w)</a>
+0079 <span class="comment">% create a soundheader from this info</span>
+0080 
+0081 blankbit =zeros(3000,1);
+0082 
+0083 mydate = datestr(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'start'</span>),30); <span class="comment">%yyyymmddTHHMMSS</span>
+0084 [yy,mo,dd,hh,mi,ss] = strread( mydate,<span class="string">'%4c%2c%2cT%2c%2c%2c'</span>);
+0085 sdirect = <span class="string">'/home/celso/CRON/soundbits/'</span>;
+0086 
+0087 <span class="comment">%assemble the new waveform</span>
+0088 <span class="keyword">try</span>
+0089     sta = wavread([sdirect,<span class="string">'station'</span>, <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'station'</span>), <span class="string">'.wav'</span>]);
+0090 <span class="keyword">catch</span>
+0091     sta = 0;
+0092 <span class="keyword">end</span>;
+0093 
+0094 
+0095 <span class="comment">%for debug purposes</span>
+0096 <a href="disp.html" class="code" title="function disp(w)">disp</a>([sdirect, <span class="string">'number'</span> dd <span class="string">'.wav'</span>]);           <span class="comment">% date</span>
+0097 <a href="disp.html" class="code" title="function disp(w)">disp</a>([sdirect, <span class="string">'month'</span> mo <span class="string">'.wav'</span>]);              <span class="comment">% month</span>
+0098 <a href="disp.html" class="code" title="function disp(w)">disp</a>([sdirect, <span class="string">'number2000.wav'</span>]);               <span class="comment">% 2000</span>
+0099 <a href="disp.html" class="code" title="function disp(w)">disp</a>([sdirect , <span class="string">'number'</span>, yy(3:4), <span class="string">'.wav'</span>]);     <span class="comment">% year</span>
+0100 <a href="disp.html" class="code" title="function disp(w)">disp</a>([sdirect,<span class="string">'number'</span>, hh, <span class="string">'.wav'</span>]);            <span class="comment">% Hour</span>
+0101 <a href="disp.html" class="code" title="function disp(w)">disp</a>([sdirect,<span class="string">'number'</span>, mi, <span class="string">'.wav'</span>]);            <span class="comment">% Minute</span>
+0102 <a href="disp.html" class="code" title="function disp(w)">disp</a>([sdirect,<span class="string">'UTC.wav'</span>]);                       <span class="comment">% UTC</span>
+0103 <span class="comment">%end debug purposes</span>
+0104 <span class="keyword">try</span>
+0105 wh = [<span class="keyword">...</span>
+0106     wavread([sdirect, <span class="string">'number'</span> dd <span class="string">'.wav'</span>]);             <span class="comment">% date</span>
+0107     wavread([sdirect, <span class="string">'month'</span> mo <span class="string">'.wav'</span>]);              <span class="comment">% month</span>
+0108     wavread([sdirect, <span class="string">'number2000.wav'</span>]);               <span class="comment">% 2000</span>
+0109     wavread([sdirect , <span class="string">'number'</span>, yy(3:4), <span class="string">'.wav'</span>]);     <span class="comment">% year</span>
+0110     blankbit;
+0111     wavread([sdirect,<span class="string">'number'</span>, hh, <span class="string">'.wav'</span>]);            <span class="comment">% Hour</span>
+0112     wavread([sdirect,<span class="string">'number'</span>, mi, <span class="string">'.wav'</span>]);            <span class="comment">% Minute</span>
+0113     wavread([sdirect,<span class="string">'UTC.wav'</span>]);                       <span class="comment">% UTC</span>
+0114     blankbit;
+0115     sta;                                                <span class="comment">% Station Code</span>
+0116     blankbit;
+0117     ];
+0118 <span class="keyword">catch</span>
+0119     wh = [0];
+0120 <span class="keyword">end</span>
+0121 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

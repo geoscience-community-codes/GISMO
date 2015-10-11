@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of set</title>
+  <meta name="keywords" content="set">
+  <meta name="description" content="SET inserts properties for threecomp object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@threecomp</a> &gt; set.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@threecomp&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>set
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>SET inserts properties for threecomp object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function TC = set(TC, fieldName, val) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SET inserts properties for threecomp object
+   TC = SET(TC,FIELD,VALUE) asigns VALUE to FIELD for all properties
+   in the threecomp object. Suitable FIELDS include:
+       WAVEFORM         value must be 1x3 waveform object
+       BACKAZIMUTH      value must be scalar or same size as TC</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>	ALIGN Align and trim traces in threecomp object.</li><li><a href="diagnostic.html" class="code" title="function diagnostic(threecomp)">diagnostic</a>	DIAGNOSTIC check for accurate behavior of threecomp object.</li><li><a href="particlemotion.html" class="code" title="function TC = particlemotion(TC, varargin)">particlemotion</a>	PARTICLEMOTION calculates particle motion vectors for threecomp object</li><li><a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="plot2.html" class="code" title="function plot2(TC,varargin)">plot2</a>	PLOT2 a figure of three component traces (deprecated).</li><li><a href="plotpm.html" class="code" title="function plotpm(TC);">plotpm</a>	PLOTPM Plot particle motion coefficients.</li><li><a href="rotate.html" class="code" title="function TC = rotate(TC,varargin)">rotate</a>	Rotate component orientations</li><li><a href="spin.html" class="code" title="function [TC,c2, c3] = spin(TCin,varargin)">spin</a>	SPIN rotate and plot horizontal components</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function TC = set(TC, fieldName, val)</a>
+0002 
+0003 <span class="comment">%SET inserts properties for threecomp object</span>
+0004 <span class="comment">%   TC = SET(TC,FIELD,VALUE) asigns VALUE to FIELD for all properties</span>
+0005 <span class="comment">%   in the threecomp object. Suitable FIELDS include:</span>
+0006 <span class="comment">%       WAVEFORM         value must be 1x3 waveform object</span>
+0007 <span class="comment">%       BACKAZIMUTH      value must be scalar or same size as TC</span>
+0008 <span class="comment">%</span>
+0009 
+0010 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0011 <span class="comment">% $Date$</span>
+0012 <span class="comment">% $Revision$</span>
+0013 
+0014 
+0015 
+0016 <span class="comment">% CHECK INPUT</span>
+0017 <span class="keyword">if</span> nargin ~= 3
+0018     error(<span class="string">'Incorrect number of inputs'</span>);
+0019 <span class="keyword">end</span>
+0020 <span class="keyword">if</span> ~isa(TC,<span class="string">'threecomp'</span>)
+0021     error(<span class="string">'First argument must be a threecomp object'</span>);
+0022 <span class="keyword">end</span>
+0023 <span class="keyword">if</span> ~ischar(fieldName)
+0024     error(<span class="string">'Second argument must be a character string'</span>);
+0025 <span class="keyword">end</span>
+0026 
+0027 <span class="keyword">switch</span> upper(fieldName)
+0028     
+0029     <span class="keyword">case</span> {<span class="string">'WAVEFORM'</span>}
+0030         <span class="keyword">if</span> ~isa(val,<span class="string">'waveform'</span>)
+0031             error(<span class="string">'VALUE is not a waveform object'</span>);
+0032         <span class="keyword">end</span>
+0033         <span class="keyword">if</span> size(val,2)~=3
+0034             error(<span class="string">'Input waveform must be nx3 in size'</span>);
+0035         <span class="keyword">end</span>
+0036         TC.traces = reshape(val,[],3);
+0037         
+0038         
+0039     <span class="keyword">case</span> {<span class="string">'BACKAZIMUTH'</span>}
+0040         <span class="keyword">if</span> ~isa(val,<span class="string">'double'</span>)
+0041             error(<span class="string">'VALUE is not of type double'</span>);
+0042         <span class="keyword">end</span>
+0043         <span class="keyword">if</span> val&lt;0 || val&gt;=360
+0044             error(<span class="string">'BACKAZIMUTH must be between 0-360'</span>);
+0045         <span class="keyword">end</span>
+0046         <span class="keyword">if</span> numel(val)==1
+0047             val = repmat(val,size(TC));
+0048         <span class="keyword">end</span>                     <span class="comment">% NOt WORKING SOMEWHERE HERE&gt;&gt;&gt;&gt;&gt;</span>
+0049         <span class="keyword">for</span> n=1:numel(TC)
+0050             TC(n).backAzimuth = val(n);
+0051         <span class="keyword">end</span>
+0052     <span class="keyword">otherwise</span>
+0053         warning(<span class="string">'can''t understand property name'</span>);
+0054 <span class="keyword">end</span>;
+0055 
+0056</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

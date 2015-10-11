@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of colormap</title>
+  <meta name="keywords" content="colormap">
+  <meta name="description" content="C = COLORMAP(C)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@correlation</a> &gt; colormap.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>colormap
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>C = COLORMAP(C)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = align(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> C = COLORMAP(C)
+ Apply the standard correlation toolbox colormap for cross-correlation
+ values. This is the same colormap used in PLOT(C,'CORR').
+ 
+ C = COLORMAP(C,'CORR')
+ Same as above but specifies the specific correlation colorscale on [0 1].
+
+ C = COLORMAP(C,'LTCORR')
+ A lightened version of the correlation colorscale.
+ 
+ C = COLORMAP(C,'LAG')
+ Specifies the lag plot colorscale.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>	C = COLORMAP(C)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>	C = COLORMAP(C)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = align(c,varargin)</a>
+0002 
+0003 <span class="comment">% C = COLORMAP(C)</span>
+0004 <span class="comment">% Apply the standard correlation toolbox colormap for cross-correlation</span>
+0005 <span class="comment">% values. This is the same colormap used in PLOT(C,'CORR').</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% C = COLORMAP(C,'CORR')</span>
+0008 <span class="comment">% Same as above but specifies the specific correlation colorscale on [0 1].</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% C = COLORMAP(C,'LTCORR')</span>
+0011 <span class="comment">% A lightened version of the correlation colorscale.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% C = COLORMAP(C,'LAG')</span>
+0014 <span class="comment">% Specifies the lag plot colorscale.</span>
+0015 
+0016 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0017 <span class="comment">% $Date$</span>
+0018 <span class="comment">% $Revision$</span>
+0019 
+0020 
+0021 <span class="comment">% READ &amp; CHECK ARGUMENTS</span>
+0022 <span class="keyword">if</span> (nargin&gt;2)
+0023     error(<span class="string">'Wrong number of inputs'</span>);
+0024 <span class="keyword">end</span>;
+0025 
+0026 <span class="keyword">if</span> ~strcmpi(class(c),<span class="string">'correlation'</span>)
+0027     error(<span class="string">'First input must be a correlation object'</span>);
+0028 <span class="keyword">end</span>
+0029 
+0030 <span class="keyword">if</span> nargin==2
+0031     mapname = varargin{1};
+0032 <span class="keyword">else</span>
+0033     mapname = <span class="string">'CORR'</span>;
+0034 <span class="keyword">end</span>
+0035     
+0036 <span class="comment">% GET COLORMAP</span>
+0037 <span class="keyword">if</span> strncmpi(mapname,<span class="string">'COR'</span>,3)
+0038     cmap = load(<span class="string">'colormap_corr.txt'</span>);
+0039     <a href="colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>(cmap);
+0040     caxis([0 1]);
+0041 <span class="keyword">elseif</span> strncmpi(mapname,<span class="string">'LAG'</span>,3)
+0042     cmap = load(<span class="string">'colormap_lag.txt'</span>);
+0043     <a href="colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>(cmap);
+0044 <span class="keyword">elseif</span> strncmpi(mapname,<span class="string">'LTC'</span>,3)
+0045     cmap = load(<span class="string">'colormap_corr.txt'</span>);
+0046     cmap = ( cmap + ones(size(cmap)) ) /2;
+0047     <a href="colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>(cmap);
+0048     caxis([0 1]);
+0049 <span class="keyword">else</span>
+0050     disp(<span class="string">'Color scale not recognized'</span>);
+0051 <span class="keyword">end</span>;
+0052 
+0053</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of load_file</title>
+  <meta name="keywords" content="load_file">
+  <meta name="description" content="LOAD_FILE">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; load_file.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>load_file
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>LOAD_FILE</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function w = load_file(dataRequest) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">LOAD_FILE
+ uses the DATASOURCE class</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function mObj = myObjectsFromCells(searchClass, mycell)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = load_file(dataRequest)</a>
+0002    <span class="comment">%LOAD_FILE</span>
+0003    <span class="comment">% uses the DATASOURCE class</span>
+0004    
+0005    <span class="comment">% VERSION: 1.1 of waveform objects</span>
+0006    <span class="comment">% AUTHOR: Celso Reyes (celso@gi.alaska.edu)</span>
+0007    <span class="comment">% LASTUPDATE: 3/5/2009</span>
+0008    w = waveform; w = w();
+0009    <span class="keyword">if</span> isstruct(dataRequest)
+0010       ds = dataRequest.dataSource;
+0011       w = load_objects_from_file(ds,<span class="keyword">...</span>
+0012          <span class="string">'waveform'</span>,<span class="keyword">...</span>
+0013          dataRequest.scnls,<span class="keyword">...</span>
+0014          dataRequest.startTimes,<span class="keyword">...</span>
+0015          dataRequest.endTimes);
+0016       w = w(:);
+0017    <span class="keyword">else</span>
+0018       filen = dataRequest;
+0019       
+0020       <span class="keyword">if</span> ~exist(filen,<span class="string">'file'</span>)
+0021          disp([<span class="string">'unable to find file: '</span>, filen]);
+0022          <span class="keyword">return</span>
+0023       <span class="keyword">end</span>
+0024       
+0025       <span class="comment">%find out which variables exist within the file...</span>
+0026       fcontents = whos(<span class="string">'-file'</span>,filen);
+0027       variablesToLoad = ismember({fcontents.class},{<span class="string">'waveform'</span>, <span class="string">'cell'</span>});
+0028       <span class="keyword">if</span> ~any(variablesToLoad),
+0029          <span class="comment">%disp(['no items of the this class exist within the file:',filen]);</span>
+0030          <span class="keyword">return</span>
+0031       <span class="keyword">end</span>
+0032       stuff =load(filen,fcontents(variablesToLoad).name);
+0033       
+0034       fieldn = fieldnames(stuff);
+0035       
+0036       <span class="comment">%Look through all variables that were loaded, looking for the desired</span>
+0037       <span class="comment">%class.  If a cell is encountered, then look for occurrences of that class</span>
+0038       <span class="comment">%within the cell (recursively).</span>
+0039       
+0040       myObjectMask = false(size(fieldn));
+0041       holder = cell(size(fieldn));
+0042       <span class="keyword">for</span> fieldidx = 1:numel(fieldn)
+0043          thisfield =  fieldn{fieldidx};
+0044          <span class="comment">%grab all myObjects</span>
+0045          <span class="keyword">if</span> isa(stuff.(thisfield),<span class="string">'waveform'</span>)
+0046             holder(fieldidx) = {reshape(stuff.(thisfield),1,numel(stuff.(thisfield)))};
+0047             myObjectMask(fieldidx) = true;
+0048             stuff.(thisfield) = {};
+0049          <span class="keyword">elseif</span> isa(stuff.(thisfield),<span class="string">'cell'</span>)
+0050             holder(fieldidx) = {<a href="#_sub1" class="code" title="subfunction mObj = myObjectsFromCells(searchClass, mycell)">myObjectsFromCells</a>(<span class="string">'waveform'</span>,stuff.(thisfield))};
+0051             myObjectMask(fieldidx) = true;
+0052          <span class="keyword">else</span>
+0053             stuff.(thisfield) = {};
+0054          <span class="keyword">end</span>
+0055       <span class="keyword">end</span>
+0056       w = [holder{myObjectMask}];
+0057       
+0058    <span class="keyword">end</span>
+0059 <span class="keyword">end</span>
+0060 
+0061 <a name="_sub1" href="#_subfunctions" class="code">function mObj = myObjectsFromCells(searchClass, mycell)</a>
+0062    myObjectMask = false(size(mycell));
+0063    <span class="keyword">for</span> i=1:numel(mycell);
+0064       <span class="keyword">if</span> isa(mycell{i},searchClass),
+0065          myObjectMask(i) = true;
+0066          mycell(i) = {reshape(mycell{i},1,numel(mycell{i}))}; <span class="comment">%make all myObjects 1xN</span>
+0067       <span class="keyword">elseif</span> isa(mycell{i},<span class="string">'cell'</span>) <span class="comment">%it's a cell, let's recurse</span>
+0068          mycell(i) = {<a href="#_sub1" class="code" title="subfunction mObj = myObjectsFromCells(searchClass, mycell)">myObjectsFromCells</a>(mycell{i})};  <span class="comment">%pull myObjects from the cell and bring them to this level.</span>
+0069       <span class="keyword">end</span>
+0070    <span class="keyword">end</span>
+0071    mObj= [mycell{myObjectMask}];
+0072 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

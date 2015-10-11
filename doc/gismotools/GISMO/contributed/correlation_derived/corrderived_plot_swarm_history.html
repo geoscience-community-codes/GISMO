@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of corrderived_plot_swarm_history</title>
+  <meta name="keywords" content="corrderived_plot_swarm_history">
+  <meta name="description" content="CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">correlation_derived</a> &gt; corrderived_plot_swarm_history.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/correlation_derived&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>corrderived_plot_swarm_history
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function corrderived_plot_swarm_history(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms
+ CORRDERIVED_PLOT_SWARM_HISTORY(C)reads correlation object C and plots various
+ parameters to characterize the swarm. Typical input will be a correlation
+ object containing waveforms from a single station for numerous events. 
+ This function requires that the CLUST and WAVEFORM fields of the
+ correlation object be filled. The heavily lifting will have already been
+ done by the LINKAGE and CLUSTER functions. This is predominantly a
+ plotting function. Plots include:
+    - A histogram of all events and clustered events
+    - An amplitude measure of all events
+    - A plot showing the &quot;lifespan&quot; of each cluster
+
+ CORRDERIVED_PLOT_SWARM_HISTORY(C,CLUSTERSIZE) specifies the minimum number of
+ events to be counted as a cluster. The default is 5. Note that the
+ clusters defined in the correaltion object may have a few as 1 event. For
+ analysis purposes however, the user will often want to set a minimum
+ size for significant clusters. CLUSTERSIZE is this value.
+
+ The trace amplitude plot is based on the maximum value of the hilbert
+ transform of the input data. The user may wish to narrow the window of
+ data to a portion of the input trace by using the cop function. Example
+     c1 = crop(c,-1,3)
+     corrderived_plot_swarm_history(c1,10)
+
+ See also correlation/linkage correlation/cluster</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function corrderived_plot_swarm_history(c,varargin)</a>
+0002 
+0003 <span class="comment">%CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms</span>
+0004 <span class="comment">% CORRDERIVED_PLOT_SWARM_HISTORY(C)reads correlation object C and plots various</span>
+0005 <span class="comment">% parameters to characterize the swarm. Typical input will be a correlation</span>
+0006 <span class="comment">% object containing waveforms from a single station for numerous events.</span>
+0007 <span class="comment">% This function requires that the CLUST and WAVEFORM fields of the</span>
+0008 <span class="comment">% correlation object be filled. The heavily lifting will have already been</span>
+0009 <span class="comment">% done by the LINKAGE and CLUSTER functions. This is predominantly a</span>
+0010 <span class="comment">% plotting function. Plots include:</span>
+0011 <span class="comment">%    - A histogram of all events and clustered events</span>
+0012 <span class="comment">%    - An amplitude measure of all events</span>
+0013 <span class="comment">%    - A plot showing the &quot;lifespan&quot; of each cluster</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% CORRDERIVED_PLOT_SWARM_HISTORY(C,CLUSTERSIZE) specifies the minimum number of</span>
+0016 <span class="comment">% events to be counted as a cluster. The default is 5. Note that the</span>
+0017 <span class="comment">% clusters defined in the correaltion object may have a few as 1 event. For</span>
+0018 <span class="comment">% analysis purposes however, the user will often want to set a minimum</span>
+0019 <span class="comment">% size for significant clusters. CLUSTERSIZE is this value.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% The trace amplitude plot is based on the maximum value of the hilbert</span>
+0022 <span class="comment">% transform of the input data. The user may wish to narrow the window of</span>
+0023 <span class="comment">% data to a portion of the input trace by using the cop function. Example</span>
+0024 <span class="comment">%     c1 = crop(c,-1,3)</span>
+0025 <span class="comment">%     corrderived_plot_swarm_history(c1,10)</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% See also correlation/linkage correlation/cluster</span>
+0028 
+0029 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0030 <span class="comment">% $Date$</span>
+0031 <span class="comment">% $Revision$</span>
+0032 
+0033 
+0034 <span class="comment">% CHECK INPUTS</span>
+0035 <span class="keyword">if</span> nargin&gt;2
+0036     error(<span class="string">'Incorrect number of inputs'</span>);
+0037 <span class="keyword">end</span>
+0038 <span class="keyword">if</span> ~isa(c,<span class="string">'correlation'</span>)
+0039     error(<span class="string">'First argument must be a correlation object'</span>);
+0040 <span class="keyword">end</span>
+0041 
+0042 <span class="keyword">if</span> isempty(get(c,<span class="string">'CLUST'</span>))
+0043     error(<span class="string">'CLUSTER field must be filled in input argument. See HELP CLUSTER'</span>);
+0044 <span class="keyword">end</span>
+0045 
+0046 <span class="keyword">if</span> numel(varargin)==1
+0047     clusterSize = varargin{1};
+0048 <span class="keyword">else</span>
+0049     clusterSize = 5;
+0050 <span class="keyword">end</span>
+0051 
+0052 
+0053 <span class="comment">% FIND EVENTS IN/OUT OF CLUSTERS</span>
+0054 inMult = find(c,<span class="string">'BIG'</span>,clusterSize);
+0055 <span class="comment">% find non-multiplets</span>
+0056 <span class="keyword">for</span> n = 1:get(c,<span class="string">'TRACES'</span>)
+0057     <span class="keyword">if</span> numel(find(inMult==n))==0
+0058         notInMult(n) = 1;
+0059     <span class="keyword">else</span>
+0060         notInMult(n) = 0;
+0061     <span class="keyword">end</span>
+0062 <span class="keyword">end</span>
+0063 notInMult = find(notInMult)';
+0064 inMult = sort(inMult);
+0065 
+0066 
+0067 <span class="comment">% GET STA_CHAN</span>
+0068 <span class="keyword">if</span> ~check(c,<span class="string">'STA'</span>) | ~check(c,<span class="string">'CHAN'</span>)
+0069    warning(<span class="string">'This function was written assuming data from a single sta_chan'</span>); 
+0070 <span class="keyword">end</span>
+0071 wtmp = waveform(c);
+0072 wtmp = wtmp(1);
+0073 nscl = [ get(wtmp,<span class="string">'NETWORK'</span>) <span class="string">'_'</span> get(wtmp,<span class="string">'STATION'</span>) <span class="string">'_'</span> get(wtmp,<span class="string">'CHANNEL'</span>) <span class="string">'_'</span> get(wtmp,<span class="string">'LOCATION'</span>) ];
+0074 
+0075 
+0076 
+0077 
+0078 <span class="comment">% PLOT IT</span>
+0079 figure(<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'Position'</span>,[0 0 1100 850]);
+0080 box on; hold on;
+0081 set(gcf,<span class="string">'DefaultLineLineWidth'</span>,0.1);
+0082 set(gcf,<span class="string">'DefaultAxesFontSize'</span>,12);
+0083 
+0084 <span class="comment">% PLOT EVENT RATES</span>
+0085 subplot(3,1,1)
+0086 disp(<span class="string">'Preparing event rate histograms ...'</span>);
+0087 c1 = subset(c,inMult);
+0088 c1 = sort(c1);
+0089 trigMult = get(c1,<span class="string">'TRIG'</span>);
+0090 trigAll = get(c,<span class="string">'TRIG'</span>);
+0091 edges = [floor(min(trigAll)):1/24:ceil(max(trigAll))];
+0092 nMult = histc(trigMult,edges);
+0093 nAll = histc(trigAll,edges);
+0094 <span class="comment">%</span>
+0095 bar(edges,nAll,<span class="string">'y'</span>);
+0096 <span class="comment">%h = findobj(gca,'Type','patch');</span>
+0097 <span class="comment">%set(h,'FaceColor',[.7 .7 .7])</span>
+0098 hold on;
+0099 bar(edges,nMult,<span class="string">'r'</span>);
+0100 h = findobj(gca,<span class="string">'Type'</span>,<span class="string">'patch'</span>);
+0101 set(h,<span class="string">'EdgeColor'</span>,[0 0 0],<span class="string">'LineWidth'</span>,0.1)
+0102 xlim([[min(trigAll)-1/24 max(trigAll)+1/24]]);
+0103 datetick(<span class="string">'x'</span>,<span class="string">'KeepLimits'</span>);
+0104 legend(<span class="string">'All events'</span>,<span class="string">'Clustered events'</span>);
+0105 
+0106 title(<span class="string">'Event rates'</span>);
+0107 ylabel(<span class="string">'Events per hour'</span>);
+0108 
+0109 
+0110 
+0111 <span class="comment">% AMPLITUDE PLOT</span>
+0112 disp(<span class="string">'Preparing amplitude measures ...'</span>);
+0113 subplot(3,1,2)
+0114 c1 = crop(c,-1,4);
+0115 w = waveform(c1);
+0116 w = hilbert(w);
+0117 amp = max(double(w));
+0118 trig = get(c1,<span class="string">'TRIG'</span>);
+0119 plot(trig(notInMult),amp(notInMult),<span class="string">'ko'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'y'</span>,<span class="string">'MarkerSize'</span>,4);
+0120 hold on;
+0121 plot(trig(inMult),amp(inMult),<span class="string">'ko'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerSize'</span>,4);
+0122 set(gca,<span class="string">'YScale'</span>,<span class="string">'log'</span>);
+0123 xlim([[min(trigAll)-1/24 max(trigAll)+1/24]]);
+0124 ylim([min(amp) max(amp)]);
+0125 datetick(<span class="string">'x'</span>,<span class="string">'KeepLimits'</span>);
+0126 <span class="comment">%set(gca,'YGrid','on')</span>
+0127 ylabel(<span class="string">'amplitude (nm/s)'</span>)
+0128 legend(<span class="string">'All events'</span>,<span class="string">'Clustered events'</span>);
+0129 title([<span class="string">'Event amplitudes    (derived from  '</span> nscl <span class="string">')'</span>],<span class="string">'Interpreter'</span>,<span class="string">'none'</span>);
+0130 
+0131 
+0132 
+0133 <span class="comment">% PLOT EVENT RATES</span>
+0134 subplot(3,1,3)
+0135 disp(<span class="string">'Preparing cluster lifespan plot ...'</span>);
+0136 family = getclusterstat(c);
+0137 index = find(family.numel&gt;=clusterSize);
+0138 [tmp,index] = sort(family.begin(index));
+0139 
+0140 box on; hold on;
+0141 <span class="keyword">for</span> n = 1:numel(index)
+0142     plot([ family.begin(index(n)) family.finish(index(n)) ],[n n],<span class="string">'-'</span>,<span class="string">'Color'</span>,[0.7 0.7 0.7],<span class="string">'LineWidth'</span>,1);
+0143     plot(family.trig{index(n)},repmat(n,family.numel(index(n)),1),<span class="string">'o'</span>,<span class="string">'Color'</span>,[0 0 0],<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerSize'</span>,4);
+0144 
+0145 <span class="keyword">end</span>
+0146 xlim([[min(trigAll)-1/24 max(trigAll)+1/24]]);
+0147 ylim([0 numel(index)+1]);
+0148 datetick(<span class="string">'x'</span>,<span class="string">'KeepLimits'</span>);
+0149 set(gca,<span class="string">'YTick'</span>,[1:numel(index)]);
+0150 set(gca,<span class="string">'YTickLabel'</span>,index);
+0151 ylabel(<span class="string">'cluster rank'</span>)
+0152 title([<span class="string">'Cluster lifespan  (clusters of '</span> num2str(clusterSize) <span class="string">' or more events)'</span>]);
+0153 
+0154 
+0155 <span class="comment">%PRINT OUT FIGURE</span>
+0156 set(gcf, <span class="string">'paperorientation'</span>, <span class="string">'portrait'</span>);
+0157 set(gcf, <span class="string">'paperposition'</span>, [.25 .25 8 10.5] );
+0158 print(gcf,<span class="string">'-dpsc2'</span>,<span class="string">'FIG_SWARM_HISTORY.ps'</span>);</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of stack</title>
+  <meta name="keywords" content="stack">
+  <meta name="description" content="c = STACK(c)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@correlation</a> &gt; stack.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>stack
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>c = STACK(c)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = stack(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> c = STACK(c)
+ This function appends a stacked waveform to the end of the correlation
+ object. Stacking is performed with the traces aligned on their trigger
+ times (as they appear in plots). In order to do this traces must be
+ cropped to the same time interval relative to the triggers. This is most
+ easily accomplished using the CROP function prior to STACK. If the traces
+ have not been cropped, STACK will attempt to figure out which time window
+ of data should be stacked. This may or may not be in the user's best
+ interest. Caveat Emptor!
+
+ c = STACK(c,INDEX)
+ Same as above except the stack is only performed using a subset of the
+ traces as specified by the index numbers, INDEX.
+
+ The traces are summed, but not normalized or averaged. In order
+ to be stacked, the &quot;phase shift&quot; of the samples within the trace must be
+ the same. If it is not, STACK will make a call to ALIGN to resample all
+ traces such that one sample falls directly on the trigger time. Following
+ the convention of waveform, the trace time and name are based on the
+ first trace that contributed to the stack.
+ 
+ ** NOTE TO USERS: Though most plotting routines normalize adjacent traces
+ to comparable amplitudes for display, the real trace amplitudes often
+ very by orders of magnitudes. Depending on the features the user is
+ trying to highlight, it may make sense to normalize the trace amplitudes
+ before stacking. This can be performed with the NORM function.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="align.html" class="code" title="function c = align(c,varargin)">align</a>	c = ALIGN(c)</li><li><a href="correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="crop.html" class="code" title="function c = crop(c,varargin)">crop</a>	c = CROP(c,[PRETRIG POSTTRIG])</li><li><a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li><li><a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li><li><a href="verify.html" class="code" title="function c = verify(c)">verify</a>	VERIFY</li><li><a href="xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	C = XCORR(C)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = stack(c,varargin)</a>
+0002 
+0003 <span class="comment">% c = STACK(c)</span>
+0004 <span class="comment">% This function appends a stacked waveform to the end of the correlation</span>
+0005 <span class="comment">% object. Stacking is performed with the traces aligned on their trigger</span>
+0006 <span class="comment">% times (as they appear in plots). In order to do this traces must be</span>
+0007 <span class="comment">% cropped to the same time interval relative to the triggers. This is most</span>
+0008 <span class="comment">% easily accomplished using the CROP function prior to STACK. If the traces</span>
+0009 <span class="comment">% have not been cropped, STACK will attempt to figure out which time window</span>
+0010 <span class="comment">% of data should be stacked. This may or may not be in the user's best</span>
+0011 <span class="comment">% interest. Caveat Emptor!</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% c = STACK(c,INDEX)</span>
+0014 <span class="comment">% Same as above except the stack is only performed using a subset of the</span>
+0015 <span class="comment">% traces as specified by the index numbers, INDEX.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% The traces are summed, but not normalized or averaged. In order</span>
+0018 <span class="comment">% to be stacked, the &quot;phase shift&quot; of the samples within the trace must be</span>
+0019 <span class="comment">% the same. If it is not, STACK will make a call to ALIGN to resample all</span>
+0020 <span class="comment">% traces such that one sample falls directly on the trigger time. Following</span>
+0021 <span class="comment">% the convention of waveform, the trace time and name are based on the</span>
+0022 <span class="comment">% first trace that contributed to the stack.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% ** NOTE TO USERS: Though most plotting routines normalize adjacent traces</span>
+0025 <span class="comment">% to comparable amplitudes for display, the real trace amplitudes often</span>
+0026 <span class="comment">% very by orders of magnitudes. Depending on the features the user is</span>
+0027 <span class="comment">% trying to highlight, it may make sense to normalize the trace amplitudes</span>
+0028 <span class="comment">% before stacking. This can be performed with the NORM function.</span>
+0029 
+0030 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0031 <span class="comment">% $Date$</span>
+0032 <span class="comment">% $Revision$</span>
+0033 
+0034 
+0035 <span class="comment">% READ &amp; CHECK ARGUMENTS</span>
+0036 <span class="keyword">if</span> (nargin&gt;2)
+0037     error(<span class="string">'Wrong number of inputs'</span>);
+0038 <span class="keyword">end</span>;
+0039 
+0040 <span class="keyword">if</span> ~strcmpi(class(c),<span class="string">'correlation'</span>)
+0041     error(<span class="string">'First input must be a correlation object'</span>);
+0042 <span class="keyword">end</span>
+0043 
+0044 <span class="keyword">if</span> (length(varargin)==1)
+0045    index = varargin{1}; 
+0046 <span class="keyword">end</span>
+0047 
+0048 
+0049 <span class="comment">% CREATE CORREATION OBJECT FOR INTERNAL MANIPULATIONS</span>
+0050 c1 = <a href="correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>;
+0051 c1 = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(c1,<span class="string">'WAVEFORM'</span>, <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'WAVEFORM'</span>) );
+0052 c1 = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(c1,<span class="string">'TRIG'</span>, <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'TRIG'</span>) );
+0053 <span class="keyword">if</span> exist(<span class="string">'index'</span>)
+0054    c1 = <a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>(c1,index); 
+0055 <span class="keyword">end</span>
+0056 
+0057 
+0058 <span class="comment">% CHECK IF TRACES ARE DESCRITIZED ON THE SAME INVERVALS</span>
+0059 t = 86400 * (c1.trig - <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1.W,<span class="string">'START'</span>));
+0060 Fs = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1,<span class="string">'Fs'</span>);
+0061 sampleshift = mod(t,1/Fs);
+0062 <span class="keyword">if</span> (mean(sampleshift) ~= sampleshift)   <span class="comment">% if all sampleshifts are the same</span>
+0063     c1 = <a href="align.html" class="code" title="function c = align(c,varargin)">align</a>(c1);
+0064 <span class="keyword">end</span>
+0065 
+0066     
+0067 <span class="comment">% CHECK IF TRACES ARE EQUALLY CROPPED</span>
+0068 pretrig  = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1,<span class="string">'START'</span>) - <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1,<span class="string">'TRIG'</span>);
+0069 posttrig = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1,<span class="string">'END'</span>)   - <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1,<span class="string">'TRIG'</span>);
+0070 <span class="keyword">if</span> (mean(pretrig)~=pretrig(1)) || (mean(posttrig)~=posttrig(1))
+0071     center = mean([pretrig ; posttrig])*86400;
+0072     pretrig = center - (0.5 * <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1,<span class="string">'DATA_LENGTH'</span>) * <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1,<span class="string">'Period'</span>));
+0073     posttrig = pretrig + (<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1,<span class="string">'DATA_LENGTH'</span>)+1) * <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1,<span class="string">'Period'</span>);
+0074     <span class="comment">% is it the right length?</span>
+0075     c1 = <a href="crop.html" class="code" title="function c = crop(c,varargin)">crop</a>(c1,pretrig,posttrig);
+0076 <span class="keyword">end</span>
+0077 
+0078 
+0079 <span class="comment">% ADJUST STACK LENGTH BY ONE SAMPLE IF NECESSARY</span>
+0080 <span class="keyword">if</span> (<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1,<span class="string">'DATA_LENGTH'</span>) &lt; <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'DATA_LENGTH'</span>))
+0081     <span class="keyword">for</span> i = 1:length(c1.trig)
+0082         Wtmp = c1.W(i);
+0083         data = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wtmp,<span class="string">'DATA'</span>);
+0084         data(end+1) = data(end);
+0085         Wtmp = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(Wtmp,<span class="string">'DATA'</span>,data);
+0086         c1.W(i) = Wtmp;
+0087     <span class="keyword">end</span>
+0088     <span class="comment">%disp('Stack was padded with one additional sample for consistency');</span>
+0089 <span class="keyword">end</span>
+0090 
+0091 
+0092 c.W(end+1) = <a href="stack.html" class="code" title="function c = stack(c,varargin)">stack</a>(c1.W);
+0093 c = <a href="verify.html" class="code" title="function c = verify(c)">verify</a>(c);        <span class="comment">%%%%%%% added on 12/15/2007 %%%%%%%%%%%%%%%%%</span>
+0094 c.trig(end+1) = c1.trig(1);
+0095 c.stat = [];
+0096 c.link = [];
+0097 c.clust = [];
+0098 <span class="keyword">if</span> size(c.C,1) &gt; 0
+0099     c = <a href="xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>(c,<span class="string">'row'</span>, <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'TRACES'</span>) );
+0100 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of load_sac</title>
+  <meta name="keywords" content="load_sac">
+  <meta name="description" content="LOAD_SAC loads a waveform from SAC files">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; load_sac.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>load_sac
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>LOAD_SAC loads a waveform from SAC files</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function w = load_sac(dataRequest) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">LOAD_SAC loads a waveform from SAC files</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="readsacfile.html" class="code" title="function OUTPUT = readsacfile(varargin)">readsacfile</a>	readsacfile    Read SAC binary files.</li><li><a href="sac2waveform.html" class="code" title="function allWaveforms = sac2waveform(sacStructure)">sac2waveform</a>	SAC2WAVEFORM fill a waveform object from a sac header</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function w = loadSacByFilenames(filename)</a></li><li><a href="#_sub2" class="code">function w = removeSacDuplicates(w)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = load_sac(dataRequest)</a>
+0002    <span class="comment">%LOAD_SAC loads a waveform from SAC files</span>
+0003    
+0004    <span class="comment">% VERSION: 1.1 of waveform objects</span>
+0005    <span class="comment">% AUTHOR: Celso Reyes (celso@gi.alaska.edu)</span>
+0006    <span class="comment">% LASTUPDATE: 9/2/2009</span>
+0007    <span class="keyword">if</span> isstruct(dataRequest)
+0008       thisSource = dataReques.dataSource;
+0009       
+0010       <span class="keyword">for</span> i=1:numel(dataRequest.scnls)
+0011          thisScnl = dataRequest.scnls(i);
+0012          <span class="keyword">for</span> j=1:numel(dataRequest.myStartTimes)
+0013             thisTime = dataRequest.startTimes(j);
+0014             thisfilename = getfilename(thisSource,thisScnl,thisTime);
+0015             w(i,j) = <a href="#_sub1" class="code" title="subfunction w = loadSacByFilenames(filename)">loadSacByFilenames</a>(thisfilename);
+0016          <span class="keyword">end</span>
+0017       <span class="keyword">end</span>
+0018       w = w(:);
+0019       
+0020    <span class="keyword">else</span>
+0021       <span class="comment">%dataRequest should be a filename</span>
+0022       w = <a href="#_sub1" class="code" title="subfunction w = loadSacByFilenames(filename)">loadSacByFilenames</a>(dataRequest);
+0023    <span class="keyword">end</span>
+0024 <span class="keyword">end</span>
+0025 
+0026 <a name="_sub1" href="#_subfunctions" class="code">function w = loadSacByFilenames(filename)</a>
+0027    <span class="comment">%LOADSAC  creates a waveform from a SAC file</span>
+0028    <span class="comment">% waveform = loadSacByFilenames(waveform, filename);</span>
+0029    <span class="comment">% To call, the first argument must be a waveform.  However this waveform</span>
+0030    <span class="comment">% will never be accessed-- it will be overwritten by the SAC information.</span>
+0031    <span class="comment">% Therefore, you can use &quot;waveform&quot; as your first argument, so that a</span>
+0032    <span class="comment">% generic waveform object will be created for you</span>
+0033    <span class="comment">%</span>
+0034    <span class="comment">% If the filename is a cell of several SAC file names, such as:</span>
+0035    <span class="comment">% fn = {'BOB.SHZ.AV','TOM.EHZ.AV','HARRY.EHZ.AV'}</span>
+0036    <span class="comment">% then, w = loadSacByFilenames(waveform,fn) will return a matrix of waveforms, the</span>
+0037    <span class="comment">% same size and shape  as fn.   fn(N,M) will be the SAC file name for the</span>
+0038    <span class="comment">% waveform denoted by w(N,M).  In the example above, loadSacByFilenames will return a</span>
+0039    <span class="comment">% 1x3 waveform object, with all three files.</span>
+0040    <span class="comment">%</span>
+0041    <span class="comment">% Programming suggestion???select files using a dialog box, by using the</span>
+0042    <span class="comment">% following code:</span>
+0043    <span class="comment">%   % display the dialog box used for selecting files, and</span>
+0044    <span class="comment">%   % allow for multiple selections</span>
+0045    <span class="comment">%   [f,d] = uigetfile({'*.*','all Files (*.*)'}, 'MultiSelect', 'on');</span>
+0046    <span class="comment">%</span>
+0047    <span class="comment">%   % f will have one or more file names, so concatenate them</span>
+0048    <span class="comment">%   % with the directory</span>
+0049    <span class="comment">%   filename = strcat(d,f);</span>
+0050    <span class="comment">%</span>
+0051    <span class="comment">%   %call loadSacByFilenames to load all these files into waveform objects</span>
+0052    <span class="comment">%   w = loadSacByFilenames(waveform, filename);</span>
+0053    <span class="comment">%</span>
+0054    <span class="comment">% The SAC header is parsed out, with the following equivelent fields used</span>
+0055    <span class="comment">% by waveform:</span>
+0056    <span class="comment">% _waveform_     _sac_</span>
+0057    <span class="comment">% STATION        KSTNM</span>
+0058    <span class="comment">% CHANNEL        KCMPNM</span>
+0059    <span class="comment">% FREQUENCY        1 / DELTA (ODELTA is not used)</span>
+0060    <span class="comment">% START            NZYEAR, NZJDAY, NZHOUR, NZMIN, NZSEC, NZMSEC</span>
+0061    <span class="comment">% UNITS            IDEP is parsed.  IUNK becomes &quot;Counts&quot;</span>
+0062    <span class="comment">% All header fields with values - that is, header fields that do not</span>
+0063    <span class="comment">% contain the value  -12345 (either numeric or text) - are put into</span>
+0064    <span class="comment">% user-defined fields within the waveform.</span>
+0065    <span class="comment">% These fields can then be accessed via get/set.  User-defined fields</span>
+0066    <span class="comment">% includes those that are parsed into waveform's predefined  fields as</span>
+0067    <span class="comment">% listed above.</span>
+0068    <span class="comment">%</span>
+0069    <span class="comment">% loadSacByFilenames uses routines originating in code borrowed from</span>
+0070    <span class="comment">% Mike Thorn</span>
+0071    <span class="comment">%</span>
+0072    <span class="comment">% For more information about the SAC header, and the interpretation of the</span>
+0073    <span class="comment">% fields, check out Lawrence Livermore's web site.  Search for &quot;seismic</span>
+0074    <span class="comment">% sac&quot; and you'll find it.</span>
+0075    
+0076    <span class="comment">% VERSION: 1.1 of waveform objects</span>
+0077    <span class="comment">% AUTHOR: Celso Reyes</span>
+0078    <span class="comment">% $Date$</span>
+0079    <span class="comment">% $Revision$</span>
+0080    
+0081    <span class="keyword">if</span> ~iscell(filename)
+0082       filename = {filename};
+0083    <span class="keyword">end</span>
+0084    
+0085    sacdata = <a href="readsacfile.html" class="code" title="function OUTPUT = readsacfile(varargin)">readsacfile</a>(filename{:});
+0086    w = <a href="sac2waveform.html" class="code" title="function allWaveforms = sac2waveform(sacStructure)">sac2waveform</a>(sacdata);
+0087    w = <a href="#_sub2" class="code" title="subfunction w = removeSacDuplicates(w)">removeSacDuplicates</a>(w);
+0088    <span class="keyword">for</span> n=1:numel(filename)
+0089       w(n) = addhistory(w(n),<span class="string">'Loaded SAC file: %s'</span>,filename{n});
+0090    <span class="keyword">end</span>
+0091 <span class="keyword">end</span>
+0092 
+0093 <a name="_sub2" href="#_subfunctions" class="code">function w = removeSacDuplicates(w)</a>
+0094    <span class="comment">% because all the files are loaded with fields blindly filled in, several</span>
+0095    <span class="comment">% of the duplicated (and easily outdated and contradictory) fields are</span>
+0096    <span class="comment">% henceforth removed</span>
+0097    <span class="comment">% These fields are regenerated when the SAC file is written back to disk.</span>
+0098    noHistory = true;
+0099    w = delfield(w,<span class="string">'B'</span>,noHistory); <span class="comment">%covered by get(w,'start_epoch');</span>
+0100    w = delfield(w,<span class="string">'E'</span>,noHistory); <span class="comment">%covered by get(w,'end_epoch');</span>
+0101    w = delfield(w,<span class="string">'DEPMIN'</span>,noHistory); <span class="comment">%covered by min(w);</span>
+0102    w = delfield(w,<span class="string">'DEPMAX'</span>,noHistory);<span class="comment">%covered by max(w);</span>
+0103    w = delfield(w,<span class="string">'DEPMEN'</span>,noHistory);<span class="comment">%covered by mean(w);</span>
+0104    w = delfield(w,<span class="string">'NPTS'</span>,noHistory); <span class="comment">%covered by get(w,'data_length');</span>
+0105    w = delfield(w,<span class="string">'KSTNM'</span>,noHistory); <span class="comment">%covered by get(w,'station');</span>
+0106    w = delfield(w,<span class="string">'KCMPNM'</span>,noHistory); <span class="comment">%covered by get(w,'channel');</span>
+0107    w = delfield(w,<span class="string">'KNETWK'</span>,noHistory); <span class="comment">%covered by get(w,'network');</span>
+0108    w = delfield(w,<span class="string">'DELTA'</span>,noHistory); <span class="comment">%covered by get(w,'period');</span>
+0109    w = delfield(w,<span class="string">'NVHDR'</span>,noHistory); <span class="comment">%covered by get(w,'data_length');</span>
+0110    w = delfield(w,<span class="string">'IDEP'</span>,noHistory); <span class="comment">%covered by get(w,'units'); %idEP is just a code.</span>
+0111    
+0112    w = delfield(w,<span class="string">'LEVEN'</span>,noHistory); <span class="comment">%by nature, data is evenly spaced</span>
+0113    w = delfield(w,<span class="string">'IDEP'</span>,noHistory); <span class="comment">%covered by get(w,'units'); %idEP is just a code.</span>
+0114    
+0115    <span class="comment">%the following date values are convenient, but also may be outdated easily.</span>
+0116    <span class="comment">%w = delfield(w,'NZYEAR',noHistory); %covered by get(w,'start');</span>
+0117    <span class="comment">%w = delfield(w,'NZJDAY',noHistory); %covered by get(w,'start');</span>
+0118    <span class="comment">%w = delfield(w,'NZHOUR',noHistory); %covered by get(w,'start');</span>
+0119    <span class="comment">%w = delfield(w,'NZMIN',noHistory); %covered by get(w,'start');</span>
+0120    <span class="comment">%w = delfield(w,'NZSEC',noHistory); %covered by get(w,'start');</span>
+0121    <span class="comment">%w = delfield(w,'NZMSEC',noHistory); %covered by get(w,'start');</span>
+0122 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

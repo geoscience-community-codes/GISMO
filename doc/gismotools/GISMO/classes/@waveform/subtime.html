@@ -1,0 +1,274 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of subtime</title>
+  <meta name="keywords" content="subtime">
+  <meta name="description" content="SUBTIME grabs time-indexed snippets of waveform data.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; subtime.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>subtime
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>SUBTIME grabs time-indexed snippets of waveform data.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = subtime(inW, startt, endt) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SUBTIME grabs time-indexed snippets of waveform data.
+   waveforms = subtime(waveform, starttimes, endtimes)
+
+   For the most part, this function has been superceded by EXTRACT.
+   Instead, use  w = extract(waveform, 'time', starttime, endtime)
+
+   Input Arguments
+       WAVEFORM: the waveform(s)to extract data from   Nx1 DIMENSIONS
+       STARTTIME: matlab date.  Both date &amp; time should be included.
+       ENDTIME are given as absolute times (date included)
+
+       output wave has all same properties as original waves, except they
+       the subset of data and the new time signature.
+
+       if waveform is N-dimensional, all waveforms become rows in the output
+       if start times or end times are vectors, they must be the same size.
+         these will become the columns of the output variable
+
+     example 1:
+        % grab a waveform
+        w = waveform('OKCF','SHZ','11/5/2005 04:00:00', '11/5/2005 05:00:00')
+
+        % grab 5 minutes of data, starting at 4:30
+        littleW = subtime(w,'11/05/2005 04:30:00','11/05/2005 04:35');
+
+     example 1:
+        % grab a waveform
+        w(1) = waveform('OKCF','SHZ','11/5 04:00:00', '11/5 05:00:00')
+        w(2) = waveform('OKCD','BHZ','11/5 04:00:00', '11/5 05:00:00')
+        starttimes  = {'11/5 04:10', '11/5 04/20'};
+        endtimes = {'11/5 04:15', '11/5 04:25'};
+
+        snippets = subtime(w,starttimes,endtimes);
+
+        % Snippets should be a 2x2 waveform object, where
+           snippets(1,N) refers to OKCF
+           snippets(2,N) refers to OKCD
+           snippets(N,1) refers to 4:10 to 4:15
+           snippets(N,2) refers to 4:20 to 4:25
+
+     example 3:
+       %  this examplecreates a quick pseudohelicorder plot, of sorts
+       wDay = waveform('CRP','SHZ','11/3/2005','11/3/2005 24:00');
+       firstsnippet = datenum('11/3/2005 00:00:00');
+       lastsnippet = datenum('11/3/2005 24:00:00');
+       HourValue = datenum('0/0/0 01:00:00');
+
+       alltimes = firstsnippet : HourValue : lastsnippet;
+       starttimes = alltimes(1:end-1);
+       endtimes = alltimes(2:end);
+
+       % grab each hour of time, and shove it into wHours
+       wHours = subtime(wDay, starttimes, endtimes);
+
+       for n = 1:length(wHours)
+         tempdata = double(wHours(n)); %grab the data
+         tempdata = tempdata ./ max(tempdata) %normalize
+         wHours(n) = set(wHours(n),'data', tempdata) % put back
+         wHours(n) = wHours(n) + n; %add offset for plotting
+       end
+       plot(wHours,'nm',[],'b'); %plot it in blue with at nm scaling
+
+  The output of this function, for multiple waveforms and times will be:
+         t1   t2  t3 ... tn
+    -----------------------
+    w1 |
+    w2 |
+    w3 |
+     . |
+     . |
+    wn |
+
+   See Also WAVEFORM/EXTRACT</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = subtime(inW, startt, endt)</a>
+0002    <span class="comment">%SUBTIME grabs time-indexed snippets of waveform data.</span>
+0003    <span class="comment">%   waveforms = subtime(waveform, starttimes, endtimes)</span>
+0004    <span class="comment">%</span>
+0005    <span class="comment">%   For the most part, this function has been superceded by EXTRACT.</span>
+0006    <span class="comment">%   Instead, use  w = extract(waveform, 'time', starttime, endtime)</span>
+0007    <span class="comment">%</span>
+0008    <span class="comment">%   Input Arguments</span>
+0009    <span class="comment">%       WAVEFORM: the waveform(s)to extract data from   Nx1 DIMENSIONS</span>
+0010    <span class="comment">%       STARTTIME: matlab date.  Both date &amp; time should be included.</span>
+0011    <span class="comment">%       ENDTIME are given as absolute times (date included)</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">%       output wave has all same properties as original waves, except they</span>
+0014    <span class="comment">%       the subset of data and the new time signature.</span>
+0015    <span class="comment">%</span>
+0016    <span class="comment">%       if waveform is N-dimensional, all waveforms become rows in the output</span>
+0017    <span class="comment">%       if start times or end times are vectors, they must be the same size.</span>
+0018    <span class="comment">%         these will become the columns of the output variable</span>
+0019    <span class="comment">%</span>
+0020    <span class="comment">%     example 1:</span>
+0021    <span class="comment">%        % grab a waveform</span>
+0022    <span class="comment">%        w = waveform('OKCF','SHZ','11/5/2005 04:00:00', '11/5/2005 05:00:00')</span>
+0023    <span class="comment">%</span>
+0024    <span class="comment">%        % grab 5 minutes of data, starting at 4:30</span>
+0025    <span class="comment">%        littleW = subtime(w,'11/05/2005 04:30:00','11/05/2005 04:35');</span>
+0026    <span class="comment">%</span>
+0027    <span class="comment">%     example 1:</span>
+0028    <span class="comment">%        % grab a waveform</span>
+0029    <span class="comment">%        w(1) = waveform('OKCF','SHZ','11/5 04:00:00', '11/5 05:00:00')</span>
+0030    <span class="comment">%        w(2) = waveform('OKCD','BHZ','11/5 04:00:00', '11/5 05:00:00')</span>
+0031    <span class="comment">%        starttimes  = {'11/5 04:10', '11/5 04/20'};</span>
+0032    <span class="comment">%        endtimes = {'11/5 04:15', '11/5 04:25'};</span>
+0033    <span class="comment">%</span>
+0034    <span class="comment">%        snippets = subtime(w,starttimes,endtimes);</span>
+0035    <span class="comment">%</span>
+0036    <span class="comment">%        % Snippets should be a 2x2 waveform object, where</span>
+0037    <span class="comment">%           snippets(1,N) refers to OKCF</span>
+0038    <span class="comment">%           snippets(2,N) refers to OKCD</span>
+0039    <span class="comment">%           snippets(N,1) refers to 4:10 to 4:15</span>
+0040    <span class="comment">%           snippets(N,2) refers to 4:20 to 4:25</span>
+0041    <span class="comment">%</span>
+0042    <span class="comment">%     example 3:</span>
+0043    <span class="comment">%       %  this examplecreates a quick pseudohelicorder plot, of sorts</span>
+0044    <span class="comment">%       wDay = waveform('CRP','SHZ','11/3/2005','11/3/2005 24:00');</span>
+0045    <span class="comment">%       firstsnippet = datenum('11/3/2005 00:00:00');</span>
+0046    <span class="comment">%       lastsnippet = datenum('11/3/2005 24:00:00');</span>
+0047    <span class="comment">%       HourValue = datenum('0/0/0 01:00:00');</span>
+0048    <span class="comment">%</span>
+0049    <span class="comment">%       alltimes = firstsnippet : HourValue : lastsnippet;</span>
+0050    <span class="comment">%       starttimes = alltimes(1:end-1);</span>
+0051    <span class="comment">%       endtimes = alltimes(2:end);</span>
+0052    <span class="comment">%</span>
+0053    <span class="comment">%       % grab each hour of time, and shove it into wHours</span>
+0054    <span class="comment">%       wHours = subtime(wDay, starttimes, endtimes);</span>
+0055    <span class="comment">%</span>
+0056    <span class="comment">%       for n = 1:length(wHours)</span>
+0057    <span class="comment">%         tempdata = double(wHours(n)); %grab the data</span>
+0058    <span class="comment">%         tempdata = tempdata ./ max(tempdata) %normalize</span>
+0059    <span class="comment">%         wHours(n) = set(wHours(n),'data', tempdata) % put back</span>
+0060    <span class="comment">%         wHours(n) = wHours(n) + n; %add offset for plotting</span>
+0061    <span class="comment">%       end</span>
+0062    <span class="comment">%       plot(wHours,'nm',[],'b'); %plot it in blue with at nm scaling</span>
+0063    <span class="comment">%</span>
+0064    <span class="comment">%  The output of this function, for multiple waveforms and times will be:</span>
+0065    <span class="comment">%         t1   t2  t3 ... tn</span>
+0066    <span class="comment">%    -----------------------</span>
+0067    <span class="comment">%    w1 |</span>
+0068    <span class="comment">%    w2 |</span>
+0069    <span class="comment">%    w3 |</span>
+0070    <span class="comment">%     . |</span>
+0071    <span class="comment">%     . |</span>
+0072    <span class="comment">%    wn |</span>
+0073    <span class="comment">%</span>
+0074    <span class="comment">%   See Also WAVEFORM/EXTRACT</span>
+0075    
+0076    <span class="comment">% VERSION: 1.0 of waveform objects</span>
+0077    <span class="comment">% AUTHOR: Celso Reyes (celso@gi.alaska.edu)</span>
+0078    <span class="comment">% LASTUPDATE: 2/15/2007</span>
+0079    
+0080    <span class="comment">% Make sure we have legal arguments</span>
+0081    
+0082    startt = datenum(startt);
+0083    endt = datenum(endt);
+0084    <span class="comment">%note: these values always end up as double, even if provided as cells</span>
+0085    
+0086    endt = endt(:); <span class="comment">%shape as column vector</span>
+0087    startt = startt(:); <span class="comment">%shape as column vector</span>
+0088    
+0089    <span class="keyword">if</span> length(endt) ~= length(startt)
+0090       error(<span class="string">'Waveform:subtime:timeLengthMismatch'</span>,<span class="keyword">...</span>
+0091          <span class="string">'length(starttimes) [%d] and length(endtimes) [%d] should be the same.'</span>,length(startt),length(endt));
+0092    <span class="keyword">end</span>
+0093    inW = inW(:); <span class="comment">%shape as column vector;</span>
+0094    
+0095    <span class="comment">%create the output matrices (blank), with size = #waveforms x #times</span>
+0096    w = repmat(<a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(inW,<span class="string">'data'</span>,[]), 1, length(startt));
+0097    
+0098    <span class="comment">%  The output of this function, for multiple waveforms and times will be:</span>
+0099    <span class="comment">%     t1   t2  t3 ... tn</span>
+0100    <span class="comment">%-----------------------</span>
+0101    <span class="comment">%w1 |</span>
+0102    <span class="comment">%w2 |</span>
+0103    <span class="comment">%w3 |</span>
+0104    <span class="comment">% . |</span>
+0105    <span class="comment">% . |</span>
+0106    <span class="comment">%wn |</span>
+0107    
+0108    <span class="keyword">for</span> widx = 1 : length(inW) <span class="comment">%for each waveform</span>
+0109       
+0110       <span class="comment">% get the reference times for this waveform</span>
+0111       timeidx = linspace(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(inW(widx),<span class="string">'start'</span>),<span class="keyword">...</span>
+0112          <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(inW(widx),<span class="string">'end'</span>),<span class="keyword">...</span>
+0113          <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(inW(widx),<span class="string">'data_length'</span>)+1);
+0114       
+0115       
+0116       <span class="keyword">for</span> n = 1 : length(startt) <span class="comment">%for each time</span>
+0117          st = startt(n);
+0118          et = endt(n);
+0119          
+0120          myData = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(inW(widx),<span class="string">'data'</span>);
+0121          
+0122          <span class="keyword">if</span> any(et &lt; st)
+0123             warning(<span class="string">'Waveform:subtime:reversedTimes'</span>,<span class="keyword">...</span>
+0124                <span class="string">'endt &lt; startt, value will be [], but continuing anyway'</span>);
+0125          <span class="keyword">end</span>
+0126          
+0127          idxmask = find(timeidx &gt;= st &amp; timeidx &lt; et);
+0128          myData = myData(idxmask);
+0129          <span class="keyword">if</span> ~<a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(myData),
+0130             myStart = timeidx(idxmask(1));
+0131          <span class="keyword">else</span>
+0132             myStart = st;
+0133          <span class="keyword">end</span>
+0134          
+0135          <span class="keyword">if</span> st &lt; timeidx(1)
+0136             st = timeidx(1);
+0137             warning(<span class="string">'Waveform:subtime:noData'</span>,<span class="keyword">...</span>
+0138                <span class="string">'start time was prior to data.  setting equal to first sample'</span>);
+0139          <span class="keyword">end</span>;
+0140          <span class="keyword">if</span> et &gt; timeidx(end)
+0141             et = timeidx(end);
+0142             warning(<span class="string">'Waveform:subtime:noData'</span>,<span class="keyword">...</span>
+0143                <span class="string">'end time was after data.  setting equal to last sample'</span>);
+0144          <span class="keyword">end</span>;
+0145          <span class="keyword">if</span> et &lt; st
+0146             warning(<span class="string">'Waveform:subtime:reversedTimes'</span>,<span class="keyword">...</span>
+0147                <span class="string">'end time &lt; start time'</span>);
+0148             <span class="keyword">return</span>
+0149          <span class="keyword">end</span>;
+0150          
+0151          w(widx,n) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(widx,n),<span class="string">'start'</span>,myStart);
+0152          w(widx,n) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(widx,n),<span class="string">'data'</span>,myData);
+0153       <span class="keyword">end</span> <span class="comment">% of each time</span>
+0154    <span class="keyword">end</span> <span class="comment">%of each waveform</span>
+0155 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of fix_data_length</title>
+  <meta name="keywords" content="fix_data_length">
+  <meta name="description" content="FIX_DATA_LENGTH adjust length of waveform data to allow batch processing">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; fix_data_length.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>fix_data_length
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>FIX_DATA_LENGTH adjust length of waveform data to allow batch processing</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = fix_data_length(w, maxlen) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">FIX_DATA_LENGTH adjust length of waveform data to allow batch processing
+   waveform = fix_data_length(waveform)
+       adjusts all waveforms to the length of the largest, while
+       zero-padding all shorter waveforms
+
+   waveform = fix_data_length(waveform, maxlength)
+       sets all waveform lengths to maxlength.  This use of the function
+       has been superceeded by set(waveform,'samplelength',maxlength);
+
+  examples
+       % let inWaves be a 1x2 waveform object
+       % 3000 samples in inWaves(1)
+       % 10025 samples in inWaves(2)
+
+       % set both waves' data to a length of to 10025 while padding the
+       % smaller of the two with zeroes.
+       outWaveforms = fix_data_length(inWaves)
+
+       % set both sample lengths to 500 truncating both of them...
+       outWaveform = fix_data_length(inWaves, 500)
+
+       %The above example is nearly the same as
+       outWaveform = set(inWaves,'sample_length',500)
+
+       Behaviorally, this differs from the set command because it
+       automatically determines the maximum desired length, when not
+       specified.
+
+
+ See also WAVEFORM/EXTRACT, WAVEFORM/DOUBLE, WAVEFORM/SET -- Sample_Length</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="waveform2sound.html" class="code" title="function isSuccessful = waveform2sound(w, outfile, speedup)">waveform2sound</a>	WAVEFORM2SOUND generate a wav file from the existing waveform</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = fix_data_length(w, maxlen)</a>
+0002    <span class="comment">%FIX_DATA_LENGTH adjust length of waveform data to allow batch processing</span>
+0003    <span class="comment">%   waveform = fix_data_length(waveform)</span>
+0004    <span class="comment">%       adjusts all waveforms to the length of the largest, while</span>
+0005    <span class="comment">%       zero-padding all shorter waveforms</span>
+0006    <span class="comment">%</span>
+0007    <span class="comment">%   waveform = fix_data_length(waveform, maxlength)</span>
+0008    <span class="comment">%       sets all waveform lengths to maxlength.  This use of the function</span>
+0009    <span class="comment">%       has been superceeded by set(waveform,'samplelength',maxlength);</span>
+0010    <span class="comment">%</span>
+0011    <span class="comment">%  examples</span>
+0012    <span class="comment">%       % let inWaves be a 1x2 waveform object</span>
+0013    <span class="comment">%       % 3000 samples in inWaves(1)</span>
+0014    <span class="comment">%       % 10025 samples in inWaves(2)</span>
+0015    <span class="comment">%</span>
+0016    <span class="comment">%       % set both waves' data to a length of to 10025 while padding the</span>
+0017    <span class="comment">%       % smaller of the two with zeroes.</span>
+0018    <span class="comment">%       outWaveforms = fix_data_length(inWaves)</span>
+0019    <span class="comment">%</span>
+0020    <span class="comment">%       % set both sample lengths to 500 truncating both of them...</span>
+0021    <span class="comment">%       outWaveform = fix_data_length(inWaves, 500)</span>
+0022    <span class="comment">%</span>
+0023    <span class="comment">%       %The above example is nearly the same as</span>
+0024    <span class="comment">%       outWaveform = set(inWaves,'sample_length',500)</span>
+0025    <span class="comment">%</span>
+0026    <span class="comment">%       Behaviorally, this differs from the set command because it</span>
+0027    <span class="comment">%       automatically determines the maximum desired length, when not</span>
+0028    <span class="comment">%       specified.</span>
+0029    <span class="comment">%</span>
+0030    <span class="comment">%</span>
+0031    <span class="comment">% See also WAVEFORM/EXTRACT, WAVEFORM/DOUBLE, WAVEFORM/SET -- Sample_Length</span>
+0032    
+0033    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0034    <span class="comment">% $Date$</span>
+0035    <span class="comment">% $Revision$</span>
+0036    
+0037    Wcount = numel(w);
+0038    
+0039    <span class="keyword">if</span> ~exist(<span class="string">'maxlen'</span>,<span class="string">'var'</span>)
+0040       m(Wcount) = 0;
+0041       <span class="keyword">for</span> j = Wcount : -1 : 1
+0042          m(j) = numel(w(j).data);
+0043       <span class="keyword">end</span>
+0044       maxlen = <a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>(m);
+0045    <span class="keyword">end</span>
+0046    
+0047    <span class="keyword">if</span> length(maxlen) == 2
+0048       st = maxlen(1);
+0049       ed = maxlen(2);
+0050    <span class="keyword">else</span>
+0051       st = 1;
+0052       ed = maxlen(end);
+0053    <span class="keyword">end</span>
+0054    
+0055    <span class="keyword">for</span> j = 1 : Wcount
+0056       D = w(j).data;
+0057       <span class="keyword">if</span> ed &gt; numel(D)
+0058          D(ed) = 0;
+0059       <span class="keyword">else</span>
+0060          D = D(st:ed);
+0061       <span class="keyword">end</span>
+0062       w(j) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(j),<span class="string">'data'</span>,D);
+0063    <span class="keyword">end</span>;
+0064 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

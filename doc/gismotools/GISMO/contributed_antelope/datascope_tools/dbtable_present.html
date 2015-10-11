@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dbtable_present</title>
+  <meta name="keywords" content="dbtable_present">
+  <meta name="description" content="DBTABLE_PRESENT Check if a Datascope database table exists and has more than 0 rows.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">contributed_antelope</a> &gt; <a href="index.html">datascope_tools</a> &gt; dbtable_present.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_antelope/datascope_tools&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>dbtable_present
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>DBTABLE_PRESENT Check if a Datascope database table exists and has more than 0 rows.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function present=dbtable_present(dbpath, table) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> DBTABLE_PRESENT Check if a Datascope database table exists and has more than 0 rows. 
+
+    PRESENT = DBTABLE_PRESENT(DBPATH, TABLE)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function present=dbtable_present(dbpath, table)</a>
+0002 <span class="comment">% DBTABLE_PRESENT Check if a Datascope database table exists and has more than 0 rows.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    PRESENT = DBTABLE_PRESENT(DBPATH, TABLE)</span>
+0005 
+0006 <span class="comment">% AUTHOR: Glenn Thompson, UAF-GI</span>
+0007 <span class="comment">% $Date$</span>
+0008 <span class="comment">% $Revision$</span>
+0009 present = 0;
+0010 
+0011 <span class="keyword">if</span> exist(dbpath, <span class="string">'file'</span>) || exist(sprintf(<span class="string">'%s.%s'</span>,dbpath,table), <span class="string">'file'</span>)
+0012    <span class="keyword">try</span>
+0013      db = dbopen(dbpath, <span class="string">'r'</span>);
+0014    <span class="keyword">catch</span>
+0015      debug.print_debug(0, <span class="string">'Failure: database exists but dbopen fails'</span>);
+0016      <span class="keyword">return</span>;
+0017    <span class="keyword">end</span>
+0018    <span class="keyword">try</span>
+0019        db = dblookup_table(db, table);
+0020        numrows = dbquery(db, <span class="string">'dbRECORD_COUNT'</span>);
+0021        <span class="keyword">if</span> numrows &gt; 0
+0022           present = numrows;
+0023           debug.print_debug(3, <span class="string">'Success: %d rows'</span>,numrows);
+0024        <span class="keyword">else</span>
+0025           <span class="keyword">if</span> exist(sprintf(<span class="string">'%s.origin'</span>,dbpath)) 
+0026             <span class="keyword">if</span> numrows &gt; 0
+0027                 present = numrows;
+0028                 debug.print_debug(3, <span class="string">'Success: %d rows'</span>,numrows); 
+0029             <span class="keyword">else</span>
+0030                 debug.print_debug(3, <span class="string">'Failure: %d rows'</span>,numrows);
+0031             <span class="keyword">end</span>
+0032           <span class="keyword">else</span>
+0033                 debug.print_debug(3,<span class="string">'Failure: %d rows'</span>,numrows);
+0034           <span class="keyword">end</span>
+0035           
+0036        <span class="keyword">end</span>
+0037     <span class="keyword">catch</span>
+0038          debug.print_debug(0, <span class="string">'Failure: dblookup_table fails for %s.%s'</span>,dbpath,table);
+0039     <span class="keyword">end</span>
+0040 <span class="keyword">else</span>
+0041     debug.print_debug(0,<span class="string">'Failure: cannot find %s or %s.%s on this computer.'</span>,dbpath,dbpath,table);
+0042 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of adjusttrig</title>
+  <meta name="keywords" content="adjusttrig">
+  <meta name="description" content="ADJUSTTRIG adjusts the trigger times of each trace">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@correlation</a> &gt; adjusttrig.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>adjusttrig
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>ADJUSTTRIG adjusts the trigger times of each trace</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = adjusttrig(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> ADJUSTTRIG adjusts the trigger times of each trace
+   C = ADJUSTTRIG(C) The first use below applies a uniform time shift to
+   the triggers. All other uses adjust the trigger times based on the
+   cross correlation lag times. These uses require the LAG field to be
+   filled and delete it afterward.
+
+   C = ADJUSTTRIG(C,TIMESHIFT) Shifts all of the trigger times by TIMESHIFT
+   seconds. A positive TIMESHIFT moves the zero alignment to the left on a
+   trace plot, and a negative TIMESHIFT to the right. (Does not use or
+   delete the LAG field.)
+
+   C = ADJUSTTRIG(C) Same as ADJUSTTRIG(C,'MIN') below.
+
+   C = ADJUSTTRIG(C,'MIN') Trigger times are adjusted relative to the trace with
+   the minimum mean lag time. This is the default setting.
+
+   C = ADJUSTTRIG(C,'MEDIAN') trigger times are adjusted by their median lag
+   time with all other traces. This can be advantageous when working within
+   a single cluster of similar waveforms.
+
+   C = ADJUSTTRIG(C,'MIN',MAXLAG) removes all traces that are shifted by more
+   than MAXLAG seconds. This approach is useful when you believe the
+   original trigger times are already accurate to within MAXLAG seconds.
+   This function can be duplicated as:
+       lag = GET(C,'LAG');
+       keep = find(abs(mean(lag))&lt;MAXLAG)
+       c = subset(C,keep);
+
+   C = ADJUSTTRIG(C,'INDEX') Trigger times are adjusted relative to the final
+   trace in the waveform list. This position is often occupied by a stack of
+   the other traces or some other master waveform. The INDEX method allows
+   trace times to be adjusted relative to this master waveform.
+
+   C = ADJUSTTRIG(C,'INDEX',TRACENUM) Same as ADJUSTTRIG(c,'INDEX') except that
+   traces are aligned relative to the trace specified by TRACENUM.
+
+   C = ADJUSTTRIG(C,'LSQ') Aligns traces by their least squares best fit delay
+   time stored in the stat field. If GETSTAT has not been run yet, ADUSTTRIG
+   will automatically call it.
+
+   NOTE that the different methods of adjusting the trigger times acheive
+   quite different results because they are solving different problems.
+   While this may seem obvious the results can be counter-intuitive, especially
+   for the LSQ solver.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG adjusts the trigger times of each trace</li><li><a href="cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	c = CLUSTER(c,CUTOFF) cuts the "branches" of the linkage tree to create</li><li><a href="find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="getstat.html" class="code" title="function c=getstat(c)">getstat</a>	c = GETSTAT(c)</li><li><a href="linkage.html" class="code" title="function c = linkage(c,varargin);">linkage</a>	c = LINKAGE(c) Creates a hierarchical cluster tree for all waveforms in</li><li><a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG adjusts the trigger times of each trace</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function c = shifttriggers(c,trigshift)</a></li><li><a href="#_sub2" class="code">function c = adjusttriggers(c,calctype,index)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = adjusttrig(c,varargin)</a>
+0002 
+0003 <span class="comment">% ADJUSTTRIG adjusts the trigger times of each trace</span>
+0004 <span class="comment">%   C = ADJUSTTRIG(C) The first use below applies a uniform time shift to</span>
+0005 <span class="comment">%   the triggers. All other uses adjust the trigger times based on the</span>
+0006 <span class="comment">%   cross correlation lag times. These uses require the LAG field to be</span>
+0007 <span class="comment">%   filled and delete it afterward.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   C = ADJUSTTRIG(C,TIMESHIFT) Shifts all of the trigger times by TIMESHIFT</span>
+0010 <span class="comment">%   seconds. A positive TIMESHIFT moves the zero alignment to the left on a</span>
+0011 <span class="comment">%   trace plot, and a negative TIMESHIFT to the right. (Does not use or</span>
+0012 <span class="comment">%   delete the LAG field.)</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%   C = ADJUSTTRIG(C) Same as ADJUSTTRIG(C,'MIN') below.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%   C = ADJUSTTRIG(C,'MIN') Trigger times are adjusted relative to the trace with</span>
+0017 <span class="comment">%   the minimum mean lag time. This is the default setting.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%   C = ADJUSTTRIG(C,'MEDIAN') trigger times are adjusted by their median lag</span>
+0020 <span class="comment">%   time with all other traces. This can be advantageous when working within</span>
+0021 <span class="comment">%   a single cluster of similar waveforms.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%   C = ADJUSTTRIG(C,'MIN',MAXLAG) removes all traces that are shifted by more</span>
+0024 <span class="comment">%   than MAXLAG seconds. This approach is useful when you believe the</span>
+0025 <span class="comment">%   original trigger times are already accurate to within MAXLAG seconds.</span>
+0026 <span class="comment">%   This function can be duplicated as:</span>
+0027 <span class="comment">%       lag = GET(C,'LAG');</span>
+0028 <span class="comment">%       keep = find(abs(mean(lag))&lt;MAXLAG)</span>
+0029 <span class="comment">%       c = subset(C,keep);</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%   C = ADJUSTTRIG(C,'INDEX') Trigger times are adjusted relative to the final</span>
+0032 <span class="comment">%   trace in the waveform list. This position is often occupied by a stack of</span>
+0033 <span class="comment">%   the other traces or some other master waveform. The INDEX method allows</span>
+0034 <span class="comment">%   trace times to be adjusted relative to this master waveform.</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">%   C = ADJUSTTRIG(C,'INDEX',TRACENUM) Same as ADJUSTTRIG(c,'INDEX') except that</span>
+0037 <span class="comment">%   traces are aligned relative to the trace specified by TRACENUM.</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%   C = ADJUSTTRIG(C,'LSQ') Aligns traces by their least squares best fit delay</span>
+0040 <span class="comment">%   time stored in the stat field. If GETSTAT has not been run yet, ADUSTTRIG</span>
+0041 <span class="comment">%   will automatically call it.</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">%   NOTE that the different methods of adjusting the trigger times acheive</span>
+0044 <span class="comment">%   quite different results because they are solving different problems.</span>
+0045 <span class="comment">%   While this may seem obvious the results can be counter-intuitive, especially</span>
+0046 <span class="comment">%   for the LSQ solver.</span>
+0047 
+0048 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0049 <span class="comment">% $Date$</span>
+0050 <span class="comment">% $Revision$</span>
+0051 
+0052 <span class="comment">% TODO: the current argument handling is done in a poor way that shows the</span>
+0053 <span class="comment">% function's growth. It is currently not possible to use the MAXLAG argument</span>
+0054 <span class="comment">% with the INDEX modifier. To change this, it would be best to rewrite the</span>
+0055 <span class="comment">% argument handling.</span>
+0056 
+0057 
+0058 
+0059 <span class="comment">% CHECK ARGUMENTS</span>
+0060 <span class="keyword">if</span> ~strcmpi(class(c),<span class="string">'correlation'</span>)
+0061     error(<span class="string">'First input must be a correlation object'</span>);
+0062 <span class="keyword">end</span>;
+0063 <span class="keyword">if</span> length(varargin)&gt;2
+0064     error(<span class="string">'Too many arguments'</span>);
+0065 <span class="keyword">end</span>;
+0066 
+0067 
+0068 <span class="comment">% SELECT SUBROUTINE</span>
+0069 <span class="keyword">if</span> length(varargin)&gt;=1 &amp;&amp; isnumeric(varargin{1})      <span class="comment">% use shifttriggers</span>
+0070     trigshift = varargin{1};
+0071     c = <a href="#_sub1" class="code" title="subfunction c = shifttriggers(c,trigshift)">shifttriggers</a>(c,trigshift);
+0072 <span class="keyword">else</span>
+0073     <span class="comment">% check if LAG field in filled                    % use adjusttriggers</span>
+0074     <span class="keyword">if</span> isempty(<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'LAG'</span>))
+0075         error(<span class="string">'LAG field must be filled in input object'</span>);
+0076         error(<span class="string">'See correlation/adjusttrig function'</span>);
+0077     <span class="keyword">end</span>;
+0078     <span class="keyword">if</span> length(varargin)&gt;=1 &amp;&amp; ischar(varargin{1})
+0079         calctype = upper(varargin{1});
+0080     <span class="keyword">else</span>
+0081         calctype = <span class="string">'MIN'</span>;    <span class="comment">% default</span>
+0082     <span class="keyword">end</span>;
+0083     <span class="keyword">if</span> strncmp(calctype,<span class="string">'MIN'</span>,3) &amp;&amp; (length(varargin)==2)
+0084         dosubset = varargin{2};
+0085     <span class="keyword">else</span>
+0086         dosubset = 0;
+0087     <span class="keyword">end</span>;
+0088 c = <a href="#_sub2" class="code" title="subfunction c = adjusttriggers(c,calctype,index)">adjusttriggers</a>(c,calctype,dosubset);
+0089 <span class="keyword">end</span>
+0090 
+0091 
+0092 <span class="comment">% SHIFT TRIGGER TIMES UNIFORMLY</span>
+0093 <a name="_sub1" href="#_subfunctions" class="code">function c = shifttriggers(c,trigshift)</a>
+0094 c.trig = c.trig + trigshift/86400;
+0095 
+0096 
+0097 <span class="comment">% ALIGN TRIGGER TIMES</span>
+0098 <a name="_sub2" href="#_subfunctions" class="code">function c = adjusttriggers(c,calctype,index)</a>
+0099 
+0100 
+0101 <span class="keyword">if</span> calctype(1:3)==<span class="string">'LSQ'</span>
+0102     <span class="keyword">if</span> size(c.stat,1)==0
+0103         c = <a href="getstat.html" class="code" title="function c=getstat(c)">getstat</a>(c);
+0104     <span class="keyword">end</span>;
+0105     tshift = c.stat(:,4);
+0106     c.trig = c.trig - tshift/86400;
+0107     c.L = [];
+0108 
+0109 <span class="keyword">elseif</span> calctype(1:3)==<span class="string">'MIN'</span>
+0110     [tmp,centerevent] = min(abs(mean(c.L)));
+0111     tshift = double(c.L(centerevent,:)');    <span class="comment">% in seconds</span>
+0112     c.trig = c.trig - tshift/86400;
+0113     c.L = [];
+0114 
+0115 <span class="keyword">elseif</span> calctype(1:3)==<span class="string">'MED'</span>
+0116     tshift = double(median(c.L)');    
+0117     c.trig = c.trig - tshift/86400;
+0118     c.L = [];
+0119     
+0120 <span class="comment">% &quot;index&quot; method is a bit ad hoc. It co-ops the &quot;index&quot; term, originally</span>
+0121 <span class="comment">% created for the 'MIN' method.</span>
+0122 <span class="keyword">elseif</span> calctype(1:3)==<span class="string">'IND'</span>
+0123     <span class="keyword">if</span> length(index) &gt; 1
+0124         error(<span class="string">'INDEX method must specify only a single value'</span>);
+0125     <span class="keyword">elseif</span> index==0
+0126        index = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'TRACES'</span>); 
+0127     <span class="keyword">end</span>
+0128     tshift = double(c.L(index,:)');    <span class="comment">% in seconds</span>
+0129     c.trig = c.trig - tshift/86400;
+0130     c.L = [];
+0131 
+0132 <span class="keyword">elseif</span> calctype(1:3)==<span class="string">'CLU'</span>
+0133     error(<span class="string">'CLUSTER OPTION NOT FUNCTIONAL YET'</span>);
+0134     <span class="keyword">if</span> size(c.link,1)==0
+0135         c = <a href="linkage.html" class="code" title="function c = linkage(c,varargin);">linkage</a>(c);
+0136         DOLINK = 1;
+0137     <span class="keyword">end</span>;
+0138     <span class="keyword">if</span> size(c.clust,1)==0
+0139         c = <a href="cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>(c,.6);
+0140         DOCLUST = 1;
+0141     <span class="keyword">end</span>;
+0142     <span class="comment">% *** NEEDS NEW VERSION OF FIND WITH ORDERED CLUSTERS</span>
+0143     <span class="keyword">for</span> n = 1:max(<a href="find.html" class="code" title="function index = find(c,varargin)">find</a>(c,<span class="string">'big'</span>,2))   <span class="comment">% do all clusters with more than 2 traces</span>
+0144         f = <a href="find.html" class="code" title="function index = find(c,varargin)">find</a>(c.clust==n);
+0145         c1 = <a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>(c,f);
+0146         c1 = <a href="adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>(c1,<span class="string">'min'</span>,index);  <span class="comment">% check use of index</span>
+0147         c.trig(f) = c1.trig;
+0148         c.W(f) = c1.W;
+0149     <span class="keyword">end</span>
+0150     <span class="keyword">if</span> DOLINK==1
+0151        c.link = []; 
+0152     <span class="keyword">end</span>
+0153     <span class="keyword">if</span> DOCLUSTER==1
+0154        c.clust = []; 
+0155     <span class="keyword">end</span>
+0156     
+0157 <span class="keyword">else</span>
+0158     disp(<span class="string">'Argument not recognized'</span>);
+0159 <span class="keyword">end</span>;
+0160 
+0161 
+0162 <span class="comment">% remove traces shifted beyond MAXLAG</span>
+0163 
+0164 <span class="keyword">if</span> (index~=0) 
+0165     f = <a href="find.html" class="code" title="function index = find(c,varargin)">find</a>(abs(tshift)&lt;=index);
+0166     c = <a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>(c,f);
+0167 <span class="keyword">end</span>;
+0168</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

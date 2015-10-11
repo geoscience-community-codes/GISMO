@@ -1,0 +1,869 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of uispecgram</title>
+  <meta name="keywords" content="uispecgram">
+  <meta name="description" content="UISPECGRAM M-file for uispecgram.fig">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../index.html">GISMO</a> &gt; <a href="index.html">applications</a> &gt; uispecgram.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/applications&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>uispecgram
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>UISPECGRAM M-file for uispecgram.fig</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = uispecgram(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> UISPECGRAM M-file for uispecgram.fig
+      USAGE: uispecgram(waveform, [spectralobject], [datasource])
+       spectralobject and datasource parameters are optional, and order
+       does not matter.
+
+
+      UISPECGRAM('CALLBACK',hObject,eventData,handles,...) calls the local
+      function named CALLBACK in UISPECGRAM.M with the given input arguments.
+
+      *See GUI Options on GUIDE's Tools menu.  Choose &quot;GUI allows only one
+      instance to run (singleton)&quot;.
+
+ See also: GUIDE, GUIDATA, GUIHANDLES, spectralobject, spectralobject/specgram2, spectralobject/specgram</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="uispecgram.html" class="code" title="function varargout = uispecgram(varargin)">uispecgram</a>	UISPECGRAM M-file for uispecgram.fig</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="uispecgram.html" class="code" title="function varargout = uispecgram(varargin)">uispecgram</a>	UISPECGRAM M-file for uispecgram.fig</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function uispecgram_OpeningFcn(hObject, eventdata, handles, varargin)</a></li><li><a href="#_sub2" class="code">function varargout = uispecgram_OutputFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub3" class="code">function pushbutton1_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub4" class="code">function FileMenu_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub5" class="code">function OpenMenuItem_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub6" class="code">function PrintMenuItem_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub7" class="code">function CloseMenuItem_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub8" class="code">function popupmenu_NFFT_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub9" class="code">function popupmenu_NFFT_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub10" class="code">function minDBLIMS_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub11" class="code">function minDBLIMS_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub12" class="code">function maxDBLIMS_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub13" class="code">function maxDBLIMS_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub14" class="code">function popupmenu_OVER_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub15" class="code">function popupmenu_OVER_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub16" class="code">function edit_MAX_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub17" class="code">function edit_MAX_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub18" class="code">function edit_MIN_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub19" class="code">function edit_MIN_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub20" class="code">function slider_FreqMax_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub21" class="code">function slider_FreqMax_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub22" class="code">function edit_FreqMax_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub23" class="code">function edit_FreqMax_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub24" class="code">function checkbox_AutoUpdate_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub25" class="code">function Specgram2_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub26" class="code">function menu_waveform_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub27" class="code">function menuitem_changetimes_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub28" class="code">function menuitem_changestation_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub29" class="code">function create_spectralobject_in_workspace(handles)</a></li><li><a href="#_sub30" class="code">function specgram_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub31" class="code">function createSpectralobjectMenuItem_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub32" class="code">function spectralobjectMenu_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub33" class="code">function plotMenu_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub34" class="code">function menu_xunits_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub35" class="code">function menu_setxunit_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub36" class="code">function replot_waveform(handles)</a></li><li><a href="#_sub37" class="code">function checkbox_logy_Callback(hObject, eventdata, handles)</a></li><li><a href="#_sub38" class="code">function autoUpdatePlot(eventdata,handles)</a></li><li><a href="#_sub39" class="code">function checkbox_logy_CreateFcn(hObject, eventdata, handles)</a></li><li><a href="#_sub40" class="code">function menu_about_Callback(hObject, eventdata, handles)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = uispecgram(varargin)</a>
+0002 <span class="comment">% UISPECGRAM M-file for uispecgram.fig</span>
+0003 <span class="comment">%      USAGE: uispecgram(waveform, [spectralobject], [datasource])</span>
+0004 <span class="comment">%       spectralobject and datasource parameters are optional, and order</span>
+0005 <span class="comment">%       does not matter.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%      UISPECGRAM('CALLBACK',hObject,eventData,handles,...) calls the local</span>
+0009 <span class="comment">%      function named CALLBACK in UISPECGRAM.M with the given input arguments.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%      *See GUI Options on GUIDE's Tools menu.  Choose &quot;GUI allows only one</span>
+0012 <span class="comment">%      instance to run (singleton)&quot;.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% See also: GUIDE, GUIDATA, GUIHANDLES, spectralobject, spectralobject/specgram2, spectralobject/specgram</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%</span>
+0017 
+0018 <span class="comment">% Modified by hand 10/22/2005</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Edit the above text to modify the response to help uispecgram</span>
+0021 
+0022 <span class="comment">% Last Modified by GUIDE v2.5 13-Mar-2010 15:24:21</span>
+0023 
+0024 <span class="comment">% Begin initialization code - DO NOT EDIT</span>
+0025 gui_Singleton = 1;
+0026 gui_State = struct(<span class="string">'gui_Name'</span>,       mfilename, <span class="keyword">...</span>
+0027   <span class="string">'gui_Singleton'</span>,  gui_Singleton, <span class="keyword">...</span>
+0028   <span class="string">'gui_OpeningFcn'</span>, @<a href="#_sub1" class="code" title="subfunction uispecgram_OpeningFcn(hObject, eventdata, handles, varargin)">uispecgram_OpeningFcn</a>, <span class="keyword">...</span>
+0029   <span class="string">'gui_OutputFcn'</span>,  @<a href="#_sub2" class="code" title="subfunction varargout = uispecgram_OutputFcn(hObject, eventdata, handles)">uispecgram_OutputFcn</a>, <span class="keyword">...</span>
+0030   <span class="string">'gui_LayoutFcn'</span>,  [] , <span class="keyword">...</span>
+0031   <span class="string">'gui_Callback'</span>,   []);
+0032 <span class="keyword">if</span> (nargin &gt; 0) &amp;&amp; ischar(varargin{1})
+0033   gui_State.gui_Callback = str2func(varargin{1});
+0034 <span class="keyword">end</span>
+0035 
+0036 <span class="keyword">if</span> nargout
+0037   [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+0038 <span class="keyword">else</span>
+0039   gui_mainfcn(gui_State, varargin{:});
+0040 <span class="keyword">end</span>
+0041 <span class="comment">% End initialization code - DO NOT EDIT</span>
+0042 
+0043 <span class="comment">% --- Executes just before uispecgram is made visible.</span>
+0044 <a name="_sub1" href="#_subfunctions" class="code">function uispecgram_OpeningFcn(hObject, eventdata, handles, varargin)</a>
+0045 <span class="comment">% This function has no output args, see OutputFcn.</span>
+0046 <span class="comment">% hObject    handle to figure</span>
+0047 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0048 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0049 <span class="comment">% varargin   command line arguments to uispecgram (see VARARGIN)</span>
+0050 
+0051 <span class="comment">% Choose default command line output for uispecgram</span>
+0052 handles.output = hObject;
+0053 
+0054 <span class="comment">% Update handles structure</span>
+0055 guidata(hObject, handles);
+0056 
+0057 
+0058 <span class="comment">%celso code</span>
+0059 nArgs = numel(varargin);
+0060 userData = struct(<span class="string">'wave'</span>,waveform,<span class="string">'spec'</span>,spectralobject,<span class="string">'source'</span>,datasource);
+0061 <span class="keyword">for</span> i=1:nArgs
+0062   <span class="keyword">if</span> isa(varargin{i},<span class="string">'waveform'</span>)
+0063     userData.wave = varargin{i};
+0064   <span class="keyword">elseif</span> isa(varargin{i},<span class="string">'spectralobject'</span>)
+0065     userData.spec = varargin{i};
+0066   <span class="keyword">elseif</span> isa(varargin{i},<span class="string">'datasource'</span>)
+0067     userData.source = varargin{i};
+0068   <span class="keyword">end</span>
+0069 <span class="keyword">end</span>
+0070 <span class="keyword">if</span> (numel(userData.wave)&gt; 1) || isempty(userData.wave(1))
+0071   error(<span class="string">'uispecgram must be called with a single waveform object.'</span>);
+0072 <span class="keyword">end</span>
+0073 
+0074 set(hObject,<span class="string">'UserData'</span>,userData); <span class="comment">%spectralobject &amp; waveform</span>
+0075 set(handles.menu_xunits,<span class="string">'userdata'</span>,<span class="string">'Seconds'</span>);
+0076 
+0077 
+0078 <span class="comment">% This sets up the initial plot - only do when we are invisible</span>
+0079 <span class="comment">% so window can get raised using uispecgram.</span>
+0080 <span class="keyword">if</span> strcmp(get(hObject,<span class="string">'Visible'</span>),<span class="string">'off'</span>)
+0081   <span class="comment">%set pointer to watch</span>
+0082   <span class="comment">%P = getptr(gcf);</span>
+0083   <span class="comment">%setptr(gcf,'watch')</span>
+0084   
+0085   <span class="comment">%draw the waveform</span>
+0086   axes(handles.axes_waveform);
+0087   plot(userData.wave);
+0088   axis tight
+0089   
+0090   <span class="comment">%draw the spectrogram</span>
+0091   <span class="comment">%   axes(handles.axes_specgram);</span>
+0092   specgram(userData.spec,userData.wave,<span class="keyword">...</span>
+0093       <span class="string">'axis'</span>,handles.axes_specgram,<span class="keyword">...</span>
+0094       <span class="string">'colorbar'</span>,<span class="string">'none'</span>,<span class="keyword">...</span>
+0095       <span class="string">'yscale'</span>,get(handles.checkbox_logy,<span class="string">'UserData'</span>));
+0096   handles.output = userData.spec;
+0097   guidata(hObject,handles)
+0098   title(<span class="string">''</span>);
+0099   colorbar(<span class="string">'horiz'</span>);
+0100   
+0101   <span class="comment">%set the parameters to match ouir input parameter...</span>
+0102   
+0103   <span class="comment">% --------------------------------------------------------------------</span>
+0104   <span class="comment">% Initialize the slider and edit box UI controls</span>
+0105   dBLimits = get(userData.spec,<span class="string">'dbLims'</span>);
+0106   lowerLimit = dBLimits(1); upperLimit = dBLimits(2);
+0107   
+0108   max_dbLim_value = 200;
+0109   min_dbLim_value = 0;
+0110   min_dBLim_step = 1/max_dbLim_value;
+0111   max_dBLim_step = 10/max_dbLim_value;
+0112   
+0113   <span class="comment">% ... Set the Lower dBLims slider</span>
+0114   set(handles.minDBLIMS,<span class="keyword">...</span>
+0115     <span class="string">'value'</span>,lowerLimit,<span class="keyword">...</span>
+0116     <span class="string">'sliderstep'</span>,[min_dBLim_step max_dBLim_step],<span class="keyword">...</span>
+0117     <span class="string">'max'</span>,max_dbLim_value,<span class="keyword">...</span>
+0118     <span class="string">'min'</span>,min_dbLim_value);
+0119   set(handles.edit_MIN,<span class="string">'value'</span>,lowerLimit,<span class="string">'string'</span>,num2str(lowerLimit));
+0120   
+0121   <span class="comment">% ... Set the Upper dBLims slider</span>
+0122   set(handles.maxDBLIMS,<span class="keyword">...</span>
+0123     <span class="string">'value'</span>, upperLimit,<span class="keyword">...</span>
+0124     <span class="string">'sliderstep'</span>, [min_dBLim_step max_dBLim_step],<span class="keyword">...</span>
+0125     <span class="string">'max'</span>,max_dbLim_value,<span class="keyword">...</span>
+0126     <span class="string">'min'</span>,min_dbLim_value);
+0127   
+0128   set(handles.edit_MAX,<span class="string">'value'</span>,upperLimit,<span class="string">'string'</span>,num2str(upperLimit));
+0129   
+0130   <span class="comment">% --------------------------------------------------------------------</span>
+0131   <span class="comment">%... set the Frequency slider</span>
+0132   max_freq_value = 49;
+0133   min_freq_value = 1;
+0134   min_freq_step = 1 / max_freq_value;
+0135   max_freq_step = 10 / max_freq_value;
+0136   current_max_freq = get(userData.spec,<span class="string">'freqMax'</span>);
+0137   set(handles.slider_FreqMax,<span class="keyword">...</span>
+0138     <span class="string">'value'</span>, current_max_freq,<span class="keyword">...</span>
+0139     <span class="string">'sliderstep'</span>,[min_freq_step max_freq_step],<span class="keyword">...</span>
+0140     <span class="string">'max'</span>,max_freq_value,<span class="string">'min'</span>,min_freq_value);
+0141   set(handles.edit_FreqMax,<span class="keyword">...</span>
+0142     <span class="string">'value'</span>,current_max_freq,<span class="keyword">...</span>
+0143     <span class="string">'string'</span>, num2str(current_max_freq));
+0144   
+0145   current_nfft = find(get(userData.spec,<span class="string">'NFFT'</span>)==[16384 8192 4096 2048 1024 512 256]);
+0146   <span class="keyword">if</span> isempty(current_nfft), current_nfft = 8; <span class="keyword">end</span>
+0147   <span class="comment">%     switch get(userData.spec,'NFFT')</span>
+0148   <span class="comment">%         case 256, current_nfft = 7;</span>
+0149   <span class="comment">%         case 512, current_nfft = 6;</span>
+0150   <span class="comment">%         case 1024, current_nfft = 5;</span>
+0151   <span class="comment">%         case 2048, current_nfft = 4;</span>
+0152   <span class="comment">%         case 4096, current_nfft = 3;</span>
+0153   <span class="comment">%         case 8192, current_nfft = 2;</span>
+0154   <span class="comment">%         case 16384, current_nfft = 1;</span>
+0155   <span class="comment">%         otherwise</span>
+0156   <span class="comment">%             current_nfft = 8; %custom</span>
+0157   <span class="comment">%     end</span>
+0158   set(handles.popupmenu_NFFT,<span class="string">'value'</span>,current_nfft);
+0159   
+0160   nfft = get(userData.spec, <span class="string">'NFFT'</span>);
+0161   overlap = get(userData.spec,<span class="string">'OVER'</span>);
+0162   freq = get(userData.wave,<span class="string">'Fs'</span>);
+0163   dif = round(nfft - overlap);
+0164   percent_overlap = round((nfft - overlap) / nfft * 100);
+0165   overlapMenuItem = 0;
+0166   
+0167   <span class="keyword">switch</span> percent_overlap
+0168     <span class="keyword">case</span> 20, overlapMenuItem = 2;
+0169     <span class="keyword">case</span> 50, overlapMenuItem = 3;
+0170     <span class="keyword">case</span> 80, overlapMenuItem = 4;
+0171     <span class="keyword">case</span> 90, overlapMenuItem = 5;
+0172   <span class="keyword">end</span>
+0173   <span class="keyword">if</span> (overlapMenuItem == 0)
+0174     <span class="comment">% didn't match a percent overlap, see if there's a dif</span>
+0175     <span class="keyword">switch</span> dif
+0176       <span class="keyword">case</span> 0, overlapMenuItem = 1;
+0177       <span class="keyword">case</span> freq, overlapMenuItem = 6;
+0178       <span class="keyword">case</span> (freq * 2), overlapMenuItem = 7;
+0179       <span class="keyword">case</span> (freq * 5), overlapMenuItem = 8;
+0180       <span class="keyword">case</span> (freq * 10), overlapMenuItem = 9;
+0181       <span class="keyword">case</span> (freq * 30), overlapMenuItem = 10;
+0182       <span class="keyword">case</span> (freq * 60), overlapMenuItem = 11;
+0183       <span class="keyword">otherwise</span>
+0184         <span class="comment">%unaccounted for overlap.  However, we need to be able to handle</span>
+0185         <span class="comment">%it.</span>
+0186         possibleOverlaps = get(handles.popupmenu_OVER,<span class="string">'string'</span>);
+0187         possibleOverlaps(12) = {num2str(overlap)};
+0188         set(handles.popupmenu_OVER,<span class="string">'string'</span>,possibleOverlaps);
+0189         overlapMenuItem = 12;
+0190     <span class="keyword">end</span>
+0191   <span class="keyword">end</span>
+0192   set(handles.popupmenu_OVER,<span class="string">'value'</span>,overlapMenuItem);
+0193   <span class="keyword">if</span> (nargout==1)
+0194     uiwait(handles.specgramfig);
+0195   <span class="keyword">end</span>
+0196   
+0197   
+0198   <span class="comment">%setptr(gcf,P{:}) %set pointer back to normal</span>
+0199 <span class="keyword">end</span>
+0200 
+0201 <span class="comment">% UIWAIT makes uispecgram wait for user response (see UIRESUME)</span>
+0202 <span class="comment">% uiwait(handles.specgramfig);</span>
+0203 
+0204 
+0205 <span class="comment">% --- Outputs from this function are returned to the command line.</span>
+0206 <a name="_sub2" href="#_subfunctions" class="code">function varargout = uispecgram_OutputFcn(hObject, eventdata, handles)</a>
+0207 <span class="comment">% varargout  cell array for returning output args (see VARARGOUT);</span>
+0208 <span class="comment">% hObject    handle to figure</span>
+0209 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0210 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0211 
+0212 <span class="comment">% Get default command line output from handles structure</span>
+0213 varargout{1} = handles.output;
+0214 uiresume(handles.specgramfig);
+0215 
+0216 <span class="comment">% --- Executes on button press in pushbutton1.</span>
+0217 <a name="_sub3" href="#_subfunctions" class="code">function pushbutton1_Callback(hObject, eventdata, handles)</a>
+0218 <span class="comment">% hObject    handle to pushbutton1 (see GCBO)</span>
+0219 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0220 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0221 axes(handles.axes_specgram);
+0222 userData = get(handles.specgramfig,<span class="string">'userdata'</span>);
+0223 
+0224 
+0225 <span class="comment">% nfft = get(userData.spec,'NFFT');</span>
+0226 
+0227 <span class="comment">% modify the stored spectralobject based on NFFT value from the pop-up menu</span>
+0228 NFFT_sel_index = get(handles.popupmenu_NFFT, <span class="string">'Value'</span>);
+0229 possibleNFFTvalues = get(handles.popupmenu_NFFT,<span class="string">'string'</span>);
+0230 nfft = str2double(possibleNFFTvalues(NFFT_sel_index));
+0231 userData.spec = set(userData.spec,<span class="string">'NFFT'</span>,nfft);
+0232 
+0233 <span class="comment">% modify the overlap based upon the overlap value from pop-up menu</span>
+0234 userData.spec = set(userData.spec,<span class="string">'FreqMax'</span>,get(handles.slider_FreqMax,<span class="string">'value'</span>));
+0235 freq = get(userData.wave,<span class="string">'Fs'</span>);
+0236 
+0237 <span class="keyword">switch</span> get(handles.popupmenu_OVER,<span class="string">'value'</span>)
+0238   <span class="keyword">case</span> 1, overlap = 0;
+0239   <span class="keyword">case</span> 2, overlap = .20 * nfft;
+0240   <span class="keyword">case</span> 3, overlap = .50 * nfft;
+0241   <span class="keyword">case</span> 4, overlap = .80 * nfft;
+0242   <span class="keyword">case</span> 5, overlap = .90 * nfft;
+0243   <span class="keyword">case</span> 6, overlap = nfft - (freq);
+0244   <span class="keyword">case</span> 7, overlap = nfft - (freq * 2);
+0245   <span class="keyword">case</span> 8, overlap = nfft - (freq * 5);
+0246   <span class="keyword">case</span> 9, overlap = nfft - (freq * 10);
+0247   <span class="keyword">case</span> 10, overlap = nfft - (freq * 30);
+0248   <span class="keyword">case</span> 11, overlap = nfft - (freq * 60);
+0249   <span class="keyword">case</span> 12, allOverlapStrings = get(handles.popupmenu_OVER,<span class="string">'string'</span>);
+0250     overlap = str2double(allOverlapStrings(12));
+0251 <span class="keyword">end</span>
+0252 
+0253 pointerShape = getptr(gcf);
+0254 setptr(gcf,<span class="string">'watch'</span>)
+0255 
+0256 userData.spec = set(userData.spec,<span class="string">'over'</span>,overlap);
+0257 dbls = [get(handles.minDBLIMS,<span class="string">'value'</span>), get(handles.maxDBLIMS,<span class="string">'value'</span>)];
+0258 <span class="keyword">if</span> dbls(1) &gt; dbls(2)
+0259   set(handles.minDBLIMS,<span class="string">'value'</span>,dbls(2));
+0260   set(handles.edit_MIN,<span class="string">'value'</span>,dbls(2),<span class="string">'string'</span>,num2str(dbls(2)));
+0261   set(handles.maxDBLIMS,<span class="string">'value'</span>,dbls(1));
+0262   set(handles.edit_MAX,<span class="string">'value'</span>,dbls(1),<span class="string">'string'</span>,num2str(dbls(1)));
+0263 <span class="keyword">end</span>;
+0264 userData.spec = set(userData.spec,<span class="string">'dblims'</span>, sort(dbls));
+0265 
+0266 axes(handles.axes_specgram);
+0267 
+0268 specgram(userData.spec,userData.wave,<span class="keyword">...</span>
+0269     <span class="string">'xunit'</span>,get(handles.menu_xunits,<span class="string">'userdata'</span>),<span class="keyword">...</span>
+0270     <span class="string">'axis'</span>, handles.axes_specgram,<span class="keyword">...</span>
+0271     <span class="string">'colorbar'</span>,<span class="string">'none'</span>,<span class="keyword">...</span>
+0272     <span class="string">'yscale'</span>,get(handles.checkbox_logy,<span class="string">'UserData'</span>));
+0273 <span class="comment">%specgram(userData.spec,userData.wave);</span>
+0274 <span class="comment">%colorbar('horiz');</span>
+0275 title(<span class="string">''</span>);
+0276 set(handles.specgramfig,<span class="string">'userdata'</span>,userData);
+0277 handles.output = userData.spec;
+0278 guidata(hObject,handles);
+0279 
+0280 set(gcf,pointerShape{:}); <span class="comment">%set pointer back to what it was before...</span>
+0281 
+0282 <span class="comment">% --------------------------------------------------------------------</span>
+0283 <a name="_sub4" href="#_subfunctions" class="code">function FileMenu_Callback(hObject, eventdata, handles)</a>
+0284 <span class="comment">% hObject    handle to FileMenu (see GCBO)</span>
+0285 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0286 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0287 
+0288 
+0289 <span class="comment">% --------------------------------------------------------------------</span>
+0290 <a name="_sub5" href="#_subfunctions" class="code">function OpenMenuItem_Callback(hObject, eventdata, handles)</a>
+0291 <span class="comment">% hObject    handle to OpenMenuItem (see GCBO)</span>
+0292 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0293 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0294 file = uigetfile(<span class="string">'*.fig'</span>);
+0295 <span class="keyword">if</span> ~isequal(file, 0)
+0296   open(file);
+0297 <span class="keyword">end</span>
+0298 
+0299 <span class="comment">% --------------------------------------------------------------------</span>
+0300 <a name="_sub6" href="#_subfunctions" class="code">function PrintMenuItem_Callback(hObject, eventdata, handles)</a>
+0301 <span class="comment">% hObject    handle to PrintMenuItem (see GCBO)</span>
+0302 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0303 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0304 printdlg(handles.specgramfig)
+0305 
+0306 <span class="comment">% --------------------------------------------------------------------</span>
+0307 <a name="_sub7" href="#_subfunctions" class="code">function CloseMenuItem_Callback(hObject, eventdata, handles)</a>
+0308 <span class="comment">% hObject    handle to CloseMenuItem (see GCBO)</span>
+0309 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0310 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0311 selection = questdlg([<span class="string">'Close '</span> get(handles.specgramfig,<span class="string">'Name'</span>) <span class="string">'?'</span>],<span class="keyword">...</span>
+0312   [<span class="string">'Close '</span> get(handles.specgramfig,<span class="string">'Name'</span>) <span class="string">'...'</span>],<span class="keyword">...</span>
+0313   <span class="string">'Yes'</span>,<span class="string">'No'</span>,<span class="string">'Yes'</span>);
+0314 <span class="keyword">if</span> strcmp(selection,<span class="string">'No'</span>)
+0315   <span class="keyword">return</span>;
+0316 <span class="keyword">end</span>
+0317 
+0318 delete(handles.specgramfig)
+0319 
+0320 
+0321 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0322 <a name="_sub8" href="#_subfunctions" class="code">function popupmenu_NFFT_CreateFcn(hObject, eventdata, handles)</a>
+0323 <span class="comment">% hObject    handle to popupmenu3 (see GCBO)</span>
+0324 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0325 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0326 
+0327 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0328 <span class="comment">%       See ISPC and COMPUTER.</span>
+0329 <span class="keyword">if</span> ispc
+0330   set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0331 <span class="keyword">else</span>
+0332   set(hObject,<span class="string">'BackgroundColor'</span>,get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>));
+0333 <span class="keyword">end</span>
+0334 
+0335 set(hObject, <span class="string">'String'</span>, {<span class="string">'16384'</span>, <span class="string">'8192'</span>, <span class="string">'4096'</span>, <span class="string">'2048'</span>, <span class="string">'1024'</span>, <span class="string">'512'</span>, <span class="string">'256'</span>});
+0336 
+0337 <span class="comment">% --- Executes on selection change in popupmenu3.</span>
+0338 <a name="_sub9" href="#_subfunctions" class="code">function popupmenu_NFFT_Callback(hObject, eventdata, handles)</a>
+0339 <span class="comment">% hObject    handle to popupmenu3 (see GCBO)</span>
+0340 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0341 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0342 
+0343 <span class="comment">% Hints: contents = get(hObject,'String') returns popupmenu3 contents as cell array</span>
+0344 <span class="comment">%        contents{get(hObject,'Value')} returns selected item from popupmenu3</span>
+0345 
+0346 <a href="#_sub38" class="code" title="subfunction autoUpdatePlot(eventdata,handles)">autoUpdatePlot</a>(eventdata,handles);
+0347 
+0348 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0349 <a name="_sub10" href="#_subfunctions" class="code">function minDBLIMS_CreateFcn(hObject, eventdata, handles)</a>
+0350 <span class="comment">% hObject    handle to minDBLIMS (see GCBO)</span>
+0351 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0352 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0353 
+0354 <span class="comment">% Hint: slider controls usually have a light gray background, change</span>
+0355 <span class="comment">%       'usewhitebg' to 0 to use default.  See ISPC and COMPUTER.</span>
+0356 usewhitebg = 1;
+0357 <span class="keyword">if</span> usewhitebg
+0358   set(hObject,<span class="string">'BackgroundColor'</span>,[.9 .9 .9]);
+0359 <span class="keyword">else</span>
+0360   set(hObject,<span class="string">'BackgroundColor'</span>,get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>));
+0361 <span class="keyword">end</span>
+0362 
+0363 
+0364 <span class="comment">% --- Executes on slider movement.</span>
+0365 <a name="_sub11" href="#_subfunctions" class="code">function minDBLIMS_Callback(hObject, eventdata, handles)</a>
+0366 <span class="comment">% hObject    handle to minDBLIMS (see GCBO)</span>
+0367 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0368 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0369 
+0370 <span class="comment">% Hints: get(hObject,'Value') returns position of slider</span>
+0371 <span class="comment">%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider</span>
+0372 set(hObject,<span class="string">'Value'</span>,round(get(hObject,<span class="string">'Value'</span>)));
+0373 set(handles.edit_MIN,<span class="string">'string'</span>,num2str(get(hObject,<span class="string">'Value'</span>)),<span class="string">'value'</span>,get(hObject,<span class="string">'Value'</span>));
+0374 
+0375 <a href="#_sub38" class="code" title="subfunction autoUpdatePlot(eventdata,handles)">autoUpdatePlot</a>(eventdata,handles);
+0376 
+0377 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0378 <a name="_sub12" href="#_subfunctions" class="code">function maxDBLIMS_CreateFcn(hObject, eventdata, handles)</a>
+0379 <span class="comment">% hObject    handle to maxDBLIMS (see GCBO)</span>
+0380 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0381 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0382 
+0383 <span class="comment">% Hint: slider controls usually have a light gray background, change</span>
+0384 <span class="comment">%       'usewhitebg' to 0 to use default.  See ISPC and COMPUTER.</span>
+0385 <span class="comment">%usewhitebg = 1;</span>
+0386 <span class="keyword">if</span> ispc
+0387   set(hObject,<span class="string">'BackgroundColor'</span>,[.9 .9 .9]);
+0388 <span class="keyword">else</span>
+0389   set(hObject,<span class="string">'BackgroundColor'</span>,get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>));
+0390 <span class="keyword">end</span>
+0391 
+0392 
+0393 <span class="comment">% --- Executes on slider movement.</span>
+0394 <a name="_sub13" href="#_subfunctions" class="code">function maxDBLIMS_Callback(hObject, eventdata, handles)</a>
+0395 <span class="comment">% hObject    handle to maxDBLIMS (see GCBO)</span>
+0396 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0397 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0398 
+0399 <span class="comment">% Hints: get(hObject,'Value') returns position of slider</span>
+0400 <span class="comment">%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider</span>
+0401 
+0402 set(hObject,<span class="string">'Value'</span>,round(get(hObject,<span class="string">'Value'</span>)));
+0403 set(handles.edit_MAX,<span class="string">'string'</span>,num2str(get(hObject,<span class="string">'Value'</span>)),<span class="string">'value'</span>,get(hObject,<span class="string">'Value'</span>));
+0404 
+0405 <a href="#_sub38" class="code" title="subfunction autoUpdatePlot(eventdata,handles)">autoUpdatePlot</a>(eventdata,handles);
+0406 
+0407 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0408 <a name="_sub14" href="#_subfunctions" class="code">function popupmenu_OVER_CreateFcn(hObject, eventdata, handles)</a>
+0409 <span class="comment">% hObject    handle to popupmenu_OVER (see GCBO)</span>
+0410 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0411 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0412 
+0413 <span class="comment">% Hint: popupmenu controls usually have a white background on Windows.</span>
+0414 <span class="comment">%       See ISPC and COMPUTER.</span>
+0415 <span class="keyword">if</span> ispc
+0416   set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0417 <span class="keyword">else</span>
+0418   set(hObject,<span class="string">'BackgroundColor'</span>,get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>));
+0419 <span class="keyword">end</span>
+0420 
+0421 
+0422 <span class="comment">% --- Executes on selection change in popupmenu_OVER.</span>
+0423 <a name="_sub15" href="#_subfunctions" class="code">function popupmenu_OVER_Callback(hObject, eventdata, handles)</a>
+0424 <span class="comment">% hObject    handle to popupmenu_OVER (see GCBO)</span>
+0425 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0426 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0427 
+0428 <span class="comment">% Hints: contents = get(hObject,'String') returns popupmenu_OVER contents as cell array</span>
+0429 <span class="comment">%        contents{get(hObject,'Value')} returns selected item from popupmenu_OVER</span>
+0430 
+0431 <a href="#_sub38" class="code" title="subfunction autoUpdatePlot(eventdata,handles)">autoUpdatePlot</a>(eventdata,handles);
+0432 
+0433 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0434 <a name="_sub16" href="#_subfunctions" class="code">function edit_MAX_CreateFcn(hObject, eventdata, handles)</a>
+0435 <span class="comment">% hObject    handle to edit_MAX (see GCBO)</span>
+0436 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0437 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0438 
+0439 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0440 <span class="comment">%       See ISPC and COMPUTER.</span>
+0441 <span class="keyword">if</span> ispc
+0442   set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0443 <span class="keyword">else</span>
+0444   set(hObject,<span class="string">'BackgroundColor'</span>,get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>));
+0445 <span class="keyword">end</span>
+0446 
+0447 
+0448 
+0449 <a name="_sub17" href="#_subfunctions" class="code">function edit_MAX_Callback(hObject, eventdata, handles)</a>
+0450 <span class="comment">% hObject    handle to edit_MAX (see GCBO)</span>
+0451 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0452 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0453 
+0454 <span class="comment">% Hints: get(hObject,'String') returns contents of edit_MAX as text</span>
+0455 <span class="comment">%        str2double(get(hObject,'String')) returns contents of edit_MAX as a double</span>
+0456 
+0457 
+0458 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0459 <a name="_sub18" href="#_subfunctions" class="code">function edit_MIN_CreateFcn(hObject, eventdata, handles)</a>
+0460 <span class="comment">% hObject    handle to edit_MIN (see GCBO)</span>
+0461 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0462 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0463 
+0464 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0465 <span class="comment">%       See ISPC and COMPUTER.</span>
+0466 <span class="keyword">if</span> ispc
+0467   set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0468 <span class="keyword">else</span>
+0469   set(hObject,<span class="string">'BackgroundColor'</span>,get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>));
+0470 <span class="keyword">end</span>
+0471 
+0472 
+0473 
+0474 <a name="_sub19" href="#_subfunctions" class="code">function edit_MIN_Callback(hObject, eventdata, handles)</a>
+0475 <span class="comment">% hObject    handle to edit_MIN (see GCBO)</span>
+0476 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0477 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0478 
+0479 <span class="comment">% Hints: get(hObject,'String') returns contents of edit_MIN as text</span>
+0480 <span class="comment">%        str2double(get(hObject,'String')) returns contents of edit_MIN as a double</span>
+0481 
+0482 
+0483 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0484 <a name="_sub20" href="#_subfunctions" class="code">function slider_FreqMax_CreateFcn(hObject, eventdata, handles)</a>
+0485 <span class="comment">% hObject    handle to slider_FreqMax (see GCBO)</span>
+0486 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0487 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0488 
+0489 <span class="comment">% Hint: slider controls usually have a light gray background, change</span>
+0490 <span class="comment">%       'usewhitebg' to 0 to use default.  See ISPC and COMPUTER.</span>
+0491 usewhitebg = 1;
+0492 <span class="keyword">if</span> usewhitebg
+0493   set(hObject,<span class="string">'BackgroundColor'</span>,[.9 .9 .9]);
+0494 <span class="keyword">else</span>
+0495   set(hObject,<span class="string">'BackgroundColor'</span>,get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>));
+0496 <span class="keyword">end</span>
+0497 
+0498 
+0499 <span class="comment">% --- Executes on slider movement.</span>
+0500 <a name="_sub21" href="#_subfunctions" class="code">function slider_FreqMax_Callback(hObject, eventdata, handles)</a>
+0501 <span class="comment">% hObject    handle to slider_FreqMax (see GCBO)</span>
+0502 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0503 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0504 
+0505 <span class="comment">% Hints: get(hObject,'Value') returns position of slider</span>
+0506 <span class="comment">%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider</span>
+0507 
+0508 set(hObject,<span class="string">'Value'</span>,round(get(hObject,<span class="string">'Value'</span>)));
+0509 set(handles.edit_FreqMax,<span class="string">'string'</span>,num2str(get(hObject,<span class="string">'Value'</span>)),<span class="string">'value'</span>,get(hObject,<span class="string">'Value'</span>));
+0510 
+0511 <a href="#_sub38" class="code" title="subfunction autoUpdatePlot(eventdata,handles)">autoUpdatePlot</a>(eventdata,handles);
+0512 
+0513 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0514 <a name="_sub22" href="#_subfunctions" class="code">function edit_FreqMax_CreateFcn(hObject, eventdata, handles)</a>
+0515 <span class="comment">% hObject    handle to edit_FreqMax (see GCBO)</span>
+0516 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0517 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0518 
+0519 <span class="comment">% Hint: edit controls usually have a white background on Windows.</span>
+0520 <span class="comment">%       See ISPC and COMPUTER.</span>
+0521 <span class="keyword">if</span> ispc
+0522   set(hObject,<span class="string">'BackgroundColor'</span>,<span class="string">'white'</span>);
+0523 <span class="keyword">else</span>
+0524   set(hObject,<span class="string">'BackgroundColor'</span>,get(0,<span class="string">'defaultUicontrolBackgroundColor'</span>));
+0525 <span class="keyword">end</span>
+0526 
+0527 
+0528 
+0529 <a name="_sub23" href="#_subfunctions" class="code">function edit_FreqMax_Callback(hObject, eventdata, handles)</a>
+0530 <span class="comment">% hObject    handle to edit_FreqMax (see GCBO)</span>
+0531 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0532 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0533 
+0534 <span class="comment">% Hints: get(hObject,'String') returns contents of edit_FreqMax as text</span>
+0535 <span class="comment">%        str2double(get(hObject,'String')) returns contents of edit_FreqMax as a double</span>
+0536 
+0537 
+0538 <span class="comment">% --- Executes on button press in checkbox_AutoUpdate.</span>
+0539 <a name="_sub24" href="#_subfunctions" class="code">function checkbox_AutoUpdate_Callback(hObject, eventdata, handles)</a>
+0540 <span class="comment">% hObject    handle to checkbox_AutoUpdate (see GCBO)</span>
+0541 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0542 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0543 
+0544 <span class="comment">% Hint: get(hObject,'Value') returns toggle state of checkbox_AutoUpdate</span>
+0545 <a href="#_sub38" class="code" title="subfunction autoUpdatePlot(eventdata,handles)">autoUpdatePlot</a>(eventdata,handles);
+0546 
+0547 <span class="comment">% --------------------------------------------------------------------</span>
+0548 <a name="_sub25" href="#_subfunctions" class="code">function Specgram2_Callback(hObject, eventdata, handles)</a>
+0549 <span class="comment">% hObject    handle to Specgram2 (see GCBO)</span>
+0550 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0551 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0552 <span class="comment">%Generates a specgram2 figure, suitable for printing and more...</span>
+0553 
+0554 h = figure
+0555 userData = get(handles.specgramfig,<span class="string">'userdata'</span>);
+0556 userData.wave
+0557 userData.spec
+0558 figure(h);
+0559 specgram2(userData.spec,userData.wave);
+0560 drawnow;
+0561 
+0562 
+0563 <span class="comment">% --------------------------------------------------------------------</span>
+0564 <a name="_sub26" href="#_subfunctions" class="code">function menu_waveform_Callback(hObject, eventdata, handles)</a>
+0565 <span class="comment">% hObject    handle to menu_waveform (see GCBO)</span>
+0566 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0567 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0568 
+0569 
+0570 <span class="comment">% --------------------------------------------------------------------</span>
+0571 <a name="_sub27" href="#_subfunctions" class="code">function menuitem_changetimes_Callback(hObject, eventdata, handles)</a>
+0572 <span class="comment">% hObject    handle to menuitem_changetimes (see GCBO)</span>
+0573 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0574 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0575 
+0576 <span class="comment">% get old waveform for defaults...</span>
+0577 userData = get(handles.specgramfig,<span class="string">'userdata'</span>);
+0578 
+0579 <span class="keyword">if</span> strcmpi(get(userData.source,<span class="string">'type'</span>),<span class="string">'none'</span>)
+0580   warning(<span class="string">'No data source exists'</span>);
+0581   set(hObject,<span class="string">'enable'</span>,<span class="string">'off'</span>);
+0582   set(handles.menuitem_changestation,<span class="string">'enable'</span>,<span class="string">'off'</span>);
+0583 <span class="keyword">end</span>
+0584 
+0585 stt = get(userData.wave,<span class="string">'start'</span>);
+0586 ent = get(userData.wave,<span class="string">'end'</span>);
+0587 
+0588 anS = inputdlg(<span class="string">'Start time?'</span>,<span class="string">'Waveform Starting time'</span>,1,{[datestr(stt,23) <span class="string">' '</span> datestr(stt,13)]});
+0589 <span class="comment">%Answer = INPUTDLG(Prompt,Title,LineNo,DefAns</span>
+0590 <span class="keyword">if</span> datenum(anS) &gt; ent, ent = datenum(anS), <span class="keyword">end</span>;  <span class="comment">%default to new start time.</span>
+0591 anE = inputdlg(<span class="string">'End time?'</span>,<span class="string">'Waveform Ending time'</span>,1,{[datestr(ent,23) <span class="string">' '</span> datestr(ent,13)]});
+0592 
+0593 <span class="keyword">try</span>
+0594 neww = waveform(userData.source,get(userData.wave,<span class="string">'scnlobject'</span>),anS{1},anE{1});
+0595 <span class="keyword">catch</span>
+0596     disp(<span class="string">'unable to access a waveform.  have a blank one instead'</span>);
+0597 <span class="keyword">end</span>
+0598 <span class="keyword">if</span> ~exist(<span class="string">'neww'</span>,<span class="string">'var'</span>) || isempty(neww)
+0599     neww = set(userData.wave,<span class="string">'start'</span>,anS{1},<span class="string">'data'</span>,[0 0 0]);
+0600     <span class="comment">% return</span>
+0601 <span class="keyword">end</span>
+0602 <span class="keyword">if</span> exist(<span class="string">'neww'</span>,<span class="string">'var'</span>)
+0603   userData.wave = neww;
+0604   set(handles.specgramfig,<span class="string">'userdata'</span>,userData);
+0605   pointerShape = getptr(gcf);
+0606   setptr(gcf,<span class="string">'watch'</span>) <span class="comment">% change cursor to watch (courtesy)</span>
+0607   axes(handles.axes_waveform);
+0608   plot(userData.wave,<span class="string">'xunit'</span>,get(handles.menu_xunits,<span class="string">'userdata'</span>));
+0609   axis tight
+0610   set(gcf,pointerShape{:})
+0611   <a href="uispecgram.html" class="code" title="function varargout = uispecgram(varargin)">uispecgram</a>(<span class="string">'pushbutton1_Callback'</span>,handles.pushbutton1,eventdata,handles) <span class="comment">%plot the spectra for the new waveform</span>
+0612 <span class="keyword">end</span>
+0613 
+0614 <span class="comment">% --------------------------------------------------------------------</span>
+0615 <a name="_sub28" href="#_subfunctions" class="code">function menuitem_changestation_Callback(hObject, eventdata, handles)</a>
+0616 <span class="comment">% hObject    handle to menuitem_changestation (see GCBO)</span>
+0617 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0618 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0619 userData = get(handles.specgramfig,<span class="string">'userdata'</span>);
+0620 <span class="keyword">if</span> isunassigned(userData.source)
+0621     <span class="comment">% no data source has been chosen</span>
+0622     vnames = evalin(<span class="string">'base'</span>,<span class="string">'whos'</span>); <span class="comment">%get list of variables from main workspace</span>
+0623     vnames = vnames(strcmp({vnames.class},<span class="string">'datasource'</span>)); <span class="comment">%keep datasource</span>
+0624     [selection, ok] = listdlg(<span class="keyword">...</span>
+0625         <span class="string">'PromptString'</span>,<span class="keyword">...</span>
+0626         <span class="string">'Choose a datasource variable, or the *new datasource*'</span>,<span class="keyword">...</span>
+0627         <span class="string">'listsize'</span>,[220 300],<span class="keyword">...</span>
+0628         <span class="string">'liststring'</span>, [{vnames.name},{<span class="string">'*new datasource*'</span>}] );
+0629     <span class="keyword">if</span> ~ok,
+0630         <span class="keyword">return</span>
+0631     <span class="keyword">end</span>
+0632     <span class="keyword">if</span> selection &gt; numel(vnames)
+0633         <span class="comment">%create a datasource from scratch</span>
+0634         answer = inputdlg(<span class="string">'Type the datasource creation command.   '</span>,<span class="keyword">...</span>
+0635             <span class="string">'Create datasource'</span>,1,{<span class="string">'datasource(''file'',''filename'')'</span>},<span class="string">'on'</span>);
+0636         <span class="keyword">if</span> isempty(answer)
+0637             <span class="keyword">return</span>;
+0638         <span class="keyword">end</span>
+0639         <span class="keyword">try</span>
+0640             userData.source = eval(answer);        
+0641             set(handles.specgramfig,<span class="string">'userdata'</span>,userData);
+0642         <span class="keyword">catch</span>
+0643             errordlg([<span class="string">'Unable to create the datasource object'</span>],<span class="string">'Problem creating datasource'</span>);
+0644         <span class="keyword">end</span>
+0645     <span class="keyword">else</span>
+0646         userData.source = evalin(<span class="string">'base'</span>,vnames(selection).name);
+0647         set(handles.specgramfig,<span class="string">'userdata'</span>,userData);
+0648     <span class="keyword">end</span>
+0649     
+0650     
+0651 <span class="keyword">end</span>
+0652 scnl = uiscnlobject(get(userData.wave,<span class="string">'scnlobject'</span>))
+0653 pointerShape = getptr(gcf);
+0654 neww = waveform(userData.source, scnl, <span class="keyword">...</span>
+0655     get(userData.wave,<span class="string">'start'</span>),<span class="keyword">...</span>
+0656     get(userData.wave,<span class="string">'end'</span>));
+0657 <span class="keyword">if</span> numel(neww) == 0
+0658   errordlg(<span class="string">'No waveform was found'</span>,<span class="string">'invalid station'</span>, <span class="string">'modal'</span>);
+0659 <span class="keyword">else</span>
+0660   set(gcf,pointerShape{:})
+0661   <span class="keyword">if</span> isa(neww,<span class="string">'waveform'</span>)
+0662     userData.wave = neww;
+0663     set(handles.specgramfig,<span class="string">'userdata'</span>,userData); <span class="comment">%make the new waveform available</span>
+0664     setptr(gcf,<span class="string">'watch'</span>) <span class="comment">% change cursor to watch (courtesy)</span>
+0665     axes(handles.axes_waveform);
+0666     plot(userData.wave,<span class="string">'xunit'</span>,get(handles.menu_xunits,<span class="string">'userdata'</span>));
+0667     axis tight
+0668     set(gcf,pointerShape{:})
+0669     <a href="uispecgram.html" class="code" title="function varargout = uispecgram(varargin)">uispecgram</a>(<span class="string">'pushbutton1_Callback'</span>,handles.pushbutton1,eventdata,handles) <span class="comment">%plot the spectra for the new waveform</span>
+0670   <span class="keyword">end</span>
+0671 <span class="keyword">end</span>
+0672 
+0673 
+0674 <span class="comment">%%%HELPER FUNCTION %%%</span>
+0675 
+0676 <a name="_sub29" href="#_subfunctions" class="code">function create_spectralobject_in_workspace(handles)</a>
+0677 prompt = <span class="string">'Name of variable to create?'</span>;
+0678 name = <span class="string">'create a spectralobject variable in the workspace'</span>;
+0679 defaultanswer = {<span class="string">'s'</span>};
+0680 numlines= 1;
+0681 options.Resize=<span class="string">'on'</span>;
+0682 options.WindowStyle=<span class="string">'modal'</span>;
+0683 options.Interpreter=<span class="string">'none'</span>;
+0684 answer = inputdlg(prompt,name,numlines,defaultanswer,options);
+0685 userData = get(handles.specgramfig,<span class="string">'userdata'</span>);
+0686 assignin(<span class="string">'base'</span>,answer{1},userData.spec);
+0687 
+0688 
+0689 <span class="comment">% --------------------------------------------------------------------</span>
+0690 <a name="_sub30" href="#_subfunctions" class="code">function specgram_Callback(hObject, eventdata, handles)</a>
+0691 <span class="comment">% hObject    handle to specgram (see GCBO)</span>
+0692 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0693 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0694 h = figure;
+0695 userData = get(handles.specgramfig,<span class="string">'userdata'</span>);
+0696 figure(h);
+0697 specgram(userData.spec,userData.wave,<span class="keyword">...</span>
+0698     <span class="string">'xunit'</span>,get(handles.menu_xunits,<span class="string">'UserData'</span>),<span class="keyword">...</span>
+0699     <span class="string">'axis'</span>,gca,<span class="keyword">...</span>
+0700     <span class="string">'yscale'</span>,get(handles.checkbox_logy,<span class="string">'UserData'</span>)<span class="keyword">...</span>
+0701     );
+0702 drawnow;
+0703 
+0704 <span class="comment">% --------------------------------------------------------------------</span>
+0705 <a name="_sub31" href="#_subfunctions" class="code">function createSpectralobjectMenuItem_Callback(hObject, eventdata, handles)</a>
+0706 <span class="comment">% hObject    handle to createSpectralobjectMenuItem (see GCBO)</span>
+0707 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0708 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0709 <span class="keyword">try</span>
+0710   <a href="#_sub29" class="code" title="subfunction create_spectralobject_in_workspace(handles)">create_spectralobject_in_workspace</a>(handles);
+0711 <span class="keyword">catch</span>
+0712   error(<span class="string">'Unable to save spectralobject to workspace'</span>);
+0713 <span class="keyword">end</span>
+0714 
+0715 
+0716 <span class="comment">% --------------------------------------------------------------------</span>
+0717 <a name="_sub32" href="#_subfunctions" class="code">function spectralobjectMenu_Callback(hObject, eventdata, handles)</a>
+0718 <span class="comment">% hObject    handle to spectralobjectMenu (see GCBO)</span>
+0719 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0720 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0721 
+0722 
+0723 <span class="comment">% --------------------------------------------------------------------</span>
+0724 <a name="_sub33" href="#_subfunctions" class="code">function plotMenu_Callback(hObject, eventdata, handles)</a>
+0725 <span class="comment">% hObject    handle to plotMenu (see GCBO)</span>
+0726 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0727 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0728 
+0729 
+0730 <span class="comment">% --------------------------------------------------------------------</span>
+0731 <a name="_sub34" href="#_subfunctions" class="code">function menu_xunits_Callback(hObject, eventdata, handles)</a>
+0732 <span class="comment">% hObject    handle to menu_xunits (see GCBO)</span>
+0733 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0734 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0735 
+0736 
+0737 <a name="_sub35" href="#_subfunctions" class="code">function menu_setxunit_Callback(hObject, eventdata, handles)</a>
+0738 <span class="comment">% hObject    handle to menu_date (see GCBO)</span>
+0739 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0740 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0741 
+0742 
+0743 
+0744 set(handles.menu_xunits,<span class="string">'userdata'</span>,get(hObject,<span class="string">'Label'</span>));
+0745 set(handles.menu_seconds,<span class="string">'checked'</span>,<span class="string">'off'</span>);
+0746 set(handles.menu_minutes,<span class="string">'checked'</span>,<span class="string">'off'</span>);
+0747 set(handles.menu_hours,<span class="string">'checked'</span>,<span class="string">'off'</span>);
+0748 set(handles.menu_date,<span class="string">'checked'</span>,<span class="string">'off'</span>);
+0749 set(handles.menu_doy,<span class="string">'checked'</span>,<span class="string">'off'</span>);
+0750 
+0751 set(hObject,<span class="string">'checked'</span>,<span class="string">'on'</span>);
+0752 <a href="#_sub36" class="code" title="subfunction replot_waveform(handles)">replot_waveform</a>(handles);
+0753 <a href="uispecgram.html" class="code" title="function varargout = uispecgram(varargin)">uispecgram</a>(<span class="string">'pushbutton1_Callback'</span>,handles.pushbutton1,eventdata,handles) <span class="comment">%plot the spectra for the new waveform</span>
+0754 
+0755 <a name="_sub36" href="#_subfunctions" class="code">function replot_waveform(handles)</a>
+0756 axes(handles.axes_waveform)
+0757 userData = get(handles.specgramfig,<span class="string">'userdata'</span>);
+0758 xunits = get(handles.menu_xunits,<span class="string">'userdata'</span>);
+0759 plot(userData.wave,<span class="string">'xunit'</span>,xunits);
+0760 axis tight
+0761 
+0762 
+0763 <span class="comment">% --- Executes on button press in checkbox_logy.</span>
+0764 <a name="_sub37" href="#_subfunctions" class="code">function checkbox_logy_Callback(hObject, eventdata, handles)</a>
+0765 <span class="comment">% hObject    handle to checkbox_logy (see GCBO)</span>
+0766 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0767 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0768 
+0769 <span class="comment">% Hint: get(hObject,'Value') returns toggle state of checkbox_logy</span>
+0770 <span class="keyword">if</span> get(hObject,<span class="string">'value'</span>)
+0771     set(hObject,<span class="string">'UserData'</span>,<span class="string">'log'</span>);
+0772 <span class="keyword">else</span>
+0773     set(hObject,<span class="string">'UserData'</span>,<span class="string">'normal'</span>);
+0774 <span class="keyword">end</span>
+0775 
+0776 <a href="#_sub38" class="code" title="subfunction autoUpdatePlot(eventdata,handles)">autoUpdatePlot</a>(eventdata,handles);
+0777 
+0778 <a name="_sub38" href="#_subfunctions" class="code">function autoUpdatePlot(eventdata,handles)</a>
+0779 <span class="comment">% Automatically update the plot IF AutoUpdate is checked</span>
+0780 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0781 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0782 <span class="keyword">if</span> get(handles.checkbox_AutoUpdate,<span class="string">'value'</span>)
+0783   <a href="uispecgram.html" class="code" title="function varargout = uispecgram(varargin)">uispecgram</a>(<span class="string">'pushbutton1_Callback'</span>,handles.pushbutton1,eventdata,handles)
+0784 <span class="keyword">end</span>
+0785 
+0786 
+0787 <span class="comment">% --- Executes during object creation, after setting all properties.</span>
+0788 <a name="_sub39" href="#_subfunctions" class="code">function checkbox_logy_CreateFcn(hObject, eventdata, handles)</a>
+0789 <span class="comment">% hObject    handle to checkbox_logy (see GCBO)</span>
+0790 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0791 <span class="comment">% handles    empty - handles not created until after all CreateFcns called</span>
+0792 
+0793 <span class="comment">% Check to see if we have to ability to create log spectrograms, if not,</span>
+0794 <span class="comment">% then disable the log checkbox.</span>
+0795 
+0796 <span class="keyword">if</span> exist(<span class="string">'uimagesc.m'</span>,<span class="string">'file'</span>) ~= 0
+0797     set(hObject,<span class="string">'Enable'</span>,<span class="string">'on'</span>);
+0798 <span class="keyword">else</span>
+0799     set(hObject,<span class="string">'Enable'</span>,<span class="string">'off'</span>);
+0800 <span class="keyword">end</span>
+0801 
+0802 
+0803 <span class="comment">% --------------------------------------------------------------------</span>
+0804 <a name="_sub40" href="#_subfunctions" class="code">function menu_about_Callback(hObject, eventdata, handles)</a>
+0805 <span class="comment">% hObject    handle to menu_about (see GCBO)</span>
+0806 <span class="comment">% eventdata  reserved - to be defined in a future version of MATLAB</span>
+0807 <span class="comment">% handles    structure with handles and user data (see GUIDATA)</span>
+0808 h = helpdlg(<span class="string">'Version r228, by Celso G. Reyes, University of Alaska Fairbanks http://www.mathworks.com/matlabcentral/fileexchange/authors/53809'</span>,<span class="string">'About uispecgram'</span>);</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

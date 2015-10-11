@@ -1,0 +1,335 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of helicorder</title>
+  <meta name="keywords" content="helicorder">
+  <meta name="description" content="HELICORDER: Helicorder generates a multi-line display of input waveform">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@helicorder</a> &gt; helicorder.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@helicorder&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>helicorder
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>HELICORDER: Helicorder generates a multi-line display of input waveform</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function h = helicorder(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">HELICORDER: Helicorder generates a multi-line display of input waveform
+   data. Helicorder can display waveform data from multiple stations and 
+   channels as long as the time range is the same for each. Helicorder
+   can also display detected events over the raw data.
+
+USAGE: helicorder()----------------------- Empty helicorder
+       helicorder(wave)------------------- Default properties
+       helicorder(wave,prop_1,val_1,...)-- User-defined properties
+
+VALID PROP/VAL:
+  'mpl'--&gt;(Minutes Per Line)
+     single numeric value specifying number of minutes per helicorder
+     line. (This applies to all waveforms in the helicorder)
+     DEFAULT = 10 
+
+  'ytick'--&gt;(Y-Axis Ticks)
+     single numeric value specifying number of minutes between y-axis 
+     tick marks and labels. 'ytick' depends on 'mpl', for example, if 
+     'mpl' is 20, an attempt to set 'ytick' to 10 will be result in 
+     'ytick' rounded to nearest multiple of 'mpl' (20 in this case). Note
+     also that manually setting 'mpl' will result in an automatic
+     adjustment of 'ytick'.
+     DEFAULT = 30
+
+  'e_sst'--&gt;(Event Start/Stop Times) 
+     If wave contains only one wavefrom object, 'e_sst' can be entered
+     as an Nx2 array of matlab times. If there is more than one waveform
+     in wave (M waveforms), 'e_sst' must be a 1xM cell array, each cell 
+     containing Nx2 array of start/stop times. A single waveform can also
+     have multiple sets of start/stop times as in a waveform with multiple
+     event families. In this case 'e_sst' should be entered as a 1xL cell
+     array for a particular waveform (with L separate groups to be 
+     highlighted).
+     EXAMPLE: h = helicorder(w,'e_sst',A) where w is a 1x2 waveform object
+        A is a 1x2 cell array
+        A(1,1) is a Nx2 numeric array
+        A(1,2) is a 1x3 cell
+        A(1,2){1} is a Nx2 numeric array
+        A(1,2){2} is a Nx2 numeric array
+        A(1,2){3} is a Nx2 numeric array
+     DEFAULT = [] (No events)
+
+  'trace_color'--&gt;(Trace Color)
+     If wave contains only one wavefrom object, 'trace_color' can be 
+     entered as a 1x3 array of RGB values (between 0 and 1). For wave
+     arguments longer than 1, 'trace_color' should be entered as a 1xN
+     cell array, each containing a 1x3 array of RGB values.
+
+  'event_color'--&gt;(Event Color)
+     Only use this property when 'e_sst' property exists. 'event_color'
+     follows the same structure as 'e_sst'. If wave contains only one 
+     waveform object, 'event_color' can be entered as a 1x3 array of RGB 
+     values (between 0 and 1). For wave arguments longer than 1, 
+     'event_color' should be entered as a 1xN cell array, each containing 
+     a 1x3 array of RGB values. If multiple event sets exist for a single
+     waveform, 'event_color' must be specified accordingly
+     EXAMPLE: h = helicorder(w,'e_sst',A,'event_color',B)
+        A is the same as the previous example
+        B(1,1) is a 1x3 RGB array
+        A(1,2) is a 1x3 cell
+        A(1,2){1} is a 1x3 RGB array
+        A(1,2){2} is a 1x3 RGB array
+        A(1,2){3} is a 1x3 RGB array
+     DEFAULT = [] (No events)
+
+  'display'--&gt;(Multi-Waveform Display Type)
+     'single' - used when there is only one waveform in wave. None of the
+        multi-waveform display types can be set unless multiple waveforms
+        are passed.
+     'stack' - plots multiple waveforms over top of each other. 
+        (Multiple motivations could exist for wanting to display data in 
+        this way such as overlaying VLP energy)
+     'alternate' - Alternate helicorder lines 
+        i.e. Helicorder containing 3 waveforms would look like:           
+        w1(t0 --&gt; t1), w2(t0 --&gt; t1), w3(t0 --&gt; t1), w1(t1 -- t2),...
+     'group' - Plot all lines from individual waveforms in separate blocks
+        i.e. Helicorder containing 3 waveforms would look like: 
+        w1(t0 --&gt; t1), w1(t1 --&gt; t2), w1(t2 --&gt; t3),... w1(t_end-1 --&gt;
+        t_end),w2(t0 --&gt; t1), w2(t1 --&gt; t2), w2(t2 --&gt; t3),...
+     DEFAULT = 'single','alternate' (1 or multiple waveforms)
+
+INPUTS: wave     - a waveform object to be plotted on multiple helicorder
+                   trace lines
+        varargin - user-defined helicorder properties (argument pairs)                  
+
+OUTPUTS: h - helicorder object
+
+   See also HELICORDER/DISP, HELICORDER/BUILD, HELICORDER/GET,
+            HELICORDER/SET
+
+ Author: Dane Ketner, Alaska Volcano Observatory
+ $Date$
+ $Revision$</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function h = helicorder(varargin)</a>
+0002 
+0003 <span class="comment">%HELICORDER: Helicorder generates a multi-line display of input waveform</span>
+0004 <span class="comment">%   data. Helicorder can display waveform data from multiple stations and</span>
+0005 <span class="comment">%   channels as long as the time range is the same for each. Helicorder</span>
+0006 <span class="comment">%   can also display detected events over the raw data.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%USAGE: helicorder()----------------------- Empty helicorder</span>
+0009 <span class="comment">%       helicorder(wave)------------------- Default properties</span>
+0010 <span class="comment">%       helicorder(wave,prop_1,val_1,...)-- User-defined properties</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%VALID PROP/VAL:</span>
+0013 <span class="comment">%  'mpl'--&gt;(Minutes Per Line)</span>
+0014 <span class="comment">%     single numeric value specifying number of minutes per helicorder</span>
+0015 <span class="comment">%     line. (This applies to all waveforms in the helicorder)</span>
+0016 <span class="comment">%     DEFAULT = 10</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%  'ytick'--&gt;(Y-Axis Ticks)</span>
+0019 <span class="comment">%     single numeric value specifying number of minutes between y-axis</span>
+0020 <span class="comment">%     tick marks and labels. 'ytick' depends on 'mpl', for example, if</span>
+0021 <span class="comment">%     'mpl' is 20, an attempt to set 'ytick' to 10 will be result in</span>
+0022 <span class="comment">%     'ytick' rounded to nearest multiple of 'mpl' (20 in this case). Note</span>
+0023 <span class="comment">%     also that manually setting 'mpl' will result in an automatic</span>
+0024 <span class="comment">%     adjustment of 'ytick'.</span>
+0025 <span class="comment">%     DEFAULT = 30</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%  'e_sst'--&gt;(Event Start/Stop Times)</span>
+0028 <span class="comment">%     If wave contains only one wavefrom object, 'e_sst' can be entered</span>
+0029 <span class="comment">%     as an Nx2 array of matlab times. If there is more than one waveform</span>
+0030 <span class="comment">%     in wave (M waveforms), 'e_sst' must be a 1xM cell array, each cell</span>
+0031 <span class="comment">%     containing Nx2 array of start/stop times. A single waveform can also</span>
+0032 <span class="comment">%     have multiple sets of start/stop times as in a waveform with multiple</span>
+0033 <span class="comment">%     event families. In this case 'e_sst' should be entered as a 1xL cell</span>
+0034 <span class="comment">%     array for a particular waveform (with L separate groups to be</span>
+0035 <span class="comment">%     highlighted).</span>
+0036 <span class="comment">%     EXAMPLE: h = helicorder(w,'e_sst',A) where w is a 1x2 waveform object</span>
+0037 <span class="comment">%        A is a 1x2 cell array</span>
+0038 <span class="comment">%        A(1,1) is a Nx2 numeric array</span>
+0039 <span class="comment">%        A(1,2) is a 1x3 cell</span>
+0040 <span class="comment">%        A(1,2){1} is a Nx2 numeric array</span>
+0041 <span class="comment">%        A(1,2){2} is a Nx2 numeric array</span>
+0042 <span class="comment">%        A(1,2){3} is a Nx2 numeric array</span>
+0043 <span class="comment">%     DEFAULT = [] (No events)</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">%  'trace_color'--&gt;(Trace Color)</span>
+0046 <span class="comment">%     If wave contains only one wavefrom object, 'trace_color' can be</span>
+0047 <span class="comment">%     entered as a 1x3 array of RGB values (between 0 and 1). For wave</span>
+0048 <span class="comment">%     arguments longer than 1, 'trace_color' should be entered as a 1xN</span>
+0049 <span class="comment">%     cell array, each containing a 1x3 array of RGB values.</span>
+0050 <span class="comment">%</span>
+0051 <span class="comment">%  'event_color'--&gt;(Event Color)</span>
+0052 <span class="comment">%     Only use this property when 'e_sst' property exists. 'event_color'</span>
+0053 <span class="comment">%     follows the same structure as 'e_sst'. If wave contains only one</span>
+0054 <span class="comment">%     waveform object, 'event_color' can be entered as a 1x3 array of RGB</span>
+0055 <span class="comment">%     values (between 0 and 1). For wave arguments longer than 1,</span>
+0056 <span class="comment">%     'event_color' should be entered as a 1xN cell array, each containing</span>
+0057 <span class="comment">%     a 1x3 array of RGB values. If multiple event sets exist for a single</span>
+0058 <span class="comment">%     waveform, 'event_color' must be specified accordingly</span>
+0059 <span class="comment">%     EXAMPLE: h = helicorder(w,'e_sst',A,'event_color',B)</span>
+0060 <span class="comment">%        A is the same as the previous example</span>
+0061 <span class="comment">%        B(1,1) is a 1x3 RGB array</span>
+0062 <span class="comment">%        A(1,2) is a 1x3 cell</span>
+0063 <span class="comment">%        A(1,2){1} is a 1x3 RGB array</span>
+0064 <span class="comment">%        A(1,2){2} is a 1x3 RGB array</span>
+0065 <span class="comment">%        A(1,2){3} is a 1x3 RGB array</span>
+0066 <span class="comment">%     DEFAULT = [] (No events)</span>
+0067 <span class="comment">%</span>
+0068 <span class="comment">%  'display'--&gt;(Multi-Waveform Display Type)</span>
+0069 <span class="comment">%     'single' - used when there is only one waveform in wave. None of the</span>
+0070 <span class="comment">%        multi-waveform display types can be set unless multiple waveforms</span>
+0071 <span class="comment">%        are passed.</span>
+0072 <span class="comment">%     'stack' - plots multiple waveforms over top of each other.</span>
+0073 <span class="comment">%        (Multiple motivations could exist for wanting to display data in</span>
+0074 <span class="comment">%        this way such as overlaying VLP energy)</span>
+0075 <span class="comment">%     'alternate' - Alternate helicorder lines</span>
+0076 <span class="comment">%        i.e. Helicorder containing 3 waveforms would look like:</span>
+0077 <span class="comment">%        w1(t0 --&gt; t1), w2(t0 --&gt; t1), w3(t0 --&gt; t1), w1(t1 -- t2),...</span>
+0078 <span class="comment">%     'group' - Plot all lines from individual waveforms in separate blocks</span>
+0079 <span class="comment">%        i.e. Helicorder containing 3 waveforms would look like:</span>
+0080 <span class="comment">%        w1(t0 --&gt; t1), w1(t1 --&gt; t2), w1(t2 --&gt; t3),... w1(t_end-1 --&gt;</span>
+0081 <span class="comment">%        t_end),w2(t0 --&gt; t1), w2(t1 --&gt; t2), w2(t2 --&gt; t3),...</span>
+0082 <span class="comment">%     DEFAULT = 'single','alternate' (1 or multiple waveforms)</span>
+0083 <span class="comment">%</span>
+0084 <span class="comment">%INPUTS: wave     - a waveform object to be plotted on multiple helicorder</span>
+0085 <span class="comment">%                   trace lines</span>
+0086 <span class="comment">%        varargin - user-defined helicorder properties (argument pairs)</span>
+0087 <span class="comment">%</span>
+0088 <span class="comment">%OUTPUTS: h - helicorder object</span>
+0089 <span class="comment">%</span>
+0090 <span class="comment">%   See also HELICORDER/DISP, HELICORDER/BUILD, HELICORDER/GET,</span>
+0091 <span class="comment">%            HELICORDER/SET</span>
+0092 <span class="comment">%</span>
+0093 <span class="comment">% Author: Dane Ketner, Alaska Volcano Observatory</span>
+0094 <span class="comment">% $Date$</span>
+0095 <span class="comment">% $Revision$</span>
+0096 
+0097 <span class="comment">%% EMPTY HELICORDER</span>
+0098 <span class="keyword">if</span> nargin == 0               
+0099    h.wave = waveform();
+0100    h.e_sst = {};
+0101    nw = 0;
+0102 
+0103 <span class="comment">%% ANOTHER HELICORDER OBJECT</span>
+0104 <span class="keyword">elseif</span> nargin==1 &amp;&amp; isa(varargin{1},<span class="string">'helicorder'</span>)
+0105     h = varargin{1};
+0106     <span class="keyword">return</span>
+0107     
+0108 <span class="comment">%% WAVEFORM OBJECT PROVIDED</span>
+0109 <span class="keyword">elseif</span> (nargin &gt;= 1) &amp;&amp; isa(varargin{1},<span class="string">'waveform'</span>)
+0110    h.wave = varargin{1}; <span class="comment">% Helicorder waveform data</span>
+0111    nw = numel(h.wave);
+0112 <span class="keyword">else</span>
+0113    error(<span class="string">'helicorder: first argument must be a waveform'</span>)
+0114 <span class="keyword">end</span>
+0115 
+0116 <span class="comment">%% DEFAULT PROPERTIES</span>
+0117 <span class="keyword">for</span> n = 1:nw,               
+0118    h.e_sst{n} = []; <span class="comment">% Empty event start/stop time array</span>
+0119 <span class="keyword">end</span> 
+0120 
+0121 h.mpl = 10;   <span class="comment">% 10 Minutes per line</span>
+0122 h.ytick = 30; <span class="comment">% Time Ticks every 30 Minutes (3 Lines)</span>
+0123 
+0124 <span class="keyword">if</span> nw &lt;= 1                     <span class="comment">% Default trace color scheme</span>
+0125    h.trace_color{1} = [0 0 0]; <span class="comment">% black</span>
+0126    h.event_color{1} = [1 0 0]; <span class="comment">% red</span>
+0127 <span class="keyword">elseif</span> nw == 2
+0128    h.trace_color{1} = [0 0 0]; <span class="comment">% black</span>
+0129    h.trace_color{2} = [0 0 1]; <span class="comment">% blue</span>
+0130 <span class="keyword">else</span>
+0131    rr = zeros(1,nw);              <span class="comment">% red values</span>
+0132    gg = round(linspace(-255,255,nw)); 
+0133    gg = sign(sign(gg)+1).*gg/255; <span class="comment">% green values</span>
+0134    bb = round(linspace(255,-255,nw)); 
+0135    bb = sign(sign(bb)+1).*bb/255; <span class="comment">% blue values</span>
+0136    <span class="keyword">for</span> n = 1:nw
+0137       h.trace_color{n} = [rr(n) gg(n) bb(n)];
+0138    <span class="keyword">end</span>
+0139 <span class="keyword">end</span>
+0140 
+0141 h.event_color = [];
+0142 
+0143 <span class="keyword">if</span> nw &lt;= 1
+0144    h.display = <span class="string">'single'</span>;
+0145 <span class="keyword">else</span>
+0146    h.display = <span class="string">'alternate'</span>;
+0147 <span class="keyword">end</span>
+0148 
+0149 h.scale = ones(1,nw); <span class="comment">% Waveform amplitude scale is automatically set based</span>
+0150                       <span class="comment">% on maximum values in wave. scale can be set after</span>
+0151                       <span class="comment">% the fact. 1 is default, going higher or lower will</span>
+0152                       <span class="comment">% scale wave proportionally.</span>
+0153 h = class(h,<span class="string">'helicorder'</span>);
+0154 
+0155 <span class="comment">%% USER-DEFINED PROPERTIES</span>
+0156 <span class="keyword">if</span> (nargin &gt; 1)
+0157    v = varargin(2:end);
+0158    nv = nargin-1;
+0159    <span class="keyword">if</span> ~rem(nv,2) == 0
+0160       error([<span class="string">'helicorder: Arguments after wave must appear in '</span>,<span class="keyword">...</span>
+0161              <span class="string">'property name/val pairs'</span>])
+0162    <span class="keyword">end</span>
+0163    <span class="keyword">for</span> n = 1:2:nv-1
+0164       name = lower(v{n});
+0165       val = v{n+1};
+0166       <span class="keyword">switch</span> name
+0167          <span class="keyword">case</span> <span class="string">'e_sst'</span> <span class="comment">% Event Start/Stop Times</span>
+0168             h = <a href="set.html" class="code" title="function h = set(h,varargin)">set</a>(h,<span class="string">'e_sst'</span>,val);
+0169             <span class="keyword">for</span> n = 1:nw       <span class="comment">% Default event color scheme (shades of red)</span>
+0170                <span class="keyword">if</span> ~iscell(h.e_sst{n})
+0171                   h.event_color{n} = [1 0 0];
+0172                <span class="keyword">else</span>
+0173                   <span class="keyword">for</span> m = 1:numel(h.e_sst{n})
+0174                      rr = m/numel(h.e_sst{n});
+0175                      h.event_color{n}{m} = [rr 0 0];
+0176                   <span class="keyword">end</span>
+0177                <span class="keyword">end</span>
+0178             <span class="keyword">end</span>
+0179          <span class="keyword">case</span> <span class="string">'ytick'</span> <span class="comment">% Y-Tick Spacing</span>
+0180             h = <a href="set.html" class="code" title="function h = set(h,varargin)">set</a>(h,<span class="string">'ytick'</span>,val);
+0181          <span class="keyword">case</span> <span class="string">'mpl'</span> <span class="comment">% Minutes Per Line</span>
+0182             h = <a href="set.html" class="code" title="function h = set(h,varargin)">set</a>(h,<span class="string">'mpl'</span>,val);
+0183          <span class="keyword">case</span> <span class="string">'trace_color'</span> <span class="comment">% Minutes Per Line</span>
+0184             h = <a href="set.html" class="code" title="function h = set(h,varargin)">set</a>(h,<span class="string">'trace_color'</span>,val);
+0185          <span class="keyword">case</span> <span class="string">'event_color'</span> <span class="comment">% Minutes Per Line</span>
+0186             h = <a href="set.html" class="code" title="function h = set(h,varargin)">set</a>(h,<span class="string">'event_color'</span>,val);
+0187          <span class="keyword">case</span> <span class="string">'display'</span> <span class="comment">% Multiple Waveform Display Type</span>
+0188             h = <a href="set.html" class="code" title="function h = set(h,varargin)">set</a>(h,<span class="string">'display'</span>,val);
+0189          <span class="keyword">case</span> <span class="string">'scale'</span> <span class="comment">% Waveform Data Scaling Factor</span>
+0190             h = <a href="set.html" class="code" title="function h = set(h,varargin)">set</a>(h,<span class="string">'scale'</span>,val);
+0191          <span class="keyword">otherwise</span>
+0192             error(<span class="string">'helicorder: Property name not recognized'</span>)
+0193       <span class="keyword">end</span>
+0194    <span class="keyword">end</span>
+0195 <span class="keyword">end</span>
+0196</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

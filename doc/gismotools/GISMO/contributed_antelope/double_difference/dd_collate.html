@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dd_collate</title>
+  <meta name="keywords" content="dd_collate">
+  <meta name="description" content="dd_collate('event.dat')">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">contributed_antelope</a> &gt; <a href="index.html">double_difference</a> &gt; dd_collate.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_antelope/double_difference&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>dd_collate
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>dd_collate('event.dat')</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function dd_collate(eventdat,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">  dd_collate('event.dat')
+
+ DD_COLLATE(EVENT.DAT) creates a hypoDD cross correlation input file
+ (referred to in hypoDD nomenclature as file dt.cc). Cross correlation
+ information is read from a directory containing pre-computed correlation
+ files as produced by DD_PROCESS_SCP. If not specified, DD_CORRELATE
+ assumes that correlation files live in a directory named
+ 'TMP_MATDD_CORR'.  By default, the output file is named 'dt.cc'.
+ EVENT.DAT is the name of the double difference input 'event file'. The
+ event file is used as a catalog of all events.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function dd_collate(eventdat,varargin)</a>
+0002 
+0003 <span class="comment">%  dd_collate('event.dat')</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% DD_COLLATE(EVENT.DAT) creates a hypoDD cross correlation input file</span>
+0006 <span class="comment">% (referred to in hypoDD nomenclature as file dt.cc). Cross correlation</span>
+0007 <span class="comment">% information is read from a directory containing pre-computed correlation</span>
+0008 <span class="comment">% files as produced by DD_PROCESS_SCP. If not specified, DD_CORRELATE</span>
+0009 <span class="comment">% assumes that correlation files live in a directory named</span>
+0010 <span class="comment">% 'TMP_MATDD_CORR'.  By default, the output file is named 'dt.cc'.</span>
+0011 <span class="comment">% EVENT.DAT is the name of the double difference input 'event file'. The</span>
+0012 <span class="comment">% event file is used as a catalog of all events.</span>
+0013 
+0014 <span class="comment">% DD_COLLATE(EVENT.DAT,DIRECTORYNAME) is the same as above except that</span>
+0015 <span class="comment">% correlation files are expected to live in DIRECTORYNAME.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% DD_COLLATE(EVENT.DAT,DIRECTORYNAME,OUTFILE) is the same as above.</span>
+0018 <span class="comment">% However, the output file is named OUTFILE instead of ct.dt.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% Defaults:</span>
+0021 <span class="comment">%   DD_COLLATE(EVENT.DAT) is the same as</span>
+0022 <span class="comment">%   DD_COLLATE(EVENT.DAT,'TMP_MATDD_CORR','dt.cc')</span>
+0023 
+0024 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0025 <span class="comment">% $Date$</span>
+0026 <span class="comment">% $Revision$</span>
+0027 
+0028 
+0029 
+0030 <span class="keyword">if</span> length(varargin)&gt;2
+0031     error(<span class="string">'Too many inputs'</span>);
+0032 <span class="keyword">end</span>
+0033     
+0034 <span class="keyword">if</span> length(varargin)==2
+0035     outfile = varargin{2};
+0036 <span class="keyword">else</span>
+0037     outfile = <span class="string">'dt.cc'</span>;
+0038 <span class="keyword">end</span>
+0039 
+0040 <span class="keyword">if</span> length(varargin)&gt;=1
+0041     directoryname = varargin{1};
+0042 <span class="keyword">else</span>
+0043     directoryname = <span class="string">'TMP_MATDD_CORR'</span>;
+0044 <span class="keyword">end</span>
+0045 
+0046 
+0047 <span class="comment">% GET CORRELATION FILE NAMES</span>
+0048 files = dir([directoryname <span class="string">'/*.mat'</span> ]);
+0049 disp(files);
+0050 
+0051 
+0052 <span class="comment">% READ LIST OF EVENTNAME</span>
+0053 <span class="comment">% DATE TIME LAT LON DEP MAG EH EV RMS ID</span>
+0054 fid = fopen(eventdat,<span class="string">'r'</span>);
+0055 filein = textscan(fid,<span class="string">'%n %n %n %n %n %n %n %n %n %n'</span>);
+0056 fclose(fid);
+0057 event.date = filein{:,1};
+0058 event.time = filein{:,2};
+0059 event.orid = filein{:,10};
+0060 clear filein;
+0061 
+0062 
+0063 <span class="comment">% SORT EVENTS BY ORID (THIS AFFECTS THE ORDER OF DT.CC)</span>
+0064 [tmp index] = sort(event.orid);
+0065 event.date = event.date(index);
+0066 event.time = event.time(index);
+0067 event.orid = event.orid(index);
+0068 
+0069 
+0070 <span class="comment">% LOAD ALL XCORR LINES</span>
+0071 disp(<span class="string">'Loading correlation data files ...'</span>);
+0072 linenums = [];
+0073 linestrs = [];
+0074 maximumLags = [];
+0075 minimumCorrelations = [];
+0076 <span class="keyword">for</span> n = 1:numel(files)
+0077     disp( [directoryname <span class="string">'/'</span> files(n).name] );
+0078     load( [directoryname <span class="string">'/'</span> files(n).name] );
+0079     clear C;
+0080     linenums = cat(1,linenums,linenum);
+0081     linestrs = cat(1,linestrs,linestr);
+0082     maximumLags = cat(1,maximumLags,maximumLag);
+0083     minimumCorrelations = cat(1,minimumCorrelations,minimumCorrelation);
+0084 <span class="keyword">end</span>
+0085 clear linenum linestr maximumLag minimumCorrelation
+0086 
+0087 
+0088 <span class="comment">% SUBSET CORRELATIONS BASED ON SCP MinCorr AND MaxLag VALUE</span>
+0089 linestrLag = zeros(numel(linestrs),1);
+0090 linestrCorWeighted = zeros(numel(linestrs),1);
+0091 disp(<span class="string">'Throwing out pairs that do not meet MaxCorr or MinLag values ...'</span>);
+0092 <span class="keyword">for</span> n = 1:length(linestrs)
+0093     linestrParsed = textscan(linestrs{n},<span class="string">'%s %n %n %s'</span>);
+0094     linestrLag(n) = linestrParsed{2};
+0095     linestrCorWeighted(n) = (linestrParsed{3});
+0096     <span class="keyword">if</span> mod(n,100000)==0;
+0097         disp([<span class="string">'Completed '</span> num2str(n) <span class="string">' of '</span> num2str(length(linestrs) ) <span class="string">' ('</span> num2str(100*n/length(linestrs),<span class="string">'%3.0f'</span>) <span class="string">'%) ...'</span> ]);
+0098     <span class="keyword">end</span>
+0099 <span class="keyword">end</span>
+0100 f = find( abs(linestrLag)&lt;maximumLags &amp; linestrCorWeighted&gt;(minimumCorrelations).^2 );
+0101 linenumsSubset = linenums(f,:);
+0102 linestrsSubset = linestrs(f);
+0103 
+0104 
+0105 
+0106 <span class="comment">% LOOP THROUGH EVENTS</span>
+0107 numevents = length(event.orid);
+0108 fid = fopen(outfile,<span class="string">'w'</span>);
+0109 <span class="keyword">for</span> n = 1:numevents-1
+0110     disp([<span class="string">'orid: '</span> num2str(event.orid(n)) <span class="string">' ('</span> num2str(n) <span class="string">' of '</span> num2str(numevents)    <span class="string">') ...'</span>]);
+0111     <span class="keyword">for</span> m = n+1:numevents
+0112         fprintf(fid,<span class="string">'# %8d %8d %5.1f\n'</span>,event.orid(n),event.orid(m),0);
+0113         f1 = find( event.orid(n)==linenumsSubset(:,1) &amp; event.orid(m)==linenumsSubset(:,2) );
+0114         f2 = find( event.orid(n)==linenumsSubset(:,2) &amp; event.orid(m)==linenumsSubset(:,1) );
+0115         f = [f1 ; f2];
+0116         <span class="keyword">for</span> k = 1:numel(f)
+0117              fprintf(fid,<span class="string">'     %s\n'</span>,char(linestrsSubset(f(k))) );
+0118         <span class="keyword">end</span>
+0119     <span class="keyword">end</span>
+0120 <span class="keyword">end</span>
+0121 fclose(fid);
+0122</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

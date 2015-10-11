@@ -1,0 +1,438 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sta_lta</title>
+  <meta name="keywords" content="sta_lta">
+  <meta name="description" content="STA_LTA: Short-Time-Average/Long-Time-Average event detector.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">event_detection</a> &gt; sta_lta.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/event_detection&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>sta_lta
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>STA_LTA: Short-Time-Average/Long-Time-Average event detector.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function events = sta_lta(wave,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">STA_LTA: Short-Time-Average/Long-Time-Average event detector.
+
+USAGE: events = sta_lta(wave,prop_name_1,prop_val_1,...)
+
+DIAGRAM:
+                       /\      /\/\        /\
+              /\  /\/\/  \/\  /    \/\    /  \/\
+                \/          \/        \/\/      \
+                                           |-STA-| --&gt;
+         --&gt; |-----------------LTA---------------| --&gt;
+
+INPUTS: wave     - A waveform object containing events (maybe)
+        varargin - User-defined parameter name/value pairs (below)
+
+VALID PROP_NAME: 
+
+  'edp'      - Event Detection Parameters (Detailed in 'VALID PROP_VAL')
+  'lta_mode' - LTA window behavior following a 'trigger on' flag
+  'skip'     - Times for STA/LTA to skip over (if known), examples are 
+               data gaps, calibration pulses, periods of excessive noise
+  'eot'      - Event output type (Detailed in 'VALID PROP_VAL')
+  'fix'      - Output event length fixed or variable?
+  'pad'      - Pad output events by a fixed amount of time before start 
+               time (trigger on) and after stop time (trigger off).
+
+VALID PROP_VAL: 
+
+  'edp'(1x6 numeric) ... default: [1 8 2 1.6 0 3]
+     --&gt; [l_sta l_lta th_on th_off min_sep min_dur]
+        --&gt; l_sta    - STA window length (s)
+        --&gt; l_lta    - LTA window length (s)
+        --&gt; th_on    - STA/LTA trigger on threshold
+        --&gt; th_off   - STA/LTA trigger off threshold
+        --&gt; min_sep  - Minimum seperation between trigger off time of an 
+                       event and trigger on time of the next event (s)
+        --&gt; min_dur  - Minimum event duration to be recorded(s)
+
+    'lta_mode' (string) ... default: 'continuous'
+     --&gt; 'frozen' - LTA window fixed in place after trigger is turned on 
+                    while STA window continues forward.
+     --&gt; 'continuous' - LTA window continues w/ STA window after trigger 
+                        is turned on (Same behavior as before trigger)
+     --&gt; 'grow' - LTA left edge fixed, right edges continues w/ STA right 
+                  edge after trigger on, thus size of LTA window is 
+                  growing until trigger off, at which point LTA window 
+                  returns to original size.
+
+    'skip' (nx2 numeric) ... default: [] (don't skip anything)
+     --&gt; skip_val - List of start/stop times to skip
+
+    'eot' (string) ... default: 'sst'
+     --&gt; 'st'  - Return event start times (nx1 numeric)
+                 (a.k.a. trigger on times)
+     --&gt; 'sst' - Return event start/stop times (nx2 numeric)
+                 (a.k.a. trigger on/off times) 
+     --&gt; 'ssd' - Return event start/stop datapoints (nx2 integer)
+                 (referenced from first datapoint in 'wave')
+     --&gt; 'wfa' - Return event waveform array (1xn waveform)
+
+   'fix' (1x1 numeric) ... default: 0
+     --&gt; 'fix_val' - If 0, output events will be variable length 
+                     (trigger on time to trigger off time)
+                     If a positive numeric value N, output events will be
+                     fixed length (trigger on time to fixed length N)
+                     Units of N is seconds if non-zero
+
+   'pad' (1x2 numeric) ... default: [0 0] (i.e. no padding)
+     --&gt; 'pad_val' - If [0 0] events will have no time padding
+                     [1 2] - pad by 1s before, 2s after event
+                     this will pad events regarless of the value of fix:
+                     i.e. fix = 7, pad = [1 2], returned events are 10s
+                         
+OUTPUTS: events - events in format specified by 'return'</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function events = sta_lta(wave,varargin)</a>
+0002 
+0003 <span class="comment">%STA_LTA: Short-Time-Average/Long-Time-Average event detector.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%USAGE: events = sta_lta(wave,prop_name_1,prop_val_1,...)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%DIAGRAM:</span>
+0008 <span class="comment">%                       /\      /\/\        /\</span>
+0009 <span class="comment">%              /\  /\/\/  \/\  /    \/\    /  \/\</span>
+0010 <span class="comment">%                \/          \/        \/\/      \</span>
+0011 <span class="comment">%                                           |-STA-| --&gt;</span>
+0012 <span class="comment">%         --&gt; |-----------------LTA---------------| --&gt;</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%INPUTS: wave     - A waveform object containing events (maybe)</span>
+0015 <span class="comment">%        varargin - User-defined parameter name/value pairs (below)</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%VALID PROP_NAME:</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%  'edp'      - Event Detection Parameters (Detailed in 'VALID PROP_VAL')</span>
+0020 <span class="comment">%  'lta_mode' - LTA window behavior following a 'trigger on' flag</span>
+0021 <span class="comment">%  'skip'     - Times for STA/LTA to skip over (if known), examples are</span>
+0022 <span class="comment">%               data gaps, calibration pulses, periods of excessive noise</span>
+0023 <span class="comment">%  'eot'      - Event output type (Detailed in 'VALID PROP_VAL')</span>
+0024 <span class="comment">%  'fix'      - Output event length fixed or variable?</span>
+0025 <span class="comment">%  'pad'      - Pad output events by a fixed amount of time before start</span>
+0026 <span class="comment">%               time (trigger on) and after stop time (trigger off).</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%VALID PROP_VAL:</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%  'edp'(1x6 numeric) ... default: [1 8 2 1.6 0 3]</span>
+0031 <span class="comment">%     --&gt; [l_sta l_lta th_on th_off min_sep min_dur]</span>
+0032 <span class="comment">%        --&gt; l_sta    - STA window length (s)</span>
+0033 <span class="comment">%        --&gt; l_lta    - LTA window length (s)</span>
+0034 <span class="comment">%        --&gt; th_on    - STA/LTA trigger on threshold</span>
+0035 <span class="comment">%        --&gt; th_off   - STA/LTA trigger off threshold</span>
+0036 <span class="comment">%        --&gt; min_sep  - Minimum seperation between trigger off time of an</span>
+0037 <span class="comment">%                       event and trigger on time of the next event (s)</span>
+0038 <span class="comment">%        --&gt; min_dur  - Minimum event duration to be recorded(s)</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%    'lta_mode' (string) ... default: 'continuous'</span>
+0041 <span class="comment">%     --&gt; 'frozen' - LTA window fixed in place after trigger is turned on</span>
+0042 <span class="comment">%                    while STA window continues forward.</span>
+0043 <span class="comment">%     --&gt; 'continuous' - LTA window continues w/ STA window after trigger</span>
+0044 <span class="comment">%                        is turned on (Same behavior as before trigger)</span>
+0045 <span class="comment">%     --&gt; 'grow' - LTA left edge fixed, right edges continues w/ STA right</span>
+0046 <span class="comment">%                  edge after trigger on, thus size of LTA window is</span>
+0047 <span class="comment">%                  growing until trigger off, at which point LTA window</span>
+0048 <span class="comment">%                  returns to original size.</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">%    'skip' (nx2 numeric) ... default: [] (don't skip anything)</span>
+0051 <span class="comment">%     --&gt; skip_val - List of start/stop times to skip</span>
+0052 <span class="comment">%</span>
+0053 <span class="comment">%    'eot' (string) ... default: 'sst'</span>
+0054 <span class="comment">%     --&gt; 'st'  - Return event start times (nx1 numeric)</span>
+0055 <span class="comment">%                 (a.k.a. trigger on times)</span>
+0056 <span class="comment">%     --&gt; 'sst' - Return event start/stop times (nx2 numeric)</span>
+0057 <span class="comment">%                 (a.k.a. trigger on/off times)</span>
+0058 <span class="comment">%     --&gt; 'ssd' - Return event start/stop datapoints (nx2 integer)</span>
+0059 <span class="comment">%                 (referenced from first datapoint in 'wave')</span>
+0060 <span class="comment">%     --&gt; 'wfa' - Return event waveform array (1xn waveform)</span>
+0061 <span class="comment">%</span>
+0062 <span class="comment">%   'fix' (1x1 numeric) ... default: 0</span>
+0063 <span class="comment">%     --&gt; 'fix_val' - If 0, output events will be variable length</span>
+0064 <span class="comment">%                     (trigger on time to trigger off time)</span>
+0065 <span class="comment">%                     If a positive numeric value N, output events will be</span>
+0066 <span class="comment">%                     fixed length (trigger on time to fixed length N)</span>
+0067 <span class="comment">%                     Units of N is seconds if non-zero</span>
+0068 <span class="comment">%</span>
+0069 <span class="comment">%   'pad' (1x2 numeric) ... default: [0 0] (i.e. no padding)</span>
+0070 <span class="comment">%     --&gt; 'pad_val' - If [0 0] events will have no time padding</span>
+0071 <span class="comment">%                     [1 2] - pad by 1s before, 2s after event</span>
+0072 <span class="comment">%                     this will pad events regarless of the value of fix:</span>
+0073 <span class="comment">%                     i.e. fix = 7, pad = [1 2], returned events are 10s</span>
+0074 <span class="comment">%</span>
+0075 <span class="comment">%OUTPUTS: events - events in format specified by 'return'</span>
+0076 
+0077 <span class="comment">% Author: Dane Ketner, Alaska Volcano Observatory</span>
+0078 <span class="comment">% $Date$</span>
+0079 <span class="comment">% $Revision$</span>
+0080 
+0081 <span class="comment">%% Check waveform variable</span>
+0082 <span class="keyword">if</span> isa(wave,<span class="string">'waveform'</span>)
+0083    Fs = get(wave,<span class="string">'freq'</span>);         <span class="comment">% Sampling frequency</span>
+0084    l_v = get(wave,<span class="string">'data_length'</span>); <span class="comment">% Length of time series</span>
+0085    tv = get(wave, <span class="string">'timevector'</span>);  <span class="comment">% Time vector of waveform</span>
+0086    <span class="keyword">if</span> isempty(wave)
+0087        disp(<span class="string">'Input waveform empty, no events detected'</span>)
+0088        events = [];
+0089        <span class="keyword">return</span>
+0090    <span class="keyword">end</span>
+0091 <span class="keyword">else</span>
+0092    error(<span class="string">'STA_LTA: First Argument must be a waveform object'</span>)
+0093 <span class="keyword">end</span>
+0094 
+0095 <span class="comment">%% Set all default parameters</span>
+0096 l_sta = 1*Fs;     <span class="comment">% STA window length</span>
+0097 l_lta = 8*Fs;     <span class="comment">% LTA window length</span>
+0098 th_on = 2;        <span class="comment">% Trigger on when sta_to_lta exceeds this theshold</span>
+0099 th_off = 1.6;     <span class="comment">% Trigger off when sta_to_lta drops below threshold</span>
+0100 min_sep = 0*Fs;   <span class="comment">% Skip ahead after end of event</span>
+0101 min_dur = 3*Fs;   <span class="comment">% Any triggers shorter than min_dur are discarded</span>
+0102 
+0103 lta_mode = <span class="string">'continuous'</span>; <span class="comment">% Post trigger-on LTA behavior</span>
+0104 skip = [];               <span class="comment">% List of start/stop times to skip</span>
+0105 eot = <span class="string">'sst'</span>;             <span class="comment">% Event output type</span>
+0106 fix = 0*Fs;              <span class="comment">% Fix event length</span>
+0107 pad = [0 0]*Fs;          <span class="comment">% Pad event start/stop times</span>
+0108 
+0109 <span class="comment">%% Check varargin size</span>
+0110 nv = numel(varargin);
+0111 <span class="keyword">if</span> ~rem(nv,2) == 0
+0112    error([<span class="string">'STA_LTA: Arguments after wave must appear in '</span>,<span class="keyword">...</span>
+0113           <span class="string">'property_name/property_value pairs'</span>])
+0114 <span class="keyword">end</span>
+0115 
+0116 <span class="comment">%% User-defined parameters (varargin)</span>
+0117 <span class="keyword">if</span> nv &gt; 0
+0118     <span class="keyword">for</span> p = 1:2:nv-1
+0119         v1 = varargin{p};
+0120         v2 = varargin{p+1};
+0121         <span class="keyword">switch</span> lower(v1)
+0122             <span class="keyword">case</span> <span class="string">'edp'</span>
+0123                 <span class="keyword">if</span> isnumeric(v2) &amp;&amp; numel(v2) == 6
+0124                     l_sta = v2(1)*Fs;    <span class="comment">% STA window length</span>
+0125                     l_lta = v2(2)*Fs;    <span class="comment">% LTA window length</span>
+0126                     th_on = v2(3);       <span class="comment">% Trigger on theshold</span>
+0127                     th_off = v2(4);      <span class="comment">% Trigger off threshold</span>
+0128                     min_sep = v2(5)*Fs;  <span class="comment">% Skip ahead after end of event</span>
+0129                     min_dur = v2(6)*Fs;  <span class="comment">% Minimum event duration</span>
+0130                 <span class="keyword">else</span>
+0131                     error(<span class="string">'STA_LTA: Wrong format for input ''edp'''</span>)
+0132                 <span class="keyword">end</span>
+0133             <span class="keyword">case</span> <span class="string">'lta_mode'</span>
+0134                 <span class="keyword">switch</span> lower(v2)
+0135                     <span class="keyword">case</span> {<span class="string">'freeze'</span>,<span class="string">'frozen'</span>}
+0136                         lta_mode = <span class="string">'frozen'</span>;
+0137                     <span class="keyword">case</span> {<span class="string">'continue'</span>,<span class="string">'continuous'</span>}
+0138                         lta_mode = <span class="string">'continuous'</span>;
+0139                     <span class="keyword">case</span> {<span class="string">'grow'</span>,<span class="string">'growing'</span>}
+0140                         lta_mode = <span class="string">'grow'</span>;
+0141                     <span class="keyword">otherwise</span>
+0142                       error(<span class="string">'STA_LTA: Wrong format for input ''lta_mode'''</span>)
+0143                 <span class="keyword">end</span>
+0144 
+0145             <span class="keyword">case</span> <span class="string">'skip'</span>
+0146                 <span class="keyword">if</span> isnumeric(v2) &amp;&amp; size(v2,2) == 2
+0147                     skip = v2;
+0148                 <span class="keyword">else</span>
+0149                     error(<span class="string">'STA_LTA: Wrong format for input ''skip'''</span>)
+0150                 <span class="keyword">end</span>
+0151             <span class="keyword">case</span> <span class="string">'eot'</span>
+0152                 <span class="keyword">switch</span> lower(v2)
+0153                     <span class="keyword">case</span> <span class="string">'st'</span>
+0154                         eot = v2;
+0155                     <span class="keyword">case</span> <span class="string">'sst'</span>
+0156                         eot = v2;
+0157                     <span class="keyword">case</span> <span class="string">'ssd'</span>
+0158                         eot = v2;
+0159                     <span class="keyword">case</span> <span class="string">'wfa'</span>
+0160                         eot = v2;
+0161                     <span class="keyword">otherwise</span>
+0162                         error(<span class="string">'STA_LTA: Wrong format for input ''eot'''</span>)
+0163                 <span class="keyword">end</span>
+0164             <span class="keyword">case</span> <span class="string">'fix'</span>
+0165                 <span class="keyword">if</span> isnumeric(v2) &amp;&amp; numel(v2) == 1
+0166                     fix = v2*Fs;
+0167                 <span class="keyword">else</span>
+0168                     error(<span class="string">'STA_LTA: Wrong format for input ''fix'''</span>)
+0169                 <span class="keyword">end</span>
+0170             <span class="keyword">case</span> <span class="string">'pad'</span>
+0171                 <span class="keyword">if</span> isnumeric(v2) &amp;&amp; size(v2,1) == 1 &amp;&amp; size(v2,2) == 2
+0172                     pad = v2*Fs;
+0173                 <span class="keyword">else</span>
+0174                     error(<span class="string">'STA_LTA: Wrong format for input ''pad'''</span>)
+0175                 <span class="keyword">end</span>
+0176             <span class="keyword">otherwise</span>
+0177                 error([<span class="string">'STA_LTA: ''edp'', ''lta_mode'', ''skip'' '</span>,<span class="keyword">...</span>
+0178                     <span class="string">'''eot'', ''fix'', and ''pad'' are the only '</span>,<span class="keyword">...</span>
+0179                     <span class="string">'property names recognized'</span>])
+0180         <span class="keyword">end</span>
+0181     <span class="keyword">end</span>
+0182 <span class="keyword">end</span>
+0183 
+0184 
+0185 <span class="comment">%% Initialize waveform data</span>
+0186 wave = set2val(wave,skip,NaN);   <span class="comment">% NaN skip times</span>
+0187 wave = zero2nan(wave,10);        <span class="comment">% NaN any data gaps</span>
+0188 v = get(wave,<span class="string">'data'</span>);            <span class="comment">% Waveform data</span>
+0189 abs_v = abs(v);                  <span class="comment">% Absolute value of time series</span>
+0190 
+0191 <span class="comment">%% Initialize flags and other variables</span>
+0192 lta_calc_flag = 0;       <span class="comment">% has the full LTA window been calculated?</span>
+0193 ntrig = 0;               <span class="comment">% number of triggers</span>
+0194 trig_array = zeros(1,2); <span class="comment">% array of trigger times: [on,off;on,off;...]</span>
+0195 
+0196 <span class="comment">%% Loops over data</span>
+0197 <span class="comment">% i is the primary reference point (right end of STA/LTA window)</span>
+0198 i = l_lta+1;
+0199 <span class="keyword">while</span> i &lt;= l_v <span class="comment">% START STA_LTA MAIN LOOP</span>
+0200 
+0201 <span class="comment">%% Skip data gaps (NaN values in LTA window)?</span>
+0202    <span class="keyword">if</span> any(isnan(abs_v(i-l_lta:i)))
+0203       gap = 1;
+0204       lta_calc_flag = 0; <span class="comment">% Force full claculations after gap</span>
+0205       <span class="keyword">while</span> (gap == 1) &amp;&amp; (i &lt; l_v)
+0206          i = i+1;
+0207          <span class="keyword">if</span> ~any(isnan(abs_v(i-l_lta:i)))
+0208             gap = 0;
+0209          <span class="keyword">end</span>
+0210       <span class="keyword">end</span>
+0211    <span class="keyword">end</span>
+0212 
+0213 <span class="comment">%% Calculate STA &amp; LTA Sum (Do Full Calculation?)</span>
+0214    <span class="keyword">if</span> (lta_calc_flag == 0)
+0215       lta_sum = 0;
+0216       sta_sum = 0;
+0217       <span class="keyword">for</span> j = i-l_lta:i-1              <span class="comment">% Loop to compute LTA &amp; STA</span>
+0218          lta_sum = lta_sum + abs_v(j); <span class="comment">% Sum LTA window</span>
+0219          <span class="keyword">if</span> (i - j) &lt;= l_sta           <span class="comment">% Sum STA window (right side of LTA)</span>
+0220             sta_sum = sta_sum + abs_v(j);
+0221          <span class="keyword">end</span>
+0222       <span class="keyword">end</span>
+0223       lta_calc_flag = 1;
+0224    <span class="keyword">else</span>
+0225       
+0226 <span class="comment">%% Calculate STA &amp; LTA Sum (Single new data point if not Full)</span>
+0227       lta_sum = lta_sum - abs_v(i-l_lta-1) + abs_v(i-1);
+0228       sta_sum = sta_sum - abs_v(i-l_sta-1) + abs_v(i-1);
+0229    <span class="keyword">end</span>
+0230 
+0231 <span class="comment">%% Calculate STA &amp; LTA</span>
+0232    lta = lta_sum/l_lta;
+0233    sta = sta_sum/l_sta;
+0234 
+0235 <span class="comment">%% Calculate STA/LTA Ratio</span>
+0236    sta_to_lta = sta/lta;
+0237 
+0238 <span class="comment">%% Trigger on? (Y/N)</span>
+0239    <span class="keyword">if</span> (sta_to_lta &gt; th_on)
+0240       j = i;   <span class="comment">% Set secondary reference point = primary</span>
+0241       g = 0;   <span class="comment">% l_lta growth, only used if LTA growing</span>
+0242       <span class="keyword">while</span> (sta_to_lta &gt; th_off)
+0243          j = j+1;
+0244          <span class="keyword">if</span> j &lt; l_v
+0245             sta_sum = sta_sum - abs_v(j-l_sta-1) + abs_v(j-1);
+0246             <span class="keyword">switch</span> lta_mode
+0247                <span class="keyword">case</span> <span class="string">'frozen'</span>
+0248                   <span class="comment">% LTA is good just the way it is</span>
+0249                <span class="keyword">case</span> <span class="string">'continuous'</span>
+0250                   <span class="comment">% Add new data point, remove oldest data point</span>
+0251                   lta_sum = lta_sum - abs_v(j-l_lta-1) + abs_v(j-1);
+0252                <span class="keyword">case</span> <span class="string">'grow'</span>
+0253                   <span class="comment">% Add new data point, increase</span>
+0254                   lta_sum = lta_sum + abs_v(j-1);
+0255                   l_lta = l_lta + 1;
+0256                   g = g+1;
+0257             <span class="keyword">end</span>
+0258             sta = sta_sum/l_sta;
+0259             lta = lta_sum/l_lta;
+0260             sta_to_lta = sta/lta;
+0261             <span class="keyword">if</span> any(isnan(abs_v(j-l_sta:j))) <span class="comment">% NaN gaps to skip?</span>
+0262                sta_to_lta = 0; <span class="comment">% Force trigger off (data gap in STA window)</span>
+0263             <span class="keyword">end</span>
+0264          <span class="keyword">else</span>
+0265             sta_to_lta = 0; <span class="comment">% Force trigger off (end of data)</span>
+0266          <span class="keyword">end</span>
+0267       <span class="keyword">end</span>
+0268       duration = (j-i); <span class="comment">% span from trigger on to trigger off</span>
+0269       l_lta = l_lta-g;
+0270 
+0271 <span class="comment">%% Triggered period long enough? (Y/N)</span>
+0272       <span class="keyword">if</span> duration &gt; min_dur <span class="comment">% If duration &lt; min_dur then skip it</span>
+0273          trig_t = i-l_sta;  <span class="comment">% Beginning of STA window during trigger on</span>
+0274          end_t  = j;        <span class="comment">% End of STA window during trigger off</span>
+0275          ntrig = ntrig + 1; <span class="comment">% Event counter</span>
+0276          trig_array(ntrig,:) = [trig_t, end_t];
+0277       <span class="keyword">end</span>
+0278       i = j + min_sep;   <span class="comment">% Skip ahead by minimum event seperation</span>
+0279       lta_calc_flag = 0; <span class="comment">% Reset LTA calc flag to force new computation</span>
+0280    <span class="keyword">end</span>
+0281    i = i + 1;
+0282 <span class="keyword">end</span> <span class="comment">% END STA_LTA MAIN LOOP</span>
+0283 
+0284 <span class="comment">%% Return events</span>
+0285 <span class="keyword">if</span> (trig_array(1,1)==0)&amp;&amp;(trig_array(1,2)==0)
+0286     disp(<span class="string">'No events detected'</span>)
+0287     events = [];
+0288     <span class="keyword">return</span>
+0289 <span class="keyword">end</span>
+0290 <span class="keyword">if</span> fix&gt;0
+0291     trig_array(:,2) = trig_array(:,1) + fix;
+0292 <span class="keyword">end</span>
+0293 trig_array(:,1) = trig_array(:,1) - pad(1);
+0294 trig_array(:,2) = trig_array(:,2) + pad(2);
+0295 <span class="comment">% If events are padded, make sure the first and last events are not out of</span>
+0296 <span class="comment">% range (beginning before or ending after the span of input 'wave')</span>
+0297 trig_array(find(trig_array&lt;1)) = 1;      <span class="comment">% Set to first datapoint</span>
+0298 trig_array(find(trig_array&gt;l_v)) = l_v;  <span class="comment">% Set to last datapoint</span>
+0299 <span class="keyword">switch</span> lower(eot)
+0300     <span class="keyword">case</span> {<span class="string">'st'</span>}
+0301         events = tv(trig_array(:,1));
+0302     <span class="keyword">case</span> {<span class="string">'sst'</span>}
+0303         events = tv(trig_array);
+0304     <span class="keyword">case</span> {<span class="string">'ssd'</span>}
+0305         events = trig_array;
+0306     <span class="keyword">case</span> {<span class="string">'wfa'</span>}
+0307         events = [];
+0308         <span class="keyword">for</span> n = 1:size(trig_array,1)
+0309             events = [events; extract(wave,<span class="string">'INDEX'</span>,trig_array(n,1),<span class="keyword">...</span>
+0310                                                    trig_array(n,2))];
+0311         <span class="keyword">end</span>
+0312 <span class="keyword">end</span>
+0313 
+0314 
+0315 
+0316 
+0317             
+0318                      
+0319</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

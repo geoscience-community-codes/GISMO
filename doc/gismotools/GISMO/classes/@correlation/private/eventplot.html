@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of eventplot</title>
+  <meta name="keywords" content="eventplot">
+  <meta name="description" content="Private method. See ../plot for details.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@correlation</a> &gt; <a href="index.html">private</a> &gt; eventplot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>eventplot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Private method. See ../plot for details.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function eventplot(c,scale,howmany); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Private method. See ../plot for details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function eventplot(c,scale,howmany);</a>
+0002 
+0003 <span class="comment">% Private method. See ../plot for details.</span>
+0004 
+0005 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0006 <span class="comment">% $Date$</span>
+0007 <span class="comment">% $Revision$</span>
+0008 
+0009 
+0010 <span class="keyword">if</span> ~strcmpi(class(c),<span class="string">'correlation'</span>)
+0011     error(<span class="string">'First input must be a correlation object'</span>);
+0012 <span class="keyword">end</span>;
+0013 
+0014 <span class="comment">% if isempty(get(c,'LINK'))</span>
+0015 <span class="comment">%     error('LINK field must be filled in input object');</span>
+0016 <span class="comment">% end;</span>
+0017 
+0018 <span class="keyword">if</span> isempty(get(c,<span class="string">'CORR'</span>))
+0019     error(<span class="string">'CORR field must be filled in input object'</span>);
+0020 <span class="keyword">end</span>;
+0021 
+0022 <span class="keyword">if</span> isempty(get(c,<span class="string">'CLUST'</span>))
+0023     error(<span class="string">'CLUST field must be filled in input object'</span>);
+0024 <span class="keyword">end</span>;
+0025 
+0026 <span class="keyword">if</span> ~isempty(get(c,<span class="string">'LAG'</span>))
+0027     warning(<span class="string">'Time corrections from LAG field have not been applied to traces. ADJUSTTRIG may be necessary'</span>);
+0028 <span class="keyword">end</span>;
+0029 
+0030 <span class="comment">% TEST FOR NUMBER OF CLUSTERS</span>
+0031 <span class="keyword">if</span> (howmany &gt; max(c.clust))
+0032     error([<span class="string">'There are only '</span> num2str(max(c.clust)) <span class="string">' clusters in this set of traces'</span>]);
+0033 <span class="keyword">end</span>
+0034 
+0035 <span class="comment">% FIND CLUSTERS AND STACK TRACES</span>
+0036 c1 = correlation;   <span class="comment">% get new correlation object without correlation info</span>
+0037 c1.W = c.W;
+0038 c1.trig = c.trig;
+0039 <span class="keyword">for</span> i = 1:howmany
+0040     index{i} = find(c,<span class="string">'CLU'</span>,i);
+0041     ntraces(i) = length(index{i});
+0042     c1 = stack(c1,index{i});
+0043 <span class="keyword">end</span>
+0044 
+0045 
+0046 <span class="comment">% MAKE PLOT OF STACKS</span>
+0047 c1 = subset(c1,[ length(c1.trig)-howmany+1 : length(c1.trig) ]);
+0048 plot(c1,<span class="string">'wig'</span>,scale);
+0049 set(gcf,<span class="string">'Position'</span>,[50 500 850 300]);
+0050 Xlim = get(gca,<span class="string">'Xlim'</span>);
+0051 <span class="keyword">for</span> i = 1:length(index)
+0052     text(Xlim(1),i-0.3,[<span class="string">'  #'</span> num2str(i) <span class="string">' ('</span> num2str(ntraces(i)) <span class="string">' traces)'</span>],<span class="string">'HorizontalAlignment'</span>,<span class="string">'Left'</span>);
+0053 <span class="keyword">end</span>
+0054 
+0055 
+0056 <span class="comment">% PLOT EVENTS VS. DATE</span>
+0057 figure(<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'Position'</span>,[50 92 850 250]);
+0058 xleft = min(c.trig) - 0.05*(max(c.trig)-min(c.trig));
+0059 xright = max(c.trig) + 0.05*(max(c.trig)-min(c.trig));
+0060 box on; hold on;
+0061 <span class="keyword">for</span> i = 1:length(ntraces)
+0062     t = index{i};
+0063     plot([xleft xright],[i i],<span class="string">'k:'</span>);
+0064     plot(c.trig(index{i}),i*ones(size(index{i})),<span class="string">'ko'</span>,<span class="string">'MarkerFaceColor'</span>,[.5 .5 1]);
+0065     text(xleft,i-0.3,[<span class="string">'  #'</span> num2str(i)],<span class="string">'HorizontalAlignment'</span>,<span class="string">'Left'</span>);
+0066 <span class="keyword">end</span>
+0067 set(gca,<span class="string">'YTick'</span>,[]);
+0068 set(gca,<span class="string">'YDir'</span>,<span class="string">'reverse'</span>);
+0069 xlabel(<span class="string">'Date'</span>);
+0070 ylabel(<span class="string">'Cluster'</span>);
+0071 datetick(<span class="string">'x'</span>);
+0072 axis([xleft xright 0 length(ntraces)+1]);
+0073 
+0074 
+0075 
+0076 
+0077 
+0078 <span class="comment">%PRINT OUT FIGURE</span>
+0079 set(gcf, <span class="string">'paperorientation'</span>, <span class="string">'portrait'</span>);
+0080 set(gcf, <span class="string">'paperposition'</span>, [.25 .25 8 10.5] );
+0081 <span class="comment">% print(gcf, '-depsc2', 'FIG.ps')</span>
+0082</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

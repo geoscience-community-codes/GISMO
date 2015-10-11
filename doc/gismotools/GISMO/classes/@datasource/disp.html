@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of disp</title>
+  <meta name="keywords" content="disp">
+  <meta name="description" content="DISP Datasource disp overloaded operator">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@datasource</a> &gt; disp.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@datasource&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>disp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>DISP Datasource disp overloaded operator</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function disp(ds) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DISP Datasource disp overloaded operator</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>	GETFILENAME returns a filename that is associated with a single SCNL</li><li><a href="isunassigned.html" class="code" title="function val = isunassigned(ds)">isunassigned</a>	ISUNASSIGNED is true when no data source is associated with this object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="display.html" class="code" title="function display(ds)">display</a>	DISPLAY - datasource display overloaded operator</li><li><a href="load_objects_from_file.html" class="code" title="function allObj = load_objects_from_file(ds,searchClass,scnl,startt,endt)">load_objects_from_file</a>	grab all the variables in a matlab file, and flip through them, returning</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function DispStr = size2str(sizeval)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function disp(ds)</a>
+0002    <span class="comment">%DISP Datasource disp overloaded operator</span>
+0003    
+0004    
+0005    <span class="comment">% VERSION: 1.0 of waveform objects</span>
+0006    <span class="comment">% AUTHOR: Celso Reyes (celso@gi.alaska.edu)</span>
+0007    <span class="comment">% LASTUPDATE: 11/29/2008</span>
+0008    
+0009    <span class="keyword">if</span> numel(ds) &gt; 1;
+0010       <a href="disp.html" class="code" title="function disp(ds)">disp</a>(<span class="string">' '</span>);
+0011       <a href="disp.html" class="code" title="function disp(ds)">disp</a>(sprintf(<span class="string">'[%s] %s object with Types:'</span>,<span class="keyword">...</span>
+0012          <a href="#_sub1" class="code" title="subfunction DispStr = size2str(sizeval)">size2str</a>(size(ds)), class(ds)));
+0013       <span class="keyword">for</span> j=1:numel(ds)
+0014          alltypes(j) = {<a href="get.html" class="code" title="function val = get(ds, propertyname)">get</a>(ds(j),<span class="string">'type'</span>)};
+0015       <span class="keyword">end</span>
+0016       alltypes = unique(alltypes);
+0017       <span class="keyword">for</span> i=1:numel(alltypes)
+0018          <a href="disp.html" class="code" title="function disp(ds)">disp</a>(sprintf(<span class="string">'     %s'</span>,alltypes{i}));
+0019       <span class="keyword">end</span>
+0020       
+0021       
+0022       
+0023    <span class="keyword">elseif</span> <a href="isunassigned.html" class="code" title="function val = isunassigned(ds)">isunassigned</a>(ds)
+0024       <a href="disp.html" class="code" title="function disp(ds)">disp</a>(<span class="string">'  unassigned datasource'</span>);
+0025    <span class="keyword">else</span>
+0026       mytype = <a href="get.html" class="code" title="function val = get(ds, propertyname)">get</a>(ds,<span class="string">'type'</span>);
+0027       <a href="disp.html" class="code" title="function disp(ds)">disp</a>([<span class="string">'      type: '</span> upper(mytype)]);
+0028       <span class="keyword">switch</span> lower(mytype)
+0029          <span class="keyword">case</span> <span class="string">'winston'</span>
+0030             <a href="disp.html" class="code" title="function disp(ds)">disp</a>([<span class="string">'    server: '</span> <a href="get.html" class="code" title="function val = get(ds, propertyname)">get</a>(ds,<span class="string">'server'</span>)]);
+0031             <a href="disp.html" class="code" title="function disp(ds)">disp</a>([<span class="string">'      port: '</span> num2str(<a href="get.html" class="code" title="function val = get(ds, propertyname)">get</a>(ds,<span class="string">'port'</span>))]);
+0032             
+0033          <span class="keyword">case</span> <span class="string">'irisdmcws'</span>
+0034             <span class="comment">%do nothing</span>
+0035             
+0036          <span class="keyword">case</span> {<span class="string">'file'</span>,<span class="string">'sac'</span>,<span class="string">'antelope'</span>,<span class="string">'seisan'</span>,<span class="string">'obspy'</span>}
+0037             filelist = <a href="getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>(ds,[],[]);
+0038             <span class="keyword">for</span> n=1:numel(filelist)
+0039                <a href="disp.html" class="code" title="function disp(ds)">disp</a>(sprintf(<span class="string">'  location: %s'</span>,filelist{n}));
+0040             <span class="keyword">end</span>
+0041             
+0042          <span class="keyword">case</span> {<span class="string">'user_defined'</span>}
+0043             filelist = <a href="getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>(ds,[],[]);
+0044             <span class="keyword">for</span> n=1:numel(filelist)
+0045                <a href="disp.html" class="code" title="function disp(ds)">disp</a>(sprintf(<span class="string">'  location: %s'</span>,filelist{n}));
+0046             <span class="keyword">end</span>
+0047             <a href="disp.html" class="code" title="function disp(ds)">disp</a>(sprintf(<span class="string">' Interpreting Function: %s'</span>,func2str(<a href="get.html" class="code" title="function val = get(ds, propertyname)">get</a>(ds,<span class="string">'interpreter'</span>))));
+0048          <span class="keyword">otherwise</span>
+0049             warning(<span class="string">'Datasource:unanticipatedType'</span>,<span class="keyword">...</span>
+0050                <span class="string">'unanticipated datasource type'</span>);
+0051       <span class="keyword">end</span>
+0052    <span class="keyword">end</span>;
+0053 <span class="keyword">end</span>
+0054 <a name="_sub1" href="#_subfunctions" class="code">function DispStr = size2str(sizeval)</a>
+0055    <span class="comment">% helper function that changes the way we view the size</span>
+0056    <span class="comment">%   from : [1 43 2 6] (numeric)  to  '1x43x2x6' (char)</span>
+0057    
+0058    DispStr = sprintf(<span class="string">'x%d'</span>, sizeval);
+0059    DispStr = DispStr(2:end);
+0060 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

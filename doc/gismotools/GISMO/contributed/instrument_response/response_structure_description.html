@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of response_structure_description</title>
+  <meta name="keywords" content="response_structure_description">
+  <meta name="description" content="RESPONSE_STRUCTURE_DESCRIPTION Describe response structure fields">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">instrument_response</a> &gt; response_structure_description.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/instrument_response&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>response_structure_description
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>RESPONSE_STRUCTURE_DESCRIPTION Describe response structure fields</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function response_structure_description </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">RESPONSE_STRUCTURE_DESCRIPTION Describe response structure fields
+   The fields of a response structure are as follows:
+       scnl: scnlobject associated with the response
+       time: time at which the response is valid
+frequencies: Nx1 vector of frequencies (Hz)
+     values: Nx1 vector of complex responses at each frequency.
+               Values should be normalized such that the maximum amplitude 
+               of the response (max(abs(values))) is near 1.
+      calib: Scaler alibration value used to scale the normalized responses
+               to their real value. NOTE that many waveform objects already
+               have this value applied.
+      units: Character string describing the units
+ sampleRate: Sample rate in Hz
+   respFile: Character string of name (and path) of response file.
+     status: Open-ended character string describing any issues with file
+
+  NOTE ABOUT CALIBRATION VALUES AND ANTELOPE DATABASES: In many cases the
+  calib value and units will already have been applied to a waveform if it
+  was loaded with WAVEFORM from an Antelope database. WAVEFORM attempts to
+  read the CALIB from the wfdisc table. DB_GET_RESPONSE retrieves the
+  calib value from the calibration table. Its inclusion here allows the
+  user to verify that the two values are the same. If they are not, it may
+  be necessary to reconcile the two. The units variable (translated from
+  the segtype field) should match as well.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function response_structure_description</a>
+0002 
+0003 <span class="comment">%RESPONSE_STRUCTURE_DESCRIPTION Describe response structure fields</span>
+0004 <span class="comment">%   The fields of a response structure are as follows:</span>
+0005 <span class="comment">%       scnl: scnlobject associated with the response</span>
+0006 <span class="comment">%       time: time at which the response is valid</span>
+0007 <span class="comment">%frequencies: Nx1 vector of frequencies (Hz)</span>
+0008 <span class="comment">%     values: Nx1 vector of complex responses at each frequency.</span>
+0009 <span class="comment">%               Values should be normalized such that the maximum amplitude</span>
+0010 <span class="comment">%               of the response (max(abs(values))) is near 1.</span>
+0011 <span class="comment">%      calib: Scaler alibration value used to scale the normalized responses</span>
+0012 <span class="comment">%               to their real value. NOTE that many waveform objects already</span>
+0013 <span class="comment">%               have this value applied.</span>
+0014 <span class="comment">%      units: Character string describing the units</span>
+0015 <span class="comment">% sampleRate: Sample rate in Hz</span>
+0016 <span class="comment">%   respFile: Character string of name (and path) of response file.</span>
+0017 <span class="comment">%     status: Open-ended character string describing any issues with file</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%  NOTE ABOUT CALIBRATION VALUES AND ANTELOPE DATABASES: In many cases the</span>
+0020 <span class="comment">%  calib value and units will already have been applied to a waveform if it</span>
+0021 <span class="comment">%  was loaded with WAVEFORM from an Antelope database. WAVEFORM attempts to</span>
+0022 <span class="comment">%  read the CALIB from the wfdisc table. DB_GET_RESPONSE retrieves the</span>
+0023 <span class="comment">%  calib value from the calibration table. Its inclusion here allows the</span>
+0024 <span class="comment">%  user to verify that the two values are the same. If they are not, it may</span>
+0025 <span class="comment">%  be necessary to reconcile the two. The units variable (translated from</span>
+0026 <span class="comment">%  the segtype field) should match as well.</span>
+0027</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

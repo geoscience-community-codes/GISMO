@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of isempty</title>
+  <meta name="keywords" content="isempty">
+  <meta name="description" content="ISEMPTY Display threecomp object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@threecomp</a> &gt; isempty.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@threecomp&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>isempty
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>ISEMPTY Display threecomp object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function TF = isempty(TC) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">ISEMPTY Display threecomp object
+   TF = ISEMPTY(TC) returns an array the same size as TC, containing
+   logical 1 (true) where the elements of TC are empty, and logical 0
+   (false) elsewhere. Empty is defined as containging no waveform data.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>	ALIGN Align and trim traces in threecomp object.</li><li><a href="disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="particlemotion.html" class="code" title="function TC = particlemotion(TC, varargin)">particlemotion</a>	PARTICLEMOTION calculates particle motion vectors for threecomp object</li><li><a href="rotate.html" class="code" title="function TC = rotate(TC,varargin)">rotate</a>	Rotate component orientations</li><li><a href="spin.html" class="code" title="function [TC,c2, c3] = spin(TCin,varargin)">spin</a>	SPIN rotate and plot horizontal components</li><li><a href="threecomp.html" class="code" title="">threecomp</a>	THREECOMP Object for three component waveform data</li><li><a href="verify.html" class="code" title="function [conflicts] = verify(TC)">verify</a>	VERIFY Check for property conflicts in the threecomp object.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function TF = isempty(TC)</a>
+0002 
+0003 <span class="comment">%ISEMPTY Display threecomp object</span>
+0004 <span class="comment">%   TF = ISEMPTY(TC) returns an array the same size as TC, containing</span>
+0005 <span class="comment">%   logical 1 (true) where the elements of TC are empty, and logical 0</span>
+0006 <span class="comment">%   (false) elsewhere. Empty is defined as containging no waveform data.</span>
+0007 
+0008 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0009 <span class="comment">% $Date$</span>
+0010 <span class="comment">% $Revision$</span>
+0011 
+0012 
+0013 
+0014 <span class="comment">% CHECK INPUTS</span>
+0015 <span class="keyword">if</span> ~isa(TC,<span class="string">'threecomp'</span>)
+0016     error(<span class="string">'First argment must be a threecomp object'</span>);
+0017 <span class="keyword">end</span>
+0018 <span class="keyword">if</span> nargin~=1
+0019     error(<span class="string">'Incorrect number of arguments'</span>);
+0020 <span class="keyword">end</span>
+0021 
+0022 
+0023 <span class="comment">% CHECK EACH ELEMENT TO SEE IF IT IS EMPTY</span>
+0024 [objSize1,objSize2] = size(TC);
+0025 numObj = numel(TC);
+0026 TF = zeros(size(TC));
+0027 <span class="keyword">for</span> n = 1:numObj
+0028     numSamples = min(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC(n).traces,<span class="string">'DATA_LENGTH'</span>));
+0029     <span class="keyword">if</span> numSamples == 0
+0030         TF(n) = 1;
+0031     <span class="keyword">else</span>
+0032         TF(n) = 0;
+0033     <span class="keyword">end</span>
+0034 <span class="keyword">end</span>
+0035 
+0036</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

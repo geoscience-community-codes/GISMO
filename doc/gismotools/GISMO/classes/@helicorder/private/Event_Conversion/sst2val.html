@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sst2val</title>
+  <meta name="keywords" content="sst2val">
+  <meta name="description" content="SST2VAL: Set sections of waveform w to single value. Useful for setting">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../../index.html">GISMO</a> &gt; <a href="../../../index.html">classes</a> &gt; <a href="../../index.html">@helicorder</a> &gt; <a href="#">private</a> &gt; <a href="index.html">Event_Conversion</a> &gt; sst2val.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../../index.html"><img alt="<" border="0" src="../../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@helicorder/private/Event_Conversion&nbsp;<img alt=">" border="0" src="../../../../../../right.png"></a></td></tr></table>-->
+
+<h1>sst2val
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+<div class="box"><strong>SST2VAL: Set sections of waveform w to single value. Useful for setting</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+<div class="box"><strong>function w = sst2val(sst,w,val) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SST2VAL: Set sections of waveform w to single value. Useful for setting
+  data gaps, noise, or other unwanted waveform sections to 0 or NaN for
+  event detection, rms calculation, display purposes, etc.
+
+USAGE: w = set2val(sst,w,val)
+
+INPUTS: sst - Start/Stop Times (nx2 array of matlab times)
+        w   - Waveform object that contains sections to delete
+        val - Numeric value used to replace waveform data in sst
+
+OUTPUTS: w - Original waveform with sst set to val
+
+ See also <a href="nan2sst.html" class="code" title="function sst = nan2sst(nan)">NAN2SST</a>, <a href="nan2wfa.html" class="code" title="function wfa = nan2wfa(nan)">NAN2WFA</a>, <a href="ssd2sst.html" class="code" title="function sst = ssd2sst(ssd,w)">SSD2SST</a>, <a href="sst2nan.html" class="code" title="function nan = sst2nan(sst,w)">SST2NAN</a>, <a href="sst2ssd.html" class="code" title="function ssd = sst2ssd(sst,w)">SST2SSD</a>, <a href="sst2wfa.html" class="code" title="function wfa = sst2wfa(sst,w)">SST2WFA</a>,
+          <a href="wfa2nan.html" class="code" title="function nan = wfa2nan(wfa, varargin)">WFA2NAN</a>, <a href="wfa2sst.html" class="code" title="function sst = wfa2sst(wfa)">WFA2SST</a>
+
+ Author: Dane Ketner, Alaska Volcano Observatory
+ $Date$
+ $Revision$</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function w = SST2VAL(sst,w,val)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = sst2val(sst,w,val)</a>
+0002 
+0003 <span class="comment">%SST2VAL: Set sections of waveform w to single value. Useful for setting</span>
+0004 <span class="comment">%  data gaps, noise, or other unwanted waveform sections to 0 or NaN for</span>
+0005 <span class="comment">%  event detection, rms calculation, display purposes, etc.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%USAGE: w = set2val(sst,w,val)</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%INPUTS: sst - Start/Stop Times (nx2 array of matlab times)</span>
+0010 <span class="comment">%        w   - Waveform object that contains sections to delete</span>
+0011 <span class="comment">%        val - Numeric value used to replace waveform data in sst</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%OUTPUTS: w - Original waveform with sst set to val</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% See also NAN2SST, NAN2WFA, SSD2SST, SST2NAN, SST2SSD, SST2WFA,</span>
+0016 <span class="comment">%          WFA2NAN, WFA2SST</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Author: Dane Ketner, Alaska Volcano Observatory</span>
+0019 <span class="comment">% $Date$</span>
+0020 <span class="comment">% $Revision$</span>
+0021 
+0022 <span class="comment">%%</span>
+0023 <span class="keyword">if</span> isempty(sst)|| iscell(sst) &amp;&amp; isempty(sst{:})
+0024    <span class="keyword">return</span>
+0025 <span class="keyword">end</span>
+0026 <span class="keyword">if</span> iscell(sst)
+0027    <span class="keyword">if</span> numel(sst) == numel(w)
+0028       <span class="keyword">for</span> l = 1:numel(sst)
+0029          w(l) = <a href="#_sub1" class="code" title="subfunction w = SST2VAL(sst,w,val)">SST2VAL</a>(sst{l},w(l),val);
+0030       <span class="keyword">end</span>
+0031    <span class="keyword">else</span>
+0032       error([<span class="string">'SST2VAL:ArgumentDimensions - Number of elements in'</span>,<span class="keyword">...</span>
+0033              <span class="string">' waveform input ''w'' and cell input ''sst'' must match'</span>]);
+0034    <span class="keyword">end</span>
+0035 <span class="keyword">else</span>
+0036    w = <a href="#_sub1" class="code" title="subfunction w = SST2VAL(sst,w,val)">SST2VAL</a>(sst,w,val);
+0037 <span class="keyword">end</span>
+0038 
+0039 <span class="comment">%%</span>
+0040 <a name="_sub1" href="#_subfunctions" class="code">function w = SST2VAL(sst,w,val)</a>
+0041 nn = size(sst,1);
+0042 
+0043 <span class="keyword">for</span> n=1:nn
+0044    <span class="keyword">if</span> n == 1
+0045       wfa(n) = extract(w,<span class="string">'time'</span>,get(w,<span class="string">'start'</span>),sst(n,1));
+0046       r_wfa(n) = extract(w,<span class="string">'time'</span>,sst(n,1),sst(n,2));
+0047       r_wfa(n) = (r_wfa*0+1)*val;
+0048       wfa(n) = combine([wfa(n) r_wfa(n)]);
+0049    <span class="keyword">else</span>
+0050       wfa(n) = extract(w,<span class="string">'time'</span>,sst(n-1,2),sst(n,1));
+0051       r_wfa(n) = extract(w,<span class="string">'time'</span>,sst(n,1),sst(n,2));
+0052       r_wfa(n) = (r_wfa(n)*0+1)*val;
+0053       wfa(n) = combine([wfa(n) r_wfa(n)]);
+0054    <span class="keyword">end</span>
+0055 <span class="keyword">end</span>
+0056 wfa(nn+1) = extract(w,<span class="string">'time'</span>,sst(nn,2),get(w,<span class="string">'end'</span>));
+0057 w = combine(wfa(:));</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

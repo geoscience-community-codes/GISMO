@@ -1,0 +1,259 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of hankelq</title>
+  <meta name="keywords" content="hankelq">
+  <meta name="description" content="HANKELQ Compute spectral ratio in two frequency bands and">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../index.html">GISMO</a> &gt; <a href="index.html">contributed_antelope</a> &gt; hankelq.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_antelope&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>hankelq
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>HANKELQ Compute spectral ratio in two frequency bands and</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function hankelq(dbpath, exvpr, f1, f2, pretrigger, posttrigger, max_arrivals) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">HANKELQ Compute spectral ratio in two frequency bands and
+   hankelq(dbpath, expr, freq_high, freq_low, pretrigger_seconds, posttrigger_seconds, max_arrivals ) 
+   Loads arrivals from an arrival table (after subsetting with expr)
+   retrieves waveform data corresponding to those arrivals, cleans and
+   plots the waveform data. The spectral ratio in bands around freq_high
+   and freq_low is computed. When done for multiple earthquakes, a plot of this the 
+   natural log of this ratio versus travel time has a slope from which Q
+   can be measured.
+   pretrigger_seconds is the number of seconds before the arrival time to
+   get waveform data for.
+   posttrigger_seconds is the number of seconds after the arrival time to
+   get waveform data for.
+   max_arrivals is the maximum number of arrivals to process. 
+
+     Based on the method of Arthur Hankel, &quot;The Effects of Attenuation and
+     Site Response on the Spectra of Microearthquakes in the Northeastern
+     Caribbean&quot;, BSSA, 72, 4, 1379-1402.
+
+   Example:
+       hankelq('/raid/data/antelope/databases/PLUTONS/dbmerged', 'sta==''PLWB'' &amp;&amp; iphase==''P''', 20, 5, 0.3, 1.28, 10);
+
+   History:
+     April 2014: Glenn Thompson
+       Original version: load arrivals, load waveforms and plot waveforms
+     April-November 2014: Heather McFarlin
+       Modified to also plot amplitude spectra
+     November 20, 2014: Glenn Thompson
+       Completely overhauled &amp; modularized.
+       Modified method to compute amplitude spectra. Now computes Q too. Now
+       also generic - works with input variables so it can be used on different
+       databases, for example.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [y, t] = plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function hankelq(dbpath, exvpr, f1, f2, pretrigger, posttrigger, max_arrivals)</a>
+0002 <span class="comment">%HANKELQ Compute spectral ratio in two frequency bands and</span>
+0003 <span class="comment">%   hankelq(dbpath, expr, freq_high, freq_low, pretrigger_seconds, posttrigger_seconds, max_arrivals )</span>
+0004 <span class="comment">%   Loads arrivals from an arrival table (after subsetting with expr)</span>
+0005 <span class="comment">%   retrieves waveform data corresponding to those arrivals, cleans and</span>
+0006 <span class="comment">%   plots the waveform data. The spectral ratio in bands around freq_high</span>
+0007 <span class="comment">%   and freq_low is computed. When done for multiple earthquakes, a plot of this the</span>
+0008 <span class="comment">%   natural log of this ratio versus travel time has a slope from which Q</span>
+0009 <span class="comment">%   can be measured.</span>
+0010 <span class="comment">%   pretrigger_seconds is the number of seconds before the arrival time to</span>
+0011 <span class="comment">%   get waveform data for.</span>
+0012 <span class="comment">%   posttrigger_seconds is the number of seconds after the arrival time to</span>
+0013 <span class="comment">%   get waveform data for.</span>
+0014 <span class="comment">%   max_arrivals is the maximum number of arrivals to process.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%     Based on the method of Arthur Hankel, &quot;The Effects of Attenuation and</span>
+0017 <span class="comment">%     Site Response on the Spectra of Microearthquakes in the Northeastern</span>
+0018 <span class="comment">%     Caribbean&quot;, BSSA, 72, 4, 1379-1402.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%   Example:</span>
+0021 <span class="comment">%       hankelq('/raid/data/antelope/databases/PLUTONS/dbmerged', 'sta==''PLWB'' &amp;&amp; iphase==''P''', 20, 5, 0.3, 1.28, 10);</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%   History:</span>
+0024 <span class="comment">%     April 2014: Glenn Thompson</span>
+0025 <span class="comment">%       Original version: load arrivals, load waveforms and plot waveforms</span>
+0026 <span class="comment">%     April-November 2014: Heather McFarlin</span>
+0027 <span class="comment">%       Modified to also plot amplitude spectra</span>
+0028 <span class="comment">%     November 20, 2014: Glenn Thompson</span>
+0029 <span class="comment">%       Completely overhauled &amp; modularized.</span>
+0030 <span class="comment">%       Modified method to compute amplitude spectra. Now computes Q too. Now</span>
+0031 <span class="comment">%       also generic - works with input variables so it can be used on different</span>
+0032 <span class="comment">%       databases, for example.</span>
+0033 
+0034     <span class="keyword">if</span> ~exist(<span class="string">'max_arrivals'</span>,<span class="string">'var'</span>)
+0035         max_arrivals=Inf;
+0036     <span class="keyword">end</span>
+0037     taper_seconds=pretrigger+posttrigger;
+0038 
+0039     arrivals = readArrivals(dbpath, expr);
+0040     w = arrivals2waveforms(dbpath, arrivals, pretrigger, posttrigger, taper_seconds, max_arrivals);
+0041     w = waveform_clean(w);
+0042     [y, t]=<a href="#_sub1" class="code" title="subfunction [y, t] = plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2)">plot_arrival_waveforms</a>(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2);
+0043     
+0044     <span class="comment">% This is the figure we use to derive q from spectral ratios for</span>
+0045     <span class="comment">% earthquakes of different distances (travel times)</span>
+0046     <span class="comment">% Q comes from the slope</span>
+0047     figure;
+0048     plot(t, y, <span class="string">'o'</span>);
+0049     ylabel(<span class="string">'ln(A_1/A_2)'</span>)
+0050     xlabel(<span class="string">'travel time (s)'</span>)
+0051     p = polyfit(t,y,1);
+0052     xlim=get(gca,<span class="string">'XLim'</span>);
+0053     yline = polyval(p, xlim);
+0054     hold on;
+0055     plot(xlim, yline)
+0056     
+0057     slope = (yline(2) - yline(1)) / (xlim(2) - xlim(1));
+0058     q = - pi * (f1 - f2) / slope;
+0059     title(sprintf(<span class="string">'Q = %.0f'</span>, q));
+0060 <span class="keyword">end</span>
+0061 
+0062 <a name="_sub1" href="#_subfunctions" class="code">function [y, t] = plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2)</a>
+0063     FMIN = 1.0;
+0064     close all
+0065     
+0066     <span class="comment">%% open an output file</span>
+0067     fid=fopen([mfilename,<span class="string">'.txt'</span>],<span class="string">'w'</span>);
+0068     
+0069     taper_fraction = (taper_seconds * 2) / (taper_seconds * 2 + pretrigger + posttrigger);
+0070     
+0071     <span class="comment">% get travel time for p-wave</span>
+0072     p_time = arrivals.time-arrivals.otime;
+0073 
+0074     <span class="comment">% time conversion</span>
+0075     anum = epoch2datenum(arrivals.time);
+0076 
+0077     <span class="keyword">for</span> i=1:min([max_arrivals numel(w)])
+0078         signal = get(w(i),<span class="string">'data'</span>);
+0079         N = length(signal);
+0080         <span class="keyword">if</span> N&gt;0
+0081             
+0082             <span class="comment">% taper, filter to remove long period noise, and cut out tapered signal to leave only</span>
+0083             <span class="comment">% untapered signal</span>
+0084             wf = w(i);
+0085             
+0086             taperwin=tukeywin(N, taper_fraction);
+0087             signal=signal.*taperwin;   
+0088             wf = set(wf, <span class="string">'data'</span>, signal);
+0089             fmax = get(wf, <span class="string">'freq'</span>) * 0.4;
+0090             fobj = filterobject(<span class="string">'b'</span>, [FMIN fmax], 2); 
+0091             wf = filtfilt(fobj, wf);
+0092             [snum, enum]=gettimerange(wf);
+0093             wf=subtime(wf, snum+taper_seconds/86400, enum-taper_seconds/86400);
+0094             
+0095             <span class="comment">% integrate</span>
+0096             dwf = integrate(wf);
+0097 
+0098             <span class="comment">% Plot waveform</span>
+0099             figure(i)
+0100             subplot(3,1,1);
+0101             plot(w(i), <span class="string">'xunit'</span>, <span class="string">'date'</span>, <span class="string">'color'</span>, <span class="string">'r'</span>); <span class="comment">%unfiltered signal</span>
+0102             hold on;
+0103             plot(wf, <span class="string">'xunit'</span>, <span class="string">'date'</span>, <span class="string">'color'</span>, <span class="string">'g'</span>); <span class="comment">%filtered signal</span>
+0104             xlabel(sprintf(<span class="string">'Time with arrival at %s'</span>,datestr(anum(i), <span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>)));
+0105             ylabel(<span class="string">'Velocity'</span>); 
+0106             title(sprintf(<span class="string">'%s.%s'</span>,arrivals.sta{i},arrivals.chan{i}));
+0107             <span class="comment">% plot arrival time as grey dotted line</span>
+0108             ylim=get(gca,<span class="string">'YLim'</span>);
+0109             plot([anum(i) anum(i)],ylim,<span class="string">'Color'</span>,[0.5 0.5 0.5], <span class="string">'linestyle'</span>, <span class="string">'--'</span>)
+0110             hold off            
+0111             
+0112             subplot(3,1,2);
+0113             plot(dwf, <span class="string">'xunit'</span>, <span class="string">'date'</span>, <span class="string">'color'</span>, <span class="string">'b'</span>); <span class="comment">%filtered &amp; integrated signal</span>
+0114             xlabel(sprintf(<span class="string">'Time with arrival at %s'</span>,datestr(anum(i), <span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>)));
+0115             ylabel(<span class="string">'Displacement'</span>); 
+0116             title(sprintf(<span class="string">'%s.%s'</span>,arrivals.sta{i},arrivals.chan{i}));
+0117             <span class="comment">% plot arrival time as grey dotted line</span>
+0118             ylim=get(gca,<span class="string">'YLim'</span>);
+0119             hold on
+0120             plot([anum(i) anum(i)],ylim,<span class="string">'Color'</span>,[0.5 0.5 0.5], <span class="string">'linestyle'</span>, <span class="string">'--'</span>)
+0121             hold off  
+0122             
+0123             <span class="comment">% compute and plot amplitude spectrum</span>
+0124             [A, phi, f] = amplitude_spectrum(dwf);
+0125             subplot(3,1,3)
+0126             plot(f,A);
+0127             <span class="comment">%loglog(f, A)</span>
+0128             xlabel(<span class="string">'Frequency (Hz)'</span>)
+0129             ylabel(<span class="string">'Displacement Amplitude Spectrum'</span>)
+0130             
+0131             <span class="comment">% evaluate the spectral ratio</span>
+0132             A1=mean(A(find(f&gt;=f1*0.9 &amp; f&lt;=f1*1.1))); <span class="comment">%  for 20 Hz, this is 18-22 Hz</span>
+0133             A2=mean(A(find(f&gt;=f2*0.8 &amp; f&lt;=f2*1.2 ))); <span class="comment">% for 5 Hz this is 4-6 Hz</span>
+0134             disp(sprintf(<span class="string">'A1 = %6.3f, A2 = %6.3f, A1/A2 = %5.2f'</span>,A1, A2, A1/A2));
+0135 
+0136             <span class="comment">% add title</span>
+0137             outstr=sprintf(<span class="string">'phase=%s orid=%d seaz=%6.2f delta=%5.3f depth=%5.1f\nA1=%5.3f A2=%5.3f A1/A2=%5.2f\n'</span>,arrivals.phase{i}, arrivals.orid(i), arrivals.seaz(i), arrivals.delta(i), arrivals.depth(i), A1, A2, A1/A2);
+0138             title(outstr)
+0139 
+0140             <span class="comment">% write out to file &amp; close plot</span>
+0141             filename=sprintf(<span class="string">'%s-%d'</span>,mfilename,i);
+0142             print(<span class="string">'-dpng'</span>, figure(i),filename)
+0143             close
+0144             
+0145             <span class="comment">% compute y=ln A1/A2 &amp; t for formula 2 in Hankel (1982)</span>
+0146             y(i) = log(A1/A2);
+0147             [times, phasenames] = arrtimes(arrivals.delta(i), arrivals.depth(i));
+0148             phase_index = 1;
+0149             found = false;
+0150             <span class="keyword">while</span> phase_index &lt;= length(times) &amp; ~found
+0151                 thisphase = lower(phasenames{phase_index});
+0152                 thisphase = thisphase(1);
+0153                 <span class="keyword">if</span> strcmp(lower(arrivals.phase{i}), thisphase)
+0154                     t(i)=times(phase_index);
+0155                     found=true;
+0156                 <span class="keyword">end</span>
+0157                 phase_index = phase_index + 1;
+0158             <span class="keyword">end</span>
+0159              
+0160             <span class="comment">%% write out to file</span>
+0161             fprintf(fid,<span class="string">'%14.2f %8.2f %6.3f %5.1f %4.1f %4.1f %e %e\n'</span>, p_time(i), t(i), arrivals.delta(i), arrivals.depth(i), f1, f2, A1, A2);
+0162                
+0163         <span class="keyword">end</span>
+0164 
+0165     <span class="keyword">end</span>
+0166     
+0167     <span class="comment">%% close output file</span>
+0168     fclose(fid);
+0169 <span class="keyword">end</span> 
+0170 
+0171 
+0172 
+0173 
+0174 
+0175 
+0176 
+0177 
+0178 
+0179 
+0180</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

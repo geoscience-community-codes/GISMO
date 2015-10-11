@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of readavovolcs</title>
+  <meta name="keywords" content="readavovolcs">
+  <meta name="description" content="READAVOVOLCS Read the avo_volcs.pf file.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">catalog</a> &gt; <a href="index.html">+catalog</a> &gt; readavovolcs.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog/+catalog&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>readavovolcs
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>READAVOVOLCS Read the avo_volcs.pf file.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function [sourcelon, sourcelat, minlon, maxlon, minlat, maxlat] = readavovolcs(volcano, pffile) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> READAVOVOLCS Read the avo_volcs.pf file.
+    Usage:
+          [sourcelon, sourcelat, minlon, maxlon, minlat, maxlat] = readavovolcs(volcano [, pffile])
+
+    Given a string (volcano), READAVOVOLCS will attempt to find that string in a file called
+    avo_volcs.pf, and then read in the corresponding summit (source) longitude and latitude, along
+    with a region that corresponds to the geographical areas used in the AVO histogram.
+
+    The avo_volcs.pf file was developed as part of the AVO histogram application, and it has been used
+    by several other applications since, though it would make more sense to store these data in a
+    database (e.g. using the Datascope places1.2 schema).
+
+    If an explicit path to the parameter file is not given, READAVOVOLCS will attempt to use
+    pf/avo_volcs.pf and then /avort/oprun/pf/avo_volcs.pf. By using an explicit path, a user could
+    create an arbitrarily named file like /home/username/config/myvolcanoes.txt, where each line
+    consists of:
+           volcanoname sourcelon sourcelat minlon maxlon minlat maxlat</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function str = camelcase2underscore(str)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [sourcelon, sourcelat, minlon, maxlon, minlat, maxlat] = readavovolcs(volcano, pffile)</a>
+0002 <span class="comment">% READAVOVOLCS Read the avo_volcs.pf file.</span>
+0003 <span class="comment">%    Usage:</span>
+0004 <span class="comment">%          [sourcelon, sourcelat, minlon, maxlon, minlat, maxlat] = readavovolcs(volcano [, pffile])</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    Given a string (volcano), READAVOVOLCS will attempt to find that string in a file called</span>
+0007 <span class="comment">%    avo_volcs.pf, and then read in the corresponding summit (source) longitude and latitude, along</span>
+0008 <span class="comment">%    with a region that corresponds to the geographical areas used in the AVO histogram.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    The avo_volcs.pf file was developed as part of the AVO histogram application, and it has been used</span>
+0011 <span class="comment">%    by several other applications since, though it would make more sense to store these data in a</span>
+0012 <span class="comment">%    database (e.g. using the Datascope places1.2 schema).</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    If an explicit path to the parameter file is not given, READAVOVOLCS will attempt to use</span>
+0015 <span class="comment">%    pf/avo_volcs.pf and then /avort/oprun/pf/avo_volcs.pf. By using an explicit path, a user could</span>
+0016 <span class="comment">%    create an arbitrarily named file like /home/username/config/myvolcanoes.txt, where each line</span>
+0017 <span class="comment">%    consists of:</span>
+0018 <span class="comment">%           volcanoname sourcelon sourcelat minlon maxlon minlat maxlat</span>
+0019 
+0020 
+0021 <span class="comment">% Author: Glenn Thompson</span>
+0022 
+0023 debug.print_debug(4,<span class="string">'&gt; %s'</span>, mfilename)
+0024 
+0025 <span class="keyword">if</span> ~exist(<span class="string">'pffile'</span>, <span class="string">'var'</span>) 
+0026     pffile=([<span class="string">'pf/avo_volcs.pf'</span>]);
+0027     <span class="keyword">if</span> ~exist(<span class="string">'pffile'</span>, <span class="string">'file'</span>) 
+0028         classdir = fileparts(which(<span class="string">'catalog'</span>));
+0029         pffile=matlab_extensions.catpath(classdir, <span class="string">'demo'</span>, <span class="string">'avo_volcs.pf'</span>);
+0030     <span class="keyword">end</span>
+0031 <span class="keyword">end</span>
+0032 <span class="keyword">if</span> exist(pffile, <span class="string">'file'</span>)
+0033     volcano = <a href="#_sub1" class="code" title="subfunction str = camelcase2underscore(str)">camelcase2underscore</a>(volcano);
+0034     
+0035     debug.print_debug(2, <span class="string">'Trying to read %s for %s\n'</span>, pffile,volcano)
+0036     A=importdata(pffile);
+0037     
+0038     <span class="keyword">for</span> c=1:length(A.rowheaders)
+0039         <span class="keyword">if</span> strcmp(lower(A.rowheaders{c}), lower(volcano))
+0040             sourcelon = A.data(c, 2);
+0041             sourcelat = A.data(c, 1);
+0042             minlon = A.data(c, 5);
+0043             maxlon = A.data(c, 6);
+0044             
+0045             minlat = A.data(c, 3);
+0046             maxlat = A.data(c, 4);
+0047         <span class="keyword">end</span>
+0048     <span class="keyword">end</span>
+0049 <span class="keyword">else</span>
+0050     error(sprintf(<span class="string">'%s: %s does not exist'</span>,mfilename, pffile));
+0051 <span class="keyword">end</span>
+0052 
+0053 debug.print_debug(4, <span class="string">'&lt; %s'</span>, mfilename)
+0054 
+0055 <a name="_sub1" href="#_subfunctions" class="code">function str = camelcase2underscore(str)</a>
+0056 str = strcat(str(1) ,regexprep(str(2:end), <span class="string">'[A-Z]'</span>, <span class="string">'_$0'</span>) );</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

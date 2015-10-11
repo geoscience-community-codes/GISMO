@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of startup_GISMO</title>
+  <meta name="keywords" content="startup_GISMO">
+  <meta name="description" content="STARTUP_GISMO recursively adds paths for contributed codes that build on">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="index.html">GISMO</a> &gt; startup_GISMO.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>startup_GISMO
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>STARTUP_GISMO recursively adds paths for contributed codes that build on</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function startup_GISMO(gismopath) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> STARTUP_GISMO recursively adds paths for contributed codes that build on
+ the GISMO suite. If the Antelope toolbox is already in the Matlab path,
+ then the codes with Antelope dependencies are added as well.
+
+ To add new paths to the contributed archives please
+ read 'contributed_style_guide.txt' in the GISMO directory.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function addContributed(gismopath, contribDir)</a></li><li><a href="#_sub2" class="code">function directoryList = removeHiddenFiles(directoryList)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function startup_GISMO(gismopath)</a>
+0002 <span class="comment">% STARTUP_GISMO recursively adds paths for contributed codes that build on</span>
+0003 <span class="comment">% the GISMO suite. If the Antelope toolbox is already in the Matlab path,</span>
+0004 <span class="comment">% then the codes with Antelope dependencies are added as well.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% To add new paths to the contributed archives please</span>
+0007 <span class="comment">% read 'contributed_style_guide.txt' in the GISMO directory.</span>
+0008 
+0009 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0010 <span class="comment">% $Date$</span>
+0011 <span class="comment">% $Revision$</span>
+0012 
+0013 
+0014 <span class="comment">% CHECK COMPATIBILITY</span>
+0015 <span class="comment">% Should consider added a compatibility checkign mechanism at some point.</span>
+0016 <span class="comment">% Not clear how best to do this. But given that GISMO uses features from</span>
+0017 <span class="comment">% recent releases and add-on toolboxes, it would be great to give users a</span>
+0018 <span class="comment">% heads up about such.</span>
+0019 
+0020 
+0021 <span class="comment">% GET PATHS TO DIRECTORIES IN GISMO</span>
+0022 <span class="keyword">if</span> ~exist(<span class="string">'gismopath'</span>, <span class="string">'var'</span>)
+0023     gismofile = which(<span class="string">'GISMO/startup_GISMO'</span>);
+0024     gismopath = fileparts(gismofile); <span class="comment">% first argout is the path</span>
+0025 <span class="keyword">end</span>
+0026 
+0027 <span class="comment">% ADD A PATH TO EACH DIRCTORY IN CONTRIBUTED</span>
+0028 <a href="#_sub1" class="code" title="subfunction addContributed(gismopath, contribDir)">addContributed</a>(gismopath,<span class="string">'contributed'</span>);
+0029 
+0030 <span class="comment">% ADD A PATH TO EACH DIRECTORY IN CONTRIBUTED_ANTELOPE</span>
+0031 <span class="keyword">if</span> exist(<span class="string">'dbopen'</span>,<span class="string">'file'</span>) &amp;&amp; exist(<span class="string">'trload_css'</span>,<span class="string">'file'</span>); <span class="comment">%  test for antelope</span>
+0032   <a href="#_sub1" class="code" title="subfunction addContributed(gismopath, contribDir)">addContributed</a>(gismopath,<span class="string">'contributed_antelope'</span>);
+0033 <span class="keyword">end</span>
+0034 
+0035 <span class="comment">% ADD A PATH TO EACH DIRCTORY IN CONTRIBUTED_INTERNAL</span>
+0036 <a href="#_sub1" class="code" title="subfunction addContributed(gismopath, contribDir)">addContributed</a>(gismopath,<span class="string">'contributed_internal'</span>);
+0037 
+0038 <span class="comment">% ADD A PATH TO CLASSES (Added by Glenn Thompson)</span>
+0039 addpath(fullfile(gismopath,<span class="string">'classes'</span>));
+0040 addpath(fullfile(gismopath,<span class="string">'classes'</span>,<span class="string">'catalog'</span>));
+0041 addpath(fullfile(gismopath,<span class="string">'classes'</span>,<span class="string">'rsam'</span>));
+0042 <span class="comment">%addpath(fullfile(gismopath,'classes','channeltag'));</span>
+0043 <span class="comment">%addpath(fullfile(gismopath,'classes','measurementunit'));</span>
+0044 
+0045 <span class="comment">% ADD A PATH TO APPLICATIONS e.g. IceWeb</span>
+0046 addpath(genpath(fullfile(gismopath,<span class="string">'applications'</span>)));
+0047 
+0048 <span class="comment">% ADD A PATH TO JAR FILES</span>
+0049 javaaddpath(fullfile(gismopath,<span class="string">'contributed'</span>,<span class="string">'iris_dmc_tools'</span>,<span class="string">'IRIS-WS-2.0.15.jar'</span>))
+0050 
+0051 <span class="comment">%%</span>
+0052 <a name="_sub1" href="#_subfunctions" class="code">function addContributed(gismopath, contribDir)</a>
+0053 <span class="comment">% add each subdirectory within gismopath/contribDir/ to the matlab path</span>
+0054 dirlist = dir(fullfile(gismopath,contribDir,<span class="string">''</span>));
+0055 dirlist = <a href="#_sub2" class="code" title="subfunction directoryList = removeHiddenFiles(directoryList)">removeHiddenFiles</a>(dirlist);
+0056 
+0057 <span class="keyword">for</span> n = 1:numel(dirlist)
+0058   newpath = fullfile(gismopath,contribDir, dirlist(n).name,<span class="string">''</span>);
+0059   <span class="keyword">if</span> ~isdir(newpath), <span class="keyword">continue</span>, <span class="keyword">end</span>  <span class="comment">%don't add loose files to the path</span>
+0060   addpath(newpath);
+0061   <span class="comment">%disp(['Adding path:  ' newpath]);</span>
+0062 <span class="keyword">end</span>
+0063 
+0064 
+0065 <a name="_sub2" href="#_subfunctions" class="code">function directoryList = removeHiddenFiles(directoryList)</a>
+0066 <span class="comment">%removes files that start with '.', which also includes '.', and '..'</span>
+0067 startsWithPeriod = strncmp(<span class="string">'.'</span>,{directoryList.name},1);
+0068 directoryList = directoryList(~startsWithPeriod);
+0069</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

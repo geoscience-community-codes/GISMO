@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of get</title>
+  <meta name="keywords" content="get">
+  <meta name="description" content="GET - Get filterobject properties">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@filterobject</a> &gt; get.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@filterobject&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>get
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>GET - Get filterobject properties</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function val = get(f, prop_name) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GET - Get filterobject properties
+   out = Get(f,prop_name)
+   Valid property names:
+       type, cutoff, poles
+   
+   If n-dimensional filterobjects used, then output is an n-dimensional
+   cell.
+
+
+  See also FILTEROBJECT/GET</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="display.html" class="code" title="function display(f)">display</a>	DISPLAY - Filterobject display overloaded operator</li><li><a href="filtfilt.html" class="code" title="function w =filtfilt(f, w, NYQ)">filtfilt</a>	FILTFILT - filterobject implementation of FILTFILT, use on waveform Object</li><li><a href="set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function val = get(f, prop_name)</a>
+0002 <span class="comment">%GET - Get filterobject properties</span>
+0003 <span class="comment">%   out = Get(f,prop_name)</span>
+0004 <span class="comment">%   Valid property names:</span>
+0005 <span class="comment">%       type, cutoff, poles</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%   If n-dimensional filterobjects used, then output is an n-dimensional</span>
+0008 <span class="comment">%   cell.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%  See also FILTEROBJECT/GET</span>
+0012 
+0013 <span class="comment">% VERSION: 1.0 of filter objects</span>
+0014 <span class="comment">% AUTHOR: Celso Reyes</span>
+0015 <span class="comment">% LASTUPDATE: 1/30/2007</span>
+0016 
+0017 val = cell(size(f));
+0018 
+0019 <span class="keyword">for</span> N = 1 : numel(val)
+0020 
+0021     <span class="keyword">switch</span> upper(prop_name)
+0022         <span class="keyword">case</span> <span class="string">'TYPE'</span>
+0023             val{N} = f(N).type;
+0024         <span class="keyword">case</span> <span class="string">'CUTOFF'</span>
+0025             val{N} = f(N).cutoff;
+0026         <span class="keyword">case</span> <span class="string">'POLES'</span>
+0027             val{N} = f(N).poles;
+0028         <span class="keyword">otherwise</span>
+0029             warning([<span class="string">'Unrecognized property : '</span> prop_name ]);
+0030     <span class="keyword">end</span>
+0031 <span class="keyword">end</span>
+0032 <span class="keyword">if</span> numel(f) == 1
+0033     val = val{1}; <span class="comment">% return the actual value, not a cell array</span>
+0034 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

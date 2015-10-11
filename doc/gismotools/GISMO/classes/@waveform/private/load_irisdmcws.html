@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of load_irisdmcws</title>
+  <meta name="keywords" content="load_irisdmcws">
+  <meta name="description" content="LOAD_IRISDMCWS loads waveforms using the IRIS Web Services Java Library">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; load_irisdmcws.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>load_irisdmcws
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>LOAD_IRISDMCWS loads waveforms using the IRIS Web Services Java Library</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function wavef = load_irisdmcws(dataRequest, combine_waves) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> LOAD_IRISDMCWS loads waveforms using the IRIS Web Services Java Library
+ For more information about the IRIS Web Services Library for Java,
+ check out
+
+ http://www.iris.edu/manuals/javawslibrary/
+
+ See also javaaddpath waveform</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [dataSource, scnls, startTimes, endTimes] = unpackDataRequest(dataRequest)</a></li><li><a href="#_sub2" class="code">function ts = irisFetchTraces( network, station, location, channel, startDateStr, endDateStr, quality, verbosity )</a></li><li><a href="#_sub3" class="code">function ws = convertTraces(traces)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function wavef = load_irisdmcws(dataRequest, combine_waves)</a>
+0002    
+0003    <span class="comment">% LOAD_IRISDMCWS loads waveforms using the IRIS Web Services Java Library</span>
+0004    <span class="comment">% For more information about the IRIS Web Services Library for Java,</span>
+0005    <span class="comment">% check out</span>
+0006    <span class="comment">%</span>
+0007    <span class="comment">% http://www.iris.edu/manuals/javawslibrary/</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">% See also javaaddpath waveform</span>
+0010    
+0011    <span class="comment">% Rich Karstens &amp; Celso Reyes</span>
+0012    <span class="comment">% IRIS DMC, December 2011</span>
+0013    
+0014    [~, allSCNLs, sTime, eTime] = <a href="#_sub1" class="code" title="subfunction [dataSource, scnls, startTimes, endTimes] = unpackDataRequest(dataRequest)">unpackDataRequest</a>(dataRequest);
+0015    disp(<span class="string">'Requesting Data from the DMC...'</span>);
+0016    offset = 0;
+0017    <span class="keyword">for</span> n=1:numel(allSCNLs)
+0018       scnl = allSCNLs(n);
+0019       thisWaveform=<a href="#_sub2" class="code" title="subfunction ts = irisFetchTraces( network, station, location, channel, startDateStr, endDateStr, quality, verbosity )">irisFetchTraces</a>(get(scnl,<span class="string">'network'</span>), get(scnl,<span class="string">'station'</span>), <span class="keyword">...</span>
+0020          get(scnl,<span class="string">'location'</span>), get(scnl,<span class="string">'channel'</span>), <span class="keyword">...</span>
+0021          datestr(sTime,<span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>), <span class="keyword">...</span>
+0022          datestr(eTime,<span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>));
+0023       <span class="keyword">if</span> numel(thisWaveform) == 1
+0024          wavef(n+ offset) = thisWaveform;
+0025       <span class="keyword">elseif</span> numel(thisWaveform) &gt; 1
+0026          thisEndIndex = n + offset + numel(thisWaveform) - 1;
+0027          wavef(n+offset : thisEndIndex) = thisWaveform;
+0028          offset = offset + numel(thisWaveform) - 1;
+0029       <span class="keyword">end</span>
+0030    <span class="keyword">end</span>
+0031    
+0032    wavef = addhistory(clearhistory(wavef),<span class="string">'Imported from IRIS'</span>);
+0033 <span class="keyword">end</span>
+0034 
+0035 <a name="_sub1" href="#_subfunctions" class="code">function [dataSource, scnls, startTimes, endTimes] = unpackDataRequest(dataRequest)</a>
+0036    dataSource = dataRequest.dataSource;
+0037    scnls = dataRequest.scnls;
+0038    startTimes = dataRequest.startTimes;
+0039    endTimes = dataRequest.endTimes;
+0040 <span class="keyword">end</span>
+0041 
+0042 <a name="_sub2" href="#_subfunctions" class="code">function ts = irisFetchTraces( network, station, location, channel, startDateStr, endDateStr, quality, verbosity )</a>
+0043    <span class="comment">% irisFetchTraces</span>
+0044    <span class="comment">%   Returns an array of Matlab trace structures (rather than Java classes)</span>
+0045    <span class="comment">%   based on standard waveform criteria</span>
+0046    
+0047    <span class="comment">% % Load up that jar if necessary</span>
+0048    
+0049    <span class="keyword">if</span> ~exist(<span class="string">'verbosity'</span>, <span class="string">'var'</span>)
+0050       verbosity = false;
+0051    <span class="keyword">end</span>
+0052    
+0053    <span class="keyword">if</span> ~exist(<span class="string">'quality'</span>, <span class="string">'var'</span>)
+0054       quality = <span class="string">'B'</span>;
+0055    <span class="keyword">end</span>
+0056    
+0057    <span class="keyword">try</span>
+0058       <span class="comment">% traces = edu.iris.WsHelper.Fetch.TraceData.fetchTraces(network, station, location, channel, startDateStr, endDateStr, quality, verbosity);</span>
+0059       traces = edu.iris.dmc.ws.extensions.fetch.TraceData.fetchTraces(network, station, location, channel, startDateStr, endDateStr, quality, verbosity);
+0060       ts = <a href="#_sub3" class="code" title="subfunction ws = convertTraces(traces)">convertTraces</a>(traces);
+0061       clear traces;
+0062    <span class="keyword">catch</span> je
+0063       <span class="keyword">switch</span> je.identifier
+0064          <span class="keyword">case</span> <span class="string">'MATLAB:undefinedVarOrClass'</span>
+0065             <span class="comment">% The library was not found</span>
+0066             error(<span class="string">'WAVEFORM:load_irisdmcws:unableToAccessLibrary'</span>,<span class="keyword">...</span>
+0067                [<span class="string">'The IRIS-WS library was not found in the matlab '</span>,<span class="keyword">...</span>
+0068                <span class="string">'path.  Please ensure it is on your system, and '</span>,<span class="keyword">...</span>
+0069                <span class="string">'has been added to MATLAB''s java path.  For more '</span>,<span class="keyword">...</span>
+0070                <span class="string">'information about using MATLAB with the IRIS-WS '</span>,<span class="keyword">...</span>
+0071                <span class="string">'library, visit:\n\n'</span>,<span class="keyword">...</span>
+0072                <span class="string">'\thttp://www.iris.edu/manuals/javawslibrary/matlab/\n'</span>]);
+0073          <span class="keyword">otherwise</span>
+0074             rethrow(je);
+0075       <span class="keyword">end</span>
+0076    <span class="keyword">end</span>
+0077 <span class="keyword">end</span>
+0078 
+0079 
+0080 <a name="_sub3" href="#_subfunctions" class="code">function ws = convertTraces(traces)</a>
+0081    <span class="keyword">for</span> i = 1:length(traces)
+0082       w = waveform;
+0083       chaninfo = locationobject(char(traces(i).getNetwork), <span class="keyword">...</span>
+0084          char(traces(i).getStation), <span class="keyword">...</span>
+0085          char(traces(i).getLocation), <span class="keyword">...</span>
+0086          char(traces(i).getChannel));
+0087       w = set(w,<span class="string">'channelinfo'</span>,chaninfo,<span class="string">'freq'</span>,traces(i).getSampleRate); <span class="comment">%, 'start', datenum(startDateStr, 'yyyy-mm-dd HH:MM:SS.FFF'));</span>
+0088       w = set(w,<span class="string">'start'</span>, char(traces(i).getStartTime.toString()));
+0089       w = addfield(w,<span class="string">'latitude'</span>,traces(i).getLatitude);
+0090       w = addfield(w,<span class="string">'longitude'</span>, traces(i).getLongitude);
+0091       w = addfield(w,<span class="string">'elevation'</span>,traces(i).getElevation);
+0092       w = addfield(w,<span class="string">'depth'</span>,traces(i).getDepth);
+0093       w = addfield(w,<span class="string">'azimuth'</span>,traces(i).getAzimuth);
+0094       w = addfield(w,<span class="string">'dip'</span>,traces(i).getDip);
+0095       w = addfield(w,<span class="string">'sensitivity'</span>,traces(i).getSensitivity);
+0096       w = addfield(w,<span class="string">'sensitivityFrequency'</span>,traces(i).getSensitivityFrequency);
+0097       w = addfield(w,<span class="string">'instrument'</span>,char(traces(i).getInstrument));
+0098       w = set(w,<span class="string">'units'</span>,char(traces(i).getSensitivityUnits));
+0099       w = addfield(w,<span class="string">'calib'</span>,1 ./ traces(i).getSensitivity);
+0100       w = addfield(w,<span class="string">'calib_applied'</span>,<span class="string">'NO'</span>);
+0101       w = set(w,<span class="string">'data'</span>, traces(i).getData);
+0102       ws(i) = w;
+0103    <span class="keyword">end</span>
+0104 <span class="keyword">end</span>
+0105</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getpath</title>
+  <meta name="keywords" content="getpath">
+  <meta name="description" content="GETPATH returns a path to GISMO toolbox(es)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="../index.html">gismo_maintenance</a> &gt; <a href="index.html">+admin</a> &gt; getpath.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/gismo_maintenance/+admin&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>getpath
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>GETPATH returns a path to GISMO toolbox(es)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function pathName = getpath(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GETPATH returns a path to GISMO toolbox(es)
+ MYPATHNAME = GETPATH will return a character string equivalent to the path to
+ the root GISMO directory (e.g. /usr/local/GISMO_r306/GISMO)
+
+ See also admin.<a href="which.html" class="code" title="function which(sourceLocation)">which</a> admin.<a href="remove.html" class="code" title="function remove">remove</a> admin.<a href="refresh.html" class="code" title="function refresh()">refresh</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="which.html" class="code" title="function which(sourceLocation)">which</a>	WHICH manage and switch between multiple GISMO archives</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="refresh.html" class="code" title="function refresh()">refresh</a>	REFRESH refresh all paths in GISMO</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">functionName = varargin{1};</a></li><li><a href="#_sub2" class="code">functionName =</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function pathName = getpath(varargin)</a>
+0002 
+0003 <span class="comment">%GETPATH returns a path to GISMO toolbox(es)</span>
+0004 <span class="comment">% MYPATHNAME = GETPATH will return a character string equivalent to the path to</span>
+0005 <span class="comment">% the root GISMO directory (e.g. /usr/local/GISMO_r306/GISMO)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% See also admin.which admin.remove admin.refresh</span>
+0008 
+0009 
+0010 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0011 <span class="comment">% $Date$</span>
+0012 <span class="comment">% $Revision$</span>
+0013 
+0014   
+0015 <span class="keyword">if</span> ~isempty(varargin)
+0016     <a name="_sub1" href="#_subfunctions" class="code">functionName = varargin{1};</a>
+0017 <span class="keyword">else</span> 
+0018     <a name="_sub2" href="#_subfunctions" class="code">functionName = </a><span class="string">'startup_GISMO'</span>;
+0019 <span class="keyword">end</span>
+0020 
+0021 
+0022 
+0023 <span class="comment">% GET PATH TO FUNCTION</span>
+0024 <span class="keyword">if</span> ~ischar(functionName)
+0025     error(<span class="string">'Argument must be a character string'</span>);
+0026 <span class="keyword">end</span>
+0027 
+0028 [pathName, ~, ~] = fileparts(<a href="which.html" class="code" title="function which(sourceLocation)">which</a>(functionName));</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

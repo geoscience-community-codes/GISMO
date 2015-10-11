@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of makespectrogramthumbnails</title>
+  <meta name="keywords" content="makespectrogramthumbnails">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">applications</a> &gt; <a href="index.html">iceweb</a> &gt; makespectrogramthumbnails.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/applications/iceweb&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>makespectrogramthumbnails
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function makespectrogramthumbnails(spectrogramFilename, spectrogramFraction) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="calculatePanelPositions.html" class="code" title="function [spectrogramPosition, tracePosition] = calculatePanelPositions(numchannels, channelNum, fractionalSpectrogramHeight, frameLeft, frameBottom, totalWidth, totalHeight);">calculatePanelPositions</a>	</li><li><a href="saveImageFile.html" class="code" title="function result = saveImageFile(arg1, arg2, arg3);">saveImageFile</a>	saveImageFile(IMGDIR, fname, res);</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function makespectrogramthumbnails(spectrogramFilename, spectrogramFraction)</a>
+0002 import debug.*
+0003 printfunctionstack(<span class="string">'&gt;'</span>);
+0004 <span class="comment">%print_debug('&gt; makespectrogramthumbnails', 2);</span>
+0005 
+0006 <span class="comment">% figure 1 should be a large spectrogram with traces, cropped nicely. Now remove labels and maximise panels.</span>
+0007 
+0008 ax=get(gcf, <span class="string">'Children'</span>);
+0009 
+0010 <span class="comment">% Work out number of channels</span>
+0011 pos1 = get(ax(1),<span class="string">'position'</span>); <span class="comment">% top trace</span>
+0012 pos2 = get(ax(2),<span class="string">'position'</span>); <span class="comment">% top sgram</span>
+0013 height_per_channel = pos1(4) + pos2(4);
+0014 numchannels = 0.95 / height_per_channel;
+0015 numpanels = numchannels * 2;
+0016 
+0017 new_height_per_channel = 1 / numchannels;
+0018 
+0019 <span class="comment">% Remove all axes, tickmarks, labels, and axis boxes and title from view</span>
+0020 <span class="keyword">for</span> c=1:numpanels
+0021     set(ax(c), <span class="string">'Visible'</span>, <span class="string">'off'</span>)
+0022 <span class="keyword">end</span>
+0023 
+0024 <span class="comment">% Move panels</span>
+0025 <span class="keyword">for</span> channelNum = 1:numchannels
+0026     [spectrogramPosition, tracePosition] = <a href="calculatePanelPositions.html" class="code" title="function [spectrogramPosition, tracePosition] = calculatePanelPositions(numchannels, channelNum, fractionalSpectrogramHeight, frameLeft, frameBottom, totalWidth, totalHeight);">calculatePanelPositions</a>(numchannels, numchannels - channelNum + 1, spectrogramFraction, 0.0, 0.0, 1, 1);
+0027     set(ax(channelNum*2 - 1), <span class="string">'position'</span>, tracePosition);
+0028     set(ax(channelNum*2), <span class="string">'position'</span>, spectrogramPosition);
+0029 <span class="keyword">end</span>
+0030 
+0031 <span class="comment">% we need a name for the labelless large spectrogram</span>
+0032 [tmppath, tmpbase, tmpext] = fileparts(spectrogramFilename);
+0033 tmpfile = sprintf(<span class="string">'%s/%s_labelless%s'</span>,tmppath,tmpbase,tmpext);
+0034 
+0035 <span class="comment">% print large labelless PNG</span>
+0036 <a href="saveImageFile.html" class="code" title="function result = saveImageFile(arg1, arg2, arg3);">saveImageFile</a>(tmpfile, 72);
+0037 
+0038 <span class="comment">% load then delete temporary file</span>
+0039 I = imread(tmpfile);
+0040 delete(tmpfile)
+0041 
+0042 <span class="comment">% Resize the image (aspect ratio 16:21 same as 576:756) and convert it to an indexed image with 256 colors</span>
+0043 <span class="comment">% (Note: we were originally creating 150x96, which is far off the aspect ratio of large spectrograms)</span>
+0044 <span class="comment">%[X,map] = rgb2ind(imresize(I, [126 96]), 256);</span>
+0045 <span class="comment">%thumbnailfile = sprintf('%s/smallest_%s%s',tmppath, tmpbase, tmpext);</span>
+0046 <span class="comment">%imwrite(X,map,thumbnailfile,'PNG');</span>
+0047 <span class="comment">%[X,map] = rgb2ind(imresize(I, [147 112]), 256);</span>
+0048 <span class="comment">%thumbnailfile = sprintf('%s/smaller_%s%s',tmppath, tmpbase, tmpext);</span>
+0049 <span class="comment">%imwrite(X,map,thumbnailfile,'PNG');</span>
+0050 [X,map] = rgb2ind(imresize(I, [198 151]), 256);
+0051 thumbnailfile = sprintf(<span class="string">'%s/small_%s%s'</span>,tmppath, tmpbase, tmpext);
+0052 imwrite(X,map,thumbnailfile,<span class="string">'PNG'</span>); 
+0053 close;
+0054 
+0055 printfunctionstack(<span class="string">'&lt;'</span>);</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

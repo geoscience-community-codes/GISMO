@@ -1,0 +1,238 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of catalog_cookbook</title>
+  <meta name="keywords" content="catalog_cookbook">
+  <meta name="description" content="% CATALOG and EVENTRATE cookbook">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">catalog</a> &gt; catalog_cookbook.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>catalog_cookbook
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>% CATALOG and EVENTRATE cookbook</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% CATALOG and EVENTRATE cookbook</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Catalog_full.html" class="code" title="">Catalog_full</a>	</li><li><a href="Event.html" class="code" title="">Event</a>	</li><li><a href="demodb.html" class="code" title="function dbpath = demodb(name)">demodb</a>	DEMODB</li><li><a href="readCatalog.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog</a>	READCATALOG: Read seismic events from common file formats & data sources.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%% CATALOG and EVENTRATE cookbook</span>
+0002 <span class="comment">%</span>
+0003 
+0004 <span class="comment">%% Introduction</span>
+0005 <span class="comment">% This is a short demonstration of some of the methods of the CATALOG and EVENTRATE classes.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% It is assumed that you already have GISMO on your MATLAB path.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% This cookbook is written as an M-file and is converted to HTML using the PUBLISH command.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Author: Glenn Thompson</span>
+0012 
+0013 <span class="comment">%% Loading event catalogs</span>
+0014 <span class="comment">% The catalog class is for loading, plotting and analyzing event catalogs.</span>
+0015 
+0016 <span class="comment">% readCatalog can be used to read catalogs (i.e. event metadata) from a</span>
+0017 <span class="comment">% variety of different common seismic data sources and file formats, for</span>
+0018 <span class="comment">% example:</span>
+0019 
+0020 cobj = <a href="readCatalog.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog</a>(<span class="string">'irisfetch'</span>, <span class="string">'minimumMagnitude'</span>, 7.9);
+0021 
+0022 <span class="comment">% reads all events with a magnitude of at least 7.9 from IRIS DMC into a</span>
+0023 <span class="comment">% GISMO Catalog_Full object, cobj.</span>
+0024 
+0025   <a href="Catalog_full.html" class="code" title="">Catalog_full</a> with properties:
+0026 
+0027      event_list: [1x41 <a href="Event.html" class="code" title="">Event</a>]
+0028             lat: [1x41 double]
+0029             lon: [1x41 double]
+0030           depth: [1x41 double]
+0031            time: [1x41 double]
+0032             mag: [1x41 double]
+0033           etype: <span class="string">'earthquakeearthquakeearthquakeearthquakeearthquakeearthquak...'</span>
+0034            dnum: []
+0035            snum: 7.1602e+05
+0036            enum: 7.3622e+05
+0037     description: <span class="string">''</span>
+0038     misc_fields: {<span class="string">'METHOD'</span>}
+0039     misc_values: {<span class="string">'convert_irisFetch_to_Catalog'</span>}
+0040     
+0041     
+0042     
+0043 cobj = <a href="readCatalog.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog</a>(<span class="string">'irisfetch'</span>,<span class="string">'radialcoordinates'</span>, [60.4853 -152.7431 km2deg(20)]);
+0044 
+0045 <span class="comment">% reads all events within 20 km of Redoubt volcano, held by IRIS</span>
+0046 
+0047 
+0048 
+0049 
+0050 
+0051 <span class="comment">% For the purpose of this exercise we will be using data from Redoubt volcano</span>
+0052 <span class="comment">% from 2009/03/20 to 2009/03/23. We will use two catalogs:</span>
+0053 <span class="comment">%</span>
+0054 <span class="comment">% # The real-time catalog, produced using Antelope (rtdb200903).</span>
+0055 <span class="comment">% # The analyst-reviewed offical AVO catalog (avodb200903), produced using</span>
+0056 <span class="comment">% Earthworm, XPick and Hypoellipse, later converted to an Antelope</span>
+0057 <span class="comment">% database.</span>
+0058 <span class="comment">%</span>
+0059 <span class="comment">% Both catalog segments are distributed in the &quot;demo&quot; directory.</span>
+0060 <span class="comment">%</span>
+0061 <span class="comment">% We will now load the real-time catalog into a catalog object. First,</span>
+0062 <span class="comment">% because we don't know where GISMO is on your system, we have to construct the</span>
+0063 <span class="comment">% path to the demo directory based on where CATALOG.M resides:</span>
+0064 <span class="keyword">if</span> antelope_exists
+0065     dbpath = <a href="demodb.html" class="code" title="function dbpath = demodb(name)">demodb</a>(<span class="string">'avo'</span>);
+0066 
+0067 <span class="comment">% Now read the events into a Catalog object. Only two parameters are</span>
+0068 <span class="comment">% needed, the database path (dbpath) and the data format ('antelope'):</span>
+0069     cobj = <a href="readCatalog.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog</a>(<span class="string">'datascope'</span>, <span class="string">'dbpath'</span>, dbpath);
+0070 
+0071 <span class="comment">% This should load 1441 events. What if we only want events within 15km of</span>
+0072 <span class="comment">% Redoubt volcano? The optional parameter 'subset_expression' can be used, with an</span>
+0073 <span class="comment">% appropriate Datascope expression, e.g.</span>
+0074 
+0075     cobj = <a href="readCatalog.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog</a>(<span class="string">'datascope'</span>, <span class="string">'dbpath'</span>, dbpath, <span class="string">'subset_expression'</span>, <span class="string">'deg2km(distance(lat, lon, 60.4853, -152.7431))&lt;15.0'</span>);
+0076 
+0077 <span class="comment">% where 60.4853 is the latitude of Redoubt and -152.7431 is the longitude.</span>
+0078 <span class="comment">% Now there should only be 1397 events.</span>
+0079 
+0080 <span class="comment">%% PLOTTING HYPOCENTERS</span>
+0081 <span class="comment">%% Magnitude-time plot</span>
+0082 <span class="comment">% You should see that there are 1441 events in these 3 days. What are their</span>
+0083 <span class="comment">% depths and magnitudes as a function of time?</span>
+0084 cobj.plot_time()
+0085 
+0086 <span class="comment">%% 3D-Hypocenters</span>
+0087 <span class="comment">% For a 3D hypocenter map, use plot3:</span>
+0088 cobj.plot3()
+0089 
+0090 <span class="comment">%% PLOTTING B-VALUES &amp; ESTIMATING MAGNITUDE OF COMPLETENESS</span>
+0091 <span class="comment">% Code from &quot;ZMap&quot; (written by Stefan Wiemer and others) has been added</span>
+0092 <span class="comment">% to Catalog to compute and plot bvalues. Use the bvalue method:</span>
+0093 cobj.bvalue()
+0094 
+0095 <span class="comment">% This will give a menu of techniques available to compute b-value (b) and</span>
+0096 <span class="comment">% magnitude of complteness (Mc)</span>
+0097 cobj.bvalue(1)
+0098 <span class="comment">% will use technique 1</span>
+0099 
+0100 <span class="comment">%% PLOTTING EVENT COUNTS &amp; ENERGY RELEASE RATES</span>
+0101 <span class="comment">% For a quick plot of earthquakes per hour, we create an eventrate object</span>
+0102 <span class="comment">% and then plot it. Here our binsize is 1/24 days, i.e. 1 hour.</span>
+0103 erobj = cobj.eventrate(<span class="string">'binsize'</span>, 1/24);
+0104 erobj.plot()
+0105 
+0106 <span class="comment">% Now let's change to a smaller bin size of just 20 minutes</span>
+0107 erobj = cobj.eventrate(<span class="string">'binsize'</span>, 20/1440);
+0108 plot(erobj);
+0109 
+0110 <span class="comment">%% Event rates for overlapping time windows</span>
+0111 <span class="comment">% Sometimes it is desirable to compute event rate metrics for sliding -</span>
+0112 <span class="comment">% i.e. overlapping - time windows. This is easily done with the 'stepsize'</span>
+0113 <span class="comment">% parameter. If omitted, stepsize defaults to the binsize - which is the</span>
+0114 <span class="comment">% length of the time window. So in the previous example, both binsize and</span>
+0115 <span class="comment">% stepsize were 1.0 hours. But we can just as easily compute an eventrate</span>
+0116 <span class="comment">% object for the same catalog object with a binsize of 1 hour, and stepsize</span>
+0117 <span class="comment">% of just 5 minutes.</span>
+0118 <span class="comment">% erobj = cobj.eventrate('binsize', 1/24,  'stepsize', 5/1440);</span>
+0119 <span class="comment">% erobj.plot()</span>
+0120 
+0121 <span class="comment">%% Plots of other event rate metrics</span>
+0122 <span class="comment">% erobj.plot() is actually equivalent to typing:</span>
+0123 <span class="comment">%   erobj.plot(), 'metric', 'counts');</span>
+0124 <span class="comment">%</span>
+0125 <span class="comment">% The full list of metrics that can be plotted are:</span>
+0126 <span class="comment">% * counts</span>
+0127 <span class="comment">% * mean_rate</span>
+0128 <span class="comment">% * median_rate</span>
+0129 <span class="comment">% * cum_mag</span>
+0130 <span class="comment">% * mean_mag</span>
+0131 <span class="comment">% * median_mag</span>
+0132 <span class="comment">% * energy</span>
+0133 <span class="comment">%</span>
+0134 <span class="comment">% All of these are properties of an eventrate object except for energy,</span>
+0135 <span class="comment">% which is computed from _cum_mag_ on-the-fly.</span>
+0136 <span class="comment">%</span>
+0137 <span class="comment">% Several can be plotted at once in subplots of the same figure using a cell array:</span>
+0138 <span class="comment">%</span>
+0139 <span class="comment">%     erobj.plot('metric', {'mean_rate'; 'median_rate'; 'mean_mag'; 'cum_mag'});</span>
+0140 <span class="comment">%</span>
+0141 <span class="comment">% Or they can of course be plotted in separate figure windows:</span>
+0142 <span class="comment">%     erobj2.plot('metric', 'mean_rate')</span>
+0143 <span class="comment">%     erobj2.plot('metric', 'median_rate')</span>
+0144 <span class="comment">%     erobj2.plot('metric', 'mean_mag')</span>
+0145 <span class="comment">%     erobj2.plot('metric', 'cum_mag')</span>
+0146 erobj.plot(<span class="string">'metric'</span>, {<span class="string">'mean_rate'</span>; <span class="string">'median_rate'</span>; <span class="string">'mean_mag'</span>; <span class="string">'cum_mag'</span>});
+0147 
+0148 <span class="comment">%% The AVO Swarm Tracking System</span>
+0149 <span class="comment">% These are the same metrics, binsize and stepsize used by the AVO swarm tracking system.</span>
+0150 <span class="comment">% See: &lt; &lt;http://www.aeic.alaska.edu/input/west/papers/2009_srl_thompson_redoubtSwarms.pdf&gt; &gt;</span>
+0151 <span class="comment">% for details.</span>
+0152 
+0153 <span class="comment">%% Helena Plot</span>
+0154 erobj.helenaplot()
+0155 
+0156 <span class="comment">%% Python plot</span>
+0157 erobj.pythonplot()
+0158 
+0159 <span class="comment">%% Loading data from a Seisan REA database</span>
+0160 <span class="comment">% Here we load events from a Seisan catalog. A Seisan</span>
+0161 <span class="comment">% &quot;Sfile&quot; contains all the metadata for 1 event.</span>
+0162 <span class="comment">% These Sfiles are stored in a flat-file database structure the path to</span>
+0163 <span class="comment">% which is: $SEISAN_TOP/REA/databaseName. Sfiles are organized in</span>
+0164 <span class="comment">% year/month subdirectories under this path. The following will navigate</span>
+0165 <span class="comment">% this where in this case $SEISAN_TOP = '/raid/data/seisan' and the</span>
+0166 <span class="comment">% databaseName is MVOE_ which stands for the Montserrat Volcano Observatory</span>
+0167 <span class="comment">% Event database. (In Seisan, databaseName is limited to exactly 5</span>
+0168 <span class="comment">% characters).</span>
+0169 <span class="comment">% This example will load all Sfiles for January 1st, 2000. This is a slow</span>
+0170 <span class="comment">% function to run as MATLAB is slow at parsing text files.</span>
+0171 cobj = <a href="readCatalog.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog</a>(<span class="string">'seisandb'</span>, <span class="string">'dbpath'</span>, fullfile(<span class="string">'/raid'</span>,<span class="string">'data'</span>,<span class="string">'seisan'</span>,<span class="string">'REA'</span>,<span class="string">'MVOE_'</span>), <span class="string">'snum'</span>, datenum(2000,1,1), <span class="string">'enum'</span>, datenum(2000,1,2) );
+0172 
+0173 <span class="comment">% This catalog object can now be explored using eev, which is modelled on</span>
+0174 <span class="comment">% the program of the same name in Seisan. We will not run this here because</span>
+0175 <span class="comment">% it is an interactive function which would cause this cookbook to fail.</span>
+0176 <span class="comment">% But here is what you would do:</span>
+0177 <span class="comment">% &gt;&gt; cobj.eev()</span>
+0178 <span class="comment">% You will see:</span>
+0179 <span class="comment">% 2000-01-01 00:51:06 l   NaN:  ?</span>
+0180 <span class="comment">% From there type h &lt;ENTER&gt; to see the list of options. s will show you the</span>
+0181 <span class="comment">% S-file. p will plot the corresponding waveforms using waveform&gt;mulplt.</span>
+0182 
+0183 
+0184 
+0185 
+0186 
+0187 
+0188 
+0189 
+0190 
+0191</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

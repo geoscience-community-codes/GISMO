@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of subdivide_files_by_date</title>
+  <meta name="keywords" content="subdivide_files_by_date">
+  <meta name="description" content="SUBDIVIDE_FILES_BY_DATE given a datasource and daterange return list of files">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@datasource</a> &gt; subdivide_files_by_date.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@datasource&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>subdivide_files_by_date
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>SUBDIVIDE_FILES_BY_DATE given a datasource and daterange return list of files</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function allDatesToCheck = subdivide_files_by_date(ds,startt,endt) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SUBDIVIDE_FILES_BY_DATE given a datasource and daterange return list of files
+ datesToCheck = subdivide_files_by_date(ds,startt,endt)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>	GETFILENAME returns a filename that is associated with a single SCNL</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function allDatesToCheck = subdivide_files_by_date(ds,startt,endt)</a>
+0002    <span class="comment">%SUBDIVIDE_FILES_BY_DATE given a datasource and daterange return list of files</span>
+0003    <span class="comment">% datesToCheck = subdivide_files_by_date(ds,startt,endt)</span>
+0004    
+0005    <span class="comment">%maxDateBins is currently unused</span>
+0006    maxDateBins = 1000; <span class="comment">%maximum number of files to be returned</span>
+0007    
+0008    startt = datenum(startt);
+0009    endt = datenum(endt);
+0010    startVec = datevec(startt);
+0011    endVec = datevec(endt);
+0012    fn = <a href="getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>(ds,[],[]);
+0013    fn = fn{1};
+0014    
+0015    changes = [any(findstr(fn,<span class="string">'[YEAR]'</span>)),any(findstr(fn,<span class="string">'[MONTH]'</span>)),<span class="keyword">...</span>
+0016       any(findstr(fn,<span class="string">'[DAY]'</span>)) || any(findstr(fn,<span class="string">'[JDAY]'</span>)),<span class="keyword">...</span>
+0017       any(findstr(fn,<span class="string">'[HOUR]'</span>)), any(findstr(fn,<span class="string">'[MINUTE]'</span>)),<span class="keyword">...</span>
+0018       any(findstr(fn,<span class="string">'[SECOND]'</span>))];
+0019    <span class="comment">%which aspect changes?</span>
+0020    <span class="comment">%changes = startVec ~= endVec;</span>
+0021    minchange = find(changes,1,<span class="string">'last'</span>);
+0022    <span class="keyword">if</span> isempty(minchange)
+0023       minchange = 0;
+0024    <span class="keyword">end</span>
+0025    
+0026    allDatesToCheck = [];
+0027    
+0028    <span class="keyword">for</span> timesnip = 1:numel(startt)
+0029       thisstart = startt(timesnip);
+0030       thisend =  endt(timesnip);
+0031       thisStartVec = startVec(timesnip,:);
+0032       thisEndVec = endVec(timesnip,:);
+0033       <span class="keyword">switch</span> minchange
+0034          <span class="keyword">case</span> 1; <span class="comment">%year</span>
+0035             
+0036             datesToCheck = datenum(thisStartVec(1):thisEndVec(1),1,1,0,0,0);
+0037          <span class="keyword">case</span> 2; <span class="comment">%month</span>
+0038             nmonths = (thisEndVec(1)*24 + thisEndVec(2)) -(thisStartVec(1)*24 + thisStartVec(2)) + 1;
+0039             datesToCheck = datenum(thisStartVec(1),thisStartVec(2)+(0:nmonths-1),1,0,0,0);
+0040          <span class="keyword">case</span> 3; <span class="comment">%day</span>
+0041             datesToCheck = floor(thisstart):1:floor(thisend);
+0042          <span class="keyword">case</span> 4; <span class="comment">%hour</span>
+0043             datesToCheck = datenum(thisStartVec(1),thisStartVec(2),thisStartVec(3),thisStartVec(4),0,0):datenum(0,0,0,1,0,0):thisend;
+0044          <span class="keyword">case</span> 5; <span class="comment">%minute</span>
+0045             datesToCheck = datenum(thisStartVec(1),thisStartVec(2),thisStartVec(3),thisStartVec(4),thisStartVec(5),0):datenum(0,0,0,0,1,0):thisend;
+0046          <span class="keyword">case</span> 6; <span class="comment">%second</span>
+0047             datesToCheck = thisstart:datenum(0,0,0,0,0,1):thisend;
+0048          <span class="keyword">case</span> 0; <span class="comment">%nothing</span>
+0049             datesToCheck = thisstart;
+0050       <span class="keyword">end</span> <span class="comment">%switch</span>
+0051       datesToCheck = datesToCheck(datesToCheck &lt; thisend);
+0052       allDatesToCheck = [allDatesToCheck(:); datesToCheck(:)];
+0053    <span class="keyword">end</span> <span class="comment">%timesnip</span>
+0054    
+0055    allDatesToCheck = unique(allDatesToCheck);
+0056 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

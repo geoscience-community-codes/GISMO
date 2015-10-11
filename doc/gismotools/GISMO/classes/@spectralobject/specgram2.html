@@ -1,0 +1,403 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of specgram2</title>
+  <meta name="keywords" content="specgram2">
+  <meta name="description" content="SPECGRAM2 - plots spectrograms of waveforms with waveform along top">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@spectralobject</a> &gt; specgram2.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@spectralobject&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>specgram2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>SPECGRAM2 - plots spectrograms of waveforms with waveform along top</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function specgram2(s, ws, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SPECGRAM2 - plots spectrograms of waveforms with waveform along top
+  h = specgram2(spectralobject, waveforms) generates a spectrogram from
+  the waveform(s), overwriting the current figure.  The waveform will be
+  displayed along the top of the spectrogram. The return value is a handle
+  to the spectrogram, and is optional.
+
+  The spectrograms will be created in the same shape as the passed
+  waveforms.  ie, if W is a 2x3 matrix of waveforms, then
+  specgram2(spectralobject,W) will generate a 2x3 plot of spectra. 
+
+  Many additional behaviors can be modified through the passing of
+  additional parameters, as listed further below.  These parameters are
+  always passed in pairs, as such:
+
+  specgram2(spectralobject, waveforms,'PARAM1',VALUE1,...,'PARAMn',VALUEn)
+    Any number of these parameters may be passed to specgram2.
+ 
+  specgram2(..., 'axis', AXIS_HANDLE)
+    Specify the axis AXIS_HANDLE within which the spectrogram will be
+    generated.  The boundary of the axis becomes the boundary for the
+    entire spectra plot.  For a matrix of waveforms, this area is
+    subdivided into NxM subplots, where N and M are the size of the
+    waveform matrix.
+
+  specgram2(..., 'xunit', XUNIT)
+    Spedifies the x-unit scale to be used with the spectrogram.  The
+    default unit is 'seconds'.  
+    valid xunits:
+     'seconds','minutes','hours','days','doy' (day of year),and 'date' 
+
+  specgram2(..., 'colormap', ALTERNATEMAP)
+    Instead of using the default colormap, any colormap may be used.  An
+    alternate way of setting the global map is by using the SETMAP
+    function.  ALTERNATEMAP will either be a name (eg. grayscale) or an
+    Nx3 numeric. Type HELP GRAPH3D to see additional useful colormaps.
+
+
+  specgram2(..., 'colorbar', COLORBAR_OPTION)
+    Generates a spectrogram from the waveform and uses a specific map
+    valid COLORBAR_OPTION values: 'horiz' (default),'vert','none',
+      'HORIZ' places a single colorbar below all plots
+      'VERT' places a single colorbar to the right of all plots 
+      'NONE' supresses the colorbar placement 
+
+  specgram2(..., 'yscale', YSCALE)
+    Choosing 'log' Allows the y-axis to be generated on a log-frequency
+    scale, with uneven vertical cell spacing.  The default value is
+    'normal', and provides the standard spectrogram view.
+    valid yscales: 'normal', 'log' (see NOTE below)
+
+    NOTE: In order to use the log scale, UIMAGESC needs to be available on
+    the matlab path.  This routine was created by Frederic Moisy, and may
+    be downloaded from the maltabcentral fileexchange (File ID: 11368).
+    If this routine is not found,then the original spectrogram will be
+    created.
+
+  specgram2(..., 'fontsize', FONTSIZE)
+    Specify the font size for a spectrogram.  The default font size is 8.
+
+  specgram2(..., 'innerLabels', SHOWINNERLABELS)
+    Suppress the labling of the inside graphs by setting SHOWINNERLABELS
+    to false.  If this is false, then the frequency label only shows on
+    the leftmost spectrograms, and the X-unit label only shows on the
+    bottommost spectrograms.
+
+  Example 1:
+    % The following plots a waveform using an alternate mapping, an xunit of
+    % of 'hours', and with the y-axis plotted using a log scale.
+    specgram2(spectralobject, waveform,...
+      'colormap', alternateMap,'xunit','h','yscale','log')
+
+
+  Example 2:
+    % create an arbitrary subplot, and then plot multiple spectra
+    a = subplot(3,2,1);
+    specgram2(spectralobject,waves,'axis',a); % waves is an NxM waveform
+
+   See also SPECTRALOBJECT/SPECGRAM</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="colorbar_axis.html" class="code" title="function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)">colorbar_axis</a>	COLORBAR - Display color bar (color scale).</li><li><a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="specgram.html" class="code" title="function h = specgram(s, ws, varargin)">specgram</a>	SPECGRAM - plots spectrogram of waveforms</li><li><a href="specgram2.html" class="code" title="function specgram2(s, ws, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="specgram2.html" class="code" title="function specgram2(s, ws, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [properties] = parseargs(arglist)</a></li><li><a href="#_sub2" class="code">function [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)</a></li><li><a href="#_sub3" class="code">function c = property2varargin(properties)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function specgram2(s, ws, varargin)</a>
+0002 <span class="comment">%SPECGRAM2 - plots spectrograms of waveforms with waveform along top</span>
+0003 <span class="comment">%  h = specgram2(spectralobject, waveforms) generates a spectrogram from</span>
+0004 <span class="comment">%  the waveform(s), overwriting the current figure.  The waveform will be</span>
+0005 <span class="comment">%  displayed along the top of the spectrogram. The return value is a handle</span>
+0006 <span class="comment">%  to the spectrogram, and is optional.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%  The spectrograms will be created in the same shape as the passed</span>
+0009 <span class="comment">%  waveforms.  ie, if W is a 2x3 matrix of waveforms, then</span>
+0010 <span class="comment">%  specgram2(spectralobject,W) will generate a 2x3 plot of spectra.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%  Many additional behaviors can be modified through the passing of</span>
+0013 <span class="comment">%  additional parameters, as listed further below.  These parameters are</span>
+0014 <span class="comment">%  always passed in pairs, as such:</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%  specgram2(spectralobject, waveforms,'PARAM1',VALUE1,...,'PARAMn',VALUEn)</span>
+0017 <span class="comment">%    Any number of these parameters may be passed to specgram2.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%  specgram2(..., 'axis', AXIS_HANDLE)</span>
+0020 <span class="comment">%    Specify the axis AXIS_HANDLE within which the spectrogram will be</span>
+0021 <span class="comment">%    generated.  The boundary of the axis becomes the boundary for the</span>
+0022 <span class="comment">%    entire spectra plot.  For a matrix of waveforms, this area is</span>
+0023 <span class="comment">%    subdivided into NxM subplots, where N and M are the size of the</span>
+0024 <span class="comment">%    waveform matrix.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%  specgram2(..., 'xunit', XUNIT)</span>
+0027 <span class="comment">%    Spedifies the x-unit scale to be used with the spectrogram.  The</span>
+0028 <span class="comment">%    default unit is 'seconds'.</span>
+0029 <span class="comment">%    valid xunits:</span>
+0030 <span class="comment">%     'seconds','minutes','hours','days','doy' (day of year),and 'date'</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%  specgram2(..., 'colormap', ALTERNATEMAP)</span>
+0033 <span class="comment">%    Instead of using the default colormap, any colormap may be used.  An</span>
+0034 <span class="comment">%    alternate way of setting the global map is by using the SETMAP</span>
+0035 <span class="comment">%    function.  ALTERNATEMAP will either be a name (eg. grayscale) or an</span>
+0036 <span class="comment">%    Nx3 numeric. Type HELP GRAPH3D to see additional useful colormaps.</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%  specgram2(..., 'colorbar', COLORBAR_OPTION)</span>
+0040 <span class="comment">%    Generates a spectrogram from the waveform and uses a specific map</span>
+0041 <span class="comment">%    valid COLORBAR_OPTION values: 'horiz' (default),'vert','none',</span>
+0042 <span class="comment">%      'HORIZ' places a single colorbar below all plots</span>
+0043 <span class="comment">%      'VERT' places a single colorbar to the right of all plots</span>
+0044 <span class="comment">%      'NONE' supresses the colorbar placement</span>
+0045 <span class="comment">%</span>
+0046 <span class="comment">%  specgram2(..., 'yscale', YSCALE)</span>
+0047 <span class="comment">%    Choosing 'log' Allows the y-axis to be generated on a log-frequency</span>
+0048 <span class="comment">%    scale, with uneven vertical cell spacing.  The default value is</span>
+0049 <span class="comment">%    'normal', and provides the standard spectrogram view.</span>
+0050 <span class="comment">%    valid yscales: 'normal', 'log' (see NOTE below)</span>
+0051 <span class="comment">%</span>
+0052 <span class="comment">%    NOTE: In order to use the log scale, UIMAGESC needs to be available on</span>
+0053 <span class="comment">%    the matlab path.  This routine was created by Frederic Moisy, and may</span>
+0054 <span class="comment">%    be downloaded from the maltabcentral fileexchange (File ID: 11368).</span>
+0055 <span class="comment">%    If this routine is not found,then the original spectrogram will be</span>
+0056 <span class="comment">%    created.</span>
+0057 <span class="comment">%</span>
+0058 <span class="comment">%  specgram2(..., 'fontsize', FONTSIZE)</span>
+0059 <span class="comment">%    Specify the font size for a spectrogram.  The default font size is 8.</span>
+0060 <span class="comment">%</span>
+0061 <span class="comment">%  specgram2(..., 'innerLabels', SHOWINNERLABELS)</span>
+0062 <span class="comment">%    Suppress the labling of the inside graphs by setting SHOWINNERLABELS</span>
+0063 <span class="comment">%    to false.  If this is false, then the frequency label only shows on</span>
+0064 <span class="comment">%    the leftmost spectrograms, and the X-unit label only shows on the</span>
+0065 <span class="comment">%    bottommost spectrograms.</span>
+0066 <span class="comment">%</span>
+0067 <span class="comment">%  Example 1:</span>
+0068 <span class="comment">%    % The following plots a waveform using an alternate mapping, an xunit of</span>
+0069 <span class="comment">%    % of 'hours', and with the y-axis plotted using a log scale.</span>
+0070 <span class="comment">%    specgram2(spectralobject, waveform,...</span>
+0071 <span class="comment">%      'colormap', alternateMap,'xunit','h','yscale','log')</span>
+0072 <span class="comment">%</span>
+0073 <span class="comment">%</span>
+0074 <span class="comment">%  Example 2:</span>
+0075 <span class="comment">%    % create an arbitrary subplot, and then plot multiple spectra</span>
+0076 <span class="comment">%    a = subplot(3,2,1);</span>
+0077 <span class="comment">%    specgram2(spectralobject,waves,'axis',a); % waves is an NxM waveform</span>
+0078 <span class="comment">%</span>
+0079 <span class="comment">%   See also SPECTRALOBJECT/SPECGRAM</span>
+0080 
+0081 <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0082 <span class="comment">% $Date$</span>
+0083 <span class="comment">% $Revision$</span>
+0084 
+0085 <span class="comment">%% enforce input arguments.</span>
+0086 <span class="keyword">if</span> ~isa(ws,<span class="string">'waveform'</span>)
+0087     error(<span class="string">'Spectralobject:specgram2:invalidArgument'</span>,<span class="keyword">...</span>
+0088         <span class="string">'Second input argument should be a waveform, not a %s'</span>,class(ws));
+0089 <span class="keyword">end</span>
+0090 
+0091 hasExtraArg = mod(numel(varargin),2);
+0092 <span class="keyword">if</span> hasExtraArg
+0093     error(<span class="string">'Spectralobject:DepricatedArgument'</span>,<span class="keyword">...</span>
+0094         [<span class="string">'spectralobject/specgram2 now requires parameter '</span>,<span class="keyword">...</span>
+0095         <span class="string">'pairs.  Most likely, you tried to call spectrogram with an '</span>,<span class="keyword">...</span>
+0096         <span class="string">'axis without specifying the property ''axis'''</span>,<span class="keyword">...</span>
+0097         <span class="string">' See help spectralobject/specgram for new usage instructions.'</span>]);
+0098 <span class="keyword">else</span>
+0099     proplist=  <a href="#_sub1" class="code" title="subfunction [properties] = parseargs(arglist)">parseargs</a>(varargin);
+0100 <span class="keyword">end</span>
+0101 
+0102 <span class="comment">%% search for relevent property pairs passed as parameters</span>
+0103 
+0104 <span class="comment">% AXIS: a handle to the axis, defining the area to be used</span>
+0105 [isfound,myaxis,proplist] = <a href="#_sub2" class="code" title="subfunction [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)">getproperty</a>(<span class="string">'axis'</span>,proplist,0);
+0106 
+0107 <span class="comment">% POSITION: 1x4 vector, specifying area in which to plot</span>
+0108 <span class="comment">%          [left, bottom, width, height]</span>
+0109 [isfound,mypos,proplist] = <a href="#_sub2" class="code" title="subfunction [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)">getproperty</a>(<span class="string">'position'</span>,proplist,[]);
+0110 
+0111 <span class="comment">% COLORBAR: Dictate the position of the colorbart relative to the plot</span>
+0112 [isfound,colorbarpref,proplist] = <a href="#_sub2" class="code" title="subfunction [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)">getproperty</a>(<span class="string">'colorbar'</span>,proplist,<span class="string">'horiz'</span>);
+0113 
+0114 <span class="comment">% XUNIT: Specify the time units for the plot.  eg, hours, minutes, doy, etc.</span>
+0115 [isfound, xChoice, proplist] =<span class="keyword">...</span>
+0116     <a href="#_sub2" class="code" title="subfunction [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)">getproperty</a>(<span class="string">'xunit'</span>,proplist,s.scaling);
+0117 
+0118 <span class="comment">% FONTSIZE: specify the font size to be used for all labels within the plot</span>
+0119 [isfound, currFontSize, proplist] =<span class="keyword">...</span>
+0120     <a href="#_sub2" class="code" title="subfunction [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)">getproperty</a>(<span class="string">'fontsize'</span>,proplist,8); <span class="comment">%default font size or override?</span>
+0121 
+0122 <span class="comment">% YSCALE: either 'normal', or 'log'</span>
+0123 [isfound, yscale, proplist] = <span class="keyword">...</span>
+0124     <a href="#_sub2" class="code" title="subfunction [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)">getproperty</a>(<span class="string">'yscale'</span>,proplist,<span class="string">'normal'</span>); <span class="comment">%default yscale to 'normal'</span>
+0125 
+0126 <span class="comment">% SUPRESSINNERLABELS: true, false</span>
+0127 [isfound, suppressLabels, proplist] = <span class="keyword">...</span>
+0128     <a href="#_sub2" class="code" title="subfunction [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)">getproperty</a>(<span class="string">'innerlabels'</span>,proplist,false); <span class="comment">%only show outside</span>
+0129 
+0130 <span class="comment">% SUPRESSXLABELS: true, false</span>
+0131 [isfound, useXlabel, proplist] = <span class="keyword">...</span>
+0132     <a href="#_sub2" class="code" title="subfunction [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)">getproperty</a>(<span class="string">'useXlabel'</span>,proplist,true); <span class="comment">%show no x, y labels</span>
+0133 <span class="comment">% SUPRESSXLABELS: true, false</span>
+0134 [isfound, useYlabel, proplist] = <span class="keyword">...</span>
+0135     <a href="#_sub2" class="code" title="subfunction [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)">getproperty</a>(<span class="string">'useYlabel'</span>,proplist,true); <span class="comment">%show no x, y labels</span>
+0136 
+0137 <span class="comment">%% figure out exactly WHERE to plot the spectrogram(s)</span>
+0138 <span class="comment">%find out area(axis) in which the spectrograms will be plotted</span>
+0139 clabel= <span class="string">'Relative Amplitude  (dB)'</span>;
+0140 
+0141 <span class="keyword">if</span> myaxis == 0,
+0142     clf;
+0143     pos = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(gca,<span class="string">'position'</span>);
+0144 <span class="keyword">else</span>
+0145     pos = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(myaxis,<span class="string">'position'</span>);
+0146 <span class="keyword">end</span>
+0147 <span class="keyword">if</span> ~isempty(mypos) <span class="comment">%position</span>
+0148     pos = myaxis;
+0149 <span class="keyword">end</span>
+0150 
+0151 left = pos(1); bottom=pos(2); width=pos(3); height=pos(4);
+0152 
+0153 <span class="comment">%% If there are multiple waveforms...</span>
+0154 <span class="comment">% subdivide the axis and loop through specgram2 with individual waveforms.</span>
+0155 
+0156 <span class="keyword">if</span> numel(ws) &gt; 1
+0157     <span class="keyword">if</span> myaxis== 0, 
+0158         myaxis = gca; 
+0159     <span class="keyword">end</span>
+0160 <span class="comment">%create the colorbar if desired</span>
+0161 <span class="keyword">if</span> ~strcmpi(colorbarpref,<span class="string">'none'</span>)
+0162     hbar = <a href="colorbar_axis.html" class="code" title="function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)">colorbar_axis</a>(s,colorbarpref,clabel,<span class="string">''</span>,<span class="string">''</span>,currFontSize);
+0163     <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(hbar,<span class="string">'fontsize'</span>,currFontSize)
+0164 <span class="keyword">end</span>
+0165 
+0166     h = subdivide_axes(myaxis,size(ws));
+0167     remainingproperties = <a href="#_sub3" class="code" title="subfunction c = property2varargin(properties)">property2varargin</a>(proplist);
+0168     <span class="keyword">for</span> n=1:numel(h)
+0169         keepYlabel =  ~suppressLabels || (n &lt;= size(h,1));
+0170         keepXlabel = ~suppressLabels || (mod(n,size(h,2))==0);
+0171         <a href="specgram2.html" class="code" title="function specgram2(s, ws, varargin)">specgram2</a>(s,ws(n),<span class="keyword">...</span>
+0172             <span class="string">'xunit'</span>,xChoice,<span class="keyword">...</span>
+0173             <span class="string">'axis'</span>,h(n),<span class="keyword">...</span>
+0174             <span class="string">'fontsize'</span>,currFontSize,<span class="keyword">...</span>
+0175             <span class="string">'useXlabel'</span>,keepXlabel,<span class="keyword">...</span>
+0176             <span class="string">'useYlabel'</span>,keepYlabel,<span class="keyword">...</span>
+0177             <span class="string">'colorbar'</span>,<span class="string">'none'</span>,<span class="keyword">...</span>
+0178             remainingproperties{:});
+0179         
+0180     <span class="keyword">end</span>
+0181     <span class="keyword">return</span>
+0182 <span class="keyword">end</span>
+0183 
+0184 <span class="comment">%% Plot the spectrogram with a wiggle on top and colorbar below</span>
+0185 
+0186 <span class="comment">% Define the area for both the wiggle and spectra</span>
+0187 wavepos = [ left, bottom + height * 0.85,  width , height * 0.15] ;
+0188 specpos = [ left, bottom, width, height * 0.85 ];
+0189 
+0190 <span class="comment">%plot the wiggle</span>
+0191 subplot(<span class="string">'position'</span>,wavepos);
+0192 plot(ws,<span class="string">'xunit'</span>,xChoice,<span class="string">'autoscale'</span>,true,<span class="string">'fontsize'</span>,currFontSize);
+0193 
+0194 <span class="comment">% make the axis tight, and keep axis info for later use with spectra</span>
+0195 axis tight;
+0196 xAxisLims = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(gca,<span class="string">'xlim'</span>);
+0197 ticnos = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(gca,<span class="string">'xtick'</span>);
+0198 
+0199 <span class="comment">%plot the spectra</span>
+0200 a = subplot(<span class="string">'position'</span>,specpos);
+0201 <a href="specgram.html" class="code" title="function h = specgram(s, ws, varargin)">specgram</a>(s,ws,<span class="keyword">...</span>
+0202     <span class="string">'xunit'</span>,xChoice,<span class="keyword">...</span>
+0203     <span class="string">'fontsize'</span>,currFontSize,<span class="keyword">...</span>
+0204     <span class="string">'yscale'</span>,yscale,<span class="keyword">...</span>
+0205     <span class="string">'colorbar'</span>,<span class="string">'none'</span>,<span class="keyword">...</span>
+0206     <span class="string">'axis'</span>,a,<span class="keyword">...</span>
+0207     <span class="string">'suppressXlabel'</span>,useXlabel,<span class="keyword">...</span>
+0208     <span class="string">'suppressYlabel'</span>,useYlabel,<span class="keyword">...</span>
+0209     varargin{:});
+0210 
+0211 <span class="comment">%make the axis match exactly with the waveform above</span>
+0212 <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(gca,<span class="string">'xtick'</span>,ticnos);
+0213 <span class="keyword">if</span> ~strcmpi(yscale,<span class="string">'log'</span>)
+0214     <span class="comment">% axis scaling doesn't work quite right at a log scale</span>
+0215     xlim(xAxisLims);
+0216 <span class="keyword">end</span>
+0217 
+0218 title(<span class="string">''</span>); <span class="comment">%clear the title</span>
+0219 
+0220 <span class="comment">%create the colorbar if desired</span>
+0221 <span class="keyword">if</span> ~strcmpi(colorbarpref,<span class="string">'none'</span>)
+0222     hbar = <a href="colorbar_axis.html" class="code" title="function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)">colorbar_axis</a>(s,colorbarpref,clabel,<span class="string">''</span>,<span class="string">''</span>,currFontSize);
+0223     <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(hbar,<span class="string">'fontsize'</span>,currFontSize)
+0224 <span class="keyword">end</span>
+0225 
+0226 
+0227 <a name="_sub1" href="#_subfunctions" class="code">function [properties] = parseargs(arglist)</a>
+0228 <span class="comment">% parse the incoming arguments, returning a cell with each parameter name</span>
+0229 <span class="comment">% as well as a cell for each parameter value pair.  parseargs will also</span>
+0230 <span class="comment">% doublecheck to ensure that all pnames are actually strings... otherwise,</span>
+0231 <span class="comment">% we're looking at a mis-parse.</span>
+0232 <span class="comment">%check to make sure these are name-value pairs</span>
+0233 argcount = numel(arglist);
+0234 evenArgumentCount = mod(argcount,2) == 0;
+0235 <span class="keyword">if</span> ~evenArgumentCount
+0236     error(<span class="string">'ParseArgs:propertyMismatch'</span>,<span class="keyword">...</span>
+0237         <span class="string">'Odd number of arguments means that these arguments cannot be parameter name-value pairs'</span>);
+0238 <span class="keyword">end</span>
+0239 
+0240 <span class="comment">%assign these to output variables</span>
+0241 properties.name = arglist(1:2:argcount);
+0242 properties.val = arglist(2:2:argcount);
+0243 
+0244 <span class="comment">%</span>
+0245 <span class="keyword">for</span> i=1:numel(properties.name)
+0246     <span class="keyword">if</span> ~ischar(properties.name{i})
+0247         error(<span class="string">'ParseArgs:invalidPropertyName'</span>,<span class="keyword">...</span>
+0248             <span class="string">'All property names must be strings.'</span>);
+0249     <span class="keyword">end</span>
+0250 <span class="keyword">end</span>
+0251 
+0252 <a name="_sub2" href="#_subfunctions" class="code">function [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)</a>
+0253 <span class="comment">%returns a property value (if found) from a property list, removing that</span>
+0254 <span class="comment">%property pair from the list.  only removes the first encountered property</span>
+0255 <span class="comment">%name.</span>
+0256 
+0257 pmask = strcmpi(desiredproperty,properties.name);
+0258 isfound = any(pmask);
+0259 <span class="keyword">if</span> isfound
+0260     foundlist = find(pmask);
+0261     foundidx = foundlist(1);
+0262     foundvalue = properties.val{foundidx};
+0263     properties.name(foundidx) = [];
+0264     properties.val(foundidx) = [];
+0265 <span class="keyword">else</span>
+0266     <span class="keyword">if</span> exist(<span class="string">'defaultvalue'</span>,<span class="string">'var'</span>)
+0267         foundvalue = defaultvalue;
+0268     <span class="keyword">else</span>
+0269         foundvalue = [];
+0270     <span class="keyword">end</span>
+0271     <span class="comment">% do nothing to properties...</span>
+0272 <span class="keyword">end</span>
+0273 
+0274 <a name="_sub3" href="#_subfunctions" class="code">function c = property2varargin(properties)</a>
+0275 c = {};
+0276 c(1:2:numel(properties.name)*2) = properties.name;
+0277 c(2:2:numel(properties.name)*2) = properties.val;</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

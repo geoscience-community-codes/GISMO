@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of marktimes</title>
+  <meta name="keywords" content="marktimes">
+  <meta name="description" content="marktimes    calculate travel times of phases and place in header">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; marktimes.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>marktimes
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>marktimes    calculate travel times of phases and place in header</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function [outfile] = marktimes(infile,model,varargin1,varargin2) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">   marktimes    calculate travel times of phases and place in header
+
+   Calculates travel times of desired phases using TTBox and
+   places the times in the header of a SACLAB file.
+
+   Requires:
+   SACLAB (http://gcc.asu.edu/mthorne/saclab)
+   TTBox (http://ifp.uni-muenster.de/spp1115/content/pub/TTBox02052004b.zip)
+
+   The SACLAB file must have the 'O' and 'GCARC' header variable set.
+   Function is similar to TauP_SetSac (http://www.seis.sc.edu/software/TauP/index.html)
+
+   Examples:
+   1. 2004180KATHZ = marktimes(2004180KATHZ,'prem','P');
+   2. 2004180KATHZ = marktimes(2004180KATHZ,'prem','P',2);
+   3. 2004180KATHZ = marktimes(2004180KATHZ,'iasp91',{'S', 'SKS'});
+   4. 2004180KATHZ = marktimes(2004180KATHZ,'iasp91',{'S', 'SKS'},[2 3]);
+
+   1. 2004180KATHZ is the SACLAB file, PREM is the model, and phase P
+      The P arrival time is placed in T0 header
+   2. Just like Ex. 1, but the P arrival time is place in T2 header
+   3. 2004180KATHZ is the SACLAB file, iasp91 is the model, and both SKS
+      and S are calculated. It is important to make the phases a char and
+      put them in a cell array with curly brackets {}. S arrival time is
+      placed in T0 and SKS in T1.
+   4. Just like Ex. 3, but S is placed in T2 and SKS in T3
+
+   For phase nomenclature see TTBox manual.
+   Available models are prem, ak135, jb, and iasp91.
+
+   by Sean Ford (1/2005)  sean.ford@asu.edu
+   A SACLAB utility (http://gcc.asu.edu/mthorne/saclab)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [outfile] = marktimes(infile,model,varargin1,varargin2)</a>
+0002    <span class="comment">%   marktimes    calculate travel times of phases and place in header</span>
+0003    <span class="comment">%</span>
+0004    <span class="comment">%   Calculates travel times of desired phases using TTBox and</span>
+0005    <span class="comment">%   places the times in the header of a SACLAB file.</span>
+0006    <span class="comment">%</span>
+0007    <span class="comment">%   Requires:</span>
+0008    <span class="comment">%   SACLAB (http://gcc.asu.edu/mthorne/saclab)</span>
+0009    <span class="comment">%   TTBox (http://ifp.uni-muenster.de/spp1115/content/pub/TTBox02052004b.zip)</span>
+0010    <span class="comment">%</span>
+0011    <span class="comment">%   The SACLAB file must have the 'O' and 'GCARC' header variable set.</span>
+0012    <span class="comment">%   Function is similar to TauP_SetSac (http://www.seis.sc.edu/software/TauP/index.html)</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">%   Examples:</span>
+0015    <span class="comment">%   1. 2004180KATHZ = marktimes(2004180KATHZ,'prem','P');</span>
+0016    <span class="comment">%   2. 2004180KATHZ = marktimes(2004180KATHZ,'prem','P',2);</span>
+0017    <span class="comment">%   3. 2004180KATHZ = marktimes(2004180KATHZ,'iasp91',{'S', 'SKS'});</span>
+0018    <span class="comment">%   4. 2004180KATHZ = marktimes(2004180KATHZ,'iasp91',{'S', 'SKS'},[2 3]);</span>
+0019    <span class="comment">%</span>
+0020    <span class="comment">%   1. 2004180KATHZ is the SACLAB file, PREM is the model, and phase P</span>
+0021    <span class="comment">%      The P arrival time is placed in T0 header</span>
+0022    <span class="comment">%   2. Just like Ex. 1, but the P arrival time is place in T2 header</span>
+0023    <span class="comment">%   3. 2004180KATHZ is the SACLAB file, iasp91 is the model, and both SKS</span>
+0024    <span class="comment">%      and S are calculated. It is important to make the phases a char and</span>
+0025    <span class="comment">%      put them in a cell array with curly brackets {}. S arrival time is</span>
+0026    <span class="comment">%      placed in T0 and SKS in T1.</span>
+0027    <span class="comment">%   4. Just like Ex. 3, but S is placed in T2 and SKS in T3</span>
+0028    <span class="comment">%</span>
+0029    <span class="comment">%   For phase nomenclature see TTBox manual.</span>
+0030    <span class="comment">%   Available models are prem, ak135, jb, and iasp91.</span>
+0031    <span class="comment">%</span>
+0032    <span class="comment">%   by Sean Ford (1/2005)  sean.ford@asu.edu</span>
+0033    <span class="comment">%   A SACLAB utility (http://gcc.asu.edu/mthorne/saclab)</span>
+0034    
+0035    
+0036    
+0037    <span class="comment">% find if varargin2 is defined</span>
+0038    <span class="keyword">if</span> (nargin == 3)
+0039       varargin2 = 0;
+0040    <span class="keyword">end</span>
+0041    
+0042    <span class="comment">% test for sacfile</span>
+0043    <span class="keyword">if</span> (infile(303,3)~=77 &amp; infile(304,3)~=73 &amp; infile(305,3)~=75 &amp; infile(306,3)~=69)
+0044       error(<span class="string">'Waveform:marktimes:notSacFormat'</span>,<span class="string">'Specified Variable is not in SAC format'</span>)
+0045    <span class="keyword">end</span>
+0046    
+0047    outfile = infile;
+0048    
+0049    <span class="comment">% grab header variables from saclabfile using lh.m (SACLAB)</span>
+0050    [dist,depth,o] = lh(infile,<span class="string">'GCARC'</span>,<span class="string">'EVDP'</span>,<span class="string">'O'</span>);
+0051    
+0052    <span class="comment">% make model using .nd models of TTBox</span>
+0053    <span class="keyword">if</span> (strcmpi(model,<span class="string">'prem'</span>))
+0054       mod = mkreadnd(<span class="string">'/users/sean/MATLAB/ttbox02052004b/data/prem.nd'</span>,<span class="string">'silent'</span>);
+0055    <span class="keyword">elseif</span> (strcmp(model,<span class="string">'iasp91'</span>))
+0056       mod = mkreadnd(<span class="string">'/users/sean/MATLAB/ttbox02052004b/data/iasp91.nd'</span>,<span class="string">'silent'</span>);
+0057    <span class="keyword">elseif</span> (strcmp(model,<span class="string">'ak135'</span>))
+0058       mod = mkreadnd(<span class="string">'/users/sean/MATLAB/ttbox02052004b/data/ak135.nd'</span>,<span class="string">'silent'</span>);
+0059    <span class="keyword">elseif</span> (strcmp(model,<span class="string">'jb'</span>))
+0060       mod = mkreadnd(<span class="string">'/users/sean/MATLAB/ttbox02052004b/data/jb.nd'</span>,<span class="string">'silent'</span>);
+0061    <span class="keyword">else</span>
+0062       error(<span class="string">'Waveform:marktimes:unsuportedModel'</span>,<span class="string">'Requested model is not supported'</span>)
+0063    <span class="keyword">end</span>
+0064    
+0065    <span class="comment">% calculate travel times of requested phases using mkttime.h (TTBox)</span>
+0066    <span class="keyword">if</span> (ischar(varargin1))
+0067       [tt,p] = mkttime(varargin1,dist,depth,mod);
+0068    <span class="keyword">else</span>
+0069       <span class="keyword">for</span> i = 1:size(varargin1,2)
+0070          [tt(i),p(i)] = mkttime(varargin1{i},dist,depth,mod);
+0071       <span class="keyword">end</span>
+0072    <span class="keyword">end</span>
+0073    
+0074    <span class="comment">% correct time using header variable o</span>
+0075    ttime = tt + o;
+0076    
+0077    <span class="comment">% place time in header using ch.m (SACLAB)</span>
+0078    <span class="keyword">if</span> (ischar(varargin1))
+0079       <span class="keyword">if</span> (varargin2 == 0)
+0080          outfile = ch(outfile,<span class="string">'T0'</span>,ttime,<span class="string">'KT0'</span>,varargin1);
+0081       <span class="keyword">else</span>
+0082          outfile = ch(outfile,[<span class="string">'T'</span> num2str(varargin2)],ttime,[<span class="string">'KT'</span> num2str(varargin2)],varargin1);
+0083       <span class="keyword">end</span>
+0084    <span class="keyword">else</span>
+0085       <span class="keyword">if</span> (varargin2 == 0)
+0086          <span class="keyword">for</span> i = 1:size(varargin1,2)
+0087             outfile = ch(outfile,[<span class="string">'T'</span> num2str(i-1)],ttime(i),[<span class="string">'KT'</span> num2str(i-1)],varargin1{i});
+0088          <span class="keyword">end</span>
+0089       <span class="keyword">else</span>
+0090          <span class="keyword">for</span> i = 1:length(varargin2)
+0091             outfile = ch(outfile,[<span class="string">'T'</span> num2str(varargin2(i))],ttime(i),[<span class="string">'KT'</span> num2str(varargin2(i))],varargin1{i});
+0092          <span class="keyword">end</span>
+0093       <span class="keyword">end</span>
+0094    <span class="keyword">end</span>
+0095 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

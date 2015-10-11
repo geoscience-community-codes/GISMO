@@ -1,0 +1,273 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of particlemotion</title>
+  <meta name="keywords" content="particlemotion">
+  <meta name="description" content="PARTICLEMOTION calculates particle motion vectors for threecomp object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@threecomp</a> &gt; particlemotion.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@threecomp&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>particlemotion
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>PARTICLEMOTION calculates particle motion vectors for threecomp object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function TC = particlemotion(TC, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">PARTICLEMOTION calculates particle motion vectors for threecomp object
+ TC = PARTICLEMOTION(TC) calculates particle motion parameters for
+ threecomp object TC. The results are stored as threecomp properties:
+     TC.rectilinearity
+     TC.planarity
+     TC.energy
+     TC.azimuth
+     TC.inclination
+
+ TC = PARTICLEMOTION(TC, DT, WIDTH) calculates particle motions where DT
+ is the time step through the traces. WIDTH is the width of the time
+ window. If these parameters are not included, the function estimates
+ appropriate values for the data.
+
+ PARTICLEMOTION can accept traces that have been rotated in the horizontal
+ plane (i.e. type ZRT and Z21) so long as the orientation field is filled
+ in. This is accomplished internally by first rotating these traces to
+ type ZNE and then carrying out the particle motion analysis. In other
+ words, the particle motion coefficients are relative to a fixed
+ geographic reference frame and are independent of the orientation of the
+ input traces. See THREECOMP(DESCRIBE) for a complete description of the
+ particle motion fields.
+
+ For an overview of this methodology see:
+    Montalbetti, J. F. and Kanasewich, E. R. (1970), Enhancement 
+    of Teleseismic Body Phases with a Polarization Filter. Geophys. 
+    J. Royal Astro. Soc., 21, 119–129. 
+    doi: 10.1111/j.1365-246X.1970.tb01771.x
+
+    Ereditato, D. and G. Luongo (1994) Volcanic tremor wave field 
+    during quiescent and eruptive activity at Mt. Etna (Sicily), 
+    J. Volcanol. Geotherm. Res., 61, 239–25.
+
+ see also threecomp/describe</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="rotate.html" class="code" title="function TC = rotate(TC,varargin)">rotate</a>	Rotate component orientations</li><li><a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="diagnostic.html" class="code" title="function diagnostic(threecomp)">diagnostic</a>	DIAGNOSTIC check for accurate behavior of threecomp object.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [rec, plan, energy, az, incl] = do_one(TC,dt,width)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function TC = particlemotion(TC, varargin)</a>
+0002 <span class="comment">%PARTICLEMOTION calculates particle motion vectors for threecomp object</span>
+0003 <span class="comment">% TC = PARTICLEMOTION(TC) calculates particle motion parameters for</span>
+0004 <span class="comment">% threecomp object TC. The results are stored as threecomp properties:</span>
+0005 <span class="comment">%     TC.rectilinearity</span>
+0006 <span class="comment">%     TC.planarity</span>
+0007 <span class="comment">%     TC.energy</span>
+0008 <span class="comment">%     TC.azimuth</span>
+0009 <span class="comment">%     TC.inclination</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% TC = PARTICLEMOTION(TC, DT, WIDTH) calculates particle motions where DT</span>
+0012 <span class="comment">% is the time step through the traces. WIDTH is the width of the time</span>
+0013 <span class="comment">% window. If these parameters are not included, the function estimates</span>
+0014 <span class="comment">% appropriate values for the data.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% PARTICLEMOTION can accept traces that have been rotated in the horizontal</span>
+0017 <span class="comment">% plane (i.e. type ZRT and Z21) so long as the orientation field is filled</span>
+0018 <span class="comment">% in. This is accomplished internally by first rotating these traces to</span>
+0019 <span class="comment">% type ZNE and then carrying out the particle motion analysis. In other</span>
+0020 <span class="comment">% words, the particle motion coefficients are relative to a fixed</span>
+0021 <span class="comment">% geographic reference frame and are independent of the orientation of the</span>
+0022 <span class="comment">% input traces. See THREECOMP(DESCRIBE) for a complete description of the</span>
+0023 <span class="comment">% particle motion fields.</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% For an overview of this methodology see:</span>
+0026 <span class="comment">%    Montalbetti, J. F. and Kanasewich, E. R. (1970), Enhancement</span>
+0027 <span class="comment">%    of Teleseismic Body Phases with a Polarization Filter. Geophys.</span>
+0028 <span class="comment">%    J. Royal Astro. Soc., 21, 119–129.</span>
+0029 <span class="comment">%    doi: 10.1111/j.1365-246X.1970.tb01771.x</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%    Ereditato, D. and G. Luongo (1994) Volcanic tremor wave field</span>
+0032 <span class="comment">%    during quiescent and eruptive activity at Mt. Etna (Sicily),</span>
+0033 <span class="comment">%    J. Volcanol. Geotherm. Res., 61, 239–25.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% see also threecomp/describe</span>
+0036 
+0037 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0038 <span class="comment">% $Date$</span>
+0039 <span class="comment">% $Revision$</span>
+0040 
+0041 
+0042 
+0043 <span class="keyword">if</span> isa(TC,<span class="string">'threecomp'</span>)
+0044     originalTraces = TC.traces;
+0045 <span class="keyword">else</span>
+0046     error(<span class="string">'Threecomp:particlemotion:mustBeThreecompObject'</span>,<span class="string">'First argument must be a threecomp object'</span>);
+0047 <span class="keyword">end</span>
+0048     
+0049     
+0050 <span class="comment">% SET UP INPUTS</span>
+0051 <span class="keyword">if</span> length(varargin) &gt;= 1
+0052     dt = varargin{1};
+0053 <span class="keyword">else</span>
+0054     dt = 86400 * <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC(1).traces(1),<span class="string">'DURATION'</span> ) / 100;
+0055 <span class="keyword">end</span>
+0056 
+0057 <span class="keyword">if</span> length(varargin) &gt;= 2
+0058     width = varargin{2};
+0059 <span class="keyword">else</span>
+0060     width = 86400 * <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC(1).traces(1),<span class="string">'DURATION'</span> ) / 10;
+0061 <span class="keyword">end</span>
+0062 
+0063 <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'Time step: '</span> num2str(dt,<span class="string">'%4.3f'</span>) <span class="string">'    Window width: '</span> num2str(width,<span class="string">'%4.3f'</span>) ]);
+0064 
+0065 
+0066 <span class="comment">% CHECK ORIENTATIONS</span>
+0067 orientation = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC,<span class="string">'ORIENTATION'</span>);
+0068 <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(orientation) || any(any(isnan(orientation)))
+0069     error(<span class="string">'Threecomp:particlemotion:requiresOrientation'</span>,<span class="string">'Orientations must be provided for all channels'</span>);
+0070 <span class="keyword">end</span>
+0071 <span class="keyword">if</span> any(orientation(:,2)~=0)
+0072     error(<span class="string">'Threecomp:particlemotion:verticalCompMustPointUp'</span>,<span class="string">'vertical component must have a vertical orientation of 0.'</span>);
+0073 <span class="keyword">end</span>
+0074 
+0075 
+0076 
+0077 <span class="comment">% TODO: ROTATE TEMPORARY THREECOMP TO ZNE, IF NEEDED</span>
+0078 
+0079 
+0080 <span class="comment">% STEP THROUGH EACH OBJECT</span>
+0081 <a href="disp.html" class="code" title="function disp(TC)">disp</a>(<span class="string">'calculating particle motions -&gt;      '</span>);
+0082 nMax = numel(TC);
+0083 <span class="keyword">for</span> n = 1:nMax;
+0084     fprintf(<span class="string">'\b\b\b\b\b%4.0f%%'</span>,n/nMax*100);
+0085     [TC(n).rectilinearity,TC(n).planarity,TC(n).energy,TC(n).azimuth,TC(n).inclination] = <a href="#_sub1" class="code" title="subfunction [rec, plan, energy, az, incl] = do_one(TC,dt,width)">do_one</a>(TC(n),dt,width); 
+0086 <span class="keyword">end</span>
+0087 fprintf(<span class="string">'\n'</span>);
+0088 
+0089 
+0090 
+0091 
+0092 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0093 <span class="comment">% Process a single object</span>
+0094 
+0095 <a name="_sub1" href="#_subfunctions" class="code">function [rec, plan, energy, az, incl] = do_one(TC,dt,width)</a>
+0096 
+0097 <span class="comment">% TEMPORARILY ADJUST ORIENTATION IF NEEDED</span>
+0098 <span class="keyword">if</span> any(TC.orientation~=[0 0 0 90 90 90]) 
+0099     <span class="comment">%disp('temporarily rotating trace to Z-N-E for particle motion calculation ...');</span>
+0100     TC = <a href="rotate.html" class="code" title="function TC = rotate(TC,varargin)">rotate</a>(TC,0);
+0101 <span class="keyword">end</span>
+0102 w = TC.traces;
+0103 freq = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(1), <span class="string">'Freq'</span>);
+0104 alldata = double(w);
+0105 <span class="comment">%ellipsoidMatrix = cov(alldata);</span>
+0106 Tstart = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(1), <span class="string">'Start_Matlab'</span>);
+0107 Tend = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(1), <span class="string">'End_Matlab'</span>);
+0108 Tc = Tstart : dt/86400 : Tend;
+0109 T1 = Tc - 0.5*width/86400;
+0110 T2 = Tc + 0.5*width/86400;
+0111 f = find(T1&lt;Tstart);
+0112 T1(f) = Tstart;
+0113 f = find(T2&gt;Tend);
+0114 T2(f) = Tend;
+0115 T1i = round((T1-Tstart)*86400*freq + 1);
+0116 T2i = round((T2-Tstart)*86400*freq);
+0117 test = [(T2'-T1')*86400 T2i' T1i'];
+0118 <span class="comment">% Tc is the center of the time ranges bounded by T1 and T2</span>
+0119 <span class="comment">% T1i and T2i are the sample indexes corresponding to these time ranges</span>
+0120 <span class="comment">% Is this formulation correct to the sample?</span>
+0121 
+0122 
+0123 
+0124 steps = numel(T1)-1;
+0125 pm.Rec = zeros(1,steps); pm.Plan = pm.Rec; pm.Ener = pm.Rec; X = pm.Rec; pm.Az = pm.Rec; pm.Inc = pm.Rec;
+0126 <span class="comment">% fprintf('Calculating covariance matrix : %05d of %05d',0, steps);</span>
+0127 <span class="comment">% backspacing = repmat('\b',1,15);</span>
+0128 <span class="comment">% formstr = [backspacing,' %05d of %05d'];</span>
+0129  
+0130 <span class="keyword">for</span> n=1:steps
+0131     <span class="comment">%fprintf(formstr,n, totcount);</span>
+0132     snippet = alldata( T1i(n) : T2i(n) ,:); <span class="comment">%grab a chunk</span>
+0133     <span class="comment">%snippet = snippet .* repmat(hanning(size(snippet,1)),1,3);</span>
+0134     covmatrix = cov(snippet); <span class="comment">%covariance matrix</span>
+0135     [V, D] = eig(covmatrix); <span class="comment">%columns of V are eigenvectors, D are eigenvalues</span>
+0136     [lambda,I] = sort(diag(D),1,<span class="string">'descend'</span>); <span class="comment">%lambda are sorted eigenvlues, I is index</span>
+0137     <span class="keyword">if</span> numel(lambda) &lt; 3,
+0138         warning(<span class="string">'less than three eigenvalues!'</span>);
+0139     <span class="keyword">end</span>
+0140 
+0141   
+0142     <span class="comment">% ADJUST SO THAT PRIMARY VECTOR POINTS ABOVE HORIZON</span>
+0143     X = V(:,I(1));  <span class="comment">% X is the largest eigenvector</span>
+0144     FLIP = 0;       <span class="comment">% track whether vector has been flipped (affects azimuth)</span>
+0145     <span class="keyword">if</span> X(1)&lt;0       <span class="comment">% if eigenvector points toward Z-</span>
+0146        X = -1*X;
+0147        FLIP = 1;
+0148     <span class="keyword">end</span>
+0149 
+0150     
+0151     <span class="comment">% RECTILINEARITY</span>
+0152     pm.Rec(n) = 1 - lambda(2) / lambda(1);   
+0153     <span class="comment">%pm.Rec(n) = 1 - (lambda(2)+lambda(3))/(2*lambda(1)); % alternate definition</span>
+0154 
+0155     <span class="comment">% PLANARITY</span>
+0156     pm.Plan(n) = 1 - lambda(3) / lambda(2);   
+0157     <span class="comment">%Fp(n) = 1 - 2*lambda(3)/(lambda(1)+lambda(2));  % alternate definition</span>
+0158 
+0159     <span class="comment">% ENERGY</span>
+0160     pm.Ener(n) = trace(D);        <span class="comment">% energy</span>
+0161     
+0162     <span class="comment">%INCIDENCE ANGLE</span>
+0163     <span class="comment">%incidence(n) = rad2deg(atan( X(1)/sqrt(X(2)^2+X(3)^2) )); % Same as below</span>
+0164     pm.Inc(n) = 90 - acosd( X(1) ); <span class="comment">% as measured from horizontal</span>
+0165    
+0166     <span class="comment">% AZIMUTH</span>
+0167     <span class="comment">%azimuth(n) = rad2deg(atan(X(3)/X(2)));    % range in -90 to +90 degrees</span>
+0168     pm.Az(n) =  rad2deg(atan2(X(3),X(2)));     <span class="comment">% range is -180 to 180</span>
+0169     pm.Az(n) = mod(pm.Az(n),360);                <span class="comment">% range is 0 to 360</span>
+0170 <span class="keyword">end</span>
+0171         
+0172   
+0173 <span class="comment">% SET THREECOMP PROPERTIES</span>
+0174 basicWave = <a href="waveform.html" class="code" title="function w = waveform(TC)">waveform</a>(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(1),<span class="string">'station'</span>),<span class="string">'JUNK'</span>,1/dt,Tstart,[]);
+0175 rec = <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(basicWave,<span class="string">'channel'</span>,<span class="string">'Rectilinearity'</span>,<span class="string">'data'</span>,pm.Rec,<span class="string">'units'</span>,<span class="string">'Fraction 0-1 (arbitrary units. Range 0-1)'</span>);
+0176 rec = addfield(rec,<span class="string">'THREECOMP_WINDOW'</span>,width);
+0177 
+0178 plan = <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(basicWave,<span class="string">'channel'</span>,<span class="string">'Planarity'</span>,<span class="string">'data'</span>,pm.Plan,<span class="string">'units'</span>,<span class="string">'(arbitrary units. Range 0-1)'</span>);
+0179 plan = addfield(plan,<span class="string">'THREECOMP_WINDOW'</span>,width);
+0180 
+0181 waveformUnits = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(<a href="waveform.html" class="code" title="function w = waveform(TC)">waveform</a>(TC),<span class="string">'UNITS'</span>);
+0182 energyUnits = [<span class="string">'('</span> waveformUnits{1} <span class="string">')^2'</span>];
+0183 energy = <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(basicWave,<span class="string">'channel'</span>,<span class="string">'Energy'</span>,<span class="string">'data'</span>,pm.Ener,<span class="string">'units'</span>,energyUnits);
+0184 energy = addfield(energy,<span class="string">'THREECOMP_WINDOW'</span>,width);
+0185 
+0186 az = <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(basicWave,<span class="string">'channel'</span>,<span class="string">'Azimuth'</span>,<span class="string">'data'</span>,pm.Az,<span class="string">'units'</span>,<span class="string">'degrees'</span>);
+0187 az = addfield(az,<span class="string">'THREECOMP_WINDOW'</span>,width);
+0188 
+0189 incl = <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(basicWave,<span class="string">'channel'</span>,<span class="string">'Incidence'</span>,<span class="string">'data'</span>,pm.Inc,<span class="string">'units'</span>,<span class="string">'degrees'</span>);
+0190 incl = addfield(incl,<span class="string">'THREECOMP_WINDOW'</span>,width);
+0191</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

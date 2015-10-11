@@ -1,0 +1,1813 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of rsam</title>
+  <meta name="keywords" content="rsam">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">rsam</a> &gt; rsam.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/rsam&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>rsam
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="rsam.html" class="code" title="">rsam</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="read_bob_file.html" class="code" title="function self=read_bob_file(varargin)">read_bob_file</a>	READ_BOB_FILE Load RSAM-like data from a BOB file into a SAM object.</li><li><a href="rsam.html" class="code" title="">rsam</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self=rsam(dnum, data, varargin)</a></li><li><a href="#_sub2" class="code">function self = findfiles(self, file)</a></li><li><a href="#_sub3" class="code">function self = load(self)</a></li><li><a href="#_sub4" class="code">function fs = Fs(self)</a></li><li><a href="#_sub5" class="code">function s=subset(self, snum, enum)</a></li><li><a href="#_sub6" class="code">function toTextFile(self, filepath)</a></li><li><a href="#_sub7" class="code">function handlePlot = plot(rsam_vector, varargin)</a></li><li><a href="#_sub8" class="code">function scrollplot(s)</a></li><li><a href="#_sub9" class="code">function plotyy(obj1, obj2, varargin)</a></li><li><a href="#_sub10" class="code">function self = reduce(self, waveType, sourcelat, sourcelon, stationlat, stationlon, varargin)</a></li><li><a href="#_sub11" class="code">function [self, timeWindow] = tremorstalta(self, varargin)</a></li><li><a href="#_sub12" class="code">function save(self, filepattern)</a></li><li><a href="#_sub13" class="code">function self = resample(self, varargin)</a></li><li><a href="#_sub14" class="code">function save2wfmeastable(self, dbname)</a></li><li><a href="#_sub15" class="code">function self = despike(self, spiketype, maxRatio)</a></li><li><a href="#_sub16" class="code">function self = remove_calibs(self)</a></li><li><a href="#_sub17" class="code">function self = correct(self)</a></li><li><a href="#_sub18" class="code">function self=rsam2energy(self, r)</a></li><li><a href="#_sub19" class="code">function w=rsam2waveform(self)</a></li><li><a href="#_sub20" class="code">function w=getwaveform(self, datapath)</a></li><li><a href="#_sub21" class="code">function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)</a></li><li><a href="#_sub22" class="code">function [aw,tt1, tt2, tmc, mag_zone]=bvalue(this, mcType, method)</a></li><li><a href="#_sub23" class="code">function self = loadwfmeastable(sta, chan, snum, enum, measure, dbname)</a></li><li><a href="#_sub24" class="code">function makebobfile(outfile, days);</a></li><li><a href="#_sub25" class="code">function [data]=remove_calibration_pulses(dnum, data)</a></li><li><a href="#_sub26" class="code">function [rsamobjects, ah]=plotrsam(sta, chan, snum, enum, DATAPATH)</a></li><li><a href="#_sub27" class="code">function rsamobj = detectTremorEvents(stationName, chan, DP, snum, enum, spikeRatio, transientEventRatio, STA_minutes, LTA_minutes, stepsize, ratio_on, ratio_off, plotResults)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="rsam.html" class="code" title="">rsam</a> 
+0002 <span class="comment">% RSAM Seismic Amplitude Measurement class constructor, version 1.0.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% RSAM is a generic term used here to represent any continuous data</span>
+0005 <span class="comment">% sampled at a regular time interval (usually 1 minute). This is a</span>
+0006 <span class="comment">% format widely used within the USGS Volcano Hazards Programme which</span>
+0007 <span class="comment">% originally stems from the RSAM system (Endo &amp; Murray, 1989)</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Written for loading and plotting RSAM data at the Montserrat Volcano</span>
+0010 <span class="comment">% Observatory (MVO), and then similar measurements derived from the VME</span>
+0011 <span class="comment">% &quot;ltamon&quot; program and ampengfft and rbuffer2bsam which took Seisan</span>
+0012 <span class="comment">% waveform files as input.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% RSAM data are historically stored in &quot;BOB&quot; format, which consists</span>
+0015 <span class="comment">% of a 4 byte floating number for each minute of the year, for a</span>
+0016 <span class="comment">% single station-channel.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% s = rsam() creates an empty RSAM object.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% s = rsam(dnum, data, 'sta', sta, 'chan', chan, 'measure', measure, 'seismogram_type', seismogram_type, 'units', units)</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%     dnum        % the dates/times (as datenum) corresponding to the start</span>
+0023 <span class="comment">%                   of each time window</span>
+0024 <span class="comment">%     data        % the value at each dnum</span>
+0025 <span class="comment">%     sta         % station</span>
+0026 <span class="comment">%     chan        % channel</span>
+0027 <span class="comment">%     measure     % statistical measure, default is 'mean'</span>
+0028 <span class="comment">%     seismogram_type % e.g. 'velocity' or 'displacement', default is 'raw'</span>
+0029 <span class="comment">%     units       % units to label y-axis, e.g. 'nm/s' or 'nm' or 'cm2', default is 'counts'</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% Examples:</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%     t = [0:60:1440]/1440;</span>
+0034 <span class="comment">%     y = randn(size(t)) + rand(size(t));</span>
+0035 <span class="comment">%     s = rsam(t, y);</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% See also: read_bob_file, oneMinuteData, waveform&gt;rsam</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% % ------- DESCRIPTION OF FIELDS IN RSAM OBJECT ------------------</span>
+0040 <span class="comment">%   DNUM:   a vector of MATLAB datenum's</span>
+0041 <span class="comment">%   DATA:   a vector of data (same size as DNUM)</span>
+0042 <span class="comment">%   MEASURE:    a string describing the statistic used to compute the</span>
+0043 <span class="comment">%               data, e.g. &quot;mean&quot;, &quot;max&quot;, &quot;std&quot;, &quot;rms&quot;, &quot;meanf&quot;, &quot;peakf&quot;,</span>
+0044 <span class="comment">%               &quot;energy&quot;</span>
+0045 <span class="comment">%   SEISMOGRAM_TYPE: a string describing whether the RSAM data were computed</span>
+0046 <span class="comment">%                    from &quot;raw&quot; seismogram, &quot;velocity&quot;, &quot;displacement&quot;</span>
+0047 <span class="comment">%   REDUCED:    a structure that is set is data are &quot;reduced&quot;, i.e. corrected</span>
+0048 <span class="comment">%               for geometric spreading (and possibly attenuation)</span>
+0049 <span class="comment">%               Has 4 fields:</span>
+0050 <span class="comment">%                   REDUCED.Q = the value of Q used to reduce the data</span>
+0051 <span class="comment">%                   (Inf by default, which indicates no attenuation)</span>
+0052 <span class="comment">%                   REDUCED.SOURCELAT = the latitude used for reducing the data</span>
+0053 <span class="comment">%                   REDUCED.SOURCELON = the longitude used for reducing the data</span>
+0054 <span class="comment">%                   REDUCED.STATIONLAT = the station latitude</span>
+0055 <span class="comment">%                   REDUCED.STATIONLON = the station longitude</span>
+0056 <span class="comment">%                   REDUCED.DISTANCE = the distance between source and</span>
+0057 <span class="comment">%                   station in km</span>
+0058 <span class="comment">%                   REDUCED.WAVETYPE = the wave type (body or surface)</span>
+0059 <span class="comment">%                   assumed</span>
+0060 <span class="comment">%                   REDUCED.F = the frequency used for surface waves</span>
+0061 <span class="comment">%                   REDUCED.WAVESPEED = the S wave speed</span>
+0062 <span class="comment">%                   REDUCED.ISREDUCED = True if the data are reduced</span>
+0063 <span class="comment">%   UNITS:  the units of the data, e.g. nm / sec.</span>
+0064 <span class="comment">%   USE: use this rsam object in plots?</span>
+0065 <span class="comment">%   FILES: structure of files data is loaded from</span>
+0066 
+0067 <span class="comment">% AUTHOR: Glenn Thompson, Montserrat Volcano Observatory</span>
+0068 <span class="comment">% $Date: $</span>
+0069 <span class="comment">% $Revision: $</span>
+0070 
+0071     properties(Access = public)
+0072         dnum = [];
+0073         data = []; <span class="comment">%</span>
+0074         measure = <span class="string">'mean'</span>;
+0075         seismogram_type = <span class="string">'raw'</span>;
+0076         reduced = struct(<span class="string">'Q'</span>, Inf, <span class="string">'sourcelat'</span>, NaN, <span class="string">'sourcelon'</span>, NaN, <span class="string">'distance'</span>, NaN, <span class="string">'waveType'</span>, <span class="string">''</span>, <span class="string">'isReduced'</span>, false, <span class="string">'f'</span>, NaN, <span class="string">'waveSpeed'</span>, NaN, <span class="string">'stationlat'</span>, NaN, <span class="string">'stationlon'</span>, NaN); 
+0077         units = <span class="string">'counts'</span>;
+0078         use = true;
+0079         files = <span class="string">''</span>;
+0080         sta = <span class="string">''</span>;
+0081         chan = <span class="string">''</span>;
+0082         snum = -Inf;
+0083         enum = Inf;
+0084         spikes = []; <span class="comment">% a vector of rsam objects that describe large spikes</span>
+0085         <span class="comment">% in the data. Populated after running 'despike' method. These are</span>
+0086         <span class="comment">% removed simultaneously from the data vector.</span>
+0087         transientEvents = []; <span class="comment">% a vector of rsam objects that describe</span>
+0088         <span class="comment">% transient events in the data that might correspond to vt, rf, lp</span>
+0089         <span class="comment">% etc. Populated after running 'despike' method with the</span>
+0090         <span class="comment">% 'transientEvents' argument. These are not removed from the data</span>
+0091         <span class="comment">% vector, but are instead returned in the continuousData vector.</span>
+0092         continuousData = []; <span class="comment">%</span>
+0093         continuousEvents = []; <span class="comment">% a vector of rsam objects that describe tremor</span>
+0094 
+0095     <span class="keyword">end</span>
+0096     <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0097     methods(Access = public)
+0098 
+0099         <a name="_sub0" href="#_subfunctions" class="code">function self=rsam(dnum, data, varargin)</a>
+0100             <span class="keyword">if</span> nargin==0
+0101                 <span class="keyword">return</span>;
+0102             <span class="keyword">end</span>
+0103             
+0104             <span class="keyword">if</span> nargin&gt;1
+0105                 self.dnum = dnum;
+0106                 self.data = data;
+0107                 <span class="keyword">if</span> nargin&gt;2
+0108                           
+0109                     [self.sta, self.chan, self.measure, self.seismogram_type, self.units, self.snum, self.enum] = <span class="keyword">...</span>
+0110                         matlab_extensions.process_options(varargin, <span class="string">'sta'</span>, self.sta, <span class="keyword">...</span>
+0111                         <span class="string">'chan'</span>, self.chan, <span class="string">'measure'</span>, self.measure, <span class="string">'seismogram_type'</span>, self.seismogram_type, <span class="string">'units'</span>, self.units, <span class="string">'snum'</span>, self.snum, <span class="string">'enum'</span>, self.enum);
+0112             
+0113                 <span class="keyword">end</span>
+0114             <span class="keyword">end</span>
+0115         <span class="keyword">end</span>
+0116 <span class="comment">% % %         function result=snum(self)</span>
+0117 <span class="comment">% % %             result = nanmin(self.dnum);</span>
+0118 <span class="comment">% % %         end</span>
+0119 <span class="comment">% % %         function result=enum(self)</span>
+0120 <span class="comment">% % %             result = nanmax(self.dnum);</span>
+0121 <span class="comment">% % %         end</span>
+0122         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0123         <a name="_sub1" href="#_subfunctions" class="code">function self = findfiles(self, file)</a>
+0124             <span class="comment">% Generate a list of files corresponding to the file pattern,</span>
+0125             <span class="comment">% snum and enum given.</span>
+0126 
+0127             filenum = 0;
+0128 
+0129             <span class="comment">% substitute for station</span>
+0130             file = regexprep(file, <span class="string">'SSSS'</span>, self.sta);
+0131             
+0132             <span class="comment">% substitute for channel</span>
+0133             file = regexprep(file, <span class="string">'CCC'</span>, self.chan);
+0134             
+0135             <span class="comment">% substitute for measure</span>
+0136             file = regexprep(file, <span class="string">'MMMM'</span>, self.measure);             
+0137 
+0138             <span class="comment">% set start year and month, and end year and month</span>
+0139             [syyy sm]=datevec(self.snum);
+0140             [eyyy em]=datevec(self.enum);
+0141            
+0142             <span class="keyword">for</span> yyyy=syyy:eyyy
+0143                 
+0144                 filenum = filenum + 1;
+0145                 files(filenum) = struct(<span class="string">'file'</span>, file, <span class="string">'snum'</span>, self.snum, <span class="string">'enum'</span>, self.enum, <span class="string">'found'</span>, false);
+0146     
+0147                 <span class="comment">% Check year against start year</span>
+0148                 <span class="keyword">if</span> yyyy~=syyy
+0149                     <span class="comment">% if not the first year, start on 1st Jan</span>
+0150                     files(filenum).snum = datenum(yyyy,1,1);
+0151                 <span class="keyword">end</span>
+0152    
+0153                 <span class="comment">% Check year against end year</span>
+0154                 <span class="keyword">if</span> yyyy~=eyyy
+0155                     <span class="comment">% if not the last year, end at 31st Dec</span>
+0156                     files(filenum).enum = datenum(yyyy,12,31,23,59,59);
+0157                 <span class="keyword">end</span>   
+0158    
+0159                 <span class="comment">% Substitute for year</span>
+0160                 files(filenum).file = regexprep(files(filenum).file, <span class="string">'YYYY'</span>, sprintf(<span class="string">'%04d'</span>,yyyy) );
+0161                 debug.print_debug(2,sprintf(<span class="string">'Output file: %s'</span>,files(filenum).file))
+0162   
+0163                 <span class="keyword">if</span> exist(files(filenum).file, <span class="string">'file'</span>)
+0164                     files(filenum).found = true;
+0165                     debug.print_debug(3,<span class="string">' - found\n'</span>);
+0166                 <span class="keyword">else</span>
+0167                     debug.print_debug(2,<span class="string">' - not found\n'</span>);
+0168                 <span class="keyword">end</span>
+0169             <span class="keyword">end</span>
+0170             self.files = files;
+0171         <span class="keyword">end</span>
+0172         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0173         <a name="_sub2" href="#_subfunctions" class="code">function self = load(self)</a>
+0174         <span class="comment">% Purpose:</span>
+0175         <span class="comment">%    Loads derived data from a binary file in the BOB RSAM format</span>
+0176         <span class="comment">%    The pointer position at which to reading from the binary file is determined from f.snum</span>
+0177         <span class="comment">%    Load all the data from f.snum to f.enum. So if timewindow is 12:34:56 to 12:44:56,</span>
+0178         <span class="comment">%    it is the samples at 12:35, ..., 12:44 - i.e. 10 of them.</span>
+0179         <span class="comment">%</span>
+0180         <span class="comment">% Input:</span>
+0181         <span class="comment">%    f - a structure which contains 'file', 'snum', 'enum' and 'found' parameters</span>
+0182         <span class="comment">% Author:</span>
+0183         <span class="comment">%   Glenn Thompson, MVO, 2000</span>
+0184 
+0185             <span class="comment">% initialise return variables</span>
+0186             datafound=false;
+0187             dnum=[];
+0188             data=[];
+0189             
+0190             f = self.files;
+0191 
+0192             [yyyy mm]=datevec(f.snum);
+0193             days=365;
+0194             <span class="keyword">if</span> mod(yyyy,4)==0
+0195                 days=366;
+0196             <span class="keyword">end</span>
+0197 
+0198             datapointsperday = 1440;
+0199             headersamples = 0;
+0200             tz=0;
+0201             <span class="keyword">if</span> strfind(f.file,<span class="string">'RSAM'</span>) 
+0202                 headersamples=datapointsperday;<span class="comment">% for PC-SEIS RSAM data there is a 1 day header</span>
+0203                 tz=-4;<span class="comment">% for Montserrat RSAM data time zone is off by 4 hours</span>
+0204             <span class="keyword">end</span>
+0205             startsample = ceil( (f.snum-datenum(yyyy,1,1))*datapointsperday)+headersamples;
+0206             endsample   = (f.enum-datenum(yyyy,1,1)) *datapointsperday + headersamples;
+0207             <span class="comment">%endsample   = floor( max([ datenum(yyyy,12,31,23,59,59) f.enum-datenum(yyyy,1,1) ]) *datapointsperday);</span>
+0208             nsamples    = endsample - startsample + 1;
+0209 
+0210             <span class="comment">% create dnum &amp; blank data vector</span>
+0211             dnum = matlab_extensions.ceilminute(f.snum)+(0:nsamples-1)/datapointsperday - tz/24;
+0212             data(1:length(dnum))=NaN;
+0213             
+0214             <span class="keyword">if</span> f.found    
+0215                 <span class="comment">% file found</span>
+0216                 debug.print_debug(0, sprintf( <span class="string">'Loading data from %s, position %d to %d of %d'</span>, <span class="keyword">...</span>
+0217                      f.file, startsample,(startsample+nsamples-1),(datapointsperday*days) )); 
+0218    
+0219                 fid=fopen(f.file,<span class="string">'r'</span>, <span class="string">'l'</span>); <span class="comment">% big-endian for Sun, little-endian for PC</span>
+0220 
+0221                 <span class="comment">% Position the pointer</span>
+0222                 offset=(startsample)*4;
+0223                 fseek(fid,offset,<span class="string">'bof'</span>);
+0224    
+0225                 <span class="comment">% Read the data</span>
+0226                 [data,numlines] = fread(fid, nsamples, <span class="string">'float32'</span>);
+0227                 fclose(fid);
+0228                 debug.print_debug(0, sprintf(<span class="string">'mean of data loaded is %e'</span>,nanmean(data)));
+0229    
+0230                 <span class="comment">% Transpose to give same dimensions as dnum</span>
+0231                 data=data';
+0232 
+0233                 <span class="comment">% Test for Nulls</span>
+0234                 <span class="keyword">if</span> length(find(data&gt;0)) &gt; 0
+0235                     datafound=true;
+0236                 <span class="keyword">end</span>    
+0237             <span class="keyword">else</span>
+0238                debug.print_debug(0, sprintf(<span class="string">'File %s not found'</span>, f.file));
+0239             <span class="keyword">end</span>
+0240             
+0241             <span class="comment">% Now paste together the matrices</span>
+0242             self.dnum = matlab_extensions.catmatrices(dnum, self.dnum);
+0243             self.data = matlab_extensions.catmatrices(data, self.data);
+0244 
+0245             <span class="keyword">if</span> ~datafound
+0246                 debug.print_debug(0, sprintf(<span class="string">'%s: No data loaded from file %s'</span>,mfilename,f.file));
+0247             <span class="keyword">end</span>
+0248 
+0249             <span class="comment">% eliminate any data outside range asked for - MAKE THIS A</span>
+0250             <span class="comment">% SEPARATE FN IF AT ALL</span>
+0251             i = find(self.dnum &gt;= self.snum &amp; self.dnum &lt;= self.enum);
+0252             self.dnum = self.dnum(i);
+0253             self.data = self.data(i);
+0254             
+0255             <span class="comment">% Fill NULL values with NaN</span>
+0256             i = find(self.data == -998);
+0257             self.data(i) = NaN;
+0258             i = find(self.data == 0);
+0259             self.data(i) = NaN;
+0260             
+0261         <span class="keyword">end</span>
+0262 
+0263         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0264         <a name="_sub3" href="#_subfunctions" class="code">function fs = Fs(self)</a>
+0265             l = length(self.dnum);
+0266             s = self.dnum(2:l) - self.dnum(1:l-1);
+0267             fs = 1.0/(median(s)*86400);
+0268         <span class="keyword">end</span>
+0269         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0270         <a name="_sub4" href="#_subfunctions" class="code">function s=subset(self, snum, enum)</a>
+0271             s = self;
+0272             i = find(self.dnum&gt;=snum &amp; self.dnum &lt;= enum);
+0273             s.dnum = self.dnum(i);
+0274             s.data = self.data(i);
+0275         <span class="keyword">end</span>
+0276         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0277         <a name="_sub5" href="#_subfunctions" class="code">function toTextFile(self, filepath)</a>
+0278            <span class="comment">% toTextFile(filepath);</span>
+0279             <span class="comment">%</span>
+0280             fout=fopen(filepath, <span class="string">'w'</span>);
+0281             <span class="keyword">for</span> c=1:length(self.dnum)
+0282                 fprintf(fout, <span class="string">'%15.8f\t%s\t%5.3e\n'</span>,self.dnum(c),datestr(self.dnum(c),<span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>),self.data(c));
+0283             <span class="keyword">end</span>
+0284             fclose(fout);
+0285         <span class="keyword">end</span>
+0286         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0287         <a name="_sub6" href="#_subfunctions" class="code">function handlePlot = plot(rsam_vector, varargin)</a>
+0288             <span class="comment">% RSAM/PLOT plot rsam data</span>
+0289             <span class="comment">% handle = plot(rsam_vector, yaxisType, h, addgrid, addlegend, fillbelow, plotspikes, plottransients, plottremor);</span>
+0290             <span class="comment">% to change where the legend plots set the global variable legend_ypos</span>
+0291             <span class="comment">% a positive value will be within the axes, a negative value will be below</span>
+0292             <span class="comment">% default is -0.2. For within the axes, log(20) is a reasonable value.</span>
+0293             <span class="comment">% yaxisType is like 'logarithmic' or 'linear'</span>
+0294             <span class="comment">% h is an axes handle (or an array of axes handles)</span>
+0295             <span class="comment">% use h = generatePanelHandles(numgraphs)</span>
+0296 
+0297             <span class="comment">% Glenn Thompson 1998-2009</span>
+0298             <span class="comment">%</span>
+0299             <span class="comment">% % GTHO 2009/10/26 Changed marker size from 5.0 to 1.0</span>
+0300             <span class="comment">% % GTHO 2009/10/26 Changed legend position to -0.2</span>
+0301             [yaxisType, h, addgrid, addlegend, fillbelow] = <span class="keyword">...</span>
+0302                 matlab_extensions.process_options(varargin, <span class="keyword">...</span>
+0303                 <span class="string">'yaxisType'</span>, <span class="string">'logarithmic'</span>, <span class="string">'h'</span>, [], <span class="string">'addgrid'</span>, false, <span class="keyword">...</span>
+0304                 <span class="string">'addlegend'</span>, false, <span class="string">'fillbelow'</span>, false);
+0305             legend_ypos = -0.2;
+0306 
+0307             <span class="comment">% colours to plot each station</span>
+0308             lineColour={[0 0 0]; [0 0 1]; [1 0 0]; [0 1 0]; [.4 .4 0]; [0 .4 0 ]; [.4 0 0]; [0 0 .4]; [0.5 0.5 0.5]; [0.25 .25 .25]};
+0309 
+0310             <span class="comment">% Plot the data graphs</span>
+0311             <span class="keyword">for</span> c = 1:length(rsam_vector)
+0312                 self = rsam_vector(c);
+0313                 hold on; 
+0314                 t = self.dnum;
+0315                 y = self.data;
+0316 
+0317                 debug.print_debug(10,sprintf(<span class="string">'Data length: %d'</span>,length(y)));
+0318 
+0319                 <span class="keyword">if</span> ~strcmp(rsam_vector(c).units, <span class="string">'Hz'</span>)
+0320                     <span class="comment">% make a logarithmic plot, with a marker size and add the station name below the x-axis like a legend</span>
+0321                     y = log10(y);  <span class="comment">% use log plots</span>
+0322 
+0323                     handlePlot = <a href="#_sub7" class="code" title="subfunction handlePlot = plot(rsam_vector, varargin)">plot</a>(t, y, <span class="string">'-'</span>, <span class="string">'Color'</span>, lineColour{c}, <span class="string">'MarkerSize'</span>, 1.0);
+0324 
+0325                     <span class="keyword">if</span> strfind(self.measure, <span class="string">'dr'</span>)
+0326                         <span class="comment">%ylabel(sprintf('%s (cm^2)',self(c).measure));</span>
+0327                         <span class="comment">%ylabel(sprintf('D_R (cm^2)',self(c).measure));</span>
+0328                         Yticks = [0.01 0.02 0.05 0.1 0.2 0.5 1 2 5 10 20 50 ];
+0329                         Ytickmarks = log10(Yticks);
+0330                         <span class="keyword">for</span> count = 1:length(Yticks)
+0331                             Yticklabels{count}=num2str(Yticks(count),3);
+0332                         <span class="keyword">end</span>
+0333                         set(gca, <span class="string">'YLim'</span>, [min(Ytickmarks) max(Ytickmarks)],<span class="string">'YTick'</span>,Ytickmarks,<span class="string">'YTickLabel'</span>,Yticklabels);
+0334                     <span class="keyword">end</span>
+0335                     axis tight
+0336                     datetick(<span class="string">'x'</span>,<span class="string">'keeplimits'</span>)
+0337 <span class="comment">%</span>
+0338                     xlabel(sprintf(<span class="string">'Date/Time starting at %s'</span>,datestr(self.snum)))
+0339                     ylabel(sprintf(<span class="string">'log(%s)'</span>,self.units))
+0340                 <span class="keyword">else</span>
+0341 
+0342                     <span class="comment">% plot on a linear axis, with station name as a y label</span>
+0343                     <span class="comment">% datetick too, add measure as title, fiddle with the YTick's and add max(y) in top left corner</span>
+0344                     <span class="keyword">if</span> ~fillbelow
+0345                         handlePlot = <a href="#_sub7" class="code" title="subfunction handlePlot = plot(rsam_vector, varargin)">plot</a>(t, y, <span class="string">'-'</span>, <span class="string">'Color'</span>, lineColour{c});
+0346                     <span class="keyword">else</span>
+0347                         handlePlot = fill([min(t) t max(t)], [min([y 0]) y min([y 0])], lineColour{c});
+0348                     <span class="keyword">end</span>
+0349 
+0350                     <span class="keyword">if</span> c ~= length(rsam_vector)
+0351                         set(gca,<span class="string">'XTickLabel'</span>,<span class="string">''</span>);
+0352                     <span class="keyword">end</span>
+0353 
+0354 <span class="comment">%                     yt=get(gca,'YTick');</span>
+0355 <span class="comment">%                     ytinterval = (yt(2)-yt(1))/2;</span>
+0356 <span class="comment">%                     yt = yt(1) + ytinterval: ytinterval: yt(end);</span>
+0357 <span class="comment">%                     ytl = yt';</span>
+0358 <span class="comment">%                     ylim = get(gca, 'YLim');</span>
+0359 <span class="comment">%                     set(gca, 'YLim', [0 ylim(2)],'YTick',yt);</span>
+0360 <span class="comment">%                     %ylabelstr = sprintf('%s.%s %s (%s)', self.sta, self.chan, self.measure, self.units);</span>
+0361 <span class="comment">%                     ylabelstr = sprintf('%s', self.sta);</span>
+0362 <span class="comment">%                     ylabel(ylabelstr);</span>
+0363                     datetick(<span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+0364                 <span class="keyword">end</span>
+0365 
+0366                 <span class="keyword">if</span> addgrid
+0367                     grid on;
+0368                 <span class="keyword">end</span>
+0369                 <span class="keyword">if</span> addlegend &amp;&amp; length(y)&gt;0
+0370                     xlim = get(gca, <span class="string">'XLim'</span>);
+0371                     legend_ypos = 0.9;
+0372                     legend_xpos = c/10;    
+0373                 <span class="keyword">end</span>
+0374 
+0375             <span class="keyword">end</span>
+0376         <span class="keyword">end</span>
+0377         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0378         <a name="_sub7" href="#_subfunctions" class="code">function scrollplot(s)</a>
+0379 
+0380             <span class="comment">% Created by Steven Lord, slord@mathworks.com</span>
+0381             <span class="comment">% Uploaded to MATLAB Central</span>
+0382             <span class="comment">% http://www.mathworks.com/matlabcentral</span>
+0383             <span class="comment">% 7 May 2002</span>
+0384             <span class="comment">%</span>
+0385             <span class="comment">% Permission is granted to adapt this code for your own use.</span>
+0386             <span class="comment">% However, if it is reposted this message must be intact.</span>
+0387 
+0388             <span class="comment">% Generate and plot data</span>
+0389             x=s.dnum();
+0390             y=s.data();
+0391             dx=1;
+0392             <span class="comment">%% dx is the width of the axis 'window'</span>
+0393             a=gca;
+0394             p=<a href="#_sub7" class="code" title="subfunction handlePlot = plot(rsam_vector, varargin)">plot</a>(x,y);
+0395 
+0396             <span class="comment">% Set appropriate axis limits and settings</span>
+0397             set(gcf,<span class="string">'doublebuffer'</span>,<span class="string">'on'</span>);
+0398             <span class="comment">%% This avoids flickering when updating the axis</span>
+0399             set(a,<span class="string">'xlim'</span>,[min(x) min(x)+dx]);
+0400             set(a,<span class="string">'ylim'</span>,[min(y) max(y)]);
+0401 
+0402             <span class="comment">% Generate constants for use in uicontrol initialization</span>
+0403             pos=get(a,<span class="string">'position'</span>);
+0404             Newpos=[pos(1) pos(2)-0.1 pos(3) 0.05];
+0405             <span class="comment">%% This will create a slider which is just underneath the axis</span>
+0406             <span class="comment">%% but still leaves room for the axis labels above the slider</span>
+0407             xmax=max(x);
+0408             xmin=min(x);
+0409             xmin=0;
+0410             <span class="comment">%gs = get(gcbo,'value')+[min(x) min(x)+dx]</span>
+0411             S=sprintf(<span class="string">'set(gca,''xlim'',get(gcbo,''value'')+[%f %f])'</span>,[xmin xmin+dx])
+0412             <span class="comment">%% Setting up callback string to modify XLim of axis (gca)</span>
+0413             <span class="comment">%% based on the position of the slider (gcbo)</span>
+0414             <span class="comment">% Creating Uicontrol</span>
+0415             h=uicontrol(<span class="string">'style'</span>,<span class="string">'slider'</span>,<span class="keyword">...</span>
+0416                 <span class="string">'units'</span>,<span class="string">'normalized'</span>,<span class="string">'position'</span>,Newpos,<span class="keyword">...</span>
+0417                 <span class="string">'callback'</span>,S,<span class="string">'min'</span>,xmin,<span class="string">'max'</span>,xmax-dx);
+0418                 <span class="comment">%'callback',S,'min',0,'max',xmax-dx);</span>
+0419         <span class="keyword">end</span>
+0420         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0421         <a name="_sub8" href="#_subfunctions" class="code">function plotyy(obj1, obj2, varargin)   </a>
+0422             [snum, enum, fun1, fun2] = matlab_extensions.process_options(varargin, <span class="string">'snum'</span>, max([obj1.dnum(1) obj2.dnum(1)]), <span class="string">'enum'</span>, min([obj1.dnum(end) obj2.dnum(end)]), <span class="string">'fun1'</span>, <span class="string">'plot'</span>, <span class="string">'fun2'</span>, <span class="string">'plot'</span>);
+0423             [ax, h1, h2] = <a href="#_sub9" class="code" title="subfunction plotyy(obj1, obj2, varargin)">plotyy</a>(obj1.dnum, obj1.data, obj2.dnum, obj2.data, fun1, fun2);
+0424             datetick(<span class="string">'x'</span>);
+0425             set(ax(2), <span class="string">'XTick'</span>, [], <span class="string">'XTickLabel'</span>, {});
+0426             set(ax(1), <span class="string">'XLim'</span>, [snum enum]);
+0427         <span class="keyword">end</span>
+0428         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0429         <a name="_sub9" href="#_subfunctions" class="code">function self = reduce(self, waveType, sourcelat, sourcelon, stationlat, stationlon, varargin)</a>
+0430             <span class="comment">% s.reduce('waveType', 'surface', 'waveSpeed', 2000, 'f', 2.0, );</span>
+0431             <span class="comment">% s.distance and waveSpeed assumed to be in metres (m)</span>
+0432             <span class="comment">% (INPUT) s.data assumed to be in nm or Pa</span>
+0433             <span class="comment">% (OUTPUT) s.data in cm^2 or Pa.m</span>
+0434             [self.reduced.waveSpeed, f] = matlab_extensions.process_options(varargin, <span class="string">'waveSpeed'</span>, 2000, <span class="string">'f'</span>, 2.0);
+0435             <span class="keyword">if</span> self.reduced.isReduced == true
+0436                 disp(<span class="string">'Data are already reduced'</span>);
+0437                 <span class="keyword">return</span>;
+0438             <span class="keyword">end</span>
+0439 
+0440             self.reduced.distance = deg2km(distance(sourcelat, sourcelon, stationlat, stationlon)) *1000; <span class="comment">% m</span>
+0441 
+0442             <span class="keyword">switch</span> self.units
+0443                 <span class="keyword">case</span> <span class="string">'nm'</span>  <span class="comment">% Displacement</span>
+0444                     <span class="comment">% Do computation in cm</span>
+0445                     self.data = self.data / 1e7;
+0446                     r = self.reduced.distance * 100; <span class="comment">% cm</span>
+0447                     ws = waveSpeed * 100; <span class="comment">% cm/2</span>
+0448                     self.measure = sprintf(<span class="string">'%sR%s'</span>,self.measure(1),self.measure(2:end));
+0449                     <span class="keyword">switch</span> self.reduced.waveType
+0450                         <span class="keyword">case</span> <span class="string">'body'</span>
+0451                             self.data = self.data * r; <span class="comment">% cm^2</span>
+0452                             self.units = <span class="string">'cm^2'</span>;
+0453                         <span class="keyword">case</span> <span class="string">'surface'</span>
+0454                             wavelength = ws / f; <span class="comment">% cm</span>
+0455                             <span class="keyword">try</span>
+0456                                     self.data = self.data .* sqrt(r * wavelength); <span class="comment">% cm^2</span>
+0457                             <span class="keyword">catch</span>
+0458                                     debug.print_debug(5, <span class="string">'mean wavelength instead'</span>)
+0459                                     self.data = self.data * sqrt(r * mean(wavelength)); <span class="comment">% cm^2</span>
+0460                             <span class="keyword">end</span>
+0461                             self.units = <span class="string">'cm^2'</span>;
+0462                             self.reduced.isReduced = true;
+0463                         <span class="keyword">otherwise</span>
+0464                             error(sprintf(<span class="string">'Wave type %s not recognised'</span>), self.reduced.waveType); 
+0465                     <span class="keyword">end</span>
+0466                 <span class="keyword">case</span> <span class="string">'Pa'</span>  <span class="comment">% Pressure</span>
+0467                     <span class="comment">% Do computation in metres</span>
+0468                     self.data = self.data * self.reduced.distance; <span class="comment">% Pa.m</span>
+0469                     self.units = <span class="string">'Pa m'</span>;
+0470                     self.reduced.isReduced = true;
+0471                     self.measure = sprintf(<span class="string">'%sR%s'</span>,self.measure(1),self.measure(2:end));
+0472                 <span class="keyword">otherwise</span>
+0473                     error(sprintf(<span class="string">'Units %s for measure %s not recognised'</span>, self.units, self.measure));
+0474             <span class="keyword">end</span>
+0475             self.reduced.sourcelat = sourcelat;
+0476             self.reduced.sourcelon = sourcelon;
+0477             self.reduced.stationlat = stationlat;
+0478             self.reduced.stationlon = stationlon;
+0479             
+0480         <span class="keyword">end</span>
+0481 
+0482         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0483         <a name="_sub10" href="#_subfunctions" class="code">function [self, timeWindow] = tremorstalta(self, varargin)</a>
+0484             <span class="comment">% rsam.detect Run an STA/LTA detector on a rsam object</span>
+0485             <span class="comment">%   [rsamobject, timeWindow] = rsam.detect(varargin)</span>
+0486             <span class="comment">%</span>
+0487             <span class="comment">%   For sample N, the STA is calculated from samples</span>
+0488             <span class="comment">%   N-stalen+1:N and the LTA from N-ltalen+1:N</span>
+0489             <span class="comment">%</span>
+0490             <span class="comment">%   Optional input name/value pairs:</span>
+0491             <span class="comment">%       'stalen'    - length of STA timeWindow in samples (minutes)</span>
+0492             <span class="comment">%                       [Default 10]</span>
+0493             <span class="comment">%       'ltalen'    - length of LTA timeWindow in samples (minutes)</span>
+0494             <span class="comment">%                       [Default 120]</span>
+0495             <span class="comment">%       'stepsize'  - number of samples to move sliding timeWindow</span>
+0496             <span class="comment">%                       [Default stalen]</span>
+0497             <span class="comment">%       'ratio_on'  - the STA/LTA ratio for which to trigger on</span>
+0498             <span class="comment">%                       [Default 1.5]</span>
+0499             <span class="comment">%       'ratio_off' - the STA/LTA ratio for which to trigger</span>
+0500             <span class="comment">%                       off [Default 1.1]</span>
+0501             <span class="comment">%       'boolplot'  - if set to true, plot the STA, LTA, ratio</span>
+0502             <span class="comment">%           and trigger on &amp; trigger off times (Default false)</span>
+0503             <span class="comment">%       'boollist'  - if set to true, list the tremor event on</span>
+0504             <span class="comment">%           and off times (Default false)</span>
+0505             <span class="comment">%</span>
+0506             <span class="comment">%   Outputs:</span>
+0507             <span class="comment">%       timeWindow  - a structure with fields (all vectors):</span>
+0508             <span class="comment">%           startSample - start sample number of each timeWindow</span>
+0509             <span class="comment">%           endSample - end sample number of each timeWindow</span>
+0510             <span class="comment">%           starttime - start time of each timeWindow</span>
+0511             <span class="comment">%           endtime - end time of each timeWindow</span>
+0512             <span class="comment">%           sta - short term average of each timeWindow</span>
+0513             <span class="comment">%           lta - long term average of each timeWindow</span>
+0514             <span class="comment">%           ratio - sta:lta ratio of each timeWindow</span>
+0515             <span class="comment">%       rsamobject - the input rsamobject but with the</span>
+0516             <span class="comment">%                   continuousEvents property populated</span>
+0517             
+0518             <span class="comment">% Process input variables</span>
+0519             [stalen, ltalen, stepsize, ratio_on, ratio_off, boolplot, boollist] = matlab_extensions.process_options(varargin, <span class="keyword">...</span>
+0520                 <span class="string">'stalen'</span>, 10, <span class="string">'ltalen'</span>, 120, <span class="string">'stepsize'</span>, 10, <span class="string">'ratio_on'</span>, 1.5, <span class="string">'ratio_off'</span>, 1.1, <span class="keyword">...</span>
+0521                 <span class="string">'boolplot'</span>, false, <span class="string">'boollist'</span>, true);
+0522             
+0523             <span class="comment">% Initialize detector variables</span>
+0524             trigger_on=false; <span class="comment">% no tremorEvent yet</span>
+0525             <span class="comment">% Make sta &amp; lta equal - no trigger</span>
+0526             sta_lastgood = eps; <span class="comment">% some non-zero value so ratio ok</span>
+0527             lta_lastgood = eps; <span class="comment">% some non-zero value so ratio ok</span>
+0528 
+0529             <span class="comment">% Create a timeWindow structure / initialize as empty</span>
+0530             timeWindowNumber = 0; <span class="comment">% timeWindowNumber is based on how many times stepsize fits in to data length</span>
+0531             timeWindow.startSample = [];
+0532             timeWindow.endSample = [];
+0533             timeWindow.starttime = [];
+0534             timeWindow.endtime = [];
+0535             timeWindow.sta = [];
+0536             timeWindow.lta = [];
+0537             timeWindow.ratio = [];
+0538             
+0539            
+0540             eventNumber = 0;
+0541             
+0542             <span class="comment">% Loop over timeWindows</span>
+0543             <span class="comment">%</span>
+0544             <span class="keyword">for</span> sampleNumber=ltalen: stepsize: length(self.data)
+0545                 timeWindowNumber=timeWindowNumber+1;
+0546                 startSample = sampleNumber-ltalen+1;
+0547                 endSample = sampleNumber;
+0548                 timeWindow.startSample(timeWindowNumber) = startSample;
+0549                 timeWindow.endSample(timeWindowNumber) = endSample;        
+0550                 timeWindow.starttime(timeWindowNumber) = self.dnum(startSample);
+0551                 timeWindow.endtime(timeWindowNumber) = self.dnum(endSample);
+0552                 
+0553                 <span class="comment">% Compute the long term average for this timeWindow</span>
+0554                 <span class="keyword">if</span> ~trigger_on <span class="comment">% sticky lta</span>
+0555                     timeWindow.lta(timeWindowNumber) = nanmean(self.data(startSample:endSample)) + eps; <span class="comment">% add eps so never 0</span>
+0556                 <span class="keyword">else</span>
+0557                     timeWindow.lta(timeWindowNumber) = lta_lastgood;
+0558                 <span class="keyword">end</span>
+0559                 
+0560                 <span class="comment">% Compute the short term average for this timeWindow</span>
+0561                 timeWindow.sta(timeWindowNumber) = nanmean(self.data(endSample-stalen+1:endSample)) + eps; <span class="comment">% add eps so never 0</span>
+0562 
+0563                 <span class="comment">% Make sta &amp; lta equal to last good values when NaN</span>
+0564                 <span class="keyword">if</span> isnan(timeWindow.sta(timeWindowNumber))
+0565                     timeWindow.sta(timeWindowNumber) = sta_lastgood;
+0566                 <span class="keyword">else</span>
+0567                     sta_lastgood = timeWindow.sta(timeWindowNumber);
+0568                 <span class="keyword">end</span>
+0569                 <span class="keyword">if</span> isnan(timeWindow.lta(timeWindowNumber))
+0570                     timeWindow.lta(timeWindowNumber) = lta_lastgood;
+0571                 <span class="keyword">else</span>
+0572                     lta_lastgood = timeWindow.lta(timeWindowNumber);
+0573                 <span class="keyword">end</span>   
+0574    
+0575                 <span class="comment">% Compute the ratio</span>
+0576                 timeWindow.ratio(timeWindowNumber) = timeWindow.sta(timeWindowNumber)./timeWindow.lta(timeWindowNumber);        
+0577                 
+0578                 <span class="keyword">if</span> trigger_on <span class="comment">% EVENT IN PROCESS, CHECK FOR DETRIGGER</span>
+0579                     <span class="keyword">if</span> timeWindow.ratio(timeWindowNumber) &lt; ratio_off
+0580                         <span class="comment">% trigger off condition</span>
+0581                         disp(sprintf(<span class="string">'TREMOR EVENT: %s to %s, max amp %e'</span>, datestr(self.dnum(eventStartSample)), datestr(self.dnum(endSample)), max(self.data(eventStartSample:endSample)) ))
+0582                         <span class="comment">%tremorEvent(eventNumber) = rsam_event(self.dnum(eventStartSample:endSample), self.data(eventStartSample:endSample), '', scnl, ltalen);</span>
+0583                         tremordnum = self.dnum(eventStartSample:endSample);
+0584                         tremordata = self.data(eventStartSample:endSample);
+0585                         tremorEvent(eventNumber) = <a href="rsam.html" class="code" title="">rsam</a>(<span class="string">'dnum'</span>, tremordnum, <span class="string">'data'</span>, tremordata,  <span class="string">'sta'</span>, self.sta, <span class="string">'chan'</span>, self.chan, <span class="string">'seismogram_type'</span>, self.seismogram_type, <span class="string">'units'</span>, self.units, <span class="string">'measure'</span>, self.measure);
+0586                         trigger_on = false;
+0587                         eventStartSample = -1;
+0588                     <span class="keyword">end</span>
+0589                 <span class="keyword">else</span> <span class="comment">% BACKGROUND, CHECK FOR TRIGGER</span>
+0590                     <span class="keyword">if</span> timeWindow.ratio(timeWindowNumber) &gt; ratio_on
+0591                         <span class="comment">% trigger on condition</span>
+0592                         eventNumber = eventNumber + 1;
+0593                         eventStartSample = endSample; <span class="comment">% event is triggered at time of sample at end of timewindow</span>
+0594                         trigger_on = true;
+0595                     <span class="keyword">end</span>
+0596                 <span class="keyword">end</span>
+0597    
+0598             <span class="keyword">end</span>
+0599             <span class="keyword">if</span> exist(<span class="string">'tremorEvent'</span>,<span class="string">'var'</span>)
+0600                 self.continuousEvents = tremorEvent;
+0601             <span class="keyword">end</span>
+0602         <span class="keyword">end</span>
+0603         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0604         <a name="_sub11" href="#_subfunctions" class="code">function save(self, filepattern)</a>
+0605             <span class="comment">% RSAM/SAVE - save an rsam-like object to an RSAM/BOB binary</span>
+0606             <span class="comment">% file</span>
+0607             <span class="comment">%</span>
+0608             <span class="comment">%</span>
+0609             <span class="comment">% Examples:</span>
+0610             <span class="comment">%   1. save data to myfile.bob</span>
+0611             <span class="comment">%       r.save('myfile.bob')</span>
+0612             <span class="comment">%</span>
+0613             <span class="comment">%   2. save to file like YEAR_STATION_CHANNEL_MEASURE.bob</span>
+0614             <span class="comment">%       r.save('YYYY_SSSS_CCC_MMMM.bob')</span>
+0615             <span class="comment">%</span>
+0616             
+0617             <span class="keyword">for</span> c=1:numel(self)
+0618 
+0619                 dnum = self(c).dnum;
+0620                 data = self(c).data;
+0621                 file = filepattern; 
+0622 
+0623                 <span class="comment">% substitute for station</span>
+0624                 file = regexprep(file, <span class="string">'SSSS'</span>, upper(self(c).sta));
+0625 
+0626                 <span class="comment">% substitute for channel</span>
+0627                 file = regexprep(file, <span class="string">'CCC'</span>, upper(self(c).chan));
+0628 
+0629                 <span class="comment">% substitute for measure</span>
+0630                 file = regexprep(file, <span class="string">'MMMM'</span>, self(c).measure);             
+0631 
+0632                 <span class="comment">% since dnum may not be ordered and contiguous, this function</span>
+0633                 <span class="comment">% should write data based on dnum only</span>
+0634 
+0635                 <span class="keyword">if</span> length(dnum)~=length(data)
+0636                         debug.print_debug(0,sprintf(<span class="string">'%s: Cannot save to %s because data and time vectors are different lengths'</span>,mfilename,filename));
+0637                         size(dnum)
+0638                         size(data)
+0639                         <span class="keyword">return</span>;
+0640                 <span class="keyword">end</span>
+0641 
+0642                 <span class="keyword">if</span> length(data)&lt;1
+0643                         debug.print_debug(0,<span class="string">'No data. Aborting'</span>);
+0644                     <span class="keyword">return</span>;
+0645                 <span class="keyword">end</span>
+0646 
+0647                 <span class="comment">% filename</span>
+0648 
+0649                 <span class="comment">% set start year and month, and end year and month</span>
+0650                 [syyy sm]=datevec(self(c).snum);
+0651                 [eyyy em]=datevec(self(c).enum);
+0652 
+0653                 <span class="keyword">if</span> syyy~=eyyy
+0654             <span class="keyword">if</span> ~strfind(filepattern, <span class="string">'YYYY'</span>)
+0655                         error(<span class="string">'can only save RSAM data to BOB file if all data within 1 year (or you can add YYYY in your file pattern)'</span>);
+0656             <span class="keyword">end</span>
+0657                 <span class="keyword">end</span> 
+0658 
+0659         <span class="keyword">for</span> yyyy=syyy:eyyy
+0660 
+0661                     <span class="comment">% how many days in this year?</span>
+0662                     daysperyear = 365;
+0663                     <span class="keyword">if</span> (mod(yyyy,4)==0)
+0664                             daysperyear = 366;
+0665                     <span class="keyword">end</span>
+0666 
+0667                     <span class="comment">% Substitute for year</span>
+0668                     fname = regexprep(file, <span class="string">'YYYY'</span>, sprintf(<span class="string">'%04d'</span>,yyyy) );
+0669                     debug.print_debug(2,sprintf(<span class="string">'Looking for file: %s\n'</span>,fname));
+0670 
+0671                     <span class="keyword">if</span> ~exist(fname,<span class="string">'file'</span>)
+0672                             debug.print_debug(2, [<span class="string">'Creating '</span>,fname])
+0673                             rsam.makebobfile(fname, daysperyear);
+0674                     <span class="keyword">end</span>            
+0675 
+0676                     datapointsperday = 1440;
+0677 
+0678                     <span class="comment">% round times to minute</span>
+0679                     dnum = round((dnum-1/86400) * 1440) / 1440;
+0680     
+0681             <span class="comment">% subset for current year</span>
+0682             dnumy = dnum(dnum &lt; datenum(yyyy + 1, 1, 1));
+0683             datay = data(dnum &lt; datenum(yyyy + 1, 1, 1));
+0684     
+0685                     <span class="comment">% find the next contiguous block of data</span>
+0686                     diff=dnumy(2:end) - dnumy(1:end-1);
+0687                     i = find(diff &gt; 1.5/1440 | diff &lt; 0.5/1440);        
+0688     
+0689                     <span class="keyword">if</span> length(i)&gt;0
+0690                         <span class="comment">% slow mode</span>
+0691     
+0692                         <span class="keyword">for</span> c=1:length(dnumy)
+0693     
+0694                             <span class="comment">% write the data</span>
+0695                             startsample = round((dnumy(c) - datenum(yyyy,1,1)) * datapointsperday);
+0696                             offset = startsample*4;
+0697                             fid = fopen(fname,<span class="string">'r+'</span>);
+0698                             fseek(fid,offset,<span class="string">'bof'</span>);
+0699                             debug.print_debug(2, sprintf(<span class="string">'saving data with mean of %e from to file %s, starting at position %d'</span>,nanmean(datay),fname,startsample,(datapointsperday*daysperyear)))
+0700                             fwrite(fid,datay(c),<span class="string">'float32'</span>);
+0701                             fclose(fid);
+0702                         <span class="keyword">end</span>
+0703                     <span class="keyword">else</span>
+0704                         <span class="comment">% fast mode</span>
+0705     
+0706                         <span class="comment">% write the data</span>
+0707                         startsample = round((dnumy(1) - datenum(yyyy,1,1)) * datapointsperday);
+0708                         offset = startsample*4;
+0709                         fid = fopen(fname,<span class="string">'r+'</span>,<span class="string">'l'</span>); <span class="comment">% little-endian. Anything written on a PC is little-endian by default. Sun is big-endian.</span>
+0710                         fseek(fid,offset,<span class="string">'bof'</span>);
+0711                         debug.print_debug(2, sprintf(<span class="string">'saving data with mean of %e from to file %s, starting at position %d/%d'</span>,nanmean(datay),fname,startsample,(datapointsperday*daysperyear)))
+0712                         fwrite(fid,datay,<span class="string">'float32'</span>);
+0713                         fclose(fid);
+0714                     <span class="keyword">end</span>
+0715         <span class="keyword">end</span>
+0716             <span class="keyword">end</span>
+0717         <span class="keyword">end</span>
+0718         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0719         <a name="_sub12" href="#_subfunctions" class="code">function self = resample(self, varargin)</a>
+0720         <span class="comment">%RESAMPLE resamples a rsam object at over every specified intercrunchfactor</span>
+0721         <span class="comment">%   rsamobject2 = rsamobject.resample('method', method, 'factor', crunchfactor)</span>
+0722         <span class="comment">%  or</span>
+0723         <span class="comment">%   rsamobject2 = rsamobject.resample(method, 'minutes', minutes)</span>
+0724         <span class="comment">%</span>
+0725         <span class="comment">%   Input Arguments</span>
+0726         <span class="comment">%       rsamobject: rsam object       N-dimensional</span>
+0727         <span class="comment">%</span>
+0728         <span class="comment">%       METHOD: which method of sampling to perform within each sample</span>
+0729         <span class="comment">%                window</span>
+0730         <span class="comment">%           'max' : maximum value</span>
+0731         <span class="comment">%           'min' : minimum value</span>
+0732         <span class="comment">%           'mean': average value</span>
+0733         <span class="comment">%           'median' : mean value</span>
+0734         <span class="comment">%           'rms' : rms value (added 2011/06/01)</span>
+0735         <span class="comment">%           'absmax': absolute maximum value (greatest deviation from zero)</span>
+0736         <span class="comment">%           'absmin': absolute minimum value (smallest deviation from zero)</span>
+0737         <span class="comment">%           'absmean' : mean deviation from zero (added 2011/06/01)</span>
+0738         <span class="comment">%           'absmedian' : median deviation from zero (added 2011/06/01)</span>
+0739         <span class="comment">%           'builtin': Use MATLAB's built in resample routine</span>
+0740         <span class="comment">%</span>
+0741         <span class="comment">%       CRUNCHFACTOR : the number of samples making up the sample window</span>
+0742         <span class="comment">%       MINUTES:       downsample to this sample period</span>
+0743         <span class="comment">%       (CRUNCHFACTOR will be calculated internally)</span>
+0744         <span class="comment">%</span>
+0745         <span class="comment">% Examples:</span>
+0746         <span class="comment">%   rsamobject.resample('method', 'mean')</span>
+0747         <span class="comment">%       Downsample the rsam object with an automatically determined</span>
+0748         <span class="comment">%           sampling period based on timeseries length.</span>
+0749         <span class="comment">%   rsamobject.resample('method', 'max', 'factor', 5) grab the max value of every 5</span>
+0750         <span class="comment">%       samples and return that in a waveform of adjusted frequency. The output</span>
+0751         <span class="comment">%       rsam object will have 1/5th of the samples, e.g. from 1</span>
+0752         <span class="comment">%       minute sampling to 5 minutes.</span>
+0753         <span class="comment">%   rsamobject.resample('method', 'max', 'minutes', 10) downsample the data at</span>
+0754         <span class="comment">%       10 minute sample period</span>
+0755         
+0756             [method, crunchfactor, minutes] = matlab_extensions.process_options(varargin, <span class="string">'method'</span>, self.measure, <span class="string">'factor'</span>, 0, <span class="string">'minutes'</span>, 0);
+0757         
+0758             <span class="keyword">persistent</span> STATS_INSTALLED;
+0759 
+0760             <span class="keyword">if</span> isempty(STATS_INSTALLED)
+0761               STATS_INSTALLED = ~isempty(ver(<span class="string">'stats'</span>));
+0762             <span class="keyword">end</span>
+0763 
+0764             <span class="keyword">if</span> ~(round(crunchfactor) == crunchfactor) 
+0765                 disp (<span class="string">'crunchfactor needs to be an integer'</span>);
+0766                 <span class="keyword">return</span>;
+0767             <span class="keyword">end</span>
+0768 
+0769             <span class="keyword">for</span> i=1:numel(self)
+0770                 samplingIntervalMinutes = 1.0 / (60 * self(i).Fs());
+0771                 <span class="keyword">if</span> crunchfactor==0 &amp; minutes==0 <span class="comment">% choose automatically</span>
+0772                     choices = [1 2 5 10 30 60 120 240 360 ];
+0773                     days = max(self(i).dnum) - min(self(i).dnum);
+0774                     choice=max(find(days &gt; choices));
+0775                     minutes=choices(choice);
+0776                 <span class="keyword">end</span>
+0777 
+0778                 <span class="keyword">if</span> minutes &gt; samplingIntervalMinutes
+0779                     crunchfactor = round(minutes / samplingIntervalMinutes);
+0780                 <span class="keyword">end</span>
+0781 
+0782                 <span class="keyword">if</span> isempty(method)
+0783                     method = <span class="string">'mean'</span>;
+0784                 <span class="keyword">end</span>
+0785                 
+0786                 <span class="keyword">if</span> crunchfactor &gt; 1
+0787                     debug.print_debug(3, sprintf(<span class="string">'Changing sampling interval to %d'</span>, minutes))
+0788                 
+0789                     rowcount = ceil(length(self(i).data) / crunchfactor);
+0790                     maxcount = rowcount * crunchfactor;
+0791                     <span class="keyword">if</span> length(self(i).data) &lt; maxcount
+0792                         self(i).dnum(end+1:maxcount) = mean(self(i).dnum((rowcount-1)*maxcount : end)); <span class="comment">%pad it with the avg value</span>
+0793                         self(i).data(end+1:maxcount) = mean(self(i).data((rowcount-1)*maxcount : end)); <span class="comment">%pad it with the avg value</span>
+0794                     <span class="keyword">end</span>
+0795                     d = reshape(self(i).data,crunchfactor,rowcount); <span class="comment">% produces ( crunchfactor x rowcount) matrix</span>
+0796                     t = reshape(self(i).dnum,crunchfactor,rowcount);
+0797                     self(i).dnum = mean(t, 1);
+0798                     <span class="keyword">switch</span> upper(method)
+0799 
+0800                         <span class="keyword">case</span> <span class="string">'MAX'</span>
+0801                             <span class="keyword">if</span> STATS_INSTALLED
+0802                                         self(i).data = nanmax(d, [], 1);
+0803                             <span class="keyword">else</span>
+0804                                         self(i).data = max(d, [], 1);
+0805                             <span class="keyword">end</span>
+0806 
+0807                         <span class="keyword">case</span> <span class="string">'MIN'</span>
+0808                             <span class="keyword">if</span> STATS_INSTALLED
+0809                                         self(i).data = nanmin(d, [], 1);
+0810                             <span class="keyword">else</span>
+0811                                         self(i).data = min(d, [], 1);
+0812                             <span class="keyword">end</span>
+0813 
+0814                         <span class="keyword">case</span> <span class="string">'MEAN'</span>
+0815                             <span class="keyword">if</span> STATS_INSTALLED
+0816                                         self(i).data = nanmean(d, 1);
+0817                             <span class="keyword">else</span>
+0818                                         self(i).data = mean(d, 1);
+0819                             <span class="keyword">end</span>
+0820 
+0821                         <span class="keyword">case</span> <span class="string">'MEDIAN'</span>
+0822                             <span class="keyword">if</span> STATS_INSTALLED
+0823                                         self(i).data = nanmedian(d, 1);
+0824                             <span class="keyword">else</span>
+0825                                         self(i).data = median(d, 1);
+0826                             <span class="keyword">end</span>
+0827 
+0828                         <span class="keyword">case</span> <span class="string">'RMS'</span>
+0829                             <span class="keyword">if</span> STATS_INSTALLED
+0830                                         self(i).data = nanstd(d, [], 1);
+0831                             <span class="keyword">else</span>
+0832                                         self(i).data = std(d, [], 1);
+0833                             <span class="keyword">end</span>
+0834 
+0835                         <span class="keyword">case</span> <span class="string">'ABSMAX'</span>
+0836                             <span class="keyword">if</span> STATS_INSTALLED
+0837                                         self(i).data = nanmax(abs(d),[],1);
+0838                             <span class="keyword">else</span>
+0839                                         self(i).data = max(abs(d),[],1);
+0840                             <span class="keyword">end</span>
+0841 
+0842 
+0843                         <span class="keyword">case</span> <span class="string">'ABSMIN'</span>
+0844                             <span class="keyword">if</span> STATS_INSTALLED
+0845                                         self(i).data = nanmin(abs(d),[],1);
+0846                             <span class="keyword">else</span>    
+0847                                         self(i).data = min(abs(d),[],1);
+0848                             <span class="keyword">end</span>
+0849 
+0850                         <span class="keyword">case</span> <span class="string">'ABSMEAN'</span>
+0851                             <span class="keyword">if</span> STATS_INSTALLED
+0852                                         self(i).data = nanmean(abs(d), 1);
+0853                             <span class="keyword">else</span>
+0854                                         self(i).data = mean(abs(d), 1);
+0855                             <span class="keyword">end</span>
+0856 
+0857                         <span class="keyword">case</span> <span class="string">'ABSMEDIAN'</span>
+0858                             <span class="keyword">if</span> STATS_INSTALLED
+0859                                         self(i).data = nanmedian(abs(d), 1);
+0860                             <span class="keyword">else</span>
+0861                                         self(i).data = median(abs(d), 1);
+0862                             <span class="keyword">end</span> 
+0863 
+0864                         <span class="keyword">otherwise</span>
+0865                             error(<span class="string">'rsam:resample:UnknownResampleMethod'</span>,<span class="keyword">...</span>
+0866                               <span class="string">'Don''t know what you mean by resample via %s'</span>, method);
+0867 
+0868                     <span class="keyword">end</span>
+0869                     self(i).measure = method;
+0870                 <span class="keyword">end</span>
+0871             <span class="keyword">end</span>  
+0872         <span class="keyword">end</span>
+0873 
+0874         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0875         <a name="_sub13" href="#_subfunctions" class="code">function save2wfmeastable(self, dbname)</a>
+0876             datascopegt.save2wfmeas(self.scnl, self.dnum, self.data, self.measure, self.units, dbname);
+0877         <span class="keyword">end</span>
+0878         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0879         <a name="_sub14" href="#_subfunctions" class="code">function self = despike(self, spiketype, maxRatio)</a>
+0880             <span class="comment">% rsam.despike Despike a rsam object by comparing ratios of</span>
+0881             <span class="comment">% concurrent samples. Checks for spikes lasting 1 or 2 samples.</span>
+0882             <span class="comment">%   rsamdespiked = rsamobject.despike(spiketype, maxRatio)</span>
+0883             
+0884             <span class="comment">%   Example 1: Remove spikes which are at least 10 times</span>
+0885             <span class="comment">%   adjacent samples. Store these in s.spikes.</span>
+0886             <span class="comment">%        s = s.despike('spikes', 10)</span>
+0887             <span class="comment">%</span>
+0888             <span class="comment">%   Example 2: Remove spikes which are at least 3 times</span>
+0889             <span class="comment">%   adjacent samples. Store these in s.events.</span>
+0890             <span class="comment">%        s = s.despike('events', 3)</span>
+0891             <span class="comment">%</span>
+0892             <span class="comment">%   Inputs:</span>
+0893             <span class="comment">%       maxRatio - Maximum ratio that defines &quot;normal&quot; data</span>
+0894             <span class="comment">%                       compared to surrounding samples</span>
+0895             <span class="comment">%   Outputs:</span>
+0896             <span class="comment">%       s = rsam object with spikes removed</span>
+0897             
+0898             <span class="comment">% find spikes lasting 1 sample only</span>
+0899             y= self.data;
+0900             spikeNumber = 0;
+0901             <span class="keyword">for</span> i=2:length(self.data)-1
+0902                 <span class="keyword">if</span> self.data(i)&gt;maxRatio*self.data(i-1)
+0903                     <span class="keyword">if</span> self.data(i)&gt;maxRatio*self.data(i+1)
+0904                         <span class="comment">%sample i is an outlier</span>
+0905                         y(i) = mean([self.data(i-1) self.data(i+1)]);
+0906                         spikeNumber = spikeNumber + 1;
+0907                         <span class="comment">%spikes(spikeNumber) = spike(self.dnum(i), self.data(i) - y(i), y(i), '');</span>
+0908                         spikes(spikeNumber) = <a href="rsam.html" class="code" title="">rsam</a>(<span class="string">'dnum'</span>, self.dnum(i), <span class="string">'data'</span>, self.data(i) - y(i),  <span class="string">'sta'</span>, self.sta, <span class="string">'chan'</span>, self.chan, <span class="string">'seismogram_type'</span>, self.seismogram_type, <span class="string">'units'</span>, self.units, <span class="string">'measure'</span>, self.measure);
+0909                         disp(sprintf(<span class="string">'%s: sample %d, time %s, before %f, this %f, after %f. Replacing with %f'</span>,upper(spiketype),i, datestr(self.dnum(i)), self.data(i-1), self.data(i), self.data(i+1), y(i)));
+0910                     <span class="keyword">end</span>
+0911                 <span class="keyword">end</span>
+0912             <span class="keyword">end</span>
+0913             
+0914             <span class="comment">% find spikes lasting 2 samples</span>
+0915             <span class="keyword">for</span> i=2:length(self.data)-2
+0916                 <span class="keyword">if</span> self.data(i)&gt;maxRatio*self.data(i-1) &amp; self.data(i+1)&gt;maxRatio*self.data(i-1)
+0917                     <span class="keyword">if</span> self.data(i)&gt;maxRatio*self.data(i+2) &amp; self.data(i+1)&gt;maxRatio*self.data(i+2) 
+0918                         <span class="comment">%samples i &amp; i+1 are outliers</span>
+0919                         y(i:i+1) = mean([self.data(i-1) self.data(i+2)]);
+0920                         spikeNumber = spikeNumber + 1;
+0921                         <span class="comment">% spikes(spikeNumber) = spike( ...</span>
+0922                         <span class="comment">%     self.dnum(i:i+1), ...</span>
+0923                         <span class="comment">%     self.data(i:i+1) - y(i:i+1), ...</span>
+0924                         <span class="comment">%     y(i:i+1), '' );</span>
+0925                         spikes(spikeNumber) = <a href="rsam.html" class="code" title="">rsam</a>(<span class="string">'dnum'</span>, self.dnum(i:i+1), <span class="string">'data'</span>, self.data(i:i+1) - y(i:i+1),  <span class="string">'sta'</span>, self.sta, <span class="string">'chan'</span>, self.chan, <span class="string">'seismogram_type'</span>, self.seismogram_type, <span class="string">'units'</span>, self.units, <span class="string">'measure'</span>, self.measure);
+0926                         disp(sprintf(<span class="string">'%s: sample %d, time %s, before %f, these %f %f, after %f. Replacing with %f'</span>,upper(spiketype), i, datestr(self.dnum(i)), self.data(i-1), self.data(i), self.data(i+1), self.data(i+2), y(i)));
+0927                     <span class="keyword">end</span>
+0928                 <span class="keyword">end</span>
+0929             <span class="keyword">end</span>
+0930             
+0931             <span class="comment">% find spikes lasting 3 samples - could be a short as 62</span>
+0932             <span class="comment">% seconds</span>
+0933             <span class="keyword">if</span> exist(<span class="string">'spikes'</span>, <span class="string">'var'</span>)
+0934                 <span class="keyword">if</span> ~strcmp(spiketype, <span class="string">'spikes'</span>) <span class="comment">% only makes sense for events - an actual telemetry spike will be 1 or 2 samples long only (a few seconds)</span>
+0935                     <span class="keyword">for</span> i=2:length(self.data)-3
+0936                         <span class="keyword">if</span> self.data(i)&gt;maxRatio*self.data(i-1) &amp; self.data(i+1)&gt;maxRatio*self.data(i-1) &amp; self.data(i+2)&gt;maxRatio*self.data(i-1) 
+0937                             <span class="keyword">if</span> self.data(i)&gt;maxRatio*self.data(i+3) &amp; self.data(i+1)&gt;maxRatio*self.data(i+3) &amp; self.data(i+2)&gt;maxRatio*self.data(i+3)
+0938                                 <span class="comment">%samples i &amp; i+1 are outliers</span>
+0939                                 y(i:i+2) = mean([self.data(i-1) self.data(i+3)]);
+0940                                 spikeNumber = spikeNumber + 1;
+0941                                 <span class="comment">% spikes(spikeNumber) = spike( ...</span>
+0942                                 <span class="comment">%     self.dnum(i:i+1), ...</span>
+0943                                 <span class="comment">%     self.data(i:i+1) - y(i:i+1), ...</span>
+0944                                 <span class="comment">%     y(i:i+1), '' );</span>
+0945                                 spikes(spikeNumber) = <a href="rsam.html" class="code" title="">rsam</a>(<span class="string">'dnum'</span>, self.dnum(i:i+2), <span class="string">'data'</span>, self.data(i:i+2) - y(i:i+2), <span class="string">'sta'</span>, self.sta, <span class="string">'chan'</span>, self.chan, <span class="string">'seismogram_type'</span>, self.seismogram_type, <span class="string">'units'</span>, self.units, <span class="string">'measure'</span>, self.measure);
+0946                                 disp(sprintf(<span class="string">'%s: sample %d, time %s, before %f, these %f %f %f, after %f. Replacing with %f'</span>,upper(spiketype), i, datestr(self.dnum(i)), self.data(i-1), self.data(i), self.data(i+1), self.data(i+2), self.data(i+3), y(i)));
+0947                             <span class="keyword">end</span>
+0948                         <span class="keyword">end</span>
+0949                     <span class="keyword">end</span>            
+0950                 <span class="keyword">end</span>
+0951             <span class="keyword">end</span>
+0952             
+0953             self.data = y; 
+0954             <span class="keyword">if</span> exist(<span class="string">'spikes'</span>, <span class="string">'var'</span>)
+0955                 <span class="keyword">if</span> strcmp(spiketype, <span class="string">'spikes'</span>)
+0956                     self.spikes = spikes;
+0957                 <span class="keyword">else</span>
+0958                     self.transientEvents = spikes;
+0959                 <span class="keyword">end</span>
+0960             <span class="keyword">end</span>
+0961         <span class="keyword">end</span>
+0962         
+0963         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0964 
+0965         <a name="_sub15" href="#_subfunctions" class="code">function self = remove_calibs(self)    </a>
+0966              <span class="keyword">for</span> c=1:numel(self)
+0967             <span class="comment">% run twice since there may be two pulses per day</span>
+0968                     self(c).data = <a href="#_sub25" class="code" title="subfunction [data]=remove_calibration_pulses(dnum, data)">remove_calibration_pulses</a>(self(c).dnum, self(c).data);
+0969                     self(c).data = <a href="#_sub25" class="code" title="subfunction [data]=remove_calibration_pulses(dnum, data)">remove_calibration_pulses</a>(self(c).dnum, self(c).data);
+0970              <span class="keyword">end</span>
+0971         <span class="keyword">end</span>
+0972         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0973         <a name="_sub16" href="#_subfunctions" class="code">function self = correct(self)    </a>
+0974              ref = 0.707; <span class="comment">% note that median, rms and std all give same value on x=sin(0:pi/1000:2*pi)</span>
+0975              <span class="keyword">for</span> c=1:numel(self)
+0976                 <span class="keyword">if</span> strcmp(self(c).measure, <span class="string">'max'</span>)
+0977                     self(c).data = self(c).data * ref;
+0978                 <span class="keyword">end</span>
+0979                 <span class="keyword">if</span> strcmp(self(c).measure, <span class="string">'68'</span>)
+0980                     self(c).data = self(c).data/0.8761 * ref;
+0981                 <span class="keyword">end</span>
+0982                 <span class="keyword">if</span> strcmp(self(c).measure, <span class="string">'mean'</span>)
+0983                     self(c).data = self(c).data/0.6363 * ref;
+0984                 <span class="keyword">end</span> 
+0985              <span class="keyword">end</span>
+0986         <span class="keyword">end</span>
+0987         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0988         <a name="_sub17" href="#_subfunctions" class="code">function self=rsam2energy(self, r)</a>
+0989             <span class="comment">% should i detrend first?</span>
+0990             e = energy(self.data, r, get(self.scnl, <span class="string">'channel'</span>), self.Fs(), self.units);
+0991                 self = set(self, <span class="string">'energy'</span>, e);
+0992         <span class="keyword">end</span>
+0993         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0994         <a name="_sub18" href="#_subfunctions" class="code">function w=rsam2waveform(self)</a>
+0995             w = waveform;
+0996             w = set(w, <span class="string">'station'</span>, self.sta);
+0997             w = set(w, <span class="string">'channel'</span>, self.chan);
+0998             w = set(w, <span class="string">'units'</span>, self.units);
+0999             w = set(w, <span class="string">'data'</span>, self.data);
+1000             w = set(w, <span class="string">'start'</span>, self.snum);
+1001             <span class="comment">%w = set(w, 'end', self.enum);</span>
+1002             w = set(w, <span class="string">'freq'</span>, 1/ (86400 * (self.dnum(2) - self.dnum(1))));
+1003             w = addfield(w, <span class="string">'reduced'</span>, self.reduced);
+1004             w = addfield(w, <span class="string">'measure'</span>, self.measure);
+1005         <span class="keyword">end</span>
+1006         
+1007         <a name="_sub19" href="#_subfunctions" class="code">function w=getwaveform(self, datapath)</a>
+1008         <span class="comment">% rsam.getwaveform() Get the waveform corresponding to the RSAM data</span>
+1009         <span class="comment">%   w = rsamobject.getwaveform() will attempt to get the waveform</span>
+1010         <span class="comment">%       data corresponding to a rsam object. Three locations are</span>
+1011         <span class="comment">%       tried:</span>
+1012         <span class="comment">%           1. MVO Seisan data</span>
+1013         <span class="comment">%           2. MVO Antelope data</span>
+1014         <span class="comment">%           3. AVO/AEIC data</span>
+1015         <span class="comment">%   Alternatively, the user may optionally provide a datasource object</span>
+1016             <span class="keyword">if</span> isempty(self.sta)
+1017                 self.sta = <span class="string">'*'</span>;
+1018             <span class="keyword">end</span>
+1019             <span class="keyword">if</span> isempty(self.chan)
+1020                 self.chan = <span class="string">'*'</span>;
+1021             <span class="keyword">end</span>           
+1022             scnl = scnlobject(self.sta, self.chan)
+1023             w = load_seisan_waveforms(datapath, min(self.dnum), max(self.dnum), scnl);
+1024         <span class="keyword">end</span>
+1025         
+1026         <a name="_sub20" href="#_subfunctions" class="code">function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)</a>
+1027         <span class="comment">%DURATION_AMPLITUDE Use the duration-amplitde</span>
+1028         <span class="comment">%Compute the fraction of a data series above each</span>
+1029         <span class="comment">%amplitude level, plot the duration vs amplitude data, and then</span>
+1030         <span class="comment">%allow user input to fit a regression line.</span>
+1031         <span class="comment">%   rsamObject.duration_amplitude(law, min_amplitude)</span>
+1032         <span class="comment">%</span>
+1033         <span class="comment">%   Inputs:</span>
+1034         <span class="comment">%       law = 'exponential' or 'power'</span>
+1035         <span class="comment">%       min_amplitude = (Optional) the smallest amplitude to use on</span>
+1036         <span class="comment">%       the x-axis. Otherwise will be 10^10 times smallest than the</span>
+1037         <span class="comment">%       largest amplitude.</span>
+1038         <span class="comment">%</span>
+1039         <span class="comment">%   Outputs:</span>
+1040         <span class="comment">%       (None) A graph is plotted, the user clicks two points, and</span>
+1041         <span class="comment">%       from that slope, the characteristic amplitude is computed</span>
+1042         <span class="comment">%       and shown on the screen.</span>
+1043  
+1044             y = self.data;
+1045             n = length(y);
+1046             a = abs(y);
+1047             max_amplitude = max(a);
+1048             <span class="keyword">if</span> ~exist(<span class="string">'min_amplitude'</span>, <span class="string">'var'</span>)
+1049                 min_amplitude = max([min(a) max(a)*1e-10]);
+1050             <span class="keyword">end</span>
+1051             
+1052             <span class="comment">% Method 1</span>
+1053             index=0;
+1054             x = min_amplitude;
+1055             <span class="keyword">while</span> x &lt; max_amplitude,
+1056                 i = find(a&gt;x);
+1057                 f = length(i);
+1058                 index = index+1;
+1059                 frequency(index) = f;
+1060                 threshold(index) = x;
+1061                 x = x * 1.2;
+1062             <span class="keyword">end</span>
+1063             clear x y a  f  n  min_amplitude max_amplitude index ;
+1064             
+1065 <span class="comment">%             % Method 2</span>
+1066 <span class="comment">%             threshold = [0.0 logspace(min_amplitude, max_amplitude, 50)];</span>
+1067 <span class="comment">%             nsamples=[];</span>
+1068 <span class="comment">%             for d = 1:length(threshold)</span>
+1069 <span class="comment">%                 i = find(a &gt; threshold(d));</span>
+1070 <span class="comment">%                 frequency(d) = length(i)/length(y);</span>
+1071 <span class="comment">%             end</span>
+1072 <span class="comment">%             clear d, nsamples, i, y</span>
+1073 
+1074             <span class="comment">%% PLOT_DURATION_AMPLITUDE</span>
+1075             <span class="comment">% plot graph, user select two points, compute</span>
+1076             <span class="comment">% characteristic from slope.</span>
+1077             <span class="comment">% Use different method depending on whether it is a</span>
+1078             <span class="comment">% power law or exponential.</span>
+1079             
+1080             <span class="comment">% define x and y</span>
+1081             <span class="keyword">switch</span> law
+1082                 <span class="keyword">case</span> {<span class="string">'exponential'</span>}
+1083                     x = threshold;
+1084                     xlabelstr = <span class="string">'RMS Displacement(nm)'</span>;
+1085                 <span class="keyword">case</span> {<span class="string">'power'</span>}
+1086                     x = log10(threshold);
+1087                     xlabelstr = <span class="string">'log10(RMS Displacement(nm))'</span>;
+1088                 <span class="keyword">otherwise</span>
+1089                     error(<span class="string">'law unknown'</span>)
+1090             <span class="keyword">end</span>
+1091             y=log10(frequency);
+1092 
+1093             <span class="comment">% plot duration-amplitude data as circles</span>
+1094             figure
+1095             <a href="#_sub7" class="code" title="subfunction handlePlot = plot(rsam_vector, varargin)">plot</a>(x,y,<span class="string">'o'</span>);
+1096             xlabel(xlabelstr);
+1097             ylabel(<span class="string">'log10(Cumulative Minutes)'</span>);
+1098             hold on;
+1099             <span class="comment">%set(gca,'XLim',[xmin xmax]);</span>
+1100 
+1101             lambda=0;
+1102             r2=0;
+1103 
+1104             <span class="comment">% check if we have pre-set the magnitude range, effectively</span>
+1105             <span class="comment">% our x1 and x2 click points with ginput</span>
+1106             <span class="keyword">if</span> exist(<span class="string">'mag_zone'</span>,<span class="string">'var'</span>) <span class="comment">% no user select</span>
+1107                 <span class="keyword">switch</span> law
+1108                     <span class="keyword">case</span> {<span class="string">'power'</span>}
+1109                         x1=min(mag_zone);
+1110                         x2=max(mag_zone);
+1111                     <span class="keyword">case</span> {<span class="string">'exponential'</span>}
+1112                         x1=10^min(mag_zone);
+1113                         x2=10^max(mag_zone);
+1114 
+1115                     <span class="keyword">otherwise</span>
+1116                         error(<span class="string">'law unknown'</span>)
+1117                 <span class="keyword">end</span>      
+1118                 <span class="keyword">if</span> x1&lt;min(x)
+1119                     x2=min(x);
+1120                 <span class="keyword">end</span>
+1121                 y1=interp1(x,y,x1);
+1122                 <span class="keyword">if</span> x2&gt;max(x)
+1123                     x2=max(x);
+1124                 <span class="keyword">end</span>
+1125                 y2=interp1(x,y,x2); 
+1126 
+1127                 <span class="comment">% draw a dotted line to show where user selected</span>
+1128                 <span class="comment">%plot([x1 x2], [y1 y2], '-.');</span>
+1129 
+1130                 <span class="comment">% select requested data range and do a least squares fit</span>
+1131                 ii = find(x &gt;= x1 &amp; x &lt;= x2);
+1132                 wx = x(ii);
+1133                 wy = y(ii);
+1134                 [p,S]=polyfit(wx,wy,1);
+1135                 yfit = polyval(p,wx);
+1136                 thiscorr = corrcoef(wy, yfit)
+1137                 <span class="comment">%try</span>
+1138                 <span class="keyword">if</span> numel(thiscorr)&gt;1
+1139                     r2 = thiscorr(1,2);
+1140 
+1141                     <span class="comment">% compute lambda</span>
+1142                     <span class="keyword">switch</span> law
+1143                         <span class="keyword">case</span> {<span class="string">'exponential'</span>}
+1144                             lambda = -p(1)/log10(exp(1));
+1145                         <span class="keyword">case</span> {<span class="string">'power'</span>}
+1146                             lambda = -p(1); 
+1147                         <span class="keyword">otherwise</span>
+1148                             error(<span class="string">'law unknown'</span>)
+1149                     <span class="keyword">end</span>
+1150 
+1151                     disp(sprintf(<span class="string">'characteristic D_R_S=%.2f cm^2, R^2=%.2f'</span>,lambda,r2));
+1152 
+1153                     <span class="comment">% draw the fitted line</span>
+1154                     xf = [min(wx) max(wx)];
+1155                     yf = xf * p(1) + p(2);
+1156                     <a href="#_sub7" class="code" title="subfunction handlePlot = plot(rsam_vector, varargin)">plot</a>(xf, yf,<span class="string">'-'</span>);
+1157 
+1158                     <span class="comment">%ylabel('log10(t/t0)');</span>
+1159                     <span class="comment">%xlabel(sprintf('D_R_S (%s) (cm^2)',measure));</span>
+1160 
+1161 
+1162                     <span class="comment">% Add legend</span>
+1163                     yrange=get(gca,<span class="string">'YLim'</span>);
+1164                     xlim = get(gca,<span class="string">'XLim'</span>);
+1165                     xmax=max(xlim);
+1166 
+1167                     xpos = xmax*0.65;
+1168                     ypos = (yrange(2)-yrange(1))*0.8;
+1169                     r2str=sprintf(<span class="string">'%.2f'</span>,r2);
+1170                     lambdastr=sprintf(<span class="string">'%.2f'</span>,lambda);
+1171                     <span class="keyword">if</span> strcmp(law,<span class="string">'exponential'</span>)
+1172                         tstr = [<span class="string">' \lambda='</span>,lambdastr,<span class="string">' R^2='</span>,r2str];
+1173                     <span class="keyword">else</span>
+1174                         tstr = [<span class="string">' \gamma='</span>,lambdastr,<span class="string">' R^2='</span>,r2str];
+1175                     <span class="keyword">end</span>
+1176 
+1177                     text(xpos, ypos, tstr, <span class="keyword">...</span>
+1178                         <span class="string">'FontName'</span>,<span class="string">'Helvetica'</span>,<span class="string">'FontSize'</span>,[14],<span class="string">'FontWeight'</span>,<span class="string">'bold'</span>);   
+1179                 <span class="keyword">else</span>
+1180                     lambda=NaN;
+1181                     r2=NaN;
+1182                 <span class="keyword">end</span>
+1183 
+1184             <span class="keyword">else</span>
+1185 
+1186                 <span class="comment">% user select a range of data</span>
+1187                 disp(<span class="string">'Left-click Select lowest X, any other mouse button to ignore this station'</span>)
+1188                 [x1, y1, button1]=ginput(1);
+1189                 <span class="keyword">if</span> button1==1
+1190                     disp(<span class="string">'Left-click Select highest X, any other mouse button to ignore this station'</span>)
+1191                     [x2, y2, button2]=ginput(1);    
+1192                     <span class="keyword">if</span> button2==1
+1193                         <span class="keyword">if</span> x2&gt;x1
+1194                            <span class="comment">% draw a dotted line to show where user selected</span>
+1195                             <a href="#_sub7" class="code" title="subfunction handlePlot = plot(rsam_vector, varargin)">plot</a>([x1 x2], [y1 y2], <span class="string">'-.'</span>);
+1196 
+1197                             <span class="comment">% select requested data range and do a least squares fit</span>
+1198                             ii = find(x &gt;= x1 &amp; x &lt;= x2);
+1199                             wx = x(ii);
+1200                             wy = y(ii);
+1201                             [p,S]=polyfit(wx,wy,1);
+1202                             yfit = polyval(p,wx);
+1203                             thiscorr = corrcoef(wy, yfit)
+1204 
+1205                             r2 = thiscorr(1,2);
+1206 
+1207                             <span class="comment">% compute lambda</span>
+1208                             <span class="keyword">switch</span> law
+1209                                 <span class="keyword">case</span> {<span class="string">'exponential'</span>}
+1210                                     lambda = -p(1)/log10(exp(1));
+1211                                 <span class="keyword">case</span> {<span class="string">'power'</span>}
+1212                                     lambda = -p(1); 
+1213                                 <span class="keyword">otherwise</span>
+1214                                     error(<span class="string">'law unknown'</span>)
+1215                             <span class="keyword">end</span>
+1216 
+1217                             disp(sprintf(<span class="string">'characteristic D_R_S=%.2f cm^2, R^2=%.2f'</span>,lambda,r2));
+1218 
+1219                             <span class="comment">% draw the fitted line</span>
+1220                             xf = [min(wx) max(wx)];
+1221                             yf = xf * p(1) + p(2);
+1222                             <a href="#_sub7" class="code" title="subfunction handlePlot = plot(rsam_vector, varargin)">plot</a>(xf, yf,<span class="string">'-'</span>);
+1223 
+1224                             <span class="comment">%ylabel('log10(t/t0)');</span>
+1225                             <span class="comment">%xlabel(sprintf('D_R_S (%s) (cm^2)',measure));</span>
+1226 
+1227 
+1228                             <span class="comment">% Add legend</span>
+1229                             yrange=get(gca,<span class="string">'YLim'</span>);
+1230                             xlim = get(gca,<span class="string">'XLim'</span>);
+1231                             xmax=max(xlim);
+1232 
+1233                             xpos = xmax*0.65;
+1234                             ypos = (yrange(2)-yrange(1))*0.8;
+1235                             r2str=sprintf(<span class="string">'%.2f'</span>,r2);
+1236                             lambdastr=sprintf(<span class="string">'%.2f'</span>,lambda);
+1237                             <span class="keyword">if</span> strcmp(law,<span class="string">'exponential'</span>)
+1238                                 tstr = [self.sta,<span class="string">' \lambda='</span>,lambdastr,<span class="string">' R^2='</span>,r2str];
+1239                             <span class="keyword">else</span>
+1240                                 tstr = [self.sta,<span class="string">' \gamma='</span>,lambdastr,<span class="string">' R^2='</span>,r2str];
+1241                             <span class="keyword">end</span>
+1242 
+1243                             text(xpos, ypos, tstr, <span class="keyword">...</span>
+1244                                 <span class="string">'FontName'</span>,<span class="string">'Helvetica'</span>,<span class="string">'FontSize'</span>,[14],<span class="string">'FontWeight'</span>,<span class="string">'bold'</span>);
+1245 
+1246 
+1247                         <span class="keyword">end</span>
+1248                     <span class="keyword">end</span>
+1249                 <span class="keyword">end</span>
+1250             <span class="keyword">end</span>    
+1251             
+1252         <span class="keyword">end</span>    
+1253         <a name="_sub21" href="#_subfunctions" class="code">function [aw,tt1, tt2, tmc, mag_zone]=bvalue(this, mcType, method)</a>
+1254             <span class="comment">%BVALUE evaluate b-value, a-value and magnitude of completeness</span>
+1255             <span class="comment">% of an earthquake catalog stored in a Catalog object.</span>
+1256             <span class="comment">%</span>
+1257             <span class="comment">% BVALUE(COBJ, MCTYPE) produces a Gutenberg-Richter type plot</span>
+1258             <span class="comment">%    with the best fit line and display of b-,a-values and Mc</span>
+1259             <span class="comment">%    for the catalog object COBJ. MCTYPE is a number from 1-5</span>
+1260             <span class="comment">%    to select the algorithm used for calculation of the</span>
+1261             <span class="comment">%    magnitude of completeness. Options are:</span>
+1262             <span class="comment">%</span>
+1263             <span class="comment">%    1: Maximum curvature</span>
+1264             <span class="comment">%    2: Fixed Mc = minimum magnitude (Mmin)</span>
+1265             <span class="comment">%    3: Mc90 (90% probability)</span>
+1266             <span class="comment">%    4: Mc95 (95% probability)</span>
+1267             <span class="comment">%    5: Best combination (Mc95 - Mc90 - maximum curvature)</span>
+1268 
+1269             <span class="comment">% Liberally adapted from original code in ZMAP.</span>
+1270             <span class="comment">% Author: Silvio De Angelis, 27/07/2012 00:00:00</span>
+1271             <span class="comment">% Modified and included in Catalog by Glenn Thompson,</span>
+1272             <span class="comment">% 14/06/2014</span>
+1273 
+1274             <span class="comment">% This program is free software; you can redistribute it and/or modify</span>
+1275             <span class="comment">% it under the terms of the GNU General Public License cobj.magas published by</span>
+1276             <span class="comment">% the Free Software Foundation; either version 2 of the License, or</span>
+1277             <span class="comment">% (at your option) any later version.</span>
+1278             <span class="comment">%</span>
+1279             <span class="comment">% This program is distributed in the hope that it will be useful,</span>
+1280             <span class="comment">% but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+1281             <span class="comment">% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
+1282             <span class="comment">% GNU General Public License for more details.</span>
+1283             <span class="comment">%</span>
+1284             <span class="comment">% You should have received a copy of the GNU General Pucobj.magblic License</span>
+1285             <span class="comment">% along with this program; if not, write to the</span>
+1286             <span class="comment">% Free Software Foundation, Inc.,</span>
+1287             <span class="comment">% 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.</span>
+1288 
+1289             <span class="keyword">if</span> nargin &lt; 2
+1290                 disp(<span class="string">'--------------------------------------------------------'</span>)
+1291                 disp(<span class="string">'ERROR: Usage is: bvalue(cobj, mcType). mcType not specified'</span>)
+1292                 disp(<span class="string">'--------------------------------------------------------'</span>)
+1293                 disp(<span class="string">'mcType can be:'</span>)
+1294                 disp(<span class="string">'1: Maximum curvature'</span>)
+1295                 disp(<span class="string">'2: Fixed Mc = minimum magnitude (Mmin)'</span>)
+1296                 disp(<span class="string">'3: Mc90 (90% probability)'</span>)
+1297                 disp(<span class="string">'4: Mc95 (95% probability)'</span>)
+1298                 disp(<span class="string">'5: Best combination (Mc95 - Mc90 - maximum curvature)'</span>)
+1299                 <span class="keyword">return</span>
+1300             <span class="keyword">end</span>
+1301 
+1302             <span class="comment">% form magnitude vector - removing any NaN values with find</span>
+1303             good_magnitude_indices = find(this.data &gt; 0.0);
+1304             <span class="keyword">if</span> strcmp(method, <span class="string">'power'</span>)
+1305                 mag = log10(this.data(good_magnitude_indices));
+1306             <span class="keyword">elseif</span> strcmp(method, <span class="string">'exponential'</span>)
+1307                 mag = this.data(good_magnitude_indices);
+1308             <span class="keyword">end</span>   
+1309                 
+1310             <span class="comment">%MIN AND MAX MAGNITUDE IN CATALOG</span>
+1311             minimum_mag = min(mag);
+1312             maximum_mag = max(mag);
+1313 
+1314             <span class="comment">%COUNT EVENTS IN EACH MAGNITUDE BIN</span>
+1315             <span class="keyword">if</span> strcmp(method, <span class="string">'power'</span>)
+1316                 magrange = minimum_mag:0.1:maximum_mag;
+1317             <span class="keyword">elseif</span> strcmp(method, <span class="string">'exponential'</span>)
+1318                 magrange = 10.^(log10(minimum_mag):0.1:log10(maximum_mag));
+1319             <span class="keyword">end</span>  
+1320             [bval, xt2] = hist(mag, magrange);
+1321 
+1322             <span class="comment">%CUMULATIVE NUMBER OF EVENTS IN EACH MAGNITUDE BIN</span>
+1323             bvalsum = cumsum(bval);
+1324 
+1325             <span class="comment">%NUMBER OF EVENTS IN EACH BIN IN REVERSE ORDER</span>
+1326             bval2 = bval(length(bval):-1:1);
+1327 
+1328             <span class="comment">%NUMBER OF EVENTS IN EACH MAGNITUDE BIN IN REVERSE ORDER</span>
+1329             bvalsum3 = cumsum(bval(length(bval):-1:1));
+1330 
+1331             <span class="comment">%BINS IN REVERSE ORDER</span>
+1332             xt3 = fliplr(magrange);
+1333             backg_ab = log10(bvalsum3);
+1334 
+1335             <span class="comment">%CREATE FIGURE WINDOW AND MAKE FREQUENCY-MAGNITUDE PLOT</span>
+1336             figure(<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'Position'</span>,[0 0 600 600])
+1337             
+1338             pl = semilogy(xt3,bvalsum3,<span class="string">'sb'</span>); 
+1339          
+1340             set(pl, <span class="string">'LineWidth'</span>, [1.0],<span class="string">'MarkerSize'</span>, [10],<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);
+1341             axis square
+1342             hold on
+1343 
+1344             <span class="comment">%pl1 = semilogy(xt3,bval2,'^b');</span>
+1345             <span class="comment">%set(pl1, 'LineWidth',[1.0],'MarkerSize',[10],'MarkerFaceColor','w','MarkerEdgeColor','k');</span>
+1346             <span class="keyword">if</span> strcmp(method, <span class="string">'power'</span>)
+1347                 <span class="comment">%xlabel('Log_1_0(Amplitude)','Fontsize', 12)</span>
+1348                 xlabel(<span class="string">'Magnitude'</span>,<span class="string">'Fontsize'</span>, 12)
+1349             <span class="keyword">elseif</span> strcmp(method, <span class="string">'exponential'</span>)
+1350                 xlabel(<span class="string">'Amplitude'</span>,<span class="string">'Fontsize'</span>, 12)
+1351             <span class="keyword">end</span>             
+1352             
+1353             ylabel(<span class="string">'Cumulative Minutes'</span>,<span class="string">'Fontsize'</span>,12)
+1354             set(gca,<span class="string">'visible'</span>,<span class="string">'on'</span>,<span class="string">'FontSize'</span>,12,<span class="string">'FontWeight'</span>,<span class="string">'normal'</span>,<span class="keyword">...</span>
+1355                 <span class="string">'FontWeight'</span>,<span class="string">'bold'</span>,<span class="string">'LineWidth'</span>,[1.0],<span class="string">'TickDir'</span>,<span class="string">'in'</span>,<span class="string">'Ticklength'</span>,[0.01 0.01],<span class="keyword">...</span>
+1356                 <span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'Tag'</span>,<span class="string">'cufi'</span>,<span class="string">'color'</span>,<span class="string">'w'</span>)
+1357 
+1358             <span class="comment">%ESTIMATE B-VALUE (MAX LIKELIHOOD ESTIMATE)</span>
+1359             Nmin = 10;
+1360             fMccorr = 0;
+1361             fBinning = 0.1;
+1362 
+1363             <span class="keyword">if</span> length(mag) &gt;= Nmin
+1364 
+1365                 <span class="comment">%GOODNESS-OF-FIT TO POWER LAW</span>
+1366                 <span class="comment">%%%%%%%%%%%%%%%%%% mcperc_ca3.m start %%%%%%%%%%%%%%%%%%%%</span>
+1367                 <span class="comment">% This is a completeness determination test</span>
+1368 
+1369                 
+1370                 <span class="keyword">if</span> strcmp(method, <span class="string">'power'</span>)
+1371                     [bval,xt2] = hist(mag,-2:0.1:6);
+1372                 <span class="keyword">elseif</span> strcmp(method, <span class="string">'exponential'</span>)
+1373                     [bval,xt2] = hist(log10(mag),-2:0.1:6);
+1374                 <span class="keyword">end</span>  
+1375                 l = max(find(bval == max(bval)));
+1376                 magco0 =  xt2(l)
+1377 
+1378                 dat = [];
+1379 
+1380                 <span class="comment">%for i = magco0-0.6:0.1:magco0+0.2</span>
+1381                 <span class="keyword">for</span> i = magco0-0.5:0.1:magco0+0.7
+1382                     <span class="keyword">if</span> strcmp(method, <span class="string">'power'</span>)
+1383                         l = mag &gt;= i - 0.0499;
+1384                     <span class="keyword">elseif</span> strcmp(method, <span class="string">'exponential'</span>)
+1385                         l = mag &gt;= 10^(i - 0.0499);
+1386                     <span class="keyword">end</span>
+1387                     nu = length(mag(l));
+1388                     <span class="keyword">if</span> length(mag(l)) &gt;= 25;
+1389                         <span class="comment">%[bv magco stan av] =  bvalca3(catZmap(l,:),2,2);</span>
+1390                         <span class="keyword">if</span> strcmp(method, <span class="string">'power'</span>)
+1391                             [mw bv2 stan2 av] =  bvalue_lib.bmemag(mag(l));
+1392                         <span class="keyword">elseif</span> strcmp(method, <span class="string">'exponential'</span>)
+1393                             [mw bv2 stan2 av] =  bvalue_lib.bmemag(log10(mag(l)));
+1394                         <span class="keyword">end</span>
+1395                         bvalue_lib.synthb_aut;
+1396                         dat = [ dat ; i res2];
+1397                     <span class="keyword">else</span>
+1398                         dat = [ dat ; i nan];
+1399                     <span class="keyword">end</span>
+1400 
+1401                 <span class="keyword">end</span>
+1402 
+1403                 j =  min(find(dat(:,2) &lt; 10 ));
+1404                 <span class="keyword">if</span> isempty(j) == 1; Mc90 = nan ;
+1405                 <span class="keyword">else</span>;
+1406                     Mc90 = dat(j,1);
+1407                 <span class="keyword">end</span>
+1408 
+1409                 j =  min(find(dat(:,2) &lt; 5 ));
+1410                 <span class="keyword">if</span> isempty(j) == 1; Mc95 = nan ;
+1411                 <span class="keyword">else</span>;
+1412                     Mc95 = dat(j,1);
+1413                 <span class="keyword">end</span>
+1414 
+1415                 j =  min(find(dat(:,2) &lt; 10 ));
+1416                 <span class="keyword">if</span> isempty(j) == 1; j =  min(find(dat(:,2) &lt; 15 )); <span class="keyword">end</span>
+1417                 <span class="keyword">if</span> isempty(j) == 1; j =  min(find(dat(:,2) &lt; 20 )); <span class="keyword">end</span>
+1418                 <span class="keyword">if</span> isempty(j) == 1; j =  min(find(dat(:,2) &lt; 25 )); <span class="keyword">end</span>
+1419                 j2 =  min(find(dat(:,2) == min(dat(:,2)) ));
+1420                 <span class="comment">%j = min([j j2]);</span>
+1421 
+1422                 Mc = dat(j,1);
+1423                 magco = Mc;
+1424                 prf = 100 - dat(j2,2);
+1425                 <span class="keyword">if</span> isempty(magco) == 1; magco = nan; prf = 100 -min(dat(:,2)); <span class="keyword">end</span>
+1426                 <span class="comment">%display(['Completeness Mc: ' num2str(Mc) ]);</span>
+1427                 <span class="comment">%%%%%%%%%%%%%%%%%% mcperc_ca3.m end %%%%%%%%%%%%%%%%%%%%%%</span>
+1428 
+1429                 <span class="comment">%CALCULATE MC</span>
+1430                 [fMc] = bvalue_lib.calc_Mc(mag, mcType, fBinning, fMccorr);
+1431                 l = mag &gt;= fMc-(fBinning/2);
+1432                 <span class="keyword">if</span> length(mag(l)) &gt;= Nmin
+1433                     [fMeanMag, fBValue, fStd_B, fAValue] =  bvalue_lib.calc_bmemag(mag(l), fBinning);
+1434                 <span class="keyword">else</span>
+1435                     [fMc, fBValue, fStd_B, fAValue] = deal(NaN);
+1436                 <span class="keyword">end</span>
+1437 
+1438                 <span class="comment">%STANDARD DEV OF a-value SET TO NAN;</span>
+1439                 [fStd_A, fStd_Mc] = deal(NaN);
+1440 
+1441             <span class="keyword">else</span>
+1442                 [fMc, fStd_Mc, fBValue, fStd_B, fAValue, fStd_A, <span class="keyword">...</span>
+1443                     fStdDevB, fStdDevMc] = deal(NaN);
+1444             <span class="keyword">end</span>
+1445 
+1446             magco = fMc; <span class="comment">% magnitude of completeness?</span>
+1447             index_low=find(xt3 &lt; magco+.05 &amp; xt3 &gt; magco-.05);
+1448             mag_hi = xt3(1);
+1449             index_hi = 1;
+1450             mz = xt3 &lt;= mag_hi &amp; xt3 &gt;= magco-.0001;
+1451             mag_zone=xt3(mz);
+1452             y = backg_ab(mz);
+1453 
+1454             <span class="comment">%PLOT MC IN FIGURE</span>
+1455             Mc = semilogy(xt3(index_low),bvalsum3(index_low)*1.5,<span class="string">'vk'</span>);
+1456             set(Mc,<span class="string">'LineWidth'</span>,[1.0],<span class="string">'MarkerSize'</span>,7)
+1457             Mc = text(xt3(index_low)+0.2,bvalsum3(index_low)*1.5,<span class="string">'Mc'</span>);
+1458             set(Mc,<span class="string">'FontWeight'</span>,<span class="string">'normal'</span>,<span class="string">'FontSize'</span>,12,<span class="string">'Color'</span>,<span class="string">'k'</span>)
+1459 
+1460             <span class="comment">%CREATE AND PLOT FIT LINE</span>
+1461             sol_type = <span class="string">'Maximum Likelihood Solution'</span>;
+1462             bw=fBValue;
+1463             aw=fAValue;
+1464             ew=fStd_B;
+1465             p = [ -1*bw aw];
+1466             f = polyval(p,mag_zone);
+1467             f = 10.^f;
+1468    
+1469             hold on
+1470             ttm= semilogy(mag_zone,f,<span class="string">'k'</span>);
+1471             set(ttm,<span class="string">'LineWidth'</span>,[2.0])
+1472             std_backg = ew;
+1473 
+1474             <span class="comment">%ERROR CALCULATIONS</span>
+1475             <span class="comment">%b = mag;</span>
+1476             bv = [];
+1477             si = [];
+1478 
+1479             set(gca,<span class="string">'XLim'</span>,[min(mag)-0.5  max(mag+0.5)])
+1480             <span class="comment">%set(gca,'YLim',[0.9 length(mag+30)*2.5]);</span>
+1481 
+1482             p=-p(1,1);
+1483             p=fix(100*p)/100;
+1484             tt1=num2str(bw,3);
+1485             tt2=num2str(std_backg,1);
+1486             tt4=num2str(bv,3);
+1487             tt5=num2str(si,2);
+1488             tmc=num2str(magco,2);
+1489             rect=[0 0 1 1];
+1490             h2=axes(<span class="string">'position'</span>,rect);
+1491             set(h2,<span class="string">'visible'</span>,<span class="string">'off'</span>);
+1492             a0 = aw-log10((max(this.dnum)-min(this.dnum))/365);
+1493 
+1494             text(.53,.88, [<span class="string">'b-value = '</span>,tt1,<span class="string">' +/- '</span>,tt2,<span class="string">',  a value = '</span>,num2str(aw,3)],<span class="string">'FontSize'</span>,12);
+1495             <span class="comment">%text(.53,.85,sol_type,'FontSize',12 );</span>
+1496             text(.53,.82,[<span class="string">'Magnitude of Completeness = '</span>,tmc],<span class="string">'FontSize'</span>,12);
+1497             
+1498             
+1499             <span class="comment">% Glenn 20150111 add R^2 value</span>
+1500             thiscorr = corrcoef(mag_zone, f)
+1501             r2 = thiscorr(1,2);
+1502             thiscorr2 = corrcoef(mag_zone, log10(f))
+1503             r22 = thiscorr2(1,2);
+1504             <span class="comment">%text(.53,.76,['R^2 = ',num2str(r2)],'FontSize',12);</span>
+1505             <span class="comment">%text(.53,.70,['R^2 = ',num2str(r22)],'FontSize',12);</span>
+1506 
+1507         <span class="keyword">end</span>         
+1508     <span class="keyword">end</span> <span class="comment">% end of dynamic methods</span>
+1509 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1510     methods(Access = public, Static)
+1511 
+1512        <a name="_sub22" href="#_subfunctions" class="code">function self = loadwfmeastable(sta, chan, snum, enum, measure, dbname)</a>
+1513             self = <a href="rsam.html" class="code" title="">rsam</a>();
+1514             [data, dnum, datafound, units] = datascopegt.load_wfmeas(station, snum, enum, measure, dbname);
+1515             self.dnum = dnum;
+1516             self.data = data;
+1517             self.measure = measure;
+1518             self.units = units;
+1519         <span class="keyword">end</span>
+1520         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1521         <a name="_sub23" href="#_subfunctions" class="code">function makebobfile(outfile, days);</a>
+1522             <span class="comment">% makebobfile(outfile, days);</span>
+1523             datapointsperday = 1440;
+1524             samplesperyear = days*datapointsperday;
+1525             a = zeros(samplesperyear,1);
+1526             <span class="comment">% ensure host directory exists</span>
+1527             mkdir(fileparts(outfile));
+1528             <span class="comment">% write blank file</span>
+1529             fid = fopen(outfile,<span class="string">'w'</span>);
+1530             fwrite(fid,a,<span class="string">'float32'</span>);
+1531             fclose(fid);
+1532         <span class="keyword">end</span>
+1533         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1534         <a name="_sub24" href="#_subfunctions" class="code">function [data]=remove_calibration_pulses(dnum, data)</a>
+1535 
+1536             t=dnum-floor(dnum); <span class="comment">% time of day vector</span>
+1537             y=[];
+1538             <span class="keyword">for</span> c=1:length(dnum)
+1539                 sample=round(t(c)*1440)+1;
+1540                 <span class="keyword">if</span> length(y) &lt; sample
+1541                     y(sample)=0;
+1542                 <span class="keyword">end</span>
+1543                 y(sample)=y(sample)+data(c);
+1544             <span class="keyword">end</span>
+1545             t2=t(1:length(y));
+1546             m=nanmedian(y);
+1547             calibOn = 0;
+1548             calibNum = 0;
+1549             calibStart = [];
+1550             calibEnd = [];
+1551             <span class="keyword">for</span> c=1:length(t2)-1
+1552                 <span class="keyword">if</span> y(c) &gt; 10*m &amp;&amp; ~calibOn
+1553                     calibOn = 1;
+1554                     calibNum = calibNum + 1;
+1555                     calibStart(calibNum) = c;
+1556                 <span class="keyword">end</span>
+1557                 <span class="keyword">if</span> y(c) &lt;= 10*m &amp;&amp; calibOn
+1558                     calibOn = 0;
+1559                     calibEnd(calibNum) = c-1;
+1560                 <span class="keyword">end</span>
+1561             <span class="keyword">end</span>
+1562 
+1563             <span class="keyword">if</span> length(calibStart) &gt; 1
+1564                 disp(sprintf(<span class="string">'%d calibration periods found: nothing will be done'</span>,length(calibStart)));
+1565                 <span class="comment">%figure;</span>
+1566                 <span class="comment">%c=1:length(y);</span>
+1567                 <span class="comment">%plot(c,y,'.')</span>
+1568                 <span class="comment">%i=find(y&gt;10*m);</span>
+1569                 <span class="comment">%hold on;</span>
+1570                 <span class="comment">%plot([c(1) c(end)],[10*m 10*m],':');</span>
+1571                 <span class="comment">%calibStart = input('Enter start sample');</span>
+1572                 <span class="comment">%calibEnd = input('Enter end sample');</span>
+1573             <span class="keyword">end</span>
+1574             <span class="keyword">if</span> length(calibStart) &gt; 0
+1575                 <span class="comment">% mask the data according to time of day</span>
+1576                 tstart = (calibStart - 2) / 1440
+1577                 tend = (calibEnd ) / 1440
+1578                 i=find(t &gt;= tstart &amp; t &lt;=tend);
+1579                 data(i)=NaN;
+1580             <span class="keyword">end</span>
+1581         <span class="keyword">end</span>  
+1582     
+1583         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1584   
+1585         <a name="_sub25" href="#_subfunctions" class="code">function [rsamobjects, ah]=plotrsam(sta, chan, snum, enum, DATAPATH)</a>
+1586         <span class="comment">% [rsamobjects, ah]=plotrsam_wrapper(sta, chan, snum, enum, DATAPATH)</span>
+1587         <span class="comment">%</span>
+1588         <span class="comment">%   Inputs:</span>
+1589         <span class="comment">%       sta - station code</span>
+1590         <span class="comment">%       chan - channel code</span>
+1591         <span class="comment">%       snum - start datenum</span>
+1592         <span class="comment">%       enum - end datenum</span>
+1593         <span class="comment">%       DATAPATH - path to data, including pattern</span>
+1594         <span class="comment">%</span>
+1595         <span class="comment">%   Outputs:</span>
+1596         <span class="comment">%       rsamobjects - vector of rsam objects</span>
+1597         <span class="comment">%       ah - vector of axes handles</span>
+1598         <span class="comment">%</span>
+1599         <span class="comment">%   Examples:</span>
+1600         <span class="comment">%       1. Data from the digital seismic network, Montserrat</span>
+1601         <span class="comment">%           DP = fullfile('/raid','data','antelope','mvo','SSSS_CCC_YYYY.DAT');</span>
+1602         <span class="comment">%           [rsamobjects, ah] = rsam.plotrsam('MBWH','SHZ',datenum(2001,2,24), datenum(2001,3,3), DP);</span>
+1603         <span class="comment">%       2. Data from the analog seismic network, Montserrat</span>
+1604         <span class="comment">%           DP = fullfile(DROPBOX, 'DOME', 'SEISMICDATA', 'RSAM_1', 'SSSSYYYY.DAT');</span>
+1605         <span class="comment">%           [rsamobjects, ah] = rsam.plotrsam('MWHZ','',datenum(1996,7,1), datenum(1996,8,13), DP);</span>
+1606         <span class="comment">%   Could use the following logic in a wrapper to decide DP:</span>
+1607         <span class="comment">%       strfind(sta{i},'MB') &amp; ~strcmp(sta{i},'MBET')</span>
+1608             
+1609             <span class="comment">% validate</span>
+1610             <span class="keyword">if</span> nargin ~= 5
+1611                 help <a href="rsam.html" class="code" title="">rsam</a>&gt;<a href="#_sub26" class="code" title="subfunction [rsamobjects, ah]=plotrsam(sta, chan, snum, enum, DATAPATH)">plotrsam</a>()
+1612                 <span class="keyword">return</span>
+1613             <span class="keyword">end</span>
+1614         
+1615             <span class="comment">% initialise</span>
+1616             <span class="keyword">if</span> ~iscell(sta)
+1617                 sta={sta};
+1618             <span class="keyword">end</span>
+1619             <span class="keyword">if</span> ~iscell(chan)
+1620                 chan={chan};
+1621             <span class="keyword">end</span>
+1622             numsta = length(sta);
+1623             numrsams = 0;
+1624             rsamobjects = [];
+1625             ah = [];
+1626             
+1627             <span class="comment">% load data</span>
+1628             <span class="keyword">for</span> i=1:numsta
+1629                 s = <a href="rsam.html" class="code" title="">rsam</a>(<span class="string">'file'</span>, DATAPATH, <span class="string">'snum'</span>, snum, <span class="string">'enum'</span>, enum, <span class="string">'sta'</span>, sta{i},<span class="string">'chan'</span>,chan{i});
+1630                 <span class="keyword">if</span> ~isempty(s.data)
+1631                     numrsams = numrsams + 1;
+1632                     rsamobjects = [rsamobjects <a href="#_sub13" class="code" title="subfunction self = resample(self, varargin)">resample</a>(s.despike(100))];
+1633                     <span class="comment">%ah(i)=subplot(numsta,1,i),plot(resample(s.despike(10)));</span>
+1634                 <span class="keyword">end</span>
+1635             <span class="keyword">end</span>
+1636             
+1637             <span class="comment">% plot data</span>
+1638             <span class="keyword">if</span> numrsams &gt; 0
+1639                 figure
+1640                 <span class="keyword">for</span> i=1:numrsams
+1641                     ah(i) = subplot(numrsams, 1, i), <a href="#_sub7" class="code" title="subfunction handlePlot = plot(rsam_vector, varargin)">plot</a>(rsamobjects(i))
+1642                 <span class="keyword">end</span>
+1643                 linkaxes(ah, <span class="string">'x'</span>)
+1644                 <span class="comment">%datetick('x','keeplimits')</span>
+1645             <span class="keyword">end</span>
+1646         <span class="keyword">end</span>
+1647         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+1648         <a name="_sub26" href="#_subfunctions" class="code">function rsamobj = detectTremorEvents(stationName, chan, DP, snum, enum, spikeRatio, transientEventRatio, STA_minutes, LTA_minutes, stepsize, ratio_on, ratio_off, plotResults)</a>
+1649         <span class="comment">% detectTremorEvents Load RSAM data, remove spikes, remove</span>
+1650         <span class="comment">% transient events, and run STA/LTA detector on continuous data to</span>
+1651         <span class="comment">% identify tremor events.</span>
+1652         <span class="comment">%   rsamobj = detectTremorEvents(stationName, snum, enum, spikeRatio, transientEventRatio, STA_minutes, LTA_minutes, stepsize, ratio_on, ratio_off, plotResults)</span>
+1653         <span class="comment">%</span>
+1654         <span class="comment">%   Example:</span>
+1655         <span class="comment">%       DP = fullfile('/raid','data','antelope','mvo','SSSS_CCC_YYYY.DAT');</span>
+1656         <span class="comment">%       rsamobj = detectTremorEvents('MBWH', 'SHZ', DP, datenum(2001,2,26), datenum(2001,3,23), 100, 3, 20, 180, 1, 1.5, 1.0, true)</span>
+1657         <span class="comment">%</span>
+1658         <span class="comment">%   This will:</span>
+1659         <span class="comment">%   * load data for MBWH between the dates given</span>
+1660         <span class="comment">%   * remove spikes lasting 1 or 2 samples that are at least 100 times adjacent samples</span>
+1661         <span class="comment">%   * remove transient events lasting 1 or 2 samples that are at least 3 times adjacent samples</span>
+1662         <span class="comment">%   * run an STA/LTA detector using STA_minutes, LTA_minutes,</span>
+1663         <span class="comment">%      stepsize, ratio_on and ratio_off (help rsam&gt;detect for more)</span>
+1664         <span class="comment">%   * if plotResults==true, the results will be plotted in 3</span>
+1665         <span class="comment">%       figures</span>
+1666         <span class="comment">%</span>
+1667         <span class="comment">%</span>
+1668         <span class="comment">%   Glenn Thompson 2014</span>
+1669 
+1670             <span class="comment">% validate inputs</span>
+1671             <span class="keyword">if</span> nargin ~=13
+1672                 warning(sprintf(<span class="string">'Wrong number of input arguments. Expected %d, got %d'</span>,13, nargin))
+1673                 help <a href="rsam.html" class="code" title="">rsam</a>&gt;<a href="#_sub27" class="code" title="subfunction rsamobj = detectTremorEvents(stationName, chan, DP, snum, enum, spikeRatio, transientEventRatio, STA_minutes, LTA_minutes, stepsize, ratio_on, ratio_off, plotResults)">detectTremorEvents</a>
+1674                 <span class="keyword">return</span>
+1675             <span class="keyword">end</span>
+1676 
+1677             <span class="comment">% load RSAM data into a RSAM object</span>
+1678             disp(<span class="string">'load rsam object'</span>)
+1679             rsamobj = <a href="rsam.html" class="code" title="">rsam</a>(<span class="string">'file'</span>, DP, <span class="string">'snum'</span>, snum, <span class="string">'enum'</span>, enum, <span class="string">'sta'</span>, stationName, <span class="string">'chan'</span>, chan);
+1680             rsamobj_raw = rsamobj;
+1681             
+1682             <span class="comment">% Find really bad telemetry spikes in the data</span>
+1683             <span class="comment">% This populates the spikes property and removes bad</span>
+1684             <span class="comment">% spikes from data property</span>
+1685             rsamobj = rsamobj.despike(<span class="string">'spikes'</span>, spikeRatio);
+1686             rsamobj_despiked = rsamobj;
+1687 
+1688             <span class="comment">% Now find smaller spikes, corresponding to events</span>
+1689             <span class="comment">% This populates the transientEvents property and removes event</span>
+1690             <span class="comment">% spikes from data property</span>
+1691             rsamobj = rsamobj.despike(<span class="string">'events'</span>, transientEventRatio);
+1692 
+1693             <span class="comment">%% Now we have a RSAM object we can run tremor detections on</span>
+1694             <span class="comment">% STA/LTA detector to find &quot;continuous&quot; events</span>
+1695             <span class="comment">% This populates the continuousEvents property</span>
+1696             [rsamobj, windows] = rsamobj.tremorstalta(<span class="string">'stalen'</span>, STA_minutes, <span class="string">'ltalen'</span>, LTA_minutes, <span class="string">'stepsize'</span>, stepsize, <span class="string">'ratio_on'</span>, ratio_on, <span class="string">'ratio_off'</span>, ratio_off);
+1697             
+1698             <span class="comment">%% plot results if asked</span>
+1699             <span class="keyword">if</span> plotResults
+1700                 
+1701                 <span class="comment">%% plot the results from despiking bad &amp; transient spikes</span>
+1702                 figure
+1703                 
+1704                 <span class="comment">% plot raw data</span>
+1705                 ah(1)=subplot(3,1,1);
+1706                 rsamobj_raw.plot(<span class="string">'h'</span>, ah(1));
+1707                 title(<span class="string">'Raw'</span>)
+1708                 
+1709                 <span class="comment">% plot despiked data</span>
+1710                 ah(2)=subplot(3,1,2);     
+1711                 rsamobj_despiked.plot(<span class="string">'h'</span>, ah(2));
+1712                 title(<span class="string">'Despiked'</span>)
+1713                 
+1714                 <span class="comment">% plot data after transient events removed</span>
+1715                 ah(3)=subplot(3,1,3);     
+1716                 rsamobj.plot(<span class="string">'h'</span>, ah(3));
+1717                 title(<span class="string">'Transient events removed'</span>)
+1718                 linkaxes(ah,<span class="string">'x'</span>);
+1719 
+1720                 <span class="comment">%% Plot the STA/LTA diagnosticsnicole_paper.m</span>
+1721                 figure;
+1722                 ha(1)=subplot(4, 1 ,1);<a href="#_sub7" class="code" title="subfunction handlePlot = plot(rsam_vector, varargin)">plot</a>(rsamobj.dnum, rsamobj.data );
+1723                 datetick(<span class="string">'x'</span>)
+1724 
+1725                 ha(2)=subplot(4, 1 ,2);<a href="#_sub7" class="code" title="subfunction handlePlot = plot(rsam_vector, varargin)">plot</a>(windows.endtime, windows.sta);
+1726                 datetick(<span class="string">'x'</span>)
+1727                 ylabel(sprintf(<span class="string">'STA\n(%s mins)'</span>,STA_minutes))
+1728 
+1729                 ha(3)=subplot(4, 1,3); <a href="#_sub7" class="code" title="subfunction handlePlot = plot(rsam_vector, varargin)">plot</a>(windows.endtime, windows.lta);
+1730                 datetick(<span class="string">'x'</span>)
+1731                 ylabel(sprintf(<span class="string">'LTA\n(%s mins)'</span>,LTA_minutes))
+1732 
+1733                 ha(4)=subplot(4,1,4);<a href="#_sub7" class="code" title="subfunction handlePlot = plot(rsam_vector, varargin)">plot</a>(windows.endtime, windows.ratio);
+1734                 datetick(<span class="string">'x'</span>)
+1735                 hold on;
+1736                 <span class="keyword">for</span> j=1:length(rsamobj.continuousEvents)
+1737                     i =( windows.endtime &gt;= rsamobj.continuousEvents(j).dnum(1) &amp; windows.endtime &lt;= rsamobj.continuousEvents(j).dnum(end) );
+1738                     area(windows.endtime(i), windows.ratio(i),<span class="string">'FaceColor'</span>, <span class="string">'r'</span>)
+1739                 <span class="keyword">end</span>
+1740                 <a href="#_sub7" class="code" title="subfunction handlePlot = plot(rsam_vector, varargin)">plot</a>(windows.endtime, ones(1,length(windows.endtime))*ratio_on, <span class="string">':'</span>)
+1741                 <a href="#_sub7" class="code" title="subfunction handlePlot = plot(rsam_vector, varargin)">plot</a>(windows.endtime, ones(1,length(windows.endtime))*ratio_off, <span class="string">':'</span>)
+1742                 hold off
+1743                 ylabel(<span class="string">'STA:LTA'</span>)
+1744                 linkaxes(ha,<span class="string">'x'</span>);
+1745                 suptitle(<span class="string">'STA/LTA detector diagnostics'</span>)
+1746 
+1747                 <span class="comment">%% Plot the tremor events superimposed on the background signal RSAM</span>
+1748                 <span class="comment">% object</span>
+1749                 figure;
+1750                 rsamobj.plot();
+1751                 hold on
+1752                 <span class="keyword">for</span> i=1:length(rsamobj.continuousEvents);
+1753                     <a href="#_sub7" class="code" title="subfunction handlePlot = plot(rsam_vector, varargin)">plot</a>(rsamobj.continuousEvents(i).dnum, rsamobj.continuousEvents(i).data,<span class="string">'r'</span>)
+1754                 <span class="keyword">end</span>
+1755                 hold off
+1756                 datetick(<span class="string">'x'</span>)
+1757                 title(<span class="string">'Tremor events'</span>)
+1758             <span class="keyword">end</span>
+1759 
+1760         <span class="keyword">end</span>
+1761     <span class="keyword">end</span>
+1762 
+1763 <span class="keyword">end</span> <span class="comment">% classdef</span>
+1764</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

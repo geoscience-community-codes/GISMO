@@ -1,0 +1,304 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plot</title>
+  <meta name="keywords" content="plot">
+  <meta name="description" content="PLOT plots a waveform object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; plot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>plot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>PLOT plots a waveform object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = plot(w, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">PLOT plots a waveform object
+   h = plot(waveform)
+   Plots a waveform object, handling the title and axis labeling.  The
+   output parameter h is optional.  If used, the handle to the waveform
+   plots will be returned.  These can be used to change properties of the
+   plotted waveforms.
+
+   h = plot(waveform, ...)
+   Plots a waveform object, passing additional parameters to matlab's PLOT
+   routine.
+
+   h = plot(waveform, 'xunit', xvalue, ...)
+   sets the xunit property of the graph, which is used to determine how
+   the times of the waveform are interpereted.  Possible values for XVALUE
+   are 's', 'm', 'h', 'd', 'doy', 'date'.
+
+        'seconds' - seconds
+        'minutes' - minutes
+        'hours' - hours
+        'day_of_year' - day of year
+        'date' - full date
+
+   for multiple waveforms, specifying XUNITs of 's', 'm', and 'h' will
+   cause all the waveforms to be plotted starting at 0.  An XUNIT of
+   'date' will force all waveforms to plot starting at their starttimes.
+
+   the default XUNIT is seconds
+
+  For the following examples:
+  % W is a waveform, and W2 is a smaller waveform (from within W)
+  W = waveform('SSLN','SHZ','04/02/2005 01:00:00', '04/02/2005 01:10:00');
+  W2 = extract(W,'date','04/02/2005 01:06:10','04/02/2005 01:06:33');
+
+ EXAMPLE 1:
+   % This example plots the waveforms at their absolute times...
+   plot(W,'xunit','date'); % plots the waveform in blue
+   hold on;
+   h = plot(W2,'xunit','date', 'r', 'linewidth', 1);
+          %plots your other waveform in red, and with a wider line
+
+ EXAMPLE 2:
+   % This example plots the waveforms, starting at time 0
+   plot(W); % plots the waveform in blue with seconds on the x axis
+   hold on;
+   plot(W2,'xunit','s', 'color', [.5 .5 .5]);  % plots your other
+                                       % waveform, starting in unison
+                                       % with the prev waveform, then
+                                       % change the color of the new
+                                       % plot to grey (RGB)
+
+  For a list of properties you can set (such as color, linestyle, etc...)
+  type get(h) after plotting something.
+
+  also, now Y can be autoscaled with the property pair: 'autoscale',true
+  although it only works for single waveforms...
+
+  see also DATETICK, WAVEFORM/EXTRACT, <a href="plot.html" class="code" title="function varargout = plot(w, varargin)">PLOT</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="linkedplot.html" class="code" title="function linkedplot(w, alignWaveforms)">linkedplot</a>	LINKEDPLOT Plot multiple waveform objects as separate linked panels</li><li><a href="plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = plot(w, varargin)</a>
+0002    <span class="comment">%PLOT plots a waveform object</span>
+0003    <span class="comment">%   h = plot(waveform)</span>
+0004    <span class="comment">%   Plots a waveform object, handling the title and axis labeling.  The</span>
+0005    <span class="comment">%   output parameter h is optional.  If used, the handle to the waveform</span>
+0006    <span class="comment">%   plots will be returned.  These can be used to change properties of the</span>
+0007    <span class="comment">%   plotted waveforms.</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">%   h = plot(waveform, ...)</span>
+0010    <span class="comment">%   Plots a waveform object, passing additional parameters to matlab's PLOT</span>
+0011    <span class="comment">%   routine.</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">%   h = plot(waveform, 'xunit', xvalue, ...)</span>
+0014    <span class="comment">%   sets the xunit property of the graph, which is used to determine how</span>
+0015    <span class="comment">%   the times of the waveform are interpereted.  Possible values for XVALUE</span>
+0016    <span class="comment">%   are 's', 'm', 'h', 'd', 'doy', 'date'.</span>
+0017    <span class="comment">%</span>
+0018    <span class="comment">%        'seconds' - seconds</span>
+0019    <span class="comment">%        'minutes' - minutes</span>
+0020    <span class="comment">%        'hours' - hours</span>
+0021    <span class="comment">%        'day_of_year' - day of year</span>
+0022    <span class="comment">%        'date' - full date</span>
+0023    <span class="comment">%</span>
+0024    <span class="comment">%   for multiple waveforms, specifying XUNITs of 's', 'm', and 'h' will</span>
+0025    <span class="comment">%   cause all the waveforms to be plotted starting at 0.  An XUNIT of</span>
+0026    <span class="comment">%   'date' will force all waveforms to plot starting at their starttimes.</span>
+0027    <span class="comment">%</span>
+0028    <span class="comment">%   the default XUNIT is seconds</span>
+0029    <span class="comment">%</span>
+0030    <span class="comment">%  For the following examples:</span>
+0031    <span class="comment">%  % W is a waveform, and W2 is a smaller waveform (from within W)</span>
+0032    <span class="comment">%  W = waveform('SSLN','SHZ','04/02/2005 01:00:00', '04/02/2005 01:10:00');</span>
+0033    <span class="comment">%  W2 = extract(W,'date','04/02/2005 01:06:10','04/02/2005 01:06:33');</span>
+0034    <span class="comment">%</span>
+0035    <span class="comment">% EXAMPLE 1:</span>
+0036    <span class="comment">%   % This example plots the waveforms at their absolute times...</span>
+0037    <span class="comment">%   plot(W,'xunit','date'); % plots the waveform in blue</span>
+0038    <span class="comment">%   hold on;</span>
+0039    <span class="comment">%   h = plot(W2,'xunit','date', 'r', 'linewidth', 1);</span>
+0040    <span class="comment">%          %plots your other waveform in red, and with a wider line</span>
+0041    <span class="comment">%</span>
+0042    <span class="comment">% EXAMPLE 2:</span>
+0043    <span class="comment">%   % This example plots the waveforms, starting at time 0</span>
+0044    <span class="comment">%   plot(W); % plots the waveform in blue with seconds on the x axis</span>
+0045    <span class="comment">%   hold on;</span>
+0046    <span class="comment">%   plot(W2,'xunit','s', 'color', [.5 .5 .5]);  % plots your other</span>
+0047    <span class="comment">%                                       % waveform, starting in unison</span>
+0048    <span class="comment">%                                       % with the prev waveform, then</span>
+0049    <span class="comment">%                                       % change the color of the new</span>
+0050    <span class="comment">%                                       % plot to grey (RGB)</span>
+0051    <span class="comment">%</span>
+0052    <span class="comment">%  For a list of properties you can set (such as color, linestyle, etc...)</span>
+0053    <span class="comment">%  type get(h) after plotting something.</span>
+0054    <span class="comment">%</span>
+0055    <span class="comment">%  also, now Y can be autoscaled with the property pair: 'autoscale',true</span>
+0056    <span class="comment">%  although it only works for single waveforms...</span>
+0057    <span class="comment">%</span>
+0058    <span class="comment">%  see also DATETICK, WAVEFORM/EXTRACT, PLOT</span>
+0059    
+0060    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0061    <span class="comment">% $Date$</span>
+0062    <span class="comment">% $Revision$</span>
+0063    
+0064    <span class="comment">% modified 11/17/2008 by Jason Amundson (amundson@gi.alaska.edu) to allow</span>
+0065    <span class="comment">% for &quot;day of year&quot; flag</span>
+0066    <span class="comment">%</span>
+0067    <span class="comment">% 11/25/2008 changed how parameters are parsed, fixing a bug where you</span>
+0068    <span class="comment">% could not specify both an Xunit and a plot-style ('.', for example)</span>
+0069    <span class="comment">%</span>
+0070    <span class="comment">% individual frequencies used instead of assumed to be equal</span>
+0071    
+0072    
+0073    <span class="keyword">if</span> isscalar(w),
+0074       yunit = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'units'</span>);
+0075    <span class="keyword">else</span>
+0076       yunit = unique(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'units'</span>)); <span class="comment">%</span>
+0077    <span class="keyword">end</span>
+0078    
+0079    <span class="comment">%secs = 1;</span>
+0080    <span class="comment">% mins = 60;</span>
+0081    <span class="comment">% hrs = 3600;</span>
+0082    <span class="comment">% days = 3600*24;</span>
+0083    
+0084    <span class="comment">%Look for an odd number of arguments beyond the first.  If there are an odd</span>
+0085    <span class="comment">%number, then it is expected that the first argument is the formatting</span>
+0086    <span class="comment">%string.</span>
+0087    hasExtraArg = mod(numel(varargin),2);
+0088    <span class="keyword">if</span> hasExtraArg
+0089       proplist=  parseargs(varargin(2:end));
+0090    <span class="keyword">else</span>
+0091       proplist=  parseargs(varargin);
+0092    <span class="keyword">end</span>
+0093    
+0094    
+0095    
+0096    [isfound,useAutoscale,proplist] = getproperty(<span class="string">'autoscale'</span>,proplist,false);
+0097    [isfound,xunit,proplist] = getproperty(<span class="string">'xunit'</span>,proplist,<span class="string">'s'</span>);
+0098    [isfound,currFontSize,proplist] = getproperty(<span class="string">'fontsize'</span>,proplist,8);
+0099    
+0100    
+0101    [xunit, xfactor] = parse_xunit(xunit);
+0102    
+0103    <span class="keyword">switch</span> lower(xunit)
+0104       <span class="keyword">case</span> <span class="string">'date'</span>
+0105          <span class="comment">% we need the actual times...</span>
+0106          tv = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'timevector'</span>);
+0107          <span class="keyword">if</span> ~isa(tv,<span class="string">'cell'</span>)
+0108             tv = {tv}; <span class="comment">%make it a cell for ease of use...</span>
+0109          <span class="keyword">end</span>
+0110          <span class="comment">% preAllocate Xvalues</span>
+0111          tvl = zeros(size(tv));
+0112          <span class="keyword">for</span> n=1:numel(tv)
+0113             tvl(n) = numel(tv{n}); <span class="comment">%tvl : TimeVectorLength</span>
+0114          <span class="keyword">end</span>
+0115          
+0116          Xvalues = nan(<a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>(tvl),numel(w)); <span class="comment">%fill empties with NaN (no plot)</span>
+0117          
+0118          <span class="keyword">for</span> n=1:numel(tv)
+0119             Xvalues(1:tvl(n),n) = tv{n};
+0120          <span class="keyword">end</span>
+0121          
+0122          
+0123       <span class="keyword">case</span> <span class="string">'day of year'</span>
+0124          startvec = datevec(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'start'</span>));
+0125          dec31 = datenum([startvec(1)-1,12,31,0,0,0]); <span class="comment">% 12/31/xxxx of previous year in Matlab format</span>
+0126          startdoy = datenum(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'start'</span>)) - dec31;
+0127          
+0128          dl = zeros(size(w));
+0129          <span class="keyword">for</span> n=1:numel(w)
+0130             dl(n) = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(n),<span class="string">'data_length'</span>); <span class="comment">%dl : DataLength</span>
+0131          <span class="keyword">end</span>
+0132          
+0133          Xvalues = nan(<a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>(dl),numel(w));
+0134          
+0135          freqs = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'freq'</span>);
+0136          <span class="keyword">for</span> n=1:numel(w)
+0137             Xvalues(1:dl(n),n) = (1:dl(n))./ freqs(n) ./ <span class="keyword">...</span>
+0138                xfactor + startdoy(n) - 1./freqs(n)./xfactor;
+0139          <span class="keyword">end</span>
+0140          
+0141       <span class="keyword">otherwise</span>,
+0142          <span class="comment">%dl = zeros(size(w));</span>
+0143          dl = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'data_length'</span>);
+0144          <span class="comment">%for n=1:numel(w)</span>
+0145          <span class="comment">%  dl(n) = length(w(n).data); %dl : DataLength</span>
+0146          <span class="comment">%end</span>
+0147          
+0148          Xvalues = nan(<a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>(dl),numel(w));
+0149          
+0150          freqs = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'freq'</span>);
+0151          <span class="keyword">for</span> n=1:numel(w)
+0152             Xvalues(1:dl(n),n) = (1:dl(n))./ freqs(n) ./ xfactor;
+0153          <span class="keyword">end</span>
+0154    <span class="keyword">end</span>
+0155    
+0156    
+0157    <span class="keyword">if</span> hasExtraArg
+0158       varargin = [varargin(1),property2varargin(proplist)];
+0159    <span class="keyword">else</span>
+0160       varargin = property2varargin(proplist);
+0161    <span class="keyword">end</span>
+0162    <span class="comment">% %</span>
+0163    
+0164    h = <a href="plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>(Xvalues, <a href="double.html" class="code" title="function n = double(W, option)">double</a>(w,<span class="string">'nan'</span>) , varargin{:} );
+0165    
+0166    <span class="keyword">if</span> useAutoscale
+0167       yunit = autoscale(h, yunit);
+0168    <span class="keyword">end</span>
+0169    
+0170    yh = ylabel(yunit,<span class="string">'fontsize'</span>,currFontSize);
+0171    
+0172    xh = xlabel(xunit,<span class="string">'fontsize'</span>,currFontSize);
+0173    <span class="keyword">switch</span> lower(xunit)
+0174       <span class="keyword">case</span> <span class="string">'date'</span>
+0175          datetick(<span class="string">'keepticks'</span>,<span class="string">'keeplimits'</span>);
+0176    <span class="keyword">end</span>
+0177    <span class="keyword">if</span> isscalar(w)
+0178       th = title(sprintf(<span class="string">'%s (%s) - starting %s'</span>,<span class="keyword">...</span>
+0179          <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'station'</span>),<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'channel'</span>),<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'start_str'</span>)),<span class="string">'interpreter'</span>,<span class="string">'none'</span>);
+0180    <span class="keyword">else</span>
+0181       th = title(sprintf(<span class="string">'Multiple waves.  wave(1) = %s (%s) - starting %s'</span>,<span class="keyword">...</span>
+0182          <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(1),<span class="string">'station'</span>),<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(1),<span class="string">'channel'</span>),<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(1),<span class="string">'start_str'</span>)),<span class="string">'interpreter'</span>,<span class="string">'none'</span>);
+0183    <span class="keyword">end</span>;
+0184    
+0185    
+0186    
+0187    <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(th,<span class="string">'fontsize'</span>,currFontSize);
+0188    <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(gca,<span class="string">'fontsize'</span>,currFontSize);
+0189    <span class="comment">%% return the graphics handles if desired</span>
+0190    <span class="keyword">if</span> nargout &gt;= 1,
+0191       varargout(1) = {h};
+0192    <span class="keyword">end</span>
+0193    
+0194    <span class="comment">% return additional information in a structure: when varargout ==2</span>
+0195    plothandles.title = th;
+0196    plothandles.xunits = xh;
+0197    plothandles.yunits = yh;
+0198    <span class="keyword">if</span> nargout ==2,
+0199       varargout(2) = {plothandles};
+0200    <span class="keyword">end</span>
+0201 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

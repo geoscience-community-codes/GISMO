@@ -1,0 +1,272 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of spectrogram_iceweb</title>
+  <meta name="keywords" content="spectrogram_iceweb">
+  <meta name="description" content="SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">applications</a> &gt; <a href="index.html">iceweb</a> &gt; spectrogram_iceweb.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/applications/iceweb&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>spectrogram_iceweb
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of
+ AVO web (IceWeb) spectrograms, by wrapping the default MATLAB spectrogram
+ function
+
+ Usage:
+     [result, Tcell, Fcell, Ycell] =spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)
+
+ Inputs:
+    w - a vector of waveform objects
+    s - a spectralobject
+    spectrogramFraction - fraction of a panel height the spectrogram should take up (default: 0.8). 
+            The waveform trace takes up the remaining fraction.
+    mycolormap - (Optional) a user-defined colormap
+
+ Outputs:
+    (other than a figure on the screen)
+    result = true if successful, false if there was an error
+   T - cell array of date/time for each spectrogram/waveform
+   F - cell array of frequency vector from fmin to fmax for each spectrogram/waveform
+   Y - cell array of spectrogram absolute amplitudes from fmin to fmax for each spectrogram/waveform</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="calculatePanelPositions.html" class="code" title="function [spectrogramPosition, tracePosition] = calculatePanelPositions(numchannels, channelNum, fractionalSpectrogramHeight, frameLeft, frameBottom, totalWidth, totalHeight);">calculatePanelPositions</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function plotTrace(tracePosition, data, freqSamp, Xtickmarks, timewindow, mycolormap, s, thissta, thischan);</a></li><li><a href="#_sub2" class="code">function rgb = amplitude2tracecolor(maxAmpl, mycolormap, s);</a></li><li><a href="#_sub3" class="code">function [Xtickmarks,Xticklabels]=findMinuteMarks(timewindow);</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)</a>
+0002 <span class="comment">% SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of</span>
+0003 <span class="comment">% AVO web (IceWeb) spectrograms, by wrapping the default MATLAB spectrogram</span>
+0004 <span class="comment">% function</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Usage:</span>
+0007 <span class="comment">%     [result, Tcell, Fcell, Ycell] =spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Inputs:</span>
+0010 <span class="comment">%    w - a vector of waveform objects</span>
+0011 <span class="comment">%    s - a spectralobject</span>
+0012 <span class="comment">%    spectrogramFraction - fraction of a panel height the spectrogram should take up (default: 0.8).</span>
+0013 <span class="comment">%            The waveform trace takes up the remaining fraction.</span>
+0014 <span class="comment">%    mycolormap - (Optional) a user-defined colormap</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% Outputs:</span>
+0017 <span class="comment">%    (other than a figure on the screen)</span>
+0018 <span class="comment">%    result = true if successful, false if there was an error</span>
+0019 <span class="comment">%   T - cell array of date/time for each spectrogram/waveform</span>
+0020 <span class="comment">%   F - cell array of frequency vector from fmin to fmax for each spectrogram/waveform</span>
+0021 <span class="comment">%   Y - cell array of spectrogram absolute amplitudes from fmin to fmax for each spectrogram/waveform</span>
+0022 
+0023 <span class="comment">% waveform should already have had zero-length waveform objects replaced by zero vectors</span>
+0024 
+0025 <span class="comment">% AUTHOR: Glenn Thompson, University of Alaska Fairbanks</span>
+0026 
+0027 debug.printfunctionstack(<span class="string">'&gt;'</span>);
+0028 
+0029 save lastspecgramcall.mat s w spectrogramFraction mycolormap
+0030 
+0031 result = 0;
+0032 
+0033 
+0034 <span class="comment">% % reverse the order of the waveforms so they plot top to bottom in same</span>
+0035 <span class="comment">% % order as in mulplt and as in waveform vector</span>
+0036 <span class="comment">% w = fliplr(w); don't need this with calculatePanelPositions2</span>
+0037 
+0038 numw = numel(w);
+0039 <span class="keyword">if</span> numw==0
+0040     <span class="keyword">return</span>;
+0041 <span class="keyword">end</span>
+0042 <span class="keyword">if</span> ~exist(<span class="string">'s'</span>,<span class="string">'var'</span>)
+0043     s = spectralobject(1024, 924, 10, [60 120]);
+0044 <span class="keyword">end</span>
+0045 <span class="keyword">if</span> ~exist(<span class="string">'spectrogramFraction'</span>,<span class="string">'var'</span>)
+0046     spectrogramFraction = 1;
+0047 <span class="keyword">end</span>
+0048 <span class="keyword">if</span> ~exist(<span class="string">'mycolormap'</span>, <span class="string">'var'</span>)
+0049     mycolormap = jet; <span class="comment">% should be using SPECTRAL_MAP here?</span>
+0050 <span class="keyword">end</span>
+0051 
+0052 debug.print_debug(2, sprintf(<span class="string">'%d waveform objects'</span>,numel(w)));
+0053 
+0054 <span class="comment">% Default colormap is JET. Override that here.</span>
+0055 <span class="keyword">if</span> exist(<span class="string">'mycolormap'</span>, <span class="string">'var'</span>)
+0056         setmap(s, mycolormap);      
+0057 <span class="keyword">end</span>
+0058 
+0059 <span class="comment">% To get a colorbar, stop the function here and set colorbar option to vert</span>
+0060 
+0061 <span class="comment">% Reset axes position &amp; squeeze in the trace panels</span>
+0062 
+0063 nfft = round(get(s,<span class="string">'nfft'</span>));
+0064 overlap = floor(get(s, <span class="string">'over'</span>));
+0065 dBlims = get(s, <span class="string">'dBlims'</span>); 
+0066 fmax = get(s, <span class="string">'freqmax'</span>);
+0067 
+0068 <span class="comment">% Set appropriate date ticks</span>
+0069 [wsnum, wenum]=gettimerange(w);
+0070 wt.start = min(wsnum);
+0071 wt.stop = max(wenum);
+0072 [Xtickmarks,XTickLabel]=<a href="#_sub3" class="code" title="subfunction [Xtickmarks,Xticklabels]=findMinuteMarks(timewindow);">findMinuteMarks</a>(wt);
+0073 
+0074 Ycell = {}; Fcell = {}; Tcell = {};
+0075 <span class="keyword">for</span> c=1:numw
+0076     fsamp = get(w(c), <span class="string">'freq'</span>);
+0077     data = get(w(c), <span class="string">'data'</span>);
+0078     
+0079     <span class="keyword">if</span> length(data) &gt; nfft
+0080         [S,F,T] = spectrogram(data, nfft, nfft/2, nfft, fsamp);
+0081 
+0082         Y = 20*log10(abs(S)+eps);
+0083         index = find(F &lt;= fmax); 
+0084         <span class="keyword">if</span> F(1)==0,
+0085             F(1)=0.001;
+0086         <span class="keyword">end</span>
+0087 
+0088         [spectrogramPosition, tracePosition] = <a href="calculatePanelPositions.html" class="code" title="function [spectrogramPosition, tracePosition] = calculatePanelPositions(numchannels, channelNum, fractionalSpectrogramHeight, frameLeft, frameBottom, totalWidth, totalHeight);">calculatePanelPositions</a>(numw, c, spectrogramFraction, 0.08, 0.05, 0.88, 0.95);
+0089         axes(<span class="string">'position'</span>, spectrogramPosition);
+0090         T = wt.start + T/86400;
+0091         F = F(1:max(index));
+0092         Y = Y(1:max(index),:);
+0093         imagesc(T,F,Y,dBlims); 
+0094         axis xy;
+0095         colormap(mycolormap);
+0096 
+0097         <span class="comment">% Change Y-Labels to 'sta.chan'</span>
+0098         ylabel( sprintf(<span class="string">'%s.%s'</span>,get(w(c), <span class="string">'station'</span>), get(w(c), <span class="string">'channel'</span>)), <span class="string">'FontSize'</span>, 10);
+0099         xlabel(<span class="string">''</span>)
+0100         title(<span class="string">''</span>)
+0101         set(gca,<span class="string">'XLim'</span>, [wt.start wt.stop]);
+0102         <span class="keyword">if</span> c==numw
+0103             set(gca, <span class="string">'XTick'</span>, Xtickmarks, <span class="string">'XTickLabel'</span>, XTickLabel,  <span class="string">'FontSize'</span>, 10); <span class="comment">% time labels only on bottom spectrogram</span>
+0104         <span class="keyword">else</span>
+0105             set(gca, <span class="string">'XTick'</span>, Xtickmarks, <span class="string">'XTickLabel'</span>, {});
+0106         <span class="keyword">end</span>
+0107 
+0108         <span class="keyword">if</span> spectrogramFraction &lt; 1
+0109             thissta = get(w(c), <span class="string">'station'</span>);
+0110             thischan = get(w(c), <span class="string">'channel'</span>);
+0111             <a href="#_sub1" class="code" title="subfunction plotTrace(tracePosition, data, freqSamp, Xtickmarks, timewindow, mycolormap, s, thissta, thischan);">plotTrace</a>(tracePosition, get(w(c),<span class="string">'data'</span>), get(w(c),<span class="string">'freq'</span>), Xtickmarks, wt, mycolormap, s, thissta, thischan);
+0112             set(gca,<span class="string">'XLim'</span>, [wt.start wt.stop]); <span class="comment">% added 20111214 to align trace with spectrogram when data missing (prevent trace being stretched out)</span>
+0113 
+0114             <span class="comment">% change the trace background color if we want to identify</span>
+0115             <span class="comment">% broadband stations</span>
+0116     <span class="comment">%         if (regexp(thischan, '[BH]H.'))</span>
+0117     <span class="comment">%             set(gca, 'Color', [.8 .8 .8]);</span>
+0118     <span class="comment">%         end</span>
+0119 
+0120         <span class="keyword">end</span>
+0121         result = result + 1;
+0122         Ycell{c} = Y; Fcell{c} = F; Tcell{c} = T;
+0123     <span class="keyword">else</span>
+0124         Ycell{c} = []; Fcell{c} = []; Tcell{c} = [];
+0125     <span class="keyword">end</span>
+0126     
+0127 <span class="keyword">end</span>
+0128 
+0129 debug.printfunctionstack(<span class="string">'&lt;'</span>);
+0130 
+0131 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0132 <a name="_sub1" href="#_subfunctions" class="code">function plotTrace(tracePosition, data, freqSamp, Xtickmarks, timewindow, mycolormap, s, thissta, thischan);</a>
+0133 debug.printfunctionstack(<span class="string">'&gt;'</span>);
+0134 snum =timewindow.start;
+0135 
+0136 <span class="comment">% set axes position</span>
+0137 axes(<span class="string">'position'</span>,tracePosition);
+0138 
+0139 <span class="comment">% trace time vector - bins are ~0.01 s apart (not 5 s as for spectrogram time)</span>
+0140 <span class="comment">% not really worthwhile plotting more than 1000 points on the screen</span>
+0141 dnum = ((1:length(data))./freqSamp)/86400 + snum;
+0142 
+0143 <span class="comment">% plot seismogram - assuming data cleaned already with</span>
+0144 <span class="comment">% w=detrend(fillgaps(w,'interp'))</span>
+0145 traceHandle = plot(dnum, data);
+0146 
+0147 <span class="comment">% blow up trace detail so it almost fills frame</span>
+0148 maxAmpl = max(abs(data));
+0149 <span class="keyword">if</span> (maxAmpl == 0) <span class="comment">% make sure that max_ampl is not zero</span>
+0150     maxAmpl = 1;
+0151 <span class="keyword">end</span>
+0152 
+0153 <span class="comment">% set properties - here we set trace color according to amplitude</span>
+0154 <span class="comment">%rgb = amplitude2tracecolor(maxAmpl, mycolormap, s);</span>
+0155 <span class="comment">%set (traceHandle,'LineWidth',[0.01],'Color',rgb)</span>
+0156 <span class="comment">% or we can use this...</span>
+0157 set (traceHandle,<span class="string">'LineWidth'</span>,[0.01],<span class="string">'Color'</span>,[0 0 0])
+0158 
+0159 set(gca, <span class="string">'XTick'</span>, Xtickmarks, <span class="string">'XTickLabel'</span>, <span class="string">''</span>, <span class="string">'XLim'</span>, [timewindow.start timewindow.stop], <span class="string">'Ytick'</span>,[],<span class="string">'YTickLabel'</span>,[<span class="string">''</span>]);
+0160 
+0161 <span class="keyword">if</span> ~isnan(maxAmpl) <span class="comment">% make sure it is not NaN else will crash</span>
+0162     traceRange = [dnum(1) dnum(end) -maxAmpl*1.1 maxAmpl*1.1];
+0163     decibels = 20 * log10(maxAmpl) + eps;
+0164     fprintf(<span class="string">'%s: %s.%s: Max amplitude %.1e nm/s (%d dB)\n'</span>,mfilename, thissta, thischan, maxAmpl,round(decibels)); 
+0165     axis(traceRange);
+0166 <span class="keyword">end</span>
+0167 debug.printfunctionstack(<span class="string">'&lt;'</span>);
+0168 
+0169 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0170 <a name="_sub2" href="#_subfunctions" class="code">function rgb = amplitude2tracecolor(maxAmpl, mycolormap, s);</a>
+0171 debug.printfunctionstack(<span class="string">'&gt;'</span>);
+0172 a = 20 * log10(maxAmpl) + eps;
+0173 dBlims = get(s, <span class="string">'dBlims'</span>);
+0174 index = round( ( (a - dBlims(1)) / (dBlims(2) - dBlims(1)) ) * (length(mycolormap)-1) ) + 1;
+0175 index=max([index 1]);
+0176 index=min([index length(mycolormap)]);
+0177 rgb = mycolormap(index, :);
+0178 debug.printfunctionstack(<span class="string">'&lt;'</span>);
+0179 
+0180 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0181 
+0182 <a name="_sub3" href="#_subfunctions" class="code">function [Xtickmarks,Xticklabels]=findMinuteMarks(timewindow);</a>
+0183 debug.printfunctionstack(<span class="string">'&gt;'</span>);
+0184 
+0185 <span class="comment">% calculate where minute marks should be, and labels</span>
+0186 snum = matlab_extensions.ceilminute(timewindow.start);
+0187 enum = matlab_extensions.floorminute(timewindow.stop);
+0188 
+0189 <span class="comment">% Number of minute marks should be no greater than 20</span>
+0190 numMins = (enum - snum) * 1440;
+0191 stepMinOptions = [1 2 3 5 10 15 20 30 60 120 180 240 360 480 720 1440];
+0192 c = 1;
+0193 <span class="keyword">while</span> (numMins / stepMinOptions(c) &gt; 12)
+0194     c = c + 1;
+0195 <span class="keyword">end</span>
+0196 stepMins = stepMinOptions(c);
+0197 
+0198 Xtickmarks = snum:stepMins/1440:enum;
+0199 Xticklabels = datestr(Xtickmarks,15); 
+0200 debug.printfunctionstack(<span class="string">'&lt;'</span>);
+0201 
+0202 
+0203 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0204</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,594 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of load_antelope</title>
+  <meta name="keywords" content="load_antelope">
+  <meta name="description" content="load a waveform from antelope">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; load_antelope.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>load_antelope
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>load a waveform from antelope</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function outputWaveforms = load_antelope(datarequest, COMBINE_WAVEFORMS, specificDatabase) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> load a waveform from antelope
+  w = load_antelope(datarequest, COMBINE_WAVEFORMS, specificDatabase)
+   CRITERIA is the search criteria, created with buildAntelopeCriteria
+   sTime is the startTimes
+   datarequest.endTimes is the endTimes
+   COMBINE_WAVEFORMS is a logical value:
+     Should segmented waveforms be combined,(within requested timerange)?
+   database is the antelope database</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>	convert an epoch date to a matlab date</li><li><a href="load_antelope.html" class="code" title="function outputWaveforms = load_antelope(datarequest, COMBINE_WAVEFORMS, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>	convert a matlab date to an epoch date</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="load_antelope.html" class="code" title="function outputWaveforms = load_antelope(datarequest, COMBINE_WAVEFORMS, specificDatabase)">load_antelope</a>	load a waveform from antelope</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function critList = buildAntelopeCriteria(scnl)</a></li><li><a href="#_sub2" class="code">function field = expandwildcard(field)</a></li><li><a href="#_sub3" class="code">function cl = makeCritListItem(field, relationship, data)</a></li><li><a href="#_sub4" class="code">function cle = getCritListExpression(cl)</a></li><li><a href="#_sub5" class="code">function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, criteriaList, database)</a></li><li><a href="#_sub6" class="code">function closeIfAppropriate(mydb)</a></li><li><a href="#_sub7" class="code">function result = isAntelopeDatabasePtr(database)</a></li><li><a href="#_sub8" class="code">function outcell = makecell(inVar)</a></li><li><a href="#_sub9" class="code">function allw = traceToWaveform(blankw,tr)</a></li><li><a href="#_sub10" class="code">function validCalibMask = hasValidCalib(w)</a></li><li><a href="#_sub11" class="code">function [units, type_of_data] = segtype2units(segtype)</a></li><li><a href="#_sub12" class="code">function ensureAntelopeInstalled()</a></li><li><a href="#_sub13" class="code">function ensureEqualNumberOfStartAndEndTimes(datarequest)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function outputWaveforms = load_antelope(datarequest, COMBINE_WAVEFORMS, specificDatabase)</a>
+0002    <span class="comment">% load a waveform from antelope</span>
+0003    <span class="comment">%  w = load_antelope(datarequest, COMBINE_WAVEFORMS, specificDatabase)</span>
+0004    <span class="comment">%   CRITERIA is the search criteria, created with buildAntelopeCriteria</span>
+0005    <span class="comment">%   sTime is the startTimes</span>
+0006    <span class="comment">%   datarequest.endTimes is the endTimes</span>
+0007    <span class="comment">%   COMBINE_WAVEFORMS is a logical value:</span>
+0008    <span class="comment">%     Should segmented waveforms be combined,(within requested timerange)?</span>
+0009    <span class="comment">%   database is the antelope database</span>
+0010    
+0011    <span class="comment">% VERSION: 1.1 of waveform objects</span>
+0012    <span class="comment">% AUTHOR: Celso Reyes (celso@gi.alaska.edu)</span>
+0013    <span class="comment">% LASTUPDATE: 11/24/2009</span>
+0014    
+0015    <span class="comment">%create a generic 1x1 and 0x0 waveforms for later use, so that the</span>
+0016    <span class="comment">%constructor does not constantly need to be called</span>
+0017    
+0018    <span class="comment">% Modifications</span>
+0019    <span class="comment">% Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data. Added try...catch..end to handle this.</span>
+0020    <span class="comment">% Glenn Thompson &amp; Carl Tape, 2012/02/06: Fixed bug which ignored the time order of requested waveforms.</span>
+0021    <span class="comment">%     Now they come back in order.</span>
+0022    
+0023    blankWave = waveform;
+0024    emptyWave = blankWave([]);
+0025    
+0026    <span class="comment">%COMBINE_WAVEFORMS = false;</span>
+0027    
+0028    <a href="#_sub12" class="code" title="subfunction ensureAntelopeInstalled()">ensureAntelopeInstalled</a>();
+0029    <a href="#_sub13" class="code" title="subfunction ensureEqualNumberOfStartAndEndTimes(datarequest)">ensureEqualNumberOfStartAndEndTimes</a>(datarequest);
+0030    
+0031    criteria = <a href="#_sub1" class="code" title="subfunction critList = buildAntelopeCriteria(scnl)">buildAntelopeCriteria</a>(datarequest.scnls);
+0032    nCriteria = numel(criteria);
+0033    database_dates_to_check = subdivide_files_by_date( <span class="keyword">...</span>
+0034       datarequest.dataSource,<span class="keyword">...</span>
+0035       datarequest.startTimes,<span class="keyword">...</span>
+0036       datarequest.endTimes);
+0037    
+0038    database =  getfilename(datarequest.dataSource,datarequest.scnls, datarequest.startTimes);
+0039    
+0040    <span class="comment">% the following line will enable the retrieval of multiple days worth of</span>
+0041    <span class="comment">% data all at once.  however, splicing them together may be tricky.</span>
+0042    <span class="comment">%database =  getfilename(datarequest.dataSource,datarequest.scnls, database_dates_to_check);</span>
+0043    
+0044    <span class="comment">%if we have multiple databases to look in, then call this routine for each</span>
+0045    <span class="comment">%one, then return the resulting waveforms.</span>
+0046    <span class="keyword">if</span> ~exist(<span class="string">'specificDatabase'</span>,<span class="string">'var'</span>)
+0047       <span class="comment">%%%%%</span>
+0048       <span class="comment">% Glenn Thompson &amp; Carl Tape, 2012/02/06</span>
+0049       <span class="comment">% We were finding that the following command was sorting the database names, with the result that</span>
+0050       <span class="comment">% if you request waveform objects out of time order, they always come back in time order.</span>
+0051       <span class="comment">% Which is annoying. Objects should be returned in the order requested.</span>
+0052       <span class="comment">%database = unique(database)a</span>
+0053       <span class="comment">% Replacing with the following 2 lines retains the database order, and hence the waveform object order.</span>
+0054       [~,inds] = unique(database);
+0055       database = database(sort(inds));
+0056       <span class="comment">%%%%%</span>
+0057       outputWaveforms = cell(size(database)); <span class="comment">%preallocate</span>
+0058       <span class="keyword">for</span> thisdatabaseN = 1 : numel(database)
+0059          outputWaveforms(thisdatabaseN) = {<a href="load_antelope.html" class="code" title="function outputWaveforms = load_antelope(datarequest, COMBINE_WAVEFORMS, specificDatabase)">load_antelope</a>(datarequest, COMBINE_WAVEFORMS, database{thisdatabaseN})};
+0060       <span class="keyword">end</span>
+0061       outputWaveforms = transpose(vertcat(outputWaveforms{:}));
+0062       <span class="keyword">return</span>;
+0063    <span class="keyword">end</span>
+0064    
+0065    database = specificDatabase;
+0066    
+0067    
+0068    outputWaveforms = emptyWave;
+0069    <span class="keyword">for</span> i = 1:nCriteria
+0070       <span class="comment">%if multiple traces will result, then there may be multiple records for tr</span>
+0071       [tr, database, fdb] = <span class="keyword">...</span>
+0072          <a href="#_sub5" class="code" title="subfunction [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, criteriaList, database)">get_antelope_traces</a>(datarequest.startTimes,datarequest.endTimes,criteria(i).group, database);
+0073       <span class="comment">%one tr exists for each timerequest within each scnl.</span>
+0074       w(numel(tr)).waves = blankWave;
+0075       <span class="keyword">for</span> traceidx = 1:numel(tr)
+0076          <span class="keyword">if</span> ~isstruct(tr{traceidx}) <span class="comment">% marker for no data</span>
+0077             w_scnl = blankWave([]);
+0078          <span class="keyword">else</span>
+0079             w_scnl = <a href="#_sub9" class="code" title="subfunction allw = traceToWaveform(blankw,tr)">traceToWaveform</a>(blankWave,tr{traceidx}); <span class="comment">%create waveform list</span>
+0080             trdestroy(tr{traceidx});
+0081          <span class="keyword">end</span>
+0082          
+0083          <span class="keyword">if</span> COMBINE_WAVEFORMS &amp;&amp; numel(w_scnl) &gt; 1, <span class="comment">%combine all of this trace's records</span>
+0084             w_scnl = combine(w_scnl);
+0085          <span class="keyword">end</span>;
+0086          w(traceidx).waves = w_scnl(:)';
+0087          clear w_scnl;
+0088       <span class="keyword">end</span>
+0089       outputWaveforms = [outputWaveforms; [w.waves]'];
+0090       clear w
+0091    <span class="keyword">end</span>
+0092    
+0093    dbclose(fdb);
+0094 <span class="keyword">end</span>
+0095 
+0096 <span class="comment">%% helper functions</span>
+0097 
+0098 <a name="_sub1" href="#_subfunctions" class="code">function critList = buildAntelopeCriteria(scnl)</a>
+0099    <span class="comment">% builds a criteria list from SCNL (Station-Channel-Network-Location)</span>
+0100    <span class="comment">% returns a structure array of cells with criteria for use with get_antelope_trace</span>
+0101    <span class="comment">% structure returned as critList(n).group, where group is a cell containing</span>
+0102    <span class="comment">% the criteria, such as {'sta == &quot;OKCF&quot;','chan==&quot;EHZ&quot;'}</span>
+0103    <span class="comment">%</span>
+0104    <span class="comment">% ex. myscnls = scnlobject({'OKCF','OKFG','OKSO'},{'EHZ','BHZ','BHZ'});</span>
+0105    <span class="comment">% ex.  cl =</span>
+0106    <span class="comment">% builtAntelopeCriteria(myscnls)</span>
+0107    <span class="comment">% ... CL will then contain</span>
+0108    <span class="comment">%</span>
+0109    <span class="comment">% CL(1).group(1).field = 'sta'</span>
+0110    <span class="comment">% CL(1).group(1).relation = '=='</span>
+0111    <span class="comment">% CL(1).group(1).data = 'OKCF'</span>
+0112    <span class="comment">% CL(1).group(2).field = 'chan'</span>
+0113    <span class="comment">% CL(1).group(2).relation = '=='</span>
+0114    <span class="comment">% CL(1).group(2).data = 'EHZ'</span>
+0115    <span class="comment">% ...</span>
+0116    <span class="comment">% CL(N).group(4).field = 'loc'</span>
+0117    <span class="comment">% CL(N).group(4).relation = '=='</span>
+0118    <span class="comment">% CL(N).group(4).data = '--'</span>
+0119    <span class="comment">%</span>
+0120    <span class="comment">% so...    getCritListExpression(CL(1).group(1)) --&gt; 'sta == &quot;OKCF&quot;'</span>
+0121    <span class="comment">% It was done this way so that the dabase could be checked to ensure</span>
+0122    <span class="comment">% that the view actually supports each search parameter.</span>
+0123    <span class="comment">%</span>
+0124    <span class="comment">% either multiple stations OR multiple channels may work... not both.</span>
+0125    <span class="comment">% also, if any of the SCNL parameters are left empty, they will not be used</span>
+0126    <span class="comment">% in subsetting the antelope database.</span>
+0127    <span class="comment">%</span>
+0128    
+0129    station = get(scnl,<span class="string">'station'</span>);
+0130    channel = get(scnl,<span class="string">'channel'</span>);
+0131    network = get(scnl,<span class="string">'network'</span>);
+0132    location = get(scnl,<span class="string">'location'</span>);
+0133    
+0134    critList.statment =  {};
+0135    <span class="keyword">if</span> exist(<span class="string">'station'</span>,<span class="string">'var'</span>) &amp;&amp; ~isempty(station)
+0136       station = <a href="#_sub2" class="code" title="subfunction field = expandwildcard(field)">expandwildcard</a>(station);
+0137       station = <a href="#_sub8" class="code" title="subfunction outcell = makecell(inVar)">makecell</a>(station);
+0138       <span class="keyword">for</span> i=1:numel(station)
+0139          sta_crit(i) = <a href="#_sub3" class="code" title="subfunction cl = makeCritListItem(field, relationship, data)">makeCritListItem</a>(<span class="string">'sta'</span>,<span class="string">'=~'</span>,station{i});
+0140       <span class="keyword">end</span>
+0141    <span class="keyword">else</span>
+0142       error(<span class="string">'Waveform:load_antelope:noStationTerm'</span>,<span class="keyword">...</span>
+0143          <span class="string">'No stations were requested. To retrieve all stations use ''*'''</span>);
+0144    <span class="keyword">end</span>
+0145    
+0146    <span class="keyword">if</span> exist(<span class="string">'channel'</span>,<span class="string">'var'</span>) &amp;&amp; ~isempty(channel)
+0147       channel = <a href="#_sub2" class="code" title="subfunction field = expandwildcard(field)">expandwildcard</a>(channel);
+0148       channel = <a href="#_sub8" class="code" title="subfunction outcell = makecell(inVar)">makecell</a>(channel);
+0149       <span class="keyword">for</span> i=1:numel(channel)
+0150          cha_crit(i) = <a href="#_sub3" class="code" title="subfunction cl = makeCritListItem(field, relationship, data)">makeCritListItem</a>(<span class="string">'chan'</span>,<span class="string">'=~'</span>,channel{i});
+0151       <span class="keyword">end</span>
+0152    <span class="keyword">else</span>
+0153       error(<span class="string">'Waveform:load_antelope:noChannelTerm'</span>,<span class="keyword">...</span>
+0154          <span class="string">'No channels were requested. To retrieve all stations use ''*'''</span>);
+0155    <span class="keyword">end</span>
+0156    
+0157    <span class="keyword">for</span> i=1:numel(sta_crit)
+0158       critList(i).group(1) = sta_crit(i);
+0159       critList(i).group(2) = cha_crit(i);
+0160    <span class="keyword">end</span>
+0161    
+0162    <span class="keyword">if</span> ~isempty(network)
+0163       network = <a href="#_sub2" class="code" title="subfunction field = expandwildcard(field)">expandwildcard</a>(network);
+0164       network = <a href="#_sub8" class="code" title="subfunction outcell = makecell(inVar)">makecell</a>(network);
+0165       <span class="keyword">for</span> i=1:numel(critList)
+0166          critList(i).group(end+1) = <a href="#_sub3" class="code" title="subfunction cl = makeCritListItem(field, relationship, data)">makeCritListItem</a>(<span class="string">'net'</span>,<span class="string">'=~'</span>,network{i});
+0167       <span class="keyword">end</span>
+0168    <span class="keyword">end</span>
+0169    
+0170    <span class="keyword">if</span> ~isempty(location)
+0171       location = <a href="#_sub2" class="code" title="subfunction field = expandwildcard(field)">expandwildcard</a>(location);
+0172       location = <a href="#_sub8" class="code" title="subfunction outcell = makecell(inVar)">makecell</a>(location);
+0173       <span class="keyword">for</span> i=1:numel(critList)
+0174          critList(i).group(end+1) = <a href="#_sub3" class="code" title="subfunction cl = makeCritListItem(field, relationship, data)">makeCritListItem</a>(<span class="string">'loc'</span>,<span class="string">'=~'</span>,location{i}); <span class="comment">%#ok&lt;*AGROW&gt;</span>
+0175       <span class="keyword">end</span>
+0176    <span class="keyword">end</span>
+0177    critList = critList(:);
+0178 <span class="keyword">end</span>
+0179 
+0180 <a name="_sub2" href="#_subfunctions" class="code">function field = expandwildcard(field)</a>
+0181    <span class="comment">% replace * with .* but leave any existing .* unchanged</span>
+0182    field = regexprep(field,<span class="string">'(?&lt;!\.)\*'</span>,<span class="string">'\.\*'</span>);
+0183 <span class="keyword">end</span>
+0184 
+0185 <a name="_sub3" href="#_subfunctions" class="code">function cl = makeCritListItem(field, relationship, data)</a>
+0186    cl.field = field;
+0187    cl.relationship = relationship;
+0188    cl.data = data;
+0189 <span class="keyword">end</span>
+0190 
+0191 <a name="_sub4" href="#_subfunctions" class="code">function cle = getCritListExpression(cl)</a>
+0192    <span class="keyword">switch</span> class(cl.data)
+0193       <span class="keyword">case</span>(<span class="string">'char'</span>)
+0194          cle = sprintf(<span class="string">'%s%s/%s/'</span>,cl.field, cl.relationship, cl.data);
+0195       <span class="keyword">otherwise</span>
+0196          cle =  sprintf(<span class="string">'%s %s %s'</span>,cl.field,cl.relationship,num2str(cl.data));
+0197    <span class="keyword">end</span>
+0198 <span class="keyword">end</span>
+0199 
+0200 <a name="_sub5" href="#_subfunctions" class="code">function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, criteriaList, database)</a>
+0201    <span class="comment">% GET_ANTELOPE_TRACE gets interesting data from database, and returns the tracebuf object</span>
+0202    <span class="comment">% [tr(1:end)] =  get_antelope_trace(startdates, enddates, criteriaList, database)</span>
+0203    <span class="comment">%    STARTDATE is a matlab datenum</span>
+0204    <span class="comment">%    ENDDATE is also in matlab datenum</span>
+0205    <span class="comment">%    CRITERIALIST is a cell of statements used to filter the antelope</span>
+0206    <span class="comment">%        database.  example: {'sta==&quot;OKCF&quot;','chan==&quot;BHZ&quot;'}</span>
+0207    <span class="comment">%    DATABASE can either be a database name, or an open antelope database</span>
+0208    <span class="comment">%    pointer.</span>
+0209    <span class="comment">%</span>
+0210    <span class="comment">%    TR is a tracebuf object containing the data requested.</span>
+0211    <span class="comment">%</span>
+0212    <span class="comment">%  In this usage, with a single output argument, TR, the database is opened</span>
+0213    <span class="comment">%  and then closed before the function returns.</span>
+0214    <span class="comment">%</span>
+0215    <span class="comment">% You can opt to keep the database open, which can make subsequent calls to</span>
+0216    <span class="comment">% get_antelope_trace much faster.  To do this, ask for the database pointer</span>
+0217    <span class="comment">% as one of the output arguments.  The database will be closed by any</span>
+0218    <span class="comment">% function call that uses the database pointer as the 'database' parameter,</span>
+0219    <span class="comment">% and does not ask for a database pointer back.</span>
+0220    <span class="comment">%</span>
+0221    <span class="comment">% [tr, mydb] = get_antelope_trace(...)</span>
+0222    <span class="comment">%    if mydb is asked for, then the database will not be closed, allowing for</span>
+0223    <span class="comment">%    more efficient reuse.  mydb is the unfiltered (and open) wfdisc table</span>
+0224    <span class="comment">%</span>
+0225    <span class="comment">% [tr, mydb, filteredDB] = get_antelope_trace(...)</span>
+0226    <span class="comment">%   returns wfdisc table in mydb, and a filtered wfdisc table in filteredDB</span>
+0227    <span class="comment">%</span>
+0228    <span class="comment">% if no records are found, then tr will be set to []</span>
+0229    <span class="comment">%</span>
+0230    <span class="comment">% will generate error message if no records found, so consider using in a</span>
+0231    <span class="comment">% TRY-CATCH loop.</span>
+0232    <span class="comment">%</span>
+0233    <span class="comment">%</span>
+0234    <span class="comment">% Example:</span>
+0235    <span class="comment">%  % set up the data</span>
+0236    <span class="comment">%  sDate = datenum('7/12/2008 05:00:00.00');</span>
+0237    <span class="comment">%  eDate = datenum('7/12/2008 05:10:00.00');</span>
+0238    <span class="comment">%  stationsToGet = {'OKFG','OKSO','OMG'};</span>
+0239    <span class="comment">%  channelsToGet = {'BHZ', 'BHE'};</span>
+0240    <span class="comment">%  mydb = '/mydir/my_antelope_database';</span>
+0241    <span class="comment">%</span>
+0242    <span class="comment">%  % get our criteria together</span>
+0243    <span class="comment">%  for st = 1:numel(stationsToGet)</span>
+0244    <span class="comment">%    staCriteria(st) = {sprintf('sta==&quot;%s&quot;',stationsToGet(st)};</span>
+0245    <span class="comment">%  end</span>
+0246    <span class="comment">%  for ch = 1:numel(channelsToGet)</span>
+0247    <span class="comment">%    chanCriteria(ch) = {sprintf('chan==&quot;%s&quot;',channelsToGet(ch)};</span>
+0248    <span class="comment">%  end</span>
+0249    <span class="comment">%</span>
+0250    <span class="comment">%  % open the database once, and read in each tracebuf. Then translate into</span>
+0251    <span class="comment">%  % waveforms.</span>
+0252    <span class="comment">%  n = 1;</span>
+0253    <span class="comment">%  for sta = 1:numel(staCriteria)</span>
+0254    <span class="comment">%    for ch = 1:numel(chanCriteria)</span>
+0255    <span class="comment">%      critera = [chanCriteria(ch),staCriteria(sta)];</span>
+0256    <span class="comment">%      [tr, mydb] = get_antelope_trace(sDate,eDate, criteria, mydb)</span>
+0257    <span class="comment">%      w(n) = traceToWaveform(tr);</span>
+0258    <span class="comment">%      n = n+1;</span>
+0259    <span class="comment">%    end</span>
+0260    <span class="comment">%  end</span>
+0261    <span class="comment">%  % finally, close up shop.</span>
+0262    <span class="comment">%  dbclose(mydb)</span>
+0263    
+0264    <span class="comment">% Modifications</span>
+0265    <span class="comment">%%% Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data. Added try...catch..end to handle this.</span>
+0266    
+0267    useExistingDatabasePtr =  <a href="#_sub7" class="code" title="subfunction result = isAntelopeDatabasePtr(database)">isAntelopeDatabasePtr</a>(database);
+0268    
+0269    <span class="keyword">if</span> useExistingDatabasePtr
+0270       <span class="keyword">try</span>
+0271          dbnrecs(database);
+0272       <span class="keyword">catch</span>
+0273          warning(<span class="string">'Waveform:load_antelope:databaseNotOpen'</span>, <span class="keyword">...</span>
+0274             <span class="string">'a Database Pointer was passed to trace, but the database was not open'</span>);
+0275          <span class="comment">%tr = trnew; %return a new object, forcing the ability to destroy it later</span>
+0276          tr = { -1 };
+0277          <span class="keyword">return</span>;
+0278       <span class="keyword">end</span>
+0279    <span class="keyword">end</span>
+0280    
+0281    <span class="comment">% do not close the database if a pointer is asked for in the return</span>
+0282    <span class="comment">% arguments</span>
+0283    closeDatabaseWhenDone = nargout &lt; 2;
+0284    
+0285    
+0286    antelope_starts = <a href="mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>(startdates);
+0287    antelope_ends = <a href="mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>(enddates);
+0288    
+0289    <span class="comment">%if the database isn't already open, then open it for reading</span>
+0290    <span class="keyword">if</span> ~useExistingDatabasePtr
+0291       mydb = dbopen(database,<span class="string">'r'</span>);
+0292       mydb = dblookup_table(mydb,<span class="string">'wfdisc'</span>);
+0293    <span class="keyword">else</span>
+0294       mydb = database;
+0295    <span class="keyword">end</span>
+0296    <span class="keyword">try</span>
+0297       nrecs = dbnrecs(mydb);
+0298    <span class="keyword">catch</span>
+0299       nrecs = 0;
+0300    <span class="keyword">end</span>
+0301    <span class="comment">%check to ensure wfdisk table exists and is populated</span>
+0302    <span class="keyword">if</span> nrecs == 0,
+0303       databaseFileName = dbquery(mydb,<span class="string">'dbTABLE_FILENAME'</span>);
+0304       <a href="#_sub6" class="code" title="subfunction closeIfAppropriate(mydb)">closeIfAppropriate</a>(mydb);
+0305       warning(<span class="string">'Waveform:load_antelope:databaseNotFound'</span>, <span class="keyword">...</span>
+0306          <span class="string">'Database not found: %s'</span>, databaseFileName);
+0307       tr = { -1 };
+0308       filteredDb = dbinvalid;
+0309       <span class="keyword">return</span>;
+0310    <span class="keyword">end</span>;
+0311    
+0312    <span class="comment">%keep a copy of the pre-subset (raw) database</span>
+0313    rawDb = mydb;
+0314    
+0315    <span class="comment">% subset the data based upon the desired criteria</span>
+0316    listOfDBFields = dbquery(mydb, <span class="string">'dbTABLE_FIELDS'</span>);
+0317    <span class="comment">% check to ensure criteria matches a field in the database</span>
+0318    criteriaList = criteriaList(ismember({criteriaList.field},listOfDBFields));
+0319    <span class="keyword">for</span> i=1:numel(criteriaList)
+0320       expList(i) = {<a href="#_sub4" class="code" title="subfunction cle = getCritListExpression(cl)">getCritListExpression</a>(criteriaList(i))};
+0321    <span class="keyword">end</span>
+0322    allExp = expList{1};
+0323    <span class="keyword">for</span> i=2: (numel(expList))
+0324       allExp = [allExp,<span class="string">' &amp;&amp; '</span>, expList{i}];
+0325    <span class="keyword">end</span>
+0326    
+0327    <span class="comment">%subset the database based on this particular criterion</span>
+0328    mydb = dbsubset(mydb,allExp);
+0329    <span class="keyword">try</span>
+0330       nrecs = dbnrecs(mydb);
+0331    <span class="keyword">catch</span>
+0332       nrecs = 0;
+0333    <span class="keyword">end</span>
+0334    <span class="keyword">if</span> nrecs == 0
+0335       <a href="#_sub6" class="code" title="subfunction closeIfAppropriate(mydb)">closeIfAppropriate</a>(mydb);
+0336       warning(<span class="string">'Waveform:load_antelope:dataNotFound'</span>, <span class="keyword">...</span>
+0337          <span class="string">'No records found for criteria [%s].'</span>, allExp);
+0338       <span class="comment">%tr = trnew;</span>
+0339       tr = { -1 };
+0340       filteredDb = dbinvalid;
+0341       <span class="keyword">return</span>;
+0342    <span class="keyword">end</span>;
+0343    
+0344    filteredDb = mydb;
+0345    
+0346    [st, ed] = dbgetv(mydb,<span class="string">'time'</span>,<span class="string">'endtime'</span>);
+0347    <span class="comment">%% Get the tracebuf object for this starttime, endtime</span>
+0348    <span class="comment">% Loop through all times.  Result is tr(1:numel(starttimes) of all tracebuffers.</span>
+0349    <span class="keyword">for</span> mytimeIDX = 1:numel(antelope_starts)
+0350       someDataExists = any(antelope_starts(mytimeIDX)&lt;= (ed) &amp; antelope_ends(mytimeIDX) &gt;= (st));
+0351       <span class="keyword">if</span> someDataExists
+0352          <span class="comment">%%% Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data.</span>
+0353          <span class="comment">% This error needs to be handled. So adding a try..catch..end around the original instruction.</span>
+0354          <span class="keyword">try</span>
+0355             tr{mytimeIDX} = trload_css(mydb, antelope_starts(mytimeIDX), antelope_ends(mytimeIDX));
+0356          <span class="keyword">catch</span>
+0357             databaseFileName = dbquery(mydb,<span class="string">'dbTABLE_FILENAME'</span>);
+0358             <a href="#_sub6" class="code" title="subfunction closeIfAppropriate(mydb)">closeIfAppropriate</a>(mydb);
+0359             warning(<span class="string">'Waveform:load_antelope:trload_css failed'</span>, <span class="keyword">...</span>
+0360                <span class="string">'Database not found: %s'</span>, databaseFileName);
+0361             tr = { -1 };
+0362             filteredDb = dbinvalid;
+0363             database
+0364             allExp
+0365             starttimes = antelope_starts(mytimeIDX);
+0366             endtimes = antelope_ends(mytimeIDX);
+0367             fprintf(<span class="string">'%.0f %.0f\n '</span>,starttimes,endtimes);
+0368             datestr(epoch2datenum(starttimes))
+0369             datestr(epoch2datenum(endtimes))
+0370             fprintf(<span class="string">'trload_css(mydb, starttimes, endtimes))\n'</span>);
+0371             <span class="keyword">return</span>
+0372          <span class="keyword">end</span>
+0373          trsplice(tr{mytimeIDX},20);
+0374       <span class="keyword">else</span>
+0375          tr{mytimeIDX} = -1;
+0376       <span class="keyword">end</span>
+0377    <span class="keyword">end</span> <span class="comment">%mytimeIDX</span>
+0378    <a href="#_sub6" class="code" title="subfunction closeIfAppropriate(mydb)">closeIfAppropriate</a>(mydb);
+0379 <span class="keyword">end</span>
+0380 
+0381 <a name="_sub6" href="#_subfunctions" class="code">function closeIfAppropriate(mydb)</a>
+0382    closeDatabase = evalin(<span class="string">'caller'</span>,<span class="string">'closeDatabaseWhenDone'</span>);
+0383    <span class="keyword">if</span> closeDatabase
+0384       dbclose(mydb);
+0385    <span class="keyword">end</span>
+0386 <span class="keyword">end</span>
+0387 
+0388 <a name="_sub7" href="#_subfunctions" class="code">function result = isAntelopeDatabasePtr(database)</a>
+0389    result = false;
+0390    <span class="keyword">if</span> ~isa(database,<span class="string">'struct'</span>)
+0391       <span class="keyword">return</span>
+0392    <span class="keyword">end</span>
+0393    fn =  fieldnames(database);
+0394    <span class="keyword">if</span> ~any(strcmpi(fn,<span class="string">'database'</span>))
+0395       <span class="keyword">return</span>
+0396    <span class="keyword">end</span>
+0397    result = true;
+0398 <span class="keyword">end</span>
+0399 
+0400 <a name="_sub8" href="#_subfunctions" class="code">function outcell = makecell(inVar)</a>
+0401    <span class="keyword">if</span> ~iscell(inVar)
+0402       outcell = {inVar};
+0403    <span class="keyword">else</span>
+0404       outcell = inVar;
+0405    <span class="keyword">end</span>
+0406 <span class="keyword">end</span>
+0407 
+0408 <a name="_sub9" href="#_subfunctions" class="code">function allw = traceToWaveform(blankw,tr)</a>
+0409    <span class="comment">% TRACETOWAVEFORM converts traceobjects to waveforms</span>
+0410    <span class="comment">%    w = traceToWaveform(blankwaveform, all_tracobjects,[units])</span>
+0411    <span class="comment">%</span>
+0412    <span class="comment">% Note: this may return multiple waveform objects, depending upon</span>
+0413    <span class="comment">% how many segments and/or scnl's.</span>
+0414    <span class="comment">%</span>
+0415    
+0416    <span class="comment">% try to end up with a single waveform object</span>
+0417    <span class="keyword">try</span>
+0418       traceCount = dbnrecs(tr);
+0419    <span class="keyword">catch</span>
+0420       allw = blankw([]);
+0421       <span class="keyword">return</span>
+0422    <span class="keyword">end</span>
+0423    <span class="keyword">if</span> traceCount == 0
+0424       <span class="comment">%no records!</span>
+0425       allw = blankw([]);
+0426       <span class="keyword">return</span>
+0427    <span class="keyword">end</span>
+0428    
+0429    <span class="comment">%badmask contains the location of data spikes and infinite values.</span>
+0430    badmask(traceCount).mask = 0; <span class="comment">%preallocate</span>
+0431    allw = repmat(blankw,traceCount,1); <span class="comment">%preallocatewithout calling constructor</span>
+0432    
+0433    maxAllowableSignal = (realmax(<span class="string">'single'</span>) * 1e-2);
+0434    
+0435    <span class="comment">% LOOP twice through segments represented by this trace object</span>
+0436    <span class="comment">% the first time, find out where signal is good or bad, and flesh out the</span>
+0437    <span class="comment">% header information.</span>
+0438    <span class="comment">% Then, apply the calibration and loop through a second time, assigning the</span>
+0439    <span class="comment">% data to the waveforms.</span>
+0440    
+0441    <span class="keyword">for</span> seg = 1:traceCount
+0442       <span class="comment">% units is now a cell</span>
+0443       tr.record = seg - 1;
+0444       s = db2struct(tr); <span class="comment">%do once, get one for each segment</span>
+0445       
+0446       tempw = set(allw(seg),<span class="string">'station'</span>,s.sta,<span class="string">'channel'</span>,s.chan,<span class="string">'start'</span>, <a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(s.time),<span class="string">'freq'</span>,s.samprate);
+0447       <span class="comment">% s(seg).loc doesn't exist... allw(seg) = addfield(allw(seg),'loc',s(seg).loc);</span>
+0448       tempw = addfield(tempw,<span class="string">'calibration_applied'</span>,<span class="string">'NO'</span>);
+0449       sunit = <a href="#_sub11" class="code" title="subfunction [units, type_of_data] = segtype2units(segtype)">segtype2units</a>(s.segtype); <span class="comment">%not bothering to get the unit detail</span>
+0450       tempw = set(tempw,<span class="string">'units'</span>,sunit);
+0451       allw(seg) = addfield(tempw,<span class="string">'calib'</span>,s.calib);
+0452       a = trextract_data(tr);
+0453       <span class="comment">%get rid of dataspikes</span>
+0454       badmask(seg).mask =(abs(a) &gt;= maxAllowableSignal) | isinf(a);
+0455    <span class="keyword">end</span>
+0456    
+0457    trapply_calib(tr);
+0458    
+0459    validCalibs = <a href="#_sub10" class="code" title="subfunction validCalibMask = hasValidCalib(w)">hasValidCalib</a>(allw);
+0460    allw(validCalibs) = set(allw(validCalibs),<span class="string">'calibration_applied'</span>,<span class="string">'YES'</span>);
+0461    <span class="keyword">for</span> seg = 1:traceCount
+0462       tr.record = seg - 1;
+0463       a = trextract_data(tr);
+0464       a(badmask(seg).mask) = nan;
+0465       allw(seg) = set(allw(seg),<span class="string">'data'</span>,a);
+0466    <span class="keyword">end</span>
+0467 <span class="keyword">end</span>
+0468 
+0469 <a name="_sub10" href="#_subfunctions" class="code">function validCalibMask = hasValidCalib(w)</a>
+0470    validCalibMask = get(w,<span class="string">'calib'</span>) ~= 0;
+0471 <span class="keyword">end</span>
+0472 
+0473 <a name="_sub11" href="#_subfunctions" class="code">function [units, type_of_data] = segtype2units(segtype)</a>
+0474    <span class="comment">%'segtype' in antelope datasets indicate the natural units of the detector</span>
+0475    segTypes = <span class="string">'ABDHIJKMPRSTVWabcdfhimnoprstuvw-'</span>;
+0476    segUnits = {<span class="string">'A'</span>,<span class="string">'nm / sec / sec'</span>,<span class="string">'acceleration'</span>;
+0477       <span class="string">'B'</span>, <span class="string">'25 mw / m / m'</span>,<span class="string">'UV (sunburn) index(NOAA)'</span>;
+0478       <span class="string">'D'</span>, <span class="string">'nm'</span>, <span class="string">'displacement'</span>;
+0479       <span class="string">'H'</span>,<span class="string">'Pa'</span>,<span class="string">'hydroacoustic'</span>;
+0480       <span class="string">'I'</span>,<span class="string">'Pa'</span>,<span class="string">'infrasound'</span>;
+0481       <span class="string">'J'</span>,<span class="string">'watts'</span>,<span class="string">'power (Joulses/sec) (UCSD)'</span>;
+0482       <span class="string">'K'</span>,<span class="string">'kPa'</span>,<span class="string">'generic pressure (UCSB)'</span>;
+0483       <span class="string">'M'</span>,<span class="string">'mm'</span>,<span class="string">'Wood-Anderson drum recorder'</span>;
+0484       <span class="string">'P'</span>,<span class="string">'mb'</span>,<span class="string">'barometric pressure'</span>;
+0485       <span class="string">'R'</span>,<span class="string">'mm'</span>,<span class="string">'rain fall (UCSD)'</span>;
+0486       <span class="string">'S'</span>,<span class="string">'nm / m'</span>,<span class="string">'strain'</span>;
+0487       <span class="string">'T'</span>,<span class="string">'sec'</span>,<span class="string">'time'</span>;
+0488       <span class="string">'V'</span>,<span class="string">'nm / sec'</span>,<span class="string">'velocity'</span>;
+0489       <span class="string">'W'</span>,<span class="string">'watts / m / m'</span>, <span class="string">'insolation'</span>;
+0490       <span class="string">'a'</span>,<span class="string">'deg'</span>, <span class="string">'azimuth'</span>
+0491       <span class="string">'b'</span>,<span class="string">'bits/ sec'</span>, <span class="string">'bit rate'</span>;
+0492       <span class="string">'c'</span>,<span class="string">'counts'</span>, <span class="string">'dimensionless integer'</span>;
+0493       <span class="string">'d'</span>,<span class="string">'m'</span>, <span class="string">'depth or height (e.g., water)'</span>;
+0494       <span class="string">'f'</span>,<span class="string">'micromoles / sec / m /m'</span>, <span class="string">'photoactive radiation flux'</span>;
+0495       <span class="string">'h'</span>,<span class="string">'pH'</span>,<span class="string">'hydrogen ion concentration'</span>;
+0496       <span class="string">'i'</span>,<span class="string">'amp'</span>,<span class="string">'electric curent'</span>
+0497       <span class="string">'m'</span>,<span class="string">'bitmap'</span>,<span class="string">'dimensionless bitmap'</span>;
+0498       <span class="string">'n'</span>,<span class="string">'nanoradians'</span>,<span class="string">'angle (tilt)'</span>;
+0499       <span class="string">'o'</span>,<span class="string">'mg/l'</span>,<span class="string">'diliution of oxygen (Mark VanScoy)'</span>;
+0500       <span class="string">'p'</span>,<span class="string">'percent'</span>,<span class="string">'percentage'</span>;
+0501       <span class="string">'r'</span>,<span class="string">'in'</span>,<span class="string">'rainfall (UCSD)'</span>;
+0502       <span class="string">'s'</span>,<span class="string">'m / sec'</span>, <span class="string">'speed (e.g., wind)'</span>;
+0503       <span class="string">'t'</span>,<span class="string">'C'</span>,<span class="string">'temperature'</span>;
+0504       <span class="string">'u'</span>,<span class="string">'microsiemens/cm'</span>,<span class="string">'conductivity'</span>;
+0505       <span class="string">'v'</span>,<span class="string">'volts'</span>,<span class="string">'electric potential'</span>;
+0506       <span class="string">'w'</span>,<span class="string">'rad / sec'</span>, <span class="string">'rotation rate'</span>;
+0507       <span class="string">'-'</span>,<span class="string">'null'</span>,<span class="string">'null'</span>};
+0508    <span class="keyword">if</span> isempty(segtype)
+0509       segtype=  <span class="string">'-'</span>;
+0510    <span class="keyword">end</span>
+0511    <span class="keyword">if</span> ~ismember(segtype,segTypes)
+0512       segtype=  <span class="string">'-'</span>;
+0513    <span class="keyword">end</span>
+0514    thisseg = find(segtype==segTypes);
+0515    units = segUnits{thisseg,2};
+0516    type_of_data = segUnits{thisseg,3};
+0517 <span class="keyword">end</span>
+0518 
+0519 <a name="_sub12" href="#_subfunctions" class="code">function ensureAntelopeInstalled()</a>
+0520    <span class="comment">% errors out if antelope is not installed on the system.</span>
+0521    
+0522    <span class="comment">%make sure antelope is in the path</span>
+0523    <span class="comment">%path_exists = ~isempty(findstr('/antlope',path));</span>
+0524    path_exists = true;
+0525    <span class="comment">% the old check involved looking for dbopen and trload_css</span>
+0526    
+0527    <span class="keyword">if</span> ~path_exists
+0528       error(<span class="string">'Waveform:load_antelope:noAntelopeToolbox'</span>,<span class="keyword">...</span>
+0529          <span class="string">'It doesn''t appear that the antelope toolbox is available'</span>);
+0530    <span class="keyword">end</span>
+0531 <span class="keyword">end</span>
+0532 
+0533 <a name="_sub13" href="#_subfunctions" class="code">function ensureEqualNumberOfStartAndEndTimes(datarequest)</a>
+0534    <span class="keyword">if</span> numel(datarequest.startTimes) ~= numel(datarequest.endTimes)
+0535       error(<span class="string">'Waveform:load_antelope:startEndMismatch'</span>,<span class="keyword">...</span>
+0536          <span class="string">'unequal number of start and end times'</span>);
+0537    <span class="keyword">end</span>
+0538 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

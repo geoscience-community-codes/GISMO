@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of map</title>
+  <meta name="keywords" content="map">
+  <meta name="description" content="MAP plot a map of ray coverage.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">contributed_antelope</a> &gt; <a href="#">traveltime_and_ray_coverage</a> &gt; <a href="index.html">+ttimes</a> &gt; map.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>map
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>MAP plot a map of ray coverage.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function map(dbName) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MAP plot a map of ray coverage.
+ MAP(dbName) creates map view plots of straight line ray coverage,
+ hypocenters and stations for database dbName. Requires the mapping
+ toolbox. There is one plot each for P and S wave coverage.
+
+ see also ttimes.<a href="dbload.html" class="code" title="function [origin,site,arrival,ray] = dbload(dbName)">dbload</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function map(dbName)</a>
+0002 
+0003 <span class="comment">%MAP plot a map of ray coverage.</span>
+0004 <span class="comment">% MAP(dbName) creates map view plots of straight line ray coverage,</span>
+0005 <span class="comment">% hypocenters and stations for database dbName. Requires the mapping</span>
+0006 <span class="comment">% toolbox. There is one plot each for P and S wave coverage.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% see also ttimes.dbload</span>
+0009 
+0010 
+0011 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0012 <span class="comment">% $Date$</span>
+0013 <span class="comment">% $Revision$</span>
+0014 
+0015 
+0016 <span class="comment">% LOAD DATABASE</span>
+0017 [origin,site,arrival,ray] = ttimes.dbload(dbName);
+0018 
+0019 
+0020 
+0021 <span class="comment">% PREP MAP PARAMETERS</span>
+0022 latmin = min([ray.originLat ;  ray.siteLat]);
+0023 latmax = max([ray.originLat ;  ray.siteLat]);
+0024 lonmin = min([ray.originLon ;  ray.siteLon]);
+0025 lonmax = max([ray.originLon ;  ray.siteLon]);
+0026 depthmin = min([ray.originDepth ;  ray.siteElev]);
+0027 depthmax = max([ray.originDepth ;  ray.siteElev]);
+0028 
+0029 
+0030 <span class="comment">% PLOT MAP VIEW</span>
+0031 figure(<span class="string">'Position'</span>,[0 0 1100 850],<span class="string">'Color'</span>,<span class="string">'w'</span>);
+0032 set(gcf,<span class="string">'DefaultAxesFontSize'</span>,14);
+0033 set(gcf,<span class="string">'DefaultAxesLineWidth'</span>,0.5);
+0034 <span class="comment">%</span>
+0035 subplot(1,2,1)
+0036 f = find(strcmp(arrival.iphase,<span class="string">'P'</span>));
+0037 h = worldmap([latmin latmax],[lonmin lonmax]);
+0038 load coast
+0039 plotm(lat, long)
+0040 geoshow(<span class="string">'landareas.shp'</span>, <span class="string">'FaceColor'</span>, [1 1 0.8])
+0041 geoshow(<span class="string">'worldlakes.shp'</span>, <span class="string">'FaceColor'</span>, [.9 .9 1])
+0042 geoshow(<span class="string">'worldrivers.shp'</span>, <span class="string">'Color'</span>, <span class="string">'blue'</span>)
+0043 plotm([ray.originLat(f) ray.siteLat(f)]',[ray.originLon(f) ray.siteLon(f)]',<span class="string">'-'</span>,<span class="string">'Color'</span>,[0.7 0.7 0.7],<span class="string">'LineWidth'</span>,0.5)
+0044 plotm(origin.lat,origin.lon,<span class="string">'ko'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerSize'</span>,4)
+0045 plotm(site.lat,site.lon,<span class="string">'kv'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'c'</span>,<span class="string">'MarkerSize'</span>,9)
+0046 title(<span class="string">'P wave ray coverage'</span>);
+0047 <span class="comment">%</span>
+0048 subplot(1,2,2)
+0049 f = find(strcmp(arrival.iphase,<span class="string">'S'</span>));
+0050 h = worldmap([latmin latmax],[lonmin lonmax]);
+0051 load coast
+0052 plotm(lat, long)
+0053 geoshow(<span class="string">'landareas.shp'</span>, <span class="string">'FaceColor'</span>, [1 1 0.8])
+0054 geoshow(<span class="string">'worldlakes.shp'</span>, <span class="string">'FaceColor'</span>, [.9 .9 1])
+0055 geoshow(<span class="string">'worldrivers.shp'</span>, <span class="string">'Color'</span>, <span class="string">'blue'</span>)
+0056 plotm([ray.originLat(f) ray.siteLat(f)]',[ray.originLon(f) ray.siteLon(f)]',<span class="string">'-'</span>,<span class="string">'Color'</span>,[0.7 0.7 0.7],<span class="string">'LineWidth'</span>,0.5)
+0057 plotm(origin.lat,origin.lon,<span class="string">'ko'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerSize'</span>,4)
+0058 plotm(site.lat,site.lon,<span class="string">'kv'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'c'</span>,<span class="string">'MarkerSize'</span>,9)
+0059 title(<span class="string">'S wave ray coverage'</span>);
+0060 <span class="comment">%</span>
+0061 set(gcf, <span class="string">'paperorientation'</span>, <span class="string">'landscape'</span>);
+0062 set(gcf, <span class="string">'paperposition'</span>, [.5 .5 10 7.5] );
+0063 print(gcf, <span class="string">'-dpsc2'</span>, <span class="string">'FIG_map.ps'</span>);
+0064</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

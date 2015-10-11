@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of add_sst</title>
+  <meta name="keywords" content="add_sst">
+  <meta name="description" content="ADD_SST: Combine 2 sets of SST (Event start/stop times)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../../index.html">GISMO</a> &gt; <a href="../../../index.html">classes</a> &gt; <a href="../../index.html">@helicorder</a> &gt; <a href="#">private</a> &gt; <a href="index.html">SST</a> &gt; add_sst.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../../index.html"><img alt="<" border="0" src="../../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@helicorder/private/SST&nbsp;<img alt=">" border="0" src="../../../../../../right.png"></a></td></tr></table>-->
+
+<h1>add_sst
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+<div class="box"><strong>ADD_SST: Combine 2 sets of SST (Event start/stop times)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+<div class="box"><strong>function sst_out = add_sst(sst_1,sst_2,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">ADD_SST: Combine 2 sets of SST (Event start/stop times)
+
+USAGE: sst_out = add_sst(sst_1,sst_2)      - Default, combine w/o merge
+       sst_out = add_sst(sst_1,sst_2,mode) - Only 'merge' is implemented
+
+INPUTS: sst_1 - SST set 1
+        sst_2 - SST set 2
+        mode  - Optional - Only 'merge' is implemented, merges SST that
+                overlap
+
+OUTPUTS: sst_out - Resulting SST output
+
+ See also <a href="add_sst.html" class="code" title="function sst_out = add_sst(sst_1,sst_2,varargin)">ADD_SST</a>, <a href="chk_t.html" class="code" title="function varargout = chk_t(type,varargin)">CHK_T</a>, <a href="compare_sst.html" class="code" title="function match = compare_sst(sst_1,sst_2)">COMPARE_SST</a>, <a href="delete_sst.html" class="code" title="function sub_sst = delete_sst(sst,t1,t2,edge_mode)">DELETE_SST</a>, <a href="extract_sst.html" class="code" title="function sub_sst = extract_sst(sst,t1,t2,edge_mode)">EXTRACT_SST</a>, <a href="is_sst.html" class="code" title="function bool = is_sst(sst)">IS_SST</a>,
+          <a href="istequal.html" class="code" title="function bool = istequal(t1,t2)">ISTEQUAL</a>, <a href="merge_sst.html" class="code" title="function sst = merge_sst(sst,varargin)">MERGE_SST</a>, <a href="search_sst.html" class="code" title="function [N P] = search_sst(t,sst)">SEARCH_SST</a>, <a href="sort_sst.html" class="code" title="function sst = sort_sst(sst)">SORT_SST</a>, NAN2SST, SSD2SST,
+          SST2NAN, SST2SSD, SST2VAL, SST2WFA, WFA2SST
+
+ Author: Dane Ketner, Alaska Volcano Observatory
+ $Date$
+ $Revision$</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../../matlabicon.gif)">
+<li><a href="merge_sst.html" class="code" title="function sst = merge_sst(sst,varargin)">merge_sst</a>	MERGE_SST: Take array to Start/Stop Time (Nx2) and merge together SST</li><li><a href="search_sst.html" class="code" title="function [N P] = search_sst(t,sst)">search_sst</a>	SEARCH_SST: Function accepts a reference datenum t and a nx2 array of</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function sst_out = add_sst(sst_1,sst_2,varargin)</a>
+0002 <span class="comment">%ADD_SST: Combine 2 sets of SST (Event start/stop times)</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%USAGE: sst_out = add_sst(sst_1,sst_2)      - Default, combine w/o merge</span>
+0005 <span class="comment">%       sst_out = add_sst(sst_1,sst_2,mode) - Only 'merge' is implemented</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%INPUTS: sst_1 - SST set 1</span>
+0008 <span class="comment">%        sst_2 - SST set 2</span>
+0009 <span class="comment">%        mode  - Optional - Only 'merge' is implemented, merges SST that</span>
+0010 <span class="comment">%                overlap</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%OUTPUTS: sst_out - Resulting SST output</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% See also ADD_SST, CHK_T, COMPARE_SST, DELETE_SST, EXTRACT_SST, IS_SST,</span>
+0015 <span class="comment">%          ISTEQUAL, MERGE_SST, SEARCH_SST, SORT_SST, NAN2SST, SSD2SST,</span>
+0016 <span class="comment">%          SST2NAN, SST2SSD, SST2VAL, SST2WFA, WFA2SST</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Author: Dane Ketner, Alaska Volcano Observatory</span>
+0019 <span class="comment">% $Date$</span>
+0020 <span class="comment">% $Revision$</span>
+0021 
+0022 <span class="comment">% TO-DO - Documentation</span>
+0023 
+0024 <span class="comment">%%</span>
+0025 method = 0; <span class="comment">% default method, don't merge new sst</span>
+0026 <span class="keyword">if</span> nargin &lt; 2
+0027    error(<span class="string">'ADD_SST: Too few input arguments'</span>)
+0028 <span class="keyword">elseif</span> nargin &gt; 3
+0029    error(<span class="string">'ADD_SST: Too many input arguments'</span>)
+0030 <span class="keyword">elseif</span> nargin == 3
+0031    <span class="keyword">switch</span> lower(varargin{1})
+0032       <span class="keyword">case</span> <span class="string">'merge'</span>
+0033          method = 1; <span class="comment">% merge new sst</span>
+0034    <span class="keyword">end</span>
+0035 <span class="keyword">end</span>
+0036 
+0037 <span class="comment">%%</span>
+0038 s1 = size(sst_1,1);
+0039 s2 = size(sst_2,1);
+0040 <span class="keyword">if</span> s1==0 &amp;&amp; s2==0
+0041    sst_out = []; <span class="keyword">return</span>
+0042 <span class="keyword">elseif</span> s1==0 &amp;&amp; s2&gt;0
+0043    sst_out = sst_2; <span class="keyword">return</span>
+0044 <span class="keyword">elseif</span> s2==0 &amp;&amp; s1&gt;0
+0045    sst_out = sst_1; <span class="keyword">return</span>
+0046 <span class="keyword">else</span> 
+0047    <span class="keyword">if</span> s1 &gt;= s2
+0048       <span class="comment">% Good to go</span>
+0049    <span class="keyword">elseif</span> s2 &gt; s1 <span class="comment">% Swap sst_1 and sst_2 variables</span>
+0050       sst_temp = sst_1; stemp = s1;
+0051       sst_1 = sst_2; s1 = s2;
+0052       sst_2 = sst_temp; s2 = stemp;  
+0053    <span class="keyword">end</span>
+0054    
+0055    <span class="keyword">for</span> n = 1:s2
+0056       x = sst_2(n,:);
+0057       [N P] = <a href="search_sst.html" class="code" title="function [N P] = search_sst(t,sst)">search_sst</a>(x(1),sst_1);
+0058       <span class="keyword">if</span> N == 1 &amp;&amp; P == 0
+0059          sst_1 = [x; sst_1];
+0060       <span class="keyword">elseif</span> N == 1 &amp;&amp; P == 1
+0061          sst_1 = [sst_1(1,:); x; sst_1(2:<span class="keyword">end</span>,:)];
+0062       <span class="keyword">elseif</span> N == s1 &amp;&amp; P == 1
+0063          sst_1 = [sst_1; x];
+0064       <span class="keyword">elseif</span> N == s1+1 &amp;&amp; P == 0
+0065          sst_1 = [sst_1; x];
+0066       <span class="keyword">elseif</span> P == 0
+0067          sst_1 = [sst_1(1:N-1,:); x; sst_1(N:<span class="keyword">end</span>,:)];
+0068       <span class="keyword">elseif</span> P == 1
+0069          sst_1 = [sst_1(1:N,:); x; sst_1(N+1:<span class="keyword">end</span>,:)];
+0070       <span class="keyword">end</span>
+0071       s1 = size(sst_1,1);
+0072    <span class="keyword">end</span>
+0073    <span class="keyword">if</span> method == 1
+0074    sst_1 = <a href="merge_sst.html" class="code" title="function sst = merge_sst(sst,varargin)">merge_sst</a>(sst_1);
+0075    <span class="keyword">end</span>
+0076 <span class="keyword">end</span>
+0077 
+0078 sst_out = sst_1;</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

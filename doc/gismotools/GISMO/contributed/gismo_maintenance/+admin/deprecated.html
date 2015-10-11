@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of deprecated</title>
+  <meta name="keywords" content="deprecated">
+  <meta name="description" content="DEPRECATED issue a deprication warning">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="../index.html">gismo_maintenance</a> &gt; <a href="index.html">+admin</a> &gt; deprecated.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/gismo_maintenance/+admin&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>deprecated
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>DEPRECATED issue a deprication warning</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function deprecated(currentMFile,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DEPRECATED issue a deprication warning
+ DEPRECATED(MFILENAME) warns the user that the current function has 
+ been deprecated and is slated for eventual removal from GISMO.
+
+ DEPRECATED(CURRENTFUNCTION,NEWMFILE) points the user toward a newer
+ function intended to replace the deprecated function.
+
+ ** HINT: In most cases the first argument can be short-handed using the
+ built-in function mfilename:
+   deprecated(mfilename);</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function deprecated(currentMFile,varargin)</a>
+0002 
+0003 <span class="comment">%DEPRECATED issue a deprication warning</span>
+0004 <span class="comment">% DEPRECATED(MFILENAME) warns the user that the current function has</span>
+0005 <span class="comment">% been deprecated and is slated for eventual removal from GISMO.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% DEPRECATED(CURRENTFUNCTION,NEWMFILE) points the user toward a newer</span>
+0008 <span class="comment">% function intended to replace the deprecated function.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% ** HINT: In most cases the first argument can be short-handed using the</span>
+0011 <span class="comment">% built-in function mfilename:</span>
+0012 <span class="comment">%   deprecated(mfilename);</span>
+0013 
+0014 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0015 <span class="comment">% $Date$</span>
+0016 <span class="comment">% $Revision$</span>
+0017 
+0018 
+0019 
+0020 <span class="comment">% CHECK ARGUMENTS</span>
+0021 <span class="keyword">if</span> ~exist(<span class="string">'currentMFile'</span>)
+0022     error(<span class="string">'admin:deprecated'</span>,<span class="string">'admin.deprecated requires at least one string argument.'</span>);
+0023 <span class="keyword">end</span> 
+0024 <span class="keyword">if</span> ~isempty(varargin)
+0025     newMFileExists = 1;
+0026     newMFile = varargin{1};
+0027 <span class="keyword">else</span>
+0028     newMFileExists = 0;
+0029     newMFile = <span class="string">'-'</span>;
+0030 <span class="keyword">end</span>
+0031 <span class="keyword">if</span> ~ischar(currentMFile) || ~ischar(newMFile)
+0032    error(<span class="string">'admin:deprecated'</span>,<span class="string">'function arguments must be character strings'</span>); 
+0033 <span class="keyword">end</span>
+0034 
+0035 
+0036 <span class="comment">% ISSUE DEPRICATION WARNING</span>
+0037 <span class="keyword">if</span> isempty(varargin)
+0038     warning([<span class="string">'The function '</span> currentMFile <span class="string">' has been deprecated and will be removed from GISMO'</span>]);
+0039 <span class="keyword">else</span>    
+0040     warning([<span class="string">'The function '</span> currentMFile <span class="string">' has been deprecated and will be removed from GISMO. Use '</span> newMFile <span class="string">' instead.'</span>]);
+0041 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

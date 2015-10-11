@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of disp</title>
+  <meta name="keywords" content="disp">
+  <meta name="description" content="DISP Display threecomp object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@threecomp</a> &gt; disp.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@threecomp&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>disp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>DISP Display threecomp object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function disp(TC) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DISP Display threecomp object
+   DISP(TC)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="diagnostic.html" class="code" title="function diagnostic(threecomp)">diagnostic</a>	DIAGNOSTIC check for accurate behavior of threecomp object.</li><li><a href="disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="particlemotion.html" class="code" title="function TC = particlemotion(TC, varargin)">particlemotion</a>	PARTICLEMOTION calculates particle motion vectors for threecomp object</li><li><a href="threecomp.html" class="code" title="">threecomp</a>	THREECOMP Object for three component waveform data</li><li><a href="verify.html" class="code" title="function [conflicts] = verify(TC)">verify</a>	VERIFY Check for property conflicts in the threecomp object.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function disp(TC)</a>
+0002 
+0003 <span class="comment">%DISP Display threecomp object</span>
+0004 <span class="comment">%   DISP(TC)</span>
+0005 
+0006 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0007 <span class="comment">% $Date$</span>
+0008 <span class="comment">% $Revision$</span>
+0009 
+0010 
+0011 
+0012 <span class="comment">% TEST FOR NON-EMPTY TRACE DATA</span>
+0013 
+0014 
+0015 <span class="keyword">if</span> numel(TC)&gt;1
+0016     [n,m] = size(TC); <span class="comment">% char returns a cell array</span>
+0017     <a href="disp.html" class="code" title="function disp(TC)">disp</a>([num2str(n) <span class="string">' x '</span> num2str(m) <span class="string">' threecomp object'</span>]);
+0018 <span class="keyword">end</span>
+0019 
+0020 <span class="keyword">if</span> numel(TC)==1
+0021     <span class="keyword">if</span> any(<a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(TC.traces))
+0022         <a href="disp.html" class="code" title="function disp(TC)">disp</a>(<span class="string">'**Empty waveforms. Use VERIFY function'</span>);
+0023     <span class="keyword">else</span>
+0024         net = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces(1),<span class="string">'NETWORK'</span>);
+0025         sta = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces(1),<span class="string">'STATION'</span>);
+0026         chan1 = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces(1),<span class="string">'CHANNEL'</span>);
+0027         chan2 = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces(2),<span class="string">'CHANNEL'</span>);
+0028         chan3 = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces(3),<span class="string">'CHANNEL'</span>);
+0029         chan = [chan1(1:end-1) <span class="string">'['</span> chan1(end) chan2(end) chan3(end) <span class="string">']'</span>];
+0030         loc = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces(1),<span class="string">'LOCATION'</span>);
+0031         <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    net_sta_chan_loc:    '</span> net <span class="string">'_'</span> sta <span class="string">'_'</span> chan <span class="string">'_'</span> loc]);
+0032         
+0033         <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    duration:            '</span> <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces(1),<span class="string">'DURATION_STR'</span>) ]);
+0034         
+0035         <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    sample rate:         '</span> num2str(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces(1),<span class="string">'FREQ'</span>)) <span class="string">' Hz'</span>]);
+0036 
+0037         <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    type:                '</span> char(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC,<span class="string">'TYPE'</span>)) ]);
+0038         
+0039         <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    trigger:             '</span> datestr(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC,<span class="string">'TRIGGER'</span>),<span class="string">'yyyy/mm/dd HH:MM:SS.FFF'</span>) ]);
+0040         
+0041         <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(TC.backAzimuth)
+0042             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    backAzimuth:         '</span> <span class="string">'property not set'</span> ]);
+0043         <span class="keyword">else</span>
+0044             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    backAzimuth:         '</span> num2str(TC.backAzimuth) ]);
+0045         <span class="keyword">end</span>
+0046         
+0047         
+0048         <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(TC.orientation)
+0049             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    orientation:         '</span> <span class="string">'property not set'</span> ]);
+0050         <span class="keyword">else</span>
+0051             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    orientation('</span> chan1(3) <span class="string">'):      '</span> num2str(TC.orientation(1)) <span class="string">'(h) '</span>  num2str(TC.orientation(2)) <span class="string">'(v)'</span> ]);
+0052             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    orientation('</span> chan2(3) <span class="string">'):      '</span> num2str(TC.orientation(3)) <span class="string">'(h) '</span>  num2str(TC.orientation(4)) <span class="string">'(v)'</span> ]);
+0053             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    orientation('</span> chan3(3) <span class="string">'):      '</span> num2str(TC.orientation(5)) <span class="string">'(h) '</span>  num2str(TC.orientation(6)) <span class="string">'(v)'</span> ]);
+0054 
+0055 
+0056         <span class="keyword">end</span>
+0057         
+0058         
+0059         
+0060         <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(TC.rectilinearity)
+0061             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    rectilinearity:      property not set'</span> ]);
+0062         <span class="keyword">else</span>
+0063             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    rectilinearity:      '</span> num2str(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.rectilinearity,<span class="string">'FREQ'</span>)) <span class="string">' Hz, '</span> num2str(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.rectilinearity,<span class="string">'THREECOMP_WINDOW'</span>)) <span class="string">' sec window'</span>]);
+0064         <span class="keyword">end</span>
+0065         
+0066         <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(TC.planarity)
+0067             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    planarity:           property not set'</span> ]);
+0068         <span class="keyword">else</span>
+0069             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    planarity:           '</span> num2str(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.rectilinearity,<span class="string">'FREQ'</span>)) <span class="string">' Hz, '</span> num2str(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.rectilinearity,<span class="string">'THREECOMP_WINDOW'</span>)) <span class="string">' sec window'</span>]);
+0070         <span class="keyword">end</span>
+0071         
+0072         <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(TC.energy)
+0073             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    energy:              property not set'</span> ]);
+0074         <span class="keyword">else</span>
+0075             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    energy:              '</span> num2str(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.rectilinearity,<span class="string">'FREQ'</span>)) <span class="string">' Hz, '</span> num2str(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.rectilinearity,<span class="string">'THREECOMP_WINDOW'</span>)) <span class="string">' sec window'</span>]);
+0076         <span class="keyword">end</span>
+0077         
+0078         <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(TC.azimuth)
+0079             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    azimuth:             property not set'</span> ]);
+0080         <span class="keyword">else</span>
+0081             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    azimuth:             '</span> num2str(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.rectilinearity,<span class="string">'FREQ'</span>)) <span class="string">' Hz, '</span> num2str(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.rectilinearity,<span class="string">'THREECOMP_WINDOW'</span>)) <span class="string">' sec window'</span>]);
+0082         <span class="keyword">end</span>
+0083         
+0084         <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(TC.inclination)
+0085             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    inclination:         property not set'</span> ]);
+0086         <span class="keyword">else</span>
+0087             <a href="disp.html" class="code" title="function disp(TC)">disp</a>([<span class="string">'    inclination:         '</span> num2str(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.rectilinearity,<span class="string">'FREQ'</span>)) <span class="string">' Hz, '</span> num2str(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.rectilinearity,<span class="string">'THREECOMP_WINDOW'</span>)) <span class="string">' sec window'</span>]);
+0088         <span class="keyword">end</span>
+0089     <span class="keyword">end</span>
+0090 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

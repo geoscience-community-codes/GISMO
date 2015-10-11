@@ -1,0 +1,308 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of set</title>
+  <meta name="keywords" content="set">
+  <meta name="description" content="SET Set properties for waveform object(s)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; set.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>set
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>SET Set properties for waveform object(s)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = set(w, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SET Set properties for waveform object(s)
+   w = Set(w,prop_name, val, [prop_name, val])
+   SET is one of the two gateway functions of an object, such as waveform.
+   Properties that are changed through SET are typechecked and otherwise
+   scrutinized before being stored within the waveform object.  This
+   ensures that the other waveform methods are all retrieving valid data,
+   thereby increasing the reliability of the code.
+
+   Another strong advantage to using SET and GET to change  and retrieve
+   properties, rather than just assigning them to the waveform directly,
+   is that the underlying data structure can change and grow without
+   harming the code that is written based on the waveform object.
+
+   Valid property names:
+
+       STATION, CHANNEL, FREQ, DATA, UNITS: self explanatory
+       START :         Set the start-time using matlab format or string
+       START_EPOCH:    Set the start-time using epoch (antelope) time
+       SAMPLE_LENGTH : adjusts the length of the data to length VAL.
+                       If this number is shorter than existing data, SET
+                       truncates after sample VAL.  If it is longer, then
+                       SET will pad the end with zeroes to get length VAL.
+
+       If user-defined fields were added to the waveform (ie, through
+       addField), these fieldnames are also available through set.
+
+       for example
+           % create a waveform object, and add a field called DUMMY with
+           % the value 12
+           w = addfield(waveform,'DUMMY',12);
+
+           % change the value of the DUMMY field
+           w = set(w,'DUMMY',32);
+
+           % change the station and channel at once
+           w = set(w,'Station','YCK', 'Channel', 'BHZ');
+
+   Batch changes can be made if input w is a matrix (use with care!)
+
+   NOTE: There is no set support for &quot;version&quot;.  This is handled entirely
+         within the waveform constructor and the loadobj function.
+
+ NOTE: To avoid logging the history, append the argument 'nohist'
+
+  See also WAVEFORM/GET</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>	ADDHISTORY function in charge of adding history to a waveform</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>	ADDFIELD add fields and values to waveform object(s)                V1.1</li><li><a href="align.html" class="code" title="function w = align(w,alignTime, newFrequency, method)">align</a>	ALIGN resamples a waveform at over a specified interval</li><li><a href="combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and channeltag info.</li><li><a href="diff.html" class="code" title="function w = diff (w)">diff</a>	DIFF Differentiate waveform</li><li><a href="extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>	FILLGAPS - fill missing data with values of your choice</li><li><a href="fix_data_length.html" class="code" title="function w = fix_data_length(w, maxlen)">fix_data_length</a>	FIX_DATA_LENGTH adjust length of waveform data to allow batch processing</li><li><a href="integrate.html" class="code" title="function w = integrate (w,method)">integrate</a>	INTEGRATE integrates a waveform signal</li><li><a href="linkedplot.html" class="code" title="function linkedplot(w, alignWaveforms)">linkedplot</a>	LINKEDPLOT Plot multiple waveform objects as separate linked panels</li><li><a href="loadobj.html" class="code" title="function b = loadobj(a)">loadobj</a>	LOADOBJ updates older versions of waveform class upon loading</li><li><a href="mrdivide.html" class="code" title="function C = mrdivide(W,B)">mrdivide</a>	MRDIVIDE (/) Slash or right matrix divide for WAVEFORMS.</li><li><a href="mtimes.html" class="code" title="function A = mtimes(A, B)">mtimes</a>	MTIMES (*) Overloaded Matrix multiply for waveforms (UNIMPLEMENTED!).</li><li><a href="pad.html" class="code" title="function [ w ] = pad( w, snum, enum, padvalue )">pad</a>	PAD Pad a waveform from snum to enum</li><li><a href="plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="remove_calib.html" class="code" title="function w = remove_calib(w)">remove_calib</a>	WAVEFORM = REMOVE_CALIB(WAVEFORM) removes calibration factor</li><li><a href="resample.html" class="code" title="function w = resample(w,method, val)">resample</a>	RESAMPLE resamples a waveform at over every specified interval</li><li><a href="rsam.html" class="code" title="function s = rsam(w, method, samplingPeriod)">rsam</a>	RSAM create an RSAM-like object from a waveform object</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="smooth.html" class="code" title="function W = smooth(W, varargin)">smooth</a>	SMOOTH overloaded smooth function for waveform</li><li><a href="stack.html" class="code" title="function out = stack(w)">stack</a>	STACK stacks data from array of waveforms</li><li><a href="subtime.html" class="code" title="function w = subtime(inW, startt, endt)">subtime</a>	SUBTIME grabs time-indexed snippets of waveform data.</li><li><a href="zero2nan.html" class="code" title="function w = zero2nan(w,mgl)">zero2nan</a>	ZERO2NAN: This function takes a waveform with gaps that have been filled</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = set(w, varargin)</a>
+0002    <span class="comment">%SET Set properties for waveform object(s)</span>
+0003    <span class="comment">%   w = Set(w,prop_name, val, [prop_name, val])</span>
+0004    <span class="comment">%   SET is one of the two gateway functions of an object, such as waveform.</span>
+0005    <span class="comment">%   Properties that are changed through SET are typechecked and otherwise</span>
+0006    <span class="comment">%   scrutinized before being stored within the waveform object.  This</span>
+0007    <span class="comment">%   ensures that the other waveform methods are all retrieving valid data,</span>
+0008    <span class="comment">%   thereby increasing the reliability of the code.</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">%   Another strong advantage to using SET and GET to change  and retrieve</span>
+0011    <span class="comment">%   properties, rather than just assigning them to the waveform directly,</span>
+0012    <span class="comment">%   is that the underlying data structure can change and grow without</span>
+0013    <span class="comment">%   harming the code that is written based on the waveform object.</span>
+0014    <span class="comment">%</span>
+0015    <span class="comment">%   Valid property names:</span>
+0016    <span class="comment">%</span>
+0017    <span class="comment">%       STATION, CHANNEL, FREQ, DATA, UNITS: self explanatory</span>
+0018    <span class="comment">%       START :         Set the start-time using matlab format or string</span>
+0019    <span class="comment">%       START_EPOCH:    Set the start-time using epoch (antelope) time</span>
+0020    <span class="comment">%       SAMPLE_LENGTH : adjusts the length of the data to length VAL.</span>
+0021    <span class="comment">%                       If this number is shorter than existing data, SET</span>
+0022    <span class="comment">%                       truncates after sample VAL.  If it is longer, then</span>
+0023    <span class="comment">%                       SET will pad the end with zeroes to get length VAL.</span>
+0024    <span class="comment">%</span>
+0025    <span class="comment">%       If user-defined fields were added to the waveform (ie, through</span>
+0026    <span class="comment">%       addField), these fieldnames are also available through set.</span>
+0027    <span class="comment">%</span>
+0028    <span class="comment">%       for example</span>
+0029    <span class="comment">%           % create a waveform object, and add a field called DUMMY with</span>
+0030    <span class="comment">%           % the value 12</span>
+0031    <span class="comment">%           w = addfield(waveform,'DUMMY',12);</span>
+0032    <span class="comment">%</span>
+0033    <span class="comment">%           % change the value of the DUMMY field</span>
+0034    <span class="comment">%           w = set(w,'DUMMY',32);</span>
+0035    <span class="comment">%</span>
+0036    <span class="comment">%           % change the station and channel at once</span>
+0037    <span class="comment">%           w = set(w,'Station','YCK', 'Channel', 'BHZ');</span>
+0038    <span class="comment">%</span>
+0039    <span class="comment">%   Batch changes can be made if input w is a matrix (use with care!)</span>
+0040    <span class="comment">%</span>
+0041    <span class="comment">%   NOTE: There is no set support for &quot;version&quot;.  This is handled entirely</span>
+0042    <span class="comment">%         within the waveform constructor and the loadobj function.</span>
+0043    <span class="comment">%</span>
+0044    <span class="comment">% NOTE: To avoid logging the history, append the argument 'nohist'</span>
+0045    <span class="comment">%</span>
+0046    <span class="comment">%  See also WAVEFORM/GET</span>
+0047    
+0048    <span class="comment">% VERSION: 1.1 of waveform objects</span>
+0049    <span class="comment">% AUTHOR: Celso Reyes (celso@gi.alaska.edu)</span>
+0050    <span class="comment">% LASTUPDATE: March 15, 2009</span>
+0051    
+0052    <span class="comment">%4/22/08 added synonym for sample_length of data_length</span>
+0053    
+0054    <span class="comment">%global dep2mep</span>
+0055    
+0056    <span class="comment">% check to see if history is bypassed</span>
+0057    
+0058    idx = numel(varargin);
+0059    <span class="keyword">while</span> idx &gt; 1
+0060       prop_name = upper(varargin{idx-1});
+0061       val = varargin{idx};
+0062       idx = idx - 2;
+0063       <span class="comment">%{</span>
+0064 Vidx = 1 : numel(varargin);
+0065 
+0066 <span class="keyword">while</span> numel(Vidx) &gt;= 2
+0067   prop_name = upper(varargin{Vidx(1)});
+0068   val = varargin{Vidx(2)};
+0069       <span class="comment">%}</span>
+0070       
+0071       <span class="comment">%for n = 1 : numel(w);</span>
+0072       <span class="comment">%out = w(n);</span>
+0073       
+0074       <span class="keyword">switch</span> prop_name
+0075          <span class="keyword">case</span> <span class="string">'SCNLOBJECT'</span>
+0076             <span class="keyword">switch</span> class(val)
+0077                <span class="keyword">case</span> <span class="string">'scnlobject'</span>
+0078                   [w.cha_tag] = deal(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(val,<span class="string">'channeltag'</span>));
+0079                <span class="keyword">case</span> <span class="string">'channeltag'</span>
+0080                   [w.cha_tag] = deal(val);
+0081                <span class="keyword">case</span> <span class="string">'char'</span>
+0082                   [w.cha_tag] = deal(channeltag.parse(val));
+0083                <span class="keyword">otherwise</span>
+0084                   <span class="comment">% try it!</span>
+0085                   [w.cha_tag] = deal(channeltag(val));
+0086                   <span class="comment">% error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT or CHANNELTAG');</span>
+0087             <span class="keyword">end</span>
+0088             <span class="comment">% whine while we refractor</span>
+0089             warning(<span class="string">'Use set(channeltag) instead'</span>) <span class="comment">% TODO: Decide if better generic name exists</span>
+0090             
+0091          <span class="keyword">case</span> {<span class="string">'CHANNELINFO'</span>, <span class="string">'CHANNELTAG'</span>}
+0092             <span class="keyword">switch</span> class(val)
+0093                <span class="keyword">case</span> <span class="string">'scnlobject'</span>
+0094                   [w.cha_tag] = deal(channeltag(char(val)));
+0095                <span class="keyword">case</span> <span class="string">'channeltag'</span>
+0096                   [w.cha_tag] = deal(val);
+0097                <span class="keyword">case</span> <span class="string">'char'</span>
+0098                   [w.cha_tag] = deal(channeltag(val));
+0099                <span class="keyword">otherwise</span>
+0100                   <span class="comment">% try it!</span>
+0101                   [w.cha_tag] = deal(channeltag(val));
+0102                   <span class="comment">% error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT or CHANNELTAG');</span>
+0103             <span class="keyword">end</span>
+0104          <span class="keyword">case</span> {<span class="string">'STATION'</span>,<span class="string">'NETWORK'</span>, <span class="string">'CHANNEL'</span>,<span class="string">'LOCATION'</span>}
+0105             <span class="keyword">if</span> ~ischar(val)
+0106                error(<span class="string">'Waveform:set:propertyTypeMismatch'</span>,<span class="keyword">...</span>
+0107                   <span class="string">'%s should be a string not a %s'</span>, prop_name,class(val));
+0108             <span class="keyword">end</span>
+0109             all_chantags = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>([w.cha_tag],prop_name,val);
+0110             <span class="keyword">for</span> n=1:numel(w)
+0111                w(n).cha_tag = all_chantags(n);
+0112             <span class="keyword">end</span>
+0113             
+0114          <span class="keyword">case</span> {<span class="string">'FS'</span>, <span class="string">'FREQ'</span>}
+0115             <span class="keyword">if</span> ~isnumeric(val)
+0116                error(<span class="string">'Waveform:set:propertyTypeMismatch'</span>,<span class="keyword">...</span>
+0117                   <span class="string">'Frequency should be numeric, not %s'</span>, class(val));
+0118             <span class="keyword">end</span>
+0119             <span class="keyword">if</span> numel(w)==1
+0120                w.Fs = val(1);
+0121             <span class="keyword">else</span>
+0122                [w.Fs] = deal(val(1));
+0123             <span class="keyword">end</span>
+0124             
+0125          <span class="keyword">case</span> {<span class="string">'START'</span>, <span class="string">'START_MATLAB'</span>}
+0126             <span class="comment">%AUTOMATICALLY figures out whether date is antelope or matlab</span>
+0127             <span class="comment">%format;</span>
+0128             <span class="keyword">if</span> numel(val) == 1
+0129                <span class="comment">%expecting a number</span>
+0130                <span class="keyword">if</span> numel(w) == 1
+0131                   w.start = val;
+0132                <span class="keyword">else</span>
+0133                   [w.start] = deal(val);
+0134                <span class="keyword">end</span>
+0135             <span class="keyword">else</span>
+0136                <span class="comment">%might be char, might be vector. give it a shot.</span>
+0137                <span class="keyword">if</span> numel(w) == 1
+0138                   w.start = datenum(val);
+0139                <span class="keyword">else</span>
+0140                   [w.start] = deal(datenum(val));
+0141                <span class="keyword">end</span>
+0142                <span class="comment">% else</span>
+0143                <span class="comment">%   error('Waveform:set:propertyTypeMismatch',...</span>
+0144                <span class="comment">%    'Start time not assigned... Unknown value type: %s', class(val));</span>
+0145             <span class="keyword">end</span>
+0146             
+0147             <span class="comment">%{</span>
+0148       <span class="keyword">if</span> ~(isnumeric(val) || isa(val,<span class="string">'char'</span>))
+0149         error(<span class="string">'Waveform:set:propertyTypeMismatch'</span>,<span class="keyword">...</span>
+0150           <span class="string">'Start time not assigned... Unknown value type: %s'</span>, class(val));
+0151       <span class="keyword">end</span>
+0152       <span class="keyword">if</span> numel(w) == 1
+0153           w.start = datenum(val);
+0154       <span class="keyword">else</span>
+0155           [w.start] = deal(datenum(val));
+0156       <span class="keyword">end</span>
+0157             <span class="comment">%}</span>
+0158          <span class="keyword">case</span> {<span class="string">'START_ANTELOPE'</span>, <span class="string">'START_EPOCH'</span>}
+0159             <span class="keyword">if</span> ~isnumeric(val),
+0160                error(<span class="string">'Waveform:set:propertyTypeMismatch'</span>,<span class="keyword">...</span>
+0161                   <span class="string">'Epoch time should be numeric, not %s'</span>, class(val));
+0162             <span class="keyword">end</span>
+0163             [w.start] = deal(datenum(dep2mep(val)));
+0164             
+0165          <span class="keyword">case</span> <span class="string">'DATA'</span>
+0166             <span class="keyword">if</span> ~isnumeric(val)
+0167                error(<span class="string">'Waveform:set:propertyTypeMismatch'</span>,<span class="keyword">...</span>
+0168                   <span class="string">'DATA should be numeric, not %s'</span>, class(val));
+0169             <span class="keyword">end</span>
+0170             <span class="keyword">if</span> numel(w) == 1
+0171                w.data = val(:);
+0172             <span class="keyword">else</span>
+0173                [w.data] = deal(val(:)); <span class="comment">%always a column</span>
+0174             <span class="keyword">end</span>
+0175             
+0176          <span class="keyword">case</span> <span class="string">'UNITS'</span>
+0177             <span class="keyword">if</span> ~ischar(val)
+0178                error(<span class="string">'Waveform:set:propertyTypeMismatch'</span>,<span class="keyword">...</span>
+0179                   <span class="string">'UNITS should be a string, not %s'</span>,class(val));
+0180             <span class="keyword">end</span>
+0181             [w.units] = deal(val);
+0182             
+0183             
+0184          <span class="keyword">case</span> {<span class="string">'SAMPLE_LENGTH'</span>,<span class="string">'DATA_LENGTH'</span>} <span class="comment">% chop data or zero pad to specific length</span>
+0185             <span class="keyword">if</span> ~isnumeric(val),
+0186                error(<span class="string">'Waveform:set:propertyTypeMismatch'</span>,<span class="keyword">...</span>
+0187                   <span class="string">'SAMPLE_LENGTH should be numeric, not %s'</span>,class(val));
+0188             <span class="keyword">end</span>
+0189             <span class="keyword">for</span> n=1:numel(w);
+0190                <span class="keyword">if</span> numel(w(n).data) &gt;= val
+0191                   w(n).data = w(n).data(1:val,1);  <span class="comment">% shrink the data</span>
+0192                <span class="keyword">else</span>
+0193                   w(n).data(numel(w(n).data)+1 :val , 1) = 0; <span class="comment">%zero pad</span>
+0194                <span class="keyword">end</span>
+0195             <span class="keyword">end</span>
+0196             
+0197          <span class="keyword">case</span> <span class="string">'HISTORY'</span>
+0198             w = <a href="addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>(w, val);
+0199             
+0200          <span class="keyword">otherwise</span>
+0201             <span class="keyword">for</span> n=1:numel(w)
+0202                <span class="keyword">switch</span> prop_name
+0203                   <span class="keyword">case</span> w(n).misc_fields
+0204                      <span class="comment">%mask = ismember(w(n).misc_fields, prop_name);</span>
+0205                      mask = strcmp(prop_name,w(n).misc_fields);
+0206                      w(n).misc_values(mask) = {val};
+0207                   <span class="keyword">otherwise</span>
+0208                      error(<span class="string">'Waveform:set:unknownProperty'</span>,<span class="keyword">...</span>
+0209                         <span class="string">'can''t understand property name : %s'</span>, prop_name);
+0210                <span class="keyword">end</span> <span class="comment">%switch</span>
+0211             <span class="keyword">end</span> <span class="comment">%n</span>
+0212       <span class="keyword">end</span> <span class="comment">%switch</span>
+0213       
+0214       <span class="comment">% Vidx(1:2) = []; %done with those parameters, move to the next ones...</span>
+0215       
+0216    <span class="keyword">end</span>
+0217 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

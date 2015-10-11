@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Origin</title>
+  <meta name="keywords" content="Origin">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">catalog</a> &gt; Origin.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>Origin
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Origin.html" class="code" title="">Origin</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Origin.html" class="code" title="">Origin</a>	</li><li><a href="readCatalog.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog</a>	READCATALOG: Read seismic events from common file formats & data sources.</li><li><a href="readCatalog2.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog2</a>	READCATALOG: Read seismic events from common file formats & data sources.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = Origin(time, lon, lat, depth, varargin)</a></li><li><a href="#_sub2" class="code">function self = set(self, varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="Origin.html" class="code" title="">Origin</a>
+0002 <span class="comment">%ORIGIN: A class that serves as a container for ORIGIN and other objects.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% This class represents the focal time and geographical location of an</span>
+0005 <span class="comment">% earthquake hypocenter, as well as additional meta-information. Origin can</span>
+0006 <span class="comment">% have objects of type Origerr and Arrival as child elements.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%% USAGE</span>
+0009 <span class="comment">%   o = Origin(time, longitude, latitude, depth)</span>
+0010 <span class="comment">%      creates an Origin object with the time and co-ordinates specified.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%% EXAMPLE</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%   % create an Origin object</span>
+0015 <span class="comment">%   lat = 62.5; lon = -120.0; depth = 15.2; time = now;</span>
+0016 <span class="comment">%   o = Origin(time, lon, lat, depth);</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%% See also CATALOG, EVENT, EVENTRATE, READEVENTS, CATALOG_COOKBOOK</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% Author: Glenn Thompson (glennthompson1971@gmail.com)</span>
+0022 <span class="comment">% $Date: $</span>
+0023 <span class="comment">% $Revision: $</span>
+0024     properties
+0025         lat;
+0026         lon;
+0027         depth;
+0028         time;
+0029         orid;
+0030         evid;
+0031         jdate;
+0032         nass;
+0033         ndef;
+0034         ndp;
+0035         grn;
+0036         srn;
+0037         etype;
+0038         review;
+0039         depdp;
+0040         dtype;
+0041         mb;
+0042         mbid;
+0043         ms;
+0044         msid;
+0045         ml;
+0046         mlid;
+0047         algorithm;
+0048         auth;
+0049         netmags;
+0050         origerrs;
+0051         arrivals;
+0052     <span class="keyword">end</span>
+0053     methods
+0054         <a name="_sub0" href="#_subfunctions" class="code">function obj = Origin(time, lon, lat, depth, varargin)</a>
+0055             <span class="comment">% Parse required, optional and param-value pair arguments,</span>
+0056             <span class="comment">% set default values, and add validation conditions</span>
+0057             <span class="keyword">persistent</span> orid;
+0058             <span class="keyword">if</span> isempty(orid)
+0059                 orid = 1;
+0060             <span class="keyword">else</span>
+0061                 orid = orid + 1;
+0062             <span class="keyword">end</span>  
+0063             p = inputParser;
+0064             p.addRequired(<span class="string">'time'</span>, @(t) t&gt;0 &amp; t&lt;now+1);
+0065             p.addRequired(<span class="string">'lon'</span>, @(x) (x&gt;=-180.0 &amp; x&lt;=180.0) | isnan(x));
+0066             p.addRequired(<span class="string">'lat'</span>, @(x) (x&gt;=-90.0 &amp; x&lt;=90.0) | isnan(x));
+0067             p.addRequired(<span class="string">'depth'</span>, @(x) (x&gt;=-10.0 &amp; x&lt;=7000.0) | isnan(x)); <span class="comment">% km?</span>
+0068             p.addParamValue(<span class="string">'orid'</span>, orid, @(i) floor(i)==i);
+0069             p.addParamValue(<span class="string">'evid'</span>, NaN, @(i) floor(i)==i);
+0070             p.addParamValue(<span class="string">'jdate'</span>, <span class="string">'0000000'</span>, @isstr);
+0071             p.addParamValue(<span class="string">'nass'</span>, NaN, @(i) floor(i)==i);  
+0072             p.addParamValue(<span class="string">'ndef'</span>, NaN, @(i) floor(i)==i); 
+0073             p.addParamValue(<span class="string">'ndp'</span>, NaN, @(i) floor(i)==i); 
+0074             p.addParamValue(<span class="string">'grn'</span>, NaN, @(i) floor(i)==i); 
+0075             p.addParamValue(<span class="string">'srn'</span>, NaN, @(i) floor(i)==i); 
+0076             p.addParamValue(<span class="string">'etype'</span>, <span class="string">'_'</span>, @isstr);
+0077             p.addParamValue(<span class="string">'review'</span>, <span class="string">''</span>, @isstr); 
+0078             p.addParamValue(<span class="string">'depdb'</span>, NaN, @(i) floor(i)==i); 
+0079             p.addParamValue(<span class="string">'dtype'</span>, <span class="string">''</span>, @isstr);
+0080             p.addParamValue(<span class="string">'mb'</span>, NaN, @isnumeric);
+0081             p.addParamValue(<span class="string">'mbid'</span>, NaN, @(i) floor(i)==i);
+0082             p.addParamValue(<span class="string">'ms'</span>, NaN, @isnumeric);
+0083             p.addParamValue(<span class="string">'msid'</span>, NaN, @(i) floor(i)==i);
+0084             p.addParamValue(<span class="string">'ml'</span>, NaN, @isnumeric);
+0085             p.addParamValue(<span class="string">'mlid'</span>, NaN, @(i) floor(i)==i);            
+0086             p.addParamValue(<span class="string">'algorithm'</span>, <span class="string">''</span>, @isstr);
+0087             p.addParamValue(<span class="string">'auth'</span>, <span class="string">''</span>, @isstr);
+0088             p.addParamValue(<span class="string">'netmags'</span>, []);
+0089             p.addParamValue(<span class="string">'origerrs'</span>, []);
+0090             p.addParamValue(<span class="string">'arrivals'</span>, []);           
+0091             p.parse(time, lon, lat, depth, varargin{:});
+0092             fields = fieldnames(p.Results);
+0093             <span class="keyword">for</span> i=1:length(fields)
+0094                 field=fields{i};
+0095                 val = p.Results.(field);
+0096                 obj = obj.set(field, val);
+0097             <span class="keyword">end</span>
+0098         <span class="keyword">end</span>
+0099         
+0100         <span class="comment">%% SET</span>
+0101         <a name="_sub1" href="#_subfunctions" class="code">function self = set(self, varargin)</a>
+0102             <span class="comment">%SET Set properties</span>
+0103             <span class="comment">%   self = set(self,'property_name', val, ['property_name2', val2])</span>
+0104             <span class="comment">%   For a list of valid property names, type:</span>
+0105             <span class="comment">%       properties(self)</span>
+0106 
+0107             Vidx = 1 : numel(varargin);
+0108 
+0109             <span class="keyword">while</span> numel(Vidx) &gt;= 2
+0110                 prop_name = upper(varargin{Vidx(1)});
+0111                 val = varargin{Vidx(2)};
+0112                 mask = strcmp(upper(prop_name),upper(properties(self)));
+0113                 <span class="keyword">if</span> any(mask)
+0114                     mc = metaclass(self);
+0115                     i = find(mask);
+0116                     prop_name = mc.PropertyList(i).Name;
+0117                     <span class="keyword">if</span> isempty(mc.PropertyList(i).GetMethod)
+0118                         <span class="comment">% The properties here need to have</span>
+0119                         <span class="comment">% SetAccess==public</span>
+0120                         self.(prop_name) = val;
+0121                     <span class="keyword">else</span>
+0122                         warning(<span class="string">'Property %s is a derived property and cannot be set'</span>,prop_name);
+0123                     <span class="keyword">end</span>
+0124                 <span class="keyword">end</span>
+0125                 Vidx(1:2) = []; <span class="comment">%done with those parameters, move to the next ones...</span>
+0126             <span class="keyword">end</span> 
+0127         <span class="keyword">end</span> 
+0128     <span class="keyword">end</span>
+0129 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

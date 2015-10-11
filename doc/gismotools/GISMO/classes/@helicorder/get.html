@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of get</title>
+  <meta name="keywords" content="get">
+  <meta name="description" content="GET: Get helicorder properties">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@helicorder</a> &gt; get.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@helicorder&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>get
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>GET: Get helicorder properties</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function val = get(h,prop_name) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GET: Get helicorder properties
+   val = get(helicorder,prop_name)
+
+   Valid property names:
+       WAVE, E_SST, MPL, TRACE_COLOR, EVENT_COLOR, DISPLAY
+   
+   Example: Create a waveform, add a field, then get the field
+
+   See also <a href="helicorder.html" class="code" title="function h = helicorder(varargin)">HELICORDER</a>, HELICORDER/SET
+
+ Author: Dane Ketner, Alaska Volcano Observatory
+ $Date$
+ $Revision$</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="build.html" class="code" title="function varargout = build(h)">build</a>	BUILD: Helicorder builder function. A helicorder object (h) contains no</li><li><a href="disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function val = get(h,prop_name)</a>
+0002 <span class="comment">%GET: Get helicorder properties</span>
+0003 <span class="comment">%   val = get(helicorder,prop_name)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   Valid property names:</span>
+0006 <span class="comment">%       WAVE, E_SST, MPL, TRACE_COLOR, EVENT_COLOR, DISPLAY</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   Example: Create a waveform, add a field, then get the field</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   See also HELICORDER, HELICORDER/SET</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Author: Dane Ketner, Alaska Volcano Observatory</span>
+0013 <span class="comment">% $Date$</span>
+0014 <span class="comment">% $Revision$</span>
+0015 
+0016 <span class="keyword">if</span> ~isa(h,<span class="string">'helicorder'</span>)
+0017    error(<span class="string">'HELICORDER/GET: Not a valid helicorder object'</span>)
+0018 <span class="keyword">end</span>
+0019 
+0020 <span class="keyword">switch</span> lower(prop_name)
+0021     <span class="keyword">case</span> <span class="string">'wave'</span>
+0022         val = h.wave;
+0023     <span class="keyword">case</span> <span class="string">'e_sst'</span>
+0024         val = h.e_sst;
+0025     <span class="keyword">case</span> <span class="string">'mpl'</span>
+0026         val = h.mpl;
+0027     <span class="keyword">case</span> <span class="string">'trace_color'</span>
+0028         val = h.trace_color;
+0029     <span class="keyword">case</span> <span class="string">'event_color'</span>
+0030         val = h.event_color;
+0031     <span class="keyword">case</span> <span class="string">'display'</span>
+0032         val = h.display;
+0033     <span class="keyword">case</span> <span class="string">'scale'</span>
+0034         val = h.scale;
+0035     <span class="keyword">otherwise</span>
+0036         error(<span class="string">'HELICORDER/GET: Not a valid helicorder property'</span>)
+0037 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

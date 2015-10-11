@@ -1,0 +1,414 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of build</title>
+  <meta name="keywords" content="build">
+  <meta name="description" content="BUILD: Helicorder builder function. A helicorder object (h) contains no">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@helicorder</a> &gt; build.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@helicorder&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>build
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>BUILD: Helicorder builder function. A helicorder object (h) contains no</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = build(h) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">BUILD: Helicorder builder function. A helicorder object (h) contains no
+  graphical elements, but is instead a blueprint for how the helicorder
+  figure should be assembled. Information in h includes waveform data,
+  number of minutes per line, color scheme, multi-waveform display type,
+  and events to highlight over the helicorder. Calling build(h) will
+  assemble the helicorder figure based the information in h. Build returns
+  the figure handle if an output argument is provided, otherwise, there is
+  no output.
+
+USAGE: build(h) --&gt; Create helicorder figure from helicorder object
+       fh = build(h) --&gt; Also return helicorder figure handle
+
+INPUTS: h - helicorder object
+                           
+OUTPUTS: fh - figure handle of helicorder
+
+ See also <a href="helicorder.html" class="code" title="function h = helicorder(varargin)">HELICORDER</a>
+
+ Author: Dane Ketner, Alaska Volcano Observatory
+ $Date$
+ $Revision$</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function add_title(h,B)</a></li><li><a href="#_sub2" class="code">function add_y_ticks(h,B)</a></li><li><a href="#_sub3" class="code">function h = pad_w(h)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = build(h)</a>
+0002 
+0003 <span class="comment">%BUILD: Helicorder builder function. A helicorder object (h) contains no</span>
+0004 <span class="comment">%  graphical elements, but is instead a blueprint for how the helicorder</span>
+0005 <span class="comment">%  figure should be assembled. Information in h includes waveform data,</span>
+0006 <span class="comment">%  number of minutes per line, color scheme, multi-waveform display type,</span>
+0007 <span class="comment">%  and events to highlight over the helicorder. Calling build(h) will</span>
+0008 <span class="comment">%  assemble the helicorder figure based the information in h. Build returns</span>
+0009 <span class="comment">%  the figure handle if an output argument is provided, otherwise, there is</span>
+0010 <span class="comment">%  no output.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%USAGE: build(h) --&gt; Create helicorder figure from helicorder object</span>
+0013 <span class="comment">%       fh = build(h) --&gt; Also return helicorder figure handle</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%INPUTS: h - helicorder object</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%OUTPUTS: fh - figure handle of helicorder</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% See also HELICORDER</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% Author: Dane Ketner, Alaska Volcano Observatory</span>
+0022 <span class="comment">% $Date$</span>
+0023 <span class="comment">% $Revision$</span>
+0024 
+0025 <span class="comment">% B is the 'builder structure' which contains the following fields:</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% B.fh --&gt; Figure handle of helicorder</span>
+0028 <span class="comment">% B.ax --&gt; Axes handle of helicorder</span>
+0029 <span class="comment">% B.nw --&gt; Number of waveform objects in helicorder</span>
+0030 <span class="comment">% B.tv --&gt; Waveform time vector cell array</span>
+0031 <span class="comment">% B.w_d --&gt; Waveform data cell array</span>
+0032 <span class="comment">% B.scale --&gt; For each waveform w, the value max(w)-min(w) is scaled such</span>
+0033 <span class="comment">%  that is spans 4 helicorder lines. If waveformm w has a max value</span>
+0034 <span class="comment">%  appearing on helicorder line 16, then that maximum point should fall</span>
+0035 <span class="comment">%  near the middle of line 14 (2 lines above 16). Note that for any</span>
+0036 <span class="comment">%  waveform in a helicorder, B.scale is consistant throughout (no different</span>
+0037 <span class="comment">%  scaling on different lines for the same waveform). B.scale is multiplied</span>
+0038 <span class="comment">%  by h.scale, which by default is equal to 1. B.scale cannot be accessed</span>
+0039 <span class="comment">%  directly, but it can be increased or decreased indirectly by setting</span>
+0040 <span class="comment">%  h.scale to a different value: h = set(h,'scale',2); will double the</span>
+0041 <span class="comment">%  displayed amplitude assuming there is only one waveform in helicorder.</span>
+0042 <span class="comment">%  h = set(h,'scale',[2 1 .5]); will double the first, and halve the</span>
+0043 <span class="comment">%  last waveform display amplitude assuming 3 waveforms in h.</span>
+0044 <span class="comment">% B.w_l --&gt; Data length of each waveform in h</span>
+0045 <span class="comment">% B.Fs --&gt; Sampling Frequency of each waveform in h</span>
+0046 <span class="comment">% B.tra_l --&gt; Number of data points per helicorder line for each waveform</span>
+0047 <span class="comment">%  in h (note: B.tra_l will be different for waveforms in h with different</span>
+0048 <span class="comment">%  sampling frequencies)</span>
+0049 <span class="comment">% B.tra_ns --&gt; Number of helicorder lines occupied by a single waveform</span>
+0050 <span class="comment">% B.tra_nt --&gt; Total number of helicorder lines (all waveforms)</span>
+0051 <span class="comment">%  (Note: If only one waveform in h, B.tra_ns = B.tra_nt)</span>
+0052 <span class="comment">% B.e_nan --&gt; Event overlay waveforms (used for event highlighting)</span>
+0053 <span class="comment">% B.off --&gt; Trace offset from bottom of H.ax</span>
+0054 <span class="comment">% B.trace --&gt; Waveform array of all traces, length = B.tra_nt</span>
+0055 <span class="comment">% B.tra_mean --&gt; Mean value of each trace (used for alignment)</span>
+0056 <span class="comment">% B.trace_e --&gt; Event trace includes event waveform data separated by NaN</span>
+0057 <span class="comment">%  values (plotted over top of B.trace)</span>
+0058 
+0059 <span class="comment">%% INITIALIZE HELICORDER FIGURE</span>
+0060 B.fh = figure(<span class="string">'Name'</span>,<span class="string">'Helicorder'</span>);        <span class="comment">% New helicorder figure handle</span>
+0061 B.ax = axes(<span class="string">'position'</span>,[.10 .07 .83 .86]); <span class="comment">% New helicorder axes handle</span>
+0062 title(B.ax,<span class="string">'Building Helicorder...'</span>,<span class="string">'FontSize'</span>,12)
+0063 <span class="comment">%refresh(B.fh)</span>
+0064 refresh(gcf)
+0065 pause(.1)
+0066 
+0067 <span class="comment">%% INITIALIZE BUILDER STRUCTURE FIELDS</span>
+0068 h = <a href="#_sub3" class="code" title="subfunction h = pad_w(h)">pad_w</a>(h);          <span class="comment">% If front of waveform is missing, fill with NaN</span>
+0069 B.nw = numel(h.wave);              <span class="comment">% Number of waveforms</span>
+0070 B.tv = <a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave, <span class="string">'timevector'</span>);  <span class="comment">% Wave time vector</span>
+0071 B.w_d = <a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave,<span class="string">'data'</span>);        <span class="comment">% Wave data vector</span>
+0072 <span class="keyword">if</span> ~iscell(B.w_d), B.w_d = {B.w_d}; <span class="keyword">end</span>
+0073 <span class="keyword">for</span> n = 1:B.nw <span class="comment">% Scale factor</span>
+0074    B.scale(n)=(max(B.w_d{n})-min(B.w_d{n}));
+0075 <span class="keyword">end</span> 
+0076 mean_scale = mean(B.scale);
+0077 <span class="keyword">for</span> n = 1:B.nw 
+0078    B.scale(n)=mean_scale./h.scale(n);
+0079 <span class="keyword">end</span> 
+0080 B.w_l = <a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave,<span class="string">'data_length'</span>);  <span class="comment">% Wave data length</span>
+0081 B.Fs = <a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave,<span class="string">'freq'</span>);          <span class="comment">% Sampling frequency</span>
+0082 B.tra_l = round(B.Fs*60*h.mpl);       <span class="comment">% Trace length (data points)</span>
+0083 B.tra_ns = round(B.w_l(1)/B.tra_l(1));<span class="comment">% # of helicorder rows (one waveform)</span>
+0084 B.tra_nt = B.nw*B.tra_ns; <span class="comment">%</span>
+0085 
+0086 <span class="keyword">for</span> n =1:B.nw
+0087    <span class="keyword">if</span> ~isempty(h.e_sst{n})  <span class="comment">% Is the events array non-empty?</span>
+0088       <span class="comment">% Return wave w/ NaN non-events from wave start to end</span>
+0089       <span class="keyword">if</span> is_sst(h.e_sst{n})
+0090       B.e_nan{n} = sst2nan(extract_sst(h.e_sst{n},<span class="keyword">...</span>
+0091          <a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave,<span class="string">'start'</span>),<a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave,<span class="string">'end'</span>)), h.wave);
+0092       <span class="keyword">elseif</span> iscell(h.e_sst{n})
+0093          <span class="keyword">for</span> m = 1:numel(h.e_sst{n})
+0094             <span class="keyword">if</span> is_sst(h.e_sst{n}{m})
+0095                B.e_nan{n}(m) = sst2nan(extract_sst(h.e_sst{n}{m},<span class="keyword">...</span>
+0096                <a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave,<span class="string">'start'</span>),<a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave,<span class="string">'end'</span>)), h.wave);
+0097             <span class="keyword">else</span>
+0098                B.e_nan{n}(m) = waveform();
+0099             <span class="keyword">end</span>
+0100          <span class="keyword">end</span>
+0101       <span class="keyword">end</span>
+0102    <span class="keyword">else</span>
+0103       B.e_nan{n} = [];
+0104    <span class="keyword">end</span>
+0105 <span class="keyword">end</span>
+0106 
+0107 
+0108 
+0109 <span class="comment">%% PLOT HELICORDER TRACES WITH EVENT OVERLAY</span>
+0110 
+0111 <span class="comment">% Example values of n,k1,k2,k3,k4 reflect:</span>
+0112 <span class="comment">% B.nw = 3;  B.tra_ns = 100;  B.tra_nt = 300</span>
+0113 <span class="comment">% Example values show what k1 through k4 look like</span>
+0114 <span class="comment">% And how they are used in different display types</span>
+0115 
+0116 <span class="keyword">for</span> n = 1:B.tra_nt     <span class="comment">% for n = 1,2,3,4,5,6,7,8,9,...,298,299,300</span>
+0117                       
+0118 k1 = ceil(n/B.nw);     <span class="comment">% k1 = 1,1,1,2,2,2,3,3,3,...,99,99,99,100,100,100</span>
+0119 k2 = n-(B.nw*(k1-1));  <span class="comment">% k2 = 1,2,3,1,2,3,1,2,3,...,1,2,3,1,2,3,1,2,3</span>
+0120 k3 = ceil(n/B.tra_ns); <span class="comment">% k3 = 1,1,1,1,1,1,...,2,2,2,2,2,2,...,3,3,3,3,3</span>
+0121 k4 =<span class="keyword">...</span><span class="comment">       % k4 = 1,2,3,4,...,99,100,1,2,3,...,99,100,1,2,3,...,99,100</span>
+0122  n-floor(n/(B.tra_ns+.00001))*B.tra_ns;
+0123 
+0124 <span class="keyword">switch</span> lower(h.display)
+0125    
+0126 <span class="comment">%% Single/Alternate Display Type (Default)</span>
+0127    <span class="keyword">case</span> {<span class="string">'single'</span>,<span class="string">'alternate'</span>}
+0128       B.off(n) = .5+(B.tra_nt-n)*.25; <span class="comment">% Trace offset from bottom</span>
+0129       B.trace(n) = extract(h.wave(k2),<span class="string">'index'</span>,<span class="keyword">...</span>
+0130          1+(k1-1)*B.tra_l(k2), k1*B.tra_l(k2))/B.scale(k2)+B.off(n);
+0131       B.k(n) = k2;
+0132       B.tra_mean(n) = mean(B.trace(n));
+0133       <span class="keyword">if</span> ~isempty(h.e_sst{k2})
+0134          B.trace_e(n) = extract(B.e_nan{k2},<span class="string">'index'</span>,<span class="keyword">...</span>
+0135             1+(k1-1)*B.tra_l(k2),k1*B.tra_l(k2))/B.scale(k2) + B.off(n);
+0136       <span class="keyword">end</span>
+0137       B.trace_h(n) = plot(B.trace(n),<span class="string">'color'</span>,h.trace_color{k2},<span class="keyword">...</span>
+0138          <span class="string">'xunit'</span>,<span class="string">'minutes'</span>);
+0139       <span class="keyword">if</span> n == 1
+0140          hold on
+0141       <span class="keyword">end</span>
+0142       <span class="keyword">if</span> ~isempty(h.e_sst{k2}) <span class="comment">% Plot event red</span>
+0143          B.trace_e_h(n) = plot(B.trace_e(n),<span class="keyword">...</span>
+0144          <span class="string">'color'</span>,h.event_color{k2},<span class="string">'xunit'</span>,<span class="string">'minutes'</span>);
+0145       <span class="keyword">else</span>
+0146          B.trace_e_h(n) = NaN;
+0147       <span class="keyword">end</span>
+0148       
+0149 <span class="comment">%% Group Display Type</span>
+0150    <span class="keyword">case</span> {<span class="string">'group'</span>}
+0151       B.off(n) = .5+(B.tra_nt-n)*.25; <span class="comment">% Trace offset from bottom</span>
+0152       B.trace(n) = extract(h.wave(k3),<span class="string">'index'</span>,<span class="keyword">...</span>
+0153          1+(k4-1)*B.tra_l(k3), k4*B.tra_l(k3))/B.scale(k3)+B.off(n);
+0154       B.k(n) = k3;
+0155       B.tra_mean(n) = mean(B.trace(n));
+0156       <span class="keyword">if</span> ~isempty(h.e_sst{k3})
+0157          B.trace_e(n) = extract(B.e_nan{k3},<span class="string">'index'</span>,<span class="keyword">...</span>
+0158             1+(k4-1)*B.tra_l(k3), k4*B.tra_l(k3))/B.scale(k3)+B.off(n);
+0159       <span class="keyword">end</span>
+0160       B.trace_h(n) = plot(B.trace(n),<span class="string">'color'</span>,h.trace_color{k3},<span class="keyword">...</span>
+0161          <span class="string">'xunit'</span>,<span class="string">'minutes'</span>);
+0162       <span class="keyword">if</span> n == 1
+0163          hold on
+0164       <span class="keyword">end</span>
+0165       <span class="keyword">if</span> ~isempty(h.e_sst{k3}) <span class="comment">% Plot event over</span>
+0166          B.trace_e_h(n) = plot(B.trace_e(n),<span class="keyword">...</span>
+0167          <span class="string">'color'</span>,h.event_color{k2},<span class="string">'xunit'</span>,<span class="string">'minutes'</span>);
+0168       <span class="keyword">else</span>
+0169          B.trace_e_h(n) = NaN;
+0170       <span class="keyword">end</span>
+0171       
+0172 <span class="comment">%% Stack Display Type</span>
+0173    <span class="keyword">case</span> {<span class="string">'stack'</span>}
+0174       B.off(n) = .5+(B.tra_ns-k1)*.25; <span class="comment">% Trace offset from bottom</span>
+0175       B.trace(n) = extract(h.wave(k2),<span class="string">'index'</span>,<span class="keyword">...</span>
+0176          1+(k1-1)*B.tra_l(k2), k1*B.tra_l(k2))/B.scale(1)+B.off(n);
+0177       B.k(n) = k2;
+0178       B.tra_mean(n) = mean(B.trace(1+B.nw*floor(n/(B.nw+.00001))));
+0179       <span class="keyword">if</span> ~isempty(h.e_sst{k2})
+0180          B.trace_e(n) = extract(B.e_nan{k2},<span class="string">'index'</span>,<span class="keyword">...</span>
+0181             1+(k1-1)*B.tra_l(k2),k1*B.tra_l(k2))/B.scale(1) + B.off(n);
+0182       <span class="keyword">end</span>
+0183       B.trace_h(n) = plot(B.trace(n),<span class="string">'color'</span>,h.trace_color{k2},<span class="keyword">...</span>
+0184          <span class="string">'xunit'</span>,<span class="string">'minutes'</span>);
+0185       <span class="keyword">if</span> n == 1
+0186          hold on
+0187       <span class="keyword">end</span>
+0188       <span class="keyword">if</span> ~isempty(h.e_sst{k2}) <span class="comment">% Plot event red</span>
+0189          B.trace_e_h(n) = plot(B.trace_e(n),<span class="keyword">...</span>
+0190             <span class="string">'color'</span>,h.event_color{k2},<span class="string">'xunit'</span>,<span class="string">'minutes'</span>);
+0191       <span class="keyword">else</span>
+0192          B.trace_e_h(n) = NaN;
+0193       <span class="keyword">end</span>
+0194 <span class="keyword">end</span> <span class="comment">% switch</span>
+0195 <span class="keyword">end</span> <span class="comment">% Finished plotting all helicorder trace data</span>
+0196 
+0197 <span class="comment">%% ADD FINISHING TOUCHES TO HELICORDER FIGURE</span>
+0198 <a href="#_sub1" class="code" title="subfunction add_title(h,B)">add_title</a>(h,B);
+0199 <a href="#_sub2" class="code" title="subfunction add_y_ticks(h,B)">add_y_ticks</a>(h,B);
+0200 <a href="set.html" class="code" title="function h = set(h,varargin)">set</a>(B.ax,<span class="string">'XGrid'</span>,<span class="string">'on'</span>)
+0201 xlim([0 h.mpl])
+0202 
+0203 <span class="keyword">switch</span> lower(h.display)
+0204    <span class="keyword">case</span> {<span class="string">'stack'</span>}       
+0205       ylim([0 1+(B.tra_ns-1)*.25])
+0206    <span class="keyword">otherwise</span>                                      
+0207      ylim([0 1+(B.tra_nt-1)*.25])
+0208 <span class="keyword">end</span>
+0209 
+0210 <span class="comment">%% STORE TRACE NUMBER IN LINE OBJECT 'TAG' &amp; SET BUTTON DOWN FUNCTION</span>
+0211 <span class="comment">% for n = 1:numel(B.trace_h)</span>
+0212 <span class="comment">%    set(B.trace_h(n),'HitTest','on','ButtonDownFcn',{@traClick,h,B})</span>
+0213 <span class="comment">%    set(B.trace_h(n),'Tag',['t',num2str(n)]) % t for trace</span>
+0214 <span class="comment">%    if ~isnan(B.trace_e_h(n))</span>
+0215 <span class="comment">%       set(B.trace_e_h(n),'Tag',['e',num2str(n)]) % e for event</span>
+0216 <span class="comment">%       set(B.trace_e_h(n),'HitTest','on','ButtonDownFcn',{@traClick,h,B})</span>
+0217 <span class="comment">%    end</span>
+0218 <span class="comment">% end</span>
+0219 
+0220 <span class="comment">%% OUTPUT</span>
+0221 <span class="keyword">if</span> nargout == 0
+0222 <span class="keyword">elseif</span> nargout == 1
+0223    varargout(1) = {B.fh};
+0224 <span class="keyword">else</span>
+0225    error(<span class="string">'HELICORDER:BUILD This many output arguments nor supported'</span>)
+0226 <span class="keyword">end</span>
+0227 
+0228 <span class="comment">%% DETERMINED WHAT WAS CLICKED</span>
+0229 <span class="comment">% function traClick(varargin)</span>
+0230 <span class="comment">%</span>
+0231 <span class="comment">% k = get(varargin{1},'Tag');       % Clicked object tag</span>
+0232 <span class="comment">% tra_n = str2double(k(2:end));     % Get Trace number</span>
+0233 <span class="comment">% h = varargin{3};                  % Get Helicorder object</span>
+0234 <span class="comment">% B = varargin{4};                  % Get Builder structure</span>
+0235 <span class="comment">% clk_trace = B.trace(tra_n);       % Get clicked trace waveform</span>
+0236 <span class="comment">% clk_n = B.k(tra_n);               % Get clicked waveform number</span>
+0237 <span class="comment">% mouse = get(B.ax,'currentpoint'); % Mouse location in H.ax()</span>
+0238 <span class="comment">% clk_t = get(clk_trace,'start')+...</span>
+0239 <span class="comment">%         mouse(1,1)/60/24;</span>
+0240 <span class="comment">% if strcmp(k(1),'e')               % Was an event was clicked?</span>
+0241 <span class="comment">%    [N P] = search_sst(t,h.e_sst{clk_n});</span>
+0242 <span class="comment">%    if P == 1</span>
+0243 <span class="comment">%       clk_e_n = N;</span>
+0244 <span class="comment">%    end</span>
+0245 <span class="comment">% else</span>
+0246 <span class="comment">%    clk_e_n = 0;</span>
+0247 <span class="comment">% end</span>
+0248 
+0249 <span class="comment">% TO SUMMARIZE:</span>
+0250 <span class="comment">% clk_n --&gt; which waveform in h.wave was clicked?</span>
+0251 <span class="comment">% clk_t --&gt; where in time was mouse click? (datenum value)</span>
+0252 <span class="comment">% clk_e_n --&gt; which event in h.e_sst was clicked?</span>
+0253 <span class="comment">%             If not event click, clk_e_n = 0</span>
+0254 <span class="comment">%% NEXT LINES CAN BE ALTERED TO CHANGE TRACE CLICK BEHAVIOR</span>
+0255 <span class="comment">% Comment next lines to suppress click behavior</span>
+0256 
+0257 <span class="comment">% w_start = get(h.wave(clk_n),'start');</span>
+0258 <span class="comment">% w_end = get(h.wave(clk_n),'end');</span>
+0259 <span class="comment">% if (w_start &gt; clk_t-30/24/60/60), win_t(1) = w_start;</span>
+0260 <span class="comment">% else win_t(1) = clk_t-30/24/60/60; end</span>
+0261 <span class="comment">% if (w_end &lt; clk_t+30/24/60/60),win_t(2) = w_end;</span>
+0262 <span class="comment">% else win_t(2) = clk_t+30/24/60/60; end</span>
+0263 <span class="comment">% if ~isempty(h.e_sst{clk_n})</span>
+0264 <span class="comment">%    event_pick(h.wave(clk_n),'sst',h.e_sst{clk_n},'win',win_t);</span>
+0265 <span class="comment">% else</span>
+0266 <span class="comment">%    event_pick(h.wave(clk_n),'win',win_t);</span>
+0267 <span class="comment">% end</span>
+0268 
+0269 <span class="comment">%% ADD TITLE TO HELICORDER FIGURE</span>
+0270 <a name="_sub1" href="#_subfunctions" class="code">function add_title(h,B)</a>
+0271 
+0272 <span class="keyword">if</span> isempty(h.wave)
+0273    title(B.ax,<span class="string">'No Data Selected'</span>,<span class="string">'FontSize'</span>,12);
+0274 <span class="keyword">else</span>
+0275    scn_str = [];
+0276    <span class="keyword">for</span> n = 1:numel(h.wave)
+0277       sta = <a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave(n),<span class="string">'station'</span>);
+0278       cha = <a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave(n),<span class="string">'channel'</span>);
+0279       net = <a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave(n),<span class="string">'network'</span>);
+0280       scn_str = [scn_str,sta,<span class="string">':'</span>,cha,<span class="string">':'</span>,net,<span class="string">', '</span>];
+0281    <span class="keyword">end</span>
+0282    
+0283    dv1 = datevec(<a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave(1),<span class="string">'start'</span>)); <span class="comment">% Date vec (first trace point)</span>
+0284    dv2 = datevec(<a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave(1),<span class="string">'end'</span>)); <span class="comment">% Date vec (last trace point)</span>
+0285    <span class="keyword">if</span> dv1(1)==dv2(1) &amp;&amp; dv1(2)==dv2(2) &amp;&amp; dv1(3)==dv2(3) <span class="comment">% Same Y,M,D ?</span>
+0286       span = [datestr(dv1,0), <span class="string">' to '</span>, datestr(dv2,13)]; <span class="comment">% Less repetitive</span>
+0287    <span class="keyword">else</span> <span class="comment">% Different Year , Month, or Day</span>
+0288       span = [datestr(dv1), <span class="string">' to '</span>, datestr(dv2)]; <span class="comment">% Full dates displayed</span>
+0289    <span class="keyword">end</span>
+0290 
+0291    h_title = [scn_str, span];
+0292    title(B.ax,h_title);
+0293 <span class="keyword">end</span>
+0294 
+0295 <span class="comment">%% ADD Y-AXES TICKS AND LABELS</span>
+0296 <a name="_sub2" href="#_subfunctions" class="code">function add_y_ticks(h,B)</a>
+0297 
+0298 <span class="keyword">if</span> ~isempty(h.wave)
+0299    ylabel(B.ax,<span class="string">''</span>)
+0300    n_lab = 0;
+0301    <span class="keyword">switch</span> lower(h.display)
+0302    <span class="keyword">case</span> {<span class="string">'single'</span>,<span class="string">'group'</span>}
+0303       d = 1;
+0304    <span class="keyword">case</span> {<span class="string">'stack'</span>,<span class="string">'alternate'</span>}
+0305       d = B.nw;
+0306    <span class="keyword">end</span>
+0307    <span class="keyword">for</span> k = 1:d:B.tra_nt
+0308       t = <a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(B.trace(k),<span class="string">'start'</span>);
+0309       m = round((t-floor(t))*24*60);   <span class="comment">% number of decimal minutes from day start</span>
+0310       <span class="keyword">if</span> rem(m,h.ytick)==0
+0311          n_lab = n_lab + 1;
+0312          tick_pos(n_lab) = B.off(k);
+0313          tick_lab{n_lab} = datestr(t,13);
+0314       <span class="keyword">end</span>
+0315    <span class="keyword">end</span>
+0316 <span class="keyword">end</span>
+0317 
+0318 tick_pos = tick_pos(end:-1:1);
+0319 tick_lab = tick_lab(end:-1:1);
+0320 <a href="set.html" class="code" title="function h = set(h,varargin)">set</a>(B.ax,<span class="string">'YTick'</span>,tick_pos)
+0321 <a href="set.html" class="code" title="function h = set(h,varargin)">set</a>(B.ax,<span class="string">'YTickLabel'</span>,tick_lab)
+0322 
+0323 <span class="comment">%% PAD FRONT &amp; END OF WAVE IF NOT A MULTIPLE OF h.mpl</span>
+0324 <span class="comment">%  (i.e. if mpl = 30 and wave begins at 12:32:00, then first 2 minutes are</span>
+0325 <span class="comment">%   NaN stuffed so that the trace begins at 12:30:00</span>
+0326 <a name="_sub3" href="#_subfunctions" class="code">function h = pad_w(h)</a>
+0327 
+0328 <span class="keyword">for</span> n = 1:numel(h.wave)
+0329    w = h.wave(n);
+0330    t1 = <a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(w,<span class="string">'start'</span>);         <span class="comment">% start of w (datenum)</span>
+0331    t2 = <a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(w,<span class="string">'end'</span>);           <span class="comment">% end of w (datenum)</span>
+0332    m1 = (t1-floor(t1))*24*60;   <span class="comment">% number of decimal minutes from day start</span>
+0333    m2 = (t2-floor(t2))*24*60;   <span class="comment">% number of decimal minutes from day end</span>
+0334    gap1 = rem(m1,h.mpl)/24/60;  <span class="comment">% gap from w start to mpl-adjusted start</span>
+0335    tt1 = t1-gap1;               <span class="comment">% mpl-adjusted start time</span>
+0336    <span class="keyword">if</span> (gap1 &gt; 0)
+0337       N1 = round(gap1*24*60*60*<a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(w,<span class="string">'freq'</span>)); <span class="comment">% length of gap1 (samples)</span>
+0338       pad1 = ones(N1,1)*NaN;
+0339       dat = [pad1; <a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(w(n),<span class="string">'data'</span>)];
+0340       w = <a href="set.html" class="code" title="function h = set(h,varargin)">set</a>(w,<span class="string">'data'</span>,dat);
+0341       w = <a href="set.html" class="code" title="function h = set(h,varargin)">set</a>(w,<span class="string">'start'</span>,tt1);
+0342       h.wave(n) = w;
+0343    <span class="keyword">end</span>
+0344 <span class="keyword">end</span>
+0345</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

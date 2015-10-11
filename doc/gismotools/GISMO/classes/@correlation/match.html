@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of match</title>
+  <meta name="keywords" content="match">
+  <meta name="description" content="Retain matching elements of two correlation objects.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@correlation</a> &gt; match.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>match
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Retain matching elements of two correlation objects.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [c1,c2] = match(c1,c2,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">Retain matching elements of two correlation objects.
+
+ [C1,C2] = MATCH(C1,C2) Returns those elements of c1 and c2 which have
+ matching trigger times. Typically this will be used to sync correlation
+ objects from two different stations covering the same time frames, or 
+ sync'ing two channels from the same station. 
+
+ [C1,C2] = MATCH(C1,C2,TOLERANCE) allows traces to match when their
+ trigger times are within TOLERANCE seconds of each other. When this
+ parameter is not included, the default value is 1 second.
+ 
+ CAVEATS: Note that if C2 has multiple traces which match a trigger time
+ in C1, there is no way of controling which single trace in C2 will be
+ considered a match. Similarly, if C1 contains multiple traces with the
+ same trigger time, a match for each one will be found in C2.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [c1,c2] = match(c1,c2,varargin)</a>
+0002 
+0003 <span class="comment">%Retain matching elements of two correlation objects.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% [C1,C2] = MATCH(C1,C2) Returns those elements of c1 and c2 which have</span>
+0006 <span class="comment">% matching trigger times. Typically this will be used to sync correlation</span>
+0007 <span class="comment">% objects from two different stations covering the same time frames, or</span>
+0008 <span class="comment">% sync'ing two channels from the same station.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% [C1,C2] = MATCH(C1,C2,TOLERANCE) allows traces to match when their</span>
+0011 <span class="comment">% trigger times are within TOLERANCE seconds of each other. When this</span>
+0012 <span class="comment">% parameter is not included, the default value is 1 second.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% CAVEATS: Note that if C2 has multiple traces which match a trigger time</span>
+0015 <span class="comment">% in C1, there is no way of controling which single trace in C2 will be</span>
+0016 <span class="comment">% considered a match. Similarly, if C1 contains multiple traces with the</span>
+0017 <span class="comment">% same trigger time, a match for each one will be found in C2.</span>
+0018 
+0019 <span class="comment">% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0020 <span class="comment">% $Date$</span>
+0021 <span class="comment">% $Revision$</span>
+0022 
+0023 
+0024 
+0025 
+0026 
+0027 <span class="comment">% READ &amp; CHECK ARGUMENTS</span>
+0028 <span class="keyword">if</span> (nargin&gt;3)
+0029     error(<span class="string">'Wrong number of inputs'</span>);
+0030 <span class="keyword">end</span>;
+0031 
+0032 <span class="keyword">if</span> ~strcmpi(class(c1),<span class="string">'correlation'</span>) | ~strcmpi(class(c2),<span class="string">'correlation'</span>) 
+0033     error(<span class="string">'First and second arguments must be a correlation object'</span>);
+0034 <span class="keyword">end</span>
+0035 
+0036 <span class="keyword">if</span> length(varargin)&gt;=1
+0037     <span class="keyword">if</span> isa(varargin{1},<span class="string">'double'</span>)
+0038        tolerance = varargin{1};
+0039     <span class="keyword">else</span>
+0040         error(<span class="string">'TOLERANCE MUST BE A SCALAR NUMBER IN SECONDS'</span>);
+0041     <span class="keyword">end</span>
+0042 <span class="keyword">else</span>
+0043     tolerance = 1;   <span class="comment">% time misfit tolerance in seconds</span>
+0044 <span class="keyword">end</span>
+0045 
+0046 disp([<span class="string">'Tolerance for successful match is: '</span> num2str(tolerance) <span class="string">' seconds'</span>]);
+0047 
+0048 
+0049 
+0050 
+0051 <span class="comment">% FIND ELEMENTS THAT MATCH</span>
+0052 trig1 = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1,<span class="string">'TRIG'</span>);
+0053 trig2 = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c2,<span class="string">'TRIG'</span>);
+0054 matchIndex = [];
+0055 <span class="keyword">for</span> n = 1:numel(trig1)
+0056     [minVal,minIndex] = min(abs(trig2 - trig1(n))*86400);
+0057     <span class="keyword">if</span> minVal &lt; tolerance
+0058         matchIndex(n) = minIndex;
+0059     <span class="keyword">else</span>
+0060        matchIndex(n) = 0; 
+0061     <span class="keyword">end</span>
+0062 <span class="keyword">end</span>
+0063 
+0064 
+0065 <span class="comment">% SUBSET FIRST CORRELATION OBJECT</span>
+0066 index = <a href="find.html" class="code" title="function index = find(c,varargin)">find</a>(matchIndex);
+0067 c1 = <a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>(c1,index);
+0068 
+0069 <span class="comment">% SUBSET FIRST CORRELATION OBJECT</span>
+0070 index = matchIndex(<a href="find.html" class="code" title="function index = find(c,varargin)">find</a>(matchIndex));
+0071 c2 = <a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>(c2,index);
+0072 
+0073</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

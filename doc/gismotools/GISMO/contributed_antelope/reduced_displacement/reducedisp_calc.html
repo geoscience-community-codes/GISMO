@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of reducedisp_calc</title>
+  <meta name="keywords" content="reducedisp_calc">
+  <meta name="description" content="WAVEFORM = REDUCEDISP(WAVEFORM,DISTANCE) This function calculates the">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">contributed_antelope</a> &gt; <a href="index.html">reduced_displacement</a> &gt; reducedisp_calc.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_antelope/reduced_displacement&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>reducedisp_calc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>WAVEFORM = REDUCEDISP(WAVEFORM,DISTANCE) This function calculates the</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = reducedisp_calc(w,dist,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> WAVEFORM = REDUCEDISP(WAVEFORM,DISTANCE) This function calculates the
+ reduced displacement of a waveform. If not specified, the body wave
+ algorithm is used. In most cases the input waveform should be
+ pre-filtered to the desired frequency band. This function requires that
+ the waveform be a velocity record with units of nm/s. The distance to the
+ presumed source, DISTANCE, must be in kilometers. If w is a vector, D
+ will be returned as a vector of the same size. Units are cm^2. 
+
+ WAVEFORM = REDUCEDISP(WAVEFORM,DISTANCE,ALGORITHM) where ALGORITHM can 
+ be specified as either 'BODY' or 'SURF' to impliment the body wave or 
+ surface wave formulation.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="reducedisp_wfmeas.html" class="code" title="function reducedisp_wfmeas(varargin);">reducedisp_wfmeas</a>	REDUCEDISP_WFMEAS(STARTTIME,ENDTIME,SCNL,DIST,DS,DBOUT,FILT,TIMESTEP,ALGORITHM)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = reducedisp_calc(w,dist,varargin)</a>
+0002 
+0003 <span class="comment">% WAVEFORM = REDUCEDISP(WAVEFORM,DISTANCE) This function calculates the</span>
+0004 <span class="comment">% reduced displacement of a waveform. If not specified, the body wave</span>
+0005 <span class="comment">% algorithm is used. In most cases the input waveform should be</span>
+0006 <span class="comment">% pre-filtered to the desired frequency band. This function requires that</span>
+0007 <span class="comment">% the waveform be a velocity record with units of nm/s. The distance to the</span>
+0008 <span class="comment">% presumed source, DISTANCE, must be in kilometers. If w is a vector, D</span>
+0009 <span class="comment">% will be returned as a vector of the same size. Units are cm^2.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% WAVEFORM = REDUCEDISP(WAVEFORM,DISTANCE,ALGORITHM) where ALGORITHM can</span>
+0012 <span class="comment">% be specified as either 'BODY' or 'SURF' to impliment the body wave or</span>
+0013 <span class="comment">% surface wave formulation.</span>
+0014 
+0015 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0016 <span class="comment">% $Date$</span>
+0017 <span class="comment">% $Revision$</span>
+0018 
+0019 
+0020 
+0021 <span class="keyword">if</span> numel(varargin) &gt; 1
+0022    error(<span class="string">'Too many input parameters'</span>);
+0023 <span class="keyword">end</span>;
+0024 
+0025 <span class="keyword">if</span> numel(varargin) == 1
+0026     <span class="keyword">if</span> strcmpi(varargin{1},<span class="string">'SURF'</span>) || strcmpi(varargin{1},<span class="string">'BODY'</span>)
+0027         algorithm = upper(varargin{1});
+0028     <span class="keyword">else</span>
+0029         error(<span class="string">'TYPE must be BODY or SURF'</span>);
+0030     <span class="keyword">end</span>
+0031 <span class="keyword">else</span>
+0032     algorithm = <span class="string">'BODY'</span>;
+0033     
+0034 <span class="keyword">end</span>
+0035     
+0036     
+0037 <span class="comment">% ENSURE UNITS ARE VELOCITY</span>
+0038 units = upper(get(w(1),<span class="string">'UNITS'</span>));
+0039 <span class="keyword">if</span> isempty(strfind(units,<span class="string">'NM'</span>)) || isempty(strfind(units,<span class="string">'SEC'</span>)) || ~isempty(strfind(units,<span class="string">'2'</span>))
+0040     error(<span class="string">'Waveform must have units of nm/sec'</span>);
+0041     <span class="comment">%warning('Units not verified. Assumging nm/sec');</span>
+0042 <span class="keyword">end</span>
+0043 <span class="keyword">if</span> ~strcmpi( get(w,<span class="string">'CALIBRATION_APPLIED'</span>) , <span class="string">'YES'</span> );
+0044     error(<span class="string">'Calibration has not been applied to waveform'</span>);
+0045 <span class="keyword">end</span>
+0046 
+0047 
+0048 <span class="comment">% SET THE SIZE OF DIST</span>
+0049 <span class="keyword">if</span> length(dist)==1 &amp;&amp; length(w)&gt;1
+0050     dist = dist * ones(size(w));
+0051 <span class="keyword">end</span>;
+0052 
+0053 
+0054 
+0055 <span class="comment">% GET REDUCED DISPLACEMENT</span>
+0056 <span class="comment">% NOTE: original body wave formula (early 2007) was</span>
+0057 <span class="comment">% D = rms(integrate(demean(w))) .* dist * 0.0001;</span>
+0058 <span class="comment">% This algorithm included the conversion</span>
+0059 <span class="comment">% &quot;0.0001 converts nm*km to cm^2&quot;</span>
+0060 <span class="comment">% *BUT* during this time period waveform had an error that did not factor</span>
+0061 <span class="comment">% frequency into integration. This resulted in another factor of 100, thus</span>
+0062 <span class="comment">% compensating for this mistake. Freak, but true.</span>
+0063 
+0064 <span class="keyword">if</span> strcmp(algorithm,<span class="string">'BODY'</span>)
+0065     D = rms(integrate(1e-7.*demean(w))) .* (1e5*dist);
+0066     <span class="keyword">for</span> i = 1:length(w)
+0067         w(i) = addfield(w(i),<span class="string">'reducedisp'</span>,D(i));
+0068     <span class="keyword">end</span>
+0069 <span class="keyword">elseif</span> strcmp(algorithm,<span class="string">'SURF'</span>)
+0070     <span class="comment">% TODO: Remove hard coded wavelength</span>
+0071     <span class="comment">% lambda based on 5 km/s velocity and freq. = 3 Hz</span>
+0072     lambda = 1.67; <span class="comment">% in km</span>
+0073     D = rms(integrate(1e-7*demean(w))) .* sqrt( (1e5*dist)*(1e5*lambda) );
+0074     <span class="keyword">for</span> i = 1:length(w)
+0075         w(i) = addfield(w(i),<span class="string">'reducedisp'</span>,D(i));
+0076     <span class="keyword">end</span>
+0077 <span class="keyword">else</span>
+0078     error(<span class="string">'algorithm not recognized'</span>);
+0079 <span class="keyword">end</span>
+0080 
+0081 
+0082 
+0083</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

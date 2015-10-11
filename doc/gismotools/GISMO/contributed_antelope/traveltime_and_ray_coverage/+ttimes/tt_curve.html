@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of tt_curve</title>
+  <meta name="keywords" content="tt_curve">
+  <meta name="description" content="TRAVELTIME make travel time plots.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">contributed_antelope</a> &gt; <a href="#">traveltime_and_ray_coverage</a> &gt; <a href="index.html">+ttimes</a> &gt; tt_curve.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>tt_curve
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>TRAVELTIME make travel time plots.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function traveltime(dbName,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">TRAVELTIME make travel time plots.
+ TRAVELTIME(dbName) creates travel time plots for database dbName. The top
+ plot for P and S plots ditance vs. traveltime in seconds adjusted by a
+ velocity reduction.
+
+ TRAVELTIME(dbName,[Vp Vs]) use the specified velocities to reduce the
+ times on the travel time plots. The default values are Vp = 7 and Vs = 4.
+
+ see also ttimes.<a href="dbload.html" class="code" title="function [origin,site,arrival,ray] = dbload(dbName)">dbload</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function traveltime(dbName,varargin)</a>
+0002 
+0003 <span class="comment">%TRAVELTIME make travel time plots.</span>
+0004 <span class="comment">% TRAVELTIME(dbName) creates travel time plots for database dbName. The top</span>
+0005 <span class="comment">% plot for P and S plots ditance vs. traveltime in seconds adjusted by a</span>
+0006 <span class="comment">% velocity reduction.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% TRAVELTIME(dbName,[Vp Vs]) use the specified velocities to reduce the</span>
+0009 <span class="comment">% times on the travel time plots. The default values are Vp = 7 and Vs = 4.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% see also ttimes.dbload</span>
+0012  
+0013 
+0014 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0015 <span class="comment">% $Date$</span>
+0016 <span class="comment">% $Revision$</span>
+0017 
+0018 
+0019 <span class="comment">% GET ARGUMENTS</span>
+0020 <span class="keyword">if</span> length(varargin)==1
+0021     VpVs = varargin{1};
+0022 <span class="keyword">else</span>
+0023     VpVs = [7 4];
+0024 <span class="keyword">end</span>
+0025 
+0026 
+0027 
+0028 <span class="comment">% LOAD DATABASE</span>
+0029 [origin,site,arrival,ray] = ttimes.dbload(dbName);
+0030 
+0031 
+0032 
+0033 <span class="comment">% TRAVEL TIME PLOTS</span>
+0034 figure(<span class="string">'Position'</span>,[0 0 1100 850],<span class="string">'Color'</span>,<span class="string">'w'</span>);
+0035 set(gcf,<span class="string">'DefaultAxesFontSize'</span>,14);
+0036 set(gcf,<span class="string">'DefaultAxesLineWidth'</span>,0.25);
+0037 
+0038 
+0039 <span class="comment">% P WAVES</span>
+0040 f = find(strcmp(arrival.iphase,<span class="string">'P'</span>));
+0041 h1 = subplot(2,2,1);
+0042 scatter(ray.flatDist(f),arrival.travelTime(f)-ray.flatDist(f)/VpVs(1),30,ray.originDepth(f),<span class="string">'filled'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);
+0043 hold on; box on; grid on;
+0044 xlabel(<span class="string">'Distance (km)'</span>);
+0045 ylabel([<span class="string">'Traveltime - distance/'</span> num2str(VpVs(1)) <span class="string">'km/s (s)'</span>]);
+0046 title(<span class="string">'P wave travel times'</span>);
+0047 xlim1 = get(gca,<span class="string">'xlim'</span>);
+0048 ylim1 = get(gca,<span class="string">'ylim'</span>);
+0049 <span class="comment">%</span>
+0050 h3 = subplot(2,2,3);
+0051 scatter(ray.flatDist(f),arrival.timeres(f),30,ray.originDepth(f),<span class="string">'filled'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);
+0052 hold on; box on; grid on;
+0053 xlabel(<span class="string">'Distance (km)'</span>);
+0054 ylabel(<span class="string">'Time residual (s)'</span>);
+0055 title(<span class="string">'P wave travel time residuals'</span>);
+0056 xlim3 = get(gca,<span class="string">'xlim'</span>);
+0057 ylim3 = get(gca,<span class="string">'ylim'</span>);
+0058 
+0059 
+0060 <span class="comment">% S WAVES</span>
+0061 f = find(strcmp(arrival.iphase,<span class="string">'S'</span>));
+0062 h2 = subplot(2,2,2);
+0063 scatter(ray.flatDist(f),arrival.travelTime(f)-ray.flatDist(f)/VpVs(2),30,ray.originDepth(f),<span class="string">'filled'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);
+0064 hold on; box on; grid on;
+0065 xlabel(<span class="string">'Distance (km)'</span>);
+0066 ylabel([<span class="string">'Traveltime - distance/'</span> num2str(VpVs(2)) <span class="string">'km/s (s)'</span>]);
+0067 title(<span class="string">'S wave travel times'</span>);
+0068 xlim2 = get(gca,<span class="string">'xlim'</span>);
+0069 ylim2 = get(gca,<span class="string">'ylim'</span>);
+0070 <span class="comment">%</span>
+0071 h4 = subplot(2,2,4);
+0072 scatter(ray.flatDist(f),arrival.timeres(f),30,ray.originDepth(f),<span class="string">'filled'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);
+0073 hold on; box on; grid on;
+0074 xlabel(<span class="string">'Distance (km)'</span>);
+0075 ylabel(<span class="string">'Time residual (s)'</span>);
+0076 title(<span class="string">'S wave travel time residuals'</span>);
+0077 xlim4 = get(gca,<span class="string">'xlim'</span>);
+0078 ylim4 = get(gca,<span class="string">'ylim'</span>);
+0079 <span class="comment">%</span>
+0080 h = colorbar(<span class="string">'Location'</span>,<span class="string">'east'</span>);
+0081 cmap = hot;
+0082 <span class="comment">%colormap(flipud(cmap));</span>
+0083 colormap(cmap);
+0084 position = get(h,<span class="string">'Position'</span>);
+0085 position(3) = position(3)/2;
+0086 position(4) = position(4)/2;
+0087 set(h,<span class="string">'Position'</span>,position);
+0088 set(h,<span class="string">'YDir'</span>,<span class="string">'reverse'</span>);
+0089 set(h,<span class="string">'FontSize'</span>,9);
+0090 hh = get(h,<span class="string">'YLabel'</span>);
+0091 set(hh,<span class="string">'String'</span>,<span class="string">'Depth (km)'</span>);
+0092 <span class="comment">%</span>
+0093 xLim = [0 max(ray.flatDist)];
+0094 yLim12 = [ min([ylim1 ylim2]) max([ylim1 ylim2])];
+0095 yLim34 = [ min([ylim3 ylim4]) max([ylim3 ylim4])];
+0096 set(h1,<span class="string">'xlim'</span>,xLim,<span class="string">'ylim'</span>,yLim12);
+0097 set(h2,<span class="string">'xlim'</span>,xLim,<span class="string">'ylim'</span>,yLim12);
+0098 set(h3,<span class="string">'xlim'</span>,xLim,<span class="string">'ylim'</span>,yLim34);
+0099 set(h4,<span class="string">'xlim'</span>,xLim,<span class="string">'ylim'</span>,yLim34);
+0100 <span class="comment">%</span>
+0101 set(gcf, <span class="string">'paperorientation'</span>, <span class="string">'landscape'</span>);
+0102 set(gcf, <span class="string">'paperposition'</span>, [.5 .5 10 7.5] );
+0103 print(gcf, <span class="string">'-dpsc2'</span>, <span class="string">'FIG_tt_curve.ps'</span>);
+0104 
+0105</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

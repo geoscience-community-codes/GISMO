@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Catalog_full</title>
+  <meta name="keywords" content="Catalog_full">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">catalog</a> &gt; Catalog_full.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>Catalog_full
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Catalog_base.html" class="code" title="">Catalog_base</a>	</li><li><a href="Catalog_full.html" class="code" title="">Catalog_full</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Catalog_full.html" class="code" title="">Catalog_full</a>	</li><li><a href="catalog_cookbook.html" class="code" title="">catalog_cookbook</a>	% CATALOG and EVENTRATE cookbook</li><li><a href="readCatalog.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog</a>	READCATALOG: Read seismic events from common file formats & data sources.</li><li><a href="readCatalog2.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog2</a>	READCATALOG: Read seismic events from common file formats & data sources.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = Catalog_full(event_list, varargin)</a></li><li><a href="#_sub2" class="code">function et = get.etype(obj)</a></li><li><a href="#_sub3" class="code">function l = get.lat(obj)</a></li><li><a href="#_sub4" class="code">function l = get.lon(obj)</a></li><li><a href="#_sub5" class="code">function z = get.depth(obj)</a></li><li><a href="#_sub6" class="code">function t = get.time(obj)</a></li><li><a href="#_sub7" class="code">function m = get.mag(obj)</a></li><li><a href="#_sub8" class="code">function cobj = plus(cobj1, cobj2)</a></li><li><a href="#_sub9" class="code">function o = origins(obj)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="Catalog_full.html" class="code" title="">Catalog_full</a> &lt; <a href="Catalog_base.html" class="code" title="">Catalog_base</a>
+0002 <span class="comment">%CATALOG_FULL: A class that serves as a container for EVENT objects.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%% USAGE</span>
+0005 <span class="comment">%   cobj = Catalog_full(event_list)</span>
+0006 <span class="comment">%      where event_list is a vector of Event objects.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%% EXAMPLE</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   % create an Origin object</span>
+0011 <span class="comment">%   lat = 62.5; lon = -120.0; depth = 15.2; time = now;</span>
+0012 <span class="comment">%   o = Origin(time, lon, lat, depth);</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%   % create an Event object</span>
+0015 <span class="comment">%   e = Event([o]); % [o] is a vector of Origin objects</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%   % create a Catalog_full object</span>
+0018 <span class="comment">%   c = Catalog_full([e]); % [e] is a vector of Event objects</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%   This is a trivial example with only 1 origin and 1 event. In general,</span>
+0021 <span class="comment">%   a Catalog_full contains multiple Event objects, and each Event object may</span>
+0022 <span class="comment">%   contain multiple Origin objects.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%% See also EVENT, ORIGIN, EVENTRATE, READEVENTS, CATALOG_COOKBOOK</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% Author: Glenn Thompson (glennthompson1971@gmail.com)</span>
+0028 <span class="comment">% $Date: $</span>
+0029 <span class="comment">% $Revision: $</span>
+0030 
+0031     properties(GetAccess = <span class="string">'public'</span>, SetAccess = <span class="string">'public'</span>)
+0032         event_list;
+0033     <span class="keyword">end</span>
+0034     properties(GetAccess = <span class="string">'public'</span>, SetAccess = <span class="string">'private'</span>)
+0035         <span class="comment">% derived properties</span>
+0036         <span class="comment">% I set these private properties so that I can define get.property</span>
+0037         <span class="comment">% functions to get these from event_list.origins</span>
+0038         <span class="comment">% These cannot be defined in Catalog_base as could not then define</span>
+0039         <span class="comment">% getters for them in Catalog_full</span>
+0040         lat;
+0041         lon;
+0042         depth;
+0043         time;
+0044         mag;
+0045         etype;
+0046     <span class="keyword">end</span>
+0047     methods
+0048         <a name="_sub0" href="#_subfunctions" class="code">function obj = Catalog_full(event_list, varargin)</a>
+0049             <span class="comment">% Parse required, optional and param-value pair arguments,</span>
+0050             <span class="comment">% set default values, and add validation conditions</span>
+0051             p = inputParser;
+0052             p.addRequired(<span class="string">'event_list'</span>, @(e) strcmp(class(e), <span class="string">'Event'</span>) | isempty(e));
+0053             p.addParamValue(<span class="string">'description'</span>, <span class="string">''</span>, @isstr);
+0054             p.parse(event_list, varargin{:});
+0055             fields = fieldnames(p.Results);
+0056             <span class="keyword">for</span> i=1:length(fields)
+0057                 field=fields{i};
+0058                 val = p.Results.(field);
+0059                 obj = obj.set(field, val);
+0060             <span class="keyword">end</span>
+0061         <span class="keyword">end</span>
+0062         
+0063         <span class="comment">%% THE FOLLOWING METHODS POPULATE PRIVATE PROPERTIES FOR</span>
+0064         <span class="comment">%  ETYPE, LAT, LON, DEPTH, TIME, DNUM, SNUM, ENUM</span>
+0065         <span class="comment">%  THESE PROVIDE COMPATIBILITY BETWEEN NEW AND OLD VERSIONS OF</span>
+0066         <span class="comment">%  THE CATALOG CLASS</span>
+0067         <a name="_sub1" href="#_subfunctions" class="code">function et = get.etype(obj)</a>
+0068             o = <a href="#_sub9" class="code" title="subfunction o = origins(obj)">origins</a>(obj);
+0069             et = [o.etype];
+0070         <span class="keyword">end</span>
+0071         <a name="_sub2" href="#_subfunctions" class="code">function l = get.lat(obj)</a>
+0072             o = <a href="#_sub9" class="code" title="subfunction o = origins(obj)">origins</a>(obj);
+0073             l = [o.lat];
+0074         <span class="keyword">end</span>
+0075         <a name="_sub3" href="#_subfunctions" class="code">function l = get.lon(obj)</a>
+0076             o = <a href="#_sub9" class="code" title="subfunction o = origins(obj)">origins</a>(obj);
+0077             l = [o.lon];
+0078         <span class="keyword">end</span>            
+0079         <a name="_sub4" href="#_subfunctions" class="code">function z = get.depth(obj)</a>
+0080             o = <a href="#_sub9" class="code" title="subfunction o = origins(obj)">origins</a>(obj);
+0081             z = [o.depth];
+0082         <span class="keyword">end</span> 
+0083         <a name="_sub5" href="#_subfunctions" class="code">function t = get.time(obj)</a>
+0084             o = <a href="#_sub9" class="code" title="subfunction o = origins(obj)">origins</a>(obj);
+0085             t = [o.time];
+0086         <span class="keyword">end</span>
+0087         <a name="_sub6" href="#_subfunctions" class="code">function m = get.mag(obj)</a>
+0088             o = <a href="#_sub9" class="code" title="subfunction o = origins(obj)">origins</a>(obj);
+0089             <span class="comment">%m_list = [o.netmags];</span>
+0090             ml_list = [o.ml];
+0091             mb_list = [o.mb];
+0092             ms_list = [o.ms];
+0093             <span class="keyword">for</span> i=1:length(ml_list)
+0094                 m(i)=NaN;
+0095                 <span class="keyword">if</span> ~isnan(ml_list(i))
+0096                     m(i)=ml_list(i);
+0097                 <span class="keyword">end</span>
+0098                 <span class="keyword">if</span> mb_list(i) &gt; m(i)
+0099                     m(i)=mb_list(i);
+0100                 <span class="keyword">end</span>                
+0101                 <span class="keyword">if</span> ms_list(i) &gt; m(i)
+0102                     m(i)=ms_list(i);
+0103                 <span class="keyword">end</span> 
+0104             <span class="keyword">end</span>
+0105         <span class="keyword">end</span>
+0106 
+0107         <a name="_sub7" href="#_subfunctions" class="code">function cobj = plus(cobj1, cobj2)</a>
+0108             cobj = [];
+0109 
+0110             <span class="keyword">if</span> nargin&lt;2
+0111                 <span class="keyword">return</span>
+0112             <span class="keyword">end</span>
+0113             
+0114             <span class="keyword">if</span> isempty(cobj1)
+0115                 cobj = cobj2;
+0116                 <span class="keyword">return</span>
+0117             <span class="keyword">end</span>
+0118             
+0119             <span class="keyword">if</span> isempty(cobj2)
+0120                 cobj = cobj1;
+0121                 <span class="keyword">return</span>
+0122             <span class="keyword">end</span> 
+0123 
+0124             <span class="keyword">if</span> isempty(cobj1.event_list) &amp; isempty(cobj2.event_list)
+0125                 <span class="keyword">return</span>
+0126             <span class="keyword">end</span>
+0127 
+0128             <span class="keyword">if</span> isempty(cobj1.event_list)
+0129                 cobj = cobj2;  
+0130             <span class="keyword">elseif</span> isempty(cobj2.event_list)
+0131                 cobj = cobj1;
+0132             <span class="keyword">else</span>
+0133                 cobj = cobj1; 
+0134                 cobj.event_list = [cobj1.event_list cobj2.event_list];
+0135                 <span class="keyword">return</span>
+0136             <span class="keyword">end</span>
+0137         <span class="keyword">end</span>
+0138         
+0139     <span class="keyword">end</span>
+0140     <span class="comment">%%</span>
+0141     methods (Access=protected, Hidden=true)
+0142         
+0143         <a name="_sub8" href="#_subfunctions" class="code">function o = origins(obj)</a>
+0144             <span class="comment">% assumes only 1 origin per event</span>
+0145             <span class="comment">% ignores concept of preferred origin</span>
+0146             o = [obj.event_list.origins];
+0147         <span class="keyword">end</span>   
+0148         
+0149     <span class="keyword">end</span>
+0150 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ideas2waveform</title>
+  <meta name="keywords" content="ideas2waveform">
+  <meta name="description" content="OPEN_INFRASOUND Open UAF/GI infrasound data as a waveform object.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed_internal</a> &gt; <a href="index.html">IDEAS_format</a> &gt; ideas2waveform.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_internal/IDEAS_format&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>ideas2waveform
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>OPEN_INFRASOUND Open UAF/GI infrasound data as a waveform object.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = ideas2waveform(fileName) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">OPEN_INFRASOUND Open UAF/GI infrasound data as a waveform object.
+ [W] = OPEN_INFRASOUND(FILENAME) opens a file in the UAF/GI infrasound
+ format. FILENAME should be quoted and be in .mat format. The contents of
+ the infrasound data are then parsed into a waveform object.
+   Example:
+       w = open_infrasound('FAI200908205.mat')</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = ideas2waveform(fileName)</a>
+0002 
+0003 <span class="comment">%OPEN_INFRASOUND Open UAF/GI infrasound data as a waveform object.</span>
+0004 <span class="comment">% [W] = OPEN_INFRASOUND(FILENAME) opens a file in the UAF/GI infrasound</span>
+0005 <span class="comment">% format. FILENAME should be quoted and be in .mat format. The contents of</span>
+0006 <span class="comment">% the infrasound data are then parsed into a waveform object.</span>
+0007 <span class="comment">%   Example:</span>
+0008 <span class="comment">%       w = open_infrasound('FAI200908205.mat')</span>
+0009 
+0010 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0011 <span class="comment">% $Date$</span>
+0012 <span class="comment">% $Revision$</span>
+0013 
+0014 
+0015 
+0016 <span class="keyword">if</span> ~exist(fileName)
+0017     error([<span class="string">'file '</span> fileName <span class="string">' does not exist.'</span>]);
+0018 <span class="keyword">end</span>
+0019 
+0020 load(fileName);
+0021 w = waveform;
+0022 
+0023 <span class="keyword">for</span> n = 1:size(data,2)
+0024     startTime = datenum([micHeader(n).date <span class="string">' '</span> micHeader(n).time]);
+0025     w(n) = waveform( micHeader(n).station , micHeader(n).channel , micHeader(n).Hz , startTime , CSS.calib(n)*data(:,n) );
+0026     w(n) = set(w(n),<span class="string">'UNITS'</span>,<span class="string">'Pa'</span>);
+0027     w(n) = addfield(w(n),<span class="string">'LAT'</span>,CSS.lat(n));
+0028     w(n) = addfield(w(n),<span class="string">'LON'</span>,CSS.lon(n));
+0029     w(n) = addfield(w(n),<span class="string">'DNORTH'</span>,CSS.dnorth(n));
+0030     w(n) = addfield(w(n),<span class="string">'DEAST'</span>,CSS.deast(n));
+0031     w(n) = addfield(w(n),<span class="string">'ELEV'</span>,CSS.elev(n));
+0032     w(n) = addfield(w(n),<span class="string">'DESCRIP'</span>,CSS.descrip(n,:));
+0033     w(n) = addfield(w(n),<span class="string">'STANAME'</span>,CSS.staname(n,:));
+0034     w(n) = addfield(w(n),<span class="string">'EDEPTH'</span>,CSS.edepth(n));
+0035     w(n) = addfield(w(n),<span class="string">'REFSTA'</span>,CSS.refsta(n,:));
+0036     w(n) = addfield(w(n),<span class="string">'CALIB'</span>,CSS.calib(n));
+0037     w(n) = addfield(w(n),<span class="string">'ONDATE'</span>,CSS.ondate(n));
+0038     w(n) = addfield(w(n),<span class="string">'OFFDATE'</span>,CSS.offdate(n));
+0039 <span class="keyword">end</span>
+0040     
+0041     
+0042     
+0043 
+0044 
+0045</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Event</title>
+  <meta name="keywords" content="Event">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">catalog</a> &gt; Event.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>Event
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Event.html" class="code" title="">Event</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Event.html" class="code" title="">Event</a>	</li><li><a href="catalog_cookbook.html" class="code" title="">catalog_cookbook</a>	% CATALOG and EVENTRATE cookbook</li><li><a href="readCatalog.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog</a>	READCATALOG: Read seismic events from common file formats & data sources.</li><li><a href="readCatalog2.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog2</a>	READCATALOG: Read seismic events from common file formats & data sources.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = Event(origins, varargin)</a></li><li><a href="#_sub2" class="code">function self = set(self, varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="Event.html" class="code" title="">Event</a>
+0002 <span class="comment">%EVENT: A class that serves as a container for ORIGIN and other objects.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% The class Event describes a seismic event which does not necessarily need</span>
+0005 <span class="comment">% to be a tectonic earthquake. An event is usually associated with one or</span>
+0006 <span class="comment">% more origins, which contain information about focal time and geographical</span>
+0007 <span class="comment">% location of the event. Multiple origins can cover automatic and manual</span>
+0008 <span class="comment">% locations, a set of location from different agencies, locations generated</span>
+0009 <span class="comment">% with different location programs and earth models, etc. Furthermore, an</span>
+0010 <span class="comment">% event is usually associated with one or more magnitudes, and with one or</span>
+0011 <span class="comment">% more focal mechanism determinations.</span>
+0012 
+0013 <span class="comment">% Event is modelled after the ObsPy Event class:</span>
+0014 <span class="comment">%   http://docs.obspy.org/packages/autogen/obspy.core.event.Event.html</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%% USAGE</span>
+0017 <span class="comment">%   e = Event([Origin1 Origin2 Origin3])</span>
+0018 <span class="comment">%      creates an Event object with 3 Origin objects</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%% EXAMPLE</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%   % create an Origin object</span>
+0023 <span class="comment">%   lat = 62.5; lon = -120.0; depth = 15.2; time = now;</span>
+0024 <span class="comment">%   o1 = Origin(time, lon, lat, depth);</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%   % create a 2nd Origin object</span>
+0027 <span class="comment">%   lat = 62.4; lon = -119.87; depth = 12.8; time = now-1/86400;</span>
+0028 <span class="comment">%   o2 = Origin(time, lon, lat, depth);</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%   % create an Event object</span>
+0031 <span class="comment">%   e = Event([o1 o2]);</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%% See also CATALOG, ORIGIN, EVENTRATE, READEVENTS, CATALOG_COOKBOOK</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">% Author: Glenn Thompson (glennthompson1971@gmail.com)</span>
+0037 <span class="comment">% $Date: $</span>
+0038 <span class="comment">% $Revision: $</span>
+0039 
+0040     properties
+0041         evid;
+0042         evname;
+0043         prefor;
+0044         auth;        
+0045         origins; <span class="comment">%[Origin()];</span>
+0046     <span class="keyword">end</span>
+0047     methods
+0048         <a name="_sub0" href="#_subfunctions" class="code">function obj = Event(origins, varargin)</a>
+0049             <span class="comment">% Parse required, optional and param-value pair arguments,</span>
+0050             <span class="comment">% set default values, and add validation conditions</span>
+0051             <span class="keyword">persistent</span> evid;
+0052             <span class="keyword">if</span> isempty(evid)
+0053                 evid = 1;
+0054             <span class="keyword">else</span>
+0055                 evid = evid + 1;
+0056             <span class="keyword">end</span>  
+0057             p = inputParser;
+0058             p.addRequired(<span class="string">'origins'</span>, @(o) strcmp(class(o), <span class="string">'Origin'</span>));
+0059             p.addParamValue(<span class="string">'evid'</span>, evid, @(i) floor(i)==i);
+0060             p.addParamValue(<span class="string">'evname'</span>, <span class="string">''</span>, @isstr);
+0061             p.addParamValue(<span class="string">'prefor'</span>, NaN, @(i) floor(i)==i);
+0062             p.addParamValue(<span class="string">'auth'</span>, <span class="string">''</span>, @isstr);
+0063             p.parse(origins, varargin{:})
+0064             fields = fieldnames(p.Results);
+0065             <span class="keyword">for</span> i=1:length(fields)
+0066                 field=fields{i};
+0067                 val = p.Results.(field);
+0068                 obj = obj.set(field, val);
+0069             <span class="keyword">end</span> 
+0070         <span class="keyword">end</span>
+0071         <span class="comment">%% SET</span>
+0072         <a name="_sub1" href="#_subfunctions" class="code">function self = set(self, varargin)</a>
+0073             <span class="comment">%SET Set properties</span>
+0074             <span class="comment">%   self = set(self,'property_name', val, ['property_name2', val2])</span>
+0075             <span class="comment">%   For a list of valid property names, type:</span>
+0076             <span class="comment">%       properties(self)</span>
+0077 
+0078             Vidx = 1 : numel(varargin);
+0079 
+0080             <span class="keyword">while</span> numel(Vidx) &gt;= 2
+0081                 prop_name = upper(varargin{Vidx(1)});
+0082                 val = varargin{Vidx(2)};
+0083                 mask = strcmp(upper(prop_name),upper(properties(self)));
+0084                 <span class="keyword">if</span> any(mask)
+0085                     mc = metaclass(self);
+0086                     i = find(mask);
+0087                     prop_name = mc.PropertyList(i).Name;
+0088                     <span class="keyword">if</span> isempty(mc.PropertyList(i).GetMethod)
+0089                         <span class="comment">% The properties here need to have</span>
+0090                         <span class="comment">% SetAccess==public</span>
+0091                         self.(prop_name) = val;
+0092                     <span class="keyword">else</span>
+0093                         warning(<span class="string">'Property %s is a derived property and cannot be set'</span>,prop_name);
+0094                     <span class="keyword">end</span>
+0095                 <span class="keyword">end</span>
+0096                 Vidx(1:2) = []; <span class="comment">%done with those parameters, move to the next ones...</span>
+0097             <span class="keyword">end</span> 
+0098         <span class="keyword">end</span> 
+0099     <span class="keyword">end</span>
+0100 <span class="keyword">end</span>
+0101             
+0102</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

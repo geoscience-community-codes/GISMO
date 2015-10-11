@@ -1,0 +1,766 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of correlation</title>
+  <meta name="keywords" content="correlation">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@correlation</a> &gt; correlation.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>correlation
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = correlation(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">
+ --------- DOCUMENTATION ------------------------------------------------
+ | CORRELATION('COOKBOOK') View html-format correlation demo cookbook.  |
+ | CORRELATION('README') View detailed version and install information. |
+ |   (see below of description of fields within a correlation object)   |
+ ------------------------------------------------------------------------
+ 
+
+ CORRELATION Correlation class constructor, version 1.5.
+
+ C = CORRELATION creates an empty correlation object. For explanation see the 
+ description below that follows the usage examples.
+
+ C = CORRELATION(WAVEFORM)
+ Create a correlation object from an existing waveform object. In a pinch
+ this formulation can be used, however, it lacks one critical element.
+ Without a trigger time, the correlation object has no information about
+ how the traces should be aligned. With clean data this may be remedied
+ with the XCORR routine. If possible however, it is better to use one of
+ the CORRELATION uses which includes trigger times. In the absence of this
+ information, trigger times are arbitrarily assigned to be one quarter of
+ the time between the trace start and end times.
+ 
+ C = CORRELATION(WAVEFORM,TRIG)
+ Create a correlation object from an existing waveform object and a column
+ vector of trigger times. These times can be in the matlab numeric time
+ format (serial day) or a recognized string format (see HELP DATENUM).
+ TRIG must be the same length as WAVEFORM or be a scalar value.
+
+ CORRELATION('DEMO')
+ Opens the demo dataset for correlation. This dataset contains a single
+ correlation object of 100 traces. It is the data source for the cookbook
+ demos.
+
+ C = CORRELATION(datasource,scnlobjects,trig,pretrig,posttrig)
+ creates a correlation object using the sta/chan/net/loc codes contained 
+ in SCNLOBJECT loaded from the datasource defined by DATASOURCE. For help
+ in understanding the SCNLOBJECT and DATASOURCE object, see HELP
+ SCNLOBJECT and HELP DATASOURCE respectively.
+
+ Start and end trace times are based on an input list of trigger times
+ cropped according to the pre/posttrig terms. All traces in the resulting
+ correlation object have the same frequency and the same number of
+ samples. If partial data is returned from the database request,
+ traces are zero-padded accordingly. If a trace has a lower frequency than
+ other traces in the object, a warning is issued and the trace is
+ resampled to the highest frequency in the set of waveforms. For most uses
+ this should be a rare occurence.
+
+The inputs are:
+       datasource:     station name
+       scnlobject:     scnlobject
+       trig:           vector of absolute trigger times
+                         (in matlab serial time format)
+       pre/posttrig:   these times in seconds define the width of the 
+                       window for each trace, where pretrig and posttrig 
+                       are times in seconds relative to the trigger
+                         time.
+
+ C = CORRELATION(C,W) replaces the waveforms in correlation object C with
+ the waveform object W. This is useful for manipulating waveforms with
+ tools outside the correlation toolbox. 
+ Example:
+   % square the amplitudes of each trace (sign-sensitive)
+   w  = waveform(c);
+   w1 = (w.^2)
+   w2 = sign(w);
+   for n = 1:numel(w)
+        w(n) = w1(n) .* w2(n);
+   end
+   c = correlation(c,w);
+ This is a very convenient usage since the correlation toolbox will never
+ incorporate all the possible waveform manipulations one might want.
+ However it needs to be used with care. It is possible to manipulate the
+ extracted waveform in ways that make it incompatible with the rest of the
+ metadata in the correlation object - for example if the times stamps are
+ altered. When replacing the waveform in a correlation object, all derived
+ data fields (CORR, LAG, LINK, STAT, CLUST) are removed since this data is
+ presumed no longer valid.
+
+ C = CORRELATION(N) where N is a single number, creates a correlation
+ object with N randomly generated simplistic synthetic traces. At times
+ useful for offline testing.
+
+ C = CORRELATION(CORAL) where CORAL is a data structure from the CORAL
+ seismic package (K. Creager, Univ. of Washington). CORAL is a fairly
+ comprehensive seismic data and metadata format. CORRELATION and
+ the underlying WAVEFORM suite are not. A CORAL to CORRELATION conversion
+ should usually be easy. The other direction may be more challenging as
+ most correlation and waveform objects do not contain much of the &quot;header&quot;
+ info stored by CORAL. If the pPick field exists in the CORAL structure,
+ then it is used to set the trigger times inside the resulting correlation
+ object. NOTE that little error checking is performed on the CORAL
+ structure. If it is improperly constructed, then the conversion to a
+ correlation object may fail without an intelligible error message.
+
+
+
+ % ------- DESCRIPTION OF FIELDS IN CORRELATION OBJECT ------------------
+ All calls to correlation return a &quot;correlation object&quot; containing
+ the following fields where M is the number of traces:
+    TRIG:     trigger times in matlab serial time (Mx1)
+    WAVES:    vector of waveforms (Mx1)
+    CORR:     max correlation coefficients (MxM, single precision)
+    LAG:      lag times in seconds (MxM, single precision)
+                (Example: If the lag time in position (A,B) is positive,
+                 then similar features on trace A occur later in relative
+                 time than on trace B. To align the traces, the lag time
+                 in (A,B) must be added to the trigger time of A)
+    STAT:     statistics about each trace (Mx? see below)
+    LINK:     defines the cluster tree (Mx3)
+    CLUST:    defines individual clusters(families) of events (Mx1)
+
+ The first two fields define the data traces. The last five fields are
+ products derived from these data. (Programming note: Internally, these
+ fields are referred to as c.trig, c.W, c.C, c.L, c.stat, c.link, and 
+ c.clust, respectively.)
+
+ The STAT field contains columns of statistics that can be assigned one 
+ per trace. The number of columns may be expanded to accomodate 
+ additional parameters. Currently it is 5 columns wide. Column 1 is the 
+ mean maximum correlation. Column 2 is the high side rms error (1 sigma) 
+ of the mean max correlation. Column 3 is the low side rms error (1 
+ sigma) of the mean max correlation. Columns 4 is the unweighted least 
+ squares best fit delay time for each trace. Column 5 is the rms error of 
+ this delay time. See Vandecar and Crosson (BSSA 1990) and HELP GETSTAT 
+ for details of how these statistics are calculated.
+
+
+
+ ------- DEPRECATED USES -----------------------------------------------
+ 
+ The following uses are still recognized by CORRELATION. However they have
+ been deprecated in favor of methods that make use of the datasource and
+ sncl objects beginning in waveform 1.10.
+
+ ANTELOPE
+    CORRELATION('stat','chan',trig,pretrig,posttrig)
+    CORRELATION('stat','chan',trig,pretrig,posttrig,'archive')
+
+ WINSTON
+    CORRELATION('stat','chan',trig,pretrig,posttrig,'netwk','loc','server',port)
+
+ While these calls to correlation may continue to work, they will not be
+ maintained and may disappear. Best to migrate to the newer flavor of
+ waveform. While the addition of two extra lines of code may seem a step
+ backward, the new approach is significantly more robust and much faster.
+ 
+ EXAMPLE OF PREFERRED FORMAT:
+ Deprecated usage:
+   correlation('stat','chan',trig,pretrig,posttrig,'archive')
+ 
+ Preferred usage:
+   ds = datasource('antelope','archive');
+   scnl = scnlobject('sta','chan');
+   correlation(ds,scnl,trig,pretrig,posttrig)
+
+ It is worth first investing time to understand the WAVEFORM, DATASOURCE,
+ SCNLOBJECT objects on which CORRELATION is built.
+ See also datasource <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a> scnlobject</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="align.html" class="code" title="function c = align(c,varargin)">align</a>	c = ALIGN(c)</li><li><a href="check.html" class="code" title="function val = check(c,varargin)">check</a>	Check various features of a correlation object.</li><li><a href="correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="crop.html" class="code" title="function c = crop(c,varargin)">crop</a>	c = CROP(c,[PRETRIG POSTTRIG])</li><li><a href="demean.html" class="code" title="function c = demean(c,varargin);">demean</a>	DEMEAN removes the mean of each trace.</li><li><a href="detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>	DETREND removes the slope of each trace.</li><li><a href="find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="verify.html" class="code" title="function c = verify(c)">verify</a>	VERIFY</li><li><a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="minus.html" class="code" title="function c = minus(c,varargin)">minus</a>	C = MINUS(C,I)</li><li><a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li><li><a href="xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	C = XCORR(C)</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function c = loadfromdatasource(ds,scnl,trig,pretrig,posttrig);</a></li><li><a href="#_sub2" class="code">function c = loadfromantelope(stat,chan,trig,pretrig,posttrig,archive)</a></li><li><a href="#_sub3" class="code">function c = loadfromwinston(stat,chan,trig,pretrig,posttrig,netwk,loc,server,port);</a></li><li><a href="#_sub4" class="code">function c = convert_coral(coral)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = correlation(varargin)</a>
+0002 
+0003 <span class="comment">%</span>
+0004 <span class="comment">% --------- DOCUMENTATION ------------------------------------------------</span>
+0005 <span class="comment">% | CORRELATION('COOKBOOK') View html-format correlation demo cookbook.  |</span>
+0006 <span class="comment">% | CORRELATION('README') View detailed version and install information. |</span>
+0007 <span class="comment">% |   (see below of description of fields within a correlation object)   |</span>
+0008 <span class="comment">% ------------------------------------------------------------------------</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% CORRELATION Correlation class constructor, version 1.5.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% C = CORRELATION creates an empty correlation object. For explanation see the</span>
+0014 <span class="comment">% description below that follows the usage examples.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% C = CORRELATION(WAVEFORM)</span>
+0017 <span class="comment">% Create a correlation object from an existing waveform object. In a pinch</span>
+0018 <span class="comment">% this formulation can be used, however, it lacks one critical element.</span>
+0019 <span class="comment">% Without a trigger time, the correlation object has no information about</span>
+0020 <span class="comment">% how the traces should be aligned. With clean data this may be remedied</span>
+0021 <span class="comment">% with the XCORR routine. If possible however, it is better to use one of</span>
+0022 <span class="comment">% the CORRELATION uses which includes trigger times. In the absence of this</span>
+0023 <span class="comment">% information, trigger times are arbitrarily assigned to be one quarter of</span>
+0024 <span class="comment">% the time between the trace start and end times.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% C = CORRELATION(WAVEFORM,TRIG)</span>
+0027 <span class="comment">% Create a correlation object from an existing waveform object and a column</span>
+0028 <span class="comment">% vector of trigger times. These times can be in the matlab numeric time</span>
+0029 <span class="comment">% format (serial day) or a recognized string format (see HELP DATENUM).</span>
+0030 <span class="comment">% TRIG must be the same length as WAVEFORM or be a scalar value.</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">% CORRELATION('DEMO')</span>
+0033 <span class="comment">% Opens the demo dataset for correlation. This dataset contains a single</span>
+0034 <span class="comment">% correlation object of 100 traces. It is the data source for the cookbook</span>
+0035 <span class="comment">% demos.</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% C = CORRELATION(datasource,scnlobjects,trig,pretrig,posttrig)</span>
+0038 <span class="comment">% creates a correlation object using the sta/chan/net/loc codes contained</span>
+0039 <span class="comment">% in SCNLOBJECT loaded from the datasource defined by DATASOURCE. For help</span>
+0040 <span class="comment">% in understanding the SCNLOBJECT and DATASOURCE object, see HELP</span>
+0041 <span class="comment">% SCNLOBJECT and HELP DATASOURCE respectively.</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">% Start and end trace times are based on an input list of trigger times</span>
+0044 <span class="comment">% cropped according to the pre/posttrig terms. All traces in the resulting</span>
+0045 <span class="comment">% correlation object have the same frequency and the same number of</span>
+0046 <span class="comment">% samples. If partial data is returned from the database request,</span>
+0047 <span class="comment">% traces are zero-padded accordingly. If a trace has a lower frequency than</span>
+0048 <span class="comment">% other traces in the object, a warning is issued and the trace is</span>
+0049 <span class="comment">% resampled to the highest frequency in the set of waveforms. For most uses</span>
+0050 <span class="comment">% this should be a rare occurence.</span>
+0051 <span class="comment">%</span>
+0052 <span class="comment">%The inputs are:</span>
+0053 <span class="comment">%       datasource:     station name</span>
+0054 <span class="comment">%       scnlobject:     scnlobject</span>
+0055 <span class="comment">%       trig:           vector of absolute trigger times</span>
+0056 <span class="comment">%                         (in matlab serial time format)</span>
+0057 <span class="comment">%       pre/posttrig:   these times in seconds define the width of the</span>
+0058 <span class="comment">%                       window for each trace, where pretrig and posttrig</span>
+0059 <span class="comment">%                       are times in seconds relative to the trigger</span>
+0060 <span class="comment">%                         time.</span>
+0061 <span class="comment">%</span>
+0062 <span class="comment">% C = CORRELATION(C,W) replaces the waveforms in correlation object C with</span>
+0063 <span class="comment">% the waveform object W. This is useful for manipulating waveforms with</span>
+0064 <span class="comment">% tools outside the correlation toolbox.</span>
+0065 <span class="comment">% Example:</span>
+0066 <span class="comment">%   % square the amplitudes of each trace (sign-sensitive)</span>
+0067 <span class="comment">%   w  = waveform(c);</span>
+0068 <span class="comment">%   w1 = (w.^2)</span>
+0069 <span class="comment">%   w2 = sign(w);</span>
+0070 <span class="comment">%   for n = 1:numel(w)</span>
+0071 <span class="comment">%        w(n) = w1(n) .* w2(n);</span>
+0072 <span class="comment">%   end</span>
+0073 <span class="comment">%   c = correlation(c,w);</span>
+0074 <span class="comment">% This is a very convenient usage since the correlation toolbox will never</span>
+0075 <span class="comment">% incorporate all the possible waveform manipulations one might want.</span>
+0076 <span class="comment">% However it needs to be used with care. It is possible to manipulate the</span>
+0077 <span class="comment">% extracted waveform in ways that make it incompatible with the rest of the</span>
+0078 <span class="comment">% metadata in the correlation object - for example if the times stamps are</span>
+0079 <span class="comment">% altered. When replacing the waveform in a correlation object, all derived</span>
+0080 <span class="comment">% data fields (CORR, LAG, LINK, STAT, CLUST) are removed since this data is</span>
+0081 <span class="comment">% presumed no longer valid.</span>
+0082 <span class="comment">%</span>
+0083 <span class="comment">% C = CORRELATION(N) where N is a single number, creates a correlation</span>
+0084 <span class="comment">% object with N randomly generated simplistic synthetic traces. At times</span>
+0085 <span class="comment">% useful for offline testing.</span>
+0086 <span class="comment">%</span>
+0087 <span class="comment">% C = CORRELATION(CORAL) where CORAL is a data structure from the CORAL</span>
+0088 <span class="comment">% seismic package (K. Creager, Univ. of Washington). CORAL is a fairly</span>
+0089 <span class="comment">% comprehensive seismic data and metadata format. CORRELATION and</span>
+0090 <span class="comment">% the underlying WAVEFORM suite are not. A CORAL to CORRELATION conversion</span>
+0091 <span class="comment">% should usually be easy. The other direction may be more challenging as</span>
+0092 <span class="comment">% most correlation and waveform objects do not contain much of the &quot;header&quot;</span>
+0093 <span class="comment">% info stored by CORAL. If the pPick field exists in the CORAL structure,</span>
+0094 <span class="comment">% then it is used to set the trigger times inside the resulting correlation</span>
+0095 <span class="comment">% object. NOTE that little error checking is performed on the CORAL</span>
+0096 <span class="comment">% structure. If it is improperly constructed, then the conversion to a</span>
+0097 <span class="comment">% correlation object may fail without an intelligible error message.</span>
+0098 <span class="comment">%</span>
+0099 <span class="comment">%</span>
+0100 <span class="comment">%</span>
+0101 <span class="comment">% % ------- DESCRIPTION OF FIELDS IN CORRELATION OBJECT ------------------</span>
+0102 <span class="comment">% All calls to correlation return a &quot;correlation object&quot; containing</span>
+0103 <span class="comment">% the following fields where M is the number of traces:</span>
+0104 <span class="comment">%    TRIG:     trigger times in matlab serial time (Mx1)</span>
+0105 <span class="comment">%    WAVES:    vector of waveforms (Mx1)</span>
+0106 <span class="comment">%    CORR:     max correlation coefficients (MxM, single precision)</span>
+0107 <span class="comment">%    LAG:      lag times in seconds (MxM, single precision)</span>
+0108 <span class="comment">%                (Example: If the lag time in position (A,B) is positive,</span>
+0109 <span class="comment">%                 then similar features on trace A occur later in relative</span>
+0110 <span class="comment">%                 time than on trace B. To align the traces, the lag time</span>
+0111 <span class="comment">%                 in (A,B) must be added to the trigger time of A)</span>
+0112 <span class="comment">%    STAT:     statistics about each trace (Mx? see below)</span>
+0113 <span class="comment">%    LINK:     defines the cluster tree (Mx3)</span>
+0114 <span class="comment">%    CLUST:    defines individual clusters(families) of events (Mx1)</span>
+0115 <span class="comment">%</span>
+0116 <span class="comment">% The first two fields define the data traces. The last five fields are</span>
+0117 <span class="comment">% products derived from these data. (Programming note: Internally, these</span>
+0118 <span class="comment">% fields are referred to as c.trig, c.W, c.C, c.L, c.stat, c.link, and</span>
+0119 <span class="comment">% c.clust, respectively.)</span>
+0120 <span class="comment">%</span>
+0121 <span class="comment">% The STAT field contains columns of statistics that can be assigned one</span>
+0122 <span class="comment">% per trace. The number of columns may be expanded to accomodate</span>
+0123 <span class="comment">% additional parameters. Currently it is 5 columns wide. Column 1 is the</span>
+0124 <span class="comment">% mean maximum correlation. Column 2 is the high side rms error (1 sigma)</span>
+0125 <span class="comment">% of the mean max correlation. Column 3 is the low side rms error (1</span>
+0126 <span class="comment">% sigma) of the mean max correlation. Columns 4 is the unweighted least</span>
+0127 <span class="comment">% squares best fit delay time for each trace. Column 5 is the rms error of</span>
+0128 <span class="comment">% this delay time. See Vandecar and Crosson (BSSA 1990) and HELP GETSTAT</span>
+0129 <span class="comment">% for details of how these statistics are calculated.</span>
+0130 <span class="comment">%</span>
+0131 <span class="comment">%</span>
+0132 <span class="comment">%</span>
+0133 <span class="comment">% ------- DEPRECATED USES -----------------------------------------------</span>
+0134 <span class="comment">%</span>
+0135 <span class="comment">% The following uses are still recognized by CORRELATION. However they have</span>
+0136 <span class="comment">% been deprecated in favor of methods that make use of the datasource and</span>
+0137 <span class="comment">% sncl objects beginning in waveform 1.10.</span>
+0138 <span class="comment">%</span>
+0139 <span class="comment">% ANTELOPE</span>
+0140 <span class="comment">%    CORRELATION('stat','chan',trig,pretrig,posttrig)</span>
+0141 <span class="comment">%    CORRELATION('stat','chan',trig,pretrig,posttrig,'archive')</span>
+0142 <span class="comment">%</span>
+0143 <span class="comment">% WINSTON</span>
+0144 <span class="comment">%    CORRELATION('stat','chan',trig,pretrig,posttrig,'netwk','loc','server',port)</span>
+0145 <span class="comment">%</span>
+0146 <span class="comment">% While these calls to correlation may continue to work, they will not be</span>
+0147 <span class="comment">% maintained and may disappear. Best to migrate to the newer flavor of</span>
+0148 <span class="comment">% waveform. While the addition of two extra lines of code may seem a step</span>
+0149 <span class="comment">% backward, the new approach is significantly more robust and much faster.</span>
+0150 <span class="comment">%</span>
+0151 <span class="comment">% EXAMPLE OF PREFERRED FORMAT:</span>
+0152 <span class="comment">% Deprecated usage:</span>
+0153 <span class="comment">%   correlation('stat','chan',trig,pretrig,posttrig,'archive')</span>
+0154 <span class="comment">%</span>
+0155 <span class="comment">% Preferred usage:</span>
+0156 <span class="comment">%   ds = datasource('antelope','archive');</span>
+0157 <span class="comment">%   scnl = scnlobject('sta','chan');</span>
+0158 <span class="comment">%   correlation(ds,scnl,trig,pretrig,posttrig)</span>
+0159 <span class="comment">%</span>
+0160 <span class="comment">% It is worth first investing time to understand the WAVEFORM, DATASOURCE,</span>
+0161 <span class="comment">% SCNLOBJECT objects on which CORRELATION is built.</span>
+0162 <span class="comment">% See also datasource waveform scnlobject</span>
+0163 
+0164 <span class="comment">% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0165 <span class="comment">% $Date$</span>
+0166 <span class="comment">% $Revision$</span>
+0167 
+0168 
+0169 
+0170 
+0171 <span class="comment">% CHECK THAT WAVEFORM OBJECT IS SET UP</span>
+0172 <span class="keyword">if</span> exist(<span class="string">'waveform'</span>,<span class="string">'file'</span>) ~= 2
+0173     error(<span class="string">'The @WAVEFORM suite must be in the path to use the correlation toolbox.'</span>)
+0174 <span class="keyword">end</span>
+0175 
+0176 
+0177 <span class="comment">% LOAD DATA VIA WAVEFORM. SEND SPECIAL CASES TO SUBROUTINE</span>
+0178 
+0179 <span class="comment">%% NO DATA</span>
+0180 <span class="keyword">if</span> nargin==0
+0181         c.W = [];
+0182         c.trig = [];
+0183         c.C = [];
+0184         c.L = [];
+0185         c.stat = [];
+0186         c.link = [];
+0187         c.clust = [];
+0188         c = class(c,<span class="string">'correlation'</span>);
+0189         
+0190 <span class="comment">%% ANOTHER CORRELATION OBJECT</span>
+0191 <span class="keyword">elseif</span> nargin==1 &amp;&amp; isa(varargin{1},<span class="string">'correlation'</span>)
+0192     c = varargin{1};
+0193         
+0194 <span class="comment">%% REPLACE WAVEFORM IN EXISTING CORRELATION OBJECT</span>
+0195 <span class="keyword">elseif</span> nargin==2 &amp;&amp; isa(varargin{1},<span class="string">'correlation'</span>)
+0196     c = varargin{1};
+0197     w = varargin{2};
+0198     <span class="keyword">if</span> <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'TRACES'</span>) ~= numel(w)
+0199         error(<span class="string">'Correlation and waveform objects must have the same number of elements'</span>);
+0200     <span class="keyword">end</span>
+0201     c.W = w;
+0202     c.C = [];
+0203     c.L = [];
+0204     c.stat = [];
+0205     c.link = [];
+0206     c.clust = [];
+0207     
+0208 <span class="comment">%% BUILD FROM A STRUCTURE (CORAL)</span>
+0209 <span class="keyword">elseif</span> isa(varargin{1},<span class="string">'struct'</span>)
+0210     <span class="comment">%if isfield(varargin{1}(1),'data') &amp;&amp; isfield(varargin{1}(1),'staCode') &amp;&amp; isfield(varargin{1}(1),'staChannel')</span>
+0211     <span class="keyword">if</span> isfield(varargin{1},<span class="string">'data'</span>) &amp;&amp; isfield(varargin{1},<span class="string">'staCode'</span>) &amp;&amp; isfield(varargin{1},<span class="string">'staChannel'</span>)
+0212         c = <a href="#_sub4" class="code" title="subfunction c = convert_coral(coral)">convert_coral</a>(varargin{1});
+0213     <span class="keyword">end</span>
+0214     <span class="comment">% add other &quot;struct&quot; processing blocks here as an embedded elseif</span>
+0215 
+0216 <span class="comment">%% BUILD FROM A DATASOURCE</span>
+0217 <span class="keyword">elseif</span> isa(varargin{1},<span class="string">'datasource'</span>)
+0218     ds = varargin{1};
+0219     scnl = varargin{2};
+0220     trig = reshape(varargin{3},length(varargin{3}),1);
+0221     pretrig = varargin{4};
+0222     posttrig = varargin{5};
+0223     c = <a href="#_sub1" class="code" title="subfunction c = loadfromdatasource(ds,scnl,trig,pretrig,posttrig);">loadfromdatasource</a>(ds,scnl,trig,pretrig,posttrig);
+0224     c.C = [];
+0225     c.L = [];
+0226     c.stat = [];
+0227     c.link = [];
+0228     c.clust = [];
+0229     c = class(c,<span class="string">'correlation'</span>);
+0230     c = <a href="verify.html" class="code" title="function c = verify(c)">verify</a>(c);
+0231     c = <a href="crop.html" class="code" title="function c = crop(c,varargin)">crop</a>(c,pretrig,posttrig);
+0232     
+0233 <span class="comment">%% DEMO DATASET</span>
+0234 <span class="keyword">elseif</span> nargin==1 &amp;&amp; strncmpi(varargin{1},<span class="string">'DEM'</span>,3)
+0235     load demo_data_100; <span class="comment">%stresstest</span>
+0236     
+0237 <span class="comment">%% OPEN HTML COOKBOOK</span>
+0238 <span class="keyword">elseif</span> nargin==1 &amp;&amp; strncmpi(varargin{1},<span class="string">'COO'</span>,3)
+0239     p = which(<span class="string">'correlation_cookbook'</span>);
+0240     <span class="keyword">if</span> isempty(p)
+0241         error(<span class="string">'Sorry. The correlation cookbook was not found.'</span>);
+0242     <span class="keyword">end</span>
+0243     p = p(1:end-22);
+0244     slash = p(end);
+0245     web([p <span class="string">'html'</span> slash <span class="string">'correlation_cookbook.html'</span>]);
+0246     c = [];
+0247     
+0248 <span class="comment">%% OPEN README FILE</span>
+0249 <span class="keyword">elseif</span> nargin==1 &amp;&amp; strncmpi(varargin{1},<span class="string">'REA'</span>,3)
+0250     p = which(<span class="string">'correlation/correlation'</span>);
+0251     p = p(1:end-13);
+0252     web([p <span class="string">'README.txt'</span>]);
+0253     c = [];
+0254     
+0255 <span class="comment">%% WITH SYNTHETIC DATA</span>
+0256 <span class="keyword">elseif</span> nargin==1 &amp;&amp; isa(varargin{1},<span class="string">'double'</span>)
+0257     co = makesynthwaves(varargin{1});
+0258     c.W = co.W;
+0259     c.trig = co.trig;
+0260     c.C = [];
+0261     c.L = [];
+0262     c.stat = [];
+0263     c.link = [];
+0264     c.clust = [];
+0265     c = class(c,<span class="string">'correlation'</span>);
+0266     
+0267 <span class="comment">%% FROM A WAVEFORM WITHOUT TRIGGERS</span>
+0268 <span class="keyword">elseif</span> nargin==1 &amp;&amp; isa(varargin{1},<span class="string">'waveform'</span>)
+0269     c.W = varargin{1};
+0270     c.W = reshape(c.W,numel(c.W),1);
+0271     c.trig = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c.W,<span class="string">'START'</span>) + 0.25*(<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c.W,<span class="string">'END'</span>)-<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c.W,<span class="string">'START'</span>));
+0272     c.trig = reshape(c.trig,numel(c.trig),1);
+0273     c.C = [];
+0274     c.L = [];
+0275     c.stat = [];
+0276     c.link = [];
+0277     c.clust = [];
+0278     c = class(c,<span class="string">'correlation'</span>);
+0279     
+0280 <span class="comment">%% FROM A WAVEFORM WITH TRIGGERS</span>
+0281 <span class="keyword">elseif</span> nargin==2 &amp;&amp; isa(varargin{1},<span class="string">'waveform'</span>)
+0282     c.W = varargin{1};
+0283     c.W = reshape(c.W,numel(c.W),1);
+0284     <span class="keyword">if</span> isa(varargin{2},<span class="string">'double'</span>)
+0285         c.trig = varargin{2};
+0286         c.trig = reshape(c.trig,numel(c.trig),1);
+0287     <span class="keyword">else</span>
+0288         error(<span class="string">'Time format for TRIG field not recognized'</span>);
+0289     <span class="keyword">end</span>
+0290     <span class="comment">% adjust length of trigger field input</span>
+0291     <span class="keyword">if</span> numel(c.trig)==1
+0292         c.trig = c.trig*ones(size(c.W));
+0293     <span class="keyword">elseif</span>  numel(c.trig)~=numel(c.W)
+0294         error(<span class="string">'correlation:correlation:wrongTriggerLength'</span>,<span class="string">'Trigger argument must be of length 1 or the same as the number of waveforms'</span>);
+0295     <span class="keyword">end</span>
+0296     c.C = [];
+0297     c.L = [];
+0298     c.stat = [];
+0299     c.link = [];
+0300     c.clust = [];
+0301     c = class(c,<span class="string">'correlation'</span>);
+0302     
+0303 <span class="comment">%% FROM DEFAULT ANTELOPE ARCHIVE</span>
+0304 <span class="keyword">elseif</span> nargin==5
+0305     warning(<span class="string">'This call to correlation is deprecated. Use the datasource and scnlobject as described in HELP CORRELATION.'</span>);
+0306     stat = varargin{1};
+0307     chan = varargin{2};
+0308     trig = reshape(varargin{3},length(varargin{3}),1);
+0309     pretrig = varargin{4};
+0310     posttrig = varargin{5};
+0311     c = <a href="#_sub2" class="code" title="subfunction c = loadfromantelope(stat,chan,trig,pretrig,posttrig,archive)">loadfromantelope</a>(stat,chan,trig,pretrig,posttrig,[]);
+0312     c.C = [];
+0313     c.L = [];
+0314     c.stat = [];
+0315     c.link = [];
+0316     c.clust = [];
+0317     c = class(c,<span class="string">'correlation'</span>);
+0318     c = <a href="verify.html" class="code" title="function c = verify(c)">verify</a>(c);
+0319     c = <a href="crop.html" class="code" title="function c = crop(c,varargin)">crop</a>(c,pretrig,posttrig);
+0320     
+0321 <span class="comment">%% FROM CUSTOM ANTELOPE ARCHIVE</span>
+0322 <span class="keyword">elseif</span> nargin==6
+0323     warning(<span class="string">'This call to correlation is deprecated. Use the datasource and scnlobject as described in HELP CORRELATION.'</span>);
+0324     stat = varargin{1};
+0325     chan = varargin{2};
+0326     trig = reshape(varargin{3},length(varargin{3}),1);
+0327     pretrig = varargin{4};
+0328     posttrig = varargin{5};
+0329     archive = varargin{6};
+0330     c = <a href="#_sub2" class="code" title="subfunction c = loadfromantelope(stat,chan,trig,pretrig,posttrig,archive)">loadfromantelope</a>(stat,chan,trig,pretrig,posttrig,archive);
+0331     c.C = [];
+0332     c.L = [];
+0333     c.stat = [];
+0334     c.link = [];
+0335     c.clust = [];
+0336     c = class(c,<span class="string">'correlation'</span>);
+0337     c = <a href="verify.html" class="code" title="function c = verify(c)">verify</a>(c);
+0338     c = <a href="crop.html" class="code" title="function c = crop(c,varargin)">crop</a>(c,pretrig,posttrig);
+0339     
+0340 <span class="comment">%% FROM WINSTON WAVE SERVER</span>
+0341 <span class="keyword">elseif</span> nargin==9
+0342     warning(<span class="string">'This call to correlation is deprecated. Use the datasource and scnlobject as described in HELP CORRELATION.'</span>);
+0343     stat = varargin{1};
+0344     chan = varargin{2};
+0345     trig = reshape(varargin{3},1,length(varargin{3}));
+0346     pretrig = varargin{4};
+0347     posttrig = varargin{5};
+0348     netwk = varargin{6};
+0349     loc = varargin{7};
+0350     server = varargin{8};
+0351     port = varargin{9};
+0352     c = <a href="#_sub3" class="code" title="subfunction c = loadfromwinston(stat,chan,trig,pretrig,posttrig,netwk,loc,server,port);">loadfromwinston</a>(stat,chan,trig,pretrig,posttrig,netwk,loc,server,port);
+0353     c.C = [];
+0354     c.L = [];
+0355     c.stat = [];
+0356     c.link = [];
+0357     c.clust = [];
+0358     c = class(c,<span class="string">'correlation'</span>);
+0359     whos
+0360     c = <a href="verify.html" class="code" title="function c = verify(c)">verify</a>(c);
+0361     c = <a href="crop.html" class="code" title="function c = crop(c,varargin)">crop</a>(c,pretrig,posttrig);
+0362     
+0363 <span class="keyword">else</span>
+0364     error(<span class="string">'Invalid input values to correlation'</span>);
+0365 <span class="keyword">end</span>;
+0366 
+0367 
+0368 
+0369 <span class="comment">%% ADJUST DATA LENGTH AND SAMPLE RATE IF NECESSARY</span>
+0370 <span class="keyword">if</span> <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'TRACES'</span>)
+0371     c = <a href="demean.html" class="code" title="function c = demean(c,varargin);">demean</a>(c);
+0372     c = <a href="detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>(c);
+0373     <span class="keyword">if</span> ~<a href="check.html" class="code" title="function val = check(c,varargin)">check</a>(c,<span class="string">'FREQ'</span>)
+0374         c = <a href="align.html" class="code" title="function c = align(c,varargin)">align</a>(c);
+0375     <span class="keyword">elseif</span> ~<a href="check.html" class="code" title="function val = check(c,varargin)">check</a>(c,<span class="string">'SAMP'</span>)
+0376         c = <a href="verify.html" class="code" title="function c = verify(c)">verify</a>(c);
+0377     <span class="keyword">end</span>    
+0378 <span class="keyword">end</span>
+0379 
+0380 
+0381 
+0382 
+0383 
+0384 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0385 <span class="comment">%% FUNCTION: LOAD WAVEFORM DATA FROM A DATASOURCE</span>
+0386 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0387 
+0388 <a name="_sub1" href="#_subfunctions" class="code">function c = loadfromdatasource(ds,scnl,trig,pretrig,posttrig);</a>
+0389     
+0390 <span class="comment">% TODO: This function needs to rewritten if/when waveform is able to</span>
+0391 <span class="comment">% identify which traces are empty instead of skipping them. This should</span>
+0392 <span class="comment">% improve the spead considerably. - MEW, May 25, 2009.</span>
+0393 
+0394 <span class="comment">% READ IN WAVEFORM OBJECTS</span>
+0395 good = true(size(trig));
+0396 fprintf(<span class="string">'Reading waveforms into a correlation object ...\n'</span>);
+0397 w = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0398 nMax = length(trig);
+0399 disp(<span class="string">'     '</span>);
+0400 
+0401 <span class="comment">%all requests for waveforms are the same, and depend upon various triggers.</span>
+0402 wgetter = @(tr) <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds, scnl, tr+pretrig/86400, tr+posttrig/86400);
+0403 
+0404 loaderrmsg = [<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(scnl,<span class="string">'nscl_string'</span>), <span class="string">' at time %s could not be loaded\n     \n'</span>];
+0405 updatemsg.good = @(n) fprintf(<span class="string">'\b\b\b\b\b\b%5.0f%%'</span>,n/nMax*100);
+0406 updatemsg.bad = @(dv) fprintf(loaderrmsg, datestr(dv,<span class="string">'mm/dd/yyyy HH:MM:SS'</span>));
+0407 
+0408 <span class="keyword">for</span> n = 1:nMax
+0409    <span class="keyword">try</span>
+0410       w(n) = wgetter(trig(n));
+0411       updatemsg.good(n);
+0412    <span class="keyword">catch</span>
+0413       updatemsg.bad(trig(n));
+0414       good(n) = false;    <span class="comment">% mark waveform as empty</span>
+0415    <span class="keyword">end</span>;
+0416 <span class="keyword">end</span>;
+0417 fprintf(<span class="string">'\n'</span>);
+0418 <span class="comment">%</span>
+0419 <span class="comment">% CHECK TO SEE IF ANY DATA WAS READ IN</span>
+0420 <span class="keyword">if</span> numel(w)==0
+0421     error(<span class="string">'This data is not available from the specified database.'</span>);
+0422 <span class="keyword">end</span>
+0423 
+0424 <span class="comment">% FILL DATA GAPS</span>
+0425  w = fillgaps(w,<span class="string">'MeanAll'</span>);
+0426 
+0427 <span class="comment">%</span>
+0428 <span class="comment">% STORE ONLY GOOD TRACES</span>
+0429 w = w(good);
+0430 trig = trig(good);
+0431 <span class="comment">%</span>
+0432 <span class="comment">% FILL CORRELATION STRUCTURE</span>
+0433 c.W = reshape(w,length(w),1);
+0434 c.trig = reshape(trig,length(trig),1);
+0435 
+0436 
+0437 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0438 <span class="comment">%% FUNCTION: LOAD AN ANTELOPE DATABASE</span>
+0439 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0440 
+0441 <a name="_sub2" href="#_subfunctions" class="code">function c = loadfromantelope(stat,chan,trig,pretrig,posttrig,archive)</a>
+0442 
+0443 <span class="comment">% READ IN WAVEFORM OBJECTS</span>
+0444 good =true(size(trig));
+0445 fprintf(<span class="string">'Creating matrix of waveforms ...'</span>);
+0446 w = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0447 
+0448 <span class="keyword">for</span> i = 1:length(trig)
+0449     <span class="keyword">try</span>
+0450     <span class="keyword">if</span> ~isnan(archive)
+0451             w(i) = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(stat,chan,trig(i)+pretrig/86400,trig(i)+posttrig/86400,archive);
+0452     <span class="keyword">else</span>
+0453             w(i) = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(stat,chan,trig(i)+pretrig/86400,trig(i)+posttrig/86400);
+0454     <span class="keyword">end</span>
+0455         freq(i) = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(i),<span class="string">'Fs'</span>);
+0456         fprintf(<span class="string">'.'</span>);
+0457     <span class="keyword">catch</span>
+0458         disp(<span class="string">' '</span>);
+0459         disp([stat <span class="string">'_'</span> chan <span class="string">' at time '</span> datestr(trig(i),<span class="string">'mm/dd/yyyy HH:MM:SS.FFF'</span>) <span class="string">' could not be loaded.'</span>]);
+0460         good(i) = false;    <span class="comment">% mark waveform as empty</span>
+0461     <span class="keyword">end</span>;
+0462 <span class="keyword">end</span>;
+0463 disp(<span class="string">' '</span>);
+0464 <span class="comment">%</span>
+0465 <span class="comment">% CHECK TO SEE IF ANY DATA WAS READ IN</span>
+0466 <span class="keyword">if</span> length(w)==0
+0467     error(<span class="string">'This data not is available from the specified database.'</span>);
+0468 <span class="keyword">end</span>
+0469 <span class="comment">%</span>
+0470 <span class="comment">% STORE ONLY GOOD TRACES</span>
+0471 w = w(good);
+0472 trig = trig(good);
+0473 freq = freq(good);
+0474 <span class="comment">%</span>
+0475 <span class="comment">% FILL CORRELATION STRUCTURE</span>
+0476 c.W = reshape(w,length(w),1);
+0477 c.trig = reshape(trig,length(trig),1);
+0478 
+0479 
+0480 
+0481 
+0482 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0483 <span class="comment">%% FUNCTION: LOAD FROM A WINSTON DATABASE</span>
+0484 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0485 
+0486 <a name="_sub3" href="#_subfunctions" class="code">function c = loadfromwinston(stat,chan,trig,pretrig,posttrig,netwk,loc,server,port);</a>
+0487 
+0488 <span class="comment">% READ IN WAVEFORM OBJECTS</span>
+0489 good = true(size(trig));
+0490 fprintf(<span class="string">'Creating matrix of waveforms ...'</span>);
+0491 w = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0492 <span class="keyword">for</span> i = 1:length(trig)
+0493     <span class="keyword">try</span>
+0494            w(i) = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(stat,chan,trig(i)+pretrig/86400,trig(i)+posttrig/86400,netwk,loc,server,port);
+0495         freq(i) = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(i),<span class="string">'Fs'</span>);
+0496         fprintf(<span class="string">'.'</span>);
+0497     <span class="keyword">catch</span>
+0498         disp(<span class="string">' '</span>);
+0499         disp([stat <span class="string">'_'</span> chan <span class="string">' at time '</span> datestr(trig(i),<span class="string">'mm/dd/yyyy HH:MM:SS.FFF'</span>) <span class="string">' could not be loaded.'</span>]);
+0500         good(i) = false;    <span class="comment">% mark waveform as empty</span>
+0501     <span class="keyword">end</span>;
+0502 <span class="keyword">end</span>;
+0503 disp(<span class="string">' '</span>);
+0504 <span class="comment">%</span>
+0505 <span class="comment">% CHECK TO SEE IF ANY DATA WAS READ IN</span>
+0506 <span class="keyword">if</span> length(w)==0
+0507     error(<span class="string">'This data not is available from the specified database.'</span>);
+0508 <span class="keyword">end</span>
+0509 <span class="comment">%</span>
+0510 <span class="comment">% STORE ONLY GOOD TRACES</span>
+0511 w = w(good);
+0512 trig = trig(good);
+0513 freq = freq(good);
+0514 <span class="comment">%</span>
+0515 <span class="comment">% RESAMPLE TRACES TO MAXIMUM FREQUENCY</span>
+0516 fmax = round(max(freq))
+0517 <span class="keyword">for</span> i = 1:length(trig)
+0518     <span class="keyword">if</span> <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(i),<span class="string">'FREQ'</span>) ~= fmax
+0519         w(i) = <a href="align.html" class="code" title="function c = align(c,varargin)">align</a>(w(i),trig(i),fmax);
+0520         disp([<span class="string">'Trace no. '</span> num2str(i) <span class="string">' is being resampled to '</span> num2str(fmax) <span class="string">' Hz'</span>]);
+0521     <span class="keyword">end</span>
+0522 <span class="keyword">end</span>
+0523 <span class="comment">%</span>
+0524 <span class="comment">% FILL CORRELATION STRUCTURE</span>
+0525 c.W = reshape(w,length(w),1);
+0526 c.trig = reshape(trig,length(trig),1);
+0527 
+0528 
+0529 
+0530 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0531 <span class="comment">%% FUNCTION: CONVERT FROM CORAL STRUCTURE</span>
+0532 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0533 
+0534 <a name="_sub4" href="#_subfunctions" class="code">function c = convert_coral(coral)</a>
+0535 
+0536 w = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0537 t = zeros(size(coral));
+0538 <span class="keyword">for</span> i = 1:length(coral)
+0539     w(i) = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0540     w(i) = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( w(i) , <span class="string">'Station'</span> , coral(i).staCode );
+0541     w(i) = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( w(i) , <span class="string">'Channel'</span> , coral(i).staChannel );
+0542     w(i) = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( w(i) , <span class="string">'Data'</span> , coral(i).data );
+0543     w(i) = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( w(i) , <span class="string">'Start'</span> , datenum(coral(i).recStartTime') );
+0544     w(i) = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( w(i) , <span class="string">'FREQ'</span> , 1/coral(i).recSampInt );
+0545     <span class="keyword">if</span> isfield(coral(i),<span class="string">'pPick'</span>)
+0546         t(i) = datenum(coral(i).pPick');
+0547     <span class="keyword">end</span>
+0548 <span class="keyword">end</span>
+0549 
+0550 <span class="keyword">if</span> length(<a href="find.html" class="code" title="function index = find(c,varargin)">find</a>(t))==length(t)
+0551     disp(<span class="string">'Trigger times are being applied from coral pPick field'</span>);
+0552     c = <a href="correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>(w,t);
+0553 <span class="keyword">else</span>
+0554     c = <a href="correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>(w);
+0555 <span class="keyword">end</span>
+0556 <span class="comment">%c.W = reshape(w,length(w),1);</span>
+0557 
+0558</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of load_winston</title>
+  <meta name="keywords" content="load_winston">
+  <meta name="description" content="LOAD_WINSTON handles retrieval of data from a winston waveserver.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; load_winston.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>load_winston
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>LOAD_WINSTON handles retrieval of data from a winston waveserver.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function allWaves = load_winston(dataRequest, COMBINE_WAVEFORMS) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> LOAD_WINSTON handles retrieval of data from a winston waveserver.
+  all times are matlab formatted datenums
+  allWaves = load_winston(allSCNLs, sTime, eTime, server, port)
+
+
+
+ scnl is the StationChannelNetworkLocation. this may be migrated into an
+ object in the near future.  For now, it is a structure with fields:
+ 'station','channel','network','location'</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>	convert an epoch date to a matlab date</li><li><a href="mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>	convert a matlab date to an epoch date</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [w, successful] = getFromWinston(scnl,stime,etime,mydatasource)</a></li><li><a href="#_sub2" class="code">function jars_are_missing = missingWinstonJars()</a></li><li><a href="#_sub3" class="code">function giveNoJarWarning()</a></li><li><a href="#_sub4" class="code">function tf = timesAreOK (t1, t2)</a></li><li><a href="#_sub5" class="code">function w = scnl2waveform(scnl)</a></li><li><a href="#_sub6" class="code">function success = getWinstonWorking()</a></li><li><a href="#_sub7" class="code">function [dataSource, scnls, startTimes, endTimes] = unpackDataRequest(dataRequest)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function allWaves = load_winston(dataRequest, COMBINE_WAVEFORMS)</a>
+0002    <span class="comment">% LOAD_WINSTON handles retrieval of data from a winston waveserver.</span>
+0003    <span class="comment">%  all times are matlab formatted datenums</span>
+0004    <span class="comment">%  allWaves = load_winston(allSCNLs, sTime, eTime, server, port)</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">%</span>
+0007    <span class="comment">%</span>
+0008    <span class="comment">% scnl is the StationChannelNetworkLocation. this may be migrated into an</span>
+0009    <span class="comment">% object in the near future.  For now, it is a structure with fields:</span>
+0010    <span class="comment">% 'station','channel','network','location'</span>
+0011    
+0012    <span class="comment">% INPUT: waveform (station, channel, start, end, network,</span>
+0013    <span class="comment">%                  location, server, port)</span>
+0014    
+0015    [myDataSource, channelInfo, sTime, eTime] = <a href="#_sub7" class="code" title="subfunction [dataSource, scnls, startTimes, endTimes] = unpackDataRequest(dataRequest)">unpackDataRequest</a>(dataRequest);
+0016    <span class="keyword">persistent</span> winstonIsWorking
+0017    
+0018    <span class="keyword">if</span> isempty(winstonIsWorking) || ~winstonIsWorking
+0019       winstonIsWorking = <a href="#_sub6" class="code" title="subfunction success = getWinstonWorking()">getWinstonWorking</a>();
+0020    <span class="keyword">end</span>
+0021    
+0022    <span class="keyword">if</span> ~winstonIsWorking
+0023       <span class="comment">%well, if winston isn't working, there's really no point now, is there?</span>
+0024       <span class="keyword">return</span>;
+0025    <span class="keyword">end</span>
+0026    
+0027    w = waveform;
+0028    allWaves = repmat(w,numel(channelInfo),numel(sTime)); <span class="comment">%preallocate</span>
+0029    allWaves = allWaves(:);
+0030    
+0031    sTime_epoch = <a href="mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>(sTime);
+0032    eTime_epoch = <a href="mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>(eTime);
+0033    
+0034    nWaves = 0;
+0035    <span class="keyword">for</span> idxTime = 1:numel(sTime)
+0036       t1 = sTime_epoch(idxTime);
+0037       t2 = eTime_epoch(idxTime);
+0038       <span class="keyword">if</span> ~<a href="#_sub4" class="code" title="subfunction tf = timesAreOK (t1, t2)">timesAreOK</a>(t1,t2)
+0039          <span class="keyword">continue</span>;
+0040       <span class="keyword">end</span>
+0041       
+0042       <span class="keyword">for</span> chaIdx = 1:numel(channelInfo);
+0043          scnl = channelInfo(chaIdx);
+0044          [w, status] = <a href="#_sub1" class="code" title="subfunction [w, successful] = getFromWinston(scnl,stime,etime,mydatasource)">getFromWinston</a>(scnl,t1,t2,myDataSource);
+0045          <span class="keyword">if</span> (status)
+0046             nWaves = nWaves+1;
+0047             allWaves(nWaves) = w;
+0048          <span class="keyword">end</span>
+0049       <span class="keyword">end</span>
+0050    <span class="keyword">end</span>
+0051    <span class="keyword">if</span> nWaves &lt; numel(allWaves)
+0052       allWaves = allWaves(1:nWaves);
+0053    <span class="keyword">end</span>
+0054 <span class="keyword">end</span>
+0055 
+0056 <a name="_sub1" href="#_subfunctions" class="code">function [w, successful] = getFromWinston(scnl,stime,etime,mydatasource)</a>
+0057    <span class="comment">%include</span>
+0058    successful = false;
+0059    
+0060    w = <a href="#_sub5" class="code" title="subfunction w = scnl2waveform(scnl)">scnl2waveform</a>(scnl);
+0061    <span class="keyword">try</span>
+0062       
+0063       WWS=gov.usgs.winston.server.WWSClient(get(mydatasource,<span class="string">'server'</span>),get(mydatasource,<span class="string">'port'</span>));
+0064    <span class="keyword">catch</span>
+0065       <span class="keyword">if</span> <a href="#_sub2" class="code" title="subfunction jars_are_missing = missingWinstonJars()">missingWinstonJars</a>()
+0066          <a href="#_sub3" class="code" title="subfunction giveNoJarWarning()">giveNoJarWarning</a>();
+0067          <span class="keyword">return</span>;
+0068       <span class="keyword">end</span>
+0069    <span class="keyword">end</span>
+0070    
+0071    <span class="comment">%grab the winston data, then close the database</span>
+0072    <span class="keyword">try</span>
+0073       mychan = get(scnl,<span class="string">'channel'</span>);
+0074       mynet = get(scnl,<span class="string">'network'</span>);
+0075       mysta = get(scnl,<span class="string">'station'</span>);
+0076       myloc = get(scnl,<span class="string">'location'</span>);
+0077       d = WWS.getRawData(mysta,mychan,mynet,myloc,stime,etime);
+0078       WWS.close;
+0079    <span class="keyword">catch</span> er
+0080       warning(<span class="string">'Waveform:load_winston:noServerAccess'</span>,<span class="keyword">...</span>
+0081          <span class="string">'Unable to access Winston Wave Server'</span>);
+0082       <span class="comment">%  try</span>
+0083       <span class="comment">%     WWS.close;</span>
+0084       <span class="comment">%  end</span>
+0085       rethrow(er)
+0086    <span class="keyword">end</span>
+0087    
+0088    <span class="keyword">if</span> ~exist(<span class="string">'d'</span>,<span class="string">'var'</span>) || isempty(d)
+0089       warning(<span class="string">'Waveform:load_winston:noInformation'</span>,<span class="keyword">...</span>
+0090          <span class="string">'information was not retrieved from the server. Did you remember to include a network in the SCNL?'</span>);
+0091       <span class="keyword">return</span>;
+0092    <span class="keyword">end</span>
+0093    fs=d.getSamplingRate;
+0094    
+0095    data_start = <a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(d.getStartTime);
+0096    data_end = <a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(d.getEndTime);
+0097    d.buffer(d.buffer == intmin(<span class="string">'int32'</span>)) = 0; <span class="comment">%fix odd spikes</span>
+0098    data = double(d.buffer); <span class="comment">% d.buffer is int32, and must be converted</span>
+0099    w = set(w,<span class="string">'start'</span>, data_start,<span class="string">'freq'</span>,fs,<span class="string">'data'</span>,data);
+0100    
+0101    <span class="comment">%if a greater range of data was found, then truncate to the desired times.</span>
+0102    <span class="keyword">if</span> data_start &lt; <a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(stime) || data_end &gt; <a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(etime)
+0103       w = extract(w,<span class="string">'time'</span>, <a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(stime),<a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(etime));
+0104    <span class="keyword">end</span>
+0105    
+0106    w = addhistory(set(w,<span class="string">'history'</span>,{}),<span class="string">'CREATED'</span>);
+0107    
+0108    successful = true; <span class="comment">%successfully completed</span>
+0109 <span class="keyword">end</span>
+0110 
+0111 <a name="_sub2" href="#_subfunctions" class="code">function jars_are_missing = missingWinstonJars()</a>
+0112    <span class="comment">%oops, winston's jar files may not exist on this system</span>
+0113    jcp = javaclasspath(<span class="string">'-all'</span>);
+0114    RequiredFiles = {<span class="string">'usgs.jar'</span>};
+0115    jars_are_missing = false;
+0116    <span class="keyword">for</span> FN = RequiredFiles
+0117       <span class="keyword">if</span> isempty(strfind([jcp{:}],FN{1}))
+0118          disp([<span class="string">'Missing '</span> FN{1}]);
+0119          jars_are_missing = true;
+0120       <span class="keyword">end</span>
+0121    <span class="keyword">end</span>
+0122 <span class="keyword">end</span>
+0123 
+0124 <a name="_sub3" href="#_subfunctions" class="code">function giveNoJarWarning()</a>
+0125    warning(<span class="string">'Waveform:load_winston:missingJars'</span>,<span class="keyword">...</span>
+0126       <span class="string">'The winston files may not be on this system.'</span>)
+0127    disp(<span class="string">'To correct, acquire the files listed above'</span>);
+0128    disp(<span class="string">'If you have already installed SWARM, then these .jar files already'</span>);
+0129    disp(<span class="string">'exist in your swarm/lib directory (or something close to it...'</span>);
+0130    disp(<span class="string">''</span>);
+0131    <span class="comment">%disp('Edit Matlab''s classpath.txt file (located in the toolbox/local');</span>
+0132    <span class="comment">%disp('directory) and add the location of these .jar files.');</span>
+0133 <span class="keyword">end</span>
+0134 
+0135 <a name="_sub4" href="#_subfunctions" class="code">function tf = timesAreOK (t1, t2)</a>
+0136    <span class="comment">%test to make sure times are valid.</span>
+0137    tf = true;
+0138    <span class="keyword">if</span> t1 &gt; t2,
+0139       warning(<span class="string">'Waveform:load_winston:invertedTimes'</span>,<span class="string">'StartTime &gt; End time.  ignored'</span>);
+0140       tf = false;
+0141    <span class="keyword">end</span>
+0142    <span class="keyword">if</span> t2 &gt; (t1 + (24 *60 * 60))
+0143       warning(<span class="string">'Waveform:load_winston:timerangeTooLarge'</span>,<span class="keyword">...</span>
+0144          <span class="string">'EndTime is more than a day past starttime.  ignored.'</span>);
+0145       tf = false;
+0146    <span class="keyword">end</span>
+0147 <span class="keyword">end</span>
+0148 
+0149 <a name="_sub5" href="#_subfunctions" class="code">function w = scnl2waveform(scnl)</a>
+0150    w = set(waveform,<span class="string">'scnlobject'</span>,scnl);
+0151 <span class="keyword">end</span>
+0152 
+0153 <span class="comment">%% Adding the Java path</span>
+0154 <a name="_sub6" href="#_subfunctions" class="code">function success = getWinstonWorking()</a>
+0155    success = false;
+0156    <span class="comment">%Check for required jar file for winston</span>
+0157    <span class="keyword">try</span>
+0158       jcp = javaclasspath(<span class="string">'-all'</span>);
+0159       
+0160    <span class="keyword">catch</span>
+0161       disp(<span class="string">'Java not enabled on this machine.  Winston will not work.'</span>);
+0162       <span class="keyword">return</span>
+0163    <span class="keyword">end</span>
+0164    
+0165    RequiredFiles = {<span class="string">'usgs.jar'</span>};
+0166    
+0167    introuble = false;
+0168    
+0169    <span class="keyword">for</span> FN = RequiredFiles
+0170       <span class="keyword">if</span> isempty(strfind([jcp{:}],FN{1}))
+0171          disp([<span class="string">'Missing '</span> FN{1}]);
+0172          introuble = true;
+0173       <span class="keyword">end</span>
+0174    <span class="keyword">end</span>
+0175    
+0176    <span class="keyword">if</span> introuble
+0177       disp(<span class="string">'please add the usgs.jar file (from swarm/lib directory) to your javaclasspath'</span>);
+0178       disp(<span class="string">'ex.  javaaddpath(''/usr/local/swarm/lib/usgs.jar'');'</span>);
+0179       
+0180       surrogate_jar = <span class="string">'http://www.avo.alaska.edu/Input/celso/swarmstuff/usgs.jar'</span>;
+0181       
+0182       [~,success] = urlread(surrogate_jar);<span class="comment">%can we read the usgs.jar? if not don't bother to add it.</span>
+0183       <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0184       <span class="comment">% MODIFY FOLLOWING LINE TO POINT TO YOUR LOCAL Swarm/lib/usgs.jar</span>
+0185       <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0186       <span class="keyword">if</span> success
+0187          javaaddpath(surrogate_jar);
+0188       <span class="keyword">else</span>
+0189          warning(<span class="string">'Waveform:load_winston:noDefaultJar'</span>,<span class="keyword">...</span>
+0190             <span class="string">'Unable to access the default jar.  Please add the usgs.jar file to your javaclasspath.  Winston access will not work.'</span>);
+0191       <span class="keyword">end</span>
+0192    <span class="keyword">end</span>;
+0193    success = true;
+0194 <span class="keyword">end</span>
+0195 
+0196 
+0197 <a name="_sub7" href="#_subfunctions" class="code">function [dataSource, scnls, startTimes, endTimes] = unpackDataRequest(dataRequest)</a>
+0198    dataSource = dataRequest.dataSource;
+0199    scnls = dataRequest.scnls;
+0200    startTimes = dataRequest.startTimes;
+0201    endTimes = dataRequest.endTimes;
+0202 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

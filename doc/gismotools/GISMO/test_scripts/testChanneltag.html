@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of testChanneltag</title>
+  <meta name="keywords" content="testChanneltag">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../index.html">GISMO</a> &gt; <a href="index.html">test_scripts</a> &gt; testChanneltag.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/test_scripts&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>testChanneltag
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="testChanneltag.html" class="code" title="">testChanneltag</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="testChanneltag.html" class="code" title="">testChanneltag</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = testChanneltag(name)</a></li><li><a href="#_sub2" class="code">function SetUp(self)</a></li><li><a href="#_sub3" class="code">function testSimpleConstructors(self)</a></li><li><a href="#_sub4" class="code">function testWhitespaceConstructors(self)</a></li><li><a href="#_sub5" class="code">function testArrayConstruction(self)</a></li><li><a href="#_sub6" class="code">function testEqNe(self)</a></li><li><a href="#_sub7" class="code">function testSort(self)</a></li><li><a href="#_sub8" class="code">function testStringConversions(self)</a></li><li><a href="#_sub9" class="code">function testIsmember(self)</a></li><li><a href="#_sub10" class="code">function  testMatching(self)</a></li><li><a href="#_sub11" class="code">function obj = createReference(N, S, L, C)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="testChanneltag.html" class="code" title="">testChanneltag</a> &lt; TestCase
+0002    <span class="comment">% TESTCHANNELTAG validates the funcionality of channeltag</span>
+0003    <span class="comment">%</span>
+0004    <span class="comment">% requires xUnit</span>
+0005    <span class="comment">% see also xUnit, channeltag</span>
+0006    
+0007    properties
+0008    <span class="keyword">end</span>
+0009    methods
+0010       <a name="_sub0" href="#_subfunctions" class="code">function self = testChanneltag(name)</a>
+0011          self = self@TestCase(name);
+0012       <span class="keyword">end</span>
+0013       
+0014       <a name="_sub1" href="#_subfunctions" class="code">function SetUp(self)</a>
+0015          <span class="comment">%nothing to set up</span>
+0016       <span class="keyword">end</span>
+0017       
+0018       <span class="comment">%---- test methods follow. each starts with &quot;test&quot; ---</span>
+0019       <a name="_sub2" href="#_subfunctions" class="code">function testSimpleConstructors(self)</a>
+0020          <span class="comment">% make sure these throw no error</span>
+0021          reftag = testChanneltag.createReference(<span class="string">'A'</span>,<span class="string">'B'</span>,<span class="string">'C'</span>,<span class="string">'D'</span>);
+0022          assertEqual(reftag, channeltag(<span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>, <span class="string">'D'</span>));  <span class="comment">% 4 string constructor</span>
+0023          assertEqual(channeltag(reftag), reftag);              <span class="comment">% copy constructor</span>
+0024          assertEqual(channeltag(<span class="string">'A.B.C.D'</span>), reftag);           <span class="comment">% string constructor</span>
+0025          assertEqual(reftag, channeltag({<span class="string">'A.B.C.D'</span>}));         <span class="comment">% cell constructor</span>
+0026       <span class="keyword">end</span>
+0027       
+0028       <a name="_sub3" href="#_subfunctions" class="code">function testWhitespaceConstructors(self)</a>
+0029          reftag = testChanneltag.createReference(<span class="string">'A'</span>,<span class="string">'B'</span>,<span class="string">'C'</span>,<span class="string">'D'</span>);
+0030          ct = channeltag(<span class="string">'  A .B . C. D '</span>);
+0031          assertEqual(reftag, ct);
+0032          ct = channeltag(<span class="string">' A '</span>, <span class="string">' B '</span>, <span class="string">' C '</span>, <span class="string">' D '</span>);
+0033          assertEqual(reftag, ct);
+0034       <span class="keyword">end</span>
+0035       
+0036       <a name="_sub4" href="#_subfunctions" class="code">function testArrayConstruction(self)</a>
+0037          reftag = testChanneltag.createReference(<span class="string">'A'</span>,<span class="string">'B'</span>,<span class="string">'C'</span>,<span class="string">'D'</span>);
+0038          ct = channeltag.array({<span class="string">'A .B . C. D '</span>,<span class="string">' A. B . C.D '</span>});
+0039          assertEqual(reftag, ct(1));
+0040          assertEqual(ct(1), ct(2));
+0041          ct = channeltag.array([<span class="string">'A.B.C.D      '</span>; <span class="string">' A.B  . C . D'</span>]);
+0042          assertEqual(reftag, ct(1));
+0043          assertEqual(ct(1), ct(2));
+0044          ct = channeltag.array({<span class="string">'N'</span>,<span class="string">'N'</span>,<span class="string">'N'</span>},{<span class="string">'S'</span>,<span class="string">'S'</span>,<span class="string">'S'</span>},{<span class="string">'L'</span>,<span class="string">'L'</span>,<span class="string">'L'</span>}, {<span class="string">'C'</span>,<span class="string">'C'</span>,<span class="string">'C'</span>});
+0045          assertEqual(ct(1), ct(2))
+0046          assertEqual(ct(2), ct(3));
+0047          ct = channeltag.array([<span class="string">'N.S.L.C '</span>;<span class="string">' N.S.L.C'</span>; <span class="string">'N.S .L.C'</span>]);
+0048          assertEqual(ct(1), ct(2))
+0049          assertEqual(ct(2), ct(3));
+0050          ct = channeltag.array(<span class="string">'N'</span>,{<span class="string">'S1'</span>,<span class="string">'S2'</span>},<span class="string">'L'</span>,<span class="string">'C'</span>);
+0051          assertEqual(ct(1).station,<span class="string">'S1'</span>);
+0052          assertEqual(ct(2).station, <span class="string">'S2'</span>);
+0053       <span class="keyword">end</span>
+0054       
+0055       <a name="_sub5" href="#_subfunctions" class="code">function testEqNe(self)</a>
+0056          A = testChanneltag.createReference(<span class="string">'NW'</span>,<span class="string">'STA'</span>,<span class="string">'LOC'</span>,<span class="string">'CHA'</span>);
+0057          B = testChanneltag.createReference(<span class="string">'NW'</span>,<span class="string">'STA'</span>,<span class="string">'LOC'</span>,<span class="string">'CHA'</span>);
+0058          C = testChanneltag.createReference(<span class="string">'NW'</span>,<span class="string">'STA'</span>,<span class="string">'LOC'</span>,<span class="string">'CHAN'</span>);
+0059          assertTrue(eq(A,B));
+0060          assertTrue(eq(B,A));
+0061          assertTrue(A == B);
+0062          assertFalse(ne(A,B));
+0063          
+0064          assertTrue(ne(A,C));
+0065          assertFalse(eq(A,C));
+0066          assertTrue(A ~=C);
+0067       <span class="keyword">end</span>
+0068       
+0069       <a name="_sub6" href="#_subfunctions" class="code">function testSort(self)</a>
+0070          ct = channeltag.array(<span class="string">'A'</span>,<span class="string">'S'</span>,<span class="string">'L'</span>,{<span class="string">'CCC'</span>,<span class="string">'BBB'</span>,<span class="string">'AAA'</span>});
+0071          s = sort(ct);
+0072          assertEqual(s(1).channel,<span class="string">'AAA'</span>);
+0073          assertEqual(s(3).channel, <span class="string">'CCC'</span>);
+0074          ct = channeltag.array({<span class="string">'N2'</span>,<span class="string">'N1'</span>},<span class="string">'S'</span>,<span class="string">'L'</span>,{<span class="string">'C1'</span>,<span class="string">'C2'</span>});
+0075          s = sort(ct);
+0076          assertEqual(s(1).network,<span class="string">'N1'</span>);
+0077          assertEqual(s(1).channel,<span class="string">'C2'</span>);
+0078          assertEqual(s(2).network,<span class="string">'N2'</span>);
+0079          assertEqual(s(2).channel,<span class="string">'C1'</span>);
+0080       <span class="keyword">end</span>
+0081       
+0082       <a name="_sub7" href="#_subfunctions" class="code">function testStringConversions(self)</a>
+0083          nslc = <span class="string">'IU.ANMO.00.LOG'</span>;
+0084          ct = channeltag(nslc);
+0085          assertEqual(ct.string(),nslc);               <span class="comment">% test basic string</span>
+0086          assertEqual(ct.string(<span class="string">'_'</span>),<span class="string">'IU_ANMO_00_LOG'</span>); <span class="comment">% test delimeter</span>
+0087          assertEqual(ct.char(),ct.string());          <span class="comment">% test string vs char</span>
+0088       <span class="keyword">end</span>
+0089       
+0090       <a name="_sub8" href="#_subfunctions" class="code">function testIsmember(self)</a>
+0091          <span class="comment">% not implemented</span>
+0092       <span class="keyword">end</span>
+0093       <a name="_sub9" href="#_subfunctions" class="code">function  testMatching(self)</a>
+0094          <span class="comment">% not implemented</span>
+0095       <span class="keyword">end</span>
+0096    <span class="keyword">end</span>
+0097    
+0098    methods(Static)
+0099       <a name="_sub10" href="#_subfunctions" class="code">function obj = createReference(N, S, L, C)</a>
+0100          obj = channeltag();
+0101          obj.network = N; 
+0102          obj.station = S; 
+0103          obj.location = L;
+0104          obj.channel = C;
+0105       <span class="keyword">end</span>
+0106    <span class="keyword">end</span>
+0107 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

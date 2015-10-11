@@ -1,0 +1,531 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of import_events</title>
+  <meta name="keywords" content="import_events">
+  <meta name="description" content="IMPORT_EVENTS Import waveforms associated with earthquake events.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">contributed_antelope</a> &gt; <a href="index.html">import_events</a> &gt; import_events.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_antelope/import_events&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>import_events
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>IMPORT_EVENTS Import waveforms associated with earthquake events.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [ eqtc, varargout ] = import_events(dbname, chanfile, starttime, endtime, phase, delay, enddelay, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">IMPORT_EVENTS Import waveforms associated with earthquake events.
+ EQTC = IMPORT_EVENTS(DBNAME, CHANFILE, STARTTIME, ENDTIME, ...
+                      PHASE, DELAY, ENDDELAY) returns a cell array of
+ threecomp objects, waveform objects, and empty cells, containing
+ waveforms organized column-wise by station and row-wise by event.  Input
+ arguments are as follows:
+
+    DBNAME: Filename of an Antelope database.
+    CHANFILE: Filename of a comma-delimited list of station-channel
+    associations (see IE_READCHANS helpfile for the format).
+    STARTTIME: Start date/time in Antelope-readable string format.
+    ENDTIME: End date/time in Antelope-readable string format.
+    PHASE: Arrival phase to use (e.g. 'P', 'S')
+    DELAY: Seconds preceding arrival time to retrieve into waveforms.
+    ENDDELAY: Seconds following arrival time to retrieve into waveforms.
+
+ The intent of this function is to import waveform data from multiple
+ events and stations, and to store it in an organized cell array which
+ preserves associations between arrivals.  Three-component data is
+ retrieved if it is available, and converted to threecomp objects.
+ Single-component data remains as waveform objects.  Values ETYPE, ORID,
+ OTIME, SEAZ, and STYPE are also retrieved from the database and stored as
+ custom fields within each waveform object.  If there is no arrival for an
+ event at a station, that cell is left empty.  If three-component data is
+ available but cannot be converted into a threecomp object (usually
+ indicating data problems), the cell is also left empty.
+
+ [EQTC, EQWF] = IMPORT_EVENTS(...) returns the aforementioned cell array
+ in EQTC as well as a cell array of unadulterated waveform objects in
+ EQWF.  These will be 1x1 waveforms for single-component data and 1x3
+ waveforms for three-component data (including those that could not be
+ converted to threecomp objects and are not present in EQTC).
+
+ ... = IMPORT_EVENTS(..., DS) uses specified GISMO datasource DS to
+ retrieve the waveform data.  The earthquake catalogue and phase arrivals
+ are always taken from the Antelope database DBNAME, but actual waveform
+ data can be in any GISMO-readable format.  Examples: DS = 
+ datasource('uaf_continuous') or DS =
+ datasource('winston','myserver.uaf.edu',12345).
+
+ RETURN VALUE EXAMPLES
+
+ In both EQTC and EQWF, waveforms are organized into columns by station
+ and rows by event.  Here is a hypothetical three-station five-earthquake
+ example; stations EG1 and EG2 are three-component, station EG3 is
+ single-component.
+
+ EQTC =  % EG1                EG2                EG3 
+                  []    [1x1 threecomp]    [1x1 waveform]   % Event 1
+     [1x1 threecomp]    [1x1 threecomp]                []   % Event 2
+                  []                 []    [1x1 waveform]   % Event 3
+     [1x1 threecomp]    [1x1 threecomp]    [1x1 waveform]   % Event 4
+                  []                 []    [1x1 waveform]   % Event 5
+
+ EQWF =  % EG1                EG2                EG3 
+                  []     [1x3 waveform]    [1x1 waveform]   % Event 1
+      [1x3 waveform]     [1x3 waveform]                []   % Event 2
+                  []                 []    [1x1 waveform]   % Event 3
+      [1x3 waveform]     [1x3 waveform]    [1x1 waveform]   % Event 4
+      [1x3 waveform]                 []    [1x1 waveform]   % Event 5
+
+ Notice that EQTC contains both threecomp objects and waveform objects.
+ EQWF contains waveform objects only, but with size 1x3 for
+ three-component stations and 1x1 for single-component stations.  When
+ events are not recorded at a station, the cell is left empty [].
+ IMPORTANT: The cell in EQTC is also left empty when a 1x3 waveform cannot
+ be converted into a threecomp object, such as with event 5 at station EG1 in
+ the above example.
+
+ CAVEATS AND LIMITATIONS:
+
+ 1. The earthquake list is taken from the origin table without
+ consideration of the event table or the value of prefor.  If more than
+ one origin is present for an event, they will all be retrieved.
+
+ 2. The value of STYPE is taken from the chosen phase arrival, and is assumed
+ to be the same across all components of three-component data.
+
+ 3. Unassociated arrivals will not be retrieved.  The returned data
+ structure is versatile enough that unassociated arrivals _could_ be
+ stored in an intuitive way (one per row) but so far this has not been
+ implemented.
+
+ Author: Christopher Bruton, Geophysical Institute, University of Alaska Fairbanks
+ $Date$
+ $Revision$</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="ie_readchans.html" class="code" title="function chanlist = ie_readchans(chanfile)">ie_readchans</a>	IE_READCHANS Read and parse station/channel list from file</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [ eqtc, varargout ] = import_events(dbname, chanfile, starttime, endtime, phase, delay, enddelay, varargin)</a>
+0002 <span class="comment">%IMPORT_EVENTS Import waveforms associated with earthquake events.</span>
+0003 <span class="comment">% EQTC = IMPORT_EVENTS(DBNAME, CHANFILE, STARTTIME, ENDTIME, ...</span>
+0004 <span class="comment">%                      PHASE, DELAY, ENDDELAY) returns a cell array of</span>
+0005 <span class="comment">% threecomp objects, waveform objects, and empty cells, containing</span>
+0006 <span class="comment">% waveforms organized column-wise by station and row-wise by event.  Input</span>
+0007 <span class="comment">% arguments are as follows:</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%    DBNAME: Filename of an Antelope database.</span>
+0010 <span class="comment">%    CHANFILE: Filename of a comma-delimited list of station-channel</span>
+0011 <span class="comment">%    associations (see IE_READCHANS helpfile for the format).</span>
+0012 <span class="comment">%    STARTTIME: Start date/time in Antelope-readable string format.</span>
+0013 <span class="comment">%    ENDTIME: End date/time in Antelope-readable string format.</span>
+0014 <span class="comment">%    PHASE: Arrival phase to use (e.g. 'P', 'S')</span>
+0015 <span class="comment">%    DELAY: Seconds preceding arrival time to retrieve into waveforms.</span>
+0016 <span class="comment">%    ENDDELAY: Seconds following arrival time to retrieve into waveforms.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% The intent of this function is to import waveform data from multiple</span>
+0019 <span class="comment">% events and stations, and to store it in an organized cell array which</span>
+0020 <span class="comment">% preserves associations between arrivals.  Three-component data is</span>
+0021 <span class="comment">% retrieved if it is available, and converted to threecomp objects.</span>
+0022 <span class="comment">% Single-component data remains as waveform objects.  Values ETYPE, ORID,</span>
+0023 <span class="comment">% OTIME, SEAZ, and STYPE are also retrieved from the database and stored as</span>
+0024 <span class="comment">% custom fields within each waveform object.  If there is no arrival for an</span>
+0025 <span class="comment">% event at a station, that cell is left empty.  If three-component data is</span>
+0026 <span class="comment">% available but cannot be converted into a threecomp object (usually</span>
+0027 <span class="comment">% indicating data problems), the cell is also left empty.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% [EQTC, EQWF] = IMPORT_EVENTS(...) returns the aforementioned cell array</span>
+0030 <span class="comment">% in EQTC as well as a cell array of unadulterated waveform objects in</span>
+0031 <span class="comment">% EQWF.  These will be 1x1 waveforms for single-component data and 1x3</span>
+0032 <span class="comment">% waveforms for three-component data (including those that could not be</span>
+0033 <span class="comment">% converted to threecomp objects and are not present in EQTC).</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% ... = IMPORT_EVENTS(..., DS) uses specified GISMO datasource DS to</span>
+0036 <span class="comment">% retrieve the waveform data.  The earthquake catalogue and phase arrivals</span>
+0037 <span class="comment">% are always taken from the Antelope database DBNAME, but actual waveform</span>
+0038 <span class="comment">% data can be in any GISMO-readable format.  Examples: DS =</span>
+0039 <span class="comment">% datasource('uaf_continuous') or DS =</span>
+0040 <span class="comment">% datasource('winston','myserver.uaf.edu',12345).</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">% RETURN VALUE EXAMPLES</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">% In both EQTC and EQWF, waveforms are organized into columns by station</span>
+0045 <span class="comment">% and rows by event.  Here is a hypothetical three-station five-earthquake</span>
+0046 <span class="comment">% example; stations EG1 and EG2 are three-component, station EG3 is</span>
+0047 <span class="comment">% single-component.</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">% EQTC =  % EG1                EG2                EG3</span>
+0050 <span class="comment">%                  []    [1x1 threecomp]    [1x1 waveform]   % Event 1</span>
+0051 <span class="comment">%     [1x1 threecomp]    [1x1 threecomp]                []   % Event 2</span>
+0052 <span class="comment">%                  []                 []    [1x1 waveform]   % Event 3</span>
+0053 <span class="comment">%     [1x1 threecomp]    [1x1 threecomp]    [1x1 waveform]   % Event 4</span>
+0054 <span class="comment">%                  []                 []    [1x1 waveform]   % Event 5</span>
+0055 <span class="comment">%</span>
+0056 <span class="comment">% EQWF =  % EG1                EG2                EG3</span>
+0057 <span class="comment">%                  []     [1x3 waveform]    [1x1 waveform]   % Event 1</span>
+0058 <span class="comment">%      [1x3 waveform]     [1x3 waveform]                []   % Event 2</span>
+0059 <span class="comment">%                  []                 []    [1x1 waveform]   % Event 3</span>
+0060 <span class="comment">%      [1x3 waveform]     [1x3 waveform]    [1x1 waveform]   % Event 4</span>
+0061 <span class="comment">%      [1x3 waveform]                 []    [1x1 waveform]   % Event 5</span>
+0062 <span class="comment">%</span>
+0063 <span class="comment">% Notice that EQTC contains both threecomp objects and waveform objects.</span>
+0064 <span class="comment">% EQWF contains waveform objects only, but with size 1x3 for</span>
+0065 <span class="comment">% three-component stations and 1x1 for single-component stations.  When</span>
+0066 <span class="comment">% events are not recorded at a station, the cell is left empty [].</span>
+0067 <span class="comment">% IMPORTANT: The cell in EQTC is also left empty when a 1x3 waveform cannot</span>
+0068 <span class="comment">% be converted into a threecomp object, such as with event 5 at station EG1 in</span>
+0069 <span class="comment">% the above example.</span>
+0070 <span class="comment">%</span>
+0071 <span class="comment">% CAVEATS AND LIMITATIONS:</span>
+0072 <span class="comment">%</span>
+0073 <span class="comment">% 1. The earthquake list is taken from the origin table without</span>
+0074 <span class="comment">% consideration of the event table or the value of prefor.  If more than</span>
+0075 <span class="comment">% one origin is present for an event, they will all be retrieved.</span>
+0076 <span class="comment">%</span>
+0077 <span class="comment">% 2. The value of STYPE is taken from the chosen phase arrival, and is assumed</span>
+0078 <span class="comment">% to be the same across all components of three-component data.</span>
+0079 <span class="comment">%</span>
+0080 <span class="comment">% 3. Unassociated arrivals will not be retrieved.  The returned data</span>
+0081 <span class="comment">% structure is versatile enough that unassociated arrivals _could_ be</span>
+0082 <span class="comment">% stored in an intuitive way (one per row) but so far this has not been</span>
+0083 <span class="comment">% implemented.</span>
+0084 <span class="comment">%</span>
+0085 <span class="comment">% Author: Christopher Bruton, Geophysical Institute, University of Alaska Fairbanks</span>
+0086 <span class="comment">% $Date$</span>
+0087 <span class="comment">% $Revision$</span>
+0088 
+0089 
+0090 <span class="comment">%% Check for valid input</span>
+0091 
+0092 <span class="comment">% dbname is checked by dbopen()</span>
+0093 
+0094 <span class="comment">% chanfile is checked by ie_readchans()</span>
+0095 
+0096 <span class="comment">% Convert dates.  We could pass the user input directly to Antelope in the</span>
+0097 <span class="comment">% query, but malformed dates could cause unexpected results.  There doesn't</span>
+0098 <span class="comment">% seem to be a simple way to otherwise check for valid date formats or to</span>
+0099 <span class="comment">% escape special characters. This way we at least ensure a valid epoch number.</span>
+0100 starttime = str2epoch(starttime);
+0101 endtime = str2epoch(endtime);
+0102 
+0103 <span class="comment">% Set flag if dates are not given; this will prevent subset on starttime</span>
+0104 <span class="comment">% and endtime and instead return the whole catalogue.  Note that</span>
+0105 <span class="comment">% str2epoch()'s return value does not distinguish between invalid input</span>
+0106 <span class="comment">% (e.g. 'asdfjd') and true zero values (e.g. 'Jan 1 1970'), so this flag</span>
+0107 <span class="comment">% could get set inadvertently.</span>
+0108 <span class="keyword">if</span> (starttime == 0) &amp;&amp; (endtime == 0)
+0109     all_times = true;
+0110 <span class="keyword">else</span>
+0111     all_times = false;
+0112     <span class="comment">% Check date range</span>
+0113     <span class="keyword">if</span> (endtime &lt; starttime)
+0114         error(<span class="string">'Argument endtime must be after argument starttime.'</span>);
+0115     <span class="keyword">end</span>
+0116 <span class="keyword">end</span>
+0117 
+0118 <span class="comment">% Check delay times.  These should be numbers</span>
+0119 <span class="keyword">if</span> ~isscalar(delay) || ~isnumeric(delay)
+0120     error(<span class="string">'Argument delay must be a scalar number.'</span>);
+0121 <span class="keyword">end</span>
+0122 <span class="keyword">if</span> ~isscalar(enddelay) || ~isnumeric(enddelay)
+0123     error(<span class="string">'Argument enddelay must be a scalar number.'</span>);
+0124 <span class="keyword">end</span>
+0125 
+0126 <span class="comment">% Check that waveform time range is valid</span>
+0127 <span class="keyword">if</span> (enddelay + delay) &lt;= 0
+0128     error(<span class="string">'Arguments delay and enddelay must denote a positive non-zero time range.'</span>);
+0129 <span class="keyword">end</span>
+0130 
+0131 <span class="comment">% Check that phase is an alphanumeric string (perhaps this cannot be</span>
+0132 <span class="comment">% expected to be universally true, but the alternative would require</span>
+0133 <span class="comment">% checking that special characters are safe).</span>
+0134 <span class="keyword">if</span> ~all(isstrprop(phase,<span class="string">'alphanum'</span>))
+0135     error(<span class="string">'Argument phase must be an alphanumeric string.'</span>);
+0136 <span class="keyword">end</span>
+0137 
+0138 <span class="comment">% Check if optional datasource object was provided</span>
+0139 <span class="keyword">switch</span> size(varargin,2)
+0140     <span class="keyword">case</span> 0
+0141         ds = datasource(<span class="string">'antelope'</span>,dbname); <span class="comment">% Standard antelope datasource</span>
+0142     <span class="keyword">case</span> 1
+0143         ds = varargin{1}; <span class="comment">% User-supplied datasource</span>
+0144     <span class="keyword">otherwise</span>
+0145         error(<span class="string">'Incorrect number of input arguments.'</span>);
+0146 <span class="keyword">end</span>
+0147 
+0148 <span class="comment">%% Check output arguments</span>
+0149 
+0150 <span class="keyword">switch</span> nargout
+0151     <span class="keyword">case</span> 1
+0152         ret_eqwf = false;
+0153     <span class="keyword">case</span> 2
+0154         ret_eqwf = true;
+0155     <span class="keyword">otherwise</span>
+0156         error(<span class="string">'Incorrect number of output arguments.'</span>);
+0157 <span class="keyword">end</span>
+0158 
+0159 
+0160 
+0161 <span class="comment">%% Read and verify list of stations and channels</span>
+0162 
+0163 fprintf(2,<span class="string">'Loading and verifying station/channel list...\n'</span>);
+0164 
+0165 <span class="comment">% Open list</span>
+0166 chanlist = <a href="ie_readchans.html" class="code" title="function chanlist = ie_readchans(chanfile)">ie_readchans</a>(chanfile);
+0167 
+0168 <span class="comment">% The above function does some basic error checking but we still need to</span>
+0169 <span class="comment">% confirm things with the database (sitechan table)</span>
+0170 
+0171 <span class="comment">% Open DB, read sitechan table, and close</span>
+0172 db = dbopen(dbname,<span class="string">'r'</span>);
+0173 db = dblookup_table(db,<span class="string">'sitechan'</span>);
+0174 db = dbsort(db,<span class="string">'sta'</span>,<span class="string">'chan'</span>);
+0175 [tsta,tchan] = dbgetv(db,<span class="string">'sta'</span>,<span class="string">'chan'</span>);
+0176 dbclose(db);
+0177 
+0178 <span class="comment">% Now check that every station-channel pair in chanlist exists</span>
+0179 stations = chanlist(:,1);
+0180 <span class="keyword">for</span> n = 1:length(stations)
+0181     channels = chanlist(n,2:4);
+0182     channels(strcmp(<span class="string">''</span>,channels)) = []; <span class="comment">% Delete empty elements</span>
+0183     
+0184     tchans = tchan(strcmp(stations(n),tsta)); <span class="comment">% Channels from tchan corresponding to station n</span>
+0185     <span class="keyword">for</span> m = 1:length(channels)
+0186         <span class="keyword">if</span> ~any(strcmp(channels(m),tchans))
+0187             error([<span class="string">'Channel '</span> channels{m} <span class="string">' at station '</span> stations{n} <span class="string">' does not exist in sitechan table.'</span>]);
+0188         <span class="keyword">end</span>
+0189     <span class="keyword">end</span>
+0190 <span class="keyword">end</span>
+0191 
+0192 
+0193 
+0194 
+0195 <span class="comment">%% Load the earthquake catalogue</span>
+0196 
+0197 fprintf(2,<span class="string">'Loading earthquake catalogue...'</span>);
+0198 
+0199 <span class="comment">% Open database</span>
+0200 db = dbopen(dbname,<span class="string">'r'</span>);
+0201 
+0202 <span class="comment">% Get all arrivals (of desired phase) for origins within time period</span>
+0203 db = dblookup_table(db,<span class="string">'origin'</span>);
+0204 <span class="keyword">if</span> all_times == false
+0205     db = dbsubset(db,[<span class="string">'time &gt;= '</span> num2str(starttime,<span class="string">'%f'</span>) <span class="string">' &amp;&amp; time &lt; '</span> num2str(endtime,<span class="string">'%f'</span>)]);
+0206 <span class="keyword">end</span>
+0207 db1 = dblookup_table(db,<span class="string">'assoc'</span>);
+0208 db1 = dbsubset(db1,[<span class="string">'phase == &quot;'</span> phase <span class="string">'&quot;'</span>]);
+0209 db = dbjoin(db,db1);
+0210 
+0211 <span class="comment">% Create station subset string</span>
+0212 stastring = [<span class="string">'sta==&quot;'</span> stations{1} <span class="string">'&quot;'</span>];
+0213 <span class="keyword">if</span> length(stations) &gt; 1
+0214     <span class="keyword">for</span> n = 1:length(stations)
+0215         stastring = [stastring <span class="string">' || sta==&quot;'</span> stations{n} <span class="string">'&quot;'</span>];
+0216     <span class="keyword">end</span>
+0217 <span class="keyword">end</span>
+0218 
+0219 <span class="comment">% Subset to only chosen stations</span>
+0220 db = dbsubset(db,stastring);
+0221 
+0222 <span class="comment">% Join to arrival table</span>
+0223 db1 = dblookup_table(db,<span class="string">'arrival'</span>);
+0224 db = dbjoin(db,db1);
+0225 
+0226 <span class="comment">% Sort by origin time and id</span>
+0227 db = dbsort(db,<span class="string">'origin.time'</span>,<span class="string">'orid'</span>);
+0228 
+0229 <span class="comment">% Get the values</span>
+0230 [sta,atime,otime,orid,etype,stype,seaz] = dbgetv(db,<span class="string">'sta'</span>,<span class="string">'arrival.time'</span>,<span class="string">'origin.time'</span>,<span class="string">'orid'</span>,<span class="string">'etype'</span>,<span class="string">'stype'</span>,<span class="string">'seaz'</span>);
+0231 atime = epoch2datenum(atime);
+0232 otime = epoch2datenum(otime);
+0233 
+0234 <span class="comment">% We also want a list of unique orids.  Have to use DB operations for this</span>
+0235 <span class="comment">% (rather than unique()) so that sorting (by time) is preserved</span>
+0236 db = dbgroup(db,{<span class="string">'origin.time'</span>,<span class="string">'orid'</span>});
+0237 unique_orids = dbgetv(db,<span class="string">'orid'</span>);
+0238 
+0239 <span class="comment">% Close database link</span>
+0240 dbclose(db);
+0241 
+0242 
+0243 <span class="comment">% Display counts</span>
+0244 fprintf(2,<span class="string">'%d origins, %d arrivals\n'</span>,numel(unique_orids),numel(atime));
+0245 
+0246 
+0247 <span class="comment">%% Arrange info from earthquake catalogue into a more useful format</span>
+0248 
+0249 <span class="comment">% We want a column for each station and a row for each earthquake (origin).</span>
+0250 <span class="comment">% Store arrival times in this format for now, so we can later replace them</span>
+0251 <span class="comment">% with loaded waveforms.</span>
+0252 
+0253 <span class="comment">% Number of stations.  Use user-specified list and order (rather than</span>
+0254 <span class="comment">% unique values from arrivals table) for greater flexibility.</span>
+0255 nstations = length(stations);
+0256 
+0257 <span class="comment">% Number of earthquakes</span>
+0258 norigins = length(unique_orids);
+0259 
+0260 <span class="comment">% Allocate an array to store arrival times</span>
+0261 eqtimes = zeros(norigins,nstations);
+0262 
+0263 <span class="comment">% Allocate an additional array to store the indices, so we can retrieve</span>
+0264 <span class="comment">% other data (e.g. event type) later</span>
+0265 eqindices = zeros(norigins,nstations);
+0266 
+0267 <span class="comment">% Now go through each arrival and place it in the array</span>
+0268 <span class="keyword">for</span> n = 1:length(orid)
+0269     sta_index = find(strcmp(sta{n},stations),1);
+0270     orid_index = find(unique_orids == orid(n),1); <span class="comment">% Could do something more efficient here; orid is sorted in ascending order so a find is not really necessary</span>
+0271     eqtimes(orid_index,sta_index) = atime(n);
+0272     eqindices(orid_index,sta_index) = n;
+0273 <span class="keyword">end</span>
+0274 
+0275 
+0276 
+0277 
+0278 
+0279 <span class="comment">%% Load waveforms for all arrivals</span>
+0280 
+0281 <span class="comment">% We now have an array full of arrival times at stations.  We want to load</span>
+0282 <span class="comment">% those waveforms into a cell array of the same shape.</span>
+0283 
+0284 
+0285 
+0286 <span class="comment">% Allocate the array</span>
+0287 eqwf = cell(norigins,nstations);
+0288 
+0289 fprintf(2,<span class="string">'Loading waveforms:\n'</span>);
+0290 <span class="comment">% We'll go column by column</span>
+0291 <span class="keyword">for</span> ns = 1:nstations
+0292     <span class="comment">% Get channel names and create scnlobject</span>
+0293     channels = chanlist(ns,2:4);
+0294     channels(strcmp(<span class="string">''</span>,channels)) = [];
+0295     scnl = scnlobject(stations{ns},channels,<span class="string">''</span>,<span class="string">''</span>);
+0296     
+0297     <span class="comment">% Is this one or three components?</span>
+0298     <span class="keyword">if</span> length(channels) == 3
+0299         is_tc = true;
+0300     <span class="keyword">else</span>
+0301         is_tc = false;
+0302     <span class="keyword">end</span>
+0303     fprintf(2,<span class="string">'%s (%d of %d)...\n'</span>,stations{ns},ns,nstations);
+0304     
+0305     <span class="comment">% Create a list of arrival times for this station</span>
+0306     satime_indices = find(eqtimes(:,ns) &gt; 0);
+0307     satimes = eqtimes(satime_indices,ns); <span class="comment">% Usually better practice to use logical indexing directly instead of a find(), but we need the indexes themselves for later</span>
+0308     
+0309     <span class="comment">% Calculate actual start and end times</span>
+0310     end_times = satimes + enddelay/86400;
+0311     start_times = satimes - delay/86400;
+0312     
+0313     <span class="comment">% Load waveforms for this station and channels</span>
+0314     wtmp = waveform(ds,scnl,start_times,end_times);
+0315     
+0316     <span class="comment">% Reshape to a Nx1 vector; sometimes waveform() returns unusual</span>
+0317     <span class="comment">% dimensions (???)</span>
+0318     wtmp = wtmp(:);
+0319     
+0320     <span class="comment">% If 3-component data, rearrange to put channels together</span>
+0321     <span class="keyword">if</span> is_tc
+0322         wtmp = reshape(wtmp,size(wtmp,1)/3,3);
+0323     <span class="keyword">end</span>
+0324     
+0325     <span class="comment">% Store event arrival times in waveform objects, then store the</span>
+0326     <span class="comment">% waveforms in our big cell array eqwf.  There doesn't seem to be an</span>
+0327     <span class="comment">% obvious way to vectorize these steps.</span>
+0328     <span class="comment">% Also store other fields retrieved from database</span>
+0329     skip_count = 0;
+0330     <span class="keyword">for</span> na = 1:numel(satimes);
+0331         
+0332         <span class="comment">% Check that the waveform is the one we expect; otherwise, skip to</span>
+0333         <span class="comment">% the next origin</span>
+0334         wtime = get(wtmp(na-skip_count,1),<span class="string">'START'</span>);
+0335         <span class="keyword">if</span> abs(wtime - start_times(na)) &gt; 0.1/86400
+0336             skip_count = skip_count + 1;
+0337             <span class="keyword">continue</span>;
+0338         <span class="keyword">end</span>
+0339         
+0340         wtmp(na-skip_count,:) = addfield(wtmp(na-skip_count,:),<span class="string">'EVENT_START'</span>,satimes(na));
+0341         wtmp(na-skip_count,:) = addfield(wtmp(na-skip_count,:),<span class="string">'ETYPE'</span>,cell2mat(etype(eqindices(satime_indices(na),ns))));
+0342          wtmp(na-skip_count,:) = addfield(wtmp(na-skip_count,:),<span class="string">'ORID'</span>,orid(eqindices(satime_indices(na),ns)));
+0343         wtmp(na-skip_count,:) = addfield(wtmp(na-skip_count,:),<span class="string">'OTIME'</span>,otime(eqindices(satime_indices(na),ns)));
+0344         wtmp(na-skip_count,:) = addfield(wtmp(na-skip_count,:),<span class="string">'SEAZ'</span>,seaz(eqindices(satime_indices(na),ns)));
+0345 
+0346         <span class="comment">% Technically, there can be a different signal type for each picked</span>
+0347         <span class="comment">% arrival.  Here we make the assumption that the value of stype for</span>
+0348         <span class="comment">% the chosen iphase (typically P) applies to all components.  This</span>
+0349         <span class="comment">% will need to be kept in mind if developing a classification</span>
+0350         <span class="comment">% routine that makes use of stype, and training catalogues designed</span>
+0351         <span class="comment">% accordingly.</span>
+0352         wtmp(na-skip_count,:) = addfield(wtmp(na-skip_count,:),<span class="string">'STYPE'</span>,stype(eqindices(satime_indices(na),ns)));
+0353         
+0354         
+0355         <span class="comment">% Store waveforms in cell array.</span>
+0356         eqwf{satime_indices(na),ns} = wtmp(na-skip_count,:);
+0357     <span class="keyword">end</span>
+0358 <span class="keyword">end</span>
+0359 
+0360 clear(<span class="string">'wtmp'</span>); <span class="comment">% No longer needed so free up some space</span>
+0361 
+0362 
+0363 
+0364 
+0365 <span class="comment">%% Convert waveforms to threecomp objects where appropriate</span>
+0366 
+0367 <span class="comment">% We've loaded all the waveforms.  Now convert the three-component sets</span>
+0368 <span class="comment">% into threecomp objects</span>
+0369 
+0370 fprintf(2,<span class="string">'Converting to threecomp objects if applicable...\n'</span>);
+0371 
+0372 eqtc = cell(size(eqwf));
+0373 <span class="keyword">for</span> no = 1:norigins
+0374     <span class="keyword">for</span> ns = 1:nstations
+0375         <span class="keyword">if</span> length(eqwf{no,ns}) == 3 <span class="comment">% If it's three-compoenent</span>
+0376             <span class="keyword">try</span>
+0377                 eqtc{no,ns} = threecomp(eqwf{no,ns},eqtimes(no,ns));
+0378             <span class="keyword">catch</span> me
+0379                 warning([<span class="string">'Error converting earthquake ('</span> num2str(no) <span class="string">','</span> num2str(ns) <span class="string">') to threecomp object.  Leaving empty.'</span>]);
+0380                 eqtc{no,ns} = [];
+0381             <span class="keyword">end</span>
+0382         <span class="keyword">else</span> <span class="comment">% If it's 1-component (or empty)...</span>
+0383             eqtc{no,ns} = eqwf{no,ns}; <span class="comment">% ...store the original value</span>
+0384         <span class="keyword">end</span>
+0385     <span class="keyword">end</span>
+0386 <span class="keyword">end</span>
+0387 
+0388 
+0389 <span class="comment">%% Return eqwf if it was requested</span>
+0390 
+0391 <span class="keyword">if</span> ret_eqwf
+0392     varargout{1} = eqwf;
+0393 <span class="keyword">end</span>
+0394 
+0395 fprintf(2,<span class="string">'Done.\n'</span>);
+0396 
+0397 
+0398 <span class="keyword">end</span>
+0399</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

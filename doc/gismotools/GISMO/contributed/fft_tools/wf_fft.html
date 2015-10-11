@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of wf_fft</title>
+  <meta name="keywords" content="wf_fft">
+  <meta name="description" content="WAVEFORM = WF_FFT(WAVEFORM)  calculate frequency spectrum of a waveform.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">fft_tools</a> &gt; wf_fft.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/fft_tools&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>wf_fft
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>WAVEFORM = WF_FFT(WAVEFORM)  calculate frequency spectrum of a waveform.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = wf_fft(w); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> WAVEFORM = WF_FFT(WAVEFORM)  calculate frequency spectrum of a waveform.
+ The results of the fast fourier transform is added as new fields
+ in the waveform:
+   FFT_FREQ is a vector of frequencies with N samples
+   FFT_AMP is a vector of spetral amplitudes
+   FFT_PHASE is a vector of phases
+   FFT_DOM is the scalar frequency of the maximum amplitude 
+           peak (or dominant frequency. This could change)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = wf_fft(w);</a>
+0002 
+0003 <span class="comment">% WAVEFORM = WF_FFT(WAVEFORM)  calculate frequency spectrum of a waveform.</span>
+0004 <span class="comment">% The results of the fast fourier transform is added as new fields</span>
+0005 <span class="comment">% in the waveform:</span>
+0006 <span class="comment">%   FFT_FREQ is a vector of frequencies with N samples</span>
+0007 <span class="comment">%   FFT_AMP is a vector of spetral amplitudes</span>
+0008 <span class="comment">%   FFT_PHASE is a vector of phases</span>
+0009 <span class="comment">%   FFT_DOM is the scalar frequency of the maximum amplitude</span>
+0010 <span class="comment">%           peak (or dominant frequency. This could change)</span>
+0011 
+0012 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0013 <span class="comment">% $Date$</span>
+0014 <span class="comment">% $Revision$</span>
+0015 
+0016 
+0017 
+0018 
+0019 admin.deprecated(mfilename,<span class="string">'wf_fft.compute'</span>);
+0020 
+0021 
+0022 <span class="comment">% CHECK ARGUMENTS</span>
+0023 <span class="keyword">if</span> ~strcmpi(class(w),<span class="string">'waveform'</span>)
+0024     error(<span class="string">'First input must be a waveform object'</span>);
+0025 <span class="keyword">end</span>
+0026 
+0027 
+0028 <span class="comment">% STEP THROUGH WAVFORMS ADDING NEW FIELDS</span>
+0029 [N,M] = size(w);
+0030 <span class="keyword">for</span> i = 1:N*M
+0031     Fn = get(w(i),<span class="string">'NYQ'</span>);
+0032     x = get(w(i),<span class="string">'DATA'</span>);
+0033     NFFT=2.^(ceil(log(length(x))/log(2)));  <span class="comment">% Next highest power of 2</span>
+0034     FFTX=fft(x,NFFT);                       <span class="comment">% Take fft, padding with zeros.</span>
+0035     NumUniquePts = ceil((NFFT+1)/2);
+0036     FFTX=FFTX(1:NumUniquePts);              <span class="comment">% throw out neg frequencies</span>
+0037     MX=abs(FFTX);                           <span class="comment">% Take magnitude of X</span>
+0038     MX=MX*2;                                <span class="comment">% Multiply by 2</span>
+0039     MX=MX/length(x);                        
+0040     PX=phase(FFTX);                           <span class="comment">% Take magnitude of X</span>
+0041     f=(0:NumUniquePts-1)*2/NFFT;            
+0042     f=f*Fn;
+0043     w(i) = addfield(w(i),<span class="string">'FFT_FREQ'</span>,f');
+0044     w(i) = addfield(w(i),<span class="string">'FFT_AMP'</span>,MX);
+0045     w(i) = addfield(w(i),<span class="string">'FFT_PHASE'</span>,PX);
+0046     a = find(MX == max(MX));
+0047     w(i) = addfield(w(i),<span class="string">'FFT_DOM'</span>,f(a));
+0048 <span class="keyword">end</span>;
+0049 
+0050 
+0051</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

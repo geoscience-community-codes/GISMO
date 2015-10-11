@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of rdivide</title>
+  <meta name="keywords" content="rdivide">
+  <meta name="description" content="RDIVIDE (./) Right array divide for WAVEFORMS.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; rdivide.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>rdivide
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>RDIVIDE (./) Right array divide for WAVEFORMS.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function W = rdivide(W,divisor) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">RDIVIDE (./) Right array divide for WAVEFORMS.
+     W./B denotes element-by-element division for waveform objects.
+     W./B scales the data in waveform(s) W by dividing them by value(s) B
+     The dividend (W) Must be one or more waveforms.  The divisor may be
+     a scalar, a numeric array of the same size &amp; shape as W, or a
+     waveform with the same number of data values as W.
+
+     If the divisor is a scalar, the resulting waveform(s) have all had
+     their data scaled by dividing by the divisor.
+
+     If the divisor is an array, then it must be of the same size as W.
+     The data within each element of W will be divided by the
+     corresponding element of divisor.
+       i.e. for each element(n) of W , C(n) = W(n) ./ B(n)
+
+     If divisor is another waveform, each sample in W is divided by the
+     corresponding sample in divisor.
+        divisor &amp; W must have the same # of data points.
+
+     C = RDIVIDE(A,B) is called for the syntax 'W ./ B' when A
+     or B is a waveform object.
+
+     The returned values are waveforms of the same size as W
+
+     examples.
+       C = W ./ 10 % scale all data values within W by dividing them by 10
+
+       Let W be a 1x3 waveform, let
+       C = W ./ [1 2 3] % does nothing to first waveform, but scales the
+                        % data within the second waveform by 1/2 and the
+                        % third waveform by 1/3
+
+       C = W ./ max(abs(W)); % scale all waveforms to have
+                             % values between -1 and 1.
+
+       Let Z be a waveform with the same # of elements as W.
+       C = W ./ Z; % scale each data point within W by the corresponding
+                   % data point within Z
+
+ See also <a href="rdivide.html" class="code" title="function W = rdivide(W,divisor)">RDIVIDE</a>, LDIVIDE, MLDIVIDE, <a href="mrdivide.html" class="code" title="function C = mrdivide(W,B)">MRDIVIDE</a>.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function W = rdivide(W,divisor)</a>
+0002    <span class="comment">%RDIVIDE (./) Right array divide for WAVEFORMS.</span>
+0003    <span class="comment">%     W./B denotes element-by-element division for waveform objects.</span>
+0004    <span class="comment">%     W./B scales the data in waveform(s) W by dividing them by value(s) B</span>
+0005    <span class="comment">%     The dividend (W) Must be one or more waveforms.  The divisor may be</span>
+0006    <span class="comment">%     a scalar, a numeric array of the same size &amp; shape as W, or a</span>
+0007    <span class="comment">%     waveform with the same number of data values as W.</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">%     If the divisor is a scalar, the resulting waveform(s) have all had</span>
+0010    <span class="comment">%     their data scaled by dividing by the divisor.</span>
+0011    <span class="comment">%</span>
+0012    <span class="comment">%     If the divisor is an array, then it must be of the same size as W.</span>
+0013    <span class="comment">%     The data within each element of W will be divided by the</span>
+0014    <span class="comment">%     corresponding element of divisor.</span>
+0015    <span class="comment">%       i.e. for each element(n) of W , C(n) = W(n) ./ B(n)</span>
+0016    <span class="comment">%</span>
+0017    <span class="comment">%     If divisor is another waveform, each sample in W is divided by the</span>
+0018    <span class="comment">%     corresponding sample in divisor.</span>
+0019    <span class="comment">%        divisor &amp; W must have the same # of data points.</span>
+0020    <span class="comment">%</span>
+0021    <span class="comment">%     C = RDIVIDE(A,B) is called for the syntax 'W ./ B' when A</span>
+0022    <span class="comment">%     or B is a waveform object.</span>
+0023    <span class="comment">%</span>
+0024    <span class="comment">%     The returned values are waveforms of the same size as W</span>
+0025    <span class="comment">%</span>
+0026    <span class="comment">%     examples.</span>
+0027    <span class="comment">%       C = W ./ 10 % scale all data values within W by dividing them by 10</span>
+0028    <span class="comment">%</span>
+0029    <span class="comment">%       Let W be a 1x3 waveform, let</span>
+0030    <span class="comment">%       C = W ./ [1 2 3] % does nothing to first waveform, but scales the</span>
+0031    <span class="comment">%                        % data within the second waveform by 1/2 and the</span>
+0032    <span class="comment">%                        % third waveform by 1/3</span>
+0033    <span class="comment">%</span>
+0034    <span class="comment">%       C = W ./ max(abs(W)); % scale all waveforms to have</span>
+0035    <span class="comment">%                             % values between -1 and 1.</span>
+0036    <span class="comment">%</span>
+0037    <span class="comment">%       Let Z be a waveform with the same # of elements as W.</span>
+0038    <span class="comment">%       C = W ./ Z; % scale each data point within W by the corresponding</span>
+0039    <span class="comment">%                   % data point within Z</span>
+0040    <span class="comment">%</span>
+0041    <span class="comment">% See also RDIVIDE, LDIVIDE, MLDIVIDE, MRDIVIDE.</span>
+0042    
+0043    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0044    <span class="comment">% $Date$</span>
+0045    <span class="comment">% $Revision$</span>
+0046    
+0047    
+0048    <span class="comment">% ----------------------------------------------------------------------- %</span>
+0049    <span class="comment">% Validation tests</span>
+0050    <span class="comment">% --------------------------</span>
+0051    <span class="comment">%</span>
+0052    <span class="comment">% dividend check</span>
+0053    <span class="comment">%   must be a waveform</span>
+0054    <span class="comment">%</span>
+0055    <span class="comment">% divisor checks</span>
+0056    <span class="comment">%   for a WAVEFORM divisor</span>
+0057    <span class="comment">%     must be scalar (1x1)</span>
+0058    <span class="comment">%     must have same data length as all dividends</span>
+0059    <span class="comment">%   for a NUMERIC divisor</span>
+0060    <span class="comment">%     must be scalar OR</span>
+0061    <span class="comment">%     must be same size (shape) as dividend OR</span>
+0062    <span class="comment">%     must have same data length as all dividends</span>
+0063    <span class="comment">%</span>
+0064    <span class="comment">% ----------------------------------------------------------------------- %</span>
+0065    
+0066    <span class="comment">% Logical variables used in validating the RDIVIDE operation</span>
+0067    
+0068    hasOneDivisorPerDividend = all(size(W) == size(divisor));
+0069    elements_haveMatchingSize = <span class="keyword">...</span>
+0070       all(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(W,<span class="string">'data_length'</span>) == numel(<a href="double.html" class="code" title="function n = double(W, option)">double</a>(divisor)));
+0071    <span class="comment">%-----------------------------------------------------------%</span>
+0072    
+0073    <span class="keyword">if</span> ~isa(W,<span class="string">'waveform'</span>);
+0074       error(<span class="string">'Waveform:rdivide:invalidDividendClass'</span>,<span class="keyword">...</span>
+0075          <span class="string">'The dividend must be a waveform object'</span>);
+0076    <span class="keyword">end</span>
+0077    
+0078    <span class="keyword">if</span> isa(divisor,<span class="string">'waveform'</span>)
+0079       <span class="keyword">if</span> ~isscalar(divisor)
+0080          error(<span class="string">'Waveform:rdivide:invalidDivisorSize'</span>,<span class="keyword">...</span>
+0081             [<span class="string">'The divisor has too many elements.  '</span><span class="keyword">...</span>
+0082             <span class="string">'It must be single (1x1) waveform object'</span>])
+0083       <span class="keyword">else</span>
+0084          task = <span class="string">'waveform_by_waveform'</span>;
+0085       <span class="keyword">end</span>
+0086    <span class="keyword">elseif</span> isnumeric(divisor)
+0087       <span class="keyword">if</span> isscalar(divisor)
+0088          task = <span class="string">'waveform_by_scalar'</span>;
+0089       <span class="keyword">elseif</span> hasOneDivisorPerDividend
+0090          task = <span class="string">'waveforms_by_element'</span>;
+0091       <span class="keyword">elseif</span> elements_haveMatchingSize
+0092          task = <span class="string">'sample_by_sample'</span>;
+0093       <span class="keyword">else</span>
+0094          error(<span class="string">'Waveform:rdivide:sizeMismatch'</span>,<span class="keyword">...</span>
+0095             <span class="string">'Number of waveforms are incompatable with the number of divisors'</span>);
+0096       <span class="keyword">end</span>
+0097    <span class="keyword">else</span> <span class="comment">% divisor is of an unknown type</span>
+0098       error(<span class="string">'Waveform:rdivide:invalidDivisorClass'</span>,<span class="keyword">...</span>
+0099          <span class="string">'The divisor must be either numeric or a single waveform object'</span>);
+0100    <span class="keyword">end</span>
+0101    
+0102    <span class="comment">% ----------------------------------------------------------------------- %</span>
+0103    <span class="keyword">switch</span> task
+0104       <span class="keyword">case</span> {<span class="string">'waveform_by_waveform'</span>, <span class="string">'sample_by_sample'</span>}
+0105          <span class="keyword">for</span> n = 1 : numel(W);
+0106             W(n).data = W(n).data ./ <a href="double.html" class="code" title="function n = double(W, option)">double</a>(divisor(:));
+0107          <span class="keyword">end</span>
+0108       <span class="keyword">case</span> <span class="string">'waveforms_by_element'</span>
+0109          <span class="comment">% each waveform has its own number to be divided by</span>
+0110          <span class="keyword">for</span> n=1:numel(W)
+0111             thisDivisor = <a href="double.html" class="code" title="function n = double(W, option)">double</a>(divisor(n));
+0112             W(n).data = W(n).data ./ thisDivisor;
+0113          <span class="keyword">end</span>
+0114       <span class="keyword">case</span> <span class="string">'waveform_by_scalar'</span>
+0115          <span class="keyword">for</span> n=1:numel(W)
+0116             W(n).data = W(n).data ./ <a href="double.html" class="code" title="function n = double(W, option)">double</a>(divisor);
+0117          <span class="keyword">end</span>
+0118       <span class="keyword">otherwise</span>
+0119          error(<span class="string">'Waveform:rdivide:unknownoperation'</span>,<span class="keyword">...</span>
+0120             <span class="string">'A rdivide operation was attempted that had no recognized task.'</span>);
+0121    <span class="keyword">end</span>
+0122 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of setfile</title>
+  <meta name="keywords" content="setfile">
+  <meta name="description" content="SETFILE associates a datasource object with a file (or directory)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@datasource</a> &gt; setfile.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@datasource&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>setfile
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>SETFILE associates a datasource object with a file (or directory)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function ds = setfile(ds, desc_string, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SETFILE associates a datasource object with a file (or directory)
+   ds = setfile(ds, descriptor_string, [var1, var2, ... varN])
+   where;
+   - DS is the datasource object
+   - DESCRIPTOR_STRING is a format statement, like that from sprintf.
+   - var1...varN are optional variable names that are used to fill in the
+     information from the format statement.
+      valid variable names (of type integer, or format string of '%d')
+         YEAR, DAY, HOUR, MINUTE, SECOND, JDAY (&lt;-- julian day)
+
+      valid variable names (of type string, or format string of '%s')
+         station, channel, location, network
+
+   this provides a powerful tool that allows the program to navigate a
+   wide variety of files and directories based upon date or SCNL
+   information.
+
+ ------------------------------------------------------------------------
+ EXAMPLE #1:
+ Assume data files are stored in the following directories:
+   /DATA/year2006/04/OKCF.dat
+   /DATA/year2006/04/OKFG.dat
+   /DATA/year2006/05/OKCF.dat
+   ...etc...
+
+  To find any given peice of data requires the year, month (zero padded!),
+  and the station name.
+
+  You can specify which file to use by setting the filename as follows:
+  ds = setfile(ds,'/DATA/year%04d/%02d/%s.dat','year','month','station');
+
+  * notice that each percent sign (%) has a corresponding term.  That is:
+    %04d --&gt; 'year',   %02d --&gt; 'month', and %s --&gt;'station'
+  * The numbers and symbols between the '%' and the first alphabetic
+    character provide additional formatting details.
+    * any number greater than zero means &quot;use up this many spaces&quot;
+    * a leading zero means &quot;fill up leading space with zeros&quot;
+
+    ex. %04d -&gt; write the number with 4 spaces, and pad with zeros.
+
+ ------------------------------------------------------------------------
+ EXAMPLE #2:
+ The method waveform/which_archive can be supplanted by
+ the following setfile call...
+ ds = setfile(ds, ...
+            '/iwrun/op/db/archive/archive_%04d/archive_%04d_%02d_%02d',...
+            'year','year','month','day')
+ - - - -
+ For access to a specific, date independent, SCNL independent database:
+ ds = setfile(ds,'mydatabasename');
+
+ see also sprintf, datasource/getfilename</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>	DATASOURCE constructor for a datasource object.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function ds = setfile(ds, desc_string, varargin)</a>
+0002    <span class="comment">%SETFILE associates a datasource object with a file (or directory)</span>
+0003    <span class="comment">%   ds = setfile(ds, descriptor_string, [var1, var2, ... varN])</span>
+0004    <span class="comment">%   where;</span>
+0005    <span class="comment">%   - DS is the datasource object</span>
+0006    <span class="comment">%   - DESCRIPTOR_STRING is a format statement, like that from sprintf.</span>
+0007    <span class="comment">%   - var1...varN are optional variable names that are used to fill in the</span>
+0008    <span class="comment">%     information from the format statement.</span>
+0009    <span class="comment">%      valid variable names (of type integer, or format string of '%d')</span>
+0010    <span class="comment">%         YEAR, DAY, HOUR, MINUTE, SECOND, JDAY (&lt;-- julian day)</span>
+0011    <span class="comment">%</span>
+0012    <span class="comment">%      valid variable names (of type string, or format string of '%s')</span>
+0013    <span class="comment">%         station, channel, location, network</span>
+0014    <span class="comment">%</span>
+0015    <span class="comment">%   this provides a powerful tool that allows the program to navigate a</span>
+0016    <span class="comment">%   wide variety of files and directories based upon date or SCNL</span>
+0017    <span class="comment">%   information.</span>
+0018    <span class="comment">%</span>
+0019    <span class="comment">% ------------------------------------------------------------------------</span>
+0020    <span class="comment">% EXAMPLE #1:</span>
+0021    <span class="comment">% Assume data files are stored in the following directories:</span>
+0022    <span class="comment">%   /DATA/year2006/04/OKCF.dat</span>
+0023    <span class="comment">%   /DATA/year2006/04/OKFG.dat</span>
+0024    <span class="comment">%   /DATA/year2006/05/OKCF.dat</span>
+0025    <span class="comment">%   ...etc...</span>
+0026    <span class="comment">%</span>
+0027    <span class="comment">%  To find any given peice of data requires the year, month (zero padded!),</span>
+0028    <span class="comment">%  and the station name.</span>
+0029    <span class="comment">%</span>
+0030    <span class="comment">%  You can specify which file to use by setting the filename as follows:</span>
+0031    <span class="comment">%  ds = setfile(ds,'/DATA/year%04d/%02d/%s.dat','year','month','station');</span>
+0032    <span class="comment">%</span>
+0033    <span class="comment">%  * notice that each percent sign (%) has a corresponding term.  That is:</span>
+0034    <span class="comment">%    %04d --&gt; 'year',   %02d --&gt; 'month', and %s --&gt;'station'</span>
+0035    <span class="comment">%  * The numbers and symbols between the '%' and the first alphabetic</span>
+0036    <span class="comment">%    character provide additional formatting details.</span>
+0037    <span class="comment">%    * any number greater than zero means &quot;use up this many spaces&quot;</span>
+0038    <span class="comment">%    * a leading zero means &quot;fill up leading space with zeros&quot;</span>
+0039    <span class="comment">%</span>
+0040    <span class="comment">%    ex. %04d -&gt; write the number with 4 spaces, and pad with zeros.</span>
+0041    <span class="comment">%</span>
+0042    <span class="comment">% ------------------------------------------------------------------------</span>
+0043    <span class="comment">% EXAMPLE #2:</span>
+0044    <span class="comment">% The method waveform/which_archive can be supplanted by</span>
+0045    <span class="comment">% the following setfile call...</span>
+0046    <span class="comment">% ds = setfile(ds, ...</span>
+0047    <span class="comment">%            '/iwrun/op/db/archive/archive_%04d/archive_%04d_%02d_%02d',...</span>
+0048    <span class="comment">%            'year','year','month','day')</span>
+0049    <span class="comment">% - - - -</span>
+0050    <span class="comment">% For access to a specific, date independent, SCNL independent database:</span>
+0051    <span class="comment">% ds = setfile(ds,'mydatabasename');</span>
+0052    <span class="comment">%</span>
+0053    <span class="comment">% see also sprintf, datasource/getfilename</span>
+0054    
+0055    
+0056    <span class="keyword">if</span> ~exist(<span class="string">'desc_string'</span>,<span class="string">'var'</span>) || isempty(desc_string)
+0057       ds.usefile = false;
+0058       ds.file_string = {};
+0059       ds.file_args = {};
+0060       <span class="keyword">return</span>
+0061    <span class="keyword">end</span>
+0062    
+0063    <span class="comment">% the number of arguments should equal the number of %somethings</span>
+0064    <span class="comment">% ... except where '%' is preceded by a  '\'</span>
+0065    n = find(desc_string == <span class="string">'%'</span>);
+0066    z=0; <span class="comment">%currently not accepting % in filename!!!</span>
+0067    <span class="comment">%z = sum('\'== desc_string(n(n&gt;2)-1));</span>
+0068    expectedArgumentCount = numel(n) - z;
+0069    <span class="keyword">if</span> numel(varargin) ~= expectedArgumentCount
+0070       error(<span class="string">'Datasource:FileArgumentMismatch'</span>, <span class="keyword">...</span>
+0071          <span class="string">'the number of file arguments provided (%d) doesn''t match the number of arguments requested by the filestring %d'</span>,<span class="keyword">...</span>
+0072          numel(varargin),expectedArgumentCount);
+0073       
+0074    <span class="keyword">end</span>
+0075    varargin = lower(varargin);
+0076    
+0077    <span class="comment">%check to be sure arguments are valid</span>
+0078    validVariables = {<span class="string">'year'</span>, <span class="string">'month'</span>, <span class="string">'day'</span>, <span class="string">'hour'</span>, <span class="string">'minute'</span>, <span class="string">'second'</span>,<span class="keyword">...</span>
+0079       <span class="string">'station'</span>, <span class="string">'channel'</span>,<span class="string">'location'</span>,<span class="string">'network'</span>, <span class="string">'jday'</span>};
+0080    <span class="keyword">for</span> i=1:numel(varargin)
+0081       <span class="keyword">if</span> ~ismember(varargin{i},validVariables)
+0082          error(<span class="string">'Datasource:FileArgumentError'</span>,<span class="keyword">...</span>
+0083             <span class="string">'unrecognized file argument [%s].'</span>,varargin{i});
+0084       <span class="keyword">end</span>
+0085    <span class="keyword">end</span>
+0086    
+0087    ds.file_string = desc_string;
+0088    ds.file_args = varargin;
+0089    ds.usefile = true;
+0090 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

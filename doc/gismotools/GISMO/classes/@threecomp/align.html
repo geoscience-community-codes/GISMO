@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of align</title>
+  <meta name="keywords" content="align">
+  <meta name="description" content="ALIGN Align and trim traces in threecomp object.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@threecomp</a> &gt; align.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@threecomp&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>align
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>ALIGN Align and trim traces in threecomp object.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function TCnew = align(TC,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">ALIGN Align and trim traces in threecomp object.
+ TC = ALIGN(TC) resample traces so that samples from each component align
+ in time. As needed, this may include: trimming the start or end times;
+ changing the sample rate; resampling traces to eliminate subsample
+ offsets. If start and end times do not overlap for all traces, the
+ waveforms returned will be of zero length.
+
+ TC = ALIGN(TC,ALIGNFREQ) specifies an explicit frequency for the
+ resampling. If no frequency is given, then traces are resampled to same
+ frequency as the Z component in each threecomp object.
+
+ If a trace contains fewer than 25 samples, that threecomp element will 
+ not be aligned and the resulting traces will be of zero length (empty).</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>	ALIGN Align and trim traces in threecomp object.</li><li><a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>	ALIGN Align and trim traces in threecomp object.</li><li><a href="threecomp.html" class="code" title="">threecomp</a>	THREECOMP Object for three component waveform data</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function TC = do_one(TC,alignFreq)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function TCnew = align(TC,varargin)</a>
+0002 
+0003 <span class="comment">%ALIGN Align and trim traces in threecomp object.</span>
+0004 <span class="comment">% TC = ALIGN(TC) resample traces so that samples from each component align</span>
+0005 <span class="comment">% in time. As needed, this may include: trimming the start or end times;</span>
+0006 <span class="comment">% changing the sample rate; resampling traces to eliminate subsample</span>
+0007 <span class="comment">% offsets. If start and end times do not overlap for all traces, the</span>
+0008 <span class="comment">% waveforms returned will be of zero length.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% TC = ALIGN(TC,ALIGNFREQ) specifies an explicit frequency for the</span>
+0011 <span class="comment">% resampling. If no frequency is given, then traces are resampled to same</span>
+0012 <span class="comment">% frequency as the Z component in each threecomp object.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% If a trace contains fewer than 25 samples, that threecomp element will</span>
+0015 <span class="comment">% not be aligned and the resulting traces will be of zero length (empty).</span>
+0016  
+0017 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0018 <span class="comment">% $Date$</span>
+0019 <span class="comment">% $Revision$</span>
+0020 
+0021 
+0022 GETFREQ = 1;
+0023 <span class="keyword">if</span> ~<a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(varargin)
+0024    alignFreq = varargin{1};
+0025    <span class="keyword">if</span> ~isreal(alignFreq)
+0026       error(<span class="string">'Threecomp:align:resampling rate must be a real number'</span>); 
+0027    <span class="keyword">end</span>
+0028    GETFREQ = 0;
+0029 <span class="keyword">end</span>
+0030 
+0031 
+0032 TCnew = TC;
+0033 <span class="keyword">for</span> n = 1:length(TC)
+0034     <span class="keyword">if</span> GETFREQ
+0035        alignFreq = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC(n).traces(1),<span class="string">'FREQ'</span>);
+0036     <span class="keyword">end</span>
+0037     TCnew(n) = <a href="#_sub1" class="code" title="subfunction TC = do_one(TC,alignFreq)">do_one</a>(TC(n),alignFreq);
+0038 <span class="keyword">end</span>
+0039 
+0040 
+0041 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0042 <span class="comment">% Process a single threecomp trace tuple</span>
+0043 <a name="_sub1" href="#_subfunctions" class="code">function TC = do_one(TC,alignFreq)</a>
+0044 
+0045 
+0046 <span class="comment">% CHECK START/END TIMES AND FREQUENCIES</span>
+0047 SAMETIMES = 1;
+0048 SAMEFREQUENCY = 1;
+0049 SUFFICIENTLENGTH = 1;
+0050 startTime = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces,<span class="string">'START_MATLAB'</span>);
+0051 endTime = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces,<span class="string">'END_MATLAB'</span>);
+0052 freq = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces,<span class="string">'FREQ'</span>);
+0053 dataLength = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces,<span class="string">'DATA_LENGTH'</span>);
+0054 <span class="keyword">if</span> ( startTime(2)~=startTime(1) ) || ( startTime(3)~=startTime(1) )
+0055     SAMETIMES = 0;
+0056 <span class="keyword">end</span>
+0057 <span class="keyword">if</span> ( endTime(2)~=endTime(1) ) || ( endTime(3)~=endTime(1) )
+0058     SAMETIMES = 0;
+0059 <span class="keyword">end</span>
+0060 <span class="keyword">if</span> ( freq(2)~=freq(1) ) || ( freq(3)~=freq(1) )
+0061     SAMEFREQUENCY = 0;
+0062 <span class="keyword">end</span>
+0063 <span class="keyword">if</span> min(dataLength)&lt;25
+0064    SUFFICIENTLENGTH = 0; 
+0065 <span class="keyword">end</span>
+0066 
+0067 
+0068 
+0069 <span class="keyword">if</span> ~SUFFICIENTLENGTH
+0070     TC.traces = <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(TC.traces,<span class="string">'DATA'</span>,[]);
+0071 <span class="keyword">else</span>
+0072     
+0073     <span class="comment">% ALIGN IF NECESSARY</span>
+0074     <span class="keyword">if</span> ~SAMETIMES || ~SAMEFREQUENCY
+0075         TC.traces = <a href="align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>(TC.traces , startTime , alignFreq );
+0076     <span class="keyword">end</span>
+0077     
+0078     <span class="comment">% CROP TRACES IF NECESSARY</span>
+0079     <span class="keyword">if</span> ~SAMETIMES || ~SAMEFREQUENCY
+0080         samples = floor(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC.traces(1),<span class="string">'FREQ'</span>)*86400*(min(endTime) - max(startTime)));
+0081         TC.traces = <a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>(TC.traces, <span class="string">'TIME&amp;SAMPLES'</span>, max(startTime), samples);
+0082     <span class="keyword">end</span>
+0083     
+0084 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

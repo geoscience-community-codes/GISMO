@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mastercorr_cookbook</title>
+  <meta name="keywords" content="mastercorr_cookbook">
+  <meta name="description" content="Demonstration of the major features of the master waveform correlation">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">master_correlation</a> &gt; mastercorr_cookbook.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/master_correlation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>mastercorr_cookbook
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Demonstration of the major features of the master waveform correlation</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Demonstration of the major features of the master waveform correlation
+ toolbox. This example uses a small set of included data. This data is six
+ 10-minute segments of data (1 hour total). MASTERCORR_SCAN can operate on
+ waveform objects from any source or any length. Loading data is a process 
+ left to the user. Individual segments exceeding a day or so in length may
+ run into computational issues.
+
+ See also <a href="mastercorr_plot_stats.html" class="code" title="function mastercorr_plot_stats(W)">mastercorr_plot_stats</a>, <a href="mastercorr_cookbook.html" class="code" title="">mastercorr_cookbook</a>, <a href="mastercorr_extract.html" class="code" title="function varargout = mastercorr_extract(W,varargin)">mastercorr_extract</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="mastercorr_extract.html" class="code" title="function varargout = mastercorr_extract(W,varargin)">mastercorr_extract</a>	MASTERCORR_EXTRACT extract matches to the master waveform</li><li><a href="mastercorr_plot_stats.html" class="code" title="function mastercorr_plot_stats(W)">mastercorr_plot_stats</a>	MASTERCORR_PLOT_STATS plot statistics from master correlation algorithm</li><li><a href="mastercorr_scan.html" class="code" title="function [WW,WWxc] = mastercorr_scan(WW,WWsnippet,threshold)">mastercorr_scan</a>	MASTERCORR_SCAN scans a waveform for events which match a master.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Demonstration of the major features of the master waveform correlation</span>
+0002 <span class="comment">% toolbox. This example uses a small set of included data. This data is six</span>
+0003 <span class="comment">% 10-minute segments of data (1 hour total). MASTERCORR_SCAN can operate on</span>
+0004 <span class="comment">% waveform objects from any source or any length. Loading data is a process</span>
+0005 <span class="comment">% left to the user. Individual segments exceeding a day or so in length may</span>
+0006 <span class="comment">% run into computational issues.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% See also mastercorr_plot_stats, mastercorr_cookbook, mastercorr_extract</span>
+0009 
+0010 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0011 <span class="comment">% $Date$</span>
+0012 <span class="comment">% $Revision$</span>
+0013 
+0014 
+0015 load mastercorr_cookbook_data
+0016 W = fillgaps(W,0);
+0017 W = demean(W);
+0018 filt = filterobject(<span class="string">'B'</span>,[0.8 12],2);
+0019 W = filtfilt(filt,W);
+0020 plot(W,<span class="string">'xunit'</span>,<span class="string">'date'</span>)
+0021 
+0022 
+0023 <span class="comment">% CREATE MASTER WAVEFORM &quot;SNIPPET&quot;</span>
+0024 Wsnippet = extract(W(4),<span class="string">'TIME'</span>,<span class="string">'4/2/2009 20:32:36'</span>,<span class="string">'4/2/2009 20:32:40'</span>);
+0025 
+0026 
+0027 <span class="comment">% ADD A REFERENCE &quot;TRIGGER&quot; TIME ON TRACE (OPTIONAL)</span>
+0028 Wsnippet = addfield(Wsnippet,<span class="string">'TRIGGER'</span>,datenum(<span class="string">'4/2/2009 20:32:37.73'</span>));
+0029 
+0030 
+0031 <span class="comment">% SCAN CONTINUOUS DATA FOR SNIPPET</span>
+0032 [W,Wxc] = <a href="mastercorr_scan.html" class="code" title="function [WW,WWxc] = mastercorr_scan(WW,WWsnippet,threshold)">mastercorr_scan</a>(W,Wsnippet,0.8);
+0033 
+0034 
+0035 <span class="comment">% PLOT SOME BASIC STATISTICS TO ASSESS THE QUALITY</span>
+0036 <a href="mastercorr_plot_stats.html" class="code" title="function mastercorr_plot_stats(W)">mastercorr_plot_stats</a>(W);
+0037 
+0038 
+0039 <span class="comment">% EXTRACT WAVEFORM MATCH INFO</span>
+0040 match = <a href="mastercorr_extract.html" class="code" title="function varargout = mastercorr_extract(W,varargin)">mastercorr_extract</a>(W)
+0041 
+0042 
+0043 <span class="comment">% EXTRACT DATA SEGMENTS INTO A CORRELATION OBJECT</span>
+0044 <span class="comment">% See help correlation for details and subsequent options</span>
+0045 [match,C] = <a href="mastercorr_extract.html" class="code" title="function varargout = mastercorr_extract(W,varargin)">mastercorr_extract</a>(W,-2,6);
+0046 plot(C);
+0047</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

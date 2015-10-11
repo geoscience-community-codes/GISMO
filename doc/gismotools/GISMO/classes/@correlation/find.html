@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of find</title>
+  <meta name="keywords" content="find">
+  <meta name="description" content="INDEX = FIND(c,'CLUST',WHICH_CLUSTER)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@correlation</a> &gt; find.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>find
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function index = find(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> INDEX = FIND(c,'CLUST',WHICH_CLUSTER)
+ Returns a list of trace numbers belonging to the cluster specified by
+ WHICH_CLUSTER. If WHICH_CLUSTER is 1, then cluster with the most traces
+ will be returned. If WHICH_CLUSTER is 2, then the seconds largest cluster
+ will be returned, and so on. Often this use will be paired with SUBSET or
+ STACK. For example, to plot the largest cluster of traces followed by 
+ a stack of these traces:
+   INDEX = FIND(c,'CLUST',1)
+   c1 = SUBSET(c,INDEX)  
+   c1 = stack(c1)
+   plot(c1)
+
+ INDEX = FIND(c,'BIG',SIZE)
+ Returns a list of trace numbers belonging to any cluster that has at
+ leats SIZE number of traces. For example, to get all clusters that
+ contain 5 or more traces:
+   INDEX = FIND(c,'BIG',5)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="sort.html" class="code" title="function c = norm(c,varargin)">sort</a>	C = SORT(C,'TIME')</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG adjusts the trigger times of each trace</li><li><a href="check.html" class="code" title="function val = check(c,varargin)">check</a>	Check various features of a correlation object.</li><li><a href="cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	c = CLUSTER(c,CUTOFF) cuts the "branches" of the linkage tree to create</li><li><a href="correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="getclusterstat.html" class="code" title="function family=getclusterstat(c)">getclusterstat</a>	GETCLUSTERSTAT gets detais of individual correlation clusters.</li><li><a href="match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>	Retain matching elements of two correlation objects.</li><li><a href="verify.html" class="code" title="function c = verify(c)">verify</a>	VERIFY</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function index = find_clu(c,n);</a></li><li><a href="#_sub2" class="code">function index = find_big(c,n);</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function index = find(c,varargin)</a>
+0002 
+0003 <span class="comment">% INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</span>
+0004 <span class="comment">% Returns a list of trace numbers belonging to the cluster specified by</span>
+0005 <span class="comment">% WHICH_CLUSTER. If WHICH_CLUSTER is 1, then cluster with the most traces</span>
+0006 <span class="comment">% will be returned. If WHICH_CLUSTER is 2, then the seconds largest cluster</span>
+0007 <span class="comment">% will be returned, and so on. Often this use will be paired with SUBSET or</span>
+0008 <span class="comment">% STACK. For example, to plot the largest cluster of traces followed by</span>
+0009 <span class="comment">% a stack of these traces:</span>
+0010 <span class="comment">%   INDEX = FIND(c,'CLUST',1)</span>
+0011 <span class="comment">%   c1 = SUBSET(c,INDEX)</span>
+0012 <span class="comment">%   c1 = stack(c1)</span>
+0013 <span class="comment">%   plot(c1)</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% INDEX = FIND(c,'BIG',SIZE)</span>
+0016 <span class="comment">% Returns a list of trace numbers belonging to any cluster that has at</span>
+0017 <span class="comment">% leats SIZE number of traces. For example, to get all clusters that</span>
+0018 <span class="comment">% contain 5 or more traces:</span>
+0019 <span class="comment">%   INDEX = FIND(c,'BIG',5)</span>
+0020 <span class="comment">%</span>
+0021 
+0022 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0023 <span class="comment">% $Date$</span>
+0024 <span class="comment">% $Revision$</span>
+0025 
+0026 
+0027 <span class="comment">% READ &amp; CHECK ARGUMENTS</span>
+0028 <span class="keyword">if</span> ~strcmpi(class(c),<span class="string">'correlation'</span>)
+0029     error(<span class="string">'First input must be a correlation object'</span>);
+0030 <span class="keyword">end</span>
+0031 
+0032 <span class="keyword">if</span> length(varargin)==0
+0033    error(<span class="string">'More arguments needed'</span>);
+0034 <span class="keyword">else</span>
+0035     type = varargin{1};
+0036 <span class="keyword">end</span>
+0037     
+0038 
+0039 <span class="comment">% EXECUTE FIND TYPE</span>
+0040 <span class="keyword">if</span> strncmpi(type,<span class="string">'CLU'</span>,3)
+0041     n = varargin{2};
+0042     <span class="keyword">if</span> isa(n,<span class="string">'double'</span>)
+0043         index = <a href="#_sub1" class="code" title="subfunction index = find_clu(c,n);">find_clu</a>(c,n);
+0044     <span class="keyword">else</span>
+0045        error(<span class="string">'second argument must be a number'</span>); 
+0046     <span class="keyword">end</span>
+0047 <span class="keyword">elseif</span> strncmpi(type,<span class="string">'BIG'</span>,3)
+0048     n = varargin{2};
+0049     <span class="keyword">if</span> isa(n,<span class="string">'double'</span>)
+0050         index = <a href="#_sub2" class="code" title="subfunction index = find_big(c,n);">find_big</a>(c,n);
+0051     <span class="keyword">else</span>
+0052        error(<span class="string">'second argument must be a number'</span>); 
+0053     <span class="keyword">end</span>    
+0054 <span class="keyword">else</span>
+0055     error(<span class="string">'This use of find is not recognized'</span>);
+0056 <span class="keyword">end</span>;
+0057 
+0058 
+0059 
+0060 
+0061 
+0062 
+0063 
+0064 
+0065 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0066 <span class="comment">% FIND CLUSTERS</span>
+0067 <span class="comment">%</span>
+0068 
+0069 <a name="_sub1" href="#_subfunctions" class="code">function index = find_clu(c,n);</a>
+0070 <span class="keyword">if</span> isempty(c.clust)
+0071     error(<span class="string">'No cluster information available. Consider using the linkage and cluster functions.'</span>);
+0072 <span class="keyword">end</span>
+0073 famsize = histc(c.clust,[0:max(c.clust)]+.5  );
+0074 [famsize,fami] = <a href="sort.html" class="code" title="function c = norm(c,varargin)">sort</a>(famsize,<span class="string">'descend'</span>);
+0075 <span class="keyword">if</span> n &gt; max(c.clust)
+0076    error([<span class="string">'There are only '</span> num2str(max(c.clust)) <span class="string">' clusters'</span>]); 
+0077 <span class="keyword">end</span>
+0078 index = [];
+0079 <span class="keyword">for</span> i = 1:length(n)
+0080     index = <a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>(1,index,<a href="find.html" class="code" title="function index = find(c,varargin)">find</a>(c.clust==fami(n(i))));
+0081 <span class="keyword">end</span>
+0082 
+0083 
+0084 
+0085 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0086 <span class="comment">% FIND BIGGEST CLUSTERS</span>
+0087 <span class="comment">%</span>
+0088 
+0089 <a name="_sub2" href="#_subfunctions" class="code">function index = find_big(c,n);</a>
+0090 
+0091 famsize = histc(c.clust,[0:max(c.clust)]+.5  );
+0092 [famsize,fami] = <a href="sort.html" class="code" title="function c = norm(c,varargin)">sort</a>(famsize,<span class="string">'descend'</span>);
+0093 <span class="keyword">if</span> n &gt; max(famsize)
+0094    disp([<span class="string">'There are no clusters with more than '</span> num2str(max(famsize)) <span class="string">' traces'</span>]); 
+0095 <span class="keyword">end</span>
+0096 index = [];
+0097 
+0098 f = <a href="find.html" class="code" title="function index = find(c,varargin)">find</a>(famsize&gt;=n);
+0099 
+0100 <span class="keyword">for</span> i = 1:length(f)
+0101     index = <a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>(1,index,<a href="find.html" class="code" title="function index = find(c,varargin)">find</a>(c.clust==fami(f(i))));
+0102 <span class="keyword">end</span>
+0103</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

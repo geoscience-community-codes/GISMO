@@ -1,0 +1,131 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of response_plot</title>
+  <meta name="keywords" content="response_plot">
+  <meta name="description" content="RESPONSE_PLOT plot an instrument response">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">instrument_response</a> &gt; response_plot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/instrument_response&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>response_plot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>RESPONSE_PLOT plot an instrument response</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function response_plot(response,xLimits,noLegend) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">RESPONSE_PLOT plot an instrument response
+  RESPONSE_PLOT(RESPONSE) creates instrument response plots for a response
+  structure given by RESPONSE. See DB_GET_RESPONSE for the format of a
+  response structure.
+
+  RESPONSE_PLOT(RESPONSE,XLIMITS) specifies explicit limits on the x-axes.
+
+  RESPONSE_PLOT(RESPONSE,XLIMITS,'nolegend') supresses the legend. This
+  may be desireable for large numbers of responses.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="demo_plutons.html" class="code" title="">demo_plutons</a>	</li><li><a href="response_cookbook.html" class="code" title="">response_cookbook</a>	% Instrument response cookbook</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function response_plot(response,xLimits,noLegend)</a>
+0002 
+0003 <span class="comment">%RESPONSE_PLOT plot an instrument response</span>
+0004 <span class="comment">%  RESPONSE_PLOT(RESPONSE) creates instrument response plots for a response</span>
+0005 <span class="comment">%  structure given by RESPONSE. See DB_GET_RESPONSE for the format of a</span>
+0006 <span class="comment">%  response structure.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%  RESPONSE_PLOT(RESPONSE,XLIMITS) specifies explicit limits on the x-axes.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%  RESPONSE_PLOT(RESPONSE,XLIMITS,'nolegend') supresses the legend. This</span>
+0011 <span class="comment">%  may be desireable for large numbers of responses.</span>
+0012 
+0013 <span class="comment">%</span>
+0014 <span class="comment">% if numel(response) &gt; 10</span>
+0015 <span class="comment">%     response = response(1:10);</span>
+0016 <span class="comment">%     warning('Only the first 10 responses will be included');</span>
+0017 <span class="comment">% end</span>
+0018 
+0019 
+0020 
+0021 figure(<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'Position'</span>,[20 20 680 880]);
+0022 set(gcf,<span class="string">'DefaultAxesFontSize'</span>,14);
+0023 set(gcf,<span class="string">'DefaultLineLineWidth'</span>,2);
+0024 colorList = jet;
+0025 <span class="keyword">if</span> numel(response)==1
+0026     row = 1;
+0027 <span class="keyword">else</span>
+0028     row = 1 + round([0:numel(response)-1] ./ (numel(response)-1) * (size(colorList,1)-1)); <span class="comment">% for jet</span>
+0029     <span class="comment">%row = 1 + round([0:numel(response)-1] ./ (numel(response)) * (size(colorList,1)-1));   % for hsv</span>
+0030 <span class="keyword">end</span>
+0031 
+0032 
+0033 subplot(2,1,1);
+0034 hold on; box on; grid on;
+0035 <span class="keyword">for</span> n = 1:numel(response)
+0036     plot( response(n).frequencies , angle(response(n).values)*180/pi , <span class="string">'-'</span> , <span class="string">'Color'</span> , colorList(row(n),:) )
+0037 <span class="keyword">end</span>
+0038 set(gca,<span class="string">'XScale'</span>,<span class="string">'log'</span>);
+0039 <span class="keyword">if</span> exist(<span class="string">'xLimits'</span>)==1
+0040     xlim(xLimits);
+0041 <span class="keyword">end</span>
+0042 ylim([-180 180]);
+0043 set(gca,<span class="string">'YTick'</span>,[-180 -135 -90 -45 0 45 90 135 180]);
+0044 ylabel(<span class="string">'Phase (degrees)'</span>);
+0045 
+0046 
+0047 
+0048 subplot(2,1,2);
+0049 hold on; box on; grid on;
+0050 <span class="keyword">for</span> n = 1:numel(response)
+0051     plot(response(n).frequencies,abs(response(n).values),<span class="string">'-'</span>,<span class="string">'Color'</span>,colorList(row(n),:) )
+0052 <span class="keyword">end</span>
+0053 set(gca,<span class="string">'XScale'</span>,<span class="string">'log'</span>);
+0054 set(gca,<span class="string">'YScale'</span>,<span class="string">'log'</span>);
+0055 <span class="keyword">if</span> exist(<span class="string">'xLimits'</span>)==1
+0056     xlim(xLimits);
+0057 <span class="keyword">end</span>
+0058 ylim([10e-4 3]);
+0059 xlabel(<span class="string">'Frequency (Hz)'</span>);
+0060 ylabel(<span class="string">'Normalized amplitude'</span>);
+0061 
+0062 
+0063 
+0064 <span class="comment">%% CREATE LEGEND INFORMATION</span>
+0065 <span class="comment">%if ~exist('noLegend')</span>
+0066 <span class="comment">%    for n = 1:numel(response)</span>
+0067 <span class="comment">%        textLabel(n) = {[ get(response(n).scnl,'NSCL_STRING') '    ' datestr(response(n).time,29) ]};</span>
+0068 <span class="comment">%    end</span>
+0069 <span class="comment">%    legend(textLabel,'Location','South','Interpreter','None','FontSize',8);</span>
+0070 <span class="comment">%end</span>
+0071 
+0072 
+0073 <span class="comment">% SETUP PRINTED FIGURE</span>
+0074 set(gcf, <span class="string">'paperorientation'</span>, <span class="string">'portrait'</span>);
+0075 set(gcf, <span class="string">'paperposition'</span>, [.25 .25 8 10.5] );
+0076</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Stamag</title>
+  <meta name="keywords" content="Stamag">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">catalog</a> &gt; Stamag.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>Stamag
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Stamag.html" class="code" title="">Stamag</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Stamag.html" class="code" title="">Stamag</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = Stamag(sta, magnitude, varargin);</a></li><li><a href="#_sub2" class="code">function print(obj)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="Stamag.html" class="code" title="">Stamag</a>
+0002     <span class="comment">% Stamag</span>
+0003     properties
+0004         magid;
+0005         sta;
+0006         arid;
+0007         orid;
+0008         evid;
+0009         phase;
+0010         magtype;
+0011         magnitude;
+0012         uncertainty;
+0013         auth;
+0014     <span class="keyword">end</span>
+0015     methods
+0016         <a name="_sub0" href="#_subfunctions" class="code">function obj = Stamag(sta, magnitude, varargin);</a>
+0017             <span class="comment">% Parse required, optional and param-value pair arguments,</span>
+0018             <span class="comment">% set default values, and add validation conditions</span>
+0019             <span class="keyword">persistent</span> magid;
+0020             <span class="keyword">if</span> isempty(magid)
+0021                 magid = 1;
+0022             <span class="keyword">else</span>
+0023                 magid = magid + 1;
+0024             <span class="keyword">end</span>  
+0025             <span class="keyword">if</span> magnitude==-999 <span class="comment">% deal with Antelope NULL value</span>
+0026                 magnitude=NaN;
+0027             <span class="keyword">end</span>
+0028             p = inputParser;
+0029             p.addRequired(<span class="string">'sta'</span>, @isstr);
+0030             p.addRequired(<span class="string">'magnitude'</span>, @(m) (m&gt;-3 &amp; m&lt;10) | isnan(m));
+0031             p.addParamValue(<span class="string">'magid'</span>, magid, @(i) floor(i)==i);
+0032             p.addParamValue(<span class="string">'arid'</span>, NaN, @(i) floor(i)==i);
+0033             p.addParamValue(<span class="string">'orid'</span>, NaN, @(i) floor(i)==i);
+0034             p.addParamValue(<span class="string">'evid'</span>, NaN, @(i) floor(i)==i);
+0035             p.addOptional(<span class="string">'phase'</span>, <span class="string">''</span>, @isstr);
+0036             p.addOptional(<span class="string">'magtype'</span>, <span class="string">''</span>, @isstr);
+0037             p.addOptional(<span class="string">'uncertainty'</span>, NaN, @isnumeric);
+0038             p.addOptional(<span class="string">'auth'</span>, <span class="string">''</span>, @isstr);
+0039             p.parse(sta, magnitude, varargin{:});
+0040             <span class="keyword">for</span> i=1:length(fields)
+0041                 field=fields{i};
+0042                 <span class="comment">% val = eval(sprintf('p.Results.%s;',field));</span>
+0043                 p.Results.(field);
+0044                 obj = obj.set(field, val);
+0045             <span class="keyword">end</span>
+0046         <span class="keyword">end</span>
+0047         <a name="_sub1" href="#_subfunctions" class="code">function print(obj)</a>
+0048         <span class="keyword">end</span>
+0049     <span class="keyword">end</span>
+0050 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

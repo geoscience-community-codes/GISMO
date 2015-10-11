@@ -1,0 +1,269 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of describe</title>
+  <meta name="keywords" content="describe">
+  <meta name="description" content="Detailed description of threecomp properties">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@threecomp</a> &gt; describe.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@threecomp&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>describe
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Detailed description of threecomp properties</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function describe(threecomp) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">Detailed description of threecomp properties
+ DESCRIBE(THREECOMP) provides detailed descriptions of threecomp object
+ properties and how they are related.
+
+
+ ------------------- COORDINATE SYSTEM -------------------------
+ The threecomp object is designed to use a familiar spherical polar
+ coordinate system in which horizontal direction on Earth is given in
+ clockwise degrees from north: north is 0; east is 90; south is 180; and
+ west is 270 degrees. Vertical directions are given with respect to
+ vertical up. up is 0 degrees; horizontal is 90 degrees; and 180 is down.
+
+
+ ------------------ TRACE NAME CONVENTIONS -----------------------
+ Trace names follow the convention of network-station-channel-location.
+ (Internally, this is enforced via the scnlobject and waveform objects.)
+ Station and channel codes have particular importance in threecomp
+ objects. A simple check is performed upon initiation to ensure that all
+ three traces in each object come from the same seismic station. In other
+ words, all three traces must have the same station code. The channel
+ codes have specific meaning and users are encouraged to make sure that
+ channel names are correct before converting to a threecomp object. The
+ threecomp channel code convention adheres to the SEED standard of a
+ minimum three character name where the third character represents the
+ component orientation. Threecomp requires that the third channel
+ characters be: Z-N-E, Z-R-T, or Z-2-1. Modest deviations from these
+ channel names are accomodated by the horizontal and vertical orientation
+ properties (see below). However, the actual channel names must contain
+ one of these character sets. 
+
+
+ ------------------ COMPONENT ORIENTATIONS ----------------------
+ The orientation of each component of trace data is essential to
+ performing any type of three component analysis. The safest way to ensure
+ that component orientations are correct is to provide them explicitly.
+ The THREECOMP function allows users to provide the horizontal and
+ vertical orientation of all three channels of data. It is also possible
+ to read these parameters automatically from the original waveforms if they
+ have been set as properties there. If no orientation information is
+ given, THREECOMP will assign default values where possible.
+
+ DEFAULT VALUES
+ If the component (third character of the channel name) is Z, N, E and no
+ explicit orientation is given, then the orientations are assumed to be 
+       Z: [0 0]    N:[0 90]    E: [90 90]
+ This is equivalent to calling the THREECOMP function with an orientation
+ matrix [0 0 0 90 90 90 ; ... ; ... ]. If the components are Z, R, T, and
+ a backazimuth is given, then the horizontal components will be aligned
+ accordingly. Components of Z, 2, 1 do not have any default orientations.
+ Orientations provided as arguments to function THREECOMP, and
+ orientations described in the input waveform properties, will override
+ default values. For details see horizontal and vertical orientation
+ descriptions below.
+
+ HORIZONTAL ORIENTATION
+ This attribute specifies the orientation of the component in the
+ horizontal plane, measured clockwise from North.  For a North-South
+ orientation, positive toward the north, the horizontal orientation is 0.
+ For East-West orientation with positive to the east, the horizontal
+ orientation is 90. Allowable range is 0 to 360.
+
+ VERTICAL ORIENTATION
+ This attribute measures the angle between the sensitive axis of a
+ seismometer and the outward-pointing vertical direction.  For a
+ vertically-oriented seismometer, the vertical orientation is 0, or 180
+ (to reverse the sense of the instrument). For a horizontally oriented
+ component, the vertical orientation is 90. Allowable range is 0 - 180.
+
+ RADIAL TRANSVERSE COORDINATE SYSTEM
+ Threecomp objects recognize the familiar coordinate system of vertical,
+ radial, and transverse (ZRT). In this system the positive radial
+ direction (R+) is 180 degrees opposite the backazimuth. The relative
+ component orientations in a ZRT coordinate system are the same as in ZNE
+ coordinates. That is, the positive transverse direction points 90 degrees
+ clockwise from the positive radial direction. For example, for a wave
+ arriving from due south on Z-N-E components, there is no rotation and N
+ becomes R, while E becomes T.
+
+
+ ------------------ PARTICLE MOTION ----------------------
+ Particle motions are calculated in a sliding time window. In each window
+ the covariance matrix of the three waveform vectors in computed. The
+ eigenvectors of the covariance matrix define the dominant orientations of
+ the data, while the eigenvalues express the relative amplitudes in each
+ of these directions. Conceptually, rectilinearity expresseses the
+ relative dominance of the largest eigenvalue (range is 0 to 1). Planarity
+ is the degree to which the largest two eigenvalues dominate (range is 0
+ to 1). Azimuth and inclination give the spherical polar orientation of
+ the largest eigenvector. It is important to note that azimuth and
+ inclination only have meaning if the waveforms show a high degree of
+ rectilinearity or in some orientations, planarity. It makes sense - think
+ about it!
+
+ Energy is computed from the trace of the eigenvalue matrix. The
+ calculation is performed independent of the data type. The term &quot;energy&quot;
+ should be treated carefully however. This term is essentially just the
+ square of the total particle velocity. The &quot;energy&quot; units are the square
+ of whatever units the input waveforms had. IF the input traces are in
+ velocity, then the energy term is the seismic kenetic energy density,
+ (smoothed over size of the sliding time window). If the input traces are
+ not velocity, then the output cannot be used as a proxy for physical
+ energy.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="describe.html" class="code" title="function describe(threecomp)">describe</a>	Detailed description of threecomp properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="describe.html" class="code" title="function describe(threecomp)">describe</a>	Detailed description of threecomp properties</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function describe(threecomp)</a>
+0002  
+0003 <span class="comment">%Detailed description of threecomp properties</span>
+0004 <span class="comment">% DESCRIBE(THREECOMP) provides detailed descriptions of threecomp object</span>
+0005 <span class="comment">% properties and how they are related.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% ------------------- COORDINATE SYSTEM -------------------------</span>
+0009 <span class="comment">% The threecomp object is designed to use a familiar spherical polar</span>
+0010 <span class="comment">% coordinate system in which horizontal direction on Earth is given in</span>
+0011 <span class="comment">% clockwise degrees from north: north is 0; east is 90; south is 180; and</span>
+0012 <span class="comment">% west is 270 degrees. Vertical directions are given with respect to</span>
+0013 <span class="comment">% vertical up. up is 0 degrees; horizontal is 90 degrees; and 180 is down.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% ------------------ TRACE NAME CONVENTIONS -----------------------</span>
+0017 <span class="comment">% Trace names follow the convention of network-station-channel-location.</span>
+0018 <span class="comment">% (Internally, this is enforced via the scnlobject and waveform objects.)</span>
+0019 <span class="comment">% Station and channel codes have particular importance in threecomp</span>
+0020 <span class="comment">% objects. A simple check is performed upon initiation to ensure that all</span>
+0021 <span class="comment">% three traces in each object come from the same seismic station. In other</span>
+0022 <span class="comment">% words, all three traces must have the same station code. The channel</span>
+0023 <span class="comment">% codes have specific meaning and users are encouraged to make sure that</span>
+0024 <span class="comment">% channel names are correct before converting to a threecomp object. The</span>
+0025 <span class="comment">% threecomp channel code convention adheres to the SEED standard of a</span>
+0026 <span class="comment">% minimum three character name where the third character represents the</span>
+0027 <span class="comment">% component orientation. Threecomp requires that the third channel</span>
+0028 <span class="comment">% characters be: Z-N-E, Z-R-T, or Z-2-1. Modest deviations from these</span>
+0029 <span class="comment">% channel names are accomodated by the horizontal and vertical orientation</span>
+0030 <span class="comment">% properties (see below). However, the actual channel names must contain</span>
+0031 <span class="comment">% one of these character sets.</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% ------------------ COMPONENT ORIENTATIONS ----------------------</span>
+0035 <span class="comment">% The orientation of each component of trace data is essential to</span>
+0036 <span class="comment">% performing any type of three component analysis. The safest way to ensure</span>
+0037 <span class="comment">% that component orientations are correct is to provide them explicitly.</span>
+0038 <span class="comment">% The THREECOMP function allows users to provide the horizontal and</span>
+0039 <span class="comment">% vertical orientation of all three channels of data. It is also possible</span>
+0040 <span class="comment">% to read these parameters automatically from the original waveforms if they</span>
+0041 <span class="comment">% have been set as properties there. If no orientation information is</span>
+0042 <span class="comment">% given, THREECOMP will assign default values where possible.</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">% DEFAULT VALUES</span>
+0045 <span class="comment">% If the component (third character of the channel name) is Z, N, E and no</span>
+0046 <span class="comment">% explicit orientation is given, then the orientations are assumed to be</span>
+0047 <span class="comment">%       Z: [0 0]    N:[0 90]    E: [90 90]</span>
+0048 <span class="comment">% This is equivalent to calling the THREECOMP function with an orientation</span>
+0049 <span class="comment">% matrix [0 0 0 90 90 90 ; ... ; ... ]. If the components are Z, R, T, and</span>
+0050 <span class="comment">% a backazimuth is given, then the horizontal components will be aligned</span>
+0051 <span class="comment">% accordingly. Components of Z, 2, 1 do not have any default orientations.</span>
+0052 <span class="comment">% Orientations provided as arguments to function THREECOMP, and</span>
+0053 <span class="comment">% orientations described in the input waveform properties, will override</span>
+0054 <span class="comment">% default values. For details see horizontal and vertical orientation</span>
+0055 <span class="comment">% descriptions below.</span>
+0056 <span class="comment">%</span>
+0057 <span class="comment">% HORIZONTAL ORIENTATION</span>
+0058 <span class="comment">% This attribute specifies the orientation of the component in the</span>
+0059 <span class="comment">% horizontal plane, measured clockwise from North.  For a North-South</span>
+0060 <span class="comment">% orientation, positive toward the north, the horizontal orientation is 0.</span>
+0061 <span class="comment">% For East-West orientation with positive to the east, the horizontal</span>
+0062 <span class="comment">% orientation is 90. Allowable range is 0 to 360.</span>
+0063 <span class="comment">%</span>
+0064 <span class="comment">% VERTICAL ORIENTATION</span>
+0065 <span class="comment">% This attribute measures the angle between the sensitive axis of a</span>
+0066 <span class="comment">% seismometer and the outward-pointing vertical direction.  For a</span>
+0067 <span class="comment">% vertically-oriented seismometer, the vertical orientation is 0, or 180</span>
+0068 <span class="comment">% (to reverse the sense of the instrument). For a horizontally oriented</span>
+0069 <span class="comment">% component, the vertical orientation is 90. Allowable range is 0 - 180.</span>
+0070 <span class="comment">%</span>
+0071 <span class="comment">% RADIAL TRANSVERSE COORDINATE SYSTEM</span>
+0072 <span class="comment">% Threecomp objects recognize the familiar coordinate system of vertical,</span>
+0073 <span class="comment">% radial, and transverse (ZRT). In this system the positive radial</span>
+0074 <span class="comment">% direction (R+) is 180 degrees opposite the backazimuth. The relative</span>
+0075 <span class="comment">% component orientations in a ZRT coordinate system are the same as in ZNE</span>
+0076 <span class="comment">% coordinates. That is, the positive transverse direction points 90 degrees</span>
+0077 <span class="comment">% clockwise from the positive radial direction. For example, for a wave</span>
+0078 <span class="comment">% arriving from due south on Z-N-E components, there is no rotation and N</span>
+0079 <span class="comment">% becomes R, while E becomes T.</span>
+0080 <span class="comment">%</span>
+0081 <span class="comment">%</span>
+0082 <span class="comment">% ------------------ PARTICLE MOTION ----------------------</span>
+0083 <span class="comment">% Particle motions are calculated in a sliding time window. In each window</span>
+0084 <span class="comment">% the covariance matrix of the three waveform vectors in computed. The</span>
+0085 <span class="comment">% eigenvectors of the covariance matrix define the dominant orientations of</span>
+0086 <span class="comment">% the data, while the eigenvalues express the relative amplitudes in each</span>
+0087 <span class="comment">% of these directions. Conceptually, rectilinearity expresseses the</span>
+0088 <span class="comment">% relative dominance of the largest eigenvalue (range is 0 to 1). Planarity</span>
+0089 <span class="comment">% is the degree to which the largest two eigenvalues dominate (range is 0</span>
+0090 <span class="comment">% to 1). Azimuth and inclination give the spherical polar orientation of</span>
+0091 <span class="comment">% the largest eigenvector. It is important to note that azimuth and</span>
+0092 <span class="comment">% inclination only have meaning if the waveforms show a high degree of</span>
+0093 <span class="comment">% rectilinearity or in some orientations, planarity. It makes sense - think</span>
+0094 <span class="comment">% about it!</span>
+0095 <span class="comment">%</span>
+0096 <span class="comment">% Energy is computed from the trace of the eigenvalue matrix. The</span>
+0097 <span class="comment">% calculation is performed independent of the data type. The term &quot;energy&quot;</span>
+0098 <span class="comment">% should be treated carefully however. This term is essentially just the</span>
+0099 <span class="comment">% square of the total particle velocity. The &quot;energy&quot; units are the square</span>
+0100 <span class="comment">% of whatever units the input waveforms had. IF the input traces are in</span>
+0101 <span class="comment">% velocity, then the energy term is the seismic kenetic energy density,</span>
+0102 <span class="comment">% (smoothed over size of the sliding time window). If the input traces are</span>
+0103 <span class="comment">% not velocity, then the output cannot be used as a proxy for physical</span>
+0104 <span class="comment">% energy.</span>
+0105 
+0106 <span class="comment">% As defined here, the azimuth range is 0 to 360 degrees measured from</span>
+0107 <span class="comment">% north. Inclination ranges from 0 (up) to 90 (horizontal). This reference</span>
+0108 <span class="comment">% frame differs from some in the literature, but is used here because it is</span>
+0109 <span class="comment">% intuitive; it is consistent through the threecomp toolbox; and, most</span>
+0110 <span class="comment">% importantly, to match the reference frame used for component</span>
+0111 <span class="comment">% orientations. See horizontal and vertical orientation, above. For</span>
+0112 <span class="comment">% mathematical descriptions of the particle motion coefficients, users are</span>
+0113 <span class="comment">% encouraged to consult the PARTICLEMOTION.M code. It is reasonably short</span>
+0114 <span class="comment">% and well commented. Note that rectilinearity and planarity have somewhat</span>
+0115 <span class="comment">% variable definitions in the literature. For the discerning user, parallel</span>
+0116 <span class="comment">% definitions are included in the PARTICLEMOTION code, but are commented</span>
+0117 <span class="comment">% out.</span>
+0118 
+0119 
+0120 
+0121 help <a href="describe.html" class="code" title="function describe(threecomp)">describe</a></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Arrival</title>
+  <meta name="keywords" content="Arrival">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">catalog</a> &gt; Arrival.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>Arrival
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Arrival.html" class="code" title="">Arrival</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Arrival.html" class="code" title="">Arrival</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = Arrival(sta, chan, time, varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="Arrival.html" class="code" title="">Arrival</a>
+0002     properties
+0003         sta;
+0004         time;
+0005         arid;
+0006         jdate;
+0007         chan;
+0008         iphase;
+0009         deltim;
+0010         azimuth;
+0011         delaz;
+0012         slow;
+0013         delslo;
+0014         ema;
+0015         rect;
+0016         amp;
+0017         per;
+0018         clip;
+0019         fm;
+0020         snr;
+0021         qual;
+0022         auth;
+0023     <span class="keyword">end</span>
+0024     methods
+0025         <a name="_sub0" href="#_subfunctions" class="code">function obj = Arrival(sta, chan, time, varargin)</a>
+0026             <span class="comment">% Parse required, optional and param-value pair arguments,</span>
+0027             <span class="comment">% set default values, and add validation conditions</span>
+0028             <span class="keyword">persistent</span> arid;
+0029             <span class="keyword">if</span> isempty(arid)
+0030                 arid = 1;
+0031             <span class="keyword">else</span>
+0032                 arid = arid + 1;
+0033             <span class="keyword">end</span>  
+0034             p = inputParser;
+0035             p.addRequired(<span class="string">'sta'</span>, @isstr);
+0036             p.addRequired(<span class="string">'chan'</span>, @isstr);
+0037             p.addRequired(<span class="string">'time'</span>, @(t) t&gt;0 &amp; t&lt;now+1);
+0038             p.addParamValue(<span class="string">'arid'</span>, arid, @(i) floor(i)==i);
+0039             p.addParamValue(<span class="string">'jdate'</span>, <span class="string">'0000000'</span>, @isstr);
+0040             p.addParamValue(<span class="string">'iphase'</span>, <span class="string">''</span>, @isstr);
+0041             <span class="comment">% Missed several properties out here just because of laziness.</span>
+0042             <span class="comment">% Add them as needed.</span>
+0043             p.addParamValue(<span class="string">'auth'</span>, <span class="string">''</span>, @isstr);           
+0044             p.parse(sta, chan, time, varargin{:});
+0045             <span class="keyword">for</span> i=1:length(fields)
+0046                 field=fields{i};
+0047                 <span class="comment">% val = eval(sprintf('p.Results.%s;',field));</span>
+0048                 val = p.Results.(field);
+0049                 obj = obj.set(field, val);
+0050             <span class="keyword">end</span>
+0051         <span class="keyword">end</span>
+0052     <span class="keyword">end</span>
+0053 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

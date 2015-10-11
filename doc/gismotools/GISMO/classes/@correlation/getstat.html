@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getstat</title>
+  <meta name="keywords" content="getstat">
+  <meta name="description" content="c = GETSTAT(c)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@correlation</a> &gt; getstat.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>getstat
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>c = GETSTAT(c)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c=getstat(c) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> c = GETSTAT(c)
+ This routine distills the results of a cross correlation into statistics
+ by trace. These statistics are stored in an Mx? matrix in the STAT field
+ of the correlation object, where M is the number of traces. See help
+ correlation for description of individual statisitics columns within the
+ STAT field. See Vandecar and Crosson (BSSA 1990) for details of how these
+ statistics are calculated.
+ 
+ Note that statistics determined from the maximum cross correlation values
+ are transformed to z space to determine the mean and rms error and then
+ transformed back for presentation, where 
+ 
+   z = 1/2 * log ( (1+r) / (1-r) ) r = (exp(2*Z)-1)./(exp(2*Z)+1)
+
+ This is done because the cross correlation value is bounded by 1 on the
+ high side and not normally distributed. Fisher's transform (z) translates
+ the correlation values into a space where they have a roughly normal
+ distribution. The implimentation here is a slight approximation because
+ the matrix of maximum correlations contains the diagonal values of one
+ where each trace is compared against itself. GETSTAT makes an
+ approximation to remove this bias. For very small numbers of traces, this
+ approach may break down. But then, for small numbers of the traces, the
+ statistics aren't terribly valid anyway.
+
+ The least squares inversion in this routine bogs down quickly when
+ operating on more than a few hundred traces.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG adjusts the trigger times of each trace</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c=getstat(c)</a>
+0002 
+0003 <span class="comment">% c = GETSTAT(c)</span>
+0004 <span class="comment">% This routine distills the results of a cross correlation into statistics</span>
+0005 <span class="comment">% by trace. These statistics are stored in an Mx? matrix in the STAT field</span>
+0006 <span class="comment">% of the correlation object, where M is the number of traces. See help</span>
+0007 <span class="comment">% correlation for description of individual statisitics columns within the</span>
+0008 <span class="comment">% STAT field. See Vandecar and Crosson (BSSA 1990) for details of how these</span>
+0009 <span class="comment">% statistics are calculated.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Note that statistics determined from the maximum cross correlation values</span>
+0012 <span class="comment">% are transformed to z space to determine the mean and rms error and then</span>
+0013 <span class="comment">% transformed back for presentation, where</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%   z = 1/2 * log ( (1+r) / (1-r) ) r = (exp(2*Z)-1)./(exp(2*Z)+1)</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% This is done because the cross correlation value is bounded by 1 on the</span>
+0018 <span class="comment">% high side and not normally distributed. Fisher's transform (z) translates</span>
+0019 <span class="comment">% the correlation values into a space where they have a roughly normal</span>
+0020 <span class="comment">% distribution. The implimentation here is a slight approximation because</span>
+0021 <span class="comment">% the matrix of maximum correlations contains the diagonal values of one</span>
+0022 <span class="comment">% where each trace is compared against itself. GETSTAT makes an</span>
+0023 <span class="comment">% approximation to remove this bias. For very small numbers of traces, this</span>
+0024 <span class="comment">% approach may break down. But then, for small numbers of the traces, the</span>
+0025 <span class="comment">% statistics aren't terribly valid anyway.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% The least squares inversion in this routine bogs down quickly when</span>
+0028 <span class="comment">% operating on more than a few hundred traces.</span>
+0029 
+0030 
+0031 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0032 <span class="comment">% $Date$</span>
+0033 <span class="comment">% $Revision$</span>
+0034 <span class="comment">% TODO: needs better handling of xcorr=1 values (MEW - 11/20/06)</span>
+0035 <span class="comment">%</span>
+0036 
+0037 
+0038 <span class="keyword">if</span> nargin &lt;= 0
+0039     error(<span class="string">'Wrong number of inputs'</span>);
+0040 <span class="keyword">end</span>
+0041 
+0042 <span class="keyword">if</span> ~strcmpi(class(c),<span class="string">'correlation'</span>)
+0043     error(<span class="string">'First input must be a correlation object'</span>);
+0044 <span class="keyword">end</span>
+0045 
+0046 <span class="keyword">if</span> isempty(<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'CORR'</span>))
+0047     error(<span class="string">'CORR and LAG fields must be filled in input object'</span>);
+0048     error(<span class="string">'See xcorr function'</span>);
+0049 <span class="keyword">end</span>
+0050 
+0051    
+0052 <span class="comment">% GET MEAN AND STD OF MAX. CROSS CORRELATION (EQ. 4)</span>
+0053 Ztmp = c.C - 0.3*eye(size(c.C));
+0054 Z = 0.5 * log((1+Ztmp)./(1-Ztmp));
+0055 Zmean = mean(Z);
+0056 Zrmshi = mean(Z) + std(Z);
+0057 Zrmslo = mean(Z) - std(Z);
+0058 Rmean = (exp(2*Zmean)-1)./(exp(2*Zmean)+1);
+0059 Rrmshi = (exp(2*Zrmshi)-1)./(exp(2*Zrmshi)+1);
+0060 Rrmslo = (exp(2*Zrmslo)-1)./(exp(2*Zrmslo)+1);
+0061 
+0062 
+0063 
+0064 <span class="comment">% BUILD A AND dT</span>
+0065 n = size(c.C,1);
+0066 m = n*(n-1)/2+1;
+0067 A = sparse(m,n);
+0068 A(m,:) = 1;
+0069 dT = zeros(m,1);
+0070 W = speye(m);
+0071 I = zeros(m,1);
+0072 J = zeros(m,1);
+0073 count = 0;
+0074 <span class="keyword">for</span> i = 1:n-1
+0075     <span class="keyword">for</span> j = (i+1):n
+0076         count = count + 1;
+0077         A(count,i) = 1;    
+0078         A(count,j) = -1;
+0079         dT(count) = c.L(i,j);
+0080         W(count,count) = c.C(i,j);
+0081     <span class="keyword">end</span>;
+0082 <span class="keyword">end</span>;
+0083 
+0084 
+0085 
+0086 <span class="comment">% INVERT FOR Test</span>
+0087 T = inv( A' * A ) * A' * dT;            <span class="comment">% unweighted</span>
+0088 <span class="comment">%Tw = inv( A' * W * A ) * A' * W * dT;        % weighted</span>
+0089 
+0090 
+0091 
+0092 <span class="comment">% ESTIMATE RESIDUALS, STD</span>
+0093 <span class="keyword">for</span> i = 1:n
+0094     <span class="keyword">for</span> j = 1:n
+0095         res(i,j) = c.L(i,j) - ( T(i) - T(j) );    <span class="comment">%eq. 7</span>
+0096     <span class="keyword">end</span>;
+0097 <span class="keyword">end</span>;
+0098 Trms = std(res)';        <span class="comment">% ~eq. 8</span>
+0099 
+0100 
+0101 c.stat(:,1) = Rmean;
+0102 c.stat(:,2) = Rrmshi;
+0103 c.stat(:,3) = Rrmslo;
+0104 c.stat(:,4) = -1*T;
+0105 c.stat(:,5) = Trms;
+0106 
+0107 
+0108 
+0109 
+0110</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

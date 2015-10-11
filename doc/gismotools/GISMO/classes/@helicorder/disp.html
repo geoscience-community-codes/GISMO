@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of disp</title>
+  <meta name="keywords" content="disp">
+  <meta name="description" content="DISP: Helicorder disp overloaded operator">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@helicorder</a> &gt; disp.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@helicorder&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>disp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>DISP: Helicorder disp overloaded operator</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function disp(h) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DISP: Helicorder disp overloaded operator
+
+ See also <a href="helicorder.html" class="code" title="function h = helicorder(varargin)">HELICORDER</a>
+
+ Author: Dane Ketner, Alaska Volcano Observatory
+ $Date$
+ $Revision$</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="display.html" class="code" title="function display(h)">display</a>	DISPLAY: Helicorder display overloaded operator</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function disp(h)</a>
+0002 <span class="comment">%DISP: Helicorder disp overloaded operator</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% See also HELICORDER</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Author: Dane Ketner, Alaska Volcano Observatory</span>
+0007 <span class="comment">% $Date$</span>
+0008 <span class="comment">% $Revision$</span>
+0009 
+0010 nw = numel(h.wave);
+0011 <a href="disp.html" class="code" title="function disp(h)">disp</a>(<span class="string">' '</span>);
+0012 fprintf(<span class="string">'%s object with %d waveform(s):\n'</span>,class(h), nw);
+0013 
+0014 <span class="keyword">for</span> n = 1:nw
+0015 <span class="keyword">if</span> n == 1
+0016  stacha = [<a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave(n),<span class="string">'station'</span>),<span class="string">':'</span>,<a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave(n),<span class="string">'channel'</span>)];
+0017 <span class="keyword">else</span>
+0018  stacha = [stacha,<span class="string">', '</span>,<a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave(n),<span class="string">'station'</span>),<span class="string">':'</span>,<a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave(n),<span class="string">'channel'</span>)];
+0019 <span class="keyword">end</span>
+0020 <span class="keyword">end</span>
+0021 
+0022 
+0023 fprintf([<span class="string">'    STA/CHA:      '</span>,stacha,<span class="string">'\n'</span>]);
+0024 fprintf(<span class="string">'    START:        %s\n'</span>,datestr(<a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave(1),<span class="string">'start'</span>)));
+0025 fprintf(<span class="string">'    DURATION:     %s\n'</span>,<a href="get.html" class="code" title="function val = get(h,prop_name)">get</a>(h.wave(1),<span class="string">'duration_str'</span>));
+0026 fprintf(<span class="string">'    MINUTES/LINE: %d\n'</span>,h.mpl);
+0027 fprintf(<span class="string">'    DISPLAY TYPE: %s\n'</span>,h.display);
+0028 
+0029 
+0030</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

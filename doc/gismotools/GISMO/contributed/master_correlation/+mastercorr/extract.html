@@ -1,0 +1,300 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of extract</title>
+  <meta name="keywords" content="extract">
+  <meta name="description" content="EXTRACT extract matches to the master waveform">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="../index.html">master_correlation</a> &gt; <a href="index.html">+mastercorr</a> &gt; extract.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/master_correlation/+mastercorr&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>extract
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>EXTRACT extract matches to the master waveform</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = extract(W,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">EXTRACT extract matches to the master waveform
+ [MATCH] = EXTRACT(W) reads waveform W and produces a structure MATCH
+ which contains relevant information for each successful match with the
+ master waveform snippet. This function is intended to be used after
+ MASTERCORR.SCAN. In order to function properly, the properties
+ MASTERCORR_TRIG, MASTERCORR_CORR and MASTERCORR_SNIPPET must exist in W.
+ See MASTERCORR.SCAN for description of these fields. MATCH is a structure
+ containing fields:
+   trig (double)           : trigger times in Matlab data format
+   corrValue (double)      : peak correlation values (&lt;=1.0) 
+   corrValueAdj (double)   : max. correlations of an adjacent peak**
+   network (cell)          : network codes
+   station (cell)          : station codes   
+   channel (cell)          : channel codes
+   location (cell)         : network codes
+
+   ** corrValueAdj is the only non-inuitive field in the MATCH structure. It
+   exists to help the user sift potential problems if/when cycle skipping
+   allows the event to be detected multiple times. This problem should be
+   obvious in the event spacing plot (middle panel) when running
+   MASTERCORR.PLOT_STATS. It is up to the user to figure out which
+   detections to keep.
+
+
+ [MATCH,C] = EXTRACT(W) produces a correlation object containing
+ segmented waveforms extracted from waveform W. 
+
+ [MATCH,C] = EXTRACT(W,PRETRIG,POSTRIG) same as above except that the
+ length of the traces in the correlation object are defined based on the
+ before and after times relative to the trigegr time, specified in seconds
+ by PRETRIG and POSTTRIG. These values are given in seconds relative to
+ the trigger times in MASTERCORR_TRIG. If not specified, these values are
+ inferred from the time fields in TRIGGER, START and END contained in
+ MASTERCORR_SNIPPET.
+
+ [MATCH,C] = EXTRACT(W,..,THRESHOLD) allows a minimum correlation
+ threshold to be included. This is useful if only the highest quality
+ waveforms need to be extracted from a more permissive scan of the data.
+
+ *** NOTE ABOUT MULTIPLE WAVEFORMS ***
+ This function is designed to accept a NxM waveform matrices as input. The
+ output is a single correlation object containing the segmented waveforms
+ from each element of W. This is useful, for example, when W is a 24x1
+ matrix of hourly waveforms. However, unexpected (or clever!) results may
+ be produced when W is complicated by elements with different channels or
+ master waveform snippets. For some uses it may prove wise to pass only
+ selected elements of W to EXTRACT. For example:
+ C = EXTRACT(W(1:5)) Note that it is also possible to unwittingly produce
+ *massive* correlation objects. Correlation objects exceeding 10,000
+ waveforms have been successfully manipulated. As a rule however, be aware
+ that downstream processing time goes up considerably as correlation
+ objects grow to thousands of events.
+
+ See also mastercorr.<a href="scan.html" class="code" title="function [WW,WWxc] = scan(WW,WWsnippet,threshold)">scan</a>, mastercorr.<a href="plot_stats.html" class="code" title="function plot_stats(W)">plot_stats</a>, correlation/correlation,
+ waveform/addfield</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="cookbook.html" class="code" title="">cookbook</a>	COOKBOOK demonstrate the features of the mastercorr package.</li><li><a href="extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = extract(W,varargin)</a>
+0002 
+0003 <span class="comment">%EXTRACT extract matches to the master waveform</span>
+0004 <span class="comment">% [MATCH] = EXTRACT(W) reads waveform W and produces a structure MATCH</span>
+0005 <span class="comment">% which contains relevant information for each successful match with the</span>
+0006 <span class="comment">% master waveform snippet. This function is intended to be used after</span>
+0007 <span class="comment">% MASTERCORR.SCAN. In order to function properly, the properties</span>
+0008 <span class="comment">% MASTERCORR_TRIG, MASTERCORR_CORR and MASTERCORR_SNIPPET must exist in W.</span>
+0009 <span class="comment">% See MASTERCORR.SCAN for description of these fields. MATCH is a structure</span>
+0010 <span class="comment">% containing fields:</span>
+0011 <span class="comment">%   trig (double)           : trigger times in Matlab data format</span>
+0012 <span class="comment">%   corrValue (double)      : peak correlation values (&lt;=1.0)</span>
+0013 <span class="comment">%   corrValueAdj (double)   : max. correlations of an adjacent peak**</span>
+0014 <span class="comment">%   network (cell)          : network codes</span>
+0015 <span class="comment">%   station (cell)          : station codes</span>
+0016 <span class="comment">%   channel (cell)          : channel codes</span>
+0017 <span class="comment">%   location (cell)         : network codes</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%   ** corrValueAdj is the only non-inuitive field in the MATCH structure. It</span>
+0020 <span class="comment">%   exists to help the user sift potential problems if/when cycle skipping</span>
+0021 <span class="comment">%   allows the event to be detected multiple times. This problem should be</span>
+0022 <span class="comment">%   obvious in the event spacing plot (middle panel) when running</span>
+0023 <span class="comment">%   MASTERCORR.PLOT_STATS. It is up to the user to figure out which</span>
+0024 <span class="comment">%   detections to keep.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% [MATCH,C] = EXTRACT(W) produces a correlation object containing</span>
+0028 <span class="comment">% segmented waveforms extracted from waveform W.</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% [MATCH,C] = EXTRACT(W,PRETRIG,POSTRIG) same as above except that the</span>
+0031 <span class="comment">% length of the traces in the correlation object are defined based on the</span>
+0032 <span class="comment">% before and after times relative to the trigegr time, specified in seconds</span>
+0033 <span class="comment">% by PRETRIG and POSTTRIG. These values are given in seconds relative to</span>
+0034 <span class="comment">% the trigger times in MASTERCORR_TRIG. If not specified, these values are</span>
+0035 <span class="comment">% inferred from the time fields in TRIGGER, START and END contained in</span>
+0036 <span class="comment">% MASTERCORR_SNIPPET.</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">% [MATCH,C] = EXTRACT(W,..,THRESHOLD) allows a minimum correlation</span>
+0039 <span class="comment">% threshold to be included. This is useful if only the highest quality</span>
+0040 <span class="comment">% waveforms need to be extracted from a more permissive scan of the data.</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">% *** NOTE ABOUT MULTIPLE WAVEFORMS ***</span>
+0043 <span class="comment">% This function is designed to accept a NxM waveform matrices as input. The</span>
+0044 <span class="comment">% output is a single correlation object containing the segmented waveforms</span>
+0045 <span class="comment">% from each element of W. This is useful, for example, when W is a 24x1</span>
+0046 <span class="comment">% matrix of hourly waveforms. However, unexpected (or clever!) results may</span>
+0047 <span class="comment">% be produced when W is complicated by elements with different channels or</span>
+0048 <span class="comment">% master waveform snippets. For some uses it may prove wise to pass only</span>
+0049 <span class="comment">% selected elements of W to EXTRACT. For example:</span>
+0050 <span class="comment">% C = EXTRACT(W(1:5)) Note that it is also possible to unwittingly produce</span>
+0051 <span class="comment">% *massive* correlation objects. Correlation objects exceeding 10,000</span>
+0052 <span class="comment">% waveforms have been successfully manipulated. As a rule however, be aware</span>
+0053 <span class="comment">% that downstream processing time goes up considerably as correlation</span>
+0054 <span class="comment">% objects grow to thousands of events.</span>
+0055 <span class="comment">%</span>
+0056 <span class="comment">% See also mastercorr.scan, mastercorr.plot_stats, correlation/correlation,</span>
+0057 <span class="comment">% waveform/addfield</span>
+0058 
+0059 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0060 <span class="comment">% $Date$</span>
+0061 <span class="comment">% $Revision$</span>
+0062 
+0063 
+0064 
+0065 <span class="comment">% CHECK INPUTS</span>
+0066 <span class="keyword">if</span> nargin&gt;4
+0067     error(<span class="string">'Incorrect number of inputs'</span>);
+0068 <span class="keyword">end</span>
+0069 <span class="keyword">if</span> ~isa(W,<span class="string">'waveform'</span>)
+0070     error(<span class="string">'First argument must be a waveform object'</span>);
+0071 <span class="keyword">end</span>
+0072 
+0073 
+0074 
+0075 
+0076 
+0077 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0078 <span class="comment">% GET ARGUMENTS</span>
+0079 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0080 
+0081 
+0082 <span class="comment">% SET THRESHOLD</span>
+0083 <span class="keyword">if</span> nargin==2 || nargin==4
+0084     threshold = varargin{end};
+0085 <span class="keyword">else</span>
+0086     threshold = -1;
+0087 <span class="keyword">end</span>
+0088 <span class="keyword">if</span> threshold&lt;-1 || threshold&gt;1
+0089     error(<span class="string">'Correlation threshold must be between -1 and 1'</span>);
+0090 <span class="keyword">end</span>
+0091 
+0092 
+0093 <span class="comment">% SET TIME WINDOWS</span>
+0094 <span class="keyword">if</span> nargin==3 || nargin==4
+0095     preTrig = varargin{1};
+0096     postTrig = varargin{2};
+0097     useTrigArgs = 1;
+0098 <span class="keyword">else</span>
+0099     preTrig = 0;
+0100     postTrig = 0;
+0101     useTrigArgs = 0;
+0102 <span class="keyword">end</span>
+0103 
+0104 
+0105 
+0106 
+0107 
+0108 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0109 <span class="comment">% EXTRACT WAVEFORMS</span>
+0110 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0111 
+0112 
+0113 <span class="comment">% READ MASTERCORR FIELDS</span>
+0114 T.trig = [];
+0115 T.corrValue = [];
+0116 T.corrValueAdj = [];
+0117 T.network = [];
+0118 T.station = [];
+0119 T.channel = [];
+0120 T.location = [];
+0121 <span class="keyword">if</span> numel(W)&gt;1
+0122     <span class="keyword">for</span> n=1:numel(W)
+0123         T.trig = [T.trig ; get(W(n),<span class="string">'MASTERCORR_TRIG'</span>)];
+0124         T.corrValue = [T.corrValue ; get(W(n),<span class="string">'MASTERCORR_CORR'</span>)];
+0125         T.corrValueAdj = [T.corrValueAdj ; get(W(n),<span class="string">'MASTERCORR_ADJACENT_CORR'</span>)];
+0126         trigLength = numel(get(W(n),<span class="string">'MASTERCORR_TRIG'</span>));
+0127         tmp = {get(W(n),<span class="string">'NETWORK'</span>)};   T.network = [T.network ; repmat(tmp,trigLength,1)];
+0128         tmp = {get(W(n),<span class="string">'STATION'</span>)};   T.station = [T.station ; repmat(tmp,trigLength,1)];
+0129         tmp = {get(W(n),<span class="string">'CHANNEL'</span>)};   T.channel = [T.channel ; repmat(tmp,trigLength,1)];
+0130         tmp = {get(W(n),<span class="string">'LOCATION'</span>)};  T.location = [T.location ; repmat(tmp,trigLength,1)];
+0131     <span class="keyword">end</span>
+0132 <span class="keyword">else</span>
+0133     T.trig = get(W,<span class="string">'MASTERCORR_TRIG'</span>);
+0134     T.corrValue = get(W,<span class="string">'MASTERCORR_CORR'</span>);
+0135     T.corrValueAdj = get(W,<span class="string">'MASTERCORR_ADJACENT_CORR'</span>);
+0136     tmp = {get(W,<span class="string">'NETWORK'</span>)};   T.network = tmp;
+0137     tmp = {get(W,<span class="string">'STATION'</span>)};   T.station = tmp;
+0138     tmp = {get(W,<span class="string">'CHANNEL'</span>)};   T.channel = tmp;
+0139     tmp = {get(W,<span class="string">'LOCATION'</span>)};  T.location = tmp;
+0140 <span class="keyword">end</span>
+0141 
+0142 
+0143 <span class="comment">% TRIM BELOW THRESHOLD</span>
+0144 f = find(T.corrValue&gt;=threshold);
+0145 T.trig = T.trig(f);
+0146 T.corrValue = T.corrValue(f);
+0147 T.corrValueAdj = T.corrValueAdj(f);
+0148 
+0149 varargout{1} = T;
+0150 
+0151 
+0152 
+0153 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0154 <span class="comment">% EXTRACT WAVEFORMS</span>
+0155 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0156 
+0157 
+0158 
+0159 <span class="keyword">if</span> nargout==2
+0160     
+0161     disp(<span class="string">'Extracting waveforms from:'</span>);
+0162     allWaveforms = repmat(waveform,numel(W),1);
+0163     <span class="keyword">for</span> n = 1:numel(W)
+0164         
+0165         <span class="comment">% SET TIME WINDOWS</span>
+0166         Wsnippet = get(W(n),<span class="string">'MASTERCORR_SNIPPET'</span>);
+0167         <span class="keyword">if</span> ~useTrigArgs
+0168             preTrig =  86400 * (get(Wsnippet,<span class="string">'START'</span>) - get(Wsnippet,<span class="string">'TRIGGER'</span>));
+0169             postTrig =  86400 * (get(Wsnippet,<span class="string">'END'</span>) - get(Wsnippet,<span class="string">'TRIGGER'</span>));
+0170         <span class="keyword">end</span>
+0171         disp([ <span class="string">'   '</span> get(W(n),<span class="string">'NETWORK'</span>) <span class="string">'_'</span> get(W(n),<span class="string">'STATION'</span>) <span class="string">'_'</span> get(W(n),<span class="string">'CHANNEL'</span>) <span class="string">'_'</span> get(W(n),<span class="string">'LOCATION'</span>) <span class="string">'   '</span> get(W(n),<span class="string">'START_STR'</span>) <span class="string">' through '</span> get(W(n),<span class="string">'END_STR'</span>) <span class="string">'   (pre/post trigger: '</span> num2str(preTrig) <span class="string">', '</span> num2str(postTrig) <span class="string">'s)'</span>])
+0172         
+0173         <span class="comment">% GET SEGMENTED WAVEFORMS</span>
+0174         trig = get(W(n),<span class="string">'MASTERCORR_TRIG'</span>);
+0175         <span class="keyword">if</span> ~isempty(trig)
+0176             corrValue = get(W(n),<span class="string">'MASTERCORR_CORR'</span>);
+0177             f = find(corrValue&gt;=threshold);
+0178             trigList = trig(f);
+0179             wList = <a href="extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>(W(n),<span class="string">'TIME'</span>,trigList+preTrig/86400,trigList+postTrig/86400)';
+0180             wList = delfield(wList,<span class="string">'MASTERCORR_CORR'</span>);
+0181             wList = delfield(wList,<span class="string">'MASTERCORR_ADJACENT_CORR'</span>);
+0182             wList = delfield(wList,<span class="string">'MASTERCORR_TRIG'</span>);
+0183             wList = delfield(wList,<span class="string">'MASTERCORR_SNIPPET'</span>);
+0184             <span class="keyword">if</span> n==1
+0185                 allTriggers = trigList;
+0186                 allWaveforms = wList;
+0187             <span class="keyword">else</span>
+0188                 allTriggers = [allTriggers ; trigList];
+0189                 allWaveforms = [allWaveforms ; wList];
+0190             <span class="keyword">end</span>
+0191         <span class="keyword">end</span>
+0192     <span class="keyword">end</span>
+0193     <span class="keyword">if</span> numel(allWaveforms)==0
+0194         varargout{2} = correlation;
+0195     <span class="keyword">else</span>
+0196         varargout{2} = correlation(allWaveforms,allTriggers);
+0197     <span class="keyword">end</span>
+0198 <span class="keyword">end</span>
+0199</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

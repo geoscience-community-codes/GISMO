@@ -1,0 +1,476 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of iceweb</title>
+  <meta name="keywords" content="iceweb">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">applications</a> &gt; <a href="index.html">iceweb</a> &gt; iceweb.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/applications/iceweb&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>iceweb
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function iceweb(ds, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="apply_calib.html" class="code" title="function w = apply_calib(w, sites)">apply_calib</a>	ADD RESPONSE FROM SUBNETS TO WAVEFORM OBJECTS</li><li><a href="apply_filter.html" class="code" title="function w = apply_filter(w, PARAMS)">apply_filter</a>	</li><li><a href="extended_spectralobject_colormap.html" class="code" title="function h = extended_spectralobject_colormap()">extended_spectralobject_colormap</a>	</li><li><a href="get_channeltags_active.html" class="code" title="function goodsites = get_channeltags_active(sites, snum)">get_channeltags_active</a>	sites active for this day</li><li><a href="get_spectrogram_filename.html" class="code" title="function spectrogramFilename = get_spectrogram_filename(paths, subnet, dnum)">get_spectrogram_filename</a>	</li><li><a href="get_timewindow.html" class="code" title="function timewindow = get_timewindow(utdnum_stop, numMins, utdnum_start)">get_timewindow</a>	GET_TIMEWINDOW</li><li><a href="makespectrogramthumbnails.html" class="code" title="function makespectrogramthumbnails(spectrogramFilename, spectrogramFraction)">makespectrogramthumbnails</a>	</li><li><a href="saveImageFile.html" class="code" title="function result = saveImageFile(arg1, arg2, arg3);">saveImageFile</a>	saveImageFile(IMGDIR, fname, res);</li><li><a href="show_sites.html" class="code" title="function show_sites(sites)">show_sites</a>	</li><li><a href="spectrogram_iceweb.html" class="code" title="function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)">spectrogram_iceweb</a>	SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of</li><li><a href="waveform_remove_empty.html" class="code" title="function w2 = waveform_remove_empty(w);">waveform_remove_empty</a>	WAVEFORM_REMOVE_EMPTY remove empty waveform objects from a vector of waveform objects</li><li><a href="waveform_wrapper.html" class="code" title="function w=waveform_wrapper(chantag, snum, enum, ds);">waveform_wrapper</a>	WAVEFORM_WRAPPER try multiple datasource objects in</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="testday.html" class="code" title="">testday</a>	</li><li><a href="unrest.html" class="code" title="">unrest</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function iceweb_helper(paths, PARAMS, subnets, tw, ds)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function iceweb(ds, varargin)</a>
+0002     debug.printfunctionstack(<span class="string">'&gt;'</span>);
+0003     <span class="comment">% Process arguments</span>
+0004     [thisrunmode, snum, enum, nummins, delaymins, thissubnet, matfile] = matlab_extensions.process_options(varargin, <span class="string">'runmode'</span>, <span class="string">'archive'</span>, <span class="string">'snum'</span>, 0, <span class="string">'enum'</span>, 0, <span class="string">'nummins'</span>, 10, <span class="string">'delaymins'</span>, 0, <span class="string">'thissubnet'</span>, <span class="string">''</span>, <span class="string">'matfile'</span>, <span class="string">'pf/tremor_runtime.mat'</span>);
+0005     <span class="keyword">if</span> exist(matfile, <span class="string">'file'</span>)
+0006         load(matfile);
+0007         PARAMS.runmode = thisrunmode;
+0008         clear thisrunmode;
+0009     <span class="keyword">else</span>
+0010         warning(sprintf(<span class="string">'matfile %s not found'</span>,matfile))
+0011         <span class="keyword">return</span>
+0012     <span class="keyword">end</span>
+0013 
+0014     <span class="comment">% load state</span>
+0015     statefile = sprintf(<span class="string">'iceweb_%s_state.mat'</span>,thissubnet);
+0016     <span class="keyword">if</span> exist(statefile, <span class="string">'file'</span>) &amp;&amp; ~strcmp(PARAMS.runmode, <span class="string">'test'</span>)
+0017         load(statefile)
+0018         <span class="keyword">if</span> strcmp(thissubnet, subnet0)
+0019         <span class="comment">%snum = snum0;</span>
+0020     <span class="keyword">end</span>
+0021     <span class="keyword">end</span>
+0022 
+0023     <span class="comment">% subset on thissubnet</span>
+0024     <span class="keyword">if</span> ~strcmp(thissubnet, <span class="string">''</span>) 
+0025         index = 0;
+0026         <span class="keyword">for</span> c=1:length(subnets)
+0027             <span class="keyword">if</span> strcmp(subnets(c).name, thissubnet)
+0028                 index = c;
+0029             <span class="keyword">end</span>
+0030         <span class="keyword">end</span>
+0031         <span class="keyword">if</span> index &gt; 0
+0032             subnets = subnets(index);
+0033             debug.print_debug(1, <span class="string">'subnet found'</span>)
+0034         <span class="keyword">else</span>
+0035             warning(<span class="string">'subnet not found'</span>)
+0036             <span class="keyword">return</span>;
+0037         <span class="keyword">end</span>
+0038     <span class="keyword">end</span>
+0039 
+0040     <span class="comment">% end time</span>
+0041     <span class="keyword">if</span> enum==0
+0042         enum = utnow - delaymins/1440;
+0043     <span class="keyword">end</span>
+0044     
+0045     <span class="comment">% since the standard way is to create Antelope databases from day-long</span>
+0046     <span class="comment">% miniseed files for each channeltag, and reference these from</span>
+0047     <span class="comment">% day-long databases, I could add a check here using</span>
+0048     <span class="comment">% listMiniSEEDfiles to see if there are any data files for each day</span>
+0049     <span class="comment">% before I look for each 10 minute window for that day with</span>
+0050     <span class="comment">% waveform_wrapper</span>
+0051     <span class="comment">%   steps:</span>
+0052         <span class="comment">% check if datasource is Antelope</span>
+0053         <span class="comment">% loop over each day from snum to enum</span>
+0054         <span class="comment">% call listMiniSEEDfiles</span>
+0055         <span class="comment">% see for which channeltag I get exists=2, and then only use that</span>
+0056         <span class="comment">% list of successful channeltags for that day</span>
+0057         <span class="comment">% create timewindows for that day</span>
+0058         <span class="comment">% call iceweb_helper for each time window</span>
+0059         
+0060     <span class="comment">% NEW STUFF TO IMPLEMENT ABOVE SUGGESTION - MIGHT NOT WORK   %%% NOTE THIS ASSUMES MINISEED FILES THROUGH ANTELOPE %%%%%%%%%%</span>
+0061     <span class="keyword">if</span> exist(<span class="string">'ds'</span>,<span class="string">'var'</span>) &amp; strcmp(get(ds,<span class="string">'type'</span>),<span class="string">'antelope'</span>)
+0062 
+0063         <span class="keyword">for</span> c=1:numel(subnets)
+0064         debug.print_debug(1,<span class="string">'Sites from MAT file - should be all in range'</span>)
+0065             sites = subnets(c).sites;
+0066         <a href="show_sites.html" class="code" title="function show_sites(sites)">show_sites</a>(sites)
+0067             <span class="keyword">for</span> dnum = floor(snum):ceil(enum)
+0068                 disp(datestr(dnum))
+0069                    
+0070                 <span class="comment">% subset to channels active for today according to</span>
+0071                 <span class="comment">% site/sitechan db</span>
+0072                 todaysites = <a href="get_channeltags_active.html" class="code" title="function goodsites = get_channeltags_active(sites, snum)">get_channeltags_active</a>(sites, dnum); <span class="comment">% subset to channeltags valid</span>
+0073                 <span class="keyword">if</span> isempty(todaysites)
+0074                     <span class="keyword">continue</span>;
+0075                 <span class="keyword">end</span>
+0076         debug.print_debug(1,<span class="string">'Subsetting to sites active today'</span>)
+0077         <a href="show_sites.html" class="code" title="function show_sites(sites)">show_sites</a>(todaysites)
+0078 
+0079                 <span class="comment">% change channel tag if this is MV network because channels in wfdisc table</span>
+0080                 <span class="comment">% are like SHZ_--</span>
+0081                 chantag = [todaysites.channeltag];
+0082                 <span class="keyword">for</span> cc=1:numel(chantag)
+0083                     <span class="keyword">if</span> strcmp(chantag(cc).network, <span class="string">'MV'</span>)
+0084                         chantag(cc).channel = sprintf(<span class="string">'%s_--'</span>,chantag(cc).channel);
+0085                     <span class="keyword">end</span>
+0086                 <span class="keyword">end</span>
+0087 
+0088                 <span class="comment">% subset to sites for which the files pointed to by the</span>
+0089                 <span class="comment">% wfdisc table, actually exist</span>
+0090                 m = listMiniseedFiles(ds, chantag, dnum, dnum+1);
+0091                 todaysites = todaysites([m.exists]==2);
+0092                 tw = <a href="get_timewindow.html" class="code" title="function timewindow = get_timewindow(utdnum_stop, numMins, utdnum_start)">get_timewindow</a>(min([enum dnum+1]), nummins, max([dnum snum]));
+0093         debug.print_debug(1,<span class="string">'Subsetting to sites with miniseed files'</span>)
+0094         <a href="show_sites.html" class="code" title="function show_sites(sites)">show_sites</a>(todaysites)
+0095 
+0096                 newsubnets = subnets(c);
+0097                 newsubnets.sites = todaysites;
+0098 
+0099 
+0100                 <span class="keyword">if</span> ~strcmp(PARAMS.runmode,<span class="string">'test'</span>)
+0101                     <span class="comment">% loop over timewindows</span>
+0102                     <span class="keyword">for</span> count = 1:length(tw.start)
+0103                         thistw.start = tw.start(count);    
+0104                         thistw.stop = tw.stop(count);    
+0105                         <a href="#_sub1" class="code" title="subfunction iceweb_helper(paths, PARAMS, subnets, tw, ds)">iceweb_helper</a>(paths, PARAMS, newsubnets, thistw, ds);
+0106                     <span class="keyword">end</span>
+0107                 <span class="keyword">end</span>
+0108         <span class="keyword">end</span>    
+0109         <span class="keyword">end</span>
+0110     <span class="keyword">else</span>
+0111         <span class="comment">% THE WAY WE USED TO DO IT</span>
+0112         <span class="comment">% timewindows</span>
+0113         <span class="keyword">if</span> snum==0
+0114             tw = <a href="get_timewindow.html" class="code" title="function timewindow = get_timewindow(utdnum_stop, numMins, utdnum_start)">get_timewindow</a>(enum, nummins);
+0115         <span class="keyword">else</span>
+0116             tw = <a href="get_timewindow.html" class="code" title="function timewindow = get_timewindow(utdnum_stop, numMins, utdnum_start)">get_timewindow</a>(enum, nummins, snum);
+0117         <span class="keyword">end</span>
+0118         snum = enum - nummins/1440;
+0119 
+0120         <span class="comment">% loop over timewindows backwards, thereby prioritizing most recent data</span>
+0121         <span class="keyword">for</span> count = length(tw.start) : -1 : 1
+0122             thistw.start = tw.start(count);    
+0123             thistw.stop = tw.stop(count);    
+0124             <span class="keyword">if</span> ~strcmp(runmode,<span class="string">'test'</span>)
+0125                 <a href="#_sub1" class="code" title="subfunction iceweb_helper(paths, PARAMS, subnets, tw, ds)">iceweb_helper</a>(paths, PARAMS, subnets, thistw);
+0126             <span class="keyword">end</span>
+0127         <span class="keyword">end</span>
+0128     <span class="keyword">end</span>
+0129     debug.printfunctionstack(<span class="string">'&lt;'</span>);
+0130 <span class="keyword">end</span>
+0131 
+0132 
+0133 <a name="_sub1" href="#_subfunctions" class="code">function iceweb_helper(paths, PARAMS, subnets, tw, ds)</a>
+0134     debug.printfunctionstack(<span class="string">'&gt;'</span>);
+0135 
+0136     MILLISECOND_IN_DAYS = (1 / 86400000);
+0137 
+0138     makeSamFiles = false;
+0139     makeSoundFiles = true; 
+0140 
+0141     <span class="keyword">if</span> ~exist(<span class="string">'ds'</span>,<span class="string">'var'</span>)
+0142         <span class="keyword">for</span> c=1:numel(PARAMS.datasource)
+0143             <span class="keyword">if</span> strcmp(PARAMS.datasource(c).type, <span class="string">'antelope'</span>)
+0144                 ds(c) = datasource(PARAMS.datasource(c).type, PARAMS.datasource(c).path);
+0145 <span class="comment">%                 ds(c) = datasource('antelope', ...</span>
+0146 <span class="comment">%                '/raid/data/MONTSERRAT/antelope/db/db%04d%02d%02d',...</span>
+0147 <span class="comment">%                'year','month','day');</span>
+0148             <span class="keyword">else</span>
+0149                 ds(c) = datasource(PARAMS.datasource(c).type, PARAMS.datasource(c).path, str2num(PARAMS.datasource(c).port));
+0150             <span class="keyword">end</span>
+0151         <span class="keyword">end</span>
+0152     <span class="keyword">end</span>
+0153     <span class="comment">%gismo_datasource = gismo_datasource(1);</span>
+0154 
+0155     <span class="comment">%% LOOP OVER SUBNETS / SITES</span>
+0156     <span class="keyword">for</span> subnet_num=1:length(subnets)
+0157         <span class="comment">% which subnet?</span>
+0158         subnet = subnets(subnet_num).name;
+0159 
+0160         <span class="comment">% get IceWeb sites</span>
+0161         sites = subnets(subnet_num).sites;
+0162         <span class="keyword">if</span> isempty(sites)
+0163             <span class="keyword">continue</span>;
+0164         <span class="keyword">end</span>
+0165 
+0166         <span class="comment">% loop over all elements of tw</span>
+0167         <span class="keyword">for</span> twcount = 1:length(tw.start)
+0168 
+0169             snum = tw.start(twcount);
+0170             enum = tw.stop(twcount) - MILLISECOND_IN_DAYS; <span class="comment">% try to skip last sample</span>
+0171 
+0172         <span class="comment">% load state</span>
+0173         statefile = sprintf(<span class="string">'iceweb_%s_state.mat'</span>,subnet);
+0174         <span class="keyword">if</span> exist(statefile, <span class="string">'file'</span>)
+0175         load(statefile)
+0176         <span class="keyword">if</span> strcmp(subnet, subnet0)
+0177             <span class="keyword">if</span> snum &lt; snum0 <span class="comment">% skip</span>
+0178                 <span class="comment">%continue</span>
+0179             <span class="keyword">end</span>
+0180         <span class="keyword">end</span>
+0181         <span class="keyword">end</span>
+0182         
+0183         <span class="comment">% save state</span>
+0184         ds0=ds; sites0=sites; snum0=snum; enum0=enum; subnet0 = subnet;
+0185         save(statefile, <span class="string">'ds0'</span>, <span class="string">'sites0'</span>, <span class="string">'snum0'</span>, <span class="string">'enum0'</span>, <span class="string">'subnet0'</span>);
+0186         clear ds0 sites0 snum0 enum0 subnet0
+0187 
+0188             <span class="comment">% Have we already process this timewindow?</span>
+0189             spectrogramFilename = <a href="get_spectrogram_filename.html" class="code" title="function spectrogramFilename = get_spectrogram_filename(paths, subnet, dnum)">get_spectrogram_filename</a>(paths,subnet,snum);
+0190              <span class="keyword">if</span> exist(spectrogramFilename, <span class="string">'file'</span>)
+0191                  <span class="comment">%fprintf('%s already exists - skipping\n',spectrogramFilename);</span>
+0192                  <span class="comment">%continue</span>
+0193              <span class="keyword">end</span>
+0194             
+0195             <span class="comment">%% Get waveform data</span>
+0196             debug.print_debug(0, sprintf(<span class="string">'%s %s: Getting waveforms for %s from %s to %s at %s'</span>,mfilename, datestr(utnow), subnet , datestr(snum), datestr(enum)));
+0197             w = <a href="waveform_wrapper.html" class="code" title="function w=waveform_wrapper(chantag, snum, enum, ds);">waveform_wrapper</a>([sites.channeltag], snum, enum, ds);
+0198 
+0199 
+0200         <span class="comment">%% Save waveform data to 1 hour MAT file</span>
+0201         dv = datevec(snum);
+0202         yyyy = dv(1);
+0203         jjj = floor(snum - datenum(yyyy,1,1) + 1);
+0204         hh = dv(4);
+0205         matfiletopdir = <span class="string">'/raid/data/matfiles'</span>;
+0206         wavmatfile = sprintf(<span class="string">'%s/%s/%04d/%03d/%s.%04d.%03d.%02d.mat'</span>,matfiletopdir,subnet,yyyy,jjj,subnet,yyyy,jjj,hh);
+0207             clear dv yyyy jjj hh
+0208         mkdir(fileparts(wavmatfile));
+0209         disp(sprintf(<span class="string">'Saving waveform data to %s'</span>,wavmatfile));
+0210         save(wavmatfile);
+0211         <span class="keyword">continue</span>
+0212 
+0213             <span class="comment">%% PRE_PROCESS DATA</span>
+0214             
+0215             <span class="comment">% Eliminate empty waveform objects</span>
+0216             w = <a href="waveform_remove_empty.html" class="code" title="function w2 = waveform_remove_empty(w);">waveform_remove_empty</a>(w);
+0217             <span class="keyword">if</span> numel(w)==0
+0218                 debug.print_debug(0, <span class="string">'No waveform data returned - skipping'</span>);
+0219                 <span class="keyword">continue</span>
+0220             <span class="keyword">end</span>
+0221 
+0222             <span class="comment">% Clean the waveforms</span>
+0223             w = fillgaps(w, <span class="string">'interp'</span>);
+0224             w = detrend(w);
+0225 
+0226             <span class="comment">% Apply calibs which should be stored within sites structure to</span>
+0227             <span class="comment">% waveform objects to convert from counts to real physical</span>
+0228             <span class="comment">% units</span>
+0229             w = <a href="apply_calib.html" class="code" title="function w = apply_calib(w, sites)">apply_calib</a>(w, sites);
+0230 
+0231             <span class="comment">% Apply filter to all signals</span>
+0232             w = <a href="apply_filter.html" class="code" title="function w = apply_filter(w, PARAMS)">apply_filter</a>(w, PARAMS);
+0233             
+0234             <span class="comment">% Pad all waveforms to same start/end</span>
+0235             [wsnum wenum] = gettimerange(w); <span class="comment">% assume gaps already filled, signal</span>
+0236             w = pad(w, min([snum wsnum]), max([enum wenum]), 0);
+0237             
+0238             <span class="comment">% Save RSAM data</span>
+0239             rsamobj = rsam(w);
+0240             rsamobj.save(fullfile(<span class="string">'spectrograms'</span>, subnet, <span class="string">'SSSS.CCC.YYYY.rsam'</span>));
+0241             
+0242             <span class="comment">%% CREATE &amp; SAVE WAVEFORM PLOT</span>
+0243             close all
+0244             linkedplot(w)
+0245             <span class="comment">%s = input('continue?');</span>
+0246             [spdir,spbase,spext] = fileparts(spectrogramFilename);
+0247             mulpltFilename = fullfile(spdir, sprintf(<span class="string">'mulplt_%s%s'</span>,spbase,spext));
+0248             orient tall;
+0249             <a href="saveImageFile.html" class="code" title="function result = saveImageFile(arg1, arg2, arg3);">saveImageFile</a>(mulpltFilename, 72);    
+0250             
+0251 <span class="comment">%             %% CREATE &amp; SAVE HELICORDER PLOT</span>
+0252 <span class="comment">%             % SCAFFOLD</span>
+0253              <span class="keyword">try</span> <span class="comment">% crashing with</span>
+0254 <span class="comment">% %                  Index exceeds matrix dimensions.</span>
+0255 <span class="comment">% %</span>
+0256 <span class="comment">% %                 Error in helicorder/build&gt;pad_w (line 339)</span>
+0257 <span class="comment">% %                       dat = [pad1; get(w(n),'data')];</span>
+0258 <span class="comment">% %</span>
+0259 <span class="comment">% %                 Error in helicorder/build (line 68)</span>
+0260 <span class="comment">% %                 h = pad_w(h);          % If front of waveform is missing, fill with NaN</span>
+0261 <span class="comment">% %</span>
+0262 <span class="comment">% %                 Error in iceweb&gt;iceweb_helper (line 208)</span>
+0263 <span class="comment">% %                             build(heliplot)</span>
+0264 <span class="comment">% %</span>
+0265 <span class="comment">% %                 Error in iceweb (line 93)</span>
+0266 <span class="comment">% %                                     iceweb_helper(paths, PARAMS, newsubnets, thistw, ds);</span>
+0267 <span class="comment">% %</span>
+0268 <span class="comment">% %                 Error in unrest (line 20)</span>
+0269 <span class="comment">% %                 iceweb(ds, 'thissubnet', 'Sakurajima', 'snum', datenum(2015,6,3), 'enum', datenum(2015,6, 7), 'delaymins', 0, 'matfile', 'pf/Sakurajima.mat',</span>
+0270 <span class="comment">% %                 'nummins', mins, 'runmode', 'archive');</span>
+0271                  close all
+0272          <span class="keyword">for</span> wi=1:numel(w)
+0273                      heliplot = helicorder(w(wi),<span class="string">'mpl'</span>,3);
+0274                      build(heliplot)
+0275              ct = get(w(wi),<span class="string">'channeltag'</span>);
+0276                      helicorderFilename = fullfile(spdir, sprintf(<span class="string">'heli_%s_%s.%s.%s'</span>,spbase,ct.station,ct.channel,spext));
+0277                      orient tall;
+0278                      <a href="saveImageFile.html" class="code" title="function result = saveImageFile(arg1, arg2, arg3);">saveImageFile</a>(helicorderFilename, 72); 
+0279             clear ct helicorderFilename 
+0280          <span class="keyword">end</span>
+0281         clear wi
+0282              <span class="keyword">end</span>
+0283             
+0284 
+0285             <span class="comment">%% PLOT SPECTROGRAM</span>
+0286             close all
+0287             debug.print_debug(1, sprintf(<span class="string">'Creating %s'</span>,spectrogramFilename))
+0288             <span class="comment">%specgram_iceweb(PARAMS.spectralobject, w, 0.75, extended_spectralobject_colormap);</span>
+0289             <span class="comment">%specgram_wrapper(PARAMS.spectralobject, w, 0.75, extended_spectralobject_colormap);</span>
+0290 <span class="comment">%             try</span>
+0291                 spectrogramFraction = 0.75;
+0292 
+0293         <span class="comment">% restrict spectrogram to Z channels only</span>
+0294         w2=[];
+0295         <span class="keyword">for</span> wi=1:numel(w)
+0296             ct=get(w(wi),<span class="string">'channeltag'</span>);
+0297             <span class="keyword">if</span> strfind(ct.channel,<span class="string">'Z'</span>)
+0298                 w2 = [w2 w(wi)];
+0299             <span class="keyword">end</span>
+0300         <span class="keyword">end</span>
+0301 
+0302                 [sgresult, Tcell, Fcell, Ycell] = <a href="spectrogram_iceweb.html" class="code" title="function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)">spectrogram_iceweb</a>(PARAMS.spectralobject, w2, spectrogramFraction, <a href="extended_spectralobject_colormap.html" class="code" title="function h = extended_spectralobject_colormap()">extended_spectralobject_colormap</a>);
+0303         clear w2 wi ct 
+0304                 <span class="keyword">if</span> sgresult &gt; 0 <span class="comment">% sgresult = number of waveforms for which a spectrogram was successfully plotted</span>
+0305                     <span class="comment">%% SAVE SPECTROGRAM PLOT TO IMAGE FILE AND CREATE THUMBNAIL</span>
+0306                     orient tall;
+0307 
+0308                     <span class="keyword">if</span> <a href="saveImageFile.html" class="code" title="function result = saveImageFile(arg1, arg2, arg3);">saveImageFile</a>(spectrogramFilename, 72)
+0309 
+0310                         fileinfo = dir(spectrogramFilename); <span class="comment">% getting a weird Index exceeds matrix dimensions error here.</span>
+0311                         debug.print_debug(0, sprintf(<span class="string">'%s %s: spectrogram PNG size is %d'</span>,mfilename, datestr(utnow), fileinfo.bytes));    
+0312 
+0313                         <span class="comment">% make thumbnails</span>
+0314                         <a href="makespectrogramthumbnails.html" class="code" title="function makespectrogramthumbnails(spectrogramFilename, spectrogramFraction)">makespectrogramthumbnails</a>(spectrogramFilename, spectrogramFraction);
+0315 
+0316                     <span class="keyword">end</span>
+0317                     close all
+0318 
+0319                     <span class="comment">%% save spectral data</span>
+0320                     frequency_index_divider = 5.0; <span class="comment">% Hz</span>
+0321                     <span class="keyword">for</span> spi = 1:numel(Fcell)
+0322                         thisY = Ycell{spi};
+0323                         thisF = Fcell{spi};
+0324                         thisT = Tcell{spi};
+0325                         sta = get(w(spi),<span class="string">'station'</span>);
+0326                         chan = get(w(spi),<span class="string">'channel'</span>);
+0327 
+0328                         <span class="comment">% peakF and meanF for each spectrogram window</span>
+0329                         [Ymax,imax] = max(thisY);
+0330                         PEAK_F = thisF(imax);
+0331                         MEAN_F = (thisF' * thisY)./sum(thisY);
+0332 
+0333                         <span class="comment">% frequency index for each spectrogram window</span>
+0334                         fUpperIndices = find(thisF &gt; frequency_index_divider);
+0335                         fLowerIndices = find(thisF &lt; frequency_index_divider);                    
+0336                         fupper = sum(thisY(fUpperIndices,:));
+0337                         flower = sum(thisY(fLowerIndices,:));
+0338                         F_INDEX = log2(fupper ./ flower);
+0339 
+0340                         <span class="comment">% Peak spectral value in each frequency bin - or in</span>
+0341                         <span class="comment">% each minute?</span>
+0342 
+0343                         <span class="comment">% Now downsample to 1 sample per minute</span>
+0344                         dnum = unique(matlab_extensions.floorminute(thisT));
+0345                         <span class="keyword">for</span> k=1:length(dnum)
+0346                             p = find(matlab_extensions.floorminute(thisT) == dnum(k));
+0347                             downsampled_peakf(k) = nanmean(PEAK_F(p));
+0348                             downsampled_meanf(k) = nanmean(MEAN_F(p));  
+0349                             downsampled_findex(k) = nanmean(F_INDEX(p));
+0350                             suby = thisY(:,p);
+0351                 <span class="keyword">if</span> size(suby,2) == 1
+0352                                 max_in_each_freq_band(:,k) = suby;
+0353                 <span class="keyword">else</span>
+0354                                 max_in_each_freq_band(:,k) = max(suby');
+0355                  <span class="keyword">end</span>
+0356                         <span class="keyword">end</span>
+0357 
+0358         <span class="comment">%                 % Plot for verification</span>
+0359         <span class="comment">%                 close all</span>
+0360         <span class="comment">%                 subplot(2,1,1),plot(dnum,downsampled_peakf,':');datetick('x');</span>
+0361         <span class="comment">%                 hold on</span>
+0362         <span class="comment">%                 plot(dnum,downsampled_meanf);datetick('x');</span>
+0363         <span class="comment">%                 subplot(2,1,2),plot(dnum,downsampled_findex);datetick('x');</span>
+0364         <span class="comment">%                 anykey = input('Press any key to continue');</span>
+0365 
+0366                         <span class="comment">% Save data</span>
+0367                         r1 = rsam(dnum, downsampled_peakf, <span class="string">'sta'</span>, sta, <span class="keyword">...</span>
+0368                             <span class="string">'chan'</span>, chan, <span class="string">'measure'</span>, <span class="string">'peakf'</span>, <span class="keyword">...</span>
+0369                             <span class="string">'units'</span>, <span class="string">'Hz'</span>, <span class="string">'snum'</span>, min(dnum), <span class="string">'enum'</span>, max(dnum));
+0370                         r1.save(fullfile(<span class="string">'spectrograms'</span>, subnet, <span class="string">'SSSS.CCC.YYYY.peakf'</span>))
+0371 
+0372                         r2 = rsam(dnum, downsampled_meanf, <span class="string">'sta'</span>, sta, <span class="keyword">...</span>
+0373                             <span class="string">'chan'</span>, chan, <span class="string">'measure'</span>, <span class="string">'meanf'</span>, <span class="keyword">...</span>
+0374                             <span class="string">'units'</span>, <span class="string">'Hz'</span>, <span class="string">'snum'</span>, min(dnum), <span class="string">'enum'</span>, max(dnum));
+0375                         r2.save(fullfile(<span class="string">'spectrograms'</span>, subnet, <span class="string">'SSSS.CCC.YYYY.meanf'</span>))
+0376 
+0377                         r3 = rsam(dnum, downsampled_findex, <span class="string">'sta'</span>, sta, <span class="keyword">...</span>
+0378                             <span class="string">'chan'</span>, chan, <span class="string">'measure'</span>, <span class="string">'findex'</span>, <span class="keyword">...</span>
+0379                             <span class="string">'units'</span>, <span class="string">'none'</span>, <span class="string">'snum'</span>, min(dnum), <span class="string">'enum'</span>, max(dnum));
+0380                         r3.save(fullfile(<span class="string">'spectrograms'</span>, subnet, <span class="string">'SSSS.CCC.YYYY.findex'</span>)) 
+0381 
+0382                         specdatafilename = fullfile(<span class="string">'spectrograms'</span>, subnet, datestr(min(dnum),<span class="string">'yyyy/mm/dd'</span>), sprintf( <span class="string">'%s_%s_%s.mat'</span>, datestr(min(dnum),30), sta, chan) );
+0383                         specdatadir = fileparts(specdatafilename); <span class="comment">% make the directory in case it does not exist</span>
+0384                         mkdir(specdatadir); <span class="comment">% make the directory in case it does not exist</span>
+0385                         save(specdatafilename, <span class="string">'dnum'</span>, <span class="string">'max_in_each_freq_band'</span>) 
+0386                         clear r1 r2 r3 k p   downsampled_peakf downsampled_meanf <span class="keyword">...</span>
+0387                             downsampled_findex fUpperIndices fLowerIndices flower <span class="keyword">...</span>
+0388                             fupper F_INDEX PEAK_F MEAN_F Ymax imax thisY thisF thisT <span class="keyword">...</span>
+0389                             suby max_in_each_freq_band
+0390 
+0391                     <span class="keyword">end</span>
+0392                 <span class="keyword">end</span>
+0393 
+0394                 <span class="comment">%% SOUND FILES</span>
+0395                 <span class="keyword">if</span> makeSoundFiles
+0396                     <span class="keyword">try</span>
+0397                         <span class="comment">% 20120221 Added a &quot;sound file&quot; like 201202211259.sound which simply records order of stachans in waveform object so</span>
+0398                         <span class="comment">% php script can match spectrogram panel with appropriate wav file</span>
+0399                         <span class="comment">% 20121101 GTHO COmment: Could replace use of bnameroot below with strrep, since it is just used to change file extensions</span>
+0400                         <span class="comment">% e.g. strrep(spectrogramFilename, '.png', sprintf('_%s_%s.wav', sta, chan))</span>
+0401                         <span class="comment">%[bname, dname, bnameroot, bnameext] = matlab_extensions.basename(spectrogramFilename);</span>
+0402                         [dname, bnameroot, bnameext] = fileparts(spectrogramFilename);
+0403                         <span class="comment">%fsound = fopen(sprintf('%s%s%s.sound', dname, filesep, bnameroot),'a');</span>
+0404                         soundfilelist = fullfile(dname, filesep, [bnameroot,<span class="string">'.sound'</span>]);
+0405                         fsound = fopen(soundfilelist,<span class="string">'a'</span>);
+0406                         <span class="keyword">for</span> c=1:length(w)
+0407                             soundfilename = fullfile(dname, sprintf(<span class="string">'%s_%s_%s.wav'</span>,bnameroot, get(w(c),<span class="string">'station'</span>), get(w(c), <span class="string">'channel'</span>)  ) );
+0408                             fprintf(fsound,<span class="string">'%s\n'</span>, soundfilename);  
+0409                             debug.print_debug(0, sprintf(<span class="string">'Writing to %s'</span>,soundfilename)); 
+0410                             data = get(w(c),<span class="string">'data'</span>);
+0411                             m = max(data);
+0412                             <span class="keyword">if</span> m == 0
+0413                                 m = 1;
+0414                             <span class="keyword">end</span> 
+0415                             data = data / m;
+0416                             wavwrite(data, get(w(c), <span class="string">'freq'</span>) * 120, soundfilename);
+0417                         <span class="keyword">end</span>
+0418                         fclose(fsound);
+0419                     <span class="keyword">end</span>
+0420                 <span class="keyword">end</span>
+0421 <span class="comment">%             end</span>
+0422         <span class="keyword">end</span>
+0423     <span class="keyword">end</span>
+0424 
+0425     debug.printfunctionstack(<span class="string">'&lt;'</span>);
+0426 <span class="keyword">end</span>
+0427</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

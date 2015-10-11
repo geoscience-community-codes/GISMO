@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sort</title>
+  <meta name="keywords" content="sort">
+  <meta name="description" content="C = SORT(C,'TIME')">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@correlation</a> &gt; sort.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>sort
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>C = SORT(C,'TIME')</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = norm(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> C = SORT(C,'TIME')
+ Sorts traces a function of time from oldest to youngest.
+ Currently no other types of sorting have been implimented
+
+ C = SORT(C)
+ Short hand for SORT(C,'TIME')</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="sort.html" class="code" title="function c = norm(c,varargin)">sort</a>	C = SORT(C,'TIME')</li><li><a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	c = CLUSTER(c,CUTOFF) cuts the "branches" of the linkage tree to create</li><li><a href="find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="sort.html" class="code" title="function c = norm(c,varargin)">sort</a>	C = SORT(C,'TIME')</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = norm(c,varargin)</a>
+0002 
+0003 <span class="comment">% C = SORT(C,'TIME')</span>
+0004 <span class="comment">% Sorts traces a function of time from oldest to youngest.</span>
+0005 <span class="comment">% Currently no other types of sorting have been implimented</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% C = SORT(C)</span>
+0008 <span class="comment">% Short hand for SORT(C,'TIME')</span>
+0009 <span class="comment">%</span>
+0010 
+0011 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0012 <span class="comment">% $Date$</span>
+0013 <span class="comment">% $Revision$</span>
+0014 
+0015 
+0016 
+0017 <span class="comment">% READ &amp; CHECK ARGUMENTS</span>
+0018 <span class="keyword">if</span> ~strcmpi(class(c),<span class="string">'correlation'</span>)
+0019     error(<span class="string">'First input must be a correlation object'</span>);
+0020 <span class="keyword">end</span>
+0021 
+0022 <span class="comment">% CHOOSE SORT TYPE</span>
+0023 <span class="keyword">if</span> nargin==1
+0024     type = <span class="string">'TIM'</span>;
+0025 <span class="keyword">elseif</span> ischar(varargin{1})
+0026     type = varargin{1};
+0027 <span class="keyword">else</span>
+0028     error(<span class="string">'Incorrect inputs'</span>);
+0029 <span class="keyword">end</span>;
+0030 
+0031 
+0032 <span class="comment">% SORT TRACES</span>
+0033 <span class="keyword">if</span> strncmpi(type,<span class="string">'TIM'</span>,3)
+0034     [S,I] = <a href="sort.html" class="code" title="function c = norm(c,varargin)">sort</a>(c.trig);
+0035     c = <a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>(c,I);
+0036 <span class="keyword">else</span>
+0037     disp(<span class="string">'Sort type not recognized'</span>);
+0038 <span class="keyword">end</span>;</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

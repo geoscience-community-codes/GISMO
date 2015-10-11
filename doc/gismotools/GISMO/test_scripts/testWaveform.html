@@ -1,0 +1,481 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of testWaveform</title>
+  <meta name="keywords" content="testWaveform">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../index.html">GISMO</a> &gt; <a href="index.html">test_scripts</a> &gt; testWaveform.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/test_scripts&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>testWaveform
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="testWaveform.html" class="code" title="">testWaveform</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="testWaveform.html" class="code" title="">testWaveform</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = testWaveform(name)</a></li><li><a href="#_sub2" class="code">function SetUp(self)</a></li><li><a href="#_sub3" class="code">function testConstructors(obj)</a></li><li><a href="#_sub4" class="code">function testSetGets(obj)</a></li><li><a href="#_sub5" class="code">function testBasicMath(obj)</a></li><li><a href="#_sub6" class="code">function testAdvancedMath(obj)</a></li><li><a href="#_sub7" class="code">function testDiff(obj)</a></li><li><a href="#_sub8" class="code">function testIntegrate(obj)</a></li><li><a href="#_sub9" class="code">function testStatisticalMath(obj)</a></li><li><a href="#_sub10" class="code">function testTransforms(obj)</a></li><li><a href="#_sub11" class="code">function testSacLoad(obj)</a></li><li><a href="#_sub12" class="code">function testPlot(obj)</a></li><li><a href="#_sub13" class="code">function testUserDefinedFields(obj)</a></li><li><a href="#_sub14" class="code">function testHistory(obj)</a></li><li><a href="#_sub15" class="code">function testIsEmpty(obj)</a></li><li><a href="#_sub16" class="code">function testDouble(obj)</a></li><li><a href="#_sub17" class="code">function testLoadobj(obj)</a></li><li><a href="#_sub18" class="code">function load_v0()</a></li><li><a href="#_sub19" class="code">function load_v1_0()</a></li><li><a href="#_sub20" class="code">function load_v1_1()</a></li><li><a href="#_sub21" class="code">function load_v1_2()</a></li><li><a href="#_sub22" class="code">function testSave(obj)</a></li><li><a href="#_sub23" class="code">function testTaper(obj)</a></li><li><a href="#_sub24" class="code">function testClip(obj)</a></li><li><a href="#_sub25" class="code">function testStack(obj)</a></li><li><a href="#_sub26" class="code">function testDisp(obj)</a></li><li><a href="#_sub27" class="code">function testCorrelationCookbook(obj)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="testWaveform.html" class="code" title="">testWaveform</a> &lt; matlab.unittest.TestCase
+0002    <span class="comment">% TESTWAVEFORM validates the funcionality of Waveform</span>
+0003    <span class="comment">%</span>
+0004    <span class="comment">% requires xUnit</span>
+0005    <span class="comment">% see also xUnit, channeltag</span>
+0006    
+0007    properties
+0008       Dt<span class="comment">% = rand(1,1001) .* 1000 - 500;</span>
+0009       chanTag<span class="comment">% = channeltag('IU.ANMO.00.BHZ');</span>
+0010       dataPath = fileparts(which(<span class="string">'test_waveform_class'</span>))
+0011       wf<span class="comment">% = waveform(testWaveform.chanTag, 20, fix(now), D, 'm / sec');</span>
+0012    <span class="keyword">end</span>
+0013    
+0014    methods
+0015       <a name="_sub0" href="#_subfunctions" class="code">function self = testWaveform(name)</a>
+0016          self = self@TestCase(name);
+0017          
+0018          self.Dt = rand(1,1001) .* 1000 - 500;
+0019          self.chanTag = channeltag(<span class="string">'IU.ANMO.00.BHZ'</span>);
+0020          self.wf = waveform(self.chanTag, 20, fix(now), self.Dt, <span class="string">'m / sec'</span>);
+0021       <span class="keyword">end</span>
+0022       
+0023       <a name="_sub1" href="#_subfunctions" class="code">function SetUp(self)</a>
+0024          <span class="comment">% not sure this is working in any way.</span>
+0025          self.Dt = rand(1,1001) .* 1000 - 500;
+0026          self.chanTag = channeltag(<span class="string">'IU.ANMO.00.BHZ'</span>);
+0027          self.wf = waveform(self.chanTag, 20, fix(now), D, <span class="string">'m / sec'</span>);
+0028       <span class="keyword">end</span>
+0029       
+0030       <a name="_sub2" href="#_subfunctions" class="code">function testConstructors(obj)</a>
+0031          <span class="comment">%% first, try the different methods of loading up waveforms</span>
+0032          <span class="comment">%default constructor</span>
+0033          w = waveform; <span class="comment">%create an empty waveform</span>
+0034          assert(isa(w,<span class="string">'waveform'</span>));
+0035          
+0036          rfreq = rand(1) * 200;
+0037          Ad = obj.Dt;
+0038          stt = now - rand(1) * 1500;
+0039          clear w
+0040          STATIONVALUE = <span class="string">'STAtION'</span>;
+0041          CHANNELVALUE = <span class="string">'CHAnNEL'</span>;
+0042          
+0043          <span class="comment">%manual constructor now gives error</span>
+0044          assertExceptionThrown(@() waveform(STATIONVALUE,CHANNELVALUE,rfreq, stt,Ad),<span class="keyword">...</span>
+0045             <span class="string">'Waveform:waveform:oldUsage'</span>);
+0046          w = waveform(obj.chanTag, rfreq, stt, obj.Dt);
+0047          
+0048          <span class="comment">% copy constructor</span>
+0049          w2 = w;
+0050          s1 = struct(w); s2 = struct(w2);
+0051          fn = fieldnames(s1);
+0052          <span class="keyword">for</span> n=1:numel(fn)
+0053             <span class="keyword">switch</span> (class(s1.(fn{n})))
+0054                <span class="keyword">case</span> {<span class="string">'char'</span>, <span class="string">'double'</span>, <span class="string">'logical'</span>}
+0055                   assertEqual(s1.(fn{n}), s2.(fn{n}));
+0056                <span class="keyword">otherwise</span>
+0057                   <span class="comment">% fprintf('field &lt;%s&gt; of type &lt;%s&gt; uncompared\n',fn{n},class(s1.(fn{n})));</span>
+0058             <span class="keyword">end</span>
+0059          <span class="keyword">end</span>
+0060          
+0061       <span class="keyword">end</span>
+0062       
+0063       <a name="_sub3" href="#_subfunctions" class="code">function testSetGets(obj)</a>
+0064          <span class="comment">%% test SET routines</span>
+0065          <span class="comment">%TODO: Update to use TestCase syntax</span>
+0066          mep2dep = inline(<span class="string">'(n - 719529) * 86400'</span>,<span class="string">'n'</span>);
+0067          set_test = {<span class="string">'station'</span>,<span class="string">'freq'</span>,<span class="string">'channel'</span>,<span class="string">'data'</span>,<span class="string">'units'</span>,<span class="keyword">...</span>
+0068             <span class="string">'start'</span>,<span class="string">'start_epoch'</span>,<span class="string">'data_length'</span>};
+0069          
+0070          set_VALID_vals = {<span class="string">'Bob'</span>,293,<span class="string">'JIM'</span>,(1:10000)',<span class="string">'MyUNIT'</span>,now,mep2dep(now),3};
+0071          
+0072          set_INVALID_vals = {5,<span class="string">'a'</span>,5,ones(5,5),3,<span class="string">'a'</span>,<span class="string">'a'</span>,-1};
+0073          
+0074          w =  obj.wf;
+0075          results.set = true;
+0076          <span class="keyword">for</span> N=1:numel(set_test)
+0077             <span class="comment">%Make sure that INVALID cases don't slip thorugh</span>
+0078             <span class="keyword">try</span>
+0079                set (w,set_test{N},set_INVALID_vals);
+0080                setresult.(set_test{N}) = false;
+0081             <span class="keyword">catch</span>
+0082                setresult.(set_test{N}) = true;
+0083             <span class="keyword">end</span>
+0084             
+0085             <span class="comment">%Make sure that corresponding VALID cases work</span>
+0086             setresult.(set_test{N}) = setresult.(set_test{N}) &amp;&amp; <span class="keyword">...</span>
+0087                all(get(set(w,set_test{N},set_VALID_vals{N}),set_test{N})<span class="keyword">...</span>
+0088                == set_VALID_vals{N});
+0089             assertTrue(setresult.(set_test{N}), set_test{N})
+0090          <span class="keyword">end</span>
+0091       <span class="keyword">end</span>
+0092       
+0093       <a name="_sub4" href="#_subfunctions" class="code">function testBasicMath(obj)</a>
+0094          <span class="comment">% basic math functions</span>
+0095          <span class="comment">%   'uminus','plus','minus'</span>
+0096          <span class="comment">%   'times','mtimes','rdivide','mrdivide','power'</span>
+0097          w = obj.wf;
+0098          D = obj.Dt(:);
+0099          <span class="comment">% identities</span>
+0100          assertEqual(w + 0, w);
+0101          assertEqual(w ./ 1, w);
+0102          assertEqual(w - 0, w);
+0103          assertEqual(w * 1, w);
+0104          assertEqual(w .* 1, w);
+0105          assertEqual(w .^ 1, w);
+0106          
+0107          <span class="comment">% comparing operations</span>
+0108          assertEqual(w + w, w * 2);    <span class="comment">% plus, times, vector addition</span>
+0109          assertEqual(w - w, w .* 0);    <span class="comment">% minus, mtimes, vector subtraction</span>
+0110          assertEqual(w ./ 2, w .* 0.5); <span class="comment">% rdivide, times</span>
+0111          assertEqual(w .^ 2, w .* w);  <span class="comment">% power, vector multiplication</span>
+0112          assertEqual(D .* D, double(w .* D));
+0113          assertEqual(w .* 5, w * 5);   <span class="comment">% mtimes, times</span>
+0114          assertEqual(w + -w, w .* 0);  <span class="comment">% uminus</span>
+0115          
+0116          <span class="comment">% communicative</span>
+0117          assertEqual(w + 100, 100 + w);
+0118          assertEqual(w .* 5, 5 .* w);
+0119          
+0120          assertEqual(double(w + 5 .* w), D + 5 .* D);
+0121          assertEqual(double((7 .* w) + (w ./ 5) - w.^3), (D .* 7)+(D ./ 5) - D.^3);
+0122          
+0123          assertEqual(double(w / 2), (D / 2));
+0124       <span class="keyword">end</span>
+0125       
+0126       <a name="_sub5" href="#_subfunctions" class="code">function testAdvancedMath(obj)</a>
+0127          <span class="comment">% sign, abs, diff, integrate</span>
+0128          D = obj.Dt(:);
+0129          w = obj.wf;
+0130          
+0131          assertEqual(double(sign(w)),  sign(D));
+0132          assertEqual(abs(w),           sign(w) .* w);
+0133          assertEqual(double(abs(w)),   abs(D));
+0134       <span class="keyword">end</span>
+0135       
+0136       <a name="_sub6" href="#_subfunctions" class="code">function testDiff(obj)</a>
+0137          dW = diff(obj.wf);
+0138          dd = diff(obj.Dt(:)) * get(obj.wf,<span class="string">'freq'</span>); <span class="comment">%scaled!</span>
+0139          assertEqual(double(dW), dd,  <span class="string">'differentiation values'</span>);
+0140          
+0141          expectedUnits = [get(obj.wf,<span class="string">'units'</span>), <span class="string">' / sec'</span>];
+0142          assertEqual(get(dW,<span class="string">'units'</span>), expectedUnits, <span class="string">'unit check'</span>);
+0143       <span class="keyword">end</span>
+0144       
+0145       <a name="_sub7" href="#_subfunctions" class="code">function testIntegrate(obj)</a>
+0146          d = sin(1:0.01:1000) .* 100;
+0147          d = d(:) + randn(size(d(:)));
+0148          w = waveform(<span class="string">'NW.STA.LO.CHA'</span>,20,fix(now),d,<span class="string">'Counts'</span>);
+0149          assertEqual(cumsum(d) ./ get(w,<span class="string">'freq'</span>), double(integrate(w)), <span class="string">'default (CUMSUM) integration'</span>);
+0150          assertEqual(get(integrate(w),<span class="string">'units'</span>), <span class="string">'Counts * sec'</span>);
+0151          assertEqual(cumsum(d) ./ get(w,<span class="string">'freq'</span>), double(integrate(w, <span class="string">'cumsum'</span>)), <span class="string">'CUMSUM integration'</span>);
+0152          assertEqual(cumtrapz(d) ./ get(w,<span class="string">'freq'</span>), double(integrate(w,<span class="string">'trapz'</span>)), <span class="string">'TRAPZ integration'</span>);
+0153          <span class="comment">%}</span>
+0154       <span class="keyword">end</span>
+0155       
+0156       <a name="_sub8" href="#_subfunctions" class="code">function testStatisticalMath(obj)</a>
+0157          <span class="comment">% 'min','max','mean', 'median','std','var'</span>
+0158          D = obj.Dt(:);
+0159          w = obj.wf;
+0160          
+0161          assertEqual(min(D), min(w));
+0162          assertEqual(max(D), max(w));
+0163          assertEqual(mean(D), mean(w));
+0164          assertEqual(median(D), median(w));
+0165          assertEqual(std(D), std(w));
+0166          assertEqual(var(D), var(w));
+0167       <span class="keyword">end</span>
+0168       
+0169       <a name="_sub9" href="#_subfunctions" class="code">function testTransforms(obj)</a>
+0170          <span class="comment">% transform functions</span>
+0171          <span class="comment">% 'rms','hilbert','detrend','demean','taper','stack','fix_data_length'</span>
+0172          
+0173          <span class="comment">% todo: rms</span>
+0174          <span class="comment">% WAVEFORM/RMS</span>
+0175          w = obj.wf;
+0176          D = obj.Dt(:);
+0177          
+0178          
+0179          assertEqual(rms(w), sqrt((sum(D .^2) / (numel(D)-1))));
+0180          <span class="comment">% WAVEFORM/DETREND</span>
+0181          assertEqual(double(detrend(w)), detrend(D));
+0182          
+0183          <span class="comment">% WAVEFORM/DEMEAN</span>
+0184          assertEqual(double(demean(w)), (D - mean(D)));
+0185          
+0186          <span class="comment">% WAVEFORM/HILBERT</span>
+0187          assertEqual(double(hilbert(w)), abs(hilbert(D)));
+0188          
+0189          <span class="comment">% WAVEFORM/STACK</span>
+0190          <span class="comment">%TODO:waveform/stack ***** NOT IMPLEMENTED ****</span>
+0191          
+0192          <span class="comment">% WAVEFORM/FIX_DATA_LENGTH</span>
+0193          <span class="comment">% TOO: doublecheck the replacement values</span>
+0194          assertEqual(get(fix_data_length(w, 5001),<span class="string">'data_length'</span>), 5001);
+0195          assertEqual(get(fix_data_length(w, 301),<span class="string">'data_length'</span>), 301);
+0196          twoWs = fix_data_length([w,set(w,<span class="string">'data'</span>,2:100)]);
+0197          assertEqual(get(twoWs,<span class="string">'data_length'</span>), get([w w],<span class="string">'data_length'</span>));
+0198       <span class="keyword">end</span>
+0199       
+0200       <a name="_sub10" href="#_subfunctions" class="code">function testSacLoad(obj)</a>
+0201          <span class="comment">% station: BYR, chan: BHZ_01, 2000/7/14 13:40 ~10 seconds</span>
+0202          fileName = fullfile(obj.dataPath,<span class="string">'test_data'</span>,<span class="string">'example_sacfile.sac'</span>);
+0203          dsac = datasource(<span class="string">'sac'</span>,fileName);
+0204          scnlSac(1) = scnlobject(<span class="string">'*'</span>,<span class="string">'*'</span>,<span class="string">'*'</span>,<span class="string">'*'</span>);
+0205          scnlSac(2) = scnlobject(<span class="string">'BYR'</span>,<span class="string">'BHZ_01'</span>,<span class="string">'*'</span>,<span class="string">'*'</span>);
+0206          
+0207          sacwave = loadsac(waveform,fileName);
+0208          assertEqual(get(sacwave,<span class="string">'data_length'</span>), 500);
+0209          assertEqual(get(sacwave,<span class="string">'NZYEAR'</span>), 2000);
+0210          assertEqual(get(sacwave,<span class="string">'start'</span>), datenum(<span class="string">'2000-07-14 13:40:00.006'</span>));
+0211          
+0212          sacwave = waveform(dsac,scnlSac(1),<span class="string">'7/14/2000'</span>,<span class="string">'7/15/2000'</span>);
+0213          assertEqual(get(sacwave,<span class="string">'data_length'</span>), 500);
+0214          assertEqual(get(sacwave,<span class="string">'NZYEAR'</span>), 2000);
+0215          assertEqual(get(sacwave,<span class="string">'start'</span>), datenum(<span class="string">'2000-07-14 13:40:00.006'</span>));
+0216       <span class="keyword">end</span>
+0217       
+0218       <a name="_sub11" href="#_subfunctions" class="code">function testPlot(obj)</a>
+0219          A = obj.wf;
+0220          B = waveform(<span class="string">'SY.SIN..BHZ'</span>,20,fix(now),sin(1:.001:100),<span class="string">'Counts'</span>);
+0221          F = figure;
+0222          plot(A);
+0223          plot([A B]);
+0224          plot([A B]',<span class="string">'g.'</span>);
+0225          plot([A B B.*2 B.*7 set(B,<span class="string">'start'</span>,get(B,<span class="string">'start'</span>)+datenum(0,0,0,0,0,1))],<span class="keyword">...</span>
+0226             <span class="string">'xunit'</span>,<span class="string">'date'</span>,<span class="string">'markersize'</span>,3);
+0227          legend([A, B]);
+0228          plotdetails = get(gca);
+0229          delete(F)
+0230       <span class="keyword">end</span>
+0231       
+0232       <a name="_sub12" href="#_subfunctions" class="code">function testUserDefinedFields(obj)</a>
+0233          <span class="comment">% User Defined Fields</span>
+0234          w = obj.wf;
+0235          w = addfield(w,<span class="string">'ABCD'</span>,<span class="string">'hello'</span>);
+0236          assertEqual(get(w,<span class="string">'abCD'</span>),<span class="string">'hello'</span>);
+0237          w = set(w,<span class="string">'ABcD'</span>,5);
+0238          assertEqual(get(w,<span class="string">'AbCD'</span>), 5);
+0239          
+0240          <span class="comment">%make sure field was deleted</span>
+0241          w = delfield(w,<span class="string">'abcd'</span>);
+0242          assertFalse(ismember(<span class="string">'ABCD'</span>,get(w,<span class="string">'misc_fields'</span>)));
+0243          assertExceptionThrown(@() get(w,<span class="string">'ABCD'</span>),<span class="string">'Waveform:get:unrecognizedProperty'</span>);
+0244       <span class="keyword">end</span>
+0245       
+0246       <a name="_sub13" href="#_subfunctions" class="code">function testHistory(obj)</a>
+0247          <span class="comment">%addhistory, clearhistory, clearhistory</span>
+0248          <span class="comment">% test ADDHISTORY</span>
+0249          w = obj.wf;
+0250          w = addhistory(w,<span class="string">'StringTest'</span>);
+0251          w = addhistory(w,<span class="string">'[%s]&lt;%02d&gt;'</span>,<span class="string">'ABCDEFG'</span>,3);
+0252          w = addhistory(w,{3});
+0253          fullhist = get(w,<span class="string">'history'</span>);
+0254          
+0255          assertEqual(numel(fullhist(:,1)), 4);
+0256          assertEqual(numel(fullhist(1,:)), 2);
+0257          assertEqual(fullhist{1,1}, <span class="string">'created'</span>);
+0258          assertEqual(fullhist{2,1},<span class="string">'StringTest'</span>);
+0259          assertEqual(fullhist{3,1}, <span class="string">'[ABCDEFG]&lt;03&gt;'</span>);
+0260          assertEqual(fullhist{4,1}{1}, 3);
+0261          
+0262          [~, dates] = history(w);
+0263          
+0264          <span class="comment">%test HISTORY</span>
+0265          assertEqual(datenum(datestr([fullhist{:,2}])), datenum(dates));
+0266          
+0267          <span class="comment">%test CLEARHISTORY</span>
+0268          Z = get(clearhistory(w),<span class="string">'History'</span>);
+0269          n = now;
+0270          onesecond = datenum(0,0,0,0,0,1);
+0271          assertTrue(abs(Z{2} - n) &lt; onesecond, <span class="string">'last event expected within past second'</span>);
+0272          assertEqual(size(Z), [1 2])
+0273          assertTrue(ischar(Z{1}));
+0274          assertTrue(isa(Z{2},<span class="string">'double'</span>));
+0275          assertEqual(Z{1},<span class="string">'Cleared History'</span>);
+0276          
+0277          <span class="comment">%results.clearhistory = isempty(Z);</span>
+0278          
+0279       <span class="keyword">end</span>
+0280       
+0281       <a name="_sub14" href="#_subfunctions" class="code">function testIsEmpty(obj)</a>
+0282          w = waveform;
+0283          assertTrue(isempty(w), <span class="string">'generic waveform should be empty'</span>);
+0284          w = set(w,<span class="string">'data'</span>,1);
+0285          assertFalse(isempty(w),<span class="string">'waveform with one byte should not be empty'</span>);
+0286          w = set(w,<span class="string">'data'</span>,[]);
+0287          assertTrue(isempty(w), <span class="string">'data set to [] should be empty'</span>);
+0288       <span class="keyword">end</span>
+0289       
+0290       <a name="_sub15" href="#_subfunctions" class="code">function testDouble(obj)</a>
+0291          A = obj.wf;
+0292          Ad = obj.Dt(:);
+0293          assertEqual(double(A), Ad);
+0294          assertEqual(double([A A]), [Ad Ad]);
+0295       <span class="keyword">end</span>
+0296       
+0297       <a name="_sub16" href="#_subfunctions" class="code">function testLoadobj(obj)</a>
+0298          <a href="#_sub18" class="code" title="subfunction load_v0()">load_v0</a>()
+0299          <a href="#_sub19" class="code" title="subfunction load_v1_0()">load_v1_0</a>()
+0300          <a href="#_sub20" class="code" title="subfunction load_v1_1()">load_v1_1</a>()
+0301          <a href="#_sub21" class="code" title="subfunction load_v1_2()">load_v1_2</a>()
+0302          
+0303          <a name="_sub17" href="#_subfunctions" class="code">function load_v0()</a>
+0304             fileName = fullfile(obj.dataPath,<span class="string">'test_data'</span>,<span class="string">'v0_example_waveforms.mat'</span>);
+0305             assertEqual(exist(fileName,<span class="string">'file'</span>), 2, <span class="string">'test data for v0 does not exist'</span>);
+0306             dummy = load(fileName);
+0307             assertTrue(isa(dummy.w,<span class="string">'waveform'</span>), <span class="string">'converting single v0 waveform failed'</span>);
+0308             assertTrue(isa(dummy.ww,<span class="string">'waveform'</span>), <span class="string">'converting multiple v0 waveforms failed'</span>);
+0309             assertEqual(numel(dummy.ww),10);
+0310          <span class="keyword">end</span>
+0311          <a name="_sub18" href="#_subfunctions" class="code">function load_v1_0()</a>
+0312             <span class="comment">% test file has two variables w &amp; ww</span>
+0313             fileName = fullfile(obj.dataPath,<span class="string">'test_data'</span>,<span class="string">'v1.0_example_waveforms.mat'</span>);
+0314             assertEqual(exist(fileName,<span class="string">'file'</span>), 2, <span class="string">'test data for v1.0 does not exist'</span>);
+0315             dummy = load(fileName);
+0316             assertTrue(isa(dummy.w,<span class="string">'waveform'</span>), <span class="string">'converting single v1.0 waveform failed'</span>);
+0317             assertTrue(isa(dummy.ww,<span class="string">'waveform'</span>), <span class="string">'converting multiple v1.0 waveforms failed'</span>);
+0318             assertEqual(numel(dummy.ww),10);
+0319          <span class="keyword">end</span>
+0320          <a name="_sub19" href="#_subfunctions" class="code">function load_v1_1()</a>
+0321             fileName = fullfile(obj.dataPath,<span class="string">'test_data'</span>,<span class="string">'v1.1_example_waveforms.mat'</span>);
+0322             assertEqual(exist(fileName,<span class="string">'file'</span>),2,<span class="string">'test data for v1.1 does not exist'</span>);
+0323             dummy = load(fileName);
+0324             assertTrue(isa(dummy.w,<span class="string">'waveform'</span>), <span class="string">'converting multiple v1.1 waveform failed'</span>);
+0325             assertEqual(numel(dummy.w),100);
+0326          <span class="keyword">end</span>
+0327          <a name="_sub20" href="#_subfunctions" class="code">function load_v1_2()</a>
+0328             fileName = fullfile(obj.dataPath,<span class="string">'test_data'</span>,<span class="string">'v1.2_example_waveforms.mat'</span>);
+0329             assertEqual(exist(fileName,<span class="string">'file'</span>),2,<span class="string">'test data for v1.2 does not exist'</span>);
+0330             dummy = load(fileName);
+0331             assertTrue(isa(dummy.w,<span class="string">'waveform'</span>), <span class="string">'converting single v1.2 waveform failed'</span>);
+0332             assertTrue(isa(dummy.ww,<span class="string">'waveform'</span>), <span class="string">'converting multiple v1.2 waveforms failed'</span>);
+0333             assertEqual(numel(dummy.ww),2);
+0334          <span class="keyword">end</span>
+0335       <span class="keyword">end</span>
+0336       
+0337       <a name="_sub21" href="#_subfunctions" class="code">function testSave(obj)</a>
+0338          <span class="comment">% try saving and loading current version</span>
+0339          tmp_name = [tempname , <span class="string">'.mat'</span>];
+0340          
+0341          wtesttemp = obj.wf;
+0342          save(tmp_name,<span class="string">'wtesttemp'</span>)
+0343          
+0344          clear wtesttemp
+0345          dummy = load(tmp_name);
+0346          results.loadobj_current = true;
+0347          delete(tmp_name); <span class="comment">%clean up</span>
+0348       <span class="keyword">end</span>
+0349       
+0350       <a name="_sub22" href="#_subfunctions" class="code">function testTaper(obj)</a>
+0351          A = obj.wf;
+0352          <span class="comment">% Test Functions: ensure they don't error &amp; output size is correct</span>
+0353          assertEqual(double(taper(A)), double(taper(A,.2)));
+0354          assertEqual(double(taper(A,.2)), double(taper(A,.2,<span class="string">'cosine'</span>)));
+0355          assert(any(double(taper(A)) ~= double(taper(A,.5))));
+0356       <span class="keyword">end</span>
+0357       
+0358       <a name="_sub23" href="#_subfunctions" class="code">function testClip(obj)</a>
+0359          A = obj.wf;
+0360          Ad = obj.Dt;
+0361          
+0362          clippedAd = Ad(:);
+0363          clippedAd(Ad&gt;.3) = .3;
+0364          clippedAd(Ad&lt;-.2) = -.2;
+0365          assertEqual(double(clip(A,[-.2,.3])), clippedAd);
+0366       <span class="keyword">end</span>
+0367       
+0368       <a name="_sub24" href="#_subfunctions" class="code">function testStack(obj)</a>
+0369          A = obj.wf;
+0370          Ad = obj.Dt;
+0371          assertEqual(double(stack([A, A, A, A])), Ad(:) .* 4);
+0372       <span class="keyword">end</span>
+0373       
+0374       <span class="comment">%{</span>
+0375 <a name="_sub25" href="#_subfunctions" class="code">function testDisp(obj)</a>
+0376          
+0377          A = obj.wf;
+0378          <span class="comment">% try display functions</span>
+0379          <span class="keyword">try</span>
+0380             disp(A); disp([A A]); disp([A A; A A; A A]);
+0381             results.disp = true;
+0382          <span class="keyword">catch</span> exception
+0383             results.disp = false;
+0384             disp(exception);
+0385          <span class="keyword">end</span>
+0386          <span class="keyword">try</span>
+0387             display(A); display([A A]); display([A A; A A; A A]);
+0388             results.display = true;
+0389          <span class="keyword">catch</span> exception
+0390             results.display = false;
+0391             disp(exception)
+0392          <span class="keyword">end</span>
+0393       <span class="keyword">end</span>
+0394       <span class="comment">%}</span>
+0395       
+0396       <a name="_sub26" href="#_subfunctions" class="code">function testCorrelationCookbook(obj)</a>
+0397          <span class="comment">% probably doesn't belong in this class</span>
+0398          <span class="comment">%% try the correlation cookbook</span>
+0399          <span class="comment">% assumes we are in GISMO/contributed/test_scripts/waveform and that</span>
+0400          <span class="comment">% correlation_cookbook is in GISMO/contributed/correlation_cookbook/</span>
+0401          disp(<span class="string">'skipping testCorrelationCookbook'</span>)
+0402          <span class="keyword">return</span>
+0403          ppp = pwd;
+0404          [dataPathCorrelation,~,~] = fileparts(which(<span class="string">'correlation'</span>));
+0405          cd(dataPathCorrelation)
+0406          <span class="keyword">if</span> exist(<span class="string">'correlation_cookbook.m'</span>,<span class="string">'file'</span>)
+0407             results.correlation_cookbook = true;
+0408             oldchildren = get(0,<span class="string">'children'</span>);
+0409             correlation_cookbook;
+0410             newchildren = get(0,<span class="string">'children'</span>);
+0411             todelete = newchildren(~ismember(newchildren,oldchildren));
+0412             delete(todelete); <span class="comment">%clean up after it.</span>
+0413          <span class="keyword">end</span>
+0414          cd(ppp);
+0415          
+0416          <span class="comment">% stress test</span>
+0417          w = get(c,<span class="string">'waveform'</span>); <span class="comment">%c is from the correlation_cookbook.</span>
+0418          w = repmat(w,20,2);
+0419          dummy = w .* 3;
+0420          todiv = rand(size(w));
+0421          <span class="keyword">try</span>
+0422             w ./ todiv;
+0423          <span class="keyword">catch</span>
+0424             <span class="keyword">for</span> z=1:numel(w);
+0425                dummy(z) = w(z) ./ todiv(z);
+0426             <span class="keyword">end</span>
+0427          <span class="keyword">end</span>
+0428          w + 2;
+0429          hilbert(w);
+0430       <span class="keyword">end</span>
+0431    <span class="keyword">end</span>
+0432 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

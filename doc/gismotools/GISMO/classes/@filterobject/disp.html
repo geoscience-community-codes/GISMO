@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of disp</title>
+  <meta name="keywords" content="disp">
+  <meta name="description" content="DISP - Filterobject disp overloaded operator">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@filterobject</a> &gt; disp.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@filterobject&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>disp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>DISP - Filterobject disp overloaded operator</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function disp(f) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> DISP - Filterobject disp overloaded operator</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="display.html" class="code" title="function display(f)">display</a>	DISPLAY - Filterobject display overloaded operator</li><li><a href="filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>	FILTEROBJECT constructor for a filter object</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function disp(f)</a>
+0002 <span class="comment">% DISP - Filterobject disp overloaded operator</span>
+0003 
+0004 <span class="comment">% VERSION: 1.0 of filter objects</span>
+0005 <span class="comment">% AUTHOR: Celso Reyes</span>
+0006 <span class="comment">% LASTUPDATE: 1/30/2007</span>
+0007 
+0008 <span class="keyword">if</span> numel(f) &gt; 1;
+0009     <a href="disp.html" class="code" title="function disp(f)">disp</a>(<span class="string">' '</span>);
+0010     DispStr = sprintf(<span class="string">'%d'</span>,size(f,1));
+0011     <span class="keyword">for</span> n = 2 : numel(size(f))
+0012         DispStr = sprintf(<span class="string">'%sx%d'</span>, DispStr, size(f,n));
+0013     <span class="keyword">end</span>
+0014     <a href="disp.html" class="code" title="function disp(f)">disp</a>(sprintf(<span class="string">'%s %s object with fields:'</span>, DispStr, class(f)));
+0015     <a href="disp.html" class="code" title="function disp(f)">disp</a>(<span class="string">'    type'</span>);
+0016     <a href="disp.html" class="code" title="function disp(f)">disp</a>(<span class="string">'    cutoff'</span>);
+0017     <a href="disp.html" class="code" title="function disp(f)">disp</a>(<span class="string">'    poles'</span>);
+0018 <span class="keyword">else</span>
+0019     <span class="keyword">switch</span> f.type
+0020         <span class="keyword">case</span> <span class="string">'B'</span>
+0021             typename = <span class="string">'Bandpass'</span>;
+0022         <span class="keyword">case</span> <span class="string">'L'</span>
+0023             typename = <span class="string">'Low-pass'</span>;
+0024         <span class="keyword">case</span> <span class="string">'H'</span>
+0025             typename = <span class="string">'High-pass'</span>;
+0026     <span class="keyword">end</span>;
+0027     <a href="disp.html" class="code" title="function disp(f)">disp</a>([<span class="string">'      type: '</span> f.type <span class="string">' ('</span> typename <span class="string">')'</span>]);
+0028     <a href="disp.html" class="code" title="function disp(f)">disp</a>([<span class="string">'    cutoff: '</span> num2str(f.cutoff) <span class="string">' Hz'</span>]);
+0029     <a href="disp.html" class="code" title="function disp(f)">disp</a>([<span class="string">'     poles: '</span> num2str(f.poles)]);
+0030 <span class="keyword">end</span>;</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

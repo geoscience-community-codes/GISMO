@@ -1,0 +1,691 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of eventrate</title>
+  <meta name="keywords" content="eventrate">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">eventrate_old</a> &gt; eventrate.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/eventrate_old&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>eventrate
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="eventrate.html" class="code" title="">eventrate</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="eventrate.html" class="code" title="">eventrate</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function Obj = eventrate(varargin)</a></li><li><a href="#_sub2" class="code">function Obj = catalog2eventrate(Obj, catalogObj, binsize, varargin)</a></li><li><a href="#_sub3" class="code">function plot(Obj, varargin)</a></li><li><a href="#_sub4" class="code">function Obj = importswarmdb(Obj, dbname, auth, snum, enum)</a></li><li><a href="#_sub5" class="code">function erobj = addfield(erobj,fieldname,value)</a></li><li><a href="#_sub6" class="code">function erobj = set(erobj, varargin)</a></li><li><a href="#_sub7" class="code">function val = get(erobj,prop_name)</a></li><li><a href="#_sub8" class="code">function Obj = process_etype(Obj, catalogObj, j, binsize, stepsize, thisetype)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="eventrate.html" class="code" title="">eventrate</a>
+0002 <span class="comment">%</span>
+0003 <span class="comment">% EVENTRATE Event Rate class constructor.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%    EVENTRATE is a class that has been developed around plotting earthquake</span>
+0006 <span class="comment">%    counts - i.e. the rate of events per unit time. It has evolved to compute</span>
+0007 <span class="comment">%    other metrics such the hourly mean event rate, median event rate, mean</span>
+0008 <span class="comment">%    magnitude and cumulative magnitude, which are important metrics for an AVO</span>
+0009 <span class="comment">%    swarm tracking system.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    EVENTRATE can import information from:</span>
+0012 <span class="comment">%    (1) a CATALOG object.</span>
+0013 <span class="comment">%    (2) a Datascope database written in the &quot;swarms1.0&quot; schema, defined at AVO.</span>
+0014 <span class="comment">%        This is the format used by the swarm tracking system.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    ER = EVENTRATE() creates an empty eventrate object.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%    ER = EVENTRATE(CATALOG_OBJECT, BINSIZE) creates an eventrate object</span>
+0019 <span class="comment">%    from a CATALOG object using non-overlapping bins of BINSIZE days.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%    ER = EVENTRATE(CATALOG_OBJECT, BINSIZE, 'stepsize', STEPSIZE) creates an eventrate object</span>
+0022 <span class="comment">%    using overlapping bins. If omitted STEPSIZE==BINSIZE.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%%   EXAMPLES:</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%       First create a catalog object from the demo database:</span>
+0027 <span class="comment">%           dirname = fileparts(which('catalog')); % get the path to the catalog directory</span>
+0028 <span class="comment">%           dbroot = [dirname,'/demo/avodb200903'];</span>
+0029 <span class="comment">%           cobj = catalog(dbroot, 'antelope', 'snum', datenum(2009,3,20), 'enum', datenum(2009,3,23), 'region','Redoubt');</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%       (1) Create an eventrate object using a binsize of 1 day:</span>
+0032 <span class="comment">%           erobj = eventrate(cobj, 1);</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%       (2) Create an eventrate object using a binsize of 1 hour:</span>
+0035 <span class="comment">%           erobj = eventrate(cobj, 1/24);</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%       (3) Create an eventrate object using a binsize of 1 hour but a stepsize of 5 minutes:</span>
+0038 <span class="comment">%           erobj = eventrate(cobj, 1/24, 'stepsize', 5/1440);</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%</span>
+0041 <span class="comment">%%   PROPERTIES</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">%    For a list of all properties type properties(eventrate)</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">%    dnum                % (array) time of the center of each bin as a DATENUM</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">%    METRICS:</span>
+0048 <span class="comment">%    counts              % (array) number of events in each bin</span>
+0049 <span class="comment">%    mean_rate           % (array) number of events per hour in each bin</span>
+0050 <span class="comment">%    median_rate         % (array) reciprocal of the median time interval between events. Represented as an hourly rate.</span>
+0051 <span class="comment">%    cum_mag             % (array) total sum of energy in each bin, represented as a magnitude.</span>
+0052 <span class="comment">%    mean_mag             % (array)</span>
+0053 <span class="comment">%    median_mag          % (array)</span>
+0054 <span class="comment">%    detection_threshold % (array) smallest magnitude in each bin</span>
+0055 <span class="comment">%</span>
+0056 <span class="comment">%    SUMMARY DATA:</span>
+0057 <span class="comment">%    numbins             % (scalar)</span>
+0058 <span class="comment">%    total_counts        % (scalar) sum of counts</span>
+0059 <span class="comment">%    total_mag           % (scalar) total sum of energy of all catalogObjs, represented as a magnitude</span>
+0060 <span class="comment">%</span>
+0061 <span class="comment">%    METADATA:</span>
+0062 <span class="comment">%    etype               % event type/classification.</span>
+0063 <span class="comment">%    snum                % (scalar) start date/time in DATENUM format</span>
+0064 <span class="comment">%    enum                % (scalar) end date/time in DATENUM format</span>
+0065 <span class="comment">%    binsize             % (scalar) bin size in days</span>
+0066 <span class="comment">%    stepsize            % (scalar) step size in days</span>
+0067 <span class="comment">%    region              % (4-element vector) [minlon maxlon minlat maxlat]</span>
+0068 <span class="comment">%    minmag              % (scalar) magnitudes smaller than this were eliminated</span>
+0069 <span class="comment">%    dbroot              % path to the original data on disk</span>
+0070 <span class="comment">%    archiveformat       % indicates if the source is a flat file, or</span>
+0071 <span class="comment">%                          'daily' or 'monthly' volumes</span>
+0072 <span class="comment">%    auth                % auth of the events</span>
+0073 <span class="comment">%</span>
+0074 <span class="comment">%%   METHODS</span>
+0075 <span class="comment">%</span>
+0076 <span class="comment">%    For a list of all methods type methods(eventrate)</span>
+0077 <span class="comment">%</span>
+0078 <span class="comment">%    plot(er) or plot(er, 'metric', 'counts')    - event rate versus time</span>
+0079 <span class="comment">%    plot(er, 'metric', 'mean_rate')             - hourly mean event rate versus time</span>
+0080 <span class="comment">%    plot(er, 'metric', 'median_rate')           - hourly median event rate versus time</span>
+0081 <span class="comment">%    plot(er, 'metric', 'mean_mag')              - hourly mean magnitude versus time</span>
+0082 <span class="comment">%    plot(er, 'metric', 'cum_mag')               - hourly cumulative magnitude versus time</span>
+0083 <span class="comment">%    plot(er, 'metric', {'counts';'mean_rate';'cum_mag'}) - would make plots for all those metrics</span>
+0084 <span class="comment">%                                mentioned in the cell array.</span>
+0085 <span class="comment">%    importfromswarmdb                           - construct an eventrate object from a swarm metrics</span>
+0086 <span class="comment">%                                                   database, as written by the real-time swarm</span>
+0087 <span class="comment">%                                                   tracking module &quot;dbdetectswarm&quot;.</span>
+0088 <span class="comment">%    set(erobj, 'property_name', value) - set property_name to value</span>
+0089 <span class="comment">%    get(erobj, 'property_name') - get value designated to property_name</span>
+0090 <span class="comment">%    addfield(erobj, 'fieldname', value) - add a field called fieldname</span>
+0091 <span class="comment">%</span>
+0092 <span class="comment">%%   See also CATALOG</span>
+0093 <span class="comment">%</span>
+0094 <span class="comment">%% AUTHOR: Glenn Thompson</span>
+0095 
+0096 <span class="comment">% $Date$</span>
+0097 <span class="comment">% $Revision$</span>
+0098 
+0099 <span class="comment">%% PROPERTIES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0100 
+0101     properties (SetAccess=private)
+0102         counts = [];         <span class="comment">% (array) number of events in each bin</span>
+0103         mean_rate = [];      <span class="comment">% (array) number of events per hour in each bin</span>
+0104         median_rate = [];    <span class="comment">% (array) reciprocal of the median time interval between events. Represented as an hourly rate.</span>
+0105         cum_mag = [];        <span class="comment">% (array) total sum of energy in each bin, represented as a magnitude.</span>
+0106         mean_mag = [];        <span class="comment">% (array)</span>
+0107         median_mag = [];     <span class="comment">% (array)</span>
+0108         total_counts = [];   <span class="comment">% (scalar) sum of counts</span>
+0109         total_mag = [];      <span class="comment">% (scalar) total sum of energy of all catalogObjs, represented as a magnitude</span>
+0110         dnum = [];           <span class="comment">% (array)</span>
+0111         numbins = [];        <span class="comment">% (scalar)</span>
+0112         detection_threshold = [];
+0113         etype = <span class="string">'*'</span>;
+0114         snum = 0;
+0115         enum = now;
+0116         binsize = 1;
+0117         stepsize = 1;
+0118 
+0119         misc_fields = {};
+0120         misc_values = {};
+0121     <span class="keyword">end</span>
+0122     
+0123  <span class="comment">%% PUBLIC METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0124    
+0125     methods
+0126         
+0127         <span class="comment">%------------------------------------------------------------------</span>
+0128         <span class="comment">%% CONSTRUCTOR</span>
+0129         <a name="_sub0" href="#_subfunctions" class="code">function Obj = eventrate(varargin)          </a>
+0130             <span class="keyword">if</span> nargin==0
+0131                 disp(<span class="string">'Creating null eventrate object'</span>);
+0132                 <span class="keyword">return</span>;
+0133             <span class="keyword">end</span>
+0134         
+0135             <span class="keyword">switch</span> class(varargin{1})
+0136                 <span class="keyword">case</span> <span class="string">'catalog'</span>, Obj = Obj.catalog2eventrate(varargin{:});
+0137                 <span class="keyword">case</span> <span class="string">'string'</span>, Obj = Obj.importswarmdb(dbname, auth, snum, enum);
+0138                 <span class="comment">%otherwise, disp('Unknown first argument to constructor');</span>
+0139             <span class="keyword">end</span>
+0140         <span class="keyword">end</span> 
+0141         
+0142         <a name="_sub1" href="#_subfunctions" class="code">function Obj = catalog2eventrate(Obj, catalogObj, binsize, varargin)</a>
+0143            [stepsize, etypes] = matlab_extensions.process_options(varargin, <span class="string">'stepsize'</span>, binsize, <span class="string">'etypes'</span>, {<span class="string">'*'</span>});       
+0144            <span class="keyword">if</span> (stepsize &gt; binsize)
+0145               disp(sprintf(<span class="string">'Invalid value for stepsize (%f). Cannot be greater than binsize (%f).'</span>,stepsize, binsize));
+0146               <span class="keyword">return</span>;
+0147            <span class="keyword">end</span>
+0148         
+0149            <span class="keyword">for</span> c=1:length(catalogObj)
+0150 
+0151                 <span class="comment">% Check for silliness</span>
+0152                 <span class="keyword">if</span> isempty(catalogObj(c).dnum)
+0153                     disp(<span class="string">'catalogObj structure contains no data'</span>);
+0154                     <span class="keyword">return</span>;
+0155                 <span class="keyword">else</span>
+0156                     numetypes = length(etypes); 
+0157                     <span class="keyword">for</span> i=1:numetypes
+0158                         <span class="keyword">if</span> strcmp(etypes(i),<span class="string">'*'</span>)
+0159                             j = 1:length(catalogObj(c).dnum);
+0160                         <span class="keyword">else</span>
+0161                             j=find(ismember(catalogObj(c).etype, etypes(i))==1);
+0162                         <span class="keyword">end</span>
+0163                         <span class="comment">%Obj(c,i) = eventrate();</span>
+0164                         Obj(c,i) = <a href="#_sub8" class="code" title="subfunction Obj = process_etype(Obj, catalogObj, j, binsize, stepsize, thisetype)">process_etype</a>(Obj(c,i), catalogObj(c), j, binsize, stepsize, etypes(i));
+0165                         Obj(c,i).mean_rate = Obj(c,i).counts / (24 * binsize);
+0166                         Obj(c,i) = Obj(c,i).addfield(<span class="string">'dbroot'</span>,catalogObj(c).dbroot);
+0167                         Obj(c,i) = Obj(c,i).addfield(<span class="string">'archiveformat'</span>,catalogObj(c).archiveformat);
+0168                         Obj(c,i) = Obj(c,i).addfield(<span class="string">'auth'</span>,unique(catalogObj(c).auth));
+0169                     <span class="keyword">end</span> <span class="comment">% for</span>
+0170                 <span class="keyword">end</span> <span class="comment">% if</span>
+0171             <span class="keyword">end</span> <span class="comment">% for</span>
+0172         <span class="keyword">end</span> <span class="comment">% function</span>
+0173 
+0174         <span class="comment">%------------------------------------------------------------------</span>
+0175         
+0176  
+0177         <span class="comment">%% PLOT</span>
+0178         <a name="_sub2" href="#_subfunctions" class="code">function plot(Obj, varargin) </a>
+0179         <span class="comment">% EVENTRATE/PLOT</span>
+0180         <span class="comment">%   Plot metrics of an EVENTRATE object</span>
+0181         <span class="comment">%   plot(eventrate_object [, 'metric', CellArrayofMetrics ]);</span>
+0182         <span class="comment">%</span>
+0183         <span class="comment">%   By default, the 'metric' parameter is set to {'counts'}, and so only a counts plot is produced</span>
+0184         <span class="comment">%   This can be overridden, e.g.</span>
+0185         <span class="comment">%       plot(eventrate_object, 'metric', {'energy'}) will plot 1 subplot per figure of energy vs. date/time</span>
+0186         <span class="comment">%       plot(eventrate_object, 'metric', {'mean_rate';'median_rate'}) will plot 2 subplots per figure</span>
+0187         <span class="comment">%</span>
+0188         <span class="comment">%   The full range of possible metrics is:</span>
+0189         <span class="comment">%       counts, cum_mag, mean_mag, median_mag, mean_rate, median_rate, detection_threshold, energy</span>
+0190         <span class="comment">%</span>
+0191         <span class="comment">%   If eventrate_object is an array of eventrate structures (e.g. one per etype), each is plotted on a separate figure</span>
+0192 
+0193         [metric] = matlab_extensions.process_options(varargin, <span class="string">'metric'</span>, {<span class="string">'counts'</span>});
+0194         <span class="keyword">if</span> ~iscell(metric)
+0195             metric = {metric};
+0196         <span class="keyword">end</span>
+0197 
+0198         <span class="keyword">for</span> c = 1 : numel(Obj)
+0199             numsubplots = length(metric);
+0200             figure(gcf+1);
+0201 
+0202             <span class="keyword">for</span> cc = 1: numsubplots
+0203                 <span class="keyword">if</span> strcmp(metric{cc},<span class="string">'energy'</span>)
+0204                     data = cumsum(magnitude.mag2eng(Obj(c).cum_mag));
+0205                 <span class="keyword">else</span>
+0206                     <span class="comment">% eval(  sprintf('data = Obj(c).%s;',metric{cc} ) );</span>
+0207                     data = Obj(c).(metric{cc});
+0208                 <span class="keyword">end</span>
+0209                 subplot(numsubplots,1,cc), bar( Obj(c).dnum, data );
+0210                 datetick(<span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+0211                 ymax = nanmax(matlab_extensions.catmatrices(1, data));
+0212                 <a href="#_sub6" class="code" title="subfunction erobj = set(erobj, varargin)">set</a>(gca, <span class="string">'YLim'</span>, [0 ymax]);
+0213                 ylabel(metric{cc});
+0214             <span class="keyword">end</span>
+0215             suptitle(Obj(c).etype);
+0216         <span class="keyword">end</span>
+0217         <span class="keyword">end</span> <span class="comment">% function</span>
+0218         
+0219         <span class="comment">%------------------------------------------------------------------</span>
+0220         <span class="comment">%% IMPORTSWARMDB</span>
+0221         <a name="_sub3" href="#_subfunctions" class="code">function Obj = importswarmdb(Obj, dbname, auth, snum, enum)</a>
+0222         <span class="comment">% IMPORTSWARMDB</span>
+0223         <span class="comment">% Load a swarm database metrics table into an EVENTRATE object</span>
+0224         <span class="comment">% eventrate = importswarmdb(eventrateObj, dbname, auth, snum, enum);</span>
+0225         <span class="comment">%</span>
+0226         <span class="comment">% INPUT:</span>
+0227         <span class="comment">%    dbname        the path of the database (must have a 'metrics' table)</span>
+0228         <span class="comment">%    auth        name of the grid to load swarm tracking metrics for</span>
+0229         <span class="comment">%    snum,enum    start and end datenumbers (Matlab time format, see 'help datenum')</span>
+0230         <span class="comment">%</span>
+0231         <span class="comment">% OUTPUT:</span>
+0232         <span class="comment">%    Obj        an eventrate object</span>
+0233         <span class="comment">%</span>
+0234         <span class="comment">% Example:</span>
+0235         <span class="comment">%    erobj = importswarmdb('/avort/devrun/dbswarm/swarm_metadata', 'RD_lo', datenum(2010, 7, 1), datenum(2010, 7, 14) );</span>
+0236         
+0237         <span class="comment">% Glenn Thompson, 20100714</span>
+0238 
+0239         <span class="comment">% initialize</span>
+0240         Obj.dbroot = dbname;
+0241         Obj.snum = snum;
+0242         Obj.enum = enum;
+0243         Obj.auth = auth;
+0244 
+0245         <span class="comment">% check that database exists</span>
+0246         dbtablename = sprintf(<span class="string">'%s.metrics'</span>,dbname);
+0247         <span class="keyword">if</span> exist(dbtablename,<span class="string">'file'</span>)
+0248             <span class="comment">% load the data</span>
+0249             <span class="keyword">try</span>
+0250                 db = dbopen(dbname, <span class="string">'r'</span>);
+0251             <span class="keyword">catch</span> me
+0252                 fprintf(<span class="string">'Error: Could not open %s for reading'</span>,dbname);
+0253                     <span class="keyword">return</span>;
+0254             <span class="keyword">end</span>
+0255             db = dblookup_table(db, <span class="string">'metrics'</span>);
+0256             <span class="keyword">if</span> (dbquery(db, <span class="string">'dbRECORD_COUNT'</span>)==0)
+0257                 fprintf(<span class="string">'Error: Could not open %s for reading'</span>,dbtablename);
+0258                 <span class="keyword">return</span>;
+0259             <span class="keyword">end</span>
+0260             db = dbsubset(db, sprintf(<span class="string">'auth ~= /.*%s.*/'</span>,auth));
+0261             numrows = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0262             debug.print_debug(2,<span class="string">'Got %d rows after auth subset'</span>,numrows);
+0263             sepoch = datenum2epoch(snum);
+0264             eepoch = datenum2epoch(enum);
+0265             db = dbsubset(db, sprintf(<span class="string">'timewindow_starttime &gt;= %f &amp;&amp; timewindow_endtime &lt;= %f'</span>,sepoch,eepoch));
+0266             numrows = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0267             debug.print_debug(2,<span class="string">'Got %d rows after time subset'</span>,numrows);
+0268 
+0269             <span class="keyword">if</span> numrows &gt; 0
+0270                 <span class="comment">% Note that metrics are only saved when mean_rate &gt;= 1.</span>
+0271                 <span class="comment">% Therefore there will be lots of mean_rate==0 timewindows not in</span>
+0272                 <span class="comment">% database.</span>
+0273                 [tempsepoch, tempeepoch, mean_rate, median_rate, mean_mag, cum_mag] = dbgetv(db,<span class="string">'timewindow_starttime'</span>, <span class="string">'timewindow_endtime'</span>, <span class="string">'mean_rate'</span>, <span class="string">'median_rate'</span>, <span class="string">'mean_ml'</span>, <span class="string">'cum_ml'</span>);
+0274                 Obj.binsize = (tempeepoch(1) - tempsepoch(1))/86400;
+0275                 Obj.stepsize = min(tempsepoch(2:end) - tempsepoch(1:end-1))/86400;
+0276                 Obj.dnum = snum+Obj.stepsize:Obj.stepsize:enum;
+0277                 Obj.numbins = length(Obj.dnum);
+0278                 Obj.mean_rate = zeros(Obj.numbins, 1);
+0279                 Obj.counts = zeros(Obj.numbins, 1);
+0280                 Obj.median_rate = zeros(Obj.numbins, 1);
+0281                 Obj.mean_mag = zeros(Obj.numbins, 1);
+0282                 Obj.cum_mag = zeros(Obj.numbins, 1);
+0283                 <span class="keyword">for</span> c=1:length(tempeepoch)
+0284                     tempenum = epoch2datenum(tempeepoch(c));
+0285                     i = find(Obj.dnum == tempenum);
+0286                     Obj.mean_rate(i) = mean_rate(c);
+0287                     Obj.counts(i) = mean_rate(c) * (Obj.binsize * 24);
+0288                     Obj.median_rate(i) = median_rate(c); 
+0289                     Obj.mean_mag(i) = mean_mag(c);
+0290                     Obj.cum_mag(i) = cum_mag(c);
+0291                 <span class="keyword">end</span>
+0292             <span class="keyword">end</span>
+0293             dbclose(db);
+0294 
+0295 
+0296         <span class="keyword">else</span>
+0297             <span class="comment">% error - table does not exist</span>
+0298             fprintf(<span class="string">'Error: %s does not exist'</span>,dbtablename);
+0299             <span class="keyword">return</span>;
+0300         <span class="keyword">end</span>
+0301         
+0302         Obj.total_counts = sum(Obj.counts)*Obj.stepsize/Obj.binsize;
+0303         
+0304         <span class="keyword">end</span> <span class="comment">% function</span>
+0305     
+0306         <span class="comment">%------------------------------------------------------------------</span>
+0307         <span class="comment">%% ADDFIELD</span>
+0308         <a name="_sub4" href="#_subfunctions" class="code">function erobj = addfield(erobj,fieldname,value)</a>
+0309             <span class="comment">%ADDFIELD add fields and values to EVENTRATE object(s)</span>
+0310             <span class="comment">%   erobj = addfield(erobj, fieldname, value)</span>
+0311             <span class="comment">%   This function creates a new user defined field, and fills it with the</span>
+0312             <span class="comment">%   included value.  If fieldname exists, it will overwrite the existing</span>
+0313             <span class="comment">%   value.</span>
+0314             <span class="comment">%</span>
+0315             <span class="comment">%   Input Arguments</span>
+0316             <span class="comment">%       EROBJ: an EVENTRATE object   N-DIMENSIONAL</span>
+0317             <span class="comment">%       FIELDNAME: a string name</span>
+0318             <span class="comment">%       VALUE: a value to be added for those fields.  Value can be anything</span>
+0319             <span class="comment">%</span>
+0320             <span class="comment">%   EVENTRATE objects can hold user-defined fields.  To access the contents,</span>
+0321             <span class="comment">%   use EVENTRATE/GET.</span>
+0322             <span class="comment">%</span>
+0323             <span class="comment">%   Example:</span>
+0324             <span class="comment">%       erobj = eventrate(); % start with a blank eventrate</span>
+0325             <span class="comment">%       totaleng = sum(mag2eng(erobj)); % create a total energy variable</span>
+0326             <span class="comment">%       erobj = addfield(erobj, 'totaleng', totaleng);</span>
+0327             <span class="comment">%</span>
+0328             <span class="comment">% See also EVENTRATE/SET, EVENTRATE/GET, WAVEFORM/ADDFIELD</span>
+0329 
+0330             <span class="comment">% AUTHOR: Glenn Thompson, based entirely on WAVEFORM/ADDFIELD by</span>
+0331             <span class="comment">% Celso Reyes</span>
+0332             <span class="comment">% $Date$</span>
+0333             <span class="comment">% $Revision$</span>
+0334 
+0335             <span class="keyword">if</span> isa(fieldname,<span class="string">'char'</span>)
+0336                 fieldname = {upper(fieldname)}; <span class="comment">%convert to cell</span>
+0337             <span class="keyword">else</span>
+0338                 error(<span class="string">'EVENTRATE:addfield:invalidFieldname'</span>,<span class="string">'fieldname must be a string'</span>)
+0339             <span class="keyword">end</span>
+0340 
+0341             actualfields = upper(fieldnames(<a href="eventrate.html" class="code" title="">eventrate</a>(1))); <span class="comment">%get the object's intrinsic fieldnames</span>
+0342 
+0343             <span class="keyword">if</span> ismember(fieldname,actualfields)
+0344                 erobj = <a href="#_sub6" class="code" title="subfunction erobj = set(erobj, varargin)">set</a>(erobj, fieldname{1}, value); <span class="comment">%set the value of the actual field</span>
+0345                 warning(<span class="string">'EVENTRATE:addfield:fieldExists'</span>,<span class="keyword">...</span>
+0346                     <span class="string">'Attempted to add intrinsic field.\nNo field added, but Values changed anyway'</span>);
+0347                 <span class="keyword">return</span>
+0348             <span class="keyword">end</span>
+0349 
+0350             <span class="comment">% Fieldname isn't one that is intrinsic to the catalog object</span>
+0351 
+0352             <span class="keyword">for</span> n=1:numel(erobj)                
+0353                 miscF = erobj(n).misc_fields;   <span class="comment">% grab the misc_fields (cell of fieldnames)</span>
+0354   
+0355                 <span class="keyword">if</span> ~any(strcmp(fieldname,miscF)) <span class="comment">% if the field doesn't already exist...</span>
+0356                     erobj(n).misc_fields = [miscF, fieldname]; <span class="comment">%add the fieldname to the list</span>
+0357                 <span class="keyword">end</span>
+0358                 erobj(n) = <a href="#_sub6" class="code" title="subfunction erobj = set(erobj, varargin)">set</a>(erobj(n), fieldname{1},value);
+0359             <span class="keyword">end</span>
+0360         <span class="keyword">end</span>
+0361     
+0362         <span class="comment">%------------------------------------------------------------------</span>
+0363         <span class="comment">%% SET</span>
+0364         <a name="_sub5" href="#_subfunctions" class="code">function erobj = set(erobj, varargin)</a>
+0365         <span class="comment">%SET Set properties for eventrate object(s)</span>
+0366         <span class="comment">%   erobj = set(erobj,'property_name', val, ['property_name2', val2])</span>
+0367         <span class="comment">%   SET is one of the two gateway functions of an object, such as EVENTRATE.</span>
+0368         <span class="comment">%   Properties that are changed through SET are typechecked and otherwise</span>
+0369         <span class="comment">%   scrutinized before being stored within the EVENTRATE object.  This</span>
+0370         <span class="comment">%   ensures that the other waveform methods are all retrieving valid data,</span>
+0371         <span class="comment">%   thereby increasing the reliability of the code.</span>
+0372         <span class="comment">%</span>
+0373         <span class="comment">%   Another strong advantage to using SET and GET to change  and retrieve</span>
+0374         <span class="comment">%   properties, rather than just assigning them to catalog object directly,</span>
+0375         <span class="comment">%   is that the underlying data structure can change and grow without</span>
+0376         <span class="comment">%   harming the code that is written based on the catalog object.</span>
+0377         <span class="comment">%</span>
+0378         <span class="comment">%   Valid property names:</span>
+0379         <span class="comment">%        'snum', 'enum'</span>
+0380         <span class="comment">%</span>
+0381         <span class="comment">%       If user-defined fields were added to the catalog object (ie, through</span>
+0382         <span class="comment">%       addField), these fieldnames are also available through set.</span>
+0383         <span class="comment">%</span>
+0384         <span class="comment">%       Example:</span>
+0385         <span class="comment">%           % create an eventrate object, and add a field called TOTAL_ENERGY</span>
+0386         <span class="comment">%           erobj = eventrate();</span>
+0387         <span class="comment">%           addfield(erobj,'TOTAL_ENERGY',1.67e9);</span>
+0388         <span class="comment">%</span>
+0389         <span class="comment">%           % change the value of the TOTAL_ENERGY field to 1.73e10</span>
+0390         <span class="comment">%           erobj = set(erobj,'TOTAL_ENERGY',1.73e10);</span>
+0391         <span class="comment">%</span>
+0392         <span class="comment">%</span>
+0393         <span class="comment">%   Batch changes can be made if input cobj is a matrix (use with care!)</span>
+0394         <span class="comment">%</span>
+0395         <span class="comment">%  See also EVENTRATE/GET, WAVEFORM/SET</span>
+0396 
+0397         <span class="comment">% AUTHOR: Glenn Thompson</span>
+0398         <span class="comment">% LASTUPDATE: September 26, 2011</span>
+0399 
+0400         Vidx = 1 : numel(varargin);
+0401 
+0402         <span class="keyword">while</span> numel(Vidx) &gt;= 2
+0403             prop_name = upper(varargin{Vidx(1)});
+0404             val = varargin{Vidx(2)};
+0405   
+0406             <span class="keyword">switch</span> prop_name
+0407             
+0408                 <span class="comment">% SNUM - results in data being filtered</span>
+0409                 <span class="keyword">case</span> <span class="string">'SNUM'</span>,
+0410                 <span class="keyword">if</span> isa(val,<span class="string">'double'</span>)
+0411                     <span class="keyword">if</span> (val&gt;=erobj.snum &amp; val&lt;erobj.enum)
+0412                         [erobj.snum] = deal(val);
+0413                         <span class="comment">% erobj = filterdata(erobj, 'snum', erobj.snum);</span>
+0414                     <span class="keyword">else</span>
+0415                         error(<span class="string">'EVENTRATE:set:propertyTypeMismatch'</span>,<span class="string">'Expected a DOUBLE from %f to %f'</span>,erobj.snum,erobj.enum);
+0416                     <span class="keyword">end</span>
+0417                 <span class="keyword">end</span>       
+0418             
+0419             
+0420                 <span class="comment">% ENUM - results in data being filtered</span>
+0421                 <span class="keyword">case</span> <span class="string">'ENUM'</span>,
+0422                 <span class="keyword">if</span> isa(val,<span class="string">'double'</span>)
+0423                     <span class="keyword">if</span> (val&gt;erobj.snum &amp; val&lt;=erobj.enum)
+0424                         [erobj.enum] = deal(val);
+0425                         <span class="comment">% erobj = filterdata(erobj, 'enum', erobj.enum);</span>
+0426                     <span class="keyword">else</span>
+0427                         error(<span class="string">'EVENTRATE:set:propertyTypeMismatch'</span>,<span class="string">'Expected a DOUBLE from %f to %f'</span>,erobj.snum,erobj.enum);
+0428                     <span class="keyword">end</span>
+0429                 <span class="keyword">end</span>    
+0430             
+0431                 <span class="comment">% DNUM</span>
+0432                 <span class="keyword">case</span> <span class="string">'DNUM'</span>
+0433                 <span class="keyword">if</span> isa(val,<span class="string">'double'</span>)
+0434                     [erobj.dnum] = deal(val);
+0435                     <span class="keyword">if</span> (val(1) &lt; erobj.snum || val(end) &gt; erobj.enum)
+0436                         <span class="comment">% Expand data vector too</span>
+0437                         disp(<span class="string">'Could expand vectors here as in mergecounts/er_expand'</span>)
+0438                     <span class="keyword">end</span>
+0439                      <span class="comment">% Here would be good to have a method that also changes the data vectors if dnum range is being contracted</span>
+0440                     [erobj.snum] = deal(val(1));
+0441                     [erobj.enum] = deal(val(end));
+0442                 <span class="keyword">end</span>  
+0443   
+0444                 <span class="comment">% COUNTS</span>
+0445                 <span class="keyword">case</span> <span class="string">'COUNTS'</span>
+0446                 <span class="keyword">if</span> isa(val,<span class="string">'double'</span>)
+0447                     <span class="keyword">if</span> (size(val)==size(erobj.dnum))
+0448                         [erobj.counts] = deal(val);
+0449                     <span class="keyword">else</span>
+0450                         error(<span class="string">'EVENTRATE:set:COUNTS'</span>,<span class="string">'counts must be the same size as dnum'</span>);
+0451                     <span class="keyword">end</span>
+0452                 <span class="keyword">else</span>
+0453                         error(<span class="string">'EVENTRATE:set:propertyTypeMismatch'</span>,<span class="string">'Expected a DOUBLE'</span>);
+0454         
+0455                 <span class="keyword">end</span> 
+0456                 
+0457                 <span class="comment">% ETYPE</span>
+0458                 <span class="keyword">case</span> <span class="string">'ETYPE'</span>
+0459                 <span class="keyword">if</span> isa(val,<span class="string">'char'</span>)
+0460                     erobj.etype = val;
+0461                 <span class="keyword">end</span> 
+0462                 
+0463                 <span class="keyword">otherwise</span>
+0464                     <span class="keyword">for</span> n=1:numel(erobj)
+0465                         <span class="keyword">switch</span> prop_name
+0466                             <span class="keyword">case</span> erobj(n).misc_fields
+0467                                 <span class="comment">%mask = ismember(erobj(n).misc_fields, prop_name);</span>
+0468                                 mask = strcmp(prop_name,erobj(n).misc_fields);
+0469                                 erobj(n).misc_values(mask) = {val};
+0470                             <span class="keyword">otherwise</span>
+0471                                 error(<span class="string">'EVENTRATE:set:unknownProperty'</span>,<span class="keyword">...</span>
+0472                                     <span class="string">'can''t understand property name : %s'</span>, prop_name);
+0473                         <span class="keyword">end</span> <span class="comment">%switch</span>
+0474                     <span class="keyword">end</span> <span class="comment">%n</span>
+0475             <span class="keyword">end</span> <span class="comment">%switch</span>
+0476   
+0477             Vidx(1:2) = []; <span class="comment">%done with those parameters, move to the next ones...</span>
+0478         <span class="keyword">end</span> <span class="comment">% while loop</span>
+0479         <span class="keyword">end</span> <span class="comment">% function</span>
+0480 
+0481     
+0482         <span class="comment">%------------------------------------------------------------------</span>
+0483         <span class="comment">%% GET</span>
+0484         <a name="_sub6" href="#_subfunctions" class="code">function val = get(erobj,prop_name)</a>
+0485             <span class="comment">%GET Get EVENTRATE properties</span>
+0486             <span class="comment">%   val = get(eventrate_object,'property_name')</span>
+0487             <span class="comment">%</span>
+0488             <span class="comment">%   For a list of valid property names type:</span>
+0489             <span class="comment">%   PROPERTIES(EVENTRATE)</span>
+0490             <span class="comment">%</span>
+0491             <span class="comment">%   If catalog_object is N-dimensional, then VAL will be a cell of the same</span>
+0492             <span class="comment">%   dimensions.  If GET would return single-values for the property, then</span>
+0493             <span class="comment">%   VAL will be a matrix of type DOUBLE, arranged in the same dimensions.</span>
+0494             <span class="comment">%</span>
+0495             <span class="comment">%       If additional fields were added to catalog using ADDFIELD, then</span>
+0496             <span class="comment">%       values from these can be retrieved using the fieldname</span>
+0497             <span class="comment">%</span>
+0498             <span class="comment">%       Example: Create an EVENTRATE object, add a field, then get the field</span>
+0499             <span class="comment">%           erobj = eventrate;</span>
+0500             <span class="comment">%           erobj = addfield(erobj,'TOTAL_ENERGY', 1e9);</span>
+0501             <span class="comment">%           te = get(erobj,'TOTAL_ENERGY');</span>
+0502             <span class="comment">%</span>
+0503             <span class="comment">%</span>
+0504             <span class="comment">%   See also EVENTRATE/SET, EVENTRATE/ADDFIELD, WAVEFORM/GET</span>
+0505 
+0506             <span class="comment">% AUTHOR: Glenn Thompson, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0507             <span class="comment">% $Date$</span>
+0508             <span class="comment">% $Revision$</span>
+0509 
+0510             prop_name = upper(prop_name);
+0511             <span class="keyword">switch</span> prop_name
+0512                 
+0513                 <span class="keyword">case</span> <span class="string">'COUNTS'</span>, val=erobj.counts;
+0514                 <span class="keyword">case</span> <span class="string">'MEAN_RATE'</span>, val=erobj.mean_rate;
+0515                 <span class="keyword">case</span> <span class="string">'MEDIAN_RATE'</span>, val=erobj.median_rate;
+0516                 <span class="keyword">case</span> <span class="string">'CUM_MAG'</span>, val=erobj.cum_mag;
+0517                 <span class="keyword">case</span> <span class="string">'MEAN_MAG'</span>, val=erobj.mean_mag;
+0518                 <span class="keyword">case</span> <span class="string">'MEDIAN_MAG'</span>, val=erobj.median_mag;
+0519                 <span class="keyword">case</span> <span class="string">'TOTAL_COUNTS'</span>, val=erobj.total_counts;
+0520                 <span class="keyword">case</span> <span class="string">'TOTAL_MAG'</span>, val=erobj.total_mag;                    
+0521                 <span class="keyword">case</span> <span class="string">'DNUM'</span>, val=erobj.dnum;
+0522                 <span class="keyword">case</span> <span class="string">'NUMBINS'</span>, val=erobj.numbins;
+0523                 <span class="keyword">case</span> <span class="string">'BINSIZE'</span>, val=erobj.binsize;
+0524                 <span class="keyword">case</span> <span class="string">'STEPSIZE'</span>, val=erobj.stepsize;
+0525                 <span class="keyword">case</span> <span class="string">'SNUM'</span>, val=erobj.snum;
+0526                 <span class="keyword">case</span> <span class="string">'ENUM'</span>, val=erobj.enum;
+0527                 <span class="keyword">case</span> <span class="string">'DBROOT'</span>, val=erobj.dbroot;                  
+0528                 <span class="keyword">case</span> <span class="string">'ARCHIVEFORMAT'</span>, val=erobj.archiveformat;
+0529                 <span class="keyword">case</span> <span class="string">'AUTH'</span>, val=erobj.auth;    
+0530                 <span class="keyword">case</span> <span class="string">'REGION'</span>, val=erobj.region;                  
+0531 
+0532                 <span class="keyword">otherwise</span>
+0533                     <span class="comment">%perhaps we're trying to get at one of the miscelleneous fields?</span>
+0534                     val = cell(size(erobj));
+0535                     <span class="keyword">for</span> n = 1 : numel(erobj)
+0536                         <span class="comment">%loc is the position...</span>
+0537                         <span class="comment">%w(n).misc_fields should ALWAYS already be in uppercase</span>
+0538                         mask = strcmp(prop_name,erobj(n).misc_fields);
+0539                         <span class="comment">%fieldwasfound = any(mask);</span>
+0540                         <span class="comment">%[fieldwasfound, loc] = ismember(prop_name, erobj(n).misc_fields);</span>
+0541                         <span class="keyword">if</span> any(mask)
+0542                 
+0543                             val{n} = erobj(n).misc_values{mask};
+0544                             <span class="comment">%val{n} = erobj(n).misc_values{m};</span>
+0545                         <span class="keyword">else</span>
+0546                             warning(<span class="string">'EVENTRATE:get:unrecognizedProperty'</span>,<span class="keyword">...</span>
+0547                                 <span class="string">'Unrecognized property name : %s'</span>,  prop_name);
+0548                         <span class="keyword">end</span>
+0549                     <span class="keyword">end</span>
+0550         
+0551                     <span class="comment">%check to see if value can be returned as a numeric value instead</span>
+0552                     <span class="comment">%of cell.  Only if all values are numeric AND scalar</span>
+0553                     numberize = true;
+0554                     <span class="keyword">for</span> n=1:numel(val)
+0555                         <span class="keyword">if</span> ~(isnumeric(val{n}) &amp;&amp; isscalar(val{n}))
+0556                             numberize = false;
+0557                             <span class="comment">%usedcell = true;</span>
+0558                             <span class="keyword">break</span>
+0559                         <span class="keyword">end</span>
+0560                     <span class="keyword">end</span>
+0561                     <span class="keyword">if</span> numberize,
+0562                         Z = val;
+0563                         val = nan(size(Z));
+0564                         <span class="keyword">for</span> n=1:numel(Z)
+0565                             val(n) = Z{n};
+0566                         <span class="keyword">end</span>
+0567                     <span class="keyword">end</span>
+0568         
+0569             <span class="keyword">end</span> <span class="comment">% switch</span>
+0570             <span class="keyword">if</span> (numel(val) == numel(erobj)) 
+0571                 val = reshape(val,size(erobj)); <span class="comment">%return values in proper shape</span>
+0572             <span class="keyword">end</span>
+0573 
+0574         <span class="keyword">end</span> <span class="comment">% function</span>
+0575         
+0576         <span class="comment">%------------------------------------------------------------------</span>
+0577     
+0578     <span class="keyword">end</span> <span class="comment">% methods</span>
+0579     
+0580     <span class="comment">%% PRIVATE METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0581     
+0582     methods (Access=private)
+0583         
+0584         <span class="comment">%------------------------------------------------------------------</span>
+0585         <span class="comment">%% PROCESS_ETYPE</span>
+0586         <a name="_sub7" href="#_subfunctions" class="code">function Obj = process_etype(Obj, catalogObj, j, binsize, stepsize, thisetype)</a>
+0587         <span class="comment">% PROCESS_ETYPE</span>
+0588         <span class="comment">% If multiple event types are requested, split them up into</span>
+0589         <span class="comment">% separate EVENTRATE objects.</span>
+0590         <span class="comment">% This is a private method only used by the constructor, i.e. not</span>
+0591         <span class="comment">% for the user.</span>
+0592         Obj.dnum = catalogObj.snum + binsize/2 : stepsize : catalogObj.enum - binsize/2;
+0593         Obj.numbins = length(Obj.dnum);
+0594         Obj.counts = zeros(1, Obj.numbins);
+0595         Obj.cum_mag = ones(1, Obj.numbins) * -999.0;
+0596         Obj.mean_mag = ones(1, Obj.numbins) * -999.0;
+0597         Obj.median_mag = ones(1, Obj.numbins) * -999.0;
+0598         Obj.mean_rate = zeros(1, Obj.numbins);
+0599         Obj.median_rate = zeros(1, Obj.numbins);
+0600         Obj.detection_threshold = ones(1, Obj.numbins) * NaN;
+0601         Obj.total_counts = length(j);
+0602         Obj.total_mag = -999.0;
+0603         Obj.etype = thisetype;
+0604         Obj.snum = catalogObj.snum;
+0605         Obj.enum = catalogObj.enum;
+0606         Obj.binsize = binsize;
+0607         Obj.stepsize = stepsize;
+0608 
+0609         <span class="comment">% preserve some properties of the catalog object</span>
+0610         Obj = Obj.addfield(<span class="string">'region'</span>, catalogObj.region);
+0611         Obj = Obj.addfield(<span class="string">'minmag'</span>, catalogObj.minmag);
+0612         <span class="keyword">if</span> isfield(catalogObj, <span class="string">'dbroot'</span>)
+0613             Obj = Obj.addfield(<span class="string">'dbroot'</span>, catalogObj.dbroot);
+0614         <span class="keyword">end</span>
+0615         <span class="keyword">if</span> isfield(catalogObj, <span class="string">'archiveformat'</span>)
+0616             Obj = Obj.addfield(<span class="string">'dbroot'</span>, catalogObj.archiveformat);
+0617         <span class="keyword">end</span>
+0618 
+0619         <span class="comment">% Do we have events of this etype?</span>
+0620         fprintf(<span class="string">'Found %d matching events'</span>, length(j));
+0621 
+0622         <span class="keyword">if</span> Obj.total_counts &gt; 0
+0623             [dnum_bin, counts_per_bin, sum_per_bin, smallest, median_per_bin, std_per_bin, median_time_interval] = matlab_extensions.bin_irregular(catalogObj.dnum(j), magnitude.mag2eng(catalogObj.mag(j)), binsize, catalogObj.snum, catalogObj.enum, stepsize);
+0624             Obj.numbins = length(dnum_bin);
+0625             Obj.dnum = dnum_bin;
+0626             Obj.counts = counts_per_bin;
+0627             Obj.cum_mag = magnitude.eng2mag(sum_per_bin);
+0628             Obj.cum_mag(sum_per_bin==0) = NaN; <span class="comment">% replace -Inf values (0 values in sum_per_bin) as they mess up plots</span>
+0629             Obj.mean_mag = magnitude.eng2mag(sum_per_bin./counts_per_bin); <span class="comment">% mean energy as a magnitude</span>
+0630             Obj.median_mag = magnitude.eng2mag(median_per_bin); <span class="comment">% median energy as a magnitude</span>
+0631             Obj.mean_rate = counts_per_bin / (24 * binsize);
+0632             Obj.median_rate = 1 ./ (median_time_interval * 24);
+0633             Obj.detection_threshold = magnitude.eng2mag(smallest);
+0634             Obj.total_mag = magnitude.eng2mag(sum(magnitude.mag2eng(catalogObj.mag)));
+0635 
+0636         <span class="keyword">end</span>
+0637         <span class="keyword">end</span> <span class="comment">% function</span>
+0638     <span class="keyword">end</span> <span class="comment">% private methods</span>
+0639         
+0640 
+0641 
+0642 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

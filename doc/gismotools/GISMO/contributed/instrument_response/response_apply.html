@@ -1,0 +1,236 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of response_apply</title>
+  <meta name="keywords" content="response_apply">
+  <meta name="description" content="RESPONSE_APPLY Deconvolve an instrument response from a waveform object.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">instrument_response</a> &gt; response_apply.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/instrument_response&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>response_apply
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>RESPONSE_APPLY Deconvolve an instrument response from a waveform object.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function wNew = response_apply(w,filterObj,sourceType,source) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">RESPONSE_APPLY Deconvolve an instrument response from a waveform object.
+ W = RESPONSE_APPLY(W,FILTEROBJ,SOURCETYPE,SOURCE) applies an instrument 
+ response to waveform W, filtered on the filter range specified by
+ filterobject FILTEROBJ. The response is read from SOURCE which is of type
+ SOURCETYPE. SOURCETYPE can be:
+   polezero:  A polezero structure. See HELP RESPONSE_GET_FROM_POLEZERO
+   antelope:  An Antelope database. See HELP RESPONSE_GET_FROM_DB
+  structure:  A response structure. See HELP RESPONSE_GET_FROM_DB
+
+  Example uses
+     w = response_apply(w,filterObj,'polezero',polezero)
+     w = response_apply(w,filterObj,'antelope',dbName)
+     w = response_apply(w,filterObj,'structure',response)
+
+
+ see also <a href="response_get_from_db.html" class="code" title="function [response] = response_get_from_db(station, channel, time, frequencies, dbName)">response_get_from_db</a>, <a href="response_get_from_polezero.html" class="code" title="function response = response_get_from_polezero(frequencies,polezero)">response_get_from_polezero</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="response_get_from_db.html" class="code" title="function [response] = response_get_from_db(station, channel, time, frequencies, dbName)">response_get_from_db</a>	RESPONSE_GET_FROM_DB Get instrument response from database.</li><li><a href="response_get_from_polezero.html" class="code" title="function response = response_get_from_polezero(frequencies,polezero)">response_get_from_polezero</a>	RESPONSE_GET_FROM_POLEZERO Create response structure from poles/zeros</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="demo_plutons.html" class="code" title="">demo_plutons</a>	</li><li><a href="response_cookbook.html" class="code" title="">response_cookbook</a>	% Instrument response cookbook</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function w = response_apply_one(w,filterObj,sourceType,source)</a></li><li><a href="#_sub2" class="code">function [respInv,response] = prep_inverse_response(w,ws,sourceType,source)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function wNew = response_apply(w,filterObj,sourceType,source)</a>
+0002 
+0003 <span class="comment">%RESPONSE_APPLY Deconvolve an instrument response from a waveform object.</span>
+0004 <span class="comment">% W = RESPONSE_APPLY(W,FILTEROBJ,SOURCETYPE,SOURCE) applies an instrument</span>
+0005 <span class="comment">% response to waveform W, filtered on the filter range specified by</span>
+0006 <span class="comment">% filterobject FILTEROBJ. The response is read from SOURCE which is of type</span>
+0007 <span class="comment">% SOURCETYPE. SOURCETYPE can be:</span>
+0008 <span class="comment">%   polezero:  A polezero structure. See HELP RESPONSE_GET_FROM_POLEZERO</span>
+0009 <span class="comment">%   antelope:  An Antelope database. See HELP RESPONSE_GET_FROM_DB</span>
+0010 <span class="comment">%  structure:  A response structure. See HELP RESPONSE_GET_FROM_DB</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%  Example uses</span>
+0013 <span class="comment">%     w = response_apply(w,filterObj,'polezero',polezero)</span>
+0014 <span class="comment">%     w = response_apply(w,filterObj,'antelope',dbName)</span>
+0015 <span class="comment">%     w = response_apply(w,filterObj,'structure',response)</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% see also response_get_from_db, response_get_from_polezero</span>
+0019 
+0020 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0021 <span class="comment">%         (borrowing liberally from codes written by M. Haney)</span>
+0022 <span class="comment">% $Date$</span>
+0023 <span class="comment">% $Revision$</span>
+0024 
+0025 
+0026 <span class="comment">% CHECK INPUTS</span>
+0027 <span class="keyword">if</span> ~ischar(sourceType) || size(sourceType,1)~=1
+0028     error(<span class="string">'SOURCETYPE must be the same for all waveforms'</span>);
+0029 <span class="keyword">end</span>
+0030 <span class="keyword">if</span> strncmpi(sourceType,<span class="string">'antelope'</span>,3) &amp;&amp; size(sourceType,1)~=1
+0031     error(<span class="string">'All responses must be sourced from a single database'</span>);
+0032 <span class="keyword">end</span>
+0033 
+0034 
+0035 <span class="comment">% PREPARE INDIVIDUAL WAVEFORMS</span>
+0036 
+0037 filterObj = repmat(filterObj,size(w));
+0038 source = repmat({source},size(w));
+0039 <span class="keyword">for</span> n = 1:numel(w)
+0040     wNew(n) = <a href="#_sub1" class="code" title="subfunction w = response_apply_one(w,filterObj,sourceType,source)">response_apply_one</a>(w(n),filterObj(n),sourceType,source(n));
+0041 <span class="keyword">end</span>
+0042 
+0043 wNew = reshape(wNew,size(w));
+0044 
+0045 
+0046 
+0047 
+0048 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0049 <span class="comment">% PROCESS INDIVIDUAL WAVEFORMS</span>
+0050 
+0051 <a name="_sub1" href="#_subfunctions" class="code">function w = response_apply_one(w,filterObj,sourceType,source)</a>
+0052 
+0053 
+0054 <span class="keyword">if</span> numel(w)~=1
+0055     error(<span class="string">'Only one waveform should be passed to this subroutine.'</span>);
+0056 <span class="keyword">end</span>
+0057 
+0058 
+0059 <span class="comment">% % CHECK THE SOURCE OF THE RESPONSE</span>
+0060 <span class="comment">% if isa(source,'char')                 % antelope db</span>
+0061 <span class="comment">%     disp(['Attempting to retreive response information from database: ' source ' ...']);</span>
+0062 <span class="comment">% elseif  isa(source,'struct')          % polezero structure</span>
+0063 <span class="comment">%     disp('Using explicit poles/zeros ...');</span>
+0064 <span class="comment">% else</span>
+0065 <span class="comment">%     error('response source argument not recognized');</span>
+0066 <span class="comment">% end</span>
+0067 
+0068 
+0069 <span class="comment">% PREPARE VARIABLE SPACE</span>
+0070 filterBand = get(filterObj,<span class="string">'CUTOFF'</span>);
+0071 period = get(w,<span class="string">'PERIOD'</span>);
+0072 nyquist = get(w,<span class="string">'NYQ'</span>);
+0073 rawData = double(w);
+0074 dataLength = numel(rawData);
+0075 rawData = reshape(rawData,1,dataLength);
+0076 
+0077 
+0078 <span class="comment">% PREPARE TRACE DATA</span>
+0079 <span class="comment">% Create a zero padded Tukey taper</span>
+0080 <span class="comment">%    Taper size is determined by the high pass filter frequency</span>
+0081 <span class="comment">%    Tapered waveform is zeros padded on either end to triple the trace length</span>
+0082 taperFullWidth = round(0.5/(filterBand(1)*period))*2; <span class="comment">% guarantees an even number</span>
+0083 taperAmp = hanning(taperFullWidth)';
+0084 taperAmp = [taperAmp(1:(taperFullWidth/2)) ones(1,(dataLength-taperFullWidth)) taperAmp(((taperFullWidth/2)+1):taperFullWidth)];
+0085 taperAmp = [ zeros(1,dataLength) taperAmp zeros(1,dataLength) ];
+0086 rawData = [ zeros(1,dataLength) rawData zeros(1,dataLength) ].*taperAmp;
+0087 dataLength = numel(rawData);
+0088 
+0089 
+0090 <span class="comment">% CREATE FULL INVERSE RESPONSE VECTORS</span>
+0091 <span class="comment">% Seperate routines for even and odd trace length</span>
+0092 <span class="comment">% Full responses are reconstituted from positive only side</span>
+0093 <span class="comment">% ws and respInv are positive frequencies only</span>
+0094 <span class="comment">% wsFull and respInvFull have negative frequencies as well</span>
+0095 <span class="keyword">if</span> floor(dataLength/2) == ceil(dataLength/2)
+0096     halfDataLength=dataLength/2;
+0097     ws = 2*pi*[0:(halfDataLength)]*(1/(halfDataLength))*nyquist;
+0098     [respInv,response] = <a href="#_sub2" class="code" title="subfunction [respInv,response] = prep_inverse_response(w,ws,sourceType,source)">prep_inverse_response</a>(w,ws,sourceType,source);
+0099     wsFull = [ -ws(halfDataLength+1:-1:2) ws(1:halfDataLength) ];
+0100     respInvFull = ([ real(respInv(end:-1:2)) real(respInv(1:end-1)) ] + 1i*[ -imag(respInv(end:-1:2)) imag(respInv(1:end-1)) ]);
+0101 <span class="keyword">else</span>
+0102     halfDataLength = (dataLength+1)/2;
+0103     ws = 2*pi * [0:(halfDataLength-1)] * (2/dataLength) * nyquist;
+0104     [respInv,response] = <a href="#_sub2" class="code" title="subfunction [respInv,response] = prep_inverse_response(w,ws,sourceType,source)">prep_inverse_response</a>(w,ws,sourceType,source);
+0105     wsFull = [ -ws(end:-1:2) ws(1:end) ];
+0106     respInvFull = ([ real(respInv(end:-1:2)) real(respInv(1:end)) ] + 1i*[ -imag(respInv(end:-1:2)) imag(respInv(1:end)) ]);
+0107 <span class="keyword">end</span>
+0108 
+0109 <span class="comment">% APPLY THE RESPONSE</span>
+0110 newData = real(ifft(ifftshift(fftshift(fft(rawData)).*(respInvFull))));
+0111 
+0112 
+0113 <span class="comment">% BANDPASS FILTER THE DATA</span>
+0114 [z q] = butter(get(filterObj,<span class="string">'POLES'</span>),[(filterBand(1)/nyquist) (filterBand(2)/nyquist)]);
+0115 newData = filter(z,q,newData);
+0116 newData = filter(z,q,fliplr(newData));
+0117 newData = fliplr(newData);
+0118 
+0119 
+0120 <span class="comment">% REMOVE TRACE PADDING</span>
+0121 newData = newData( (dataLength/3)+1 : 2*(dataLength/3) );
+0122 
+0123 
+0124 <span class="comment">% RETURN INSTURMENT CORRECTED WAVEFORM</span>
+0125 w = set(w,<span class="string">'DATA'</span>,newData);
+0126 w = addhistory(w,<span class="string">'A frequency response was deconvolved using RESPONSE_APPLY. See RESPONSE field.'</span>);
+0127 w = addhistory(w,<span class="string">'Butterworth filter was doubly applied (FILTFILT). See FILTER field.'</span>);
+0128 w = addfield(w,<span class="string">'RESPONSE'</span>,response);
+0129 w = addfield(w,<span class="string">'FILTER'</span>,filterObj);
+0130 
+0131 
+0132 
+0133 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0134 <span class="comment">% SET UP THE INVERSE RESPONSE FUNCTIONS</span>
+0135 <span class="comment">% could facilitate calls to a different response loader</span>
+0136 
+0137 <a name="_sub2" href="#_subfunctions" class="code">function [respInv,response] = prep_inverse_response(w,ws,sourceType,source)</a>
+0138 
+0139 <span class="keyword">switch</span> lower(sourceType)
+0140     
+0141     <span class="keyword">case</span> {<span class="string">'antelope'</span>}
+0142         sta = get(w,<span class="string">'STATION'</span>);
+0143         chan = get(w,<span class="string">'CHANNEL'</span>);
+0144         time = get(w,<span class="string">'START_MATLAB'</span>);
+0145         response = <a href="response_get_from_db.html" class="code" title="function [response] = response_get_from_db(station, channel, time, frequencies, dbName)">response_get_from_db</a>(sta,chan,time,(ws/(2*pi)),source);
+0146         respInv = 1./response.values;
+0147         respInv(1) = 0;
+0148         respInv = reshape(respInv,1,numel(respInv));
+0149         
+0150     <span class="keyword">case</span> {<span class="string">'polezero'</span>}
+0151         response = <a href="response_get_from_polezero.html" class="code" title="function response = response_get_from_polezero(frequencies,polezero)">response_get_from_polezero</a>(ws,source);
+0152         respInv = 1./response.values;
+0153         respInv(1) = 0;
+0154         respInv = reshape(respInv,1,numel(respInv));
+0155         
+0156     <span class="keyword">case</span> {<span class="string">'structure'</span>}
+0157         disp(<span class="string">'Structure is not yet implemented'</span>)
+0158     <span class="keyword">otherwise</span>
+0159         error(<span class="string">'response source argument not recognized'</span>);
+0160         
+0161 <span class="keyword">end</span>
+0162 
+0163 
+0164 
+0165 
+0166 
+0167 
+0168 
+0169 
+0170 
+0171 
+0172</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

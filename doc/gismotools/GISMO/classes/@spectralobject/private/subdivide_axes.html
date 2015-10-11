@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of subdivide_axes</title>
+  <meta name="keywords" content="subdivide_axes">
+  <meta name="description" content="returns handles for sub-axes of axis(h).  These axes are createdb y">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@spectralobject</a> &gt; <a href="index.html">private</a> &gt; subdivide_axes.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@spectralobject/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>subdivide_axes
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>returns handles for sub-axes of axis(h).  These axes are createdb y</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function sub_h = subdivide_axes(h,sizes) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> returns handles for sub-axes of axis(h).  These axes are createdb y
+ subdividing h into sections according to SIZES, where sizes is a
+ 2-component vector corresponding to [nCol, nRow];
+ example:
+   subplot(3,3,5); % break figure into 3x3 grid, and select the center
+   % let w be an NxM object array
+   h = subdivide_axes(gca, size(w));
+   for n=1:numel(h)
+     plot(h,somethingToPlot);
+   end
+
+ axis h is cleared, then subaxes are created.  This function returns an
+ NxM array of handles to the subaxes.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function sub_h = subdivide_axes(h,sizes)</a>
+0002 <span class="comment">% returns handles for sub-axes of axis(h).  These axes are createdb y</span>
+0003 <span class="comment">% subdividing h into sections according to SIZES, where sizes is a</span>
+0004 <span class="comment">% 2-component vector corresponding to [nCol, nRow];</span>
+0005 <span class="comment">% example:</span>
+0006 <span class="comment">%   subplot(3,3,5); % break figure into 3x3 grid, and select the center</span>
+0007 <span class="comment">%   % let w be an NxM object array</span>
+0008 <span class="comment">%   h = subdivide_axes(gca, size(w));</span>
+0009 <span class="comment">%   for n=1:numel(h)</span>
+0010 <span class="comment">%     plot(h,somethingToPlot);</span>
+0011 <span class="comment">%   end</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% axis h is cleared, then subaxes are created.  This function returns an</span>
+0014 <span class="comment">% NxM array of handles to the subaxes.</span>
+0015 
+0016 <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0017 <span class="comment">% $Date$</span>
+0018 <span class="comment">% $Revision$</span>
+0019 
+0020 rect = get(h,<span class="string">'position'</span>);
+0021 nCol = sizes(2);
+0022 nRow = sizes(1);
+0023 left = rect(1);
+0024 bottom = rect(2);
+0025 width = rect(3);
+0026 height = rect(4);
+0027 <span class="comment">%top = bottom - height;</span>
+0028 
+0029 <span class="keyword">if</span> sizes(1) == 1
+0030     <span class="comment">% unchanged # of rows</span>
+0031     newMaxHeight  = height;
+0032 <span class="keyword">else</span>
+0033     newMaxHeight = height / nRow .* .85;
+0034     <span class="comment">%top = top + ( (0:nRow-1) .* (top/nRow)) + heightToAddEachTime</span>
+0035     bottom = linspace(bottom,  (bottom+height)-newMaxHeight,nRow);
+0036 <span class="keyword">end</span>
+0037 <span class="keyword">if</span> sizes(2) == 1
+0038     <span class="comment">% unchanged # of columns</span>
+0039     newMaxWidth = width;
+0040 <span class="keyword">else</span>
+0041     newMaxWidth = width / nCol .* .93;
+0042     <span class="comment">%widthToAddEachTime = (0:nCol-1) .* deadwidth;</span>
+0043     left = linspace(left, (left+width) - newMaxWidth, nCol);
+0044     <span class="comment">%left = left + ( (0:nCol-1) .* width/nCol) + widthToAddEachTime;</span>
+0045 <span class="keyword">end</span>
+0046 delete(h);
+0047 sub_h = zeros(nRow,nCol);
+0048 <span class="keyword">for</span> c = 1:nCol
+0049     <span class="keyword">for</span> r = 1:nRow
+0050         sub_h(r,c) = subplot(<span class="string">'position'</span>,<span class="keyword">...</span>
+0051             [left(c) bottom(r) newMaxWidth newMaxHeight]);
+0052     <span class="keyword">end</span>
+0053 <span class="keyword">end</span>
+0054 sub_h = flipud(sub_h);</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

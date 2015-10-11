@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of setmap</title>
+  <meta name="keywords" content="setmap">
+  <meta name="description" content="SETMAP   sets the default colormap used with spectrograms">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@spectralobject</a> &gt; setmap.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@spectralobject&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>setmap
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>SETMAP   sets the default colormap used with spectrograms</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function setmap(s, alternateMap) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SETMAP   sets the default colormap used with spectrograms
+   USAGE: setmap(spectralobject, alternateMap)
+
+   EXAMPLE: setmap(s, bone(64));
+     this sets the map to the 'bone' colormap, with 64 shading  values.  
+     If you don't specify the # of values, MatLab will assign the colormap
+     to your current figure.  If no figure exists, MatLab will create one.
+
+   GETMAP and SETMAP are different from GET and SET in that they affect
+   all spectrograms, regardless of the spectralobject used.
+
+   Please Type HELP GRAPH3D to see a number of useful colormaps.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function setmap(s, alternateMap)</a>
+0002 <span class="comment">%SETMAP   sets the default colormap used with spectrograms</span>
+0003 <span class="comment">%   USAGE: setmap(spectralobject, alternateMap)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   EXAMPLE: setmap(s, bone(64));</span>
+0006 <span class="comment">%     this sets the map to the 'bone' colormap, with 64 shading  values.</span>
+0007 <span class="comment">%     If you don't specify the # of values, MatLab will assign the colormap</span>
+0008 <span class="comment">%     to your current figure.  If no figure exists, MatLab will create one.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   GETMAP and SETMAP are different from GET and SET in that they affect</span>
+0011 <span class="comment">%   all spectrograms, regardless of the spectralobject used.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   Please Type HELP GRAPH3D to see a number of useful colormaps.</span>
+0014 
+0015 <span class="comment">% VERSION: 1.0 of spectralobject</span>
+0016 <span class="comment">% AUTHOR: Celso Reyes</span>
+0017 <span class="comment">% LASTUPDATE: 1/30/2007</span>
+0018 
+0019 
+0020 <span class="keyword">global</span> SPECTRAL_MAP
+0021 <span class="comment">%size(SPECTRAL_MAP)</span>
+0022 sizecheck = size(alternateMap);
+0023 <span class="keyword">if</span> sizecheck(2) ~= 3,
+0024     warning(<span class="string">'Map ignored.  alternateMap has  incorrect # columns; should be 3'</span>);
+0025     <span class="keyword">return</span>
+0026 <span class="keyword">end</span>
+0027 
+0028 SPECTRAL_MAP = alternateMap;</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

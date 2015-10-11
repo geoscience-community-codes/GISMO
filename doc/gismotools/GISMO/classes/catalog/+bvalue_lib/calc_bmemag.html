@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of calc_bmemag</title>
+  <meta name="keywords" content="calc_bmemag">
+  <meta name="description" content="CALC_BMEMAG Calculate Maximum Likelihood b-value">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">catalog</a> &gt; <a href="index.html">+bvalue_lib</a> &gt; calc_bmemag.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog/+bvalue_lib&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>calc_bmemag
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>CALC_BMEMAG Calculate Maximum Likelihood b-value</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function [fMeanMag, fBValue, fStdDev, fAValue] =calc_bmemag(mag, fBinning) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CALC_BMEMAG Calculate Maximum Likelihood b-value
+ [fMeanMag, fBValue, fStdDev, fAValue] = ...
+                   calc_bmemag(mag, fBinning)
+ Calculates the mean magnitute, the b-value based
+ on the maximum likelihood estimation, the a-value and the
+ standard deviation of the b-value
+
+ Input parameters:
+   mag             Vector of magnitudes
+   fBinning        Bin size in magnitude (default 0.1)
+
+ Output parameters:
+   fMeanMag        Mean magnitude
+   fBValue         b-value
+   fStdDev         Standard deviation of b-value
+   fAValue         a-value</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [fMeanMag, fBValue, fStdDev, fAValue] = </a><span class="keyword">...</span>
+0002         calc_bmemag(mag, fBinning)
+0003     <span class="comment">%CALC_BMEMAG Calculate Maximum Likelihood b-value</span>
+0004     <span class="comment">% [fMeanMag, fBValue, fStdDev, fAValue] = ...</span>
+0005     <span class="comment">%                   calc_bmemag(mag, fBinning)</span>
+0006     <span class="comment">% Calculates the mean magnitute, the b-value based</span>
+0007     <span class="comment">% on the maximum likelihood estimation, the a-value and the</span>
+0008     <span class="comment">% standard deviation of the b-value</span>
+0009     <span class="comment">%</span>
+0010     <span class="comment">% Input parameters:</span>
+0011     <span class="comment">%   mag             Vector of magnitudes</span>
+0012     <span class="comment">%   fBinning        Bin size in magnitude (default 0.1)</span>
+0013     <span class="comment">%</span>
+0014     <span class="comment">% Output parameters:</span>
+0015     <span class="comment">%   fMeanMag        Mean magnitude</span>
+0016     <span class="comment">%   fBValue         b-value</span>
+0017     <span class="comment">%   fStdDev         Standard deviation of b-value</span>
+0018     <span class="comment">%   fAValue         a-value</span>
+0019 
+0020     <span class="comment">% Copyright (C) 2003 by Danijel Schorlemmer</span>
+0021     <span class="comment">%</span>
+0022     <span class="comment">% This program is free software; you can redistribute it and/or modify</span>
+0023     <span class="comment">% it under the terms of the GNU General Public License as published by</span>
+0024     <span class="comment">% the Free Software Foundation; either version 2 of the License, or</span>
+0025     <span class="comment">% (at your option) any later version.</span>
+0026     <span class="comment">%</span>
+0027     <span class="comment">% This program is distributed in the hope that it will be useful,</span>
+0028     <span class="comment">% but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0029     <span class="comment">% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
+0030     <span class="comment">% GNU General Public License for more details.</span>
+0031     <span class="comment">%</span>
+0032     <span class="comment">% You should have received a copy of the GNU General Public License</span>
+0033     <span class="comment">% along with this program; if not, write to the</span>
+0034     <span class="comment">% Free Software Foundation, Inc.,</span>
+0035     <span class="comment">% 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.</span>
+0036     <span class="comment">%</span>
+0037     <span class="comment">% Modified by Glenn Thompson 2014/06/14</span>
+0038 
+0039     <span class="comment">% Set the default value if not passed to the function</span>
+0040     <span class="keyword">if</span> ~exist(<span class="string">'fBinning'</span>)
+0041         fBinning = 0.1;
+0042     <span class="keyword">end</span>
+0043 
+0044     <span class="comment">% Calculate the minimum and mean magnitude, length of catalog</span>
+0045     nLen = length(mag);
+0046     fMinMag = min(mag);
+0047     fMeanMag = mean(mag);
+0048     <span class="comment">% Calculate the b-value (maximum likelihood)</span>
+0049     fBValue = (1/(fMeanMag-(fMinMag-(fBinning/2))))*log10(exp(1));
+0050     <span class="comment">% Calculate the standard deviation</span>
+0051     fStdDev = (sum((mag-fMeanMag).^2))/(nLen*(nLen-1));
+0052     fStdDev = 2.30 * sqrt(fStdDev) * fBValue^2;
+0053     <span class="comment">% Calculate the a-value</span>
+0054     fAValue = log10(nLen) + fBValue * fMinMag;
+0055 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

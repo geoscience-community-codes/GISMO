@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of xcorrdec</title>
+  <meta name="keywords" content="xcorrdec">
+  <meta name="description" content="Same algorithm as xcorr1xr, except this function decomposes the complex">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@correlation</a> &gt; <a href="index.html">private</a> &gt; xcorrdec.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>xcorrdec
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Same algorithm as xcorr1xr, except this function decomposes the complex</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function d = xcorrdec(d) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Same algorithm as xcorr1xr, except this function decomposes the complex
+ numbers into their real and imaginary parts before doing the math.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function d = xcorrdec(d)</a>
+0002 
+0003 <span class="comment">% Same algorithm as xcorr1xr, except this function decomposes the complex</span>
+0004 <span class="comment">% numbers into their real and imaginary parts before doing the math.</span>
+0005 
+0006 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0007 <span class="comment">% $Date$</span>
+0008 <span class="comment">% $Revision$</span>
+0009 
+0010 <span class="comment">% PREP NECESSARY TERMS</span>
+0011 [M,N] = size(d.w);
+0012 pretrig = 86400*(d.trig-d.start);   <span class="comment">% time between trace start and trigger</span>
+0013 l = (1./d.Fs)*[-M+1:M-1]';        <span class="comment">% lag vector</span>
+0014 wcoeff = 1./sqrt(sum(d.w.*d.w));
+0015 d.C = eye(length(d.trig),<span class="string">'single'</span>);
+0016 d.L = zeros(length(d.trig),<span class="string">'single'</span>);
+0017 
+0018 
+0019 <span class="comment">% GET FFT OF TRACES</span>
+0020 X = fft(d.w,2^nextpow2(2*M-1));
+0021 [MX,NX] = size(X);
+0022 
+0023 
+0024 <span class="comment">% DECOMPOSE COMPLEX INTO REAL AND IMAG PARTS</span>
+0025 Xr = real(X);
+0026 Xi = imag(X);
+0027 
+0028 
+0029 <span class="comment">% TIME THE PROCESS</span>
+0030 starttime = now;
+0031 tic;
+0032 t0 = cputime;
+0033 numcorr = ((length(d.trig))^2-length(d.trig))/2;
+0034 count = 0;
+0035 
+0036 <span class="comment">% LOOP THROUGH ROWS OF SIMILARITY MATRIX</span>
+0037 i = sqrt(-1);
+0038 <span class="keyword">for</span> n =1:N
+0039     cols = n:N;
+0040     <span class="comment">% multiply fourier series and transform back to time domain</span>
+0041     
+0042     <span class="comment">% APPROACH NUMBER 1 (test time: 11.3, 11.2, 11.3 sec)</span>
+0043     <span class="comment">%a = (Xr(:,n)*ones(1,length(cols))).*Xr(:,cols);</span>
+0044     <span class="comment">%b = (Xr(:,n)*ones(1,length(cols))).*Xi(:,cols);</span>
+0045     <span class="comment">%c = (Xi(:,n)*ones(1,length(cols))).*Xr(:,cols);</span>
+0046     <span class="comment">%d = (Xi(:,n)*ones(1,length(cols))).*Xi(:,cols);</span>
+0047     <span class="comment">%CC = a - i*b + i*c - i*i*d;</span>
+0048     
+0049     <span class="comment">% APPROACH NUMBER 2 (test time: 11.4, 11.8, 11.6 sec)</span>
+0050     <span class="comment">%ad = (Xr(:,n)*ones(1,length(cols))).*Xr(:,cols) + (Xi(:,n)*ones(1,length(cols))).*Xi(:,cols);</span>
+0051     <span class="comment">%cb = (Xi(:,n)*ones(1,length(cols))).*Xr(:,cols) - (Xr(:,n)*ones(1,length(cols))).*Xi(:,cols);</span>
+0052     <span class="comment">%CC = ad + i*cb;</span>
+0053     
+0054     <span class="comment">% APPROACH NUMBER 3 (test time: 16.2, 16.0, 15.8 sec)</span>
+0055     CC = (Xr(:,n)*ones(1,length(cols))).*Xr(:,cols) - i*(Xr(:,n)*ones(1,length(cols))).*Xi(:,cols) + i*(Xi(:,n)*ones(1,length(cols))).*Xr(:,cols) + (Xi(:,n)*ones(1,length(cols))).*Xi(:,cols);
+0056     
+0057     corr = ifft(CC);
+0058     corr = [corr(end-M+2:<span class="keyword">end</span>,:);corr(1:M,:)];
+0059     
+0060     <span class="comment">% save only max correlation value</span>
+0061     [maxval,index] = max(corr);
+0062     d.C(n,cols)=maxval .* wcoeff(n) .* wcoeff(cols);   <span class="comment">% normalized maximum correlation</span>
+0063     d.L(n,cols)=l(index) + (pretrig(cols) - pretrig(n)); <span class="comment">% lag in seconds</span>
+0064     
+0065     <span class="keyword">if</span> (n==100) | (n==1000)
+0066         tclock = toc/86400;
+0067         completed = sum(N-n:N-1)/((N*N-N)/2);
+0068         fin = datestr(starttime + tclock/completed,16);
+0069         disp([num2str(100*completed,<span class="string">'%2.0f'</span>) <span class="string">'% completed. Estimated completion at '</span> fin <span class="string">'...'</span>]);
+0070     <span class="keyword">end</span>;
+0071 <span class="keyword">end</span>
+0072 
+0073 
+0074 <span class="comment">% FILL LOWER TRIANGULAR PART OF MATRICES</span>
+0075 d.C = d.C + d.C' - eye(size(d.C));
+0076 d.L = d.L - d.L';
+0077 
+0078 
+0079 <span class="comment">% DISPLAY RUN TIMES</span>
+0080 tclock = toc;
+0081 tcpu = cputime-t0;
+0082 disp([<span class="string">'Clock time to complete correlations: '</span> num2str(tclock,<span class="string">'%5.1f'</span>) <span class="string">' s'</span>]);
+0083 disp([<span class="string">'CPU time to complete correlations:   '</span> num2str(tcpu,<span class="string">'%5.1f'</span>) <span class="string">' s'</span>]);
+0084</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

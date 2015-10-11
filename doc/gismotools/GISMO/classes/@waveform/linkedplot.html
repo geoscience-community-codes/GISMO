@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of linkedplot</title>
+  <meta name="keywords" content="linkedplot">
+  <meta name="description" content="LINKEDPLOT Plot multiple waveform objects as separate linked panels">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; linkedplot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>linkedplot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>LINKEDPLOT Plot multiple waveform objects as separate linked panels</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function linkedplot(w, alignWaveforms) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">LINKEDPLOT Plot multiple waveform objects as separate linked panels
+   linkedplot(w, alignWaveforms) 
+   where:
+       w = a vector of waveform objects
+       alignWaveforms is either true or false (default)
+   linkedplot(w) will plot a record section, i.e. each waveform is plotted
+   against absolute time.
+   linkedplot(w, true) will align the waveforms on their start times.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>	GETTIMERANGE returns the list of start and end times from a waveform array</li><li><a href="min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function daterange(obj, evt, snum, SECSPERDAY)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function linkedplot(w, alignWaveforms)</a>
+0002 <span class="comment">%LINKEDPLOT Plot multiple waveform objects as separate linked panels</span>
+0003 <span class="comment">%   linkedplot(w, alignWaveforms)</span>
+0004 <span class="comment">%   where:</span>
+0005 <span class="comment">%       w = a vector of waveform objects</span>
+0006 <span class="comment">%       alignWaveforms is either true or false (default)</span>
+0007 <span class="comment">%   linkedplot(w) will plot a record section, i.e. each waveform is plotted</span>
+0008 <span class="comment">%   against absolute time.</span>
+0009 <span class="comment">%   linkedplot(w, true) will align the waveforms on their start times.</span>
+0010 
+0011 <span class="comment">% Glenn Thompson 2014/11/05, generalized after a function I wrote in 2000</span>
+0012 <span class="comment">% to operate on Seisan files only</span>
+0013 
+0014     <span class="keyword">if</span> numel(w)==0
+0015         warning(<span class="string">'no waveforms to plot'</span>)
+0016         <span class="keyword">return</span>
+0017     <span class="keyword">end</span>
+0018     
+0019     <span class="keyword">if</span> ~exist(<span class="string">'alignWaveforms'</span>, <span class="string">'var'</span>)
+0020             alignWaveforms = false;
+0021     <span class="keyword">end</span>
+0022     
+0023     <span class="comment">% get the first start time and last end time</span>
+0024     [starttimes endtimes]=<a href="gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>(w);
+0025     snum = nanmin(starttimes);
+0026     enum = nanmax(endtimes);
+0027     
+0028     <span class="comment">% get the longest duration - in mode=='align'</span>
+0029     durations = endtimes - starttimes;
+0030     maxduration = nanmax(durations);
+0031     SECSPERDAY = 60 * 60 * 24;
+0032     
+0033     nwaveforms = numel(w);
+0034     figure
+0035     trace_height=0.9/nwaveforms;
+0036     left=0.1;
+0037     width=0.8;
+0038     <span class="keyword">for</span> wavnum = 1:nwaveforms
+0039         data=<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(wavnum),<span class="string">'data'</span>);
+0040         dnum=<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(wavnum),<span class="string">'timevector'</span>); 
+0041         sta=<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(wavnum),<span class="string">'station'</span>);
+0042         chan=<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(wavnum),<span class="string">'channel'</span>);
+0043         ax(wavnum)=axes(<span class="string">'Position'</span>,[left 0.95-wavnum*trace_height width trace_height]);   
+0044         <span class="keyword">if</span> alignWaveforms
+0045             <a href="plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>((dnum-<a href="min.html" class="code" title="function [Y, I] = min(w)">min</a>(dnum))*SECSPERDAY, data,<span class="string">'-k'</span>);
+0046             <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(gca, <span class="string">'XLim'</span>, [0 maxduration*SECSPERDAY]);
+0047         <span class="keyword">else</span>
+0048             <a href="plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>((dnum-snum)*SECSPERDAY, data,<span class="string">'-k'</span>);
+0049             <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(gca, <span class="string">'XLim'</span>, [0 enum-snum]*SECSPERDAY);
+0050         <span class="keyword">end</span>
+0051 <span class="comment">%         xlim = get(gca, 'XLim');</span>
+0052 <span class="comment">%         set(gca,'XTick', linspace(xlim(1), xlim(2), 11));</span>
+0053         ylabel(sprintf(<span class="string">'%s\n%s '</span>,sta,chan),<span class="string">'FontSize'</span>,10,<span class="string">'Rotation'</span>,90);
+0054         <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(gca,<span class="string">'YTick'</span>,[],<span class="string">'YTickLabel'</span>,[<span class="string">''</span>]);
+0055         <span class="keyword">if</span> wavnum&lt;nwaveforms;
+0056            <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(gca,<span class="string">'XTickLabel'</span>,[<span class="string">''</span>]);
+0057         <span class="keyword">end</span>
+0058         
+0059         <span class="comment">% display mean on left, max on right</span>
+0060         text(0.02,0.85, sprintf(<span class="string">'%5.0f'</span>,nanmean(<a href="abs.html" class="code" title="function w = abs(w)">abs</a>(data))),<span class="string">'FontSize'</span>,10,<span class="string">'Color'</span>,<span class="string">'b'</span>,<span class="string">'units'</span>,<span class="string">'normalized'</span>);
+0061         text(0.4,0.85,sprintf(<span class="string">' %s'</span>,datestr(starttimes(wavnum),30)),<span class="string">'FontSize'</span>,10,<span class="string">'Color'</span>,<span class="string">'g'</span>,<span class="string">'units'</span>,<span class="string">'normalized'</span>);
+0062         text(0.9,0.85,sprintf(<span class="string">'%5.0f'</span>,nanmax(<a href="abs.html" class="code" title="function w = abs(w)">abs</a>(data))),<span class="string">'FontSize'</span>,10,<span class="string">'Color'</span>,<span class="string">'r'</span>,<span class="string">'units'</span>,<span class="string">'normalized'</span>);
+0063     <span class="keyword">end</span>
+0064     
+0065     <span class="keyword">if</span> exist(<span class="string">'ax'</span>,<span class="string">'var'</span>)
+0066         linkaxes(ax,<span class="string">'x'</span>);
+0067         
+0068         <span class="comment">% enable update x tick labels after zoom</span>
+0069 <span class="comment">%         h = zoom(gcf);</span>
+0070 <span class="comment">%         set(h,'ActionPostCallback',{@myzoomcallback,ax});</span>
+0071 <span class="comment">%         set(h,'Enable','on');</span>
+0072 
+0073     <span class="keyword">end</span>
+0074     
+0075     originalXticks = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(gca,<span class="string">'XTickLabels'</span>);
+0076     
+0077     f = uimenu(<span class="string">'Label'</span>,<span class="string">'X-Ticks'</span>);
+0078 <span class="comment">%     uimenu(f,'Label','seconds since start time','Callback',{@secondssince, originalXticks});</span>
+0079 <span class="comment">%     uimenu(f,'Label','absolute time','Callback',{@datetickplot, snum, SECSPERDAY});</span>
+0080     uimenu(f,<span class="string">'Label'</span>,<span class="string">'time range'</span>,<span class="string">'Callback'</span>,{@<a href="#_sub1" class="code" title="subfunction daterange(obj, evt, snum, SECSPERDAY)">daterange</a>, snum, SECSPERDAY});
+0081     uimenu(f,<span class="string">'Label'</span>,<span class="string">'quit'</span>,<span class="string">'Callback'</span>,<span class="string">'disp(''exit'')'</span>,<span class="keyword">...</span><span class="comment"> </span>
+0082            <span class="string">'Separator'</span>,<span class="string">'on'</span>,<span class="string">'Accelerator'</span>,<span class="string">'Q'</span>);
+0083 <span class="keyword">end</span>
+0084 
+0085 <span class="comment">% function myzoomcallback(obj,evd,AX)</span>
+0086 <span class="comment">%     %datetick(AX,'x',20,'keeplimits');</span>
+0087 <span class="comment">%     xlim = get(AX(1),'XLim');</span>
+0088 <span class="comment">%     xticks = linspace(xlim(1), xlim(2), 11);</span>
+0089 <span class="comment">%     set(AX(end),'XTick', xticks, 'XTickLabels', xticks);</span>
+0090 <span class="comment">% end</span>
+0091 
+0092 <span class="comment">% function secondssince(obj, evt, originalXticks)</span>
+0093 <span class="comment">%     set(gca, 'xtickLabels', originalXticks);</span>
+0094 <span class="comment">% end</span>
+0095 <span class="comment">%</span>
+0096 <span class="comment">%</span>
+0097 <span class="comment">% function datetickplot(obj, evt, snum, SECSPERDAY)</span>
+0098 <span class="comment">%     xticks = get(gca, 'xtick');</span>
+0099 <span class="comment">%     ticklabels = datestr(snum + xticks/SECSPERDAY, 15);</span>
+0100 <span class="comment">%     set(gca, 'xtickLabels', ticklabels);</span>
+0101 <span class="comment">% end</span>
+0102 
+0103 <a name="_sub1" href="#_subfunctions" class="code">function daterange(obj, evt, snum, SECSPERDAY)</a>
+0104     xlim = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(gca, <span class="string">'xlim'</span>);
+0105     xticks = linspace(xlim(1), xlim(2), 11);
+0106     dnum = snum + xlim/SECSPERDAY;
+0107     datestr(dnum,<span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>)
+0108 <span class="keyword">end</span>
+0109 
+0110</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

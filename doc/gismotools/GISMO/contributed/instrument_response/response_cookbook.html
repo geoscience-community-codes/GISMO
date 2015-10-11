@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of response_cookbook</title>
+  <meta name="keywords" content="response_cookbook">
+  <meta name="description" content="% Instrument response cookbook">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">instrument_response</a> &gt; response_cookbook.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/instrument_response&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>response_cookbook
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>% Instrument response cookbook</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Instrument response cookbook
+ The goal of this toolbox is to provide a rapid way to apply instrument
+ response corrections to seismic data. The response toolbox has routines
+ for reading instrument responses from outside formats, visualizing
+ responses, and correcting seismic data for their effects. The toolbox is
+ not designed for creating or storing multistage instrument responses.
+ There are numerous systems for storing response information. This toolkit
+ focuses on providing users with tools to interact with existing response
+ information.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="response_apply.html" class="code" title="function wNew = response_apply(w,filterObj,sourceType,source)">response_apply</a>	RESPONSE_APPLY Deconvolve an instrument response from a waveform object.</li><li><a href="response_demo_database.html" class="code" title="function dbName = response_demo_database">response_demo_database</a>	RESPONSE_DEMO_DATABASE returns the absolute path to the demo database</li><li><a href="response_demo_waveforms.html" class="code" title="function w = response_demo_waveforms">response_demo_waveforms</a>	RESPONSE_DEMO_WAVEFORMS returns the absolute path to the demo database</li><li><a href="response_get_from_db.html" class="code" title="function [response] = response_get_from_db(station, channel, time, frequencies, dbName)">response_get_from_db</a>	RESPONSE_GET_FROM_DB Get instrument response from database.</li><li><a href="response_get_from_polezero.html" class="code" title="function response = response_get_from_polezero(frequencies,polezero)">response_get_from_polezero</a>	RESPONSE_GET_FROM_POLEZERO Create response structure from poles/zeros</li><li><a href="response_plot.html" class="code" title="function response_plot(response,xLimits,noLegend)">response_plot</a>	RESPONSE_PLOT plot an instrument response</li><li><a href="response_polezero_demo.html" class="code" title="function polezero = response_polezero_demo">response_polezero_demo</a>	RESPONSE_POLEZERO_DEMO Create a polezero structure</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%% Instrument response cookbook</span>
+0002 <span class="comment">% The goal of this toolbox is to provide a rapid way to apply instrument</span>
+0003 <span class="comment">% response corrections to seismic data. The response toolbox has routines</span>
+0004 <span class="comment">% for reading instrument responses from outside formats, visualizing</span>
+0005 <span class="comment">% responses, and correcting seismic data for their effects. The toolbox is</span>
+0006 <span class="comment">% not designed for creating or storing multistage instrument responses.</span>
+0007 <span class="comment">% There are numerous systems for storing response information. This toolkit</span>
+0008 <span class="comment">% focuses on providing users with tools to interact with existing response</span>
+0009 <span class="comment">% information.</span>
+0010 
+0011 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0012 <span class="comment">% $Date$</span>
+0013 <span class="comment">% $Revision$</span>
+0014 
+0015 <span class="comment">% TODO:</span>
+0016 <span class="comment">% Create NEW waveform for a good YAHTSE event for a couple of channels. DEMO+_PLUTONS</span>
+0017 <span class="comment">% Enable Antelope checking in response_get_from_db</span>
+0018 
+0019 
+0020 <span class="comment">%% Create a response structure from an Antelope database</span>
+0021 <span class="comment">% The response structure is the internal method for storing a response as a</span>
+0022 <span class="comment">% function of frequency (in Hz). This is independent of the native format</span>
+0023 <span class="comment">% of the response (poles/zeros, frequency/amplitude/phase tuples, FIR</span>
+0024 <span class="comment">% filters, etc.) Creation of the response structure is handled in the</span>
+0025 <span class="comment">% RESPONSE_GET_XXXXX functions.</span>
+0026 time = datenum(<span class="string">'2010/02/27'</span>);
+0027 dbName = <a href="response_demo_database.html" class="code" title="function dbName = response_demo_database">response_demo_database</a>;
+0028 frequencies = logspace(-2,2,100);
+0029 station = {<span class="string">'UTCA'</span> <span class="string">'UTTM'</span> <span class="string">'UTLO'</span> <span class="string">'UTSA'</span>};
+0030 channel = {<span class="string">'SHZ'</span> <span class="string">'SHZ'</span> <span class="string">'BHZ'</span> <span class="string">'BHZ'</span>};
+0031 <span class="keyword">for</span> n = 1:4
+0032     response(n) = <a href="response_get_from_db.html" class="code" title="function [response] = response_get_from_db(station, channel, time, frequencies, dbName)">response_get_from_db</a>( station{n} , channel{n} , time , frequencies , dbName);
+0033 <span class="keyword">end</span>
+0034 
+0035 
+0036 <span class="comment">%% Show the fields of the response structure</span>
+0037 <span class="comment">% The response structure contains a number of fields</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%       scnl: scnlobject associated with the response</span>
+0040 <span class="comment">%       time: time at which the response is valid</span>
+0041 <span class="comment">%frequencies: Nx1 vector of frequencies (Hz)</span>
+0042 <span class="comment">%     values: Nx1 vector of complex responses at each frequency.</span>
+0043 <span class="comment">%               Values should be normalized such that the maximum amplitude</span>
+0044 <span class="comment">%               of the response (max(abs(values))) is near 1.</span>
+0045 <span class="comment">%      calib: Scaler alibration value used to scale the normalized responses</span>
+0046 <span class="comment">%               to their real value. NOTE that many waveform objects already</span>
+0047 <span class="comment">%               have this value applied.</span>
+0048 <span class="comment">%      units: Character string describing the units</span>
+0049 <span class="comment">% sampleRate: Sample rate in Hz</span>
+0050 <span class="comment">%   respFile: Character string of name (and path) of response file.</span>
+0051 <span class="comment">%     status: Open-ended character string describing any issues with file</span>
+0052 
+0053 response(1)
+0054 
+0055 
+0056 <span class="comment">%% Create a response structure from a set of poles and zeros</span>
+0057 <span class="comment">% This usage requires as input a so-called polezero structure containing</span>
+0058 <span class="comment">% three fields named poles, zeros and normalization. The first two should</span>
+0059 <span class="comment">% be Nx1 while the normalization field is a scalar. Once this strcture</span>
+0060 <span class="comment">% exists it can be passed to response_get_frompolezero using the same</span>
+0061 <span class="comment">% frequencies term as above.</span>
+0062 
+0063 polezero = <a href="response_polezero_demo.html" class="code" title="function polezero = response_polezero_demo">response_polezero_demo</a>;
+0064 response_polezero = <a href="response_get_from_polezero.html" class="code" title="function response = response_get_from_polezero(frequencies,polezero)">response_get_from_polezero</a>(frequencies,polezero)
+0065 
+0066 
+0067 <span class="comment">%% Plot responses</span>
+0068 <span class="comment">% This is a simple function that plots the instrument responses. Input</span>
+0069 <span class="comment">% RESPONSE structure follows the same construct as above. RESPONSE_PLOT can</span>
+0070 <span class="comment">% accept a single response structure or a matrix of responses. Some attempt</span>
+0071 <span class="comment">% is made to label in smart ways using the other fields in the resposne</span>
+0072 <span class="comment">% structure.</span>
+0073 
+0074 <a href="response_plot.html" class="code" title="function response_plot(response,xLimits,noLegend)">response_plot</a>(response)
+0075 set(gcf,<span class="string">'Position'</span>,[50 50 700 400]);
+0076 
+0077 
+0078 <span class="comment">%% Correct seismic waveforms for instrument response from Antelope database</span>
+0079 dbName = <a href="response_demo_database.html" class="code" title="function dbName = response_demo_database">response_demo_database</a>;
+0080 w = <a href="response_demo_waveforms.html" class="code" title="function w = response_demo_waveforms">response_demo_waveforms</a>;
+0081 filterObj = filterobject(<span class="string">'b'</span>,[0.5 10],3);
+0082 wCorrected = <a href="response_apply.html" class="code" title="function wNew = response_apply(w,filterObj,sourceType,source)">response_apply</a>(w,filterObj,<span class="string">'antelope'</span>,dbName)
+0083 
+0084 figure(<span class="string">'Position'</span>,[50 50 700 400],<span class="string">'Color'</span>,<span class="string">'w'</span>);
+0085 hold on;
+0086 plot(w(1),<span class="string">'b'</span>);
+0087 plot(wCorrected(1),<span class="string">'r'</span>);
+0088 
+0089 
+0090 <span class="comment">% NOT FINISHED ....</span>
+0091 
+0092 <span class="comment">%w = response_apply(w,filterObj,'polezero',polezero);</span>
+0093 <span class="comment">%w(3) = response_apply(w(1),filterObj,'structure',response)</span>
+0094 <span class="comment">% plot before and after ....</span>
+0095 
+0096 
+0097 
+0098 
+0099 
+0100 
+0101 
+0102 
+0103 
+0104 
+0105 
+0106 
+0107 
+0108 
+0109 
+0110 
+0111 
+0112 
+0113 
+0114 
+0115 
+0116 
+0117 
+0118 
+0119 
+0120 
+0121 
+0122 
+0123 
+0124</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

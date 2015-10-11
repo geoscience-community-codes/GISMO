@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sst2wfa</title>
+  <meta name="keywords" content="sst2wfa">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../../index.html">GISMO</a> &gt; <a href="../../../index.html">classes</a> &gt; <a href="../../index.html">@helicorder</a> &gt; <a href="#">private</a> &gt; <a href="index.html">Event_Conversion</a> &gt; sst2wfa.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../../index.html"><img alt="<" border="0" src="../../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@helicorder/private/Event_Conversion&nbsp;<img alt=">" border="0" src="../../../../../../right.png"></a></td></tr></table>-->
+
+<h1>sst2wfa
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+<div class="box"><strong>function wfa = sst2wfa(sst,w) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">
+SST2WFA: Convert events from SST form to WFA form.
+      WFA - WaveForm Array form, events separated in nx1 waveform array
+          - (or) into 1xl cell array, each cell containing a nx1 waveform 
+          - array of events from a separate station/channel.
+      NAN - NaN form, (1xl waveform) for l station/channels with events in 
+            one time series w/ non-events = NaN. 
+      SST - Start/Stop Times form, nx2 array of matlab start/stop times
+            (or) 1xl cell array, each cell containing nx2 start/stop
+            times from a separate station/channel.
+
+USAGE: wfa = sst2wfa(sst)
+
+INPUTS: w    - Waveform object that contains events
+        sst  - Events (WFA form)   
+
+OUTPUTS: wfa - Events (WFA form)
+
+ See also <a href="nan2sst.html" class="code" title="function sst = nan2sst(nan)">NAN2SST</a>, <a href="nan2wfa.html" class="code" title="function wfa = nan2wfa(nan)">NAN2WFA</a>, <a href="ssd2sst.html" class="code" title="function sst = ssd2sst(ssd,w)">SSD2SST</a>, <a href="sst2nan.html" class="code" title="function nan = sst2nan(sst,w)">SST2NAN</a>, <a href="sst2ssd.html" class="code" title="function ssd = sst2ssd(sst,w)">SST2SSD</a>, <a href="sst2val.html" class="code" title="function w = sst2val(sst,w,val)">SST2VAL</a>,
+          <a href="wfa2nan.html" class="code" title="function nan = wfa2nan(wfa, varargin)">WFA2NAN</a>, <a href="wfa2sst.html" class="code" title="function sst = wfa2sst(wfa)">WFA2SST</a>
+
+ Author: Dane Ketner, Alaska Volcano Observatory
+ $Date$
+ $Revision$</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function wfa = sst2wfa(sst,w)</a>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%SST2WFA: Convert events from SST form to WFA form.</span>
+0004 <span class="comment">%      WFA - WaveForm Array form, events separated in nx1 waveform array</span>
+0005 <span class="comment">%          - (or) into 1xl cell array, each cell containing a nx1 waveform</span>
+0006 <span class="comment">%          - array of events from a separate station/channel.</span>
+0007 <span class="comment">%      NAN - NaN form, (1xl waveform) for l station/channels with events in</span>
+0008 <span class="comment">%            one time series w/ non-events = NaN.</span>
+0009 <span class="comment">%      SST - Start/Stop Times form, nx2 array of matlab start/stop times</span>
+0010 <span class="comment">%            (or) 1xl cell array, each cell containing nx2 start/stop</span>
+0011 <span class="comment">%            times from a separate station/channel.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%USAGE: wfa = sst2wfa(sst)</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%INPUTS: w    - Waveform object that contains events</span>
+0016 <span class="comment">%        sst  - Events (WFA form)</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%OUTPUTS: wfa - Events (WFA form)</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% See also NAN2SST, NAN2WFA, SSD2SST, SST2NAN, SST2SSD, SST2VAL,</span>
+0021 <span class="comment">%          WFA2NAN, WFA2SST</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Author: Dane Ketner, Alaska Volcano Observatory</span>
+0024 <span class="comment">% $Date$</span>
+0025 <span class="comment">% $Revision$</span>
+0026 
+0027 <span class="keyword">if</span> iscell(sst)
+0028    <span class="keyword">if</span> numel(sst) == numel(w)
+0029       <span class="keyword">for</span> l=1:numel(sst)
+0030          <span class="keyword">for</span> n=1:size(sst{l},1)
+0031             wfa{l}(n) = extract(w,<span class="string">'time'</span>,sst{l}(n,1),sst{l}(n,2));
+0032          <span class="keyword">end</span>
+0033       <span class="keyword">end</span>
+0034    <span class="keyword">else</span>
+0035       error([<span class="string">'sst2nan:ArgumentDimensions - Number of elements in'</span>,<span class="keyword">...</span>
+0036              <span class="string">' waveform input ''w'' and cell input ''sst'' must match'</span>]);
+0037    <span class="keyword">end</span>
+0038 <span class="keyword">else</span>
+0039    <span class="keyword">for</span> n=1:size(sst,1)
+0040       wfa(n) = extract(w,<span class="string">'time'</span>,sst(n,1),sst(n,2));
+0041    <span class="keyword">end</span>
+0042 <span class="keyword">end</span>
+0043 
+0044 
+0045    
+0046</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

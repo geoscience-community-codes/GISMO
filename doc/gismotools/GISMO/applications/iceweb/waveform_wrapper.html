@@ -1,0 +1,301 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of waveform_wrapper</title>
+  <meta name="keywords" content="waveform_wrapper">
+  <meta name="description" content="WAVEFORM_WRAPPER try multiple datasource objects in">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">applications</a> &gt; <a href="index.html">iceweb</a> &gt; waveform_wrapper.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/applications/iceweb&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>waveform_wrapper
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>WAVEFORM_WRAPPER try multiple datasource objects in</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w=waveform_wrapper(chantag, snum, enum, ds); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> WAVEFORM_WRAPPER try multiple datasource objects in 
+ &quot;all&quot; and &quot;single&quot; extractmodes, until we either have a waveform
+ for each chantag between times given, or have exhausted all
+ options.
+
+ This function is useful if you have multiple source datasources
+ that might contain the data you care about. For each channeltag
+ requested, every datasource will be tried, and the one that returns 
+ the most data will be used.  
+
+     W = waveform_wrapper(SCNL, SNUM, ENUM, DATASOURCES)
+
+    Inputs:
+        chantag - a vector of type channeltag 
+        snum - start date/time in datenum format
+        enum - end date/time in datenum format
+        datasources - a vector of datasources to try
+
+     The main advantage of this wrapper for automation is that
+     if ds is a vector of different datasources, it will try all of them.
+
+     It will also try to create waveform objects with a single call of waveform,
+     but if this fails, it will call waveform for each channeltag in turn.
+
+    See also: channeltag, waveform, datasource, datenum</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [w,chantaggot] = deal_waveforms(w, w_new, chantaggot, extractmode, datapath)</a></li><li><a href="#_sub2" class="code">function print_waveform_call(snum, enum, chantag, ds)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w=waveform_wrapper(chantag, snum, enum, ds);</a>
+0002 <span class="comment">% WAVEFORM_WRAPPER try multiple datasource objects in</span>
+0003 <span class="comment">% &quot;all&quot; and &quot;single&quot; extractmodes, until we either have a waveform</span>
+0004 <span class="comment">% for each chantag between times given, or have exhausted all</span>
+0005 <span class="comment">% options.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function is useful if you have multiple source datasources</span>
+0008 <span class="comment">% that might contain the data you care about. For each channeltag</span>
+0009 <span class="comment">% requested, every datasource will be tried, and the one that returns</span>
+0010 <span class="comment">% the most data will be used.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%     W = waveform_wrapper(SCNL, SNUM, ENUM, DATASOURCES)</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    Inputs:</span>
+0015 <span class="comment">%        chantag - a vector of type channeltag</span>
+0016 <span class="comment">%        snum - start date/time in datenum format</span>
+0017 <span class="comment">%        enum - end date/time in datenum format</span>
+0018 <span class="comment">%        datasources - a vector of datasources to try</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%     The main advantage of this wrapper for automation is that</span>
+0021 <span class="comment">%     if ds is a vector of different datasources, it will try all of them.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%     It will also try to create waveform objects with a single call of waveform,</span>
+0024 <span class="comment">%     but if this fails, it will call waveform for each channeltag in turn.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%    See also: channeltag, waveform, datasource, datenum</span>
+0027 
+0028 
+0029 <span class="comment">% AUTHOR: Glenn Thompson, UAF-GI</span>
+0030 <span class="comment">% $Date: $</span>
+0031 <span class="comment">% $Revision: -1 $</span>
+0032 
+0033     debug.printfunctionstack(<span class="string">'&gt;'</span>);
+0034 
+0035     <span class="comment">% change channel tag if this is MV network because channels in wfdisc table</span>
+0036     <span class="comment">% are like SHZ_--</span>
+0037     <span class="keyword">for</span> c=1:numel(chantag)
+0038         <span class="keyword">if</span> strcmp(chantag(c).network, <span class="string">'MV'</span>)
+0039             chantag(c).channel = sprintf(<span class="string">'%s_--'</span>,chantag(c).channel);
+0040         <span class="keyword">end</span>
+0041     <span class="keyword">end</span>
+0042 
+0043     <span class="comment">% get datasource</span>
+0044     <span class="keyword">if</span> isempty(ds)
+0045         debug.print_debug(1,<span class="string">'No valid datasource. Exiting.'</span>);
+0046         w=[];    
+0047         <span class="keyword">return</span>;
+0048     <span class="keyword">end</span>
+0049 
+0050     numchantags = numel(chantag); 
+0051 
+0052     <span class="comment">% chantaggot will record which chantags we've got data for, and which we haven't</span>
+0053     <span class="comment">% initially set chantaggot for each chantag to 0.</span>
+0054     chantaggot = zeros(numchantags,1);
+0055 
+0056     <span class="comment">% start off with blank waveform objects</span>
+0057     <span class="keyword">for</span> c=1:numchantags
+0058         w(c) = waveform;
+0059     <span class="comment">%    w(c) = set(w(c), 'station', get(scnl(c), 'station') );</span>
+0060     <span class="comment">%    w(c) = set(w(c), 'channel', get(scnl(c), 'channel') );</span>
+0061         w(c) = set(w(c), <span class="string">'station'</span>, chantag(c).station);
+0062         w(c) = set(w(c), <span class="string">'channel'</span>, chantag(c).channel);
+0063         w(c) = set(w(c), <span class="string">'start'</span>, snum);
+0064     <span class="keyword">end</span>
+0065 
+0066 
+0067     <span class="comment">%% loop over all data sources until some data found</span>
+0068     <span class="comment">% - all station extractmode for speed</span>
+0069     debug.print_debug(2,<span class="string">'- ALL STATIONS MODE'</span>);
+0070     finished = false;
+0071     <span class="keyword">for</span> dsi=1:length(ds)
+0072 
+0073         <span class="comment">% for informational purposes only, record where we get data from</span>
+0074         datapath=<span class="string">''</span>;
+0075         <span class="keyword">if</span> strcmp(get(ds(dsi), <span class="string">'type'</span>), <span class="string">'antelope'</span>)
+0076             <span class="comment">% if dbopen command not recognised it means Antelope not installed</span>
+0077             <span class="comment">% - skip to next datasource</span>
+0078             dummy = help(<span class="string">'dbopen'</span>);
+0079             <span class="keyword">if</span> isempty(dummy)
+0080                 <span class="keyword">continue</span>;
+0081             <span class="keyword">end</span>
+0082             datapath = getfilename(ds(dsi), chantag(1), snum);
+0083         <span class="keyword">else</span>
+0084             datapath = get(ds(dsi), <span class="string">'server'</span>);
+0085         <span class="keyword">end</span>
+0086         <span class="keyword">if</span> strcmp(class(datapath), <span class="string">'cell'</span>)
+0087             datapath = datapath{1};
+0088         <span class="keyword">end</span>
+0089 
+0090         chantagtoget = chantag(chantaggot==0);
+0091         <span class="keyword">if</span> (length(chantagtoget)==0)
+0092             debug.print_debug(2,<span class="string">'- Got data for all chantags'</span>);
+0093             finished = true;
+0094             <span class="keyword">break</span>;
+0095         <span class="keyword">else</span>
+0096             debug.print_debug(2, sprintf(<span class="string">'- There are still %d chantags to get waveform objects for'</span>, length(chantagtoget)));
+0097         <span class="keyword">end</span>
+0098         <span class="keyword">try</span>    
+0099             <span class="keyword">if</span> length(chantagtoget)&gt;0
+0100                 debug.print_debug(0, sprintf(<span class="string">'- Attempting to load waveform data for %d remaining stations (of %d total) from %s to %s'</span>,length(chantagtoget),numchantags,datestr(snum,31),datestr(enum,31)));
+0101                 <span class="comment">%print_waveform_call(snum, enum, chantagtoget, ds(dsi))</span>
+0102                 save lastwaveformcall.mat ds chantag snum enum
+0103                 w_new = waveform(ds(dsi), chantagtoget, snum, enum); 
+0104         w_new = combine(w_new);
+0105             <span class="keyword">else</span>
+0106                 <span class="keyword">continue</span>;
+0107             <span class="keyword">end</span>
+0108         <span class="keyword">catch</span> ME
+0109             <a href="#_sub2" class="code" title="subfunction print_waveform_call(snum, enum, chantag, ds)">print_waveform_call</a>(snum, enum, chantagtoget, ds(dsi))
+0110             debug.print_debug(1,<span class="string">'waveform failed'</span>); 
+0111             w_new = [];
+0112         <span class="keyword">end</span>
+0113         <span class="keyword">if</span> ~isempty(w_new)
+0114             [w, chantaggot] = <a href="#_sub1" class="code" title="subfunction [w,chantaggot] = deal_waveforms(w, w_new, chantaggot, extractmode, datapath)">deal_waveforms</a>(w, w_new, chantaggot, <span class="string">'all'</span>, datapath);
+0115         <span class="keyword">end</span>
+0116     <span class="keyword">end</span>    
+0117 
+0118     <span class="comment">% - individual station extractmode to fill in blanks</span>
+0119     <span class="keyword">if</span> ~finished 
+0120         debug.print_debug(2,<span class="string">'- SINGLE CHANNEL MODE'</span>);
+0121         <span class="keyword">for</span> dsi=1:length(ds)
+0122 
+0123             <span class="comment">% for informational purposes only, record where we get data from</span>
+0124             datapath=<span class="string">''</span>;
+0125             <span class="keyword">if</span> strcmp(get(ds(dsi), <span class="string">'type'</span>), <span class="string">'antelope'</span>)
+0126                 datapath = getfilename(ds(dsi), chantag(1), snum);
+0127             <span class="keyword">else</span>
+0128                 datapath = get(ds(dsi), <span class="string">'server'</span>);
+0129             <span class="keyword">end</span>
+0130             <span class="keyword">if</span> strcmp(class(datapath), <span class="string">'cell'</span>)
+0131                 datapath = datapath{1};
+0132             <span class="keyword">end</span>
+0133 
+0134             chantagtoget = chantag(chantaggot==0);
+0135             <span class="keyword">if</span> (length(chantagtoget)==0)
+0136                 debug.print_debug(2,<span class="string">'- Got data for all chantags'</span>);
+0137                 finished = true;
+0138                 <span class="keyword">break</span>;
+0139             <span class="keyword">else</span>
+0140                 debug.print_debug(2,sprintf(<span class="string">'- There are still %d chantags to get waveform objects for'</span>, length(chantagtoget)));
+0141             <span class="keyword">end</span>
+0142             
+0143             <span class="keyword">for</span> c=1:numchantags    
+0144                 <span class="keyword">if</span> chantaggot(c)==0
+0145                     <span class="keyword">try</span>    
+0146                         <span class="keyword">if</span> length(chantagtoget)&gt;0
+0147                             <span class="comment">%debug.print_debug(sprintf('- Attempting to load waveform data for %s-%s from %s to %s',get(scnl(c),'station'),get(scnl(c),'channel'),datestr(snum,31),datestr(enum,31)),0);</span>
+0148                             save lastwaveformcall.mat ds chantag snum enum chantagtoget c
+0149                             w_new = waveform(ds(dsi), chantag(c), snum, enum); 
+0150                 w_new = combine(w_new);
+0151                         <span class="keyword">else</span>
+0152                             <span class="keyword">continue</span>;
+0153                         <span class="keyword">end</span>
+0154                     <span class="keyword">catch</span> ME
+0155                         <a href="#_sub2" class="code" title="subfunction print_waveform_call(snum, enum, chantag, ds)">print_waveform_call</a>(snum, enum, chantag(c), ds(dsi))
+0156                         debug.print_debug(1,<span class="string">'waveform failed'</span>); 
+0157                         w_new = [];
+0158                     <span class="keyword">end</span>
+0159                     <span class="keyword">if</span> ~isempty(w_new)
+0160                         [w, chantaggot] = <a href="#_sub1" class="code" title="subfunction [w,chantaggot] = deal_waveforms(w, w_new, chantaggot, extractmode, datapath)">deal_waveforms</a>(w, w_new, chantaggot, <span class="string">'single'</span>, datapath);
+0161                     <span class="keyword">end</span>
+0162                 <span class="keyword">end</span>    
+0163             <span class="keyword">end</span>
+0164         <span class="keyword">end</span>
+0165     <span class="keyword">end</span>    
+0166     <span class="comment">% now remove any waveforms which are empty</span>
+0167     <span class="comment">%w = w(find(chantaggot==1));</span>
+0168 
+0169     <span class="comment">% report what waveforms we got and where they came from</span>
+0170     <span class="keyword">for</span> i=1:numel(w)
+0171         sta0 = get(w(i), <span class="string">'station'</span>);
+0172         chan0 = get(w(i), <span class="string">'channel'</span>);
+0173         <span class="comment">%ds0 = get(w(i), 'ds');</span>
+0174         <span class="comment">%extractmode0 = get(w(i), 'extractmode');</span>
+0175         dl0 = get(w(i), <span class="string">'data_length'</span>);
+0176         <span class="comment">%debug.print_debug(sprintf('- waveform %d: got %d samples for %s-%s from %s in extractmode %s',i,dl0,sta0,chan0,ds0,extractmode0),2);</span>
+0177         debug.print_debug(2,sprintf(<span class="string">'- waveform %d: got %d samples for %s-%s'</span>,i,dl0,sta0,chan0));
+0178     <span class="keyword">end</span>
+0179     debug.print_debug(1,sprintf(<span class="string">'- Got %d waveform objects\n'</span>, length(w)));
+0180     <span class="comment">%print_debug(sprintf('&lt; %s', mfilename),1)</span>
+0181     debug.printfunctionstack(<span class="string">'&lt;'</span>);
+0182 <span class="keyword">end</span>
+0183 
+0184 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0185 
+0186 <a name="_sub1" href="#_subfunctions" class="code">function [w,chantaggot] = deal_waveforms(w, w_new, chantaggot, extractmode, datapath)</a>
+0187 <span class="comment">% take arrays of waveforms we just got, and waveforms we already have</span>
+0188     <span class="keyword">for</span> i=1:numel(w)
+0189         sta = get(w(i), <span class="string">'station'</span>);
+0190         chan = get(w(i), <span class="string">'channel'</span>);
+0191         <span class="keyword">for</span> j = 1:numel(w_new)
+0192             sta_new = get(w_new(j), <span class="string">'station'</span>);
+0193             chan_new = get(w_new(j), <span class="string">'channel'</span>);
+0194             nsamp = get(w_new(j), <span class="string">'data_length'</span>);
+0195             freq = get(w_new(j), <span class="string">'freq'</span>);
+0196             nsamp_expected = freq * 600;
+0197             <span class="keyword">if</span> (strcmp(sta_new, sta) &amp; strcmp(chan_new, chan))
+0198                 <span class="comment">% w_new(j) corresponds to chantag(i)</span>
+0199                 nsamp_before = get(w(i), <span class="string">'data_length'</span>);
+0200                 <span class="keyword">if</span> (nsamp &gt; nsamp_before) 
+0201                     w(i) = addfield(w_new(j), <span class="string">'extractmode'</span>, extractmode);
+0202                     w(i) = addfield(w(i), <span class="string">'ds'</span>, datapath);
+0203                     <span class="keyword">if</span> (nsamp &gt; 0.99 * nsamp_expected)
+0204                         chantaggot(i)=1;
+0205                     <span class="keyword">end</span>
+0206                 <span class="keyword">end</span>
+0207                 <span class="keyword">break</span>;
+0208             <span class="keyword">end</span>
+0209         <span class="keyword">end</span>
+0210     <span class="keyword">end</span>
+0211 <span class="keyword">end</span>
+0212 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0213 
+0214 <a name="_sub2" href="#_subfunctions" class="code">function print_waveform_call(snum, enum, chantag, ds)</a>
+0215 
+0216     disp(<span class="string">'Waveform call:'</span>)
+0217     <span class="keyword">for</span> c=1:numel(chantag)
+0218         fprintf(<span class="string">'\tchantag(%d) = channeltag(''%s'')\n'</span>, c, string(chantag(c)));
+0219     <span class="keyword">end</span>
+0220     <span class="keyword">if</span> (strcmp(get(ds, <span class="string">'type'</span>), <span class="string">'winston'</span>))
+0221         fprintf(<span class="string">'\tds = datasource(''winston'', ''%s'', %d);\n'</span>, get(ds, <span class="string">'server'</span>), get(ds, <span class="string">'port'</span>));
+0222     <span class="keyword">end</span>
+0223     <span class="keyword">if</span> (strcmp(get(ds, <span class="string">'type'</span>), <span class="string">'antelope'</span>))
+0224         filenames = getfilename(ds, chantag(1), snum);
+0225         fprintf(<span class="string">'\tds = datasource(''antelope'', ''%s'');\n'</span>, filenames{1});
+0226     <span class="keyword">end</span>
+0227     fprintf(<span class="string">'\tw = waveform(ds, chantag, %f, %f)\n'</span>, snum, enum);
+0228 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

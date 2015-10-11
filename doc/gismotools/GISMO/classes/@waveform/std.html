@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of std</title>
+  <meta name="keywords" content="std">
+  <meta name="description" content="STD Standard deviation of a waveform">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; std.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>std
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>STD Standard deviation of a waveform</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function Y = std(w,flag) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">STD Standard deviation of a waveform
+  Y = STD(W), where W is an N-dimensional waveform object returns the
+  standard deviation within each waveform, normalized by N-1
+
+  Y = STD(W,1) returns the standard deviation within each waveform,
+  normalized by N
+
+  Note: NaN values are ignored entirely
+
+  See also WAVEFORM/MEAN, WAVEFORM/MEDIAN, NANSTD</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="std.html" class="code" title="function Y = std(w,flag)">std</a>	STD Standard deviation of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="resample.html" class="code" title="function w = resample(w,method, val)">resample</a>	RESAMPLE resamples a waveform at over every specified interval</li><li><a href="std.html" class="code" title="function Y = std(w,flag)">std</a>	STD Standard deviation of a waveform</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function Y = std(w,flag)</a>
+0002    <span class="comment">%STD Standard deviation of a waveform</span>
+0003    <span class="comment">%  Y = STD(W), where W is an N-dimensional waveform object returns the</span>
+0004    <span class="comment">%  standard deviation within each waveform, normalized by N-1</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">%  Y = STD(W,1) returns the standard deviation within each waveform,</span>
+0007    <span class="comment">%  normalized by N</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">%  Note: NaN values are ignored entirely</span>
+0010    <span class="comment">%</span>
+0011    <span class="comment">%  See also WAVEFORM/MEAN, WAVEFORM/MEDIAN, NANSTD</span>
+0012    
+0013    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0014    <span class="comment">% $Date$</span>
+0015    <span class="comment">% $Revision$</span>
+0016    
+0017    Y = zeros(size(w));
+0018    
+0019    <span class="comment">%if the statistics toolbox is installed, use the builtin nanstd function to</span>
+0020    <span class="comment">%ignore NaN values during the variance calculation.</span>
+0021    <span class="keyword">if</span> ~<a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(ver(<span class="string">'stats'</span>))
+0022       <span class="keyword">if</span> (exist(<span class="string">'flag'</span>,<span class="string">'var'</span>) &amp;&amp; (flag == 1))
+0023          <span class="keyword">for</span> n = 1:numel(Y)
+0024             Y(n) = nanstd(w(n).data,1);
+0025          <span class="keyword">end</span>
+0026       <span class="keyword">else</span>
+0027          <span class="keyword">for</span> n = 1:numel(Y)
+0028             Y(n) = nanstd(w(n).data);
+0029          <span class="keyword">end</span>
+0030       <span class="keyword">end</span>
+0031       
+0032    <span class="keyword">else</span>
+0033       <span class="comment">% the statistics toolbox is not installed, so any nan values will have</span>
+0034       <span class="comment">% to be dealt with (ignored) manually.</span>
+0035       <span class="keyword">if</span> (exist(<span class="string">'flag'</span>,<span class="string">'var'</span>) &amp;&amp; (flag == 1))
+0036          <span class="keyword">for</span> n = 1:numel(Y)
+0037             d = w(n).data;
+0038             <span class="comment">%d = d(~isnan(d));</span>
+0039             Y(n) = <a href="std.html" class="code" title="function Y = std(w,flag)">std</a>(d(~isnan(d)),1);
+0040          <span class="keyword">end</span>
+0041       <span class="keyword">else</span>
+0042          <span class="keyword">for</span> n = 1:numel(Y)
+0043             d = w(n).data;
+0044             <span class="comment">%d = d(~isnan(d));</span>
+0045             Y(n) = <a href="std.html" class="code" title="function Y = std(w,flag)">std</a>(d(~isnan(d)));
+0046          <span class="keyword">end</span>
+0047       <span class="keyword">end</span>
+0048    <span class="keyword">end</span>
+0049 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

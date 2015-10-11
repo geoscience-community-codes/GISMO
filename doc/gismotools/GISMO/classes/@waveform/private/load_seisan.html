@@ -1,0 +1,203 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of load_seisan</title>
+  <meta name="keywords" content="load_seisan">
+  <meta name="description" content="Read a v7.0 or later SEISAN file">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; load_seisan.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>load_seisan
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Read a v7.0 or later SEISAN file</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function w = load_seisan(fn)%dataRequest) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Read a v7.0 or later SEISAN file
+ example file is currently :'c:\2008-05-12-0630-00S.INSN__054'
+ dataRequest has the fields dataSource, scnls, startTimes, and endTimes
+ only looks in first file, currently.
+dataRequest.startTimes = subdivide_files_by_date(dataRequest.dataSource,dataRequest.startTimes,dataRequest.endTimes);
+fn = getfilename(dataRequest.dataSource,dataRequest.scnls,dataRequest.startTimes);</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function h = parseSeisamHeader(headerBlock)</a></li><li><a href="#_sub2" class="code">function ch = parseSeisamChannelHeader(channelBlock)</a></li><li><a href="#_sub3" class="code">function d = parseSeisamData(dataBlock)</a></li><li><a href="#_sub4" class="code">function st = getStartTime(myData)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = load_seisan(fn)</a><span class="comment">%dataRequest)</span>
+0002    <span class="comment">% Read a v7.0 or later SEISAN file</span>
+0003    <span class="comment">% example file is currently :'c:\2008-05-12-0630-00S.INSN__054'</span>
+0004    <span class="comment">% dataRequest has the fields dataSource, scnls, startTimes, and endTimes</span>
+0005    <span class="comment">% only looks in first file, currently.</span>
+0006    <span class="comment">%dataRequest.startTimes = subdivide_files_by_date(dataRequest.dataSource,dataRequest.startTimes,dataRequest.endTimes);</span>
+0007    <span class="comment">%fn = getfilename(dataRequest.dataSource,dataRequest.scnls,dataRequest.startTimes);</span>
+0008    w  = waveform; <span class="comment">%initialize, in case nothing works</span>
+0009    MACHINEFORMAT = <span class="string">'l'</span>;
+0010    <span class="comment">%disp('Little Endian');</span>
+0011    fid = fopen(fn,<span class="string">'r'</span>,MACHINEFORMAT);
+0012    bytesToRead = fread(fid,1,<span class="string">'uint32'</span>);
+0013    <span class="keyword">if</span> bytesToRead ~= 80
+0014       fclose(fid);
+0015       MACHINEFORMAT = <span class="string">'b'</span>;
+0016       <span class="comment">%disp('Switching to Big Endian');</span>
+0017       fid = fopen(fn,<span class="string">'r'</span>,MACHINEFORMAT);
+0018       bytesToRead = fread(fid,1,<span class="string">'uint32'</span>);
+0019       <span class="keyword">if</span> bytesToRead ~= 80
+0020          
+0021          warning(<span class="string">'Waveform:load_seisan:invalidFileFormat'</span>,[<span class="string">'File does not appear to be a SEISAN file,]'</span><span class="keyword">...</span>
+0022             <span class="string">'[ or is an old PC version.\n This program is currently]'</span>,<span class="keyword">...</span>
+0023             <span class="string">'[ incapable of opening PC SEISAN files older than V7.0'</span>]);
+0024          fclose(fid);
+0025          <span class="keyword">return</span>
+0026       <span class="keyword">end</span>
+0027    <span class="keyword">end</span>
+0028    
+0029    
+0030    fseek(fid,0,-1);
+0031    
+0032    nsta = 0;
+0033    <span class="keyword">for</span> i=1:333;
+0034       bytesToRead = fread(fid,1,<span class="string">'uint32'</span>);
+0035       <span class="keyword">if</span> bytesToRead == 80
+0036          st(1:80) = fread(fid,80,<span class="string">'char'</span>);
+0037          <span class="keyword">if</span> i== 1
+0038             h = <a href="#_sub1" class="code" title="subfunction h = parseSeisamHeader(headerBlock)">parseSeisamHeader</a>(st);
+0039             nsta = h.stationCount;
+0040          <span class="keyword">end</span>
+0041          
+0042          <span class="keyword">if</span> i &gt;= 3
+0043             <span class="keyword">for</span> j=1:3
+0044                thisbit = st(((j-1) * 26 + 1):(j*26));
+0045                ch = <a href="#_sub2" class="code" title="subfunction ch = parseSeisamChannelHeader(channelBlock)">parseSeisamChannelHeader</a>(thisbit);
+0046             <span class="keyword">end</span>
+0047          <span class="keyword">end</span>
+0048          bytesRead = fread(fid,1,<span class="string">'uint32'</span>);
+0049          
+0050       <span class="keyword">else</span>
+0051          <span class="keyword">break</span>
+0052       <span class="keyword">end</span>
+0053    <span class="keyword">end</span>
+0054    
+0055    <span class="keyword">for</span> j = 1: nsta
+0056       dt = fread(fid,1040,<span class="string">'char'</span>);
+0057       mydata = <a href="#_sub3" class="code" title="subfunction d = parseSeisamData(dataBlock)">parseSeisamData</a>(dt);
+0058       w(j) = waveform;
+0059       w(j) = set(w(j),<span class="string">'station'</span>,mydata.station,<span class="string">'channel'</span>,mydata.channel,<span class="keyword">...</span>
+0060          <span class="string">'start'</span>,<a href="#_sub4" class="code" title="subfunction st = getStartTime(myData)">getStartTime</a>(mydata),<span class="string">'freq'</span>,mydata.sampleRate);
+0061       
+0062       nbytesread = fread(fid,1,<span class="string">'uint32'</span>); <span class="comment">%bytecount</span>
+0063       bytestoread = fread(fid,1,<span class="string">'uint32'</span>); <span class="comment">%bytecount</span>
+0064       
+0065       rawdata = fread(fid,bytestoread / 4,<span class="string">'int32'</span>);
+0066       w(j) = set(w(j),<span class="string">'data'</span>,rawdata);
+0067       
+0068       nbytesread = fread(fid,1,<span class="string">'uint32'</span>); <span class="comment">%bytecount</span>
+0069       nbytesToread2 = fread(fid,1,<span class="string">'uint32'</span>); <span class="comment">%bytecount</span>
+0070    <span class="keyword">end</span>
+0071    fclose(fid);
+0072 <span class="keyword">end</span>
+0073 
+0074 <a name="_sub1" href="#_subfunctions" class="code">function h = parseSeisamHeader(headerBlock)</a>
+0075    
+0076    hFieldName = {<span class="string">'network'</span>,<span class="string">'stationCount'</span>,<span class="string">'centuryCode'</span>,<span class="string">'year'</span>,<span class="string">'doy'</span>,<span class="string">'month'</span>,<span class="string">'day'</span>,<span class="string">'hr'</span>,<span class="string">'min'</span>,<span class="string">'sec'</span>,<span class="string">'totalTime'</span>};
+0077    hFieldpos = {2:30,31:33,34,35:36,38:40,42:43,45:46,48:49,51:52,54:59,61:69};
+0078    hFieldType = [<span class="string">'sddddddddff'</span>]; <span class="comment">%s=string, d=integer, f=float</span>
+0079    
+0080    <span class="keyword">for</span> n=1:numel(hFieldName)
+0081       <span class="keyword">switch</span> hFieldType(n)
+0082          <span class="keyword">case</span> <span class="string">'s'</span>
+0083             h.(hFieldName{n}) = deblank(char(headerBlock([hFieldpos{n}])));
+0084          <span class="keyword">case</span> <span class="string">'d'</span>
+0085             h.(hFieldName{n}) = str2double(char(headerBlock([hFieldpos{n}]')));
+0086          <span class="keyword">case</span> <span class="string">'f'</span>
+0087             h.(hFieldName{n}) = str2double(char(headerBlock([hFieldpos{n}]')));
+0088       <span class="keyword">end</span>
+0089    <span class="keyword">end</span>
+0090 <span class="keyword">end</span>
+0091 <a name="_sub2" href="#_subfunctions" class="code">function ch = parseSeisamChannelHeader(channelBlock)</a>
+0092    
+0093    chFieldName= {<span class="string">'station'</span>,<span class="string">'comp'</span>,<span class="string">'lastStaLetter'</span>,<span class="string">'startRelToEvent'</span>,<span class="string">'staDataInterval'</span>};
+0094    chFieldpos = {2:5,6:9,10,11:17,19:26};
+0095    chFieldType = [<span class="string">'sssff'</span>]; <span class="comment">%s=string, d=integer, f=float</span>
+0096    
+0097    <span class="keyword">for</span> n=1:numel(chFieldName)
+0098       <span class="keyword">switch</span> chFieldType(n)
+0099          <span class="keyword">case</span> <span class="string">'s'</span>
+0100             ch.(chFieldName{n}) = deblank(char(channelBlock([chFieldpos{n}])));
+0101          <span class="keyword">case</span> <span class="string">'d'</span>
+0102             ch.(chFieldName{n}) = str2double(char(channelBlock([chFieldpos{n}]')));
+0103          <span class="keyword">case</span> <span class="string">'f'</span>
+0104             ch.(chFieldName{n}) = str2double(char(channelBlock([chFieldpos{n}]')));
+0105       <span class="keyword">end</span>
+0106    <span class="keyword">end</span>
+0107 <span class="keyword">end</span>
+0108 <a name="_sub3" href="#_subfunctions" class="code">function d = parseSeisamData(dataBlock)</a>
+0109    
+0110    dFieldName= {<span class="string">'station'</span>,<span class="string">'channel'</span>,<span class="string">'centuryCode'</span>,<span class="string">'year'</span>,<span class="string">'doy'</span>,<span class="keyword">...</span>
+0111       <span class="string">'month'</span>,<span class="string">'day'</span>,<span class="string">'hr'</span>,<span class="string">'min'</span>,<span class="string">'timingIndicator'</span>,<span class="string">'second'</span>,<span class="string">'sampleRate'</span>,<span class="keyword">...</span>
+0112       <span class="string">'nsamp'</span>,<span class="string">'lat'</span>,<span class="string">'lon'</span>,<span class="string">'elev'</span>,<span class="string">'gainFactor'</span>,<span class="string">'howManyBits'</span>};
+0113    dFieldpos = {1:5,6:9,10,11:12,14:16,<span class="keyword">...</span>
+0114       18:19,21:22,24:25,27:28,29,30:35,37:43,<span class="keyword">...</span>
+0115       45:50,52:59,61:69,71:75,76,77};
+0116    dFieldType = [<span class="string">'ssdddddddsffdffdsd'</span>]; <span class="comment">%s=string, d=integer, f=float</span>
+0117    
+0118    <span class="keyword">for</span> n=1:numel(dFieldName)
+0119       <span class="keyword">switch</span> dFieldType(n)
+0120          <span class="keyword">case</span> <span class="string">'s'</span>
+0121             temp = char(dataBlock([dFieldpos{n}]));
+0122             d.(dFieldName{n}) = deblank(temp(:)');
+0123          <span class="keyword">case</span> <span class="string">'d'</span>
+0124             d.(dFieldName{n}) = str2double(char(dataBlock([dFieldpos{n}]')));
+0125          <span class="keyword">case</span> <span class="string">'f'</span>
+0126             d.(dFieldName{n}) = str2double(char(dataBlock([dFieldpos{n}]')));
+0127       <span class="keyword">end</span>
+0128    <span class="keyword">end</span>
+0129 <span class="keyword">end</span>
+0130 
+0131 <a name="_sub4" href="#_subfunctions" class="code">function st = getStartTime(myData)</a>
+0132    
+0133    <span class="keyword">switch</span> myData.centuryCode
+0134       <span class="keyword">case</span> 0
+0135          baseyear = 1900;
+0136       <span class="keyword">case</span> 1
+0137          baseyear = 2000;
+0138       <span class="keyword">otherwise</span>
+0139          baseyear = 0;
+0140    <span class="keyword">end</span>
+0141    st = datenum(myData.year + baseyear,<span class="keyword">...</span>
+0142       myData.month,<span class="keyword">...</span>
+0143       myData.day,<span class="keyword">...</span>
+0144       myData.hr,<span class="keyword">...</span>
+0145       myData.min,<span class="keyword">...</span>
+0146       myData.second);
+0147    
+0148    <span class="keyword">return</span>
+0149 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

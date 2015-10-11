@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of process_options</title>
+  <meta name="keywords" content="process_options">
+  <meta name="description" content="PROCESS_OPTIONS - Processes options passed to a Matlab function.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="#">packages</a> &gt; <a href="index.html">+matlab_extensions</a> &gt; process_options.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/packages/+matlab_extensions&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>process_options
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>PROCESS_OPTIONS - Processes options passed to a Matlab function.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function [varargout] = process_options(args, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> PROCESS_OPTIONS - Processes options passed to a Matlab function.
+                   This function provides a simple means of
+                   parsing attribute-value options.  Each option is
+                   named by a unique string and is given a default
+                   value.
+
+ Usage:  [var1, var2, ..., varn[, unused]] = ...
+           process_options(args, ...
+                           str1, def1, str2, def2, ..., strn, defn)
+
+ Arguments:   
+            args            - a cell array of input arguments, such
+                              as that provided by VARARGIN.  Its contents
+                              should alternate between strings and
+                              values.
+            str1, ..., strn - Strings that are associated with a 
+                              particular variable
+            def1, ..., defn - Default values returned if no option
+                              is supplied
+
+ Returns:
+            var1, ..., varn - values to be assigned to variables
+            unused          - an optional cell array of those 
+                              string-value pairs that were unused;
+                              if this is not supplied, then a
+                              warning will be issued for each
+                              option in args that lacked a match.
+
+ Examples:
+
+ Suppose we wish to define a Matlab function 'func' that has
+ required parameters x and y, and optional arguments 'u' and 'v'.
+ With the definition
+
+   function y = func(x, y, varargin)
+
+     [u, v] = process_options(varargin, 'u', 0, 'v', 1);
+
+ calling func(0, 1, 'v', 2) will assign 0 to x, 1 to y, 0 to u, and 2
+ to v.  The parameter names are insensitive to case; calling 
+ func(0, 1, 'V', 2) has the same effect.  The function call
+ 
+   func(0, 1, 'u', 5, 'z', 2);
+
+ will result in u having the value 5 and v having value 1, but
+ will issue a warning that the 'z' option has not been used.  On
+ the other hand, if func is defined as
+
+   function y = func(x, y, varargin)
+
+     [u, v, unused_args] = process_options(varargin, 'u', 0, 'v', 1);
+
+ then the call func(0, 1, 'u', 5, 'z', 2) will yield no warning,
+ and unused_args will have the value {'z', 2}.  This behaviour is
+ useful for functions with options that invoke other functions
+ with options; all options can be passed to the outer function and
+ its unprocessed arguments can be passed to the inner function.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% PROCESS_OPTIONS - Processes options passed to a Matlab function.</span>
+0002 <span class="comment">%                   This function provides a simple means of</span>
+0003 <span class="comment">%                   parsing attribute-value options.  Each option is</span>
+0004 <span class="comment">%                   named by a unique string and is given a default</span>
+0005 <span class="comment">%                   value.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Usage:  [var1, var2, ..., varn[, unused]] = ...</span>
+0008 <span class="comment">%           process_options(args, ...</span>
+0009 <span class="comment">%                           str1, def1, str2, def2, ..., strn, defn)</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Arguments:</span>
+0012 <span class="comment">%            args            - a cell array of input arguments, such</span>
+0013 <span class="comment">%                              as that provided by VARARGIN.  Its contents</span>
+0014 <span class="comment">%                              should alternate between strings and</span>
+0015 <span class="comment">%                              values.</span>
+0016 <span class="comment">%            str1, ..., strn - Strings that are associated with a</span>
+0017 <span class="comment">%                              particular variable</span>
+0018 <span class="comment">%            def1, ..., defn - Default values returned if no option</span>
+0019 <span class="comment">%                              is supplied</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% Returns:</span>
+0022 <span class="comment">%            var1, ..., varn - values to be assigned to variables</span>
+0023 <span class="comment">%            unused          - an optional cell array of those</span>
+0024 <span class="comment">%                              string-value pairs that were unused;</span>
+0025 <span class="comment">%                              if this is not supplied, then a</span>
+0026 <span class="comment">%                              warning will be issued for each</span>
+0027 <span class="comment">%                              option in args that lacked a match.</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% Examples:</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% Suppose we wish to define a Matlab function 'func' that has</span>
+0032 <span class="comment">% required parameters x and y, and optional arguments 'u' and 'v'.</span>
+0033 <span class="comment">% With the definition</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%   function y = func(x, y, varargin)</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%     [u, v] = process_options(varargin, 'u', 0, 'v', 1);</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">% calling func(0, 1, 'v', 2) will assign 0 to x, 1 to y, 0 to u, and 2</span>
+0040 <span class="comment">% to v.  The parameter names are insensitive to case; calling</span>
+0041 <span class="comment">% func(0, 1, 'V', 2) has the same effect.  The function call</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">%   func(0, 1, 'u', 5, 'z', 2);</span>
+0044 <span class="comment">%</span>
+0045 <span class="comment">% will result in u having the value 5 and v having value 1, but</span>
+0046 <span class="comment">% will issue a warning that the 'z' option has not been used.  On</span>
+0047 <span class="comment">% the other hand, if func is defined as</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">%   function y = func(x, y, varargin)</span>
+0050 <span class="comment">%</span>
+0051 <span class="comment">%     [u, v, unused_args] = process_options(varargin, 'u', 0, 'v', 1);</span>
+0052 <span class="comment">%</span>
+0053 <span class="comment">% then the call func(0, 1, 'u', 5, 'z', 2) will yield no warning,</span>
+0054 <span class="comment">% and unused_args will have the value {'z', 2}.  This behaviour is</span>
+0055 <span class="comment">% useful for functions with options that invoke other functions</span>
+0056 <span class="comment">% with options; all options can be passed to the outer function and</span>
+0057 <span class="comment">% its unprocessed arguments can be passed to the inner function.</span>
+0058 
+0059 <span class="comment">% Copyright (C) 2002 Mark A. Paskin</span>
+0060 <span class="comment">%</span>
+0061 <span class="comment">% This program is free software; you can redistribute it and/or modify</span>
+0062 <span class="comment">% it under the terms of the GNU General Public License as published by</span>
+0063 <span class="comment">% the Free Software Foundation; either version 2 of the License, or</span>
+0064 <span class="comment">% (at your option) any later version.</span>
+0065 <span class="comment">%</span>
+0066 <span class="comment">% This program is distributed in the hope that it will be useful, but</span>
+0067 <span class="comment">% WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0068 <span class="comment">% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU</span>
+0069 <span class="comment">% General Public License for more details.</span>
+0070 <span class="comment">%</span>
+0071 <span class="comment">% You should have received a copy of the GNU General Public License</span>
+0072 <span class="comment">% along with this program; if not, write to the Free Software</span>
+0073 <span class="comment">% Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307</span>
+0074 <span class="comment">% USA.</span>
+0075 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0076 
+0077 <a name="_sub0" href="#_subfunctions" class="code">function [varargout] = process_options(args, varargin)</a>
+0078 
+0079 <span class="comment">% Check the number of input arguments</span>
+0080 n = length(varargin);
+0081 <span class="keyword">if</span> (mod(n, 2))
+0082   error(<span class="string">'Each option must be a string/value pair.'</span>);
+0083 <span class="keyword">end</span>
+0084 
+0085 <span class="comment">% Check the number of supplied output arguments</span>
+0086 <span class="keyword">if</span> (nargout &lt; (n / 2))
+0087   error(<span class="string">'Insufficient number of output arguments given'</span>);
+0088 <span class="keyword">elseif</span> (nargout == (n / 2))
+0089   warn = 1;
+0090   nout = n / 2;
+0091 <span class="keyword">else</span>
+0092   warn = 0;
+0093   nout = n / 2 + 1;
+0094 <span class="keyword">end</span>
+0095 
+0096 <span class="comment">% Set outputs to be defaults</span>
+0097 varargout = cell(1, nout);
+0098 <span class="keyword">for</span> i=2:2:n
+0099   varargout{i/2} = varargin{i};
+0100 <span class="keyword">end</span>
+0101 
+0102 <span class="comment">% Now process all arguments</span>
+0103 nunused = 0;
+0104 <span class="keyword">for</span> i=1:2:length(args)
+0105   found = 0;
+0106   <span class="keyword">for</span> j=1:2:n
+0107     <span class="keyword">if</span> strcmpi(args{i}, varargin{j})
+0108       varargout{(j + 1)/2} = args{i + 1};
+0109       found = 1;
+0110       <span class="keyword">break</span>;
+0111     <span class="keyword">end</span>
+0112   <span class="keyword">end</span>
+0113   <span class="keyword">if</span> (~found)
+0114     <span class="keyword">if</span> (warn)
+0115       warning(sprintf(<span class="string">'Option ''%s'' not used.'</span>, args{i}));
+0116       args{i}
+0117     <span class="keyword">else</span>
+0118       nunused = nunused + 1;
+0119       unused{2 * nunused - 1} = args{i};
+0120       unused{2 * nunused} = args{i + 1};
+0121     <span class="keyword">end</span>
+0122   <span class="keyword">end</span>
+0123 <span class="keyword">end</span>
+0124 
+0125 <span class="comment">% Assign the unused arguments</span>
+0126 <span class="keyword">if</span> (~warn)
+0127   <span class="keyword">if</span> (nunused)
+0128     varargout{nout} = unused;
+0129   <span class="keyword">else</span>
+0130     varargout{nout} = cell(0);
+0131   <span class="keyword">end</span>
+0132 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,1439 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of readCatalog</title>
+  <meta name="keywords" content="readCatalog">
+  <meta name="description" content="READCATALOG: Read seismic events from common file formats &amp; data sources.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">catalog</a> &gt; readCatalog.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>readCatalog
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>READCATALOG: Read seismic events from common file formats &amp; data sources.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function self = readCatalog(catalog_source, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">READCATALOG: Read seismic events from common file formats &amp; data sources.
+  readEvents loads events from a seismic event catalog into a GISMO
+  Catalog object. 
+
+
+ USAGE
+
+  cobj = readCatalog(catalog_source, 'param1', value1, 'param2', value2 ...)
+     loads a seismic event catalog into a GISMO/Catalog object.
+     catalog_source is a method by which the source catalog is
+     retrieved, or format in which the source catalog is stored.
+
+  The name-value parameter pairs supported by readCatalog mirror those of 
+  irisFetch.Events, which currently are:
+      contributor, startTime, endTime, eventId, fetchLimit, latitude, longitude, magnitudeType,
+      maximumDepth, maximumLatitude, maximumLongitude, maximumMagnitude,
+      minimumDepth, minimumLatitude, minimumLongitude, minimumMagnitude,
+      minimumRadius, maximumRadius, offset, updatedAfter.
+  An arbitrary number of parameter-value pairs may be specified in order to 
+  narrow down the search results. Some catalog_source allow additional
+  name-value parameter pairs.
+
+  By default readCatalog will only retrieve basic event metadata such as 
+  (preferred) origin time, longitude, latitude, depth and magnitude.
+  However:
+
+  cobj = readCatalog(..., 'addarrivals', true)
+
+  will also include more detailed information, such as phase arrivals and
+  different measurements of magnitude. Warning - this may become slow,
+  especially for large datasets.
+
+ LOADING FROM IRIS/FSDN web services via irisfetch.m:
+   cobj = readCatalog('irisfetch', 'param1', value1, 'param2', value2 ...)
+             loads events, origins and magnitudes from IRIS-DMC or other
+             FSDN data sources via irisFetch.m. The allowed parameter-value 
+             pairs are those allowed by irisFetch.Events.
+
+ LOADING FROM ANTELOPE/DATASCOPE CSS3.0 DATABASES
+
+   cobj = readCatalog('datascope', 'dbpath', path_to_database)
+     loads events, origins and magnitudes from a Datascope CSS3.0
+     database using Kent Lindquist's Antelope Toolbox for MATLAB. As a
+     minimum, the database must have an origin table.
+
+   Additional name-value parameter pairs supported by 'datascope' are:
+       'archiveformat'
+       'subset_expression'
+
+   If the database is stored in daily volumes, e.g. foo/bar_YYYY_MM_DD, 
+   rather than a single database use the 'archiveformat'
+   name/value pair, e.g.
+
+   cobj = readCatalog('antelope', 'dbpath', 'foo/bar', 'archiveformat','daily');
+
+   For monthly volumes, e.g. foo/bar_YYYY_MM, set 'archiveformat' to
+   'monthly':
+
+   cobj = readCatalog('antelope', 'dbpath', 'foo/bar', 'archiveformat','monthly');
+
+   [Note: it would be much better if I could do 'dbpath',
+   'foo/bar_%YYYY%MM%DD', 'year', 'month', 'day' as Celso does for
+   datasource].
+
+   cobj = readCatalog(..., 'subset_expression', subset_expression)
+             will subset the database given a valid datascope subset
+             expression.
+
+   If the subset_expression parameter name/value pair is omitted, a expression 
+   can also be formed from other name/value pairs. These are:
+       PARAMETER  VALUE
+       'snum'     a datenum denoting the minimum origin time
+       'enum'     a datenum denoting the maximum origin time
+       'minmag'   the minimum magnitude
+       'mindepth' the minimum depth (in km)
+       'maxdepth' the maximum depth (in km)
+       'region'   a 4-element vector: [minlon maxlon minlat maxlat]
+
+ READING FROM A SEISAN-DERIVED DAT FILE
+ 
+   obj = readCatalog('aef', 'dbpath', dbpath) 
+     will attempt to load all Seisan-derived AEF summary files in the 
+     directory specified by dbpath.
+ 
+     To subset the data, use parameter name/value pairs (snum, enum, 
+     minmag, mindepth, maxdepth, region). 
+
+ READING S-FILES FROM A SEISAN YYYY/MM REA DATABASE
+ 
+   obj = readCatalog('seisandb', 'dbpath', dbpath) 
+     will attempt to load all Seisan S-files in the 
+     directory specified by dbpath (which should be the parent of
+     YYYY/MM directories)
+ 
+     To subset the data, use parameter name/value pairs (snum, enum, 
+     minmag, mindepth, maxdepth, region). 
+
+% EXAMPLES
+
+   (1) Import all events from the demo database
+         % get path to demo database
+         dbpath = demodb('avo');
+         % read events from database
+         obj = readCatalog('datascope', 'dbpath', dbpath);
+
+   (2) As previous example, but use a subset expression also. Here we
+       subset for origins within 15 km of Redoubt volcano:
+         obj = readCatalog('datascope', 'dbpath', dbpath, 'subset_expression', 'deg2km(distance(lat, lon, 60.4853, -152.7431))&lt;15.0');
+
+   (3) Read all magnitude&gt;7 events from IRIS DMC via irisFetch.m:
+         obj = readCatalog('irisfetch', 'MinimumMagnitude', 7.0);
+
+   (4) Read all events within 20 km of Redoubt volcano from IRIS DMC:
+         obj = readCatalog('irisfetch','radialcoordinates', [60.4853 -152.7431 km2deg(20)]); 
+ 
+   (5) Read Alaska Earthquake Center events greater than M=4.0 in 2009
+       within rectangular region lat = 55 to 65, lon = -170 to -135 from
+       the &quot;Total&quot; database of all regional earthquakes in Alaska:
+         obj = readCatalog('datascope', 'dbpath', '/Seis/catalogs/aeic/Total/Total', 'snum', datenum(2009,1,1), 'enum', datenum(2010,1,1), 'minmag', 4.0, 'region', [-170.0 -135.0 55.0 65.0]);
+
+   (6) As 5, but use a subset_expression instead:
+         obj = readCatalog('datascope', 'dbpath', '/Seis/catalogs/aeic/Total/Total', 'subset_expression', 'time &gt; &quot;2009/1/1&quot; &amp; time &lt; &quot;2010/1/1&quot;' &amp; ml &gt; 4 &amp; lon &gt; -170.0 &amp; lon &lt; -135.0 &amp; lat &gt; 55.0 &amp; lat &lt; 65.0');
+
+   (7) Read MVO data from station MBWH for all of year 2000:
+         obj = readCatalog('aef', 'dbpath', fullfile('/raid','data','seisan','mbwh_catalog'), 'snum', datenum(2000,1,1), 'enum', datenum(2000,12,31,23,59,59));
+
+   (8) Read Sfiles from MVOE_ Seisan database for January 2000 (this can be slow, especially over a network drive):
+         obj = readCatalog('seisandb', 'dbpath', fullfile('/raid','data','seisan','REA','MVOE_'), 'snum', datenum(2000,1,1), 'enum', datenum(2000,1,2) );
+
+   (9) Read from a SRU catalog in a text file:
+         obj = readCatalog('sru', '/raid/data/seisan/REA/DMNCA/DominicaCatalog.txt');
+ 
+% See also <a href="catalog.html" class="code" title="function cobj = catalog(filepath, dataformat, varargin)">CATALOG</a>, <a href="Event.html" class="code" title="">EVENT</a>, MAGNITUDE, IRISFETCH. <a href="catalog_cookbook.html" class="code" title="">CATALOG_COOKBOOK</a>
+
+ Author: Glenn Thompson (glennthompson1971@gmail.com)
+ $Date: $
+ $Revision: $</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Catalog_full.html" class="code" title="">Catalog_full</a>	</li><li><a href="Catalog_lite.html" class="code" title="">Catalog_lite</a>	</li><li><a href="Event.html" class="code" title="">Event</a>	</li><li><a href="Netmag.html" class="code" title="">Netmag</a>	</li><li><a href="Origin.html" class="code" title="">Origin</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="catalog.html" class="code" title="function cobj = catalog(filepath, dataformat, varargin)">catalog</a>	CATALOG</li><li><a href="catalog_cookbook.html" class="code" title="">catalog_cookbook</a>	% CATALOG and EVENTRATE cookbook</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = load_datascope_events(varargin)</a></li><li><a href="#_sub2" class="code">function [lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth] = dbloadprefors(dbpath, subset_expression)</a></li><li><a href="#_sub3" class="code">function self = convert_irisFetch_to_Catalog(ev)</a></li><li><a href="#_sub4" class="code">function self = load_aef(varargin)</a></li><li><a href="#_sub5" class="code">function self = import_aef_file(dirpath, yyyy, mm, snum, enum, RUNMODE)</a></li><li><a href="#_sub6" class="code">function self = load_seisandb(varargin)</a></li><li><a href="#_sub7" class="code">function files = list_sfiles(dbpath, snum, enum)</a></li><li><a href="#_sub8" class="code">function s=read_sfile(sfiledir, sfilebase,sta,chan);</a></li><li><a href="#_sub9" class="code">function sfilednum=sfile2dnum(sfile)</a></li><li><a href="#_sub10" class="code">function self=read_vdap(filename)</a></li><li><a href="#_sub11" class="code">function self=read_SRU(filename)</a></li><li><a href="#_sub12" class="code">function out = ensure_dateformat(t)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function self = readCatalog(catalog_source, varargin)</a>
+0002 <span class="comment">%READCATALOG: Read seismic events from common file formats &amp; data sources.</span>
+0003 <span class="comment">%  readEvents loads events from a seismic event catalog into a GISMO</span>
+0004 <span class="comment">%  Catalog object.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% USAGE</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%  cobj = readCatalog(catalog_source, 'param1', value1, 'param2', value2 ...)</span>
+0010 <span class="comment">%     loads a seismic event catalog into a GISMO/Catalog object.</span>
+0011 <span class="comment">%     catalog_source is a method by which the source catalog is</span>
+0012 <span class="comment">%     retrieved, or format in which the source catalog is stored.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%  The name-value parameter pairs supported by readCatalog mirror those of</span>
+0015 <span class="comment">%  irisFetch.Events, which currently are:</span>
+0016 <span class="comment">%      contributor, startTime, endTime, eventId, fetchLimit, latitude, longitude, magnitudeType,</span>
+0017 <span class="comment">%      maximumDepth, maximumLatitude, maximumLongitude, maximumMagnitude,</span>
+0018 <span class="comment">%      minimumDepth, minimumLatitude, minimumLongitude, minimumMagnitude,</span>
+0019 <span class="comment">%      minimumRadius, maximumRadius, offset, updatedAfter.</span>
+0020 <span class="comment">%  An arbitrary number of parameter-value pairs may be specified in order to</span>
+0021 <span class="comment">%  narrow down the search results. Some catalog_source allow additional</span>
+0022 <span class="comment">%  name-value parameter pairs.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%  By default readCatalog will only retrieve basic event metadata such as</span>
+0025 <span class="comment">%  (preferred) origin time, longitude, latitude, depth and magnitude.</span>
+0026 <span class="comment">%  However:</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%  cobj = readCatalog(..., 'addarrivals', true)</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%  will also include more detailed information, such as phase arrivals and</span>
+0031 <span class="comment">%  different measurements of magnitude. Warning - this may become slow,</span>
+0032 <span class="comment">%  especially for large datasets.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% LOADING FROM IRIS/FSDN web services via irisfetch.m:</span>
+0035 <span class="comment">%   cobj = readCatalog('irisfetch', 'param1', value1, 'param2', value2 ...)</span>
+0036 <span class="comment">%             loads events, origins and magnitudes from IRIS-DMC or other</span>
+0037 <span class="comment">%             FSDN data sources via irisFetch.m. The allowed parameter-value</span>
+0038 <span class="comment">%             pairs are those allowed by irisFetch.Events.</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">% LOADING FROM ANTELOPE/DATASCOPE CSS3.0 DATABASES</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">%   cobj = readCatalog('datascope', 'dbpath', path_to_database)</span>
+0043 <span class="comment">%     loads events, origins and magnitudes from a Datascope CSS3.0</span>
+0044 <span class="comment">%     database using Kent Lindquist's Antelope Toolbox for MATLAB. As a</span>
+0045 <span class="comment">%     minimum, the database must have an origin table.</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">%   Additional name-value parameter pairs supported by 'datascope' are:</span>
+0048 <span class="comment">%       'archiveformat'</span>
+0049 <span class="comment">%       'subset_expression'</span>
+0050 <span class="comment">%</span>
+0051 <span class="comment">%   If the database is stored in daily volumes, e.g. foo/bar_YYYY_MM_DD,</span>
+0052 <span class="comment">%   rather than a single database use the 'archiveformat'</span>
+0053 <span class="comment">%   name/value pair, e.g.</span>
+0054 <span class="comment">%</span>
+0055 <span class="comment">%   cobj = readCatalog('antelope', 'dbpath', 'foo/bar', 'archiveformat','daily');</span>
+0056 <span class="comment">%</span>
+0057 <span class="comment">%   For monthly volumes, e.g. foo/bar_YYYY_MM, set 'archiveformat' to</span>
+0058 <span class="comment">%   'monthly':</span>
+0059 <span class="comment">%</span>
+0060 <span class="comment">%   cobj = readCatalog('antelope', 'dbpath', 'foo/bar', 'archiveformat','monthly');</span>
+0061 <span class="comment">%</span>
+0062 <span class="comment">%   [Note: it would be much better if I could do 'dbpath',</span>
+0063 <span class="comment">%   'foo/bar_%YYYY%MM%DD', 'year', 'month', 'day' as Celso does for</span>
+0064 <span class="comment">%   datasource].</span>
+0065 <span class="comment">%</span>
+0066 <span class="comment">%   cobj = readCatalog(..., 'subset_expression', subset_expression)</span>
+0067 <span class="comment">%             will subset the database given a valid datascope subset</span>
+0068 <span class="comment">%             expression.</span>
+0069 <span class="comment">%</span>
+0070 <span class="comment">%   If the subset_expression parameter name/value pair is omitted, a expression</span>
+0071 <span class="comment">%   can also be formed from other name/value pairs. These are:</span>
+0072 <span class="comment">%       PARAMETER  VALUE</span>
+0073 <span class="comment">%       'snum'     a datenum denoting the minimum origin time</span>
+0074 <span class="comment">%       'enum'     a datenum denoting the maximum origin time</span>
+0075 <span class="comment">%       'minmag'   the minimum magnitude</span>
+0076 <span class="comment">%       'mindepth' the minimum depth (in km)</span>
+0077 <span class="comment">%       'maxdepth' the maximum depth (in km)</span>
+0078 <span class="comment">%       'region'   a 4-element vector: [minlon maxlon minlat maxlat]</span>
+0079 <span class="comment">%</span>
+0080 <span class="comment">% READING FROM A SEISAN-DERIVED DAT FILE</span>
+0081 <span class="comment">%</span>
+0082 <span class="comment">%   obj = readCatalog('aef', 'dbpath', dbpath)</span>
+0083 <span class="comment">%     will attempt to load all Seisan-derived AEF summary files in the</span>
+0084 <span class="comment">%     directory specified by dbpath.</span>
+0085 <span class="comment">%</span>
+0086 <span class="comment">%     To subset the data, use parameter name/value pairs (snum, enum,</span>
+0087 <span class="comment">%     minmag, mindepth, maxdepth, region).</span>
+0088 <span class="comment">%</span>
+0089 <span class="comment">% READING S-FILES FROM A SEISAN YYYY/MM REA DATABASE</span>
+0090 <span class="comment">%</span>
+0091 <span class="comment">%   obj = readCatalog('seisandb', 'dbpath', dbpath)</span>
+0092 <span class="comment">%     will attempt to load all Seisan S-files in the</span>
+0093 <span class="comment">%     directory specified by dbpath (which should be the parent of</span>
+0094 <span class="comment">%     YYYY/MM directories)</span>
+0095 <span class="comment">%</span>
+0096 <span class="comment">%     To subset the data, use parameter name/value pairs (snum, enum,</span>
+0097 <span class="comment">%     minmag, mindepth, maxdepth, region).</span>
+0098 <span class="comment">%</span>
+0099 <span class="comment">%% EXAMPLES</span>
+0100 <span class="comment">%</span>
+0101 <span class="comment">%   (1) Import all events from the demo database</span>
+0102 <span class="comment">%         % get path to demo database</span>
+0103 <span class="comment">%         dbpath = demodb('avo');</span>
+0104 <span class="comment">%         % read events from database</span>
+0105 <span class="comment">%         obj = readCatalog('datascope', 'dbpath', dbpath);</span>
+0106 <span class="comment">%</span>
+0107 <span class="comment">%   (2) As previous example, but use a subset expression also. Here we</span>
+0108 <span class="comment">%       subset for origins within 15 km of Redoubt volcano:</span>
+0109 <span class="comment">%         obj = readCatalog('datascope', 'dbpath', dbpath, 'subset_expression', 'deg2km(distance(lat, lon, 60.4853, -152.7431))&lt;15.0');</span>
+0110 <span class="comment">%</span>
+0111 <span class="comment">%   (3) Read all magnitude&gt;7 events from IRIS DMC via irisFetch.m:</span>
+0112 <span class="comment">%         obj = readCatalog('irisfetch', 'MinimumMagnitude', 7.0);</span>
+0113 <span class="comment">%</span>
+0114 <span class="comment">%   (4) Read all events within 20 km of Redoubt volcano from IRIS DMC:</span>
+0115 <span class="comment">%         obj = readCatalog('irisfetch','radialcoordinates', [60.4853 -152.7431 km2deg(20)]);</span>
+0116 <span class="comment">%</span>
+0117 <span class="comment">%   (5) Read Alaska Earthquake Center events greater than M=4.0 in 2009</span>
+0118 <span class="comment">%       within rectangular region lat = 55 to 65, lon = -170 to -135 from</span>
+0119 <span class="comment">%       the &quot;Total&quot; database of all regional earthquakes in Alaska:</span>
+0120 <span class="comment">%         obj = readCatalog('datascope', 'dbpath', '/Seis/catalogs/aeic/Total/Total', 'snum', datenum(2009,1,1), 'enum', datenum(2010,1,1), 'minmag', 4.0, 'region', [-170.0 -135.0 55.0 65.0]);</span>
+0121 <span class="comment">%</span>
+0122 <span class="comment">%   (6) As 5, but use a subset_expression instead:</span>
+0123 <span class="comment">%         obj = readCatalog('datascope', 'dbpath', '/Seis/catalogs/aeic/Total/Total', 'subset_expression', 'time &gt; &quot;2009/1/1&quot; &amp; time &lt; &quot;2010/1/1&quot;' &amp; ml &gt; 4 &amp; lon &gt; -170.0 &amp; lon &lt; -135.0 &amp; lat &gt; 55.0 &amp; lat &lt; 65.0');</span>
+0124 <span class="comment">%</span>
+0125 <span class="comment">%   (7) Read MVO data from station MBWH for all of year 2000:</span>
+0126 <span class="comment">%         obj = readCatalog('aef', 'dbpath', fullfile('/raid','data','seisan','mbwh_catalog'), 'snum', datenum(2000,1,1), 'enum', datenum(2000,12,31,23,59,59));</span>
+0127 <span class="comment">%</span>
+0128 <span class="comment">%   (8) Read Sfiles from MVOE_ Seisan database for January 2000 (this can be slow, especially over a network drive):</span>
+0129 <span class="comment">%         obj = readCatalog('seisandb', 'dbpath', fullfile('/raid','data','seisan','REA','MVOE_'), 'snum', datenum(2000,1,1), 'enum', datenum(2000,1,2) );</span>
+0130 <span class="comment">%</span>
+0131 <span class="comment">%   (9) Read from a SRU catalog in a text file:</span>
+0132 <span class="comment">%         obj = readCatalog('sru', '/raid/data/seisan/REA/DMNCA/DominicaCatalog.txt');</span>
+0133 <span class="comment">%</span>
+0134 <span class="comment">%% See also CATALOG, EVENT, MAGNITUDE, IRISFETCH. CATALOG_COOKBOOK</span>
+0135 <span class="comment">%</span>
+0136 <span class="comment">% Author: Glenn Thompson (glennthompson1971@gmail.com)</span>
+0137 <span class="comment">% $Date: $</span>
+0138 <span class="comment">% $Revision: $</span>
+0139     <span class="keyword">switch</span> lower(data_source)
+0140         <span class="keyword">case</span> {<span class="string">'css3.0'</span>,<span class="string">'antelope'</span>, <span class="string">'datascope'</span>}
+0141             <span class="comment">% url is called dbpath within load_datascope_events</span>
+0142             self = <a href="#_sub1" class="code" title="subfunction self = load_datascope_events(varargin)">load_datascope_events</a>(varargin{:});
+0143         <span class="keyword">case</span> <span class="string">'irisfetch'</span>
+0144             ev = irisFetch.Events(varargin{:});
+0145             self = <a href="#_sub3" class="code" title="subfunction self = convert_irisFetch_to_Catalog(ev)">convert_irisFetch_to_Catalog</a>(ev);
+0146         <span class="keyword">case</span> <span class="string">'seisandb'</span>
+0147             self = <a href="#_sub6" class="code" title="subfunction self = load_seisandb(varargin)">load_seisandb</a>(varargin{:});
+0148         <span class="keyword">case</span> <span class="string">'aef'</span>
+0149             self = <a href="#_sub4" class="code" title="subfunction self = load_aef(varargin)">load_aef</a>(varargin{:});
+0150         <span class="keyword">case</span> <span class="string">'sru'</span>
+0151             self = <a href="#_sub11" class="code" title="subfunction self=read_SRU(filename)">read_SRU</a>(varargin{:});
+0152         <span class="keyword">otherwise</span>
+0153             self = NaN;
+0154             fprintf(<span class="string">'format %s unknown\n\n'</span>,data_source);
+0155     <span class="keyword">end</span>
+0156 <span class="keyword">end</span>
+0157 
+0158 
+0159 <span class="comment">%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0160 <a name="_sub1" href="#_subfunctions" class="code">function self = load_datascope_events(varargin)            </a>
+0161     <span class="keyword">if</span> ~admin.antelope_exists
+0162         error(<span class="string">'This function requires the Antelope toolbox for Matlab'</span>); 
+0163         <span class="keyword">return</span>;
+0164     <span class="keyword">end</span>
+0165 
+0166     <span class="comment">% Process input arguments</span>
+0167     p = inputParser;
+0168     p.addParamValue(<span class="string">'dbpath'</span>, @isstr);
+0169     p.addParamValue(<span class="string">'subset_expression'</span>, <span class="string">''</span>, @isstr);
+0170     p.addParamValue(<span class="string">'archiveformat'</span>, <span class="string">'single file'</span>, @isstr);
+0171     p.addParamValue(<span class="string">'snum'</span>, [], @isnumeric);  
+0172     p.addParamValue(<span class="string">'enum'</span>, [], @isnumeric);
+0173     p.addParamValue(<span class="string">'minmag'</span>, [], @isnumeric);
+0174     p.addParamValue(<span class="string">'region'</span>, [], @isnumeric);
+0175     p.addParamValue(<span class="string">'subclass'</span>, <span class="string">'*'</span>, @ischar);
+0176     p.addParamValue(<span class="string">'mindepth'</span>, [], @isnumeric);
+0177     p.addParamValue(<span class="string">'maxdepth'</span>, [], @isnumeric);
+0178     p.addParamValue(<span class="string">'RUNMODE'</span>, <span class="string">'fast'</span>, @isstr);
+0179     p.parse(varargin{:});
+0180     fields = fieldnames(p.Results);
+0181     <span class="keyword">for</span> i=1:length(fields)
+0182         field=fields{i};
+0183         <span class="comment">% val = eval(sprintf('p.Results.%s;',field));</span>
+0184         val = p.Results.(field);
+0185         eval(sprintf(<span class="string">'%s = val;'</span>,field));
+0186     <span class="keyword">end</span> 
+0187 
+0188     <span class="comment">% Create a dbeval subset_expression if not already set.</span>
+0189     <span class="keyword">if</span> ~exist(<span class="string">'subset_expression'</span>, <span class="string">'var'</span>) | isempty(subset_expression)
+0190         <span class="keyword">if</span> nargin &gt; 2
+0191             expr = <span class="string">''</span>;
+0192             <span class="keyword">if</span> ~isempty(snum) &amp; isnumeric(snum)
+0193                 expr = sprintf(<span class="string">'%s &amp;&amp; time &gt;= %f'</span>,expr,datenum2epoch(snum));
+0194             <span class="keyword">end</span> 
+0195             <span class="keyword">if</span> ~isempty(enum) &amp; isnumeric(enum)
+0196                 expr = sprintf(<span class="string">'%s &amp;&amp; time &lt;= %f'</span>,expr,datenum2epoch(enum));
+0197             <span class="keyword">end</span>
+0198             <span class="keyword">if</span> ~isempty(minmag) &amp; isnumeric(minmag)
+0199                 expr = sprintf(<span class="string">'%s &amp;&amp; (ml &gt;= %f || mb &gt;= %f || ms &gt;= %f)'</span>,expr,minmag,minmag,minmag);
+0200             <span class="keyword">end</span>
+0201             <span class="keyword">if</span> ~isempty(region) &amp; isnumeric(region)
+0202                 leftlon = region(1); rightlon=region(2); lowerlat=region(3); upperlat=region(4);
+0203                 expr = sprintf(<span class="string">'%s &amp;&amp; (lat &gt;= %f &amp;&amp; lat &lt;= %f &amp;&amp; lon &gt;= %f &amp;&amp; lon &lt;= %f)'</span>,expr,lowerlat, upperlat, leftlon, rightlon);
+0204             <span class="keyword">end</span>
+0205             <span class="keyword">if</span> ~isempty(mindepth) &amp; isnumeric(mindepth)
+0206                 expr = sprintf(<span class="string">'%s &amp;&amp; (depth &gt;= %f)'</span>, expr,mindepth); 
+0207             <span class="keyword">end</span>
+0208             <span class="keyword">if</span> ~isempty(maxdepth) &amp; isnumeric(maxdepth)
+0209                 expr = sprintf(<span class="string">'%s &amp;&amp; (depth &lt;= %f)'</span>, expr,maxdepth); 
+0210             <span class="keyword">end</span>
+0211             subset_expression = expr(4:end);
+0212             clear expr
+0213         <span class="keyword">end</span>
+0214     <span class="keyword">end</span>
+0215     
+0216     <span class="comment">% BUILD DBNAMELIST</span>
+0217     dbpathlist = {};
+0218     
+0219     <span class="keyword">if</span> strcmp(archiveformat,<span class="string">'single file'</span>) <span class="comment">% Just 1 entry</span>
+0220         dbpathlist = {dbpath};   
+0221     <span class="keyword">else</span>
+0222         <span class="keyword">if</span> isempty(snum) || isempty(enum)
+0223             disp(sprintf(<span class="string">'Failure: you must set values for \&quot;snum\&quot; and \&quot;enum\&quot; parameters when \&quot;archiveformat\&quot; is set to \&quot;daily\&quot; or \&quot;monthly\&quot;'</span>));
+0224             <span class="keyword">return</span>;
+0225         <span class="keyword">end</span>
+0226         <span class="keyword">if</span> strcmp(archiveformat,<span class="string">'daily'</span>)
+0227             <span class="keyword">for</span> dnum=floor(snum):floor(enum-1/1440)
+0228                 dbpathfull = sprintf(<span class="string">'%s_%s'</span>,dbpath,datestr(dnum, <span class="string">'yyyy_mm_dd'</span>));
+0229                 <span class="keyword">if</span> exist(sprintf(<span class="string">'%s.origin'</span>,dbpathfull),<span class="string">'file'</span>)
+0230                     dbpathlist{end+1} = dbpathfull; <span class="comment">% Add here</span>
+0231                 <span class="keyword">else</span>
+0232                     fprintf(<span class="string">'%s.origin not found\n'</span>,dbpath);
+0233                 <span class="keyword">end</span>
+0234             <span class="keyword">end</span>
+0235         <span class="keyword">elseif</span> strcmp(archiveformat,<span class="string">'monthly'</span>)
+0236             <span class="keyword">for</span> yyyy=dnum2year(snum):1:dnum2year(enum)
+0237                 <span class="keyword">for</span> mm=dnum2month(snum):1:dnum2month(enum)
+0238                     dnum = datenum(yyyy,mm,1);
+0239                     dbpathfull = sprintf(<span class="string">'%s%04d_%02d'</span>,dbpath,yyyy,mm);
+0240                     <span class="keyword">if</span> exist(sprintf(<span class="string">'%s.origin'</span>,dbpath),<span class="string">'file'</span>) 
+0241                         dbpathlist{end+1} = dbpathfull; <span class="comment">% Add here</span>
+0242                     <span class="keyword">else</span>
+0243                         fprintf(<span class="string">'%s.origin not found\n'</span>,dbpath);
+0244                     <span class="keyword">end</span>
+0245                 <span class="keyword">end</span>
+0246             <span class="keyword">end</span>
+0247         <span class="keyword">end</span>
+0248     <span class="keyword">end</span>
+0249     
+0250     <span class="comment">% LOAD FROM DBNAMELIST</span>
+0251     <span class="comment">% Initialize to empty</span>
+0252     [lat, lon, depth, dnum, time, evid, orid, nass, mag, ml, mb, ms, etype, auth] = deal([]);
+0253     subclass = <span class="string">''</span>;
+0254     <span class="keyword">for</span> dbpathitem = dbpathlist
+0255         <span class="comment">% Load vectors</span>
+0256         [lon0, lat0, depth0, dnum0, evid0, orid0, nass0, mag0, mb0, ml0, ms0, subclass0, auth0] = <a href="#_sub2" class="code" title="subfunction [lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth] = dbloadprefors(dbpath, subset_expression)">dbloadprefors</a>(dbpathitem, subset_expression);
+0257         <span class="keyword">if</span> length(lon0) == length(mag0)
+0258             <span class="comment">% Concatentate vectors</span>
+0259             lon   = cat(1, lon,   lon0);
+0260             lat   = cat(1, lat,   lat0);
+0261             depth = cat(1, depth, depth0);
+0262             dnum  = cat(1, dnum,  dnum0);
+0263             evid  = cat(1, evid,  evid0);
+0264             orid  = cat(1, orid,  orid0);
+0265             nass  = cat(1, nass,  nass0);
+0266             mag   = cat(1, mag,   mag0);
+0267             mb   = cat(1, mb,   mb0);
+0268             ml   = cat(1, ml,   ml0);
+0269             ms   = cat(1, ms,   ms0);
+0270             subclass  = cat(2, subclass, subclass0);
+0271             auth = cat(1,  auth, auth0);
+0272         <span class="keyword">end</span>
+0273     <span class="keyword">end</span>
+0274     mag(mag&lt;-3.0)=NaN;
+0275     <span class="keyword">if</span> strcmp(p.Results.RUNMODE, <span class="string">'slow'</span>)
+0276         <span class="comment">%%% SLOW MODE %%%</span>
+0277         <span class="comment">% Create an Event object for each longitude in the list</span>
+0278         event_list = [];
+0279         <span class="keyword">for</span> i=1:length(lon) <span class="comment">% Loop over each element in vector</span>
+0280             magnitude_obj = <a href="Netmag.html" class="code" title="">Netmag</a>(mag(i));
+0281             origin_obj = <a href="Origin.html" class="code" title="">Origin</a>(dnum(i), lon(i), lat(i), depth(i), <span class="keyword">...</span>
+0282                 <span class="string">'orid'</span>, orid(i), <span class="string">'etype'</span>, subclass(i), <span class="string">'netmags'</span>, [magnitude_obj] <span class="keyword">...</span>
+0283                 );
+0284             event_list = [ <span class="keyword">...</span>
+0285                 event_list <span class="keyword">...</span>
+0286                 <a href="Event.html" class="code" title="">Event</a>( <span class="keyword">...</span>
+0287                     [origin_obj], <span class="keyword">...</span>
+0288                     <span class="string">'evid'</span>, evid(i) <span class="keyword">...</span>
+0289                     ) <span class="keyword">...</span>
+0290                 ];
+0291         <span class="keyword">end</span>
+0292 
+0293         <span class="comment">% CREATE CATALOG OBJECT</span>
+0294         self = <a href="Catalog_full.html" class="code" title="">Catalog_full</a>(event_list);
+0295 
+0296     <span class="keyword">elseif</span> strcmp(p.Results.RUNMODE, <span class="string">'fast'</span>)
+0297         <span class="comment">%%% FAST MODE %%%</span>
+0298         self = <a href="Catalog_lite.html" class="code" title="">Catalog_lite</a>(lat, lon, depth, dnum, mag, subclass);
+0299     <span class="keyword">end</span>
+0300     st = dbstack;
+0301     self = self.addfield(<span class="string">'method'</span>, st(1).name);
+0302     self = self.addfield(<span class="string">'dbpath'</span>, dbpath);
+0303     self = self.addfield(<span class="string">'archiveformat'</span>, archiveformat);
+0304     ds = datasource(<span class="string">'antelope'</span>, dbpath);
+0305     self = self.addfield(<span class="string">'datasource'</span>, ds);
+0306     
+0307 <span class="keyword">end</span>
+0308 
+0309 <span class="comment">%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0310 <a name="_sub2" href="#_subfunctions" class="code">function [lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth] = dbloadprefors(dbpath, subset_expression)</a>
+0311 
+0312     numorigins = 0;
+0313     [lat, lon, depth, dnum, time, evid, orid, nass, mag, ml, mb, ms, etype, auth] = deal([]);
+0314     <span class="keyword">if</span> iscell(dbpath)
+0315         dbpath = dbpath{1};
+0316     <span class="keyword">end</span>
+0317     debug.print_debug(sprintf(<span class="string">'Loading data from %s'</span>,dbpath),3);
+0318 
+0319     ORIGIN_TABLE_PRESENT = dbtable_present(dbpath, <span class="string">'origin'</span>);
+0320 
+0321     <span class="keyword">if</span> (ORIGIN_TABLE_PRESENT)
+0322         db = dblookup_table(dbopen(dbpath, <span class="string">'r'</span>), <span class="string">'origin'</span>);
+0323         numorigins = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0324         debug.print_debug(sprintf(<span class="string">'Got %d records from %s.origin'</span>,numorigins,dbpath),1);
+0325         <span class="keyword">if</span> numorigins &gt; 0
+0326             EVENT_TABLE_PRESENT = dbtable_present(dbpath, <span class="string">'event'</span>);           
+0327             <span class="keyword">if</span> (EVENT_TABLE_PRESENT)
+0328                 db = dbjoin(db, dblookup_table(db, <span class="string">'event'</span>) );
+0329                 numorigins = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0330                 debug.print_debug(sprintf(<span class="string">'Got %d records after joining event with %s.origin'</span>,numorigins,dbpath),1);
+0331                 <span class="keyword">if</span> numorigins &gt; 0
+0332                     db = dbsubset(db, <span class="string">'orid == prefor'</span>);
+0333                     numorigins = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0334                     debug.print_debug(sprintf(<span class="string">'Got %d records after subsetting with orid==prefor'</span>,numorigins),1);
+0335                     <span class="keyword">if</span> numorigins &gt; 0
+0336                         db = dbsort(db, <span class="string">'time'</span>);
+0337                     <span class="keyword">else</span>
+0338                         <span class="comment">% got no origins after subsetting for prefors - already reported</span>
+0339                         debug.print_debug(sprintf(<span class="string">'%d records after subsetting with orid==prefor'</span>,numorigins),0);
+0340                         <span class="keyword">return</span>
+0341                     <span class="keyword">end</span>
+0342                 <span class="keyword">else</span>
+0343                     <span class="comment">% got no origins after joining event to origin table - already reported</span>
+0344                     debug.print_debug(sprintf(<span class="string">'%d records after joining event table with origin table'</span>,numorigins),0);
+0345                     <span class="keyword">return</span>
+0346                 <span class="keyword">end</span>
+0347             <span class="keyword">else</span>
+0348                 debug.print_debug(<span class="string">'No event table found, so will use all origins from origin table, not just prefors'</span>,0);
+0349             <span class="keyword">end</span>
+0350         <span class="keyword">else</span>
+0351             <span class="comment">% got no origins after opening origin table - already reported</span>
+0352             debug.print_debug(sprintf(<span class="string">'origin table has %d records'</span>,numorigins),0);
+0353             <span class="keyword">return</span>
+0354         <span class="keyword">end</span>
+0355     <span class="keyword">else</span>
+0356         debug.print_debug(<span class="string">'no origin table found'</span>,0);
+0357         <span class="keyword">return</span>
+0358     <span class="keyword">end</span>
+0359 
+0360     numorigins = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0361     debug.print_debug(sprintf(<span class="string">'Got %d prefors prior to subsetting'</span>,numorigins),2);
+0362 
+0363     <span class="comment">% Do the subsetting</span>
+0364     <span class="keyword">if</span> ~isempty(subset_expression)
+0365         db = dbsubset(db, subset_expression);
+0366         numorigins = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0367         debug.print_debug(sprintf(<span class="string">'Got %d prefors after subsetting'</span>,numorigins),2);
+0368     <span class="keyword">end</span>
+0369 
+0370     <span class="keyword">if</span> numorigins&gt;0
+0371         <span class="keyword">if</span> EVENT_TABLE_PRESENT
+0372             [lat, lon, depth, time, evid, orid, nass, ml, mb, ms, auth] = dbgetv(db,<span class="string">'lat'</span>, <span class="string">'lon'</span>, <span class="string">'depth'</span>, <span class="string">'time'</span>, <span class="string">'evid'</span>, <span class="string">'orid'</span>, <span class="string">'nass'</span>, <span class="string">'ml'</span>, <span class="string">'mb'</span>, <span class="string">'ms'</span>, <span class="string">'auth'</span>);
+0373         <span class="keyword">else</span>
+0374             [lat, lon, depth, time, orid, nass, ml, mb, ms, auth] = dbgetv(db,<span class="string">'lat'</span>, <span class="string">'lon'</span>, <span class="string">'depth'</span>, <span class="string">'time'</span>, <span class="string">'orid'</span>, <span class="string">'nass'</span>, <span class="string">'ml'</span>, <span class="string">'mb'</span>, <span class="string">'ms'</span>, <span class="string">'auth'</span>);  
+0375             disp(<span class="string">'Setting evid == orid'</span>);
+0376             evid = orid;
+0377         <span class="keyword">end</span>
+0378         etype0 = dbgetv(db,<span class="string">'etype'</span>);
+0379 
+0380         <span class="keyword">if</span> isempty(etype0)
+0381                 etype = char(ones(numorigins,1)*<span class="string">'R'</span>);
+0382         <span class="keyword">else</span>
+0383             <span class="comment">% convert etypes</span>
+0384             <span class="comment">% AVO codes are A, B, C, E, G, L, O, R, X, a, b, h, i, x and</span>
+0385             <span class="comment">% '-' = the null etype in Antelope</span>
+0386             <span class="comment">% AVO Classification Codes</span>
+0387             <span class="comment">% 'a' = Volcano-Tectonic (VT)</span>
+0388             <span class="comment">% 'b' = Low-Frequency (LF)</span>
+0389             <span class="comment">% 'h' = Hybrid</span>
+0390             <span class="comment">% 'E' = Regional-Tectonic</span>
+0391             <span class="comment">% 'T' = Teleseismic</span>
+0392             <span class="comment">% 'i' = Shore-Ice</span>
+0393             <span class="comment">% 'C' = Calibrations</span>
+0394             <span class="comment">% 'o' = Other non-seismic</span>
+0395             <span class="comment">% 'x' = Cause unknown</span>
+0396             <span class="comment">% But AVO catalog also contains A, B, G, L, O, R, X</span>
+0397             <span class="comment">% Assuming A, B, O and X are same as a, b, o and x, that still</span>
+0398             <span class="comment">% leaves G, L and R</span>
+0399 
+0400             etype0=char(etype0);
+0401             etype(etype0==<span class="string">'a'</span>)=<span class="string">'t'</span>;
+0402             etype(etype0==<span class="string">'A'</span>)=<span class="string">'t'</span>;
+0403             etype(etype0==<span class="string">'b'</span>)=<span class="string">'l'</span>;
+0404             etype(etype0==<span class="string">'B'</span>)=<span class="string">'l'</span>;
+0405             etype(etype0==<span class="string">'-'</span>)=<span class="string">'u'</span>;
+0406             etype(etype0==<span class="string">' '</span>)=<span class="string">'u'</span>;
+0407             etype(etype0==<span class="string">'E'</span>)=<span class="string">'R'</span>;
+0408             etype(etype0==<span class="string">'T'</span>)=<span class="string">'D'</span>;
+0409             etype(etype0==<span class="string">'x'</span>)=<span class="string">'u'</span>;
+0410             etype(etype0==<span class="string">'X'</span>)=<span class="string">'u'</span>;
+0411             etype(etype0==<span class="string">'O'</span>)=<span class="string">'o'</span>;
+0412             
+0413         <span class="keyword">end</span>
+0414         etype = char(etype); <span class="comment">% sometimes etype gets converted to ASCII numbers</span>
+0415 
+0416         <span class="comment">% get mag</span>
+0417         mag = max([ml mb ms], [], 2);
+0418 
+0419         <span class="comment">% convert time from epoch to Matlab datenumber</span>
+0420         dnum = epoch2datenum(time);
+0421     <span class="keyword">end</span>
+0422 
+0423     <span class="comment">% close database</span>
+0424     dbclose(db);
+0425 <span class="keyword">end</span>
+0426 
+0427 <a name="_sub3" href="#_subfunctions" class="code">function self = convert_irisFetch_to_Catalog(ev)</a>
+0428     <span class="comment">% Create an Event object for each longitude in the list</span>
+0429     event_list = [];
+0430     <span class="keyword">for</span> i=1:length(ev) <span class="comment">% Loop over each element in vector</span>
+0431 
+0432 
+0433        <span class="comment">% try</span>
+0434             magnitude_obj = [<a href="Netmag.html" class="code" title="">Netmag</a>(NaN)];
+0435             <span class="keyword">if</span> ~isnan(ev(i).PreferredMagnitudeValue)
+0436                 magnitude_obj = <span class="keyword">...</span>
+0437                     <a href="Netmag.html" class="code" title="">Netmag</a>( <span class="keyword">...</span>
+0438                         ev(i).PreferredMagnitude.Value, <span class="keyword">...</span>
+0439                         <span class="string">'magtype'</span>, ev(i).PreferredMagnitude.Type <span class="keyword">...</span>
+0440                     );
+0441             <span class="keyword">end</span>
+0442             origin_obj = [];
+0443             evid = 0;
+0444             <span class="keyword">if</span> ev(i).PreferredTime
+0445                 origin_obj = <span class="keyword">...</span>
+0446                     <a href="Origin.html" class="code" title="">Origin</a>( <span class="keyword">...</span>
+0447                         datenum(ev(i).PreferredOrigin.Time), <span class="keyword">...</span>
+0448                         ev(i).PreferredOrigin.Longitude, <span class="keyword">...</span>
+0449                         ev(i).PreferredOrigin.Latitude, <span class="keyword">...</span>
+0450                         ev(i).PreferredOrigin.Depth, <span class="keyword">...</span>
+0451                         <span class="string">'etype'</span>, ev(i).Type, <span class="keyword">...</span>
+0452                         <span class="string">'netmags'</span>, magnitude_obj <span class="keyword">...</span>
+0453                     );
+0454                 evid = ev(i).PreferredOrigin.ContributorEventId;
+0455             <span class="keyword">end</span>
+0456 
+0457             <span class="keyword">if</span> isnumeric(evid)
+0458                 event_list = <span class="keyword">...</span>
+0459                     [event_list <span class="keyword">...</span>
+0460                         <a href="Event.html" class="code" title="">Event</a>( <span class="keyword">...</span>
+0461                             [origin_obj], <span class="keyword">...</span>
+0462                             <span class="string">'evid'</span>, ev(i).PreferredOrigin.ContributorEventId <span class="keyword">...</span><span class="comment"> </span>
+0463                         );
+0464                     ];
+0465             <span class="keyword">else</span>
+0466                  event_list = <span class="keyword">...</span>
+0467                     [event_list <span class="keyword">...</span>
+0468                         <a href="Event.html" class="code" title="">Event</a>( <span class="keyword">...</span>
+0469                             [origin_obj] <span class="keyword">...</span>
+0470                         );
+0471                     ];               
+0472             <span class="keyword">end</span>
+0473             
+0474         <span class="comment">%catch ME</span>
+0475         <span class="comment">%    ev(i)</span>
+0476         <span class="comment">%    rethrow(ME);</span>
+0477         <span class="comment">%end</span>
+0478     <span class="keyword">end</span>
+0479     
+0480     <span class="comment">% CREATE CATALOG OBJECT</span>
+0481     self = <span class="keyword">...</span>
+0482         <a href="Catalog_full.html" class="code" title="">Catalog_full</a>( <span class="keyword">...</span>
+0483             event_list, <span class="keyword">...</span>
+0484             <span class="string">'description'</span>, <span class="string">''</span> <span class="keyword">...</span>
+0485         ); 
+0486     
+0487     st = dbstack;
+0488     self = self.addfield(<span class="string">'method'</span>, st(1).name);
+0489 <span class="keyword">end</span>
+0490 
+0491 <span class="comment">% function irisFetchExists()</span>
+0492 <span class="comment">%     if exist('dirisFetch')~=2</span>
+0493 <span class="comment">%         [st,i]=dbstack();</span>
+0494 <span class="comment">%         error(sprintf('%s:%s:line %d: irisFetch.m not found\n',st(1).file,st(1).name,st(1).line));</span>
+0495 <span class="comment">%     end</span>
+0496 <span class="comment">% end</span>
+0497 
+0498 <span class="comment">%% LOAD_AEF</span>
+0499 <a name="_sub4" href="#_subfunctions" class="code">function self = load_aef(varargin)     </a>
+0500     <span class="comment">% LOAD_AEF</span>
+0501     <span class="comment">%   Wrapper for loading dat files generated from Seisan S-FILES (REA) databases.</span>
+0502     <span class="comment">%   DAT file name is like YYYYMM.dat</span>
+0503     <span class="comment">%   DAT file format is like:</span>
+0504     <span class="comment">%</span>
+0505     <span class="comment">%   YYYY MM DD HH MM SS c  MagE</span>
+0506     <span class="comment">%</span>
+0507     <span class="comment">%   where YYYY MM DD HH MM SS is time in UTC</span>
+0508     <span class="comment">%         c is subclass</span>
+0509     <span class="comment">%              r = rockfall</span>
+0510     <span class="comment">%              e = lp-rockfall</span>
+0511     <span class="comment">%              l = long period (lp)</span>
+0512     <span class="comment">%              h = hybrid</span>
+0513     <span class="comment">%              t = volcano-tectonic</span>
+0514     <span class="comment">%              R = regional</span>
+0515     <span class="comment">%              u = unknown</span>
+0516     <span class="comment">%         MagE is equivalent magnitude, based on energy</span>
+0517     <span class="comment">%         produced by the program ampengfft. These values come</span>
+0518     <span class="comment">%         from magnitude database that formed part of a</span>
+0519     <span class="comment">%         real-time alarm system, but these deleted were</span>
+0520     <span class="comment">%         maliciously deleted in June 2003. A magnitude was</span>
+0521     <span class="comment">%         computed for each event, assuming a location at sea</span>
+0522     <span class="comment">%         level beneath the dome. Regardless of type. This was</span>
+0523     <span class="comment">%         particularly helpful for understanding trends in</span>
+0524     <span class="comment">%         cumulative energy for different types from week to</span>
+0525     <span class="comment">%         week or month to month, and for real-time alarm</span>
+0526     <span class="comment">%         messages about pyroclastic flow signals where an</span>
+0527     <span class="comment">%         indication of event size was very important.</span>
+0528     <span class="comment">%</span>
+0529     <span class="comment">%</span>
+0530   
+0531 
+0532     <span class="comment">% Process input arguments</span>
+0533     p = inputParser;
+0534     p.addParamValue(<span class="string">'dbpath'</span>, <span class="string">''</span>, @isstr);
+0535     p.addParamValue(<span class="string">'snum'</span>, 0, @isnumeric);  
+0536     p.addParamValue(<span class="string">'enum'</span>, now, @isnumeric);
+0537     p.addParamValue(<span class="string">'minmag'</span>, [], @isnumeric);
+0538     p.addParamValue(<span class="string">'region'</span>, [], @isnumeric);
+0539     p.addParamValue(<span class="string">'subclass'</span>, <span class="string">'*'</span>, @ischar);
+0540     p.addParamValue(<span class="string">'mindepth'</span>, [], @isnumeric);
+0541     p.addParamValue(<span class="string">'maxdepth'</span>, [], @isnumeric);
+0542     p.addParamValue(<span class="string">'RUNMODE'</span>, <span class="string">'fast'</span>, @isstr);
+0543     p.parse(varargin{:});
+0544     
+0545     fields = fieldnames(p.Results);
+0546     <span class="keyword">for</span> i=1:length(fields)
+0547         field=fields{i};
+0548         <span class="comment">% val = eval(sprintf('p.Results.%s;',field));</span>
+0549         val = p.Results.(field);
+0550         eval(sprintf(<span class="string">'%s = val;'</span>,field));
+0551     <span class="keyword">end</span>
+0552     <span class="keyword">if</span> ~exist(dbpath, <span class="string">'dir'</span>)
+0553         fprintf(<span class="string">'Directory %s not found. Perhaps you need to generate from S files?\n'</span>,dbpath);
+0554         <span class="keyword">return</span>;
+0555     <span class="keyword">end</span>
+0556     
+0557     lnum=snum;
+0558 
+0559     <span class="comment">% loop over all years and months selected</span>
+0560     <span class="keyword">while</span> (  lnum &lt;= enum ),
+0561         [yyyy, mm] = datevec(lnum);
+0562 
+0563         <span class="comment">% concatenate catalogs</span>
+0564         obj0 = <a href="#_sub5" class="code" title="subfunction self = import_aef_file(dirpath, yyyy, mm, snum, enum, RUNMODE)">import_aef_file</a>(dbpath,yyyy,mm,snum,enum,p.Results.RUNMODE);
+0565         <span class="keyword">if</span> exist(<span class="string">'self'</span>, <span class="string">'var'</span>)
+0566             self = self + obj0;
+0567         <span class="keyword">else</span>
+0568             self = obj0;
+0569         <span class="keyword">end</span>
+0570         clear obj0;
+0571         
+0572         <span class="comment">% ready for following month</span>
+0573         lnum=datenum(yyyy,mm+1,1);
+0574     <span class="keyword">end</span>
+0575 
+0576     self.mag(self.mag&lt;-3)=NaN;
+0577 
+0578     <span class="keyword">if</span> ~isempty(self.dnum)
+0579 
+0580         <span class="comment">% cut data according to threshold mag</span>
+0581         <span class="keyword">if</span> ~isempty(minmag)
+0582             disp(<span class="string">'Applying minimum magnitude filter'</span>)
+0583             m = find(self.mag &gt; minmag);
+0584             fprintf(<span class="string">'Accepting %d events out of %d\n'</span>,length(m),length(self.dnum));
+0585             self.event_list = self.event_list(m);
+0586         <span class="keyword">end</span>    
+0587     <span class="keyword">end</span>
+0588 <span class="keyword">end</span>
+0589         
+0590 
+0591         
+0592         
+0593 <span class="comment">%% IMPORT_AEF_FILE</span>
+0594 <a name="_sub5" href="#_subfunctions" class="code">function self = import_aef_file(dirpath, yyyy, mm, snum, enum, RUNMODE)</a>
+0595     self = [];
+0596     fprintf(<span class="string">'\nAPPEND SEISAN %4d-%02d\n'</span>,yyyy,mm)
+0597     datfile = fullfile(dirpath,sprintf(<span class="string">'%4d%02d.dat'</span>,yyyy,mm));
+0598     <span class="keyword">if</span> exist(datfile,<span class="string">'file'</span>) 
+0599         disp([<span class="string">'loading '</span>,datfile]);
+0600         [yr,mn,dd,hh,mi,ss,etype0,mag0] = textread(datfile,<span class="string">'%d %d %d %d %d %d %s %f'</span>);
+0601         dnum = datenum(yr,mn,dd,hh,mi,ss)';
+0602         mag = mag0';
+0603         etype = char(etype0)';
+0604         l = length(dnum);      
+0605         
+0606         <span class="keyword">if</span> strcmp(RUNMODE, <span class="string">'slow'</span>)
+0607             <span class="comment">% SLOW MODE</span>
+0608             <span class="comment">% Create an Event object for each dnum in the list</span>
+0609             event_list = [];
+0610             <span class="keyword">for</span> i=1:l <span class="comment">% Loop over each element in vector</span>
+0611                 <span class="keyword">if</span> dnum(i)&gt;=snum &amp; dnum(i)&lt;=enum
+0612                     disp(sprintf(<span class="string">'%s %5.2f'</span>,datestr(dnum(i)), mag(i)))
+0613                     <span class="keyword">if</span> mag(i) &lt; -3.0
+0614                         mag(i) = NaN;
+0615                     <span class="keyword">end</span>
+0616                     magnitude_obj = <a href="Netmag.html" class="code" title="">Netmag</a>(mag(i));
+0617                     origin_obj = <a href="Origin.html" class="code" title="">Origin</a>(dnum(i), NaN, NaN, NaN, <span class="keyword">...</span>
+0618                             <span class="string">'orid'</span>, str2num(sprintf(<span class="string">'%4d%02d_%05d'</span>,yyyy,mm,i)), <span class="keyword">...</span>
+0619                             <span class="string">'netmags'</span>, [magnitude_obj], <span class="keyword">...</span>
+0620                             <span class="string">'etype'</span>, etype(i) <span class="keyword">...</span>
+0621                         );
+0622                     event_list = [ <span class="keyword">...</span>
+0623                         event_list <span class="keyword">...</span>
+0624                         <a href="Event.html" class="code" title="">Event</a>( <span class="keyword">...</span>
+0625                             [origin_obj], <span class="keyword">...</span>
+0626                             <span class="string">'evid'</span>, str2num(sprintf(<span class="string">'%4d%02d_%05d'</span>,yyyy,mm,i)) <span class="keyword">...</span>
+0627                             ) <span class="keyword">...</span>
+0628                         ];
+0629                 <span class="keyword">end</span>
+0630             <span class="keyword">end</span>
+0631 
+0632             <span class="comment">% CREATE CATALOG OBJECT</span>
+0633             self = <a href="Catalog_full.html" class="code" title="">Catalog_full</a>( event_list );
+0634         <span class="keyword">elseif</span> strcmp(RUNMODE, <span class="string">'fast'</span>)
+0635             <span class="comment">% FAST MODE</span>
+0636             self = <a href="Catalog_lite.html" class="code" title="">Catalog_lite</a>([], [], [], dnum, mag, etype); 
+0637         <span class="keyword">end</span>
+0638         st = dbstack;
+0639         self = self.addfield(<span class="string">'method'</span>, st(1).name);
+0640         self = self.addfield(<span class="string">'dbpath'</span>, dirpath);
+0641     <span class="keyword">else</span>
+0642         disp([datfile,<span class="string">' not found'</span>]);
+0643     <span class="keyword">end</span>
+0644 
+0645 <span class="keyword">end</span>
+0646 
+0647 <a name="_sub6" href="#_subfunctions" class="code">function self = load_seisandb(varargin)</a>
+0648     <span class="comment">% LOAD_SEISANDB</span>
+0649     <span class="comment">%   Wrapper for loading dat files generated from Seisan S-FILES (REA) databases.</span>
+0650     <span class="comment">%   DAT file name is like YYYYMM.dat</span>
+0651     <span class="comment">%   DAT file format is like:</span>
+0652     <span class="comment">%</span>
+0653     <span class="comment">%   YYYY MM DD HH MM SS c  MagE</span>
+0654     <span class="comment">%</span>
+0655     <span class="comment">%   where YYYY MM DD HH MM SS is time in UTC</span>
+0656     <span class="comment">%         c is subclass</span>
+0657     <span class="comment">%              r = rockfall</span>
+0658     <span class="comment">%              e = lp-rockfall</span>
+0659     <span class="comment">%              l = long period (lp)</span>
+0660     <span class="comment">%              h = hybrid</span>
+0661     <span class="comment">%              t = volcano-tectonic</span>
+0662     <span class="comment">%              R = regional</span>
+0663     <span class="comment">%              u = unknown</span>
+0664     <span class="comment">%         MagE is equivalent magnitude, based on energy</span>
+0665     <span class="comment">%         produced by the program ampengfft. These values come</span>
+0666     <span class="comment">%         from magnitude database that formed part of a</span>
+0667     <span class="comment">%         real-time alarm system, but these were deleted in June 2003.</span>
+0668     <span class="comment">%</span>
+0669     <span class="comment">%         A magnitude was</span>
+0670     <span class="comment">%         computed for each event, assuming a location at sea</span>
+0671     <span class="comment">%         level beneath the dome. Regardless of type. This was</span>
+0672     <span class="comment">%         particularly helpful for understanding trends in</span>
+0673     <span class="comment">%         cumulative energy for different types from week to</span>
+0674     <span class="comment">%         week or month to month, and for real-time alarm</span>
+0675     <span class="comment">%         messages about pyroclastic flow signals where an</span>
+0676     <span class="comment">%         indication of event size was very important.</span>
+0677     <span class="comment">%</span>
+0678     <span class="comment">%</span>
+0679 
+0680     <span class="comment">% Process input arguments</span>
+0681     p = inputParser;
+0682     p.addParamValue(<span class="string">'dbpath'</span>, <span class="string">''</span>, @isstr);
+0683     p.addParamValue(<span class="string">'snum'</span>, 0, @isnumeric);  
+0684     p.addParamValue(<span class="string">'enum'</span>, now, @isnumeric);
+0685     p.addParamValue(<span class="string">'RUNMODE'</span>, <span class="string">'fast'</span>, @isstr);
+0686     p.parse(varargin{:});
+0687     fields = fieldnames(p.Results);
+0688     <span class="keyword">for</span> i=1:length(fields)
+0689         field=fields{i};
+0690         <span class="comment">% val = eval(sprintf('p.Results.%s;',field));</span>
+0691         val = p.Results.field;
+0692         eval(sprintf(<span class="string">'%s = val;'</span>,field));
+0693     <span class="keyword">end</span>
+0694     
+0695     <span class="keyword">if</span> ~exist(dbpath, <span class="string">'dir'</span>)
+0696         fprintf(<span class="string">'Directory %s not found\n'</span>,dbpath);
+0697         self = struct;
+0698         <span class="keyword">return</span>;
+0699     <span class="keyword">end</span>
+0700     
+0701     <span class="comment">% get dir list of matching sfiles</span>
+0702     sfiles = <a href="#_sub7" class="code" title="subfunction files = list_sfiles(dbpath, snum, enum)">list_sfiles</a>(dbpath, snum, enum);
+0703     
+0704     <span class="comment">% loop over sfiles</span>
+0705 
+0706     <span class="keyword">for</span> i=1:length(sfiles)
+0707         <span class="comment">% read</span>
+0708         disp(sprintf(<span class="string">'Processing %s'</span>,fullfile(sfiles(i).dir, sfiles(i).name)));
+0709 
+0710         thiss = <a href="#_sub8" class="code" title="subfunction s=read_sfile(sfiledir, sfilebase,sta,chan);">read_sfile</a>(sfiles(i).dir, sfiles(i).name, <span class="string">'*'</span>, <span class="string">'*'</span>);
+0711 
+0712         <span class="keyword">try</span>
+0713             s(i)=thiss;
+0714         <span class="keyword">catch</span>
+0715             s(i)
+0716             thiss
+0717             warning(<span class="string">'Wrong number of fields?'</span>)
+0718         <span class="keyword">end</span>
+0719 s(i)
+0720         <span class="comment">% add to catalog</span>
+0721         dnum(i)  = s(i).dnum;
+0722         etype(i) = s(i).subclass;
+0723         lat(i) = s(i).latitude;
+0724         lon(i) = s(i).longitude;
+0725         depth(i) = s(i).depth;
+0726         s(i).magnitude
+0727         <span class="comment">% SKELETON</span>
+0728         mag(i) = NaN;
+0729         <span class="keyword">try</span>
+0730             sfile_mags = [s(i).magnitude.value];
+0731             <span class="keyword">if</span> ~isempty(sfile_mags)
+0732                 disp(<span class="string">'**************** ********************'</span>)
+0733                 mag(i) = max(sfile_mags);
+0734             <span class="keyword">end</span>
+0735         <span class="keyword">end</span>
+0736 
+0737         <span class="comment">% also do something with parameters spdur, bbdur, amp, eng, pkf,</span>
+0738         <span class="comment">% station</span>
+0739         <span class="comment">% Compute a magnitude from amp &amp; eng, but need to know where</span>
+0740         <span class="comment">% stations are. I can save these as MA and ME, to distinguish from</span>
+0741         <span class="comment">% Ml, Ms, Mb, Mw if those exist</span>
+0742 <span class="comment">%         catch</span>
+0743 <span class="comment">%             i</span>
+0744 <span class="comment">%             %s(i) = struct();</span>
+0745 <span class="comment">%             disp('- failed');</span>
+0746 <span class="comment">%             dnum(i) = NaN;</span>
+0747 <span class="comment">%             etype(i) = 'u';</span>
+0748 <span class="comment">%         end</span>
+0749     <span class="keyword">end</span>
+0750 
+0751     l = length(dnum);      
+0752 
+0753     <span class="keyword">if</span> strcmp(RUNMODE, <span class="string">'slow'</span>)
+0754         <span class="comment">% SLOW MODE</span>
+0755         <span class="comment">% Create an Event object for each dnum in the list</span>
+0756         event_list = [];
+0757         <span class="keyword">for</span> i=1:l <span class="comment">% Loop over each element in vector</span>
+0758             <span class="keyword">if</span> dnum(i)&gt;=snum &amp; dnum(i)&lt;=enum
+0759                 [yyyy,mm]=datevec(dnum(i));
+0760                 disp(sprintf(<span class="string">'%s %5.2f'</span>,datestr(dnum(i)), mag(i)))
+0761                 <span class="keyword">if</span> mag(i) &lt; -3.0
+0762                     mag(i) = NaN;
+0763                 <span class="keyword">end</span>
+0764                 magnitude_obj = <a href="Netmag.html" class="code" title="">Netmag</a>(mag(i));
+0765                 origin_obj = <a href="Origin.html" class="code" title="">Origin</a>(dnum(i), lon(i), lat(i), depth(i), <span class="keyword">...</span>
+0766                         <span class="string">'orid'</span>, str2num(sprintf(<span class="string">'%4d%02d%05d'</span>,yyyy,mm,i)), <span class="keyword">...</span>
+0767                         <span class="string">'etype'</span>, etype(i), <span class="keyword">...</span>
+0768                         <span class="string">'netmags'</span>, [magnitude_obj] <span class="keyword">...</span>
+0769                     );
+0770                 event_list = [ <span class="keyword">...</span>
+0771                     event_list <span class="keyword">...</span>
+0772                     <a href="Event.html" class="code" title="">Event</a>( <span class="keyword">...</span>
+0773                         [origin_obj], <span class="keyword">...</span>
+0774                         <span class="string">'evid'</span>, str2num(sprintf(<span class="string">'%4d%02d%05d'</span>,yyyy,mm,i)) <span class="keyword">...</span>
+0775                         ) <span class="keyword">...</span>
+0776                     ];
+0777             <span class="keyword">end</span>
+0778         <span class="keyword">end</span>
+0779 
+0780         <span class="comment">% CREATE CATALOG OBJECT</span>
+0781         self = <a href="Catalog_full.html" class="code" title="">Catalog_full</a>(event_list);
+0782     <span class="keyword">elseif</span> strcmp(RUNMODE, <span class="string">'fast'</span>)
+0783         <span class="comment">% FAST MODE</span>
+0784         self = <a href="Catalog_lite.html" class="code" title="">Catalog_lite</a>([], [], [], dnum, mag, etype);
+0785     <span class="keyword">end</span>
+0786     st = dbstack;
+0787     self = self.addfield(<span class="string">'method'</span>, st(1).name);
+0788     self = self.addfield(<span class="string">'dbpath'</span>, dbpath);
+0789     self = self.addfield(<span class="string">'sfile'</span>, s);
+0790     wavdbpath = strrep(dbpath, <span class="string">'REA'</span>, <span class="string">'WAV'</span>);
+0791     ds = datasource(<span class="string">'seisan'</span>, wavdbpath);
+0792     self = self.addfield(<span class="string">'datasource'</span>, ds);
+0793 <span class="keyword">end</span>
+0794 
+0795 <a name="_sub7" href="#_subfunctions" class="code">function files = list_sfiles(dbpath, snum, enum)</a>
+0796     <span class="comment">% LIST_SFILES Load waveform files from a Seisan database</span>
+0797     <span class="comment">%   s = list_sfiles(dbpath, snum, enum) search a Seisan</span>
+0798     <span class="comment">%   database for Sfiles matching the time range given by snum</span>
+0799     <span class="comment">%   and enum.</span>
+0800     <span class="comment">%</span>
+0801     <span class="comment">%   Notes:</span>
+0802     <span class="comment">%     Seisan Sfiles are typically stored in a Seisan</span>
+0803     <span class="comment">%     Seisan database, which is a tree of 4-digit-year/2-digit-month</span>
+0804     <span class="comment">%     directories. They have a name matching DD-HHMM-SSc.SYYYYMM</span>
+0805     <span class="comment">%</span>
+0806     <span class="comment">%   Example:</span>
+0807     <span class="comment">%       Load all data for all stations &amp; channels between 1000 and 1100</span>
+0808     <span class="comment">%       UTC on March 1st, 2001.</span>
+0809     <span class="comment">%</span>
+0810     <span class="comment">%           dbpath = '/raid/data/seisan/REA/DSNC_';</span>
+0811     <span class="comment">%           snum = datenum(2001,3,1,10,0,0);</span>
+0812     <span class="comment">%           enum = datenum(2001,3,1,11,0,0);</span>
+0813     <span class="comment">%           s = list_sfiles(dbpath, snum, enum)</span>
+0814     <span class="comment">%</span>
+0815 
+0816     files = [];
+0817     
+0818     <span class="comment">% Test dbpath</span>
+0819     <span class="keyword">if</span> ~exist(dbpath,<span class="string">'dir'</span>)
+0820         disp(sprintf(<span class="string">'dbpath %s not found'</span>,dbpath))
+0821         <span class="keyword">return</span>
+0822     <span class="keyword">end</span>
+0823         
+0824     <span class="comment">%% Compile a list from all directories from snum to enum</span>
+0825     sdv = datevec(snum);
+0826     edv = datevec(enum);
+0827     fileindex = 0;
+0828     <span class="keyword">for</span> yyyy=sdv(1):edv(1)
+0829        <span class="keyword">for</span> mm=sdv(2):edv(2)
+0830            seisandir = fullfile(dbpath, sprintf(<span class="string">'%4d'</span>,yyyy), sprintf(<span class="string">'%02d'</span>,mm) );
+0831            newfiles = dir(fullfile(seisandir, sprintf(<span class="string">'*%4d%02d'</span>,yyyy,mm)));
+0832            <span class="keyword">for</span> i=1:length(newfiles)
+0833                dnum = <a href="#_sub9" class="code" title="subfunction sfilednum=sfile2dnum(sfile)">sfile2dnum</a>(newfiles(i).name);
+0834                <span class="keyword">if</span> dnum &gt;= snum &amp; dnum &lt;= enum
+0835                    fileindex = fileindex + 1;
+0836                    newfiles(i).dir = seisandir;
+0837                    files = [files; newfiles(i)];
+0838                <span class="keyword">elseif</span> dnum&gt;enum
+0839                    <span class="keyword">break</span>;
+0840                <span class="keyword">end</span>
+0841            <span class="keyword">end</span>
+0842        <span class="keyword">end</span>
+0843     <span class="keyword">end</span>
+0844 
+0845     <span class="comment">%% Echo the list of matching sfiles</span>
+0846     disp(sprintf(<span class="string">'There are %d sfiles matching your request'</span>,numel(files)))
+0847 <span class="keyword">end</span>
+0848 
+0849 
+0850 <a name="_sub8" href="#_subfunctions" class="code">function s=read_sfile(sfiledir, sfilebase,sta,chan);</a>
+0851 <span class="comment">% READ_SFILE import data from a single MVO SFILE generated in SEISAN.</span>
+0852 <span class="comment">% USAGE: s=read_sfile(sfiledir, sfilebase,sta,chan)</span>
+0853 <span class="comment">% INPUT VARIABLES:</span>
+0854 <span class="comment">%   sfiledir = directory of the S-file</span>
+0855 <span class="comment">%   sfilebase = basename of the S-file</span>
+0856 <span class="comment">%   sta = the station to load, or can be set to '*' for all</span>
+0857 <span class="comment">%   chan = the channel to load, or can be set to '*' for all</span>
+0858 <span class="comment">%       note: only last character of chan is used for matching presently</span>
+0859 <span class="comment">% OUTPUT VARIABLES:</span>
+0860 <span class="comment">%   s = a structure containing</span>
+0861 <span class="comment">%       aef = a structure with vector fields</span>
+0862 <span class="comment">%           amp = MAX AVERAGE AMPLITUDE OF SIGNAL</span>
+0863 <span class="comment">%           eng = SEISMIC ENERGY</span>
+0864 <span class="comment">%           ssam = percentage of energy in 11 different frequency bins</span>
+0865 <span class="comment">%           pkf = PEAK FREQUENCY</span>
+0866 <span class="comment">%           scnl = SCNLOBJECT</span>
+0867 <span class="comment">%       stime = EVENT TIME</span>
+0868 <span class="comment">%       ...and many more variables...</span>
+0869 <span class="comment">%</span>
+0870 <span class="comment">% EXAMPLE:</span>
+0871 <span class="comment">%   s = read_sfile('/raid/data/seisan/REA/MVOE_/2002/02', '27-2109-46L.S200202','*', '*')</span>
+0872 <span class="comment">%   s = read_sfile('/raid/data/seisan/AEF/MVOE_/2002/02', '2002-02-27-2311-34S.MVO___014.aef','*','*')</span>
+0873 
+0874     <span class="comment">% Validate</span>
+0875     fullpath = fullfile(sfiledir, sfilebase);
+0876     <span class="keyword">if</span> ~ischar(fullpath) || ~exist(fullpath)
+0877         warning(sprintf(<span class="string">'catalog:readCatalog:notFound'</span>,<span class="string">'%s not found'</span>,fullpath));
+0878         <span class="comment">% eval(['help ' mfilename]);</span>
+0879         help(mfilename);
+0880     <span class="keyword">end</span>
+0881 
+0882     <span class="comment">% initialize</span>
+0883     s = struct();
+0884     s.aef = struct(<span class="string">'amp'</span>, [], <span class="string">'eng'</span>, [], <span class="string">'ssam'</span>, {}, <span class="string">'pkf'</span>, [], <span class="string">'scnl'</span>, []);
+0885     s.subclass=<span class="string">'_'</span>;                  
+0886     s.bbdur=NaN; 
+0887     s.stime = <span class="string">''</span>;
+0888     s.dnum = <a href="#_sub9" class="code" title="subfunction sfilednum=sfile2dnum(sfile)">sfile2dnum</a>(sfilebase);
+0889     s.wavfiles = <span class="string">''</span>;
+0890     s.error = NaN;
+0891     s.gap = NaN;
+0892     s.magnitude = struct();
+0893     s.longitude = NaN;
+0894     s.latitude = NaN;
+0895     s.depth = NaN;
+0896     aef = struct();
+0897     
+0898     <span class="comment">% open file</span>
+0899     fid=fopen(fullpath,<span class="string">'r'</span>);
+0900     patternstr = [<span class="string">'VOLC'</span>,<span class="string">' '</span>,sta];
+0901   
+0902     linenum = 1;
+0903     aeflinenum = 0;
+0904     magnum = 0;
+0905     <span class="keyword">while</span> fid ~= -1,
+0906         tline = fgetl(fid);
+0907         <span class="comment">%disp(sprintf('line = %d',linenum));</span>
+0908         <span class="comment">%disp(tline);</span>
+0909         linelength=length(tline);    
+0910         <span class="keyword">if</span> ischar(tline) &amp; linelength == 80 <span class="comment">% must be an 80 character string, or close file</span>
+0911             
+0912             <span class="keyword">if</span> tline(80) == <span class="string">'1'</span>
+0913                 <span class="keyword">if</span> length(strtrim(tline(2:20)))  &gt;= 14
+0914                     s.year = str2num(tline(2:5));
+0915                     s.month = str2num(tline(7:8));
+0916                     day = str2num(tline(9:10));
+0917                     hour = str2num(tline(12:13));
+0918                     minute = str2num(tline(14:15));
+0919                     second = str2num(tline(17:20));
+0920                     <span class="keyword">if</span> floor(second) == 60
+0921                         minute = minute + 1;
+0922                         second = second - 60.0;
+0923                     <span class="keyword">end</span>
+0924                     s.otime = datenum(s.year, s.month, day, hour, minute, floor(second));
+0925                 <span class="keyword">end</span>
+0926                 s.mainclass = strtrim(tline(22:23));
+0927                 lat = str2num(tline(24:30));
+0928                 lon = str2num(tline(31:38));
+0929                 depth = str2num(tline(39:43));
+0930                 <span class="keyword">if</span> isempty(lat)
+0931                     s.latitude = NaN;
+0932                 <span class="keyword">end</span>
+0933                 <span class="keyword">if</span> isempty(lon)
+0934                     s.longitude = NaN;
+0935                 <span class="keyword">end</span>     
+0936                 <span class="keyword">if</span> isempty(depth)
+0937                     s.depth = NaN;
+0938                 <span class="keyword">end</span>                    
+0939                 s.z_indicator = strtrim(tline(44));
+0940                 s.agency = strtrim(tline(46:48));
+0941                 s.no_sta=str2num(tline(49:51));
+0942                 <span class="keyword">if</span> isempty(s.no_sta)
+0943                     s.no_sta=0;
+0944                 <span class="keyword">end</span>
+0945                 s.rms=str2num(tline(52:55));
+0946                 tline(56:75)
+0947                 <span class="keyword">if</span> ~isempty(strtrim(tline(56:59)));
+0948                     magnum = magnum + 1;
+0949                     s.magnitude(magnum).value = str2num(tline(56:59));
+0950                     s.magnitude(magnum).type = tline(60);
+0951                     s.magnitude(magnum).agency = strtrim(tline(61:63));
+0952                 <span class="keyword">end</span>
+0953                 <span class="keyword">if</span> ~isempty(strtrim(tline(64:67)))
+0954                     magnum = magnum + 1;
+0955                     s.magnitude(magnum).value = str2num(tline(64:67));
+0956                     s.magnitude(magnum).type = tline(68);
+0957                     s.magnitude(magnum).agency = strtrim(tline(69:71));
+0958                 <span class="keyword">end</span>
+0959                 <span class="keyword">if</span> ~isempty(strtrim(tline(72:75)))
+0960                     magnum = magnum + 1;
+0961                     s.magnitude(magnum).value = str2num(tline(72:75));
+0962                     s.magnitude(magnum).type = tline(76);
+0963                     s.magnitude(magnum).agency = strtrim(tline(77:79));
+0964                 <span class="keyword">end</span>                
+0965             <span class="keyword">end</span>
+0966                         
+0967             <span class="comment">% Process Type 2 line, Macroseismic Intensity Information</span>
+0968             <span class="keyword">if</span> tline(80) == <span class="string">'2'</span>
+0969                s.maximum_intensity=str2num(tline(28:29));
+0970             <span class="keyword">end</span>
+0971                
+0972             <span class="keyword">if</span> tline(80) == <span class="string">'3'</span>   <span class="comment">% This is SEISAN identifier for summary lines in the Sfile</span>
+0973                 <span class="keyword">if</span> strfind(tline,<span class="string">'VOLC'</span>)                   
+0974                     <span class="keyword">if</span> strfind(tline,<span class="string">'MAIN'</span>)  <span class="comment">% This identifies the volcanic type</span>
+0975                         s.subclass=tline(12);
+0976                     <span class="keyword">else</span> <span class="comment">% A TYPE 3 LINE LIKE &quot;VOLC STA&quot;</span>
+0977                         <span class="keyword">if</span> strcmp(sta,<span class="string">'*'</span>) || strfind(tline,sta)
+0978                             <span class="keyword">if</span> strcmp(chan,<span class="string">'*'</span>) ||  strfind(tline(14:15),chan(end))
+0979                                 aeflinenum = aeflinenum + 1;
+0980                                 thissta = strtrim(tline(7:10));
+0981                                 thischan = strtrim(tline(12:15));
+0982                                 aef.scnl(aeflinenum) = scnlobject(thissta, thischan);
+0983                                 <span class="keyword">try</span>
+0984                                     <span class="comment">%aef.amp(aeflinenum)=str2num(tline(20:27));</span>
+0985                                     aef.amp(aeflinenum)=str2num(tline(18:25));
+0986                                 <span class="keyword">catch</span>
+0987                                     tline
+0988                                     tline(20:27)
+0989                                     aeflinenum
+0990                                     aef.amp
+0991                                     error(<span class="string">'aef.amp'</span>)
+0992                                 <span class="keyword">end</span>
+0993                                 <span class="comment">%aef.eng(aeflinenum)=str2num(tline(30:37));</span>
+0994                                 aef.eng(aeflinenum)=str2num(tline(28:35));
+0995                                 <span class="keyword">for</span> i = 1:11
+0996                                     <span class="comment">%startindex = (i-1)*3 + 40;</span>
+0997                                     startindex = (i-1)*3 + 38;
+0998                                     ssam(i) = str2num(tline(startindex:startindex+1));
+0999                                 <span class="keyword">end</span>
+1000                                 aef.ssam{aeflinenum} = ssam;
+1001                                 aef.pkf(aeflinenum)=str2num(tline(73:77));   <span class="comment">% Peak frequency (Frequency of the largest peak</span>
+1002                             <span class="keyword">end</span>
+1003                         <span class="keyword">end</span>
+1004                     <span class="keyword">end</span>
+1005                 <span class="keyword">elseif</span> strcmp(tline(2:7), <span class="string">'ExtMag'</span>)
+1006                     magnum = magnum + 1;
+1007                     s.magnitude(magnum).value = str2num(tline(9:12));
+1008                     s.magnitude(magnum).type = tline(13);
+1009                     s.magnitude(magnum).agency = strtrim(tline(14:16));   
+1010                 <span class="keyword">elseif</span> strcmp(tline(1:4), <span class="string">'URL'</span>)
+1011                     s.url = strtrim(tline(6:78));
+1012                 <span class="keyword">end</span>
+1013                    
+1014             <span class="keyword">end</span>
+1015             
+1016             <span class="keyword">if</span> tline(80) == <span class="string">'6'</span>
+1017                 s.wavfiles = tline(2:79);
+1018                 wavfile{1} = tline(2:36);
+1019             <span class="keyword">end</span>
+1020             
+1021             <span class="comment">% Process Type E line, Hyp error estimates</span>
+1022             <span class="keyword">if</span> tline(80) == <span class="string">'E'</span>
+1023                 s.gap=str2num(tline(6:8));
+1024                 s.error.origintime=str2num(tline(15:20));
+1025                 s.error.latitude=str2num(tline(25:30));
+1026                 s.error.longitude=str2num(tline(33:38));
+1027                 s.error.depth=str2num(tline(39:43));
+1028                 s.error.covxy=str2num(tline(44:55));
+1029                 s.error.covxz=str2num(tline(56:67));
+1030                 s.error.covyz=str2num(tline(68:79));
+1031             <span class="keyword">end</span>
+1032             
+1033             <span class="comment">% Process Type F line, Fault plane solution</span>
+1034             <span class="comment">% Format has changed need to fix AAH - 2011-06-23</span>
+1035             <span class="keyword">if</span> tline(80) == <span class="string">'F'</span> <span class="comment">%and not s.focmec.has_key('dip'):</span>
+1036                 s.focmec.strike=str2num(tline(1:10));
+1037                 s.focmec.dip=str2num(tline(11:20));
+1038                 s.focmec.rake=str2num(tline(21:30));
+1039                 <span class="comment">%s.focmec.bad_pols=str2num(tline(61:66));</span>
+1040                 s.focmec.agency=tline(67:69);
+1041                 s.focmec.source=tline(71:77);
+1042                 s.focmec.quality=tline(78);
+1043             <span class="keyword">end</span>
+1044             
+1045             <span class="comment">% Process Type H line, High accuracy line</span>
+1046             <span class="comment">% This replaces some origin parameters with more accurate ones</span>
+1047             <span class="keyword">if</span> tline(80) == <span class="string">'H'</span>
+1048                 osec0=str2num(tline(17:22));
+1049                 yyyy0=str2num(tline(2:5));
+1050                 mm0=str2num(tline(7:8));
+1051                 dd0=str2num(tline(9:10));
+1052                 hh0=str2num(tline(12:13));
+1053                 mi0=str2num(tline(14:15));
+1054                 s.otime=datenum(yyyy0, mm0, dd0, hh0, mi0, osec0)
+1055                 s.latitude=str2num(tline(24:32));
+1056                 s.longitude=str2num(tline(34:43));
+1057                 s.depth=str2num(tline(45:52));
+1058                 s.rms=str2num(tline(54:59));   
+1059             <span class="keyword">end</span>
+1060             
+1061             <span class="keyword">if</span> tline(80) == <span class="string">'I'</span>
+1062                 s.last_action=strtrim(tline(9:11));
+1063                 s.action_time=strtrim(tline(13:26));
+1064                 s.analyst = strtrim(tline(31:33));
+1065                 s.id = str2num(tline(61:74));
+1066             <span class="keyword">end</span>  
+1067             
+1068             <span class="keyword">if</span> tline(2:8)==<span class="string">'trigger'</span> 
+1069                 s.bbdur=str2num(tline(18:19)); <span class="comment">% EARTHWORM TRIGGER DURATION (including pre &amp; posttrigger times?)</span>
+1070                 s.bbdur=str2num(tline(19:23));
+1071             <span class="keyword">elseif</span> tline(2:7)==<span class="string">'sptrig'</span>
+1072                 s.spdur=str2num(tline(19:23));
+1073             <span class="keyword">end</span>
+1074 
+1075             <span class="keyword">if</span> tline(22:24) == <span class="string">'MVO'</span> &amp;  (tline(80) == <span class="string">'6'</span>) <span class="comment">% DATE AND TIME OF THE EVENT</span>
+1076                 s.stime=tline(2:19);
+1077             <span class="keyword">end</span>
+1078         <span class="keyword">else</span>
+1079             fclose(fid);
+1080             <span class="keyword">break</span>
+1081         <span class="keyword">end</span>
+1082         linenum = linenum + 1;
+1083     <span class="keyword">end</span>
+1084     s.aef = aef;
+1085 <span class="keyword">end</span>
+1086 
+1087 <a name="_sub9" href="#_subfunctions" class="code">function sfilednum=sfile2dnum(sfile)</a>
+1088     ddstr=sfile(1:2);
+1089     hhstr=sfile(4:5);
+1090     mistr=sfile(6:7);
+1091     ssstr=sfile(9:10);
+1092     yystr=sfile(14:17);
+1093     mm=str2num(sfile(18:19));
+1094     months=[<span class="string">'Jan'</span>;<span class="string">'Feb'</span>;<span class="string">'Mar'</span>;<span class="string">'Apr'</span>;<span class="string">'May'</span>;<span class="string">'Jun'</span>;<span class="string">'Jul'</span>;<span class="string">'Aug'</span>;<span class="string">'Sep'</span>;<span class="string">'Oct'</span>;<span class="string">'Nov'</span>;<span class="string">'Dec'</span>];
+1095     mmstr=months(mm,:);
+1096     datestring=[ddstr,<span class="string">'-'</span>,mmstr,<span class="string">'-'</span>,yystr,<span class="string">' '</span>,hhstr,<span class="string">':'</span>,mistr,<span class="string">':'</span>,ssstr];
+1097     <span class="keyword">try</span>
+1098         sfilednum=datenum(datestring);
+1099     <span class="keyword">catch</span>
+1100         error(sprintf(<span class="string">'Could not convert %s to a datenum for sfile=%s. Returning 0'</span>, datestring, sfile));
+1101     <span class="keyword">end</span>
+1102 <span class="keyword">end</span>
+1103 
+1104 <a name="_sub10" href="#_subfunctions" class="code">function self=read_vdap(filename)</a>
+1105 <span class="comment">%READ_VDAP read Hypoellipse summary files and PHA pickfiles</span>
+1106 <span class="comment">%   based on Montserrat analog network</span>
+1107 <span class="comment">%   cobj = read_vdap(filename) will read the catalog file, and create a</span>
+1108 <span class="comment">%   Catalog object</span>
+1109 <span class="comment">%</span>
+1110 <span class="comment">%   Summary file has lines like:</span>
+1111 <span class="comment">%</span>
+1112 <span class="comment">%   PHA phase file has lines like:</span>
+1113 <span class="comment">%   MGHZEP 1 950814071436.76</span>
+1114 <span class="comment">%   MSPTIPU0 950814071437.96</span>
+1115 <span class="comment">%   MGATEPU0 950814071437.92                                              00011</span>
+1116 <span class="comment">%   MLGT PD0 950814071438.09       39.41 S 2</span>
+1117 <span class="comment">%   MWHTEPD1 950814071437.61       38.78 S 2                              00009</span>
+1118 <span class="comment">%   1-4: sta code</span>
+1119 <span class="comment">%   5:   E or I</span>
+1120 <span class="comment">%   6:   P (or blank)</span>
+1121 <span class="comment">%   7:   U or D</span>
+1122 <span class="comment">%   8:   quality 0-4</span>
+1123 <span class="comment">%  10-24: YYMMDDhhmmss.ii for P</span>
+1124 <span class="comment">%  31-35: ss.ii for S</span>
+1125 <span class="comment">%  37:   S (or blank)</span>
+1126 <span class="comment">%  39:   quality 0-4</span>
+1127 <span class="comment">% Glenn Thompson 2014/11/14</span>
+1128 
+1129     <span class="comment">%% read the headers and data</span>
+1130     fid = fopen(phafilename);
+1131     tline = fgetl(fid);
+1132     <span class="keyword">while</span> ischar(tline)
+1133         tline = fgetl(fid);
+1134         stacode = tline(1:4);
+1135         p_eori = tline(5);
+1136         p = tline(6);
+1137         p_uord = tline(7);
+1138         p_qual = tline(8);
+1139         p_datetime = tline(10:24);
+1140         s_datetime = tline(31:35);
+1141         s = tline(37);
+1142         s_qual = tline(39);
+1143     <span class="keyword">end</span>
+1144     fclose(fid);
+1145 
+1146 
+1147 <span class="keyword">end</span>
+1148 
+1149 
+1150 <a name="_sub11" href="#_subfunctions" class="code">function self=read_SRU(filename)</a>
+1151 <span class="comment">%READ_SRU read a catalog sent by Seismic Research Unit, University of West</span>
+1152 <span class="comment">%Indies</span>
+1153 <span class="comment">%   Based on a Dominica catalog sent to Ophelia George</span>
+1154 <span class="comment">%   cobj = read_SRU(filename) will read the catalog file, and create a</span>
+1155 <span class="comment">%   Catalog object</span>
+1156 <span class="comment">%</span>
+1157 <span class="comment">%   File has lines like:</span>
+1158 <span class="comment">%   #EVENT_ID    P    S    LAT.    LONG    DEP.    DATE    TIME    RMSE    MAG.</span>
+1159 <span class="comment">%   9703120.002    3    3    15.4170N    61.2890W    3    19970322    658.23    0.347    2.5</span>
+1160 <span class="comment">%</span>
+1161 <span class="comment">% Glenn Thompson 2014/11/14</span>
+1162 
+1163     <span class="comment">%% read the headers and data</span>
+1164     fid = fopen(filename);
+1165     headers = textscan(fid, <span class="string">'%s'</span>, 10); <span class="comment">% header is just 10 strings</span>
+1166     data = textscan(fid, <span class="string">'%f%d%d%s%s%f%s%f%f%f'</span>); <span class="comment">% import the columns from each tab separated row as float, integer, integer, string, ...</span>
+1167     fclose(fid);
+1168     
+1169     <span class="comment">%% wrangle the data into variables we can use</span>
+1170     evid=data{1}; <span class="comment">% event id - like 9703120.002 - but we'll probably just renumber them from 1</span>
+1171     nassP=data{2}; <span class="comment">% number of associated P arrivals - like 3</span>
+1172     nassS=data{3}; <span class="comment">% number of associated S arrivals - like 3</span>
+1173     
+1174     <span class="comment">% latitude like '15.4170N'</span>
+1175     latstr = data{4};
+1176     <span class="keyword">for</span> c=1:numel(latstr)
+1177         thislatstr = latstr{c};
+1178         hemisphere = thislatstr(end);
+1179         lat(c) = str2num(thislatstr(1:end-1));
+1180         <span class="keyword">if</span> lower(hemisphere)==<span class="string">'s'</span>
+1181             lat(c) = -lat(c);
+1182         <span class="keyword">end</span>
+1183     <span class="keyword">end</span>
+1184     
+1185     <span class="comment">% longitude like '61.2890W'</span>
+1186     lonstr = data{5};
+1187     <span class="keyword">for</span> c=1:numel(lonstr)
+1188         thislonstr = lonstr{c};
+1189         hemisphere = thislonstr(end);
+1190         lon(c) = str2num(thislonstr(1:end-1));
+1191         <span class="keyword">if</span> lower(hemisphere)==<span class="string">'w'</span>
+1192             lon(c) = -lon(c);
+1193         <span class="keyword">end</span>
+1194     <span class="keyword">end</span>
+1195     
+1196     <span class="comment">% depth like 3</span>
+1197     depth = data{6};
+1198     
+1199     <span class="comment">% date like 19970322</span>
+1200     yyyymmdd = data{7};
+1201     <span class="keyword">for</span> c=1:numel(yyyymmdd)
+1202         thisyyyymmdd = yyyymmdd{c};
+1203         yyyy(c) = str2num(thisyyyymmdd(:,1:4));
+1204         mo(c) = str2num(thisyyyymmdd(:,5:6));
+1205         dd(c) = str2num(thisyyyymmdd(:,7:8));
+1206     <span class="keyword">end</span>
+1207     
+1208     <span class="comment">% time like 658.23 for 00:06:58.23 but really HHMMSS.MS</span>
+1209     hhmmss = data{8};
+1210     <span class="keyword">for</span> c=1:numel(hhmmss)
+1211         thishhmmss = sprintf(<span class="string">'%09.2f'</span>,hhmmss(c));
+1212         hh(c) = str2num(thishhmmss(:,1:2));
+1213         mm(c) = str2num(thishhmmss(:,3:4));
+1214         ss(c) = str2num(thishhmmss(:,5:9));
+1215     <span class="keyword">end</span>
+1216     
+1217     dnum = datenum(yyyy, mo, dd, hh, mm, ss);
+1218     datestr(dnum)
+1219     
+1220     <span class="comment">% RMS Error</span>
+1221     rms = data{9};
+1222     
+1223     <span class="comment">% Magnitude</span>
+1224     mag = data{10};
+1225     
+1226     
+1227     <span class="comment">%% Create an etype (assume type 'tectonic')</span>
+1228     etype = repmat(<span class="string">'t'</span>,numel(dnum));
+1229     
+1230     <span class="comment">%% Create our Catalog object</span>
+1231     <span class="comment">% FAST MODE</span>
+1232     self = <a href="Catalog_lite.html" class="code" title="">Catalog_lite</a>(lat, lon, depth, dnum, mag, etype);
+1233     <span class="comment">% WE COULD ADD ANOTHER METHOD HERE IN SLOW MODE TO CREATE A FULL</span>
+1234     <span class="comment">% CATALOG OBJECT, MAKING USE OF FIELDS LIKE nassP, rms etc.</span>
+1235 <span class="keyword">end</span>
+1236 
+1237 <a name="_sub12" href="#_subfunctions" class="code">function out = ensure_dateformat(t)</a>
+1238 <span class="comment">% stolen from waveform</span>
+1239    <span class="comment">% returns a matrix of datenums of same shape as t</span>
+1240    <span class="keyword">if</span> isnumeric(t)
+1241       out = t;
+1242    <span class="keyword">elseif</span> ischar(t),
+1243       <span class="keyword">for</span> n = size(t,1) : -1 : 1
+1244          out(n) = datenum(t(n,:));
+1245       <span class="keyword">end</span>
+1246    <span class="keyword">elseif</span> iscell(t)
+1247       out(:) = datenum(t);
+1248    <span class="keyword">end</span>
+1249    <span class="comment">% previously implemented as:</span>
+1250    <span class="comment">% if ischar(startt), startt = {startt}; end</span>
+1251    <span class="comment">% if ischar (endt), endt = {endt}; end;</span>
+1252    <span class="comment">% startt = reshape(datenum(startt(:)),size(startt));</span>
+1253    <span class="comment">% endt = reshape(datenum(endt(:)),size(endt));</span>
+1254 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of read_bob_file</title>
+  <meta name="keywords" content="read_bob_file">
+  <meta name="description" content="READ_BOB_FILE Load RSAM-like data from a BOB file into a SAM object.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">rsam</a> &gt; read_bob_file.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/rsam&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>read_bob_file
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>READ_BOB_FILE Load RSAM-like data from a BOB file into a SAM object.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function self=read_bob_file(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">READ_BOB_FILE Load RSAM-like data from a BOB file into a SAM object.
+ SAM is a generic term used here to represent any continuous data
+ sampled at a regular time interval (usually 1 minute). This is a 
+ format widely used within the USGS Volcano Hazards Programme which
+ originally stems from the RSAM system (Endo &amp; Murray, 1989)
+
+ Written for loading and plotting RSAM data at the Montserrat Volcano 
+ Observatory (MVO), and then similar measurements derived from the VME 
+ &quot;ltamon&quot; program and ampengfft and rbuffer2bsam which took Seisan 
+ waveform files as input. 
+
+ RSAM data are historically stored in &quot;BOB&quot; format, which consists
+ of a 4 byte floating number for each minute of the year, for a 
+ single station-channel.
+
+ s = read_bob_file('file', file, 'snum', snum, 'enum', enum, 'sta', sta, 'chan', chan, 'measure', measure, 'seismogram_type', seismogram_type, 'units', units)
+
+     file        % the path to the file. Substitutions enabled
+                 'SSSS' replaced with sta
+                 'CCC' replaced with chan
+                 'MMMM' replaced with measure
+                 'YYYY' replaced with year (from snum:enum)
+                 These allow looping over many year files
+     snum        % the start datenum
+     enum        % the end   datenum
+     sta         % station
+     chan        % channel
+     measure     % statistical measure, default is 'mean'
+     seismogram_type % e.g. 'velocity' or 'displacement', default is 'raw'
+     units       % units to label y-axis, e.g. 'nm/s' or 'nm' or 'cm2', default is 'counts'
+
+ See also: sam, <a href="oneMinuteData.html" class="code" title="">oneMinuteData</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="rsam.html" class="code" title="">rsam</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = findfiles(self, file)</a></li><li><a href="#_sub2" class="code">function self = load(self, f)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function self=read_bob_file(varargin)</a>
+0002 <span class="comment">%READ_BOB_FILE Load RSAM-like data from a BOB file into a SAM object.</span>
+0003 <span class="comment">% SAM is a generic term used here to represent any continuous data</span>
+0004 <span class="comment">% sampled at a regular time interval (usually 1 minute). This is a</span>
+0005 <span class="comment">% format widely used within the USGS Volcano Hazards Programme which</span>
+0006 <span class="comment">% originally stems from the RSAM system (Endo &amp; Murray, 1989)</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Written for loading and plotting RSAM data at the Montserrat Volcano</span>
+0009 <span class="comment">% Observatory (MVO), and then similar measurements derived from the VME</span>
+0010 <span class="comment">% &quot;ltamon&quot; program and ampengfft and rbuffer2bsam which took Seisan</span>
+0011 <span class="comment">% waveform files as input.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% RSAM data are historically stored in &quot;BOB&quot; format, which consists</span>
+0014 <span class="comment">% of a 4 byte floating number for each minute of the year, for a</span>
+0015 <span class="comment">% single station-channel.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% s = read_bob_file('file', file, 'snum', snum, 'enum', enum, 'sta', sta, 'chan', chan, 'measure', measure, 'seismogram_type', seismogram_type, 'units', units)</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%     file        % the path to the file. Substitutions enabled</span>
+0020 <span class="comment">%                 'SSSS' replaced with sta</span>
+0021 <span class="comment">%                 'CCC' replaced with chan</span>
+0022 <span class="comment">%                 'MMMM' replaced with measure</span>
+0023 <span class="comment">%                 'YYYY' replaced with year (from snum:enum)</span>
+0024 <span class="comment">%                 These allow looping over many year files</span>
+0025 <span class="comment">%     snum        % the start datenum</span>
+0026 <span class="comment">%     enum        % the end   datenum</span>
+0027 <span class="comment">%     sta         % station</span>
+0028 <span class="comment">%     chan        % channel</span>
+0029 <span class="comment">%     measure     % statistical measure, default is 'mean'</span>
+0030 <span class="comment">%     seismogram_type % e.g. 'velocity' or 'displacement', default is 'raw'</span>
+0031 <span class="comment">%     units       % units to label y-axis, e.g. 'nm/s' or 'nm' or 'cm2', default is 'counts'</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">% See also: sam, oneMinuteData</span>
+0034     self = <a href="rsam.html" class="code" title="">rsam</a>(); <span class="comment">% Create a blank sam object</span>
+0035     
+0036     [file, self.snum, self.enum, self.sta, self.chan, self.measure, self.seismogram_type, self.units, self.dnum, self.data] = <span class="keyword">...</span>
+0037         matlab_extensions.process_options(varargin, <span class="string">'file'</span>, <span class="string">''</span>, <span class="string">'snum'</span>, self.snum, <span class="string">'enum'</span>, self.enum, <span class="string">'sta'</span>, self.sta, <span class="keyword">...</span>
+0038         <span class="string">'chan'</span>, self.chan, <span class="string">'measure'</span>, self.measure, <span class="string">'seismogram_type'</span>, self.seismogram_type, <span class="string">'units'</span>, self.units, <span class="string">'dnum'</span>, self.dnum, <span class="string">'data'</span>, self.data);
+0039 
+0040     <span class="comment">%%%% CREATING SAM OBJECT FROM A BOB FILE</span>
+0041     <span class="comment">% check if filename has a year in it, if it does</span>
+0042     <span class="comment">% make sure snum doesn't start before this year</span>
+0043     <span class="comment">% and enum doesn't end after this year</span>
+0044     <span class="keyword">if</span> ~isempty(file)
+0045         dummy = regexp(file, <span class="string">'(\d+)'</span>, <span class="string">'match'</span>);
+0046         <span class="keyword">if</span> ~isempty(dummy)
+0047             yyyy = str2num(dummy{end});
+0048             d=datevec(now);yearnow=d(1);clear d
+0049             <span class="keyword">if</span> yyyy&gt;=1980 &amp; yyyy&lt;=yearnow
+0050                 self.snum = max([self.snum datenum(yyyy,1,1)]);
+0051                 self.enum = min([self.enum datenum(yyyy,12,31,23,59,59)]);
+0052             <span class="keyword">end</span>
+0053         <span class="keyword">end</span>
+0054 
+0055         <span class="comment">% Generate a list of files</span>
+0056         self = <a href="#_sub1" class="code" title="subfunction self = findfiles(self, file)">findfiles</a>(self, file);
+0057 
+0058         <span class="comment">% Load the data</span>
+0059         <span class="keyword">for</span> f = self.files
+0060             <span class="keyword">if</span> f.found
+0061                 self = self.load(f);
+0062             <span class="keyword">end</span>
+0063         <span class="keyword">end</span>
+0064     <span class="keyword">end</span>
+0065 <span class="keyword">end</span>
+0066 
+0067 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0068 <a name="_sub1" href="#_subfunctions" class="code">function self = findfiles(self, file)</a>
+0069     <span class="comment">% Generate a list of files corresponding to the file pattern,</span>
+0070     <span class="comment">% snum and enum given.</span>
+0071 
+0072     filenum = 0;
+0073 
+0074     <span class="comment">% substitute for station</span>
+0075     file = regexprep(file, <span class="string">'SSSS'</span>, self.sta);
+0076 
+0077     <span class="comment">% substitute for channel</span>
+0078     file = regexprep(file, <span class="string">'CCC'</span>, self.chan);
+0079 
+0080     <span class="comment">% substitute for measure</span>
+0081     file = regexprep(file, <span class="string">'MMMM'</span>, self.measure);             
+0082 
+0083     <span class="comment">% set start year and month, and end year and month</span>
+0084     [syyy sm]=datevec(self.snum);
+0085     [eyyy em]=datevec(self.enum);
+0086 
+0087     <span class="keyword">for</span> yyyy=syyy:eyyy
+0088 
+0089         filenum = filenum + 1;
+0090         files(filenum) = struct(<span class="string">'file'</span>, file, <span class="string">'snum'</span>, self.snum, <span class="string">'enum'</span>, self.enum, <span class="string">'found'</span>, false);
+0091 
+0092         <span class="comment">% Check year against start year</span>
+0093         <span class="keyword">if</span> yyyy~=syyy
+0094             <span class="comment">% if not the first year, start on 1st Jan</span>
+0095             files(filenum).snum = datenum(yyyy,1,1);
+0096         <span class="keyword">end</span>
+0097 
+0098         <span class="comment">% Check year against end year</span>
+0099         <span class="keyword">if</span> yyyy~=eyyy
+0100             <span class="comment">% if not the last year, end at 31st Dec</span>
+0101             files(filenum).enum = datenum(yyyy,12,31,23,59,59);
+0102         <span class="keyword">end</span>   
+0103 
+0104         <span class="comment">% Substitute for year</span>
+0105         files(filenum).file = regexprep(files(filenum).file, <span class="string">'YYYY'</span>, sprintf(<span class="string">'%04d'</span>,yyyy) );
+0106         fprintf(<span class="string">'Looking for file: %s'</span>,files(filenum).file);
+0107 
+0108         <span class="keyword">if</span> exist(files(filenum).file, <span class="string">'file'</span>)
+0109             files(filenum).found = true;
+0110             fprintf(<span class="string">' - found\n'</span>);
+0111         <span class="keyword">else</span>
+0112             fprintf(<span class="string">' - not found\n'</span>);
+0113         <span class="keyword">end</span>
+0114     <span class="keyword">end</span>
+0115     self.files = files;
+0116 <span class="keyword">end</span>
+0117 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0118 <a name="_sub2" href="#_subfunctions" class="code">function self = load(self, f)</a>
+0119 <span class="comment">% Purpose:</span>
+0120 <span class="comment">%    Loads derived data from a binary file in the BOB RSAM format</span>
+0121 <span class="comment">%    The pointer position at which to reading from the binary file is determined from f.snum</span>
+0122 <span class="comment">%    Load all the data from f.snum to f.enum. So if timewindow is 12:34:56 to 12:44:56,</span>
+0123 <span class="comment">%    it is the samples at 12:35, ..., 12:44 - i.e. 10 of them.</span>
+0124 <span class="comment">%</span>
+0125 <span class="comment">% Input:</span>
+0126 <span class="comment">%    f - a structure which contains 'file', 'snum', 'enum' and 'found' parameters</span>
+0127 <span class="comment">% Author:</span>
+0128 <span class="comment">%   Glenn Thompson, MVO, 2000</span>
+0129 
+0130     <span class="comment">% initialise return variables</span>
+0131     datafound=false;
+0132     dnum=[];
+0133     data=[];
+0134 
+0135     [yyyy mm]=datevec(f.snum);
+0136     days=365;
+0137     <span class="keyword">if</span> mod(yyyy,4)==0
+0138         days=366;
+0139     <span class="keyword">end</span>
+0140 
+0141     datapointsperday = 1440;
+0142     headersamples = 0;
+0143     tz=0;
+0144     <span class="keyword">if</span> strfind(f.file,<span class="string">'RSAM'</span>)
+0145         headersamples=datapointsperday;
+0146         tz=-4;
+0147     <span class="keyword">end</span>
+0148     startsample = ceil( (f.snum-datenum(yyyy,1,1))*datapointsperday)+headersamples;
+0149     endsample   = (f.enum-datenum(yyyy,1,1)) *datapointsperday + headersamples;
+0150     <span class="comment">%endsample   = floor( max([ datenum(yyyy,12,31,23,59,59) f.enum-datenum(yyyy,1,1) ]) *datapointsperday);</span>
+0151     nsamples    = endsample - startsample + 1;
+0152 
+0153     <span class="comment">% create dnum &amp; blank data vector</span>
+0154     dnum = matlab_extensions.ceilminute(f.snum)+(0:nsamples-1)/datapointsperday - tz/24;
+0155     data(1:length(dnum))=NaN;
+0156 
+0157     <span class="keyword">if</span> f.found    
+0158         <span class="comment">% file found</span>
+0159         debug.print_debug(sprintf( <span class="string">'Loading data from %s, position %d to %d of %d'</span>, <span class="keyword">...</span>
+0160              f.file, startsample,(startsample+nsamples-1),(datapointsperday*days) ),3); 
+0161 
+0162         fid=fopen(f.file,<span class="string">'r'</span>, <span class="string">'l'</span>); <span class="comment">% big-endian for Sun, little-endian for PC</span>
+0163 
+0164         <span class="comment">% Position the pointer</span>
+0165         offset=(startsample)*4;
+0166         fseek(fid,offset,<span class="string">'bof'</span>);
+0167 
+0168         <span class="comment">% Read the data</span>
+0169         [data,numlines] = fread(fid, nsamples, <span class="string">'float32'</span>);
+0170         fclose(fid);
+0171         debug.print_debug(sprintf(<span class="string">'mean of data loaded is %e'</span>,nanmean(data)),1);
+0172 
+0173         <span class="comment">% Transpose to give same dimensions as dnum</span>
+0174         data=data';
+0175 
+0176         <span class="comment">% Test for Nulls</span>
+0177         <span class="keyword">if</span> length(find(data&gt;0)) &gt; 0
+0178             datafound=true;
+0179         <span class="keyword">end</span>    
+0180     <span class="keyword">end</span>
+0181 
+0182     <span class="comment">% Now paste together the matrices</span>
+0183     self.dnum = matlab_extensions.catmatrices(dnum, self.dnum);
+0184     self.data = matlab_extensions.catmatrices(data, self.data);
+0185 
+0186     <span class="keyword">if</span> ~datafound
+0187         debug.print_debug(sprintf(<span class="string">'%s: No data loaded from file %s'</span>,mfilename,f.file),1);
+0188     <span class="keyword">end</span>
+0189 
+0190     <span class="comment">% eliminate any data outside range asked for - MAKE THIS A</span>
+0191     <span class="comment">% SEPARATE FN IF AT ALL</span>
+0192     i = find(self.dnum &gt;= self.snum &amp; self.dnum &lt;= self.enum);
+0193     self.dnum = self.dnum(i);
+0194     self.data = self.data(i);
+0195 
+0196     <span class="comment">% Fill NULL values with NaN</span>
+0197     i = find(self.data == -998);
+0198     self.data(i) = NaN;
+0199     i = find(self.data == 0);
+0200     self.data(i) = NaN;
+0201 
+0202 <span class="keyword">end</span>
+0203</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

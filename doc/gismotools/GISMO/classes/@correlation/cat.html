@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cat</title>
+  <meta name="keywords" content="cat">
+  <meta name="description" content="c = cat(c1,c2,c3,...)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@correlation</a> &gt; cat.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>cat
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>c = cat(c1,c2,c3,...)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = cat(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> c = cat(c1,c2,c3,...)
+ Concatenate the traces in two or more correlation objects. c1,c2,c3,...
+ will be combined in the order listed. Only the four data descriptor
+ fields (TRIG,START,WAVES,FS) will be filled in the output object. There
+ is not enough information to fill in the CORRELATION, LAG, STAT, LINK, or 
+ CLUSTER fields. These fields will be empty. Data in c1,c2,c3,... must
+ have the same number of samples and sampling frequency.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="interferogram.html" class="code" title="function [c,t,i,CC,LL] = interferogram(c,varargin)">interferogram</a>	C = INTERFEROGRAM(C)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = cat(varargin)</a>
+0002 
+0003 <span class="comment">% c = cat(c1,c2,c3,...)</span>
+0004 <span class="comment">% Concatenate the traces in two or more correlation objects. c1,c2,c3,...</span>
+0005 <span class="comment">% will be combined in the order listed. Only the four data descriptor</span>
+0006 <span class="comment">% fields (TRIG,START,WAVES,FS) will be filled in the output object. There</span>
+0007 <span class="comment">% is not enough information to fill in the CORRELATION, LAG, STAT, LINK, or</span>
+0008 <span class="comment">% CLUSTER fields. These fields will be empty. Data in c1,c2,c3,... must</span>
+0009 <span class="comment">% have the same number of samples and sampling frequency.</span>
+0010 
+0011 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0012 <span class="comment">% $Date$</span>
+0013 <span class="comment">% $Revision$</span>
+0014 
+0015 
+0016 
+0017 <span class="keyword">if</span> nargin &lt;= 1
+0018     error(<span class="string">'Not enough inputs'</span>);
+0019 <span class="keyword">end</span>
+0020 
+0021 
+0022 
+0023 <span class="keyword">for</span> i = 1:nargin
+0024     <span class="keyword">if</span> ~isa(varargin{i},<span class="string">'correlation'</span>)
+0025         error(<span class="string">'All inputs must be correlation objects'</span>);
+0026     <span class="keyword">end</span>
+0027     <span class="keyword">if</span> <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{i},<span class="string">'Fs'</span>) ~= <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{1},<span class="string">'Fs'</span>)
+0028         error(<span class="string">'All inputs must have the same sampling frequency'</span>);
+0029     <span class="keyword">end</span>
+0030     <span class="keyword">if</span> size(<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{i},<span class="string">'DATA_LENGTH'</span>),1) ~= size(<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{1},<span class="string">'DATA_LENGTH'</span>),1)
+0031         error(<span class="string">'All inputs must have the same trace length'</span>);
+0032     <span class="keyword">end</span>
+0033 <span class="keyword">end</span>
+0034 
+0035 
+0036 
+0037 c = varargin{1};
+0038 c.C = [];
+0039 c.L = [];
+0040 c.stat = [];
+0041 c.link = [];
+0042 c.clust = [];
+0043 
+0044 <span class="keyword">for</span> i = 2:nargin
+0045     cin = varargin{i};
+0046     c.W = <a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>(1,c.W,cin.W);    
+0047     c.trig = <a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>(1,c.trig,cin.trig);
+0048 <span class="keyword">end</span>
+0049 
+0050 
+0051 
+0052</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

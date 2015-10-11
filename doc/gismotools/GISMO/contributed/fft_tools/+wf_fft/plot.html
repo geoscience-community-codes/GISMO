@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plot</title>
+  <meta name="keywords" content="plot">
+  <meta name="description" content="PLOT plot fourier transform of a waveform">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="../index.html">fft_tools</a> &gt; <a href="index.html">+wf_fft</a> &gt; plot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/fft_tools/+wf_fft&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>plot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>PLOT plot fourier transform of a waveform</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function plot(w) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">PLOT plot fourier transform of a waveform
+ PLOT(WAVEFORM) creates a simple plot of the frequency vs. amplitude 
+ spectrum of the traces in WAVEFORM. This function requires that the 
+ FFT_AMP and FFT_FREQ fields have been filled using WF_FFT.COMPUTE
+
+ see also wf_fft.<a href="compute.html" class="code" title="function w = compute(w);">compute</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="freqindex.html" class="code" title="function W = freqindex(W,varargin)">freqindex</a>	WAVEFORM = FREQINDEX(WAVEFORM) calculates the frequency index of a waveform.</li><li><a href="plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function plot(w)</a>
+0002 
+0003 <span class="comment">%PLOT plot fourier transform of a waveform</span>
+0004 <span class="comment">% PLOT(WAVEFORM) creates a simple plot of the frequency vs. amplitude</span>
+0005 <span class="comment">% spectrum of the traces in WAVEFORM. This function requires that the</span>
+0006 <span class="comment">% FFT_AMP and FFT_FREQ fields have been filled using WF_FFT.COMPUTE</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% see also wf_fft.compute</span>
+0009 
+0010 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0011 <span class="comment">% $Date$</span>
+0012 <span class="comment">% $Revision$</span>
+0013 <span class="comment">% TODO: written pretty hastily and inefficiently - MEW 6/18/2007</span>
+0014 
+0015 
+0016 <span class="comment">% CHECK ARGUMENTS</span>
+0017 <span class="keyword">if</span> ~strcmpi(class(w),<span class="string">'waveform'</span>)
+0018     error(<span class="string">'First input must be a waveform object'</span>);
+0019 <span class="keyword">end</span>
+0020 
+0021 Fs = round(get(w,<span class="string">'Fs'</span>));
+0022 <span class="keyword">if</span> ~isempty(find(Fs-mean(Fs)))
+0023    error(<span class="string">'Waveforms must have the same sample rate'</span>); 
+0024 <span class="keyword">end</span>
+0025 
+0026 
+0027 <span class="comment">%if ~isfield(w,'FFT_AMP')</span>
+0028 <span class="comment">%    error('waveform must contain FFT fields. Run WF_FFT.COMPUTE first');</span>
+0029 <span class="comment">%end;</span>
+0030 
+0031 
+0032 
+0033 <span class="comment">% MAKE LOG PLOT</span>
+0034 figure(<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'Position'</span>,[50 200 800 600]);
+0035 set(gcf,<span class="string">'DefaultAxesFontSize'</span>,14);
+0036 hold on; box on; grid on;
+0037 cmap = lines;
+0038 <span class="keyword">for</span> n = 1:numel(w)
+0039     col = round(size(cmap,1)*rand(1));
+0040     col = cmap(col,:);
+0041     <a href="plot.html" class="code" title="function plot(w)">plot</a>( get(w(n),<span class="string">'FFT_FREQ'</span>) ,  get(w(n),<span class="string">'FFT_AMP'</span>) , <span class="string">'Color'</span> , col );
+0042 <span class="keyword">end</span>;
+0043 set(gca,<span class="string">'XScale'</span>,<span class="string">'log'</span>);
+0044 <span class="comment">%set(gca,'YScale','log');</span>
+0045 xlabel(<span class="string">'Frequency (Hz)'</span>);
+0046 ylabel(<span class="string">'Amplitude'</span>);
+0047</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

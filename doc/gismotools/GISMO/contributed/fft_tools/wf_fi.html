@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of wf_fi</title>
+  <meta name="keywords" content="wf_fi">
+  <meta name="description" content="WAVEFORM = WF_FI(WAVEFORM) calculates the frequency index of a waveform.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">fft_tools</a> &gt; wf_fi.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/fft_tools&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>wf_fi
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>WAVEFORM = WF_FI(WAVEFORM) calculates the frequency index of a waveform.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function W = wf_fi(W,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> WAVEFORM = WF_FI(WAVEFORM) calculates the frequency index of a waveform.
+ The FI is stored as a new field called FI. 
+
+ WAVEFORM = WF_FI(WAVEFORM,1) includes a plot of the waveform, and the 
+ frequency spectrum with the FI frequency bins shaded by their appropriate
+ heights. If WAVEFORM is a vector, plots will only be included for the
+ first five waveforms. This is a bit ad hoc, but it prevents accidental
+ plotting of thousands of waveforms. To plot specific waveforms one can
+ always use wf_fi(w(n)) where n is the index of the nth waveform.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function W = wf_fi(W,varargin)</a>
+0002 
+0003 <span class="comment">% WAVEFORM = WF_FI(WAVEFORM) calculates the frequency index of a waveform.</span>
+0004 <span class="comment">% The FI is stored as a new field called FI.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% WAVEFORM = WF_FI(WAVEFORM,1) includes a plot of the waveform, and the</span>
+0007 <span class="comment">% frequency spectrum with the FI frequency bins shaded by their appropriate</span>
+0008 <span class="comment">% heights. If WAVEFORM is a vector, plots will only be included for the</span>
+0009 <span class="comment">% first five waveforms. This is a bit ad hoc, but it prevents accidental</span>
+0010 <span class="comment">% plotting of thousands of waveforms. To plot specific waveforms one can</span>
+0011 <span class="comment">% always use wf_fi(w(n)) where n is the index of the nth waveform.</span>
+0012 
+0013 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0014 <span class="comment">% $Date$</span>
+0015 <span class="comment">% $Revision$</span>
+0016 <span class="comment">% Programming note: WF_FI could be folded into WF_FFT</span>
+0017 
+0018 
+0019 admin.deprecated(mfilename,<span class="string">'wf_fft.freqindex'</span>);
+0020 
+0021 DOPLOT = 0;
+0022 <span class="keyword">if</span> length(varargin) == 1
+0023     DOPLOT = varargin{1};
+0024 <span class="keyword">end</span>
+0025 
+0026 
+0027 <span class="comment">% LOOP THROUGH WAVEFORMS (INEFFICIENT CODE!)</span>
+0028 <span class="keyword">for</span> i = 1:length(W)
+0029     w = W(i);
+0030 
+0031 
+0032     <span class="comment">% GET FFT</span>
+0033     <span class="comment">%W(i) = demean(W(i));</span>
+0034     <span class="comment">%W(i) = wf_fft(W(i));</span>
+0035     F = get(W(i),<span class="string">'FFT_FREQ'</span>);
+0036     A  = get(W(i),<span class="string">'FFT_AMP'</span>);
+0037     <span class="keyword">if</span> isempty(F) || isempty(A)
+0038         error([<span class="string">'Trace '</span> num2str(i) <span class="string">' does not have FFT_FREQ or FFT_AMP fields. Run WF_FFT before WF_FI.'</span> ]);
+0039     <span class="keyword">end</span>
+0040     <span class="comment">%A = A .* A;</span>
+0041     j = find(F &gt;= 1 &amp; F &lt;= 2);
+0042     Al = mean(A(j));
+0043     j = find(F &gt;= 10 &amp; F &lt;= 20);
+0044     Ah = mean(A(j));
+0045     fi = log10(Ah/Al);
+0046     W(i) = addfield(W(i),<span class="string">'FFT_FI'</span>,fi);
+0047     
+0048     <span class="comment">% PLOT IT</span>
+0049     <span class="keyword">if</span> DOPLOT &amp;&amp; i&lt;=5
+0050 
+0051         figure(<span class="string">'Color'</span>,<span class="string">'w'</span>);
+0052         set(gcf,<span class="string">'DefaultAxesFontSize'</span>,14);
+0053 
+0054         subplot(2,1,1);
+0055         plot(w);
+0056         title(datestr(get(w,<span class="string">'START'</span>),31));
+0057 
+0058         subplot(2,1,2);
+0059         hold on;
+0060         fill( [1 1 2 2] , [0 Al Al 0] , [.7 .7 .7]);
+0061         fill( [10 10 20 20] , [0 Ah Ah 0] , [.7 .7 .7]);
+0062         plot( F , A , <span class="string">'r-'</span> );
+0063         xlabel(<span class="string">'Frequency (Hz)'</span>);
+0064         ylabel(<span class="string">'Power'</span>);
+0065         set(gca,<span class="string">'XScale'</span>,<span class="string">'Log'</span>);
+0066         grid on; box on;
+0067         xlim([0.1 50]);
+0068         title([<span class="string">'Frequency index: '</span> num2str(fi,<span class="string">'%5.2f'</span>)]);
+0069 
+0070     <span class="keyword">end</span>
+0071 
+0072 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

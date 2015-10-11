@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of calc_McBest</title>
+  <meta name="keywords" content="calc_McBest">
+  <meta name="description" content="CALC_MCBEST Calculate best Mc from combining methods">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">catalog</a> &gt; <a href="index.html">+bvalue_lib</a> &gt; calc_McBest.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog/+bvalue_lib&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>calc_McBest
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>CALC_MCBEST Calculate best Mc from combining methods</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function [fMc, fMc95, fMc90] = calc_McBest(mag, fBinning); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CALC_MCBEST Calculate best Mc from combining methods</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [fMc, fMc95, fMc90] = calc_McBest(mag, fBinning);</a>
+0002     <span class="comment">%CALC_MCBEST Calculate best Mc from combining methods</span>
+0003 
+0004     <span class="comment">% First estimation of magnitude of completeness (maximum curvature)</span>
+0005     [vEvents, vMag] = hist(mag, -2:0.1:6);
+0006     nSel = max(find(vEvents == max(vEvents)));
+0007     fMcStart = vMag(nSel);
+0008 
+0009     <span class="comment">% Data container</span>
+0010     mData = [];
+0011 
+0012     <span class="comment">% Magnitude increment</span>
+0013     <span class="keyword">if</span> ~exist(<span class="string">'fBinning'</span>)
+0014         fBinning = 0.1;
+0015     <span class="keyword">end</span>
+0016 
+0017     <span class="keyword">for</span> nCnt = (fMcStart - 0.9):fBinning:(fMcStart + 1.5)
+0018         vSel = mag &gt; (nCnt - (fBinning/2));
+0019         <span class="comment">%vSel = mag &gt;= nCnt - 0.0499;</span>
+0020         nNumberEvents = length(mag(vSel));
+0021         <span class="keyword">if</span> nNumberEvents &gt;= 25;
+0022             [fDummy fBValue fDummy fDummy] =  bvalue_lib.bmemag(mag(vSel));
+0023 
+0024             fStartMag = nCnt; <span class="comment">% Starting magnitude (hypothetical Mc)</span>
+0025 
+0026             <span class="comment">% log10(N)=A-B*M</span>
+0027             vMag = [fStartMag:fBinning:15]; <span class="comment">% Ending magnitude must be sufficiently high</span>
+0028             vNumber = 10.^(log10(nNumberEvents)-fBValue*(vMag - fStartMag));
+0029             vNumber = round(vNumber);
+0030 
+0031             <span class="comment">% Find the last bin with an event</span>
+0032             nLastEventBin = min(find(vNumber == 0)) - 1;
+0033             <span class="keyword">if</span> isempty(nLastEventBin)
+0034                 nLastEventBin = length(vNumber);
+0035             <span class="keyword">end</span>
+0036 
+0037             <span class="comment">%    ctM=vMag(ct1);</span>
+0038 
+0039             <span class="comment">% Determine set of all magnitude bins with number of events &gt; 0</span>
+0040             ct = round((vMag(nLastEventBin)-fStartMag)*(1/fBinning) + 1);
+0041             <span class="comment">%     ct=0;</span>
+0042             <span class="comment">%     for I=fStartMag:fBinning:ctM;</span>
+0043             <span class="comment">%       ct=ct+1;</span>
+0044             <span class="comment">%     end;</span>
+0045 
+0046             PM=vMag(1:ct);
+0047             vNumber = vNumber(1:ct);
+0048             [bval, vDummy] = hist(mag(vSel),PM);
+0049             b3 = fliplr(cumsum(fliplr(bval)));    <span class="comment">% N for M &gt;= (counted backwards)</span>
+0050             res2 = sum(abs(b3 - vNumber))/sum(b3)*100;
+0051             mData = [mData; nCnt res2];
+0052         <span class="keyword">else</span>
+0053             mData = [mData; nCnt NaN];
+0054         <span class="keyword">end</span>
+0055     <span class="keyword">end</span>
+0056 
+0057     <span class="comment">% Evaluation of results</span>
+0058 
+0059     <span class="comment">% Is fMc90 available</span>
+0060     nSel = min(find(mData(:,2) &lt; 10));
+0061     <span class="keyword">if</span> isempty(nSel)
+0062         fMc90 = NaN;
+0063     <span class="keyword">else</span>
+0064         fMc90 = mData(nSel,1);
+0065     <span class="keyword">end</span>
+0066 
+0067     <span class="comment">% Is fMc95 available</span>
+0068     nSel = min(find(mData(:,2) &lt; 5));
+0069     <span class="keyword">if</span> isempty(nSel)
+0070         fMc95 = NaN;
+0071     <span class="keyword">else</span>
+0072         fMc95 = mData(nSel,1);
+0073     <span class="keyword">end</span>
+0074 
+0075     <span class="comment">% ?????</span>
+0076     j =  min(find(mData(:,2) &lt; 10 ));
+0077     <span class="keyword">if</span> isempty(j) == 1; j =  min(find(mData(:,2) &lt; 15 )); <span class="keyword">end</span>
+0078     <span class="keyword">if</span> isempty(j) == 1; j =  min(find(mData(:,2) &lt; 20 )); <span class="keyword">end</span>
+0079     <span class="keyword">if</span> isempty(j) == 1; j =  min(find(mData(:,2) &lt; 25 )); <span class="keyword">end</span>
+0080     <span class="comment">%j2 =  min(find(dat(:,2) == min(dat(:,2)) ));</span>
+0081 
+0082     fMc = mData(j,1);
+0083     <span class="keyword">if</span> isempty(fMc)
+0084         fMc = NaN;
+0085     <span class="keyword">end</span>
+0086 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of spin</title>
+  <meta name="keywords" content="spin">
+  <meta name="description" content="SPIN rotate and plot horizontal components">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@threecomp</a> &gt; spin.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@threecomp&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>spin
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>SPIN rotate and plot horizontal components</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [TC,c2, c3] = spin(TCin,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SPIN rotate and plot horizontal components
+ SPIN(TC) rotates a single threecomp object TC through a range of
+ horizontal orientations. By default, the range is [0:10:360].
+
+ SPIN(TC,ORIENTATIONS) rotates the horizontal components to orientations
+ specified by the numerical vector ORIENTATIONS.
+
+ TC2 = SPIN(TC, ...) Returns the multiply-rotated threecomp object as TC2.
+
+ [TC2, C2, C3] = SPIN(...) Returns the threecomp object TC2 as well as
+ correlation objects C2 and C3 containing the traces from the second and
+ third components (the horizontals).</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="rotate.html" class="code" title="function TC = rotate(TC,varargin)">rotate</a>	Rotate component orientations</li><li><a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="threecomp.html" class="code" title="">threecomp</a>	THREECOMP Object for three component waveform data</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function labelbackazimuth(bearing,TC)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [TC,c2, c3] = spin(TCin,varargin)</a>
+0002 
+0003 <span class="comment">%SPIN rotate and plot horizontal components</span>
+0004 <span class="comment">% SPIN(TC) rotates a single threecomp object TC through a range of</span>
+0005 <span class="comment">% horizontal orientations. By default, the range is [0:10:360].</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% SPIN(TC,ORIENTATIONS) rotates the horizontal components to orientations</span>
+0008 <span class="comment">% specified by the numerical vector ORIENTATIONS.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% TC2 = SPIN(TC, ...) Returns the multiply-rotated threecomp object as TC2.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% [TC2, C2, C3] = SPIN(...) Returns the threecomp object TC2 as well as</span>
+0013 <span class="comment">% correlation objects C2 and C3 containing the traces from the second and</span>
+0014 <span class="comment">% third components (the horizontals).</span>
+0015 
+0016 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0017 <span class="comment">% $Date$</span>
+0018 <span class="comment">% $Revision$</span>
+0019 
+0020 
+0021 <span class="keyword">if</span> numel(TCin)&gt;1
+0022     error(<span class="string">'Threecomp:plot:tooManyObjects'</span>, <span class="keyword">...</span>
+0023         [<span class="string">'Plot only operates on a single threecomp object. '</span> <span class="keyword">...</span>
+0024         <span class="string">'Select a single object using an index such as TC(n).'</span>]);
+0025 <span class="keyword">end</span>
+0026 
+0027 
+0028 <span class="keyword">if</span> length(varargin)&gt;=1
+0029    <span class="keyword">if</span> isa(varargin{1},<span class="string">'double'</span>) &amp;&amp; numel(varargin{1})&gt;3
+0030         bearing = mod(varargin{1},360);
+0031         bearing = reshape(bearing,numel(bearing),1);
+0032    <span class="keyword">else</span>
+0033        error(<span class="string">'Threecomp:spin:badOrientationList'</span>,<span class="string">'orientation argument must be a numeric vector'</span>);
+0034    <span class="keyword">end</span>
+0035 <span class="keyword">else</span>   
+0036     bearing = [0:10:360]';   
+0037 <span class="keyword">end</span>
+0038 
+0039 
+0040 <span class="comment">% GENERATE ROTATED TRACES</span>
+0041 TC = <a href="threecomp.html" class="code" title="">threecomp</a>;
+0042 <span class="keyword">for</span> n = 1:numel(bearing)
+0043    TC(n) = <a href="rotate.html" class="code" title="function TC = rotate(TC,varargin)">rotate</a>(TCin,bearing(n)); 
+0044 <span class="keyword">end</span>
+0045 TC = reshape(TC,numel(TC),1);
+0046 
+0047 
+0048 <span class="comment">% PLOT ROTATED TRACES</span>
+0049 <span class="comment">% This plotting approach makes use of the correlation toolbox.</span>
+0050 bearing2Text = num2str(bearing);
+0051 bearing3Text = num2str(mod(bearing+90,360));
+0052 w = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC,<span class="string">'WAVEFORM'</span>);
+0053 trig = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC,<span class="string">'TRIGGER'</span>);
+0054 
+0055 c2 = correlation(w(:,2),trig);
+0056 c3 = correlation(w(:,3),trig);
+0057 <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(c2,<span class="string">'raw'</span>,0.7)
+0058 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gcf,<span class="string">'Position'</span>,[0 0 700 800]);
+0059 title([<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(1,2),<span class="string">'NETWORK'</span>) <span class="string">'_'</span> <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(1,2),<span class="string">'STATION'</span>) <span class="string">'_'</span> <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(1,2),<span class="string">'CHANNEL'</span>) <span class="string">'_'</span> <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(1,2),<span class="string">'LOCATION'</span>)],<span class="string">'FontSize'</span>,15,<span class="string">'Interpreter'</span>,<span class="string">'None'</span>);
+0060 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'yTickLabel'</span>,bearing2Text);
+0061 ylabel(<span class="string">'Horizontal orientation (degrees)'</span>,<span class="string">'FontSize'</span>,14);
+0062 <span class="comment">%labelbackazimuth(bearing,TCin)</span>
+0063 
+0064 <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(c3,<span class="string">'raw'</span>,0.7)
+0065 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gcf,<span class="string">'Position'</span>,[700 0 700 800]);
+0066 title([<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(1,3),<span class="string">'NETWORK'</span>) <span class="string">'_'</span> <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(1,3),<span class="string">'STATION'</span>) <span class="string">'_'</span> <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(1,3),<span class="string">'CHANNEL'</span>) <span class="string">'_'</span> <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(w(1,3),<span class="string">'LOCATION'</span>)],<span class="string">'FontSize'</span>,15,<span class="string">'Interpreter'</span>,<span class="string">'None'</span>);
+0067 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'yTickLabel'</span>,bearing3Text);
+0068 ylabel(<span class="string">'Horizontal orientation (degrees)'</span>,<span class="string">'FontSize'</span>,14);
+0069 <span class="comment">%labelbackazimuth(bearing+90,TCin)</span>
+0070 
+0071 
+0072    
+0073 
+0074 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0075 <span class="comment">% Add lines to label backazimuth</span>
+0076 <span class="comment">%</span>
+0077 <span class="comment">% TODO: Disabled because the plotting function doesn't wrap 0 appropriately.</span>
+0078 
+0079 <a name="_sub1" href="#_subfunctions" class="code">function labelbackazimuth(bearing,TC)</a>
+0080 
+0081 TC.backAzimuth
+0082 <span class="keyword">if</span> ~<a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(TC.backAzimuth)
+0083     baz = TC.backAzimuth;
+0084     bazList = mod([baz baz+180],360);
+0085     bazListOpp = mod([baz+90 baz+270],360);
+0086     xLimit = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(gca,<span class="string">'XLim'</span>);
+0087     <span class="keyword">if</span> bazList(1)&gt;=bearing(1) &amp;&amp; bazList(1)&lt;=bearing(end)
+0088         height = (bazList(1)-bearing(1))/(bearing(end)-bearing(1))*length(bearing);
+0089         <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(xLimit,[height height],<span class="string">'-'</span>,<span class="string">'Color'</span>,[1 .7 .7],<span class="string">'LineWidth'</span>,5);
+0090     <span class="keyword">end</span>
+0091     <span class="keyword">if</span> bazList(2)&gt;=bearing(1) &amp;&amp; bazList(2)&lt;=bearing(end)
+0092         height = (bazList(2)-bearing(1))/(bearing(end)-bearing(1))*length(bearing);
+0093         <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(xLimit,[height height],<span class="string">'--'</span>,<span class="string">'Color'</span>,[0 0 .5]);
+0094     <span class="keyword">end</span>
+0095     <span class="keyword">if</span> bazListOpp(1)&gt;=bearing(1) &amp;&amp; bazListOpp(1)&lt;=bearing(end)
+0096         height = (bazListOpp(1)-bearing(1))/(bearing(end)-bearing(1))*length(bearing);
+0097         <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(xLimit,[height height],<span class="string">'-'</span>,<span class="string">'Color'</span>,[.7 .7 .7]);
+0098     <span class="keyword">end</span>
+0099     <span class="keyword">if</span> bazListOpp(2)&gt;=bearing(1) &amp;&amp; bazListOpp(2)&lt;=bearing(end)
+0100         height = (bazListOpp(2)-bearing(1))/(bearing(end)-bearing(1))*length(bearing);
+0101         <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(xLimit,[height height],<span class="string">'-'</span>,<span class="string">'Color'</span>,[.7 .7 .7]);
+0102     <span class="keyword">end</span>
+0103 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

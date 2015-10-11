@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of max</title>
+  <meta name="keywords" content="max">
+  <meta name="description" content="MIN    Largest value of a waveform.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; max.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>max
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>MIN    Largest value of a waveform.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [Y, I] = max(w) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MIN    Largest value of a waveform.
+   Y = max(waveform)
+   returns a scalar containing the minimum value of the waveform data
+   [Y, I] = max(waveform)
+
+   Input Arguments
+       WAVEFORM: waveform object   N-DIMENSIONAL
+
+   Output
+       Y: array of same shape as WAVEFORM, with each element corresponding
+          to the maximum value of each waveform
+       I: index(es) of Y within each waveform.
+
+   NOTE: If waveforms with no data are queried, Y and I will be NaN.  This
+   differs from the built-in version of min which returns an empty set.
+   This change allows max to be used for N-dimensional arrays of waveform
+   objects.
+
+   See also <a href="max.html" class="code" title="function [Y, I] = max(w)">MAX</a>, WAVEFORM/MIN, WAVEFORM/MEDIAN, WAVEFORM/MEAN, SORT.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="fix_data_length.html" class="code" title="function w = fix_data_length(w, maxlen)">fix_data_length</a>	FIX_DATA_LENGTH adjust length of waveform data to allow batch processing</li><li><a href="isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>	ISFIELD checks the presence of waveform fields.</li><li><a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="resample.html" class="code" title="function w = resample(w,method, val)">resample</a>	RESAMPLE resamples a waveform at over every specified interval</li><li><a href="waveform2sound.html" class="code" title="function isSuccessful = waveform2sound(w, outfile, speedup)">waveform2sound</a>	WAVEFORM2SOUND generate a wav file from the existing waveform</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [Y, I] = max(w)</a>
+0002    <span class="comment">%MIN    Largest value of a waveform.</span>
+0003    <span class="comment">%   Y = max(waveform)</span>
+0004    <span class="comment">%   returns a scalar containing the minimum value of the waveform data</span>
+0005    <span class="comment">%   [Y, I] = max(waveform)</span>
+0006    <span class="comment">%</span>
+0007    <span class="comment">%   Input Arguments</span>
+0008    <span class="comment">%       WAVEFORM: waveform object   N-DIMENSIONAL</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">%   Output</span>
+0011    <span class="comment">%       Y: array of same shape as WAVEFORM, with each element corresponding</span>
+0012    <span class="comment">%          to the maximum value of each waveform</span>
+0013    <span class="comment">%       I: index(es) of Y within each waveform.</span>
+0014    <span class="comment">%</span>
+0015    <span class="comment">%   NOTE: If waveforms with no data are queried, Y and I will be NaN.  This</span>
+0016    <span class="comment">%   differs from the built-in version of min which returns an empty set.</span>
+0017    <span class="comment">%   This change allows max to be used for N-dimensional arrays of waveform</span>
+0018    <span class="comment">%   objects.</span>
+0019    <span class="comment">%</span>
+0020    <span class="comment">%   See also MAX, WAVEFORM/MIN, WAVEFORM/MEDIAN, WAVEFORM/MEAN, SORT.</span>
+0021    
+0022    
+0023    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0024    <span class="comment">% $Date$</span>
+0025    <span class="comment">% $Revision$</span>
+0026    
+0027    Y = nan(size(w));
+0028    I = nan(size(w));
+0029    <span class="keyword">for</span> n = 1 : numel(w);
+0030       <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(w(n).data)
+0031          warning(<span class="string">'Waveform:max:noDataFound'</span>,<span class="keyword">...</span>
+0032             <span class="string">'no data in waveform #%d, index and value are set to NaN'</span>, n);
+0033          <span class="keyword">continue</span>
+0034       <span class="keyword">end</span>
+0035       [Y(n), I(n)] = <a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>(w(n).data);
+0036    <span class="keyword">end</span>
+0037 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

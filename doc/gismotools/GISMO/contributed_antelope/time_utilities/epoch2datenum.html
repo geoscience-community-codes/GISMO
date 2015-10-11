@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of epoch2datenum</title>
+  <meta name="keywords" content="epoch2datenum">
+  <meta name="description" content="TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">contributed_antelope</a> &gt; <a href="index.html">time_utilities</a> &gt; epoch2datenum.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_antelope/time_utilities&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>epoch2datenum
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function time = epoch2datenum(epoch) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab
+ numeric date format. Requires the Antelope tool box.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab</span>
+0002 <span class="comment">% numeric date format. Requires the Antelope tool box.</span>
+0003 
+0004 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0005 <span class="comment">% $Date$</span>
+0006 <span class="comment">% $Revision$</span>
+0007 
+0008 <a name="_sub0" href="#_subfunctions" class="code">function time = epoch2datenum(epoch)</a>
+0009 
+0010 <span class="comment">%</span>
+0011 <span class="comment">% if strcmp(computer,'GLNXA64')</span>
+0012 <span class="comment">%     error('This function requires the Antelope toolbox which currently functions only with the 32 bit Matlab libraries. Run as &gt;&gt; linux32 matlab');</span>
+0013 <span class="comment">% end</span>
+0014 
+0015 
+0016 time = datenum(epoch2str(epoch,<span class="string">'%m %d %Y %H %M %S.%s'</span>),<span class="string">'mm dd yyyy HH MM SS.FFF'</span>);</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of DEPRICATED_xcorrcxc</title>
+  <meta name="keywords" content="DEPRICATED_xcorrcxc">
+  <meta name="description" content="This function performs cross correlations of one correlation object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@correlation</a> &gt; <a href="index.html">private</a> &gt; DEPRICATED_xcorrcxc.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>DEPRICATED_xcorrcxc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>This function performs cross correlations of one correlation object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function d = xcorr1xr(d) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> This function performs cross correlations of one correlation object
+ against another. Traces from the second object are added and correlated
+ one by one with the first in sets by correlating one trace against a row
+ of traces at once. Generally it is faster than the one at a time
+ implimentation. All steps are included in this function.
+ That is, no calls to the Matlab built-in xcorr are used.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function d = xcorr1xr(d)</a>
+0002 
+0003 <span class="comment">% This function performs cross correlations of one correlation object</span>
+0004 <span class="comment">% against another. Traces from the second object are added and correlated</span>
+0005 <span class="comment">% one by one with the first in sets by correlating one trace against a row</span>
+0006 <span class="comment">% of traces at once. Generally it is faster than the one at a time</span>
+0007 <span class="comment">% implimentation. All steps are included in this function.</span>
+0008 <span class="comment">% That is, no calls to the Matlab built-in xcorr are used.</span>
+0009 
+0010 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0011 <span class="comment">% $Date$</span>
+0012 <span class="comment">% $Revision$</span>
+0013 
+0014 
+0015 <span class="comment">% PREP NECESSARY TERMS</span>
+0016 [M,N] = size(d.w);
+0017 pretrig = 86400*(d.trig-d.start);   <span class="comment">% time between trace start and trigger</span>
+0018 l = (1./d.Fs)*[-M+1:M-1]';        <span class="comment">% lag vector</span>
+0019 <span class="comment">% next two lines are equivalent ways to get normalization coefficients</span>
+0020 wcoeff = 1./sqrt(sum(d.w.*d.w));
+0021 <span class="comment">%for i = 1:size(d.w,2), wcoeff(i) = 1./norm(d.w(:,i)); end;</span>
+0022 d.C = eye(length(d.trig),<span class="string">'single'</span>);
+0023 d.L = zeros(length(d.trig),<span class="string">'single'</span>);
+0024 
+0025 
+0026 <span class="comment">% GET FFT OF TRACES</span>
+0027 X = fft(d.w,2^nextpow2(2*M-1));
+0028 Xc = conj(X);
+0029 [MX,NX] = size(X);
+0030 
+0031 
+0032 <span class="comment">% TIME THE PROCESS</span>
+0033 starttime = now;
+0034 tic;
+0035 t0 = cputime;
+0036 numcorr = ((length(d.trig))^2-length(d.trig))/2;
+0037 count = 0;
+0038 
+0039 
+0040 <span class="comment">% LOOP THROUGH ROWS OF SIMILARITY MATRIX</span>
+0041 <span class="keyword">for</span> n =1:N
+0042     cols = n:N;
+0043     <span class="comment">% multiply fourier series and transform back to time domain</span>
+0044     CC = (X(:,n) * ones(1,length(cols))) .* Xc(:,cols);
+0045     corr = ifft(CC);
+0046     corr = [corr(end-M+2:<span class="keyword">end</span>,:);corr(1:M,:)];
+0047     
+0048     <span class="comment">% save only max correlation value</span>
+0049     [maxval,index] = max(corr);
+0050     d.C(n,cols)=maxval .* wcoeff(n) .* wcoeff(cols);   <span class="comment">% normalized maximum correlation</span>
+0051     d.L(n,cols)=l(index) + (pretrig(cols) - pretrig(n)); <span class="comment">% lag in seconds</span>
+0052     
+0053     <span class="keyword">if</span> (n==100) | (n==1000)
+0054         tclock = toc/86400;
+0055         completed = sum(N-n:N-1)/((N*N-N)/2);
+0056         fin = datestr(starttime + tclock/completed,16);
+0057         disp([num2str(100*completed,<span class="string">'%2.0f'</span>) <span class="string">'% completed. Estimated completion at '</span> fin <span class="string">'...'</span>]);
+0058     <span class="keyword">end</span>;
+0059 <span class="keyword">end</span>
+0060 
+0061 
+0062 <span class="comment">% FILL LOWER TRIANGULAR PART OF MATRICES</span>
+0063 d.C = d.C + d.C' - eye(size(d.C));
+0064 d.L = d.L - d.L';
+0065 
+0066 
+0067 <span class="comment">% DISPLAY RUN TIMES</span>
+0068 tclock = toc;
+0069 tcpu = cputime-t0;
+0070 disp([<span class="string">'Clock time to complete correlations: '</span> num2str(tclock,<span class="string">'%5.1f'</span>) <span class="string">' s'</span>]);
+0071 disp([<span class="string">'CPU time to complete correlations:   '</span> num2str(tcpu,<span class="string">'%5.1f'</span>) <span class="string">' s'</span>]);
+0072 
+0073 
+0074 
+0075</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

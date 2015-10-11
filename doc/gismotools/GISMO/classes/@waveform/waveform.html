@@ -1,0 +1,511 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of waveform</title>
+  <meta name="keywords" content="waveform">
+  <meta name="description" content="WAVEFORM Waveform Class constructor">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; waveform.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>waveform
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>WAVEFORM Waveform Class constructor</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = waveform(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">WAVEFORM Waveform Class constructor
+   w = WAVEFORM(datasource, channeltags, starttimes, endtimes)
+          loads waveform from the specified DATASOURCE
+          SCNL stands for STATION-CHANNEL-NETWORK-LOCATION.
+          multiple start-endtime pairs may be used, while station-channel
+          pairs can be provided as an array of channeltags
+
+  w = WAVEFORM() creates a blank waveform
+
+  w = WAVEFORM(channeltag, samplerate, starttime, data, units) creates
+      a waveform from consituent parts.
+
+      CHANNELTAG - either 'net.sta.loc.cha' or a channeltag 
+             (channeltag replaces the old scnlobject)
+      SAMPLERATE - Sampling frequency, in Hz       (default nan)
+      DATA - a vector of seismic amplitudes        (default [])
+      STARTTIME - Start time, in most any format   (default '1/1/1970')
+      UNITS - a string describing the data units
+
+  w = WAVEFORM(...,'nocombine')
+    If the data requested by waveform consists of multiple segments, then
+    these segments will be combined, with NaN filling any data gaps. 
+    'nocombine' overrides this behavior.
+
+
+    ---------- USING WAVEFORM WITH ANTELOPE ------------
+    The Antelope Toolbox must be installed.
+    w = WAVEFORM(..., 'noexit') attempts to avoid antelope segfaults
+
+    ---------- USING WAVEFORM WITH WINSTON -------------
+    To use the waveform files with winston, you need to have the usgs.jar
+    file. If you have already installed SWARM, then this .jar file already
+    exist in your swarm/lib directory (or thereabouts).
+
+    Edit Matlab's classpath.txt file (located in the toolbox/local
+    directory) and add the location of this .jar files.
+
+    WINSTON WARNING: Data received through winston is in COUNTS, and is
+        not adjusted for instrument gain. To fix this, you'll
+        need to scale the data by the correct gain.  
+            Ex: W = W .* instGain
+ 
+    % WINSTON EXAMPLE: This example gets a few minutes of data 
+    % (starting a day ago) from a ficticious winston server.  
+    % Data returned is for the EHZ channel at each of the three 
+    % selected stations.
+
+      tags = channeltag({'AV.OKCF..EHZ','AV.PV6..EHZ','AV.SSLS..EHZ'});
+      mySource = datasource('winston','servername.here.edu',1255);
+      w = waveform(mySource, tags, now - 1, now - .98);
+
+
+ ------------ DEPRECATED USAGE ---------------
+   w = WAVEFORM(station, channel, samplerate, starttime, data)
+
+ see also channeltag, datasource</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and channeltag info.</li><li><a href="disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>	GETTIMERANGE returns the list of start and end times from a waveform array</li><li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and channeltag info.</li><li><a href="extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>	ISFIELD checks the presence of waveform fields.</li><li><a href="loadobj.html" class="code" title="function b = loadobj(a)">loadobj</a>	LOADOBJ updates older versions of waveform class upon loading</li><li><a href="waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function w = genericWaveform()</a></li><li><a href="#_sub2" class="code">function w = waveformFromParts(chaTag, freq, starttime, data, units)</a></li><li><a href="#_sub3" class="code">function w = filter_by_time(w, myStartTime, myEndTime)</a></li><li><a href="#_sub4" class="code">function tf = isVoidInterpreter(ds)</a></li><li><a href="#_sub5" class="code">function datarequest = makeDataRequest(ds, chans, st, ed)</a></li><li><a href="#_sub6" class="code">function s = updateWarningMessage()</a></li><li><a href="#_sub7" class="code">function out = ensure_dateformat(t)</a></li><li><a href="#_sub8" class="code">function w = load_from_file(myLoadFunc, fname, allowMultiple, ErrorOnEmpty)</a></li><li><a href="#_sub9" class="code">function [v, cell_array] = peel(cell_array)</a></li><li><a href="#_sub10" class="code">function [optExists, value, vargs] = peelOption(vargs, searchValue, searchClass, minPos)</a></li><li><a href="#_sub11" class="code">function w = winstonAccess(varargin)</a></li><li><a href="#_sub12" class="code">function obj = asChanneltag(obj)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = waveform(varargin)</a>
+0002    <span class="comment">%WAVEFORM Waveform Class constructor</span>
+0003    <span class="comment">%   w = WAVEFORM(datasource, channeltags, starttimes, endtimes)</span>
+0004    <span class="comment">%          loads waveform from the specified DATASOURCE</span>
+0005    <span class="comment">%          SCNL stands for STATION-CHANNEL-NETWORK-LOCATION.</span>
+0006    <span class="comment">%          multiple start-endtime pairs may be used, while station-channel</span>
+0007    <span class="comment">%          pairs can be provided as an array of channeltags</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">%  w = WAVEFORM() creates a blank waveform</span>
+0010    <span class="comment">%</span>
+0011    <span class="comment">%  w = WAVEFORM(channeltag, samplerate, starttime, data, units) creates</span>
+0012    <span class="comment">%      a waveform from consituent parts.</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">%      CHANNELTAG - either 'net.sta.loc.cha' or a channeltag</span>
+0015    <span class="comment">%             (channeltag replaces the old scnlobject)</span>
+0016    <span class="comment">%      SAMPLERATE - Sampling frequency, in Hz       (default nan)</span>
+0017    <span class="comment">%      DATA - a vector of seismic amplitudes        (default [])</span>
+0018    <span class="comment">%      STARTTIME - Start time, in most any format   (default '1/1/1970')</span>
+0019    <span class="comment">%      UNITS - a string describing the data units</span>
+0020    <span class="comment">%</span>
+0021    <span class="comment">%  w = WAVEFORM(...,'nocombine')</span>
+0022    <span class="comment">%    If the data requested by waveform consists of multiple segments, then</span>
+0023    <span class="comment">%    these segments will be combined, with NaN filling any data gaps.</span>
+0024    <span class="comment">%    'nocombine' overrides this behavior.</span>
+0025    <span class="comment">%</span>
+0026    <span class="comment">%</span>
+0027    <span class="comment">%    ---------- USING WAVEFORM WITH ANTELOPE ------------</span>
+0028    <span class="comment">%    The Antelope Toolbox must be installed.</span>
+0029    <span class="comment">%    w = WAVEFORM(..., 'noexit') attempts to avoid antelope segfaults</span>
+0030    <span class="comment">%</span>
+0031    <span class="comment">%    ---------- USING WAVEFORM WITH WINSTON -------------</span>
+0032    <span class="comment">%    To use the waveform files with winston, you need to have the usgs.jar</span>
+0033    <span class="comment">%    file. If you have already installed SWARM, then this .jar file already</span>
+0034    <span class="comment">%    exist in your swarm/lib directory (or thereabouts).</span>
+0035    <span class="comment">%</span>
+0036    <span class="comment">%    Edit Matlab's classpath.txt file (located in the toolbox/local</span>
+0037    <span class="comment">%    directory) and add the location of this .jar files.</span>
+0038    <span class="comment">%</span>
+0039    <span class="comment">%    WINSTON WARNING: Data received through winston is in COUNTS, and is</span>
+0040    <span class="comment">%        not adjusted for instrument gain. To fix this, you'll</span>
+0041    <span class="comment">%        need to scale the data by the correct gain.</span>
+0042    <span class="comment">%            Ex: W = W .* instGain</span>
+0043    <span class="comment">%</span>
+0044    <span class="comment">%    % WINSTON EXAMPLE: This example gets a few minutes of data</span>
+0045    <span class="comment">%    % (starting a day ago) from a ficticious winston server.</span>
+0046    <span class="comment">%    % Data returned is for the EHZ channel at each of the three</span>
+0047    <span class="comment">%    % selected stations.</span>
+0048    <span class="comment">%</span>
+0049    <span class="comment">%      tags = channeltag({'AV.OKCF..EHZ','AV.PV6..EHZ','AV.SSLS..EHZ'});</span>
+0050    <span class="comment">%      mySource = datasource('winston','servername.here.edu',1255);</span>
+0051    <span class="comment">%      w = waveform(mySource, tags, now - 1, now - .98);</span>
+0052    <span class="comment">%</span>
+0053    <span class="comment">%</span>
+0054    <span class="comment">% ------------ DEPRECATED USAGE ---------------</span>
+0055    <span class="comment">%   w = WAVEFORM(station, channel, samplerate, starttime, data)</span>
+0056    <span class="comment">%</span>
+0057    <span class="comment">% see also channeltag, datasource</span>
+0058    
+0059    <span class="comment">% VERSION: 2.0 of waveform objects</span>
+0060    <span class="comment">% AUTHOR: Celso Reyes</span>
+0061    
+0062    <span class="comment">% considerations when changing the internals:</span>
+0063    <span class="comment">%  when replacing scnl with channeltag, affects loadobj!</span>
+0064    
+0065    <span class="keyword">global</span> WaveformNamespaceIsLoaded
+0066    <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(WaveformNamespaceIsLoaded)
+0067       WaveformNamespaceIsLoaded = loadGlobalNamespace();
+0068    <span class="keyword">end</span>;
+0069    <span class="keyword">persistent</span> waveformversion
+0070    <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(waveformversion)
+0071       waveformversion = 2.0;
+0072    <span class="keyword">end</span>
+0073    
+0074    <span class="comment">% usage: [optExists, value, vargs] = peelOption(vargs, searchValue, searchClass, minPos)</span>
+0075    [COMBINE_WAVES, ~, varargin] = <a href="#_sub10" class="code" title="subfunction [optExists, value, vargs] = peelOption(vargs, searchValue, searchClass, minPos)">peelOption</a>(varargin, <span class="string">'nocombine'</span>, <span class="string">'char'</span>, 5);
+0076    [NOEXIT_OPTION, bwkaround, varargin] = <a href="#_sub10" class="code" title="subfunction [optExists, value, vargs] = peelOption(vargs, searchValue, searchClass, minPos)">peelOption</a>(varargin, [], <span class="string">'logical'</span>, 5);
+0077    
+0078    argCount = numel(varargin);
+0079    
+0080    updateWarningID = <span class="string">'Waveform:waveform:oldUsage'</span>;
+0081    
+0082    <span class="keyword">switch</span> argCount
+0083       <span class="keyword">case</span> 0
+0084          w = <a href="#_sub1" class="code" title="subfunction w = genericWaveform()">genericWaveform</a>();
+0085          
+0086       <span class="keyword">case</span> 1   <span class="comment">%&quot;copy&quot; a waveform object</span>
+0087          anyV = varargin{1};
+0088          <span class="keyword">if</span> isa(anyV, <span class="string">'waveform'</span>)
+0089             w = anyV;
+0090          <span class="keyword">end</span>;
+0091          <span class="comment">% SHOULD THERE BE A WARNING OTHERWISE?</span>
+0092          
+0093       <span class="keyword">case</span> 4
+0094          [arg1, arg2, arg3, arg4] = deal(varargin{:});
+0095          <span class="keyword">switch</span> class(arg1)
+0096             <span class="keyword">case</span> <span class="string">'datasource'</span> <span class="comment">%datsource, channeltag/scnl/text, starttimes, endtimes</span>
+0097                arg2 = <a href="#_sub12" class="code" title="subfunction obj = asChanneltag(obj)">asChanneltag</a>(arg2);
+0098             <span class="keyword">otherwise</span>
+0099                arg1 = <a href="#_sub12" class="code" title="subfunction obj = asChanneltag(obj)">asChanneltag</a>(arg1);
+0100                w = <a href="#_sub2" class="code" title="subfunction w = waveformFromParts(chaTag, freq, starttime, data, units)">waveformFromParts</a>(arg1, arg2, arg3, arg4, <span class="string">'Counts'</span>);
+0101                <span class="keyword">return</span>;
+0102          <span class="keyword">end</span>
+0103          
+0104          <span class="comment">% eg.  INPUT: (datasource, channeltags, startTimes, endTimes)</span>
+0105          [ds, chans, startt, endt] = deal(arg1, arg2, arg3, arg4);
+0106          
+0107          startt = <a href="#_sub7" class="code" title="subfunction out = ensure_dateformat(t)">ensure_dateformat</a>(startt);
+0108          endt = <a href="#_sub7" class="code" title="subfunction out = ensure_dateformat(t)">ensure_dateformat</a>(endt);
+0109          
+0110          <span class="comment">% -------------------------------------------------------------------</span>
+0111          <span class="comment">% if there is no specifically assigned load function, then</span>
+0112          <span class="comment">% determine the load function based upon the datasource's type</span>
+0113          
+0114          <span class="keyword">if</span> <a href="#_sub4" class="code" title="subfunction tf = isVoidInterpreter(ds)">isVoidInterpreter</a>(ds)
+0115             ds_type  = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(ds,<span class="string">'type'</span>);
+0116             <span class="keyword">if</span> strcmp(ds_type,<span class="string">'antelope'</span>) &amp;&amp; NOEXIT_OPTION &amp;&amp; bwkaround
+0117                myLoadRoutine = @load_antelope_workaround;
+0118             <span class="keyword">else</span>
+0119                myLoadRoutine = str2func([<span class="string">'load_'</span>, ds_type]);
+0120             <span class="keyword">end</span>
+0121             <span class="keyword">switch</span> lower(ds_type)
+0122                
+0123                <span class="comment">% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span>
+0124                <span class="comment">% file, sac, and seisan all do not require fancy handling.  The</span>
+0125                <span class="comment">% load routine and interpreter will be set, and the waveform will</span>
+0126                <span class="comment">% be loaded in the following section, along with any user-defined</span>
+0127                <span class="comment">% load functions.</span>
+0128                <span class="keyword">case</span> {<span class="string">'file'</span>,<span class="string">'sac'</span>,<span class="string">'seisan'</span>,<span class="string">'obspy'</span>}
+0129                   ds = setinterpreter(ds,myLoadRoutine); <span class="comment">%update interpeter funct</span>
+0130                   
+0131                   <span class="comment">% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -</span>
+0132                   <span class="comment">% database types require fancier handling. load waveforms right here.</span>
+0133                <span class="keyword">case</span> {<span class="string">'antelope'</span>, <span class="string">'irisdmcws'</span>, <span class="string">'winston'</span>}
+0134                   w = myLoadRoutine( <a href="#_sub5" class="code" title="subfunction datarequest = makeDataRequest(ds, chans, st, ed)">makeDataRequest</a>(ds, chans, startt, endt), COMBINE_WAVES);
+0135                <span class="keyword">otherwise</span>
+0136                   error(<span class="string">'Waveform:waveform:noDatasourceInterpreter'</span>,<span class="keyword">...</span>
+0137                      <span class="string">'user defined datasources should be associated with an interpreter'</span>);
+0138             <span class="keyword">end</span> <span class="comment">%switch</span>
+0139          <span class="keyword">end</span> <span class="comment">%isvoidInterpreter</span>
+0140          
+0141          
+0142          <span class="comment">% -------------------------------------------------------------------</span>
+0143          <span class="comment">% if the datasource is file based, or if it requires a user-defined</span>
+0144          <span class="comment">% intepreter function, then do what follows.  Otherwise, we're done</span>
+0145          
+0146          <span class="keyword">if</span> ~<a href="#_sub4" class="code" title="subfunction tf = isVoidInterpreter(ds)">isVoidInterpreter</a>(ds)
+0147             myLoadFunc = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(ds,<span class="string">'interpreter'</span>);
+0148             
+0149             <span class="comment">%user_defined datasource</span>
+0150             ALLOW_MULTIPLE = true;
+0151             ERROR_ON_EMPTY = true;
+0152             <span class="keyword">for</span> j = 1:numel(startt)
+0153                myStartTime = startt(j);
+0154                myEndTime = endt(j);
+0155                
+0156                <span class="comment">% grab all files for date range, discarding duplicates</span>
+0157                fn = getfilename(ds, chans,subdivide_files_by_date(ds,myStartTime, myEndTime));
+0158                fn = unique(fn);
+0159                
+0160                <span class="comment">%load all waveforms for these files</span>
+0161                clear somew
+0162                
+0163                <span class="keyword">for</span> i=1:numel(fn)
+0164                   w = <a href="#_sub8" class="code" title="subfunction w = load_from_file(myLoadFunc, fname, allowMultiple, ErrorOnEmpty)">load_from_file</a>(myLoadFunc,fn{i},ALLOW_MULTIPLE, ERROR_ON_EMPTY);
+0165                   <span class="comment">%w = w(ismember([w.cha_tag],[chans])); %keep only appropriate station/chan</span>
+0166                   w = w(w.cha_tag.matching(chans)); <span class="comment">%Not 100% sure about this one</span>
+0167                   w = <a href="#_sub3" class="code" title="subfunction w = filter_by_time(w, myStartTime, myEndTime)">filter_by_time</a>(w, myStartTime, myEndTime);
+0168                   <span class="keyword">if</span> numel(w) &gt; 0
+0169                      somew(i) = {w};
+0170                   <span class="keyword">end</span>
+0171                <span class="keyword">end</span> <span class="comment">%for fn</span>
+0172                <span class="keyword">if</span> ~exist(<span class="string">'somew'</span>,<span class="string">'var'</span>)
+0173                   w = <a href="waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>; w = w([]);
+0174                <span class="keyword">else</span>
+0175                   <span class="keyword">if</span> COMBINE_WAVES,
+0176                      w = <a href="combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>([somew{:}]);
+0177                   <span class="keyword">else</span>
+0178                      w = [somew{:}];
+0179                   <span class="keyword">end</span>
+0180                <span class="keyword">end</span>
+0181                allw(j) = {w};
+0182             <span class="keyword">end</span> <span class="comment">%each start time</span>
+0183             w = [allw{:}];
+0184          <span class="keyword">end</span> <span class="comment">%~isVoidInterpreter</span>
+0185          
+0186       <span class="keyword">case</span> 5
+0187          [arg1, arg2, arg3, arg4, arg5] = deal(varargin{:});
+0188          <span class="keyword">switch</span> class(arg1)
+0189             <span class="keyword">case</span> <span class="string">'datasource'</span> <span class="comment">%INPUT(datasource, channeltag, starttimes, endtimes)</span>
+0190                error(updateWarningID,<span class="string">'Should never get to this section of code'</span>);
+0191             <span class="keyword">otherwise</span>
+0192                <span class="keyword">if</span> ischar(arg1) &amp;&amp; ischar(arg2) <span class="comment">%given station, channel</span>
+0193                   error(updateWarningID,<span class="keyword">...</span>
+0194                      [<span class="string">'ancient usage.\nInstead of:\n   waveform(''%s'', ''%s'', ...\n'</span>,<span class="keyword">...</span>
+0195                      <span class="string">'use the ''NET.STA.LOC.CHA'' form:\n   waveform(''.%s..%s'', ...\n'</span>,<span class="keyword">...</span>
+0196                      <span class="string">'however, it is recommended that you include network and location info if available'</span>],<span class="keyword">...</span>
+0197                      arg1, arg2, arg1, arg2);
+0198                   arg1 = [<span class="string">'.'</span> arg1 <span class="string">'..'</span> arg2];
+0199                   [arg2, arg3, arg4, arg5] = deal(arg3, arg4, arg5, <span class="string">'Counts'</span>);
+0200                <span class="keyword">end</span>
+0201                arg1 = <a href="#_sub12" class="code" title="subfunction obj = asChanneltag(obj)">asChanneltag</a>(arg1);
+0202                w = <a href="#_sub2" class="code" title="subfunction w = waveformFromParts(chaTag, freq, starttime, data, units)">waveformFromParts</a>(arg1, arg2, arg3, arg4, arg5);
+0203                <span class="keyword">return</span>;
+0204          <span class="keyword">end</span>
+0205          
+0206       <span class="keyword">case</span> 8
+0207          w = <a href="#_sub11" class="code" title="subfunction w = winstonAccess(varargin)">winstonAccess</a>(varargin{:});
+0208       <span class="keyword">otherwise</span>
+0209          <a href="disp.html" class="code" title="function disp(w)">disp</a>(<span class="string">'Invalid arguments in waveform constructor:'</span>);
+0210          <a href="disp.html" class="code" title="function disp(w)">disp</a>(varargin);
+0211          error(<span class="string">'Waveform:waveform:InvalidWaveformArugments'</span>,<span class="keyword">...</span>
+0212             [<span class="string">'Valid ways of calling waveform include: \n'</span>,<span class="keyword">...</span>
+0213             <span class="string">'   w = WAVEFORM()\n'</span>,<span class="keyword">...</span>
+0214             <span class="string">'   w = WAVEFORM(datasource, channeltag, starttimes, endtimes)\n'</span>,<span class="keyword">...</span>
+0215             <span class="string">'   w = WAVEFORM(channeltag, samplefreq, starttime, data, units)\n'</span>]);
+0216    <span class="keyword">end</span>
+0217    <a name="_sub1" href="#_subfunctions" class="code">function w = genericWaveform()</a>
+0218       <span class="comment">%create a fresh waveform.  All calls to the waveform object, aside</span>
+0219       <span class="comment">%from the &quot;copy&quot; call (case nargin==1) will be initated HERE.</span>
+0220       w.cha_tag = channeltag();
+0221       w.Fs = nan;
+0222       w.start = 719529; <span class="comment">% datenum for 1970-01-01</span>
+0223       w.data = <a href="double.html" class="code" title="function n = double(W, option)">double</a>([]);
+0224       w.units = <span class="string">'Counts'</span>;
+0225       w.version = waveformversion; <span class="comment">%version of waveform object (internal)</span>
+0226       w.misc_fields = {}; <span class="comment">%add'l fields, such as &quot;comments&quot;, or &quot;trig&quot;</span>
+0227       w.misc_values = {}; <span class="comment">%values for these fields</span>
+0228       w.history = {<span class="string">'created'</span>,now};
+0229       w = class(w, <span class="string">'waveform'</span>);
+0230    <span class="keyword">end</span>
+0231    <a name="_sub2" href="#_subfunctions" class="code">function w = waveformFromParts(chaTag, freq, starttime, data, units)</a>
+0232       w.cha_tag = chaTag;<span class="comment">%(DEFAULT_STATION,DEFAULT_CHAN);</span>
+0233       w.Fs = freq;
+0234       w.start = datenum(starttime);
+0235       w.data = <a href="double.html" class="code" title="function n = double(W, option)">double</a>(data(:));
+0236       w.units = units; <span class="comment">%units for data (nm? counts?)</span>
+0237       w.version = waveformversion; <span class="comment">%version of waveform object (internal)</span>
+0238       w.misc_fields = {}; <span class="comment">%add'l fields, such as &quot;comments&quot;, or &quot;trig&quot;</span>
+0239       w.misc_values = {}; <span class="comment">%values for these fields</span>
+0240       w.history = {<span class="string">'created'</span>,now};
+0241       w = class(w, <span class="string">'waveform'</span>);
+0242    <span class="keyword">end</span>
+0243 <span class="keyword">end</span>
+0244 
+0245 <a name="_sub3" href="#_subfunctions" class="code">function w = filter_by_time(w, myStartTime, myEndTime)</a>
+0246    <span class="comment">% subset and consolidate</span>
+0247    [wstarts, wends] = <a href="gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>(w);
+0248    wavesWithinWindow = wstarts &lt; myEndTime &amp; wends &gt; myStartTime;
+0249    <span class="keyword">if</span> any(wavesWithinWindow)
+0250       w = <a href="extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>(w(wavesWithinWindow),<span class="string">'time'</span>,myStartTime,myEndTime);
+0251    <span class="keyword">else</span>
+0252       w(:)=[]; <span class="comment">%return an empty waveform</span>
+0253    <span class="keyword">end</span>
+0254 <span class="keyword">end</span>
+0255 
+0256 <a name="_sub4" href="#_subfunctions" class="code">function tf = isVoidInterpreter(ds)</a>
+0257    tf = strcmpi(func2str(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(ds,<span class="string">'interpreter'</span>)),<span class="string">'void_interpreter'</span>);
+0258 <span class="keyword">end</span>
+0259 
+0260 <a name="_sub5" href="#_subfunctions" class="code">function datarequest = makeDataRequest(ds, chans, st, ed)</a>
+0261    datarequest = struct(<span class="keyword">...</span>
+0262       <span class="string">'dataSource'</span>, ds, <span class="keyword">...</span>
+0263       <span class="string">'scnls'</span>, chans, <span class="keyword">...</span>
+0264       <span class="string">'startTimes'</span>, st,<span class="keyword">...</span>
+0265       <span class="string">'endTimes'</span>,ed);
+0266 <span class="keyword">end</span>
+0267 
+0268 <a name="_sub6" href="#_subfunctions" class="code">function s = updateWarningMessage()</a>
+0269    
+0270    updateMessageBase = <span class="keyword">...</span>
+0271       [<span class="string">'Instead, please call the waveform constructor with '</span><span class="keyword">...</span>
+0272       <span class="string">' a datasource and locationtag. \n'</span><span class="keyword">...</span>
+0273       <span class="string">'USAGE: w = waveform(datasource, locationtag, starttimes, endtimes)\n'</span><span class="keyword">...</span>
+0274       <span class="string">'   ...modifying request and proceeding.'</span>];
+0275    s = sprintf(<span class="string">'%s'</span>,updateMessageBase);
+0276 <span class="keyword">end</span>
+0277 
+0278 <a name="_sub7" href="#_subfunctions" class="code">function out = ensure_dateformat(t)</a>
+0279    <span class="comment">% returns a matrix of datenums of same shape as t</span>
+0280    <span class="keyword">if</span> isnumeric(t)
+0281       out = t;
+0282    <span class="keyword">elseif</span> ischar(t),
+0283       <span class="keyword">for</span> n = size(t,1) : -1 : 1
+0284          out(n) = datenum(t(n,:));
+0285       <span class="keyword">end</span>
+0286    <span class="keyword">elseif</span> iscell(t)
+0287       out(:) = datenum(t);
+0288    <span class="keyword">end</span>
+0289    <span class="comment">% previously implemented as:</span>
+0290    <span class="comment">% if ischar(startt), startt = {startt}; end</span>
+0291    <span class="comment">% if ischar (endt), endt = {endt}; end;</span>
+0292    <span class="comment">% startt = reshape(datenum(startt(:)),size(startt));</span>
+0293    <span class="comment">% endt = reshape(datenum(endt(:)),size(endt));</span>
+0294 <span class="keyword">end</span>
+0295 
+0296 <a name="_sub8" href="#_subfunctions" class="code">function w = load_from_file(myLoadFunc, fname, allowMultiple, ErrorOnEmpty)</a>
+0297    <span class="comment">% load waveforms from a file using myLoadfunc</span>
+0298    <span class="comment">% w = load_from_file(myLoadFunc, singleFileName);</span>
+0299    <span class="comment">%     singleFileName may have wildcards.</span>
+0300    
+0301    
+0302    possiblefiles = dir(fname); <span class="comment">% this handles wildcards</span>
+0303    
+0304    <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(possiblefiles)
+0305       error(<span class="string">'Waveform:waveform:FileNotFound'</span>,<span class="string">'No file matches: %s'</span>, fname);
+0306    <span class="keyword">end</span>
+0307    
+0308    mydir = fileparts(fname); <span class="comment">%fileparts returns [path, name, ext]</span>
+0309    myfiles = fullfile(mydir, {possiblefiles(:).name});
+0310    w(numel(myfiles)) = <a href="waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>; <span class="comment">%best-guess preinitialization (candidate for trouble!)</span>
+0311    startindex = 0;
+0312    <span class="keyword">while</span> ~<a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(myfiles)
+0313       [f, myfiles] = <a href="#_sub9" class="code" title="subfunction [v, cell_array] = peel(cell_array)">peel</a>(myfiles);
+0314       tmp = myLoadFunc(f);
+0315       nFound = numel(tmp);
+0316       <span class="keyword">switch</span> nFound
+0317          <span class="keyword">case</span> 0
+0318             <span class="keyword">if</span> ErrorOnEmpty
+0319                error(<span class="string">'Waveform:waveform:noData'</span>,<span class="string">'no data retrieved: %s'</span>, f);
+0320             <span class="keyword">end</span>
+0321          <span class="keyword">case</span> 1
+0322             w(startindex+1) = tmp;
+0323          <span class="keyword">otherwise</span>
+0324             <span class="keyword">if</span> allowMultiple
+0325                w(startindex+1:startindex+nFound) = tmp(:);
+0326             <span class="keyword">else</span>
+0327                error(<span class="string">'Waveform:waveform:MultipleWaveformsInFile'</span>,<span class="keyword">...</span>
+0328                   <span class="string">'Expected a single waveform, but several exist: %s'</span>, f)
+0329             <span class="keyword">end</span>
+0330       <span class="keyword">end</span> <span class="comment">%switch</span>
+0331       startindex = startindex + nFound;
+0332    <span class="keyword">end</span> <span class="comment">%while</span>
+0333 <span class="keyword">end</span> <span class="comment">%load_from_file</span>
+0334 
+0335 <a name="_sub9" href="#_subfunctions" class="code">function [v, cell_array] = peel(cell_array)</a>
+0336    <span class="comment">% remove first item from a cell array, return remaining items</span>
+0337    v = cell_array{1};
+0338    cell_array(1) = [];
+0339 <span class="keyword">end</span> <span class="comment">%peel</span>
+0340 
+0341 <a name="_sub10" href="#_subfunctions" class="code">function [optExists, value, vargs] = peelOption(vargs, searchValue, searchClass, minPos)</a>
+0342    optExists = false; value = [];
+0343    <span class="keyword">if</span> minPos &gt; numel(vargs)
+0344       <span class="keyword">return</span>
+0345    <span class="keyword">end</span>
+0346    <span class="keyword">switch</span> searchClass
+0347       <span class="keyword">case</span> <span class="string">'char'</span>
+0348          <span class="keyword">for</span> n = minPos:numel(vargs)
+0349             <span class="keyword">if</span> ischar(vargs{n})
+0350                <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(searchValue) || strcmp(searchValue,vargs{n})
+0351                   optExists = true; value = vargs{n}; vargs(n) = [];
+0352                   <span class="keyword">return</span>
+0353                <span class="keyword">end</span>
+0354             <span class="keyword">end</span>
+0355          <span class="keyword">end</span>
+0356       <span class="keyword">otherwise</span>
+0357          <span class="keyword">for</span> n = minPos: numel(vargs)
+0358             <span class="keyword">if</span> isa(vargs{n},searchClass)
+0359                <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(searchValue) || vargs{n} == searchValue
+0360                   optExists = true; value = vargs{n}; vargs(n) = [];
+0361                   <span class="keyword">return</span>
+0362                <span class="keyword">end</span>
+0363             <span class="keyword">end</span>
+0364          <span class="keyword">end</span>
+0365    <span class="keyword">end</span>
+0366 <span class="keyword">end</span>
+0367 
+0368 <a name="_sub11" href="#_subfunctions" class="code">function w = winstonAccess(varargin)</a>
+0369    p.channel = <span class="string">'EHZ'</span>;
+0370    p.station = <span class="string">'UNK'</span>;
+0371    p.tStart = datenum(1970, 1, 1, 0 ,0, 0);
+0372    p.tEnd = datenum(1970, 1, 1, 0, 5, 0);
+0373    p.network = <span class="string">''</span>;
+0374    p.location = <span class="string">''</span>; <span class="comment">%should this be '--' ?</span>
+0375    p.server = <span class="string">'churchill.giseis.alaska.edu'</span>;
+0376    p.port = 16022;
+0377    
+0378    warning(updateWarningID,<a href="#_sub6" class="code" title="subfunction s = updateWarningMessage()">updateWarningMessage</a>);
+0379    
+0380    <span class="comment">% INPUT: waveform (station, channel, start, end, network,</span>
+0381    <span class="comment">%                  location, server, port)</span>
+0382    
+0383    MyVars = {<span class="string">'station'</span>, <span class="string">'channel'</span>, <span class="string">'tStart'</span>, <span class="string">'tEnd'</span>, <span class="string">'network'</span>, <span class="keyword">...</span>
+0384       <span class="string">'location'</span>, <span class="string">'server'</span>, <span class="string">'port'</span>};
+0385    
+0386    <span class="comment">%Fill in all the variables with the appropriate default values</span>
+0387    <span class="keyword">for</span> N = 1:argCount
+0388       <span class="keyword">if</span> ~<a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(varargin{N}),
+0389          p.(MyVars{N}) = varargin{N};
+0390       <span class="keyword">end</span>
+0391    <span class="keyword">end</span>
+0392    thesechans = channeltag(p.station,p.channel,p.network,p.location);
+0393    
+0394    mysource = datasource(<span class="string">'winston'</span>,p.server,p.port);
+0395    w = <a href="waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>(mysource, thesechans, datenum(p.tStart), datenum(p.tEnd));
+0396 <span class="keyword">end</span>
+0397 
+0398 <a name="_sub12" href="#_subfunctions" class="code">function obj = asChanneltag(obj)</a>
+0399    <span class="keyword">switch</span>(class(obj))
+0400       <span class="keyword">case</span> <span class="string">'channeltag'</span> <span class="comment">%good. do nothing.</span>
+0401       <span class="keyword">case</span> <span class="string">'scnlobject'</span>
+0402          obj = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(obj, <span class="string">'channeltag'</span>);
+0403       <span class="keyword">otherwise</span>
+0404          obj = channeltag(obj); <span class="comment">%attempt natural conversion</span>
+0405          <span class="comment">% should be able to handle 'N.S.L.C'</span>
+0406    <span class="keyword">end</span>
+0407 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

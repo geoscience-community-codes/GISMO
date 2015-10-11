@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of set_debug</title>
+  <meta name="keywords" content="set_debug">
+  <meta name="description" content="SET_DEBUG set the debug level.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="#">packages</a> &gt; <a href="index.html">+debug</a> &gt; set_debug.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/packages/+debug&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>set_debug
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>SET_DEBUG set the debug level.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function set_debug(debuglevel) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> SET_DEBUG set the debug level.
+
+    SET_DEBUG is used in conjunction with PRINT_DEBUG to control the verboseness of MATLAB output.
+    You use it to specify the debug level (an integer) at which to display a certain message.
+    
+    EXAMPLE:
+    Set the debug level to 1:
+        debug.set_debug(1)
+ 
+    See also debug.<a href="get_debug.html" class="code" title="function debuglevel=get_debug()">get_debug</a>, debug.<a href="print_debug.html" class="code" title="function print_debug(level, varargin)">print_debug</a>, setpref.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function set_debug(debuglevel)</a>
+0002     <span class="comment">% SET_DEBUG set the debug level.</span>
+0003     <span class="comment">%</span>
+0004     <span class="comment">%    SET_DEBUG is used in conjunction with PRINT_DEBUG to control the verboseness of MATLAB output.</span>
+0005     <span class="comment">%    You use it to specify the debug level (an integer) at which to display a certain message.</span>
+0006     <span class="comment">%</span>
+0007     <span class="comment">%    EXAMPLE:</span>
+0008     <span class="comment">%    Set the debug level to 1:</span>
+0009     <span class="comment">%        debug.set_debug(1)</span>
+0010     <span class="comment">%</span>
+0011     <span class="comment">%    See also debug.get_debug, debug.print_debug, setpref.</span>
+0012 
+0013     <span class="comment">% AUTHOR: Ronni Grapenthin and Glenn Thompson, UAF-GI</span>
+0014     <span class="comment">% $Date$</span>
+0015     <span class="comment">% $Revision$</span>
+0016     <span class="comment">% Modified by Glenn Thompson: 2010-03-10: To use multiple levels of debug (0 = none, 1 = some, 2 = higher)</span>
+0017     <span class="comment">% GT 20150916: the setpref doesn't seem to work now print_debug is</span>
+0018     <span class="comment">% using persistent variable. ANd now print_debug(level) without a text</span>
+0019     <span class="comment">% message sets level. So replace this:</span>
+0020 
+0021         <span class="comment">%setpref('runmode', 'debug', debuglevel);</span>
+0022         
+0023     <span class="comment">% with</span>
+0024         debug.print_debug(debuglevel)
+0025 
+0026 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

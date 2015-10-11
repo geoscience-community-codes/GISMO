@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of parseargs</title>
+  <meta name="keywords" content="parseargs">
+  <meta name="description" content="PARSEARGS creates a structure of parameternames and values from arglist">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; parseargs.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>parseargs
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>PARSEARGS creates a structure of parameternames and values from arglist</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function [properties] = parseargs(arglist) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> PARSEARGS creates a structure of parameternames and values from arglist
+  [properties] = parseargs(arglist)
+ parse the incoming arguments, returning a cell with each parameter name
+ as well as a cell for each parameter value pair.  parseargs will also
+ doublecheck to ensure that all pnames are actually strings... otherwise,
+ there will be a mis-parse.
+check to make sure these are name-value pairs
+
+ see also waveform/private/getproperty, waveform/private/property2varargin</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [properties] = parseargs(arglist)</a>
+0002    <span class="comment">% PARSEARGS creates a structure of parameternames and values from arglist</span>
+0003    <span class="comment">%  [properties] = parseargs(arglist)</span>
+0004    <span class="comment">% parse the incoming arguments, returning a cell with each parameter name</span>
+0005    <span class="comment">% as well as a cell for each parameter value pair.  parseargs will also</span>
+0006    <span class="comment">% doublecheck to ensure that all pnames are actually strings... otherwise,</span>
+0007    <span class="comment">% there will be a mis-parse.</span>
+0008    <span class="comment">%check to make sure these are name-value pairs</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">% see also waveform/private/getproperty, waveform/private/property2varargin</span>
+0011    
+0012    argcount = numel(arglist);
+0013    evenArgumentCount = mod(argcount,2) == 0;
+0014    <span class="keyword">if</span> ~evenArgumentCount
+0015       error(<span class="string">'Waveform:parseargs:propertyMismatch'</span>,<span class="keyword">...</span>
+0016          <span class="string">'Odd number of arguments means that these arguments cannot be parameter name-value pairs'</span>);
+0017    <span class="keyword">end</span>
+0018    
+0019    <span class="comment">%assign these to output variables</span>
+0020    properties.name = arglist(1:2:argcount);
+0021    properties.val = arglist(2:2:argcount);
+0022    
+0023    <span class="comment">%</span>
+0024    <span class="keyword">for</span> i=1:numel(properties.name)
+0025       <span class="keyword">if</span> ~ischar(properties.name{i})
+0026          error(<span class="string">'Waveform:parseargs:invalidPropertyName'</span>,<span class="keyword">...</span>
+0027             <span class="string">'All property names must be strings.'</span>);
+0028       <span class="keyword">end</span>
+0029    <span class="keyword">end</span>
+0030 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

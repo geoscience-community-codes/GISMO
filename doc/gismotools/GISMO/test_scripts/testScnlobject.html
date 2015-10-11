@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of testScnlobject</title>
+  <meta name="keywords" content="testScnlobject">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../index.html">GISMO</a> &gt; <a href="index.html">test_scripts</a> &gt; testScnlobject.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/test_scripts&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>testScnlobject
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="testScnlobject.html" class="code" title="">testScnlobject</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="testScnlobject.html" class="code" title="">testScnlobject</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = testScnlobject(name)</a></li><li><a href="#_sub2" class="code">function SetUp(self)</a></li><li><a href="#_sub3" class="code">function testSimpleConstructors(self)</a></li><li><a href="#_sub4" class="code">function testWhitespaceConstructors(self)</a></li><li><a href="#_sub5" class="code">function testArrayConstruction(self)</a></li><li><a href="#_sub6" class="code">function testEqNe(self)</a></li><li><a href="#_sub7" class="code">function testStringConversions(self)</a></li><li><a href="#_sub8" class="code">function testIsmember(self)</a></li><li><a href="#_sub9" class="code">function  testMatching(self)</a></li><li><a href="#_sub10" class="code">function obj = createReference(N, S, L, C)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="testScnlobject.html" class="code" title="">testScnlobject</a> &lt; TestCase
+0002    <span class="comment">% testScnlobject validates the funcionality of scnlobject</span>
+0003    <span class="comment">%</span>
+0004    <span class="comment">% requires xUnit</span>
+0005    <span class="comment">% see also xUnit, scnlobject</span>
+0006    
+0007    properties
+0008    <span class="keyword">end</span>
+0009    methods
+0010       <a name="_sub0" href="#_subfunctions" class="code">function self = testScnlobject(name)</a>
+0011          self = self@TestCase(name);
+0012       <span class="keyword">end</span>
+0013       
+0014       <a name="_sub1" href="#_subfunctions" class="code">function SetUp(self)</a>
+0015          <span class="comment">%nothing to set up</span>
+0016       <span class="keyword">end</span>
+0017       
+0018       <span class="comment">%---- test methods follow. each starts with &quot;test&quot; ---</span>
+0019       <a name="_sub2" href="#_subfunctions" class="code">function testSimpleConstructors(self)</a>
+0020          <span class="comment">% make sure these throw no error</span>
+0021          reftag = testScnlobject.createReference(<span class="string">'N'</span>,<span class="string">'S'</span>,<span class="string">'L'</span>,<span class="string">'C'</span>);
+0022          assert(reftag == scnlobject(<span class="string">'S'</span>, <span class="string">'C'</span>, <span class="string">'N'</span>, <span class="string">'L'</span>));  <span class="comment">% 4 string constructor</span>
+0023          ct2 = reftag;
+0024          assertEqual(ct2, reftag);              <span class="comment">% copy constructor</span>
+0025          assertEqual(scnlobject(<span class="string">'N.S.L.C'</span>), reftag);           <span class="comment">% string constructor</span>
+0026          assertEqual(reftag,scnlobject({<span class="string">'N.S.L.C'</span>}));         <span class="comment">% cell constructor</span>
+0027       <span class="keyword">end</span>
+0028       
+0029       <a name="_sub3" href="#_subfunctions" class="code">function testWhitespaceConstructors(self)</a>
+0030          reftag = testScnlobject.createReference(<span class="string">'N'</span>,<span class="string">'S'</span>,<span class="string">'L'</span>,<span class="string">'C'</span>);
+0031          ct = scnlobject(<span class="string">'  N .S . L. C '</span>);
+0032          assertEqual(reftag, ct);
+0033          ct = scnlobject(<span class="string">' S '</span>, <span class="string">' C '</span>, <span class="string">' N '</span>, <span class="string">' L '</span>);
+0034          assertEqual(reftag, ct);
+0035       <span class="keyword">end</span>
+0036       
+0037       <a name="_sub4" href="#_subfunctions" class="code">function testArrayConstruction(self)</a>
+0038          reftag = testScnlobject.createReference(<span class="string">'N'</span>,<span class="string">'S'</span>,<span class="string">'L'</span>,<span class="string">'C'</span>);
+0039          ct = scnlobject({<span class="string">'N .S . L. C '</span>,<span class="string">' N. S . L.C '</span>});
+0040          assertEqual(reftag, ct(1));
+0041          assertEqual(ct(1), ct(2));
+0042          ct = scnlobject([<span class="string">'N.S.L.C      '</span>; <span class="string">' N.S  . L . C'</span>]);
+0043          assertEqual(reftag, ct(1));
+0044          assertEqual(ct(1), ct(2));
+0045          ct = scnlobject({<span class="string">'S'</span>,<span class="string">'S'</span>,<span class="string">'S'</span>},{<span class="string">'C'</span>,<span class="string">'C'</span>,<span class="string">'C'</span>}, {<span class="string">'N'</span>,<span class="string">'N'</span>,<span class="string">'N'</span>}, {<span class="string">'L'</span>,<span class="string">'L'</span>,<span class="string">'L'</span>} );
+0046          assertEqual(ct(1), ct(2));
+0047          assertEqual(ct(2), ct(3));
+0048          ct = scnlobject([<span class="string">'N.S.L.C '</span>;<span class="string">' N.S.L.C'</span>; <span class="string">'N.S .L.C'</span>]);
+0049          assertEqual(ct(1), ct(2));
+0050          assertEqual(ct(2), ct(3));
+0051          ct = scnlobject({<span class="string">'S1'</span>,<span class="string">'S2'</span>},<span class="string">'C'</span>,<span class="string">'N'</span>,<span class="string">'L'</span>);
+0052          assertEqual(get(ct(1),<span class="string">'station'</span>),<span class="string">'S1'</span>)
+0053          assertEqual(get(ct(2),<span class="string">'station'</span>), <span class="string">'S2'</span>);
+0054       <span class="keyword">end</span>
+0055       
+0056       <a name="_sub5" href="#_subfunctions" class="code">function testEqNe(self)</a>
+0057          A = testScnlobject.createReference(<span class="string">'NW'</span>,<span class="string">'STA'</span>,<span class="string">'LOC'</span>,<span class="string">'CHA'</span>);
+0058          B = testScnlobject.createReference(<span class="string">'NW'</span>,<span class="string">'STA'</span>,<span class="string">'LOC'</span>,<span class="string">'CHA'</span>);
+0059          C = testScnlobject.createReference(<span class="string">'NW'</span>,<span class="string">'STA'</span>,<span class="string">'LOC'</span>,<span class="string">'CHAN'</span>);
+0060          assertTrue(eq(A, B));
+0061          assertTrue(A == B);
+0062          assertFalse(A == C);
+0063       <span class="keyword">end</span>
+0064       
+0065       <a name="_sub6" href="#_subfunctions" class="code">function testStringConversions(self)</a>
+0066          nslc = <span class="string">'IU.ANMO.00.LOG'</span>;
+0067          ct = scnlobject(nslc);
+0068          assertEqual(get(ct,<span class="string">'nscl_string'</span>),<span class="string">'IU_ANMO_LOG_00'</span>);
+0069       <span class="keyword">end</span>
+0070       
+0071       <a name="_sub7" href="#_subfunctions" class="code">function testIsmember(self)</a>
+0072          A = scnlobject(<span class="string">'N.S.L.C'</span>);
+0073          B = scnlobject(<span class="string">'N1.S1.L1.C1'</span>);
+0074          C = scnlobject(<span class="string">'N2.S2.L2.C2'</span>);
+0075          assertEqual(ismember(A,[A, A, B]), true)
+0076          assertEqual(ismember([A, A, B],A), [true true false]);
+0077          [LTA, LTB]   = ismember([A A B C],  [A scnlobject() B; B scnlobject() scnlobject()]);
+0078          [NumA, NumB] = ismember([ 1 1 2 3], [1 0 2;2 0 0]);
+0079          assertEqual(LTA, NumA)
+0080          assertEqual(LTB, NumB)
+0081       <span class="keyword">end</span>
+0082       
+0083       <a name="_sub8" href="#_subfunctions" class="code">function  testMatching(self)</a>
+0084          wildcardString = <span class="string">'*.*.*.*'</span>;
+0085          A = scnlobject(<span class="string">'N.S.L.C'</span>);
+0086          B = scnlobject(<span class="string">'N1.S1.L1.C1'</span>);
+0087          <span class="comment">% C = scnlobject('N2.S2.L2.C2');</span>
+0088          W = scnlobject(wildcardString);
+0089          assertTrue(ismember(scnlobject,wildcardString), <span class="string">'Wildcards are not recognized'</span>);
+0090          assertExceptionThrown(@() ismember(A,B),<span class="string">'somexception'</span>)
+0091          assertTrue(ismember(A,W))
+0092          assertEqual(ismember([A, A, B],W), [true true true]);
+0093          assertTrue(ismember(A, [A A W]));
+0094       <span class="keyword">end</span>
+0095    <span class="keyword">end</span>
+0096    
+0097    methods(Static)
+0098       <a name="_sub9" href="#_subfunctions" class="code">function obj = createReference(N, S, L, C)</a>
+0099          obj = scnlobject();
+0100          obj = set(obj,<span class="string">'network'</span>,N,<span class="string">'station'</span>,S,<span class="string">'channel'</span>,C,<span class="string">'location'</span>,L);
+0101       <span class="keyword">end</span>
+0102    <span class="keyword">end</span>
+0103 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

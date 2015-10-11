@@ -1,0 +1,348 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sac2waveform</title>
+  <meta name="keywords" content="sac2waveform">
+  <meta name="description" content="SAC2WAVEFORM fill a waveform object from a sac header">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; sac2waveform.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>sac2waveform
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>SAC2WAVEFORM fill a waveform object from a sac header</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function allWaveforms = sac2waveform(sacStructure) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SAC2WAVEFORM fill a waveform object from a sac header
+   waveform = sac2waveform(sacInfo)
+     sacInfo is the output from readsacfile.m
+
+    Each field from the header be either incorporated into the basic
+    structure of each waveform or will be added as user-defined fields.
+
+    See also:  waveform/private/readsacfile,
+    waveform/private/waveform2sacheader</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="load_sac.html" class="code" title="function w = load_sac(dataRequest)">load_sac</a>	LOAD_SAC loads a waveform from SAC files</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function scnl = getSCNL(header)</a></li><li><a href="#_sub2" class="code">function chanT = getChanneltag(header)</a></li><li><a href="#_sub3" class="code">function mydate = getDate(header)</a></li><li><a href="#_sub4" class="code">function measurementUnits = idep2units(IDEP)</a></li><li><a href="#_sub5" class="code">function [headerFields,value] = parseHeader(h)</a></li><li><a href="#_sub6" class="code">function headerDefinitions = getHeaderDefinitions()</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function allWaveforms = sac2waveform(sacStructure)</a>
+0002    <span class="comment">%SAC2WAVEFORM fill a waveform object from a sac header</span>
+0003    <span class="comment">%   waveform = sac2waveform(sacInfo)</span>
+0004    <span class="comment">%     sacInfo is the output from readsacfile.m</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">%    Each field from the header be either incorporated into the basic</span>
+0007    <span class="comment">%    structure of each waveform or will be added as user-defined fields.</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">%    See also:  waveform/private/readsacfile,</span>
+0010    <span class="comment">%    waveform/private/waveform2sacheader</span>
+0011    
+0012    <span class="comment">% VERSION: 1.1 of waveform objects</span>
+0013    <span class="comment">% AUTHOR: Celso Reyes (celso@gi.alaska.edu)</span>
+0014    <span class="comment">%    modified from Michael Thorne (4/2004)  mthorne@asu.edu</span>
+0015    <span class="comment">% LASTUPDATE: 9/1/2009, improving readability in effort to be able to</span>
+0016    <span class="comment">% better maintain this code.</span>
+0017    
+0018    <span class="comment">% first test to see if the sacInfo is indeed a sacfile</span>
+0019    <span class="comment">%---------------------------------------------------------------------------</span>
+0020    
+0021    allWaveforms = repmat(waveform,size(sacStructure));
+0022    
+0023    <span class="keyword">for</span> eachSacFile = 1:numel(sacStructure)
+0024       sacInfo = sacStructure(eachSacFile);
+0025       
+0026       [fieldNames, fieldValues] =  <a href="#_sub5" class="code" title="subfunction [headerFields,value] = parseHeader(h)">parseHeader</a>(sacInfo.header);
+0027       
+0028       <span class="comment">% Take these results and create a structure with them</span>
+0029       <span class="comment">%   fieldsPairedWithValues puts it all in an order that &quot;struct()&quot;</span>
+0030       <span class="comment">%   understands. like so: {fieldname1,fieldval1,...,fieldNameN,fieldvalN}</span>
+0031       invalidFields = strcmp(fieldNames,<span class="string">'DUMMYVARIABLE'</span>);
+0032       fieldNames = fieldNames(~invalidFields);
+0033       fieldValues = fieldValues(~invalidFields);
+0034       fieldsPairedWithValues = [fieldNames(:)'; fieldValues(:)'];
+0035       headerDetails = struct(fieldsPairedWithValues{:});
+0036       
+0037       
+0038       chanTag = <a href="#_sub2" class="code" title="subfunction chanT = getChanneltag(header)">getChanneltag</a>(headerDetails);
+0039       w = set(waveform,<span class="string">'channelinfo'</span>,chanTag);
+0040       
+0041       <span class="keyword">for</span> nrecs = 1:numel(fieldNames)
+0042          thisfield = fieldNames{nrecs};
+0043          thisvalue = fieldValues{nrecs};
+0044          <span class="keyword">if</span> ~isempty(thisvalue)
+0045             w = addfield(w,thisfield,headerDetails.(thisfield));
+0046          <span class="keyword">end</span>
+0047       <span class="keyword">end</span>
+0048       
+0049       w = set(w,<span class="string">'start'</span>,<a href="#_sub3" class="code" title="subfunction mydate = getDate(header)">getDate</a>(headerDetails));
+0050       w = set(w,<span class="string">'data'</span>,sacInfo.amplitudes);
+0051       w = set(w,<span class="string">'freq'</span>, 1 ./ headerDetails.DELTA); <span class="comment">%doesn't take into account ODELTA (observed freq)</span>
+0052       w = set(w,<span class="string">'units'</span>, <a href="#_sub4" class="code" title="subfunction measurementUnits = idep2units(IDEP)">idep2units</a>(headerDetails.IDEP));
+0053       w = clearhistory(w);
+0054       allWaveforms(eachSacFile) = w;
+0055    <span class="keyword">end</span>
+0056 <span class="keyword">end</span>
+0057 <span class="comment">% varargout = headerDetails;</span>
+0058 
+0059 <span class="comment">%{</span>
+0060 <a name="_sub1" href="#_subfunctions" class="code">function scnl = getSCNL(header)</a>
+0061    <span class="comment">%make scnl object from station channel and network.  no location info</span>
+0062    <span class="comment">%exists</span>
+0063    scnl = scnlobject(deblank(header.KSTNM),<span class="keyword">...</span><span class="comment"> station</span>
+0064       deblank(header.KCMPNM), <span class="keyword">...</span><span class="comment"> channel</span>
+0065       deblank(header.KNETWK)); <span class="comment">%network</span>
+0066 <span class="keyword">end</span>
+0067 <span class="comment">%}</span>
+0068 
+0069 <a name="_sub2" href="#_subfunctions" class="code">function chanT = getChanneltag(header)</a>
+0070    chanT = scnlobject(deblank(header.KNETWK), <span class="keyword">...</span><span class="comment"> network</span>
+0071       deblank(header.KSTNM),<span class="keyword">...</span><span class="comment"> station</span>
+0072       deblank(header.KHOLE), <span class="keyword">...</span><span class="comment"> location</span>
+0073       deblank(header.KCMPNM)); <span class="comment">%network</span>
+0074 <span class="keyword">end</span>
+0075 
+0076 <a name="_sub3" href="#_subfunctions" class="code">function mydate = getDate(header)</a>
+0077    mydate= datenum(header.NZYEAR, 0, header.NZJDAY, <span class="keyword">...</span>
+0078       header.NZHOUR, header.NZMIN, <span class="keyword">...</span>
+0079       header.NZSEC + .001 * header.NZMSEC + header.B);
+0080 <span class="keyword">end</span>
+0081 
+0082 <a name="_sub4" href="#_subfunctions" class="code">function measurementUnits = idep2units(IDEP)</a>
+0083    <span class="comment">% look up the proper units based on the SAC IDEP value</span>
+0084    <span class="keyword">if</span> isempty(IDEP), IDEP = 5; <span class="keyword">end</span>
+0085    <span class="keyword">switch</span> IDEP
+0086       <span class="keyword">case</span> 6 <span class="comment">%idisp</span>
+0087          measurementUnits = <span class="string">'nm'</span>;
+0088       <span class="keyword">case</span> 7 <span class="comment">%ivel</span>
+0089          measurementUnits = <span class="string">'nm / sec'</span>;
+0090       <span class="keyword">case</span> 8 <span class="comment">%iacc</span>
+0091          measurementUnits = <span class="string">'nm / sec / sec'</span>;
+0092       <span class="keyword">case</span> 50 <span class="comment">%ivolts</span>
+0093          measurementUnits = <span class="string">'volts'</span>;
+0094       <span class="keyword">otherwise</span> <span class="comment">%case 5 = iunkn</span>
+0095          measurementUnits = <span class="string">'Counts'</span>;
+0096    <span class="keyword">end</span>
+0097 <span class="keyword">end</span>
+0098 
+0099 <a name="_sub5" href="#_subfunctions" class="code">function [headerFields,value] = parseHeader(h)</a>
+0100    emptyNumber = -12345;
+0101    emptyString = <span class="string">'-12345'</span>;
+0102    
+0103    headerDefinitions = <a href="#_sub6" class="code" title="subfunction headerDefinitions = getHeaderDefinitions()">getHeaderDefinitions</a>();
+0104    headerFields = headerDefinitions(:,1);
+0105    fieldType = headerDefinitions(:,2);
+0106    <span class="comment">%startPositions = [headerDefinitions{:,3}];</span>
+0107    <span class="comment">%endPositions = (startPositions - 1) + [ headerDefinitions{:,4}];</span>
+0108    value = cell(size(headerFields));
+0109    
+0110    <span class="keyword">for</span> thisField=1:numel(headerFields)
+0111       <span class="comment">%ensure each field is of the right type, and get rid of any default</span>
+0112       <span class="comment">%values, replacing with '' or [] as appropriate</span>
+0113       
+0114       value(thisField) = h(thisField);
+0115       
+0116       <span class="keyword">switch</span> (fieldType{thisField})
+0117          <span class="keyword">case</span> <span class="string">'double'</span>
+0118             <span class="keyword">if</span> value{thisField} == emptyNumber
+0119                value(thisField) = {[]};
+0120             <span class="keyword">end</span>
+0121             
+0122          <span class="keyword">case</span> <span class="string">'char'</span>
+0123             <span class="comment">%get rid of all beginning/ending whitespace</span>
+0124             value(thisField) = {strtrim(char(value{thisField}))};
+0125             
+0126             <span class="keyword">if</span> strcmpi(value(thisField),emptyString)
+0127                value(thisField) = {<span class="string">''</span>};
+0128             <span class="keyword">end</span>
+0129             
+0130          <span class="keyword">case</span> <span class="string">'integer'</span>
+0131             value(thisField) = {round(value{thisField})};
+0132             <span class="keyword">if</span> value{thisField} == emptyNumber
+0133                value(thisField) = {[]};
+0134             <span class="keyword">end</span>
+0135             
+0136          <span class="keyword">case</span> <span class="string">'logical'</span>
+0137             <span class="keyword">if</span> strcmp(value{thisField},emptyString)
+0138                value(thisField) = {false};
+0139             <span class="keyword">end</span>
+0140             value(thisField) = {logical(value{thisField})};
+0141             
+0142          <span class="keyword">otherwise</span>
+0143             error(<span class="string">'Waveform:sac2waveform:unknownHeaderTypedef'</span>,<span class="keyword">...</span>
+0144                <span class="string">'Unknown type definition within the SAC header'</span>);
+0145       <span class="keyword">end</span>
+0146    <span class="keyword">end</span>
+0147 <span class="keyword">end</span>
+0148 
+0149 <a name="_sub6" href="#_subfunctions" class="code">function headerDefinitions = getHeaderDefinitions()</a>
+0150    <span class="comment">% Create a cell with one row for each variable represented in the SAC</span>
+0151    <span class="comment">% header.  Each row contains the information required to decode the header</span>
+0152    <span class="comment">% into a matlab variable.</span>
+0153    <span class="comment">%</span>
+0154    <span class="comment">% columns : variablename, type, startPos, length</span>
+0155    <span class="comment">% startPos is no longer used.</span>
+0156    
+0157    headerDefinitions={
+0158       <span class="string">'DELTA'</span>,<span class="string">'double'</span>,1,1;
+0159       <span class="string">'DEPMIN'</span>,<span class="string">'double'</span>,2,1;
+0160       <span class="string">'DEPMAX'</span>,<span class="string">'double'</span>,3,1;
+0161       <span class="string">'SCALE'</span>,<span class="string">'double'</span>,4,1;
+0162       <span class="string">'ODELTA'</span>,<span class="string">'double'</span>,5,1;
+0163       <span class="string">'B'</span>,<span class="string">'double'</span>,6,1;
+0164       <span class="string">'E'</span>,<span class="string">'double'</span>,7,1;
+0165       <span class="string">'O'</span>,<span class="string">'double'</span>,8,1;
+0166       <span class="string">'A'</span>,<span class="string">'double'</span>,9,1; <span class="comment">%10 not represented</span>
+0167       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'double'</span>,10,1;
+0168       <span class="string">'T0'</span>,<span class="string">'double'</span>,11,1;
+0169       <span class="string">'T1'</span>,<span class="string">'double'</span>,12,1;
+0170       <span class="string">'T2'</span>,<span class="string">'double'</span>,13,1;
+0171       <span class="string">'T3'</span>,<span class="string">'double'</span>,14,1;
+0172       <span class="string">'T4'</span>,<span class="string">'double'</span>,15,1;
+0173       <span class="string">'T5'</span>,<span class="string">'double'</span>,16,1;
+0174       <span class="string">'T6'</span>,<span class="string">'double'</span>,17,1;
+0175       <span class="string">'T7'</span>,<span class="string">'double'</span>,18,1;
+0176       <span class="string">'T8'</span>,<span class="string">'double'</span>,19,1;
+0177       <span class="string">'T9'</span>,<span class="string">'double'</span>,20,1;
+0178       <span class="string">'F'</span>,<span class="string">'double'</span>,21,1;
+0179       <span class="string">'RESP0'</span>,<span class="string">'double'</span>,22,1;
+0180       <span class="string">'RESP1'</span>,<span class="string">'double'</span>,23,1;
+0181       <span class="string">'RESP2'</span>,<span class="string">'double'</span>,24,1;
+0182       <span class="string">'RESP3'</span>,<span class="string">'double'</span>,25,1;
+0183       <span class="string">'RESP4'</span>,<span class="string">'double'</span>,26,1;
+0184       <span class="string">'RESP5'</span>,<span class="string">'double'</span>,27,1;
+0185       <span class="string">'RESP6'</span>,<span class="string">'double'</span>,28,1;
+0186       <span class="string">'RESP7'</span>,<span class="string">'double'</span>,29,1;
+0187       <span class="string">'RESP8'</span>,<span class="string">'double'</span>,30,1;
+0188       <span class="string">'RESP9'</span>,<span class="string">'double'</span>,31,1;
+0189       <span class="string">'STLA'</span>,<span class="string">'double'</span>,32,1;
+0190       <span class="string">'STLO'</span>,<span class="string">'double'</span>,33,1;
+0191       <span class="string">'STEL'</span>,<span class="string">'double'</span>,34,1;
+0192       <span class="string">'STDP'</span>,<span class="string">'double'</span>,35,1;
+0193       <span class="string">'EVLA'</span>,<span class="string">'double'</span>,36,1;
+0194       <span class="string">'EVLO'</span>,<span class="string">'double'</span>,37,1;
+0195       <span class="string">'EVEL'</span>,<span class="string">'double'</span>,38,1;
+0196       <span class="string">'EVDP'</span>,<span class="string">'double'</span>,39,1;
+0197       <span class="string">'MAG'</span>,<span class="string">'double'</span>,40,1;
+0198       <span class="string">'USER0'</span>,<span class="string">'double'</span>,41,1;
+0199       <span class="string">'USER1'</span>,<span class="string">'double'</span>,42,1;
+0200       <span class="string">'USER2'</span>,<span class="string">'double'</span>,43,1;
+0201       <span class="string">'USER3'</span>,<span class="string">'double'</span>,44,1;
+0202       <span class="string">'USER4'</span>,<span class="string">'double'</span>,45,1;
+0203       <span class="string">'USER5'</span>,<span class="string">'double'</span>,46,1;
+0204       <span class="string">'USER6'</span>,<span class="string">'double'</span>,47,1;
+0205       <span class="string">'USER7'</span>,<span class="string">'double'</span>,48,1;
+0206       <span class="string">'USER8'</span>,<span class="string">'double'</span>,49,1;
+0207       <span class="string">'USER9'</span>,<span class="string">'double'</span>,50,1;
+0208       <span class="string">'DIST'</span>,<span class="string">'double'</span>,51,1;
+0209       <span class="string">'AZ'</span>,<span class="string">'double'</span>,52,1;
+0210       <span class="string">'BAZ'</span>,<span class="string">'double'</span>,53,1;
+0211       <span class="string">'GCARC'</span>,<span class="string">'double'</span>,54,1; <span class="comment">%55 - 56 not represented</span>
+0212       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'double'</span>,55,1;
+0213       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'double'</span>,56,1;
+0214       <span class="string">'DEPMEN'</span>,<span class="string">'double'</span>,57,1;
+0215       <span class="string">'CMPAZ'</span>,<span class="string">'double'</span>,58,1;
+0216       <span class="string">'CMPINC'</span>,<span class="string">'double'</span>,59,1;
+0217       <span class="string">'XMINIMUM'</span>,<span class="string">'double'</span>,60,1;
+0218       <span class="string">'XMAXIMUM'</span>,<span class="string">'double'</span>,61,1;
+0219       <span class="string">'YMINIMUM'</span>,<span class="string">'double'</span>,62,1;
+0220       <span class="string">'YMAXIMUM'</span>,<span class="string">'double'</span>,63,1; <span class="comment">%64 - 70 not represented</span>
+0221       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'double'</span>,64,1;
+0222       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'double'</span>,65,1;
+0223       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'double'</span>,66,1;
+0224       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'double'</span>,67,1;
+0225       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'double'</span>,68,1;
+0226       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'double'</span>,69,1;
+0227       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'double'</span>,70,1;
+0228       <span class="string">'NZYEAR'</span>,<span class="string">'integer'</span>,71,1;
+0229       <span class="string">'NZJDAY'</span>,<span class="string">'integer'</span>,72,1;
+0230       <span class="string">'NZHOUR'</span>,<span class="string">'integer'</span>,73,1;
+0231       <span class="string">'NZMIN'</span>,<span class="string">'integer'</span>,74,1;
+0232       <span class="string">'NZSEC'</span>,<span class="string">'integer'</span>,75,1;
+0233       <span class="string">'NZMSEC'</span>,<span class="string">'integer'</span>,76,1;
+0234       <span class="string">'NVHDR'</span>,<span class="string">'integer'</span>,77,1;
+0235       <span class="string">'NORID'</span>,<span class="string">'integer'</span>,78,1;
+0236       <span class="string">'NEVID'</span>,<span class="string">'integer'</span>,79,1;
+0237       <span class="string">'NPTS'</span>,<span class="string">'integer'</span>,80,1; <span class="comment">%81 not represented</span>
+0238       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'integer'</span>,81,1;
+0239       <span class="string">'NWFID'</span>,<span class="string">'integer'</span>,82,1;
+0240       <span class="string">'NXSIZE'</span>,<span class="string">'integer'</span>,83,1;
+0241       <span class="string">'NYSIZE'</span>,<span class="string">'integer'</span>,84,1; <span class="comment">%85 not represented</span>
+0242       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'integer'</span>,85,1;
+0243       <span class="string">'IFTYPE'</span>,<span class="string">'integer'</span>,86,1;
+0244       <span class="string">'IDEP'</span>,<span class="string">'integer'</span>,87,1;
+0245       <span class="string">'IZTYPE'</span>,<span class="string">'integer'</span>,88,1; <span class="comment">%89 not represented</span>
+0246       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'integer'</span>,89,1;
+0247       <span class="string">'IINST'</span>,<span class="string">'integer'</span>,90,1;
+0248       <span class="string">'ISTREG'</span>,<span class="string">'integer'</span>,91,1;
+0249       <span class="string">'IEVREG'</span>,<span class="string">'integer'</span>,92,1;
+0250       <span class="string">'IEVTYP'</span>,<span class="string">'integer'</span>,93,1;
+0251       <span class="string">'IQUAL'</span>,<span class="string">'integer'</span>,94,1;
+0252       <span class="string">'ISYNTH'</span>,<span class="string">'integer'</span>,95,1;
+0253       <span class="string">'IMAGTYP'</span>,<span class="string">'integer'</span>,96,1;
+0254       <span class="string">'IMAGSRC'</span>,<span class="string">'integer'</span>,97,1; <span class="comment">%98 - 105 not represeneted</span>
+0255       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'integer'</span>,98,1;
+0256       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'integer'</span>,99,1;
+0257       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'integer'</span>,100,1;
+0258       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'integer'</span>,101,1;
+0259       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'integer'</span>,102,1;
+0260       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'integer'</span>,103,1;
+0261       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'integer'</span>,104,1;
+0262       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'integer'</span>,105,1;
+0263       <span class="string">'LEVEN'</span>,<span class="string">'logical'</span>,106,1;
+0264       <span class="string">'LPSPOL'</span>,<span class="string">'logical'</span>,107,1;
+0265       <span class="string">'LOVROK'</span>,<span class="string">'logical'</span>,108,1;
+0266       <span class="string">'LCALDA'</span>,<span class="string">'logical'</span>,109,1; <span class="comment">%110 not represented.</span>
+0267       <span class="string">'DUMMYVARIABLE'</span>,<span class="string">'integer'</span>,110,1;
+0268       <span class="string">'KSTNM'</span>,<span class="string">'char'</span>,111,8;
+0269       <span class="string">'KEVNM'</span>,<span class="string">'char'</span>,119,16;
+0270       <span class="string">'KHOLE'</span>,<span class="string">'char'</span>,135,8;
+0271       <span class="string">'KO'</span>,<span class="string">'char'</span>,143,8;
+0272       <span class="string">'KA'</span>,<span class="string">'char'</span>,151,8;
+0273       <span class="string">'KT0'</span>,<span class="string">'char'</span>,159,8;
+0274       <span class="string">'KT1'</span>,<span class="string">'char'</span>,167,8;
+0275       <span class="string">'KT2'</span>,<span class="string">'char'</span>,175,8;
+0276       <span class="string">'KT3'</span>,<span class="string">'char'</span>,183,8;
+0277       <span class="string">'KT4'</span>,<span class="string">'char'</span>,191,8;
+0278       <span class="string">'KT5'</span>,<span class="string">'char'</span>,199,8;
+0279       <span class="string">'KT6'</span>,<span class="string">'char'</span>,207,8;
+0280       <span class="string">'KT7'</span>,<span class="string">'char'</span>,215,8;
+0281       <span class="string">'KT8'</span>,<span class="string">'char'</span>,223,8;
+0282       <span class="string">'KT9'</span>,<span class="string">'char'</span>,231,8;
+0283       <span class="string">'KF'</span>,<span class="string">'char'</span>,239,8;
+0284       <span class="string">'KUSER0'</span>,<span class="string">'char'</span>,247,8;
+0285       <span class="string">'KUSER1'</span>,<span class="string">'char'</span>,255,8;
+0286       <span class="string">'KUSER2'</span>,<span class="string">'char'</span>,263,8;
+0287       <span class="string">'KCMPNM'</span>,<span class="string">'char'</span>,271,8;
+0288       <span class="string">'KNETWK'</span>,<span class="string">'char'</span>,279,8;
+0289       <span class="string">'KDATRD'</span>,<span class="string">'char'</span>,287,8;
+0290       <span class="string">'KINST'</span>,<span class="string">'char'</span>,295,8};
+0291 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

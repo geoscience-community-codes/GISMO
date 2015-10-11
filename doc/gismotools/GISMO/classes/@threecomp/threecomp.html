@@ -1,0 +1,406 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of threecomp</title>
+  <meta name="keywords" content="threecomp">
+  <meta name="description" content="THREECOMP Object for three component waveform data">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@threecomp</a> &gt; threecomp.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@threecomp&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>threecomp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>THREECOMP Object for three component waveform data</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">THREECOMP Object for three component waveform data
+ TC = THREECOMP(W) creates a vector of threecomp objects TC from waveform
+ matrix W where W is of dimensions Nx3, and TC is Nx1. Each row of W must
+ be a tuple of waveforms from different components of the same station.
+ Acceptable component orientations are Z-N-E, Z-R-T, and Z-2-1.
+ For example:
+        COLA_BHZ     COLA_BHN     COLA_BHE
+        AUNW_EHZ     AUNW_EHN     AUNW_EHE
+           &quot;            &quot;            &quot;
+           &quot;            &quot;            &quot;
+
+ By meeting this and a few other conventions threecomp objects are
+ amenable to standardized three component analyses. Additional
+ requirements are that the traces in each threecomp object span the same
+ time ranges with the same sample rates and units and contain no data
+ gaps. THREECOMP checks for consistency of these fields. Where possible,
+ times, sample rates, and gaps are adjusted to meet these requirements on
+ the fly. By default, all traces are also detrended and demeaned.
+
+ TC = THREECOMP(W,...,TRIGGER,...) fills the trigger property in each
+ threecomp object. TRIGGER must be an Nx1 vector of Matlab numeric times
+ between year 1900 and 2100. Users may choose to set the trigger to an
+ origin time, an arrival time or any arbitrary time.  This can prove
+ useful in later processing for aligning traces. The trigger may also be
+ ignored entirely in which case it defaults to the start time of each
+ threecomp object. Can be used with or without BACKAZIMUTH argument.
+
+ TC = THREECOMP(W,...,BACKAZIMUTH,...) fills the backazimuth property in
+ each threecomp object. BACKAZIMUTH must be an Nx1 vector of backazimuths
+ indicating the direction from the station to the source. Backazimuths
+ should be given in degrees between -360 and 360 where 0 is north. Can be
+ used with or without TRIGGER argument.
+
+ TC = THREECOMP(W,...,ORIENTATIONS,...) fills the orientation property in
+ each threecomp object. ORIENTATION must be an Nx6 vector of orientations
+ in which each row contains the azimuth and inclination of the three
+ compnents. For example, channels with orientations of 
+     BHZ: [0 0]    BHN:[5 90]    BHE: [95 90]
+ would be specified as as the 1x6 matrix [0 0 5 90 95 90]. For a full
+ description of the coordinate system see threecomp/describe.
+
+ indicating the direction from the station to the source. Backazimuths
+ should be given in degrees between -360 and 360 where 0 is north. Can be
+ used with or without TRIGGER argument.
+
+ AUTOMATIC LOADING OF TRIGGER, BACKAZIMUTH AND ORIENTATION PROPERTIES
+ THREECOMP will attempt to read these properties from various waveform
+ fields automatically if they exist. For details see threecomp/describe.
+
+ HOW TO HANDLE INCONSISTENCIES IN INPUT WAVEFORMS
+ 1x3 tuples in W that do not meet the minimum standards are not included in
+ the threecomp vector TC. There are three ways to handle this:
+ Option 1:
+    Clean up the input waveforms. THREECOMP attempts to provide verbose
+    descriptions of all trace inconsistencies.
+ Option 2:
+    Use the SUCCESS function to get the mask of tuples which were
+    successfully converted to threecomp ojects.
+    TC = THREECOMP(W);
+    MASK = SUCCESS(TC);
+    where MASK is an Nx1 boolean vector of 0's and 1's which can be used
+    at a code level to track the success of the threecomp conversion.
+ Option 3:
+    Use TC = THREECOMP(W,...,'NoVerify'); The NoVerify option forces each
+    tuple to be converted to a threecomp object without exception and
+    without checking for inconsistencies. This overrides all of the
+    safeguards in THREECOMP and may well cause unanticipated (and
+    non-intuitive) errors in subsequent codes. This not recommended for
+    typical use but may prove useful in debugging. If this approach is
+    used, it is strongly recommended to use the VERIFY function on the
+    resulting threecomp object.
+
+ See also threecomp/describe, threecomp/verify, threecomp/success</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>	ALIGN Align and trim traces in threecomp object.</li><li><a href="disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="threecomp.html" class="code" title="">threecomp</a>	THREECOMP Object for three component waveform data</li><li><a href="verify.html" class="code" title="function [conflicts] = verify(TC)">verify</a>	VERIFY Check for property conflicts in the threecomp object.</li><li><a href="waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="demo.html" class="code" title="function [w,backAzimuth,trigger,staLat,staLon,origLat,origLon] = demo(TC)">demo</a>	DEMO</li><li><a href="diagnostic.html" class="code" title="function diagnostic(threecomp)">diagnostic</a>	DIAGNOSTIC check for accurate behavior of threecomp object.</li><li><a href="spin.html" class="code" title="function [TC,c2, c3] = spin(TCin,varargin)">spin</a>	SPIN rotate and plot horizontal components</li><li><a href="threecomp.html" class="code" title="">threecomp</a>	THREECOMP Object for three component waveform data</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function TC = threecomp(varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%THREECOMP Object for three component waveform data</span>
+0002 <span class="comment">% TC = THREECOMP(W) creates a vector of threecomp objects TC from waveform</span>
+0003 <span class="comment">% matrix W where W is of dimensions Nx3, and TC is Nx1. Each row of W must</span>
+0004 <span class="comment">% be a tuple of waveforms from different components of the same station.</span>
+0005 <span class="comment">% Acceptable component orientations are Z-N-E, Z-R-T, and Z-2-1.</span>
+0006 <span class="comment">% For example:</span>
+0007 <span class="comment">%        COLA_BHZ     COLA_BHN     COLA_BHE</span>
+0008 <span class="comment">%        AUNW_EHZ     AUNW_EHN     AUNW_EHE</span>
+0009 <span class="comment">%           &quot;            &quot;            &quot;</span>
+0010 <span class="comment">%           &quot;            &quot;            &quot;</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% By meeting this and a few other conventions threecomp objects are</span>
+0013 <span class="comment">% amenable to standardized three component analyses. Additional</span>
+0014 <span class="comment">% requirements are that the traces in each threecomp object span the same</span>
+0015 <span class="comment">% time ranges with the same sample rates and units and contain no data</span>
+0016 <span class="comment">% gaps. THREECOMP checks for consistency of these fields. Where possible,</span>
+0017 <span class="comment">% times, sample rates, and gaps are adjusted to meet these requirements on</span>
+0018 <span class="comment">% the fly. By default, all traces are also detrended and demeaned.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% TC = THREECOMP(W,...,TRIGGER,...) fills the trigger property in each</span>
+0021 <span class="comment">% threecomp object. TRIGGER must be an Nx1 vector of Matlab numeric times</span>
+0022 <span class="comment">% between year 1900 and 2100. Users may choose to set the trigger to an</span>
+0023 <span class="comment">% origin time, an arrival time or any arbitrary time.  This can prove</span>
+0024 <span class="comment">% useful in later processing for aligning traces. The trigger may also be</span>
+0025 <span class="comment">% ignored entirely in which case it defaults to the start time of each</span>
+0026 <span class="comment">% threecomp object. Can be used with or without BACKAZIMUTH argument.</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% TC = THREECOMP(W,...,BACKAZIMUTH,...) fills the backazimuth property in</span>
+0029 <span class="comment">% each threecomp object. BACKAZIMUTH must be an Nx1 vector of backazimuths</span>
+0030 <span class="comment">% indicating the direction from the station to the source. Backazimuths</span>
+0031 <span class="comment">% should be given in degrees between -360 and 360 where 0 is north. Can be</span>
+0032 <span class="comment">% used with or without TRIGGER argument.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% TC = THREECOMP(W,...,ORIENTATIONS,...) fills the orientation property in</span>
+0035 <span class="comment">% each threecomp object. ORIENTATION must be an Nx6 vector of orientations</span>
+0036 <span class="comment">% in which each row contains the azimuth and inclination of the three</span>
+0037 <span class="comment">% compnents. For example, channels with orientations of</span>
+0038 <span class="comment">%     BHZ: [0 0]    BHN:[5 90]    BHE: [95 90]</span>
+0039 <span class="comment">% would be specified as as the 1x6 matrix [0 0 5 90 95 90]. For a full</span>
+0040 <span class="comment">% description of the coordinate system see threecomp/describe.</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">% indicating the direction from the station to the source. Backazimuths</span>
+0043 <span class="comment">% should be given in degrees between -360 and 360 where 0 is north. Can be</span>
+0044 <span class="comment">% used with or without TRIGGER argument.</span>
+0045 <span class="comment">%</span>
+0046 <span class="comment">% AUTOMATIC LOADING OF TRIGGER, BACKAZIMUTH AND ORIENTATION PROPERTIES</span>
+0047 <span class="comment">% THREECOMP will attempt to read these properties from various waveform</span>
+0048 <span class="comment">% fields automatically if they exist. For details see threecomp/describe.</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">% HOW TO HANDLE INCONSISTENCIES IN INPUT WAVEFORMS</span>
+0051 <span class="comment">% 1x3 tuples in W that do not meet the minimum standards are not included in</span>
+0052 <span class="comment">% the threecomp vector TC. There are three ways to handle this:</span>
+0053 <span class="comment">% Option 1:</span>
+0054 <span class="comment">%    Clean up the input waveforms. THREECOMP attempts to provide verbose</span>
+0055 <span class="comment">%    descriptions of all trace inconsistencies.</span>
+0056 <span class="comment">% Option 2:</span>
+0057 <span class="comment">%    Use the SUCCESS function to get the mask of tuples which were</span>
+0058 <span class="comment">%    successfully converted to threecomp ojects.</span>
+0059 <span class="comment">%    TC = THREECOMP(W);</span>
+0060 <span class="comment">%    MASK = SUCCESS(TC);</span>
+0061 <span class="comment">%    where MASK is an Nx1 boolean vector of 0's and 1's which can be used</span>
+0062 <span class="comment">%    at a code level to track the success of the threecomp conversion.</span>
+0063 <span class="comment">% Option 3:</span>
+0064 <span class="comment">%    Use TC = THREECOMP(W,...,'NoVerify'); The NoVerify option forces each</span>
+0065 <span class="comment">%    tuple to be converted to a threecomp object without exception and</span>
+0066 <span class="comment">%    without checking for inconsistencies. This overrides all of the</span>
+0067 <span class="comment">%    safeguards in THREECOMP and may well cause unanticipated (and</span>
+0068 <span class="comment">%    non-intuitive) errors in subsequent codes. This not recommended for</span>
+0069 <span class="comment">%    typical use but may prove useful in debugging. If this approach is</span>
+0070 <span class="comment">%    used, it is strongly recommended to use the VERIFY function on the</span>
+0071 <span class="comment">%    resulting threecomp object.</span>
+0072 <span class="comment">%</span>
+0073 <span class="comment">% See also threecomp/describe, threecomp/verify, threecomp/success</span>
+0074 
+0075 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0076 <span class="comment">% $Date$</span>
+0077 <span class="comment">% $Revision$</span>
+0078 
+0079 
+0080 classdef <a href="threecomp.html" class="code" title="">threecomp</a>
+0081     
+0082     properties
+0083         traces
+0084         trigger
+0085         backAzimuth
+0086         orientation
+0087         rectilinearity
+0088         planarity
+0089         energy
+0090         azimuth
+0091         inclination
+0092     <span class="keyword">end</span>
+0093     
+0094     
+0095     methods
+0096         <a name="_sub0" href="#_subfunctions" class="code">function TC = threecomp(varargin)</a>
+0097             
+0098             <span class="comment">%% CHECK ARGUMENTS</span>
+0099             
+0100             
+0101             <span class="comment">% CHECK WAVEFORM ARGUMENT</span>
+0102             <span class="keyword">if</span> length(varargin)&gt;=1
+0103                 W = varargin{1};
+0104                 <span class="keyword">if</span> ~isa(W,<span class="string">'waveform'</span>) || size(W,2)~=3
+0105                     error(<span class="string">'Threecomp:threecomp:badWaveform'</span>,<span class="string">'argument 1 must be an nx3 waveform object'</span>);
+0106                 <span class="keyword">end</span>
+0107             <span class="keyword">end</span>
+0108             
+0109             
+0110             <span class="comment">% CHECK FOR NOVERIFY ARGUMENT</span>
+0111             DOVERIFY = 1;
+0112             INTERNAL = 0;
+0113             <span class="keyword">if</span> length(varargin)&gt;=2
+0114                 <span class="keyword">if</span> ischar(varargin{end})
+0115                     <span class="keyword">if</span> strcmpi(varargin{end},<span class="string">'NOVERIFY'</span>)
+0116                         DOVERIFY = 0;
+0117                         varargin = varargin(1:end-1);
+0118                     <span class="keyword">elseif</span> strcmpi(varargin{end},<span class="string">'INTERNAL'</span>)
+0119                         INTERNAL = 1;
+0120                         DOVERIFY = 0;
+0121                         varargin = varargin(1:end-1);
+0122                     <span class="keyword">else</span>
+0123                         error(<span class="string">'Threecomp:threecomp:badTextArgument'</span>,<span class="string">'Text argument not recognized'</span>);
+0124                     <span class="keyword">end</span>
+0125                 <span class="keyword">end</span>
+0126             <span class="keyword">end</span>
+0127             
+0128             
+0129             <span class="comment">% CHECK TRIGGER/BACKAZIMUTH/ORIENTATION ARGUMENTS</span>
+0130             triggerList = [];
+0131             backAzimuthList = [];
+0132             orientationList = [];
+0133             <span class="keyword">if</span> ~INTERNAL
+0134                 <span class="keyword">for</span> n = 1:length(varargin)-1
+0135                     vals = varargin{end};
+0136                     <span class="comment">%if min(size(vals))==1      % turn vectors to Nx1</span>
+0137                     <span class="comment">%    vals = reshape(vals,length(vals),1);</span>
+0138                     <span class="comment">%end</span>
+0139                     <span class="keyword">if</span> isa(vals,<span class="string">'double'</span>) &amp;&amp; size(vals,1)==size(W,1)
+0140                         <span class="keyword">if</span> size(vals,2)==6
+0141                             orientationList = mod(vals,360);
+0142                         <span class="keyword">elseif</span> abs(vals)&lt;=720
+0143                             backAzimuthList = mod(vals,360);
+0144                         <span class="keyword">elseif</span> vals&gt;datenum(<span class="string">'1/1/1900'</span>) &amp; vals&lt;datenum(<span class="string">'1/1/2100'</span>)
+0145                             triggerList = vals;
+0146                         <span class="keyword">else</span>
+0147                             error(<span class="string">'Threecomp:threecomp:badArgumentValues'</span>,<span class="string">'Argument not recognized as triggers or backazimuths.'</span>);
+0148                         <span class="keyword">end</span>
+0149                     <span class="keyword">else</span>
+0150                         error(<span class="string">'Threecomp:threecomp:badArgumentFormat'</span>,<span class="string">'Argument not recognized or incorrect length.'</span>);
+0151                     <span class="keyword">end</span>
+0152                     varargin = varargin(1:end-1);
+0153                 <span class="keyword">end</span>
+0154             <span class="keyword">end</span>
+0155             
+0156             
+0157             
+0158             <span class="comment">%% CREATE INITIAL THREECOMP OBJECT(S)</span>
+0159             <span class="keyword">if</span> length(varargin)&gt;=1
+0160                 dimensionOne = size(W,1);
+0161                 <span class="keyword">if</span> dimensionOne &gt; 1         <span class="comment">% multiple waveform tuples</span>
+0162                     <span class="keyword">for</span> n=1:dimensionOne
+0163                         TC(n) = <a href="threecomp.html" class="code" title="">threecomp</a>(W(n,:),<span class="string">'INTERNAL'</span>);
+0164                     <span class="keyword">end</span>
+0165                     TC = reshape(TC,dimensionOne,1);
+0166                 <span class="keyword">elseif</span> dimensionOne == 1    <span class="comment">% single waveform tuple</span>
+0167                     TC.traces = reshape(W,1,3);
+0168                 <span class="keyword">end</span>
+0169             <span class="keyword">elseif</span> nargin==0                <span class="comment">% empty object</span>
+0170                 TC.traces = [<a href="waveform.html" class="code" title="function w = waveform(TC)">waveform</a> <a href="waveform.html" class="code" title="function w = waveform(TC)">waveform</a> <a href="waveform.html" class="code" title="function w = waveform(TC)">waveform</a>];
+0171                 <span class="keyword">return</span>
+0172             <span class="keyword">end</span>
+0173             
+0174             
+0175             <span class="comment">%% ADD PROPERTIES TO THREECOMP OBJECTS</span>
+0176             <span class="comment">% TODO: does not handle waveform vectors with partial inclusion</span>
+0177             <span class="comment">% of the following fields</span>
+0178             
+0179             <span class="keyword">if</span> ~INTERNAL
+0180                 
+0181                 <span class="comment">% TRIGGERS</span>
+0182                 <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(triggerList)
+0183                     <span class="keyword">if</span> all(isfield(W(:,1),<span class="string">'TRIG'</span>))
+0184                         triggerList = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'TRIG'</span>);
+0185                     <span class="keyword">elseif</span> all(isfield(W(:,1),<span class="string">'TRIGGER'</span>))
+0186                         triggerList = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'TRIGGER'</span>);
+0187                     <span class="keyword">else</span>
+0188                         triggerList = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'START'</span>);
+0189                     <span class="keyword">end</span>
+0190                 <span class="keyword">end</span>
+0191                 <span class="keyword">for</span> n = 1:length(TC)
+0192                     TC(n).trigger = triggerList(n);
+0193                 <span class="keyword">end</span>
+0194                 
+0195                 <span class="comment">% BACKAZIMUTH</span>
+0196                 <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(backAzimuthList)
+0197                     <span class="keyword">if</span> all(isfield(W(:,1),<span class="string">'BACKAZIMUTH'</span>))
+0198                         <a href="disp.html" class="code" title="function disp(TC)">disp</a>(<span class="string">'Setting backAzimuth according to user field BACKAZIMUTH.'</span>);
+0199                         backAzimuthList = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'BACKAZIMUTH'</span>);
+0200                     <span class="keyword">elseif</span> all(isfield(W(:,1),<span class="string">'BAZ'</span>))
+0201                         <a href="disp.html" class="code" title="function disp(TC)">disp</a>(<span class="string">'Setting backAzimuth according to SAC field BAZ.'</span>);
+0202                         backAzimuthList = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'BAZ'</span>);
+0203                     <span class="keyword">end</span>
+0204                 <span class="keyword">end</span>
+0205                 <span class="keyword">for</span> n = 1:length(TC)
+0206                     <span class="keyword">if</span> ~<a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(backAzimuthList)
+0207                         TC(n).backAzimuth = backAzimuthList(n);
+0208                     <span class="keyword">end</span>
+0209                 <span class="keyword">end</span>
+0210                 
+0211                 <span class="comment">% CHANNELS ORIENTATIONS</span>
+0212                 <span class="comment">% check first for custom field definitions, then css3.0</span>
+0213                 <span class="comment">% orientations, then SAC header orientations</span>
+0214                 <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(orientationList)
+0215                     <span class="keyword">if</span> all(all(isfield(W,<span class="string">'HorizontalOrientation'</span>))) &amp;&amp; all(all(isfield(W,<span class="string">'VerticalOrientation'</span>)))
+0216                         <a href="disp.html" class="code" title="function disp(TC)">disp</a>(<span class="string">'Component orientations are being set according to user fields HorizontalOrientation and VerticalOrientation.'</span>);
+0217                         orientationList(:,1) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'HorizontalOrientation'</span>);
+0218                         orientationList(:,2) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'VerticalOrientation'</span>);
+0219                         orientationList(:,3) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,2),<span class="string">'HorizontalOrientation'</span>);
+0220                         orientationList(:,4) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,2),<span class="string">'VerticalOrientation'</span>);
+0221                         orientationList(:,5) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,3),<span class="string">'HorizontalOrientation'</span>);
+0222                         orientationList(:,6) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,3),<span class="string">'VerticalOrientation'</span>);
+0223                     <span class="keyword">elseif</span> all(all(isfield(W,<span class="string">'HANG'</span>))) &amp;&amp; all(all(isfield(W,<span class="string">'VANG'</span>)))
+0224                         <a href="disp.html" class="code" title="function disp(TC)">disp</a>(<span class="string">'Component orientations are being set according to css3.0 fields HANG and VANG.'</span>);
+0225                         orientationList(:,1) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'HANG'</span>);
+0226                         orientationList(:,2) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'VANG'</span>);
+0227                         orientationList(:,3) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,2),<span class="string">'HANG'</span>);
+0228                         orientationList(:,4) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,2),<span class="string">'VANG'</span>);
+0229                         orientationList(:,5) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,3),<span class="string">'HANG'</span>);
+0230                         orientationList(:,6) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,3),<span class="string">'VANG'</span>);
+0231                     <span class="keyword">elseif</span> all(all(isfield(W,<span class="string">'CMPAZ'</span>))) &amp;&amp; all(all(isfield(W,<span class="string">'CMPINC'</span>)))
+0232                         <a href="disp.html" class="code" title="function disp(TC)">disp</a>(<span class="string">'Component orientations are being set according to SAC fields CMPAZ and CMPINC.'</span>);
+0233                         <a href="disp.html" class="code" title="function disp(TC)">disp</a>(<span class="string">'Vertical orientation set to 180-CMPINC. See DESCRIBE(THREECOMP) for conventions.'</span>);
+0234                         orientationList(:,1) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'CMPAZ'</span>);
+0235                         orientationList(:,2) = 180 - <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'CMPINC'</span>);
+0236                         orientationList(:,3) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,2),<span class="string">'CMPAZ'</span>);
+0237                         orientationList(:,4) = 180 - <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,2),<span class="string">'CMPINC'</span>);
+0238                         orientationList(:,5) = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,3),<span class="string">'CMPAZ'</span>);
+0239                         orientationList(:,6) = 180 - <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,3),<span class="string">'CMPINC'</span>);
+0240                         
+0241                     <span class="keyword">end</span>
+0242                 <span class="keyword">end</span>
+0243                 <span class="keyword">for</span> n = 1:length(TC)
+0244                     <span class="keyword">if</span> ~<a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(orientationList)
+0245                         TC(n).orientation = orientationList(n,:);
+0246                     <span class="keyword">else</span>
+0247                         type = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC(n),<span class="string">'TYPE'</span>);
+0248                         <a href="disp.html" class="code" title="function disp(TC)">disp</a>(<span class="string">'Component orientations inferred from channel names.'</span>);
+0249                         <span class="keyword">if</span> strcmpi(type,<span class="string">'ZNE'</span>)
+0250                             TC(n).orientation = [0 0 0 90 90 90];
+0251                         <span class="keyword">elseif</span> strcmpi(type,<span class="string">'ZRT'</span>) &amp;&amp; ~<a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(TC(n).backAzimuth)
+0252                             TC(n).orientation = [0 0 0 mod(TC(n).backAzimuth,360) 0 mod(TC(n).backAzimuth+90,360)];   <span class="comment">% TODO: STILL NEED TO DEFINE</span>
+0253                         <span class="keyword">end</span>
+0254                     <span class="keyword">end</span>
+0255                 <span class="keyword">end</span>
+0256                 <span class="keyword">if</span> any(any(isnan(<a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC,<span class="string">'orientation'</span>))))
+0257                     <a href="disp.html" class="code" title="function disp(TC)">disp</a>(<span class="string">'One or more component orientations are not set. Some functionality will be lost.'</span>);
+0258                 <span class="keyword">else</span>
+0259                 <span class="keyword">end</span>
+0260             <span class="keyword">end</span>
+0261             
+0262             
+0263             
+0264             <span class="comment">%% VERIFY AND ADJUST</span>
+0265             <span class="keyword">if</span> DOVERIFY
+0266                 TC = <a href="align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>(TC);
+0267                 conflicts = <a href="verify.html" class="code" title="function [conflicts] = verify(TC)">verify</a>(TC);
+0268                 successMask = find(strcmp(conflicts,<span class="string">'0000000'</span>));
+0269                 
+0270                 TC = TC(successMask);
+0271                 <span class="keyword">if</span> numel(TC) == 0 <span class="comment">%isempty(TC)</span>
+0272                    <span class="keyword">return</span>
+0273                 <span class="keyword">end</span>
+0274                 
+0275                 TC(1).traces(1) = addfield(TC(1).traces(1),<span class="string">'TMP_SUCCESSMASK'</span>,successMask);
+0276                 TC(1).traces(1) = addfield(TC(1).traces(1),<span class="string">'TMP_CONFLICTS'</span>,conflicts);
+0277                 <span class="keyword">for</span> n=1:length(TC)
+0278                     TC(n).traces = detrend(TC(n).traces);
+0279                     TC(n).traces = demean(TC(n).traces);
+0280                 <span class="keyword">end</span>
+0281             <span class="keyword">end</span>
+0282         <span class="keyword">end</span>
+0283     <span class="keyword">end</span>
+0284     
+0285 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

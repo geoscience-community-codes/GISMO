@@ -1,0 +1,394 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of extract</title>
+  <meta name="keywords" content="extract">
+  <meta name="description" content="EXTRACT creates a waveform with a subset of another's data.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; extract.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>extract
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>EXTRACT creates a waveform with a subset of another's data.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function outW = extract(w, method, startV, endV) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">EXTRACT creates a waveform with a subset of another's data.
+   waveform = extract(waveform, 'TIME', startTime, endTime)
+       returns a waveform with the subset of data from startTime to
+       endTime.  Both times are matlab formatted (string or datenum)
+
+   waveform = extract(waveform, 'INDEX', startIndex, endIndex)
+       returns a waveform with the subset of data from StartIndex to
+       EndIndex.  this is roughly equivelent to grabbing the waveform's
+       data into an array, as in D = get(W,'data'), then returning a
+       waveform with the subset of data,
+       ie. waveform = set(waveform,'data', D(startIndex:endIndex));
+
+   waveform = extract(waveform, 'INDEX&amp;DURATION', startIndex, duration)
+       a hybrid method that starts from data index startIndex, and then
+       returns a specified length of data as indicated by duration.
+       Duration is a matlab formatted time (string or datenum).
+
+   waveform = extract(waveform, 'TIME&amp;SAMPLES', startTime, Samples)
+       a hybrid method that starts from data index startIndex, and then
+       returns a specified length of data as indicated by duration.
+       Duration is a matlab formatted time (string or datenum).
+
+   Input Arguments:
+       WAVEFORM: waveform object        N-DIMENSIONAL
+       METHOD: 'TIME', or 'INDEX', or 'INDEX&amp;DURATION'
+           TIME: starttime and endtime are absolute times
+                   (include the date)
+           INDEX: startt and endt are the offset (index) within the data
+           INDEX&amp;DURATION: first value is an offset (index), the next says
+                           how much data to retrieve...
+           TIME&amp;SAMPLES: grab first value at time startTime, and grab
+                         Samplength data points
+       STARTTIME:  Start time (matlab or text format)
+       ENDTIME:    End time (matlab or text format)
+       STARTINDEX: position within data array to begin extraction
+       ENDINDEX:   final grabbed position within data array
+       DURATION:   matlab format time indicating duration of data to grab
+       SAMPLES: the number of data points to grab.
+
+   the output waveform will have the new, appropriate start time.
+   if the times are outside the range of the waveform object, then the
+   output waveform will contain only the portion of the data that is
+   appropriate.
+
+   *MULTIPLE EXTRACTIONS* can be received if the time values are vectors.
+   Both starttime/startindex and endtime/endindex/endduration/samples must
+   have the same number of elements.  In this case the output waveforms
+   will be reshaped with each waveform represented by row, and each
+   extracted time represented by column.  that is...
+
+  The output of this function, for multiple waveforms and times will be:
+         t1   t2  t3 ... tn
+    -----------------------
+    w1 |
+    w2 |
+    w3 |
+     . |
+     . |
+    wn |
+
+
+%   examples:
+       % say that Win is a waveform that starts 1/5/2007 04:00, and
+       % contains 1 hour of data at 100 Hz (360000 samples)
+
+       % grab samples between 4:15 and 4:20
+       Wout = extract(Win, 'TIME', '1/5/2007 4:15:00','1/5/2007 4:20:00');
+
+       % grab 3 minutes, starting at the 10000th sample
+       Wout = extract(Win, 'INDEX&amp;DURATION', 10000 , '0/0/0 00:03:00');
+
+
+%     example of multiple extract:
+  % declare the times we're interested in
+         firstsnippet = datenum('6/20/2003 00:00:00');
+         lastsnippet = datenum('6/20/2003 24:00:00');
+
+         % divide the day into 1-hour segments.
+         % note, 25 peices. equivelent to 0:1:24, including both midnights
+         alltimes = linspace(firstsnippet, lastsnippet, 25);
+         starttimes = alltimes(1:end-1);
+         endtimes = alltimes(2:end);
+
+         % grab each hour of time, and shove it into wHours
+         wHours = extract(wDay, 'time',starttimes, endtimes);
+
+         scaleFactor = 4 * std(double(wDay));
+         wHours = wHours ./ scaleFactor;
+ %
+          for n = 1:length(wHours)
+            wHours(n) = -wHours(n) + n; %add offset for plotting
+          end
+          plot(wHours,'xunit','m','b'); %plot it in blue with at nm scaling
+          axis ([0 60 1 25])
+          set(gca,'ytick',[0:2:24],'xgrid', 'on','ydir','reverse');
+          ylabel('Hour');
+
+   See also WAVEFORM/SET -- Sample_Length</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and channeltag info.</li><li><a href="waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function  [B,A] = swap(A,B)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function outW = extract(w, method, startV, endV)</a>
+0002    <span class="comment">%EXTRACT creates a waveform with a subset of another's data.</span>
+0003    <span class="comment">%   waveform = extract(waveform, 'TIME', startTime, endTime)</span>
+0004    <span class="comment">%       returns a waveform with the subset of data from startTime to</span>
+0005    <span class="comment">%       endTime.  Both times are matlab formatted (string or datenum)</span>
+0006    <span class="comment">%</span>
+0007    <span class="comment">%   waveform = extract(waveform, 'INDEX', startIndex, endIndex)</span>
+0008    <span class="comment">%       returns a waveform with the subset of data from StartIndex to</span>
+0009    <span class="comment">%       EndIndex.  this is roughly equivelent to grabbing the waveform's</span>
+0010    <span class="comment">%       data into an array, as in D = get(W,'data'), then returning a</span>
+0011    <span class="comment">%       waveform with the subset of data,</span>
+0012    <span class="comment">%       ie. waveform = set(waveform,'data', D(startIndex:endIndex));</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">%   waveform = extract(waveform, 'INDEX&amp;DURATION', startIndex, duration)</span>
+0015    <span class="comment">%       a hybrid method that starts from data index startIndex, and then</span>
+0016    <span class="comment">%       returns a specified length of data as indicated by duration.</span>
+0017    <span class="comment">%       Duration is a matlab formatted time (string or datenum).</span>
+0018    <span class="comment">%</span>
+0019    <span class="comment">%   waveform = extract(waveform, 'TIME&amp;SAMPLES', startTime, Samples)</span>
+0020    <span class="comment">%       a hybrid method that starts from data index startIndex, and then</span>
+0021    <span class="comment">%       returns a specified length of data as indicated by duration.</span>
+0022    <span class="comment">%       Duration is a matlab formatted time (string or datenum).</span>
+0023    <span class="comment">%</span>
+0024    <span class="comment">%   Input Arguments:</span>
+0025    <span class="comment">%       WAVEFORM: waveform object        N-DIMENSIONAL</span>
+0026    <span class="comment">%       METHOD: 'TIME', or 'INDEX', or 'INDEX&amp;DURATION'</span>
+0027    <span class="comment">%           TIME: starttime and endtime are absolute times</span>
+0028    <span class="comment">%                   (include the date)</span>
+0029    <span class="comment">%           INDEX: startt and endt are the offset (index) within the data</span>
+0030    <span class="comment">%           INDEX&amp;DURATION: first value is an offset (index), the next says</span>
+0031    <span class="comment">%                           how much data to retrieve...</span>
+0032    <span class="comment">%           TIME&amp;SAMPLES: grab first value at time startTime, and grab</span>
+0033    <span class="comment">%                         Samplength data points</span>
+0034    <span class="comment">%       STARTTIME:  Start time (matlab or text format)</span>
+0035    <span class="comment">%       ENDTIME:    End time (matlab or text format)</span>
+0036    <span class="comment">%       STARTINDEX: position within data array to begin extraction</span>
+0037    <span class="comment">%       ENDINDEX:   final grabbed position within data array</span>
+0038    <span class="comment">%       DURATION:   matlab format time indicating duration of data to grab</span>
+0039    <span class="comment">%       SAMPLES: the number of data points to grab.</span>
+0040    <span class="comment">%</span>
+0041    <span class="comment">%   the output waveform will have the new, appropriate start time.</span>
+0042    <span class="comment">%   if the times are outside the range of the waveform object, then the</span>
+0043    <span class="comment">%   output waveform will contain only the portion of the data that is</span>
+0044    <span class="comment">%   appropriate.</span>
+0045    <span class="comment">%</span>
+0046    <span class="comment">%   *MULTIPLE EXTRACTIONS* can be received if the time values are vectors.</span>
+0047    <span class="comment">%   Both starttime/startindex and endtime/endindex/endduration/samples must</span>
+0048    <span class="comment">%   have the same number of elements.  In this case the output waveforms</span>
+0049    <span class="comment">%   will be reshaped with each waveform represented by row, and each</span>
+0050    <span class="comment">%   extracted time represented by column.  that is...</span>
+0051    <span class="comment">%</span>
+0052    <span class="comment">%  The output of this function, for multiple waveforms and times will be:</span>
+0053    <span class="comment">%         t1   t2  t3 ... tn</span>
+0054    <span class="comment">%    -----------------------</span>
+0055    <span class="comment">%    w1 |</span>
+0056    <span class="comment">%    w2 |</span>
+0057    <span class="comment">%    w3 |</span>
+0058    <span class="comment">%     . |</span>
+0059    <span class="comment">%     . |</span>
+0060    <span class="comment">%    wn |</span>
+0061    <span class="comment">%</span>
+0062    <span class="comment">%</span>
+0063    <span class="comment">%%   examples:</span>
+0064    <span class="comment">%       % say that Win is a waveform that starts 1/5/2007 04:00, and</span>
+0065    <span class="comment">%       % contains 1 hour of data at 100 Hz (360000 samples)</span>
+0066    <span class="comment">%</span>
+0067    <span class="comment">%       % grab samples between 4:15 and 4:20</span>
+0068    <span class="comment">%       Wout = extract(Win, 'TIME', '1/5/2007 4:15:00','1/5/2007 4:20:00');</span>
+0069    <span class="comment">%</span>
+0070    <span class="comment">%       % grab 3 minutes, starting at the 10000th sample</span>
+0071    <span class="comment">%       Wout = extract(Win, 'INDEX&amp;DURATION', 10000 , '0/0/0 00:03:00');</span>
+0072    <span class="comment">%</span>
+0073    <span class="comment">%</span>
+0074    <span class="comment">%%     example of multiple extract:</span>
+0075    <span class="comment">%  % declare the times we're interested in</span>
+0076    <span class="comment">%         firstsnippet = datenum('6/20/2003 00:00:00');</span>
+0077    <span class="comment">%         lastsnippet = datenum('6/20/2003 24:00:00');</span>
+0078    <span class="comment">%</span>
+0079    <span class="comment">%         % divide the day into 1-hour segments.</span>
+0080    <span class="comment">%         % note, 25 peices. equivelent to 0:1:24, including both midnights</span>
+0081    <span class="comment">%         alltimes = linspace(firstsnippet, lastsnippet, 25);</span>
+0082    <span class="comment">%         starttimes = alltimes(1:end-1);</span>
+0083    <span class="comment">%         endtimes = alltimes(2:end);</span>
+0084    <span class="comment">%</span>
+0085    <span class="comment">%         % grab each hour of time, and shove it into wHours</span>
+0086    <span class="comment">%         wHours = extract(wDay, 'time',starttimes, endtimes);</span>
+0087    <span class="comment">%</span>
+0088    <span class="comment">%         scaleFactor = 4 * std(double(wDay));</span>
+0089    <span class="comment">%         wHours = wHours ./ scaleFactor;</span>
+0090    <span class="comment">% %</span>
+0091    <span class="comment">%          for n = 1:length(wHours)</span>
+0092    <span class="comment">%            wHours(n) = -wHours(n) + n; %add offset for plotting</span>
+0093    <span class="comment">%          end</span>
+0094    <span class="comment">%          plot(wHours,'xunit','m','b'); %plot it in blue with at nm scaling</span>
+0095    <span class="comment">%          axis ([0 60 1 25])</span>
+0096    <span class="comment">%          set(gca,'ytick',[0:2:24],'xgrid', 'on','ydir','reverse');</span>
+0097    <span class="comment">%          ylabel('Hour');</span>
+0098    <span class="comment">%</span>
+0099    <span class="comment">%   See also WAVEFORM/SET -- Sample_Length</span>
+0100    
+0101    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0102    <span class="comment">% $Date$</span>
+0103    <span class="comment">% $Revision$</span>
+0104    
+0105    <span class="comment">%% Set up condition variables, and ensure validity of input</span>
+0106    MULTIPLE_WAVES = ~isscalar(w);
+0107    
+0108    <span class="comment">%if either of our times are strings, it's 'cause they're actually dates</span>
+0109    <span class="keyword">if</span> ischar(startV)
+0110       startV = datenum(startV);
+0111    <span class="keyword">end</span>
+0112    <span class="keyword">if</span> ischar(endV)
+0113       endV = datenum(endV);
+0114    <span class="keyword">end</span>
+0115    
+0116    <span class="keyword">if</span> numel(startV) ~= numel(endV)
+0117       error(<span class="string">'Waveform:extract:indexMismatch'</span>,<span class="keyword">...</span>
+0118          <span class="string">'Number of start times (or indexes) must equal number of end times'</span>)
+0119    <span class="keyword">end</span>
+0120    
+0121    <span class="comment">% are we getting a series of extractions from each waveform?</span>
+0122    MULTIPLE_EXTRACTION = numel(endV) &gt; 1;
+0123    
+0124    <span class="keyword">if</span> MULTIPLE_WAVES &amp;&amp; MULTIPLE_EXTRACTION
+0125       w = w(:);
+0126    <span class="keyword">end</span>
+0127    
+0128    <span class="comment">%%</span>
+0129    <span class="keyword">if</span> numel(w)==0 || numel(startV) ==0
+0130       warning(<span class="string">'Waveform:extract:emptyWaveform'</span>,<span class="string">'no waveforms to extract'</span>);
+0131       <span class="keyword">return</span>
+0132    <span class="keyword">end</span>
+0133    outW(numel(w),numel(startV)) = <a href="waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>;
+0134    
+0135    <span class="keyword">for</span> m = 1: numel(startV) <span class="comment">%loop through the number of extractions</span>
+0136       <span class="keyword">for</span> n=1:numel(w); <span class="comment">%loop through the waveforms</span>
+0137          inW = w(n);
+0138          myData = inW.data;
+0139          
+0140          <span class="keyword">switch</span> lower(method)
+0141             <span class="keyword">case</span> <span class="string">'time'</span>
+0142                
+0143                <span class="comment">% startV and endV are both matlab formated dates</span>
+0144                <span class="comment">%sampleTimes = get(inW,'timevector');</span>
+0145                
+0146                <span class="comment">%   ensure the format of our times</span>
+0147                <span class="keyword">if</span> startV(m) &gt; endV(m)
+0148                   warning(<span class="string">'Waveform:extract:reversedValues'</span>,<span class="keyword">...</span>
+0149                      <span class="string">'Start time prior to end time.  Flipping.'</span>);
+0150                   [startV(m), endV(m)] = <a href="#_sub1" class="code" title="subfunction  [B,A] = swap(A,B)">swap</a>(startV(m), endV(m));
+0151                <span class="keyword">end</span>
+0152                
+0153                
+0154                <span class="comment">%if requested data is outside the existing waveform, change the</span>
+0155                <span class="comment">%start time, and clear out the data.</span>
+0156                startsAfterWave = startV(m) &gt; <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(inW,<span class="string">'end'</span>) ;
+0157                endsBeforeWave = endV(m) &lt; <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(inW,<span class="string">'start'</span>);
+0158                <span class="keyword">if</span> startsAfterWave || endsBeforeWave
+0159                   myStart = startV(m);
+0160                   myData = [];
+0161                <span class="keyword">else</span>
+0162                   <span class="comment">%some aspect of this data must be represented by the waveform</span>
+0163                   [myStartI myStartTime] = time2offset(inW,startV(m));
+0164                   [myEndI] = time2offset(inW,endV(m)) - 1;
+0165                   <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(myStartTime)
+0166                      <span class="comment">%waveform starts sometime after requested start</span>
+0167                      myStartTime = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(inW,<span class="string">'start'</span>);
+0168                      myStartI = 1;
+0169                   <span class="keyword">end</span>
+0170                   
+0171                   <span class="keyword">if</span> myEndI &gt; numel(myData)
+0172                      myEndI = numel(myData);
+0173                   <span class="keyword">end</span>
+0174                   myData = myData(myStartI:myEndI);
+0175                   myStart = myStartTime;
+0176                <span class="keyword">end</span>
+0177             <span class="keyword">case</span> <span class="string">'index'</span>
+0178                <span class="comment">%startV and endV are both indexes into the data</span>
+0179                
+0180                
+0181                <span class="keyword">if</span> startV(m) &gt; numel(myData)
+0182                   warning(<span class="string">'Waveform:extract:noDataFound'</span>,<span class="keyword">...</span>
+0183                      <span class="string">'no data after start index'</span>);
+0184                   <span class="keyword">return</span>
+0185                <span class="keyword">end</span>;
+0186                <span class="keyword">if</span> endV(m) &gt; numel(myData)
+0187                   endV(m) = length(myData);
+0188                   warning(<span class="string">'Waveform:extract:truncatingData'</span>,<span class="keyword">...</span>
+0189                      <span class="string">'end index too long, truncating to match data'</span>);
+0190                <span class="keyword">end</span>
+0191                
+0192                <span class="keyword">if</span> startV(m) &gt; endV(m)
+0193                   warning(<span class="string">'Waveform:extract:reversedValues'</span>,<span class="keyword">...</span>
+0194                      <span class="string">'Start time prior to end time.  Flipping.'</span>);
+0195                   [startV(m), endV(m)] = <a href="#_sub1" class="code" title="subfunction  [B,A] = swap(A,B)">swap</a>(startV(m), endV(m));
+0196                <span class="keyword">end</span>
+0197                
+0198                myData = myData(startV(m):endV(m));
+0199                sampTimes = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(inW,<span class="string">'timevector'</span>); <span class="comment">% grab individual sample times</span>
+0200                myStart = sampTimes(startV(m));
+0201                
+0202             <span class="keyword">case</span> <span class="string">'index&amp;duration'</span>
+0203                <span class="comment">% startV is an index into the data, endV is a matlab date</span>
+0204                myData = myData(startV(m):end); <span class="comment">%grab the data starting at our index</span>
+0205                
+0206                sampTimes = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(inW,<span class="string">'timevector'</span>); <span class="comment">% grab individual sample times</span>
+0207                sampTimes = sampTimes(startV(m):end); <span class="comment">% truncate to match data</span>
+0208                
+0209                myStart = sampTimes(1); <span class="comment">%grab our starting date before hacking it</span>
+0210                
+0211                sampTimes = sampTimes - sampTimes(1); <span class="comment">%set first time to zero</span>
+0212                count = sum(sampTimes &lt;= endV(m)) -1;
+0213                myData = myData(1:count);
+0214                
+0215                
+0216             <span class="keyword">case</span> <span class="string">'time&amp;samples'</span>
+0217                <span class="comment">% startV is a matlab date, while endV is an index into the data</span>
+0218                sampTimes = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(inW,<span class="string">'timevector'</span>); <span class="comment">% grab individual sample times</span>
+0219                
+0220                index_to_times = sampTimes &gt;= startV(m); <span class="comment">%mask of valid times</span>
+0221                goodTimes = find(index_to_times,endV(m));<span class="comment">%first howevermany of these good times</span>
+0222                
+0223                myData = myData(goodTimes); <span class="comment">% keep matching samples</span>
+0224                
+0225                <span class="keyword">try</span>
+0226                   myStart = sampTimes(goodTimes(1)); <span class="comment">%first sample time is new waveform start</span>
+0227                <span class="keyword">catch</span>
+0228                   warning(<span class="string">'Waveform:extract:NoDataFound'</span>,<span class="keyword">...</span>
+0229                      <span class="string">'no data'</span>);
+0230                   myStart = startV(1);
+0231                <span class="keyword">end</span>
+0232                
+0233             <span class="keyword">otherwise</span>
+0234                error(<span class="string">'Waveform:extract:unknownMethod'</span>,<span class="string">'unknown method: %s'</span>, method);
+0235          <span class="keyword">end</span>
+0236          
+0237          <span class="keyword">if</span> MULTIPLE_EXTRACTION
+0238             outW(n,m) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(inW,<span class="string">'start'</span>,myStart, <span class="string">'data'</span>, myData);
+0239          <span class="keyword">else</span>
+0240             outW(n) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(inW,<span class="string">'start'</span>,myStart, <span class="string">'data'</span>, myData);
+0241          <span class="keyword">end</span>
+0242       <span class="keyword">end</span> <span class="comment">% n-loop (looping through waveforms)</span>
+0243    <span class="keyword">end</span> <span class="comment">% m-loop (looping through extractions)</span>
+0244 <span class="keyword">end</span>
+0245 
+0246 <a name="_sub1" href="#_subfunctions" class="code">function  [B,A] = swap(A,B)</a>
+0247    <span class="comment">%do nothing, just flip inputs &amp; outputs</span>
+0248 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of correlation_cookbook</title>
+  <meta name="keywords" content="correlation_cookbook">
+  <meta name="description" content="% Correlation object cookbook">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">correlation_cookbook</a> &gt; correlation_cookbook.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed/correlation_cookbook&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>correlation_cookbook
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>% Correlation object cookbook</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Correlation object cookbook
+ This is a short demonstration of some of the major tools in the waveform
+ correlation toolbox. The overarching goal of the toolbox is to provide a
+ set of functions for performing routine manipulations on a large set of
+ waveforms (tens to thousands) which may bare some similarity to each
+ other - cross correlation, stacking, grouping, plotting, interferometry
+ etc. Detailed usages can be found for each function with the HELP
+ command. At a minimum, read HELP CORRELATION for the basic architecture
+ of a CORRELATION object. Detailed installation and version notes can be
+ found in GISMO/@correlation/README.txt
+ 
+ Data can be imported to a CORRELATION object from several sources.
+ Primary sources are intended to be Antelope and Winston databases. Since
+ trace handling is carried out with the WAVEFORM toolbox though, any data
+ that can be converted to a WAVEFORM object can be converted to a
+ CORRELATION object, including SAC files. All uses of CORRELATION require
+ that the WAVEFORM toolbox be installed.
+
+ [NOTE that the set(gcf,'Position',...) lines used repeatedly below are
+ just for display purposes in this document.]</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%% Correlation object cookbook</span>
+0002 <span class="comment">% This is a short demonstration of some of the major tools in the waveform</span>
+0003 <span class="comment">% correlation toolbox. The overarching goal of the toolbox is to provide a</span>
+0004 <span class="comment">% set of functions for performing routine manipulations on a large set of</span>
+0005 <span class="comment">% waveforms (tens to thousands) which may bare some similarity to each</span>
+0006 <span class="comment">% other - cross correlation, stacking, grouping, plotting, interferometry</span>
+0007 <span class="comment">% etc. Detailed usages can be found for each function with the HELP</span>
+0008 <span class="comment">% command. At a minimum, read HELP CORRELATION for the basic architecture</span>
+0009 <span class="comment">% of a CORRELATION object. Detailed installation and version notes can be</span>
+0010 <span class="comment">% found in GISMO/@correlation/README.txt</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Data can be imported to a CORRELATION object from several sources.</span>
+0013 <span class="comment">% Primary sources are intended to be Antelope and Winston databases. Since</span>
+0014 <span class="comment">% trace handling is carried out with the WAVEFORM toolbox though, any data</span>
+0015 <span class="comment">% that can be converted to a WAVEFORM object can be converted to a</span>
+0016 <span class="comment">% CORRELATION object, including SAC files. All uses of CORRELATION require</span>
+0017 <span class="comment">% that the WAVEFORM toolbox be installed.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% [NOTE that the set(gcf,'Position',...) lines used repeatedly below are</span>
+0020 <span class="comment">% just for display purposes in this document.]</span>
+0021 
+0022 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0023 <span class="comment">% $Date$</span>
+0024 <span class="comment">% $Revision$</span>
+0025 
+0026 
+0027 <span class="comment">%% Use traces from the demo dataset</span>
+0028 <span class="comment">% For the purposes of this cookbook example we use the built-in correlation</span>
+0029 <span class="comment">% demo dataset of 100 traces drawn from a broadband sensor AU13 at</span>
+0030 <span class="comment">% Augustine volcano.</span>
+0031 
+0032 c = correlation(<span class="string">'DEMO'</span>);
+0033 
+0034 
+0035 <span class="comment">%% Load traces from an outside datasource</span>
+0036 <span class="comment">% This approach requires that the Antelope toolbox for Matlab be installed.</span>
+0037 <span class="comment">% The waveform object must also be installed. Once a list of &quot;trigger</span>
+0038 <span class="comment">% times&quot; has been defined (in Matlab date format), reading traces can</span>
+0039 <span class="comment">% be accomplished with a single command. Loading a few thousand short</span>
+0040 <span class="comment">% traces into a single correlation object is no problem. See HELP</span>
+0041 <span class="comment">% DATASOURCE and HELP SCNLOBJECT for a full description of these</span>
+0042 <span class="comment">% prerequisite tools.</span>
+0043 <span class="comment">%</span>
+0044 <span class="comment">%&gt;&gt; time_str = [</span>
+0045 <span class="comment">%     '01/11/2006 03:05:14.363'</span>
+0046 <span class="comment">%     '01/11/2006 03:06:24.336'</span>
+0047 <span class="comment">%     ...</span>
+0048 <span class="comment">%     '01/12/2006 06:25:59.710'</span>
+0049 <span class="comment">%     '01/12/2006 06:27:23.797'</span>
+0050 <span class="comment">%     ];</span>
+0051 <span class="comment">%&gt;&gt; time_num = datenum(time_str);</span>
+0052 <span class="comment">%&gt;&gt; ds = datasource('antelope','archive');</span>
+0053 <span class="comment">%&gt;&gt; scnl = scnlobject('sta','chan');</span>
+0054 <span class="comment">%&gt;&gt; c = correlation(ds,scnl,time_num,-5,10)</span>
+0055 
+0056 
+0057 <span class="comment">%% How to use a correlation object</span>
+0058 <span class="comment">% List what functions can be used on a CORRELATION object. Display the 7</span>
+0059 <span class="comment">% fields contained with each CORRELATION object.</span>
+0060 
+0061 methods(c)
+0062 display(c)
+0063 
+0064 
+0065 <span class="comment">%% Plot raw data</span>
+0066 <span class="comment">% Use 'wig' option for a traditional wiggle plot. 'sha' displays shaded</span>
+0067 <span class="comment">% traces often useful when viewing more than ~50 traces at a</span>
+0068 <span class="comment">% time.</span>
+0069 
+0070 plot(c,<span class="string">'wig'</span>);
+0071 set(gcf,<span class="string">'Position'</span>,[50 50 700 400]);
+0072 
+0073 
+0074 <span class="comment">%% Crop, taper, filter traces</span>
+0075 <span class="comment">% This particular use of crop is unnecessary but it demonstrates cropping</span>
+0076 <span class="comment">% the data (in this case on the low end) and zero padding (in this case on</span>
+0077 <span class="comment">% the high end.) BUTTER applies a zero-phase Butterworth filter to the</span>
+0078 <span class="comment">% data. It is important to at least apply a high pass filter to data before</span>
+0079 <span class="comment">% cross-correlating as long period rolls can greatly bias the correlation.</span>
+0080 
+0081 c = crop(c,-4,12);
+0082 c = taper(c);
+0083 c = butter(c,[.5 10]);
+0084 
+0085 
+0086 <span class="comment">%% Cross correlate</span>
+0087 <span class="comment">% Cross correlate waveforms, identifying the maximum correlation value and</span>
+0088 <span class="comment">% the relative time offset between each pair of traces to acheive the</span>
+0089 <span class="comment">% maximum correlation. For many hundreds of events, this can be a time</span>
+0090 <span class="comment">% consuming process. XCORR provides status information along the way.</span>
+0091 
+0092 c = xcorr(c,[0 3.5]); 
+0093 
+0094 
+0095 <span class="comment">%% Similarity matrix</span>
+0096 <span class="comment">% Sort traces by time and plot the correlation matrix - the set of maximum</span>
+0097 <span class="comment">% cross-correlation values between each pair of traces. To access the</span>
+0098 <span class="comment">% correlation matrix directly, first extract it from the correlation object</span>
+0099 <span class="comment">% using the get command.</span>
+0100 
+0101 c = sort(c);
+0102 plot(c,<span class="string">'corr'</span>);
+0103 set(gcf,<span class="string">'Position'</span>,[50 50 500 400]);
+0104 corr_matrix = get(c,<span class="string">'CORR'</span>);
+0105 corr_matrix(1:5,1:5)
+0106 
+0107 <span class="comment">%% Lag matrix</span>
+0108 <span class="comment">% Similar to above, this function plots the matrix of lag times (in</span>
+0109 <span class="comment">% seconds) that yeild the maximum correlation between each pair of traces.</span>
+0110 
+0111 plot(c,<span class="string">'lag'</span>);
+0112 set(gcf,<span class="string">'Position'</span>,[50 50 500 400]);
+0113 lag_matrix = get(c,<span class="string">'LAG'</span>);
+0114 lag_matrix(1:5,1:5)
+0115 
+0116 
+0117 <span class="comment">%% Realign traces</span>
+0118 <span class="comment">% Apply the time corrections in the lag matrix to the trigger times. This</span>
+0119 <span class="comment">% will result in highly correlated traces being well aligned. Plot the</span>
+0120 <span class="comment">% results as a shaded waveform plot.</span>
+0121 
+0122 c = adjusttrig(c,<span class="string">'MIN'</span>,1);
+0123 plot(c,<span class="string">'sha'</span>);
+0124 set(gcf,<span class="string">'Position'</span>,[50 50 700 400]);
+0125 
+0126 
+0127 <span class="comment">%% hierarchical cluster tree</span>
+0128 <span class="comment">% Plot a hierarchical cluster tree relationship (denrogram) between traces.</span>
+0129 <span class="comment">% Plot reorders traces such that they correspond with the ordering of</span>
+0130 <span class="comment">% traces on the cluster tree.</span>
+0131 
+0132 c = linkage(c);
+0133 plot(c,<span class="string">'den'</span>);
+0134 close(gcf)
+0135 set(gcf,<span class="string">'Position'</span>,[50 50 600 400]);
+0136 
+0137 
+0138 <span class="comment">%% Event clusters</span>
+0139 <span class="comment">% Trim the cluster tree relationship into discrete clusters of events. Subset</span>
+0140 <span class="comment">% just the events of the largest cluster.</span>
+0141 
+0142 c = cluster(c,.8);
+0143 index = find(c,<span class="string">'CLUST'</span>,1);
+0144 c1 = subset(c,index);
+0145 plot(c1,<span class="string">'wig'</span>);
+0146 set(gcf,<span class="string">'Position'</span>,[50 50 700 400]);
+0147 
+0148 
+0149 <span class="comment">%% Coverting waveform and correlation objects</span>
+0150 <span class="comment">% Inside the CORRELATION object, waveforms are stored as WAVEFORM objects.</span>
+0151 <span class="comment">% It is possible to extract and then reinsert waveforms. This is use for</span>
+0152 <span class="comment">% carrying out trace manipulations that do not exist in the CORRELATION</span>
+0153 <span class="comment">% toolbox. Be aware if reinserting waveforms that it is possible to</span>
+0154 <span class="comment">% manipulate waveforms in ways that may be incompatible with the</span>
+0155 <span class="comment">% correlation object, removing waveforms, for example, or altering</span>
+0156 <span class="comment">% timestamps.</span>
+0157 
+0158 w  = waveform(c1);
+0159 <span class="keyword">for</span> n = 1:numel(w)
+0160      w(n) = w(n).^2 .* sign(w(n));
+0161 <span class="keyword">end</span>
+0162 c2 = correlation(c1,w);
+0163 
+0164 
+0165 <span class="comment">%% Sign traces</span>
+0166 <span class="comment">% SIGN effectively removes the ampltiude information from traces. In some</span>
+0167 <span class="comment">% cases the can improve correlations in the presence of large amplitude</span>
+0168 <span class="comment">% transients.</span>
+0169 
+0170 c2 = sign(c1);
+0171 plot(c2,<span class="string">'wig'</span>,.3);
+0172 set(gcf,<span class="string">'Position'</span>,[50 50 700 400]);
+0173 
+0174 
+0175 <span class="comment">%% Stack traces</span>
+0176 <span class="comment">% Crop, normalize and stack events. The stack is appended as an additional</span>
+0177 <span class="comment">% traces at the bottom. The first NORM call is to ensure that each trace is</span>
+0178 <span class="comment">% given equal weight in the stack. The second NORM call is to normalize the</span>
+0179 <span class="comment">% new trace stack appended to the end. STACK does not, by default, divide</span>
+0180 <span class="comment">% the summation by the number of traces.</span>
+0181 c1 = crop(c1,-4,9);
+0182 c1 = norm(c1);
+0183 c1 = stack(c1);
+0184 c1 = norm(c1);
+0185 
+0186 
+0187 <span class="comment">%% Find residual waveform</span>
+0188 <span class="comment">% Subtract the stacked waveform from all other traces. The final trace is</span>
+0189 <span class="comment">% zeroed out because it was subtracted from itself (the stack).</span>
+0190 
+0191 c2 = norm(c1);
+0192 c2 = minus(c2);
+0193 plot(c2,<span class="string">'raw'</span>,.5)
+0194 set(gcf,<span class="string">'Position'</span>,[50 50 700 400]);
+0195 
+0196 
+0197 <span class="comment">%% Interferogram</span>
+0198 <span class="comment">% Calculate the correlation and lag values on narrow time windows within</span>
+0199 <span class="comment">% each trace relative to a master event. By default, the final trace is</span>
+0200 <span class="comment">% used as the master event, which in this case is the trace stack. Both the</span>
+0201 <span class="comment">% maximum correlations and the lag times can be plotted behind a wiggle</span>
+0202 <span class="comment">% trace plot, or they can be exported as matrices. This can be a</span>
+0203 <span class="comment">% computationally intensive routine. Feedback is given to show progress</span>
+0204 <span class="comment">% through the calculation. See HELP CORRELATION/PLOT for an explanation of</span>
+0205 <span class="comment">% the lag interferogram color scale.</span>
+0206 
+0207 c1 = xcorr(c1,[1 3]);       <span class="comment">% align traces on the initial wavelet</span>
+0208 c1 = adjusttrig(c1);        <span class="comment">%     &quot;     &quot;</span>
+0209 c1 = interferogram(c1);
+0210 plot(c1,<span class="string">'int'</span>,1,<span class="string">'corr'</span>);    <span class="comment">% plot the correlation value interferogram</span>
+0211 set(gcf,<span class="string">'Position'</span>,[50 50 700 400]);
+0212 plot(c1,<span class="string">'int'</span>,1,<span class="string">'lag'</span>,.01);    <span class="comment">% plot the lag value interferogram</span>
+0213 set(gcf,<span class="string">'Position'</span>,[50 50 700 400]);
+0214 
+0215 
+0216 <span class="comment">%% Occurence plot</span>
+0217 <span class="comment">% Display stacked traces for the 10 largest clusters and plot them against</span>
+0218 <span class="comment">% the time history of the events.</span>
+0219 
+0220 c = crop(c,-3,10);
+0221 plot(c,<span class="string">'occurence'</span>,1,1:10);
+0222 set(gcf,<span class="string">'Position'</span>,[50 50 700 400]);
+0223 
+0224 
+0225 <span class="comment">%% Overlay traces</span>
+0226 <span class="comment">% Plot all traces from the largest cluster together with the stack of</span>
+0227 <span class="comment">% the traces.</span>
+0228 
+0229 index = find(c,<span class="string">'CLUST'</span>,1);
+0230 plot(c,<span class="string">'overlay'</span>,1,index);
+0231 set(gcf,<span class="string">'Position'</span>,[50 50 700 200]);
+0232 
+0233 
+0234</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

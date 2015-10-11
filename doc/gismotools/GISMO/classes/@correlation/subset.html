@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of subset</title>
+  <meta name="keywords" content="subset">
+  <meta name="description" content="c = SUBSET(c,INDEX)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@correlation</a> &gt; subset.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>subset
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>c = SUBSET(c,INDEX)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = subset(c,index) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> c = SUBSET(c,INDEX)
+ This function subsets a correlation object to include only those traces
+ specified by the vector in INDEX. If INDEX = [1 3 5], all traces except
+ for 1,3,5 are discarded. The order of traces is the same order as traces
+ appear in c.trig and c.start fields. The fields LINK or CLUST must be 
+ recalculated after subsetting as their values are no longer valid. 
+ SUBSET replaces these fileds with []. Example:
+       d = SUBSET(c,[1 3 5]);
+
+ USAGE NOTE: The returned values will be ordered as listed in the INDEX
+ vector. In most circumstances, INDEX will be monotonically increasing.
+ However, SUBSET can also be used to reorder the traces using any
+ permutation. This may include duplicate events. SUBSET(c,[5 5 5 1]) will
+ return a new object that contains three copies of trace followed by a
+ single copy of trace 1.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG adjusts the trigger times of each trace</li><li><a href="getclusterstat.html" class="code" title="function family=getclusterstat(c)">getclusterstat</a>	GETCLUSTERSTAT gets detais of individual correlation clusters.</li><li><a href="match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>	Retain matching elements of two correlation objects.</li><li><a href="minus.html" class="code" title="function c = minus(c,varargin)">minus</a>	C = MINUS(C,I)</li><li><a href="sort.html" class="code" title="function c = norm(c,varargin)">sort</a>	C = SORT(C,'TIME')</li><li><a href="stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = subset(c,index)</a>
+0002 
+0003 <span class="comment">% c = SUBSET(c,INDEX)</span>
+0004 <span class="comment">% This function subsets a correlation object to include only those traces</span>
+0005 <span class="comment">% specified by the vector in INDEX. If INDEX = [1 3 5], all traces except</span>
+0006 <span class="comment">% for 1,3,5 are discarded. The order of traces is the same order as traces</span>
+0007 <span class="comment">% appear in c.trig and c.start fields. The fields LINK or CLUST must be</span>
+0008 <span class="comment">% recalculated after subsetting as their values are no longer valid.</span>
+0009 <span class="comment">% SUBSET replaces these fileds with []. Example:</span>
+0010 <span class="comment">%       d = SUBSET(c,[1 3 5]);</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% USAGE NOTE: The returned values will be ordered as listed in the INDEX</span>
+0013 <span class="comment">% vector. In most circumstances, INDEX will be monotonically increasing.</span>
+0014 <span class="comment">% However, SUBSET can also be used to reorder the traces using any</span>
+0015 <span class="comment">% permutation. This may include duplicate events. SUBSET(c,[5 5 5 1]) will</span>
+0016 <span class="comment">% return a new object that contains three copies of trace followed by a</span>
+0017 <span class="comment">% single copy of trace 1.</span>
+0018 <span class="comment">%</span>
+0019 
+0020 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0021 <span class="comment">% $Date$</span>
+0022 <span class="comment">% $Revision$</span>
+0023 
+0024 
+0025 
+0026 <span class="comment">% RESHAPE AS COLUMN VECTOR</span>
+0027 index = reshape(index,length(index),1);
+0028 
+0029 
+0030 <span class="comment">% SELCT DESIRED DATA</span>
+0031 
+0032 c.W = c.W(index);
+0033 
+0034 c.trig = c.trig(index);
+0035 
+0036 <span class="keyword">if</span> ~isempty(c.C)
+0037     c.C = c.C(index,:);
+0038     c.C = c.C(:,index);
+0039 <span class="keyword">end</span>;
+0040 
+0041 <span class="keyword">if</span> ~isempty(c.L)
+0042     c.L = c.L(index,:);
+0043     c.L = c.L(:,index);
+0044 <span class="keyword">end</span>;
+0045 
+0046 <span class="keyword">if</span> ~isempty(c.stat)
+0047     c.stat = c.stat(index,:);
+0048 <span class="keyword">end</span>;
+0049 
+0050 c.link = [];
+0051 
+0052 <span class="keyword">if</span> ~isempty(c.clust)
+0053     c.clust = c.clust(index,:);
+0054 <span class="keyword">end</span>;
+0055 
+0056 
+0057 
+0058</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

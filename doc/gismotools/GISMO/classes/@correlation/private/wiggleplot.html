@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of wiggleplot</title>
+  <meta name="keywords" content="wiggleplot">
+  <meta name="description" content="Private method. See ../plot for details.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@correlation</a> &gt; <a href="index.html">private</a> &gt; wiggleplot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>wiggleplot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Private method. See ../plot for details.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function wiggleplot(c,scale,ord,norm) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Private method. See ../plot for details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function wiggleplot(c,scale,ord,norm)</a>
+0002 
+0003 <span class="comment">% Private method. See ../plot for details.</span>
+0004 
+0005 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0006 <span class="comment">% $Date$</span>
+0007 <span class="comment">% $Revision$</span>
+0008 
+0009 
+0010 <span class="comment">% PREP PLOT</span>
+0011 figure(<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'Position'</span>,[50 50 850 1100]);
+0012 box on;
+0013 <span class="comment">% hold on;</span>
+0014 
+0015 <span class="comment">% LOOP THROUGH WAVEFORMS</span>
+0016 wstartrel = 86400 *( get(c.W(ord),<span class="string">'START_MATLAB'</span>) - c.trig(ord));<span class="comment">% relative start time (trigger is at zero)</span>
+0017 freq = get(c.W(ord),<span class="string">'Fs'</span>);
+0018 lengths = get(c.W(ord),<span class="string">'data_length'</span>);
+0019 tr = nan(max(lengths),numel(ord)); <span class="comment">%pre allocate with nan to not plot</span>
+0020 abs_max =  max(abs(c.W(ord)));
+0021 <span class="keyword">for</span> count = 1:numel(ord)
+0022     tr(1:lengths(count),count) = <span class="keyword">...</span>
+0023         wstartrel(count) + [ 0:lengths(count)-1]'/freq(count);
+0024 <span class="keyword">end</span>;
+0025 
+0026 <span class="comment">% scale is negative because it is reversed below</span>
+0027 <span class="keyword">if</span> norm==0
+0028     <span class="comment">% GET MEAN TRACE AMPLITUDE FOR SCALING BELOW (when norm = 0)</span>
+0029     maxlist = max(abs(c.W(ord)));
+0030     normval = mean(maxlist);
+0031     d =  double(c.W(ord) .*( -scale ./ normval)+ [1:numel(ord)]',<span class="string">'nan'</span>); <span class="comment">% do not normalize trace amplitudes</span>
+0032 <span class="keyword">else</span>
+0033     abs_max(abs_max==0) = 1; <span class="comment">% ignore zero traces</span>
+0034     
+0035     d = double(c.W(ord) .* (-scale ./ abs_max)+[1:numel(ord)]',<span class="string">'nan'</span>); <span class="comment">% normalize trace amplitudes</span>
+0036 <span class="keyword">end</span>
+0037 
+0038 plot(tr,d,<span class="string">'b-'</span>,<span class="string">'LineWidth'</span>,1);
+0039 
+0040 <span class="comment">% adjust figure</span>
+0041 <span class="comment">%axis([tmin tmax 0 length(ord)+1]);</span>
+0042 axis([min(tr(:)) max(tr(:)) 0 length(ord)+1]);
+0043 set(gca,<span class="string">'YDir'</span>,<span class="string">'reverse'</span>,<span class="keyword">...</span>
+0044     <span class="string">'YTick'</span>,1:length(ord),<span class="keyword">...</span>
+0045     <span class="string">'YTickLabel'</span>,datestr(c.trig(ord),<span class="string">'yyyy-mm-dd HH:MM:SS'</span>),<span class="keyword">...</span>
+0046     <span class="string">'FontSize'</span>,6);
+0047 
+0048 xlabel(<span class="string">'Relative Time,(s)'</span>,<span class="string">'FontSize'</span>,8);
+0049 
+0050 
+0051 
+0052 <span class="comment">% replace dates with station names if stations are different</span>
+0053 <span class="keyword">if</span> ~check(c,<span class="string">'STA'</span>)
+0054     sta  = get(c,<span class="string">'STA'</span>);
+0055     chan = get(c,<span class="string">'CHAN'</span>);
+0056     
+0057     <span class="keyword">for</span> i=1:get(c,<span class="string">'TRACES'</span>)
+0058         labels(i) = strcat( sta(i) , <span class="string">'_'</span> , chan(i) );
+0059     <span class="keyword">end</span>
+0060     set( gca , <span class="string">'YTick'</span> , [1:1:get(c,<span class="string">'TRACES'</span>)] );
+0061     set( gca , <span class="string">'YTickLabel'</span> , labels );
+0062 <span class="keyword">end</span>
+0063 
+0064 
+0065 
+0066 
+0067 <span class="comment">%PRINT OUT FIGURE</span>
+0068 set(gcf, <span class="string">'paperorientation'</span>, <span class="string">'portrait'</span>);
+0069 set(gcf, <span class="string">'paperposition'</span>, [.25 .25 8 10.5] );
+0070 <span class="comment">%print(gcf, '-depsc2', 'FIG_alignwfm.ps')</span>
+0071 <span class="comment">%!ps2pdf FIG_alignwfm.ps</span>
+0072 <span class="comment">%!convert FIG_alignwfm.ps FIG_alignwfm.gif</span>
+0073 <span class="comment">%!rm FIG_alignwfm.ps</span>
+0074</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

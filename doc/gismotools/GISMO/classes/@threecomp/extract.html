@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of extract</title>
+  <meta name="keywords" content="extract">
+  <meta name="description" content="EXTRACT particle motion parameters from a threecomp object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@threecomp</a> &gt; extract.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@threecomp&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>extract
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>EXTRACT particle motion parameters from a threecomp object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function pm = extract(TC,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">EXTRACT particle motion parameters from a threecomp object
+ PM = EXTRACT(TC,[START END]) extracts particle motion parameters from a single
+ threecomp object. START and END are Matlab times which bracket the
+ extraction. The output structure, PM, is the same size as threecomp
+ object TC and has similar fields. However, instead of the particle motion
+ fields being represented by waveforms (as in TC), they are scalar values
+ that represent mean or median measures over the time interval defined by
+ START and END.
+
+ PM = EXTRACT(TC,[START END],[REC_THRESHOLD, PLAN_THRESHOLD]) The azimuth
+ and inclination coefficients only have meaning if the degree of
+ rectilinearity, and sometimes, planarity, is high. The threshold terms
+ allow users to set minimum rectilinearity and planarity values. The time
+ range set by START and END is scanned for sufficiently high
+ rectilinearity and planarity. Only those time steps which meet the
+ threshold values are included in the mean/median calculations. The
+ default values of this term err on the inclusive side [0.5 0].
+
+ see also threecomp/describe</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>	ALIGN Align and trim traces in threecomp object.</li><li><a href="cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function pm = do_one(TC,times,thresholds,num)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function pm = extract(TC,varargin)</a>
+0002 
+0003 <span class="comment">%EXTRACT particle motion parameters from a threecomp object</span>
+0004 <span class="comment">% PM = EXTRACT(TC,[START END]) extracts particle motion parameters from a single</span>
+0005 <span class="comment">% threecomp object. START and END are Matlab times which bracket the</span>
+0006 <span class="comment">% extraction. The output structure, PM, is the same size as threecomp</span>
+0007 <span class="comment">% object TC and has similar fields. However, instead of the particle motion</span>
+0008 <span class="comment">% fields being represented by waveforms (as in TC), they are scalar values</span>
+0009 <span class="comment">% that represent mean or median measures over the time interval defined by</span>
+0010 <span class="comment">% START and END.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% PM = EXTRACT(TC,[START END],[REC_THRESHOLD, PLAN_THRESHOLD]) The azimuth</span>
+0013 <span class="comment">% and inclination coefficients only have meaning if the degree of</span>
+0014 <span class="comment">% rectilinearity, and sometimes, planarity, is high. The threshold terms</span>
+0015 <span class="comment">% allow users to set minimum rectilinearity and planarity values. The time</span>
+0016 <span class="comment">% range set by START and END is scanned for sufficiently high</span>
+0017 <span class="comment">% rectilinearity and planarity. Only those time steps which meet the</span>
+0018 <span class="comment">% threshold values are included in the mean/median calculations. The</span>
+0019 <span class="comment">% default values of this term err on the inclusive side [0.5 0].</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% see also threecomp/describe</span>
+0022 
+0023 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0024 <span class="comment">% $Date$</span>
+0025 <span class="comment">% $Revision$</span>
+0026 
+0027 
+0028 <span class="keyword">if</span> ~isa(TC,<span class="string">'threecomp'</span>)
+0029     error(<span class="string">'Threecomp:extract:badArgument'</span>, <span class="keyword">...</span>
+0030         [<span class="string">'First argument must be a threecomp object.'</span>]);
+0031 <span class="keyword">end</span>
+0032 
+0033 
+0034 <span class="comment">% GET TIME WINDOW</span>
+0035 <span class="keyword">if</span> length(varargin)&gt;=1
+0036     <span class="keyword">if</span> isa(varargin{1},<span class="string">'double'</span>) &amp;&amp; numel(varargin{1})==2
+0037         times = reshape(varargin{1},1,2);
+0038     <span class="keyword">else</span>
+0039             error(<span class="string">'Threecomp:exgtract:badArgument'</span>,<span class="string">'second argument must be a two element timer vector'</span>);
+0040     <span class="keyword">end</span>
+0041 <span class="keyword">else</span>
+0042    error(<span class="string">'Threecomp:exgtract:wrongNumberArguments'</span>,<span class="string">'incorrect number of arguments'</span>); 
+0043 <span class="keyword">end</span>
+0044 
+0045 
+0046 <span class="comment">% GET THRESHOLDS</span>
+0047 <span class="keyword">if</span> length(varargin)&gt;=2
+0048     <span class="keyword">if</span> isa(varargin{2},<span class="string">'double'</span>) &amp;&amp; numel(varargin{2})==2
+0049         thresholds = reshape(varargin{2},1,2);
+0050     <span class="keyword">else</span>
+0051         error(<span class="string">'Threecomp:exgtract:badArgument'</span>,<span class="string">'third argument must be a two element timer vector'</span>);
+0052     <span class="keyword">end</span>
+0053 <span class="keyword">else</span>
+0054     thresholds = [0.5 0];
+0055 <span class="keyword">end</span>
+0056 
+0057 
+0058 
+0059 <span class="comment">% EXTRACT VALUES FOR EACH</span>
+0060 <span class="keyword">for</span> n = 1:length(TC)
+0061     [pm(n)] = <a href="#_sub1" class="code" title="subfunction pm = do_one(TC,times,thresholds,num)">do_one</a>(TC(n),times,thresholds,n);
+0062 <span class="keyword">end</span>
+0063 pm = reshape(pm,size(TC));
+0064 
+0065 
+0066 
+0067 
+0068 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0069 <span class="comment">% Extract a single set of particle motions</span>
+0070 <a name="_sub1" href="#_subfunctions" class="code">function pm = do_one(TC,times,thresholds,num)</a>
+0071 
+0072 
+0073 <span class="keyword">if</span> all(times&gt;datenum(<span class="string">'01/01/1900'</span>)) &amp;&amp; all(times&lt;datenum(<span class="string">'01/01/2100'</span>))
+0074     times = times;
+0075 <span class="keyword">elseif</span> all(abs(times)&lt;100000)
+0076     times = times./86400 + TC.trigger;
+0077 <span class="keyword">else</span>
+0078     error(<span class="string">'Threecomp:exgtract:badTimeFormat'</span>,<span class="string">'time format not recognized'</span>);
+0079 <span class="keyword">end</span>
+0080 
+0081 
+0082 <span class="comment">% EXTRACT MEAN PARTICLE MOTIONS</span>
+0083 pm.rectilinearity = double(<a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>(TC.rectilinearity,<span class="string">'TIME'</span>,times(1),times(2)));
+0084 pm.planarity = double(<a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>(TC.planarity,<span class="string">'TIME'</span>,times(1),times(2)));
+0085 pm.energy = double(<a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>(TC.energy,<span class="string">'TIME'</span>,times(1),times(2)));
+0086 pm.azimuth = double(<a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>(TC.azimuth,<span class="string">'TIME'</span>,times(1),times(2)));
+0087 pm.inclination = double(<a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>(TC.inclination,<span class="string">'TIME'</span>,times(1),times(2)));
+0088 
+0089 
+0090 <span class="comment">% GET MEAN TERMS ABOVE THRESHOLDS</span>
+0091 f = find( pm.rectilinearity&gt;=thresholds(1) &amp; pm.planarity&gt;=thresholds(2) );
+0092 pm.rectilinearity = mean(pm.rectilinearity(f));
+0093 pm.planarity = mean(pm.planarity(f));
+0094 pm.energy = mean(pm.energy(f));
+0095 pm.azimuth = median(pm.azimuth(f));
+0096 pm.inclination = median(pm.inclination(f));
+0097 pm.time = mean(times);
+0098 
+0099 <span class="comment">% TODO: include some type pf error estimate for angular parameters</span>
+0100</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

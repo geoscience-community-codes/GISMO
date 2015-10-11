@@ -1,0 +1,1026 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Catalog_base</title>
+  <meta name="keywords" content="Catalog_base">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">catalog</a> &gt; Catalog_base.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>Catalog_base
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Catalog_base.html" class="code" title="">Catalog_base</a>	</li><li><a href="EventRate.html" class="code" title="">EventRate</a>	</li><li><a href="autobinsize.html" class="code" title="function binsize = autobinsize(daysdiff)">autobinsize</a>	Copied after modgiseis.xpy/autobinsize</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Catalog_base.html" class="code" title="">Catalog_base</a>	</li><li><a href="Catalog_full.html" class="code" title="">Catalog_full</a>	</li><li><a href="Catalog_lite.html" class="code" title="">Catalog_lite</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function snum = get.snum(obj)</a></li><li><a href="#_sub2" class="code">function enum = get.enum(obj)</a></li><li><a href="#_sub3" class="code">function cobj = addfield(cobj,fieldname,val)</a></li><li><a href="#_sub4" class="code">function cobj = set(cobj, varargin)</a></li><li><a href="#_sub5" class="code">function val = get(cobj,prop_name)</a></li><li><a href="#_sub6" class="code">function plot(cobj, varargin)</a></li><li><a href="#_sub7" class="code">function plot3(cobj, varargin)</a></li><li><a href="#_sub8" class="code">function plot_time(cobj);</a></li><li><a href="#_sub9" class="code">function helenaplot(obj)</a></li><li><a href="#_sub10" class="code">function bvalue(cobj, mcType)</a></li><li><a href="#_sub11" class="code">function c = subclassify(cobj, subclasses)</a></li><li><a href="#_sub12" class="code">function erobj=eventrate(cobj, varargin)</a></li><li><a href="#_sub13" class="code">function plot_counts(cobj)</a></li><li><a href="#_sub14" class="code">function plotprmm(cobj)</a></li><li><a href="#_sub15" class="code">function eev(obj)</a></li><li><a href="#_sub16" class="code">function toDatascope(cobj, dbpath, schema)</a></li><li><a href="#_sub17" class="code">function binsize = autobinsize(cobj)</a></li><li><a href="#_sub18" class="code">function region = get_region(cobj, nsigma)</a></li><li><a href="#_sub19" class="code">function symsize = get_symsize(cobj)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="Catalog_base.html" class="code" title="">Catalog_base</a>
+0002 <span class="comment">%CATALOG_BASE: A base class that serves as a container for EVENT objects.</span>
+0003 <span class="comment">% This class is not to be used directly. Instead it is inherited by</span>
+0004 <span class="comment">% Catalog_lite and Catalog_full</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%% See also Catalog_lite, Catalog_full, ReadCatalog, Event</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Author: Glenn Thompson (glennthompson1971@gmail.com)</span>
+0009 <span class="comment">% $Date: $</span>
+0010 <span class="comment">% $Revision: $</span>
+0011     properties(GetAccess = <span class="string">'public'</span>, SetAccess = <span class="string">'private'</span>)
+0012         <span class="comment">% properties set here cannot have getters defined on them in</span>
+0013         <span class="comment">% subclasses</span>
+0014         dnum; <span class="comment">% alias for time</span>
+0015         snum;
+0016         enum;
+0017     <span class="keyword">end</span>
+0018     properties(GetAccess = <span class="string">'public'</span>, SetAccess = <span class="string">'public'</span>)
+0019         description;
+0020         misc_fields = {};
+0021         misc_values = {};
+0022     <span class="keyword">end</span>
+0023     methods (Abstract)
+0024         plus(cobj1, cobj2)
+0025     <span class="keyword">end</span>
+0026     methods
+0027 <span class="comment">%         function dnum = get.dnum(obj)</span>
+0028 <span class="comment">%             dnum = obj.time();</span>
+0029 <span class="comment">%         end</span>
+0030         <a name="_sub0" href="#_subfunctions" class="code">function snum = get.snum(obj)</a>
+0031             snum = min(obj.time());
+0032         <span class="keyword">end</span>
+0033         <a name="_sub1" href="#_subfunctions" class="code">function enum = get.enum(obj)</a>
+0034             enum = max(obj.time());
+0035         <span class="keyword">end</span>
+0036         <span class="comment">%% ADDFIELD</span>
+0037         <a name="_sub2" href="#_subfunctions" class="code">function cobj = addfield(cobj,fieldname,val)</a>
+0038             <span class="comment">%ADDFIELD add fields and values to CATALOG object(s)</span>
+0039             <span class="comment">%   cobj = addfield(cobj, fieldname, value)</span>
+0040             <span class="comment">%   This function creates a new user defined field, and fills it with the</span>
+0041             <span class="comment">%   included value.  If fieldname exists, it will overwrite the existing</span>
+0042             <span class="comment">%   value.</span>
+0043             <span class="comment">%</span>
+0044             <span class="comment">%   Input Arguments</span>
+0045             <span class="comment">%       COBJ: a Catalog object   N-DIMENSIONAL</span>
+0046             <span class="comment">%       FIELDNAME: a string name</span>
+0047             <span class="comment">%       VALUE: a value to be added for those fields.  Value can be anything</span>
+0048             <span class="comment">%</span>
+0049             <span class="comment">%   CATALOG objects can hold user-defined fields.  To access the contents,</span>
+0050             <span class="comment">%   use Catalog/get.</span>
+0051             <span class="comment">%</span>
+0052             <span class="comment">%   Example:</span>
+0053             <span class="comment">%       % add a field called &quot;TESTFIELD&quot;, containing the numbers 1-45</span>
+0054             <span class="comment">%       cobj = addfield(cobj,'TestField',1:45);</span>
+0055             <span class="comment">%</span>
+0056             <span class="comment">%       % add a cell field called &quot;MISHMOSH&quot;</span>
+0057             <span class="comment">%       cobj = addfield(cobj,'mishmosh',{'hello';'world'});</span>
+0058             <span class="comment">%</span>
+0059             <span class="comment">%       % see the result</span>
+0060             <span class="comment">%       disp(cobj)</span>
+0061             <span class="comment">%</span>
+0062             <span class="comment">% See also CATALOG/SET, CATALOG/GET</span>
+0063 
+0064             <span class="comment">% AUTHOR: Glenn Thompson</span>
+0065 
+0066             <span class="keyword">if</span> ischar(fieldname)
+0067                 mask = strcmp(fieldname, properties(cobj));
+0068                 <span class="keyword">if</span> any(mask)
+0069                     cobj = cobj.set(fieldname, val);
+0070                 <span class="keyword">else</span>
+0071                     mask = strcmp(upper(fieldname),cobj.misc_fields);
+0072                     <span class="keyword">if</span> any(mask)
+0073                         cobj = cobj.set(fieldname, val);
+0074                     <span class="keyword">else</span>
+0075                         cobj.misc_fields = [cobj.misc_fields, upper(fieldname)];
+0076                         cobj = cobj.set(upper(fieldname), val);
+0077                     <span class="keyword">end</span>
+0078                 <span class="keyword">end</span>   
+0079             <span class="keyword">else</span>
+0080                 error(<span class="string">'%s:addfield:invalidFieldname'</span>,<span class="string">'fieldname must be a string'</span>, class(cobj))
+0081             <span class="keyword">end</span>
+0082 
+0083         <span class="keyword">end</span>
+0084 
+0085         <span class="comment">%% SET</span>
+0086         <a name="_sub3" href="#_subfunctions" class="code">function cobj = set(cobj, varargin)</a>
+0087             <span class="comment">%SET Set properties for Catalog object(s)</span>
+0088             <span class="comment">%   cobj = set(cobj,'property_name', val, ['property_name2', val2])</span>
+0089             <span class="comment">%   SET is one of the two gateway functions of an object, such as Catalog.</span>
+0090             <span class="comment">%   Properties that are changed through SET are typechecked and otherwise</span>
+0091             <span class="comment">%   scrutinized before being stored within the Catalog object.  This</span>
+0092             <span class="comment">%   ensures that the other Catalog methods are all retrieving valid data,</span>
+0093             <span class="comment">%   thereby increasing the reliability of the code.</span>
+0094             <span class="comment">%</span>
+0095             <span class="comment">%   Another strong advantage to using SET and GET to change and retrieve</span>
+0096             <span class="comment">%   properties, rather than just assigning them to Catalog object directly,</span>
+0097             <span class="comment">%   is that the underlying data structure can change and grow without</span>
+0098             <span class="comment">%   harming the code that is written based on the Catalog object.</span>
+0099             <span class="comment">%</span>
+0100             <span class="comment">%   For a list of valid property names, type:</span>
+0101             <span class="comment">%       properties(cobj)</span>
+0102             <span class="comment">%</span>
+0103             <span class="comment">%   If user-defined fields were added to the Catalog object (ie, through</span>
+0104             <span class="comment">%   addField), these fieldnames are also available through set.</span>
+0105             <span class="comment">%</span>
+0106             <span class="comment">%   Examples:</span>
+0107             <span class="comment">%       (1) Change the description property</span>
+0108             <span class="comment">%           cobj = cobj.set('description','hello world');</span>
+0109             <span class="comment">%</span>
+0110             <span class="comment">%       (2) Add new a field called CLOSEST_STATION with</span>
+0111             <span class="comment">%           % the value 'MBLG'</span>
+0112             <span class="comment">%           cobj = cobj.addfield('CLOSEST_STATION','MBLG');</span>
+0113             <span class="comment">%</span>
+0114             <span class="comment">%           % change the value of the CLOSEST_STATION field</span>
+0115             <span class="comment">%           cobj = cobj.set('CLOSEST_STATION','MBWH');</span>
+0116             <span class="comment">%</span>
+0117             <span class="comment">%  See also CATALOG/GET</span>
+0118 
+0119             Vidx = 1 : numel(varargin);
+0120 
+0121             <span class="keyword">while</span> numel(Vidx) &gt;= 2
+0122                 prop_name = upper(varargin{Vidx(1)});
+0123                 val = varargin{Vidx(2)};
+0124                 mask = strcmp(upper(prop_name),upper(properties(cobj)));
+0125                 <span class="keyword">if</span> any(mask)
+0126                     mc = metaclass(cobj);
+0127                     i = find(mask);
+0128                     prop_name = mc.PropertyList(i).Name;
+0129                     <span class="keyword">if</span> isempty(mc.PropertyList(i).GetMethod)
+0130                         <span class="comment">% The properties here need to have</span>
+0131                         <span class="comment">% SetAccess==public</span>
+0132                         cobj.(prop_name) = val;
+0133                         <span class="comment">% This should work for SetAccess=private but</span>
+0134                         <span class="comment">% actually causes a segmentation fault</span>
+0135                         <span class="comment">%eval(sprintf('cobj = cobj.set(''%s'', val);',prop_name));</span>
+0136                     <span class="keyword">else</span>
+0137                         warning(<span class="string">'Property %s is a derived property and cannot be set'</span>,prop_name);
+0138                     <span class="keyword">end</span>
+0139                 <span class="keyword">else</span>
+0140                     <span class="keyword">switch</span> prop_name
+0141                         <span class="keyword">case</span> cobj.misc_fields
+0142                             mask = strcmp(prop_name,cobj.misc_fields);
+0143                             cobj.misc_values(mask) = {val};
+0144                         <span class="keyword">otherwise</span>
+0145                             error(<span class="string">'%s:set:unknownProperty'</span>,<span class="keyword">...</span>
+0146                                 <span class="string">'can''t understand property name : %s'</span>, mfilename,prop_name);
+0147                     <span class="keyword">end</span>
+0148                 <span class="keyword">end</span>
+0149                 Vidx(1:2) = []; <span class="comment">%done with those parameters, move to the next ones...</span>
+0150             <span class="keyword">end</span> 
+0151         <span class="keyword">end</span> 
+0152         
+0153         <span class="comment">%% GET</span>
+0154         <a name="_sub4" href="#_subfunctions" class="code">function val = get(cobj,prop_name)</a>
+0155             <span class="comment">%GET Get Catalog properties</span>
+0156             <span class="comment">%   val = get(Catalog_object,'property_name')</span>
+0157             <span class="comment">%</span>
+0158             <span class="comment">%   To see valid property names, type:</span>
+0159             <span class="comment">%       properties(Catalog_object)</span>
+0160             <span class="comment">%</span>
+0161             <span class="comment">%       If additional fields were added to Catalog using ADDFIELD, then</span>
+0162             <span class="comment">%       values from these can be retrieved using the fieldname</span>
+0163             <span class="comment">%</span>
+0164             <span class="comment">%       Example: Create a Catalog, get 'lon', add a field, then get the field</span>
+0165             <span class="comment">%           cobj = Catalog;</span>
+0166             <span class="comment">%           cobj = cobj.get('lon')</span>
+0167             <span class="comment">%           cobj = cobj.addfield('closest_station', 'MBLG');</span>
+0168             <span class="comment">%           cs = cobj.get('closest_station');</span>
+0169             <span class="comment">%</span>
+0170             <span class="comment">%   See also CATALOG/SET, CATALOG/ADDFIELD</span>
+0171 
+0172             mask = strcmp(prop_name, properties(cobj));
+0173             <span class="keyword">if</span> any(mask)
+0174                 val=cobj.(prop_name);
+0175             <span class="keyword">else</span>
+0176                 mask = strcmp(upper(prop_name),cobj.misc_fields);
+0177                 <span class="keyword">if</span> any(mask)
+0178                     val = cobj.misc_values{mask};
+0179                 <span class="keyword">else</span>
+0180                     warning(<span class="string">'%s:get:unrecognizedProperty'</span>,<span class="keyword">...</span>
+0181                         <span class="string">'Unrecognized property name : %s'</span>,  class(cobj), prop_name);
+0182                 <span class="keyword">end</span>
+0183             <span class="keyword">end</span>
+0184         <span class="keyword">end</span>
+0185         
+0186         <span class="comment">%% PLOT</span>
+0187         <a name="_sub5" href="#_subfunctions" class="code">function plot(cobj, varargin)</a>
+0188             <span class="comment">%PLOT plot hypocenters in 3-D</span>
+0189             <span class="comment">%   catlog_object.plot()</span>
+0190             <span class="comment">%</span>
+0191             <span class="comment">%   Optional name/value pairs:</span>
+0192             <span class="comment">%     'nsigma' - controls how zoomed-in the axes are (default</span>
+0193             <span class="comment">%     5)</span>
+0194             
+0195             <span class="comment">% Glenn Thompson 2014/06/01</span>
+0196             <span class="keyword">if</span> all(isnan(cobj.lat))
+0197                 warning(<span class="string">'No hypocenter data to plot'</span>);
+0198                 <span class="keyword">return</span>
+0199             <span class="keyword">end</span>
+0200             p = inputParser;
+0201             p.addParamValue(<span class="string">'nsigma'</span>, <span class="string">'5'</span>, @isstr);
+0202             p.parse(varargin{:});
+0203             nsigma = p.Results.nsigma;
+0204             
+0205             <span class="comment">% change region</span>
+0206             region = <a href="#_sub18" class="code" title="subfunction region = get_region(cobj, nsigma)">get_region</a>(cobj, nsigma);
+0207       
+0208             <span class="comment">% Compute Marker Size</span>
+0209             symsize = <a href="#_sub19" class="code" title="subfunction symsize = get_symsize(cobj)">get_symsize</a>(cobj);
+0210       
+0211             figure;
+0212             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gcf,<span class="string">'Color'</span>, [1 1 1]);
+0213             
+0214             <span class="comment">% lon-lat plot</span>
+0215             axes(<span class="string">'position'</span>,[0.05 0.45 0.5 0.5]);
+0216             scatter(cobj.lon, cobj.lat, symsize);
+0217             grid on;
+0218             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'XLim'</span>, [region(1) region(2)]);
+0219             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'YLim'</span>, [region(3) region(4)]);
+0220             xlabel(<span class="string">'Longitude'</span>);
+0221 
+0222             <span class="comment">% depth-longitude</span>
+0223             axes(<span class="string">'position'</span>,[0.05 0.05 0.5 0.35]);
+0224             scatter(cobj.lon, cobj.depth, symsize);
+0225             ylabel(<span class="string">'Depth (km)'</span>);
+0226             xlabel(<span class="string">'Longitude'</span>);
+0227             grid on;
+0228             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'YDir'</span>, <span class="string">'reverse'</span>);
+0229             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'XLim'</span>, [region(1) region(2)]);
+0230 
+0231             <span class="comment">% depth-lat</span>
+0232             axes(<span class="string">'position'</span>,[0.6 0.45 0.35 0.5]);
+0233             scatter(cobj.depth, cobj.lat, symsize);
+0234             xlabel(<span class="string">'Depth (km)'</span>);
+0235             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'XDir'</span>, <span class="string">'reverse'</span>);
+0236             ylabel(<span class="string">'Latitude'</span>);
+0237             grid on;
+0238             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'YLim'</span>, [region(3) region(4)]);
+0239 
+0240         <span class="keyword">end</span>
+0241 
+0242         <span class="comment">%% PLOT3</span>
+0243         <a name="_sub6" href="#_subfunctions" class="code">function plot3(cobj, varargin)</a>
+0244             <span class="comment">%PLOT3 plot hypocenters in 3-D</span>
+0245             <span class="comment">%   catlog_object.plot3()</span>
+0246             <span class="comment">%</span>
+0247             <span class="comment">%   Optional name/value pairs:</span>
+0248             <span class="comment">%     'nsigma' - controls how zoomed-in the axes are (default</span>
+0249             <span class="comment">%     5)</span>
+0250             
+0251             <span class="comment">% Glenn Thompson 2014/06/01</span>
+0252             <span class="keyword">if</span> all(isnan(cobj.lat))
+0253                 warning(<span class="string">'No hypocenter data to plot'</span>);
+0254                 <span class="keyword">return</span>
+0255             <span class="keyword">end</span>
+0256             p = inputParser;
+0257             p.addParamValue(<span class="string">'nsigma'</span>, <span class="string">'5'</span>, @isstr);
+0258             p.parse(varargin{:});
+0259             nsigma = p.Results.nsigma;            
+0260             
+0261             <span class="comment">% change region</span>
+0262             region = <a href="#_sub18" class="code" title="subfunction region = get_region(cobj, nsigma)">get_region</a>(cobj, nsigma);
+0263       
+0264             <span class="comment">% Compute Marker Size</span>
+0265             symsize = <a href="#_sub19" class="code" title="subfunction symsize = get_symsize(cobj)">get_symsize</a>(cobj);
+0266             
+0267             <span class="comment">% 3D plot</span>
+0268             figure
+0269             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gcf,<span class="string">'Color'</span>, [1 1 1]);
+0270             scatter3(cobj.lon, cobj.lat, cobj.depth, symsize);
+0271             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'ZDir'</span>, <span class="string">'reverse'</span>);
+0272             grid on;
+0273             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'XLim'</span>, [region(1) region(2)]);
+0274             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'YLim'</span>, [region(3) region(4)]);
+0275             xlabel(<span class="string">'Longitude'</span>);
+0276             ylabel(<span class="string">'Latitude'</span>);
+0277             zlabel(<span class="string">'Depth (km)'</span>);
+0278             
+0279         <span class="keyword">end</span>
+0280         
+0281         <span class="comment">%% PLOT_TIME</span>
+0282         <a name="_sub7" href="#_subfunctions" class="code">function plot_time(cobj); </a>
+0283             <span class="comment">%PLOT_TIME plot magnitude and depth against time</span>
+0284             <span class="comment">%   catlog_object.plot_time()</span>
+0285             
+0286             <span class="comment">% Glenn Thompson 2014/06/01</span>
+0287             
+0288             symsize = <a href="#_sub19" class="code" title="subfunction symsize = get_symsize(cobj)">get_symsize</a>(cobj);            
+0289 
+0290             <span class="comment">% time-depth</span>
+0291             <span class="keyword">if</span> all(isnan(cobj.depth))
+0292                 warning(<span class="string">'No depth data to plot'</span>);
+0293             <span class="keyword">else</span>
+0294                 figure;
+0295                 <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gcf,<span class="string">'Color'</span>, [1 1 1]);
+0296                 subplot(2,1,1);
+0297                 scatter(cobj.time, cobj.depth, symsize);
+0298                 <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'XLim'</span>, [floor(cobj.snum) ceil(cobj.enum)]);
+0299                 datetick(<span class="string">'x'</span>);
+0300                 xlabel(<span class="string">'Date'</span>);
+0301                 ylabel(<span class="string">'Depth (km)'</span>);
+0302                 <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'YDir'</span>, <span class="string">'reverse'</span>);
+0303                 grid on;
+0304             
+0305                 <span class="comment">% time-mag</span>
+0306                 subplot(2,1,2);
+0307             <span class="keyword">end</span>
+0308             <span class="keyword">if</span> all(isnan(cobj.mag))
+0309                 warning(<span class="string">'No magnitude data to plot'</span>);
+0310             <span class="keyword">else</span>
+0311                 scatter(cobj.time, cobj.mag, symsize);
+0312                 <span class="comment">%stem(cobj.time, cobj.mag);</span>
+0313                 <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'XLim'</span>, [floor(cobj.snum) ceil(cobj.enum)]);
+0314                 datetick(<span class="string">'x'</span>);
+0315                 xlabel(<span class="string">'Date'</span>);
+0316                 ylabel(<span class="string">'Magnitude'</span>);
+0317                 grid on;
+0318             <span class="keyword">end</span>
+0319         <span class="keyword">end</span>
+0320 
+0321                 
+0322         <span class="comment">%% HELENAPLOT</span>
+0323         <a name="_sub8" href="#_subfunctions" class="code">function helenaplot(obj)</a>
+0324             <span class="keyword">for</span> c=1:length(obj)
+0325                 figure(gcf+1)
+0326                 <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gcf,<span class="string">'Color'</span>, [1 1 1]);
+0327                 [ax, h1, h2] = plotyy(obj(c).dnum, cumsum(obj(c).mag), obj(c).dnum, cumsum(obj(c).energy), @<a href="#_sub6" class="code" title="subfunction plot(cobj, varargin)">plot</a>, @<a href="#_sub6" class="code" title="subfunction plot(cobj, varargin)">plot</a>);
+0328                 datetick(ax(1), <span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+0329                 datetick(ax(2), <span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+0330                 <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(ax(1), <span class="string">'YLabel'</span>, <span class="string">'Cumulative Magnitude'</span>);
+0331                 <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(ax(2), <span class="string">'YLabel'</span>, <span class="string">'Cumulative Energy'</span>);
+0332             <span class="keyword">end</span>
+0333         <span class="keyword">end</span>
+0334         
+0335         
+0336         <span class="comment">%% OTHER MISC PLOTTING CODES</span>
+0337 <span class="comment">%         function mapexample(cobj)</span>
+0338 <span class="comment">%             % simple epicentral plot</span>
+0339 <span class="comment">%             latmin = min(cobj1.lat) - latrange/20;</span>
+0340 <span class="comment">%             lonmin = min(cobj1.lon) - lonrange/20;</span>
+0341 <span class="comment">%             latmax = max(cobj1.lat) + latrange/20;</span>
+0342 <span class="comment">%             lonmax = max(cobj1.lon) + lonrange/20;</span>
+0343 <span class="comment">%             figure;</span>
+0344 <span class="comment">%             close all</span>
+0345 <span class="comment">%             h = worldmap([latmin latmax],[lonmin lonmax]);</span>
+0346 <span class="comment">%             load coast</span>
+0347 <span class="comment">%             plotm(lat, long)</span>
+0348 <span class="comment">%</span>
+0349 <span class="comment">%             % Add some standard datasets from Matlab</span>
+0350 <span class="comment">%             geoshow('landareas.shp', 'FaceColor', [0.15 0.5 0.15])</span>
+0351 <span class="comment">%             geoshow('worldlakes.shp', 'FaceColor', 'cyan')</span>
+0352 <span class="comment">%             geoshow('worldrivers.shp', 'Color', 'blue')</span>
+0353 <span class="comment">%             geoshow('worldcities.shp', 'Marker', '.',...</span>
+0354 <span class="comment">%                 'MarkerEdgeColor', 'red')</span>
+0355 <span class="comment">%</span>
+0356 <span class="comment">%</span>
+0357 <span class="comment">%             % Add features with textm, e.g.</span>
+0358 <span class="comment">%             % textm(64.83778, -147.71639, 'Fairbanks')</span>
+0359 <span class="comment">%             % plotm(64.83778, -147.71639, 'ro')</span>
+0360 <span class="comment">%</span>
+0361 <span class="comment">%             plotm(cobj.lat, cobj.lon, '*');</span>
+0362 <span class="comment">%         end</span>
+0363 <span class="comment">%%</span>
+0364         <a name="_sub9" href="#_subfunctions" class="code">function bvalue(cobj, mcType)</a>
+0365             <span class="comment">%BVALUE evaluate b-value, a-value and magnitude of completeness</span>
+0366             <span class="comment">% of an earthquake catalog stored in a Catalog object.</span>
+0367             <span class="comment">%</span>
+0368             <span class="comment">% BVALUE(COBJ, MCTYPE) produces a Gutenberg-Richter type plot</span>
+0369             <span class="comment">%    with the best fit line and display of b-,a-values and Mc</span>
+0370             <span class="comment">%    for the catalog object COBJ. MCTYPE is a number from 1-5</span>
+0371             <span class="comment">%    to select the algorithm used for calculation of the</span>
+0372             <span class="comment">%    magnitude of completeness. Options are:</span>
+0373             <span class="comment">%</span>
+0374             <span class="comment">%    1: Maximum curvature</span>
+0375             <span class="comment">%    2: Fixed Mc = minimum magnitude (Mmin)</span>
+0376             <span class="comment">%    3: Mc90 (90% probability)</span>
+0377             <span class="comment">%    4: Mc95 (95% probability)</span>
+0378             <span class="comment">%    5: Best combination (Mc95 - Mc90 - maximum curvature)</span>
+0379 
+0380             <span class="comment">% Liberally adapted from original code in ZMAP.</span>
+0381             <span class="comment">% Author: Silvio De Angelis, 27/07/2012 00:00:00</span>
+0382             <span class="comment">% Modified and included in Catalog by Glenn Thompson,</span>
+0383             <span class="comment">% 14/06/2014</span>
+0384 
+0385             <span class="comment">% This program is free software; you can redistribute it and/or modify</span>
+0386             <span class="comment">% it under the terms of the GNU General Public License as published by</span>
+0387             <span class="comment">% the Free Software Foundation; either version 2 of the License, or</span>
+0388             <span class="comment">% (at your option) any later version.</span>
+0389             <span class="comment">%</span>
+0390             <span class="comment">% This program is distributed in the hope that it will be useful,</span>
+0391             <span class="comment">% but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0392             <span class="comment">% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
+0393             <span class="comment">% GNU General Public License for more details.</span>
+0394             <span class="comment">%</span>
+0395             <span class="comment">% You should have received a copy of the GNU General Public License</span>
+0396             <span class="comment">% along with this program; if not, write to the</span>
+0397             <span class="comment">% Free Software Foundation, Inc.,</span>
+0398             <span class="comment">% 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.</span>
+0399 
+0400             <span class="keyword">if</span> nargin &lt; 2
+0401                 disp(<span class="string">'--------------------------------------------------------'</span>)
+0402                 disp(<span class="string">'ERROR: Usage is: Catalog.bvalue(mcType). mcType not specified'</span>)
+0403                 disp(<span class="string">'--------------------------------------------------------'</span>)
+0404                 disp(<span class="string">'mcType can be:'</span>)
+0405                 disp(<span class="string">'1: Maximum curvature'</span>)
+0406                 disp(<span class="string">'2: Fixed Mc = minimum magnitude (Mmin)'</span>)
+0407                 disp(<span class="string">'3: Mc90 (90% probability)'</span>)
+0408                 disp(<span class="string">'4: Mc95 (95% probability)'</span>)
+0409                 disp(<span class="string">'5: Best combination (Mc95 - Mc90 - maximum curvature)'</span>)
+0410                 <span class="keyword">return</span>
+0411             <span class="keyword">end</span>
+0412 
+0413             <span class="comment">% form magnitude vector - removing any NaN values with find</span>
+0414             good_magnitude_indices = find(cobj.mag &gt; -3.0);
+0415             mag = cobj.mag(good_magnitude_indices);
+0416             <span class="comment">%MIN AND MAX MAGNITUDE IN CATALOG</span>
+0417             minimum_mag = min(mag);
+0418             maximum_mag = max(mag);
+0419 
+0420             <span class="comment">%COUNT EVENTS IN EACH MAGNITUDE BIN</span>
+0421             [bval, xt2] = hist(mag, (minimum_mag:0.1:maximum_mag));
+0422 
+0423             <span class="comment">%CUMULATIVE NUMBER OF EVENTS IN EACH MAGNITUDE BIN</span>
+0424             bvalsum = cumsum(bval);
+0425 
+0426             <span class="comment">%NUMBER OF EVENTS IN EACH BIN IN REVERSE ORDER</span>
+0427             bval2 = bval(length(bval):-1:1);
+0428 
+0429             <span class="comment">%NUMBER OF EVENTS IN EACH MAGNITUDE BIN IN REVERSE ORDER</span>
+0430             bvalsum3 = cumsum(bval(length(bval):-1:1));
+0431 
+0432             <span class="comment">%BINS IN REVERSE ORDER</span>
+0433             xt3 = (maximum_mag:-0.1:minimum_mag);
+0434             backg_ab = log10(bvalsum3);
+0435 
+0436             <span class="comment">%CREATE FIGURE WINDOW AND MAKE FREQUENCY-MAGNITUDE PLOT</span>
+0437             figure(<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'Position'</span>,[0 0 600 600])
+0438 
+0439             pl = semilogy(xt3,bvalsum3,<span class="string">'sb'</span>); <span class="comment">% semilogy is same as plot, except a log (base10) scale is used for Y-axis</span>
+0440             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(pl, <span class="string">'LineWidth'</span>, [1.0],<span class="string">'MarkerSize'</span>, [10],<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);
+0441             axis square
+0442             hold on
+0443 
+0444             pl1 = semilogy(xt3,bval2,<span class="string">'^b'</span>);
+0445             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(pl1, <span class="string">'LineWidth'</span>,[1.0],<span class="string">'MarkerSize'</span>,[10],<span class="string">'MarkerFaceColor'</span>,<span class="string">'w'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);
+0446             xlabel(<span class="string">'Magnitude'</span>,<span class="string">'Fontsize'</span>, 12)
+0447             ylabel(<span class="string">'Cumulative Number'</span>,<span class="string">'Fontsize'</span>,12)
+0448             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca,<span class="string">'visible'</span>,<span class="string">'on'</span>,<span class="string">'FontSize'</span>,12,<span class="string">'FontWeight'</span>,<span class="string">'normal'</span>,<span class="keyword">...</span>
+0449                 <span class="string">'FontWeight'</span>,<span class="string">'bold'</span>,<span class="string">'LineWidth'</span>,[1.0],<span class="string">'TickDir'</span>,<span class="string">'in'</span>,<span class="string">'Ticklength'</span>,[0.01 0.01],<span class="keyword">...</span>
+0450                 <span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'Tag'</span>,<span class="string">'cufi'</span>,<span class="string">'color'</span>,<span class="string">'w'</span>)
+0451 
+0452             <span class="comment">%ESTIMATE B-VALUE (MAX LIKELIHOOD ESTIMATE)</span>
+0453             Nmin = 10;
+0454             fMccorr = 0;
+0455             fBinning = 0.1;
+0456 
+0457             <span class="keyword">if</span> length(mag) &gt;= Nmin
+0458 
+0459                 <span class="comment">%GOODNESS-OF-FIT TO POWER LAW</span>
+0460                 <span class="comment">%%%%%%%%%%%%%%%%%% mcperc_ca3.m start %%%%%%%%%%%%%%%%%%%%</span>
+0461                 <span class="comment">% This is a completeness determination test</span>
+0462 
+0463                 [bval,xt2] = hist(mag,-2:0.1:6);
+0464                 l = max(find(bval == max(bval)));
+0465                 magco0 =  xt2(l);
+0466 
+0467                 dat = [];
+0468 
+0469                 <span class="comment">%for i = magco0-0.6:0.1:magco0+0.2</span>
+0470                 <span class="keyword">for</span> i = magco0-0.5:0.1:magco0+0.7
+0471                     l = mag &gt;= i - 0.0499;
+0472                     nu = length(mag(l));
+0473                     <span class="keyword">if</span> length(mag(l)) &gt;= 25;
+0474                         <span class="comment">%[bv magco stan av] =  bvalca3(catZmap(l,:),2,2);</span>
+0475                         [mw bv2 stan2 av] =  bvalue_lib.bmemag(mag(l));
+0476                         bvalue_lib.synthb_aut;
+0477                         dat = [ dat ; i res2];
+0478                     <span class="keyword">else</span>
+0479                         dat = [ dat ; i nan];
+0480                     <span class="keyword">end</span>
+0481 
+0482                 <span class="keyword">end</span>
+0483 
+0484                 j =  min(find(dat(:,2) &lt; 10 ));
+0485                 <span class="keyword">if</span> isempty(j) == 1; Mc90 = nan ;
+0486                 <span class="keyword">else</span>;
+0487                     Mc90 = dat(j,1);
+0488                 <span class="keyword">end</span>
+0489 
+0490                 j =  min(find(dat(:,2) &lt; 5 ));
+0491                 <span class="keyword">if</span> isempty(j) == 1; Mc95 = nan ;
+0492                 <span class="keyword">else</span>;
+0493                     Mc95 = dat(j,1);
+0494                 <span class="keyword">end</span>
+0495 
+0496                 j =  min(find(dat(:,2) &lt; 10 ));
+0497                 <span class="keyword">if</span> isempty(j) == 1; j =  min(find(dat(:,2) &lt; 15 )); <span class="keyword">end</span>
+0498                 <span class="keyword">if</span> isempty(j) == 1; j =  min(find(dat(:,2) &lt; 20 )); <span class="keyword">end</span>
+0499                 <span class="keyword">if</span> isempty(j) == 1; j =  min(find(dat(:,2) &lt; 25 )); <span class="keyword">end</span>
+0500                 j2 =  min(find(dat(:,2) == min(dat(:,2)) ));
+0501                 <span class="comment">%j = min([j j2]);</span>
+0502 
+0503                 Mc = dat(j,1);
+0504                 magco = Mc;
+0505                 prf = 100 - dat(j2,2);
+0506                 <span class="keyword">if</span> isempty(magco) == 1; magco = nan; prf = 100 -min(dat(:,2)); <span class="keyword">end</span>
+0507                 <span class="comment">%display(['Completeness Mc: ' num2str(Mc) ]);</span>
+0508                 <span class="comment">%%%%%%%%%%%%%%%%%% mcperc_ca3.m end %%%%%%%%%%%%%%%%%%%%%%</span>
+0509 
+0510                 <span class="comment">%CALCULATE MC</span>
+0511                 [fMc] = bvalue_lib.calc_Mc(mag, mcType, fBinning, fMccorr);
+0512                 l = mag &gt;= fMc-(fBinning/2);
+0513                 <span class="keyword">if</span> length(mag(l)) &gt;= Nmin
+0514                     [fMeanMag, fBValue, fStd_B, fAValue] =  bvalue_lib.calc_bmemag(mag(l), fBinning);
+0515                 <span class="keyword">else</span>
+0516                     [fMc, fBValue, fStd_B, fAValue] = deal(NaN);
+0517                 <span class="keyword">end</span>
+0518 
+0519                 <span class="comment">%STANDARD DEV OF a-value SET TO NAN;</span>
+0520                 [fStd_A, fStd_Mc] = deal(NaN);
+0521 
+0522             <span class="keyword">else</span>
+0523                 [fMc, fStd_Mc, fBValue, fStd_B, fAValue, fStd_A, <span class="keyword">...</span>
+0524                     fStdDevB, fStdDevMc] = deal(NaN);
+0525             <span class="keyword">end</span>
+0526 
+0527             magco = fMc;
+0528             index_low=find(xt3 &lt; magco+.05 &amp; xt3 &gt; magco-.05);
+0529             mag_hi = xt3(1);
+0530             index_hi = 1;
+0531             mz = xt3 &lt;= mag_hi &amp; xt3 &gt;= magco-.0001;
+0532             mag_zone=xt3(mz);
+0533             y = backg_ab(mz);
+0534 
+0535             <span class="comment">%PLOT MC IN FIGURE</span>
+0536             Mc = semilogy(xt3(index_low),bvalsum3(index_low)*1.5,<span class="string">'vk'</span>);
+0537             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(Mc,<span class="string">'LineWidth'</span>,[1.0],<span class="string">'MarkerSize'</span>,7)
+0538             Mc = text(xt3(index_low)+0.2,bvalsum3(index_low)*1.5,<span class="string">'Mc'</span>);
+0539             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(Mc,<span class="string">'FontWeight'</span>,<span class="string">'normal'</span>,<span class="string">'FontSize'</span>,12,<span class="string">'Color'</span>,<span class="string">'k'</span>)
+0540 
+0541             <span class="comment">%CREATE AND PLOT FIT LINE</span>
+0542             sol_type = <span class="string">'Maximum Likelihood Solution'</span>;
+0543             bw=fBValue;
+0544             aw=fAValue;
+0545             ew=fStd_B;
+0546             p = [ -1*bw aw];
+0547             f = polyval(p,mag_zone);
+0548             f = 10.^f;
+0549             hold on
+0550             ttm= semilogy(mag_zone,f,<span class="string">'k'</span>);
+0551             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(ttm,<span class="string">'LineWidth'</span>,[2.0])
+0552             std_backg = ew;
+0553 
+0554             <span class="comment">%ERROR CALCULATIONS</span>
+0555             <span class="comment">%b = mag;</span>
+0556             bv = [];
+0557             si = [];
+0558 
+0559             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca,<span class="string">'XLim'</span>,[min(mag)-0.5  max(mag+0.5)])
+0560             <span class="comment">%set(gca,'YLim',[0.9 length(mag+30)*2.5]);</span>
+0561 
+0562             p=-p(1,1);
+0563             p=fix(100*p)/100;
+0564             tt1=num2str(bw,3);
+0565             tt2=num2str(std_backg,1);
+0566             tt4=num2str(bv,3);
+0567             tt5=num2str(si,2);
+0568             tmc=num2str(magco,2);
+0569             rect=[0 0 1 1];
+0570             h2=axes(<span class="string">'position'</span>,rect);
+0571             <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(h2,<span class="string">'visible'</span>,<span class="string">'off'</span>);
+0572             a0 = aw-log10((max(cobj.time)-min(cobj.time))/365);
+0573 
+0574             text(.53,.88, [<span class="string">'b-value = '</span>,tt1,<span class="string">' +/- '</span>,tt2,<span class="string">',  a value = '</span>,num2str(aw,3)],<span class="string">'FontSize'</span>,12);
+0575             text(.53,.85,sol_type,<span class="string">'FontSize'</span>,12 );
+0576             text(.53,.82,[<span class="string">'Magnitude of Completeness = '</span>,tmc],<span class="string">'FontSize'</span>,12);
+0577         <span class="keyword">end</span> 
+0578         
+0579         <span class="comment">%% SUBCLASSIFY</span>
+0580         <a name="_sub10" href="#_subfunctions" class="code">function c = subclassify(cobj, subclasses)</a>
+0581             <span class="comment">% c = subclassify(cobj, subclasses)</span>
+0582             <span class="keyword">if</span> strcmp(subclasses, <span class="string">'*'</span>)==0
+0583                 <span class="keyword">for</span> i = 1:length(subclasses);
+0584                     c(i) = cobj;
+0585                     subclass = subclasses(i);
+0586                     index = strfind(cobj.etype, subclass); <span class="comment">% previously findstr</span>
+0587                     <span class="keyword">if</span> numel(cobj.lat)==numel(cobj.etype)
+0588                         c(i).lat = cobj.lat(index);
+0589                         c(i).lon = cobj.lon(index);
+0590                         c(i).depth = cobj.depth(index);
+0591                     <span class="keyword">end</span>
+0592                     c(i).time = cobj.time(index);
+0593                     c(i).mag = cobj.mag(index);
+0594                     c(i).etype = cobj.etype(index);
+0595                 <span class="keyword">end</span>
+0596             <span class="keyword">end</span>     
+0597         <span class="keyword">end</span>
+0598         
+0599         <a name="_sub11" href="#_subfunctions" class="code">function erobj=eventrate(cobj, varargin)</a>
+0600             <span class="comment">%eventrate</span>
+0601             <span class="comment">% Create an EventRate object from a Catalog</span>
+0602             <span class="comment">% object, with a binsize determined automatically.</span>
+0603             <span class="comment">%   erobj = cobj.eventrate()</span>
+0604             <span class="comment">%</span>
+0605             <span class="comment">% Specify a binsize (in days):</span>
+0606             <span class="comment">%   erobj = cobj.eventrate('binsize', 1/24)</span>
+0607             <span class="comment">%</span>
+0608             <span class="comment">% Specify a stepsize (in days). Must be &lt;= stepsize.</span>
+0609             <span class="comment">%   erobj = cobj.eventrate(..., 'stepsize',1/24)</span>
+0610                          
+0611             p = inputParser;
+0612             p.addParamValue(<span class="string">'binsize'</span>, 0, @isnumeric);
+0613             p.addParamValue(<span class="string">'stepsize'</span>, 0, @isnumeric);
+0614             p.parse(varargin{:});
+0615             binsize = p.Results.binsize;
+0616             stepsize = p.Results.stepsize;
+0617             
+0618             <span class="keyword">for</span> i=1:numel(cobj)
+0619             
+0620                 <span class="keyword">if</span> ~(binsize&gt;0)
+0621                     binsize = <a href="autobinsize.html" class="code" title="function binsize = autobinsize(daysdiff)">autobinsize</a>(cobj(i));
+0622                 <span class="keyword">end</span>
+0623                 <span class="keyword">if</span> ~(stepsize&gt;0)
+0624                     stepsize = binsize;
+0625                 <span class="keyword">end</span>      
+0626                 <span class="keyword">if</span> (stepsize &gt; binsize)
+0627                    disp(sprintf(<span class="string">'Invalid value for stepsize (%f days). Cannot be greater than binsize (%f days).'</span>,stepsize, binsize));
+0628                    <span class="keyword">return</span>;
+0629                 <span class="keyword">end</span>          
+0630                 <span class="keyword">if</span> ~(binsize&gt;0)
+0631                     binsize = <a href="autobinsize.html" class="code" title="function binsize = autobinsize(daysdiff)">autobinsize</a>(cobj(i).enum-cobj(i).snum);
+0632                 <span class="keyword">end</span>
+0633                 <span class="keyword">if</span> ~(stepsize&gt;0)
+0634                     stepsize = binsize;
+0635                 <span class="keyword">end</span>      
+0636                 <span class="keyword">if</span> (stepsize &gt; binsize)
+0637                    disp(sprintf(<span class="string">'Invalid value for stepsize (%f days). Cannot be greater than binsize (%f days).'</span>,stepsize, binsize));
+0638                    <span class="keyword">return</span>;
+0639                 <span class="keyword">end</span> 
+0640 
+0641                 <span class="comment">% Find out how many event types we have</span>
+0642                 etypes = unique(cobj(i).etype);      
+0643 
+0644                 <span class="comment">% bin the data</span>
+0645                 [dnum, counts, energy, smallest_energy, <span class="keyword">...</span>
+0646                     median_energy, std, median_time_interval] = <span class="keyword">...</span>
+0647                     matlab_extensions.bin_irregular(cobj(i).time, <span class="keyword">...</span>
+0648                     magnitude.mag2eng(cobj(i).mag), <span class="keyword">...</span>
+0649                     binsize, cobj(i).snum, cobj(i).enum, stepsize);
+0650 
+0651                 <span class="comment">% create the Event Rate object</span>
+0652                 total_counts = length(cobj(i).dnum);
+0653                 numbins = numel(dnum);
+0654                 erobj(i) = <a href="EventRate.html" class="code" title="">EventRate</a>(dnum, counts, energy, median_energy, <span class="keyword">...</span>
+0655                     smallest_energy, biggest_energy, median_time_interval, total_counts, <span class="keyword">...</span>
+0656                     cobj(i).snum, cobj(i).enum, etypes, binsize, stepsize, numbins);
+0657             <span class="keyword">end</span>
+0658         <span class="keyword">end</span>
+0659 
+0660         <span class="comment">%% PLOT COUNTS / EVENTRATE</span>
+0661         <a name="_sub12" href="#_subfunctions" class="code">function plot_counts(cobj)</a>
+0662             erobj = cobj.eventrate();
+0663             erobj.plot()
+0664         <span class="keyword">end</span>
+0665         
+0666         
+0667         <span class="comment">%% PLOT Peak_rate and Max_mag</span>
+0668         <a name="_sub13" href="#_subfunctions" class="code">function plotprmm(cobj)</a>
+0669             figure
+0670             symsize = <a href="#_sub19" class="code" title="subfunction symsize = get_symsize(cobj)">get_symsize</a>(cobj);            
+0671             <span class="keyword">if</span> all(isnan(cobj.mag))
+0672                 warning(<span class="string">'No magnitude data to plot'</span>);
+0673             <span class="keyword">else</span>
+0674                 
+0675                 <span class="comment">% plot magnitudes</span>
+0676                 subplot(2,1,1), scatter(cobj.time, cobj.mag, symsize);
+0677                 <span class="comment">%stem(cobj.time, cobj.mag);</span>
+0678                 <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'XLim'</span>, [floor(cobj.snum) ceil(cobj.enum)]);
+0679                 datetick(<span class="string">'x'</span>);
+0680                 xlabel(<span class="string">'Date'</span>);
+0681                 ylabel(<span class="string">'Magnitude'</span>);
+0682                 grid on;
+0683                 
+0684                 <span class="comment">% put 'MM' label by max mag event</span>
+0685                 [mm, mmi] = max(cobj.mag);
+0686                 text(cobj.time(mmi), cobj.mag(mmi), <span class="string">'MM'</span>,<span class="string">'color'</span>,<span class="string">'r'</span>);
+0687                 disp(sprintf(<span class="string">'MM=%.1f occurs at %.1f%% of time series'</span>,mm,100*(cobj.time(mmi) - cobj.snum)/(cobj.enum-cobj.snum)));
+0688                 
+0689                 <span class="comment">% plot event rate in 100 equal bins</span>
+0690                 days = cobj.enum - cobj.snum;
+0691                 binsize = days/100;
+0692                 erobj = cobj.eventrate(<span class="string">'binsize'</span>,binsize);
+0693                 subplot(2,1,2),<a href="#_sub6" class="code" title="subfunction plot(cobj, varargin)">plot</a>(erobj.dnum, erobj.counts);
+0694                 <a href="#_sub4" class="code" title="subfunction cobj = set(cobj, varargin)">set</a>(gca, <span class="string">'XLim'</span>, [floor(cobj.snum) ceil(cobj.enum)]);
+0695                 datetick(<span class="string">'x'</span>);
+0696                 xlabel(<span class="string">'Date'</span>);
+0697                 ylabel(<span class="string">'Event Rate'</span>);
+0698                 grid on; 
+0699                 
+0700                 <span class="comment">% put 'PR' label by peak-rate</span>
+0701                 [pr, pri] = max(erobj.counts);
+0702                 text(erobj.dnum(pri), erobj.counts(pri), <span class="string">'PR'</span>,<span class="string">'color'</span>,<span class="string">'r'</span>);               
+0703                 disp(sprintf(<span class="string">'PR=%d occurs at %.1f%% of time series'</span>,pr,100*(erobj.dnum(pri) - erobj.snum)/(erobj.enum-erobj.snum)));
+0704             <span class="keyword">end</span>
+0705         <span class="keyword">end</span>
+0706         
+0707         <span class="comment">%% EEV</span>
+0708         <a name="_sub14" href="#_subfunctions" class="code">function eev(obj)</a>
+0709             <span class="comment">% eev - Browse through a catalog. Based on the Seisan program of the same name</span>
+0710             PRETRIGGER = 10/86400;
+0711             POSTTRIGGER = (60+10)/86400;
+0712             eventnum = 1;
+0713 
+0714             <span class="keyword">while</span> 1,
+0715                 
+0716                 <span class="comment">% don't beyond start or end of this catalog object</span>
+0717                 <span class="keyword">if</span> eventnum&lt;1
+0718                     eventnum=1;
+0719                 <span class="keyword">end</span>
+0720                 <span class="keyword">if</span> eventnum&gt;numel(obj.time)
+0721                     eventnum=numel(obj.time);
+0722                 <span class="keyword">end</span>           
+0723                 <span class="comment">% display line for this event</span>
+0724                 dstr=datestr(obj.time(eventnum),31);
+0725                 subclass=obj.etype(eventnum);
+0726                 mag=obj.mag(eventnum);
+0727                 outstr=sprintf(<span class="string">'%s %s %5.2f'</span>,dstr,subclass,mag);
+0728                 choice=input([outstr,<span class="string">':  ?'</span>],<span class="string">'s'</span>);           
+0729                 
+0730                 <span class="comment">% process choice</span>
+0731                 <span class="keyword">if</span> isempty(choice)
+0732                     eventnum=eventnum+1; <span class="comment">% ENTER goes to next event</span>
+0733 
+0734                 <span class="keyword">elseif</span> (choice(1)==<span class="string">'c'</span>) <span class="comment">% CLASSIFY</span>
+0735                     classify_event(time);
+0736 
+0737                 <span class="keyword">elseif</span> (choice(1)==<span class="string">'p'</span>) <span class="comment">% PLOT</span>
+0738 <span class="comment">%                     if strcmp(get(obj,'method'), 'import_aef_file')</span>
+0739 <span class="comment">%                         % AEF SUMMARY FILE FOR MBWH</span>
+0740 <span class="comment">%                         dnum = obj.dnum(eventnum);</span>
+0741 <span class="comment">%                         sfilename = dnum2sfile(dnum);</span>
+0742 <span class="comment">%                         % read the sfile</span>
+0743 <span class="comment">%                         sfile = readCatalog.read_sfile(fullfile('/raid','data','seisan','MVOE_','REA'), sfilename,'*','*')</span>
+0744 <span class="comment">% %                         wavfiles = {sfile(1).wavfiles};</span>
+0745 <span class="comment">% %                         wavpath = fullfile('/raid','data','seisan','MVOE_', 'WAV', sprintf('%04d', wavfiles{1})</span>
+0746 <span class="comment">% %                         ds = datasource('seisan', wavpath)</span>
+0747 <span class="comment">% %                         w = waveform(ds, scnl, dnum-PRETRIGGER, dnum+POSTTRIGGER);</span>
+0748 <span class="comment">%                     end</span>
+0749                     <span class="keyword">if</span> strcmp(<a href="#_sub5" class="code" title="subfunction val = get(cobj,prop_name)">get</a>(obj,<span class="string">'method'</span>), <span class="string">'load_seisandb'</span>)
+0750                         <span class="comment">% SEISAN FILE</span>
+0751                         scnl = scnlobject(<span class="string">'*'</span>, <span class="string">'*'</span>);
+0752                         ds = <a href="#_sub5" class="code" title="subfunction val = get(cobj,prop_name)">get</a>(obj, <span class="string">'datasource'</span>);
+0753                         sfile = <a href="#_sub5" class="code" title="subfunction val = get(cobj,prop_name)">get</a>(obj, <span class="string">'sfile'</span>);
+0754 
+0755                         wavfiles = {sfile(eventnum).wavfiles};
+0756                         yyyy = sfile(eventnum).year;
+0757                         mm = sfile(eventnum).month;
+0758                         dnum = sfile(eventnum).dnum;
+0759                         dbpath = <a href="#_sub5" class="code" title="subfunction val = get(cobj,prop_name)">get</a>(obj, <span class="string">'dbpath'</span>);
+0760                         dbpath = strrep(dbpath, <span class="string">'REA'</span>, <span class="string">'WAV'</span>);
+0761                         <span class="keyword">for</span> i=1:numel(wavfiles)
+0762                             wavpath = fullfile(dbpath, sprintf(<span class="string">'%04d'</span>, yyyy), sprintf(<span class="string">'%02d'</span>, mm), wavfiles{i});
+0763                             <span class="keyword">if</span> ~exist(wavpath, <span class="string">'file'</span>)
+0764                                 dbpath = strrep(dbpath, <span class="string">'WAV'</span>, <span class="string">'WAV2'</span>);
+0765                                 wavpath = fullfile(dbpath, sprintf(<span class="string">'%04d'</span>, yyyy), sprintf(<span class="string">'%02d'</span>, mm), wavfiles{i});
+0766                             <span class="keyword">end</span>
+0767                             disp(sprintf(<span class="string">'Loading %s'</span>,wavpath));
+0768                             ds = datasource(<span class="string">'seisan'</span>, wavpath);
+0769                             datestr(dnum)
+0770                             w = waveform(ds, scnl, dnum-PRETRIGGER, dnum+POSTTRIGGER);
+0771                         <span class="keyword">end</span>
+0772                         <span class="keyword">if</span> exist(<span class="string">'w'</span>,<span class="string">'var'</span>)
+0773                             mulplt(w);
+0774                         <span class="keyword">end</span>
+0775                     <span class="keyword">end</span>
+0776 
+0777                 <span class="keyword">elseif</span> (choice(1)==<span class="string">'f'</span>) <span class="comment">% FORWARD N EVENTS</span>
+0778                     num=1;
+0779                     <span class="keyword">if</span> length(choice)&gt;1
+0780                         num=str2num(choice(2:end));
+0781                     <span class="keyword">end</span>
+0782                     eventnum=eventnum+num; 
+0783 
+0784                 <span class="keyword">elseif</span> (choice(1)==<span class="string">'b'</span>) <span class="comment">% BACKWARD N EVENTS</span>
+0785                     num=1;
+0786                     <span class="keyword">if</span> length(choice)&gt;1
+0787                         num=str2num(choice(2:end));
+0788                     <span class="keyword">end</span>
+0789                     eventnum=eventnum-num;
+0790 
+0791                 <span class="keyword">elseif</span> (choice(1)==<span class="string">'t'</span>) <span class="comment">% JUMP TO TIME</span>
+0792                     month=1;dd=1;hr=0;
+0793                     <span class="keyword">if</span> length(choice)&gt;4
+0794                         year=str2num(choice(2:5));
+0795                     <span class="keyword">end</span>
+0796                     <span class="keyword">if</span> length(choice)&gt;6
+0797                         month=str2num(choice(6:7));
+0798                     <span class="keyword">end</span>
+0799                     <span class="keyword">if</span> length(choice)&gt;8
+0800                         dd=str2num(choice(8:9));
+0801                     <span class="keyword">end</span>
+0802                     <span class="keyword">if</span> length(choice)&gt;10
+0803                         hr=str2num(choice(10:11));
+0804                     <span class="keyword">end</span>
+0805                     jumpdnum=datenum(year,month,dd,hr,0,0);
+0806                     eventnum = min(find(obj.dnum &gt; jumpdnum));
+0807 
+0808                 <span class="keyword">elseif</span> (choice(1)==<span class="string">'s'</span>) <span class="comment">% SUMMARISE - SHOW S FILE or similar data</span>
+0809                     <span class="keyword">try</span>
+0810                         s = <a href="#_sub5" class="code" title="subfunction val = get(cobj,prop_name)">get</a>(obj, <span class="string">'sfile'</span>);
+0811                         disp(s(eventnum));                 
+0812                     <span class="keyword">catch</span>
+0813                         disp(<span class="string">'No Sfile'</span>);
+0814                     <span class="keyword">end</span>
+0815 
+0816                 <span class="keyword">elseif</span> (choice(1)==<span class="string">'x'</span>) <span class="comment">% CLOSE ALL</span>
+0817                     close all;
+0818 
+0819                 <span class="keyword">elseif</span> (choice==<span class="string">'q'</span>) <span class="comment">% QUIT</span>
+0820                     <span class="keyword">break</span>;
+0821 
+0822                 <span class="keyword">elseif</span> (choice(1)==<span class="string">'h'</span>) <span class="comment">% HELP</span>
+0823                     disp(<span class="string">' '</span>);
+0824                     disp(<span class="string">'Options:'</span>);
+0825                     disp(<span class="string">'________'</span>);
+0826                     disp(<span class="string">' '</span>);
+0827                     disp(<span class="string">'b[num]            - go backward 1 event (or N events)'</span>);
+0828                     disp(<span class="string">'c                 - classify'</span>);
+0829                     disp(<span class="string">'e                 - edit/generate S-file'</span>);
+0830                     disp(<span class="string">'f[num]            - go forward 1 event (or N events)'</span>);
+0831                     disp(<span class="string">'h                 - this help'</span>);
+0832                     disp(<span class="string">'p                 - plot'</span>);
+0833                     disp(<span class="string">'s                 - summarise'</span>);
+0834                     disp(<span class="string">'tYYYY[MM[DD[HH]]] - jump to date/hour specified'</span>);
+0835                     disp(<span class="string">'x                 - close all figure windows'</span>);
+0836                     disp(<span class="string">'q                 - quit'</span>);
+0837                     disp(<span class="string">' '</span>);
+0838                 <span class="keyword">end</span>
+0839             <span class="keyword">end</span>
+0840         <span class="keyword">end</span>   
+0841         
+0842         <span class="comment">%% WRITE CATALOG TO AN ANTELOPE/DATASCOPE css3.0 or aefsam0.1 DATABASE</span>
+0843         <a name="_sub15" href="#_subfunctions" class="code">function toDatascope(cobj, dbpath, schema)</a>
+0844             <span class="comment">% toDatascope Write a Catalog object to a CSS3.0 or aefsam0.1</span>
+0845             <span class="comment">%   database. Requires Antelope and Antelope Toolbox for MATLAB</span>
+0846             <span class="comment">% Usage: cobj.toDatascope('/home/t/thompson/mydb')</span>
+0847             <span class="comment">%</span>
+0848             <span class="comment">% Glenn Thompson, 4 February 2015</span>
+0849             
+0850             <span class="comment">% create new db</span>
+0851             <span class="keyword">if</span> ~exist(<span class="string">'schema'</span>,<span class="string">'var'</span>)
+0852                 schema=<span class="string">'css3.0'</span>;
+0853             <span class="keyword">end</span>
+0854             system(sprintf(<span class="string">'dbcreate -s %s %s'</span>,schema, dbpath));
+0855             system(sprintf(<span class="string">'touch %s.event'</span>,dbpath));
+0856             system(sprintf(<span class="string">'touch %s.origin'</span>,dbpath));
+0857             
+0858             <span class="comment">% open db</span>
+0859             db = dbopen(dbpath, <span class="string">'r+'</span>);
+0860             dbe = dblookup_table(db,<span class="string">'event'</span>);
+0861             dbo = dblookup_table(db,<span class="string">'origin'</span>);
+0862 
+0863             <span class="comment">% write event</span>
+0864             <span class="keyword">if</span> numel(cobj.event_list)&gt;0
+0865                 <span class="comment">% long</span>
+0866                 <span class="keyword">for</span> eventidx = 1:numel(cobj.event_list)
+0867                     evid = dbnextid(dbe,<span class="string">'evid'</span>);
+0868                     <span class="keyword">for</span> originidx = 1:numel(cobj.event_list(eventidx).origins)
+0869                         <span class="comment">% write origin record</span>
+0870                         orid = dbnextid(dbo,<span class="string">'orid'</span>);
+0871                         dbo.record = dbaddnull(dbo);
+0872                         thisorigin = cobj.event_list(eventidx).origins(originidx);
+0873                         thisorigin.evid = evid; <span class="comment">% force the evid to be consistent</span>
+0874                         thisorigin.orid = orid;
+0875                         fieldlist = fields(thisorigin);
+0876                         <span class="keyword">for</span> fieldindex = 1:numel(fieldlist)
+0877                             thisfield = fieldlist{fieldindex};
+0878                             thisvalue = thisorigin.(thisfield);
+0879                             <span class="keyword">if</span> strcmp(thisfield,<span class="string">'time'</span>)
+0880                                 thisvalue=datenum2epoch(thisvalue);
+0881                             <span class="keyword">end</span>
+0882                             <span class="keyword">if</span> isnumeric(thisvalue)
+0883                                 <span class="keyword">if</span> ~isnan(thisvalue)
+0884                                     <span class="keyword">if</span> numel(thisvalue)==1
+0885                                         <span class="keyword">try</span>
+0886                                             dbputv(dbo, thisfield, thisvalue);
+0887                                         <span class="keyword">catch</span> ME
+0888                                             thisfield, thisvalue
+0889                                             ME
+0890                                         <span class="keyword">end</span>
+0891                                     <span class="keyword">end</span>
+0892                                 <span class="keyword">end</span>
+0893                             <span class="keyword">elseif</span> ischar(thisvalue)
+0894                                 <span class="keyword">if</span> ~isempty(thisvalue)
+0895                                     <span class="keyword">try</span>
+0896                                         dbputv(dbo, thisfield, thisvalue);
+0897                                     <span class="keyword">catch</span> ME
+0898                                         thisfield, thisvalue
+0899                                         ME
+0900                                     <span class="keyword">end</span>
+0901                                 <span class="keyword">end</span>
+0902                             <span class="keyword">end</span>
+0903                         <span class="keyword">end</span>
+0904                     <span class="keyword">end</span>
+0905                     
+0906                     <span class="comment">% write event record</span>
+0907                     dbe.record = dbaddnull(dbe);
+0908                     thisevent = cobj.event_list(eventidx);
+0909                     thisevent.evid = evid;
+0910                     <span class="keyword">if</span> isnan(thisevent.prefor)
+0911                         thisevent.prefor = orid;
+0912                     <span class="keyword">end</span>
+0913                     fieldlist = fields(thisevent);
+0914                     <span class="keyword">for</span> fieldindex = 1:numel(fieldlist)
+0915                         thisfield = fieldlist{fieldindex};
+0916                         thisvalue = thisevent.(thisfield);
+0917                         <span class="keyword">if</span> isnumeric(thisvalue)
+0918                             <span class="keyword">if</span> ~isnan(thisvalue)
+0919                                 <span class="keyword">if</span> numel(thisvalue)==1
+0920                                     <span class="keyword">try</span>
+0921                                         dbputv(dbe, thisfield, thisvalue);
+0922                                     <span class="keyword">catch</span> ME
+0923                                         ME
+0924                                         thisfield, thisvalue
+0925                                     <span class="keyword">end</span>
+0926                                 <span class="keyword">end</span>
+0927                             <span class="keyword">end</span>
+0928                         <span class="keyword">elseif</span> ischar(thisvalue)
+0929                             <span class="keyword">if</span> ~isempty(thisvalue)
+0930                                 <span class="keyword">try</span>
+0931                                     dbputv(dbe, thisfield, thisvalue);
+0932                                 <span class="keyword">catch</span> ME
+0933                                     ME
+0934                                     thisfield, thisvalue
+0935                                 <span class="keyword">end</span>
+0936                             <span class="keyword">end</span>
+0937                         <span class="keyword">end</span>
+0938                     <span class="keyword">end</span>      
+0939                 <span class="keyword">end</span>
+0940             <span class="keyword">end</span>
+0941             dbclose(db);
+0942         <span class="keyword">end</span>
+0943         
+0944     <span class="keyword">end</span>
+0945 
+0946     methods (Access=protected, Hidden=true)
+0947         
+0948         <span class="comment">%% AUTOBINSIZE</span>
+0949         <a name="_sub16" href="#_subfunctions" class="code">function binsize = autobinsize(cobj)</a>
+0950             binsize = <a href="autobinsize.html" class="code" title="function binsize = autobinsize(daysdiff)">autobinsize</a>(cobj.enum - cobj.snum);
+0951         <span class="keyword">end</span>
+0952         
+0953         <span class="comment">%%</span>
+0954         <a name="_sub17" href="#_subfunctions" class="code">function region = get_region(cobj, nsigma)</a>
+0955             medianlat = nanmedian(cobj.lat);
+0956             medianlon = nanmedian(cobj.lon);
+0957             cosine = cos(medianlat);
+0958             stdevlat = nanstd(cobj.lat);
+0959             stdevlon = nanstd(cobj.lon);
+0960             rangeindeg = max([stdevlat stdevlon*cosine]) * nsigma;
+0961             region = [(medianlon - rangeindeg/2) (medianlon + rangeindeg/2) (medianlat - rangeindeg/2) (medianlat + rangeindeg/2)];
+0962         <span class="keyword">end</span>
+0963         
+0964         <span class="comment">%%</span>
+0965         <a name="_sub18" href="#_subfunctions" class="code">function symsize = get_symsize(cobj)</a>
+0966             <span class="comment">% Compute Marker Size</span>
+0967             minsymsize = 3;
+0968             maxsymsize = 50;
+0969             symsize = (cobj.mag + 2) * 10; <span class="comment">% -2- -&gt; 1, 1 -&gt; 10, 0 -&gt; 20, 1 -&gt; 30, 2-&gt; 40, 3+ -&gt; 50 etc.</span>
+0970             symsize(symsize&lt;minsymsize)=minsymsize;
+0971             symsize(symsize&gt;maxsymsize)=maxsymsize;
+0972             <span class="comment">% deal with NULL (NaN) values</span>
+0973             symsize(isnan(symsize))=minsymsize;
+0974         <span class="keyword">end</span>
+0975         
+0976     <span class="keyword">end</span>
+0977 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

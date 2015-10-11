@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of var</title>
+  <meta name="keywords" content="var">
+  <meta name="description" content="VAR Variance of a waveform's data">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">@waveform</a> &gt; var.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@waveform&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>var
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>VAR Variance of a waveform's data</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function Y = var(w,flag) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">VAR Variance of a waveform's data
+  Y = var(W), where W is an N-dimensional waveform object returns the
+  variance of the data within each waveform, normalized by N-1
+
+  Y = var(W,1) returns the variance within each waveform,
+  normalized by N.
+
+  Y = var(W,weights), where weights is a vector the same length as the
+  number of data samples, applies the weights to the variance.
+
+ See the help for MATLAB's built in VAR for more details.
+
+ Note: NAN values are completely ignored.
+
+  See also WAVEFORM/MEAN, WAVEFORM/MEDIAN, WAVEFORM/STD, NANVAR</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="var.html" class="code" title="function Y = var(w,flag)">var</a>	VAR Variance of a waveform's data</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="var.html" class="code" title="function Y = var(w,flag)">var</a>	VAR Variance of a waveform's data</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function Y = var(w,flag)</a>
+0002    <span class="comment">%VAR Variance of a waveform's data</span>
+0003    <span class="comment">%  Y = var(W), where W is an N-dimensional waveform object returns the</span>
+0004    <span class="comment">%  variance of the data within each waveform, normalized by N-1</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">%  Y = var(W,1) returns the variance within each waveform,</span>
+0007    <span class="comment">%  normalized by N.</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">%  Y = var(W,weights), where weights is a vector the same length as the</span>
+0010    <span class="comment">%  number of data samples, applies the weights to the variance.</span>
+0011    <span class="comment">%</span>
+0012    <span class="comment">% See the help for MATLAB's built in VAR for more details.</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">% Note: NAN values are completely ignored.</span>
+0015    <span class="comment">%</span>
+0016    <span class="comment">%  See also WAVEFORM/MEAN, WAVEFORM/MEDIAN, WAVEFORM/STD, NANVAR</span>
+0017    
+0018    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0019    <span class="comment">% $Date$</span>
+0020    <span class="comment">% $Revision$</span>
+0021    
+0022    Y = zeros(size(w));
+0023    
+0024    <span class="comment">%if the statistics toolbox is installed, use the builtin nanvar function to</span>
+0025    <span class="comment">%ignore NaN values during the variance calculation.</span>
+0026    <span class="keyword">if</span> ~<a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(ver(<span class="string">'stats'</span>))
+0027       <span class="keyword">if</span> exist(<span class="string">'flag'</span>,<span class="string">'var'</span>)
+0028          <span class="keyword">for</span> n = 1:numel(Y)
+0029             Y(n) = nanvar(w(n).data,flag);
+0030          <span class="keyword">end</span>
+0031       <span class="keyword">else</span>
+0032          <span class="keyword">for</span> n = 1:numel(Y)
+0033             Y(n) = nanvar(w(n).data);
+0034          <span class="keyword">end</span>
+0035       <span class="keyword">end</span>
+0036    <span class="keyword">else</span>
+0037       <span class="comment">% the statistics toolbox is not installed, so any nan values will have</span>
+0038       <span class="comment">% to be dealt with (ignored) manually.</span>
+0039       <span class="keyword">if</span> exist(<span class="string">'flag'</span>,<span class="string">'var'</span>)
+0040          <span class="keyword">for</span> n = 1:numel(Y)
+0041             d = w(n).data;
+0042             <span class="comment">%d = d(~isnan(d));</span>
+0043             Y(n) = <a href="var.html" class="code" title="function Y = var(w,flag)">var</a>(d(~isnan(d)),flag);
+0044          <span class="keyword">end</span>
+0045       <span class="keyword">else</span>
+0046          <span class="keyword">for</span> n = 1:numel(Y)
+0047             d = w(n).data;
+0048             <span class="comment">%d = d(~isnan(d));</span>
+0049             Y(n) = <a href="var.html" class="code" title="function Y = var(w,flag)">var</a>(d(~isnan(d)));
+0050          <span class="keyword">end</span>
+0051       <span class="keyword">end</span>
+0052    <span class="keyword">end</span>
+0053 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

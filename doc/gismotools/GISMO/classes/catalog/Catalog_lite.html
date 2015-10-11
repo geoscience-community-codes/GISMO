@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Catalog_lite</title>
+  <meta name="keywords" content="Catalog_lite">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">catalog</a> &gt; Catalog_lite.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>Catalog_lite
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Catalog_base.html" class="code" title="">Catalog_base</a>	</li><li><a href="Catalog_lite.html" class="code" title="">Catalog_lite</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="Catalog_lite.html" class="code" title="">Catalog_lite</a>	</li><li><a href="readCatalog.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog</a>	READCATALOG: Read seismic events from common file formats & data sources.</li><li><a href="readCatalog2.html" class="code" title="function self = readCatalog(catalog_source, varargin)">readCatalog2</a>	READCATALOG: Read seismic events from common file formats & data sources.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = Catalog_lite(lat, lon, depth, time, mag, etype, varargin)</a></li><li><a href="#_sub2" class="code">function cobj = plus(cobj1, cobj2)</a></li><li><a href="#_sub3" class="code">function write(cobj, dbpath)</a></li><li><a href="#_sub4" class="code">function w=towaveform(obj)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="Catalog_lite.html" class="code" title="">Catalog_lite</a> &lt; <a href="Catalog_base.html" class="code" title="">Catalog_base</a>
+0002 <span class="comment">%CATALOG_LITE: A fast version of Catalog that does not support deeper</span>
+0003 <span class="comment">%classes such as EVENT, ORIGIN, MAGNITUDE, ARRIVAL etc.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% Catalog_lite is modelled after the Catalog class, but is far faster to</span>
+0006 <span class="comment">% use in cases where there are large numbers of events to load</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%% USAGE</span>
+0009 <span class="comment">%   cobj = Catalog_lite(lat, lon, depth, time, mag, etype)</span>
+0010 <span class="comment">%      where each input is a vector of the same size</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%% EXAMPLE</span>
+0013 <span class="comment">% %</span>
+0014 <span class="comment">%   lat = [62.654 62.632 62.656];</span>
+0015 <span class="comment">%   lon = [-145.321 -145.318 -145.337];</span>
+0016 <span class="comment">%   depth = [2.4 2.9 3.7];</span>
+0017 <span class="comment">%   time = [datenum(2001,1,7,16,54,32) datenum(2001,1,7,16,55,35) ...</span>
+0018 <span class="comment">%   datenum(2001,1,7,17,13,12)];</span>
+0019 <span class="comment">%   mag = [1.4 1.8 1.5];</span>
+0020 <span class="comment">%   etype = 'tth';</span>
+0021 <span class="comment">%   cobj = Catalog_lite(lat, lon, depth, time, mag, etype);</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%   This is a trivial example with only 3 origins. In general,</span>
+0024 <span class="comment">%   a Catalog_lite may contain tens of thousands of events.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%% See also CATALOG, EVENTRATE, READEVENTS, CATALOG_COOKBOOK</span>
+0028 <span class="comment">%</span>
+0029 <span class="comment">% Author: Glenn Thompson (glennthompson1971@gmail.com)</span>
+0030 <span class="comment">% $Date: $</span>
+0031 <span class="comment">% $Revision: $</span>
+0032 <span class="comment">% 20141121 Glenn Thompson added write method to export to CSS3.0 origin</span>
+0033 <span class="comment">% table</span>
+0034 
+0035     properties(GetAccess = <span class="string">'public'</span>, SetAccess = <span class="string">'public'</span>)
+0036         <span class="comment">% These cannot be defined in Catalog_base as could not then define</span>
+0037         <span class="comment">% getters for them in Catalog</span>
+0038         lat;
+0039         lon;
+0040         depth;
+0041         time;
+0042         mag;
+0043         etype;
+0044     <span class="keyword">end</span>
+0045     methods
+0046         <a name="_sub0" href="#_subfunctions" class="code">function obj = Catalog_lite(lat, lon, depth, time, mag, etype, varargin)</a>
+0047             <span class="comment">% Parse required, optional and param-value pair arguments,</span>
+0048             <span class="comment">% set default values, and add validation conditions</span>
+0049             p = inputParser;
+0050             p.addRequired(<span class="string">'lat'</span>, @isnumeric);
+0051             p.addRequired(<span class="string">'lon'</span>, @isnumeric);
+0052             p.addRequired(<span class="string">'depth'</span>, @isnumeric);
+0053             p.addRequired(<span class="string">'time'</span>, @isnumeric);
+0054             p.addRequired(<span class="string">'mag'</span>, @isnumeric);
+0055             p.addRequired(<span class="string">'etype'</span>, @isstr);
+0056             p.addParamValue(<span class="string">'description'</span>, <span class="string">''</span>, @isstr);
+0057             p.parse(lat, lon, depth, time, mag, etype, varargin{:});
+0058             fields = fieldnames(p.Results);
+0059             <span class="keyword">for</span> i=1:length(fields)
+0060                 field=fields{i};
+0061                 val = p.Results.(field);
+0062                 obj = obj.set(field, val);
+0063             <span class="keyword">end</span>
+0064         <span class="keyword">end</span>
+0065          
+0066         <a name="_sub1" href="#_subfunctions" class="code">function cobj = plus(cobj1, cobj2)</a>
+0067 
+0068             cobj = [];
+0069 
+0070             <span class="keyword">if</span> nargin&lt;2
+0071                 <span class="keyword">return</span>
+0072             <span class="keyword">end</span>
+0073             
+0074             <span class="keyword">if</span> isempty(cobj1)
+0075                 cobj = cobj2;
+0076                 <span class="keyword">return</span>
+0077             <span class="keyword">end</span>
+0078             
+0079             <span class="keyword">if</span> isempty(cobj2)
+0080                 cobj = cobj1;
+0081                 <span class="keyword">return</span>
+0082             <span class="keyword">end</span>            
+0083 
+0084             <span class="keyword">if</span> isempty(cobj1.time) &amp; isempty(cobj2.time)
+0085                 <span class="keyword">return</span>
+0086             <span class="keyword">end</span>
+0087 
+0088             <span class="keyword">if</span> isempty(cobj1.time)
+0089                 cobj = cobj2;  
+0090             <span class="keyword">elseif</span> isempty(cobj2.time)
+0091                 cobj = cobj1;
+0092             <span class="keyword">else</span>
+0093                 cobj = cobj1; 
+0094                 props = {<span class="string">'time'</span>;<span class="string">'mag'</span>;<span class="string">'lat'</span>;<span class="string">'lon'</span>;<span class="string">'depth'</span>;<span class="string">'etype'</span>};
+0095                 <span class="keyword">for</span> i=1:length(props)
+0096                     prop = props{i};
+0097                     cobj.(prop) = [cobj1.(prop) cobj2.(prop)];
+0098                 <span class="keyword">end</span>
+0099             <span class="keyword">end</span>
+0100         <span class="keyword">end</span>
+0101         
+0102         <a name="_sub2" href="#_subfunctions" class="code">function write(cobj, dbpath)</a>
+0103             <span class="comment">% Catalog_lite.write Write a Catalog object to an Antelope</span>
+0104             <span class="comment">% CSS3.0 origin table</span>
+0105             
+0106             <span class="comment">% See if the database already exists</span>
+0107             db = dbopen(dbpath, <span class="string">'r+'</span>);
+0108             db = dblookup_table(db, <span class="string">'origin'</span>)
+0109             <span class="keyword">for</span> i=1:numel(cobj.time)
+0110                 <span class="comment">%db.record = i-1;</span>
+0111                 db.record = dbaddnull(db);
+0112                 orid = dbnextid(db, <span class="string">'orid'</span>);
+0113                 evid = dbnextid(db, <span class="string">'evid'</span>);
+0114                 dbputv(db, <span class="string">'orid'</span>, orid, <span class="string">'evid'</span>, evid, <span class="string">'time'</span>, datenum2epoch(cobj.time(i)), <span class="string">'lat'</span>, cobj.lat(i), <span class="string">'lon'</span>, cobj.lon(i), <span class="string">'depth'</span>, cobj.depth(i), <span class="string">'ml'</span>, cobj.mag(i));
+0115             <span class="keyword">end</span>
+0116             dbclose(db)
+0117         <span class="keyword">end</span>
+0118         
+0119         <a name="_sub3" href="#_subfunctions" class="code">function w=towaveform(obj)</a>
+0120              w{1,1} = waveform();
+0121              <span class="keyword">if</span> strcmp(get(obj,<span class="string">'method'</span>), <span class="string">'load_seisandb'</span>)
+0122                 <span class="comment">% SEISAN FILE</span>
+0123                 scnl = scnlobject(<span class="string">'*'</span>, <span class="string">'*'</span>);
+0124                 ds = get(obj, <span class="string">'datasource'</span>);
+0125                 sfile = get(obj, <span class="string">'sfile'</span>);
+0126                 datestr([sfile.dnum])
+0127                 <span class="keyword">for</span> k=1:numel([sfile.dnum])
+0128                     wavfiles = {sfile(k).wavfiles};
+0129                     yyyy = sfile(k).year;
+0130                     mm = sfile(k).month;
+0131                     dnum = sfile(k).dnum;
+0132                     dbpath = get(obj, <span class="string">'dbpath'</span>);
+0133                     dbpath = strrep(dbpath, <span class="string">'REA'</span>, <span class="string">'WAV'</span>);
+0134                     <span class="keyword">for</span> i=1:numel(wavfiles)
+0135                         wavpath = strtrim(fullfile(dbpath, sprintf(<span class="string">'%04d'</span>, yyyy), sprintf(<span class="string">'%02d'</span>, mm), wavfiles{i}));
+0136                         <span class="keyword">if</span> exist(wavpath, <span class="string">'file'</span>)
+0137                             <span class="comment">%disp(sprintf('Loading %s',wavpath));</span>
+0138                             ds = datasource(<span class="string">'seisan'</span>, wavpath);
+0139                             w{k,i}=waveform(ds, scnl, dnum, dnum+300/86400);
+0140                         <span class="keyword">else</span>
+0141                            disp(sprintf(<span class="string">'Not found: %s'</span>,wavpath));
+0142                         <span class="keyword">end</span>
+0143                     <span class="keyword">end</span>         
+0144                 <span class="keyword">end</span>
+0145              <span class="keyword">end</span>
+0146         <span class="keyword">end</span>
+0147                 
+0148                 
+0149                 
+0150     <span class="keyword">end</span>
+0151 
+0152 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

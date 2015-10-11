@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of overlayplot</title>
+  <meta name="keywords" content="overlayplot">
+  <meta name="description" content="Private method. See ../plot for details.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">@correlation</a> &gt; <a href="index.html">private</a> &gt; overlayplot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/@correlation/private&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>overlayplot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>Private method. See ../plot for details.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function overlayplot(c,scale,ord) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Private method. See ../plot for details.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function overlayplot(c,scale,ord)</a>
+0002 
+0003 <span class="comment">% Private method. See ../plot for details.</span>
+0004 
+0005 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0006 <span class="comment">% $Date$</span>
+0007 <span class="comment">% $Revision$</span>
+0008 
+0009 
+0010 <span class="comment">% PREP PLOT</span>
+0011 figure(<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'Position'</span>,[50 50 850 200]);
+0012 box on; hold on;
+0013 
+0014 
+0015 <span class="comment">% GET TEMP CORRELATION OBJECT</span>
+0016 c1 = correlation(c);
+0017 c1 = set(c1,<span class="string">'WAVEFORMS'</span>, get(c,<span class="string">'WAVEFORMS'</span>) );
+0018 c1 = set(c1,<span class="string">'TRIG'</span>, get(c,<span class="string">'TRIG'</span>) );
+0019 c1 = subset(c1,ord);
+0020 c1 = norm(c1);
+0021 c1 = stack(c1);
+0022 c1 = norm(c1);
+0023 
+0024 
+0025 <span class="comment">% GET MEAN TRACE AMPLITUDE FOR SCALING BELOW</span>
+0026 maxlist = [];
+0027 <span class="keyword">for</span> i = 1:length(c1.trig)
+0028     maxlist(end+1) = max(abs( get(c1.W(i),<span class="string">'DATA'</span>) ));
+0029 <span class="keyword">end</span>;
+0030 normval = mean(maxlist);
+0031 
+0032 
+0033 <span class="comment">% LOOP THROUGH WAVEFORMS</span>
+0034 tmin =  999999;
+0035 tmax = -999999;
+0036 count = 0;
+0037 <span class="keyword">for</span> i = 1:length(c1.trig)-1
+0038     count = count + 1;
+0039     d = get(c1.W(i),<span class="string">'DATA'</span>);
+0040     d = scale * d/normval;
+0041     d = -1 * d;                 <span class="comment">% because scale is reversed below</span>
+0042     wstartrel = 86400*(get(c1.W(i),<span class="string">'START_MATLAB'</span>)-c1.trig(i));    <span class="comment">% relative start time (trigger is at zero)</span>
+0043     tr = wstartrel + [ 0:length(d)-1]'/get(c1.W(i),<span class="string">'Fs'</span>); 
+0044     plot(tr,d,<span class="string">'-'</span>,<span class="string">'Color'</span>,[.4 .4 1],<span class="string">'LineWidth'</span>,1);
+0045     <span class="comment">% save min and max relative trace times</span>
+0046     <span class="keyword">if</span> tr(1) &lt; tmin
+0047         tmin = tr(1);
+0048     <span class="keyword">end</span>;
+0049     <span class="keyword">if</span> tr(end) &gt; tmax
+0050         tmax = tr(end);
+0051     <span class="keyword">end</span>;
+0052 
+0053 <span class="keyword">end</span>;
+0054 
+0055 
+0056 <span class="comment">% PLOT THE STACK OF TRACES</span>
+0057 d = get(c1.W(end),<span class="string">'DATA'</span>);
+0058 d = scale * d/normval;            
+0059 d = -1 * d;                 
+0060 wstartrel = 86400*(get(c1.W(end),<span class="string">'START_MATLAB'</span>)-c1.trig(end));
+0061 tr = wstartrel + [ 0:length(d)-1]'/get(c1.W(end),<span class="string">'Fs'</span>); 
+0062 plot(tr,d,<span class="string">'k-'</span>,<span class="string">'LineWidth'</span>,2);
+0063 
+0064 
+0065 <span class="comment">% adjust figure</span>
+0066 axis([tmin tmax -1.1 1.1]);
+0067 set(gca,<span class="string">'YDir'</span>,<span class="string">'reverse'</span>);
+0068 set(gca,<span class="string">'YTick'</span>,[]);
+0069 xlabel(<span class="string">'Relative Time,(s)'</span>,<span class="string">'FontSize'</span>,8);
+0070 text(tmin,-0.8,[<span class="string">' ('</span> num2str(length(c1.trig)-1) <span class="string">' traces)'</span>],<span class="string">'HorizontalAlignment'</span>,<span class="string">'Left'</span>);
+0071 
+0072 
+0073 <span class="comment">%PRINT OUT FIGURE</span>
+0074 set(gcf, <span class="string">'paperorientation'</span>, <span class="string">'portrait'</span>);
+0075 set(gcf, <span class="string">'paperposition'</span>, [.25 5 8 2] );
+0076 <span class="comment">%print(gcf, '-depsc2', 'FIG_alignwfm.ps')</span>
+0077 
+0078</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

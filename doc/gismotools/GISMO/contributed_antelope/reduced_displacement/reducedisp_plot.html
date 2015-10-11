@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of reducedisp_plot</title>
+  <meta name="keywords" content="reducedisp_plot">
+  <meta name="description" content="REDUCEDISP_PLOT plot reduced displacement data.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">contributed_antelope</a> &gt; <a href="index.html">reduced_displacement</a> &gt; reducedisp_plot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_antelope/reduced_displacement&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>reducedisp_plot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>REDUCEDISP_PLOT plot reduced displacement data.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function reducedisp_plot(dbname) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">REDUCEDISP_PLOT plot reduced displacement data.
+
+REDUCEDISP_PLOT(DBNAME) is really just an example script that shows how a
+custom reduced displacement plot can be made. For most applications users
+will want more custom control over the data.  See below.
+
+ This finction reads in a reduced displacement database and plot it as a
+ function of time. As an intermediate step it also creates a version of
+ the database table that is matlab formatted. The name of this file is the
+ same as the database table except that the .wfmeas extension is replaced
+ by .mat. This function automatically writes out a postscript plot of the
+ results named FIG_reducedisp.ps. If this file already exists, it is
+ overwritten without asking. To generate custom plots, copy this function
+ to a local location and use it as a template:
+ &gt;&gt; which reducedisp_plot
+    /[SomePathName]/reducedisp_plot
+ cp /[SomePathName]/reducedisp_plot .  (outside matlab)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function reducedisp_plot(dbname)</a>
+0002 
+0003 <span class="comment">%REDUCEDISP_PLOT plot reduced displacement data.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%REDUCEDISP_PLOT(DBNAME) is really just an example script that shows how a</span>
+0006 <span class="comment">%custom reduced displacement plot can be made. For most applications users</span>
+0007 <span class="comment">%will want more custom control over the data.  See below.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% This finction reads in a reduced displacement database and plot it as a</span>
+0010 <span class="comment">% function of time. As an intermediate step it also creates a version of</span>
+0011 <span class="comment">% the database table that is matlab formatted. The name of this file is the</span>
+0012 <span class="comment">% same as the database table except that the .wfmeas extension is replaced</span>
+0013 <span class="comment">% by .mat. This function automatically writes out a postscript plot of the</span>
+0014 <span class="comment">% results named FIG_reducedisp.ps. If this file already exists, it is</span>
+0015 <span class="comment">% overwritten without asking. To generate custom plots, copy this function</span>
+0016 <span class="comment">% to a local location and use it as a template:</span>
+0017 <span class="comment">% &gt;&gt; which reducedisp_plot</span>
+0018 <span class="comment">%    /[SomePathName]/reducedisp_plot</span>
+0019 <span class="comment">% cp /[SomePathName]/reducedisp_plot .  (outside matlab)</span>
+0020 
+0021 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0022 <span class="comment">% $Date$</span>
+0023 <span class="comment">% $Revision$</span>
+0024 
+0025 
+0026 
+0027 
+0028 db = dbopen(dbname,<span class="string">'r'</span>);
+0029 db = dblookup(db,<span class="string">''</span>,<span class="string">'wfmeas'</span>,<span class="string">''</span>,<span class="string">''</span>);
+0030 <span class="comment">%db = dbsubset(db,'chan =~ /HHZ/');</span>
+0031 <span class="comment">%db = dbsubset(db,'sta =~ /BEZC/');</span>
+0032 <span class="comment">%db = dbsubset(db,'time &gt; &quot;01/05/2006 00:00:00&quot;');</span>
+0033 <span class="comment">%db = dbsubset(db,'time &lt; &quot;01/14/2006 00:00:00&quot;');</span>
+0034 nrecords = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0035 display([<span class="string">'Number of records: '</span> num2str(nrecords)]);
+0036 [sta,chan,tmeas,val1] = dbgetv(db,<span class="string">'sta'</span>,<span class="string">'chan'</span>,<span class="string">'tmeas'</span>,<span class="string">'val1'</span>);
+0037 tmeas = epoch2datenum(tmeas);
+0038 dbclose(db);
+0039 save([dbname <span class="string">'.mat'</span>])
+0040 
+0041 
+0042 
+0043 <span class="comment">%%%%%%%%%%%%%%%%%% 32 or 64 %%%%%%%%%%%%%%%%%%%%</span>
+0044 
+0045 
+0046 figure(<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'Position'</span>,[50 500 1200 400]);
+0047 set(gcf,<span class="string">'DefaultAxesFontSize'</span>,14);
+0048 set(gca,<span class="string">'YScale'</span>,<span class="string">'log'</span>);
+0049 
+0050 semilogy(tmeas,val1,<span class="string">'o'</span>,<span class="string">'Color'</span>,<span class="string">'k'</span>,<span class="string">'MarkerSize'</span>,4,<span class="string">'LineWidth'</span>,.25,<span class="string">'MarkerFaceColor'</span>,<span class="string">'y'</span>);
+0051 xlim([min(tmeas) max(tmeas)]);
+0052 ylim( 0.5*[min(val1) 2*max(val1)] );
+0053 grid on; box on; hold on;
+0054 
+0055 <span class="comment">%xlim([min(tmeas) max(tmeas)]);</span>
+0056 <span class="comment">%xticklist = {'1/1/2006' '1/10/2006' '1/20/2006' '2/1/2006' '2/10/2006' '2/20/2006' '3/1/2006' '3/10/2006' '3/20/2006' '4/1/2006'};</span>
+0057 <span class="comment">%set(gca,'XTick',datenum(xticklist));</span>
+0058 ylabel(<span class="string">'Reduced displacement (cm^2)'</span>);
+0059 datetick(<span class="string">'x'</span>,6,<span class="string">'KeepTicks'</span>);
+0060 
+0061 set(gcf, <span class="string">'paperorientation'</span>, <span class="string">'landscape'</span>);
+0062 set(gcf, <span class="string">'paperposition'</span>, [.25 4 10.5 3] );
+0063 print(gcf, <span class="string">'-depsc2'</span>, <span class="string">'FIG_reducedisp.ps'</span>)
+0064 
+0065 
+0066 
+0067</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

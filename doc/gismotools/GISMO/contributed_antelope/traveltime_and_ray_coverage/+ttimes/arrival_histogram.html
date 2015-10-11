@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of arrival_histogram</title>
+  <meta name="keywords" content="arrival_histogram">
+  <meta name="description" content="ARRIVAL_HISTOGRAM compare the number of arrivals to each station.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">contributed_antelope</a> &gt; <a href="#">traveltime_and_ray_coverage</a> &gt; <a href="index.html">+ttimes</a> &gt; arrival_histogram.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>arrival_histogram
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>ARRIVAL_HISTOGRAM compare the number of arrivals to each station.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function arrival_histogram(dbName) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">ARRIVAL_HISTOGRAM compare the number of arrivals to each station.
+ ARRIVAL_HISTOGRAM(dbName) creates plot comparing the number of P and S
+ phase arrivals at each station.
+
+ see also ttimes.<a href="dbload.html" class="code" title="function [origin,site,arrival,ray] = dbload(dbName)">dbload</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function arrival_histogram(dbName)</a>
+0002 
+0003 <span class="comment">%ARRIVAL_HISTOGRAM compare the number of arrivals to each station.</span>
+0004 <span class="comment">% ARRIVAL_HISTOGRAM(dbName) creates plot comparing the number of P and S</span>
+0005 <span class="comment">% phase arrivals at each station.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% see also ttimes.dbload</span>
+0008 
+0009 
+0010 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0011 <span class="comment">% $Date$</span>
+0012 <span class="comment">% $Revision$</span>
+0013 
+0014 
+0015 
+0016 <span class="comment">% LOAD DATABASE</span>
+0017 [origin,site,arrival,ray] = ttimes.dbload(dbName);
+0018 
+0019 
+0020 <span class="comment">% ADD STATION NUMBERS</span>
+0021 site.stationNum = 1:numel(site.sta);
+0022 <span class="keyword">for</span> n = 1:numel(site.stationNum)
+0023     f = find(strcmp(site.sta(n),arrival.sta));
+0024    arrival.stationNum(f) = site.stationNum(n); 
+0025 <span class="keyword">end</span>
+0026 arrival.stationNum =  arrival.stationNum';
+0027  
+0028 
+0029 <span class="comment">% ARRIVAL HISTOGRAMS</span>
+0030 figure(<span class="string">'Position'</span>,[0 0 1100 850],<span class="string">'Color'</span>,<span class="string">'w'</span>);
+0031 set(gcf,<span class="string">'DefaultAxesFontSize'</span>,14);
+0032 set(gcf,<span class="string">'DefaultAxesLineWidth'</span>,0.25);
+0033 <span class="comment">%</span>
+0034 f = find(strcmp(arrival.iphase,<span class="string">'P'</span>));
+0035 nP = hist(arrival.stationNum(f),site.stationNum);
+0036 f = find(strcmp(arrival.iphase,<span class="string">'S'</span>));
+0037 nS = hist(arrival.stationNum(f),site.stationNum);
+0038 h = bar(site.stationNum,[nP' nS'],1.8)
+0039 set(h(1),<span class="string">'FaceColor'</span>,<span class="string">'r'</span>);
+0040 set(h(2),<span class="string">'FaceColor'</span>,[0.7 0.7 0.7]);
+0041 legend(<span class="string">'P wave arrivals'</span>,<span class="string">'S wave arrivals'</span>)
+0042 <span class="comment">%xlabel('Station name');</span>
+0043 ylabel(<span class="string">'No. of phase arrivals'</span>);
+0044 
+0045 <span class="comment">% place rotated x-axis labels</span>
+0046 set(gca,<span class="string">'XTick'</span>,1:12,<span class="string">'XTickLabel'</span>,<span class="string">''</span>) 
+0047 xAxisHandle = get(gca,<span class="string">'XLabel'</span>); 
+0048 set(xAxisHandle,<span class="string">'Units'</span>,<span class="string">'data'</span>); 
+0049 pos = get(xAxisHandle,<span class="string">'Position'</span>); 
+0050 y = pos(2); 
+0051 <span class="keyword">for</span> n = 1:size(site.sta,1) 
+0052 t(n) = text(site.stationNum(n),y,site.sta(n,:)); 
+0053 <span class="keyword">end</span> 
+0054 set(t,<span class="string">'Rotation'</span>,90,<span class="string">'HorizontalAlignment'</span>,<span class="string">'right'</span>) 
+0055 
+0056 set(gcf, <span class="string">'paperorientation'</span>, <span class="string">'landscape'</span>);
+0057 set(gcf, <span class="string">'paperposition'</span>, [.5 .5 10 6.5] );
+0058 print(gcf, <span class="string">'-dpsc2'</span>, <span class="string">'FIG_arrival_histogram.ps'</span>);
+0059 
+0060 
+0061 
+0062</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of write_lotos</title>
+  <meta name="keywords" content="write_lotos">
+  <meta name="description" content="WRITE_LOTOS write files for LOTOS tomography codes.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">contributed_antelope</a> &gt; <a href="#">traveltime_and_ray_coverage</a> &gt; <a href="index.html">+ttimes</a> &gt; write_lotos.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>write_lotos
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>WRITE_LOTOS write files for LOTOS tomography codes.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function write_lotos(dbName) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">WRITE_LOTOS write files for LOTOS tomography codes. 
+ WRITE_LOTOS(dbName) creates two files in the current directory called
+ rays.dat and stat_ft.dat. These are suitable input for the LOTOS
+ tomography codes. For information about the LOTOS codes, see:
+    Koulakov, I. (2009), BSSA, 194?214, doi:10.1785/0120080013.
+
+ see also ttimes.<a href="dbload.html" class="code" title="function [origin,site,arrival,ray] = dbload(dbName)">dbload</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function write_lotos(dbName)</a>
+0002 
+0003 <span class="comment">%WRITE_LOTOS write files for LOTOS tomography codes.</span>
+0004 <span class="comment">% WRITE_LOTOS(dbName) creates two files in the current directory called</span>
+0005 <span class="comment">% rays.dat and stat_ft.dat. These are suitable input for the LOTOS</span>
+0006 <span class="comment">% tomography codes. For information about the LOTOS codes, see:</span>
+0007 <span class="comment">%    Koulakov, I. (2009), BSSA, 194?214, doi:10.1785/0120080013.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% see also ttimes.dbload</span>
+0010 
+0011 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0012 <span class="comment">% $Date$</span>
+0013 <span class="comment">% $Revision$</span>
+0014 
+0015 
+0016 
+0017 <span class="comment">% LOAD DATABASE</span>
+0018 [origin,site,arrival,ray] = ttimes.dbload(dbName);
+0019 
+0020 
+0021 <span class="comment">% ADD STATION NUMBERS</span>
+0022 site.stationNum = 1:numel(site.sta);
+0023 <span class="keyword">for</span> n = 1:numel(site.stationNum)
+0024     f = find(strcmp(site.sta(n),arrival.sta));
+0025    arrival.stationNum(f) = site.stationNum(n); 
+0026 <span class="keyword">end</span>
+0027 arrival.stationNum =  arrival.stationNum';
+0028  
+0029 
+0030 <span class="comment">% CREATE PHASE NUMBER PARAMETER</span>
+0031 f = find(strcmp(arrival.iphase,<span class="string">'P'</span>));
+0032 arrival.phaseNum(f) = 1;
+0033 f = find(strcmp(arrival.iphase,<span class="string">'S'</span>));
+0034 arrival.phaseNum(f) = 2;
+0035 f = find( ~strcmp(arrival.iphase,<span class="string">'S'</span>) &amp; ~strcmp(arrival.iphase,<span class="string">'P'</span>) );
+0036 <span class="keyword">if</span> ~isempty(f)
+0037     error(<span class="string">'Problem parsing S and P phase names'</span>);
+0038 <span class="keyword">end</span>
+0039 arrival.phaseNum = arrival.phaseNum';
+0040 
+0041 
+0042 <span class="comment">% WRITE RAY FILE</span>
+0043 fid = fopen(<span class="string">'rays.dat'</span>,<span class="string">'w'</span>);
+0044 <span class="keyword">for</span> n = 1:numel(origin.orid)
+0045     f = find(arrival.orid==origin.orid(n));
+0046     fprintf(fid,<span class="string">'%15.5f%15.5f%15.5f%15.0f     %s\n'</span>,origin.lon(n),origin.lat(n),origin.depth(n),numel(f),datestr(origin.dnum(n),<span class="string">'yyyy-mm-dd HH:MM:SS'</span>));
+0047     <span class="keyword">for</span> nArr = 1:numel(f)
+0048         index = f(nArr);
+0049         fprintf(fid,<span class="string">'%15.0f%8.0f%12.5f\n'</span>,arrival.phaseNum(index),arrival.stationNum(index),arrival.travelTime(index));
+0050     <span class="keyword">end</span>
+0051 <span class="keyword">end</span>
+0052 fclose(fid);
+0053     
+0054 
+0055 <span class="comment">% WRITE STATION FILE</span>
+0056 fid = fopen(<span class="string">'stat_ft.dat'</span>,<span class="string">'w'</span>);
+0057 <span class="keyword">for</span> n = 1:max(site.stationNum)
+0058     fprintf(fid,<span class="string">'%15.5f%15.5f%15.5f%15s\n'</span>,site.lon(n),site.lat(n),site.elev(n),site.sta{n});
+0059 <span class="keyword">end</span>
+0060 fclose(fid);
+0061</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

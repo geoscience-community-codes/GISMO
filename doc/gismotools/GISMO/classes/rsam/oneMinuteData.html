@@ -1,0 +1,469 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of oneMinuteData</title>
+  <meta name="keywords" content="oneMinuteData">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">classes</a> &gt; <a href="index.html">rsam</a> &gt; oneMinuteData.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/rsam&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>oneMinuteData
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="oneMinuteData.html" class="code" title="">oneMinuteData</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="oneMinuteData.html" class="code" title="">oneMinuteData</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self=oneMinuteData(varargin)</a></li><li><a href="#_sub2" class="code">function fs = Fs(self)</a></li><li><a href="#_sub3" class="code">function s=subset(self, snum, enum)</a></li><li><a href="#_sub4" class="code">function toTextFile(self, filepath)</a></li><li><a href="#_sub5" class="code">function scrollplot(s)</a></li><li><a href="#_sub6" class="code">function plotyy(obj1, obj2, varargin)</a></li><li><a href="#_sub7" class="code">function save(self, file)</a></li><li><a href="#_sub8" class="code">function self = resample(self, varargin)</a></li><li><a href="#_sub9" class="code">function self = save2wfmeastable(self, dbname)</a></li><li><a href="#_sub10" class="code">function w=toWaveform(self)</a></li><li><a href="#_sub11" class="code">function self = loadwfmeastable(sta, chan, snum, enum, measure, dbname)</a></li><li><a href="#_sub12" class="code">function makebobfile(outfile, days);</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="oneMinuteData.html" class="code" title="">oneMinuteData</a>
+0002 <span class="comment">% oneMinuteData Class constructor for generic data sampled once per minute.</span>
+0003 <span class="comment">% This might not be amplitude data - it could be energy or frequency too -</span>
+0004 <span class="comment">% or perhaps a metric like cumulative magnitude, or frequency index.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% s = oneMinuteData() creates an empty oneMinuteData object.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Optional name/value pairs:</span>
+0009 <span class="comment">%   DNUM:   a vector of MATLAB datenum's</span>
+0010 <span class="comment">%   DATA:   a vector of data (same size as DNUM)</span>
+0011 <span class="comment">%   STA:    station</span>
+0012 <span class="comment">%   CHAN:   channel</span>
+0013 <span class="comment">%   MEASURE:    a string describing the statistic used to compute the</span>
+0014 <span class="comment">%               data, e.g. &quot;mean&quot;, &quot;max&quot;, &quot;std&quot;, &quot;rms&quot;, &quot;meanf&quot;, &quot;peakf&quot;,</span>
+0015 <span class="comment">%               &quot;energy&quot;, default is 'mean' which indicates</span>
+0016 <span class="comment">%               that each 1 minute sample is the mean of a 60-s seismogram</span>
+0017 <span class="comment">%   SEISMOGRAM_TYPE: a string describing whether the data were computed</span>
+0018 <span class="comment">%                    from &quot;raw&quot; seismogram, &quot;velocity&quot;, &quot;displacement&quot;.</span>
+0019 <span class="comment">%                    default is 'raw'.</span>
+0020 <span class="comment">%   UNITS:  the units of the data, used to label the y-axis, e.g. nm / sec,</span>
+0021 <span class="comment">%                   'nm/s' or 'nm' or 'cm2', default is 'counts'</span>
+0022 <span class="comment">% Examples:</span>
+0023 <span class="comment">%     s = oneMinuteData('dnum', dnum, 'data', data, 'sta', 'MBWH', 'chan', 'SHZ')</span>
+0024 
+0025 <span class="comment">% AUTHOR: Glenn Thompson, Montserrat Volcano Observatory</span>
+0026 <span class="comment">% $Date: $</span>
+0027 <span class="comment">% $Revision: $</span>
+0028 
+0029     properties(Access = public)
+0030         dnum = [];
+0031         data = []; 
+0032         measure = <span class="string">'mean'</span>;
+0033         seismogram_type = <span class="string">'raw'</span>;
+0034         units = <span class="string">'counts'</span>;
+0035         sta = <span class="string">''</span>
+0036         chan = <span class="string">''</span>
+0037         snum = -Inf;
+0038         enum = Inf;
+0039     <span class="keyword">end</span>
+0040     
+0041     methods(Access = public)
+0042 
+0043         <a name="_sub0" href="#_subfunctions" class="code">function self=oneMinuteData(varargin)</a>
+0044             [self.dnum, self.data, self.sta, self.chan, self.measure, self.seismogram_type, self.units] = <span class="keyword">...</span>
+0045                 matlab_extensions.process_options(varargin, <span class="string">'dnum'</span>, [], <span class="string">'data'</span>, [], <span class="string">'sta'</span>, self.sta, <span class="keyword">...</span>
+0046                 <span class="string">'chan'</span>, self.chan, <span class="string">'measure'</span>, self.measure, <span class="string">'seismogram_type'</span>, self.seismogram_type, <span class="string">'units'</span>, self.units);
+0047             self.snum = min(self.dnum);
+0048             self.enum = max(self.dnum);
+0049         <span class="keyword">end</span>
+0050 
+0051 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0052         <a name="_sub1" href="#_subfunctions" class="code">function fs = Fs(self) </a><span class="comment">% check the sampling frequency</span>
+0053             l = length(self.dnum);
+0054             s = self.dnum(2:l) - self.dnum(1:l-1);
+0055             fs = 1.0/(median(s)*86400);
+0056         <span class="keyword">end</span>
+0057 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0058         <a name="_sub2" href="#_subfunctions" class="code">function s=subset(self, snum, enum)</a>
+0059             s = self;
+0060             i = find(self.dnum&gt;=snum &amp; self.dnum &lt;= enum);
+0061             s.dnum = self.dnum(i);
+0062             s.data = self.data(i);
+0063         <span class="keyword">end</span>
+0064 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0065         <a name="_sub3" href="#_subfunctions" class="code">function toTextFile(self, filepath)</a>
+0066            <span class="comment">% toTextFile(filepath);</span>
+0067             <span class="comment">%</span>
+0068             fout=fopen(filepath, <span class="string">'w'</span>);
+0069             <span class="keyword">for</span> c=1:length(self.dnum)
+0070                 fprintf(fout, <span class="string">'%15.8f\t%s\t%5.3e\n'</span>,self.dnum(c),datestr(self.dnum(c),<span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>),self.data(c));
+0071             <span class="keyword">end</span>
+0072             fclose(fout);
+0073         <span class="keyword">end</span>
+0074 <span class="comment">%</span>
+0075         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0076         <a name="_sub4" href="#_subfunctions" class="code">function scrollplot(s)</a>
+0077 
+0078             <span class="comment">% Created by Steven Lord, slord@mathworks.com</span>
+0079             <span class="comment">% Uploaded to MATLAB Central</span>
+0080             <span class="comment">% http://www.mathworks.com/matlabcentral</span>
+0081             <span class="comment">% 7 May 2002</span>
+0082             <span class="comment">%</span>
+0083             <span class="comment">% Permission is granted to adapt this code for your own use.</span>
+0084             <span class="comment">% However, if it is reposted this message must be intact.</span>
+0085 
+0086             <span class="comment">% Generate and plot data</span>
+0087             x=s.dnum();
+0088             y=s.data();
+0089             dx=1;
+0090             <span class="comment">%% dx is the width of the axis 'window'</span>
+0091             a=gca;
+0092             p=plot(x,y);
+0093 
+0094             <span class="comment">% Set appropriate axis limits and settings</span>
+0095             set(gcf,<span class="string">'doublebuffer'</span>,<span class="string">'on'</span>);
+0096             <span class="comment">%% This avoids flickering when updating the axis</span>
+0097             set(a,<span class="string">'xlim'</span>,[min(x) min(x)+dx]);
+0098             set(a,<span class="string">'ylim'</span>,[min(y) max(y)]);
+0099 
+0100             <span class="comment">% Generate constants for use in uicontrol initialization</span>
+0101             pos=get(a,<span class="string">'position'</span>);
+0102             Newpos=[pos(1) pos(2)-0.1 pos(3) 0.05];
+0103             <span class="comment">%% This will create a slider which is just underneath the axis</span>
+0104             <span class="comment">%% but still leaves room for the axis labels above the slider</span>
+0105             xmax=max(x);
+0106             xmin=min(x);
+0107             xmin=0;
+0108             <span class="comment">%gs = get(gcbo,'value')+[min(x) min(x)+dx]</span>
+0109             S=sprintf(<span class="string">'set(gca,''xlim'',get(gcbo,''value'')+[%f %f])'</span>,[xmin xmin+dx])
+0110             <span class="comment">%% Setting up callback string to modify XLim of axis (gca)</span>
+0111             <span class="comment">%% based on the position of the slider (gcbo)</span>
+0112             <span class="comment">% Creating Uicontrol</span>
+0113             h=uicontrol(<span class="string">'style'</span>,<span class="string">'slider'</span>,<span class="keyword">...</span>
+0114                 <span class="string">'units'</span>,<span class="string">'normalized'</span>,<span class="string">'position'</span>,Newpos,<span class="keyword">...</span>
+0115                 <span class="string">'callback'</span>,S,<span class="string">'min'</span>,xmin,<span class="string">'max'</span>,xmax-dx);
+0116                 <span class="comment">%'callback',S,'min',0,'max',xmax-dx);</span>
+0117         <span class="keyword">end</span>
+0118 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0119         <a name="_sub5" href="#_subfunctions" class="code">function plotyy(obj1, obj2, varargin)   </a>
+0120             [snum, enum, fun1, fun2] = matlab_extensions.process_options(varargin, <span class="string">'snum'</span>, max([obj1.dnum(1) obj2.dnum(1)]), <span class="string">'enum'</span>, min([obj1.dnum(end) obj2.dnum(end)]), <span class="string">'fun1'</span>, <span class="string">'plot'</span>, <span class="string">'fun2'</span>, <span class="string">'plot'</span>);
+0121             [ax, h1, h2] = <a href="#_sub6" class="code" title="subfunction plotyy(obj1, obj2, varargin)">plotyy</a>(obj1.dnum, obj1.data, obj2.dnum, obj2.data, fun1, fun2);
+0122             datetick(<span class="string">'x'</span>);
+0123             set(ax(2), <span class="string">'XTick'</span>, [], <span class="string">'XTickLabel'</span>, {});
+0124             set(ax(1), <span class="string">'XLim'</span>, [snum enum]);
+0125         <span class="keyword">end</span>
+0126 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0127         <a name="_sub6" href="#_subfunctions" class="code">function save(self, file)</a>
+0128             dnum = self.dnum;
+0129             data = self.data;
+0130             
+0131             <span class="comment">% substitute for station</span>
+0132             file = regexprep(file, <span class="string">'SSSS'</span>, self.sta);
+0133             
+0134             <span class="comment">% substitute for channel</span>
+0135             file = regexprep(file, <span class="string">'CCC'</span>, self.chan);
+0136             
+0137             <span class="comment">% substitute for measure</span>
+0138             file = regexprep(file, <span class="string">'MMMM'</span>, self.measure);             
+0139                 
+0140             <span class="comment">% since dnum may not be ordered and contiguous, this function</span>
+0141             <span class="comment">% should write data based on dnum only</span>
+0142             
+0143             <span class="keyword">if</span> length(dnum)~=length(data)
+0144                     disp(sprintf(<span class="string">'%s: Cannot save to %s because data and time vectors are different lengths'</span>,mfilename,filename));
+0145                     size(dnum)
+0146                     size(data)
+0147                     <span class="keyword">return</span>;
+0148             <span class="keyword">end</span>
+0149 
+0150             <span class="keyword">if</span> length(data)&lt;1
+0151                     disp(<span class="string">'No data. Aborting'</span>);
+0152                 <span class="keyword">return</span>;
+0153             <span class="keyword">end</span>
+0154             
+0155             <span class="comment">% filename</span>
+0156 
+0157             <span class="comment">% set start year and month, and end year and month</span>
+0158             [yyyy sm]=datevec(self.snum);
+0159             [eyyy em]=datevec(self.enum);
+0160             
+0161             <span class="keyword">if</span> yyyy~=eyyy
+0162                 error(<span class="string">'can only save RSAM data to BOB file if all data within 1 year'</span>);
+0163             <span class="keyword">end</span> 
+0164             
+0165             <span class="comment">% how many days in this year?</span>
+0166             daysperyear = 365;
+0167             <span class="keyword">if</span> (mod(yyyy,4)==0)
+0168                     daysperyear = 366;
+0169             <span class="keyword">end</span>
+0170             
+0171             <span class="comment">% Substitute for year</span>
+0172             fname = regexprep(file, <span class="string">'YYYY'</span>, sprintf(<span class="string">'%04d'</span>,yyyy) );
+0173             fprintf(<span class="string">'Looking for file: %s\n'</span>,fname);
+0174 
+0175             <span class="keyword">if</span> ~exist(fname,<span class="string">'file'</span>)
+0176                     debug.print_debug([<span class="string">'Creating '</span>,fname],2)
+0177                     oneMinuteData.makebobfile(fname, daysperyear);
+0178             <span class="keyword">end</span>            
+0179 
+0180             datapointsperday = 1440;
+0181 
+0182             <span class="comment">% round times to minute</span>
+0183             dnum = round((dnum-1/86400) * 1440) / 1440;
+0184 
+0185             <span class="comment">% find the next contiguous block of data</span>
+0186             diff=dnum(2:end) - dnum(1:end-1);
+0187             i = find(diff &gt; 1.5/1440 | diff &lt; 0.5/1440);        
+0188 
+0189             <span class="keyword">if</span> length(i)&gt;0
+0190                 <span class="comment">% slow mode</span>
+0191 
+0192                 <span class="keyword">for</span> c=1:length(dnum)
+0193 
+0194                     <span class="comment">% write the data</span>
+0195                     startsample = round((dnum(c) - datenum(yyyy,1,1)) * datapointsperday);
+0196                     offset = startsample*4;
+0197                     fid = fopen(fname,<span class="string">'r+'</span>);
+0198                     fseek(fid,offset,<span class="string">'bof'</span>);
+0199                     debug.print_debug(sprintf(<span class="string">'saving to %s, position %d'</span>,fname,startsample),3)
+0200                     fwrite(fid,data(c),<span class="string">'float32'</span>);
+0201                     fclose(fid);
+0202                 <span class="keyword">end</span>
+0203             <span class="keyword">else</span>
+0204                 <span class="comment">% fast mode</span>
+0205 
+0206                 <span class="comment">% write the data</span>
+0207                 startsample = round((dnum(1) - datenum(yyyy,1,1)) * datapointsperday);
+0208                 offset = startsample*4;
+0209                 fid = fopen(fname,<span class="string">'r+'</span>,<span class="string">'l'</span>); <span class="comment">% little-endian. Anything written on a PC is little-endian by default. Sun is big-endian.</span>
+0210                 fseek(fid,offset,<span class="string">'bof'</span>);
+0211                 debug.print_debug(sprintf(<span class="string">'saving to %s, position %d of %d'</span>,fname,startsample,(datapointsperday*daysperyear)),3)
+0212                 fwrite(fid,data,<span class="string">'float32'</span>);
+0213                 fclose(fid);
+0214             <span class="keyword">end</span>
+0215         <span class="keyword">end</span>
+0216 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0217         <a name="_sub7" href="#_subfunctions" class="code">function self = resample(self, varargin)</a>
+0218         <span class="comment">%RESAMPLE resamples a oneMinuteData object at over every specified crunchfactor</span>
+0219         <span class="comment">%   oneMinuteDataobject2 = oneMinuteDataobject.resample('method', method, 'factor', crunchfactor)</span>
+0220         <span class="comment">%  or</span>
+0221         <span class="comment">%   oneMinuteDataobject2 = oneMinuteDataobject.resample(method, 'minutes', minutes)</span>
+0222         <span class="comment">%</span>
+0223         <span class="comment">%   Input Arguments</span>
+0224         <span class="comment">%       oneMinuteDataobject: oneMinuteData object       N-dimensional</span>
+0225         <span class="comment">%</span>
+0226         <span class="comment">%       METHOD: which method of sampling to perform within each sample</span>
+0227         <span class="comment">%                window</span>
+0228         <span class="comment">%           'max' : maximum value</span>
+0229         <span class="comment">%           'min' : minimum value</span>
+0230         <span class="comment">%           'mean': average value</span>
+0231         <span class="comment">%           'median' : mean value</span>
+0232         <span class="comment">%           'rms' : rms value (added 2011/06/01)</span>
+0233         <span class="comment">%           'absmax': absolute maximum value (greatest deviation from zero)</span>
+0234         <span class="comment">%           'absmin': absolute minimum value (smallest deviation from zero)</span>
+0235         <span class="comment">%           'absmean' : mean deviation from zero (added 2011/06/01)</span>
+0236         <span class="comment">%           'absmedian' : median deviation from zero (added 2011/06/01)</span>
+0237         <span class="comment">%           'builtin': Use MATLAB's built in resample routine</span>
+0238         <span class="comment">%</span>
+0239         <span class="comment">%       CRUNCHFACTOR : the number of samples making up the sample window</span>
+0240         <span class="comment">%       MINUTES:       downsample to this sample period</span>
+0241         <span class="comment">%       (CRUNCHFACTOR will be calculated internally)</span>
+0242         <span class="comment">%</span>
+0243         <span class="comment">% Examples:</span>
+0244         <span class="comment">%   oneMinuteDataobject.resample('method', 'mean')</span>
+0245         <span class="comment">%       Downsample the oneMinuteData object with an automatically determined</span>
+0246         <span class="comment">%           sampling period based on timeseries length.</span>
+0247         <span class="comment">%   oneMinuteDataobject.resample('method', 'max', 'factor', 5) grab the max value of every 5</span>
+0248         <span class="comment">%       samples and return that in a waveform of adjusted frequency. The output</span>
+0249         <span class="comment">%       oneMinuteData object will have 1/5th of the samples, e.g. from 1</span>
+0250         <span class="comment">%       minute sampling to 5 minutes.</span>
+0251         <span class="comment">%   oneMinuteDataobject.resample('method', 'max', 'minutes', 10) downsample the data at</span>
+0252         <span class="comment">%       10 minute sample period</span>
+0253         <span class="comment">%</span>
+0254         <span class="comment">%</span>
+0255 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0256             [method, crunchfactor, minutes] = matlab_extensions.process_options(varargin, <span class="string">'method'</span>, self.measure, <span class="string">'factor'</span>, 0, <span class="string">'minutes'</span>, 0);
+0257         
+0258             <span class="keyword">persistent</span> STATS_INSTALLED;
+0259 
+0260             <span class="keyword">if</span> isempty(STATS_INSTALLED)
+0261               STATS_INSTALLED = ~isempty(ver(<span class="string">'stats'</span>));
+0262             <span class="keyword">end</span>
+0263 
+0264             <span class="keyword">if</span> ~(round(crunchfactor) == crunchfactor) 
+0265                 disp (<span class="string">'crunchfactor needs to be an integer'</span>);
+0266                 <span class="keyword">return</span>;
+0267             <span class="keyword">end</span>
+0268 
+0269             <span class="keyword">for</span> i=1:numel(self)
+0270                 samplingIntervalMinutes = 1.0 / (60 * self(i).Fs());
+0271                 <span class="keyword">if</span> crunchfactor==0 &amp; minutes==0 <span class="comment">% choose automatically</span>
+0272                     choices = [1 2 5 10 30 60 120 240 360 ];
+0273                     days = max(self(i).dnum) - min(self(i).dnum);
+0274                     choice=max(find(days &gt; choices));
+0275                     minutes=choices(choice);
+0276                 <span class="keyword">end</span>
+0277 
+0278                 <span class="keyword">if</span> minutes &gt; samplingIntervalMinutes
+0279                     crunchfactor = round(minutes / samplingIntervalMinutes);
+0280                 <span class="keyword">end</span>
+0281 
+0282                 <span class="keyword">if</span> isempty(method)
+0283                     method = <span class="string">'mean'</span>;
+0284                 <span class="keyword">end</span>
+0285                 
+0286                 <span class="keyword">if</span> crunchfactor &gt; 1
+0287                     debug.print_debug(sprintf(<span class="string">'Changing sampling interval to %d'</span>, minutes),3)
+0288                 
+0289                     rowcount = ceil(length(self(i).data) / crunchfactor);
+0290                     maxcount = rowcount * crunchfactor;
+0291                     <span class="keyword">if</span> length(self(i).data) &lt; maxcount
+0292                         self(i).dnum(end+1:maxcount) = mean(self(i).dnum((rowcount-1)*maxcount : end)); <span class="comment">%pad it with the avg value</span>
+0293                         self(i).data(end+1:maxcount) = mean(self(i).data((rowcount-1)*maxcount : end)); <span class="comment">%pad it with the avg value</span>
+0294                     <span class="keyword">end</span>
+0295                     d = reshape(self(i).data,crunchfactor,rowcount); <span class="comment">% produces ( crunchfactor x rowcount) matrix</span>
+0296                     t = reshape(self(i).dnum,crunchfactor,rowcount);
+0297                     self(i).dnum = mean(t, 1);
+0298                     <span class="keyword">switch</span> upper(method)
+0299 
+0300                         <span class="keyword">case</span> <span class="string">'MAX'</span>
+0301                             <span class="keyword">if</span> STATS_INSTALLED
+0302                                         self(i).data = nanmax(d, [], 1);
+0303                             <span class="keyword">else</span>
+0304                                         self(i).data = max(d, [], 1);
+0305                             <span class="keyword">end</span>
+0306 
+0307                         <span class="keyword">case</span> <span class="string">'MIN'</span>
+0308                             <span class="keyword">if</span> STATS_INSTALLED
+0309                                         self(i).data = nanmin(d, [], 1);
+0310                             <span class="keyword">else</span>
+0311                                         self(i).data = min(d, [], 1);
+0312                             <span class="keyword">end</span>
+0313 
+0314                         <span class="keyword">case</span> <span class="string">'MEAN'</span>
+0315                             <span class="keyword">if</span> STATS_INSTALLED
+0316                                         self(i).data = nanmean(d, 1);
+0317                             <span class="keyword">else</span>
+0318                                         self(i).data = mean(d, 1);
+0319                             <span class="keyword">end</span>
+0320 
+0321                         <span class="keyword">case</span> <span class="string">'MEDIAN'</span>
+0322                             <span class="keyword">if</span> STATS_INSTALLED
+0323                                         self(i).data = nanmedian(d, 1);
+0324                             <span class="keyword">else</span>
+0325                                         self(i).data = median(d, 1);
+0326                             <span class="keyword">end</span>
+0327 
+0328                         <span class="keyword">case</span> <span class="string">'RMS'</span>
+0329                             <span class="keyword">if</span> STATS_INSTALLED
+0330                                         self(i).data = nanstd(d, [], 1);
+0331                             <span class="keyword">else</span>
+0332                                         self(i).data = std(d, [], 1);
+0333                             <span class="keyword">end</span>
+0334 
+0335                         <span class="keyword">case</span> <span class="string">'ABSMAX'</span>
+0336                             <span class="keyword">if</span> STATS_INSTALLED
+0337                                         self(i).data = nanmax(abs(d),[],1);
+0338                             <span class="keyword">else</span>
+0339                                         self(i).data = max(abs(d),[],1);
+0340                             <span class="keyword">end</span>
+0341 
+0342 
+0343                         <span class="keyword">case</span> <span class="string">'ABSMIN'</span>
+0344                             <span class="keyword">if</span> STATS_INSTALLED
+0345                                         self(i).data = nanmin(abs(d),[],1);
+0346                             <span class="keyword">else</span>    
+0347                                         self(i).data = min(abs(d),[],1);
+0348                             <span class="keyword">end</span>
+0349 
+0350                         <span class="keyword">case</span> <span class="string">'ABSMEAN'</span>
+0351                             <span class="keyword">if</span> STATS_INSTALLED
+0352                                         self(i).data = nanmean(abs(d), 1);
+0353                             <span class="keyword">else</span>
+0354                                         self(i).data = mean(abs(d), 1);
+0355                             <span class="keyword">end</span>
+0356 
+0357                         <span class="keyword">case</span> <span class="string">'ABSMEDIAN'</span>
+0358                             <span class="keyword">if</span> STATS_INSTALLED
+0359                                         self(i).data = nanmedian(abs(d), 1);
+0360                             <span class="keyword">else</span>
+0361                                         self(i).data = median(abs(d), 1);
+0362                             <span class="keyword">end</span> 
+0363 
+0364                         <span class="keyword">otherwise</span>
+0365                             error(<span class="string">'oneMinuteData:resample:UnknownResampleMethod'</span>,<span class="keyword">...</span>
+0366                               <span class="string">'Don''t know what you mean by resample via %s'</span>, method);
+0367 
+0368                     <span class="keyword">end</span>
+0369                     self(i).measure = method;
+0370                 <span class="keyword">end</span>
+0371             <span class="keyword">end</span>  
+0372         <span class="keyword">end</span>
+0373 
+0374 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0375         <a name="_sub8" href="#_subfunctions" class="code">function self = save2wfmeastable(self, dbname) </a>
+0376         <span class="comment">% add save2wfmeas here</span>
+0377             datascopegt.save2wfmeas(self.scnl, self.dnum, self.data, self.measure, self.units, dbname);
+0378         <span class="keyword">end</span>
+0379 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0380         <a name="_sub9" href="#_subfunctions" class="code">function w=toWaveform(self) </a>
+0381             <span class="comment">% oneMinuteData.toWaveform() Create a Waveform Object from a</span>
+0382             <span class="comment">% oneMinuteData object. Use with caution!</span>
+0383             w = waveform;
+0384             w = set(w, <span class="string">'station'</span>, self.sta);
+0385             w = set(w, <span class="string">'channel'</span>, self.chan);
+0386             w = set(w, <span class="string">'units'</span>, self.units);
+0387             w = set(w, <span class="string">'data'</span>, self.data);
+0388             w = set(w, <span class="string">'start'</span>, self.snum);
+0389             <span class="comment">%w = set(w, 'end', self.enum);</span>
+0390             w = set(w, <span class="string">'freq'</span>, self.Fs());
+0391             w = addfield(w, <span class="string">'measure'</span>, self.measure);
+0392         <span class="keyword">end</span>        
+0393     <span class="keyword">end</span> <span class="comment">% end of methods</span>
+0394 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0395     <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FILE LOAD AND SAVE FUNCTIONS %%%%%%%%%%%%%%%%%%%%%%%</span>
+0396     methods(Access = public, Static)
+0397 
+0398        <a name="_sub10" href="#_subfunctions" class="code">function self = loadwfmeastable(sta, chan, snum, enum, measure, dbname)</a>
+0399             self = <a href="oneMinuteData.html" class="code" title="">oneMinuteData</a>();
+0400             [data, dnum, datafound, units] = datascopegt.load_wfmeas(station, snum, enum, measure, dbname);
+0401             self.dnum = dnum;
+0402             self.data = data;
+0403             self.measure = measure;
+0404             self.units = units;
+0405         <span class="keyword">end</span>
+0406 
+0407         <a name="_sub11" href="#_subfunctions" class="code">function makebobfile(outfile, days);</a>
+0408             <span class="comment">% makebobfile(outfile, days);</span>
+0409             datapointsperday = 1440;
+0410             samplesperyear = days*datapointsperday;
+0411             a = zeros(samplesperyear,1);
+0412             fid = fopen(outfile,<span class="string">'w'</span>);
+0413             fwrite(fid,a,<span class="string">'float32'</span>);
+0414             fclose(fid);
+0415         <span class="keyword">end</span> 
+0416 
+0417     <span class="keyword">end</span> <span class="comment">% methods</span>
+0418 
+0419 <span class="keyword">end</span> <span class="comment">% classdef</span>
+0420</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

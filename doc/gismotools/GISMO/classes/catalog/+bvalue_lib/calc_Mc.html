@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of calc_Mc</title>
+  <meta name="keywords" content="calc_Mc">
+  <meta name="description" content="CALC_MC Estimate magnitude of completeness">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../../index.html">GISMO</a> &gt; <a href="../../index.html">classes</a> &gt; <a href="../index.html">catalog</a> &gt; <a href="index.html">+bvalue_lib</a> &gt; calc_Mc.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/classes/catalog/+bvalue_lib&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>calc_Mc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>CALC_MC Estimate magnitude of completeness</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function [fMc] = calc_Mc(mag, nMethod, fBinning, fMcCorrection) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CALC_MC Estimate magnitude of completeness
+ fMc = calc_Mc(mag, nMethod, fBinning, fMcCorrection)
+    Calculate the magnitude of completeness for a given catalog
+
+ Input parameters:
+   mag            A vector of magnitudes
+   nMethod        Method to determine the magnitude of completeness
+                  1: Maximum curvature
+                  2: Fixed Mc = minimum magnitude (Mmin)
+                  3: Mc90 (90% probability)
+                  4: Mc95 (95% probability)
+                  5: Best combination (Mc95 - Mc90 - maximum curvature)
+
+   fMcCorrection  Correction term to be added to fMc (default 0)
+
+ Output parameters:
+   fMc            Magnitude of completeness
+
+ Special function
+   If called without any parameters, calc_Mc returns a string containing the names
+   of all available Mc-determination routines
+
+ Copyright (C) 2004 by Danijel Schorlemmer, Jochen Woessner
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the
+ Free Software Foundation, Inc.,
+ 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [fMc] = calc_Mc(mag, nMethod, fBinning, fMcCorrection)</a>
+0002     <span class="comment">%CALC_MC Estimate magnitude of completeness</span>
+0003     <span class="comment">% fMc = calc_Mc(mag, nMethod, fBinning, fMcCorrection)</span>
+0004     <span class="comment">%    Calculate the magnitude of completeness for a given catalog</span>
+0005     <span class="comment">%</span>
+0006     <span class="comment">% Input parameters:</span>
+0007     <span class="comment">%   mag            A vector of magnitudes</span>
+0008     <span class="comment">%   nMethod        Method to determine the magnitude of completeness</span>
+0009     <span class="comment">%                  1: Maximum curvature</span>
+0010     <span class="comment">%                  2: Fixed Mc = minimum magnitude (Mmin)</span>
+0011     <span class="comment">%                  3: Mc90 (90% probability)</span>
+0012     <span class="comment">%                  4: Mc95 (95% probability)</span>
+0013     <span class="comment">%                  5: Best combination (Mc95 - Mc90 - maximum curvature)</span>
+0014     <span class="comment">%</span>
+0015     <span class="comment">%   fMcCorrection  Correction term to be added to fMc (default 0)</span>
+0016     <span class="comment">%</span>
+0017     <span class="comment">% Output parameters:</span>
+0018     <span class="comment">%   fMc            Magnitude of completeness</span>
+0019     <span class="comment">%</span>
+0020     <span class="comment">% Special function</span>
+0021     <span class="comment">%   If called without any parameters, calc_Mc returns a string containing the names</span>
+0022     <span class="comment">%   of all available Mc-determination routines</span>
+0023     <span class="comment">%</span>
+0024     <span class="comment">% Copyright (C) 2004 by Danijel Schorlemmer, Jochen Woessner</span>
+0025     <span class="comment">%</span>
+0026     <span class="comment">% This program is free software; you can redistribute it and/or modify</span>
+0027     <span class="comment">% it under the terms of the GNU General Public License as published by</span>
+0028     <span class="comment">% the Free Software Foundation; either version 2 of the License, or</span>
+0029     <span class="comment">% (at your option) any later version.</span>
+0030     <span class="comment">%</span>
+0031     <span class="comment">% This program is distributed in the hope that it will be useful,</span>
+0032     <span class="comment">% but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0033     <span class="comment">% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
+0034     <span class="comment">% GNU General Public License for more details.</span>
+0035     <span class="comment">%</span>
+0036     <span class="comment">% You should have received a copy of the GNU General Public License</span>
+0037     <span class="comment">% along with this program; if not, write to the</span>
+0038     <span class="comment">% Free Software Foundation, Inc.,</span>
+0039     <span class="comment">% 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.</span>
+0040 
+0041 
+0042     <span class="keyword">if</span> nargin == 0
+0043         fMc = [<span class="string">'1: Maximum curvature|'</span> <span class="keyword">...</span>
+0044             <span class="string">'2: Fixed Mc = minimum magnitude (Mmin)|'</span> <span class="keyword">...</span>
+0045             <span class="string">'3: Mc90 (90% probability)|'</span> <span class="keyword">...</span>
+0046             <span class="string">'4: Mc95 (95% probability)|'</span> <span class="keyword">...</span>
+0047             <span class="string">'5: Best combination (Mc95 - Mc90 - maximum curvature)|'</span>];
+0048         <span class="keyword">return</span>
+0049     <span class="keyword">end</span>
+0050 
+0051     <span class="comment">% Magnitude binning</span>
+0052     <span class="keyword">if</span> ~exist(<span class="string">'fBinning'</span>, <span class="string">'var'</span>)
+0053         fBinning = 0.1;
+0054     <span class="keyword">end</span>
+0055 
+0056     <span class="comment">% Correction</span>
+0057     <span class="keyword">if</span> ~exist(<span class="string">'fMcCorrection'</span>, <span class="string">'var'</span>)
+0058         fMcCorrection = 0;
+0059     <span class="keyword">end</span>
+0060 
+0061     <span class="comment">% Init return variable</span>
+0062     fMc = NaN;
+0063 
+0064     <span class="keyword">switch</span> nMethod
+0065         <span class="keyword">case</span> 1
+0066             <span class="comment">% Maximum curvature</span>
+0067             fMc = bvalue_lib.calc_McMaxCurvature(mag);
+0068         <span class="keyword">case</span> 2
+0069             <span class="comment">% Fixed Mc (Mc = Mmin)</span>
+0070             fMc = min(mag(:,6));
+0071         <span class="keyword">case</span> 3
+0072             <span class="comment">% Automatic Mc90</span>
+0073             [fDummy, fDummy, fMc] = bvalue_lib.calc_McBest(mag, fBinning);
+0074         <span class="keyword">case</span> 4
+0075             <span class="comment">% Automatic Mc95</span>
+0076             [fDummy, fMc, fDummy] = bvalue_lib.calc_McBest(mag, fBinning);
+0077         <span class="keyword">case</span> 5
+0078             <span class="comment">% Best combination (Mc95 - Mc90 - maximum curvature)</span>
+0079             [fMc, Mc95, Mc90] = bvalue_lib.calc_McBest(mag, fBinning);
+0080             <span class="keyword">if</span> isnan(Mc95) == 0
+0081                 fMc = Mc95;
+0082             <span class="keyword">elseif</span> isnan(Mc90) == 0
+0083                 fMc = Mc90;
+0084             <span class="keyword">else</span>
+0085                 fMc = bvalue_lib.calc_McMaxCurvature(mag);
+0086             <span class="keyword">end</span>
+0087     <span class="keyword">end</span>
+0088 
+0089     <span class="comment">% Check fMc</span>
+0090     <span class="keyword">if</span> isempty(fMc)
+0091         fMc = NaN;
+0092     <span class="keyword">end</span>;
+0093 
+0094     <span class="comment">% Apply correction</span>
+0095     <span class="keyword">if</span> ~isnan(fMc)
+0096         fMc = fMc + fMcCorrection;
+0097     <span class="keyword">end</span>
+0098 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

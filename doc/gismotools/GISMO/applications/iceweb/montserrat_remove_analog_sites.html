@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of montserrat_remove_analog_sites</title>
+  <meta name="keywords" content="montserrat_remove_analog_sites">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="#">gismotools</a> &gt; <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">applications</a> &gt; <a href="index.html">iceweb</a> &gt; montserrat_remove_analog_sites.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for gismotools/GISMO/applications/iceweb&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>montserrat_remove_analog_sites
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function montserrat_remove_analog_sites </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function montserrat_remove_analog_sites</a>
+0002 debug.printfunctionstack(<span class="string">'&gt;'</span>)
+0003     load pf/Montserrat.mat
+0004     sites = subnets.sites;
+0005     k = 0;
+0006     <span class="keyword">for</span> c=1:numel(sites)
+0007         site = sites(c);
+0008         sta = site.channeltag.station;
+0009         chan = site.channeltag.channel;
+0010         <span class="keyword">if</span> strcmp(sta(1:2),<span class="string">'MB'</span>) &amp;&amp; chan(3)==<span class="string">'Z'</span> &amp;&amp; ~strcmp(sta,<span class="string">'MBET'</span>) &amp;&amp; ~strcmp(sta,<span class="string">'MBUN'</span>) &amp;&amp; ~strcmp(sta,<span class="string">'MB??'</span>)
+0011             k = k + 1;
+0012             goodsites(k) = site;
+0013         <span class="keyword">end</span>
+0014     <span class="keyword">end</span>
+0015     subnets.sites = goodsites;
+0016     clear c k goodsites sta sites site
+0017     save pf/Montserrat.mat
+0018 debug.printfunctionstack(<span class="string">'&lt;'</span>)
+0019 <span class="keyword">end</span>        
+0020</pre></div>
+<hr><address>Generated on Sun 11-Oct-2015 14:40:09 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
