@@ -16,7 +16,7 @@ function iceweb(ds, varargin)
     if exist(statefile, 'file') && ~strcmp(PARAMS.runmode, 'test')
         load(statefile)
         if strcmp(thissubnet, subnet0)
-		snum = snum0;
+		%snum = snum0;
 	end
     end
 
@@ -64,7 +64,6 @@ function iceweb(ds, varargin)
 		debug.print_debug(1,'Sites from MAT file - should be all in range')
             sites = subnets(c).sites;
 	    show_sites(sites)
-datestr([snum enum])
             for dnum = floor(snum):ceil(enum)
                 disp(datestr(dnum))
                    
@@ -176,7 +175,7 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
 		load(statefile)
 		if strcmp(subnet, subnet0)
 			if snum < snum0 % skip
-				continue
+				%continue
 			end
 		end
 	    end
@@ -189,20 +188,28 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
             % Have we already process this timewindow?
             spectrogramFilename = get_spectrogram_filename(paths,subnet,snum);
              if exist(spectrogramFilename, 'file')
-                 fprintf('%s already exists - skipping\n',spectrogramFilename);
-                 continue
+                 %fprintf('%s already exists - skipping\n',spectrogramFilename);
+                 %continue
              end
             
             %% Get waveform data
             debug.print_debug(0, sprintf('%s %s: Getting waveforms for %s from %s to %s at %s',mfilename, datestr(utnow), subnet , datestr(snum), datestr(enum)));
             w = waveform_wrapper([sites.channeltag], snum, enum, ds);
 
-w = combine(w);
-size(w)
-size(sites)
-if size(w)~=size(sites)
-error('barf')
-end
+
+	    %% Save waveform data to 1 hour MAT file
+	    dv = datevec(snum);
+	    yyyy = dv(1);
+	    jjj = floor(snum - datenum(yyyy,1,1) + 1);
+	    hh = dv(4);
+	    matfiletopdir = '/raid/data/matfiles';
+	    wavmatfile = sprintf('%s/%s/%04d/%03d/%s.%04d.%03d.%02d.mat',matfiletopdir,subnet,yyyy,jjj,subnet,yyyy,jjj,hh);
+            clear dv yyyy jjj hh
+	    mkdir(fileparts(wavmatfile));
+	    disp(sprintf('Saving waveform data to %s',wavmatfile));
+	    save(wavmatfile);
+	    continue
+
             %% PRE_PROCESS DATA
             
             % Eliminate empty waveform objects
@@ -243,7 +250,7 @@ end
             
 %             %% CREATE & SAVE HELICORDER PLOT
 %             % SCAFFOLD
-%             try % crashing with 
+             try % crashing with 
 % %                  Index exceeds matrix dimensions.
 % % 
 % %                 Error in helicorder/build>pad_w (line 339)
@@ -261,13 +268,18 @@ end
 % %                 Error in unrest (line 20)
 % %                 iceweb(ds, 'thissubnet', 'Sakurajima', 'snum', datenum(2015,6,3), 'enum', datenum(2015,6, 7), 'delaymins', 0, 'matfile', 'pf/Sakurajima.mat',
 % %                 'nummins', mins, 'runmode', 'archive');               
-%                 close all
-%                 heliplot = helicorder(w);
-%                 build(heliplot)
-%                 helicorderFilename = fullfile(spdir, sprintf('heli_%s%s',spbase,spext));
-%                 orient tall;
-%                 saveImageFile(helicorderFilename, 72); 
-%             end
+                 close all
+		 for wi=1:numel(w)
+                 	heliplot = helicorder(w(wi),'mpl',3);
+                 	build(heliplot)
+		 	ct = get(w(wi),'channeltag');
+                 	helicorderFilename = fullfile(spdir, sprintf('heli_%s_%s.%s.%s',spbase,ct.station,ct.channel,spext));
+                 	orient tall;
+                 	saveImageFile(helicorderFilename, 72); 
+			clear ct helicorderFilename 
+		 end
+		clear wi
+             end
             
 
             %% PLOT SPECTROGRAM	
@@ -277,7 +289,18 @@ end
             %specgram_wrapper(PARAMS.spectralobject, w, 0.75, extended_spectralobject_colormap);
 %             try
                 spectrogramFraction = 0.75;
-                [sgresult, Tcell, Fcell, Ycell] = spectrogram_iceweb(PARAMS.spectralobject, w, spectrogramFraction, extended_spectralobject_colormap);
+
+		% restrict spectrogram to Z channels only
+		w2=[];
+		for wi=1:numel(w)
+			ct=get(w(wi),'channeltag');
+			if strfind(ct.channel,'Z')
+				w2 = [w2 w(wi)];
+			end
+		end
+
+                [sgresult, Tcell, Fcell, Ycell] = spectrogram_iceweb(PARAMS.spectralobject, w2, spectrogramFraction, extended_spectralobject_colormap);
+		clear w2 wi ct 
                 if sgresult > 0 % sgresult = number of waveforms for which a spectrogram was successfully plotted
                     %% SAVE SPECTROGRAM PLOT TO IMAGE FILE AND CREATE THUMBNAIL
                     orient tall;
