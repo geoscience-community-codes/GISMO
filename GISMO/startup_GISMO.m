@@ -46,7 +46,7 @@ addpath(fullfile(gismopath,'classes','rsam'));
 addpath(genpath(fullfile(gismopath,'applications')));
 
 % ADD A PATH TO JAR FILES
-javaaddpath('contributed/iris_dmc_tools/IRIS-WS-2.0.15.jar')
+javaaddpath(fullfile(gismopath,'contributed','iris_dmc_tools','IRIS-WS-2.0.15.jar'))
 
 %%
 function addContributed(gismopath, contribDir)

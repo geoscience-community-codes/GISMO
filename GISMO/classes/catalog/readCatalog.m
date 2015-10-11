@@ -1,57 +1,69 @@
-function self = readCatalog(data_source, varargin)
-%READCATALOG: Load events from various catalog data sources into a Catalog
-% object.
+function self = readCatalog(catalog_source, varargin)
+%READCATALOG: Read seismic events from common file formats & data sources.
+%  readEvents loads events from a seismic event catalog into a GISMO
+%  Catalog object. 
 %
-%% USAGE
 %
-%   obj = readCatalog(data_source, 'param1', value1, 'param2', value2 ...)
-%             loads a seismic event catalog into a GISMO/Catalog object.
-%             data_source is a method by which the source catalog is
-%             retrieved, or format in which the source catalog is stored.
-%             This may be followed by named parameter-value pairs. Allowed
-%             parameter-value pairs vary according to data_source.
-%            
-%             The output obj is a Catalog object, which itself may contain
-%             a hierarchy of Event, Origin and Magnitude objects. Each of
-%             these classes is styled after classes available in ObsPy. See
-%             http://docs.obspy.org/packages/autogen/obspy.core.event.html
-%             for details. However, it possibly mkes more sense to migrate
-%	      them on CSS3.0 format.
-%	      * SKELETON *
-
-%% MODES
+% USAGE
 %
-%   Data can be loaded in "fast" or "slow" RUNMODE (default is "fast").
-%   In "slow" RUNMODE, a Catalog_full object is constructed consisting of Event,
-%   Origin and Magnitude objects (and perhaps others as this is expanded
-%   to describe a catalog in more detail).
-%   In "fast" RUNMODE, a Catalog_lite object is constructed. It has no
-%   underlying Event, Origin or Magnitude objects.
-%   Catalog_full and Catalog_lite have a lot of common functionality as they
-%   derive from the same superclass, Catalog_base.
-%   To load data in "slow" RUNMODE, include the additional parameter-value
-%   pair:
-%       readCatalog(..., 'RUNMODE', 'slow')
+%  cobj = readCatalog(catalog_source, 'param1', value1, 'param2', value2 ...)
+%     loads a seismic event catalog into a GISMO/Catalog object.
+%     catalog_source is a method by which the source catalog is
+%     retrieved, or format in which the source catalog is stored.
 %
-%% LOADING FROM DATASCOPE (ANTELOPE) DATABASES
+%  The name-value parameter pairs supported by readCatalog mirror those of 
+%  irisFetch.Events, which currently are:
+%      contributor, startTime, endTime, eventId, fetchLimit, latitude, longitude, magnitudeType,
+%      maximumDepth, maximumLatitude, maximumLongitude, maximumMagnitude,
+%      minimumDepth, minimumLatitude, minimumLongitude, minimumMagnitude,
+%      minimumRadius, maximumRadius, offset, updatedAfter.
+%  An arbitrary number of parameter-value pairs may be specified in order to 
+%  narrow down the search results. Some catalog_source allow additional
+%  name-value parameter pairs.
 %
-%   obj = readCatalog('datascope', 'dbpath', path_to_database)
-%             loads events, origins and magnitudes from a Datascope
-%             (Antelope) database given by the dbpath parameter-value. As a
-%             minimum, the database must have an origin table.
+%  By default readCatalog will only retrieve basic event metadata such as 
+%  (preferred) origin time, longitude, latitude, depth and magnitude.
+%  However:
+%
+%  cobj = readCatalog(..., 'addarrivals', true)
+%
+%  will also include more detailed information, such as phase arrivals and
+%  different measurements of magnitude. Warning - this may become slow,
+%  especially for large datasets.
+%
+% LOADING FROM IRIS/FSDN web services via irisfetch.m:
+%   cobj = readCatalog('irisfetch', 'param1', value1, 'param2', value2 ...)
+%             loads events, origins and magnitudes from IRIS-DMC or other
+%             FSDN data sources via irisFetch.m. The allowed parameter-value 
+%             pairs are those allowed by irisFetch.Events.
+%
+% LOADING FROM ANTELOPE/DATASCOPE CSS3.0 DATABASES
+%
+%   cobj = readCatalog('datascope', 'dbpath', path_to_database)
+%     loads events, origins and magnitudes from a Datascope CSS3.0
+%     database using Kent Lindquist's Antelope Toolbox for MATLAB. As a
+%     minimum, the database must have an origin table.
+%
+%   Additional name-value parameter pairs supported by 'datascope' are:
+%       'archiveformat'
+%       'subset_expression'
 %
 %   If the database is stored in daily volumes, e.g. foo/bar_YYYY_MM_DD, 
 %   rather than a single database use the 'archiveformat'
 %   name/value pair, e.g.
 %
-%   obj = readCatalog('datascope', 'dbpath', 'foo/bar', 'archiveformat','daily');
+%   cobj = readCatalog('antelope', 'dbpath', 'foo/bar', 'archiveformat','daily');
 %
 %   For monthly volumes, e.g. foo/bar_YYYY_MM, set 'archiveformat' to
 %   'monthly':
 %
-%   obj = readCatalog('datascope', 'dbpath', 'foo/bar', 'archiveformat','monthly');
+%   cobj = readCatalog('antelope', 'dbpath', 'foo/bar', 'archiveformat','monthly');
 %
-%   obj = readCatalog('datascope', 'dbpath', path_to_database, 'subset_expression', subset_expression)
+%   [Note: it would be much better if I could do 'dbpath',
+%   'foo/bar_%YYYY%MM%DD', 'year', 'month', 'day' as Celso does for
+%   datasource].
+%
+%   cobj = readCatalog(..., 'subset_expression', subset_expression)
 %             will subset the database given a valid datascope subset
 %             expression.
 %
@@ -65,13 +77,7 @@ function self = readCatalog(data_source, varargin)
 %       'maxdepth' the maximum depth (in km)
 %       'region'   a 4-element vector: [minlon maxlon minlat maxlat]
 %
-%% LOADING FROM FDSN DATA SOURCES
-%   obj = readCatalog('irisfetch', 'param1', value1, 'param2', value2 ...)
-%             loads events, origins and magnitudes from IRIS-DMC or other
-%             FSDN data sources via irisFetch.m. The allowed parameter-value 
-%             pairs are those allowed by irisFetch.m. 
-%
-%% READING FROM A SEISAN-DERIVED DAT FILE
+% READING FROM A SEISAN-DERIVED DAT FILE
 % 
 %   obj = readCatalog('aef', 'dbpath', dbpath) 
 %     will attempt to load all Seisan-derived AEF summary files in the 
@@ -80,7 +86,7 @@ function self = readCatalog(data_source, varargin)
 %     To subset the data, use parameter name/value pairs (snum, enum, 
 %     minmag, mindepth, maxdepth, region). 
 %
-%% READING S-FILES FROM A SEISAN YYYY/MM REA DATABASE
+% READING S-FILES FROM A SEISAN YYYY/MM REA DATABASE
 % 
 %   obj = readCatalog('seisandb', 'dbpath', dbpath) 
 %     will attempt to load all Seisan S-files in the 
@@ -1226,4 +1232,23 @@ function self=read_SRU(filename)
     self = Catalog_lite(lat, lon, depth, dnum, mag, etype);
     % WE COULD ADD ANOTHER METHOD HERE IN SLOW MODE TO CREATE A FULL
     % CATALOG OBJECT, MAKING USE OF FIELDS LIKE nassP, rms etc.
+end
+
+function out = ensure_dateformat(t)
+% stolen from waveform
+   % returns a matrix of datenums of same shape as t
+   if isnumeric(t)
+      out = t;
+   elseif ischar(t),
+      for n = size(t,1) : -1 : 1
+         out(n) = datenum(t(n,:));
+      end
+   elseif iscell(t)
+      out(:) = datenum(t);
+   end
+   % previously implemented as:
+   % if ischar(startt), startt = {startt}; end
+   % if ischar (endt), endt = {endt}; end;
+   % startt = reshape(datenum(startt(:)),size(startt));
+   % endt = reshape(datenum(endt(:)),size(endt));
 end

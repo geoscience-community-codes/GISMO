@@ -8,12 +8,46 @@
 %
 % This cookbook is written as an M-file and is converted to HTML using the PUBLISH command.
 %
-% Author: Glenn Thompson, Geophysical Institute, Univ. of Alaska Fairbanks
+% Author: Glenn Thompson
 
 %% Loading event catalogs
-% The catalog class is for loading, plotting and analysing event catalogs.
-% For a detailed description, read HELP CATALOG.M.
-%
+% The catalog class is for loading, plotting and analyzing event catalogs.
+
+% readCatalog can be used to read catalogs (i.e. event metadata) from a
+% variety of different common seismic data sources and file formats, for
+% example:
+
+cobj = readCatalog('irisfetch', 'minimumMagnitude', 7.9);
+
+% reads all events with a magnitude of at least 7.9 from IRIS DMC into a
+% GISMO Catalog_Full object, cobj.
+
+  Catalog_full with properties:
+
+     event_list: [1x41 Event]
+            lat: [1x41 double]
+            lon: [1x41 double]
+          depth: [1x41 double]
+           time: [1x41 double]
+            mag: [1x41 double]
+          etype: 'earthquakeearthquakeearthquakeearthquakeearthquakeearthquak...'
+           dnum: []
+           snum: 7.1602e+05
+           enum: 7.3622e+05
+    description: ''
+    misc_fields: {'METHOD'}
+    misc_values: {'convert_irisFetch_to_Catalog'}
+    
+    
+    
+cobj = readCatalog('irisfetch','radialcoordinates', [60.4853 -152.7431 km2deg(20)]);
+
+% reads all events within 20 km of Redoubt volcano, held by IRIS
+
+
+
+
+
 % For the purpose of this exercise we will be using data from Redoubt volcano
 % from 2009/03/20 to 2009/03/23. We will use two catalogs:
 %
@@ -27,18 +61,18 @@
 % We will now load the real-time catalog into a catalog object. First,
 % because we don't know where GISMO is on your system, we have to construct the
 % path to the demo directory based on where CATALOG.M resides:
-debug.set_debug(0);
-dbpath = demodb('avo');
+if antelope_exists
+    dbpath = demodb('avo');
 
 % Now read the events into a Catalog object. Only two parameters are
 % needed, the database path (dbpath) and the data format ('antelope'): 
-cobj = readCatalog('datascope', 'dbpath', dbpath);
+    cobj = readCatalog('datascope', 'dbpath', dbpath);
 
 % This should load 1441 events. What if we only want events within 15km of
 % Redoubt volcano? The optional parameter 'subset_expression' can be used, with an
 % appropriate Datascope expression, e.g.
 
-cobj = readCatalog('datascope', 'dbpath', dbpath, 'subset_expression', 'deg2km(distance(lat, lon, 60.4853, -152.7431))<15.0');
+    cobj = readCatalog('datascope', 'dbpath', dbpath, 'subset_expression', 'deg2km(distance(lat, lon, 60.4853, -152.7431))<15.0');
 
 % where 60.4853 is the latitude of Redoubt and -152.7431 is the longitude.
 % Now there should only be 1397 events.
