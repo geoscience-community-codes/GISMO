@@ -238,7 +238,7 @@ classdef TraceData
       function A = abs(A)
          for n=1:numel(A)
             A(n).data = abs(A(n).data);
-            A(n).units = ['abs (', A(n).units, ')'];
+            % A(n).units = ['abs (', A(n).units, ')'];
          end
       end
       

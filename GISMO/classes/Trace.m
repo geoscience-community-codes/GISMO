@@ -1,5 +1,10 @@
 classdef Trace < TraceData
    % Trace is the new waveform
+   %
+   % Unless otherwise stated, all work by Celso Reyes
+   % Contributions by: Glenn Thompson, Michael West
+   % Based on waveform, by Celso Reyes
+   % XXXX by: 
    
    properties(Dependent)
       network % network code
@@ -10,8 +15,9 @@ classdef Trace < TraceData
    end
    
    properties
-      history = {'created', now}; % history for Trace {'what', when}
+      history = struct('what','created','when',now); % history for Trace
       UserData = struct(); % structure containing user-defined fields
+      calib = struct('value',1,'applied',false);
    end
    
    properties(Hidden)
@@ -26,6 +32,9 @@ classdef Trace < TraceData
       %   eac assignment must have exactly this number of values.
       %   if [min max], then any number of values between min
       UserDataRules %   and max inclusive may be assigned to this.
+   end
+   
+   properties(Hidden, Dependent)
    end
    
    methods
@@ -85,6 +94,37 @@ classdef Trace < TraceData
          val = sampletimes@TraceData(obj) + obj.mat_starttime;
       end
       
+      function val = firstsampletime(obj, stringformat)
+         % firstsampletime - get time of first sample as matlab date or string.
+         % val = trace.lastsampletime will return as a datenum
+         % val = trace.lastsampletime(FORMAT) will return a string
+         % formatted according to FORMAT.
+         % For multiple traces, a character array will be returned.
+         %
+         % see also datestr
+         val = [obj.mat_starttime];
+         if exist('stringformat','var')
+            val = datestr(val,stringformat);
+         end
+      end
+      function val = lastsampletime(obj, stringformat)
+         % lastsampletime - get time of last sample as matlab date or string.
+         % val = trace.lastsampletime will return as a datenum
+         % val = trace.lastsampletime(FORMAT) will return a string
+         % formatted according to FORMAT.
+         %
+         % For multiple traces, a character array will be returned.
+         % see also datestr
+         secDurs = [obj.duration];
+         secDurs(secDurs > 0) = secDurs - [obj.samplefreq];
+         val = [obj.firstsampletime] + secDurs/86400;
+         if exist('stringformat','var')
+            val = datestr(val,stringformat);
+         end
+         
+            
+      end
+         
       function T = align(T,alignTime, newFrequency, method)
          %ALIGN resamples a waveform at over a specified interval
          %   w = w.align(alignTime, newFrequency)
@@ -209,6 +249,64 @@ classdef Trace < TraceData
             timeStr = datestr(startt,'yyyy-mm-dd HH:MM:SS.FFF');
             myHistory = sprintf('aligned data to %s at %f samples/sec', timeStr, freq);
             T = T.addhistory(myHistory);
+         end
+      end
+      
+      function s = rsam(w, method, samplingPeriod)
+         %RSAM create an RSAM-like object from a waveform object
+         %   s = rsam(waveform, method, samplingPeriod)
+         %
+         %   Input Arguments
+         %       WAVEFORM: waveform object       N-dimensional
+         %
+         %       METHOD: which method of sampling to perform within each sample
+         %                window
+         %           'max' : maximum value
+         %           'min' : minimum value
+         %           'mean': average value (Default)
+         %           'median' : mean value
+         %           'rms' : rms value (added 2011/06/01)
+         %
+         %       SAMPLINGPERIOD : the number of seconds between samples (Default:
+         %       60s)
+         %
+         %
+         %   Examples:
+         %       s = rsam(w) Each sample in the RSAM object is computed from a 60-s
+         %       window of data. Successive windows do not overlap. Each window is
+         %       detrended, NaN's replaced with mean value. Then the mean absolute
+         %       value - i.e. the mean amplitude - is taken.
+         %
+         %       s = rsam(w, 'rms') As above, but the root-mean-square absolute value
+         %       is taken.
+         %
+         %       s = rsam(w, 'max', 1.0) As above, but the max absolute value is
+         %       taken, and the time window is 1s rather than 60s.
+         %
+         % Glenn Thompson 2014/10/28
+         if ~exist('method', 'var')
+            method = 'mean';
+         end
+         if ~exist('samplingPeriod', 'var')
+            samplingPeriod = 60;
+         end
+         
+         % detrend data after fill gaps to get rid of NaNs marking missing values
+         w = w.fillgaps('interp');
+         w = w.detrend;
+         
+         for i = 1:numel(w)
+            Wsamplingperiod = 1.0 / w(i).samplefreq;
+            % either set to whatever samplingPeriod seconds of data are, or the
+            % length of data if less
+            crunchfactor = min([round(samplingPeriod / Wsamplingperiod) numel(w(i).data)]);
+            wabs = abs(w(i));
+            wresamp = resample(wabs, method, crunchfactor);
+            %TODO: replace the enum and allow for full Net.Sta.Loc.Cha channel definition
+            s(i) = rsam(wresamp.sampletimes, wresamp.data,...
+               'sta', wresamp.station, 'chan', wresamp.channel,...
+               'units', wresamp.units, 'snum', wresamp.mat_starttime,...
+               'enum', get(wresamp, 'end'));
          end
       end
       
@@ -394,9 +492,10 @@ classdef Trace < TraceData
          end
          
          function w = piece_together(w)
+            %TODO: Finish fixing this
             if numel(w) > 2
-               for i = numel(w)-1: -1 : 1
-                  w(i) = piece_together(w(i:i+1));
+               for n = numel(w)-1: -1 : 1
+                  w(n) = piece_together(w(n:n+1));
                end
                w = w(1);
                return;
@@ -408,11 +507,11 @@ classdef Trace < TraceData
                return;
             end;
             dt = dt_seconds(w(1),w(2));  %time overlap in seconds.
-            sampleRates = round(get(w,'freq'));
+            sampleRates = round([w.samplefreq]);
             sampleInterval = 1 ./ sampleRates(1);
             
             if overlaps(dt, sampleInterval)
-               w = spliceWaveform(w(1), w(2));
+               w = spliceTrace(w(1), w(2));
             else
                paddingAmount = round((dt * sampleRates(1))-1);
                w = spliceAndPad(w(1),w(2), paddingAmount);
@@ -420,42 +519,41 @@ classdef Trace < TraceData
             w = w(1);
          end
          
-         function w = spliceAndPad(w1, w2, paddingAmount)
+         function T1 = spliceAndPad(T1, T2, paddingAmount)
             if paddingAmount > 0 && ~isinf(paddingAmount)
                toAdd = nan(paddingAmount,1);
             else
                toAdd = [];
             end
             
-            w = set(w1,'data',[w1.data; toAdd; w2.data]);
+            T1.data = [T1.data; toAdd; T2.data];
          end
          
-         function w = spliceWaveform(w1, w2)
+         function W1 = spliceTrace(W1, T2)
             % NOTE * Function uses direct field access
-            timesToGrab = sum(get(w1,'timevector') < get(w2,'start'));
+            timesToGrab = sum(W1.sampletimes < T2.mat_starttime);
             
-            samplesRemoved = numel(w1.data) - timesToGrab;
+            samplesRemoved = numel(W1.data) - timesToGrab;
+            W1.data = [double(extract(W1,'index',1,timesToGrab)); T2.data];
             
-            w = set(w1,'data',[double(extract(w1,'index',1,timesToGrab)); w2.data]);
-            
-            w= addhistory(w,'SPLICEPOINT: %s, removed %d points (overlap)',...
-               datestr(get(w2,'start')),samplesRemoved);
+            W1= W1.addhistory('SPLICEPOINT: %s, removed %d points (overlap)',...
+               T2.start, samplesRemoved);
          end
          
          function result = overlaps(dt, sampleInterval)
             result = (dt- sampleInterval .* 1.25) < 0;
          end
          
-         function t = dt_seconds(w1,w2)
+         function t = dt_seconds(T1,T2)
             %  w1----] t [----w2
-            firstsampleT = get(w2,'start');
-            lastsampleT = get(w1,'timevector'); lastsampleT = lastsampleT(end);
-            t = firstsampleT*86400 - lastsampleT * 86400;
+            firstsampleT = T2.firstsampletime;
+            lastsampleT = T1.lastsampletime;
+            t = (firstsampleT - lastsampleT) * 86400;
          end
          
-         function w = timesort(w)
-            [~, I] = sort(get(w,'start'));
-            w = w(I);
+         function T = timesort(T)
+            [~, I] = sort([T.mat_starttime]);
+            T = T(I);
          end
       end
       
@@ -714,9 +812,60 @@ classdef Trace < TraceData
       %function calib_apply
       %function calib_remove
       
-      %function addhistory
-      %function clearhistory
-      %function history
+      %% history-related functions
+      function T = addhistory(T, whathappened,varargin)
+         %ADDHISTORY function in charge of adding history to a waveform
+         %   trace = trace.addhistory(whathappened);
+         %   trace = trace.addhistory(formatString, [variables...])
+         %
+         %   The second way of using addhistory follows the syntax of fprintf
+         %
+         %   Input Arguments
+         %       WAVEFORM: a Trace object
+         %       WHATHAPPENED: absolutely anything.  Really.
+         %
+         %   AddHistory appends not only what happened, but also keeps track of WHEN
+         %   it happened.
+         %
+         %   example
+         %       T = Trace; %create a blank trace
+         %       T = T.addhistory('the following procedures done by DoIt.m');
+         %       N = 1; M = 'Today'
+         %       T = T.addhistory('this is sample #%d date:%s',N,M);
+         %       % what is actually added: "this is sample #1 date:Today"
+         %
+         % See also Trace.history, fprintf
+         
+         if nargin > 2,
+            whathappened = sprintf(whathappened, varargin{:});
+         end
+         modtime = now;
+         for N = 1 : numel(T);
+            %History is stored in a cell, the format of which is [WHAT, WHEN]
+               T(N).history(end+1).what = whathappened;
+               T(N).history(end).when = modtime;
+         end
+      end
+      function T = clearhistory(T)
+         %CLEARHISTORY reset history of a waveform
+         %   trace = trace.clearhistory
+         %   clears the history, leaving it blank
+         %
+         % See also Trace.addhistory Trace.history.         
+         T(N).history= T(N).history([]);
+      end
+      function [myhist] = get.history(w)
+         %HISTORY retrieve the history of a waveform object
+         %   myhist = history(waveform)
+         %       returns a struct describing what's been done to this trace
+         %
+         % See also Trace.addhistory, Trace.clearhistory
+         if numel(w) > 1
+            error('Waveform:history:tooManyWaveforms',...
+               '''waveform/history()'' can only retrieve history for individual waveforms');
+         end
+         myhist = w.history;
+      end
       
       %% plotting functions
       function varargout = plot(T, varargin)
