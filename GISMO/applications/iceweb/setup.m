@@ -1,10 +1,12 @@
-function setup_lite(subnet, snum, enum, setupfile, chanmatch)
+function setup(subnet, snum, enum, setupfile, chanmatch)
+debug.printfunctionstack('>');
     [paths,PARAMS,subnets]=pf2PARAMS(setupfile);
     if ~exist('enum','var')
         enum = snum;
     end
     subnets(1).sites = get_closest_sites(subnets(1).source.longitude, subnets(1).source.latitude, subnets(1).radius, paths.DBMASTER, Inf, snum, enum+1, chanmatch);
     sites = subnets(1).sites;
+	show_sites(sites);
     save sites.mat sites
     
 %     %gismo_datasource = datasource('antelope', dbwfdata);
@@ -27,6 +29,7 @@ function setup_lite(subnet, snum, enum, setupfile, chanmatch)
     
     
     save2mat(sprintf('pf/%s.mat',subnet), subnets, paths, PARAMS)
+debug.printfunctionstack('<');
 end
 
 function [paths,PARAMS,subnets]=pf2PARAMS(setupfile)

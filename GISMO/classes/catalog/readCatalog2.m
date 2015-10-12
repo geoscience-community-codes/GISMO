@@ -68,14 +68,8 @@ function self = readCatalog(catalog_source, varargin)
 %             expression.
 %
 %   If the subset_expression parameter name/value pair is omitted, a expression 
-%   can also be formed from other name/value pairs. These are:
-%       PARAMETER  VALUE
-%       'snum'     a datenum denoting the minimum origin time
-%       'enum'     a datenum denoting the maximum origin time
-%       'minmag'   the minimum magnitude
-%       'mindepth' the minimum depth (in km)
-%       'maxdepth' the maximum depth (in km)
-%       'region'   a 4-element vector: [minlon maxlon minlat maxlat]
+%   can also be formed from other name/value pairs as for irisFetch.Events,
+%   except that minimumRadius and offset are not supported.
 %
 % READING FROM A SEISAN-DERIVED DAT FILE
 % 
@@ -84,7 +78,7 @@ function self = readCatalog(catalog_source, varargin)
 %     directory specified by dbpath.
 % 
 %     To subset the data, use parameter name/value pairs (snum, enum, 
-%     minmag, mindepth, maxdepth, region). 
+%     minimumMagnitude, minimumDepth, maximumDepth, region). 
 %
 % READING S-FILES FROM A SEISAN YYYY/MM REA DATABASE
 % 
@@ -94,7 +88,7 @@ function self = readCatalog(catalog_source, varargin)
 %     YYYY/MM directories)
 % 
 %     To subset the data, use parameter name/value pairs (snum, enum, 
-%     minmag, mindepth, maxdepth, region). 
+%     minimumMagnitude, minimumDepth, maximumDepth, region). 
 %
 %% EXAMPLES
 %
@@ -117,7 +111,7 @@ function self = readCatalog(catalog_source, varargin)
 %   (5) Read Alaska Earthquake Center events greater than M=4.0 in 2009
 %       within rectangular region lat = 55 to 65, lon = -170 to -135 from
 %       the "Total" database of all regional earthquakes in Alaska:
-%         obj = readCatalog('datascope', 'dbpath', '/Seis/catalogs/aeic/Total/Total', 'snum', datenum(2009,1,1), 'enum', datenum(2010,1,1), 'minmag', 4.0, 'region', [-170.0 -135.0 55.0 65.0]);
+%         obj = readCatalog('datascope', 'dbpath', '/Seis/catalogs/aeic/Total/Total', 'snum', datenum(2009,1,1), 'enum', datenum(2010,1,1), 'minimumMagnitude', 4.0, 'region', [-170.0 -135.0 55.0 65.0]);
 %
 %   (6) As 5, but use a subset_expression instead:
 %         obj = readCatalog('datascope', 'dbpath', '/Seis/catalogs/aeic/Total/Total', 'subset_expression', 'time > "2009/1/1" & time < "2010/1/1"' & ml > 4 & lon > -170.0 & lon < -135.0 & lat > 55.0 & lat < 65.0');
@@ -168,14 +162,20 @@ function self = load_datascope_events(varargin)
     p.addParamValue('dbpath', @isstr);
     p.addParamValue('subset_expression', '', @isstr);
     p.addParamValue('archiveformat', 'single file', @isstr);
-    p.addParamValue('snum', [], @isnumeric);  
-    p.addParamValue('enum', [], @isnumeric);
-    p.addParamValue('minmag', [], @isnumeric);
-    p.addParamValue('region', [], @isnumeric);
+    p.addParamValue('startTime', []);  
+    p.addParamValue('endTime', []);
+    p.addParamValue('minimumMagnitude', [], @isnumeric);
+    p.addParamValue('maximumMagnitude', [], @isnumeric);
+    p.addParamValue('minimumLatitude', [], @isnumeric);
+    p.addParamValue('maximumLatitude', [], @isnumeric);
+    p.addParamValue('minimumLongitude', [], @isnumeric);
+    p.addParamValue('maximumLongitude', [], @isnumeric);  
+    p.addParamValue('minimumDepth', [], @isnumeric);
+    p.addParamValue('maximumDepth', [], @isnumeric); 
+    p.addParamValue('minimumRadius', [], @isnumeric);
+    p.addParamValue('maximumRadius', [], @isnumeric);     
     p.addParamValue('subclass', '*', @ischar);
-    p.addParamValue('mindepth', [], @isnumeric);
-    p.addParamValue('maxdepth', [], @isnumeric);
-    p.addParamValue('RUNMODE', 'fast', @isstr);
+    p.addParamValue('addarrivals', false, @islogical);
     p.parse(varargin{:});
     fields = fieldnames(p.Results);
     for i=1:length(fields)
@@ -184,6 +184,10 @@ function self = load_datascope_events(varargin)
         val = p.Results.(field);
         eval(sprintf('%s = val;',field));
     end 
+    
+    % Check start & end times
+    snum = ensure_dateformat(startTime);
+    enum = ensure_dateformat(endTime);
 
     % Create a dbeval subset_expression if not already set.
     if ~exist('subset_expression', 'var') | isempty(subset_expression)
@@ -195,18 +199,29 @@ function self = load_datascope_events(varargin)
             if ~isempty(enum) & isnumeric(enum)
                 expr = sprintf('%s && time <= %f',expr,datenum2epoch(enum));
             end
-            if ~isempty(minmag) & isnumeric(minmag)
-                expr = sprintf('%s && (ml >= %f || mb >= %f || ms >= %f)',expr,minmag,minmag,minmag);
+            if ~isempty(minimumMagnitude) & isnumeric(minimumMagnitude)
+                expr = sprintf('%s && (ml >= %f || mb >= %f || ms >= %f)',expr,minimumMagnitude,minimumMagnitude,minimumMagnitude);
             end
-            if ~isempty(region) & isnumeric(region)
-                leftlon = region(1); rightlon=region(2); lowerlat=region(3); upperlat=region(4);
-                expr = sprintf('%s && (lat >= %f && lat <= %f && lon >= %f && lon <= %f)',expr,lowerlat, upperlat, leftlon, rightlon);
+            if ~isempty(maximumMagnitude) & isnumeric(maximumMagnitude)
+                expr = sprintf('%s && (ml >= %f || mb >= %f || ms >= %f)',expr,maximumMagnitude,maximumMagnitude,maximumMagnitude);
             end
-            if ~isempty(mindepth) & isnumeric(mindepth)
-                expr = sprintf('%s && (depth >= %f)', expr,mindepth); 
+            if ~isempty(minimumLatitude) & isnumeric(minimumLatitude)
+                expr = sprintf('%s && (lat >= %f)',expr, minimumLatitude);
             end
-            if ~isempty(maxdepth) & isnumeric(maxdepth)
-                expr = sprintf('%s && (depth <= %f)', expr,maxdepth); 
+            if ~isempty(maximumLatitude) & isnumeric(maximumLatitude)
+                expr = sprintf('%s && (lat <= %f)',expr, maximumLatitude);
+            end            
+            if ~isempty(minimumLongitude) & isnumeric(minimumLongitude)
+                expr = sprintf('%s && (lon >= %f)',expr, minimumLongitude);
+            end
+            if ~isempty(maximumLongitude) & isnumeric(maximumLongitude)
+                expr = sprintf('%s && (lon <= %f)',expr, maximumLongitude);
+            end            
+            if ~isempty(minimumDepth) & isnumeric(minimumDepth)
+                expr = sprintf('%s && (depth >= %f)', expr,minimumDepth); 
+            end
+            if ~isempty(maximumDepth) & isnumeric(maximumDepth)
+                expr = sprintf('%s && (depth <= %f)', expr,maximumDepth); 
             end
             subset_expression = expr(4:end);
             clear expr
@@ -534,11 +549,11 @@ function self = load_aef(varargin)
     p.addParamValue('dbpath', '', @isstr);
     p.addParamValue('snum', 0, @isnumeric);  
     p.addParamValue('enum', now, @isnumeric);
-    p.addParamValue('minmag', [], @isnumeric);
+    p.addParamValue('minimumMagnitude', [], @isnumeric);
     p.addParamValue('region', [], @isnumeric);
     p.addParamValue('subclass', '*', @ischar);
-    p.addParamValue('mindepth', [], @isnumeric);
-    p.addParamValue('maxdepth', [], @isnumeric);
+    p.addParamValue('minimumDepth', [], @isnumeric);
+    p.addParamValue('maximumDepth', [], @isnumeric);
     p.addParamValue('RUNMODE', 'fast', @isstr);
     p.parse(varargin{:});
     
@@ -578,9 +593,9 @@ function self = load_aef(varargin)
     if ~isempty(self.dnum)
 
         % cut data according to threshold mag
-        if ~isempty(minmag)
+        if ~isempty(minimumMagnitude)
             disp('Applying minimum magnitude filter')
-            m = find(self.mag > minmag);
+            m = find(self.mag > minimumMagnitude);
             fprintf('Accepting %d events out of %d\n',length(m),length(self.dnum));
             self.event_list = self.event_list(m);
         end    
