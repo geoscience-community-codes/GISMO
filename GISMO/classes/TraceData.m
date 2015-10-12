@@ -41,6 +41,10 @@ classdef TraceData
       units % text description of data units
    end
    
+   properties(Dependent)
+      duration % duration in seconds To get matlab duration, divide by 86400
+   end
+   
    properties(Hidden=true)
       % when trust_assignments is false, then data
       trust_assignments = false; % if not trusted, then slows down computations somewhat, but is useful for debugging. 
@@ -71,10 +75,30 @@ classdef TraceData
       function val = sampletimes(obj)
          % TraceData.sampletimes returns matlab-time offset of each sample
          assert(numel(obj) == 1, 'only works on one TraceData at a time');
-         sampPerSec = obj.samplefreq;
-         matstep = datenum(0,0,0,0,0, 1 / sampPerSec);
-         val = (0:(numel(obj.data)-1)) .* matstep;
+         val = (0:(numel(obj.data)-1)) .* obj.samplefreq / 86400;
          val = val(:);
+      end
+      
+      function secondsOfData = get.duration(obj)
+         %returns duration in seconds
+         assert(numel(obj) == 1, 'only works on one TraceData at a time');
+         secondsOfData = numel(obj.data) / obj.samplefreq;
+      end
+      
+      function s = formattedduration(obj, fmt)
+         % formattedduration default format is 'dd:hh:mm:ss.SSS'
+         % depends upon the duration class, introduced in r2014b
+         % see duration
+         secsOfData = obj.duration;
+         if exist('duration','class') %available in recent r2014b and later of matlab
+            if exist('fmt','var') && ~isempty(fmt)
+               s = char(duration(0,0,secsOfData,'Format',fmt));
+            else
+               s = char(duration(0,0,secsOfData,'Format','dd:hh:mm:ss.SSS'));
+            end
+         else
+            error('advanced duration functions supported in r2014b and later');
+         end
       end
       
       %% Mathamatical - BASIC OPERATIONS
@@ -782,10 +806,69 @@ classdef TraceData
          assert(tf, 'TraceData:compatabilityCheckFailed', msg);
       end
       
-               
+      %% stacking functions
+      function out = stack(T)
+         %STACK stacks data from array of waveforms
+         %   StackedWave = stack(waveforms)
+         %   ASSUMES frequencies are the same. data does not need to be the same
+         %   length, but shorter waveforms will be padded with zeros at the end
+         %   prior to stacking.
+         %
+         %   Stacks all waves, regardless of waveform's dimension
+         %
+         %   Data is summed, but the average is not taken, nor is it normalized. You
+         %   may wish to change the station and/or channel names to reflect the
+         %   properties of this waveform.  Possibly change the units, also, if that
+         %   makes sense.
+         %
+         %   Output retains the same info as the very first waveform (minus history)
+         %   the station name becomes the original name with "- stack (N)" tacked onto
+         %   the end.
+         %
+         %   To ensure frequency and time matching, use ALIGN
+         %
+         %   See also WAVEFORM/ALIGN
+         
+         out = T(1);
+         out.station = [out.station ' - stack (' num2str(T) ')'];
+         out.data = sum(double(T),2);
+      end
+      function stk = bin_stack(T,bin,ovr)
+         %BIN_STACK: Stack input waveforms with N waveforms per stack. The number N
+         %    is specified by input 'bin'. The input 'ovr' specifies the amount of
+         %    overlap between bins.
+         %
+         %USAGE: stk = bin_stack(w,bin,ovr)
+         %    If input w contains 100 waveforms then:
+         %    stk = bin_stack(w,20,0) % stk has 5 stacks of 20 waveforms
+         %    stk = bin_stack(w,5,0)  % stk has 20 stacks of 5 waveforms
+         %    stk = bin_stack(w,20,10)  % stk has 9 stacks of 20 waveforms
+         %
+         %INPUTS:  w   - Input waveform
+         %         bin - Bin size of stacked waveforms
+         %         ovr - Number of overlapping events between bins
+         %
+         %OUTPUTS: stk - Array of stacked waveforms
+         
+         % Author: Dane Ketner, Alaska Volcano Observatory
+         
+         nw = numel(T);
+         inc = bin-ovr;
+         n=1;
+         while 1
+            if (n-1)*inc+bin > nw
+               return
+            else
+               stk(n) = stack(T((n-1)*inc+1:(n-1)*inc+bin));
+               n=n+1;
+            end
+         end
+      end
    end
+   
+   %% protected methods
    methods(Access=protected)
-      
+      %none
    end
    
    methods(Static)

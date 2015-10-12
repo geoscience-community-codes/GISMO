@@ -7,7 +7,6 @@ classdef Trace < TraceData
       location % location code
       channel % channel code
       start % start time (text)
-      % sampletimes % moved to the TraceData
    end
    
    properties
@@ -18,14 +17,14 @@ classdef Trace < TraceData
    properties(Hidden)
       mat_starttime % start time in matlab-time
       channelInfo % channelTag
-                    %struct that mirrors UserData, but contains two fields:
-                    %   allowed_type: a class name (or empty). If this
-                    %   exist, then when data is assigned to UserData, it
-                    %   will be type-checked.
-                    %   min_count, max_count: if empty,any sized array can be
-                    %   assigned to this field.  If a single number, then
-                    %   eac assignment must have exactly this number of values.
-                    %   if [min max], then any number of values between min
+      %struct that mirrors UserData, but contains two fields:
+      %   allowed_type: a class name (or empty). If this
+      %   exist, then when data is assigned to UserData, it
+      %   will be type-checked.
+      %   min_count, max_count: if empty,any sized array can be
+      %   assigned to this field.  If a single number, then
+      %   eac assignment must have exactly this number of values.
+      %   if [min max], then any number of values between min
       UserDataRules %   and max inclusive may be assigned to this.
    end
    
@@ -46,38 +45,171 @@ classdef Trace < TraceData
          end %switch
       end
       
+      %% get/set of channel-related data
       function N = get.network(obj)
          N = obj.channelInfo.network;
+      end
+      function obj = set.network(obj, val)
+         obj.channelInfo.network = val;
       end
       
       function S = get.station(obj)
          S = obj.channelInfo.station;
       end
       function obj = set.station(obj, val)
-        obj.channelInfo.station = val;
+         obj.channelInfo.station = val;
       end
+      
       function L = get.location(obj)
          L = obj.channelInfo.location;
+      end
+      function obj = set.location(obj, val)
+         obj.channelInfo.location = val;
       end
       
       function C = get.channel(obj)
          C = obj.channelInfo.channel;
       end
+      function obj = set.channel(obj, val)
+         obj.channelInfo.channel = val;
+      end
       
+      %%
       function T = get.start(obj)
          T = datestr(obj.mat_starttime,'yyyy-mm-dd HH:MM:SS.FFF');
       end
       
- 
       function val = sampletimes(obj)
          %sampletimes retrieve matlab date for each sample
-         
          % replaces get(w, 'timevector')
          val = sampletimes@TraceData(obj) + obj.mat_starttime;
       end
       
-      function obj = align(obj, alignTime, newFrequency, method)
-         error('unimplemented function');
+      function T = align(T,alignTime, newFrequency, method)
+         %ALIGN resamples a waveform at over a specified interval
+         %   w = w.align(alignTime, newFrequency)
+         %   w = w.align(alignTime, newFrequency, method)
+         %
+         %   Input Arguments
+         %       WAVEFORM: waveform object       N-dimensional
+         %       ALIGNTIME: either a single matlab time or a series of times the
+         %       same shape as the input WAVEFORM matrix.
+         %       NEWFREQUENCY: the frequency (Samples per Second) of the newly aligned
+         %          waveforms
+         %       METHOD: Any of the methods from function INTERP
+         %          If omitted, then the DEFAULT IS 'pchip'
+         %
+         %   Output
+         %       The output waveform has the new frequency newFrequency and a
+         %       starttime calculated by the specified method, using matlab's
+         %       INTERP1 function.
+         %
+         %
+         %   METHODOLOGY
+         %     The alignTime is projected forward or backward in time at the
+         %     specified sample interval until it approaches the original waveform's
+         %     start time.  The rest of the waveform is then interpolated at the
+         %     sample frequency.
+         %
+         %     Methodology Example.
+         %         A waveform starts on 1/1/2008 12:00, with sample freq of 10
+         %         samples/sec, and has data covering 10 minutes  (6000 samples).
+         %         The resampled data is requested for time 1/1/2008 12:05:00.03,
+         %         also at 10 samples/sec.
+         %         The resulting data will start at 1/1/2008 12:00:00.3, and have
+         %         5999 samples, with the last sample occurring at 12:09:59.830.
+         %
+         %   Examples of usefulness?  Particle motions, coordinate transformations.
+         %   If used for particle motions, consider MatLab's plotmatrix command.
+         %
+         %   example:
+         %   OUTDATED>    scnl = sclnobject('KDAK',{'BHZ','BHN','BHE'}); %grab all 3 channels
+         %       % for each component, grab winston data on Kurile Earthquake
+         %   OUTDATED>    w = waveform(mydatasource,scnl,'1/13/2007 04:20:00','1/13/2007 04:30:00');
+         %       w = w.align('1/37/2007 4:22:00', w(1).samplefreq);
+         %
+         %
+         % See also INTERP1, PLOTMATRIX
+         
+         % AUTHOR: Celso Reyes
+         
+         oneSecond = 1/86400;
+         
+         if ~exist('method','var')
+            method = 'pchip';
+         end
+         
+         if ischar(alignTime),
+            alignTime =  datenum(alignTime);
+         end
+         
+         hasSingleAlignTime = numel(alignTime) == 1;
+         
+         if hasSingleAlignTime %use same align time for all waveforms
+            alignTime = repmat(alignTime,size(T));
+         elseif isvector(alignTime) && isvector(T)
+            if numel(alignTime) ~= numel(T)
+               error('Waveform:align:invalidAlignSize',...
+                  'The number of Align Times does not match the number of waveforms');
+            else
+               % this situation OK.
+               % ignore possibility that we're comparing a 1xN vs Nx1.
+            end
+         elseif ~all(size(alignTime) == size(T)) %make sure 1:1 ratio for alignTime & waveform
+            if numel(alignTime) == numel(T)
+               error('Waveform:align:invalidAlignSize',...
+                  ['The alignTime matrix is of a different size than the '...
+                  'waveform Matrix.  ']);
+            end
+         end
+         
+         
+         newSamplesPerSec = 1 / newFrequency ;  %# samplesPerSecond
+         timeStep = newSamplesPerSec * oneSecond;
+         existingStarts = [T.mat_starttime]; %get(w,'start');
+         existingEnds = get(T,'end');
+         
+         % calculate the offset of the closest "aligned" time, by projecting the
+         % desired frequency rate and time forward or backward onto these waveforms'
+         % start time.
+         deltaTime = existingStarts - alignTime;  % time in between
+         % if deltatime (-):alignTime AFTER existingStarts,
+         % if deltatime (+):alignTime BEFORE existingStarts
+         closestStartTime = existingStarts - rem(deltaTime,timeStep);
+         
+         for n=1:numel(T)
+            origTimes = T(n).sampletimes;
+            % newTimes MUST be in one column, else DATA field gets corrupted
+            newTimes = ( closestStartTime(n):timeStep:existingEnds(n) )';
+            
+            %get rid of samples that lay entirely outside the existing waveform's
+            %range (ie, only interpolate values BETWEEN points)
+            newTimes(newTimes < origTimes(1) | newTimes > origTimes(end)) = [];
+            
+            T(n).data = interp1(...
+               origTimes,...     original times (x)
+               T(n).data,...         original data (y)
+               newTimes,...    new times (x1)
+               method);           %  method
+            T(n).start = newTimes(1); % must be a datenum
+            T(n).samplefreq = newFrequency;
+         end
+         
+         %% update histories
+         % if all waves were aligned to the same time, then handle all history here
+         if hasSingleAlignTime
+            % noteRealignment(w, alignTime(1), newFrequency);
+         else
+            for n=1:numel(T)
+               % w(n) = noteRealignment(w(n), alignTime(n), newFrequency);
+            end
+         end
+         
+         function T = noteRealignment(T, startt, freq)
+            timeStr = datestr(startt,'yyyy-mm-dd HH:MM:SS.FFF');
+            myHistory = sprintf('aligned data to %s at %f samples/sec', timeStr, freq);
+            T = T.addhistory(myHistory);
+         end
       end
       
       %% Handling User-defined fields
@@ -109,7 +241,7 @@ classdef Trace < TraceData
       end
       
       function testUserField(obj, fn, value)
-         if ~isfield(obj.UserDataRules,fn) 
+         if ~isfield(obj.UserDataRules,fn)
             return;
          end
          if ~isfield(obj.UserData,fn)
@@ -124,7 +256,7 @@ classdef Trace < TraceData
             return
          end
          if ~exist('value','var')
-           value = obj.UserData.(fn);
+            value = obj.UserData.(fn);
          end
          % test the type
          if ~isempty(rules.allowed_type) && ...
@@ -152,7 +284,7 @@ classdef Trace < TraceData
          end
       end
       
-      function T = setUserDataRule(T, fieldname, allowedType, allowedCount, allowedRange) 
+      function T = setUserDataRule(T, fieldname, allowedType, allowedCount, allowedRange)
          % setUserDataRule creates rules that govern setting various userdata fields.
          % T = T.setUserData(fieldname, classname) will have the class
          % checked each time a value is assigned to the UserData
@@ -165,7 +297,7 @@ classdef Trace < TraceData
          %    numel(value) == N or Nmin <= numel(value) <= Nmax
          %
          % T = T.setUserDataRule(fieldname, classname, count, range)
-         % for numeric classes, range will specify the min/max values. 
+         % for numeric classes, range will specify the min/max values.
          %
          % T = T.setUserDataRule(fieldname) will clear the constraints.
          % examples:
@@ -210,7 +342,7 @@ classdef Trace < TraceData
             error('allowedCount must be either empty, or numeric with 1 or 2 values');
          end
          
-         if ~exist('allowedRange', 'var') || strcmp(allowedType,'char') 
+         if ~exist('allowedRange', 'var') || strcmp(allowedType,'char')
             allowedRange = [];
          end
          if isnumeric(allowedRange)
@@ -230,34 +362,376 @@ classdef Trace < TraceData
       end
       
       %%
-      %function stack
-      %function binstack
       %function combine
-      %function extract
-
+      function combined_waveforms = combine (waveformlist)
+         %TODO: Make this work with TRACE. Rightnow it is waveforms...
+         %COMBINE merges waveforms based on start/end times and channeltag info.
+         % combined_waveforms = combine (waveformlist) takes a vector of waveforms
+         % and combines them based on SCNL information and start/endtimes.
+         % DOES NO OTHER CHECKS
+         
+         % AUTHOR: Celso Reyes
+         
+         if numel(waveformlist) == 0  %nothing to do
+            combined_waveforms = waveformlist;
+            return
+         end
+         
+         channelinfo = get(waveformlist,'channeltag');
+         [uniquescnls, idx, scnlmembers] = unique(channelinfo);
+         
+         %preallocate
+         combined_waveforms = repmat(waveform,size(uniquescnls));
+         
+         for i=1:numel(uniquescnls)
+            w = waveformlist(scnlmembers == i);
+            w = timesort(w);
+            for j=(numel(w)-1):-1:1
+               w(j) = piece_together(w(j:j+1));
+               w(j+1) = waveform;
+            end
+            combined_waveforms(i) = w(1);
+         end
+         
+         function w = piece_together(w)
+            if numel(w) > 2
+               for i = numel(w)-1: -1 : 1
+                  w(i) = piece_together(w(i:i+1));
+               end
+               w = w(1);
+               return;
+            elseif numel(w) == 1
+               return
+            end
+            if isempty(w(1))
+               w = w(2);
+               return;
+            end;
+            dt = dt_seconds(w(1),w(2));  %time overlap in seconds.
+            sampleRates = round(get(w,'freq'));
+            sampleInterval = 1 ./ sampleRates(1);
+            
+            if overlaps(dt, sampleInterval)
+               w = spliceWaveform(w(1), w(2));
+            else
+               paddingAmount = round((dt * sampleRates(1))-1);
+               w = spliceAndPad(w(1),w(2), paddingAmount);
+            end
+            w = w(1);
+         end
+         
+         function w = spliceAndPad(w1, w2, paddingAmount)
+            if paddingAmount > 0 && ~isinf(paddingAmount)
+               toAdd = nan(paddingAmount,1);
+            else
+               toAdd = [];
+            end
+            
+            w = set(w1,'data',[w1.data; toAdd; w2.data]);
+         end
+         
+         function w = spliceWaveform(w1, w2)
+            % NOTE * Function uses direct field access
+            timesToGrab = sum(get(w1,'timevector') < get(w2,'start'));
+            
+            samplesRemoved = numel(w1.data) - timesToGrab;
+            
+            w = set(w1,'data',[double(extract(w1,'index',1,timesToGrab)); w2.data]);
+            
+            w= addhistory(w,'SPLICEPOINT: %s, removed %d points (overlap)',...
+               datestr(get(w2,'start')),samplesRemoved);
+         end
+         
+         function result = overlaps(dt, sampleInterval)
+            result = (dt- sampleInterval .* 1.25) < 0;
+         end
+         
+         function t = dt_seconds(w1,w2)
+            %  w1----] t [----w2
+            firstsampleT = get(w2,'start');
+            lastsampleT = get(w1,'timevector'); lastsampleT = lastsampleT(end);
+            t = firstsampleT*86400 - lastsampleT * 86400;
+         end
+         
+         function w = timesort(w)
+            [~, I] = sort(get(w,'start'));
+            w = w(I);
+         end
+      end
+      
+      function outW = extract(w, method, startV, endV)
+         %TODO: make this Trace-y.  This is currently written for waveforms
+         %TODO: Decide on proper wording! Should this be multiple functions?
+         %EXTRACT creates a waveform with a subset of another's data.
+         %   waveform = extract(waveform, 'TIME', startTime, endTime)
+         %       returns a waveform with the subset of data from startTime to
+         %       endTime.  Both times are matlab formatted (string or datenum)
+         %
+         %   waveform = extract(waveform, 'INDEX', startIndex, endIndex)
+         %       returns a waveform with the subset of data from StartIndex to
+         %       EndIndex.  this is roughly equivelent to grabbing the waveform's
+         %       data into an array, as in D = get(W,'data'), then returning a
+         %       waveform with the subset of data,
+         %       ie. waveform = set(waveform,'data', D(startIndex:endIndex));
+         %
+         %   waveform = extract(waveform, 'INDEX&DURATION', startIndex, duration)
+         %       a hybrid method that starts from data index startIndex, and then
+         %       returns a specified length of data as indicated by duration.
+         %       Duration is a matlab formatted time (string or datenum).
+         %
+         %   waveform = extract(waveform, 'TIME&SAMPLES', startTime, Samples)
+         %       a hybrid method that starts from data index startIndex, and then
+         %       returns a specified length of data as indicated by duration.
+         %       Duration is a matlab formatted time (string or datenum).
+         %
+         %   Input Arguments:
+         %       WAVEFORM: waveform object        N-DIMENSIONAL
+         %       METHOD: 'TIME', or 'INDEX', or 'INDEX&DURATION'
+         %           TIME: starttime and endtime are absolute times
+         %                   (include the date)
+         %           INDEX: startt and endt are the offset (index) within the data
+         %           INDEX&DURATION: first value is an offset (index), the next says
+         %                           how much data to retrieve...
+         %           TIME&SAMPLES: grab first value at time startTime, and grab
+         %                         Samplength data points
+         %       STARTTIME:  Start time (matlab or text format)
+         %       ENDTIME:    End time (matlab or text format)
+         %       STARTINDEX: position within data array to begin extraction
+         %       ENDINDEX:   final grabbed position within data array
+         %       DURATION:   matlab format time indicating duration of data to grab
+         %       SAMPLES: the number of data points to grab.
+         %
+         %   the output waveform will have the new, appropriate start time.
+         %   if the times are outside the range of the waveform object, then the
+         %   output waveform will contain only the portion of the data that is
+         %   appropriate.
+         %
+         %   *MULTIPLE EXTRACTIONS* can be received if the time values are vectors.
+         %   Both starttime/startindex and endtime/endindex/endduration/samples must
+         %   have the same number of elements.  In this case the output waveforms
+         %   will be reshaped with each waveform represented by row, and each
+         %   extracted time represented by column.  that is...
+         %
+         %  The output of this function, for multiple waveforms and times will be:
+         %         t1   t2  t3 ... tn
+         %    -----------------------
+         %    w1 |
+         %    w2 |
+         %    w3 |
+         %     . |
+         %     . |
+         %    wn |
+         %
+         %
+         %%   examples:
+         %       % say that Win is a waveform that starts 1/5/2007 04:00, and
+         %       % contains 1 hour of data at 100 Hz (360000 samples)
+         %
+         %       % grab samples between 4:15 and 4:20
+         %       Wout = extract(Win, 'TIME', '1/5/2007 4:15:00','1/5/2007 4:20:00');
+         %
+         %       % grab 3 minutes, starting at the 10000th sample
+         %       Wout = extract(Win, 'INDEX&DURATION', 10000 , '0/0/0 00:03:00');
+         %
+         %
+         %%     example of multiple extract:
+         %  % declare the times we're interested in
+         %         firstsnippet = datenum('6/20/2003 00:00:00');
+         %         lastsnippet = datenum('6/20/2003 24:00:00');
+         %
+         %         % divide the day into 1-hour segments.
+         %         % note, 25 peices. equivelent to 0:1:24, including both midnights
+         %         alltimes = linspace(firstsnippet, lastsnippet, 25);
+         %         starttimes = alltimes(1:end-1);
+         %         endtimes = alltimes(2:end);
+         %
+         %         % grab each hour of time, and shove it into wHours
+         %         wHours = extract(wDay, 'time',starttimes, endtimes);
+         %
+         %         scaleFactor = 4 * std(double(wDay));
+         %         wHours = wHours ./ scaleFactor;
+         % %
+         %          for n = 1:length(wHours)
+         %            wHours(n) = -wHours(n) + n; %add offset for plotting
+         %          end
+         %          plot(wHours,'xunit','m','b'); %plot it in blue with at nm scaling
+         %          axis ([0 60 1 25])
+         %          set(gca,'ytick',[0:2:24],'xgrid', 'on','ydir','reverse');
+         %          ylabel('Hour');
+         %
+         %   See also WAVEFORM/SET -- Sample_Length
+         
+         % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+         
+         %% Set up condition variables, and ensure validity of input
+         MULTIPLE_WAVES = ~isscalar(w);
+         
+         %if either of our times are strings, it's 'cause they're actually dates
+         if ischar(startV)
+            startV = datenum(startV);
+         end
+         if ischar(endV)
+            endV = datenum(endV);
+         end
+         
+         if numel(startV) ~= numel(endV)
+            error('Waveform:extract:indexMismatch',...
+               'Number of start times (or indexes) must equal number of end times')
+         end
+         
+         % are we getting a series of extractions from each waveform?
+         MULTIPLE_EXTRACTION = numel(endV) > 1;
+         
+         if MULTIPLE_WAVES && MULTIPLE_EXTRACTION
+            w = w(:);
+         end
+         
+         %%
+         if numel(w)==0 || numel(startV) ==0
+            warning('Waveform:extract:emptyWaveform','no waveforms to extract');
+            return
+         end
+         outW(numel(w),numel(startV)) = waveform;
+         
+         for m = 1: numel(startV) %loop through the number of extractions
+            for n=1:numel(w); %loop through the waveforms
+               inW = w(n);
+               myData = inW.data;
+               
+               switch lower(method)
+                  case 'time'
+                     
+                     % startV and endV are both matlab formated dates
+                     %sampleTimes = get(inW,'timevector');
+                     
+                     %   ensure the format of our times
+                     if startV(m) > endV(m)
+                        warning('Waveform:extract:reversedValues',...
+                           'Start time prior to end time.  Flipping.');
+                        [startV(m), endV(m)] = swap(startV(m), endV(m));
+                     end
+                     
+                     
+                     %if requested data is outside the existing waveform, change the
+                     %start time, and clear out the data.
+                     startsAfterWave = startV(m) > get(inW,'end') ;
+                     endsBeforeWave = endV(m) < get(inW,'start');
+                     if startsAfterWave || endsBeforeWave
+                        myStart = startV(m);
+                        myData = [];
+                     else
+                        %some aspect of this data must be represented by the waveform
+                        [myStartI myStartTime] = time2offset(inW,startV(m));
+                        [myEndI] = time2offset(inW,endV(m)) - 1;
+                        if isempty(myStartTime)
+                           %waveform starts sometime after requested start
+                           myStartTime = get(inW,'start');
+                           myStartI = 1;
+                        end
+                        
+                        if myEndI > numel(myData)
+                           myEndI = numel(myData);
+                        end
+                        myData = myData(myStartI:myEndI);
+                        myStart = myStartTime;
+                     end
+                  case 'index'
+                     %startV and endV are both indexes into the data
+                     
+                     
+                     if startV(m) > numel(myData)
+                        warning('Waveform:extract:noDataFound',...
+                           'no data after start index');
+                        return
+                     end;
+                     if endV(m) > numel(myData)
+                        endV(m) = length(myData);
+                        warning('Waveform:extract:truncatingData',...
+                           'end index too long, truncating to match data');
+                     end
+                     
+                     if startV(m) > endV(m)
+                        warning('Waveform:extract:reversedValues',...
+                           'Start time prior to end time.  Flipping.');
+                        [startV(m), endV(m)] = swap(startV(m), endV(m));
+                     end
+                     
+                     myData = myData(startV(m):endV(m));
+                     sampTimes = get(inW,'timevector'); % grab individual sample times
+                     myStart = sampTimes(startV(m));
+                     
+                  case 'index&duration'
+                     % startV is an index into the data, endV is a matlab date
+                     myData = myData(startV(m):end); %grab the data starting at our index
+                     
+                     sampTimes = get(inW,'timevector'); % grab individual sample times
+                     sampTimes = sampTimes(startV(m):end); % truncate to match data
+                     
+                     myStart = sampTimes(1); %grab our starting date before hacking it
+                     
+                     sampTimes = sampTimes - sampTimes(1); %set first time to zero
+                     count = sum(sampTimes <= endV(m)) -1;
+                     myData = myData(1:count);
+                     
+                     
+                  case 'time&samples'
+                     % startV is a matlab date, while endV is an index into the data
+                     sampTimes = get(inW,'timevector'); % grab individual sample times
+                     
+                     index_to_times = sampTimes >= startV(m); %mask of valid times
+                     goodTimes = find(index_to_times,endV(m));%first howevermany of these good times
+                     
+                     myData = myData(goodTimes); % keep matching samples
+                     
+                     try
+                        myStart = sampTimes(goodTimes(1)); %first sample time is new waveform start
+                     catch
+                        warning('Waveform:extract:NoDataFound',...
+                           'no data');
+                        myStart = startV(1);
+                     end
+                     
+                  otherwise
+                     error('Waveform:extract:unknownMethod','unknown method: %s', method);
+               end
+               
+               if MULTIPLE_EXTRACTION
+                  outW(n,m) = set(inW,'start',myStart, 'data', myData);
+               else
+                  outW(n) = set(inW,'start',myStart, 'data', myData);
+               end
+            end % n-loop (looping through waveforms)
+         end % m-loop (looping through extractions)
+         
+         function  [B,A] = swap(A,B)
+            %do nothing, just flip inputs & outputs
+         end
+      end
+      
       %function ismember
       %function isvertical (?) don't like this.
       
       %function calib_apply
       %function calib_remove
-       
+      
       %function addhistory
       %function clearhistory
       %function history
       
+      %% plotting functions
       function varargout = plot(T, varargin)
          %PLOT plots a waveform object
-         %   h = plot(waveform)
+         %   h = plot(trace)
          %   Plots a waveform object, handling the title and axis labeling.  The
          %      output parameter h is optional.  If u, thto the waveform
          %   plots will be returned.  These can be used to change properties of the
          %   plotted waveforms.
          %
-         %   h = plot(waveform, ...)
+         %   h = plot(trace, ...)
          %   Plots a waveform object, passing additional parameters to matlab's PLOT
          %   routine.
          %
-         %   h = plot(waveform, 'xunit', xvalue, ...)
+         %   h = plot(trace, 'xunit', xvalue, ...)
          %   sets the xunit property of the graph, which is used to determine how
          %   the times of the waveform are interpereted.  Possible values for XVALUE
          %   are 's', 'm', 'h', 'd', 'doy', 'date'.
@@ -283,7 +757,7 @@ classdef Trace < TraceData
          %   % This example plots the waveforms at their absolute times...
          %   plot(W,'xunit','date'); % plots the waveform in blue
          %   hold on;
-         %   h = plot(W2,'xunit','date', 'r', 'linewidth', 1);
+         %   h = W.plot(W2,'xunit','date', 'r', 'linewidth', 1);
          %          %plots your other waveform in red, and with a wider line
          %
          % EXAMPLE 2:
@@ -456,7 +930,7 @@ classdef Trace < TraceData
             hasExtraArg = mod(numel(arglist),2);
             if hasExtraArg
                proplist =  parseargs(arglist(2:end));
-            formString = arglist{1};
+               formString = arglist{1};
             else
                proplist =  parseargs(arglist);
                formString = '';
@@ -535,15 +1009,15 @@ classdef Trace < TraceData
          end
       end %plot
       
-      function linkedplot(T, alignWaveforms)
+      function linkedplot(T, alignTraces)
          %LINKEDPLOT Plot multiple waveform objects as separate linked panels
-         %   linkedplot(w, alignWaveforms)
+         %   linkedplot(trace, alignTraces)
          %   where:
-         %       w = a vector of waveform objects
+         %       T = a vector of Trace
          %       alignWaveforms is either true or false (default)
-         %   linkedplot(w) will plot a record section, i.e. each waveform is plotted
+         %   T.linkedplot will plot a record section, i.e. each waveform is plotted
          %   against absolute time.
-         %   linkedplot(w, true) will align the waveforms on their start times.
+         %   T.linkedplot(true) will align the waveforms on their start times.
          
          % Glenn Thompson 2014/11/05, generalized after a function I wrote in 2000
          % to operate on Seisan files only
@@ -554,13 +1028,14 @@ classdef Trace < TraceData
          end
          
          if ~exist('alignWaveforms', 'var')
-            alignWaveforms = false;
+            alignTraces = false;
          end
          
          % get the first start time and last end time
          starttimes = [T.mat_starttime];
          % endtimes = T.timeLastSample();
-         grabendtime = @(X) (X.mat_starttime + (numel(X.data)-1) .* datenum(0,0,0,0,0,1/X.samplefreq));
+         SECSPERDAY = 86400;
+         grabendtime = @(X) (X.mat_starttime + (numel(X.data)-1) / (X.samplefreq * SECSPERDAY));
          endtimes = arrayfun(grabendtime, T);
          endtimes(endtimes < starttimes) = starttimes(endtimes<starttimes); %no negative values!
          % [starttimes endtimes]=gettimerange(T);
@@ -570,7 +1045,6 @@ classdef Trace < TraceData
          % get the longest duration - in mode=='align'
          durations = endtimes - starttimes;
          maxduration = nanmax(durations);
-         SECSPERDAY = 60 * 60 * 24;
          
          nwaveforms = numel(T);
          figure
@@ -581,7 +1055,7 @@ classdef Trace < TraceData
             myw = T(wavnum);
             dnum = myw.sampletimes;
             ax(wavnum) = axes('Position',[left 0.95-wavnum*trace_height width trace_height]);
-            if alignWaveforms
+            if alignTraces
                plot((dnum-min(dnum))*SECSPERDAY, myw.data,'-k');
                set(gca, 'XLim', [0 maxduration*SECSPERDAY]);
             else
@@ -618,14 +1092,16 @@ classdef Trace < TraceData
             datestr(mydate,'yyyy-mm-dd HH:MM:SS.FFF')
          end
       end
+      
+      %%
       function varargout = legend(T, varargin)
          %TODO: FIX REPETITIONS
          %legend creates a legend for a waveform graph
-         %  legend(wave) attempts to automatically create a legend based upon
+         %  legend(traces) attempts to automatically create a legend based upon
          %  unique values within the waveforms.  in order, the legend will
          %  preferentially use station, channel, start time.
          %
-         %  legend(wave, field1, [field2, [..., fieldn]]) will create a legend,
+         %  legend(traces, field1, [field2, [..., fieldn]]) will create a legend,
          %  using the fieldnames.
          %
          %  h = legend(...) returns the handle for the created legend.  this handle
@@ -711,6 +1187,6 @@ classdef Trace < TraceData
             end
          end
       end
-
+      
    end
 end
