@@ -7,7 +7,7 @@ classdef Trace < TraceData
       location % location code
       channel % channel code
       start % start time (text)
-      sampletimes
+      % sampletimes % moved to the TraceData
    end
    
    properties
@@ -53,7 +53,9 @@ classdef Trace < TraceData
       function S = get.station(obj)
          S = obj.channelInfo.station;
       end
-      
+      function obj = set.station(obj, val)
+        obj.channelInfo.station = val;
+      end
       function L = get.location(obj)
          L = obj.channelInfo.location;
       end
@@ -67,12 +69,11 @@ classdef Trace < TraceData
       end
       
  
-      function val = get.sampletimes(obj)
-         assert(numel(obj) == 1, 'only works on one at a time');
-         sampPerSec = obj.samplefreq;
-         matstep = datenum(0,0,0,0,0, 1 / sampPerSec);
-         val = (0:(numel(obj.data)-1)) .* matstep + obj.mat_starttime;
-         val = val(:);
+      function val = sampletimes(obj)
+         %sampletimes retrieve matlab date for each sample
+         
+         % replaces get(w, 'timevector')
+         val = sampletimes@TraceData(obj) + obj.mat_starttime;
       end
       
       function obj = align(obj, alignTime, newFrequency, method)
@@ -233,18 +234,13 @@ classdef Trace < TraceData
       %function binstack
       %function combine
       %function extract
-      %function gettimerange
+
       %function ismember
       %function isvertical (?) don't like this.
       
       %function calib_apply
       %function calib_remove
-      
-      %function plot
-      %function legend
-      %function linkedplot
-      
-         
+       
       %function addhistory
       %function clearhistory
       %function history
@@ -356,18 +352,19 @@ classdef Trace < TraceData
                
                
             case 'day of year'
-               startvec = datevec(get(T,'start'));
+               allstarts = [T.mat_starttime];
+               startvec = datevec(allstarts(:));
                dec31 = datenum([startvec(1)-1,12,31,0,0,0]); % 12/31/xxxx of previous year in Matlab format
-               startdoy = datenum(get(T,'start')) - dec31;
+               startdoy = datenum(allstarts(:)) - dec31;
                
                dl = zeros(size(T));
                for n=1:numel(T)
-                  dl(n) = get(T(n),'data_length'); %dl : DataLength
+                  dl(n) = numel(T(n).data); %dl : DataLength
                end
                
                Xvalues = nan(max(dl),numel(T));
                
-               freqs = get(T,'freq');
+               freqs = [T.samplefreq];
                for n=1:numel(T)
                   Xvalues(1:dl(n),n) = (1:dl(n))./ freqs(n) ./ ...
                      xfactor + startdoy(n) - 1./freqs(n)./xfactor;
@@ -538,5 +535,182 @@ classdef Trace < TraceData
          end
       end %plot
       
+      function linkedplot(T, alignWaveforms)
+         %LINKEDPLOT Plot multiple waveform objects as separate linked panels
+         %   linkedplot(w, alignWaveforms)
+         %   where:
+         %       w = a vector of waveform objects
+         %       alignWaveforms is either true or false (default)
+         %   linkedplot(w) will plot a record section, i.e. each waveform is plotted
+         %   against absolute time.
+         %   linkedplot(w, true) will align the waveforms on their start times.
+         
+         % Glenn Thompson 2014/11/05, generalized after a function I wrote in 2000
+         % to operate on Seisan files only
+         
+         if numel(T)==0
+            warning('no waveforms to plot')
+            return
+         end
+         
+         if ~exist('alignWaveforms', 'var')
+            alignWaveforms = false;
+         end
+         
+         % get the first start time and last end time
+         starttimes = [T.mat_starttime];
+         % endtimes = T.timeLastSample();
+         grabendtime = @(X) (X.mat_starttime + (numel(X.data)-1) .* datenum(0,0,0,0,0,1/X.samplefreq));
+         endtimes = arrayfun(grabendtime, T);
+         endtimes(endtimes < starttimes) = starttimes(endtimes<starttimes); %no negative values!
+         % [starttimes endtimes]=gettimerange(T);
+         snum = nanmin(starttimes);
+         enum = nanmax(endtimes);
+         
+         % get the longest duration - in mode=='align'
+         durations = endtimes - starttimes;
+         maxduration = nanmax(durations);
+         SECSPERDAY = 60 * 60 * 24;
+         
+         nwaveforms = numel(T);
+         figure
+         trace_height=0.9/nwaveforms;
+         left=0.1;
+         width=0.8;
+         for wavnum = 1:nwaveforms
+            myw = T(wavnum);
+            dnum = myw.sampletimes;
+            ax(wavnum) = axes('Position',[left 0.95-wavnum*trace_height width trace_height]);
+            if alignWaveforms
+               plot((dnum-min(dnum))*SECSPERDAY, myw.data,'-k');
+               set(gca, 'XLim', [0 maxduration*SECSPERDAY]);
+            else
+               plot((dnum-snum)*SECSPERDAY, myw.data,'-k');
+               set(gca, 'XLim', [0 enum-snum]*SECSPERDAY);
+            end
+            ylabel(myw.channelInfo.string,'FontSize',10,'Rotation',90);
+            set(gca,'YTick',[],'YTickLabel','');
+            if wavnum<nwaveforms;
+               set(gca,'XTickLabel','');
+            end
+            
+            % display mean on left, max on right
+            text(0.02,0.85, sprintf('%5.0f',nanmean(abs(myw.data))),'FontSize',10,'Color','b','units','normalized');
+            text(0.4,0.85,sprintf(' %s',datestr(starttimes(wavnum),30)),'FontSize',10,'Color','g','units','normalized');
+            text(0.9,0.85,sprintf('%5.0f',nanmax(abs(myw.data))),'FontSize',10,'Color','r','units','normalized');
+         end
+         
+         if exist('ax','var')
+            linkaxes(ax,'x');
+         end
+         
+         originalXticks = get(gca,'XTickLabel');
+         
+         f = uimenu('Label','X-Ticks');
+         uimenu(f,'Label','time range','Callback',{@daterange, snum, SECSPERDAY});
+         uimenu(f,'Label','quit','Callback','disp(''exit'')',...
+            'Separator','on','Accelerator','Q');
+         
+         function daterange(obj, evt, snum, SECSPERDAY)
+            xlim = get(gca, 'xlim');
+            xticks = linspace(xlim(1), xlim(2), 11);
+            mydate = snum + xlim/SECSPERDAY;
+            datestr(mydate,'yyyy-mm-dd HH:MM:SS.FFF')
+         end
+      end
+      function varargout = legend(T, varargin)
+         %TODO: FIX REPETITIONS
+         %legend creates a legend for a waveform graph
+         %  legend(wave) attempts to automatically create a legend based upon
+         %  unique values within the waveforms.  in order, the legend will
+         %  preferentially use station, channel, start time.
+         %
+         %  legend(wave, field1, [field2, [..., fieldn]]) will create a legend,
+         %  using the fieldnames.
+         %
+         %  h = legend(...) returns the handle for the created legend.  this handle
+         %  can be used to later modify the legend entry (such as setting the
+         %  location, etc.)
+         %
+         %  Note: for additional control, use matlab's legend function by passing it
+         %  cells & strings instead of a waveform.
+         %    (hint:useful functions include waveform/get, strcat, sprintf, num2str)
+         %
+         %  see also legend
+         
+         if nargin == 1
+            % automatically determine the legend
+            total_waves = numel(T);
+            cha_tags = [T.channelInfo];
+            ncha_tags = numel(unique(cha_tags));
+            if ncha_tags == 1
+               % all cha_tags represent the same station
+               items = T.start;
+            else
+               uniquestations = unique({cha_tags.station});
+               stationsareunique = numel(uniquestations) == total_waves;
+               issinglestation = isscalar(uniquestations);
+               
+               uniquechannels = unique({cha_tags.channel});
+               channelsareunique = numel(uniquechannels) == total_waves;
+               issinglechannel = isscalar(uniquechannels);
+               
+               if stationsareunique
+                  if issinglechannel
+                     items = {cha_tags.station};
+                  else
+                     items = strcat({cha_tags.station},':',{cha_tags.channel});
+                  end
+               elseif issinglestation
+                  if issinglechannel
+                     items = T.start;
+                  elseif channelsareunique
+                     items = {cha_tags.channel};
+                  else
+                     % 1 station, mixed channels
+                     items = strcat({cha_tags.channel},': ',T.start);
+                  end
+               else %mixed stations
+                  if issinglechannel
+                     items = strcat({cha_tags.station},': ',T.start);
+                  else
+                     items = strcat({cha_tags.station},':', {cha_tags.channel});
+                  end
+               end
+               
+            end
+            
+            
+            
+         else
+            %let the provided fieldnames determine the legend.
+            items = T.(varargin{1});
+            items = anything2textCell(items);
+            
+            for n = 2:nargin-1
+               nextitems = T.(varargin{n});
+               items = strcat(items,':',anything2textCell(nextitems));
+            end
+         end
+         
+         h = legend(items);
+         if nargout == 1
+            varargout = {h};
+         end
+         
+         function stuff = anything2textCell(stuff)
+            %convert anything to a text cell
+            if isnumeric(stuff)
+               stuff=num2str(stuff);
+            elseif iscell(stuff)
+               if isnumeric(stuff{1})
+                  for m=1 : numel(stuff)
+                     stuff(m) = {num2str(stuff{m})};
+                  end
+               end
+            end
+         end
+      end
+
    end
 end

@@ -68,6 +68,15 @@ classdef TraceData
             obj.data = values(:);
       end
       
+      function val = sampletimes(obj)
+         % TraceData.sampletimes returns matlab-time offset of each sample
+         assert(numel(obj) == 1, 'only works on one TraceData at a time');
+         sampPerSec = obj.samplefreq;
+         matstep = datenum(0,0,0,0,0, 1 / sampPerSec);
+         val = (0:(numel(obj.data)-1)) .* matstep;
+         val = val(:);
+      end
+      
       %% Mathamatical - BASIC OPERATIONS
       function A = plus(A, B)
          % PLUS add something to the TraceData's data,
@@ -360,8 +369,8 @@ classdef TraceData
          dlens = arrayfun(@(x) numel(x.data), obj);
          maxlen = max(dlens(:));
          d = createDefaultArray(maxlen,numel(obj));
-         for n = obj
-            d(1:numel(n.data),end+1) = double(n.data);
+         for n = 1:numel(obj)
+            d(1:numel(obj(n).data),n) = double(obj(n).data);
          end
       end
       
