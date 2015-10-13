@@ -56,7 +56,9 @@ classdef Trace < TraceData
                   end
                   miscFields = get(varargin{1},'misc_fields');
                   for n = 1: numel(miscFields)
-                     obj.UserData.(miscFields{n})= get(varargin{1},miscFields{n});
+                     if ~isempty(miscFields{n})
+                        obj.UserData.(miscFields{n})= get(varargin{1},miscFields{n});
+                     end
                   end
                end
          end %switch
@@ -133,6 +135,22 @@ classdef Trace < TraceData
             
       end
          
+      function tf = startsbefore(A, B)
+         %TODO: make this work for datetime or datenums or datestrings
+         tf = A.mat_starttime < B.mat_starttime;
+      end
+      function tf = startsafter(A, B)
+         %TODO: make this work for datetime or datenums or datestrings
+         tf = A.firstsampletime > B.firstsampletime;
+      end
+      function tf = endsbefore(A, B)
+         %TODO: make this work for datetime or datenums or datestrings
+         tf = A.lastsampletime < B.lastsampletime;
+      end
+      function tf = endsafter(A, B)
+         %TODO: make this work for datetime or datenums or datestrings
+         tf = A.lastsampletime > B.lastsampletime;
+      end
       function T = align(T,alignTime, newSamprate, method)
          %ALIGN resamples a waveform at over a specified interval
          %   w = w.align(alignTime, newSamprate)
@@ -1175,12 +1193,12 @@ classdef Trace < TraceData
          endtimes = arrayfun(grabendtime, T);
          endtimes(endtimes < starttimes) = starttimes(endtimes<starttimes); %no negative values!
          % [starttimes endtimes]=gettimerange(T);
-         snum = nanmin(starttimes);
-         enum = nanmax(endtimes);
+         snum = min(starttimes(~isnan(starttimes)));
+         enum = max(endtimes(~isnan(endtimes)));
          
          % get the longest duration - in mode=='align'
          durations = endtimes - starttimes;
-         maxduration = nanmax(durations);
+         maxduration = max(durations(~isnan(durations)));
          
          nwaveforms = numel(T);
          figure
@@ -1205,9 +1223,9 @@ classdef Trace < TraceData
             end
             
             % display mean on left, max on right
-            text(0.02,0.85, sprintf('%5.0f',nanmean(abs(myw.data))),'FontSize',10,'Color','b','units','normalized');
+            text(0.02,0.85, sprintf('%5.0f',mean(abs(myw.data(~isnan(myw.data))))),'FontSize',10,'Color','b','units','normalized');
             text(0.4,0.85,sprintf(' %s',datestr(starttimes(wavnum),30)),'FontSize',10,'Color','g','units','normalized');
-            text(0.9,0.85,sprintf('%5.0f',nanmax(abs(myw.data))),'FontSize',10,'Color','r','units','normalized');
+            text(0.9,0.85,sprintf('%5.0f',max(abs(myw.data(~isnan(myw.data))))),'FontSize',10,'Color','r','units','normalized');
          end
          
          if exist('ax','var')
@@ -1325,4 +1343,17 @@ classdef Trace < TraceData
       end
       
    end
+   methods(Static)
+      function T = waveform2trace(W)
+         % convert waveforms into traces
+         assert(isa(W,'waveform'));
+         for N=1:numel(W)
+            T(N) = Trace(W(N));
+         end
+      end
+      function W = trace2waveform(T)
+         % convert traces into waveforms
+         error('not implemented yet')
+      end
+   end %static methods
 end

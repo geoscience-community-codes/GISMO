@@ -111,7 +111,7 @@ classdef TraceData
          %      TraceData + Scalar;
          %
          %  To avoid ambiguity with the metadata, two traces are added
-         %  toether by explicitly adding the data from one to the other:
+         %  together by explicitly adding the data from one to the other:
          %
          %      % assertCompatibility(TraceData1, TraceData2); % for debug
          %      TraceData1 + TraceData2.data
@@ -127,6 +127,12 @@ classdef TraceData
             for n = 1: numel(A)
                A(n).data = A(n).data + B; % add to either a scalar or a COLUMN of numbers (same length as TraceData's data)
             end
+         elseif isa(B,'TraceData')
+            error('TraceData:plus:ambiguousOperation',...
+               ['Adding two TraceData objects results in ambiguous metadata.'...
+               '\nInstead, add the data explicitly to the Trace whose'...
+               ' metadata you wish to keep.\nEx.  T = T1 + T2.data']);
+         else
             error('TraceData:plus:unknownClass','do not know how to add a %s to a TraceData object', class(B));
          end
       end
@@ -152,8 +158,12 @@ classdef TraceData
             for n = 1:numel(A)
                A(n).data = A(n).data - B; % subtract either a scalar or a COLUMN of numbers (same length as TraceData's data)
             end
+         elseif isa(B,'TraceData')
+            error('TraceData:minus:ambiguousOperation',...
+               ['Subtracting a Trace from a constant is not supported.\n'...
+               'For equivalent functionality, add the negative.\nEx.  ans = 5 + (-T)']);
          else
-               error('TraceData:minus:unknownClass','do not know how to subtract a %s from a TraceData object', class(B));
+            error('TraceData:minus:unknownClass','do not know how to subtract a %s from a %s', class(B), class(A));
          end
       end
       
@@ -260,24 +270,72 @@ classdef TraceData
          else
             error('not implemented yet');
          end
-         % deal with units
-         %{
-         % swiped directly from waveform, needs editing.
-         tempUnits = allUnits{I};
-      whereInUnits = strfind(tempUnits,' * sec');
-      if isempty(whereInUnits)
-         w(I) = set(w(I),'units', [tempUnits, ' / sec']);
-      else
-         tempUnits(whereInUnits(1) :whereInUnits(1)+5) = [];
-         w(I) = set(w(I),'units',tempUnits);
-      end
-         %}
+         for I=1:numel(A)
+            tempUnits = A(I).units;
+            whereInUnits = strfind(tempUnits,' * sec');
+            if isempty(whereInUnits)
+               A(I).units = [tempUnits, ' / sec'];
+            else
+               tempUnits(whereInUnits(1) :whereInUnits(1)+5) = [];
+               A(I).units = tempUnits;
+            end
+         end
       end
       
-      function A = integrate(A, method)
-         error('not implemented yet');
+      function w = integrate (w,method)
+         %INTEGRATE integrates a waveform signal
+         %   waveform = integrate(waveform, [method])
+         %   goes from Acceleration -> Velocity, and from Velocity -> displacement
+         %
+         %   wave = integrate(waveform)  or
+         %   wave = integrate(waveform,'cumsum') performs integration by summing the
+         %   data points with the cumsum function, taking into account time interval
+         %   and updating the units as appropriate.
+         %
+         %   waveform = integrate(waveform, 'trapz') as above, but uses matlab's
+         %   cumtrapz function to perform the integration.
+         
+         %   Input Arguments
+         %       WAVEFORM: a waveform object   N-DIMENSIONAL
+         %       METHOD: either 'cumtrapz' or 'cumsum'  [default is cumsum]
+         %
+         %   Actual implementation  merely does a cumulative sum of the waveform's
+         %   samples, and updates the units accordingly.  These units may be a
+         %   little kludgey.
+         %
+         %
+         %   See also CUMSUM, CUMTRAPZ, WAVEFORM/DIFF
+         
+         Nmax = numel(w);
+         allfreq = [w.samplerate];
+         
+         if ~exist('method','var')
+            method = 'cumsum';
+         end
+         
+         switch lower(method)
+            case 'cumsum'
+               integratefn = str2func('cumsum');
+            case 'trapz'
+               integratefn = str2func('cumtrapz');
+            otherwise
+               error('Waveform:integrate:unknownMethod',...
+                  'Unknown integration method.  Valid methods are ''cumsum'' and ''trap''');
+         end
+         
+         for I = 1 : Nmax
+            w(I).data = integratefn(w(I).data) ./ allfreq(I);
+            tempUnits = w(I).units;
+            whereInUnits = strfind(tempUnits,' / sec');
+            if isempty(whereInUnits)
+               w(I).units = [tempUnits, ' * sec'];
+            else
+               tempUnits(whereInUnits(1) :whereInUnits(1)+5) = [];
+               w(I).units = tempUnits;
+            end
+         end
       end
-               
+      
       function A = demean(A)
          for n=1:numel(A);
             A(n) = A(n) - mean(A(n).data);
@@ -399,9 +457,11 @@ classdef TraceData
       end
       
       function tf = eq(A, B)
-         tf = all(A.data == B.data) && A.freq==B.freq && strcmp(A.units, B.units);
+         tf = all(A.data == B.data) && A.samplerate==B.samplerate && strcmp(A.units, B.units);
       end
-      
+      function tf = ne(A,B)
+         tf = ~eq(A,B);
+      end;
       function outT = extract(Tr, method, starts, ends)
          switch lower(method)
             case 'index'
