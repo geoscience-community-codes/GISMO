@@ -15,7 +15,7 @@ classdef Trace < TraceData
    end
    
    properties
-      history = struct('what','created','when',now); % history for Trace
+      history = struct('what','created Trace','when',now); % history for Trace
       UserData = struct(); % structure containing user-defined fields
       calib = struct('value',1,'applied',false);
    end
@@ -45,7 +45,15 @@ classdef Trace < TraceData
                if isa(varargin{1}, 'waveform')
                   obj.channelInfo = get(varargin{1},'channeltag');
                   obj.mat_starttime = get(varargin{1}, 'start');
-                  obj.history = get(varargin{1},'history');
+                  
+                  H = get(varargin{1}, 'history');
+                  for n=1:size(H,1);
+                     if isempty(H{n,1}) || isempty(H{n,2})
+                        continue
+                     end
+                     obj.history(end+1).what = H{n,1};
+                     obj.history(end).when = H{n,2};
+                  end
                   miscFields = get(varargin{1},'misc_fields');
                   for n = 1: numel(miscFields)
                      obj.UserData.(miscFields{n})= get(varargin{1},miscFields{n});
@@ -116,7 +124,7 @@ classdef Trace < TraceData
          % For multiple traces, a character array will be returned.
          % see also datestr
          secDurs = [obj.duration];
-         secDurs(secDurs > 0) = secDurs - [obj.samplefreq];
+         secDurs(secDurs > 0) = secDurs - [obj.samplerate];
          val = [obj.firstsampletime] + secDurs/86400;
          if exist('stringformat','var')
             val = datestr(val,stringformat);
@@ -125,22 +133,22 @@ classdef Trace < TraceData
             
       end
          
-      function T = align(T,alignTime, newFrequency, method)
+      function T = align(T,alignTime, newSamprate, method)
          %ALIGN resamples a waveform at over a specified interval
-         %   w = w.align(alignTime, newFrequency)
-         %   w = w.align(alignTime, newFrequency, method)
+         %   w = w.align(alignTime, newSamprate)
+         %   w = w.align(alignTime, newSamprate, method)
          %
          %   Input Arguments
          %       WAVEFORM: waveform object       N-dimensional
          %       ALIGNTIME: either a single matlab time or a series of times the
-         %       same shape as the input WAVEFORM matrix.
-         %       NEWFREQUENCY: the frequency (Samples per Second) of the newly aligned
-         %          waveforms
+         %       same shape as the input TRACE matrix.
+         %       newSamprate: sample rate (Samples per Second) of the newly aligned
+         %          traces
          %       METHOD: Any of the methods from function INTERP
          %          If omitted, then the DEFAULT IS 'pchip'
          %
          %   Output
-         %       The output waveform has the new frequency newFrequency and a
+         %       The output waveform has the new samplerate newSamprate and a
          %       starttime calculated by the specified method, using matlab's
          %       INTERP1 function.
          %
@@ -149,10 +157,10 @@ classdef Trace < TraceData
          %     The alignTime is projected forward or backward in time at the
          %     specified sample interval until it approaches the original waveform's
          %     start time.  The rest of the waveform is then interpolated at the
-         %     sample frequency.
+         %     sample rate.
          %
          %     Methodology Example.
-         %         A waveform starts on 1/1/2008 12:00, with sample freq of 10
+         %         A waveform starts on 1/1/2008 12:00, with sample rate of 10
          %         samples/sec, and has data covering 10 minutes  (6000 samples).
          %         The resampled data is requested for time 1/1/2008 12:05:00.03,
          %         also at 10 samples/sec.
@@ -166,7 +174,7 @@ classdef Trace < TraceData
          %   OUTDATED>    scnl = sclnobject('KDAK',{'BHZ','BHN','BHE'}); %grab all 3 channels
          %       % for each component, grab winston data on Kurile Earthquake
          %   OUTDATED>    w = waveform(mydatasource,scnl,'1/13/2007 04:20:00','1/13/2007 04:30:00');
-         %       w = w.align('1/37/2007 4:22:00', w(1).samplefreq);
+         %       w = w.align('1/37/2007 4:22:00', w(1).samplerate);
          %
          %
          % See also INTERP1, PLOTMATRIX
@@ -204,13 +212,13 @@ classdef Trace < TraceData
          end
          
          
-         newSamplesPerSec = 1 / newFrequency ;  %# samplesPerSecond
+         newSamplesPerSec = 1 / newSamprate ;  %# samplesPerSecond
          timeStep = newSamplesPerSec * oneSecond;
          existingStarts = [T.mat_starttime]; %get(w,'start');
          existingEnds = get(T,'end');
          
          % calculate the offset of the closest "aligned" time, by projecting the
-         % desired frequency rate and time forward or backward onto these waveforms'
+         % desired sample rate and time forward or backward onto these waveforms'
          % start time.
          deltaTime = existingStarts - alignTime;  % time in between
          % if deltatime (-):alignTime AFTER existingStarts,
@@ -232,22 +240,22 @@ classdef Trace < TraceData
                newTimes,...    new times (x1)
                method);           %  method
             T(n).start = newTimes(1); % must be a datenum
-            T(n).samplefreq = newFrequency;
+            T(n).samplerate = newSamprate;
          end
          
          %% update histories
          % if all waves were aligned to the same time, then handle all history here
          if hasSingleAlignTime
-            % noteRealignment(w, alignTime(1), newFrequency);
+            % noteRealignment(w, alignTime(1), newSamprate);
          else
             for n=1:numel(T)
-               % w(n) = noteRealignment(w(n), alignTime(n), newFrequency);
+               % w(n) = noteRealignment(w(n), alignTime(n), newSamprate);
             end
          end
          
-         function T = noteRealignment(T, startt, freq)
+         function T = noteRealignment(T, startt, samprate)
             timeStr = datestr(startt,'yyyy-mm-dd HH:MM:SS.FFF');
-            myHistory = sprintf('aligned data to %s at %f samples/sec', timeStr, freq);
+            myHistory = sprintf('aligned data to %s at %f samples/sec', timeStr, samprate);
             T = T.addhistory(myHistory);
          end
       end
@@ -296,7 +304,7 @@ classdef Trace < TraceData
          w = w.detrend;
          
          for i = 1:numel(w)
-            Wsamplingperiod = 1.0 / w(i).samplefreq;
+            Wsamplingperiod = 1.0 / w(i).samplerate;
             % either set to whatever samplingPeriod seconds of data are, or the
             % length of data if less
             crunchfactor = min([round(samplingPeriod / Wsamplingperiod) numel(w(i).data)]);
@@ -460,9 +468,8 @@ classdef Trace < TraceData
       end
       
       %%
-      %function combine
-      function combined_waveforms = combine (waveformlist)
-         %TODO: Make this work with TRACE. Rightnow it is waveforms...
+      function combined_traces = combine (traces)
+         %TODO: remove references to scnl, and replace with channeltag
          %COMBINE merges waveforms based on start/end times and channeltag info.
          % combined_waveforms = combine (waveformlist) takes a vector of waveforms
          % and combines them based on SCNL information and start/endtimes.
@@ -470,53 +477,47 @@ classdef Trace < TraceData
          
          % AUTHOR: Celso Reyes
          
-         if numel(waveformlist) == 0  %nothing to do
-            combined_waveforms = waveformlist;
+         if numel(traces) == 0  %nothing to do
+            combined_traces = traces;
             return
          end
          
-         channelinfo = get(waveformlist,'channeltag');
+         channelinfo = get(traces,'channeltag');
          [uniquescnls, idx, scnlmembers] = unique(channelinfo);
          
          %preallocate
-         combined_waveforms = repmat(waveform,size(uniquescnls));
+         combined_traces = repmat(waveform,size(uniquescnls));
          
          for i=1:numel(uniquescnls)
-            w = waveformlist(scnlmembers == i);
-            w = timesort(w);
-            for j=(numel(w)-1):-1:1
-               w(j) = piece_together(w(j:j+1));
-               w(j+1) = waveform;
+            T = traces(scnlmembers == i);
+            T = timesort(T);
+            for j=(numel(T)-1):-1:1
+               T(j) = piece_together(T(j), T(j+1));
+               T(j+1) = [];
             end
-            combined_waveforms(i) = w(1);
+            combined_traces(i) = T;
          end
          
-         function w = piece_together(w)
-            %TODO: Finish fixing this
-            if numel(w) > 2
-               for n = numel(w)-1: -1 : 1
-                  w(n) = piece_together(w(n:n+1));
-               end
-               w = w(1);
-               return;
-            elseif numel(w) == 1
-               return
-            end
-            if isempty(w(1))
-               w = w(2);
+         function Tout = piece_together(T1, T2)
+            if isempty(T1.data)
+               Tout = T2;
                return;
             end;
-            dt = dt_seconds(w(1),w(2));  %time overlap in seconds.
-            sampleRates = round([w.samplefreq]);
-            sampleInterval = 1 ./ sampleRates(1);
-            
-            if overlaps(dt, sampleInterval)
-               w = spliceTrace(w(1), w(2));
-            else
-               paddingAmount = round((dt * sampleRates(1))-1);
-               w = spliceAndPad(w(1),w(2), paddingAmount);
+            dtSecs = (T2.firstsampletime - T1.lastsampletime) * 86400;
+            sampRate = T1.samplerate;
+            if sampRate > 1
+               sampRate = round(sampRate);
+            elseif sampRate > 0
+               sampRate = 1 / (round(1 / sampRate));
             end
-            w = w(1);
+            sampleInterval = 1 ./ sampRate;
+            overlaps = (dtSecs - sampleInterval .* 1.25) < 0;
+            if overlaps
+               Tout = spliceTrace(T1, T2);
+            else
+               paddingAmount = round((dtSecs * sampRate)-1);
+               Tout = spliceAndPad(T1,T2, paddingAmount);
+            end
          end
          
          function T1 = spliceAndPad(T1, T2, paddingAmount)
@@ -529,28 +530,14 @@ classdef Trace < TraceData
             T1.data = [T1.data; toAdd; T2.data];
          end
          
-         function W1 = spliceTrace(W1, T2)
-            % NOTE * Function uses direct field access
-            timesToGrab = sum(W1.sampletimes < T2.mat_starttime);
-            
-            samplesRemoved = numel(W1.data) - timesToGrab;
-            W1.data = [double(extract(W1,'index',1,timesToGrab)); T2.data];
-            
-            W1= W1.addhistory('SPLICEPOINT: %s, removed %d points (overlap)',...
+         function T1 = spliceTrace(T1, T2)
+            timesToGrab = sum(T1.sampletimes < T2.mat_starttime);
+            samplesRemoved = numel(T1.data) - timesToGrab;
+            T1.data = [double(extract(T1,'index',1,timesToGrab)); T2.data];
+            T1= T1.addhistory('SPLICEPOINT: %s, removed %d points (overlap)',...
                T2.start, samplesRemoved);
          end
-         
-         function result = overlaps(dt, sampleInterval)
-            result = (dt- sampleInterval .* 1.25) < 0;
-         end
-         
-         function t = dt_seconds(T1,T2)
-            %  w1----] t [----w2
-            firstsampleT = T2.firstsampletime;
-            lastsampleT = T1.lastsampletime;
-            t = (firstsampleT - lastsampleT) * 86400;
-         end
-         
+                  
          function T = timesort(T)
             [~, I] = sort([T.mat_starttime]);
             T = T(I);
@@ -935,7 +922,7 @@ classdef Trace < TraceData
          % 11/25/2008 changed how parameters are parsed, fixing a bug where you
          % could not specify both an Xunit and a plot-style ('.', for example)
          %
-         % individual frequencies used instead of assumed to be equal
+         % individual sample rates used instead of assumed to be equal
          
          
          if isscalar(T),
@@ -987,10 +974,10 @@ classdef Trace < TraceData
                
                Xvalues = nan(max(dl),numel(T));
                
-               freqs = [T.samplefreq];
+               samprates = [T.samplerate];
                for n=1:numel(T)
-                  Xvalues(1:dl(n),n) = (1:dl(n))./ freqs(n) ./ ...
-                     xfactor + startdoy(n) - 1./freqs(n)./xfactor;
+                  Xvalues(1:dl(n),n) = (1:dl(n))./ samprates(n) ./ ...
+                     xfactor + startdoy(n) - 1./samprates(n)./xfactor;
                end
                
             otherwise,
@@ -998,7 +985,7 @@ classdef Trace < TraceData
                Xvalues = nan(longest, numel(T));
                for n=1:numel(T)
                   dl = numel(T(n).data);
-                  Xvalues(1:dl,n) = (1:dl) ./ T(n).samplefreq ./ xfactor;
+                  Xvalues(1:dl,n) = (1:dl) ./ T(n).samplerate ./ xfactor;
                end
          end
          
@@ -1184,7 +1171,7 @@ classdef Trace < TraceData
          starttimes = [T.mat_starttime];
          % endtimes = T.timeLastSample();
          SECSPERDAY = 86400;
-         grabendtime = @(X) (X.mat_starttime + (numel(X.data)-1) / (X.samplefreq * SECSPERDAY));
+         grabendtime = @(X) (X.mat_starttime + (numel(X.data)-1) / (X.samplerate * SECSPERDAY));
          endtimes = arrayfun(grabendtime, T);
          endtimes(endtimes < starttimes) = starttimes(endtimes<starttimes); %no negative values!
          % [starttimes endtimes]=gettimerange(T);

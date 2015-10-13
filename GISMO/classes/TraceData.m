@@ -37,7 +37,7 @@ classdef TraceData
    
    properties
       data % time-series data, kept in a column
-      samplefreq % sample frequency of the time-series data in samples/sec
+      samplerate % in samples/sec
       units % text description of data units
    end
    
@@ -56,13 +56,13 @@ classdef TraceData
          switch nargin
             case 1
                if isa(varargin{1}, 'waveform')
-                  obj.samplefreq = get(varargin{1},'freq');
+                  obj.samplerate = get(varargin{1},'freq');
                   obj.data = get(varargin{1},'data');
                   obj.units = get(varargin{1}, 'units');
                end
-            case 3 % TraceData(data, samplefreq, units);
+            case 3 % TraceData(data, samplerate, units);
                obj.data = varargin{1};
-               obj.samplefreq = varargin{2};
+               obj.samplerate = varargin{2};
                obj.units = varargin{3};
          end %switch
       end
@@ -75,14 +75,14 @@ classdef TraceData
       function val = sampletimes(obj)
          % TraceData.sampletimes returns matlab-time offset of each sample
          assert(numel(obj) == 1, 'only works on one TraceData at a time');
-         val = (0:(numel(obj.data)-1)) .* obj.samplefreq / 86400;
+         val = (0:(numel(obj.data)-1)) .* obj.samplerate / 86400;
          val = val(:);
       end
       
       function secondsOfData = get.duration(obj)
          %returns duration in seconds
          assert(numel(obj) == 1, 'only works on one TraceData at a time');
-         secondsOfData = numel(obj.data) / obj.samplefreq;
+         secondsOfData = numel(obj.data) / obj.samplerate;
       end
       
       function s = formattedduration(obj, fmt)
@@ -255,7 +255,7 @@ classdef TraceData
          % FREQUENCY is not considered!
          % otherwise, would be X = diff(X) .* Freq
          if isempty(varargin)
-            A.data = diff(A.data) .* A.samplefreq;
+            A.data = diff(A.data) .* A.samplerate;
             A.data = diff(A.data);
          else
             error('not implemented yet');
@@ -317,7 +317,7 @@ classdef TraceData
          Y = fft(td.data, NFFT); % X will have same length as signal, and will be complex with a magnitude and phase
          A = 2 * abs(Y(1:NFFT/2+1)) / N;
          phi = angle(Y);
-         f = td.samplefreq / 2 * linspace(0,1,NFFT/2+1);
+         f = td.samplerate / 2 * linspace(0,1,NFFT/2+1);
       end
       
       function obj = clip(obj, vals)
@@ -607,7 +607,7 @@ classdef TraceData
          %
          %       %put back into waveform, but don't forget to update the frequency
          %       T.data = ResampleD; 
-         %       T.samplefreq = NewFrequency;
+         %       T.samplerate = NewFrequency;
          %
          % See also RESAMPLE, MIN, MAX, MEAN, MEDIAN.
          
@@ -662,7 +662,7 @@ classdef TraceData
                   error('TraceData:resample:UnknownSampleMethod',...
                      'Don''t know what you mean by resample via %s', method);
             end;
-            T(i).samplefreq = T(i).samplefreq ./ crunchFactor;
+            T(i).samplerate = T(i).samplerate ./ crunchFactor;
          end
       end
       
@@ -747,12 +747,12 @@ classdef TraceData
       end
 
       function [tf, msg] = testCompatibility(A, B)
-         % testCompatibility confirms matching units, samplefreq, and data length
+         % testCompatibility confirms matching units, samplerate, and data length
          % tf = testCompatibility(A, B) will make sure that A and B have
          % matching units, sample frequencies, and data length.  
          % If units are empty for either A or B, then units will pass
-         % If samplefreq is empty for either A or B, then samplefreq will
-         % pass.  samplefreq is compared within a tolerance of 10e-2
+         % If samplerate is empty for either A or B, then samplerate will
+         % pass.  samplerate is compared within a tolerance of 10e-2
          %
          % [tf, msg] = testCompatibility(A,B) will also return a message
          % describing how the test failed.
@@ -771,9 +771,9 @@ classdef TraceData
          elseif ~(isempty(B.units) ||isempty(A.units) || strcmp(A.units, B.units))
             tf = false;
             msg = sprintf('Units do not match [%s] vs [%s]', A.units, B.units);
-         elseif ~(isempty(A.samplefreq) || isempty(B.samplefreq) || isnan(A.samplefreq) || isnan(B.samplefreq) || ismembertol(A.samplefreq,B.samplefreq, TOL))
+         elseif ~(isempty(A.samplerate) || isempty(B.samplerate) || isnan(A.samplerate) || isnan(B.samplerate) || ismembertol(A.samplerate,B.samplerate, TOL))
             tf = false;
-            msg = sprintf('Frequencies do not match [%f] vs [%f]',A.samplefreq, B.samplefreq);
+            msg = sprintf('Frequencies do not match [%f] vs [%f]',A.samplerate, B.samplerate);
          else
             tf = true;
             msg = '';
@@ -781,7 +781,7 @@ classdef TraceData
       end
       
       function assertCompatibility(A, B)
-         % assertCompatibility asserts matching units, samplefreq, and data length
+         % assertCompatibility asserts matching units, samplerate, and data length
          % assertCompatibility(A, B) will error unless A and B have
          % matching units, sample frequencies, and data length.  The error
          % message will describe what is wrong
