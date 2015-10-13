@@ -402,6 +402,20 @@ classdef TraceData
          tf = all(A.data == B.data) && A.freq==B.freq && strcmp(A.units, B.units);
       end
       
+      function outT = extract(Tr, method, starts, ends)
+         switch lower(method)
+            case 'index'
+               assert(numel(starts) == numel(ends));
+               outT = repmat(Trace,numel(Tr),numel(starts));
+               for n=1:numel(T);
+                  for t=1:numel(starts)
+                     outT(n,t) = Tr(n);
+                  outT(n,t).data = Tr(n).data(starts(t), ends(t));
+                  end
+               end
+         end
+      end
+      
       function td = fillgaps(td,value, gapvalue)
          % FILLGAPS - fill missing data with values of your choice
          % T = fillgaps(T,number) fills data with the number of your choice
