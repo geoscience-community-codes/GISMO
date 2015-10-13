@@ -61,7 +61,7 @@ classdef Catalog_full < Catalog_base
         end
         
         %% THE FOLLOWING METHODS POPULATE PRIVATE PROPERTIES FOR 
-        %  ETYPE, LAT, LON, DEPTH, TIME, DNUM, SNUM, ENUM
+        %  ETYPE, LAT, LON, DEPTH, TIME, SNUM, ENUM
         %  THESE PROVIDE COMPATIBILITY BETWEEN NEW AND OLD VERSIONS OF
         %  THE CATALOG CLASS
         function et = get.etype(obj)

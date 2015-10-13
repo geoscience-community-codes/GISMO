@@ -1,4 +1,4 @@
-%% Loading and displaying seismic event catalogs in MATLAB
+%% Reading and displaying seismic events in MATLAB
 
 % A seismic event catalog is any list that contains at a minimum the time
 % of 1 or more seismic events. 
@@ -23,107 +23,107 @@
 
 % GISMO's Catalog class is a solution to these problems. Just as waveform
 % objects are the universal container for handling waveform data from any
-% source or data format, the Catalog class does the same for catalog data.
+% source or data format, the Events class does the same for catalog data.
 
-%% Loading an event catalog from IRIS DMC:
+%% Section 1: Loading events from IRIS DMC and saving to other formats
 
-% To load catalog data into a Catalog object we use the readEvents 
+% To load events into an Events object we use the readEvents 
 % function. The first argument is the data source/format - in this case 
 % readEvents will use the irisfetch program to retrieve all events at IRIS
 % DMC with a magnitude of at least 7.9:
 
-eventsObject = readEvents('irisfetch', 'minimumMagnitude', 7.9);
+eventsObject = readEvents('iris', 'minimumMagnitude', 7.9, ...
+    'starttime', '2000-01-01', 'endtime', '2015-01-01');
 
-% Let's see what this catalog object, eventsObject, contains:
+% Let's see what this Events object, eventsObject, contains:
 
 eventsObject
 
-% As you can see, the size of the lat, lon, depth, time and mag matrices
-% are 1 x 41. This means we have retrieved 41 events. snum and enum are the
-% times of the first and last event respectively, in MATLAB's datenum
-% format (decimal days since year 0). The time matrix is also in datenum
-% format. 
+% As you can see, the size of the time, lon, lat, depth, mag, magtype and
+% etype matrices are 1 x 26. This means we have retrieved 26 events. The 
+% time matrix is in MATLAB's datenum format (decimal days since year 0).
 
-% eventsObject is of type "Catalog_full". This means that it also contains an
-% event_list property, which holds a set of 41 Event objects. Each Event
-% object can contain information about phase arrivals as well as
-% alternative origins and magnitudes. We will ignore Event objects in this
-% tutorial. 
+% eventsObject is of type "Events". etype is a cell array containing the 
+% event type for each of the 26 events. In this case each is just 
+% 'earthquake', but when dealing with more diverse dataset, many other 
+% etype's are possible. magtype is whatever magnitude type was assigned by
+% the agency that provided the magnitude data.
 
-% etype is a cell array containing the event type for each of the 41
-% events. In this case each is just 'earthquake', but when dealing with a
-% more diverse dataset, many other etype's are possible. 
+% The arrivals property is blank. This is a cell array that can optionally
+% contain phase arrival data. See the Arrival class for more on this. We
+% will not deal with arrivals in this tutorial.
 
+% Now we'll do another example - we will get events within 20 km of Redoubt
+% volcano in the IRIS DMC database between January 1st and June 1st, 2009..
+% We'll limit our search to events in the upper 40km because we are
+% interested in volcanic earthquakes only:
 
+eventsObject = readEvents('iris', ...
+    'radialcoordinates', [60.4853 -152.7431 km2deg(20)], ...
+    'starttime', '2009/01/01', ...
+    'endtime', '2009/06/01', ...
+    'maximumDepth', 40.0);
 
-  Catalog_full with properties:
+% Only 2 earthquakes. Disappointing. There were in fact many much smaller
+% earthquakes than this but those only appear in the catalog of the Alaska
+% Volcano Observatory. Part of the AVO catalog is included as the demodb in
+% part 2. For now, we will save the events we have read from IRIS;
 
-     event_list: [1x41 Event]
-            lat: [1x41 double]
-            lon: [1x41 double]
-          depth: [1x41 double]
-           time: [1x41 double]
-            mag: [1x41 double]
-          etype: 'earthquakeearthquakeearthquakeearthquakeearthquakeearthquak...'
-           dnum: []
-           snum: 7.1602e+05
-           enum: 7.3622e+05
-    description: ''
-    misc_fields: {'METHOD'}
-    misc_values: {'convert_irisFetch_to_Catalog'}
-    
-    
-    
-eventsObject = readEvents('irisfetch','radialcoordinates', [60.4853 -152.7431 km2deg(20)]);
+eventsObject.save('myevents.mat')
 
-% reads all events within 20 km of Redoubt volcano, held by IRIS
+% We will also try to save them to an Antelope database. This should fail
+% gracefully if you do not have BRTT's Antelope toolbox installed.
 
+%eventsObject.write('antelope','mylocaldb','css3.0');
 
-
-
+%% Section 2: Loading an Antelope database 
 
 % For the purpose of this exercise we will be using data from Redoubt volcano
-% from 2009/03/20 to 2009/03/23. We will use two catalogs:
+% from 2009/03/20 to 2009/03/23. We will use snippets from two catalogs
+% that are provided with GISMO in Antelope format:
 %
-% # The real-time catalog, produced using Antelope (rtdb200903).
-% # The analyst-reviewed offical AVO catalog (avodb200903), produced using 
-% Earthworm, XPick and Hypoellipse, later converted to an Antelope
-% database.
+% # The real-time catalog (rtdb200903).
+% # The analyst-reviewed offical AVO catalog (avodb200903).
 %
-% Both catalog segments are distributed in the "demo" directory.
+% Both catalog segments are included in the "demo" directory.
 %
-% We will now load the real-time catalog into a catalog object. First,
-% because we don't know where GISMO is on your system, we have to construct the
-% path to the demo directory based on where CATALOG.M resides:
-if antelope_exists
-    dbpath = demodb('avo');
+% We will now load the official AVO catalog into an Events object:
 
-% Now read the events into a Catalog object. Only two parameters are
-% needed, the database path (dbpath) and the data format ('antelope'): 
-    eventsObject = readEvents('datascope', 'dbpath', dbpath);
+if admin.antelope_exists
+    dbpath = demodb('avo'); 
+    eventsObject = readEvents('antelope', 'dbpath', dbpath);
+end
 
-% This should load 1441 events. What if we only want events within 15km of
+% This should load 1441 events. What if we only want events within 20km of
 % Redoubt volcano? The optional parameter 'subset_expression' can be used, with an
 % appropriate Datascope expression, e.g.
 
-    eventsObject = readEvents('datascope', 'dbpath', dbpath, 'subset_expression', 'deg2km(distance(lat, lon, 60.4853, -152.7431))<15.0');
+redoubtLon = -152.7431; redoubtLat = 60.4853;
+if admin.antelope_exists
+    eventsObject = readEvents('antelope', 'dbpath', dbpath, 'subset_expression', 'deg2km(distance(lat, lon, redoubtLat, redoubtLon))<20.0');
+end
 
-% where 60.4853 is the latitude of Redoubt and -152.7431 is the longitude.
-% Now there should only be 1397 events.
+% Now there should be 1397 events. A lot better than 2! Let's save this
+% dataset to a MAT file
+eventsObject.save('avo_redoubt.mat')
 
-%% PLOTTING HYPOCENTERS
-%% Magnitude-time plot
+
+
+%% Section 3: PLOTTING HYPOCENTERS
+% Magnitude-time plot
+% -------------------
 % You should see that there are 1441 events in these 3 days. What are their
 % depths and magnitudes as a function of time?
 eventsObject.plot_time()
 
-%% 3D-Hypocenters
+% 3D-Hypocenters
+% --------------
 % For a 3D hypocenter map, use plot3:
 eventsObject.plot3()
 
-%% PLOTTING B-VALUES & ESTIMATING MAGNITUDE OF COMPLETENESS
+%% Section 4: PLOTTING B-VALUES & ESTIMATING MAGNITUDE OF COMPLETENESS
 % Code from "ZMap" (written by Stefan Wiemer and others) has been added
-% to Catalog to compute and plot bvalues. Use the bvalue method:
+% to Events to compute and plot bvalues. Use the bvalue method:
 eventsObject.bvalue()
 
 % This will give a menu of techniques available to compute b-value (b) and
@@ -131,7 +131,7 @@ eventsObject.bvalue()
 eventsObject.bvalue(1)
 % will use technique 1
 
-%% PLOTTING EVENT COUNTS & ENERGY RELEASE RATES
+%% Section 5: PLOTTING EVENT COUNTS & ENERGY RELEASE RATES
 % For a quick plot of earthquakes per hour, we create an eventrate object
 % and then plot it. Here our binsize is 1/24 days, i.e. 1 hour.
 eventrateObject = eventsObject.eventrate('binsize', 1/24);
@@ -147,7 +147,7 @@ plot(eventrateObject);
 % parameter. If omitted, stepsize defaults to the binsize - which is the
 % length of the time window. So in the previous example, both binsize and
 % stepsize were 1.0 hours. But we can just as easily compute an eventrate
-% object for the same catalog object with a binsize of 1 hour, and stepsize
+% object for the same Events object with a binsize of 1 hour, and stepsize
 % of just 5 minutes. 
 % eventrateObject = eventsObject.eventrate('binsize', 1/24,  'stepsize', 5/1440);
 % eventrateObject.plot()
@@ -179,18 +179,11 @@ plot(eventrateObject);
 %     eventrateObject2.plot('metric', 'cum_mag')
 eventrateObject.plot('metric', {'mean_rate'; 'median_rate'; 'mean_mag'; 'cum_mag'});
 
-%% The AVO Swarm Tracking System
 % These are the same metrics, binsize and stepsize used by the AVO swarm tracking system.
 % See: < <http://www.aeic.alaska.edu/input/west/papers/2009_srl_thompson_redoubtSwarms.pdf> >
 % for details.
 
-%% Helena Plot
-eventrateObject.helenaplot()
-
-%% Python plot
-eventrateObject.pythonplot()
-
-%% Loading data from a Seisan REA database
+%% Section 5: Loading data from a Seisan (Nordic) database
 % Here we load events from a Seisan catalog. A Seisan
 % "Sfile" contains all the metadata for 1 event.
 % These Sfiles are stored in a flat-file database structure the path to
@@ -204,7 +197,7 @@ eventrateObject.pythonplot()
 % function to run as MATLAB is slow at parsing text files.
 eventsObject = readEvents('seisandb', 'dbpath', fullfile('/raid','data','seisan','REA','MVOE_'), 'snum', datenum(2000,1,1), 'enum', datenum(2000,1,2) );
 
-% This catalog object can now be explored using eev, which is modelled on
+% This Events object can now be explored using eev, which is modelled on
 % the program of the same name in Seisan. We will not run this here because
 % it is an interactive function which would cause this cookbook to fail.
 % But here is what you would do:
@@ -214,8 +207,11 @@ eventsObject = readEvents('seisandb', 'dbpath', fullfile('/raid','data','seisan'
 % From there type h <ENTER> to see the list of options. s will show you the
 % S-file. p will plot the corresponding waveforms using waveform>mulplt.
 
-
-
+% %% Helena Plot
+% eventrateObject.helenaplot()
+% 
+% %% Python plot
+% eventrateObject.pythonplot()
 
 
 

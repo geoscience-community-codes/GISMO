@@ -123,12 +123,12 @@ classdef Catalog_lite < Catalog_base
                 scnl = scnlobject('*', '*');
                 ds = get(obj, 'datasource');
                 sfile = get(obj, 'sfile');
-                datestr([sfile.dnum])
-                for k=1:numel([sfile.dnum])
+                datestr([sfile.time])
+                for k=1:numel([sfile.time])
                     wavfiles = {sfile(k).wavfiles};
                     yyyy = sfile(k).year;
                     mm = sfile(k).month;
-                    dnum = sfile(k).dnum;
+                    time = sfile(k).time;
                     dbpath = get(obj, 'dbpath');
                     dbpath = strrep(dbpath, 'REA', 'WAV');
                     for i=1:numel(wavfiles)
@@ -136,7 +136,7 @@ classdef Catalog_lite < Catalog_base
                         if exist(wavpath, 'file')
                             %disp(sprintf('Loading %s',wavpath));
                             ds = datasource('seisan', wavpath);
-                            w{k,i}=waveform(ds, scnl, dnum, dnum+300/86400);
+                            w{k,i}=waveform(ds, scnl, time, time+300/86400);
                         else
                            disp(sprintf('Not found: %s',wavpath));
                         end

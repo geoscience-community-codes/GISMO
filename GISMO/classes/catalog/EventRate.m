@@ -23,22 +23,22 @@ classdef EventRate
 %
 %       First create a catalog object from the demo database:
 %           dbpath = demodb('avo')
-%           cobj = readEvents('datascope', 'dbpath', dbpath, ...
+%           eventsObject = readEvents('datascope', 'dbpath', dbpath, ...
 %                  'dbeval', ...
 %                  'deg2km(distance(lat, lon, 60.4853, -152.7431))<15.0' ...
 %                  );
 %
 %       (1) Create an eventrate object using a binsize of 1 day:
-%           erobj = cobj.eventrate('binsize', 1);
+%           erobj = eventsObject.eventrate('binsize', 1);
 %
 %       (2) Create an eventrate object using a binsize of 1 hour:
-%           erobj = cobj.eventrate('binsize', 1/24);
+%           erobj = eventsObject.eventrate('binsize', 1/24);
 %
 %       (3) Create an eventrate object using a binsize of 1 hour but a stepsize of 5 minutes:
-%           erobj = cobj.eventrate('binsize', 1/24, 'stepsize', 5/1440);
+%           erobj = eventsObject.eventrate('binsize', 1/24, 'stepsize', 5/1440);
 %
 %       (4) Create a vector of eventrate objects subclassified using event types 'r', 'e', 'l', 'h', 't':
-%               erobj = eventrate(cobj, 1, 'etypes', 'relht');
+%               erobj = eventrate(eventsObject, 1, 'etypes', 'relht');
 %           To plot counts on separate figures:
 %               erobj.plot()
 %           To plot counts and energy panels, each event type as a separate figure:
@@ -49,8 +49,8 @@ classdef EventRate
 %               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');
 %
 %       (5) A full example:
-%               cobj = catalog(fullfile(MVO_DATA, 'mbwh_catalog'), 'seisan', 'snum', datenum(1996,10,1), 'enum', datenum(2004,3,1), 'region', 'Montserrat')
-%               erobj = eventrate(cobj, 365/12, 'stepsize', 1, 'etypes', 'thlr');
+%               eventsObject = catalog(fullfile(MVO_DATA, 'mbwh_catalog'), 'seisan', 'snum', datenum(1996,10,1), 'enum', datenum(2004,3,1), 'region', 'Montserrat')
+%               erobj = eventrate(eventsObject, 365/12, 'stepsize', 1, 'etypes', 'thlr');
 %               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');
 %
 %
@@ -58,7 +58,7 @@ classdef EventRate
 %
 %    For a list of all properties type properties(EventRate)
 %
-%    dnum                % (array) time of the center of each bin as a DATENUM
+%    time                % (array) time of the center of each bin as a DATENUM
 %
 %    METRICS:
 %        counts 		     % (array) number of events in each bin
@@ -74,7 +74,7 @@ classdef EventRate
 %        numbins             % (scalar) number of bins used for grouping
 %                                events
 %        total_counts        % (scalar) sum of counts
-%        total_mag           % (scalar) total sum of energy of all cobjs, represented as a magnitude
+%        total_mag           % (scalar) total sum of energy of all eventsObjects, represented as a magnitude
 %
 %    METADATA:
 %        etype               % event type/classification. 
@@ -112,8 +112,8 @@ classdef EventRate
         median_mag = [];     % (array)
         energy = [];
         total_counts = [];   % (scalar) sum of counts
-		total_mag = [];      % (scalar) total sum of energy of all cobjs, represented as a magnitude
-        dnum = [];           % (array) 	
+		total_mag = [];      % (scalar) total sum of energy of all eventsObjects, represented as a magnitude
+        time = [];           % (array) 	
         numbins = [];        % (scalar)
         min_mag = [];
         max_mag = [];
@@ -130,7 +130,7 @@ classdef EventRate
    
 	methods
         %% CONSTRUCTOR
-        function self = EventRate(dnum, counts, energy, median_energy, ...
+        function self = EventRate(time, counts, energy, median_energy, ...
                 smallest_energy, biggest_energy, median_time_interval, total_counts, ...
                 snum, enum, etypes, binsize, stepsize, numbins);
             self.counts = counts;          
@@ -140,7 +140,7 @@ classdef EventRate
             self.median_mag = magnitude.eng2mag(median_energy);
             self.energy = energy;
             self.total_counts = total_counts;  
-            self.dnum = dnum; 	
+            self.time = time; 	
             self.numbins = numbins;
             self.min_mag = magnitude.eng2mag(smallest_energy);
             self.max_mag = magnitude.eng2mag(biggest_energy);
@@ -151,21 +151,21 @@ classdef EventRate
             self.stepsize = stepsize;
         end
         
-%         function erobj = EventRate(dnum, mag, snum, enum, binsize, stepsize, etype) 
+%         function erobj = EventRate(time, mag, snum, enum, binsize, stepsize, etype) 
 %             if isempty(snum) | snum==0
-%                 snum = min(dnum);
+%                 snum = min(time);
 %             end
 %             if isempty(enum) | enum==0
-%                 enum = max(dnum);
+%                 enum = max(time);
 %             end
-%             if isempty(dnum)
+%             if isempty(time)
 %                 return
 %             end
 %             if isempty(mag)
-%                 mag = ones(size(dnum)) * NaN;
+%                 mag = ones(size(time)) * NaN;
 %             end
-%             if length(mag)~=length(dnum)
-%                 error('dnum and mag must be same size')
+%             if length(mag)~=length(time)
+%                 error('time and mag must be same size')
 %             end
 %             if ~(binsize>0)
 %                 binsize = autobinsize(enum-snum);
@@ -178,10 +178,10 @@ classdef EventRate
 %                return;
 %             end
 %             if isempty(etype)
-%                 etype = char(ones(size(dnum)) * 'x');
+%                 etype = char(ones(size(time)) * 'x');
 %             end
-%             if length(etype)~=length(dnum)
-%                 error('dnum and etype must be same size')
+%             if length(etype)~=length(time)
+%                 error('time and etype must be same size')
 %             end  
 %             
 %             % Find out how many event types we have. Recursively call
@@ -191,23 +191,23 @@ classdef EventRate
 %             if length(etypes)>1
 %                 for c=1:length(etypes)
 %                     i = find(etype==etypes(c));
-%                     erobj(c) = EventRate(dnum(i), mag(i), snum, enum, binsize, stepsize, etype(i));
+%                     erobj(c) = EventRate(time(i), mag(i), snum, enum, binsize, stepsize, etype(i));
 %                 end
 %             else
-%                 [dnum_bin, counts_per_bin, sum_per_bin, smallest, ...
+%                 [time_bin, counts_per_bin, sum_per_bin, smallest, ...
 %                     median_per_bin, std_per_bin, median_time_interval] = ...
-%                     matlab_extensions.bin_irregular(dnum, ...
+%                     matlab_extensions.bin_irregular(time, ...
 %                     magnitude.mag2eng(mag), ...
 %                     binsize, snum, enum, stepsize);
-%                 erobj.total_counts = length(dnum);
+%                 erobj.total_counts = length(time);
 %                 erobj.etype = etypes;
 %                 erobj.snum = snum;
 %                 erobj.enum = enum;
 %                 erobj.binsize = binsize;
 %                 erobj.stepsize = stepsize;
-%                 erobj.numbins = length(dnum_bin);                
+%                 erobj.numbins = length(time_bin);                
 %                 % vector properties
-%                 erobj.dnum = dnum_bin;
+%                 erobj.time = time_bin;
 %                 erobj.counts = counts_per_bin;
 %                 erobj.energy = sum_per_bin;
 %                 erobj.median_mag = magnitude.eng2mag(median_per_bin); % median energy as a magnitude
@@ -319,11 +319,11 @@ classdef EventRate
                         if (obj(c).binsize == obj(c).stepsize) & ( strcmp(metric{cc}, 'counts') | strcmp(metric{cc}, 'energy') | strcmp(metric{cc}, 'cum_mag') )
                             if strfind(metric{cc}, 'mag')
                                 cumdata = magnitude.eng2mag(cumsum(magnitude.mag2eng(data)));           
-                                subplot(numsubplots,1,cc), [ax, h1, h2] = plotyy(obj(c).dnum, ydata, obj(c).dnum, cumdata, @stairs, @plot );
+                                subplot(numsubplots,1,cc), [ax, h1, h2] = plotyy(obj(c).time, ydata, obj(c).time, cumdata, @stairs, @plot );
                                 set(h1, 'Color', colors{1});
                             else
-                                %subplot(numsubplots,1,cc), [ax, h1, h2] = plotyy(obj(c).dnum, data, obj(c).dnum, cumsum(data), @bar, @plot );
-                                subplot(numsubplots,1,cc), [ax, h1, h2] = plotyy(obj(c).dnum, ydata, obj(c).dnum, cumsum(data), @stairs, @plot );
+                                %subplot(numsubplots,1,cc), [ax, h1, h2] = plotyy(obj(c).time, data, obj(c).time, cumsum(data), @bar, @plot );
+                                subplot(numsubplots,1,cc), [ax, h1, h2] = plotyy(obj(c).time, ydata, obj(c).time, cumsum(data), @stairs, @plot );
                                 %set(h1, 'FaceColor', colors{1}, 'EdgeColor', colors{1})
                                 %set(h1, 'BarWidth', 1);
                                 %set(h1, 'LineWidth', 0.1);
@@ -340,10 +340,10 @@ classdef EventRate
                         else
 
                             if strfind(metric{cc}, 'mag')           
-                                subplot(numsubplots,1,cc), stairs(obj(c).dnum, ydata, 'Color', colors{1});
+                                subplot(numsubplots,1,cc), stairs(obj(c).time, ydata, 'Color', colors{1});
                             else
-                                %subplot(numsubplots,1,cc), bar(obj(c).dnum, data, 'FaceColor', colors{1}, 'EdgeColor', colors{1}, 'BarWidth', 1, 'LineWidth', 0.1);
-                                subplot(numsubplots,1,cc), stairs(obj(c).dnum, ydata, 'Color', colors{1});
+                                %subplot(numsubplots,1,cc), bar(obj(c).time, data, 'FaceColor', colors{1}, 'EdgeColor', colors{1}, 'BarWidth', 1, 'LineWidth', 0.1);
+                                subplot(numsubplots,1,cc), stairs(obj(c).time, ydata, 'Color', colors{1});
                             end
                             datetick('x','keeplimits');
                             title(metric2label(metric{cc}, obj(c).binsize), 'FontSize',12)                        
@@ -381,10 +381,10 @@ classdef EventRate
                         axes('position', pos);
                         
                         % plot
-                        bar( obj(cc).dnum, data, 'EdgeColor', 'none', 'FaceColor', [0 0 0] );
+                        bar( obj(cc).time, data, 'EdgeColor', 'none', 'FaceColor', [0 0 0] );
 %                         hold on;
 %                         sdata = smooth(data, 30, 'lowess');
-%                         plot( obj(cc).dnum, sdata, 'k-', 'linewidth', 2);
+%                         plot( obj(cc).time, sdata, 'k-', 'linewidth', 2);
                         
                         
                         % range and label
@@ -423,7 +423,7 @@ classdef EventRate
                             data = smooth(data, smoothbins);
                         end    
                         
-                        plot( obj(cc).dnum, data, sprintf('-%c',colour(cc)) );
+                        plot( obj(cc).time, data, sprintf('-%c',colour(cc)) );
                         hold on;
                         datetick('x','keeplimits');
                         set(gca, 'XLim', [obj(cc).snum obj(cc).enum]);
@@ -458,8 +458,8 @@ classdef EventRate
                             data = smooth(data, smoothbins);
                         end    
                     
-                        %bar( obj(cc).dnum, data, 1, 'stack' );
-                        area(obj(cc).dnum, data);
+                        %bar( obj(cc).time, data, 1, 'stack' );
+                        area(obj(cc).time, data);
                         datetick('x','keeplimits');
                         set(gca, 'XLim', [obj(cc).snum obj(cc).enum]);
                         suptitle(metric{c});
@@ -479,7 +479,7 @@ classdef EventRate
                 figure(gcf+1)
                 set(gcf,'Color', [1 1 1]);
                 cumcummag = magnitude.eng2mag(cumsum(magnitude.mag2eng(obj(c).cum_mag)));
-                [ax, h1, h2] = plotyy(obj(c).dnum, cumcummag, obj(c).dnum, cumsum(obj(c).energy), @plot, @plot);
+                [ax, h1, h2] = plotyy(obj(c).time, cumcummag, obj(c).time, cumsum(obj(c).energy), @plot, @plot);
                 datetick(ax(1), 'x','keeplimits');
                 datetick(ax(2), 'x','keeplimits');
                 ylabel(ax(1), 'Cumulative Magnitude', 'FontSize',12);
@@ -527,9 +527,9 @@ classdef EventRate
             for c = 1:length(obj)
                 % set up weekending list for yticklabels
                 binendstr = {};
-                for bin_index=numel(obj.dnum)-numBinsToUse+1: numel(obj.dnum)
+                for bin_index=numel(obj.time)-numBinsToUse+1: numel(obj.time)
                     bin_index
-                    dstr = datestr(obj.dnum(bin_index))
+                    dstr = datestr(obj.time(bin_index))
                     binendstr{bin_index} = dstr;
                 end
                 pointlabels = {};
@@ -541,7 +541,7 @@ classdef EventRate
                     prcntile = percentiles(obj(c).counts);
                     %pointlabels{i} = sprintf('%s(%d)', point_label{i}, counts(-1));
                     pointlabels{i}='';
-                    for bin_index=numel(obj.dnum)-numBinsToUse+1: numel(obj.dnum)%-numBinsToUse-1: 1: 0
+                    for bin_index=numel(obj.time)-numBinsToUse+1: numel(obj.time)%-numBinsToUse-1: 1: 0
                         y = obj(c).counts(bin_index);
                         magnitude = obj(c).cum_mag(bin_index);
                         p = y2percentile(y,prcntile);
@@ -645,8 +645,8 @@ classdef EventRate
                     [tempsepoch, tempeepoch, mean_rate, median_rate, mean_mag, cum_mag] = dbgetv(db,'timewindow_starttime', 'timewindow_endtime', 'mean_rate', 'median_rate', 'mean_ml', 'cum_ml');
                     obj.binsize = (tempeepoch(1) - tempsepoch(1))/86400;
                     obj.stepsize = min(tempsepoch(2:end) - tempsepoch(1:end-1))/86400;
-                    obj.dnum = snum+obj.stepsize:obj.stepsize:enum;
-                    obj.numbins = length(obj.dnum);
+                    obj.time = snum+obj.stepsize:obj.stepsize:enum;
+                    obj.numbins = length(obj.time);
                     obj.mean_rate = zeros(obj.numbins, 1);
                     obj.counts = zeros(obj.numbins, 1);
                     obj.median_rate = zeros(obj.numbins, 1);
@@ -654,7 +654,7 @@ classdef EventRate
                     obj.cum_mag = zeros(obj.numbins, 1);
                     for c=1:length(tempeepoch)
                         tempenum = epoch2datenum(tempeepoch(c));
-                        i = find(obj.dnum == tempenum);
+                        i = find(obj.time == tempenum);
                         obj.mean_rate(i) = mean_rate(c);
                         obj.counts(i) = mean_rate(c) * (obj.binsize * 24);
                         obj.median_rate(i) = median_rate(c); 
@@ -718,7 +718,7 @@ classdef EventRate
                     end
                 end   
             else
-                error('%s:addfield:invalidFieldname','fieldname must be a string', class(cobj))
+                error('%s:addfield:invalidFieldname','fieldname must be a string', class(eventsObject))
             end
 
         end
