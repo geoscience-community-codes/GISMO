@@ -6,18 +6,7 @@ classdef TraceData
    %
    %
    % About TraceData vs Waveform
-   %   Because of the ability to reference fields directly, several
-   %   functions no longer are included. These include:
-   %   MIN, MAX, MEDIAN, MEAN,
-   %   Let T be a TraceData object, and let W be a waveform object
-   %   BEFORE: 
-   %      m = min(W)
-   %   NOW:
-   %      m = min(T.data);
-   %   
-   %  if T is an array of TraceData objects
-   %      m = 
-   
+   %
    % trying new tactic.  I won't try to anticipate all the various ways
    % someone can provide incompatible data. Instead, I'm going to provide a
    % comment with my expectations which will show up automatically in the
@@ -348,6 +337,66 @@ classdef TraceData
          end
       end
       
+      %% simple stats
+      function val = bulk_run_on_data(T, F)
+         % will run function F against the data field of each element in T
+         % shape is preserved, and all empty traces return nan
+         % F must return a single value
+         %
+         % see also TraceData.max, TraceData.min, TraceData.mean, TraceData.median
+         hasdata = arrayfun(@(X) ~isempty(X.data), T);
+         val = nan(size(T));
+         val(hasdata) = arrayfun(F,T(hasdata));
+      end
+      function val = max(T)
+         F = @(X) max(X.data);
+         val = T.bulk_run_on_data(F);
+      end
+      function val = min(T)
+         F = @(X) min(X.data);
+         val = T.bulk_run_on_data(F);
+      end
+      function val = mean(T)
+         F = @(X) mean(X.data);
+         val = T.bulk_run_on_data(F);
+      end
+      function val = median(T)
+         F = @(X) median(X.data);
+         val = T.bulk_run_on_data(F);
+      end
+      function val = std(T, varargin)
+         % std standard deviation for traces
+         % vals = T.std retrieves the std from each trace, returning in an
+         % array of the same shape as T.
+         % vals = T.std(options); lets you declare options as per the
+         % builtin version of std
+         % useful option:
+         %   vals = T.std('omitnan') % or 'includenan'
+         %
+         % see also std, TraceData.bulk_run_on_data
+         if exist('varargin','var')
+            F = @(X) std(X.data,varargin{:});
+         else
+            F = @(X) std(X.data);
+         end
+         val = T.bulk_run_on_data(F);
+      end
+      function val = var(T, varargin)
+         % var calulate variance for traces
+         % vals = T.var;
+         % vals = T.var(options); lets you declare options as per the
+         % builtin version of var
+         % useful option:
+         % vals = T.var('omitnan') % or 'includenan'
+         %
+         % see also var, TraceData.bulk_run_on_data
+         if exist('varargin','var')
+            F = @(X) var(X.data,varargin{:});
+         else
+            F = @(X) var(X.data);
+         end
+         val = T.bulk_run_on_data(F);
+      end
       %% extended functionality
       function [A, phi, f] = amplitude_spectrum(td)
          % waveform.amplitude_spectrum Simple method to compute amplitude
@@ -463,14 +512,15 @@ classdef TraceData
          tf = ~eq(A,B);
       end;
       function outT = extract(Tr, method, starts, ends)
+         % extract retrieves Tracedatas with subsets of their data
          switch lower(method)
             case 'index'
-               assert(numel(starts) == numel(ends));
+               assert(numel(starts) == numel(ends), 'number of start and end indices must match');
                outT = repmat(Trace,numel(Tr),numel(starts));
                for n=1:numel(T);
                   for t=1:numel(starts)
                      outT(n,t) = Tr(n);
-                  outT(n,t).data = Tr(n).data(starts(t), ends(t));
+                     outT(n,t).data = Tr(n).data(starts(t), ends(t));
                   end
                end
          end
@@ -627,7 +677,6 @@ classdef TraceData
          % keep the imaginary values, then you should use the built-in hilbert
          % transform.  ie.  Don't feed it a trace, feed it a vector... - CR
          %
-         %
          % See also FFT, IFFT, for details and the meaning of "N" see HILBERT
          
          if nargin==2
@@ -659,7 +708,7 @@ classdef TraceData
          %           'max' : maximum value
          %           'min' : minimum value
          %           'mean': average value
-         %           'median' : mean value
+         %           'median' : median value
          %           'rms' : rms value (added 2011/06/01)
          %           'absmax': absolute maximum value (greatest deviation from zero)
          %           'absmin': absolute minimum value (smallest deviation from zero)
@@ -685,10 +734,7 @@ classdef TraceData
          %
          % See also RESAMPLE, MIN, MAX, MEAN, MEDIAN.
          
-         % AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-         % 10/2015: Celso Reyes: put in TraceData and restructured
-         % 7/6/2011: Glenn Thompson: Made all methods NaN tolerant (replace max with nanmax etc) - checks for statistics toolbox
-         % 6/1/2011: Glenn Thompson: Added methods for ABSMEAN, ABSMEDIAN and RMS
+         % AUTHOR: Celso Reyes, Glenn Thompson
          
          persistent STATS_INSTALLED;
          if isempty(STATS_INSTALLED)
@@ -750,43 +796,61 @@ classdef TraceData
       
       function A = smooth(A, varargin)
          % smooth requires the signal fitting toolbox
-         % see smooth
+         % see also smooth
          for n = 1:numel(A)
             A(n).data = smooth(A(n).data,varargin{:});
          end
       end
       
-      function T = taper(T, R, style)
-         % trace = TAPER(trace,R) applies a cosine taper to the ends of a
-         % trace where r is the ratio of tapered to constant sections and is between
-         % 0 and 1. For example, if R = 0.1 then the taper at each end of the trace
-         % is 5% of the total trace length. R can be either a scalar or the same
-         % size as TRACE. If R is a scalar, it is applied uniformly to each
-         % waveform. Note that if R is set to 1 the resulting taper is a hanning
-         % window.
+      function T = taper(T, style, R)
+         % trace = trace.taper() applies a cosine (tukey) taper to the ends
+         % of a trace with a default taper to the first and last 10% of the
+         % trace.  This is same as trace.taper('tukey', 0.2)
          %
-         % trace = TAPER(trace) same as above with a default taper of R = 0.2.
+         % trace = trace.taper(style) applies the tapering window function
+         % STYLE to the waveform. STYLE can be any valid windowing function 
+         % some possible taper styles include hanning, tukey, and gaussian.
+         % see help for WINDOW for a more complete list.
          %
-         % TODO: Currently, only cosine tapers are supported. The code is set up to
-         % accept other window shapes as a final argument, e.g.
-         % taper(trace,R,'cosine'). However other window shapes have not yet been
-         % implimented. - MEW
-         
+         % trace = trace.taper(style, R) 
+         % R varies in meaning according to the window style. For the
+         % default cosine (tukey) taper, R is the ratio of tapered to
+         % constant sections and is between 0 and 1. For example, if R =
+         % 0.1 then the taper at each end of the trace is 5% of the total
+         % trace length. R can be either a scalar or the same size as
+         % TRACE. If R is a scalar, it is applied uniformly to each 
+         % waveform.
+         %
+         % for a tukey taper, setting R ito 1 results in a hanning taper
+         %
+         % All tapers require the signal processing toolbox.
+         % 
+         % see also window
          % AUTHOR: Michael West
          % Modified: Celso Reyes
+         HAVE_SIGBOX = ismember('Signal Processing Toolbox',{a.Name});
+         if ~HAVE_SIGBOX
+            error('TraceData:taper:signalToolboxNotInstalled',...
+                  'Using a taper requires access to the Signal Processing Toolbox');
+         end
+         if ~exist('style','var') || isempty(style) || strcmpi(style,'cosine')
+            style = 'tukeywin';
+         end
+         if exist(lower(style))
+            taperfun = str2func(lower(style));
+         else
+                           error('TraceData:taper:invalidTaperType',...
+                  'This style of taper is not recognized.');
+         end
          
-                  
-         if ~exist('R','var') || isempty(R)
+         %% massage R into place
+         if strcmpi(style,'tukeywin') && (~exist('R','var') || isempty(R))
             R = 0.2; %assign default taper
-         elseif ~isnumeric(R)
+         end
+         if exist('R','var') &&  ~isnumeric(R)
             error('TraceData:taper:InvalidRValue',...
                'R, if specified, must be numeric');
          end
-         
-         if ~exist('style','var') || isempty(style)
-            style = 'COSINE';
-         end
-         
          
          if isscalar(R)
             R = repmat(R,size(T));
@@ -807,25 +871,17 @@ classdef TraceData
             error('TraceData:taper:InvalidRSize',...
                'R must either be a scalar value, or must be the same size as the input waveforms');
          end
-         
-         switch upper(style)
-            case 'COSINE'
-               for n=1:numel(T)
-                  T(n) = docosine(T(n),R(n));
-               end
-            case 'GAUSSIAN'
-               %not implemented, placeholder only.
-               error('TraceData:taper:invalidTaperType',...
-                  'Gaussian taper is not yet implimented');
-            otherwise
-               error('TraceData:taper:invalidTaperType',...
-                  'This style of taper is not recognized.');
-         end;
-         
-         function T = docosine(T,r)
-            %applied to individual traces only
-            T = T .* tukeywin( numel(T.data) , r );
+         %% Do the window processing
+         if exist('R','var')
+            for N=1:numel(T)
+               T(N) = T(N) .* window(taperfun, numel(T(N).data), R(N));
+            end
+         else
+            for N=1:numel(T)
+               T(N) = T(N) .* window(taperfun, numel(T(N).data));
+            end
          end
+         
       end
 
       function [tf, msg] = testCompatibility(A, B)
@@ -966,7 +1022,6 @@ classdef TraceData
          %     extra speed and tightly control the inputs to this class.
          %
          %     DEBUG_LEVEL
-         %
          disp(val)
          disp('not active yet');
          switch lower(name)

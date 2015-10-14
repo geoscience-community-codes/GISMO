@@ -113,6 +113,18 @@ classdef test_TraceData < matlab.unittest.TestCase
          testCase.verifyEqual(T .^ 2, T .* T.data);
          testCase.verifyEqual(T .^ 3.5, powT);
       end
+      function test_min(testCase)
+      end
+      function test_max(testCase)
+      end
+      function test_median(testCase)
+      end
+      function test_mean(testCase)
+      end
+      function test_std(testCase)
+      end
+      function test_var(testCase)
+      end
       function test_abs(testCase)
          simpledata = [1 2 3 -inf inf 0];
          T = test_TraceData.makeTraceData(simpledata, 10, 'counts');
