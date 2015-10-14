@@ -705,9 +705,17 @@ classdef TraceData
          % automatically determine whether it can use the NaN-safe version
          if ~strcmp(method,'builtin')
             if STATS_INSTALLED
+               if numel(method) > 3 && strcmpi(method(1:3),'ABS')
+                  methodfn = str2func(['nan' method(4:end)]);
+               else
                methodfn = str2func(['nan', method]);
+               end
             else
-               methodfn = str2func(method);
+               if numel(method) > 3 && strcmpi(method(1:3),'ABS')
+                  methodfn = str2func(method(4:end));
+               else
+                  methodfn = str2func(method);
+               end
             end
          end
          

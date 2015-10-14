@@ -104,13 +104,94 @@ classdef test_TraceData < matlab.unittest.TestCase
       function test_mtimes(testCase)
          
       end
-      function test_pow(testCase)
+      function test_rdivide(testCase)
+      end
+      function test_power(testCase)
          simpledata = [1 2 3 -inf inf 0];
          powT = test_TraceData.makeTraceData(simpledata .^ 3.5, 10, 'counts');
          T = test_TraceData.makeTraceData(simpledata, 10, 'counts');
          testCase.verifyEqual(T .^ 2, T .* T.data);
          testCase.verifyEqual(T .^ 3.5, powT);
       end
+      function test_abs(testCase)
+         simpledata = [1 2 3 -inf inf 0];
+         T = test_TraceData.makeTraceData(simpledata, 10, 'counts');
+         Tkey = test_TraceData.makeTraceData(abs(simpledata), 10, 'counts');
+         testCase.verifyEqual(abs(T), Tkey);
+      end
+      function test_sign(testCase)
+         simpledata = [1 2 3 -inf inf 0];
+         T = test_TraceData.makeTraceData(simpledata, 10, 'counts');
+         Tsig = test_TraceData.makeTraceData(sign(simpledata), 10, 'sign(counts)');
+         testCase.verifyEqual(sign(T),Tsig);
+      end
+      function test_demean(testCase)
+      end
+      function test_integerate(testCase)
+      end
+      function test_diff(testCase)
+      end
+      function test_detrend(testCase)
+         simpledata = [1 1 2 2 3 3 4 4 5 5];
+         T= test_TraceData.makeTraceData(simpledata, 10, 'counts');
+      end
+      function test_double(testCase)
+         simpledata = [1 2 3 -inf inf 0]';
+         T(1) = test_TraceData.makeTraceData(simpledata, 10, 'counts');
+         T(2) = -T(1);
+         testCase.verifyEqual(double(T(1)), simpledata);
+         testCase.verifyEqual(double(T), [simpledata,-simpledata]);
+      end
+      function test_resample(testCase)
+         simpledata = [-20 20 0 0 -1 1 3 4 10 20 -14 -12];
+         T10 = test_TraceData.makeTraceData(simpledata, 10, 'counts');
+         T5 = test_TraceData.makeTraceData([], 5, 'counts');
+         %           'max' : maximum value
+         T5.data = [20 0 1 4 20 -12];
+         testCase.verifyEqual(T10.resample('max',2), T5)
+         %           'min' : minimum value
+         T5.data = [-20 0 -1 3 10 -14];
+         testCase.verifyEqual(T10.resample('min',2), T5)
+         %           'mean': average value
+         T5.data = [0 0 0 3.5 15 -13];
+         testCase.verifyEqual(T10.resample('mean',2), T5)
+         %           'rms' : rms value (added 2011/06/01)
+         %           'absmax': absolute maximum value (greatest deviation from zero)
+         T5.data = [20 0 1 4 20 14];
+         testCase.verifyEqual(T10.resample('absmax',2), T5)
+         %           'absmin': absolute minimum value (smallest deviation from zero)
+         T5.data = [20 0 1 3 10 12];
+         testCase.verifyEqual(T10.resample('absmin',2), T5)
+         %           'absmean' : mean deviation from zero (added 2011/06/01)
+         %           'median' : median value
+         T10.data = [0 0 0 3.5 -15 100 82 95 90 ]; T10.samplerate = 9;
+         T5.data = [0 3.5 90];
+         T5 = test_TraceData.makeTraceData(T5.data, 3, 'counts');
+         testCase.verifyEqual(T10.resample('median',3), T5)
+         %           'absmedian' : median deviation from zero (added 2011/06/01)
+         %           'builtin': Use MATLAB's built in resample routine
+      end
+      function test_smooth(testCase)
+         testCase.assumeEqual(exist('smooth'),2);
+         error('smooth test not written');
+      end
+      function test_fillgaps(testCase)
+      end
+      function test_clip(testCase)
+      end
+      function stack(testCase)
+      end
+      function binstack(testCase)
+      end
+      function test_taper(testCase)
+      end
+      function test_hilbert(testCase)
+      end
+      function test_zero2nan(testCase)
+      end
+      function test_extract(testCase)
+      end
+      
    end
    
 end
