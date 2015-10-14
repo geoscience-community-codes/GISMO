@@ -11,12 +11,13 @@ classdef Catalog_base
     properties(GetAccess = 'public', SetAccess = 'private')
         % properties set here cannot have getters defined on them in
         % subclasses
-        dnum; % alias for time
+        time; % alias for time
         snum;
         enum;
     end
     properties(GetAccess = 'public', SetAccess = 'public')
         description;
+        
         misc_fields = {};
         misc_values = {};
     end
@@ -24,8 +25,8 @@ classdef Catalog_base
         plus(cobj1, cobj2)
     end
     methods
-%         function dnum = get.dnum(obj)
-%             dnum = obj.time();
+%         function time = get.time(obj)
+%             time = obj.time();
 %         end
         function snum = get.snum(obj)
             snum = min(obj.time());
@@ -324,7 +325,7 @@ classdef Catalog_base
             for c=1:length(obj)
                 figure(gcf+1)
                 set(gcf,'Color', [1 1 1]);
-                [ax, h1, h2] = plotyy(obj(c).dnum, cumsum(obj(c).mag), obj(c).dnum, cumsum(obj(c).energy), @plot, @plot);
+                [ax, h1, h2] = plotyy(obj(c).time, cumsum(obj(c).mag), obj(c).time, cumsum(obj(c).energy), @plot, @plot);
                 datetick(ax(1), 'x','keeplimits');
                 datetick(ax(2), 'x','keeplimits');
                 set(ax(1), 'YLabel', 'Cumulative Magnitude');
@@ -642,16 +643,16 @@ classdef Catalog_base
                 etypes = unique(cobj(i).etype);      
 
                 % bin the data
-                [dnum, counts, energy, smallest_energy, ...
+                [time, counts, energy, smallest_energy, ...
                     median_energy, std, median_time_interval] = ...
                     matlab_extensions.bin_irregular(cobj(i).time, ...
                     magnitude.mag2eng(cobj(i).mag), ...
                     binsize, cobj(i).snum, cobj(i).enum, stepsize);
 
                 % create the Event Rate object
-                total_counts = length(cobj(i).dnum);
-                numbins = numel(dnum);
-                erobj(i) = EventRate(dnum, counts, energy, median_energy, ...
+                total_counts = length(cobj(i).time);
+                numbins = numel(time);
+                erobj(i) = EventRate(time, counts, energy, median_energy, ...
                     smallest_energy, biggest_energy, median_time_interval, total_counts, ...
                     cobj(i).snum, cobj(i).enum, etypes, binsize, stepsize, numbins);
             end
@@ -690,7 +691,7 @@ classdef Catalog_base
                 days = cobj.enum - cobj.snum;
                 binsize = days/100;
                 erobj = cobj.eventrate('binsize',binsize);
-                subplot(2,1,2),plot(erobj.dnum, erobj.counts);
+                subplot(2,1,2),plot(erobj.time, erobj.counts);
                 set(gca, 'XLim', [floor(cobj.snum) ceil(cobj.enum)]);
                 datetick('x');
                 xlabel('Date');
@@ -699,8 +700,8 @@ classdef Catalog_base
                 
                 % put 'PR' label by peak-rate
                 [pr, pri] = max(erobj.counts);
-                text(erobj.dnum(pri), erobj.counts(pri), 'PR','color','r');               
-                disp(sprintf('PR=%d occurs at %.1f%% of time series',pr,100*(erobj.dnum(pri) - erobj.snum)/(erobj.enum-erobj.snum)));
+                text(erobj.time(pri), erobj.counts(pri), 'PR','color','r');               
+                disp(sprintf('PR=%d occurs at %.1f%% of time series',pr,100*(erobj.time(pri) - erobj.snum)/(erobj.enum-erobj.snum)));
             end
         end
         
@@ -737,14 +738,14 @@ classdef Catalog_base
                 elseif (choice(1)=='p') % PLOT
 %                     if strcmp(get(obj,'method'), 'import_aef_file')
 %                         % AEF SUMMARY FILE FOR MBWH
-%                         dnum = obj.dnum(eventnum);
-%                         sfilename = dnum2sfile(dnum);
+%                         time = obj.time(eventnum);
+%                         sfilename = time2sfile(time);
 %                         % read the sfile
 %                         sfile = readCatalog.read_sfile(fullfile('/raid','data','seisan','MVOE_','REA'), sfilename,'*','*')
 % %                         wavfiles = {sfile(1).wavfiles};
 % %                         wavpath = fullfile('/raid','data','seisan','MVOE_', 'WAV', sprintf('%04d', wavfiles{1})
 % %                         ds = datasource('seisan', wavpath)
-% %                         w = waveform(ds, scnl, dnum-PRETRIGGER, dnum+POSTTRIGGER);
+% %                         w = waveform(ds, scnl, time-PRETRIGGER, time+POSTTRIGGER);
 %                     end    
                     if strcmp(get(obj,'method'), 'load_seisandb')
                         % SEISAN FILE
@@ -755,7 +756,7 @@ classdef Catalog_base
                         wavfiles = {sfile(eventnum).wavfiles};
                         yyyy = sfile(eventnum).year;
                         mm = sfile(eventnum).month;
-                        dnum = sfile(eventnum).dnum;
+                        time = sfile(eventnum).time;
                         dbpath = get(obj, 'dbpath');
                         dbpath = strrep(dbpath, 'REA', 'WAV');
                         for i=1:numel(wavfiles)
@@ -766,8 +767,8 @@ classdef Catalog_base
                             end
                             disp(sprintf('Loading %s',wavpath));
                             ds = datasource('seisan', wavpath);
-                            datestr(dnum)
-                            w = waveform(ds, scnl, dnum-PRETRIGGER, dnum+POSTTRIGGER);
+                            datestr(time)
+                            w = waveform(ds, scnl, time-PRETRIGGER, time+POSTTRIGGER);
                         end
                         if exist('w','var')
                             mulplt(w);
@@ -802,8 +803,8 @@ classdef Catalog_base
                     if length(choice)>10
                         hr=str2num(choice(10:11));
                     end
-                    jumpdnum=datenum(year,month,dd,hr,0,0);
-                    eventnum = min(find(obj.dnum > jumpdnum));
+                    jumptime=datenum(year,month,dd,hr,0,0);
+                    eventnum = min(find(obj.time > jumptime));
 
                 elseif (choice(1)=='s') % SUMMARISE - SHOW S FILE or similar data 
                     try
@@ -947,7 +948,7 @@ classdef Catalog_base
         
         %% AUTOBINSIZE        
         function binsize = autobinsize(cobj)
-            binsize = autobinsize(cobj.enum - cobj.snum);
+            binsize = autobinsize(max(cobj.time) - min(cobj.time));
         end
         
         %%
