@@ -898,6 +898,7 @@ classdef Trace < TraceData
       
       %% plotting functions
       function varargout = plot(T, varargin)
+         %TODO: use parse
          %PLOT plots a waveform object
          %   h = plot(trace)
          %   Plots a waveform object, handling the title and axis labeling.  The

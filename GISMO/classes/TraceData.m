@@ -75,7 +75,12 @@ classdef TraceData
       end
       
       function s = formattedduration(obj, fmt)
-         % formattedduration default format is 'dd:hh:mm:ss.SSS'
+         % formattedduration retrieves the duration as a formatted string
+         % s = trace.formattedduration() retrieves the duration in the
+         % default format as 'dd:hh:mm:ss.SSS' 
+         % s = trace.formattedduration(fmt) retrieves duration in format
+         % specified.  
+         %
          % depends upon the duration class, introduced in r2014b
          % see duration
          secsOfData = obj.duration;
@@ -102,10 +107,10 @@ classdef TraceData
          %  To avoid ambiguity with the metadata, two traces are added
          %  together by explicitly adding the data from one to the other:
          %
-         %      % assertCompatibility(TraceData1, TraceData2); % for debug
+         %      % assertCompatiblewith(TraceData1, TraceData2); % for debug
          %      TraceData1 + TraceData2.data
          %
-         % see also testCompatibility, assertCompatibility
+         % see also compatiblewith, assertCompatiblewith
          
          if ~isa(A, 'TraceData')
             [A, B] = deal(B, A); % swap values
@@ -137,10 +142,10 @@ classdef TraceData
          %  To avoid ambiguity with the metadata, two traces are subtracted
          %  by explicitly subtracting the one's data from the other:
          %
-         %      % assertCompatibility(TraceData1, TraceData2); % for debug
+         %      % assertCompatiblewith(TraceData1, TraceData2); % for debug
          %      TraceData1 - TraceData2.data
          %
-         % see also testCompatibility, assertCompatibility
+         % see also compatiblewith, assertCompatiblewith
          
          if isnumeric(B)
             % A is guaranteed to be a TraceData
@@ -165,10 +170,10 @@ classdef TraceData
          %  To avoid ambiguity with the metadata, two traces are multiplied
          %  by explicitly multiplying one's data with the other:
          %
-         %      % assertCompatibility(TraceData1, TraceData2); % for debug
+         %      % assertCompatiblewith(TraceData1, TraceData2); % for debug
          %      TraceData1 .* TraceData2.data
          %
-         % see also testCompatibility, assertCompatibility
+         % see also compatiblewith, assertCompatiblewith
          if isnumeric(B)
             for n=1:numel(A)
                A(n).data = A(n).data .* B; % B should be either scalar or same size as obj.data
@@ -201,10 +206,10 @@ classdef TraceData
          %  To avoid ambiguity with the metadata, two traces are multiplied
          %  by explicitly dividing one's data from the other:
          %
-         %      % assertCompatibility(TraceData1, TraceData2); % for debug
+         %      % assertCompatiblewith(TraceData1, TraceData2); % for debug
          %      TraceData1 ./ TraceData2.data
          %
-         % see also testCompatibility, assertCompatibility
+         % see also compatiblewith, assertCompatiblewith
          
          if isnumeric(B)
             % A is guaranteed to be a TraceData
@@ -234,69 +239,88 @@ classdef TraceData
          end
       end
       
-      function A = abs(A)
-         for n=1:numel(A)
-            A(n).data = abs(A(n).data);
-            % A(n).units = ['abs (', A(n).units, ')'];
+      function trace = abs(trace)
+         %abs get absolute value of data within trace
+         % T = abs(trace) returns traces containing the absolute values of
+         % the data.
+         %
+         % see also abs
+         for n=1:numel(trace)
+            trace(n).data = abs(trace(n).data);
          end
       end
       
-      function A = sign(A)
+      function trace = sign(trace)
          %sign get signum for data in A
-         for n=1:numel(A)
-            A(n).data = sign(A(n).data);
-            A(n).units = ['sign(', A(n).units, ')'];
+         % T = sign(trace) returns a a trace containing the signs of the
+         % data, instead of the data.
+         %
+         % see also sign
+         for n=1:numel(trace)
+            trace(n).data = sign(trace(n).data);
+            trace(n).units = ['sign(', trace(n).units, ')'];
          end
       end
                
       %% more complicated 
-      function A = diff(A, varargin)
-         % FREQUENCY is not considered!
-         % otherwise, would be X = diff(X) .* Freq
+      function T = diff(T, varargin)
+         % diff Difference and approximate derivative for traces
+         % A = diff(trace)
+         % A = diff(trace, options) see the builtin diff for details on
+         % available options.
+         %
+         % trace must have samplerate and data assigned, otherwise you may
+         % get "a Matrix dimensions must agree" error
+         % 
+         % units are automatically changed.  Assuming the sample rate is
+         % samples/sec, then the new trace is in currentunits / sec.
+         % 
+         % see diff
          if isempty(varargin)
-            A.data = diff(A.data) .* A.samplerate;
-            A.data = diff(A.data);
+            for I=1:numel(T)
+               T(I).data = diff(T(I).data) .* T(I).samplerate; % must have data and sample rate
+            end
          else
             error('not implemented yet');
          end
-         for I=1:numel(A)
-            tempUnits = A(I).units;
+         for I=1:numel(T)
+            tempUnits = T(I).units;
             whereInUnits = strfind(tempUnits,' * sec');
             if isempty(whereInUnits)
-               A(I).units = [tempUnits, ' / sec'];
+               T(I).units = [tempUnits, ' / sec'];
             else
                tempUnits(whereInUnits(1) :whereInUnits(1)+5) = [];
-               A(I).units = tempUnits;
+               T(I).units = tempUnits;
             end
          end
       end
       
-      function w = integrate (w,method)
-         %INTEGRATE integrates a waveform signal
-         %   waveform = integrate(waveform, [method])
+      function T = integrate (T,method)
+         %INTEGRATE integrates a tracedata signal
+         %   trace = trace.integrate([method])
          %   goes from Acceleration -> Velocity, and from Velocity -> displacement
          %
-         %   wave = integrate(waveform)  or
-         %   wave = integrate(waveform,'cumsum') performs integration by summing the
+         %   tr = trace.integrate()
+         %   tr = integrate(trace,'cumsum') performs integration by summing the
          %   data points with the cumsum function, taking into account time interval
          %   and updating the units as appropriate.
          %
-         %   waveform = integrate(waveform, 'trapz') as above, but uses matlab's
+         %   tr = trace.integrate('trapz') as above, but uses matlab's
          %   cumtrapz function to perform the integration.
          
          %   Input Arguments
-         %       WAVEFORM: a waveform object   N-DIMENSIONAL
+         %       trace: tracedata   N-DIMENSIONAL
          %       METHOD: either 'cumtrapz' or 'cumsum'  [default is cumsum]
          %
-         %   Actual implementation  merely does a cumulative sum of the waveform's
+         %   Actual implementation  merely does a cumulative sum of the trace's
          %   samples, and updates the units accordingly.  These units may be a
          %   little kludgey.
          %
          %
-         %   See also CUMSUM, CUMTRAPZ, WAVEFORM/DIFF
+         %   See also CUMSUM, CUMTRAPZ, trace.diff
          
-         Nmax = numel(w);
-         allfreq = [w.samplerate];
+         Nmax = numel(T);
+         allfreq = [T.samplerate];
          
          if ~exist('method','var')
             method = 'cumsum';
@@ -308,30 +332,34 @@ classdef TraceData
             case 'trapz'
                integratefn = str2func('cumtrapz');
             otherwise
-               error('Waveform:integrate:unknownMethod',...
+               error('TraceData:integrate:unknownMethod',...
                   'Unknown integration method.  Valid methods are ''cumsum'' and ''trap''');
          end
          
          for I = 1 : Nmax
-            w(I).data = integratefn(w(I).data) ./ allfreq(I);
-            tempUnits = w(I).units;
+            T(I).data = integratefn(T(I).data) ./ allfreq(I);
+            tempUnits = T(I).units;
             whereInUnits = strfind(tempUnits,' / sec');
             if isempty(whereInUnits)
-               w(I).units = [tempUnits, ' * sec'];
+               T(I).units = [tempUnits, ' * sec'];
             else
                tempUnits(whereInUnits(1) :whereInUnits(1)+5) = [];
-               w(I).units = tempUnits;
+               T(I).units = tempUnits;
             end
          end
       end
       
       function A = demean(A)
+         % demean removes the average from tracedata
+         %see demean
          for n=1:numel(A);
             A(n) = A(n) - mean(A(n).data);
          end
       end
       
       function A = detrend(A, varargin)
+         % detrend removes the trend from tracedata
+         %see detrend
          for n=1:numel(A);
             A(n).data = detrend(A(n).data,varargin{:});
          end
@@ -342,25 +370,33 @@ classdef TraceData
          % will run function F against the data field of each element in T
          % shape is preserved, and all empty traces return nan
          % F must return a single value
-         %
+         % vals = T.bulk_run_on_data(functionhandle)
+         % 
          % see also TraceData.max, TraceData.min, TraceData.mean, TraceData.median
-         hasdata = arrayfun(@(X) ~isempty(X.data), T);
+         
          val = nan(size(T));
+         for n=numel(T) : -1 : 1
+            hasdata = isempty(T(n).data);
+         end
          val(hasdata) = arrayfun(F,T(hasdata));
       end
       function val = max(T)
+         %max for traces
          F = @(X) max(X.data);
          val = T.bulk_run_on_data(F);
       end
       function val = min(T)
+         %min for traces
          F = @(X) min(X.data);
          val = T.bulk_run_on_data(F);
       end
       function val = mean(T)
+         %mean for traces
          F = @(X) mean(X.data);
          val = T.bulk_run_on_data(F);
       end
       function val = median(T)
+         %median for traces
          F = @(X) median(X.data);
          val = T.bulk_run_on_data(F);
       end
@@ -399,12 +435,12 @@ classdef TraceData
       end
       %% extended functionality
       function [A, phi, f] = amplitude_spectrum(td)
-         % waveform.amplitude_spectrum Simple method to compute amplitude
-         % spectrum for a waveform object. Uses the MATLAB fft function.
+         % trace.amplitude_spectrum Simple method to compute amplitude
+         % spectrum for a trace. Uses the MATLAB fft function.
          %   [A, phi, f] = amplitude_spectrum(td)
          %
          %   Inputs:
-         %       td - a single TraceData object
+         %       td - a single TraceData
          %
          %   Outputs:
          %       A - the amplitude coefficients
@@ -493,7 +529,7 @@ classdef TraceData
             elseif isa(option,'function_handle')
                createDefaultArray = option;
             else
-               error('waveform:double:invalidOption',...
+               error('TraceData:double:invalidOption',...
                   '''option'' must be either a function handle or function name.');
             end
          end
@@ -528,14 +564,14 @@ classdef TraceData
       
       function td = fillgaps(td,value, gapvalue)
          % FILLGAPS - fill missing data with values of your choice
-         % T = fillgaps(T,number) fills data with the number of your choice
-         %   "number" can also be nan or inf or -inf
+         % T = T.fillgaps(value) fills data with the number of your choice
+         %   VALUE can also be nan or inf or -inf
          %
-         % T = fillgaps(T,[]) removes missing data from trace.  Warning, the
+         % T = T.fillgaps([]) removes missing data from trace.  Warning, the
          %   resulting timing issues are NOT corrected for!
          %
-         % T = fillgaps(T,'method') replaces data using an interpolation method of
-         % your choice. Methods are:
+         % T = T.fillgaps('method') replaces data using an interpolation method of
+         % your choice. Valid methods are:
          %
          %    'meanall' - replace missing values with the mean of the whole
          %    dataset
@@ -547,7 +583,7 @@ classdef TraceData
          %    cubic interpolation to estimate the missing values
          %
          % FILLGAPS is designed to replace NaN values.  However, if if you use
-         % T = fillgaps(T,number, gapvalue), then ALL data points with the value
+         % T = T.fillgaps(number, gapvalue), then ALL data points with the value
          % GAPVALUE will be replaced by NUMBER.
          
          if ~(isnumeric(value) && (isscalar(value) || isempty(value)) || ischar(value))
@@ -594,21 +630,25 @@ classdef TraceData
          end
       end
       
-      function T = zero2nan(T,mgl)
-         %ZERO2NAN: This function takes a waveform with gaps that have been filled
-         %   with zeros and converts them to NaN values. This is the inverse of w =
-         %   fillgaps(w,0). An input mgl defines the minimum gap length to be
-         %   converted to NaN gaps, i.e. if only 5 consecutive zero values exist in
-         %   a given small gap, they will be converted to NaN values if mgl <= 5 and
-         %   left as zero values if mgl > 5
+      function T = zero2nan(T,mgl) 
+      % Should be replaced with T.fillgaps(nan, 0)
+      % however, it was designed to have a minimum gap length Perhaps this
+      % should be added to fillgaps
+      
+         %ZERO2NAN replaces zeros with nan values.
+         %This function replaces gaps that have been filled with zeros and
+         %converts them to NaN values. This is the inverse of T =
+         %T.fillgaps(0). An input mgl defines the minimum gap length to be
+         %converted to NaN gaps, i.e. if only 5 consecutive zero values
+         %exist in a given small gap, they will be converted to NaN values
+         %if mgl <= 5 and left as zero values if mgl > 5
          %
-         %USAGE: w = zero2nan(w,mgl)
+         %USAGE: T = T.zero2nan(mgl)
          %
          %REQUIRED INPUTS:
-         %   w - waveform object with zero-value gaps to be converted to NaN gaps
          %   mgl - minimum gap length (datapoints) to convert to NaN values
          %
-         %OUTPUTS: w - waveform with gaps converted to NaN
+         %OUTPUTS: w - trace with gaps converted to NaN
          
          % Author: Dane Ketner, Alaska Volcano Observatory
          % Modified: Celso Reyes: rewrote algorithm to elimenate looping (2x faster)
@@ -619,7 +659,7 @@ classdef TraceData
             closeToZero = abs(T(nw).data) < 0.1; % 0.1 was already chosen -CR
             
             % --- the logic below should be pulled into a new function, since it is
-            % shared across a couple different areas, such as waveform/clean -- %
+            % shared across a couple different areas, such as trace/clean -- %
             firstZeros = find(diff([false; closeToZero(:)]) == 1);
             lastZeros = find(diff([closeToZero(:); false]) == -1);
             assert(numel(firstZeros) == numel(lastZeros));
@@ -633,13 +673,13 @@ classdef TraceData
          end
       end
 
-      function t = fix_data_length(t, maxlen)
-         %FIX_DATA_LENGTH adjust length of waveform data to allow batch processing
-         %   trace = fix_data_length(traces)
+      function t = setlength(t, maxlen)
+         %FIX_DATA_LENGTH adjust length of trace data to allow batch processing
+         %   trace = traces.setlength()
          %       adjusts all traces to the length of the largest, while
          %       zero-padding all shorter traces
          %
-         %   trace = fix_data_length(traces, maxlength)
+         %   trace = traces.setlength(maxlength)
          %       sets all data lengths to maxlength, padding with zero or
          %       truncating as necessary.
          %
@@ -650,10 +690,10 @@ classdef TraceData
          %
          %       % set both waves' data to a length of to 10025 while padding the
          %       % smaller of the two with zeroes.
-         %       outTraces = fix_data_length(traces)
+         %       outTraces = traces.setlength
          %
          %       % set both sample lengths to 500 truncating both of them...
-         %       outTraces = fix_data_length(traces, 500)
+         %       outTraces = traces.setlength(500)
          datalengths = arrayfun(@(x) numel(x.data), t);
          if ~exist('maxlen','var')
             maxlen = max(datalengths);
@@ -669,11 +709,11 @@ classdef TraceData
       end
 
       function T = hilbert(T, n)
-         %HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.
-         %   waveform = hilbert(waveform)
-         %   waveform = hilbert(waveform, N);
+         %HILBERT (for traces) Discrete-time analytic Hilbert transform.
+         %   trace = trace.hilbert()
+         %   trace = trace.hilbert(N);
          %
-         % THIS version only returns the abs value in the waveform.  If you want to
+         % THIS version only returns the abs value in the trace.  If you want to
          % keep the imaginary values, then you should use the built-in hilbert
          % transform.  ie.  Don't feed it a trace, feed it a vector... - CR
          %
@@ -697,11 +737,11 @@ classdef TraceData
       end
       
       function T = resample(T, method, crunchFactor)
-         %RESAMPLE resamples a waveform at over every specified interval
-         %   w = resample(waveform, method, crunchfactor)
+         %RESAMPLE resamples a trace at over every specified interval
+         %   T = trace.resample(method, crunchfactor)
          %
          %   Input Arguments
-         %       WAVEFORM: waveform object       N-dimensional
+         %       Trace: TraceData or Trace       N-dimensional
          %
          %       METHOD: which method of sampling to perform within each sample
          %                window
@@ -718,17 +758,17 @@ classdef TraceData
          %
          %       CRUNCHFACTOR : the number of samples making up the sample window
          %
-         % For example, resample(T,'max',5) would grab the max value of every 5
-         % samples and return that in a waveform of adjusted frequency.  as a
-         % result, the waveform will have 1/5 of the samples
+         % For example, T.resample('max',5) would grab the max value of every 5
+         % samples and return that in a trace with an adjusted frequency.  as a
+         % result, the trace will have 1/5 of the samples
          %
          %
          % To use matlab's built-in RESAMPLE method...
-         %       % assume T is an existing waveform
+         %       % assume T is an existing trace
          %       D = double(T);
-         %       ResampleD = resample(D,P,Q);  % see matlab's RESAMPLE for specifics
+         %       ResampleD = D.resample(P,Q);  % see matlab's RESAMPLE for specifics
          %
-         %       %put back into waveform, but don't forget to update the frequency
+         %       %put back into trace, but don't forget to update the frequency
          %       T.data = ResampleD; 
          %       T.samplerate = NewFrequency;
          %
@@ -808,7 +848,7 @@ classdef TraceData
          % trace.  This is same as trace.taper('tukey', 0.2)
          %
          % trace = trace.taper(style) applies the tapering window function
-         % STYLE to the waveform. STYLE can be any valid windowing function 
+         % STYLE to the trace. STYLE can be any valid windowing function 
          % some possible taper styles include hanning, tukey, and gaussian.
          % see help for WINDOW for a more complete list.
          %
@@ -819,7 +859,7 @@ classdef TraceData
          % 0.1 then the taper at each end of the trace is 5% of the total
          % trace length. R can be either a scalar or the same size as
          % TRACE. If R is a scalar, it is applied uniformly to each 
-         % waveform.
+         % trace.
          %
          % for a tukey taper, setting R ito 1 results in a hanning taper
          %
@@ -869,7 +909,7 @@ classdef TraceData
          
          if ~all(size(T) == size(R))
             error('TraceData:taper:InvalidRSize',...
-               'R must either be a scalar value, or must be the same size as the input waveforms');
+               'R must either be a scalar value, or must be the same size as the input traces');
          end
          %% Do the window processing
          if exist('R','var')
@@ -884,24 +924,24 @@ classdef TraceData
          
       end
 
-      function [tf, msg] = testCompatibility(A, B)
-         % testCompatibility confirms matching units, samplerate, and data length
-         % tf = testCompatibility(A, B) will make sure that A and B have
+      function [tf, msg] = compatiblewith(A, B)
+         % compatiblewith confirms matching units, samplerate, and data length
+         % tf = A.compatiblewith(B) will make sure that A and B have
          % matching units, sample frequencies, and data length.  
          % If units are empty for either A or B, then units will pass
          % If samplerate is empty for either A or B, then samplerate will
          % pass.  samplerate is compared within a tolerance of 10e-2
          %
-         % [tf, msg] = testCompatibility(A,B) will also return a message
+         % [tf, msg] = A.compatiblewith(B) will also return a message
          % describing how the test failed.
          %
          % sample usage: 
          %   % assume A & B are TraceData
-         %   if testCompatibility(A,B)
+         %   if A.compatiblewith(B)
          %     dosomething(A, B)
          %   end
          %
-         % see also assertCompatibility
+         % see also assertCompatiblewith
          TOL = 10e-2;
          if ~(numel(A.data) == numel(B.data))
             tf = false;
@@ -918,9 +958,9 @@ classdef TraceData
          end
       end
       
-      function assertCompatibility(A, B)
-         % assertCompatibility asserts matching units, samplerate, and data length
-         % assertCompatibility(A, B) will error unless A and B have
+      function assertCompatiblewith(A, B)
+         % assertCompatiblewith asserts matching units, samplerate, and data length
+         % assertCompatiblewith(A, B) will error unless A and B have
          % matching units, sample frequencies, and data length.  The error
          % message will describe what is wrong
          %
@@ -928,65 +968,65 @@ classdef TraceData
          %
          % sample debugging usage: 
          %   % assume A & B are TraceData
-         %   assertCompatibility(A,B)
+         %   A.assertCompatiblewith(B)
          %   C = A + B.data;
          %
          % sample prduction usage:
          %   try
-         %     assertCompatibility(A,B)
+         %     A.assertCompatiblewith(B)
          %     C = A + B.data;
          %   catch er
          %     % handle this failure somehow
          %   end
          %
-         % see also testCompatibility
-         [tf, msg] = testCompatibility(A, B);
+         % see also compatiblewith
+         [tf, msg] = compatiblewith(A, B);
          assert(tf, 'TraceData:compatabilityCheckFailed', msg);
       end
       
       %% stacking functions
       function out = stack(T)
-         %STACK stacks data from array of waveforms
-         %   StackedWave = stack(waveforms)
+         %STACK stacks data from array of traces
+         %   StackedTraces = stack(traces)
          %   ASSUMES frequencies are the same. data does not need to be the same
-         %   length, but shorter waveforms will be padded with zeros at the end
+         %   length, but shorter traces will be padded with zeros at the end
          %   prior to stacking.
          %
-         %   Stacks all waves, regardless of waveform's dimension
+         %   Stacks all traces, regardless of dimension
          %
          %   Data is summed, but the average is not taken, nor is it normalized. You
          %   may wish to change the station and/or channel names to reflect the
-         %   properties of this waveform.  Possibly change the units, also, if that
+         %   properties of this trace.  Possibly change the units, also, if that
          %   makes sense.
          %
-         %   Output retains the same info as the very first waveform (minus history)
+         %   Output retains the same info as the very first trace (minus history)
          %   the station name becomes the original name with "- stack (N)" tacked onto
          %   the end.
          %
          %   To ensure frequency and time matching, use ALIGN
          %
-         %   See also WAVEFORM/ALIGN
+         %   See also trace.align
          
          out = T(1);
          out.station = [out.station ' - stack (' num2str(T) ')'];
          out.data = sum(double(T),2);
       end
       function stk = bin_stack(T,bin,ovr)
-         %BIN_STACK: Stack input waveforms with N waveforms per stack. The number N
+         %BIN_STACK: Stack input traces with N traces per stack. The number N
          %    is specified by input 'bin'. The input 'ovr' specifies the amount of
          %    overlap between bins.
          %
          %USAGE: stk = bin_stack(w,bin,ovr)
-         %    If input w contains 100 waveforms then:
-         %    stk = bin_stack(w,20,0) % stk has 5 stacks of 20 waveforms
-         %    stk = bin_stack(w,5,0)  % stk has 20 stacks of 5 waveforms
-         %    stk = bin_stack(w,20,10)  % stk has 9 stacks of 20 waveforms
+         %    If input w contains 100 traces then:
+         %    stk = bin_stack(w,20,0) % stk has 5 stacks of 20 traces
+         %    stk = bin_stack(w,5,0)  % stk has 20 stacks of 5 traces
+         %    stk = bin_stack(w,20,10)  % stk has 9 stacks of 20 traces
          %
-         %INPUTS:  w   - Input waveform
-         %         bin - Bin size of stacked waveforms
+         %INPUTS:  w   - Input traces
+         %         bin - Bin size of stacked traces
          %         ovr - Number of overlapping events between bins
          %
-         %OUTPUTS: stk - Array of stacked waveforms
+         %OUTPUTS: stk - Array of stacked traces
          
          % Author: Dane Ketner, Alaska Volcano Observatory
          
