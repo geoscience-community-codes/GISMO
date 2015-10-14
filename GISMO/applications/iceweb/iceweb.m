@@ -398,9 +398,7 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
                         % php script can match spectrogram panel with appropriate wav file 
                         % 20121101 GTHO COmment: Could replace use of bnameroot below with strrep, since it is just used to change file extensions
                         % e.g. strrep(spectrogramFilename, '.png', sprintf('_%s_%s.wav', sta, chan)) 
-                        %[bname, dname, bnameroot, bnameext] = matlab_extensions.basename(spectrogramFilename);
                         [dname, bnameroot, bnameext] = fileparts(spectrogramFilename);
-                        %fsound = fopen(sprintf('%s%s%s.sound', dname, filesep, bnameroot),'a');
                         soundfilelist = fullfile(dname, filesep, [bnameroot,'.sound']);
                         fsound = fopen(soundfilelist,'a');
                         for c=1:length(w)
