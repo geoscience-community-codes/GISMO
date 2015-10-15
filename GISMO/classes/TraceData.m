@@ -26,12 +26,12 @@ classdef TraceData
    
    properties
       data % time-series data, kept in a column
-      samplerate % in samples/sec
-      units % text description of data units
+      samplerate  = NaN% in samples/sec
+      units = 'none' % text description of data units
    end
    
    properties(Dependent)
-      duration % duration in seconds To get matlab duration, divide by 86400
+      duration % duration in seconds. To get matlab duration, divide by 86400
    end
    
    properties(Hidden=true)
@@ -71,7 +71,11 @@ classdef TraceData
       function secondsOfData = get.duration(obj)
          %returns duration in seconds
          assert(numel(obj) == 1, 'only works on one TraceData at a time');
+         if isempty(obj.data) || isempty(obj.samplerate)
+            secondsOfData = 0;
+         else
          secondsOfData = numel(obj.data) / obj.samplerate;
+         end
       end
       
       function s = formattedduration(obj, fmt)
@@ -376,7 +380,7 @@ classdef TraceData
          
          val = nan(size(T));
          for n=numel(T) : -1 : 1
-            hasdata = isempty(T(n).data);
+            hasdata = ~isempty(T(n).data);
          end
          val(hasdata) = arrayfun(F,T(hasdata));
       end
