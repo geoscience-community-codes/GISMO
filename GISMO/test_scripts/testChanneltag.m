@@ -1,4 +1,4 @@
-classdef testChanneltag < TestCase
+classdef testChanneltag < matlab.unittest.TestCase
    % TESTCHANNELTAG validates the funcionality of channeltag
    %
    % requires xUnit 
@@ -6,85 +6,77 @@ classdef testChanneltag < TestCase
    
    properties
    end
-   methods
-      function self = testChanneltag(name)
-         self = self@TestCase(name);
-      end
-      
-      function SetUp(self)
-         %nothing to set up
-      end
-      
+   methods(Test)
       %---- test methods follow. each starts with "test" ---
       function testSimpleConstructors(self)
          % make sure these throw no error
          reftag = testChanneltag.createReference('A','B','C','D');
-         assertEqual(reftag, channeltag('A', 'B', 'C', 'D'));  % 4 string constructor
-         assertEqual(channeltag(reftag), reftag);              % copy constructor
-         assertEqual(channeltag('A.B.C.D'), reftag);           % string constructor
-         assertEqual(reftag, channeltag({'A.B.C.D'}));         % cell constructor
+         self.verifyEqual(reftag, channeltag('A', 'B', 'C', 'D'));  % 4 string constructor
+         self.verifyEqual(channeltag(reftag), reftag);              % copy constructor
+         self.verifyEqual(channeltag('A.B.C.D'), reftag);           % string constructor
+         self.verifyEqual(reftag, channeltag({'A.B.C.D'}));         % cell constructor
       end
       
       function testWhitespaceConstructors(self)
          reftag = testChanneltag.createReference('A','B','C','D');
          ct = channeltag('  A .B . C. D ');
-         assertEqual(reftag, ct);
+         self.verifyEqual(reftag, ct);
          ct = channeltag(' A ', ' B ', ' C ', ' D ');
-         assertEqual(reftag, ct);
+         self.verifyEqual(reftag, ct);
       end
       
       function testArrayConstruction(self)
          reftag = testChanneltag.createReference('A','B','C','D');
          ct = channeltag.array({'A .B . C. D ',' A. B . C.D '});
-         assertEqual(reftag, ct(1));
-         assertEqual(ct(1), ct(2));
+         self.verifyEqual(reftag, ct(1));
+         self.verifyEqual(ct(1), ct(2));
          ct = channeltag.array(['A.B.C.D      '; ' A.B  . C . D']);
-         assertEqual(reftag, ct(1));
-         assertEqual(ct(1), ct(2));
+         self.verifyEqual(reftag, ct(1));
+         self.verifyEqual(ct(1), ct(2));
          ct = channeltag.array({'N','N','N'},{'S','S','S'},{'L','L','L'}, {'C','C','C'});
-         assertEqual(ct(1), ct(2))
-         assertEqual(ct(2), ct(3));
+         self.verifyEqual(ct(1), ct(2))
+         self.verifyEqual(ct(2), ct(3));
          ct = channeltag.array(['N.S.L.C ';' N.S.L.C'; 'N.S .L.C']);
-         assertEqual(ct(1), ct(2))
-         assertEqual(ct(2), ct(3));
+         self.verifyEqual(ct(1), ct(2))
+         self.verifyEqual(ct(2), ct(3));
          ct = channeltag.array('N',{'S1','S2'},'L','C');
-         assertEqual(ct(1).station,'S1');
-         assertEqual(ct(2).station, 'S2');
+         self.verifyEqual(ct(1).station,'S1');
+         self.verifyEqual(ct(2).station, 'S2');
       end
       
       function testEqNe(self)
          A = testChanneltag.createReference('NW','STA','LOC','CHA');
          B = testChanneltag.createReference('NW','STA','LOC','CHA');
          C = testChanneltag.createReference('NW','STA','LOC','CHAN');
-         assertTrue(eq(A,B));
-         assertTrue(eq(B,A));
-         assertTrue(A == B);
-         assertFalse(ne(A,B));
+         self.verifyTrue(eq(A,B));
+         self.verifyTrue(eq(B,A));
+         self.verifyTrue(A == B);
+         self.verifyFalse(ne(A,B));
          
-         assertTrue(ne(A,C));
-         assertFalse(eq(A,C));
-         assertTrue(A ~=C);
+         self.verifyTrue(ne(A,C));
+         self.verifyFalse(eq(A,C));
+         self.verifyTrue(A ~=C);
       end
       
       function testSort(self)
          ct = channeltag.array('A','S','L',{'CCC','BBB','AAA'});
          s = sort(ct);
-         assertEqual(s(1).channel,'AAA');
-         assertEqual(s(3).channel, 'CCC');
+         self.verifyEqual(s(1).channel,'AAA');
+         self.verifyEqual(s(3).channel, 'CCC');
          ct = channeltag.array({'N2','N1'},'S','L',{'C1','C2'});
          s = sort(ct);
-         assertEqual(s(1).network,'N1');
-         assertEqual(s(1).channel,'C2');
-         assertEqual(s(2).network,'N2');
-         assertEqual(s(2).channel,'C1');
+         self.verifyEqual(s(1).network,'N1');
+         self.verifyEqual(s(1).channel,'C2');
+         self.verifyEqual(s(2).network,'N2');
+         self.verifyEqual(s(2).channel,'C1');
       end
       
       function testStringConversions(self)
          nslc = 'IU.ANMO.00.LOG';
          ct = channeltag(nslc);
-         assertEqual(ct.string(),nslc);               % test basic string
-         assertEqual(ct.string('_'),'IU_ANMO_00_LOG'); % test delimeter
-         assertEqual(ct.char(),ct.string());          % test string vs char
+         self.verifyEqual(ct.string(),nslc);               % test basic string
+         self.verifyEqual(ct.string('_'),'IU_ANMO_00_LOG'); % test delimeter
+         self.verifyEqual(ct.char(),ct.string());          % test string vs char
       end
       
       function testIsmember(self)

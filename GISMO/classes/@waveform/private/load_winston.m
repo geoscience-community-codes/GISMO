@@ -1,18 +1,12 @@
-function allWaves = load_winston(dataRequest, COMBINE_WAVEFORMS)
+function allWaves = load_winston(request)
    % LOAD_WINSTON handles retrieval of data from a winston waveserver.
    %  all times are matlab formatted datenums
-   %  allWaves = load_winston(allSCNLs, sTime, eTime, server, port)
-   %
-   %
-   %
-   % scnl is the StationChannelNetworkLocation. this may be migrated into an
-   % object in the near future.  For now, it is a structure with fields:
-   % 'station','channel','network','location'
+   %  allWaves = load_winston(request)
+   %  server and port are dictatd by the datasource included within the request. 
    
-   % INPUT: waveform (station, channel, start, end, network,
-   %                  location, server, port)
+   % 2015 - CR refractored.  winstonNotWorking is now an error, so this
+   % should be used within some try-catch statement.
    
-   [myDataSource, channelInfo, sTime, eTime] = unpackDataRequest(dataRequest);
    persistent winstonIsWorking
    
    if isempty(winstonIsWorking) || ~winstonIsWorking
@@ -20,105 +14,72 @@ function allWaves = load_winston(dataRequest, COMBINE_WAVEFORMS)
    end
    
    if ~winstonIsWorking
-      %well, if winston isn't working, there's really no point now, is there?
-      return;
+      error('waveform:load_winston:winstonNotWorking',...
+         'failed to access winston');
    end
    
-   w = waveform;
-   allWaves = repmat(w,numel(channelInfo),numel(sTime)); %preallocate
-   allWaves = allWaves(:);
+   [ds, channelInfo, sTime, eTime, ~] = unpackDataRequest(request);
+   validTimes = eTime > sTime;
+   sTime = sTime(validTimes);
+   eTime = eTime(validTimes);
    
    sTime_epoch = mep2dep(sTime);
    eTime_epoch = mep2dep(eTime);
    
-   nWaves = 0;
-   for idxTime = 1:numel(sTime)
-      t1 = sTime_epoch(idxTime);
-      t2 = eTime_epoch(idxTime);
-      if ~timesAreOK(t1,t2)
-         continue;
-      end
-      
-      for chaIdx = 1:numel(channelInfo);
-         scnl = channelInfo(chaIdx);
-         [w, status] = getFromWinston(scnl,t1,t2,myDataSource);
-         if (status)
-            nWaves = nWaves+1;
-            allWaves(nWaves) = w;
-         end
-      end
-   end
-   if nWaves < numel(allWaves)
-      allWaves = allWaves(1:nWaves);
-   end
+   timefn = @(t1, t2) grab_for_time(channelInfo, t1, t2, ds);
+   allWaves = arrayfun(timefn, sTime_epoch, eTime_epoch, 'uniformoutput',false);
+   allWaves = [allWaves{:}];
 end
 
-function [w, successful] = getFromWinston(scnl,stime,etime,mydatasource)
+function w = grab_for_time(chanInfo, t1, t2, ds)
+      myfn = @(nslc) getFromWinston(nslc, t1, t2, ds);
+      w = arrayfun(myfn, chanInfo, 'uniformoutput', false);
+      w = [w{:}];
+end
+
+function [w, successful] = getFromWinston(chanTag,stime,etime,ds)
    %include
    successful = false;
-   
-   w = scnl2waveform(scnl);
-   try
-      
-      WWS=gov.usgs.winston.server.WWSClient(get(mydatasource,'server'),get(mydatasource,'port'));
-   catch
-      if missingWinstonJars()
-         giveNoJarWarning();
-         return;
-      end
+   if ~exist('gov.usgs.winston.server.WWSClient', 'class')
+      giveNoJarWarning();
+      return
    end
    
+   w = set(waveform,'channeltag',chanTag);  %initialize a waveform
+   WWS = gov.usgs.winston.server.WWSClient(get(ds,'server'),get(ds,'port'));
+   
    %grab the winston data, then close the database
+   mychan = chanTag.channel;
+   mynet = chanTag.network;
+   mysta = chanTag.station;
+   myloc = chanTag.location;
+   
    try
-      mychan = get(scnl,'channel');
-      mynet = get(scnl,'network');
-      mysta = get(scnl,'station');
-      myloc = get(scnl,'location');
       d = WWS.getRawData(mysta,mychan,mynet,myloc,stime,etime);
       WWS.close;
    catch er
-      warning('Waveform:load_winston:noServerAccess',...
-         'Unable to access Winston Wave Server');
-      %  try
-      %     WWS.close;
-      %  end
+      warning('Waveform:load_winston:noServerAccess', 'Unable to access Winston Wave Server');
       rethrow(er)
    end
    
    if ~exist('d','var') || isempty(d)
-      warning('Waveform:load_winston:noInformation',...
-         'information was not retrieved from the server. Did you remember to include a network in the SCNL?');
+      fprintf('%s %s - %s not found on server\n', char(chanTag), datestr(dep2mep(stime),31), datestr(dep2mep(etime),31));
       return;
    end
-   fs=d.getSamplingRate;
-   
+   fs = d.getSamplingRate;
    data_start = dep2mep(d.getStartTime);
    data_end = dep2mep(d.getEndTime);
-   d.buffer(d.buffer == intmin('int32')) = 0; %fix odd spikes
-   data = double(d.buffer); % d.buffer is int32, and must be converted
+   spikes = d.buffer == intmin('int32');
+   data = double(d.buffer); % d.buffer must be converted from int32
+   data(spikes) = nan; % spikes used to be set to 0
    w = set(w,'start', data_start,'freq',fs,'data',data);
    
    %if a greater range of data was found, then truncate to the desired times.
    if data_start < dep2mep(stime) || data_end > dep2mep(etime)
       w = extract(w,'time', dep2mep(stime),dep2mep(etime));
    end
-   
    w = addhistory(set(w,'history',{}),'CREATED');
-   
    successful = true; %successfully completed
-end
-
-function jars_are_missing = missingWinstonJars()
-   %oops, winston's jar files may not exist on this system
-   jcp = javaclasspath('-all');
-   RequiredFiles = {'usgs.jar'};
-   jars_are_missing = false;
-   for FN = RequiredFiles
-      if isempty(strfind([jcp{:}],FN{1}))
-         disp(['Missing ' FN{1}]);
-         jars_are_missing = true;
-      end
-   end
 end
 
 function giveNoJarWarning()
@@ -132,71 +93,32 @@ function giveNoJarWarning()
    %disp('directory) and add the location of these .jar files.');
 end
 
-function tf = timesAreOK (t1, t2)
-   %test to make sure times are valid.
-   tf = true;
-   if t1 > t2,
-      warning('Waveform:load_winston:invertedTimes','StartTime > End time.  ignored');
-      tf = false;
-   end
-   if t2 > (t1 + (24 *60 * 60))
-      warning('Waveform:load_winston:timerangeTooLarge',...
-         'EndTime is more than a day past starttime.  ignored.');
-      tf = false;
-   end
-end
-
-function w = scnl2waveform(scnl)
-   w = set(waveform,'scnlobject',scnl);
-end
-
 %% Adding the Java path
 function success = getWinstonWorking()
-   success = false;
-   %Check for required jar file for winston
-   try
-      jcp = javaclasspath('-all');
-      
-   catch
-      disp('Java not enabled on this machine.  Winston will not work.');
+   if usejava('jvm')
+      introuble = ~exist('gov.usgs.winston.server.WWSClient', 'class');
+   else
+      disp('Java not enabled on this machine. Winston will not work.')
       return
    end
-   
-   RequiredFiles = {'usgs.jar'};
-   
-   introuble = false;
-   
-   for FN = RequiredFiles
-      if isempty(strfind([jcp{:}],FN{1}))
-         disp(['Missing ' FN{1}]);
-         introuble = true;
-      end
-   end
-   
+
    if introuble
-      disp('please add the usgs.jar file (from swarm/lib directory) to your javaclasspath');
-      disp('ex.  javaaddpath(''/usr/local/swarm/lib/usgs.jar'');');
+      error('waveform:load_winston:noDefaultJar',[...
+         'please add the winston java file to your javaclasspath.'...
+         'One such file is usgs.jar, found in the swarm/lib directory (if swarm is installed)\n'...
+         '  ex.  javaaddpath(''/usr/local/swarm/lib/usgs.jar'')\n'...
+         'to obtain a jar, try contacting the manager of your swarm or winston database']);
       
-      surrogate_jar = 'http://www.avo.alaska.edu/Input/celso/swarmstuff/usgs.jar';
-      
-      [~,success] = urlread(surrogate_jar);%can we read the usgs.jar? if not don't bother to add it.
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      % MODIFY FOLLOWING LINE TO POINT TO YOUR LOCAL Swarm/lib/usgs.jar
-      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+      % will no longer attempt to connect to jar on internet, since that
+      % could potentially not be safe!
+      %{
+      % surrogate_jar = 'http://www.avo.alaska.edu/Input/celso/swarmstuff/usgs.jar';
+      % [~,success] = urlread(surrogate_jar);%can we read the usgs.jar? if not don't bother to add it.
       if success
          javaaddpath(surrogate_jar);
-      else
-         warning('Waveform:load_winston:noDefaultJar',...
-            'Unable to access the default jar.  Please add the usgs.jar file to your javaclasspath.  Winston access will not work.');
+         introuble = ~exist('gov.usgs.winston.server.WWSClient', 'class');
       end
+      %}
    end;
-   success = true;
-end
-
-
-function [dataSource, scnls, startTimes, endTimes] = unpackDataRequest(dataRequest)
-   dataSource = dataRequest.dataSource;
-   scnls = dataRequest.scnls;
-   startTimes = dataRequest.startTimes;
-   endTimes = dataRequest.endTimes;
+   success = ~introuble;
 end

@@ -29,7 +29,7 @@ for n = 1:nr;
     elseif recnum ==1
        net(n) = {dbgetv(db1,'snet')};
     else
-       disp(sprintf('Station %s has more than 1 record found in "snetsta" table, use the first record',sta{n}));
+       fprintf('Station %s has more than 1 record found in "snetsta" table, use the first record\n',sta{n}));
        nettemp = dbgetv(db1,'snet');
        net(n)=nettemp(1);
     end    

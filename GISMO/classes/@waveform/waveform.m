@@ -50,10 +50,6 @@ function w = waveform(varargin)
    %      mySource = datasource('winston','servername.here.edu',1255);
    %      w = waveform(mySource, tags, now - 1, now - .98);
    %
-   %
-   % ------------ DEPRECATED USAGE ---------------
-   %   w = WAVEFORM(station, channel, samplerate, starttime, data)
-   %
    % see also channeltag, datasource
    
    % VERSION: 2.0 of waveform objects
@@ -71,9 +67,9 @@ function w = waveform(varargin)
       waveformversion = 2.0;
    end
    
-   % usage: [optExists, value, vargs] = peelOption(vargs, searchValue, searchClass, minPos)
-   [COMBINE_WAVES, ~, varargin] = peelOption(varargin, 'nocombine', 'char', 5);
-   [NOEXIT_OPTION, bwkaround, varargin] = peelOption(varargin, [], 'logical', 5);
+   % usage: [optExists, value, vargs] = peel_option(vargs, searchValue, searchClass, minPos)
+   [COMBINE_WAVES, ~, varargin] = peel_option(varargin, 'nocombine', 'char', 5);
+   [NOEXIT_OPTION, bwkaround, varargin] = peel_option(varargin, [], 'logical', 5);
    
    argCount = numel(varargin);
    
@@ -82,107 +78,21 @@ function w = waveform(varargin)
    switch argCount
       case 0
          w = genericWaveform();
-         
-      case 1   %"copy" a waveform object
-         anyV = varargin{1};
-         if isa(anyV, 'waveform')
-            w = anyV;
+      %{
+      case 1   %"copy" a waveform object. Matlab naturally bypasses this.
+         if isa(varargin{1}, 'waveform')
+            w = varargin{1};
          end;
-         % SHOULD THERE BE A WARNING OTHERWISE?
+      %}
          
       case 4
          [arg1, arg2, arg3, arg4] = deal(varargin{:});
          switch class(arg1)
             case 'datasource' %datsource, channeltag/scnl/text, starttimes, endtimes
-               arg2 = asChanneltag(arg2);
-            otherwise
-               arg1 = asChanneltag(arg1);
-               w = waveformFromParts(arg1, arg2, arg3, arg4, 'Counts');
-               return;
+               w = waveformFromDatasource(arg1, as_channeltag(arg2), arg3, arg4);
+            otherwise % assumed to be Channeltag or something that can be converted into it
+               w = waveformFromParts(as_channeltag(arg1), arg2, arg3, arg4, 'Counts');
          end
-         
-         % eg.  INPUT: (datasource, channeltags, startTimes, endTimes)
-         [ds, chans, startt, endt] = deal(arg1, arg2, arg3, arg4);
-         
-         startt = ensure_dateformat(startt);
-         endt = ensure_dateformat(endt);
-         
-         % -------------------------------------------------------------------
-         % if there is no specifically assigned load function, then
-         % determine the load function based upon the datasource's type
-         
-         if isVoidInterpreter(ds)
-            ds_type  = get(ds,'type');
-            if strcmp(ds_type,'antelope') && NOEXIT_OPTION && bwkaround
-               myLoadRoutine = @load_antelope_workaround;
-            else
-               myLoadRoutine = str2func(['load_', ds_type]);
-            end
-            switch lower(ds_type)
-               
-               % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-               % file, sac, and seisan all do not require fancy handling.  The
-               % load routine and interpreter will be set, and the waveform will
-               % be loaded in the following section, along with any user-defined
-               % load functions.
-               case {'file','sac','seisan','obspy'}
-                  ds = setinterpreter(ds,myLoadRoutine); %update interpeter funct
-                  
-                  % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-                  % database types require fancier handling. load waveforms right here.
-               case {'antelope', 'irisdmcws', 'winston'}
-                  w = myLoadRoutine( makeDataRequest(ds, chans, startt, endt), COMBINE_WAVES);
-               otherwise
-                  error('Waveform:waveform:noDatasourceInterpreter',...
-                     'user defined datasources should be associated with an interpreter');
-            end %switch
-         end %isvoidInterpreter
-         
-         
-         % -------------------------------------------------------------------
-         % if the datasource is file based, or if it requires a user-defined
-         % intepreter function, then do what follows.  Otherwise, we're done
-         
-         if ~isVoidInterpreter(ds)
-            myLoadFunc = get(ds,'interpreter');
-            
-            %user_defined datasource
-            ALLOW_MULTIPLE = true;
-            ERROR_ON_EMPTY = true;
-            for j = 1:numel(startt)
-               myStartTime = startt(j);
-               myEndTime = endt(j);
-               
-               % grab all files for date range, discarding duplicates
-               fn = getfilename(ds, chans,subdivide_files_by_date(ds,myStartTime, myEndTime));
-               fn = unique(fn);
-               
-               %load all waveforms for these files
-               clear somew
-               
-               for i=1:numel(fn)
-                  w = load_from_file(myLoadFunc,fn{i},ALLOW_MULTIPLE, ERROR_ON_EMPTY);
-                  %w = w(ismember([w.cha_tag],[chans])); %keep only appropriate station/chan
-                  w = w(w.cha_tag.matching(chans)); %Not 100% sure about this one
-                  w = filter_by_time(w, myStartTime, myEndTime);
-                  if numel(w) > 0
-                     somew(i) = {w};
-                  end
-               end %for fn
-               if ~exist('somew','var')
-                  w = waveform; w = w([]);
-               else
-                  if COMBINE_WAVES,
-                     w = combine([somew{:}]);
-                  else
-                     w = [somew{:}];
-                  end
-               end
-               allw(j) = {w};
-            end %each start time
-            w = [allw{:}];
-         end %~isVoidInterpreter
-         
       case 5
          [arg1, arg2, arg3, arg4, arg5] = deal(varargin{:});
          switch class(arg1)
@@ -190,7 +100,7 @@ function w = waveform(varargin)
                error(updateWarningID,'Should never get to this section of code');
             otherwise
                if ischar(arg1) && ischar(arg2) %given station, channel
-                  error(updateWarningID,...
+                  warning(updateWarningID,... % could make this a ERROR instead
                      ['ancient usage.\nInstead of:\n   waveform(''%s'', ''%s'', ...\n',...
                      'use the ''NET.STA.LOC.CHA'' form:\n   waveform(''.%s..%s'', ...\n',...
                      'however, it is recommended that you include network and location info if available'],...
@@ -198,13 +108,12 @@ function w = waveform(varargin)
                   arg1 = ['.' arg1 '..' arg2];
                   [arg2, arg3, arg4, arg5] = deal(arg3, arg4, arg5, 'Counts');
                end
-               arg1 = asChanneltag(arg1);
+               arg1 = as_channeltag(arg1);
                w = waveformFromParts(arg1, arg2, arg3, arg4, arg5);
-               return;
          end
          
       case 8
-         w = winstonAccess(varargin{:});
+         w = winston_access(varargin{:});
       otherwise
          disp('Invalid arguments in waveform constructor:');
          disp(varargin);
@@ -214,21 +123,33 @@ function w = waveform(varargin)
             '   w = WAVEFORM(datasource, channeltag, starttimes, endtimes)\n',...
             '   w = WAVEFORM(channeltag, samplefreq, starttime, data, units)\n']);
    end
+   
    function w = genericWaveform()
-      %create a fresh waveform.  All calls to the waveform object, aside
-      %from the "copy" call (case nargin==1) will be initated HERE.
-      w.cha_tag = channeltag();
-      w.Fs = nan;
-      w.start = 719529; % datenum for 1970-01-01
-      w.data = double([]);
-      w.units = 'Counts';
-      w.version = waveformversion; %version of waveform object (internal)
-      w.misc_fields = {}; %add'l fields, such as "comments", or "trig"
-      w.misc_values = {}; %values for these fields
-      w.history = {'created',now};
-      w = class(w, 'waveform');
+      persistent blankW
+      persistent wCreated
+      if ~isempty(wCreated)
+         w = blankW;
+         w.history = {'created', now};
+      else
+         %create a fresh waveform.  All calls to the waveform object, aside
+         %from the "copy" call (case nargin==1) will be initated HERE.
+         blankW.cha_tag = channeltag();
+         blankW.Fs = nan;
+         blankW.start = 719529; % datenum for 1970-01-01
+         blankW.data = double([]);
+         blankW.units = 'Counts';
+         blankW.version = waveformversion; %version of waveform object (internal)
+         blankW.misc_fields = {}; %add'l fields, such as "comments", or "trig"
+         blankW.misc_values = {}; %values for these fields
+         blankW.history = {'created',[]};
+         blankW = class(blankW, 'waveform');
+         wCreated = true;
+         w = blankW;
+      end
    end
+   
    function w = waveformFromParts(chaTag, freq, starttime, data, units)
+      w = genericWaveform();
       w.cha_tag = chaTag;%(DEFAULT_STATION,DEFAULT_CHAN);
       w.Fs = freq;
       w.start = datenum(starttime);
@@ -237,42 +158,14 @@ function w = waveform(varargin)
       w.version = waveformversion; %version of waveform object (internal)
       w.misc_fields = {}; %add'l fields, such as "comments", or "trig"
       w.misc_values = {}; %values for these fields
-      w.history = {'created',now};
-      w = class(w, 'waveform');
    end
-end
-
-function w = filter_by_time(w, myStartTime, myEndTime)
-   % subset and consolidate
-   [wstarts, wends] = gettimerange(w);
-   wavesWithinWindow = wstarts < myEndTime & wends > myStartTime;
-   if any(wavesWithinWindow)
-      w = extract(w(wavesWithinWindow),'time',myStartTime,myEndTime);
-   else
-      w(:)=[]; %return an empty waveform
-   end
-end
-
-function tf = isVoidInterpreter(ds)
-   tf = strcmpi(func2str(get(ds,'interpreter')),'void_interpreter');
-end
-
-function datarequest = makeDataRequest(ds, chans, st, ed)
-   datarequest = struct(...
-      'dataSource', ds, ...
-      'scnls', chans, ...
-      'startTimes', st,...
-      'endTimes',ed);
-end
-
-function s = updateWarningMessage()
    
-   updateMessageBase = ...
-      ['Instead, please call the waveform constructor with '...
-      ' a datasource and locationtag. \n'...
-      'USAGE: w = waveform(datasource, locationtag, starttimes, endtimes)\n'...
-      '   ...modifying request and proceeding.'];
-   s = sprintf('%s',updateMessageBase);
+   function w = waveformFromDatasource(ds, chans, startt, endt)
+         startt = ensure_dateformat(startt);
+         endt = ensure_dateformat(endt);
+         usewkaround = NOEXIT_OPTION && bwkaround;
+         w = load_from_datasource(ds, chans, startt, endt, COMBINE_WAVES, usewkaround);
+   end
 end
 
 function out = ensure_dateformat(t)
@@ -286,122 +179,5 @@ function out = ensure_dateformat(t)
    elseif iscell(t)
       out(:) = datenum(t);
    end
-   % previously implemented as:
-   % if ischar(startt), startt = {startt}; end
-   % if ischar (endt), endt = {endt}; end;
-   % startt = reshape(datenum(startt(:)),size(startt));
-   % endt = reshape(datenum(endt(:)),size(endt));
 end
 
-function w = load_from_file(myLoadFunc, fname, allowMultiple, ErrorOnEmpty)
-   % load waveforms from a file using myLoadfunc
-   % w = load_from_file(myLoadFunc, singleFileName);
-   %     singleFileName may have wildcards.
-   
-   
-   possiblefiles = dir(fname); % this handles wildcards
-   
-   if isempty(possiblefiles)
-      error('Waveform:waveform:FileNotFound','No file matches: %s', fname);
-   end
-   
-   mydir = fileparts(fname); %fileparts returns [path, name, ext]
-   myfiles = fullfile(mydir, {possiblefiles(:).name});
-   w(numel(myfiles)) = waveform; %best-guess preinitialization (candidate for trouble!)
-   startindex = 0;
-   while ~isempty(myfiles)
-      [f, myfiles] = peel(myfiles);
-      tmp = myLoadFunc(f);
-      nFound = numel(tmp);
-      switch nFound
-         case 0
-            if ErrorOnEmpty
-               error('Waveform:waveform:noData','no data retrieved: %s', f);
-            end
-         case 1
-            w(startindex+1) = tmp;
-         otherwise
-            if allowMultiple
-               w(startindex+1:startindex+nFound) = tmp(:);
-            else
-               error('Waveform:waveform:MultipleWaveformsInFile',...
-                  'Expected a single waveform, but several exist: %s', f)
-            end
-      end %switch
-      startindex = startindex + nFound;
-   end %while
-end %load_from_file
-
-function [v, cell_array] = peel(cell_array)
-   % remove first item from a cell array, return remaining items
-   v = cell_array{1};
-   cell_array(1) = [];
-end %peel
-
-function [optExists, value, vargs] = peelOption(vargs, searchValue, searchClass, minPos)
-   optExists = false; value = [];
-   if minPos > numel(vargs)
-      return
-   end
-   switch searchClass
-      case 'char'
-         for n = minPos:numel(vargs)
-            if ischar(vargs{n})
-               if isempty(searchValue) || strcmp(searchValue,vargs{n})
-                  optExists = true; value = vargs{n}; vargs(n) = [];
-                  return
-               end
-            end
-         end
-      otherwise
-         for n = minPos: numel(vargs)
-            if isa(vargs{n},searchClass)
-               if isempty(searchValue) || vargs{n} == searchValue
-                  optExists = true; value = vargs{n}; vargs(n) = [];
-                  return
-               end
-            end
-         end
-   end
-end
-
-function w = winstonAccess(varargin)
-   p.channel = 'EHZ';
-   p.station = 'UNK';
-   p.tStart = datenum(1970, 1, 1, 0 ,0, 0);
-   p.tEnd = datenum(1970, 1, 1, 0, 5, 0);
-   p.network = '';
-   p.location = ''; %should this be '--' ?
-   p.server = 'churchill.giseis.alaska.edu';
-   p.port = 16022;
-   
-   warning(updateWarningID,updateWarningMessage);
-   
-   % INPUT: waveform (station, channel, start, end, network,
-   %                  location, server, port)
-   
-   MyVars = {'station', 'channel', 'tStart', 'tEnd', 'network', ...
-      'location', 'server', 'port'};
-   
-   %Fill in all the variables with the appropriate default values
-   for N = 1:argCount
-      if ~isempty(varargin{N}),
-         p.(MyVars{N}) = varargin{N};
-      end
-   end
-   thesechans = channeltag(p.station,p.channel,p.network,p.location);
-   
-   mysource = datasource('winston',p.server,p.port);
-   w = waveform(mysource, thesechans, datenum(p.tStart), datenum(p.tEnd));
-end
-
-function obj = asChanneltag(obj)
-   switch(class(obj))
-      case 'channeltag' %good. do nothing.
-      case 'scnlobject'
-         obj = get(obj, 'channeltag');
-      otherwise
-         obj = channeltag(obj); %attempt natural conversion
-         % should be able to handle 'N.S.L.C'
-   end
-end

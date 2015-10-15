@@ -189,7 +189,7 @@ v = get(wave,'data');            % Waveform data
 abs_v = abs(v);                  % Absolute value of time series
 
 %% Initialize flags and other variables
-lta_calc_flag = 0;       % has the full LTA window been calculated?
+lta_calc_flag = false;       % has the full LTA window been calculated?
 ntrig = 0;               % number of triggers
 trig_array = zeros(1,2); % array of trigger times: [on,off;on,off;...]
 
@@ -200,18 +200,18 @@ while i <= l_v % START STA_LTA MAIN LOOP
 
 %% Skip data gaps (NaN values in LTA window)?
    if any(isnan(abs_v(i-l_lta:i)))
-      gap = 1;
-      lta_calc_flag = 0; % Force full claculations after gap
-      while (gap == 1) && (i < l_v)
+      gap = true;
+      lta_calc_flag = false; % Force full claculations after gap
+      while (gap) && (i < l_v)
          i = i+1;
          if ~any(isnan(abs_v(i-l_lta:i)))
-            gap = 0;
+            gap = false;
          end
       end
    end
 
 %% Calculate STA & LTA Sum (Do Full Calculation?)
-   if (lta_calc_flag == 0)
+   if ~lta_calc_flag
       lta_sum = 0;
       sta_sum = 0;
       for j = i-l_lta:i-1              % Loop to compute LTA & STA
@@ -220,7 +220,7 @@ while i <= l_v % START STA_LTA MAIN LOOP
             sta_sum = sta_sum + abs_v(j);
          end
       end
-      lta_calc_flag = 1;
+      lta_calc_flag = true;
    else
       
 %% Calculate STA & LTA Sum (Single new data point if not Full) 
@@ -276,7 +276,7 @@ while i <= l_v % START STA_LTA MAIN LOOP
          trig_array(ntrig,:) = [trig_t, end_t];
       end
       i = j + min_sep;   % Skip ahead by minimum event seperation
-      lta_calc_flag = 0; % Reset LTA calc flag to force new computation
+      lta_calc_flag = false; % Reset LTA calc flag to force new computation
    end
    i = i + 1;
 end % END STA_LTA MAIN LOOP
@@ -294,8 +294,8 @@ trig_array(:,1) = trig_array(:,1) - pad(1);
 trig_array(:,2) = trig_array(:,2) + pad(2);
 % If events are padded, make sure the first and last events are not out of
 % range (beginning before or ending after the span of input 'wave')
-trig_array(find(trig_array<1)) = 1;      % Set to first datapoint
-trig_array(find(trig_array>l_v)) = l_v;  % Set to last datapoint
+trig_array(trig_array<1) = 1;      % Set to first datapoint
+trig_array(trig_array>l_v) = l_v;  % Set to last datapoint
 switch lower(eot)
     case {'st'}
         events = tv(trig_array(:,1));

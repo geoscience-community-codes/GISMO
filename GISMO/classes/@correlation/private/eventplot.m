@@ -7,7 +7,7 @@ function eventplot(c,scale,howmany);
 % $Revision$
 
 
-if ~strcmpi(class(c),'correlation')
+if ~isa(c,'correlation')
     error('First input must be a correlation object');
 end;
 

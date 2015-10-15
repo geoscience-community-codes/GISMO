@@ -34,7 +34,7 @@ if ~strcmpi(class(c1),'correlation') | ~strcmpi(class(c2),'correlation')
 end
 
 if length(varargin)>=1
-    if isa(varargin{1},'double')
+    if isnumeric(varargin{1})
        tolerance = varargin{1};
     else
         error('TOLERANCE MUST BE A SCALAR NUMBER IN SECONDS');

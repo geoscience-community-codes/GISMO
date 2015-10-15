@@ -1,101 +1,83 @@
-function outputWaveforms = load_antelope(datarequest, COMBINE_WAVEFORMS, specificDatabase)
+function outputWaveforms = load_antelope(request, specificDatabase)
    % load a waveform from antelope
-   %  w = load_antelope(datarequest, COMBINE_WAVEFORMS, specificDatabase)
+   %  w = load_antelope(request, specificDatabase)
    %   CRITERIA is the search criteria, created with buildAntelopeCriteria
-   %   sTime is the startTimes
-   %   datarequest.endTimes is the endTimes
-   %   COMBINE_WAVEFORMS is a logical value:
+   %   request.sTime is the startTimes
+   %   endTimes is the endTimes
+   %   combineWaves is a logical value:
    %     Should segmented waveforms be combined,(within requested timerange)?
    %   database is the antelope database
    
-   % VERSION: 1.1 of waveform objects
-   % AUTHOR: Celso Reyes (celso@gi.alaska.edu)
-   % LASTUPDATE: 11/24/2009
+   % AUTHOR: Celso Reyes
+   % MODIFICATIONS: Glenn Thompson, Carl Tape
    
-   %create a generic 1x1 and 0x0 waveforms for later use, so that the
-   %constructor does not constantly need to be called
    
-   % Modifications
-   % Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data. Added try...catch..end to handle this.
-   % Glenn Thompson & Carl Tape, 2012/02/06: Fixed bug which ignored the time order of requested waveforms.
-   % 	Now they come back in order.
+   %TODO: maybe order of operations can be changed to avoid unpacking
+   %request when unnecessary.
+   TRY_MULTIDAY = false;
+   wBlank = waveform;
+   wEmpty = wBlank([]);
+   [ds, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request);
+   assert(numel(startTimes) == numel(endTimes),...
+      'Waveform:load_antelope:startEndMismatch', 'Unequal number of start and end times');
    
-   blankWave = waveform;
-   emptyWave = blankWave([]);
+   [criteria, nCriteria] = buildAntelopeCriteria(chanInfo);
+   database =  getfilename(ds,chanInfo, startTimes);
    
-   %COMBINE_WAVEFORMS = false;
+   if TRY_MULTIDAY
+      % the next 2 lines enable multiday data retrieval. However, splicing them may be tricky.
+      dbDatesToCheck = subdivide_files_by_date(ds,startTimes, endTimes); %#ok<UNRCH>
+      database =  getfilename(ds,chanInfo, dbDatesToCheck);
+   end
    
-   ensureAntelopeInstalled();
-   ensureEqualNumberOfStartAndEndTimes(datarequest);
-   
-   criteria = buildAntelopeCriteria(datarequest.scnls);
-   nCriteria = numel(criteria);
-   database_dates_to_check = subdivide_files_by_date( ...
-      datarequest.dataSource,...
-      datarequest.startTimes,...
-      datarequest.endTimes);
-   
-   database =  getfilename(datarequest.dataSource,datarequest.scnls, datarequest.startTimes);
-   
-   % the following line will enable the retrieval of multiple days worth of
-   % data all at once.  however, splicing them together may be tricky.
-   %database =  getfilename(datarequest.dataSource,datarequest.scnls, database_dates_to_check);
-   
-   %if we have multiple databases to look in, then call this routine for each
-   %one, then return the resulting waveforms.
+   %for multiple databases, call this routine for each one, then return the waveforms.
    if ~exist('specificDatabase','var')
-      %%%%%
-      % Glenn Thompson & Carl Tape, 2012/02/06
-      % We were finding that the following command was sorting the database names, with the result that
-      % if you request waveform objects out of time order, they always come back in time order.
-      % Which is annoying. Objects should be returned in the order requested.
-      %database = unique(database)a
-      % Replacing with the following 2 lines retains the database order, and hence the waveform object order.
-      [~,inds] = unique(database);
-      database = database(sort(inds));
-      %%%%%
-      outputWaveforms = cell(size(database)); %preallocate
-      for thisdatabaseN = 1 : numel(database)
-         outputWaveforms(thisdatabaseN) = {load_antelope(datarequest, COMBINE_WAVEFORMS, database{thisdatabaseN})};
-      end
+      % [~,inds] = unique(database); database = database(sort(inds)); % no longer necessary as of r2012a
+      database = unique(database, 'stable'); %  avoid changing requested order
+      antelope_load_fn = @(oneDB) load_antelope(request, oneDB);
+      outputWaveforms = cellfun(antelope_load_fn, database, 'uniformOutput',false); % each cell
       outputWaveforms = transpose(vertcat(outputWaveforms{:}));
       return;
    end
    
    database = specificDatabase;
    
-   
-   outputWaveforms = emptyWave;
+   outputWaveforms = wEmpty;
    for i = 1:nCriteria
       %if multiple traces will result, then there may be multiple records for tr
-      [tr, database, fdb] = ...
-         get_antelope_traces(datarequest.startTimes,datarequest.endTimes,criteria(i).group, database);
+      [tr, database, fdb] = get_antelope_traces(...
+         startTimes,endTimes,criteria(i).group, database);
+      w = cycleThroughTraces(tr, combineWaves);
       %one tr exists for each timerequest within each scnl.
-      w(numel(tr)).waves = blankWave;
-      for traceidx = 1:numel(tr)
-         if ~isstruct(tr{traceidx}) % marker for no data
-            w_scnl = blankWave([]);
-         else
-            w_scnl = traceToWaveform(blankWave,tr{traceidx}); %create waveform list
-            trdestroy(tr{traceidx});
-         end
-         
-         if COMBINE_WAVEFORMS && numel(w_scnl) > 1, %combine all of this trace's records
-            w_scnl = combine(w_scnl);
-         end;
-         w(traceidx).waves = w_scnl(:)';
-         clear w_scnl;
-      end
-      outputWaveforms = [outputWaveforms; [w.waves]'];
-      clear w
+      outputWaveforms = [outputWaveforms; [w.waves]']; %#ok<AGROW>
    end
-   
    dbclose(fdb);
 end
 
+function w = cycleThroughTraces(tr, COMBINE_WAVEFORMS)
+   w(numel(tr)).waves = waveform;
+   for traceidx = 1:numel(tr)
+      w(traceidx) = wavesfromtraces(tr, traceindex, COMBINE_WAVEFORMS);
+   end
+end
+
+function w_scnl = wavesfromtraces(tr, traceidx, COMBINE_WAVEFORMS)
+   if ~isstruct(tr{traceidx}) % marker for no data
+      wBlank = waveform;
+      w_scnl.waves = wBlank([]);
+   else
+      w_scnl.waves = traceToWaveform(tr{traceidx}); %create waveform list
+      trdestroy(tr{traceidx});
+   end
+   if COMBINE_WAVEFORMS && numel(w_scnl.waves) > 1, %combine all of this trace's records
+      w_scnl.waves = combine(w_scnl.waves);
+   end;
+   w_scnl.waves = reshape(w_scnl.waves, 1, numel(w_scnl.waves));
+end
+   
 %% helper functions
 
-function critList = buildAntelopeCriteria(scnl)
+function [critList, nCrit] = buildAntelopeCriteria(chanTag)
    % builds a criteria list from SCNL (Station-Channel-Network-Location)
    % returns a structure array of cells with criteria for use with get_antelope_trace
    % structure returned as critList(n).group, where group is a cell containing
@@ -126,74 +108,44 @@ function critList = buildAntelopeCriteria(scnl)
    % in subsetting the antelope database.
    %
    
-   station = get(scnl,'station');
-   channel = get(scnl,'channel');
-   network = get(scnl,'network');
-   location = get(scnl,'location');
-   
-   critList.statment =  {};
-   if exist('station','var') && ~isempty(station)
-      station = expandwildcard(station);
-      station = makecell(station);
-      for i=1:numel(station)
-         sta_crit(i) = makeCritListItem('sta','=~',station{i});
-      end
-   else
-      error('Waveform:load_antelope:noStationTerm',...
-         'No stations were requested. To retrieve all stations use ''*''');
+   for N = numel(chanTag) : -1: 1
+      critList(N).group(1) = grabCritList('sta', chanTag(N).station);
+      critList(N).group(2) = grabCritList('net', chanTag(N).network);
+      critList(N).group(3) = grabCritList('chan', chanTag(N).channel);
+      critList(N).group(4) = grabCritList('loc', chanTag(N).location);
    end
    
-   if exist('channel','var') && ~isempty(channel)
-      channel = expandwildcard(channel);
-      channel = makecell(channel);
-      for i=1:numel(channel)
-         cha_crit(i) = makeCritListItem('chan','=~',channel{i});
-      end
-   else
-      error('Waveform:load_antelope:noChannelTerm',...
-         'No channels were requested. To retrieve all stations use ''*''');
-   end
+   critList.statment =  {}; % PERHAPS UNUSED? CERTAINLY MISSPELLED.
+   sta_crit = grabCritList('sta', chanTag.station); % struct with (field, relationship, data)
+   cha_crit = grabCritList('chan', chanTag.channel);
+   net_crit = grabCritList('net', chanTag.network); % expecting only 1
+   loc_crit = grabCritList('loc', chanTag.location); % expecting only 1
    
    for i=1:numel(sta_crit)
       critList(i).group(1) = sta_crit(i);
       critList(i).group(2) = cha_crit(i);
+      if ~isempty(net_crit), critList(i).group(end + 1) = net_crit; end;
+      if ~isempty(loc_crit), critList(i).group(end + 1) = loc_crit; end;
    end
    
-   if ~isempty(network)
-      network = expandwildcard(network);
-      network = makecell(network);
-      for i=1:numel(critList)
-         critList(i).group(end+1) = makeCritListItem('net','=~',network{i});
-      end
-   end
-   
-   if ~isempty(location)
-      location = expandwildcard(location);
-      location = makecell(location);
-      for i=1:numel(critList)
-         critList(i).group(end+1) = makeCritListItem('loc','=~',location{i}); %#ok<*AGROW>
-      end
-   end
    critList = critList(:);
+   nCrit = numel(critList);
 end
 
-function field = expandwildcard(field)
-   % replace * with .* but leave any existing .* unchanged
-   field = regexprep(field,'(?<!\.)\*','\.\*');
-end
-
-function cl = makeCritListItem(field, relationship, data)
-   cl.field = field;
-   cl.relationship = relationship;
-   cl.data = data;
-end
-
-function cle = getCritListExpression(cl)
-   switch class(cl.data)
-      case('char')
-         cle = sprintf('%s%s/%s/',cl.field, cl.relationship, cl.data);
-      otherwise
-         cle =  sprintf('%s %s %s',cl.field,cl.relationship,num2str(cl.data));
+function A = grabCritList(key, value)
+   if ~isempty(value)
+      value = regexprep(value,'(?<!\.)\*','\.\*'); %replace * with .*, but leave existing .* alone
+      value = makecell(value);
+      for i = numel(value) : -1 : 1
+         A(i).field = key;
+         A(i).relationship = '=~';
+         A(i).value = value{i};
+      end
+   elseif ismember(key,{'sta','cha'})  %ew. get rid of special treatment
+      erid = sprintf('Waveform:load_antelope:no%sTerm',key);
+      error(erid,'No %s  requested. To retrieve all %ss use ''*''', key, key);
+   else
+      A = [];
    end
 end
 
@@ -278,10 +230,8 @@ function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, cr
       end
    end
    
-   % do not close the database if a pointer is asked for in the return
-   % arguments
-   closeDatabaseWhenDone = nargout < 2;
-   
+   % do not close the database if a pointer is asked for in the return arguments
+   onFinishCloseDB = nargout < 2;
    
    antelope_starts = mep2dep(startdates);
    antelope_ends = mep2dep(enddates);
@@ -293,51 +243,28 @@ function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, cr
    else
       mydb = database;
    end
-   try
-      nrecs = dbnrecs(mydb);
-   catch
-      nrecs = 0;
-   end
    %check to ensure wfdisk table exists and is populated
-   if nrecs == 0,
-      databaseFileName = dbquery(mydb,'dbTABLE_FILENAME');
-      closeIfAppropriate(mydb);
-      warning('Waveform:load_antelope:databaseNotFound', ...
-         'Database not found: %s', databaseFileName);
-      tr = { -1 };
-      filteredDb = dbinvalid;
+   
+   if safe_dbnrecs(mydb) == 0,
+      cleanUpFail('Waveform:load_antelope:databaseNotFound', ...
+         'Database not found: %s', dbquery(mydb,'dbTABLE_FILENAME'));
       return;
    end;
    
-   %keep a copy of the pre-subset (raw) database
-   rawDb = mydb;
+   rawDb = mydb;   % keep a copy of the pre-subset (raw) database
    
    % subset the data based upon the desired criteria
-   listOfDBFields = dbquery(mydb, 'dbTABLE_FIELDS');
-   % check to ensure criteria matches a field in the database
-   criteriaList = criteriaList(ismember({criteriaList.field},listOfDBFields));
-   for i=1:numel(criteriaList)
-      expList(i) = {getCritListExpression(criteriaList(i))};
-   end
-   allExp = expList{1};
-   for i=2: (numel(expList))
-      allExp = [allExp,' && ', expList{i}];
-   end
    
+   dbFields = dbquery(mydb, 'dbTABLE_FIELDS');
+   critFields = {criteriaList.field};
+   % ensure criteria matches a field in the database
+   criteriaList = criteriaList(ismember(critFields, dbFields));
+   allExp = getAsExpressions(criteriaList);
+      
    %subset the database based on this particular criterion
    mydb = dbsubset(mydb,allExp);
-   try
-      nrecs = dbnrecs(mydb);
-   catch
-      nrecs = 0;
-   end
-   if nrecs == 0
-      closeIfAppropriate(mydb);
-      warning('Waveform:load_antelope:dataNotFound', ...
-         'No records found for criteria [%s].', allExp);
-      %tr = trnew;
-      tr = { -1 };
-      filteredDb = dbinvalid;
+   if safe_dbnrecs(mydb) == 0
+      cleanUpFail('Waveform:load_antelope:dataNotFound', 'No records found for criteria [%s].', allExp);
       return;
    end;
    
@@ -352,187 +279,192 @@ function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, cr
          %%% Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data.
          % This error needs to be handled. So adding a try..catch..end around the original instruction.
          try
-            tr{mytimeIDX} = trload_css(mydb, antelope_starts(mytimeIDX), antelope_ends(mytimeIDX));
+            tr{mytimeIDX} = trload_css(mydb, antelope_starts(mytimeIDX), antelope_ends(mytimeIDX)); %#ok<AGROW>
          catch
-            databaseFileName = dbquery(mydb,'dbTABLE_FILENAME');
-            closeIfAppropriate(mydb);
-            warning('Waveform:load_antelope:trload_css failed', ...
-               'Database not found: %s', databaseFileName);
-            tr = { -1 };
-            filteredDb = dbinvalid;
-            database
-            allExp
+            cleanUpFail('Waveform:load_antelope:trload_css failed', ...
+               'Database not found: %s', dbquery(mydb,'dbTABLE_FILENAME'));
+            disp(database)
+            disp(allExp)
             starttimes = antelope_starts(mytimeIDX);
             endtimes = antelope_ends(mytimeIDX);
             fprintf('%.0f %.0f\n ',starttimes,endtimes);
-            datestr(epoch2datenum(starttimes))
-            datestr(epoch2datenum(endtimes))
+            disp(['starttimes: ', datestr(epoch2datenum(starttimes))]);
+            disp(['endtimes: ', datestr(epoch2datenum(endtimes))]);
             fprintf('trload_css(mydb, starttimes, endtimes))\n');
             return
          end
          trsplice(tr{mytimeIDX},20);
       else
-         tr{mytimeIDX} = -1;
+         tr{mytimeIDX} = -1; %#ok<AGROW>
       end
    end %mytimeIDX
-   closeIfAppropriate(mydb);
+   closeIfAppropriate(mydb, onFinishCloseDB);
+   
+   function cleanUpFail(varargin)
+      % tidy up database and records and display warning
+      closeIfAppropriate(mydb, onFinishCloseDB);
+      tr = { -1 };
+      filteredDb = dbinvalid;
+      warning(varargin{:});      
+   end
 end
 
-function closeIfAppropriate(mydb)
-   closeDatabase = evalin('caller','closeDatabaseWhenDone');
+function allExp = getAsExpressions(criteria)
+   eachExp = arrayfun(crit2expression, criteria);
+   allExp = eachExp{1};
+   for i= 2 : (numel(eachExp))
+      allExp = [allExp,' && ', eachExp{i}]; %#ok<AGROW>
+   end
+end
+
+function cle = crit2expression(cl)
+   if ischar(cl.data)
+      cle = {sprintf('%s%s/%s/',cl.field, cl.relationship, cl.data)};
+   else
+      cle =  {sprintf('%s %s %s',cl.field,cl.relationship,num2str(cl.data))};
+   end
+end
+
+
+function n = safe_dbnrecs(mydb)
+   try
+      n = dbnrecs(mydb);
+   catch
+      n = 0;
+   end
+end
+
+function closeIfAppropriate(mydb, closeDatabase)
    if closeDatabase
       dbclose(mydb);
    end
 end
 
 function result = isAntelopeDatabasePtr(database)
-   result = false;
-   if ~isa(database,'struct')
-      return
-   end
-   fn =  fieldnames(database);
-   if ~any(strcmpi(fn,'database'))
-      return
-   end
-   result = true;
+   result = isa(database,'struct');
+   result = result && any(strcmpi(fieldnames(database),'database'));
 end
 
-function outcell = makecell(inVar)
-   if ~iscell(inVar)
-      outcell = {inVar};
-   else
-      outcell = inVar;
+function X = makecell(X)
+   if ~iscell(X)
+      X = {X};
    end
 end
 
-function allw = traceToWaveform(blankw,tr)
+function allw = traceToWaveform(tr)
    % TRACETOWAVEFORM converts traceobjects to waveforms
-   %    w = traceToWaveform(blankwaveform, all_tracobjects,[units])
+   %    w = traceToWaveform(blankwaveform, all_tracobjects)
    %
    % Note: this may return multiple waveform objects, depending upon
    % how many segments and/or scnl's.
-   %
    
-   % try to end up with a single waveform object
+   persistent wBlank           % cannot test if wBlank is empty because
+   persistent blankWaveExists  %   isempty(wBlank) is always true.
+   
+   if isempty(blankWaveExists)
+      wBlank = waveform;
+      wBlank =  addfield(wBlank,'calib', 0);
+      wBlank = addfield(wBlank, 'calibration_applied', 'NO');
+      blankWaveExists = true;
+   end
+   
    try
       traceCount = dbnrecs(tr);
+      assert(traceCount > 0);
    catch
-      allw = blankw([]);
-      return
-   end
-   if traceCount == 0
-      %no records!
-      allw = blankw([]);
+      allw = wBlank([]);
       return
    end
    
-   %badmask contains the location of data spikes and infinite values.
-   badmask(traceCount).mask = 0; %preallocate
-   allw = repmat(blankw,traceCount,1); %preallocatewithout calling constructor
+   % preallocations
+   spikes(traceCount).mask = false; %used to track data spikes & inf values
+   allw = repmat(wBlank,traceCount,1);
    
    maxAllowableSignal = (realmax('single') * 1e-2);
    
    % LOOP twice through segments represented by this trace object
-   % the first time, find out where signal is good or bad, and flesh out the
-   % header information.
-   % Then, apply the calibration and loop through a second time, assigning the
-   % data to the waveforms.
-   
+   % 1st loop: find signal spikes, and get header info.
    for seg = 1:traceCount
-      % units is now a cell
       tr.record = seg - 1;
-      s = db2struct(tr); %do once, get one for each segment
+      s = db2struct(tr); %do once, get one for each segment 
+      [sunit, ~] = segtype2units(s.segtype);
+      allw(seg) = set(wBlank, ...
+         'station', s.sta, ...
+         'channel', s.chan, ...
+         'network', s.net, ...
+         ... 'location', s.loc, ... % unknown if 'loc' really is a field
+         'start', dep2mep(s.time), ...
+         'freq', s.samprate, ...
+         'units', sunit, ...
+         'calib', s.calib);
       
-      tempw = set(allw(seg),'station',s.sta,'channel',s.chan,'start', dep2mep(s.time),'freq',s.samprate);
-      % s(seg).loc doesn't exist... allw(seg) = addfield(allw(seg),'loc',s(seg).loc);
-      tempw = addfield(tempw,'calibration_applied','NO');
-      sunit = segtype2units(s.segtype); %not bothering to get the unit detail
-      tempw = set(tempw,'units',sunit);
-      allw(seg) = addfield(tempw,'calib',s.calib);
-      a = trextract_data(tr);
-      %get rid of dataspikes
-      badmask(seg).mask =(abs(a) >= maxAllowableSignal) | isinf(a);
+      % data spikes must be known PRIOR to applying calibration
+      data = trextract_data(tr);
+      spikes(seg).mask =(abs(data) >= maxAllowableSignal) | isinf(data);
    end
    
+   % now, apply calibrations to all traces at once
    trapply_calib(tr);
+   hasCalibs = get(allw,'calib') ~= 0;
+   allw(hasCalibs) = set(allw(hasCalibs),'calibration_applied','YES');
    
-   validCalibs = hasValidCalib(allw);
-   allw(validCalibs) = set(allw(validCalibs),'calibration_applied','YES');
+   % 2nd loop: assign data to the waveforms.
+   replaceWithNan = @(W,BAD) setsamples(W, BAD.mask, nan);
    for seg = 1:traceCount
       tr.record = seg - 1;
-      a = trextract_data(tr);
-      a(badmask(seg).mask) = nan;
-      allw(seg) = set(allw(seg),'data',a);
+      allw(seg) = set(allw(seg), 'data', trextract_data(tr));
+      allw(seg) = replaceWithNan(allw(seg), spikes(seg));
    end
 end
 
-function validCalibMask = hasValidCalib(w)
-   validCalibMask = get(w,'calib') ~= 0;
-end
-
-function [units, type_of_data] = segtype2units(segtype)
+function [units, data_type] = segtype2units(segtype)
    %'segtype' in antelope datasets indicate the natural units of the detector
-   segTypes = 'ABDHIJKMPRSTVWabcdfhimnoprstuvw-';
-   segUnits = {'A','nm / sec / sec','acceleration';
-      'B', '25 mw / m / m','UV (sunburn) index(NOAA)';
-      'D', 'nm', 'displacement';
-      'H','Pa','hydroacoustic';
-      'I','Pa','infrasound';
-      'J','watts','power (Joulses/sec) (UCSD)';
-      'K','kPa','generic pressure (UCSB)';
-      'M','mm','Wood-Anderson drum recorder';
-      'P','mb','barometric pressure';
-      'R','mm','rain fall (UCSD)';
-      'S','nm / m','strain';
-      'T','sec','time';
-      'V','nm / sec','velocity';
-      'W','watts / m / m', 'insolation';
-      'a','deg', 'azimuth'
-      'b','bits/ sec', 'bit rate';
-      'c','counts', 'dimensionless integer';
-      'd','m', 'depth or height (e.g., water)';
-      'f','micromoles / sec / m /m', 'photoactive radiation flux';
-      'h','pH','hydrogen ion concentration';
-      'i','amp','electric curent'
-      'm','bitmap','dimensionless bitmap';
-      'n','nanoradians','angle (tilt)';
-      'o','mg/l','diliution of oxygen (Mark VanScoy)';
-      'p','percent','percentage';
-      'r','in','rainfall (UCSD)';
-      's','m / sec', 'speed (e.g., wind)';
-      't','C','temperature';
-      'u','microsiemens/cm','conductivity';
-      'v','volts','electric potential';
-      'w','rad / sec', 'rotation rate';
-      '-','null','null'};
-   if isempty(segtype)
-      segtype=  '-';
+   persistent segUnits
+   if isempty(segUnits)
+      segUnits = getSegUnits();
    end
-   if ~ismember(segtype,segTypes)
-      segtype=  '-';
+   if segUnits.isKey(segtype)
+      details = segUnits(segtype);
+      units = details{1};
+      data_type = details{2};
+   else
+      [units, data_type] = deal('null');
    end
-   thisseg = find(segtype==segTypes);
-   units = segUnits{thisseg,2};
-   type_of_data = segUnits{thisseg,3};
-end
-
-function ensureAntelopeInstalled()
-   % errors out if antelope is not installed on the system.
    
-   %make sure antelope is in the path
-   %path_exists = ~isempty(findstr('/antlope',path));
-   path_exists = true;
-   % the old check involved looking for dbopen and trload_css
-   
-   if ~path_exists
-      error('Waveform:load_antelope:noAntelopeToolbox',...
-         'It doesn''t appear that the antelope toolbox is available');
-   end
-end
-
-function ensureEqualNumberOfStartAndEndTimes(datarequest)
-   if numel(datarequest.startTimes) ~= numel(datarequest.endTimes)
-      error('Waveform:load_antelope:startEndMismatch',...
-         'unequal number of start and end times');
+   function SU = getSegUnits()
+      SU = containers.Map;
+      %  segtype = {units , data_type}
+      SU('A') = {'nm / sec / sec','acceleration'};
+      SU('B') = {'25 mw / m / m','UV (sunburn) index(NOAA)'};
+      SU('D') = {'nm', 'displacement'};
+      SU('H') = {'Pa','hydroacoustic'};
+      SU('I') = {'Pa','infrasound'};
+      SU('J') = {'watts','power (Joulses/sec) (UCSD)'};
+      SU('K') = {'kPa','generic pressure (UCSB)'};
+      SU('M') = {'mm','Wood-Anderson drum recorder'};
+      SU('P') = {'mb','barometric pressure'};
+      SU('R') = {'mm','rain fall (UCSD)'};
+      SU('S') = {'nm / m','strain'};
+      SU('T') = {'sec','time'};
+      SU('V') = {'nm / sec','velocity'};
+      SU('W') = {'watts / m / m', 'insolation'};
+      SU('a') = {'deg', 'azimuth'};
+      SU('b') = {'bits/ sec', 'bit rate'};
+      SU('c') = {'counts', 'dimensionless integer'};
+      SU('d') = {'m', 'depth or height (e.g., water)'};
+      SU('f') = {'micromoles / sec / m /m', 'photoactive radiation flux'};
+      SU('h') = {'pH','hydrogen ion concentration'};
+      SU('i') = {'amp','electric curent'};
+      SU('m') = {'bitmap','dimensionless bitmap'};
+      SU('n') = {'nanoradians','angle (tilt)'};
+      SU('o') = {'mg/l','diliution of oxygen (Mark VanScoy)'};
+      SU('p') = {'percent','percentage'};
+      SU('r') = {'in','rainfall (UCSD)'};
+      SU('s') = {'m / sec', 'speed (e.g., wind)'};
+      SU('t') = {'C','temperature'};
+      SU('u') = {'microsiemens/cm','conductivity'};
+      SU('v') = {'volts','electric potential'};
+      SU('w') = {'rad / sec', 'rotation rate'};
+      SU('-') = {'null','null'};
    end
 end

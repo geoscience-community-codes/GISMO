@@ -1,4 +1,5 @@
 % test waveform creation
+%deprecated by testWaveform.m
 
 data = 1:(10*60*60*2.5);
 st_mat = now-1;
@@ -9,7 +10,7 @@ sta = 'XXXX';
 net = 'NW';
 cha = 'BHZ';
 loc = '00';
-nscltxt = [net, '.', sta, '.', loc, '.', cha];
+nslctxt = [net, '.', sta, '.', loc, '.', cha];
 hz = 20;
 unit = 'CNT';
 scnl = scnlobject(sta,cha,net,loc);
@@ -26,13 +27,13 @@ w = waveform(sta,       cha,  hz,      st_mat,  data)
 disp('CREATE: scnl hz st data unit')
 w = waveform(scnl,      hz,   st_mat,  data,    unit)
 disp('CREATE: nscltxt hz st data unit')
-w = waveform(nscltxt,   hz,   st_mat,  data,    unit)
+w = waveform(nslctxt,   hz,   st_mat,  data,    unit)
 disp('CREATE: tag hz st data unit')
 w = waveform(tag,       hz,   st_mat,  data,    unit)
 disp('CREATE: scnl hz st data')
 w = waveform(scnl,      hz,   st_mat,  data)
 disp('CREATE: nscltxt hz st data')
-w = waveform(nscltxt,   hz,   st_mat,  data)
+w = waveform(nslctxt,   hz,   st_mat,  data)
 disp('CREATE: tag hz st data')
 w = waveform(tag,       hz,   st_mat,  data)
 

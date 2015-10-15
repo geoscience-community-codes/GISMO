@@ -1,12 +1,12 @@
-function allObj = load_objects_from_file(ds,searchClass,scnl,startt,endt)
+function allObj = load_objects_from_file(ds,searchClass,chanTag,startt,endt)
    %grab all the variables in a matlab file, and flip through them, returning
    %those that match the criteria
    % allObj = load_file(datasource,searchClass,scnl,starttime,endtime)
    %   DATASOURCE is a single datasource object (of type "file")
    %   SEARCHCLASS is a string containing the name of the class you are
    %   searching for.  eg, 'double','waveform', etc.
-   %   SCNL is an array of scnlobjects which hold
-   %   station/channel/network/location matches.
+   %   CHANTAG is an array of channeltags which hold
+   %   network/station/location/channel/network matches.
    %   STARTTIME is the starting time in matlab datenum format
    %   ENDTIME is the ending time in matlab datenum format
    %
@@ -29,10 +29,12 @@ function allObj = load_objects_from_file(ds,searchClass,scnl,startt,endt)
    %   the starttime-endtime timeeframe.  That is, individual objects are not
    %   altered through the use of this function.
    %
+   %   IF CHANNELTAG is empty, then all channels don't matter.
+   %   If STARTTIME or ENDTIME are empty, then time doesn't matter.
    %
    % Any object can be loaded from file, however since this was designed to
    % work with seismic data, it must have an ISMEMBER function that takes as
-   % it's parameters the object itself and a SCNLobject.  Also required is the
+   % it's parameters the object itself and a channeltag.  Also required is the
    % [Starts Ends] = GETTIMERANGE(obj) function. (see waveform/gettimerange
    % for an example implementation.
    %
@@ -40,7 +42,8 @@ function allObj = load_objects_from_file(ds,searchClass,scnl,startt,endt)
    
    %The file looks a little opaque because it deals generically with classes
    %and objects, rather than tying itself down to any particular object.
-   allfilen = getfilename(ds,scnl,startt);
+   allfilen = getfilename(ds,chanTag,startt);
+   allObj = cell(size(allfilen));   %preallocate
    for thisfile = 1 : numel(allfilen)
       filen = allfilen{thisfile};
       
@@ -56,41 +59,24 @@ function allObj = load_objects_from_file(ds,searchClass,scnl,startt,endt)
          %disp(['no items of the this class exist within the file:',filen]);
          continue
       end
-      stuff =load(filen,fcontents(variablesToLoad).name);
       
-      fieldn = fieldnames(stuff);
-      
-      %Look through all variables that were loaded, looking for the desired
-      %class.  If a cell is encountered, then look for occurrences of that class
-      %within the cell (recursively).
-      
-      myObjectMask = false(size(fieldn));
-      holder = cell(size(fieldn));
-      for fieldidx = 1:numel(fieldn)
-         thisfield =  fieldn{fieldidx};
-         %grab all myObjects
-         if isa(stuff.(thisfield),searchClass)
-            holder(fieldidx) = {reshape(stuff.(thisfield),1,numel(stuff.(thisfield)))};
-            myObjectMask(fieldidx) = true;
-            stuff.(thisfield) = {};
-         elseif isa(stuff.(thisfield),'cell')
-            holder(fieldidx) = {myObjectsFromCells(searchClass,stuff.(thisfield))};
-            myObjectMask(fieldidx) = true;
-         else
-            stuff.(thisfield) = {};
-         end
+      % load all variables into a big cell.
+      % each variable becomes a cell within this big cell, so variable names are lost)
+      fileAsCell = struct2cell(load(filen,fcontents(variablesToLoad).name));
+      myObj = getFromCells(searchClass, fileAsCell);
+
+      if ~isempty(chanTag)
+         myObj = myObj(ismember(myObj,chanTag));
       end
-      myObj = [holder{myObjectMask}];
-      myObj = myObj(ismember(myObj,scnl));
       
-      
-      %now get rid of any that don't match the time criteria.
-      hasValidRange = isWithinTimeRange(myObj,startt,endt);
-      allObj(thisfile) = {myObj(hasValidRange)};
-      
+      if ~(isempty(startt) || isempty(endt))
+         hasValidRange = isWithinTimeRange(myObj,startt,endt);
+         allObj(thisfile) = {myObj(hasValidRange)};
+      else
+         allObj(thisFile) = {myObj};
+      end
       
    end
-   
    
    if ~exist('allObj','var')
       warning('no %ss found',searchClass);
@@ -98,18 +84,12 @@ function allObj = load_objects_from_file(ds,searchClass,scnl,startt,endt)
    end
    
    allObj = [allObj{:}];
-   
 end
+
 function hasValidRange = isWithinTimeRange(myObj,startt,endt)
-   
+   % TODO: split out each test to provide more flexibility
    [theseStarts, theseEnds] = gettimerange(myObj);
    hasValidRange = false(size(theseStarts));
-   
-   %   if isempty(theseStarts) || isempty(theseEnds)
-   %     warning('Datasource:ObjectNoTimes',...
-   %       'One or more objects have no start or end times associated with them');
-   %     return;
-   %   end
    
    %check each object's range against all requested ranges
    for timeidx = 1:numel(startt)
@@ -118,7 +98,7 @@ function hasValidRange = isWithinTimeRange(myObj,startt,endt)
       
       % make sure the data doesn't start AFTER requested data...
       validStarts = (theseStarts <=requestedEnd);
-      % ...and make sure the data deosn't end BEFORE requested data
+      % ...and make sure the data doesn't end BEFORE requested data
       validEnds = (theseEnds >= requestedStart);
       
       %add objects that match the criteria to the OK list
@@ -126,15 +106,21 @@ function hasValidRange = isWithinTimeRange(myObj,startt,endt)
    end
 end
 
-function mObj = myObjectsFromCells(searchClass, mycell)
-   myObjectMask = false(size(mycell));
-   for i=1:numel(mycell);
-      if isa(mycell{i},searchClass),
-         myObjectMask(i) = true;
-         mycell(i) = {reshape(mycell{i},1,numel(mycell{i}))}; %make all myObjects 1xN
-      elseif isa(mycell{i},'cell') %it's a cell, let's recurse
-         mycell(i) = {myObjectsFromCells(mycell{i})};  %pull myObjects from the cell and bring them to this level.
-      end
+function mObj = getFromCells(searchClass, mycell)
+   % returns an 1xN array of objects
+   
+   %might break if searchClass == 'cell'. but I haven't tested it
+   searchFn = @(x) isa (x, searchClass);
+   makeRows = @(x) reshape(x,1,numel(x));
+   
+   target = cellfun(searchFn, mycell);
+   objs = cellfun(makeRows, mycell(target), 'uniformoutput', false);
+  
+   holdsCell = cellfun(@iscell, mycell);
+   if any(holdsCell)
+      mObj = getFromCells(searchClass, mycell{holdsCell}); %recurse
+   else
+      mObj = {};
    end
-   mObj= [mycell{myObjectMask}];
+   mObj = [mObj{:} objs{:}];
 end

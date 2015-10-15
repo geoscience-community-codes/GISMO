@@ -1,10 +1,12 @@
-function w = load_file(request)
+function w = load_matfile(request)
    %LOAD_FILE
    % uses the DATASOURCE class
    
+   % request.combineWaves is ignored
+   
    w = waveform; w = w();
    if isstruct(request)
-      [ds, chanInfo, startTimes, endTimes, ~] = unpackDataRequest(request);
+      [ds, chanInfo, startTimes, endTimes, ~]  = unpackDataRequest(request);
       w = load_objects_from_file(ds, 'waveform', chanInfo, startTimes, endTimes);
       w = w(:);
    else

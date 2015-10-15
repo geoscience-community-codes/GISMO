@@ -60,7 +60,7 @@ function allObj = load_file(ds,searchClass,scnl,startt,endt)
             myObjectMask(fieldidx) = true;
             stuff.(thisfield) = {};
          elseif isa(stuff.(thisfield),'cell')
-            holder(fieldidx) = {myObjectsFromCells(searchClass,stuff.(thisfield))};
+            holder(fieldidx) = {getFromCells(searchClass,stuff.(thisfield))};
             myObjectMask(fieldidx) = true;
          else
             stuff.(thisfield) = {};
@@ -106,15 +106,37 @@ function hasValidRange = isWithinTimeRange(myObj,startt,endt)
 end
 
 
-function mObj = myObjectsFromCells(searchClass, mycell)
-   myObjectMask = false(size(mycell));
+function mObj = getFromCells(searchClass, mycell)
+   % returns an 1xN array of objects
+   
+   %might break if searchClass == 'cell'. but I haven't tested it
+   searchFn = @(x) isa (x, searchClass);
+   makeRows = @(x) reshape(x,1,numel(x));
+   
+   target = cellfun(searchFn, mycell);
+   objs = cellfun(makeRows, mycell(target), 'uniformoutput', false);
+   
+   holdsCell = cellfun(@iscell, mycell);
+   if any(holdsCell)
+      mObj = getFromCells(searchClass, mycell{holdsCell}); %recurse
+   else
+      mObj = {};
+   end
+   
+   mObj = [mObj{:} objs{:}];
+end
+   
+   %{
+   holdsTarget = false(size(mycell));
    for i=1:numel(mycell);
+      holdsTarget(i) = isa(mycell{i}, searchClass);
       if isa(mycell{i},searchClass),
-         myObjectMask(i) = true;
+         holdsTarget(i) = true;
          mycell(i) = {reshape(mycell{i},1,numel(mycell{i}))}; %make all myObjects 1xN
       elseif isa(mycell{i},'cell') %it's a cell, let's recurse
          mycell(i) = {myObjectsFromCells(mycell{i})};  %pull myObjects from the cell and bring them to this level.
       end
    end
-   mObj= [mycell{myObjectMask}];
+   mObj= [mycell{holdsTarget}];
 end
+%}
