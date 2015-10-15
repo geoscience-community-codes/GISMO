@@ -1,11 +1,11 @@
-function self = readEvents(dataformat, varargin)
+function self = readCatalog(dataformat, varargin)
 %readEvents: Read seismic events from common file formats & data sources.
 %  readEvents loads events from a seismic event catalog into a GISMO
-%  Events object. 
+%  Catalog object
 %
-% USAGE
+%% GENERAL USAGE:
 %
-%  cobj = readEvents(dataformat, 'param1', value1, 'param2', value2 ...)
+%  cObject = readCatalog(dataformat, 'param1', value1, 'param2', value2 ...)
 %     loads a seismic event catalog into a GISMO/Catalog object.
 %     dataformat is a method by which the source catalog is
 %     retrieved, or format in which the source catalog is stored.
@@ -16,119 +16,131 @@ function self = readEvents(dataformat, varargin)
 %      maximumDepth, maximumLatitude, maximumLongitude, maximumMagnitude,
 %      minimumDepth, minimumLatitude, minimumLongitude, minimumMagnitude,
 %      minimumRadius, maximumRadius, offset, updatedAfter.
+%
+%  CONVENIENCE PARAMETERS
+%   'boxcoordinates'    : [minLat, maxLat, minLon, maxLon]   % use NaN as a wildcard
+%   'radialcoordinates' : [Lat, Lon, MaxRadius, MinRadius]   % MinRadius is optional
+%
 %  An arbitrary number of parameter-value pairs may be specified in order to 
-%  narrow down the search results. Some dataformat allow additional
+%  narrow down the search results. Some dataformat choices allow additional
 %  name-value parameter pairs.
 %
 %  By default readEvents will only retrieve basic event metadata such as 
 %  (preferred) origin time, longitude, latitude, depth and magnitude.
 %  However:
 %
-%  cobj = readEvents(..., 'addarrivals', true)
+%  cObject = readCatalog(..., 'addarrivals', true)
 %
 %  will also include more detailed information, such as phase arrivals and
-%  different measurements of magnitude. Warning - this may become slow,
-%  especially for large datasets.
+%  different measurements of magnitude, if available. Warning - this may 
+%  be slow, especially for large datasets.
 %
-% LOADING FROM IRIS/FSDN web services via irisfetch.m:
-%   cobj = readEvents('irisfetch', 'param1', value1, 'param2', value2 ...)
+%% READING FROM IRIS/FSDN web services via irisfetch.m:
+%   cObject = readCatalog('irisfetch', 'param1', value1, 'param2', value2 ...)
 %             loads events, origins and magnitudes from IRIS-DMC or other
 %             FSDN data sources via irisFetch.m. The allowed parameter-value 
-%             pairs are those allowed by irisFetch.Events.
+%             pairs are those allowed by irisFetch.Events, listed above.
 %
-% LOADING FROM ANTELOPE DATABASES
+% Examples:
 %
-%   cobj = readEvents('antelope', 'dbpath', path_to_database)
+%   (1) Read all magnitude>7 events from IRIS DMC via irisFetch.m:
+%         Object = readCatalog('iris', 'MinimumMagnitude', 7.0);
+%
+%   (2) Read all events within 20 km of Redoubt volcano from IRIS DMC:
+%         Object = readCatalog('iris','radialcoordinates', [60.4853 -152.7431 km2deg(20)]); 
+%
+%% READING FROM ANTELOPE DATABASES
+%
+%   cObject = readCatalog('antelope', 'dbpath', path_to_database, 'param1', value1, ...)
 %     loads events, origins and magnitudes from an Antelope CSS3.0
 %     database using Kent Lindquist's Antelope Toolbox for MATLAB. As a
-%     minimum, the database must have an origin table.
+%     minimum, the database must have an origin table. All the name-value
+%     parameters pairs supported by 'iris' are supported by 'antelope' too.
 %
-%   Additional name-value parameter pairs supported by 'antelope' are:
-%       'archiveformat'
-%       'subset_expression'
 %
-%   If the database is stored in daily volumes, e.g. foo/bar_YYYY_MM_DD, 
-%   rather than a single database use the 'archiveformat'
-%   name/value pair, e.g.
-%
-%   cobj = readEvents('antelope', 'dbpath', 'foo/bar', 'archiveformat','daily');
-%
-%   For monthly volumes, e.g. foo/bar_YYYY_MM, set 'archiveformat' to
-%   'monthly':
-%
-%   cobj = readEvents('antelope', 'dbpath', 'foo/bar', 'archiveformat','monthly');
-%
-%   [Note: it would be much better if I could do 'dbpath',
-%   'foo/bar_%YYYY%MM%DD', 'year', 'month', 'day' as Celso does for
-%   datasource].
-%
-%   cobj = readEvents(..., 'subset_expression', subset_expression)
+%   cObject = readCatalog(..., 'subset_expression', subset_expression)
 %             will subset the database given a valid antelope subset
-%             expression.
+%             expression. Any other name-value parameter pairs will be
+%             ignored if subset_expression is given.
 %
-% READING FROM A SEISAN-DERIVED DAT FILE
+%   If the database is stored in daily or monthly volumes, 
+%          e.g. catalogs/avodb20010101 catalogs/avodb20010102, 
+%   then specify name like:
+%           dbpath = 'catalogs/avodb%YYYY%MM%DD'
+%
+% Examples:
+%   (1) Import all events from the demo database
+%         % get path to demo database
+%         dbpath = demodb('avo');
+%         % read events from database
+%         Object = readCatalog('antelope', 'dbpath', dbpath);
+%
+%   (2) As previous example, but use a subset expression also. Here we
+%       subset for origins within 15 km of Redoubt volcano:
+%         Object = readCatalog('antelope', 'dbpath', dbpath, ...
+%                   'subset_expression', ...
+%                   'deg2km(distance(lat, lon, 60.4853, -152.7431))<15.0');
+%
+%   (3) Read Alaska Earthquake Center events greater than M=4.0 in 2009
+%       within rectangular region lat = 55 to 65, lon = -170 to -135 from
+%       the "Total" database of all regional earthquakes in Alaska:
+%         Object = readCatalog('antelope', ...
+%               'dbpath', '/Seis/catalogs/aeic/Total/Total', ...
+%               'startTime', datenum(2009,1,1), ...
+%               'endTime', datenum(2010,1,1), ...
+%               'minimumMagnitude', 4.0, ...
+%               'boxcoordinates', [-170.0 -135.0 55.0 65.0]);
+%
+%   (4) As 3, but use a subset_expression instead:
+%         Object = readCatalog('antelope', ...
+%               'dbpath', '/Seis/catalogs/aeic/Total/Total', ...
+%               'subset_expression', ...
+%               'time > "2009/1/1" & time < "2010/1/1" & ml > 4 & lon > -170.0 & lon < -135.0 & lat > 55.0 & lat < 65.0');
+%
+%
+%% READING FROM AEF SUMMARY FILES
 % 
-%   obj = readEvents('aef', 'dbpath', dbpath) 
+%   Object = readCatalog('aef', 'dbpath', dbpath, 'param1', value1, ...) 
 %     will attempt to load all Seisan-derived AEF summary files in the 
 %     directory specified by dbpath.
 % 
 %     To subset the data, use parameter name/value pairs (snum, enum, 
-%     minmag, mindepth, maxdepth, region). 
+%     minimumMagnitude, minimumDepth, maximumDepth, region). 
 %
-% READING S-FILES FROM A SEISAN YYYY/MM REA DATABASE
+% Example: Read MVO data from station MBWH for all of year 2000:
+%         Object = readCatalog('aef', ...
+%           'dbpath', fullfile('/raid','data','seisan','mbwh_catalog'), 
+%           'startTime', '2000/01/01', 'endTime', '2001/01/01');
+%
+%% READING S-FILES FROM A SEISAN YYYY/MM REA DATABASE
 % 
-%   obj = readEvents('seisan', 'dbpath', dbpath) 
+%   Object = readCatalog('seisan', 'dbpath', dbpath, 'param1', value1, ...) 
 %     will attempt to load all Seisan S-files in the 
 %     directory specified by dbpath (which should be the parent of
 %     YYYY/MM directories)
 % 
 %     To subset the data, use parameter name/value pairs (snum, enum, 
-%     minmag, mindepth, maxdepth, region). 
+%     minimumMagnitude, minimumDepth, maximumDepth, region).
 %
-%% EXAMPLES
+% Example: Read Sfiles from MVOE_ Seisan database for January 2000:
+%     Object = readCatalog('seisandb', ...
+%           'dbpath', fullfile('/raid','data','seisan','REA','MVOE_'), ...
+%            'startTime', '2000/01/01', 'endTime', '2000/01/02' );
 %
-%   (1) Import all events from the demo database
-%         % get path to demo database
-%         dbpath = demodb('avo');
-%         % read events from database
-%         obj = readEvents('antelope', 'dbpath', dbpath);
 %
-%   (2) As previous example, but use a subset expression also. Here we
-%       subset for origins within 15 km of Redoubt volcano:
-%         obj = readEvents('antelope', 'dbpath', dbpath, 'subset_expression', 'deg2km(distance(lat, lon, 60.4853, -152.7431))<15.0');
+%% READING FROM AN SRU-CATALOG
 %
-%   (3) Read all magnitude>7 events from IRIS DMC via irisFetch.m:
-%         obj = readEvents('irisfetch', 'MinimumMagnitude', 7.0);
-%
-%   (4) Read all events within 20 km of Redoubt volcano from IRIS DMC:
-%         obj = readEvents('irisfetch','radialcoordinates', [60.4853 -152.7431 km2deg(20)]); 
+%  Example: Read all events from the Dominica Catalog given to Ophelia
+%         Object = readCatalog('sru', '/raid/data/seisan/REA/DMNCA/DominicaCatalog.txt');
 % 
-%   (5) Read Alaska Earthquake Center events greater than M=4.0 in 2009
-%       within rectangular region lat = 55 to 65, lon = -170 to -135 from
-%       the "Total" database of all regional earthquakes in Alaska:
-%         obj = readEvents('antelope', 'dbpath', '/Seis/catalogs/aeic/Total/Total', 'snum', datenum(2009,1,1), 'enum', datenum(2010,1,1), 'minmag', 4.0, 'region', [-170.0 -135.0 55.0 65.0]);
-%
-%   (6) As 5, but use a subset_expression instead:
-%         obj = readEvents('antelope', 'dbpath', '/Seis/catalogs/aeic/Total/Total', 'subset_expression', 'time > "2009/1/1" & time < "2010/1/1"' & ml > 4 & lon > -170.0 & lon < -135.0 & lat > 55.0 & lat < 65.0');
-%
-%   (7) Read MVO data from station MBWH for all of year 2000:
-%         obj = readEvents('aef', 'dbpath', fullfile('/raid','data','seisan','mbwh_catalog'), 'snum', datenum(2000,1,1), 'enum', datenum(2000,12,31,23,59,59));
-%
-%   (8) Read Sfiles from MVOE_ Seisan database for January 2000 (this can be slow, especially over a network drive):
-%         obj = readEvents('seisandb', 'dbpath', fullfile('/raid','data','seisan','REA','MVOE_'), 'snum', datenum(2000,1,1), 'enum', datenum(2000,1,2) );
-%
-%   (9) Read from a SRU catalog in a text file:
-%         obj = readEvents('sru', '/raid/data/seisan/REA/DMNCA/DominicaCatalog.txt');
-% 
-%% See also CATALOG, EVENT, MAGNITUDE, IRISFETCH. CATALOG_COOKBOOK
+%% See also EVENTS, IRISFETCH, EVENTS_COOKBOOK
 %
 % Author: Glenn Thompson (glennthompson1971@gmail.com)
-% $Date: $
-% $Revision: $
+
     switch lower(dataformat)
         case 'iris'
             if exist('irisfetch.m','file')
-                ev = irisFetch.Events(varargin{:});
+                ev = irisFetch.Catalog(varargin{:});
                 self = iris(ev);
             else
                 warning('Cannot find irisFetch.m')
@@ -153,7 +165,7 @@ end
 
 function self = iris(ev)
     %readEvents.iris
-    % convert an events structure from irisfetch into an Events object
+    % convert an events structure from irisfetch into an Catalog object
   
     for i=1:length(ev) % Loop over each element in vector
 
@@ -175,7 +187,7 @@ function self = iris(ev)
     end
     
     request.dataformat = 'iris';
-    self = Events(time, lon, lat, depth, mag, magtype, etype, 'request', request);
+    self = Catalog(time, lon, lat, depth, mag, magtype, etype, 'request', request);
     
 end
 
@@ -193,16 +205,26 @@ function self = antelope(varargin)
     % Process input arguments
     p = inputParser;
     p.addParamValue('dbpath', @isstr);
-    p.addParamValue('subset_expression', '', @isstr);
-    p.addParamValue('archiveformat', 'single file', @isstr);
-    p.addParamValue('snum', [], @isnumeric);  
-    p.addParamValue('enum', [], @isnumeric);
-    p.addParamValue('minmag', [], @isnumeric);
-    p.addParamValue('region', [], @isnumeric);
+    p.addParamValue('startTime', []);  
+    p.addParamValue('endTime', []);
+    p.addParamValue('minimumMagnitude', [], @isnumeric);
+    p.addParamValue('maximumMagnitude', [], @isnumeric);
+    p.addParamValue('minimumLatitude', [], @isnumeric);
+    p.addParamValue('maximumLatitude', [], @isnumeric);
+    p.addParamValue('minimumLongitude', [], @isnumeric);
+    p.addParamValue('maximumLongitude', [], @isnumeric);  
+    p.addParamValue('minimumDepth', [], @isnumeric);
+    p.addParamValue('maximumDepth', [], @isnumeric); 
+    p.addParamValue('minimumRadius', [], @isnumeric);
+    p.addParamValue('maximumRadius', [], @isnumeric);     
+    p.addParamValue('boxcoordinates', @isnumeric);    %[minLat, maxLat, minLon, maxLon]   % use NaN as a wildcard
+    p.addParamValue('radialcoordinates', @isnumeric); % [Lat, Lon, MaxRadius, MinRadius]   % MinRadius is optional
+    p.addParamValue('addarrivals', false, @islogical);
+    
+    % CUSTOM PARAMETERS
+    p.addParamValue('subset_expression', '', @isstr);    
     p.addParamValue('subclass', '*', @ischar);
-    p.addParamValue('mindepth', [], @isnumeric);
-    p.addParamValue('maxdepth', [], @isnumeric);
-    p.addParamValue('RUNMODE', 'fast', @isstr);
+    
     p.parse(varargin{:});
     fields = fieldnames(p.Results);
     for i=1:length(fields)
@@ -211,82 +233,110 @@ function self = antelope(varargin)
         val = p.Results.(field);
         eval(sprintf('%s = val;',field));
     end 
+    
+    if exist('boxcoordinates','var')
+        minimumLatitude = boxcoordinates(1);
+        maximumLatitude = boxcoordinates(2);
+        minimumLongitude = boxcoordinates(3);
+        maximumLongitude = boxcoordinates(4);            
+    end
+    
+    if exist('radialcoordinates','var')
+        centerLatitude = radialcoordinates(1);
+        centerLongitude = radialcoordinates(2);
+        maximumRadius = radialcoordinates(3);
+        %minimumRadius = radialcoordinates(4);            
+    end
+    
+    % Check start & end times
+    snum = ensure_dateformat(startTime);
+    enum = ensure_dateformat(endTime);
 
     % Create a dbeval subset_expression if not already set.
     if ~exist('subset_expression', 'var') | isempty(subset_expression)
         if nargin > 2
             expr = '';
-            if ~isempty(snum) & isnumeric(snum)
+            if ~isempty(snum) & isnumeric(snum) 
                 expr = sprintf('%s && time >= %f',expr,datenum2epoch(snum));
             end 
-            if ~isempty(enum) & isnumeric(enum)
+            if ~isempty(enum) & isnumeric(enum) 
                 expr = sprintf('%s && time <= %f',expr,datenum2epoch(enum));
             end
-            if ~isempty(minmag) & isnumeric(minmag)
-                expr = sprintf('%s && (ml >= %f || mb >= %f || ms >= %f)',expr,minmag,minmag,minmag);
+            if ~isempty(minimumMagnitude) & isnumeric(minimumMagnitude)
+                expr = sprintf('%s && (ml >= %f || mb >= %f || ms >= %f)',expr,minimumMagnitude,minimumMagnitude,minimumMagnitude);
             end
-            if ~isempty(region) & isnumeric(region)
-                leftlon = region(1); rightlon=region(2); lowerlat=region(3); upperlat=region(4);
-                expr = sprintf('%s && (lat >= %f && lat <= %f && lon >= %f && lon <= %f)',expr,lowerlat, upperlat, leftlon, rightlon);
+            if ~isempty(maximumMagnitude) & isnumeric(maximumMagnitude)
+                expr = sprintf('%s && (ml >= %f || mb >= %f || ms >= %f)',expr,maximumMagnitude,maximumMagnitude,maximumMagnitude);
             end
-            if ~isempty(mindepth) & isnumeric(mindepth)
-                expr = sprintf('%s && (depth >= %f)', expr,mindepth); 
+            if ~isempty(minimumLatitude) & isnumeric(minimumLatitude)
+                expr = sprintf('%s && (lat >= %f)',expr, minimumLatitude);
             end
-            if ~isempty(maxdepth) & isnumeric(maxdepth)
-                expr = sprintf('%s && (depth <= %f)', expr,maxdepth); 
+            if ~isempty(maximumLatitude) & isnumeric(maximumLatitude)
+                expr = sprintf('%s && (lat <= %f)',expr, maximumLatitude);
+            end            
+            if ~isempty(minimumLongitude) & isnumeric(minimumLongitude)
+                expr = sprintf('%s && (lon >= %f)',expr, minimumLongitude);
             end
+            if ~isempty(maximumLongitude) & isnumeric(maximumLongitude)
+                expr = sprintf('%s && (lon <= %f)',expr, maximumLongitude);
+            end            
+            if ~isempty(minimumDepth) & isnumeric(minimumDepth)
+                expr = sprintf('%s && (depth >= %f)', expr,minimumDepth); 
+            end
+            if ~isempty(maximumDepth) & isnumeric(maximumDepth)
+                expr = sprintf('%s && (depth <= %f)', expr,maximumDepth); 
+            end
+            if ~isempty(maximumRadius) & isnumeric(maximumRadius)
+                expr = sprintf('%s && (distance(lat, lon, %f, %f) <= %f)', ...
+                    expr, centerLatitude, centerLongitude, maximumRadius); 
+            end            
             subset_expression = expr(4:end);
             clear expr
         end
     end
-    
+
     % BUILD DBNAMELIST
     dbpathlist = {};
     
-    if strcmp(archiveformat,'single file') % Just 1 entry
-        dbpathlist = {dbpath};   
-    else
-        if isempty(snum) || isempty(enum)
-            disp(sprintf('Failure: you must set values for \"snum\" and \"enum\" parameters when \"archiveformat\" is set to \"daily\" or \"monthly\"'));
-            return;
-        end
-        if strcmp(archiveformat,'daily')
+    % Loop over databases split into day, month or year volumes
+    if strfindbool(dbpath, '%DD') ||  strfindbool(dbpath, '%MM') || strfindbool(dbpath, '%YYYY') % strfind returns [] if false
+        if snum < enum
             for dnum=floor(snum):floor(enum-1/1440)
-                dbpathfull = sprintf('%s_%s',dbpath,datestr(dnum, 'yyyy_mm_dd'));
-                if exist(sprintf('%s.origin',dbpathfull),'file')
-                    dbpathlist{end+1} = dbpathfull; % Add here
-                else
-                    fprintf('%s.origin not found\n',dbpath);
+                dv = datevec(dnum);
+                thisdb = dbpath;
+                thisdb = regexprep(thisdb, '%YYYY', sprintf('%04d',dv(1)) );
+                thisdb = regexprep(thisdb, '%MM', sprintf('%02d',dv(2)) );
+                thisdb = regexprep(thisdb, '%DD', sprintf('%02d',dv(3)) );
+                if exist(sprintf('%s.origin',thisdb),'file')
+                    dbpathlist{end+1} = thisdb; % Add here
                 end
             end
-        elseif strcmp(archiveformat,'monthly')
-            for yyyy=dnum2year(snum):1:dnum2year(enum)
-                for mm=dnum2month(snum):1:dnum2month(enum)
-                    dnum = datenum(yyyy,mm,1);
-                    dbpathfull = sprintf('%s%04d_%02d',dbpath,yyyy,mm);
-                    if exist(sprintf('%s.origin',dbpath),'file') 
-                        dbpathlist{end+1} = dbpathfull; % Add here
-                    else
-                        fprintf('%s.origin not found\n',dbpath);
-                    end
-                end
-            end
+            dbpathlist = unique(dbpathlist);
+        else
+            debug.print_debug(0,'when using %YYYY, %MM or %DD in dbpath, must also specify startTime and endTime')
         end
+    else
+        dbpathlist = {dbpath};
+    end
+
+    if isempty(dbpathlist)
+        debug.print_debug(0, 'no database found');
     end
     
     % LOAD FROM DBNAMELIST
     % Initialize to empty
     [lat, lon, depth, dnum, time, evid, orid, nass, mag, ml, mb, ms, etype, auth] = deal([]);
-    subclass = '';
+    etype = {}; magtype = {};
     for dbpathitem = dbpathlist
         % Load vectors
-        [lon0, lat0, depth0, dnum0, evid0, orid0, nass0, mag0, mb0, ml0, ms0, subclass0, auth0] = dbloadprefors(dbpathitem, subset_expression);
+        [lon0, lat0, depth0, dnum0, evid0, orid0, nass0, mag0, mb0, ml0, ms0, etype0, auth0, magtype0] = ...
+            dbloadprefors(dbpathitem, subset_expression);
         if length(lon0) == length(mag0)
             % Concatentate vectors
+            dnum  = cat(1, dnum,  dnum0);           
             lon   = cat(1, lon,   lon0);
             lat   = cat(1, lat,   lat0);
             depth = cat(1, depth, depth0);
-            dnum  = cat(1, dnum,  dnum0);
             evid  = cat(1, evid,  evid0);
             orid  = cat(1, orid,  orid0);
             nass  = cat(1, nass,  nass0);
@@ -294,105 +344,76 @@ function self = antelope(varargin)
             mb   = cat(1, mb,   mb0);
             ml   = cat(1, ml,   ml0);
             ms   = cat(1, ms,   ms0);
-            subclass  = cat(2, subclass, subclass0);
+            etype  = cat(1, etype, etype0);
             auth = cat(1,  auth, auth0);
+            magtype = cat(1, magtype, magtype0);
         end
     end
     mag(mag<-3.0)=NaN;
-    if strcmp(p.Results.RUNMODE, 'slow')
-        %%% SLOW MODE %%%
-        % Create an Event object for each longitude in the list
-        event_list = [];
-        for i=1:length(lon) % Loop over each element in vector
-            magnitude_obj = Netmag(mag(i));
-            origin_obj = Origin(dnum(i), lon(i), lat(i), depth(i), ...
-                'orid', orid(i), 'etype', subclass(i), 'netmags', [magnitude_obj] ...
-                );
-            event_list = [ ...
-                event_list ...
-                Event( ...
-                    [origin_obj], ...
-                    'evid', evid(i) ...
-                    ) ...
-                ];
-        end
-
-        % CREATE EVENTS OBJECT
-        self = Catalog_full(event_list);
-
-    elseif strcmp(p.Results.RUNMODE, 'fast')
-        %%% FAST MODE %%%
-        self = Events(time, lon, lat, depth, mag, subclass);
-    end
-    st = dbstack;
-    self = self.addfield('method', st(1).name);
-    self = self.addfield('dbpath', dbpath);
-    self = self.addfield('archiveformat', archiveformat);
-    ds = datasource('antelope', dbpath);
-    self = self.addfield('datasource', ds);
-    
+    self = Catalog(dnum, lon, lat, depth, mag, magtype, etype);
 end
 
 %% ---------------------------------------------------
 
-function [lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth] = dbloadprefors(dbpath, subset_expression)
+function [lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth, magtype] = dbloadprefors(dbpath, subset_expression)
 
-    numorigins = 0;
-    [lat, lon, depth, dnum, time, evid, orid, nass, mag, ml, mb, ms, etype, auth] = deal([]);
+    numorigins = 0; etype={}; magtype = {};
+    [lat, lon, depth, dnum, time, evid, orid, nass, mag, ml, mb, ms, auth] = deal([]);
     if iscell(dbpath)
         dbpath = dbpath{1};
     end
-    debug.print_debug(sprintf('Loading data from %s',dbpath),3);
+    debug.print_debug(0, sprintf('Loading data from %s',dbpath));
 
     ORIGIN_TABLE_PRESENT = dbtable_present(dbpath, 'origin');
 
     if (ORIGIN_TABLE_PRESENT)
         db = dblookup_table(dbopen(dbpath, 'r'), 'origin');
         numorigins = dbquery(db,'dbRECORD_COUNT');
-        debug.print_debug(sprintf('Got %d records from %s.origin',numorigins,dbpath),1);
+        debug.print_debug(1,sprintf('Got %d records from %s.origin',numorigins,dbpath));
         if numorigins > 0
-            EVENT_TABLE_PRESENT = dbtable_present(dbpath, 'event');           
+            EVENT_TABLE_PRESENT = dbtable_present(dbpath, 'event'); 
+            NETMAG_TABLE_PRESENT = dbtable_present(dbpath, 'netmag');  
             if (EVENT_TABLE_PRESENT)
                 db = dbjoin(db, dblookup_table(db, 'event') );
                 numorigins = dbquery(db,'dbRECORD_COUNT');
-                debug.print_debug(sprintf('Got %d records after joining event with %s.origin',numorigins,dbpath),1);
+                debug.print_debug(1,sprintf('Got %d records after joining event with %s.origin',numorigins,dbpath));
                 if numorigins > 0
                     db = dbsubset(db, 'orid == prefor');
                     numorigins = dbquery(db,'dbRECORD_COUNT');
-                    debug.print_debug(sprintf('Got %d records after subsetting with orid==prefor',numorigins),1);
+                    debug.print_debug(1,sprintf('Got %d records after subsetting with orid==prefor',numorigins));
                     if numorigins > 0
                         db = dbsort(db, 'time');
                     else
                         % got no origins after subsetting for prefors - already reported
-                        debug.print_debug(sprintf('%d records after subsetting with orid==prefor',numorigins),0);
+                        debug.print_debug(0,sprintf('%d records after subsetting with orid==prefor',numorigins));
                         return
                     end
                 else
                     % got no origins after joining event to origin table - already reported
-                    debug.print_debug(sprintf('%d records after joining event table with origin table',numorigins),0);
+                    debug.print_debug(0,sprintf('%d records after joining event table with origin table',numorigins));
                     return
                 end
             else
-                debug.print_debug('No event table found, so will use all origins from origin table, not just prefors',0);
+                debug.print_debug(0,'No event table found, so will use all origins from origin table, not just prefors');
             end
         else
             % got no origins after opening origin table - already reported
-            debug.print_debug(sprintf('origin table has %d records',numorigins),0);
+            debug.print_debug(0,sprintf('origin table has %d records',numorigins));
             return
         end
     else
-        debug.print_debug('no origin table found',0);
+        debug.print_debug(0,'no origin table found');
         return
     end
 
     numorigins = dbquery(db,'dbRECORD_COUNT');
-    debug.print_debug(sprintf('Got %d prefors prior to subsetting',numorigins),2);
+    debug.print_debug(2,sprintf('Got %d prefors prior to subsetting',numorigins));
 
     % Do the subsetting
     if ~isempty(subset_expression)
         db = dbsubset(db, subset_expression);
         numorigins = dbquery(db,'dbRECORD_COUNT');
-        debug.print_debug(sprintf('Got %d prefors after subsetting',numorigins),2);
+        debug.print_debug(2,sprintf('Got %d prefors after subsetting',numorigins));
     end
 
     if numorigins>0
@@ -403,46 +424,49 @@ function [lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth]
             disp('Setting evid == orid');
             evid = orid;
         end
-        etype0 = dbgetv(db,'etype');
+        etype = dbgetv(db,'etype');
 
-        if isempty(etype0)
-                etype = char(ones(numorigins,1)*'R');
-        else
-            % convert etypes
-            % AVO codes are A, B, C, E, G, L, O, R, X, a, b, h, i, x and
-            % '-' = the null etype in Antelope
-            % AVO Classification Codes
-            % 'a' = Volcano-Tectonic (VT)
-            % 'b' = Low-Frequency (LF)
-            % 'h' = Hybrid
-            % 'E' = Regional-Tectonic
-            % 'T' = Teleseismic
-            % 'i' = Shore-Ice
-            % 'C' = Calibrations
-            % 'o' = Other non-seismic
-            % 'x' = Cause unknown
-            % But AVO catalog also contains A, B, G, L, O, R, X
-            % Assuming A, B, O and X are same as a, b, o and x, that still
-            % leaves G, L and R
 
-            etype0=char(etype0);
-            etype(etype0=='a')='t';
-            etype(etype0=='A')='t';
-            etype(etype0=='b')='l';
-            etype(etype0=='B')='l';
-            etype(etype0=='-')='u';
-            etype(etype0==' ')='u';
-            etype(etype0=='E')='R';
-            etype(etype0=='T')='D';
-            etype(etype0=='x')='u';
-            etype(etype0=='X')='u';
-            etype(etype0=='O')='o';
-            
+        % convert etypes?
+        % AVO Classification Codes
+        % 'a' = Volcano-Tectonic (VT)
+        % 'b' = Low-Frequency (LF)
+        % 'h' = Hybrid
+        % 'E' = Regional-Tectonic
+        % 'T' = Teleseismic
+        % 'i' = Shore-Ice
+        % 'C' = Calibrations
+        % 'o' = Other non-seismic
+        % 'x' = Cause unknown
+        % But AVO catalog also contains A, B, G, L, O, R, X
+        % Assuming A, B, O and X are same as a, b, o and x, that still
+        % leaves G, L and R
+
+
+
+        % get largest mag & magtype for this mag
+        [mag,magind] = max([ml mb ms], [], 2);
+        magtypes = {'ml';'mb';'ms'};
+        magtype = magtypes(magind);
+        
+        if NETMAG_TABLE_PRESENT
+            % loop over each origin and find largest mag for each orid in
+            % netmag
+            dbn = dblookup_table(dbopen(dbpath, 'r'), 'netmag');
+            numrecs = dbquery(dbn,'dbRECORD_COUNT');
+            if numrecs > 0
+                [nevid, norid, nmagtype, nmag] = dbgetv(dbn, 'evid', 'orid', 'magtype', 'magnitude');
+            end
+            for oi = 1:numel(orid)
+                oin = find(norid == orid(oi));
+                [mmax, indmax] = max(nmag(oin));
+                if mmax > mag(oi)
+                    mag(oi) = mmax;
+                    magtype{oi} = nmagtype(oin(indmax));
+                end
+            end
         end
-        etype = char(etype); % sometimes etype gets converted to ASCII numbers
-
-        % get mag
-        mag = max([ml mb ms], [], 2);
+            
 
         % convert time from epoch to Matlab datenumber
         dnum = epoch2datenum(time);
@@ -490,14 +514,12 @@ function self = load_aef(varargin)
     % Process input arguments
     p = inputParser;
     p.addParamValue('dbpath', '', @isstr);
-    p.addParamValue('snum', 0, @isnumeric);  
-    p.addParamValue('enum', now, @isnumeric);
-    p.addParamValue('minmag', [], @isnumeric);
-    p.addParamValue('region', [], @isnumeric);
+    p.addParamValue('startTime', 0, @isnumeric);  
+    p.addParamValue('endTime', now, @isnumeric);
+    p.addParamValue('minimumMagnitude', [], @isnumeric);
     p.addParamValue('subclass', '*', @ischar);
-    p.addParamValue('mindepth', [], @isnumeric);
-    p.addParamValue('maxdepth', [], @isnumeric);
-    p.addParamValue('RUNMODE', 'fast', @isstr);
+    p.addParamValue('minimumDepth', [], @isnumeric);
+    p.addParamValue('maximumDepth', [], @isnumeric);
     p.parse(varargin{:});
     
     fields = fieldnames(p.Results);
@@ -519,13 +541,13 @@ function self = load_aef(varargin)
         [yyyy, mm] = datevec(lnum);
 
         % concatenate catalogs
-        obj0 = import_aef_file(dbpath,yyyy,mm,snum,enum,p.Results.RUNMODE);
+        Object0 = import_aef_file(dbpath,yyyy,mm,snum,enum,p.Results.RUNMODE);
         if exist('self', 'var')
-            self = self + obj0;
+            self = self + Object0;
         else
-            self = obj0;
+            self = Object0;
         end
-        clear obj0;
+        clear Object0;
         
         % ready for following month
         lnum=datenum(yyyy,mm+1,1);
@@ -536,9 +558,9 @@ function self = load_aef(varargin)
     if ~isempty(self.dnum)
 
         % cut data according to threshold mag
-        if ~isempty(minmag)
+        if ~isempty(minimumMagnitude)
             disp('Applying minimum magnitude filter')
-            m = find(self.mag > minmag);
+            m = find(self.mag > minimumMagnitude);
             fprintf('Accepting %d events out of %d\n',length(m),length(self.dnum));
             self.event_list = self.event_list(m);
         end    
@@ -550,62 +572,6 @@ end
 function self = import_aef_file(dirpath, yyyy, mm, snum, enum, RUNMODE)
 % readEvents.import_aef_file Read an individual aef_file. Used only by
 % readEvents.load_aef
-    self = [];
-    fprintf('\nAPPEND SEISAN %4d-%02d\n',yyyy,mm)
-    datfile = fullfile(dirpath,sprintf('%4d%02d.dat',yyyy,mm));
-    if exist(datfile,'file') 
-        disp(['loading ',datfile]);
-        [yr,mn,dd,hh,mi,ss,etype0,mag0] = textread(datfile,'%d %d %d %d %d %d %s %f');
-        dnum = datenum(yr,mn,dd,hh,mi,ss)';
-        mag = mag0';
-        etype = char(etype0)';
-        l = length(dnum);      
-        
-        if strcmp(RUNMODE, 'slow')
-            % SLOW MODE
-            % Create an Event object for each dnum in the list
-            event_list = [];
-            for i=1:l % Loop over each element in vector
-                if dnum(i)>=snum & dnum(i)<=enum
-                    disp(sprintf('%s %5.2f',datestr(dnum(i)), mag(i)))
-                    if mag(i) < -3.0
-                        mag(i) = NaN;
-                    end
-                    magnitude_obj = Netmag(mag(i));
-                    origin_obj = Origin(dnum(i), NaN, NaN, NaN, ...
-                            'orid', str2num(sprintf('%4d%02d_%05d',yyyy,mm,i)), ...
-                            'netmags', [magnitude_obj], ...
-                            'etype', etype(i) ...
-                        );
-                    event_list = [ ...
-                        event_list ...
-                        Event( ...
-                            [origin_obj], ...
-                            'evid', str2num(sprintf('%4d%02d_%05d',yyyy,mm,i)) ...
-                            ) ...
-                        ];
-                end
-            end
-
-            % CREATE CATALOG OBJECT
-            self = Catalog_full( event_list );
-        elseif strcmp(RUNMODE, 'fast')
-            % FAST MODE
-            self = Catalog_lite([], [], [], dnum, mag, etype); 
-        end
-        st = dbstack;
-        self = self.addfield('method', st(1).name);
-        self = self.addfield('dbpath', dirpath);
-    else
-        disp([datfile,' not found']);
-    end
-
-end
-
-%% ---------------------------------------------------
-
-function self = seisan(varargin)
-    % readEvents.seisan
     %   Wrapper for loading dat files generated from Seisan S-FILES (REA) databases.
     %   DAT file name is like YYYYMM.dat
     %   DAT file format is like:
@@ -634,20 +600,37 @@ function self = seisan(varargin)
     %         week or month to month, and for real-time alarm
     %         messages about pyroclastic flow signals where an
     %         indication of event size was very important.
-    %
-    %  
+
+    self = [];
+    fprintf('\nAPPEND SEISAN %4d-%02d\n',yyyy,mm)
+    datfile = fullfile(dirpath,sprintf('%4d%02d.dat',yyyy,mm));
+    if exist(datfile,'file') 
+        disp(['loading ',datfile]);
+        [yr,mn,dd,hh,mi,ss,etype0,mag0] = textread(datfile,'%d %d %d %d %d %d %s %f');
+        dnum = datenum(yr,mn,dd,hh,mi,ss)';
+        mag = mag0';
+        etype = char(etype0)';
+        self = Catalog(dnum, [], [], [], mag, {}, etype); 
+    else
+        disp([datfile,' not found']);
+    end
+
+end
+
+%% ---------------------------------------------------
+
+function self = seisan(varargin)
+    % readEvents.seisan
 
     % Process input arguments
     p = inputParser;
     p.addParamValue('dbpath', '', @isstr);
-    p.addParamValue('snum', 0, @isnumeric);  
-    p.addParamValue('enum', now, @isnumeric);
-    p.addParamValue('RUNMODE', 'fast', @isstr);
+    p.addParamValue('startTime', 0, @isnumeric);  
+    p.addParamValue('endTime', now, @isnumeric);
     p.parse(varargin{:});
     fields = fieldnames(p.Results);
     for i=1:length(fields)
         field=fields{i};
-        % val = eval(sprintf('p.Results.%s;',field));
         val = p.Results.field;
         eval(sprintf('%s = val;',field));
     end
@@ -662,11 +645,9 @@ function self = seisan(varargin)
     sfiles = list_sfiles(dbpath, snum, enum);
     
     % loop over sfiles
-
     for i=1:length(sfiles)
         % read 
         disp(sprintf('Processing %s',fullfile(sfiles(i).dir, sfiles(i).name)));
-
         thiss = read_sfile(sfiles(i).dir, sfiles(i).name, '*', '*');
 
         try
@@ -676,7 +657,7 @@ function self = seisan(varargin)
             thiss
             warning('Wrong number of fields?')
         end
-s(i)
+
         % add to catalog
         dnum(i)  = s(i).dnum;
         etype(i) = s(i).subclass;
@@ -684,7 +665,7 @@ s(i)
         lon(i) = s(i).longitude;
         depth(i) = s(i).depth;
         s(i).magnitude
-        % SKELETON
+        % SCAFFOLD
         mag(i) = NaN;
         try
             sfile_mags = [s(i).magnitude.value];
@@ -694,62 +675,13 @@ s(i)
             end
         end
 
-        % also do something with parameters spdur, bbdur, amp, eng, pkf,
-        % station
+        % SCAFFOLD also use durations (bbdur) and ampengfft info
         % Compute a magnitude from amp & eng, but need to know where
         % stations are. I can save these as MA and ME, to distinguish from
         % Ml, Ms, Mb, Mw if those exist
-%         catch
-%             i
-%             %s(i) = struct();
-%             disp('- failed');
-%             dnum(i) = NaN;
-%             etype(i) = 'u';
-%         end
     end
-
-    l = length(dnum);      
-
-    if strcmp(RUNMODE, 'slow')
-        % SLOW MODE
-        % Create an Event object for each dnum in the list
-        event_list = [];
-        for i=1:l % Loop over each element in vector
-            if dnum(i)>=snum & dnum(i)<=enum
-                [yyyy,mm]=datevec(dnum(i));
-                disp(sprintf('%s %5.2f',datestr(dnum(i)), mag(i)))
-                if mag(i) < -3.0
-                    mag(i) = NaN;
-                end
-                magnitude_obj = Netmag(mag(i));
-                origin_obj = Origin(dnum(i), lon(i), lat(i), depth(i), ...
-                        'orid', str2num(sprintf('%4d%02d%05d',yyyy,mm,i)), ...
-                        'etype', etype(i), ...
-                        'netmags', [magnitude_obj] ...
-                    );
-                event_list = [ ...
-                    event_list ...
-                    Event( ...
-                        [origin_obj], ...
-                        'evid', str2num(sprintf('%4d%02d%05d',yyyy,mm,i)) ...
-                        ) ...
-                    ];
-            end
-        end
-
-        % CREATE CATALOG OBJECT
-        self = Catalog_full(event_list);
-    elseif strcmp(RUNMODE, 'fast')
-        % FAST MODE
-        self = Events(dnum, [], [], [], mag, etype);
-    end
-    st = dbstack;
-    self = self.addfield('method', st(1).name);
-    self = self.addfield('dbpath', dbpath);
-    self = self.addfield('sfile', s);
-    wavdbpath = strrep(dbpath, 'REA', 'WAV');
-    ds = datasource('seisan', wavdbpath);
-    self = self.addfield('datasource', ds);
+    magtype = {};
+    self = Catalog(dnum, lon, lat, depth, mag, magtype, etype);
 end
 
 %% ---------------------------------------------------
@@ -942,7 +874,7 @@ function s=read_sfile(sfiledir, sfilebase,sta,chan);
                                 aeflinenum = aeflinenum + 1;
                                 thissta = strtrim(tline(7:10));
                                 thischan = strtrim(tline(12:15));
-                                aef.scnl(aeflinenum) = scnlobject(thissta, thischan);
+                                aef.scnl(aeflinenum) = scnlObject(thissta, thischan);
                                 try
                                     %aef.amp(aeflinenum)=str2num(tline(20:27));
                                     aef.amp(aeflinenum)=str2num(tline(18:25));
@@ -1074,7 +1006,7 @@ end
 function self=vdap(filename)
 %readEvents.vdap read Hypoellipse summary files and PHA pickfiles
 %   based on Montserrat analog network
-%   cobj = read_vdap(filename) will read the catalog file, and create a
+%   cObject = read_vdap(filename) will read the catalog file, and create a
 %   Catalog object
 %
 %   Summary file has lines like:
@@ -1122,7 +1054,7 @@ function self=sru(filename)
 %readEvents.sru read a catalog sent by Seismic Research Unit, University of West
 %Indies
 %   Based on a Dominica catalog sent to Ophelia George
-%   cobj = read_SRU(filename) will read the catalog file, and create a
+%   cObject = read_SRU(filename) will read the catalog file, and create a
 %   Catalog object
 %
 %   File has lines like:
@@ -1224,4 +1156,11 @@ function out = ensure_dateformat(t)
    % if ischar (endt), endt = {endt}; end;
    % startt = reshape(datenum(startt(:)),size(startt));
    % endt = reshape(datenum(endt(:)),size(endt));
+end
+
+function found = strfindbool(haystack, needle)
+    found = strfind(haystack, needle);
+    if isempty(found)
+        found = false;
+    end
 end

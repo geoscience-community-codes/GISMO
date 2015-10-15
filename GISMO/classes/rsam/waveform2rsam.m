@@ -1,5 +1,5 @@
-function s = rsam(w, method, samplingPeriod)
-%RSAM create an RSAM-like object from a waveform object
+function s = waveform2rsam(w, method, samplingPeriod)
+%WAVEFORM2RSAM create an RSAM-like object from a waveform object
 %   s = rsam(waveform, method, samplingPeriod)
 %
 %   Input Arguments
@@ -18,15 +18,15 @@ function s = rsam(w, method, samplingPeriod)
 %
 %
 %   Examples:
-%       s = rsam(w) Each sample in the RSAM object is computed from a 60-s
+%       s = waveform2rsam(w) Each sample in the RSAM object is computed from a 60-s
 %       window of data. Successive windows do not overlap. Each window is
 %       detrended, NaN's replaced with mean value. Then the mean absolute
 %       value - i.e. the mean amplitude - is taken.
 %
-%       s = rsam(w, 'rms') As above, but the root-mean-square absolute value
+%       s = waveform2rsam(w, 'rms') As above, but the root-mean-square absolute value
 %       is taken.
 %
-%       s = rsam(w, 'max', 1.0) As above, but the max absolute value is
+%       s = waveform2rsam(w, 'max', 1.0) As above, but the max absolute value is
 %       taken, and the time window is 1s rather than 60s.
 %
 % Glenn Thompson 2014/10/28

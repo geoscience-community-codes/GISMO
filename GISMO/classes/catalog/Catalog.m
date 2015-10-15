@@ -1,8 +1,7 @@
-%EVENTS the blueprint for Events objects in GISMO
-% An Events object is a container for event metadata for events any type of
-% seismic event catalog
-% See also EventRate, readEvents, Events_Cookbook
-classdef Events
+%CATALOG the blueprint for Catalog objects in GISMO
+% An Catalog object is a container for event metadata
+% See also EventRate, readEvents, Catalog_Cookbook
+classdef Catalog
 
     properties(GetAccess = 'public', SetAccess = 'public')
         time = [];
@@ -32,9 +31,9 @@ classdef Events
 
     methods
 
-        function obj = Events(time, lon, lat, depth, mag, magtype, etype, varargin)
-            %Events.Events constructor for Events object
-            % eventsObject = Events(lat, lon, depth, time, mag, etype, varargin)
+        function obj = Catalog(time, lon, lat, depth, mag, magtype, etype, varargin)
+            %Catalog.Catalog constructor for Catalog object
+            % catalogObject = Catalog(lat, lon, depth, time, mag, etype, varargin)
             
             % Parse required, optional and param-value pair arguments,
             % set default values, and add validation conditions
@@ -67,52 +66,52 @@ classdef Events
 
 %% ---------------------------------------------------
 
-        function save(eventsObject, matfile)
-            %Events.save save an eventsObject to a MAT file
-            save eventsObject matfile
+        function save(catalogObject, matfile)
+            %Catalog.save save an catalogObject to a MAT file
+            save catalogObject matfile
         end
 
 %% ---------------------------------------------------
-        function eventsObject = combine(eventsObject1, eventsObject2)
-            %Events.combine combine two Events objects
-            % eventsObject = combine(eventsObject1, eventsObject2)
+        function catalogObject = combine(catalogObject1, catalogObject2)
+            %Catalog.combine combine two Catalog objects
+            % catalogObject = combine(catalogObject1, catalogObject2)
 
-            eventsObject = [];
+            catalogObject = [];
 
             if nargin<2
                 return
             end
             
-            if isempty(eventsObject1)
-                eventsObject = eventsObject2;
+            if isempty(catalogObject1)
+                catalogObject = catalogObject2;
                 return
             end
             
-            if isempty(eventsObject2)
-                eventsObject = eventsObject1;
+            if isempty(catalogObject2)
+                catalogObject = catalogObject1;
                 return
             end            
 
-            if isempty(eventsObject1.time) & isempty(eventsObject2.time)
+            if isempty(catalogObject1.time) & isempty(catalogObject2.time)
                 return
             end
 
-            if isempty(eventsObject1.time)
-                eventsObject = eventsObject2;  
-            elseif isempty(eventsObject2.time)
-                eventsObject = eventsObject1;
+            if isempty(catalogObject1.time)
+                catalogObject = catalogObject2;  
+            elseif isempty(catalogObject2.time)
+                catalogObject = catalogObject1;
             else
-                eventsObject = eventsObject1; 
+                catalogObject = catalogObject1; 
                 props = {'time';'mag';'lat';'lon';'depth';'etype'};
                 for i=1:length(props)
                     prop = props{i};
-                    eventsObject.(prop) = [eventsObject1.(prop) eventsObject2.(prop)];
+                    catalogObject.(prop) = [catalogObject1.(prop) catalogObject2.(prop)];
                 end
             end
         end
         
-%         function write(eventsObject, dbpath)
-%             % Events.write Write a Catalog object to an Antelope
+%         function write(catalogObject, dbpath)
+%             % Catalog.write Write a catalogObject object to an Antelope
 %             % CSS3.0 origin table. Requires Antelope & Antelope Toolbox.
 %             
 %             if admin.antelope_exists
@@ -120,12 +119,12 @@ classdef Events
 %                 % See if the database already exists
 %                 db = dbopen(dbpath, 'r+');
 %                 db = dblookup_table(db, 'origin')
-%                 for i=1:numel(eventsObject.time)
+%                 for i=1:numel(catalogObject.time)
 %                     %db.record = i-1;
 %                     db.record = dbaddnull(db);
 %                     orid = dbnextid(db, 'orid');
 %                     evid = dbnextid(db, 'evid');
-%                     dbputv(db, 'orid', orid, 'evid', evid, 'time', datenum2epoch(eventsObject.time(i)), 'lat', eventsObject.lat(i), 'lon', eventsObject.lon(i), 'depth', eventsObject.depth(i), 'ml', eventsObject.mag(i));
+%                     dbputv(db, 'orid', orid, 'evid', evid, 'time', datenum2epoch(catalogObject.time(i)), 'lat', catalogObject.lat(i), 'lon', catalogObject.lon(i), 'depth', catalogObject.depth(i), 'ml', catalogObject.mag(i));
 %                 end
 %                 dbclose(db)
 %             else
@@ -137,7 +136,7 @@ classdef Events
 
 %         function w=towaveform(obj)
 %             % WHAT THE HELL IS THIS - SOMETHING TO DO WITH SEISAN - PERHAPS
-%             % I NEED NEW CLASS EVENTS_SEISAN
+%             % I NEED NEW CLASS Catalog_SEISAN
 %              w{1,1} = waveform();
 %              if strcmp(get(obj,'method'), 'load_seisandb')
 %                 % SEISAN FILE
@@ -167,8 +166,8 @@ classdef Events
 %         end
         
 %% ---------------------------------------------------
-		function plot(eventsObject, varargin)
-            %Events.plot plot hypocenters in map view and cross-sections
+		function plot(catalogObject, varargin)
+            %Catalog.plot plot hypocenters in map view and cross-sections
             % 
             %
             %   Optional name/value pairs:
@@ -176,7 +175,7 @@ classdef Events
             %     5)            
             
             % Glenn Thompson 2014/06/01
-            if all(isnan(eventsObject.lat))
+            if all(isnan(catalogObject.lat))
                 warning('No hypocenter data to plot');
                 return
             end
@@ -186,17 +185,17 @@ classdef Events
             nsigma = p.Results.nsigma;
             
 			% change region
-            region = get_region(eventsObject, nsigma);
+            region = get_region(catalogObject, nsigma);
       
             % Compute Marker Size
-            symsize = get_symsize(eventsObject);
+            symsize = get_symsize(catalogObject);
       
 			figure;
             set(gcf,'Color', [1 1 1]);
             
 			% lon-lat plot
 			axes('position',[0.05 0.45 0.5 0.5]);
-            scatter(eventsObject.lon, eventsObject.lat, symsize);
+            scatter(catalogObject.lon, catalogObject.lat, symsize);
 			grid on;
             %set(gca, 'XLim', [region(1) region(2)]);
             %set(gca, 'YLim', [region(3) region(4)]);
@@ -204,7 +203,7 @@ classdef Events
 
 			% depth-longitude
 			axes('position',[0.05 0.05 0.5 0.35]);
-            scatter(eventsObject.lon, eventsObject.depth, symsize);
+            scatter(catalogObject.lon, catalogObject.depth, symsize);
 			ylabel('Depth (km)');
 			xlabel('Longitude');
 			grid on;
@@ -213,7 +212,7 @@ classdef Events
 
 			% depth-lat
 			axes('position',[0.6 0.45 0.35 0.5]);
-            scatter(eventsObject.depth, eventsObject.lat, symsize);
+            scatter(catalogObject.depth, catalogObject.lat, symsize);
 			xlabel('Depth (km)');
 			%set(gca, 'XDir', 'reverse');
 			ylabel('Latitude');
@@ -222,16 +221,16 @@ classdef Events
 
         end
 %% ---------------------------------------------------        
-		function plot3(eventsObject, varargin)
-            %Events.plot3 plot hypocenters in 3-D
-            %   eventsObject.plot3()
+		function plot3(catalogObject, varargin)
+            %Catalog.plot3 plot hypocenters in 3-D
+            %   catalogObject.plot3()
             %
             %   Optional name/value pairs:
             %     'nsigma' - controls how zoomed-in the axes are (default
             %     5)            
             
             % Glenn Thompson 2014/06/01
-            if all(isnan(eventsObject.lat))
+            if all(isnan(catalogObject.lat))
                 warning('No hypocenter data to plot');
                 return
             end
@@ -241,15 +240,15 @@ classdef Events
             nsigma = p.Results.nsigma;            
             
 			% change region
-            region = get_region(eventsObject, nsigma);
+            region = get_region(catalogObject, nsigma);
       
             % Compute Marker Size
-            symsize = get_symsize(eventsObject);
+            symsize = get_symsize(catalogObject);
             
             % 3D plot
             figure
             set(gcf,'Color', [1 1 1]);
-            scatter3(eventsObject.lon, eventsObject.lat, eventsObject.depth, symsize);
+            scatter3(catalogObject.lon, catalogObject.lat, catalogObject.depth, symsize);
 			set(gca, 'ZDir', 'reverse');
 			grid on;
             set(gca, 'XLim', [region(1) region(2)]);
@@ -261,24 +260,24 @@ classdef Events
         end
   %% ---------------------------------------------------      
         %% PLOT_TIME
-        function plot_time(eventsObject); 
+        function plot_time(catalogObject); 
             %PLOT_TIME plot magnitude and depth against time
             %   catlog_object.plot_time()
             
             % Glenn Thompson 2014/06/01
             
-            symsize = get_symsize(eventsObject); 
+            symsize = get_symsize(catalogObject); 
             
-            xlims = [floor(snum(eventsObject)) ceil(enum(eventsObject))];
+            xlims = [floor(snum(catalogObject)) ceil(enum(catalogObject))];
 
 			% time-depth
-            if all(isnan(eventsObject.depth))
+            if all(isnan(catalogObject.depth))
                 warning('No depth data to plot');
             else
                 figure;
                 set(gcf,'Color', [1 1 1]);
                 subplot(2,1,1);
-                scatter(eventsObject.time, eventsObject.depth, symsize);
+                scatter(catalogObject.time, catalogObject.depth, symsize);
                 set(gca, 'XLim', xlims);
                 datetick('x');
                 xlabel('Date');
@@ -289,11 +288,11 @@ classdef Events
                 % time-mag
                 subplot(2,1,2);
             end
-            if all(isnan(eventsObject.mag))
+            if all(isnan(catalogObject.mag))
                 warning('No magnitude data to plot');
             else
-                scatter(eventsObject.time, eventsObject.mag, symsize);
-                %stem(eventsObject.time, eventsObject.mag);
+                scatter(catalogObject.time, catalogObject.mag, symsize);
+                %stem(catalogObject.time, catalogObject.mag);
                 set(gca, 'XLim', xlims);
                 datetick('x');
                 xlabel('Date');
@@ -302,27 +301,15 @@ classdef Events
             end
         end
 
-  %% ---------------------------------------------------              
-        function helenaplot(obj)
-            for c=1:length(obj)
-                figure(gcf+1)
-                set(gcf,'Color', [1 1 1]);
-                [ax, h1, h2] = plotyy(obj(c).time, cumsum(obj(c).mag), obj(c).time, cumsum(obj(c).energy), @plot, @plot);
-                datetick(ax(1), 'x','keeplimits');
-                datetick(ax(2), 'x','keeplimits');
-                set(ax(1), 'YLabel', 'Cumulative Magnitude');
-                set(ax(2), 'YLabel', 'Cumulative Energy');
-            end
-        end
-        
+          
 %% ---------------------------------------------------        
         %% OTHER MISC PLOTTING CODES
-%         function mapexample(eventsObject)
+%         function mapexample(catalogObject)
 %             % simple epicentral plot
-%             latmin = min(eventsObject1.lat) - latrange/20;
-% 			lonmin = min(eventsObject1.lon) - lonrange/20;
-% 			latmax = max(eventsObject1.lat) + latrange/20;
-% 			lonmax = max(eventsObject1.lon) + lonrange/20;
+%             latmin = min(catalogObject1.lat) - latrange/20;
+% 			lonmin = min(catalogObject1.lon) - lonrange/20;
+% 			latmax = max(catalogObject1.lat) + latrange/20;
+% 			lonmax = max(catalogObject1.lon) + lonrange/20;
 %             figure;
 %             close all
 %             h = worldmap([latmin latmax],[lonmin lonmax]);
@@ -341,16 +328,16 @@ classdef Events
 %             % textm(64.83778, -147.71639, 'Fairbanks')
 %             % plotm(64.83778, -147.71639, 'ro')
 % 
-%             plotm(eventsObject.lat, eventsObject.lon, '*');
+%             plotm(catalogObject.lat, catalogObject.lon, '*');
 %         end
 %% ---------------------------------------------------
-        function bvalue(eventsObject, mcType)
+        function bvalue(catalogObject, mcType)
             %BVALUE evaluate b-value, a-value and magnitude of completeness
             % of an earthquake catalog stored in a Catalog object.
             %
-            % BVALUE(eventsObject, MCTYPE) produces a Gutenberg-Richter type plot 
+            % BVALUE(catalogObject, MCTYPE) produces a Gutenberg-Richter type plot 
             %    with the best fit line and display of b-,a-values and Mc 
-            %    for the catalog object eventsObject. MCTYPE is a number from 1-5 
+            %    for catalogObject. MCTYPE is a number from 1-5 
             %    to select the algorithm used for calculation of the 
             %    magnitude of completeness. Options are:
             %
@@ -382,7 +369,7 @@ classdef Events
 
             if nargin < 2
                 disp('--------------------------------------------------------')
-                disp('ERROR: Usage is: Catalog.bvalue(mcType). mcType not specified')
+                disp('Usage is: catalogObject.bvalue(mcType)')
                 disp('--------------------------------------------------------')
                 disp('mcType can be:')
                 disp('1: Maximum curvature')
@@ -394,9 +381,9 @@ classdef Events
             end
 
             % form magnitude vector - removing any NaN values with find
-            good_magnitude_indices = find(eventsObject.mag > -3.0);
-            mag = eventsObject.mag(good_magnitude_indices);
-            %MIN AND MAX MAGNITUDE IN CATALOG
+            good_magnitude_indices = find(catalogObject.mag > -3.0);
+            mag = catalogObject.mag(good_magnitude_indices);
+            %MIN AND MAX MAGNITUDE IN catalogObject
             minimum_mag = min(mag);
             maximum_mag = max(mag);
 
@@ -552,7 +539,7 @@ classdef Events
             rect=[0 0 1 1];
             h2=axes('position',rect);
             set(h2,'visible','off');
-            a0 = aw-log10((max(eventsObject.time)-min(eventsObject.time))/365);
+            a0 = aw-log10((max(catalogObject.time)-min(catalogObject.time))/365);
 
             text(.53,.88, ['b-value = ',tt1,' +/- ',tt2,',  a value = ',num2str(aw,3)],'FontSize',12);
             text(.53,.85,sol_type,'FontSize',12 );
@@ -560,41 +547,41 @@ classdef Events
         end 
 %% ---------------------------------------------------        
         %% SUBCLASSIFY
-        function c = subclassify(eventsObject, subclasses)
-            % Events.subclassify Split eventsObject into multiple
-            % eventsObjects where each one contains only a single etype
+        function c = subclassify(catalogObject, subclasses)
+            % Catalog.subclassify Split catalogObject into multiple
+            % catalogObjects where each one contains only a single etype
             % (event type). THIS NEED CHANGING BECAUSE ETYPE IS NOW A CELL
             % ARRAY OF STRINGS
             
-            eventsObjects = subclassify(eventsObject, subclasses)
+            catalogObjects = subclassify(catalogObject, subclasses)
             if strcmp(subclasses, '*')==0
                 for i = 1:length(subclasses);
-                    c(i) = eventsObject;
+                    c(i) = catalogObject;
                     subclass = subclasses(i);
-                    index = strfind(eventsObject.etype, subclass); % previously findstr
-                    if numel(eventsObject.lat)==numel(eventsObject.etype)
-                        c(i).lat = eventsObject.lat(index);
-                        c(i).lon = eventsObject.lon(index);
-                        c(i).depth = eventsObject.depth(index);
+                    index = strfind(catalogObject.etype, subclass); % previously findstr
+                    if numel(catalogObject.lat)==numel(catalogObject.etype)
+                        c(i).lat = catalogObject.lat(index);
+                        c(i).lon = catalogObject.lon(index);
+                        c(i).depth = catalogObject.depth(index);
                     end
-                    c(i).time = eventsObject.time(index);
-                    c(i).mag = eventsObject.mag(index);
-                    c(i).etype = eventsObject.etype(index);
+                    c(i).time = catalogObject.time(index);
+                    c(i).mag = catalogObject.mag(index);
+                    c(i).etype = catalogObject.etype(index);
                 end
             end     
         end
 %% ---------------------------------------------------         
-        function erobj=eventrate(eventsObject, varargin)
-            %eventsObject.eventrate    
-            % Create an EventRate object from an Events object
+        function erobj=eventrate(catalogObject, varargin)
+            %catalogObject.eventrate    
+            % Create an EventRate object from an Catalog object
             % object, with a binsize determined automatically.
-            %   erobj = eventsObject.eventrate()
+            %   erobj = catalogObject.eventrate()
             %
             % Specify a binsize (in days):
-            %   erobj = eventsObject.eventrate('binsize', 1/24)
+            %   erobj = catalogObject.eventrate('binsize', 1/24)
             %
             % Specify a stepsize (in days). Must be <= stepsize.
-            %   erobj = eventsObject.eventrate(..., 'stepsize',1/24) 
+            %   erobj = catalogObject.eventrate(..., 'stepsize',1/24) 
                          
             p = inputParser;
             p.addParamValue('binsize', 0, @isnumeric);
@@ -603,10 +590,10 @@ classdef Events
             binsize = p.Results.binsize;
             stepsize = p.Results.stepsize;
             
-            for i=1:numel(eventsObject)
+            for i=1:numel(catalogObject)
             
                 if ~(binsize>0)
-                    binsize = autobinsize(eventsObject(i));
+                    binsize = autobinsize(catalogObject(i));
                 end
                 if ~(stepsize>0)
                     stepsize = binsize;
@@ -616,7 +603,7 @@ classdef Events
                    return;
                 end          
                 if ~(binsize>0)
-                    binsize = autobinsize(eventsObject(i).enum-eventsObject(i).snum);
+                    binsize = autobinsize(catalogObject(i).enum-catalogObject(i).snum);
                 end
                 if ~(stepsize>0)
                     stepsize = binsize;
@@ -627,63 +614,63 @@ classdef Events
                 end 
 
                 % Find out how many event types we have
-                etypes = unique(eventsObject(i).etype);      
+                etypes = unique(catalogObject(i).etype);      
 
                 % bin the data
                 [time, counts, energy, smallest_energy, ...
-                    median_energy, std, median_time_interval] = ...
-                    matlab_extensions.bin_irregular(eventsObject(i).time, ...
-                    magnitude.mag2eng(eventsObject(i).mag), ...
-                    binsize, eventsObject(i).snum, eventsObject(i).enum, stepsize);
+                    biggest_energy, median_energy, stdev, median_time_interval] = ...
+                    bin_irregular(catalogObject(i).time, ...
+                    magnitude.mag2eng(catalogObject(i).mag), ...
+                    binsize, catalogObject(i).snum, catalogObject(i).enum, stepsize);
 
                 % create the Event Rate object
-                total_counts = length(eventsObject(i).time);
+                total_counts = length(catalogObject(i).time);
                 numbins = numel(time);
                 erobj(i) = EventRate(time, counts, energy, median_energy, ...
                     smallest_energy, biggest_energy, median_time_interval, total_counts, ...
-                    eventsObject(i).snum, eventsObject(i).enum, etypes, binsize, stepsize, numbins);
+                    catalogObject(i).snum, catalogObject(i).enum, etypes, binsize, stepsize, numbins);
             end
         end
 %% --------------------------------------------------- 
         %% PLOT COUNTS / EVENTRATE
-        function plot_counts(eventsObject)
-            %Events.plot_counts Plot event counts - i.e. number of events
+        function plot_counts(catalogObject)
+            %Catalog.plot_counts Plot event counts - i.e. number of events
             %per unit time. See also the EventRate class.
-            erobj = eventsObject.eventrate();
+            erobj = catalogObject.eventrate();
             erobj.plot()
         end
         
 %% ---------------------------------------------------         
         %% PLOT Peak_rate and Max_mag
-        function plotprmm(eventsObject)
-            %Events.plotprmm Plot the peak rate and maximum magnitude of a
+        function plotprmm(catalogObject)
+            %Catalog.plotprmm Plot the peak rate and maximum magnitude of a
             %set of events
             figure
-            symsize = get_symsize(eventsObject);            
-            if all(isnan(eventsObject.mag))
+            symsize = get_symsize(catalogObject);            
+            if all(isnan(catalogObject.mag))
                 warning('No magnitude data to plot');
             else
                 
                 % plot magnitudes
-                subplot(2,1,1), scatter(eventsObject.time, eventsObject.mag, symsize);
-                %stem(eventsObject.time, eventsObject.mag);
-                set(gca, 'XLim', [floor(eventsObject.snum) ceil(eventsObject.enum)]);
+                subplot(2,1,1), scatter(catalogObject.time, catalogObject.mag, symsize);
+                %stem(catalogObject.time, catalogObject.mag);
+                set(gca, 'XLim', [floor(catalogObject.snum) ceil(catalogObject.enum)]);
                 datetick('x');
                 xlabel('Date');
                 ylabel('Magnitude');
                 grid on;
                 
                 % put 'MM' label by max mag event
-                [mm, mmi] = max(eventsObject.mag);
-                text(eventsObject.time(mmi), eventsObject.mag(mmi), 'MM','color','r');
-                disp(sprintf('MM=%.1f occurs at %.1f%% of time series',mm,100*(eventsObject.time(mmi) - eventsObject.snum)/(eventsObject.enum-eventsObject.snum)));
+                [mm, mmi] = max(catalogObject.mag);
+                text(catalogObject.time(mmi), catalogObject.mag(mmi), 'MM','color','r');
+                disp(sprintf('MM=%.1f occurs at %.1f%% of time series',mm,100*(catalogObject.time(mmi) - catalogObject.snum)/(catalogObject.enum-catalogObject.snum)));
                 
                 % plot event rate in 100 equal bins
-                days = eventsObject.enum - eventsObject.snum;
+                days = catalogObject.enum - catalogObject.snum;
                 binsize = days/100;
-                erobj = eventsObject.eventrate('binsize',binsize);
+                erobj = catalogObject.eventrate('binsize',binsize);
                 subplot(2,1,2),plot(erobj.time, erobj.counts);
-                set(gca, 'XLim', [floor(eventsObject.snum) ceil(eventsObject.enum)]);
+                set(gca, 'XLim', [floor(catalogObject.snum) ceil(catalogObject.enum)]);
                 datetick('x');
                 xlabel('Date');
                 ylabel('Event Rate');
@@ -697,8 +684,8 @@ classdef Events
         end
 %% ---------------------------------------------------         
 %         function eev(obj)
-%             % Events.eev - Browse an Events object one event at a time.
-%             %  eventsObject.eev() Browse through an events object one event
+%             % Catalog.eev - Browse an Catalog object one event at a time.
+%             %  catalogObject.eev() Browse through an Catalog object one event
 %             %  at a time in a similar way to the Seisan program 'eev'.
 %             %. Based on the Seisan program of the same name
 %             PRETRIGGER = 10/86400;
@@ -707,7 +694,7 @@ classdef Events
 % 
 %             while 1,
 %                 
-%                 % don't beyond start or end of this catalog object
+%                 % don't beyond start or end of this catalogObject object
 %                 if eventnum<1
 %                     eventnum=1;
 %                 end
@@ -835,12 +822,12 @@ classdef Events
 %         
 % %% ---------------------------------------------------
 
-        %% WRITE CATALOG TO AN ANTELOPE/DATASCOPE css3.0 or aefsam0.1 DATABASE
-        function write(eventsObject, outformat, outpath, schema)
-            %Events.write Write an Events object to disk
+        %% WRITE catalogObject TO AN ANTELOPE/DATASCOPE css3.0 or aefsam0.1 DATABASE
+        function write(catalogObject, outformat, outpath, schema)
+            %Catalog.write Write an Catalog object to disk
             %
-            % eventsObject.write('antelope', 'mydb', 'css3.0') writes the
-            % eventsObject to a CSS3.0 database called 'mydb' using
+            % catalogObject.write('antelope', 'mydb', 'css3.0') writes the
+            % catalogObject to a CSS3.0 database called 'mydb' using
             % Antelope. Requires Antelope and Antelope Toolbox. Support for
             % aefsam0.1 schema will be added later.
             % 
@@ -848,14 +835,13 @@ classdef Events
             % later.
             
             % Glenn Thompson, 4 February 2015
- 0         
- outformat
+ 
             switch outformat
                 case 'antelope'
                     
-                    .5
+                    
                     if admin.antelope_exists
-                        .6
+                        
                         dbpath = outpath;
             
                         % create new db
@@ -866,23 +852,23 @@ classdef Events
                         
                         system(sprintf('touch %s.event',dbpath));
                         system(sprintf('touch %s.origin',dbpath));
-1
+
                         % open db
                         db = dbopen(dbpath, 'r+');
                         dbe = dblookup_table(db,'event');
                         dbo = dblookup_table(db,'origin');
                         dbn = dblookup_table(db,'netmag');
-2
+
                         % write event to event and origin tables
-                        if numel(eventsObject.time)>0
-                            for eventidx = 1:numel(eventsObject.time)
+                        if numel(catalogObject.time)>0
+                            for eventidx = 1:numel(catalogObject.time)
                                 event.evid = dbnextid(dbe,'evid');
                                 origin.orid = dbnextid(dbo,'orid');
-                                origin.time = datenum2epoch(eventsObject.time(eventidx));
-                                origin.lon = eventsObject.lon(eventidx);
-                                origin.lat = eventsObject.lat(eventidx);
-                                origin.depth = eventsObject.depth(eventidx);
-                                origin.etype = eventsObject.etype{eventidx};
+                                origin.time = datenum2epoch(catalogObject.time(eventidx));
+                                origin.lon = catalogObject.lon(eventidx);
+                                origin.lat = catalogObject.lat(eventidx);
+                                origin.depth = catalogObject.depth(eventidx);
+                                origin.etype = catalogObject.etype{eventidx};
                                 
                                 % Antelope etype can only be two characters
                                 % Antelope uses 'eq' where IRIS use
@@ -896,8 +882,8 @@ classdef Events
                                 end
                                 
                                 netmag.magid = dbnextid(dbn,'magid');
-                                netmag.magtype = eventsObject.magtype{eventidx};
-                                netmag.magnitude = eventsObject.mag(eventidx);
+                                netmag.magtype = catalogObject.magtype{eventidx};
+                                netmag.magnitude = catalogObject.mag(eventidx);
                                 
                                 % Add new record to event table & write to
                                 % it
@@ -939,29 +925,29 @@ classdef Events
     methods (Access=protected, Hidden=true)
         
         %% AUTOBINSIZE        
-        function binsize = autobinsize(eventsObject)
+        function binsize = autobinsize(catalogObject)
         %autobinsize Compute the best bin size based on start and end times
-            binsize = autobinsize(max(eventsObject.time) - min(eventsObject.time));
+            binsize = autobinsize(max(catalogObject.time) - min(catalogObject.time));
         end
 %% ---------------------------------------------------        
-        function region = get_region(eventsObject, nsigma)
+        function region = get_region(catalogObject, nsigma)
         % region Compute the region to plot based on spread of lon,lat data
-			medianlat = nanmedian(eventsObject.lat);
-			medianlon = nanmedian(eventsObject.lon);
+			medianlat = nanmedian(catalogObject.lat);
+			medianlon = nanmedian(catalogObject.lon);
 			cosine = cos(medianlat);
-			stdevlat = nanstd(eventsObject.lat);
-			stdevlon = nanstd(eventsObject.lon);
+			stdevlat = nanstd(catalogObject.lat);
+			stdevlon = nanstd(catalogObject.lon);
 			rangeindeg = max([stdevlat stdevlon*cosine]) * nsigma;
 			region = [(medianlon - rangeindeg/2) (medianlon + rangeindeg/2) (medianlat - rangeindeg/2) (medianlat + rangeindeg/2)];
         end
         
 %% ---------------------------------------------------
-        function symsize = get_symsize(eventsObject)
+        function symsize = get_symsize(catalogObject)
             %get_symsize Get symbol marker size based on magnitude of event
             % Compute Marker Size
             minsymsize = 3;
             maxsymsize = 50;
-            symsize = (eventsObject.mag + 2) * 10; % -2- -> 1, 1 -> 10, 0 -> 20, 1 -> 30, 2-> 40, 3+ -> 50 etc.
+            symsize = (catalogObject.mag + 2) * 10; % -2- -> 1, 1 -> 10, 0 -> 20, 1 -> 30, 2-> 40, 3+ -> 50 etc.
             symsize(symsize<minsymsize)=minsymsize;
             symsize(symsize>maxsymsize)=maxsymsize;
             % deal with NULL (NaN) values

@@ -9,8 +9,6 @@ debug.printfunctionstack('>');
 result = 0;
 switch nargin
 	case 2,
-		% GTHO 20121101: Replacing basename with fileparts
-		%[fname, IMGDIR] = basename(arg1); 
 		[IMGDIR, fname] = fileparts(arg1); 
 		outpath = arg1;
 		res = arg2;

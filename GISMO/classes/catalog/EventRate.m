@@ -23,22 +23,22 @@ classdef EventRate
 %
 %       First create a catalog object from the demo database:
 %           dbpath = demodb('avo')
-%           eventsObject = readEvents('datascope', 'dbpath', dbpath, ...
+%           catalogObject = readEvents('datascope', 'dbpath', dbpath, ...
 %                  'dbeval', ...
 %                  'deg2km(distance(lat, lon, 60.4853, -152.7431))<15.0' ...
 %                  );
 %
 %       (1) Create an eventrate object using a binsize of 1 day:
-%           erobj = eventsObject.eventrate('binsize', 1);
+%           erobj = catalogObject.eventrate('binsize', 1);
 %
 %       (2) Create an eventrate object using a binsize of 1 hour:
-%           erobj = eventsObject.eventrate('binsize', 1/24);
+%           erobj = catalogObject.eventrate('binsize', 1/24);
 %
 %       (3) Create an eventrate object using a binsize of 1 hour but a stepsize of 5 minutes:
-%           erobj = eventsObject.eventrate('binsize', 1/24, 'stepsize', 5/1440);
+%           erobj = catalogObject.eventrate('binsize', 1/24, 'stepsize', 5/1440);
 %
 %       (4) Create a vector of eventrate objects subclassified using event types 'r', 'e', 'l', 'h', 't':
-%               erobj = eventrate(eventsObject, 1, 'etypes', 'relht');
+%               erobj = eventrate(catalogObject, 1, 'etypes', 'relht');
 %           To plot counts on separate figures:
 %               erobj.plot()
 %           To plot counts and energy panels, each event type as a separate figure:
@@ -49,8 +49,8 @@ classdef EventRate
 %               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');
 %
 %       (5) A full example:
-%               eventsObject = catalog(fullfile(MVO_DATA, 'mbwh_catalog'), 'seisan', 'snum', datenum(1996,10,1), 'enum', datenum(2004,3,1), 'region', 'Montserrat')
-%               erobj = eventrate(eventsObject, 365/12, 'stepsize', 1, 'etypes', 'thlr');
+%               catalogObject = catalog(fullfile(MVO_DATA, 'mbwh_catalog'), 'seisan', 'snum', datenum(1996,10,1), 'enum', datenum(2004,3,1), 'region', 'Montserrat')
+%               erobj = eventrate(catalogObject, 365/12, 'stepsize', 1, 'etypes', 'thlr');
 %               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');
 %
 %
@@ -74,7 +74,7 @@ classdef EventRate
 %        numbins             % (scalar) number of bins used for grouping
 %                                events
 %        total_counts        % (scalar) sum of counts
-%        total_mag           % (scalar) total sum of energy of all eventsObjects, represented as a magnitude
+%        total_mag           % (scalar) total sum of energy of all catalogObjects, represented as a magnitude
 %
 %    METADATA:
 %        etype               % event type/classification. 
@@ -103,7 +103,8 @@ classdef EventRate
 
 %% PROPERTIES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-	properties (SetAccess=private)
+    properties(GetAccess = 'public', SetAccess = 'public')
+        time = [];          % (array) in datenum format
         counts = []; 		% (array) number of events in each bin
 		mean_rate = [];      % (array) number of events per hour in each bin
 		median_rate = [];	% (array) reciprocal of the median time interval between events. Represented as an hourly rate.
@@ -112,8 +113,7 @@ classdef EventRate
         median_mag = [];     % (array)
         energy = [];
         total_counts = [];   % (scalar) sum of counts
-		total_mag = [];      % (scalar) total sum of energy of all eventsObjects, represented as a magnitude
-        time = [];           % (array) 	
+		total_mag = [];      % (scalar) total sum of energy of all catalogObjects, represented as a magnitude	
         numbins = [];        % (scalar)
         min_mag = [];
         max_mag = [];
@@ -132,15 +132,15 @@ classdef EventRate
         %% CONSTRUCTOR
         function self = EventRate(time, counts, energy, median_energy, ...
                 smallest_energy, biggest_energy, median_time_interval, total_counts, ...
-                snum, enum, etypes, binsize, stepsize, numbins);
+                snum, enum, etypes, binsize, stepsize, numbins)
+            self.time = time;
             self.counts = counts;          
             self.median_rate = 1 ./ (median_time_interval * 24); 
             self.median_rate(counts<10) = 0;
             self.median_rate = max([self.counts / (24 * binsize); self.median_rate]);      
             self.median_mag = magnitude.eng2mag(median_energy);
             self.energy = energy;
-            self.total_counts = total_counts;  
-            self.time = time; 	
+            self.total_counts = total_counts;  	
             self.numbins = numbins;
             self.min_mag = magnitude.eng2mag(smallest_energy);
             self.max_mag = magnitude.eng2mag(biggest_energy);
@@ -151,71 +151,7 @@ classdef EventRate
             self.stepsize = stepsize;
         end
         
-%         function erobj = EventRate(time, mag, snum, enum, binsize, stepsize, etype) 
-%             if isempty(snum) | snum==0
-%                 snum = min(time);
-%             end
-%             if isempty(enum) | enum==0
-%                 enum = max(time);
-%             end
-%             if isempty(time)
-%                 return
-%             end
-%             if isempty(mag)
-%                 mag = ones(size(time)) * NaN;
-%             end
-%             if length(mag)~=length(time)
-%                 error('time and mag must be same size')
-%             end
-%             if ~(binsize>0)
-%                 binsize = autobinsize(enum-snum);
-%             end
-%             if ~(stepsize>0)
-%                 stepsize = binsize;
-%             end      
-%             if (stepsize > binsize)
-%                disp(sprintf('Invalid value for stepsize (%f days). Cannot be greater than binsize (%f days).',stepsize, binsize));
-%                return;
-%             end
-%             if isempty(etype)
-%                 etype = char(ones(size(time)) * 'x');
-%             end
-%             if length(etype)~=length(time)
-%                 error('time and etype must be same size')
-%             end  
-%             
-%             % Find out how many event types we have. Recursively call
-%             % EventRate if we have more than one. If we only have one, bin
-%             % the data and set our properties.
-%             etypes = unique(etype);         
-%             if length(etypes)>1
-%                 for c=1:length(etypes)
-%                     i = find(etype==etypes(c));
-%                     erobj(c) = EventRate(time(i), mag(i), snum, enum, binsize, stepsize, etype(i));
-%                 end
-%             else
-%                 [time_bin, counts_per_bin, sum_per_bin, smallest, ...
-%                     median_per_bin, std_per_bin, median_time_interval] = ...
-%                     matlab_extensions.bin_irregular(time, ...
-%                     magnitude.mag2eng(mag), ...
-%                     binsize, snum, enum, stepsize);
-%                 erobj.total_counts = length(time);
-%                 erobj.etype = etypes;
-%                 erobj.snum = snum;
-%                 erobj.enum = enum;
-%                 erobj.binsize = binsize;
-%                 erobj.stepsize = stepsize;
-%                 erobj.numbins = length(time_bin);                
-%                 % vector properties
-%                 erobj.time = time_bin;
-%                 erobj.counts = counts_per_bin;
-%                 erobj.energy = sum_per_bin;
-%                 erobj.median_mag = magnitude.eng2mag(median_per_bin); % median energy as a magnitude
-%                 erobj.median_rate = 1 ./ (median_time_interval * 24);
-%                 erobj.min_mag = magnitude.eng2mag(smallest);
-%             end
-%         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %% ----------------------------------------------
         %% GETTERS
         function cum_mag = get.cum_mag(erobj)
             cum_mag = magnitude.eng2mag(erobj.energy);
@@ -229,7 +165,7 @@ classdef EventRate
         function total_mag = get.total_mag(erobj)
             total_mag = magnitude.eng2mag(sum(erobj.energy));
         end
-        %% PLOT
+       
         function plot(obj, varargin) 
             %EventRate/plot
             %   Plot metrics of an EventRate object
@@ -718,7 +654,7 @@ classdef EventRate
                     end
                 end   
             else
-                error('%s:addfield:invalidFieldname','fieldname must be a string', class(eventsObject))
+                error('%s:addfield:invalidFieldname','fieldname must be a string', class(catalogObject))
             end
 
         end
