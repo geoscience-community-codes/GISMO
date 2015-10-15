@@ -1076,8 +1076,6 @@ classdef TraceData
             otherwise
          end
       end
-            
    end
-   
 end
 

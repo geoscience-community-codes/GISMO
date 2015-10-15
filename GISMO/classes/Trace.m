@@ -1135,6 +1135,9 @@ classdef Trace < TraceData
                
             otherwise,
                longest = max(arrayfun(@(tr) numel(tr.data), T));
+               while numel(longest) > 1
+                  longest = max(longest);
+               end
                Xvalues = nan(longest, numel(T));
                for n=1:numel(T)
                   dl = numel(T(n).data);
@@ -1489,6 +1492,35 @@ classdef Trace < TraceData
       function W = trace2waveform(T)
          % convert traces into waveforms
          error('not implemented yet')
+      end
+      function T = retrieve(ds, names, starts, ends, miscfilters)
+         % ds is a datasource
+         % names are channeltags OR bulkdataselect (BDS)-type requests
+         %    if BDS type, then starts, ends, miscfilters ignored.
+         % starts is either text, or array fo start times 
+         % find data pointed to by ds, names, starts, ends
+         % convertToTraces
+         % return the traces
+         
+         %anticipated trouble: wildcards
+         warning('not hooked up yet. filling with bogus data');
+         if ~exist('starts','var')
+            % build T from names
+         else
+            T = Trace; T.samplerate = 20;
+            T = repmat(T, numel(names), numel(starts));
+            
+            for n=1:numel(names)
+               [T(n,:).name] = deal(names(n));
+            end
+            for n=1:numel(starts)
+               [T(:,n).start] = deal(starts(n));
+               Nsamples = (ends(n) - starts(n)) * 86400;
+               D = sin((-Nsamples: 2 : Nsamples-1) / 600) * 10 + randn(size(-Nsamples: 2 : Nsamples-1));
+               [T(:,n).data] = deal(D);
+            end
+            % now fill with bogus data
+         end
       end
    end %static methods
 end
