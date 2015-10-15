@@ -7,6 +7,7 @@ classdef Trace < TraceData
    % XXXX by: 
    
    properties(Dependent)
+      name % N.S.L.C code
       network % network code
       station % station code
       location % location code
@@ -22,7 +23,7 @@ classdef Trace < TraceData
    
    properties(Hidden)
       mat_starttime % start time in matlab-time
-      channelInfo % channelTag
+      channelinfo = channeltag; % channelTag
       %struct that mirrors UserData, but contains two fields:
       %   allowed_type: a class name (or empty). If this
       %   exist, then when data is assigned to UserData, it
@@ -43,7 +44,7 @@ classdef Trace < TraceData
          switch nargin
             case 1
                if isa(varargin{1}, 'waveform')
-                  obj.channelInfo = get(varargin{1},'channeltag');
+                  obj.channelinfo = get(varargin{1},'channeltag');
                   obj.mat_starttime = get(varargin{1}, 'start');
                   
                   H = get(varargin{1}, 'history');
@@ -66,38 +67,48 @@ classdef Trace < TraceData
       
       %% get/set of channel-related data
       function N = get.network(obj)
-         N = obj.channelInfo.network;
+         N = obj.channelinfo.network;
       end
       function obj = set.network(obj, val)
-         obj.channelInfo.network = val;
+         obj.channelinfo.network = val;
       end
       
       function S = get.station(obj)
-         S = obj.channelInfo.station;
+         S = obj.channelinfo.station;
       end
       function obj = set.station(obj, val)
-         obj.channelInfo.station = val;
+         obj.channelinfo.station = val;
       end
       
       function L = get.location(obj)
-         L = obj.channelInfo.location;
+         L = obj.channelinfo.location;
       end
       function obj = set.location(obj, val)
-         obj.channelInfo.location = val;
+         obj.channelinfo.location = val;
       end
       
       function C = get.channel(obj)
-         C = obj.channelInfo.channel;
+         C = obj.channelinfo.channel;
       end
       function obj = set.channel(obj, val)
-         obj.channelInfo.channel = val;
+         obj.channelinfo.channel = val;
       end
       
       %%
-      function T = get.start(obj)
-         T = datestr(obj.mat_starttime,'yyyy-mm-dd HH:MM:SS.FFF');
+      function st = get.start(obj)
+         st = datestr(obj.mat_starttime,'yyyy-mm-dd HH:MM:SS.FFF');
       end
       
+      function obj = set.start(obj, v)
+         if isnumeric(v) && numel(v) == 1
+            obj.mat_starttime = v;
+         elseif ischar(v)
+            obj.mat_starttime = datenum(v);
+         else
+            error('do not understand start assignment. must be a matlab datenum or a string')
+         end
+         % could add ability to translate from java or datetime
+      end
       function val = sampletimes(obj)
          %sampletimes retrieve matlab date for each sample
          % replaces get(w, 'timevector')
@@ -131,8 +142,6 @@ classdef Trace < TraceData
          if exist('stringformat','var')
             val = datestr(val,stringformat);
          end
-         
-            
       end
          
       function tf = startsbefore(A, B)
@@ -151,6 +160,19 @@ classdef Trace < TraceData
          %TODO: make this work for datetime or datenums or datestrings
          tf = A.lastsampletime > B.lastsampletime;
       end
+      
+      function s = get.name(T)
+         if numel(T) ==1
+            s = T.channelinfo.string;
+         else
+            s=arrayfun(@(x) x.channelinfo.string, T, 'UniformOutput',false);
+         end
+      end
+      function T = set.name(T, val)
+         assert(numel(T) == 1, 'only can set name for individual traces');
+         T.channelinfo = channeltag(val);
+      end
+      
       function T = align(T,alignTime, newSamprate, method)
          %ALIGN resamples a waveform at over a specified interval
          %   w = w.align(alignTime, newSamprate)
@@ -267,7 +289,7 @@ classdef Trace < TraceData
             % noteRealignment(w, alignTime(1), newSamprate);
          else
             for n=1:numel(T)
-               % w(n) = noteRealignment(w(n), alignTime(n), newSamprate);
+               % T(n) = noteRealignment(T(n), alignTime(n), newSamprate);
             end
          end
          
@@ -275,64 +297,6 @@ classdef Trace < TraceData
             timeStr = datestr(startt,'yyyy-mm-dd HH:MM:SS.FFF');
             myHistory = sprintf('aligned data to %s at %f samples/sec', timeStr, samprate);
             T = T.addhistory(myHistory);
-         end
-      end
-      
-      function s = rsam(w, method, samplingPeriod)
-         %RSAM create an RSAM-like object from a waveform object
-         %   s = rsam(waveform, method, samplingPeriod)
-         %
-         %   Input Arguments
-         %       WAVEFORM: waveform object       N-dimensional
-         %
-         %       METHOD: which method of sampling to perform within each sample
-         %                window
-         %           'max' : maximum value
-         %           'min' : minimum value
-         %           'mean': average value (Default)
-         %           'median' : mean value
-         %           'rms' : rms value (added 2011/06/01)
-         %
-         %       SAMPLINGPERIOD : the number of seconds between samples (Default:
-         %       60s)
-         %
-         %
-         %   Examples:
-         %       s = rsam(w) Each sample in the RSAM object is computed from a 60-s
-         %       window of data. Successive windows do not overlap. Each window is
-         %       detrended, NaN's replaced with mean value. Then the mean absolute
-         %       value - i.e. the mean amplitude - is taken.
-         %
-         %       s = rsam(w, 'rms') As above, but the root-mean-square absolute value
-         %       is taken.
-         %
-         %       s = rsam(w, 'max', 1.0) As above, but the max absolute value is
-         %       taken, and the time window is 1s rather than 60s.
-         %
-         % Glenn Thompson 2014/10/28
-         if ~exist('method', 'var')
-            method = 'mean';
-         end
-         if ~exist('samplingPeriod', 'var')
-            samplingPeriod = 60;
-         end
-         
-         % detrend data after fill gaps to get rid of NaNs marking missing values
-         w = w.fillgaps('interp');
-         w = w.detrend;
-         
-         for i = 1:numel(w)
-            Wsamplingperiod = 1.0 / w(i).samplerate;
-            % either set to whatever samplingPeriod seconds of data are, or the
-            % length of data if less
-            crunchfactor = min([round(samplingPeriod / Wsamplingperiod) numel(w(i).data)]);
-            wabs = abs(w(i));
-            wresamp = resample(wabs, method, crunchfactor);
-            %TODO: replace the enum and allow for full Net.Sta.Loc.Cha channel definition
-            s(i) = rsam(wresamp.sampletimes, wresamp.data,...
-               'sta', wresamp.station, 'chan', wresamp.channel,...
-               'units', wresamp.units, 'snum', wresamp.mat_starttime,...
-               'enum', get(wresamp, 'end'));
          end
       end
       
@@ -357,11 +321,71 @@ classdef Trace < TraceData
          % to delete the field:
          % T.UserData = rmfield(T.UserData, 'fieldToRemove');
          % see also Trace.SetUserDataRule, rmfield
+         oldfields = fieldnames(T.UserData);
          fn = fieldnames(val);
+         fieldToAdd = fn(~ismember(fn, oldfields));
+         if ~isempty(fieldToAdd) && any(strcmpi(fieldToAdd, oldfields))
+            % we have a case change!! uh-oh.
+            error('attempted to add field [''%s''], but a similar field [''%s''] exists.\nCheck your case and try again',...
+               fieldToAdd{1}, oldfields{strcmpi(oldfields, fieldToAdd)});
+         end
+         %fn_existing = fieldnames(T.UserData);
+         %newfn = ~ismember(fieldnames(val),val
          for f = 1:numel(fn);
             testUserField(T, fn{f}, val.(fn{f}))
          end
          T.UserData = val;
+      end
+      
+      function T = renameUserField(T, oldField, newField, failSilently)
+         % Trace.renameUserField renames a UserData field
+         % T = T.renameuserField(oldName, newName);
+         % rename a field if it exists to a new name.
+         % Possible sticking-points to deal with:
+         % 1. both oldField and newField exist in T.UserData -> error
+         % 2. newField already exists in T.UserData -> ignore
+         % 3. neither newField or oldfield exists in T.Userdata -> warning
+         % 
+         % if failSilently is true, then failures will not result in an
+         % error.
+         oldFieldExists = isfield(T.UserData, oldField);
+         newFieldExists = isfield(T.UserData, newField);
+         sameNames = strcmp(oldField, newField);
+         if ~exist('failSilently', 'var'); failSilently = false; end;
+         if sameNames
+            if failSilently
+               return
+            else
+               warning('oldField is the same as newField [%s]. Ignoring', oldField);
+               return
+            end
+         end
+         if oldFieldExists
+            if newFieldExists %BOTH fields exist
+               if (~isempty(newField))  %but the new one isn't empty
+                  error('Both fields already exist, and UserData.%s already contains data',newField);
+               else % but the new one is empty, so proceed normally
+                  if ~failSilently
+                     warning('Both fields exist, but since UserData.%s is empty, its value is being replaced', newField);
+                  end
+                  tmp = T.UserData.(oldField);
+                  T.UserData = rmfield(T.UserData,oldField);
+                  [T.UserData.(newField)] = tmp;
+               end
+            else % only the old field exists, so proceed normally
+               tmp = T.UserData.(oldField);
+               T.UserData = rmfield(T.UserData,oldField);
+               [T.UserData.(newField)] = tmp;
+            end
+         else
+            if newFieldExists  %only the new field exists
+               % already renamed. ignore
+            else % neither field exists
+               if ~failSilently
+                 warning('field [%s] does not exist in UserData', oldField);
+               end
+            end
+         end
       end
       
       function testUserField(obj, fn, value)
@@ -486,7 +510,7 @@ classdef Trace < TraceData
       end
       
       %%
-      function [W, I] = sortby(W, criteria)
+      function [T, I] = sortby(T, criteria)
          %TODO: Make this TRACE-y. which involves sorting by User fields
          %too.
          %
@@ -506,8 +530,8 @@ classdef Trace < TraceData
             criteria = 'channeltag';
          end
          % sort by a field
-         [~, I] = sort(get(W,criteria));
-         W = W(I);
+         [~, I] = sort(get(T,criteria));
+         T = T(I);
       end
 
       function combined_traces = combine (traces)
@@ -896,6 +920,91 @@ classdef Trace < TraceData
          myhist = w.history;
       end
       
+      %% display functions
+      function disp(w)
+         %DISP Trace disp overloaded operator
+         
+         
+         % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
+         % $Date$
+         % $Revision$
+         
+         if numel(w) > 1;
+            disp(' ');
+            fprintf('[%s] %s containing:\n', size2str(size(w)), class(w));
+            % could present fields that it has in common
+            %could provide a bulkdataselect style output...
+            fprintf('net.sta.lo.cha\tfirstsample\t\t  nsamples\tsamprate\t duration\n');
+            for n=1:numel(w)
+            secs = mod(w(n).duration,60);
+            mins = mod(fix(w(n).duration / 60),60);
+            hrs = fix(w(n).duration / 3600);
+               fprintf('%-10s\t%s\t%9d\t%9.3f\t',...
+                  w(n).name, w(n).start, numel(w(n).data), w(n).samplerate); 
+               fprintf('%02d:%02d:%05.3f\n' , hrs,mins,secs);
+            end;
+            return
+               U = unique({w.name});
+            if numel(U) < 5
+               for n=1:numel(U)
+                  fprintf('    %s\n', U{n});
+               end
+            else
+               fprintf('     %d unique net.sta.loc.cha combos\n',numel(U));
+            end
+            % starting ranges
+            % duration ranges
+            % sample ranges
+            %samplerate ranges
+            
+         elseif numel(w) == 0
+            disp('  No Traces');
+            
+         else %single Trace
+            % no longer have test for complete/empty waveform
+            fprintf(' channeltag: %-15s   [network.station.location.channel]\n', w.name);
+            fprintf('      start: %s\n',w.start);
+            secs = mod(w.duration,60);
+            mins = mod(fix(w.duration / 60),60);
+            hrs = fix(w.duration / 3600);
+            fprintf('             duration %02d:%02d:%06.3f\n' , hrs,mins,secs);
+            fprintf('       data: %d samples\n', numel(w.data));
+            fprintf('             range(%f, %f),  mean (%f)\n',min(w), max(w), mean(w));
+            fprintf('sample rate: %-10.4f samples per sec\n',w.samplerate);
+            fprintf('      units: %s\n',w.units);
+            historycount =  numel(w.history);
+            if historycount == 1
+               plural='';
+            else
+               plural = 's';
+            end
+            fprintf('    history: [%d item%s], last modification: %s\n',...
+               historycount, plural, datestr(max([w.history.when])));
+            ud_fields = fieldnames(w.UserData);
+            if isempty(ud_fields)
+               disp('<No user defined fields>');
+            else
+            fprintf('User Defined fields:\n');
+            for n=1:numel(ud_fields);
+               if isstruct(w.UserDataRules) && isfield(w.UserDataRules, ud_fields{n})
+                  fprintf('   *%-15s: ',ud_fields{n}); disp(w.UserData.(ud_fields{n}));
+               else
+                  fprintf('    %-15s: ',ud_fields{n}); disp(w.UserData.(ud_fields{n}));
+               end
+            end
+            disp(' <(*) before fieldname means that rules have been set up governing data input for this field>');
+            end
+         end
+         
+         function DispStr = size2str(sizeval)
+            % helper function that changes the way we view the size
+            %   from : [1 43 2 6] (numeric)  to  '1x43x2x6' (char)
+            
+            DispStr = sprintf('x%d', sizeval);
+            DispStr = DispStr(2:end);
+         end
+      end
+      
       %% plotting functions
       function varargout = plot(T, varargin)
          %TODO: use parse
@@ -906,11 +1015,11 @@ classdef Trace < TraceData
          %   plots will be returned.  These can be used to change properties of the
          %   plotted waveforms.
          %
-         %   h = plot(trace, ...)
+         %   h = trace.plot(...)
          %   Plots a waveform object, passing additional parameters to matlab's PLOT
          %   routine.
          %
-         %   h = plot(trace, 'xunit', xvalue, ...)
+         %   h = trace.plot('xunit', xvalue, ...)
          %   sets the xunit property of the graph, which is used to determine how
          %   the times of the waveform are interpereted.  Possible values for XVALUE
          %   are 's', 'm', 'h', 'd', 'doy', 'date'.
@@ -934,16 +1043,16 @@ classdef Trace < TraceData
          %
          % EXAMPLE 1:
          %   % This example plots the waveforms at their absolute times...
-         %   plot(W,'xunit','date'); % plots the waveform in blue
+         %   W.plot('xunit','date'); % plots the waveform in blue
          %   hold on;
-         %   h = W.plot(W2,'xunit','date', 'r', 'linewidth', 1);
+         %   h = W2.plot('xunit','date', 'r', 'linewidth', 1);
          %          %plots your other waveform in red, and with a wider line
          %
          % EXAMPLE 2:
          %   % This example plots the waveforms, starting at time 0
-         %   plot(W); % plots the waveform in blue with seconds on the x axis
+         %   W.plot(); % plots the waveform in blue with seconds on the x axis
          %   hold on;
-         %   plot(W2,'xunit','s', 'color', [.5 .5 .5]);  % plots your other
+         %   W2.plot('xunit','s', 'color', [.5 .5 .5]);  % plots your other
          %                                       % waveform, starting in unison
          %                                       % with the prev waveform, then
          %                                       % change the color of the new
@@ -955,7 +1064,7 @@ classdef Trace < TraceData
          %  also, now Y can be autoscaled with the property pair: 'autoscale',true
          %  although it only works for single waveforms...
          %
-         %  see also DATETICK, WAVEFORM/EXTRACT, PLOT
+         %  see also DATETICK, Trace.plot, PLOT
          
          % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
          %
@@ -972,6 +1081,7 @@ classdef Trace < TraceData
             yunit = T.units;
          else
             yunit = arrayfun(@(tr) tr.units, T, 'UniformOutput',false); %
+            yunit = unique(yunit);
          end
          
          %Look for an odd number of arguments beyond the first.  If there are an odd
@@ -981,7 +1091,7 @@ classdef Trace < TraceData
          hasExtraArg = ~isempty(formString);
          [isfound, useAutoscale, proplist] = getproperty('autoscale',proplist,false);
          [isfound, xunit, proplist] = getproperty('xunit',proplist,'s');
-         [isfound, currFontSize, proplist] = getproperty('fontsize',proplist,8);
+         [isfound, currFontSize, proplist] = getproperty('fontsize',proplist,10);
          
          [xunit, xfactor] = parse_xunit(xunit);
          
@@ -1053,10 +1163,10 @@ classdef Trace < TraceData
                datetick('keepticks','keeplimits');
          end
          if isscalar(T)
-            th = title(sprintf('%s (%s) - starting %s',...
-               T.station, T.channel, T.start),'interpreter','none');
+            th = title(sprintf('%s (%s) @ %3.2f samp/sec',...
+               T.name, T.start, T.samplerate),'interpreter','none');
          else
-            th = title(sprintf('Multiple waves.  wave(1) = %s (%s) - starting %s',...
+            th = title(sprintf('Multiple Traces.  wave(1) = %s (%s) - starting %s',...
                T(1).station, T(1).channel, T(1).start),'interpreter','none');
          end;
          
@@ -1241,7 +1351,7 @@ classdef Trace < TraceData
                plot((dnum-snum)*SECSPERDAY, myw.data,'-k');
                set(gca, 'XLim', [0 enum-snum]*SECSPERDAY);
             end
-            ylabel(myw.channelInfo.string,'FontSize',10,'Rotation',90);
+            ylabel(myw.channelinfo.string,'FontSize',10,'Rotation',90);
             set(gca,'YTick',[],'YTickLabel','');
             if wavnum<nwaveforms;
                set(gca,'XTickLabel','');
@@ -1296,7 +1406,7 @@ classdef Trace < TraceData
          if nargin == 1
             % automatically determine the legend
             total_waves = numel(T);
-            cha_tags = [T.channelInfo];
+            cha_tags = [T.channelinfo];
             ncha_tags = numel(unique(cha_tags));
             if ncha_tags == 1
                % all cha_tags represent the same station
