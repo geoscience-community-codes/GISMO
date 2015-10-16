@@ -7,9 +7,6 @@ function startup_GISMO(gismopath)
 % read 'contributed_style_guide.txt' in the GISMO directory.
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date$
-% $Revision$
-
 
 % CHECK COMPATIBILITY
 % Should consider added a compatibility checkign mechanism at some point. 
@@ -20,7 +17,8 @@ function startup_GISMO(gismopath)
 
 % GET PATHS TO DIRECTORIES IN GISMO
 if ~exist('gismopath', 'var')
-	gismofile = which('GISMO/startup_GISMO');
+	%gismofile = which('GISMO/startup_GISMO');
+	gismofile = which('startup_GISMO');
 	gismopath = fileparts(gismofile); % first argout is the path
 end
 
@@ -37,7 +35,7 @@ addContributed(gismopath,'contributed_internal');
 
 % ADD A PATH TO CLASSES (Added by Glenn Thompson)
 addpath(fullfile(gismopath,'classes'));
-addpath(fullfile(gismopath,'classes','catalog'));
+addpath(fullfile(gismopath,'classes','Catalog'));
 addpath(fullfile(gismopath,'classes','rsam'));
 %addpath(fullfile(gismopath,'classes','channeltag'));
 %addpath(fullfile(gismopath,'classes','measurementunit'));
