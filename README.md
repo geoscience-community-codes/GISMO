@@ -1,6 +1,9 @@
 # GISMO
 A seismic data analysis toolbox for MATLAB. 
 
-<h3>Project Website</h3>
-<a href="http://giseislab.github.io/gismotools/wiki/">GISMO wiki & tutorials</a>
+Links:
+<ul>
+<li><a href="http://github.com/giseislab/gismotools/wiki/">GISMO wiki</a></li>
+<li><a href="http://github.com/giseislab/gismotools/wiki/Tutorials">GISMO tutorials</a></li>
+</ul>
 
