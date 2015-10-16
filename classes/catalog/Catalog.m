@@ -54,25 +54,49 @@ classdef Catalog
                 %obj = obj.set(field, val);
                 eval(sprintf('obj.%s = val;',field));
             end
+            
+            % Fill empty vectors to size of time
+            if isempty(obj.lon)
+                obj.lon = NaN(size(obj.time));
+            end
+            if isempty(obj.lat)
+                obj.lat = NaN(size(obj.time));
+            end   
+            if isempty(obj.depth)
+                obj.depth = NaN(size(obj.time));
+            end
+            if isempty(obj.mag)
+                obj.mag = NaN(size(obj.time));
+            end  
+            if isempty(obj.magtype) % 'u' for unknown
+                obj.magtype = cellstr(repmat('u',size(obj.time)));
+            end 
+            if isempty(obj.etype)  % 'u' for unknown
+                obj.etype = cellstr(repmat('u',size(obj.time)));
+            end     
+            
+            % Check everything is same size - probably something involving
+            % getting properties and then looping over them
+            
         end
-
+%% ---------------------------------------------------
         function val = snum(obj)
             val = min(obj.time());
         end
-        
+%% ---------------------------------------------------        
         function val = enum(obj)
             val = max(obj.time());
         end
 
 %% ---------------------------------------------------
-
         function save(catalogObject, matfile)
             %Catalog.save save an catalogObject to a MAT file
-            save catalogObject matfile
+            save(catalogObject,matfile)
         end
 
 %% ---------------------------------------------------
         function catalogObject = combine(catalogObject1, catalogObject2)
+            % SCAFFOLD: not tested & merge would be better name
             %Catalog.combine combine two Catalog objects
             % catalogObject = combine(catalogObject1, catalogObject2)
 
@@ -109,62 +133,7 @@ classdef Catalog
                 end
             end
         end
-        
-%         function write(catalogObject, dbpath)
-%             % Catalog.write Write a catalogObject object to an Antelope
-%             % CSS3.0 origin table. Requires Antelope & Antelope Toolbox.
-%             
-%             if admin.antelope_exists
-%             
-%                 % See if the database already exists
-%                 db = dbopen(dbpath, 'r+');
-%                 db = dblookup_table(db, 'origin')
-%                 for i=1:numel(catalogObject.time)
-%                     %db.record = i-1;
-%                     db.record = dbaddnull(db);
-%                     orid = dbnextid(db, 'orid');
-%                     evid = dbnextid(db, 'evid');
-%                     dbputv(db, 'orid', orid, 'evid', evid, 'time', datenum2epoch(catalogObject.time(i)), 'lat', catalogObject.lat(i), 'lon', catalogObject.lon(i), 'depth', catalogObject.depth(i), 'ml', catalogObject.mag(i));
-%                 end
-%                 dbclose(db)
-%             else
-%                 warning('Antelope toolbox not installed. Cannot write')
-%             end
-%         end
- 
-%% ---------------------------------------------------
-
-%         function w=towaveform(obj)
-%             % WHAT THE HELL IS THIS - SOMETHING TO DO WITH SEISAN - PERHAPS
-%             % I NEED NEW CLASS Catalog_SEISAN
-%              w{1,1} = waveform();
-%              if strcmp(get(obj,'method'), 'load_seisandb')
-%                 % SEISAN FILE
-%                 scnl = scnlobject('*', '*');
-%                 ds = get(obj, 'datasource');
-%                 sfile = get(obj, 'sfile');
-%                 datestr([sfile.time])
-%                 for k=1:numel([sfile.time])
-%                     wavfiles = {sfile(k).wavfiles};
-%                     yyyy = sfile(k).year;
-%                     mm = sfile(k).month;
-%                     time = sfile(k).time;
-%                     dbpath = get(obj, 'dbpath');
-%                     dbpath = strrep(dbpath, 'REA', 'WAV');
-%                     for i=1:numel(wavfiles)
-%                         wavpath = strtrim(fullfile(dbpath, sprintf('%04d', yyyy), sprintf('%02d', mm), wavfiles{i}));
-%                         if exist(wavpath, 'file')
-%                             %disp(sprintf('Loading %s',wavpath));
-%                             ds = datasource('seisan', wavpath);
-%                             w{k,i}=waveform(ds, scnl, time, time+300/86400);
-%                         else
-%                            disp(sprintf('Not found: %s',wavpath));
-%                         end
-%                     end         
-%                 end
-%              end
-%         end
-        
+       
 %% ---------------------------------------------------
 		function plot(catalogObject, varargin)
             %Catalog.plot plot hypocenters in map view and cross-sections
@@ -682,39 +651,125 @@ classdef Catalog
                 disp(sprintf('PR=%d occurs at %.1f%% of time series',pr,100*(erobj.time(pri) - erobj.snum)/(erobj.enum-erobj.snum)));
             end
         end
+%% ---------------------------------------------------
+        function catalogObject2 = subset(catalogObject, indices)
+            %Catalog.subset Create a new catalogObject by subsetting based
+            %on indices. 
+            catalogObject2 = Catalog(catalogObject.time(indices), ...
+                catalogObject.lon(indices), ...
+                catalogObject.lat(indices), ...
+                catalogObject.depth(indices), ...
+                catalogObject.mag(indices), ...
+                catalogObject.magtype{indices}, ...
+                catalogObject.etype{indices});
+        end
+        
+%% ---------------------------------------------------
+
+        function Event(obj, eventnum)
+            % Catalog.Event - Browse an Catalog object one event at a time.
+            %  catalogObject.Event() Browse through an Catalog object one event
+            %  at a time in a similar way to the Seisan program 'eev'.
+
+            
+            if ~exist('eventnum','var')
+                eventnum = 1;
+            end
+
+            while 1,
+                
+                % don't beyond start or end of this catalogObject object
+                if eventnum<1
+                    eventnum=1;
+                end
+                if eventnum>numel(obj.time)
+                    eventnum=numel(obj.time);
+                end           
+                % display line for this event
+                dstr=datestr(obj.time(eventnum),31);
+                subclass=obj.etype{eventnum};
+                mag=obj.mag(eventnum);
+                outstr=sprintf('%s %7.2f %7.2f %7.2 %5.1f %s %s',dstr, obj.lon(eventnum), obj.lat(eventnum), obj.depth(eventnum), mag, obj.magtype{eventnum}, subclass);
+                choice=input([outstr,':  ?'],'s');           
+                
+                % process choice
+                if isempty(choice)
+                    eventnum=eventnum+1; % ENTER goes to next event 
+
+                elseif (choice(1)=='c') % CLASSIFY
+                    classify_event(time);
+
+                elseif (choice(1)=='f') % FORWARD N EVENTS
+                    num=1;
+                    if length(choice)>1
+                        num=str2num(choice(2:end));
+                    end
+                    eventnum=eventnum+num; 
+
+                elseif (choice(1)=='b') % BACKWARD N EVENTS
+                    num=1;
+                    if length(choice)>1
+                        num=str2num(choice(2:end));
+                    end
+                    eventnum=eventnum-num;
+
+                elseif (choice(1)=='t') % JUMP TO TIME
+                    month=1;dd=1;hr=0;
+                    if length(choice)>4
+                        year=str2num(choice(2:5));
+                    end
+                    if length(choice)>6
+                        month=str2num(choice(6:7));
+                    end
+                    if length(choice)>8
+                        dd=str2num(choice(8:9));
+                    end
+                    if length(choice)>10
+                        hr=str2num(choice(10:11));
+                    end
+                    jumptime=datenum(year,month,dd,hr,0,0);
+                    eventnum = min(find(obj.time > jumptime));
+
+                elseif (choice(1)=='s') % SUMMARISE - SHOW S FILE or similar data 
+                    fprintf('\nTime:\t\t%s\n',dstr);
+                    fprintf('Longitude:\t%7.2f degrees\n',obj.lon(eventnum));
+                    fprintf('Latitude:\t%7.2f degrees\n',obj.lat(eventnum));
+                    fprintf('Depth:\t\t%7.2f km\n',obj.depth(eventnum));
+                    fprintf('Magnitude:\t%7.2f\n',obj.mag(eventnum));
+                    fprintf('Magnitude Type:\t%s\n',obj.magtype{eventnum});
+                    fprintf('Event Type:\t%s\n',obj.etype{eventnum});
+                    fprintf('\n');
+
+                elseif (choice(1)=='x') % CLOSE ALL
+                    close all;
+
+                elseif (choice=='q') % QUIT
+                    break;
+
+                elseif (choice(1)=='h') % HELP
+                    disp(' ');
+                    disp('Options:');
+                    disp('________');
+                    disp(' ');
+                    disp('b[num]            - go backward 1 event (or N events)');
+                    disp('c                 - classify');
+                    %disp('e                 - edit/generate S-file');
+                    disp('f[num]            - go forward 1 event (or N events)');
+                    disp('h                 - this help');
+                    %disp('p                 - plot');
+                    disp('s                 - summarise');
+                    disp('tYYYY[MM[DD[HH]]] - jump to date/hour specified');
+                    disp('x                 - close all figure windows');
+                    disp('q                 - quit');
+                    disp(' ');
+                end
+            end
+        end   
+        
 %% ---------------------------------------------------         
 %         function eev(obj)
 %             % Catalog.eev - Browse an Catalog object one event at a time.
-%             %  catalogObject.eev() Browse through an Catalog object one event
-%             %  at a time in a similar way to the Seisan program 'eev'.
-%             %. Based on the Seisan program of the same name
-%             PRETRIGGER = 10/86400;
-%             POSTTRIGGER = (60+10)/86400;
-%             eventnum = 1;
-% 
-%             while 1,
-%                 
-%                 % don't beyond start or end of this catalogObject object
-%                 if eventnum<1
-%                     eventnum=1;
-%                 end
-%                 if eventnum>numel(obj.time)
-%                     eventnum=numel(obj.time);
-%                 end           
-%                 % display line for this event
-%                 dstr=datestr(obj.time(eventnum),31);
-%                 subclass=obj.etype{eventnum};
-%                 mag=obj.mag(eventnum);
-%                 outstr=sprintf('%s %s %5.2f',dstr,subclass,mag);
-%                 choice=input([outstr,':  ?'],'s');           
-%                 
-%                 % process choice
-%                 if isempty(choice)
-%                     eventnum=eventnum+1; % ENTER goes to next event 
-% 
-%                 elseif (choice(1)=='c') % CLASSIFY
-%                     classify_event(time);
-% 
+% SAME AS EVENT FUNCTION EXCEPT ATTEMPTS TO USE SFILES TO LOAD WAVFILES
 %                 elseif (choice(1)=='p') % PLOT
 % %                     if strcmp(get(obj,'method'), 'import_aef_file')
 % %                         % AEF SUMMARY FILE FOR MBWH
@@ -754,75 +809,39 @@ classdef Catalog
 %                             mulplt(w);
 %                         end
 %                     end
-% 
-%                 elseif (choice(1)=='f') % FORWARD N EVENTS
-%                     num=1;
-%                     if length(choice)>1
-%                         num=str2num(choice(2:end));
-%                     end
-%                     eventnum=eventnum+num; 
-% 
-%                 elseif (choice(1)=='b') % BACKWARD N EVENTS
-%                     num=1;
-%                     if length(choice)>1
-%                         num=str2num(choice(2:end));
-%                     end
-%                     eventnum=eventnum-num;
-% 
-%                 elseif (choice(1)=='t') % JUMP TO TIME
-%                     month=1;dd=1;hr=0;
-%                     if length(choice)>4
-%                         year=str2num(choice(2:5));
-%                     end
-%                     if length(choice)>6
-%                         month=str2num(choice(6:7));
-%                     end
-%                     if length(choice)>8
-%                         dd=str2num(choice(8:9));
-%                     end
-%                     if length(choice)>10
-%                         hr=str2num(choice(10:11));
-%                     end
-%                     jumptime=datenum(year,month,dd,hr,0,0);
-%                     eventnum = min(find(obj.time > jumptime));
-% 
-%                 elseif (choice(1)=='s') % SUMMARISE - SHOW S FILE or similar data 
-%                     try
-%                         s = get(obj, 'sfile');
-%                         disp(s(eventnum));                 
-%                     catch
-%                         disp('No Sfile');
-%                     end
-% 
-%                 elseif (choice(1)=='x') % CLOSE ALL
-%                     close all;
-% 
-%                 elseif (choice=='q') % QUIT
-%                     break;
-% 
-%                 elseif (choice(1)=='h') % HELP
-%                     disp(' ');
-%                     disp('Options:');
-%                     disp('________');
-%                     disp(' ');
-%                     disp('b[num]            - go backward 1 event (or N events)');
-%                     disp('c                 - classify');
-%                     disp('e                 - edit/generate S-file');
-%                     disp('f[num]            - go forward 1 event (or N events)');
-%                     disp('h                 - this help');
-%                     disp('p                 - plot');
-%                     disp('s                 - summarise');
-%                     disp('tYYYY[MM[DD[HH]]] - jump to date/hour specified');
-%                     disp('x                 - close all figure windows');
-%                     disp('q                 - quit');
-%                     disp(' ');
+%         function w=towaveform(obj)
+%             % WHAT THE HELL IS THIS - SOMETHING TO DO WITH SEISAN - PERHAPS
+%             % I NEED NEW CLASS Catalog_SEISAN
+%              w{1,1} = waveform();
+%              if strcmp(get(obj,'method'), 'load_seisandb')
+%                 % SEISAN FILE
+%                 scnl = scnlobject('*', '*');
+%                 ds = get(obj, 'datasource');
+%                 sfile = get(obj, 'sfile');
+%                 datestr([sfile.time])
+%                 for k=1:numel([sfile.time])
+%                     wavfiles = {sfile(k).wavfiles};
+%                     yyyy = sfile(k).year;
+%                     mm = sfile(k).month;
+%                     time = sfile(k).time;
+%                     dbpath = get(obj, 'dbpath');
+%                     dbpath = strrep(dbpath, 'REA', 'WAV');
+%                     for i=1:numel(wavfiles)
+%                         wavpath = strtrim(fullfile(dbpath, sprintf('%04d', yyyy), sprintf('%02d', mm), wavfiles{i}));
+%                         if exist(wavpath, 'file')
+%                             %disp(sprintf('Loading %s',wavpath));
+%                             ds = datasource('seisan', wavpath);
+%                             w{k,i}=waveform(ds, scnl, time, time+300/86400);
+%                         else
+%                            disp(sprintf('Not found: %s',wavpath));
+%                         end
+%                     end         
 %                 end
-%             end
-%         end   
-%         
-% %% ---------------------------------------------------
+%              end
+%         end
 
-        %% WRITE catalogObject TO AN ANTELOPE/DATASCOPE css3.0 or aefsam0.1 DATABASE
+%% ---------------------------------------------------
+       
         function write(catalogObject, outformat, outpath, schema)
             %Catalog.write Write an Catalog object to disk
             %

@@ -155,6 +155,8 @@ function self = readCatalog(dataformat, varargin)
             self = sru(varargin{:});
         case 'vdap'
             self = vdap(varargin{:});
+        case 'zmap'
+            self = zmap(varargin{:});
         otherwise
             self = NaN;
             fprintf('format %s unknown\n\n',data_source);
@@ -1131,10 +1133,22 @@ function self=sru(filename)
     etype = repmat('t',numel(dnum));
     
     %% Create our Catalog object
-    % FAST MODE
-    self = Catalog_lite(lat, lon, depth, dnum, mag, etype);
-    % WE COULD ADD ANOTHER METHOD HERE IN SLOW MODE TO CREATE A FULL
-    % CATALOG OBJECT, MAKING USE OF FIELDS LIKE nassP, rms etc.
+    self = Catalog(dnum, lon, lat, depth, mag, {}, etype);
+end
+
+%% ---------------------------------------------------
+
+function self = zmap(zmapdata)
+%readEvents.zmap Translate a ZMAP-format data matrix into a Catalog object
+% ZMAP format is 10 columns: longitude, latitude, decimal year, month, day,
+% magnitude, depth, hour, minute, second
+    lon = zmapdata(:,1);
+    lat = zmapdata(:,2);
+    time = datenum( floor(zmapdata(:,3)), zmapdata(:,4), zmapdata(:,5), ...
+        zmapdata(:,8), zmapdata(:,9), zmapdata(:,10) );
+    mag = zmapdata(:,6);
+    depth = zmapdata(:,7);
+    self = Catalog(time, lon, lat, depth, mag, {}, {});
 end
 
 %% ---------------------------------------------------
