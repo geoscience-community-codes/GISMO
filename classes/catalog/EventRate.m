@@ -422,7 +422,23 @@ classdef EventRate
                 ylabel(ax(2), 'Cumulative Energy', 'FontSize',12);
             end
         end
+
         
+        function pvalue(obj)
+            logt = log10(obj.time-obj.time(1));
+            logc = log10(obj.counts);
+            plot(logt, logc);
+            p = logt \ logc'
+%             p = polyfit(logt, logc, 1)
+%             hold on
+%             logt1 = min(logt);
+%             logc1 = polyval(p, logt1);
+%             logt2 = max(logt);
+%             logc2 = polyval(p, logt2);  
+%             line([logt1 logt2], [logc1 logc2]);
+        end
+            
+            
         %% SAUSAGEPLOT
         function sausageplot(obj, numBinsToUse, varargin)
             %sausageplot

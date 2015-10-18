@@ -1,4 +1,4 @@
-function hankelq(dbpath, exvpr, f1, f2, pretrigger, posttrigger, max_arrivals)
+function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
 %HANKELQ Compute spectral ratio in two frequency bands and
 %   hankelq(dbpath, expr, freq_high, freq_low, pretrigger_seconds, posttrigger_seconds, max_arrivals ) 
 %   Loads arrivals from an arrival table (after subsetting with expr)
@@ -38,7 +38,7 @@ function hankelq(dbpath, exvpr, f1, f2, pretrigger, posttrigger, max_arrivals)
 
     arrivals = readArrivals(dbpath, expr);
     w = arrivals2waveforms(dbpath, arrivals, pretrigger, posttrigger, taper_seconds, max_arrivals);
-    w = waveform_clean(w);
+    %w = waveform_clean(w);
     [y, t]=plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2);
     
     % This is the figure we use to derive q from spectral ratios for
