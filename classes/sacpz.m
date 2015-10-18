@@ -8,6 +8,7 @@ classdef sacpz
 	methods
 		function obj = sacpz(sacpzfile)
 		%sacpz.sacpz Constructor for sacpz
+        % sacpz(sacpzfile)
 			obj.z = []; obj.p = []; obj.k = NaN;
 			if ~exist(sacpzfile, 'file')
 				warning(sprintf('File not found %s',sacpzfile))
@@ -19,7 +20,6 @@ classdef sacpz
                     thisline = fgetl(fin);
 					continue
                 end
-                %thisline = strtrim(thisline);
 				if strfind(thisline,'ZEROS')
                     thisline = strrep(thisline, 'ZEROS', '');
                     numzeros = sscanf(thisline, '%d', 1);
@@ -48,11 +48,25 @@ classdef sacpz
 		end
 
 		function plot(obj)
-			zplane(obj.z, obj.p)
-			% let's all plot impz and freqz
-		end
-
-		
+            %sacpz.plot() Plot poles & zeros, impulse response & frequency
+            %response
+            
+            % Poles (x) & zeros (o) plot with unit circle
+            figure(1)
+            zplane(obj.z, obj.p)
+            
+            % Impulse response 
+            figure(2)
+            sos = zp2sos(obj.z, obj.p, obj.k);
+            impz(sos)
+            
+            % Frequency response
+            figure(3)
+            freqz(sos)
+            
+            % Filter visualization GUI
+            %fvtool(sos)
+        end
 	end
 end
 
