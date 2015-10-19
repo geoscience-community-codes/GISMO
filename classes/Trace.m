@@ -143,6 +143,10 @@ classdef Trace < TraceData
             val = datestr(val,stringformat);
          end
       end
+      function N = nyquist(T)
+         N=[T.samplerate] ./ 2;
+         reshape(N,size(T));
+      end
          
       function tf = startsbefore(A, B)
          %TODO: make this work for datetime or datenums or datestrings
@@ -1495,6 +1499,7 @@ classdef Trace < TraceData
       end
       function T = retrieve(ds, names, starts, ends, miscfilters)
          % ds is a datasource
+         % T = retrieve(datasouce, names, starts, ends, miscfilters)
          % names are channeltags OR bulkdataselect (BDS)-type requests
          %    if BDS type, then starts, ends, miscfilters ignored.
          % starts is either text, or array fo start times 
@@ -1521,7 +1526,7 @@ classdef Trace < TraceData
             end
             % now fill with bogus data
          end
-         
+         return
             if isVoidInterpreter(ds)
                ds = setinterpreter(ds, get_load_routine(ds, usewkaround));
             end
