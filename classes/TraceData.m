@@ -61,10 +61,16 @@ classdef TraceData
             obj.data = values(:);
       end
       
+      
+      function p = period(T)
+         p = 1 ./ [T.samplerate];
+         % NOT reshaped
+      end
+      
       function val = sampletimes(obj)
          % TraceData.sampletimes returns matlab-time offset of each sample
          assert(numel(obj) == 1, 'only works on one TraceData at a time');
-         val = (0:(numel(obj.data)-1)) .* obj.samplerate / 86400;
+         val = (0:(numel(obj.data)-1)) .* obj.period / 86400;
          val = val(:);
       end
       

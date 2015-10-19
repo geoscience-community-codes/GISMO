@@ -15,7 +15,6 @@ function w = load_from_datasource(ds, chans, startt, endt, combine_waves, usewka
    
    % TODO: Trim waveform to request
    % maybe we're already done?
-   disp('done?')
    return
    % -------------------------------------------------------------------
    % if the datasource is file based, or if it requires a user-defined
