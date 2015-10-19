@@ -13,8 +13,6 @@ classdef Tracefilter
       function f = Tracefilter(filtType, cutoff_, poles_)
          % TRACEFILTER constructor for a filter object
          switch nargin
-            case 0
-               return;
             case 1
                if isa(filtType,'filterobject')
                   % convert from the old filterobject
@@ -25,13 +23,15 @@ classdef Tracefilter
                   error('unknown Tracefilter usage');
                end
             case 3
-               f = filterobject;
-               f = set(f,'type',anything, 'cutoff', cutoff,'poles',poles);
+               f.type = filtType;
+               f.cutoff = cutoff_;
+               f.poles = poles_;
             otherwise
                disp('Invalid arguments in TraceFilter constructor');
          end
       end
       function f = set.type(f, val)
+            assert(numel(f) == 1, 'only can set type for one Tracefilter at a time');
          if ~ischar(val) || numel(val) ~= 1
             error('filter TYPE must be ''B'', ''H'', or ''L'', not a %s',class(val));
          end
@@ -42,6 +42,7 @@ classdef Tracefilter
          end
       end
       function f = set.cutoff(f, val)
+            assert(numel(f) == 1, 'only can set cutoff for one Tracefilter at a time');
          if ~isnumeric(val)
             error('Cutoff frequency should be numeric, not %s',class(val));
          end
@@ -56,8 +57,9 @@ classdef Tracefilter
          end
       end
       function f = set.poles(f, val)
+         assert(numel(f) == 1, 'only can set poles for one Tracefilter at a time');
          if val >=0,
-            f(n).poles = round(val);
+            f.poles = round(val);
          else
             warning('Poles cannot be negative!');
          end

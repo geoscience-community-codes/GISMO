@@ -976,13 +976,15 @@ classdef Trace < TraceData
                disp('<No user defined fields>');
             else
             fprintf('User Defined fields:\n');
+            format compact
             for n=1:numel(ud_fields);
                if isstruct(w.UserDataRules) && isfield(w.UserDataRules, ud_fields{n})
-                  fprintf('   *%-15s: ',ud_fields{n}); disp(w.UserData.(ud_fields{n}));
+                  fprintf('   *%15s: ',ud_fields{n}); disp(w.UserData.(ud_fields{n}));
                else
-                  fprintf('    %-15s: ',ud_fields{n}); disp(w.UserData.(ud_fields{n}));
+                  fprintf('    %15s: ',ud_fields{n}); disp(w.UserData.(ud_fields{n}));
                end
             end
+            format short
             disp(' <(*) before fieldname means that rules have been set up governing data input for this field>');
             end
          end
@@ -1493,7 +1495,7 @@ classdef Trace < TraceData
             T(N) = Trace(W(N));
          end
       end
-      function T = retrieve(ds, names, starts, ends, miscfilters)
+            function T = fakedata(ds, names, starts, ends, miscfilters)
          % ds is a datasource
          % T = retrieve(datasouce, names, starts, ends, miscfilters)
          % names are channeltags OR bulkdataselect (BDS)-type requests
@@ -1504,7 +1506,7 @@ classdef Trace < TraceData
          % return the traces
          
          %anticipated trouble: wildcards
-         warning('not hooked up yet. filling with bogus data');
+         warning('filling with bogus data');
          if ~exist('starts','var')
             % build T from names
          else
@@ -1522,15 +1524,29 @@ classdef Trace < TraceData
             end
             % now fill with bogus data
          end
-         return
-            if isVoidInterpreter(ds)
-               ds = setinterpreter(ds, get_load_routine(ds, usewkaround));
-            end
-            request = packDataRequest(ds, chans, startt, endt, miscfilters);
-            getter = get(ds,'interpreter');
-            T = getter(request);
-            
-            return
+      end
+      
+      function T = retrieve(ds, names, starts, ends, miscfilters)
+         % Get a Trace from external data source
+         %
+         % UNDER CONSTRUCTION. for now, this is a wrapper around waveform.
+         % it will use the waveform class to get data, and will then
+         % convert to traces and pass that along.
+         %
+         % T = retrieve(datasouce, names, starts, ends, miscfilters)
+         % names are channeltags OR N.S.L.C strings.
+         % in future, this will be able to accept bulkdataselect (BDS)-type requests
+         %    if BDS type, then starts, ends, miscfilters ignored.
+         % for now
+         % starts is either text, or array fo start times 
+         % find data pointed to by ds, names, starts, ends
+         % convertToTraces
+         % return the traces
+         if isa(names,'cell') || isa(names,'char')
+            names = channeltag.array(names);
+         end
+         w = waveform(ds, names, starts, ends);
+         T = Trace.waveform2trace(w);
       end
    end %static methods
 end
