@@ -137,7 +137,7 @@ classdef Trace < TraceData
          % For multiple traces, a character array will be returned.
          % see also datestr
          secDurs = [obj.duration];
-         secDurs(secDurs > 0) = secDurs - [obj.samplerate];
+         secDurs(secDurs > 0) = secDurs - 1./[obj.samplerate];
          val = [obj.firstsampletime] + secDurs/86400;
          if exist('stringformat','var')
             val = datestr(val,stringformat);
@@ -172,6 +172,7 @@ classdef Trace < TraceData
          assert(numel(T) == 1, 'only can set name for individual traces');
          T.channelinfo = channeltag(val);
       end
+      
       
       function T = align(T,alignTime, newSamprate, method)
          %ALIGN resamples a waveform at over a specified interval
@@ -286,10 +287,10 @@ classdef Trace < TraceData
          %% update histories
          % if all waves were aligned to the same time, then handle all history here
          if hasSingleAlignTime
-            % noteRealignment(w, alignTime(1), newSamprate);
+            noteRealignment(w, alignTime(1), newSamprate);
          else
             for n=1:numel(T)
-               % T(n) = noteRealignment(T(n), alignTime(n), newSamprate);
+               T(n) = noteRealignment(T(n), alignTime(n), newSamprate);
             end
          end
          
@@ -548,14 +549,14 @@ classdef Trace < TraceData
             return
          end
          
-         channelinfo = get(traces,'channeltag');
-         [uniquescnls, idx, scnlmembers] = unique(channelinfo);
+         chaninfo = [traces.channelinfo];
+         [uniquechans, ~, chanbin] = unique(chaninfo);
          
          %preallocate
-         combined_traces = repmat(waveform,size(uniquescnls));
+         combined_traces = repmat(Trace,size(uniquechans));
          
-         for i=1:numel(uniquescnls)
-            T = traces(scnlmembers == i);
+         for i=1:numel(uniquechans)
+            T = traces(chanbin == i);
             T = timesort(T);
             for j=(numel(T)-1):-1:1
                T(j) = piece_together(T(j), T(j+1));
@@ -570,6 +571,7 @@ classdef Trace < TraceData
                return;
             end;
             dtSecs = (T2.firstsampletime - T1.lastsampletime) * 86400;
+            %seamless = dTSecs == 
             sampRate = T1.samplerate;
             if sampRate > 1
                sampRate = round(sampRate);
@@ -586,18 +588,16 @@ classdef Trace < TraceData
             end
          end
          
-         function T1 = spliceAndPad(T1, T2, paddingAmount)
-            if paddingAmount > 0 && ~isinf(paddingAmount)
-               toAdd = nan(paddingAmount,1);
+         function T1 = spliceAndPad(T1, T2, nToPad)
+            if nToPad > 0 && ~isinf(nToPad)
+               T1.data = [T1.data; nan(nToPad,1); T2.data];
             else
-               toAdd = [];
+               T1.data = [T1.data; T2.data];
             end
-            
-            T1.data = [T1.data; toAdd; T2.data];
          end
          
          function T1 = spliceTrace(T1, T2)
-            timesToGrab = sum(T1.sampletimes < T2.mat_starttime);
+            timesToGrab = sum(T1.sampletimes < T2.firstsampletime);
             samplesRemoved = numel(T1.data) - timesToGrab;
             T1.data = [double(extract(T1,'index',1,timesToGrab)); T2.data];
             T1= T1.addhistory('SPLICEPOINT: %s, removed %d points (overlap)',...
@@ -610,7 +610,7 @@ classdef Trace < TraceData
          end
       end
       
-      function outW = extract(w, method, startV, endV)
+      function outW = extract(T, method, startV, endV)
          %TODO: make this Trace-y.  This is currently written for waveforms
          %TODO: Decide on proper wording! Should this be multiple functions?
          %EXTRACT creates a waveform with a subset of another's data.
@@ -715,7 +715,7 @@ classdef Trace < TraceData
          % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
          
          %% Set up condition variables, and ensure validity of input
-         MULTIPLE_WAVES = ~isscalar(w);
+         MULTIPLE_WAVES = ~isscalar(T);
          
          %if either of our times are strings, it's 'cause they're actually dates
          if ischar(startV)
@@ -734,19 +734,19 @@ classdef Trace < TraceData
          MULTIPLE_EXTRACTION = numel(endV) > 1;
          
          if MULTIPLE_WAVES && MULTIPLE_EXTRACTION
-            w = w(:);
+            T = T(:);
          end
          
          %%
-         if numel(w)==0 || numel(startV) ==0
+         if numel(T)==0 || numel(startV) ==0
             warning('Waveform:extract:emptyWaveform','no waveforms to extract');
             return
          end
-         outW(numel(w),numel(startV)) = waveform;
+         outW(numel(T),numel(startV)) = Trace;
          
          for m = 1: numel(startV) %loop through the number of extractions
-            for n=1:numel(w); %loop through the waveforms
-               inW = w(n);
+            for n=1:numel(T); %loop through the waveforms
+               inW = T(n);
                myData = inW.data;
                
                switch lower(method)
@@ -772,7 +772,7 @@ classdef Trace < TraceData
                         myData = [];
                      else
                         %some aspect of this data must be represented by the waveform
-                        [myStartI myStartTime] = time2offset(inW,startV(m));
+                        [myStartI, myStartTime] = time2offset(inW,startV(m));
                         [myEndI] = time2offset(inW,endV(m)) - 1;
                         if isempty(myStartTime)
                            %waveform starts sometime after requested start
@@ -808,7 +808,7 @@ classdef Trace < TraceData
                      end
                      
                      myData = myData(startV(m):endV(m));
-                     sampTimes = get(inW,'timevector'); % grab individual sample times
+                     sampTimes = inW.sampletimes; % grab individual sample times
                      myStart = sampTimes(startV(m));
                      
                   case 'index&duration'
@@ -847,9 +847,13 @@ classdef Trace < TraceData
                end
                
                if MULTIPLE_EXTRACTION
-                  outW(n,m) = set(inW,'start',myStart, 'data', myData);
+                  outW(n,m).start = myStart;
+                  outW(n,m).data = myData;
+                  %outW(n,m) = set(inW,'start',myStart, 'data', myData);
                else
-                  outW(n) = set(inW,'start',myStart, 'data', myData);
+                  outW(n).start = myStart;
+                  outW(n).data = myData;
+                  %outW(n) = set(inW,'start',myStart, 'data', myData);
                end
             end % n-loop (looping through waveforms)
          end % m-loop (looping through extractions)
@@ -944,19 +948,6 @@ classdef Trace < TraceData
                fprintf('%02d:%02d:%05.3f\n' , hrs,mins,secs);
             end;
             return
-               U = unique({w.name});
-            if numel(U) < 5
-               for n=1:numel(U)
-                  fprintf('    %s\n', U{n});
-               end
-            else
-               fprintf('     %d unique net.sta.loc.cha combos\n',numel(U));
-            end
-            % starting ranges
-            % duration ranges
-            % sample ranges
-            %samplerate ranges
-            
          elseif numel(w) == 0
             disp('  No Traces');
             
@@ -1089,16 +1080,16 @@ classdef Trace < TraceData
          %string.
          [formString, proplist] = getformatstring(varargin);
          hasExtraArg = ~isempty(formString);
-         [isfound, useAutoscale, proplist] = getproperty('autoscale',proplist,false);
-         [isfound, xunit, proplist] = getproperty('xunit',proplist,'s');
-         [isfound, currFontSize, proplist] = getproperty('fontsize',proplist,10);
+         [~, useAutoscale, proplist] = getproperty('autoscale',proplist,false);
+         [~, xunit, proplist] = getproperty('xunit',proplist,'s');
+         [~, currFontSize, proplist] = getproperty('fontsize',proplist,10);
          
          [xunit, xfactor] = parse_xunit(xunit);
          
          switch lower(xunit)
             case 'date'
                % we need the actual times...
-               for n=1:numel(T)
+               for n=numel(T):-1:1
                   tv(n) = {T(n).sampletimes};
                end
                % preAllocate Xvalues
@@ -1117,7 +1108,7 @@ classdef Trace < TraceData
             case 'day of year'
                allstarts = [T.mat_starttime];
                startvec = datevec(allstarts(:));
-               dec31 = datenum([startvec(1)-1,12,31,0,0,0]); % 12/31/xxxx of previous year in Matlab format
+               dec31 = datenum(startvec(1)-1,12,31,0,0,0); % 12/31/xxxx of previous year in Matlab format
                startdoy = datenum(allstarts(:)) - dec31;
                
                dl = zeros(size(T));
@@ -1126,11 +1117,10 @@ classdef Trace < TraceData
                end
                
                Xvalues = nan(max(dl),numel(T));
-               
-               samprates = [T.samplerate];
+               periodsInUnits = T.period() ./ xfactor;
                for n=1:numel(T)
-                  Xvalues(1:dl(n),n) = (1:dl(n))./ samprates(n) ./ ...
-                     xfactor + startdoy(n) - 1./samprates(n)./xfactor;
+                  Xvalues(1:dl(n),n) = (0:dl(n)-1) .* periodsInUnits(n) + startdoy(n);
+                  % (1:dl(n)) .* periodsInUnits(n) + startdoy(n) - periodsInUnits(n);
                end
                
             otherwise,
@@ -1343,10 +1333,11 @@ classdef Trace < TraceData
          trace_height=0.9/nwaveforms;
          left=0.1;
          width=0.8;
+         ax = zeros(1,nwaveforms);
          for wavnum = 1:nwaveforms
             myw = T(wavnum);
             dnum = myw.sampletimes;
-            ax(wavnum) = axes('Position',[left 0.95-wavnum*trace_height width trace_height]);
+            ax(wavnum) = axes('Position',[left, 0.95-wavnum*trace_height, width, trace_height]);
             if alignTraces
                plot((dnum-min(dnum))*SECSPERDAY, myw.data,'-k');
                set(gca, 'XLim', [0 maxduration*SECSPERDAY]);
@@ -1370,16 +1361,16 @@ classdef Trace < TraceData
             linkaxes(ax,'x');
          end
          
-         originalXticks = get(gca,'XTickLabel');
+         % originalXticks = get(gca,'XTickLabel');
          
          f = uimenu('Label','X-Ticks');
          uimenu(f,'Label','time range','Callback',{@daterange, snum, SECSPERDAY});
          uimenu(f,'Label','quit','Callback','disp(''exit'')',...
             'Separator','on','Accelerator','Q');
          
-         function daterange(obj, evt, snum, SECSPERDAY)
+         function daterange(~, ~, snum, SECSPERDAY)
             xlim = get(gca, 'xlim');
-            xticks = linspace(xlim(1), xlim(2), 11);
+            %xticks = linspace(xlim(1), xlim(2), 11);
             mydate = snum + xlim/SECSPERDAY;
             datestr(mydate,'yyyy-mm-dd HH:MM:SS.FFF')
          end
@@ -1387,7 +1378,6 @@ classdef Trace < TraceData
       
       %%
       function varargout = legend(T, varargin)
-         %TODO: FIX REPETITIONS
          %legend creates a legend for a waveform graph
          %  legend(traces) attempts to automatically create a legend based upon
          %  unique values within the waveforms.  in order, the legend will
@@ -1479,19 +1469,29 @@ classdef Trace < TraceData
             end
          end
       end
+      function W = trace2waveform(T)
+         % convert traces into waveforms
+         for n=numel(T):-1:1
+            W(n) = waveform;
+            W(n) = set(W(n),'channelinfo',T(n).channelinfo,...
+               'freq', T(n).samplerate,...
+               'data',T(n).data,...
+               'units',T(n).units);
+            ufields = fieldnames(T(n).UserData);
+            for z = 1:numel(ufields)
+               W(n) = addfield(W(n), ufields{z}, T(n).UserData, T(n).UserData.(ufields{z}));
+            end
+         end
+      end
       
    end
    methods(Static)
       function T = waveform2trace(W)
          % convert waveforms into traces
          assert(isa(W,'waveform'));
-         for N=1:numel(W)
+         for N = numel(W):-1:1
             T(N) = Trace(W(N));
          end
-      end
-      function W = trace2waveform(T)
-         % convert traces into waveforms
-         error('not implemented yet')
       end
       function T = retrieve(ds, names, starts, ends, miscfilters)
          % ds is a datasource
@@ -1521,6 +1521,15 @@ classdef Trace < TraceData
             end
             % now fill with bogus data
          end
+         
+            if isVoidInterpreter(ds)
+               ds = setinterpreter(ds, get_load_routine(ds, usewkaround));
+            end
+            request = packDataRequest(ds, chans, startt, endt, miscfilters);
+            getter = get(ds,'interpreter');
+            T = getter(request);
+            
+            return
       end
    end %static methods
 end
