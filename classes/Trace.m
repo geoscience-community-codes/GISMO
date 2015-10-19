@@ -143,10 +143,6 @@ classdef Trace < TraceData
             val = datestr(val,stringformat);
          end
       end
-      function N = nyquist(T)
-         N=[T.samplerate] ./ 2;
-         reshape(N,size(T));
-      end
          
       function tf = startsbefore(A, B)
          %TODO: make this work for datetime or datenums or datestrings
@@ -1149,7 +1145,7 @@ classdef Trace < TraceData
          h = plot(Xvalues, double(T,'nan') , varargin{:} );
          
          if useAutoscale
-            yunit = autoscale(h, yunit);
+            yunit = Trace.autoscale(h, yunit);
          end
          
          yh = ylabel(yunit,'fontsize',currFontSize);
