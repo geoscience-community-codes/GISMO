@@ -114,8 +114,9 @@ classdef channeltag
                      [obj.network, obj.station, obj.location, obj.channel] = ...
                         channeltag.parse(inObj);
                      else
-                        error('channeltag:InvalidConversion',...
-                           'To create multiple channeltags, use channeltag.array()');
+                        obj = channeltag.array(varargin{1});
+                        %error('channeltag:InvalidConversion',...
+                        %   'To create multiple channeltags, use channeltag.array()');
                      end
                         
                   case 'cell'
@@ -123,8 +124,9 @@ classdef channeltag
                         [obj.network, obj.station, obj.location, obj.channel] = ...
                            channeltag.parse(inObj{1});
                      else
-                        error('channeltag:InvalidConversion',...
-                           'To create multiple channeltags, use channeltag.array()');
+                        obj = channeltag.array(varargin{1});
+                        %error('channeltag:InvalidConversion',...
+                        %   'To create multiple channeltags, use channeltag.array()');
                      end
                   otherwise
                      error ('channeltag:InvalidConversion','Invalid number of arguments');

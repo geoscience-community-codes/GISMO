@@ -1488,6 +1488,28 @@ classdef Trace < TraceData
       
    end
    methods(Static)
+      function T = toTrace(item, itemlabel, conversionfunction)
+         % convert anything into traces
+         % conversion functions exist outside the Trace class so that
+         % adding/removing/changing the conversion functions do not affect
+         % this class
+         % some envisioned examples
+         % T = toTrace( X , 'fdsn_trace');
+         % T = toTrace( X, 'fdsn_sac');
+         % T = toTrace( X , 'winston');
+         % T = toTrace( X , 'miniseed');
+         % T = toTrace( X , 'seisan');
+         % T = toTrace( X , 'seisan');
+         % T = toTrace( X , 'waveform');
+         %
+         persistent converters
+         if isempty(converters)
+            converters = [];
+            %fill converters based on a directory/package
+         end
+         
+         
+      end
       function T = waveform2trace(W)
          % convert waveforms into traces
          assert(isa(W,'waveform'));
