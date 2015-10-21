@@ -133,7 +133,20 @@ classdef Catalog
                 end
             end
         end
-       
+%% ---------------------------------------------------
+		function webmap(catalogObject)
+            %Catalog.webmap plot hypocenters in map view using webmap         
+            
+            if all(isnan(catalogObject.lat))
+                warning('No hypocenter data to plot');
+                return
+            end
+            lat = catalogObject.lat(~isnan((catalogObject.lat)));
+            lon = catalogObject.lon(~isnan((catalogObject.lat)));
+            webmap
+            wmmarker(lat, lon)
+
+        end
 %% ---------------------------------------------------
 		function plot(catalogObject, varargin)
             %Catalog.plot plot hypocenters in map view and cross-sections

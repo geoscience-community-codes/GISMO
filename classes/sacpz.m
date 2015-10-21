@@ -22,20 +22,27 @@ classdef sacpz
         outputunit = '';
         instrumenttype = '';
         instrumentgain = '';
+        instrumentgainunits = '';
         sensitivity = '';
+        sensitivityunits = '';
         a0 = NaN;
 	end
 	methods
-		function obj = sacpz(sacpzfile)
+		function obj = sacpz(fileContents)
 		%sacpz.sacpz Constructor for sacpz
-        % sacpz(sacpzfile)
+        % sacpz(fileContents)
+        % Examples:
+        % 1. Read a sacpz file:
+        %     pz = sacpz(fileread('SACPZ.IU.COLA.BHZ'))
+        % 2. Read from a webservices URL (SCAFFOLD: code can only handle 1 time period / channel currently)
+        %     pz = sacpz(webread('http://service.iris.edu/irisws/sacpz/1/query?net=AV&sta=OKSO&loc=--&cha=BHZ&starttime=2011-03-21T00:00:00'))
 			obj.z = []; obj.p = []; obj.k = NaN;
-			if ~exist(sacpzfile, 'file')
-				warning(sprintf('File not found %s',sacpzfile))
-			end
-			fin = fopen(sacpzfile,'r');
-			thisline = fgetl(fin);
-			while ischar(thisline),
+            tic
+            lines = strread(fileContents, '%s', 'delimiter', sprintf('\n'));
+            c = 1;
+			while c <= numel(lines),
+                thisline = lines{c};
+                disp(thisline)
 				if (numel(thisline)>0 & thisline(1)=='*')
                     if strfind(thisline, 'NETWORK');
                         idx = strfind(thisline,':');
@@ -108,25 +115,31 @@ classdef sacpz
                     elseif strfind(thisline, 'INSTGAIN')  ;
                         idx = strfind(thisline,':');
                         thisline = strtrim(thisline(idx+1:end));
-                        obj.instrumentgain = thisline;  
+                        tmpfields = strread(thisline, '%s', 'delimiter', ' ');
+                        obj.instrumentgain = sscanf(tmpfields{1}, '%e', 1);
+                        obj.instrumentgainunits = tmpfields{2};
+                        clear tmpfields
                     elseif strfind(thisline, 'SENSITIVITY')  ;
                         idx = strfind(thisline,':');
                         thisline = strtrim(thisline(idx+1:end));
-                        obj.sensitivity = thisline;
+                        tmpfields = strread(thisline, '%s', 'delimiter', ' ');
+                        obj.sensitivity = sscanf(tmpfields{1}, '%e', 1);
+                        obj.sensitivityunits = tmpfields{2};
+                        clear tmpfields
                     elseif strfind(thisline, 'A0')  ;
                         idx = strfind(thisline,':');
                         thisline = strtrim(thisline(idx+1:end));
                         obj.a0 = sscanf(thisline, '%f', 1);   
                     end
-                    
-                    thisline = fgetl(fin);
+                    c = c + 1;
 					continue
                 end
 				if strfind(thisline,'ZEROS')
                     thisline = strrep(thisline, 'ZEROS', '');
                     numzeros = sscanf(thisline, '%d', 1);
                     for zidx = 1:numzeros
-                        thisline = fgetl(fin);
+                        c = c + 1;
+                        thisline = lines{c};
                         a = sscanf(thisline,'%e',2);
                         obj.z(zidx, 1) = a(1) + 1j*a(2);
                     end
@@ -135,7 +148,8 @@ classdef sacpz
                     thisline = strrep(thisline, 'POLES', '');
                     numpoles = sscanf(thisline, '%d', 1);
                     for pidx = 1:numpoles
-                        thisline = fgetl(fin);
+                        c = c + 1;
+                        thisline = lines{c};
                         a = sscanf(thisline,'%e',2);
                         obj.p(pidx, 1) = a(1) + 1j*a(2);
                     end
@@ -144,9 +158,9 @@ classdef sacpz
                     thisline = strrep(thisline, 'CONSTANT', '');
 					obj.k = sscanf(thisline, '%f',1);
                 end
-                thisline = fgetl(fin);
-			end
-			fclose(fin);
+                c = c + 1;
+            end
+            toc
 		end
 
         %% -----------------------------------------------
