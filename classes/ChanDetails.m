@@ -131,7 +131,7 @@ classdef ChanDetails
                        R.(f) = datestr(v,31);
                     end
                     
-                       R.(f) = strrep(v,' ','T');
+                       R.(f) = strrep(R.(f),' ','T');
                     % all dates. further process
                  case {'lat', 'lon', 'maxradius', 'minradius'} 
                     assert(~any(ismember({'minlat','maxlat','minlon','maxlon'},fn)),...
@@ -150,6 +150,8 @@ classdef ChanDetails
            val = R.(name);
            urlstr = [urlstr, '&', name, '=', val];
         end
+        disp(urlstr);
+           
         chdeets = urlread(urlstr);
         labels = textscan(chdeets,'%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s',1,'delimiter','|');
         labels=[labels{:}];
