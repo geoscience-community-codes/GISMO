@@ -31,22 +31,22 @@ classdef test_ChanDetails < matlab.unittest.TestCase
          
          % test retrieve with a single N.S.L.C string
          chd = ChanDetails.retrieve([], ANMO);
-         testCase.verifyEqual(chd.channelinfo,channeltag(ANMO));
+         testCase.verifyEqual(chd(end),cdKey);
          % test retrieve with channeltag
          chaninfo = channeltag(ANMO);
          chd = ChanDetails.retrieve([], chaninfo);
-         testCase.verifytEqual(chd.channelinfo,channeltag(ANMO));
+         testCase.verifyEqual(chd(end),cdKey);
          % test retrieve with multiple channeltags
          chansinfo = channeltag({ANMO, ANTO});
          chd = ChanDetails.retrieve([], [chansinfo; chansinfo]);
-         testCase.verifySize(size(chd), [2 2], 'Wrong size returned for multiple Traces');
+         testCase.verifySize(chd, [2 2], 'Wrong size returned for multiple Traces');
          % test retrieve with Trace
-         T = Trace; T.name = ANMO;
+         T = Trace; T.name = ANMO;T.start = datenum('2015-10-21');
          chd = ChanDetails.retrieve([],T);
-         testCase.verifyEqual(chd.channelinfo,channeltag(ANMO));
+         testCase.verifyEqual(chd,cdKey);
          % test retrieve with multiple Traces
          chd = ChanDetails.retrieve([], [T T; T T]);
-         testCase.verifySize(size(chd), [2 2], 'Wrong size returned for multiple Traces');
+         testCase.verifySize(chd, [2, 2], 'Wrong size returned for multiple Traces');
       end
    end
    

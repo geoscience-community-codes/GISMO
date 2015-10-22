@@ -24,6 +24,11 @@ classdef ChanDetails
    %
    %    Results are in an 1XN ChanDetails object
    
+   % NOTE: Starting in r2014b matlab has WEBREAD to access data from
+   % restful services.  We could use that with weboptions to provide useful
+   % information to the service. (such as type of data requested, useragent,
+   % and for restricted data, a username & password pair.
+   
    properties(Dependent)
       name
       network
@@ -104,13 +109,14 @@ classdef ChanDetails
                      ch = ChanDetails.retrieve(ds,...
                         'network',me.network, 'station', me.station, ...
                         'location', me.location, 'channel', me.channel, ...
-                        'starttime', me.starttime, 'endtime', me.endtime);
+                        'starttime', me.firstsampletime, 'endtime', me.lastsampletime);
                      if numel(ch) > 1
                         warning('Found multiple epochs for %s channel. only Keeping last one', me.name);
                      end
                      chdeets(n) = ch(end);
-                     return
                   end
+                  chdeets = reshape(chdeets, size(varargin{1}));
+                  return
                case 'channeltag'
                   % return as cell, because we can't be sure how many are
                   % returned!
@@ -126,6 +132,7 @@ classdef ChanDetails
                            'network',me.network, 'station', me.station, ...
                            'location', me.location, 'channel', me.channel)};
                      end
+                     chdeets = reshape(chdeets, size(varargin{1}));
                   end
                   return
                otherwise
@@ -232,7 +239,6 @@ classdef ChanDetails
                chdeets(n).(fn) = thisval;
             end
          end
->>>>>>> origin/master
       end
    end
    
