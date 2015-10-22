@@ -6,10 +6,7 @@ classdef sacpz
 		k = [];
         starttime = NaN;
         endtime = NaN;
-        network = '';
-        station = '';
-        location = '';
-        channel = '';
+        channelinfo;
         latitude = NaN;
         longitude = NaN;
         depth = NaN;
@@ -40,6 +37,7 @@ classdef sacpz
             tic
             lines = strread(fileContents, '%s', 'delimiter', sprintf('\n'));
             c = 1;
+            ctag = struct(); 
 			while c <= numel(lines),
                 thisline = lines{c};
                 disp(thisline)
@@ -47,19 +45,19 @@ classdef sacpz
                     if strfind(thisline, 'NETWORK');
                         idx = strfind(thisline,':');
                         thisline = strtrim(thisline(idx+1:end));
-                        obj.network = sscanf(thisline, '%s', 1);
+                        ctag.network = sscanf(thisline, '%s', 1);
                     elseif strfind(thisline, 'STATION');
                         idx = strfind(thisline,':');
                         thisline = strtrim(thisline(idx+1:end));
-                        obj.station = sscanf(thisline, '%s', 1);
+                        ctag.station = sscanf(thisline, '%s', 1);
                     elseif strfind(thisline, 'LOCATION')  ;  
                         idx = strfind(thisline,':');
                         thisline = strtrim(thisline(idx+1:end));
-                        obj.location = sscanf(thisline, '%s', 1);
+                        ctag.location = sscanf(thisline, '%s', 1);
                     elseif strfind(thisline, 'CHANNEL')  ;
                         idx = strfind(thisline,':');
                         thisline = strtrim(thisline(idx+1:end));
-                        obj.channel = sscanf(thisline, '%s', 1);                        
+                        ctag.channel = sscanf(thisline, '%s', 1);                        
                     elseif strfind(thisline, 'START')  ;
                         idx = strfind(thisline,':');
                         thisline = strtrim(thisline(idx+1:end));
@@ -160,9 +158,35 @@ classdef sacpz
                 end
                 c = c + 1;
             end
+            obj.channelinfo = channeltag(ctag.network, ctag.station, ctag.location, ctag.channel);
             toc
 		end
-
+        %% -----------------------------------------------
+        
+        function disp(obj)
+            %sacpz.disp() Display summary information of a sacpz object
+            outstr = '';
+            % site info
+            outstr = fprintf('Site name: %s', obj.description);
+            disp(obj.channelinfo)
+            %obj.channelinfo.string()
+            
+            %outstr = fprintf('%s\nnet.sta.loc.chan: %s',outstr, obj.channelinfo.string());
+            outstr = fprintf('%s\nlatitude = %9.4f, longitude = %9.4f, elevation = %f',outstr,obj.latitude, obj.longitude, obj.elevation);
+            outstr = fprintf('%s\nsample rate = %.1f Hz',outstr,obj.samplerate);
+            outstr = fprintf('%s\ninstrument = %s',outstr,obj.instrumenttype);
+            outstr = fprintf('%s\nondate = %s, offdate = %s',outstr,datestr(obj.starttime), datestr(obj.endtime));
+            outstr = fprintf('%s\n\nZEROS %d',outstr, numel(obj.z));
+            for zi = 1:numel(obj.z)
+                outstr = fprintf('%s\n\t%f',outstr, obj.z(zi));
+            end
+            outstr = fprintf('%s\n\nPOLES %d',outstr, numel(obj.p));
+            for zi = 1:numel(obj.p)
+                outstr = fprintf('%s\n\t%f',outstr, obj.p(zi));
+            end            
+            disp(outstr)
+        end
+         
         %% -----------------------------------------------
 		function plot(obj)
             %sacpz.plot() Plot poles & zeros, impulse response & frequency
