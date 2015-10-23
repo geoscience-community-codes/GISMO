@@ -1,11 +1,11 @@
-function self = readCatalog(dataformat, varargin)
+function self = readEvents(dataformat, varargin)
 %readEvents: Read seismic events from common file formats & data sources.
 %  readEvents loads events from a seismic event catalog into a GISMO
 %  Catalog object
 %
 %% GENERAL USAGE:
 %
-%  cObject = readCatalog(dataformat, 'param1', value1, 'param2', value2 ...)
+%  cObject = readEvents(dataformat, 'param1', value1, 'param2', value2 ...)
 %     loads a seismic event catalog into a GISMO/Catalog object.
 %     dataformat is a method by which the source catalog is
 %     retrieved, or format in which the source catalog is stored.
@@ -29,14 +29,14 @@ function self = readCatalog(dataformat, varargin)
 %  (preferred) origin time, longitude, latitude, depth and magnitude.
 %  However:
 %
-%  cObject = readCatalog(..., 'addarrivals', true)
+%  cObject = readEvents(..., 'addarrivals', true)
 %
 %  will also include more detailed information, such as phase arrivals and
 %  different measurements of magnitude, if available. Warning - this may 
 %  be slow, especially for large datasets.
 %
 %% READING FROM IRIS/FSDN web services via irisfetch.m:
-%   cObject = readCatalog('irisfetch', 'param1', value1, 'param2', value2 ...)
+%   cObject = readEvents('irisfetch', 'param1', value1, 'param2', value2 ...)
 %             loads events, origins and magnitudes from IRIS-DMC or other
 %             FSDN data sources via irisFetch.m. The allowed parameter-value 
 %             pairs are those allowed by irisFetch.Events, listed above.
@@ -44,21 +44,21 @@ function self = readCatalog(dataformat, varargin)
 % Examples:
 %
 %   (1) Read all magnitude>7 events from IRIS DMC via irisFetch.m:
-%         Object = readCatalog('iris', 'MinimumMagnitude', 7.0);
+%         cObject = readEvents('iris', 'MinimumMagnitude', 7.0);
 %
 %   (2) Read all events within 20 km of Redoubt volcano from IRIS DMC:
-%         Object = readCatalog('iris','radialcoordinates', [60.4853 -152.7431 km2deg(20)]); 
+%        cObject = readEvents('iris','radialcoordinates', [60.4853 -152.7431 km2deg(20)]); 
 %
 %% READING FROM ANTELOPE DATABASES
 %
-%   cObject = readCatalog('antelope', 'dbpath', path_to_database, 'param1', value1, ...)
+%   cObject = readEvents('antelope', 'dbpath', path_to_database, 'param1', value1, ...)
 %     loads events, origins and magnitudes from an Antelope CSS3.0
 %     database using Kent Lindquist's Antelope Toolbox for MATLAB. As a
 %     minimum, the database must have an origin table. All the name-value
 %     parameters pairs supported by 'iris' are supported by 'antelope' too.
 %
 %
-%   cObject = readCatalog(..., 'subset_expression', subset_expression)
+%   cObject = readEvents(..., 'subset_expression', subset_expression)
 %             will subset the database given a valid antelope subset
 %             expression. Any other name-value parameter pairs will be
 %             ignored if subset_expression is given.
@@ -73,18 +73,18 @@ function self = readCatalog(dataformat, varargin)
 %         % get path to demo database
 %         dbpath = demodb('avo');
 %         % read events from database
-%         Object = readCatalog('antelope', 'dbpath', dbpath);
+%         Object = readEvents('antelope', 'dbpath', dbpath);
 %
 %   (2) As previous example, but use a subset expression also. Here we
 %       subset for origins within 15 km of Redoubt volcano:
-%         Object = readCatalog('antelope', 'dbpath', dbpath, ...
+%         Object = readEvents('antelope', 'dbpath', dbpath, ...
 %                   'subset_expression', ...
 %                   'deg2km(distance(lat, lon, 60.4853, -152.7431))<15.0');
 %
 %   (3) Read Alaska Earthquake Center events greater than M=4.0 in 2009
 %       within rectangular region lat = 55 to 65, lon = -170 to -135 from
 %       the "Total" database of all regional earthquakes in Alaska:
-%         Object = readCatalog('antelope', ...
+%         Object = readEvents('antelope', ...
 %               'dbpath', '/Seis/catalogs/aeic/Total/Total', ...
 %               'startTime', datenum(2009,1,1), ...
 %               'endTime', datenum(2010,1,1), ...
@@ -92,7 +92,7 @@ function self = readCatalog(dataformat, varargin)
 %               'boxcoordinates', [-170.0 -135.0 55.0 65.0]);
 %
 %   (4) As 3, but use a subset_expression instead:
-%         Object = readCatalog('antelope', ...
+%         Object = readEvents('antelope', ...
 %               'dbpath', '/Seis/catalogs/aeic/Total/Total', ...
 %               'subset_expression', ...
 %               'time > "2009/1/1" & time < "2010/1/1" & ml > 4 & lon > -170.0 & lon < -135.0 & lat > 55.0 & lat < 65.0');
@@ -100,7 +100,7 @@ function self = readCatalog(dataformat, varargin)
 %
 %% READING FROM AEF SUMMARY FILES
 % 
-%   Object = readCatalog('aef', 'dbpath', dbpath, 'param1', value1, ...) 
+%   Object = readEvents('aef', 'dbpath', dbpath, 'param1', value1, ...) 
 %     will attempt to load all Seisan-derived AEF summary files in the 
 %     directory specified by dbpath.
 % 
@@ -108,13 +108,13 @@ function self = readCatalog(dataformat, varargin)
 %     minimumMagnitude, minimumDepth, maximumDepth, region). 
 %
 % Example: Read MVO data from station MBWH for all of year 2000:
-%         Object = readCatalog('aef', ...
+%         cObject = readEvents('aef', ...
 %           'dbpath', fullfile('/raid','data','seisan','mbwh_catalog'), 
 %           'startTime', '2000/01/01', 'endTime', '2001/01/01');
 %
 %% READING S-FILES FROM A SEISAN YYYY/MM REA DATABASE
 % 
-%   Object = readCatalog('seisan', 'dbpath', dbpath, 'param1', value1, ...) 
+%   cObject = readEvents('seisan', 'dbpath', dbpath, 'param1', value1, ...) 
 %     will attempt to load all Seisan S-files in the 
 %     directory specified by dbpath (which should be the parent of
 %     YYYY/MM directories)
@@ -123,7 +123,7 @@ function self = readCatalog(dataformat, varargin)
 %     minimumMagnitude, minimumDepth, maximumDepth, region).
 %
 % Example: Read Sfiles from MVOE_ Seisan database for January 2000:
-%     Object = readCatalog('seisandb', ...
+%     cObject = readEvents('seisandb', ...
 %           'dbpath', fullfile('/raid','data','seisan','REA','MVOE_'), ...
 %            'startTime', '2000/01/01', 'endTime', '2000/01/02' );
 %
@@ -131,7 +131,7 @@ function self = readCatalog(dataformat, varargin)
 %% READING FROM AN SRU-CATALOG
 %
 %  Example: Read all events from the Dominica Catalog given to Ophelia
-%         Object = readCatalog('sru', '/raid/data/seisan/REA/DMNCA/DominicaCatalog.txt');
+%         cObject = readEvents('sru', '/raid/data/seisan/REA/DMNCA/DominicaCatalog.txt');
 % 
 %% See also EVENTS, IRISFETCH, EVENTS_COOKBOOK
 %
@@ -140,7 +140,7 @@ function self = readCatalog(dataformat, varargin)
     switch lower(dataformat)
         case 'iris'
             if exist('irisfetch.m','file')
-                ev = irisFetch.Catalog(varargin{:});
+                ev = irisFetch.Events(varargin{:});
                 self = iris(ev);
             else
                 warning('Cannot find irisFetch.m')

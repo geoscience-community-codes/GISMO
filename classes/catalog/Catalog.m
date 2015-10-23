@@ -3,7 +3,8 @@
 % See also EventRate, readEvents, Catalog_Cookbook
 classdef Catalog
 
-    properties(GetAccess = 'public', SetAccess = 'public')
+    properties(Dependent) % These all come from table, computed on the fly
+        date = [];
         time = [];
         lon = [];
         lat = [];
@@ -11,6 +12,9 @@ classdef Catalog
         mag = [];
         magtype = {};
         etype = {};
+    end
+    
+    properties % These are properties of the catalog itself
         request = struct();
 %         request.starttime = -Inf;
 %         request.endtime = Inf;
@@ -27,6 +31,11 @@ classdef Catalog
 %         request.maximumMagnitude = Inf;
         arrivals = {};
 %         magnitudes = {};
+    end
+    
+    properties(Hidden) % internal, external code cannot access them
+        table;
+        datetime;
     end
 
     methods
@@ -51,33 +60,78 @@ classdef Catalog
             for i=1:length(fields)
                 field=fields{i};
                 val = p.Results.(field);
-                %obj = obj.set(field, val);
-                eval(sprintf('obj.%s = val;',field));
+                eval(sprintf('%s = val;',field));
             end
             
             % Fill empty vectors to size of time
-            if isempty(obj.lon)
-                obj.lon = NaN(size(obj.time));
+            if isempty(lon)
+                lon = NaN(size(time));
             end
-            if isempty(obj.lat)
-                obj.lat = NaN(size(obj.time));
+            if isempty(lat)
+                lat = NaN(size(time));
             end   
-            if isempty(obj.depth)
-                obj.depth = NaN(size(obj.time));
+            if isempty(depth)
+                depth = NaN(size(time));
             end
-            if isempty(obj.mag)
-                obj.mag = NaN(size(obj.time));
+            if isempty(mag)
+                mag = NaN(size(time));
             end  
-            if isempty(obj.magtype) % 'u' for unknown
-                obj.magtype = cellstr(repmat('u',size(obj.time)));
+            if isempty(magtype) % 'u' for unknown
+                magtype = cellstr(repmat('u',size(time)));
             end 
-            if isempty(obj.etype)  % 'u' for unknown
-                obj.etype = cellstr(repmat('u',size(obj.time)));
+            if isempty(etype)  % 'u' for unknown
+                etype = cellstr(repmat('u',size(time)));
             end     
+
+            obj.table = table(datestr(time',26), datestr(time',13), lon', lat', depth', mag', magtype', etype', ...
+                'VariableNames', {'date' 'time' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype'});
             
-            % Check everything is same size - probably something involving
-            % getting properties and then looping over them
+            obj.datetime  = time';
             
+        end
+        
+        function val = get.date(obj)
+            val = datenum(obj.table.date);
+        end
+ 
+        function val = get.time(obj)
+            val = datenum(obj.table.time);
+        end
+        
+        function val = get.datetime(obj)
+            val = obj.datetime;
+        end       
+        
+        function val = get.lon(obj)
+            val = obj.table.lon;
+        end        
+        
+        function val = get.lat(obj)
+            val = obj.table.lat;
+        end
+        
+        function val = get.depth(obj)
+            val = obj.table.depth;
+        end        
+        
+        function val = get.mag(obj)
+            val = obj.table.mag;
+        end          
+        
+        function val = get.magtype(obj)
+            val = obj.table.magtype;
+        end        
+        
+        function val = get.etype(obj)
+            val = obj.table.etype;
+        end  
+        
+        function summary(obj)
+            summary(obj.table)
+        end
+        
+        function disp(obj)
+            disp(obj.table)
         end
 %% ---------------------------------------------------
         function val = snum(obj)
