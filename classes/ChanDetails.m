@@ -1,5 +1,5 @@
 classdef ChanDetails
-   %ChanDetails Summary of this class goes here
+   %ChanDetails Handles station metadata information
    %   Access fields as though this were a struct
    %
    %  Request data using
@@ -53,6 +53,12 @@ classdef ChanDetails
       starttime
       endtime
    end
+   
+   properties(Dependent, Hidden)
+      latlon
+      latlonelev
+   end
+   
    methods
       %% get/set of channel-related data
       function N = get.network(obj)
@@ -92,6 +98,21 @@ classdef ChanDetails
          % ex.
          % chandeets.getbyname('IU.ANMO.00.BH1')
          C = obj(strcmp({obj.name},val));
+      end
+      function LL = get.latlon(obj)
+         % handles single lat/lon combination
+         LL = [obj.latitude, obj.longitude];
+      end
+      function obj = set.latlon(obj, LL)
+         % handles single lat/lon combination
+         %does no reality checks
+         assert(numel(LL) == 2);
+         obj.latitude = LL(1);
+         obj.longitude = LL(2);
+      end
+     function LL = latlons(obj)
+        % can handle multiple latitudes & longitudes
+         LL = [[obj.latitude]' [obj.longitude]'];
       end
    end
    methods(Static)

@@ -1,29 +1,49 @@
 classdef Trace < TraceData
-   % Trace is the new waveform
+   %TRACE class that handles timeseries manipulation with channel info 
+   %  Trace inherits the ability to manipulate timeseries data from
+   %  TraceData, and adds the capability to handle chanel descriptor tags,
+   %  handle UserData fields, track history, timestamping, and basic calibration. 
    %
-   % Unless otherwise stated, all work by Celso Reyes
-   % Contributions by: Glenn Thompson, Michael West
+   %Trace is the replacement class for waveform
+   %
+   %see also Trace.retrieve
+   %TraceData, waveform, channeltag
+   
+   % Author: Celso Reyes, unless otherwise specified in the class functions
+   % Contributions by: Glenn Thompson, Michael West, Carl Tape
    % Based on waveform, by Celso Reyes
-   % XXXX by: 
    
    properties(Dependent)
+      % Network.Station.Location.Channel code, as char.
+      % By setting the name, the related network, station, location,
+      % channel, and channelinfo fields are also set
+      % see also network, station, location, channel, channelinfo
       name % N.S.L.C code
       network % network code
       station % station code
       location % location code
       channel % channel code
-      start % start time (text)
+       % Text representation for the start time
+       % see also Trace.firstsampletime, Trace.lastsampletime, mat_start
+      start
    end
    
    properties
-      history = struct('what','created Trace','when',now); % history for Trace
-      UserData = struct(); % structure containing user-defined fields
+      % history, stored as a structure of (what, when),
+      % where "what" can be anything, and "when" is a matlab datenum
+      % see also Trace.addhistory, Trace.clearhistory
+      history = struct('what','created Trace','when',now); 
+      % structure containing user-defined fields
+      % Field names are case sensitive.
+      % Field values can be validated if a UserDataRule is specified.
+      % 
+      % see also Trace.UserData, Trace.setUserDataRule,
+      % Trace.renameUserField
+      UserData = struct();
+      % contains calibration values for this trace.
+      % see also Trace.setcalib, Trace.removecalib, Trace.applycalib
       calib = struct('value',1,'applied',false);
-   end
-   
-   properties(Hidden)
-      mat_starttime % start time in matlab-time
-      channelinfo = channeltag; % channelTag
+      
       %struct that mirrors UserData, but contains two fields:
       %   allowed_type: a class name (or empty). If this
       %   exist, then when data is assigned to UserData, it
@@ -32,7 +52,15 @@ classdef Trace < TraceData
       %   assigned to this field.  If a single number, then
       %   eac assignment must have exactly this number of values.
       %   if [min max], then any number of values between min
-      UserDataRules %   and max inclusive may be assigned to this.
+      %   and max inclusive may be assigned to this.
+      % see also Trace.UserData, Trace.setUserDataRule,
+      % Trace.renameUserField
+      UserDataRules 
+   end
+   
+   properties(Hidden)
+      mat_starttime % start time in matlab-time
+      channelinfo = channeltag; % channelTag
    end
    
    properties(Hidden, Dependent)
@@ -911,17 +939,14 @@ classdef Trace < TraceData
          % See also Trace.addhistory Trace.history.         
          T(N).history= T(N).history([]);
       end
-      function [myhist] = get.history(w)
+      function [myhist] = get.history(t)
          %HISTORY retrieve the history of a waveform object
-         %   myhist = history(waveform)
+         %   myhist = trace.history
          %       returns a struct describing what's been done to this trace
-         %
+         %   myhist = trace.history(N)
+         %       get Nth element from the history.  End works,too!
          % See also Trace.addhistory, Trace.clearhistory
-         if numel(w) > 1
-            error('Waveform:history:tooManyWaveforms',...
-               '''waveform/history()'' can only retrieve history for individual waveforms');
-         end
-         myhist = w.history;
+         myhist = t.history;
       end
       
       %% display functions

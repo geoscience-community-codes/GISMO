@@ -63,17 +63,21 @@ classdef TraceData
       
       
       function N = nyquist(T)
+         % nyquist - the nyquist frequency calculated as (samplerate / 2)
          N=[T.samplerate] ./ 2;
          reshape(N,size(T));
       end
       
       function p = period(T)
+         % period - calculated as (1 / samplerate)
          p = 1 ./ [T.samplerate];
          % NOT reshaped
       end
       
       function val = sampletimes(obj)
-         % TraceData.sampletimes returns matlab-time offset of each sample
+         % sampletimes returns matlab-time offset of each sample.
+         %
+         % equivalent to waveform's get(w,'timevector');
          assert(numel(obj) == 1, 'only works on one TraceData at a time');
          val = (0:(numel(obj.data)-1)) .* obj.period / 86400;
          val = val(:);
@@ -81,7 +85,6 @@ classdef TraceData
       
       function secondsOfData = get.duration(obj)
          %returns duration in seconds
-         assert(numel(obj) == 1, 'only works on one TraceData at a time');
          if isempty(obj.data) || isempty(obj.samplerate)
             secondsOfData = 0;
          else
