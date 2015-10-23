@@ -84,10 +84,12 @@ classdef Catalog
                 etype = cellstr(repmat('u',size(time)));
             end     
 
-            obj.table = table(datestr(time',26), datestr(time,13), lon, lat, depth, mag, magtype, etype, ...
+            obj.table = table(datestr(time,26), datestr(time,13), lon, lat, depth, mag, magtype, etype, ...
                 'VariableNames', {'date' 'time' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype'});
             
             obj.datetime  = time';
+            
+            fprintf('Got %d events',height(obj.table));
             
         end
         
