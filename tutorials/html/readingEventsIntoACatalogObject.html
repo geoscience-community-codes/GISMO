@@ -73,7 +73,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 26 events found *************
 
 parsing into MATLAB structures
-
+Got 26 events
 catalogObject = 
 
        date         time        lon        lat      depth    mag    magtype       etype    
@@ -196,7 +196,7 @@ fetching...
 1136 events found *************
 
 parsing into MATLAB structures
-</pre><p>This returns 1136 earthquakes. Let's get a summary:</p><pre class="codeinput">catalogObject.summary()
+Got 1136 events</pre><p>This returns 1136 earthquakes. Let's get a summary:</p><pre class="codeinput">catalogObject.summary()
 </pre><pre class="codeoutput">
 Variables:
 
@@ -240,48 +240,92 @@ Variables:
 </pre><h2>Readings events from an Antelope database<a name="13"></a></h2><p>To load event data from an Antelope/Datascope CSS3.0 database you will need to have Antelope (<a href="http://www.brtt.com/software.html">http://www.brtt.com/software.html</a>) installed, including the Antelope toolbox for MATLAB.</p><p><b>SCAFFOLD: NOTE THAT CURRENTLY NOT USING THE RTDB200903 AT ALL</b></p><p>For the purpose of this exercise we will be using data from Redoubt volcano from 2009/03/20 to 2009/03/23. We will use snippets from two catalogs that are provided with GISMO in Antelope format:</p><div><ul><li>The real-time catalog (rtdb200903).</li><li>The analyst-reviewed offical AVO catalog (avodb200903).</li></ul></div><p>Both catalog segments are included in the "demo" directory. We will now load the official AVO catalog into an Events object:</p><pre class="codeinput">dbpath = demodb(<span class="string">'avo'</span>);
 catalogObject = readEvents(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, dbpath);
 </pre><pre class="codeoutput">Loading data from /Users/thompsong/src/matlab/GISMO/classes/Catalog/demo/antelope/avodb200903
-</pre><p>This should load 1441 events. What if we only want events within 20km of Redoubt volcano? There are two ways to do this. The first is the use the radialcoordinates parameter:</p><pre class="codeinput">redoubtLon = -152.7431;
+Got 1441 events</pre><p>This should load 1441 events. What if we only want events within 20km of Redoubt volcano? There are two ways to do this. The first is the use the radialcoordinates parameter:</p><pre class="codeinput">redoubtLon = -152.7431;
 redoubtLat = 60.4853;
-maxR = 20.0;
+maxR = km2deg(20.0);
 catalogObject = readEvents(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, dbpath, <span class="keyword">...</span>
 	<span class="string">'radialcoordinates'</span>, [redoubtLat redoubtLon maxR]);
-catalogObject.numberOfEvents
 </pre><pre class="codeoutput">Loading data from /Users/thompsong/src/matlab/GISMO/classes/Catalog/demo/antelope/avodb200903
-
-ans =
-
-        1441
-
-</pre><p>The second way is to use the 'subset_expression' which the Antelope expression evaluator interprets:</p><pre class="codeinput">redoubtLon = -152.7431;
-redoubtLat = 60.4853;
-expr = sprintf(<span class="string">'deg2km(distance(lat, lon, %f, %f)) &lt; %f'</span>,redoubtLat, redoubtLon,maxR)
+Got 1397 events</pre><p>The second way is to use the 'subset_expression' which the Antelope expression evaluator interprets:</p><pre class="codeinput">expr = sprintf(<span class="string">'distance(lat, lon, %f, %f) &lt; %f'</span>,redoubtLat, redoubtLon,maxR)
 catalogObject = readEvents(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, dbpath, <span class="keyword">...</span>
 	<span class="string">'subset_expression'</span>, expr);
-catalogObject.numberOfEvents
 </pre><pre class="codeoutput">
 expr =
 
-deg2km(distance(lat, lon, 60.485300, -152.743100)) &lt; 20.000000
+distance(lat, lon, 60.485300, -152.743100) &lt; 0.179864
 
 Loading data from /Users/thompsong/src/matlab/GISMO/classes/Catalog/demo/antelope/avodb200903
+Got 1397 events</pre><h2>Reading events from a Seisan database<a name="19"></a></h2><p>Here we load events from a Seisan catalog. A Seisan "Sfile" contains all the metadata for 1 event. These Sfiles are stored in a flat-file database structure the path to which is: $SEISAN_TOP/REA/databaseName. Sfiles are organized in year/month subdirectories under this path.</p><p><b>SCAFFOLD: INCLUDE DEMO DATASET FROM MVOE</b></p><p>The following will navigate this where in this case $SEISAN_TOP = '/raid/data/seisan' and the databaseName is MVOE_ which stands for the Montserrat Volcano Observatory Event database. (In Seisan, databaseName is limited to exactly 5 characters).</p><p>This example will load Sfiles from 4 hours on 1st Nov, 1996. This is a slow function to run as MATLAB is slow at parsing text files, and there are many events per day in this particular database.</p><pre class="codeinput">catalogObject = readEvents(<span class="string">'seisan'</span>, <span class="keyword">...</span>
+    <span class="string">'dbpath'</span>, fullfile(<span class="string">'/raid'</span>,<span class="string">'data'</span>,<span class="string">'MONTSERRAT'</span>,<span class="string">'seisan'</span>,<span class="string">'REA'</span>,<span class="string">'MVOE_'</span>), <span class="keyword">...</span>
+	<span class="string">'startTime'</span>, <span class="string">'1996/11/01 11:00:00'</span>, <span class="keyword">...</span><span class="comment">.</span>
+	<span class="string">'endTime'</span>, <span class="string">'1996/11/01 15:00:00'</span>)
+</pre><pre class="codeoutput">There are 29 sfiles matching your request
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1108-25L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1115-03L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1131-08L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1135-09L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1141-34L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1146-34L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1154-07L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1214-17L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1232-42L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1239-55L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1246-24L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1301-08L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1306-18L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1314-39L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1320-33L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1326-24L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1329-18L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1334-58L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1336-31L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1353-50L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1408-52L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1412-15L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1417-35L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1424-29L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1432-44L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1433-40L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1443-02L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1450-08L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1459-30L.S199611
+Got 29 events
+catalogObject = 
 
-ans =
+       date         time        lon       lat      depth    mag    magtype    etype
+    __________    ________    _______    ______    _____    ___    _______    _____
 
-        1397
+    1996/11/01    11:08:25        NaN       NaN    NaN      NaN    'u'        'h'  
+    1996/11/01    11:15:03        NaN       NaN    NaN      NaN    'u'        't'  
+    1996/11/01    11:31:08        NaN       NaN    NaN      NaN    'u'        't'  
+    1996/11/01    11:35:09    -62.177    16.713    1.7      NaN    'u'        'h'  
+    1996/11/01    11:41:34        NaN       NaN    NaN      NaN    'u'        't'  
+    1996/11/01    11:46:34    -62.156     16.63    3.1      NaN    'u'        'h'  
+    1996/11/01    11:54:07        NaN       NaN    NaN      NaN    'u'        'h'  
+    1996/11/01    12:14:17        NaN       NaN    NaN      NaN    'u'        'h'  
+    1996/11/01    12:32:42        NaN       NaN    NaN      NaN    'u'        'h'  
+    1996/11/01    12:39:55        NaN       NaN    NaN      NaN    'u'        'h'  
+    1996/11/01    12:46:24        NaN       NaN    NaN      NaN    'u'        'h'  
+    1996/11/01    13:01:08        NaN       NaN    NaN      NaN    'u'        'h'  
+    1996/11/01    13:06:18        NaN       NaN    NaN      NaN    'u'        'h'  
+    1996/11/01    13:14:39        NaN       NaN    NaN      NaN    'u'        'h'  
+    1996/11/01    13:20:33    -62.176    16.713      0      NaN    'u'        'h'  
+    1996/11/01    13:26:24        NaN       NaN    NaN      NaN    'u'        'h'  
+    1996/11/01    13:29:18        NaN       NaN    NaN      NaN    'u'        'e'  
+    1996/11/01    13:34:58        NaN       NaN    NaN      NaN    'u'        'h'  
+    1996/11/01    13:36:31    -62.177    16.715      0      NaN    'u'        'h'  
+    1996/11/01    13:53:50        NaN       NaN    NaN      NaN    'u'        'h'  
+    1996/11/01    14:08:52        NaN       NaN    NaN      NaN    'u'        't'  
+    1996/11/01    14:12:15        NaN       NaN    NaN      NaN    'u'        'h'  
+    1996/11/01    14:17:35        NaN       NaN    NaN      NaN    'u'        'u'  
+    1996/11/01    14:24:29    -62.176    16.714    1.3      NaN    'u'        'h'  
+    1996/11/01    14:32:44        NaN       NaN    NaN      NaN    'u'        'r'  
+    1996/11/01    14:33:40        NaN       NaN    NaN      NaN    'u'        'h'  
+    1996/11/01    14:43:02    -62.177    16.711    1.8      NaN    'u'        'h'  
+    1996/11/01    14:50:08        NaN       NaN    NaN      NaN    'u'        'h'  
+    1996/11/01    14:59:30        NaN       NaN    NaN      NaN    'u'        'h'  
 
-</pre><h2>Reading events from a Seisan database<a name="19"></a></h2><p>Here we load events from a Seisan catalog. A Seisan "Sfile" contains all the metadata for 1 event. These Sfiles are stored in a flat-file database structure the path to which is: $SEISAN_TOP/REA/databaseName. Sfiles are organized in year/month subdirectories under this path.</p><p><b>SCAFFOLD: INCLUDE DEMO DATASET FROM MVOE</b></p><p>The following will navigate this where in this case $SEISAN_TOP = '/raid/data/seisan' and the databaseName is MVOE_ which stands for the Montserrat Volcano Observatory Event database. (In Seisan, databaseName is limited to exactly 5 characters).</p><p>This example will load all Sfiles for January 1st, 2000. This is a slow function to run as MATLAB is slow at parsing text files, and there are many events per day in this particular database.</p><pre class="codeinput">catalogObject = readEvents(<span class="string">'seisan'</span>, <span class="keyword">...</span>
-    <span class="string">'dbpath'</span>, fullfile(<span class="string">'/raid'</span>,<span class="string">'data'</span>,<span class="string">'seisan'</span>,<span class="string">'REA'</span>,<span class="string">'MVOE_'</span>), <span class="keyword">...</span>
-	<span class="string">'starttime'</span>, <span class="string">'2000/01/01'</span>, <span class="keyword">...</span><span class="comment">.</span>
-	<span class="string">'endtime'</span>, <span class="string">'2000/01/02'</span>)
-</pre><pre class="codeoutput error">Error using readEvents&gt;seisan (line 632)
-The value of 'startTime' is invalid. It must satisfy the function: isnumeric.
-
-Error in readEvents (line 151)
-            self = seisan(varargin{:});
-
-Error in readingEventsIntoACatalogObject (line 173)
-catalogObject = readEvents('seisan', ...
-</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014b</a><br></p></div><!--
+</pre><p>Only a few of these earthquakes have been located and even fewer have magnitudes. This is common for volcanic earthquakes. Most of these are of type 'h' - a hybrid earthquake.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Reading events into a Catalog object
 % GISMO can read events from many different earthquake catalog file formats
@@ -421,21 +465,16 @@ catalogObject = readEvents('antelope', 'dbpath', dbpath);
 
 redoubtLon = -152.7431; 
 redoubtLat = 60.4853;
-maxR = 20.0;
+maxR = km2deg(20.0);
 catalogObject = readEvents('antelope', 'dbpath', dbpath, ...
 	'radialcoordinates', [redoubtLat redoubtLon maxR]);
-catalogObject.numberOfEvents
 
 %%
 % The second way is to use the 'subset_expression' which the Antelope
 % expression evaluator interprets:
- 
-redoubtLon = -152.7431; 
-redoubtLat = 60.4853;
-expr = sprintf('deg2km(distance(lat, lon, %f, %f)) < %f',redoubtLat, redoubtLon,maxR)
+expr = sprintf('distance(lat, lon, %f, %f) < %f',redoubtLat, redoubtLon,maxR)
 catalogObject = readEvents('antelope', 'dbpath', dbpath, ...
 	'subset_expression', expr);
-catalogObject.numberOfEvents
 
 %% Reading events from a Seisan database
 % Here we load events from a Seisan catalog. A Seisan "Sfile" contains all
@@ -451,14 +490,19 @@ catalogObject.numberOfEvents
 % stands for the Montserrat Volcano Observatory Event database. 
 % (In Seisan, databaseName is limited to exactly 5 characters).
 %
-% This example will load all Sfiles for January 1st, 2000. This is a slow 
+% This example will load Sfiles from 4 hours on 1st Nov, 1996. This is a slow 
 % function to run as MATLAB is slow at parsing text files, and there are
 % many events per day in this particular database.
  
 catalogObject = readEvents('seisan', ...
-    'dbpath', fullfile('/raid','data','seisan','REA','MVOE_'), ...
-	'starttime', '2000/01/01', ....
-	'endtime', '2000/01/02')
+    'dbpath', fullfile('/raid','data','MONTSERRAT','seisan','REA','MVOE_'), ...
+	'startTime', '1996/11/01 11:00:00', ....
+	'endTime', '1996/11/01 15:00:00')
+
+%%
+% Only a few of these earthquakes have been located and even fewer have
+% magnitudes. This is common for volcanic earthquakes. Most of these are of
+% type 'h' - a hybrid earthquake.
 
 
 

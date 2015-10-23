@@ -136,21 +136,16 @@ catalogObject = readEvents('antelope', 'dbpath', dbpath);
 
 redoubtLon = -152.7431; 
 redoubtLat = 60.4853;
-maxR = 20.0;
+maxR = km2deg(20.0);
 catalogObject = readEvents('antelope', 'dbpath', dbpath, ...
 	'radialcoordinates', [redoubtLat redoubtLon maxR]);
-catalogObject.numberOfEvents
 
 %%
 % The second way is to use the 'subset_expression' which the Antelope
 % expression evaluator interprets:
- 
-redoubtLon = -152.7431; 
-redoubtLat = 60.4853;
-expr = sprintf('deg2km(distance(lat, lon, %f, %f)) < %f',redoubtLat, redoubtLon,maxR)
+expr = sprintf('distance(lat, lon, %f, %f) < %f',redoubtLat, redoubtLon,maxR)
 catalogObject = readEvents('antelope', 'dbpath', dbpath, ...
 	'subset_expression', expr);
-catalogObject.numberOfEvents
 
 %% Reading events from a Seisan database
 % Here we load events from a Seisan catalog. A Seisan "Sfile" contains all
@@ -166,13 +161,18 @@ catalogObject.numberOfEvents
 % stands for the Montserrat Volcano Observatory Event database. 
 % (In Seisan, databaseName is limited to exactly 5 characters).
 %
-% This example will load all Sfiles for January 1st, 2000. This is a slow 
+% This example will load Sfiles from 4 hours on 1st Nov, 1996. This is a slow 
 % function to run as MATLAB is slow at parsing text files, and there are
 % many events per day in this particular database.
  
 catalogObject = readEvents('seisan', ...
-    'dbpath', fullfile('/raid','data','seisan','REA','MVOE_'), ...
-	'starttime', '2000/01/01', ....
-	'endtime', '2000/01/02')
+    'dbpath', fullfile('/raid','data','MONTSERRAT','seisan','REA','MVOE_'), ...
+	'startTime', '1996/11/01 11:00:00', ....
+	'endTime', '1996/11/01 15:00:00')
+
+%%
+% Only a few of these earthquakes have been located and even fewer have
+% magnitudes. This is common for volcanic earthquakes. Most of these are of
+% type 'h' - a hybrid earthquake.
 
 
