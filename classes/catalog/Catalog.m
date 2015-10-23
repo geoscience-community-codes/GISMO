@@ -83,14 +83,6 @@ classdef Catalog
             if isempty(etype)  % 'u' for unknown
                 etype = cellstr(repmat('u',size(time)));
             end     
-            
-            size(time)
-            size(lon)
-            size(lat)
-            size(depth)
-            size(mag)
-            size(magtype)
-            size(etype)
 
             obj.table = table(datestr(time',26), datestr(time,13), lon, lat, depth, mag, magtype, etype, ...
                 'VariableNames', {'date' 'time' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype'});
@@ -136,7 +128,7 @@ classdef Catalog
         end
         
         function val = get.numberOfEvents(obj)
-            val = length(obj.table);
+            val = height(obj.table);
         end
         
         function summary(obj)
