@@ -184,6 +184,14 @@ classdef sacpz
             % Filter visualization GUI
             %fvtool(sos)
         end
+        
+        function [num,den] = transfer(obj)
+            % sacpz.transfer Compute the numerator and denominator of the
+            % transfer function with the zeros and poles given in a sacpz
+            % object.
+            [num,den] = zp2tf(obj.z, obj.p, obj.k);
+        end
+            
         %% -----------------------------------------------
         function response = to_response_structure(obj, frequencies)
             %sacpz.to_response_structure(frequencies) Create response

@@ -12,6 +12,7 @@ classdef Catalog
         mag = [];
         magtype = {};
         etype = {};
+        numberOfEvents = 0;
     end
     
     properties % These are properties of the catalog itself
@@ -82,8 +83,16 @@ classdef Catalog
             if isempty(etype)  % 'u' for unknown
                 etype = cellstr(repmat('u',size(time)));
             end     
+            
+            size(time)
+            size(lon)
+            size(lat)
+            size(depth)
+            size(mag)
+            size(magtype)
+            size(etype)
 
-            obj.table = table(datestr(time',26), datestr(time',13), lon', lat', depth', mag', magtype', etype', ...
+            obj.table = table(datestr(time',26), datestr(time,13), lon, lat, depth, mag, magtype, etype, ...
                 'VariableNames', {'date' 'time' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype'});
             
             obj.datetime  = time';
@@ -124,7 +133,11 @@ classdef Catalog
         
         function val = get.etype(obj)
             val = obj.table.etype;
-        end  
+        end
+        
+        function val = get.numberOfEvents(obj)
+            val = length(obj.table);
+        end
         
         function summary(obj)
             summary(obj.table)

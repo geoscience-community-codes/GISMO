@@ -189,7 +189,7 @@ function self = iris(ev)
     end
     
     request.dataformat = 'iris';
-    self = Catalog(time, lon, lat, depth, mag, magtype, etype, 'request', request);
+    self = Catalog(time', lon', lat', depth', mag', magtype', etype', 'request', request);
     
 end
 

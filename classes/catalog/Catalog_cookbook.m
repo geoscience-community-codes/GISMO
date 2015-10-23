@@ -1,3 +1,130 @@
+%% Reading events into a Catalog object
+
+%% The readEvents() function
+% The readEvents() function is used to read event metadata (origin time, lon, lat, depth, mag etc.) from various different data sources such as IRIS DMC, and catalog formats such as those produced by Seisan, Antelope, hypoinverse, hypoellipse etc., into a Catalog object.
+
+% The aim is to support the same name-value parameter pairs supported by irisFetch.m. Currently supported are:
+
+% * _startTime_ 
+% * _endTime_ 
+% * _eventId_ 
+% * _fetchLimit_
+% * _magnitudeType_
+% * _minimumLongitude_
+% * _maximumLongitude_
+% * _minimumLatitude_
+% * _maximumLatitude_
+% * _minimumMagnitude_
+% * _maximumMagnitude_
+% * _minimumDepth_
+% * _maximumDepth_
+ 
+% And the two convenience parameters:
+% * _radialcoordinates_, which is a vector [_centerLatitude_, _centerLongitude_, _maximumRadius_]
+% * _boxcoordinates_, which is a vector [_minimumLatitude_ _maximumLatitude_ _minimumLongitude_ _maximumLongitude_]
+ 
+% Calls to readEvents() are like:
+ 
+%       >> catalogObject = readEvents(dataformat, 'param1', _value1_, ..., 'paramN', _valueN_)
+ 
+% dataformat may be:
+ 
+% * 'iris' (for IRIS DMC, using irisFetch.m), 
+% * 'antelope' (for a CSS3.0 Antelope/Datascope database)
+% * 'seisan' (for a Seisan database that uses the "Nordic" REA/YYYY/MM/ directory structure)
+ 
+% The aim is to also add support to read from other FDSN data centers and from other catalog formats, such as hypoinverse, hypoellipse, hypocenter, hypo71 etc. 
+ 
+% The plan is also to optionally load arrival data too, from dataformat's that contain that information.
+
+%% Reading events from IRIS DMC
+
+% To load events into a Catalog object we use the readEvents function. The first argument is the data source/format - when this is given as 'iris', readEvents uses the irisFetch.m program to retrieve event data via the IRIS webservices. To narrow down our data search we can give readEvents any name-value parameter pairs supported by irisFetch.
+ 
+% In this example we will use readEvents to retrieve all events at IRIS DMC with a magnitude of at least 7.9 between year 2000 and 2014 (inclusive):
+
+catalogObject = readEvents('iris', 'minimumMagnitude', 7.9, 'starttime', '2000-01-01', 'endtime', '2015-01-01')
+
+% The size of the _time_, _lon_, _lat_, _depth_, _mag_, _magtype_ and _etype_ vectors are 1 x 26. This means we have retrieved 26 events. The time matrix is in MATLAB's datenum format (decimal days since year 0).
+ 
+% catalogObject is of type "Catalog". etype is a cell array containing the event type for each of the 26 events. In this case each is just 'earthquake', but when dealing with more diverse dataset, many other etype's are possible. magtype is whatever magnitude type was assigned by the agency that provided the magnitude data.
+ 
+% The arrivals property is blank. This is a cell array that can optionally contain phase arrival data. See the Arrival class for more on this. 
+ 
+% Now we'll do another example - we will get events within 200 km of the great M9.0 Tohoku earthquake that occurred on 2011/03/11. 
+% According to [USGS](http://earthquake.usgs.gov/earthquakes/eqinthenews/2011/usc0001xgp/#details) the mainshock parameters are: 
+ 
+%     Date/Time:  "2011/03/11 05:46:24"
+%     Longitude:  142.372
+%     Latitude:   38.297
+%     Depth:      30 km
+ 
+% We will limit our search to 1 day before and after the earthquake:
+ 
+mainshocktime = datenum('2011/03/11 05:46:24')
+catalogObject = readEvents('iris', ...
+            'radialcoordinates', [38.297 142.372 km2deg(200)], ...
+            'starttime', mainshocktime - 1, ...
+            'endtime', mainshocktime + 1)
+
+ 
+% 1136 earthquakes. Now let's save the events we have read from IRIS, so we can use it again later:
+ 
+catalogObject.save('tohoku_events_1day.mat')
+
+%% Readings events from an Antelope database
+
+% To load event data from an Antelope/Datascope CSS3.0 database you will need to have [Antelope] (http://www.brtt.com/software.html) installed, including the Antelope toolbox for MATLAB.
+ 
+% SCAFFOLD: NOTE THAT CURRENTLY NOT USING THE RTDB200903 AT ALL !!!!!!!!
+ 
+% For the purpose of this exercise we will be using data from Redoubt volcano from 2009/03/20 to 2009/03/23. We will use snippets from two catalogs that are provided with GISMO in Antelope format:
+ 
+% * The real-time catalog (rtdb200903).
+% * The analyst-reviewed offical AVO catalog (avodb200903).
+ 
+% Both catalog segments are included in the "demo" directory. We will now load the official AVO catalog into an Events object:
+ 
+if admin.antelope_exists
+	dbpath = demodb('avo');
+	catalogObject = readEvents('antelope', 'dbpath', dbpath);
+end
+ 
+% This should load 1441 events. What if we only want events within 20km of Redoubt volcano? The optional parameter 'subset_expression' can be used, with an appropriate Datascope expression, e.g.
+ 
+redoubtLon = -152.7431; 
+redoubtLat = 60.4853;
+if admin.antelope_exists
+	catalogObject = readEvents('antelope', 'dbpath', dbpath, ...
+        'subset_expression', 'deg2km(distance(lat, lon, redoubtLat, redoubtLon))<20.0');
+end
+ 
+% Now there should be 1397 events. Let's save this dataset to a MAT file:
+ 
+catalogObject.save('avo_redoubt.mat')
+
+% INCLUDE DEMO DATASET FROM MVOE_ !!!!!!!!!!!!!!!!!!!
+ 
+% Here we load events from a Seisan catalog. A Seisan "Sfile" contains all the metadata for 1 event. These Sfiles are stored in a flat-file database structure the path to which is: $SEISAN_TOP/REA/databaseName. Sfiles are organized in year/month subdirectories under this path.
+ 
+% The following will navigate this where in this case $SEISAN_TOP = '/raid/data/seisan' and the databaseName is MVOE_ which stands for the Montserrat Volcano Observatory Event database. (In Seisan, databaseName is limited to exactly 5 characters).
+ 
+% This example will load all Sfiles for January 1st, 2000. This is a slow function to run as MATLAB is slow at parsing text files, and there are many events per day in this particular database.
+ 
+catalogObject = readEvents('seisan', ...
+    'dbpath', fullfile('/raid','data','seisan','REA','MVOE_'), ...
+	'starttime', '2000/01/01', ....
+	'endtime', '2000/01/02')
+
+% This Events object can now be explored using eev, which is modelled on the program of the same name in Seisan. This is an interactive function.
+ 
+catalogObject.event()
+
+% From there type h <ENTER> to see the list of options. For example, f takes you to the next event, s will show you the S-file, p will plot the corresponding waveforms providing the waveform data are available at the path indicated in the S-file.
+
+
+%----------------
+
 %% Loading and displaying seismic event catalogs in MATLAB
 
 % A seismic event catalog is any list that contains at a minimum the time
