@@ -66,48 +66,13 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Reading events into a Catalog object</h1><!--introduction--><p>GISMO can read events from many different earthquake catalog file formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) using the readEvents() function.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">The readEvents() function</a></li><li><a href="#6">Reading events from IRIS DMC</a></li><li><a href="#12">Readings events from an Antelope database</a></li><li><a href="#18">Reading events from a Seisan database</a></li></ul></div><h2>The readEvents() function<a name="1"></a></h2><p>The readEvents() function is used to read event metadata (origin time, lon, lat, depth, mag etc.) from a variety of catalog data sources and file formats into a Catalog object.</p><p>Usage:       catalogObject = readEvents(dataformat, 'param1', <i>value1</i>, ...                                                   'paramN', <i>valueN</i>)</p><p>dataformat may be:</p><div><ul><li>'iris' (for IRIS DMC, using irisFetch.m),</li><li>'antelope' (for a CSS3.0 Antelope/Datascope database)</li><li>'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)</li></ul></div><p>The name-value parameter pairs supported are the same as those supported by irisFetch.Events(). Currently these are:</p><div><ul><li><i>startTime</i></li><li><i>endTime</i></li><li><i>eventId</i></li><li><i>fetchLimit</i></li><li><i>magnitudeType</i></li><li><i>minimumLongitude</i></li><li><i>maximumLongitude</i></li><li><i>minimumLatitude</i></li><li><i>maximumLatitude</i></li><li><i>minimumMagnitude</i></li><li><i>maximumMagnitude</i></li><li><i>minimumDepth</i></li><li><i>maximumDepth</i></li></ul></div><p>And the two convenience parameters:</p><div><ul><li><i>radialcoordinates</i> = [ <i>centerLatitude</i>, <i>centerLongitude</i>, <i>maximumRadius</i> ]</li></ul></div><div><ul><li><i>boxcoordinates</i> = [ <i>minimumLatitude</i> <i>maximumLatitude</i> <i>minimumLongitude</i> <i>maximumLongitude</i> ]</li></ul></div><h2>Reading events from IRIS DMC<a name="6"></a></h2><p>To load events into a Catalog object we use the readEvents function. The first argument is the data source/format - when this is given as 'iris', readEvents uses the irisFetch.m program to retrieve event data via the IRIS webservices. To narrow down our data search we can give readEvents any name-value parameter pairs supported by irisFetch.</p><p>In this example we will use readEvents to retrieve all events at IRIS DMC with a magnitude of at least 7.9 between year 2000 and 2014 (inclusive):</p><pre class="codeinput">catalogObject = readEvents(<span class="string">'iris'</span>, <span class="string">'minimumMagnitude'</span>, 7.9, <span class="string">'starttime'</span>, <span class="string">'2000-01-01'</span>, <span class="string">'endtime'</span>, <span class="string">'2015-01-01'</span>)
+  </style></head><body><div class="content"><h1>Reading events into a Catalog object</h1><!--introduction--><p>GISMO can read events from many different earthquake catalog file formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) using the readEvents() function.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">The readEvents() function</a></li><li><a href="#6">Reading events from IRIS DMC</a></li><li><a href="#13">Readings events from an Antelope database</a></li><li><a href="#19">Reading events from a Seisan database</a></li></ul></div><h2>The readEvents() function<a name="1"></a></h2><p>The readEvents() function is used to read event metadata (origin time, lon, lat, depth, mag etc.) from a variety of catalog data sources and file formats into a Catalog object.</p><p>Usage:       catalogObject = readEvents(dataformat, 'param1', <i>value1</i>, ...                                                   'paramN', <i>valueN</i>)</p><p>dataformat may be:</p><div><ul><li>'iris' (for IRIS DMC, using irisFetch.m),</li><li>'antelope' (for a CSS3.0 Antelope/Datascope database)</li><li>'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)</li></ul></div><p>The name-value parameter pairs supported are the same as those supported by irisFetch.Events(). Currently these are:</p><div><ul><li><i>startTime</i></li><li><i>endTime</i></li><li><i>eventId</i></li><li><i>fetchLimit</i></li><li><i>magnitudeType</i></li><li><i>minimumLongitude</i></li><li><i>maximumLongitude</i></li><li><i>minimumLatitude</i></li><li><i>maximumLatitude</i></li><li><i>minimumMagnitude</i></li><li><i>maximumMagnitude</i></li><li><i>minimumDepth</i></li><li><i>maximumDepth</i></li></ul></div><p>And the two convenience parameters:</p><div><ul><li><i>radialcoordinates</i> = [ <i>centerLatitude</i>, <i>centerLongitude</i>, <i>maximumRadius</i> ]</li></ul></div><div><ul><li><i>boxcoordinates</i> = [ <i>minimumLatitude</i> <i>maximumLatitude</i> <i>minimumLongitude</i> <i>maximumLongitude</i> ]</li></ul></div><h2>Reading events from IRIS DMC<a name="6"></a></h2><p>To load events into a Catalog object we use the readEvents function. The first argument is the data source/format - when this is given as 'iris', readEvents uses the irisFetch.m program to retrieve event data via the IRIS webservices. To narrow down our data search we can give readEvents any name-value parameter pairs supported by irisFetch.</p><p>In this example we will use readEvents to retrieve all events at IRIS DMC with a magnitude of at least 7.9 between year 2000 and 2014 (inclusive):</p><pre class="codeinput">catalogObject = readEvents(<span class="string">'iris'</span>, <span class="string">'minimumMagnitude'</span>, 7.9, <span class="string">'starttime'</span>, <span class="string">'2000-01-01'</span>, <span class="string">'endtime'</span>, <span class="string">'2015-01-01'</span>)
 </pre><pre class="codeoutput">fetching...
 
 
 26 events found *************
 
 parsing into MATLAB structures
-
-ans =
-
-    26     1
-
-
-ans =
-
-    26     1
-
-
-ans =
-
-    26     1
-
-
-ans =
-
-    26     1
-
-
-ans =
-
-    26     1
-
-
-ans =
-
-    26     1
-
-
-ans =
-
-    26     1
-
 
 catalogObject = 
 
@@ -143,13 +108,6 @@ catalogObject =
 
 </pre><p>We have retrieved 26 events. To access any particular property we can use dot notation, as if the object were a structure, e.g.:</p><pre class="codeinput">catalogObject.depth
 catalogObject.mag
-
-<span class="comment">% catalogObject is of type "Catalog". etype contains the event type for</span>
-<span class="comment">% each of the 26 events. In this case each is just  'earthquake', but when</span>
-<span class="comment">% dealing with more diverse dataset, many other etype's are possible.</span>
-<span class="comment">% magtype is whatever magnitude type was assigned by the agency that</span>
-<span class="comment">% provided the magnitude data.</span>
-<span class="comment">%</span>
 </pre><pre class="codeoutput">
 ans =
 
@@ -210,7 +168,7 @@ ans =
     8.1000
     8.3000
 
-</pre><p>Using the methods() function will tell us what operations we can perform on a Catalog object:</p><pre class="codeinput">methods(catalogObject)
+</pre><p>catalogObject is of type "Catalog". etype contains the event type for each of the 26 events. In this case each is just  'earthquake', but when dealing with more diverse dataset, many other etype's are possible. magtype is whatever magnitude type was assigned by the agency that provided the magnitude data.</p><p>Using the methods() function will tell us what operations we can perform on a Catalog object:</p><pre class="codeinput">methods(catalogObject)
 </pre><pre class="codeoutput">
 Methods for class Catalog:
 
@@ -238,41 +196,6 @@ fetching...
 1136 events found *************
 
 parsing into MATLAB structures
-
-ans =
-
-        1136           1
-
-
-ans =
-
-        1136           1
-
-
-ans =
-
-        1136           1
-
-
-ans =
-
-        1136           1
-
-
-ans =
-
-        1136           1
-
-
-ans =
-
-        1136           1
-
-
-ans =
-
-        1136           1
-
 </pre><p>This returns 1136 earthquakes. Let's get a summary:</p><pre class="codeinput">catalogObject.summary()
 </pre><pre class="codeoutput">
 Variables:
@@ -314,44 +237,9 @@ Variables:
 
     etype: 1136x1 cell string
 
-</pre><h2>Readings events from an Antelope database<a name="12"></a></h2><p>To load event data from an Antelope/Datascope CSS3.0 database you will need to have Antelope (<a href="http://www.brtt.com/software.html">http://www.brtt.com/software.html</a>) installed, including the Antelope toolbox for MATLAB.</p><p><b>SCAFFOLD: NOTE THAT CURRENTLY NOT USING THE RTDB200903 AT ALL</b></p><p>For the purpose of this exercise we will be using data from Redoubt volcano from 2009/03/20 to 2009/03/23. We will use snippets from two catalogs that are provided with GISMO in Antelope format:</p><div><ul><li>The real-time catalog (rtdb200903).</li><li>The analyst-reviewed offical AVO catalog (avodb200903).</li></ul></div><p>Both catalog segments are included in the "demo" directory. We will now load the official AVO catalog into an Events object:</p><pre class="codeinput">dbpath = demodb(<span class="string">'avo'</span>);
+</pre><h2>Readings events from an Antelope database<a name="13"></a></h2><p>To load event data from an Antelope/Datascope CSS3.0 database you will need to have Antelope (<a href="http://www.brtt.com/software.html">http://www.brtt.com/software.html</a>) installed, including the Antelope toolbox for MATLAB.</p><p><b>SCAFFOLD: NOTE THAT CURRENTLY NOT USING THE RTDB200903 AT ALL</b></p><p>For the purpose of this exercise we will be using data from Redoubt volcano from 2009/03/20 to 2009/03/23. We will use snippets from two catalogs that are provided with GISMO in Antelope format:</p><div><ul><li>The real-time catalog (rtdb200903).</li><li>The analyst-reviewed offical AVO catalog (avodb200903).</li></ul></div><p>Both catalog segments are included in the "demo" directory. We will now load the official AVO catalog into an Events object:</p><pre class="codeinput">dbpath = demodb(<span class="string">'avo'</span>);
 catalogObject = readEvents(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, dbpath);
 </pre><pre class="codeoutput">Loading data from /Users/thompsong/src/matlab/GISMO/classes/Catalog/demo/antelope/avodb200903
-
-ans =
-
-        1441           1
-
-
-ans =
-
-        1441           1
-
-
-ans =
-
-        1441           1
-
-
-ans =
-
-        1441           1
-
-
-ans =
-
-        1441           1
-
-
-ans =
-
-        1441           1
-
-
-ans =
-
-        1441           1
-
 </pre><p>This should load 1441 events. What if we only want events within 20km of Redoubt volcano? There are two ways to do this. The first is the use the radialcoordinates parameter:</p><pre class="codeinput">redoubtLon = -152.7431;
 redoubtLat = 60.4853;
 maxR = 20.0;
@@ -362,56 +250,37 @@ catalogObject.numberOfEvents
 
 ans =
 
-        1441           1
+        1441
 
-
-ans =
-
-        1441           1
-
-
-ans =
-
-        1441           1
-
-
-ans =
-
-        1441           1
-
-
-ans =
-
-        1441           1
-
-
-ans =
-
-        1441           1
-
-
-ans =
-
-        1441           1
-
-</pre><pre class="codeoutput error">Error using table/length (line 394)
-Undefined function 'length' for input arguments of type 'table'.  Use the HEIGHT, WIDTH, or SIZE functions instead.
-
-Error in Catalog/get.numberOfEvents (line 139)
-            val = length(obj.table);
-
-Error in readingEventsIntoACatalogObject (line 141)
-catalogObject.numberOfEvents
 </pre><p>The second way is to use the 'subset_expression' which the Antelope expression evaluator interprets:</p><pre class="codeinput">redoubtLon = -152.7431;
 redoubtLat = 60.4853;
+expr = sprintf(<span class="string">'deg2km(distance(lat, lon, %f, %f)) &lt; %f'</span>,redoubtLat, redoubtLon,maxR)
 catalogObject = readEvents(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, dbpath, <span class="keyword">...</span>
-	<span class="string">'subset_expression'</span>, <span class="keyword">...</span>
-    <span class="string">'deg2km(distance(lat, lon, redoubtLat, redoubtLon)) &lt; maxR'</span>);
+	<span class="string">'subset_expression'</span>, expr);
 catalogObject.numberOfEvents
-</pre><h2>Reading events from a Seisan database<a name="18"></a></h2><p>Here we load events from a Seisan catalog. A Seisan "Sfile" contains all the metadata for 1 event. These Sfiles are stored in a flat-file database structure the path to which is: $SEISAN_TOP/REA/databaseName. Sfiles are organized in year/month subdirectories under this path.</p><p><b>SCAFFOLD: INCLUDE DEMO DATASET FROM MVOE</b></p><p>The following will navigate this where in this case $SEISAN_TOP = '/raid/data/seisan' and the databaseName is MVOE_ which stands for the Montserrat Volcano Observatory Event database. (In Seisan, databaseName is limited to exactly 5 characters).</p><p>This example will load all Sfiles for January 1st, 2000. This is a slow function to run as MATLAB is slow at parsing text files, and there are many events per day in this particular database.</p><pre class="codeinput">catalogObject = readEvents(<span class="string">'seisan'</span>, <span class="keyword">...</span>
+</pre><pre class="codeoutput">
+expr =
+
+deg2km(distance(lat, lon, 60.485300, -152.743100)) &lt; 20.000000
+
+Loading data from /Users/thompsong/src/matlab/GISMO/classes/Catalog/demo/antelope/avodb200903
+
+ans =
+
+        1397
+
+</pre><h2>Reading events from a Seisan database<a name="19"></a></h2><p>Here we load events from a Seisan catalog. A Seisan "Sfile" contains all the metadata for 1 event. These Sfiles are stored in a flat-file database structure the path to which is: $SEISAN_TOP/REA/databaseName. Sfiles are organized in year/month subdirectories under this path.</p><p><b>SCAFFOLD: INCLUDE DEMO DATASET FROM MVOE</b></p><p>The following will navigate this where in this case $SEISAN_TOP = '/raid/data/seisan' and the databaseName is MVOE_ which stands for the Montserrat Volcano Observatory Event database. (In Seisan, databaseName is limited to exactly 5 characters).</p><p>This example will load all Sfiles for January 1st, 2000. This is a slow function to run as MATLAB is slow at parsing text files, and there are many events per day in this particular database.</p><pre class="codeinput">catalogObject = readEvents(<span class="string">'seisan'</span>, <span class="keyword">...</span>
     <span class="string">'dbpath'</span>, fullfile(<span class="string">'/raid'</span>,<span class="string">'data'</span>,<span class="string">'seisan'</span>,<span class="string">'REA'</span>,<span class="string">'MVOE_'</span>), <span class="keyword">...</span>
 	<span class="string">'starttime'</span>, <span class="string">'2000/01/01'</span>, <span class="keyword">...</span><span class="comment">.</span>
 	<span class="string">'endtime'</span>, <span class="string">'2000/01/02'</span>)
+</pre><pre class="codeoutput error">Error using readEvents&gt;seisan (line 632)
+The value of 'startTime' is invalid. It must satisfy the function: isnumeric.
+
+Error in readEvents (line 151)
+            self = seisan(varargin{:});
+
+Error in readingEventsIntoACatalogObject (line 173)
+catalogObject = readEvents('seisan', ...
 </pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Reading events into a Catalog object
@@ -482,6 +351,7 @@ catalogObject = readEvents('iris', 'minimumMagnitude', 7.9, 'starttime', '2000-0
 catalogObject.depth
 catalogObject.mag
 
+%%
 % catalogObject is of type "Catalog". etype contains the event type for 
 % each of the 26 events. In this case each is just  'earthquake', but when 
 % dealing with more diverse dataset, many other etype's are possible. 
@@ -562,9 +432,9 @@ catalogObject.numberOfEvents
  
 redoubtLon = -152.7431; 
 redoubtLat = 60.4853;
+expr = sprintf('deg2km(distance(lat, lon, %f, %f)) < %f',redoubtLat, redoubtLon,maxR)
 catalogObject = readEvents('antelope', 'dbpath', dbpath, ...
-	'subset_expression', ...
-    'deg2km(distance(lat, lon, redoubtLat, redoubtLon)) < maxR');
+	'subset_expression', expr);
 catalogObject.numberOfEvents
 
 %% Reading events from a Seisan database
