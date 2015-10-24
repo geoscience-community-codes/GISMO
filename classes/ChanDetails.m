@@ -113,7 +113,43 @@ classdef ChanDetails
      function LL = latlons(obj)
         % can handle multiple latitudes & longitudes
          LL = [[obj.latitude]' [obj.longitude]'];
-      end
+     end
+     
+     function sphereplot(obj)
+        % sphereplot plots the stations on a sphere that represents the
+        % earth.
+        %
+        % example:
+        % % grab all BHZ stations in iris catalog, then plot
+        % chandeets = ChanDetails.retrieve([],'channel','BHZ','endafter',datenum(2015,1,1));
+        % chandeets.sphereplot;
+        %
+        % TODO: add color or symbol per object?
+        [sphx,sphy,sphz] = sphere(36);
+        s=surf(sphx,sphy,sphz,'FaceAlpha',0.7,'edgecolor',[0.85 0.85 0.85],'FaceColor',[1, 1, 1]);
+        
+        deg2rad = @(x) (pi / 180) .* x;
+        %{
+        % plot lat/lon dots
+        latlines = deg2rad([-90,-60, -45,-30,-15 0, 15, 30 45, 60, 90]);
+        lonlines = deg2rad(-180:10:180);
+        [lonmesh,latmesh] = meshgrid(latlines, lonlines);
+        [y,x,z] = sph2cart(latmesh, lonmesh,1);
+        hold on;
+        % plot3(x,y,z,'.','color',[0.7 0.7 0.7])
+        %}
+        LatLon = deg2rad(obj.latlons);
+        [x,y,z] = sph2cart(LatLon(:,2), LatLon(:,1),1.05);
+        set(gca,'ytick',[],'xtick',[],'ztick',[]);
+        hold on;
+        plot3(x,y,z,'bs') % plot stations
+        [x2,y2,z2] = sph2cart(LatLon(:,2), LatLon(:,1),1.0);
+        plot3([x,x2]',[y,y2]',[z,z2]','k-') %plot dashes above
+        hold off
+        axis equal
+        axis vis3d
+        grid off
+     end
    end
    methods(Static)
       function chdeets = retrieve(ds,varargin)
