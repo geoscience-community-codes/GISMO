@@ -73,7 +73,6 @@ catalogObject.mag
 % dealing with more diverse dataset, many other etype's are possible. 
 % magtype is whatever magnitude type was assigned by the agency that 
 % provided the magnitude data.
-%
 
 %%
 % Using the methods() function will tell us what operations we can perform
@@ -104,6 +103,11 @@ catalogObject = readEvents('iris', ...
 % This returns 1136 earthquakes. Let's get a summary:
 
 catalogObject.summary()
+
+%%
+% Save this dataset so you can use it again later:
+
+save('tohoku_events.mat', 'catalogObject')
 
 
 %% Readings events from an Antelope database
@@ -176,11 +180,19 @@ catalogObject = readEvents('seisan', ...
 % magnitudes. This is common for volcanic earthquakes. Most of these are of
 % type 'h' - a hybrid earthquake.
 
+%% Converting a Zmap data structure to a Catalog object
+% ZMap is a graphical application written by Stefan Wiemer and others for
+% statistical analysis of catalogs. GISMO can convert a ZMap data structure
+% into a Catalog object with:
+
+catalogObject = readEvents('zmap', zmapdata)
+
 %% Plotting hypocenter maps
 % Catalog objects have three builtin ways for plotting hypocenters
 
-% Let's use the Tohoku dataset
-load tohoku_events_1day.mat
+%%
+% Reload the Tohoku dataset
+load tohoku_events.mat
 
 %%
 % *Map view & cross-sections*
@@ -192,7 +204,10 @@ catalogObject.plot3()
 
 %%
 % *web map*
-catalogObject.webmap()
+%%
+% 
+%   catalogObject.webmap()
+
 
 %% Plotting time series of events
 % *Magnitude-time plot*
@@ -244,7 +259,7 @@ catalogObject.plotprmm()
 %%
 % Just calling the bvalue method, i.e.
 %
-%     >> catalogObject.bvalue()
+%   catalogObject.bvalue() 
 %
 % displays a menu of techniques available to compute b-value (b) and 
 % magnitude of completeness (Mc):

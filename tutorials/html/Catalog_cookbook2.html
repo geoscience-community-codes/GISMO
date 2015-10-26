@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Reading events into a Catalog object</title><meta name="generator" content="MATLAB 8.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-10-23"><meta name="DC.source" content="readingEventsIntoACatalogObject.m"><style type="text/css">
+      --><title>Reading events into a Catalog object</title><meta name="generator" content="MATLAB 8.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-10-24"><meta name="DC.source" content="Catalog_cookbook2.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,8 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Reading events into a Catalog object</h1><!--introduction--><p>GISMO can read events from many different earthquake catalog file formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) using the readEvents() function.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">The readEvents() function</a></li><li><a href="#6">Reading events from IRIS DMC</a></li><li><a href="#13">Readings events from an Antelope database</a></li><li><a href="#19">Reading events from a Seisan database</a></li></ul></div><h2>The readEvents() function<a name="1"></a></h2><p>The readEvents() function is used to read event metadata (origin time, lon, lat, depth, mag etc.) from a variety of catalog data sources and file formats into a Catalog object.</p><p>Usage:       catalogObject = readEvents(dataformat, 'param1', <i>value1</i>, ...                                                   'paramN', <i>valueN</i>)</p><p>dataformat may be:</p><div><ul><li>'iris' (for IRIS DMC, using irisFetch.m),</li><li>'antelope' (for a CSS3.0 Antelope/Datascope database)</li><li>'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)</li></ul></div><p>The name-value parameter pairs supported are the same as those supported by irisFetch.Events(). Currently these are:</p><div><ul><li><i>startTime</i></li><li><i>endTime</i></li><li><i>eventId</i></li><li><i>fetchLimit</i></li><li><i>magnitudeType</i></li><li><i>minimumLongitude</i></li><li><i>maximumLongitude</i></li><li><i>minimumLatitude</i></li><li><i>maximumLatitude</i></li><li><i>minimumMagnitude</i></li><li><i>maximumMagnitude</i></li><li><i>minimumDepth</i></li><li><i>maximumDepth</i></li></ul></div><p>And the two convenience parameters:</p><div><ul><li><i>radialcoordinates</i> = [ <i>centerLatitude</i>, <i>centerLongitude</i>, <i>maximumRadius</i> ]</li></ul></div><div><ul><li><i>boxcoordinates</i> = [ <i>minimumLatitude</i> <i>maximumLatitude</i> <i>minimumLongitude</i> <i>maximumLongitude</i> ]</li></ul></div><h2>Reading events from IRIS DMC<a name="6"></a></h2><p>To load events into a Catalog object we use the readEvents function. The first argument is the data source/format - when this is given as 'iris', readEvents uses the irisFetch.m program to retrieve event data via the IRIS webservices. To narrow down our data search we can give readEvents any name-value parameter pairs supported by irisFetch.</p><p>In this example we will use readEvents to retrieve all events at IRIS DMC with a magnitude of at least 7.9 between year 2000 and 2014 (inclusive):</p><pre class="codeinput">catalogObject = readEvents(<span class="string">'iris'</span>, <span class="string">'minimumMagnitude'</span>, 7.9, <span class="string">'starttime'</span>, <span class="string">'2000-01-01'</span>, <span class="string">'endtime'</span>, <span class="string">'2015-01-01'</span>)
+  </style></head><body><div class="content"><h1>Reading events into a Catalog object</h1><!--introduction--><p>GISMO can read events from many different earthquake catalog file formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) using the readEvents() function.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">The readEvents() function</a></li><li><a href="#6">Reading events from IRIS DMC</a></li><li><a href="#14">Readings events from an Antelope database</a></li><li><a href="#20">Reading events from a Seisan database</a></li><li><a href="#23">Converting a Zmap data structure to a Catalog object</a></li><li><a href="#24">Plotting hypocenter maps</a></li><li><a href="#30">Plotting time series of events</a></li><li><a href="#34">Analysis</a></li><li><a href="#39">Saving Catalog objects to disk</a></li></ul></div><h2>The readEvents() function<a name="1"></a></h2><p>The readEvents() function is used to read event metadata (origin time, lon, lat, depth, mag etc.) from a variety of catalog data sources and file formats into a Catalog object.</p><p>Usage:       catalogObject = readEvents(dataformat, 'param1', <i>value1</i>, ...                                                   'paramN', <i>valueN</i>)</p><p>dataformat may be:</p><div><ul><li>'iris' (for IRIS DMC, using irisFetch.m),</li><li>'antelope' (for a CSS3.0 Antelope/Datascope database)</li><li>'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)</li></ul></div><p>The name-value parameter pairs supported are the same as those supported by irisFetch.Events(). Currently these are:</p><div><ul><li><i>startTime</i></li><li><i>endTime</i></li><li><i>eventId</i></li><li><i>fetchLimit</i></li><li><i>magnitudeType</i></li><li><i>minimumLongitude</i></li><li><i>maximumLongitude</i></li><li><i>minimumLatitude</i></li><li><i>maximumLatitude</i></li><li><i>minimumMagnitude</i></li><li><i>maximumMagnitude</i></li><li><i>minimumDepth</i></li><li><i>maximumDepth</i></li></ul></div><p>And the two convenience parameters:</p><div><ul><li><i>radialcoordinates</i> = [ <i>centerLatitude</i>, <i>centerLongitude</i>, <i>maximumRadius</i> ]</li></ul></div><div><ul><li><i>boxcoordinates</i> = [ <i>minimumLatitude</i> <i>maximumLatitude</i> <i>minimumLongitude</i> <i>maximumLongitude</i> ]</li></ul></div><h2>Reading events from IRIS DMC<a name="6"></a></h2><p>To load events into a Catalog object we use the readEvents function. The first argument is the data source/format - when this is given as 'iris', readEvents uses the irisFetch.m program to retrieve event data via the IRIS webservices. To narrow down our data search we can give readEvents any name-value parameter pairs supported by irisFetch.</p><p>In this example we will use readEvents to retrieve all events at IRIS DMC with a magnitude of at least 7.9 between year 2000 and 2014 (inclusive):</p><pre class="codeinput">catalogObject = readEvents(<span class="string">'iris'</span>, <span class="string">'minimumMagnitude'</span>, 7.9, <span class="keyword">...</span>
+    <span class="string">'starttime'</span>, <span class="string">'2000-01-01'</span>, <span class="string">'endtime'</span>, <span class="string">'2015-01-01'</span>)
 </pre><pre class="codeoutput">fetching...
 
 
@@ -237,7 +238,8 @@ Variables:
 
     etype: 1136x1 cell string
 
-</pre><h2>Readings events from an Antelope database<a name="13"></a></h2><p>To load event data from an Antelope/Datascope CSS3.0 database you will need to have Antelope (<a href="http://www.brtt.com/software.html">http://www.brtt.com/software.html</a>) installed, including the Antelope toolbox for MATLAB.</p><p><b>SCAFFOLD: NOTE THAT CURRENTLY NOT USING THE RTDB200903 AT ALL</b></p><p>For the purpose of this exercise we will be using data from Redoubt volcano from 2009/03/20 to 2009/03/23. We will use snippets from two catalogs that are provided with GISMO in Antelope format:</p><div><ul><li>The real-time catalog (rtdb200903).</li><li>The analyst-reviewed offical AVO catalog (avodb200903).</li></ul></div><p>Both catalog segments are included in the "demo" directory. We will now load the official AVO catalog into an Events object:</p><pre class="codeinput">dbpath = demodb(<span class="string">'avo'</span>);
+</pre><p>Save this dataset so you can use it again later:</p><pre class="codeinput">save(<span class="string">'tohoku_events.mat'</span>, <span class="string">'catalogObject'</span>)
+</pre><h2>Readings events from an Antelope database<a name="14"></a></h2><p>To load event data from an Antelope/Datascope CSS3.0 database you will need to have Antelope (<a href="http://www.brtt.com/software.html">http://www.brtt.com/software.html</a>) installed, including the Antelope toolbox for MATLAB.</p><p><b>SCAFFOLD: NOTE THAT CURRENTLY NOT USING THE RTDB200903 AT ALL</b></p><p>For the purpose of this exercise we will be using data from Redoubt volcano from 2009/03/20 to 2009/03/23. We will use snippets from two catalogs that are provided with GISMO in Antelope format:</p><div><ul><li>The real-time catalog (rtdb200903).</li><li>The analyst-reviewed offical AVO catalog (avodb200903).</li></ul></div><p>Both catalog segments are included in the "demo" directory. We will now load the official AVO catalog into an Events object:</p><pre class="codeinput">dbpath = demodb(<span class="string">'avo'</span>);
 catalogObject = readEvents(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, dbpath);
 </pre><pre class="codeoutput">Loading data from /Users/thompsong/src/matlab/GISMO/classes/Catalog/demo/antelope/avodb200903
 Got 1441 events</pre><p>This should load 1441 events. What if we only want events within 20km of Redoubt volcano? There are two ways to do this. The first is the use the radialcoordinates parameter:</p><pre class="codeinput">redoubtLon = -152.7431;
@@ -255,13 +257,16 @@ expr =
 distance(lat, lon, 60.485300, -152.743100) &lt; 0.179864
 
 Loading data from /Users/thompsong/src/matlab/GISMO/classes/Catalog/demo/antelope/avodb200903
-Got 1397 events</pre><h2>Reading events from a Seisan database<a name="19"></a></h2><p>Here we load events from a Seisan catalog. A Seisan "Sfile" contains all the metadata for 1 event. These Sfiles are stored in a flat-file database structure the path to which is: $SEISAN_TOP/REA/databaseName. Sfiles are organized in year/month subdirectories under this path.</p><p><b>SCAFFOLD: INCLUDE DEMO DATASET FROM MVOE</b></p><p>The following will navigate this where in this case $SEISAN_TOP = '/raid/data/seisan' and the databaseName is MVOE_ which stands for the Montserrat Volcano Observatory Event database. (In Seisan, databaseName is limited to exactly 5 characters).</p><p>This example will load Sfiles from 4 hours on 1st Nov, 1996. This is a slow function to run as MATLAB is slow at parsing text files, and there are many events per day in this particular database.</p><pre class="codeinput">catalogObject = readEvents(<span class="string">'seisan'</span>, <span class="keyword">...</span>
+Got 1397 events</pre><h2>Reading events from a Seisan database<a name="20"></a></h2><p>Here we load events from a Seisan catalog. A Seisan "Sfile" contains all the metadata for 1 event. These Sfiles are stored in a flat-file database structure the path to which is: $SEISAN_TOP/REA/databaseName. Sfiles are organized in year/month subdirectories under this path.</p><p><b>SCAFFOLD: INCLUDE DEMO DATASET FROM MVOE</b></p><p>The following will navigate this where in this case $SEISAN_TOP = '/raid/data/seisan' and the databaseName is MVOE_ which stands for the Montserrat Volcano Observatory Event database. (In Seisan, databaseName is limited to exactly 5 characters).</p><p>This example will load Sfiles from 4 hours on 1st Nov, 1996. This is a slow function to run as MATLAB is slow at parsing text files, and there are many events per day in this particular database.</p><pre class="codeinput">catalogObject = readEvents(<span class="string">'seisan'</span>, <span class="keyword">...</span>
     <span class="string">'dbpath'</span>, fullfile(<span class="string">'/raid'</span>,<span class="string">'data'</span>,<span class="string">'MONTSERRAT'</span>,<span class="string">'seisan'</span>,<span class="string">'REA'</span>,<span class="string">'MVOE_'</span>), <span class="keyword">...</span>
 	<span class="string">'startTime'</span>, <span class="string">'1996/11/01 11:00:00'</span>, <span class="keyword">...</span><span class="comment">.</span>
 	<span class="string">'endTime'</span>, <span class="string">'1996/11/01 15:00:00'</span>)
 </pre><pre class="codeoutput">There are 29 sfiles matching your request
 Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1108-25L.S199611
-</pre><pre class="codeoutput error">Undefined function 'read_sfile' for input arguments of type 'char'.
+</pre><pre class="codeoutput error">Undefined function 'sfile2dnum' for input arguments of type 'char'.
+
+Error in read_sfile (line 41)
+    s.dnum = sfile2dnum(sfilebase);
 
 Error in readEvents&gt;seisan (line 717)
         thiss = read_sfile(sfiles(i).dir, sfiles(i).name, '*', '*');
@@ -269,9 +274,36 @@ Error in readEvents&gt;seisan (line 717)
 Error in readEvents (line 153)
             self = seisan(varargin{:});
 
-Error in readingEventsIntoACatalogObject (line 168)
+Error in Catalog_cookbook2 (line 173)
 catalogObject = readEvents('seisan', ...
-</pre><p>Only a few of these earthquakes have been located and even fewer have magnitudes. This is common for volcanic earthquakes. Most of these are of type 'h' - a hybrid earthquake.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014b</a><br></p></div><!--
+</pre><p>Only a few of these earthquakes have been located and even fewer have magnitudes. This is common for volcanic earthquakes. Most of these are of type 'h' - a hybrid earthquake.</p><h2>Converting a Zmap data structure to a Catalog object<a name="23"></a></h2><p>ZMap is a graphical application written by Stefan Wiemer and others for statistical analysis of catalogs. GISMO can convert a ZMap data structure into a Catalog object with:</p><pre class="codeinput">catalogObject = readEvents(<span class="string">'zmap'</span>, zmapdata)
+</pre><h2>Plotting hypocenter maps<a name="24"></a></h2><p>Catalog objects have three builtin ways for plotting hypocenters</p><p>Reload the Tohoku dataset</p><pre class="codeinput">load <span class="string">tohoku_events.mat</span>
+</pre><p><b>Map view &amp; cross-sections</b></p><pre class="codeinput">catalogObject.plot()
+</pre><p><b>3D-Hypocenters</b></p><pre class="codeinput">catalogObject.plot3()
+</pre><p><b>web map</b></p><pre class="language-matlab">catalogObject.webmap()
+</pre><h2>Plotting time series of events<a name="30"></a></h2><p><b>Magnitude-time plot</b></p><pre class="codeinput">catalogObject.plot_time()
+</pre><p><b>Earthquake event counts (number of events per unit time)</b> A plot of seismic catalog per day is often called an "event counts" plot. In GISMO, we call this an "event rate plot" and the first step is to generate an EventRate object. Here our binsize is 1/24 days, i.e. 1 hour.</p><pre class="codeinput">eventrateObject = catalogObject.eventrate(<span class="string">'binsize'</span>, 1/24)
+</pre><p>Now plot the EventRate object:</p><pre class="codeinput">eventrateObject.plot()
+</pre><p>To see more of the things we can do with EventRate objects see the EventRate cookbook <a href="EventRate.html">EventRate.html</a></p><h2>Analysis<a name="34"></a></h2><p><b>Peak event rate (PR) and maximum magnitude</b> A common type of analysis is to identify the peak rate in an earthquake sequence such as this preshock-mainshock-aftershock sequence or an earthquake swarm. This can be done with:</p><pre class="codeinput">catalogObject.plotprmm()
+</pre><p>In the command window this returns:     MM=9.1 occurs at 50.0% of time series     PR=32 occurs at 53.5% of time series</p><p>These are labelled on the plot above with PR and MM.</p><p><b>b-value and magnitude of completeness</b> Code from "ZMap" (written by Stefan Wiemer and others) has been added to Catalog to compute and plot b-values and the magnitude of completeness.</p><p>Definitions:</p><div><ul><li>b-value: the slope of a plot of the logarithm of the cumulative number of events against magnitude. A measure of the number of small earthquakes to larger earthquakes.</li><li>magnitude of completeness (Mc): all events with magnitude&gt;=Mc are in the catalog. Below Mc, not all events are detected, and below the magnitude detection threshold, no events are captured.</li></ul></div><p>Just calling the bvalue method, i.e.</p><pre class="language-matlab">catalogObject.bvalue()
+</pre><p>displays a menu of techniques available to compute b-value (b) and magnitude of completeness (Mc):</p><pre>   --------------------------------------------------------
+   Usage is: eventsObject.bvalue(mcType)
+   --------------------------------------------------------
+   mcType can be:
+   1: Maximum curvature
+   2: Fixed Mc = minimum magnitude (Mmin)
+   3: Mc90 (90% probability)
+   4: Mc95 (95% probability)
+   5: Best combination (Mc95 - Mc90 - maximum curvature)</pre><p>We will use the first menu option:</p><pre class="codeinput">catalogObject.bvalue(1)
+
+<span class="comment">% In this particular example, the b-value is 0.6 and the magnitude of</span>
+<span class="comment">% completeness is 4.2.</span>
+</pre><h2>Saving Catalog objects to disk<a name="39"></a></h2><p><b>Writing to a MAT file</b></p><pre class="codeinput">save(<span class="string">'mycatalog.mat'</span>, <span class="string">'catalogObject'</span>)
+</pre><p>This can simply be loaded again with:</p><pre class="codeinput">load(<span class="string">'myevents_filename.mat'</span>)
+</pre><p><b>Writing to an Antelope CSS3.0 database</b> This method requires the Antelope toolbox for MATLAB and writes the Catalog as a CSS3.0 flat-file database:</p><pre class="codeinput">catalogObject.write(<span class="string">'antelope'</span>, <span class="string">'myeventsdb'</span>, <span class="string">'css3.0'</span>)
+</pre><p>Antelope users: This can then be opened in the normal way with dbe in Mac/Linux terminal window. For example, the origin table should look like:</p><pre class="codeinput"><span class="comment">% [[images/dbe.png]]</span>
+</pre><p>This database can be reloaded with:</p><pre class="codeinput">ev = readEvents(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>,<span class="string">'myeventsdb'</span>)
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014b</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Reading events into a Catalog object
 % GISMO can read events from many different earthquake catalog file formats
@@ -332,7 +364,8 @@ catalogObject = readEvents('seisan', ...
 % In this example we will use readEvents to retrieve all events at IRIS DMC 
 % with a magnitude of at least 7.9 between year 2000 and 2014 (inclusive):
 
-catalogObject = readEvents('iris', 'minimumMagnitude', 7.9, 'starttime', '2000-01-01', 'endtime', '2015-01-01')
+catalogObject = readEvents('iris', 'minimumMagnitude', 7.9, ...
+    'starttime', '2000-01-01', 'endtime', '2015-01-01')
 
 %%
 % We have retrieved 26 events. To access any particular property we can use
@@ -347,7 +380,6 @@ catalogObject.mag
 % dealing with more diverse dataset, many other etype's are possible. 
 % magtype is whatever magnitude type was assigned by the agency that 
 % provided the magnitude data.
-%
 
 %%
 % Using the methods() function will tell us what operations we can perform
@@ -378,6 +410,11 @@ catalogObject = readEvents('iris', ...
 % This returns 1136 earthquakes. Let's get a summary:
 
 catalogObject.summary()
+
+%%
+% Save this dataset so you can use it again later:
+
+save('tohoku_events.mat', 'catalogObject')
 
 
 %% Readings events from an Antelope database
@@ -450,6 +487,134 @@ catalogObject = readEvents('seisan', ...
 % magnitudes. This is common for volcanic earthquakes. Most of these are of
 % type 'h' - a hybrid earthquake.
 
+%% Converting a Zmap data structure to a Catalog object
+% ZMap is a graphical application written by Stefan Wiemer and others for
+% statistical analysis of catalogs. GISMO can convert a ZMap data structure
+% into a Catalog object with:
+
+catalogObject = readEvents('zmap', zmapdata)
+
+%% Plotting hypocenter maps
+% Catalog objects have three builtin ways for plotting hypocenters
+
+%%
+% Reload the Tohoku dataset
+load tohoku_events.mat
+
+%%
+% *Map view & cross-sections*
+catalogObject.plot()
+
+%%
+% *3D-Hypocenters*
+catalogObject.plot3()
+
+%%
+% *web map*
+%%
+% 
+%   catalogObject.webmap()
+
+
+%% Plotting time series of events
+% *Magnitude-time plot*
+
+catalogObject.plot_time()
+
+%%
+% *Earthquake event counts (number of events per unit time)*
+% A plot of seismic catalog per day is often called an "event counts" plot.
+% In GISMO, we call this an "event rate plot" and the first step is to 
+% generate an EventRate object. Here our binsize is 1/24 days, i.e. 1 hour.
+
+eventrateObject = catalogObject.eventrate('binsize', 1/24)
+
+%%
+% Now plot the EventRate object:
+eventrateObject.plot()
+
+%%
+% To see more of the things we can do with EventRate objects see the
+% EventRate cookbook <EventRate.html>
+
+%% Analysis
+% *Peak event rate (PR) and maximum magnitude*
+% A common type of analysis is to identify the peak rate in an earthquake
+% sequence such as this preshock-mainshock-aftershock sequence or an 
+% earthquake swarm. This can be done with:
+
+catalogObject.plotprmm()
+
+%%
+% In the command window this returns:
+%     MM=9.1 occurs at 50.0% of time series
+%     PR=32 occurs at 53.5% of time series
+%
+% These are labelled on the plot above with PR and MM.
+
+%%
+% *b-value and magnitude of completeness*
+% Code from "ZMap" (written by Stefan Wiemer and others) has been added to 
+% Catalog to compute and plot b-values and the magnitude of completeness. 
+
+%%
+% Definitions:
+%
+% * b-value: the slope of a plot of the logarithm of the cumulative number of events against magnitude. A measure of the number of small earthquakes to larger earthquakes.
+% * magnitude of completeness (Mc): all events with magnitude>=Mc are in the catalog. Below Mc, not all events are detected, and below the magnitude detection threshold, no events are captured.
+
+%%
+% Just calling the bvalue method, i.e.
+%
+%   catalogObject.bvalue() 
+%
+% displays a menu of techniques available to compute b-value (b) and 
+% magnitude of completeness (Mc):
+%
+%     REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%     Usage is: eventsObject.bvalue(mcType)
+%     REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%     mcType can be:
+%     1: Maximum curvature
+%     2: Fixed Mc = minimum magnitude (Mmin)
+%     3: Mc90 (90% probability)
+%     4: Mc95 (95% probability)
+%     5: Best combination (Mc95 - Mc90 - maximum curvature)
+% 
+% We will use the first menu option:
+
+catalogObject.bvalue(1)
+
+% In this particular example, the b-value is 0.6 and the magnitude of 
+% completeness is 4.2.
+
+%% Saving Catalog objects to disk
+% *Writing to a MAT file*
+
+save('mycatalog.mat', 'catalogObject')
+
+%%
+% This can simply be loaded again with:
+
+load('myevents_filename.mat')
+
+%% 
+% *Writing to an Antelope CSS3.0 database*
+% This method requires the Antelope toolbox for MATLAB and writes the 
+% Catalog as a CSS3.0 flat-file database:
+
+catalogObject.write('antelope', 'myeventsdb', 'css3.0')
+
+%%
+% Antelope users: This can then be opened in the normal way with dbe in 
+% Mac/Linux terminal window. For example, the origin table should look like:
+ 
+% [[images/dbe.png]]
+
+%% 
+% This database can be reloaded with:
+
+ev = readEvents('antelope', 'dbpath','myeventsdb')
 
 
 ##### SOURCE END #####
