@@ -1,0 +1,1169 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Reading events into a Catalog object</title><meta name="generator" content="MATLAB 8.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-10-26"><meta name="DC.source" content="Catalog_cookbook.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Reading events into a Catalog object</h1><!--introduction--><p>GISMO can read events from many different earthquake catalog file formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) using the readEvents() function.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">The readEvents() function</a></li><li><a href="#6">Reading events from IRIS DMC</a></li><li><a href="#17">Readings events from an Antelope database</a></li><li><a href="#24">Reading events from a Seisan database</a></li><li><a href="#28">Converting a Zmap data structure to a Catalog object</a></li><li><a href="#29">Plotting hypocenter maps</a></li><li><a href="#35">Plotting time series of events</a></li><li><a href="#40">Analysis</a></li><li><a href="#48">Saving Catalog objects to disk</a></li></ul></div><h2>The readEvents() function<a name="1"></a></h2><p>The readEvents() function is used to read event metadata (origin time, lon, lat, depth, mag etc.) from a variety of catalog data sources and file formats into a Catalog object.</p><p>Usage:       catalogObject = readEvents(dataformat, 'param1', <i>value1</i>, ...                                                   'paramN', <i>valueN</i>)</p><p>dataformat may be:</p><div><ul><li>'iris' (for IRIS DMC, using irisFetch.m),</li><li>'antelope' (for a CSS3.0 Antelope/Datascope database)</li><li>'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)</li></ul></div><p>The name-value parameter pairs supported are the same as those supported by irisFetch.Events(). Currently these are:</p><div><ul><li><i>startTime</i></li><li><i>endTime</i></li><li><i>eventId</i></li><li><i>fetchLimit</i></li><li><i>magnitudeType</i></li><li><i>minimumLongitude</i></li><li><i>maximumLongitude</i></li><li><i>minimumLatitude</i></li><li><i>maximumLatitude</i></li><li><i>minimumMagnitude</i></li><li><i>maximumMagnitude</i></li><li><i>minimumDepth</i></li><li><i>maximumDepth</i></li></ul></div><p>And the two convenience parameters:</p><div><ul><li><i>radialcoordinates</i> = [ <i>centerLatitude</i>, <i>centerLongitude</i>, <i>maximumRadius</i> ]</li></ul></div><div><ul><li><i>boxcoordinates</i> = [ <i>minimumLatitude</i> <i>maximumLatitude</i> <i>minimumLongitude</i> <i>maximumLongitude</i> ]</li></ul></div><h2>Reading events from IRIS DMC<a name="6"></a></h2><p>To load events into a Catalog object we use the readEvents function. The first argument is the data source/format - when this is given as 'iris', readEvents uses the irisFetch.m program to retrieve event data via the IRIS webservices. To narrow down our data search we can give readEvents any name-value parameter pairs supported by irisFetch.</p><p>In this example we will use readEvents to retrieve all events at IRIS DMC with a magnitude of at least 8.0 between year 2000 and 2014 (inclusive):</p><pre class="codeinput">greatquakes = readEvents(<span class="string">'iris'</span>, <span class="string">'minimumMagnitude'</span>, 8.0, <span class="keyword">...</span>
+    <span class="string">'starttime'</span>, <span class="string">'2000-01-01'</span>, <span class="string">'endtime'</span>, <span class="string">'2015-01-01'</span>)
+</pre><pre class="codeoutput">fetching...
+
+
+20 events found *************
+
+parsing into MATLAB structures
+Got 20 events
+greatquakes = 
+
+     datenum         date         time        lon        lat      depth    mag
+    __________    __________    ________    _______    _______    _____    ___
+
+    7.3569e+05    2014/04/01    23:46:47    -70.769     -19.61       25    8.2
+    7.3538e+05    2013/05/24    05:44:49     153.28     54.874    608.9    8.3
+    7.3527e+05    2013/02/06    01:12:27     165.14    -10.738     28.7      8
+    7.3497e+05    2012/04/11    10:43:10     92.428     0.7675     21.6    8.2
+    7.3497e+05    2012/04/11    08:38:37     93.014     2.2376     26.3    8.6
+    7.3457e+05    2011/03/11    05:46:23      142.5     38.296     19.7    9.1
+     7.342e+05    2010/02/27    06:34:13    -72.933    -36.148     28.1    8.8
+    7.3405e+05    2009/09/29    17:48:11    -171.94    -15.512     18.5    8.1
+     7.333e+05    2007/09/12    11:10:26      101.4    -4.4637     35.5    8.5
+    7.3327e+05    2007/08/15    23:40:58    -76.555    -13.384     41.2      8
+    7.3313e+05    2007/04/01    20:39:56     157.03    -8.4468      9.5    8.1
+    7.3306e+05    2007/01/13    04:23:23      154.5     46.231     22.5    8.1
+      7.33e+05    2006/11/15    11:14:14     153.21     46.681     12.2    8.3
+    7.3283e+05    2006/06/05    00:50:31     119.08     17.992      124      8
+    7.3283e+05    2006/06/01    18:57:02     120.88     19.054       13    8.4
+     7.324e+05    2005/03/28    16:09:35     97.113     2.0964       30    8.1
+    7.3231e+05    2004/12/26    00:58:52     95.901     3.4125     26.1    8.2
+     7.323e+05    2004/12/23    14:59:00     161.58     -49.71       10      8
+    7.3185e+05    2003/09/25    19:50:07     143.87     41.749       33    8.1
+    7.3103e+05    2001/06/23    20:33:09    -73.561    -16.303      2.2    8.3
+
+
+    magtype       etype    
+    _______    ____________
+
+    'MWW'      'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MS'       'earthquake'
+    'MS'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+
+</pre><p>What type of data structure is the "greatquakes" variable? To find this we can ask:</p><pre class="codeinput">class(greatquakes)
+</pre><pre class="codeoutput">
+ans =
+
+Catalog
+
+</pre><p>it is of type "Catalog" - i.e. it is a Catalog object, an instance of the Catalog class.</p><p>We have retrieved 26 events. To access any particular property we can use dot notation, as if the object were a structure, e.g.:</p><pre class="codeinput">greatquakes.depth
+greatquakes.mag
+</pre><pre class="codeoutput">
+ans =
+
+   25.0000
+  608.9000
+   28.7000
+   21.6000
+   26.3000
+   19.7000
+   28.1000
+   18.5000
+   35.5000
+   41.2000
+    9.5000
+   22.5000
+   12.2000
+  124.0000
+   13.0000
+   30.0000
+   26.1000
+   10.0000
+   33.0000
+    2.2000
+
+
+ans =
+
+    8.2000
+    8.3000
+    8.0000
+    8.2000
+    8.6000
+    9.1000
+    8.8000
+    8.1000
+    8.5000
+    8.0000
+    8.1000
+    8.1000
+    8.3000
+    8.0000
+    8.4000
+    8.1000
+    8.2000
+    8.0000
+    8.1000
+    8.3000
+
+</pre><p>catalogObject is of type "Catalog". etype contains the event type for each of the 26 events. In this case each is just  'earthquake', but when dealing with more diverse dataset, many other etype's are possible. magtype is whatever magnitude type was assigned by the agency that provided the magnitude data.</p><p>Using the methods() function will tell us what operations we can perform on a Catalog object:</p><pre class="codeinput">methods(greatquakes)
+</pre><pre class="codeoutput">
+Methods for class Catalog:
+
+Catalog      disp         plot3        save         webmap       
+Event        eventrate    plot_counts  subclassify  write        
+bvalue       hist         plot_time    subset       
+combine      plot         plotprmm     summary      
+
+</pre><p>Save this dataset so you can use it again later:</p><pre class="codeinput">save(<span class="string">'great_earthquakes.mat'</span>, <span class="string">'greatquakes'</span>)
+</pre><p>Now we'll do another example - we will get events within 200 km of the great M9.0 Tohoku earthquake that occurred on 2011/03/11. The mainshock parameters are:</p><pre>   Date/Time:  "2011/03/11 05:46:24"
+   Longitude:  142.372
+   Latitude:   38.297
+   Depth:      30 km</pre><p>We will limit our search to 1 day before and after the earthquake:</p><pre class="codeinput">mainshocktime = datenum(<span class="string">'2011/03/11 05:46:24'</span>)
+tohoku_events = readEvents(<span class="string">'iris'</span>, <span class="keyword">...</span>
+            <span class="string">'radialcoordinates'</span>, [38.297 142.372 km2deg(200)], <span class="keyword">...</span>
+            <span class="string">'starttime'</span>, mainshocktime - 1, <span class="keyword">...</span>
+            <span class="string">'endtime'</span>, mainshocktime + 1);
+</pre><pre class="codeoutput">
+mainshocktime =
+
+   7.3457e+05
+
+fetching...
+
+
+1136 events found *************
+
+parsing into MATLAB structures
+Got 1136 events</pre><p>This returns 1136 earthquakes. Let's get a summary:</p><pre class="codeinput">tohoku_events.summary()
+</pre><pre class="codeoutput">
+Variables:
+
+    datenum: 1136x1 double
+        Values:
+
+            min       7.3457e+05
+            median    7.3457e+05
+            max       7.3457e+05
+
+    date: 1136x10 char
+
+    time: 1136x8 char
+
+    lon: 1136x1 double
+        Values:
+
+            min       140.31
+            median    142.59
+            max       144.63
+
+    lat: 1136x1 double
+        Values:
+
+            min       36.517
+            median     37.88
+            max       40.044
+
+    depth: 1136x1 double
+        Values:
+
+            min           0  
+            median       25  
+            max       149.7  
+
+    mag: 1136x1 double
+        Values:
+
+            min       0.1  
+            median    4.3  
+            max       9.1  
+            NaNs        4  
+
+    magtype: 1136x1 cell string
+
+    etype: 1136x1 cell string
+
+</pre><p>Save this dataset so you can use it again later:</p><pre class="codeinput">save(<span class="string">'tohoku_events.mat'</span>, <span class="string">'tohoku_events'</span>)
+</pre><h2>Readings events from an Antelope database<a name="17"></a></h2><p>To load event data from an Antelope/Datascope CSS3.0 database you will need to have Antelope (<a href="http://www.brtt.com/software.html">http://www.brtt.com/software.html</a>) installed, including the Antelope toolbox for MATLAB.</p><p><b>SCAFFOLD: NOTE THAT CURRENTLY NOT USING THE RTDB200903 AT ALL</b></p><p>For the purpose of this exercise we will be using data from Redoubt volcano from 2009/03/20 to 2009/03/23. We will use snippets from two catalogs that are provided with GISMO in Antelope format:</p><div><ul><li>The real-time catalog (rtdb200903).</li><li>The analyst-reviewed offical AVO catalog (avodb200903).</li></ul></div><p>Both catalog segments are included in the "demo" directory. We will now load the official AVO catalog into an Events object:</p><pre class="codeinput">dbpath = demodb(<span class="string">'avo'</span>);
+avocatalog = readEvents(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, dbpath);
+</pre><pre class="codeoutput">Loading data from /home/t/thompsong/src/GISMO/classes/Catalog/demo/antelope/avodb200903
+Got 1441 events</pre><p>This should load 1441 events. What if we only want events within 20km of Redoubt volcano? There are two ways to do this. The first is the use the radialcoordinates parameter:</p><pre class="codeinput">redoubtLon = -152.7431;
+redoubtLat = 60.4853;
+maxR = km2deg(20.0);
+redoubt_events = readEvents(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, dbpath, <span class="keyword">...</span>
+	<span class="string">'radialcoordinates'</span>, [redoubtLat redoubtLon maxR])
+</pre><pre class="codeoutput">Loading data from /home/t/thompsong/src/GISMO/classes/Catalog/demo/antelope/avodb200903
+Got 1397 events
+redoubt_events = 
+
+     datenum         date         time        lon       lat      depth    mag 
+    __________    __________    ________    _______    ______    _____    ____
+
+    7.3385e+05    2009/03/20    00:24:41     -152.8    60.481     3.62     0.3
+    7.3385e+05    2009/03/20    07:29:44    -152.74    60.494       -3    -0.3
+    7.3385e+05    2009/03/20    07:43:40    -152.78    60.484       -3     0.4
+    7.3385e+05    2009/03/20    07:48:53    -152.75    60.455     0.44     0.7
+    7.3385e+05    2009/03/20    11:09:21    -152.77    60.497     3.09     0.5
+    7.3385e+05    2009/03/20    11:10:43    -152.77    60.488     0.69     0.8
+    7.3385e+05    2009/03/20    12:20:02    -152.77     60.48    -0.15     0.3
+    7.3385e+05    2009/03/20    13:21:06    -152.76    60.488    -2.78     0.4
+    7.3385e+05    2009/03/20    14:04:39    -152.76     60.48     3.72     0.5
+    7.3385e+05    2009/03/20    15:25:39    -152.76    60.486     -2.9     0.4
+    7.3385e+05    2009/03/20    16:51:47    -152.78    60.483       -3     0.5
+    7.3385e+05    2009/03/20    16:52:08    -152.77    60.501     2.12     0.5
+    7.3385e+05    2009/03/20    17:10:26    -152.77    60.484     0.61     0.9
+    7.3385e+05    2009/03/20    17:17:16    -152.73    60.495       -3    -0.1
+    7.3385e+05    2009/03/20    17:46:27    -152.78    60.505     2.59    -0.3
+    7.3385e+05    2009/03/20    17:46:39    -152.76    60.489    -2.46     0.8
+    7.3385e+05    2009/03/20    17:59:41    -152.77    60.487    -2.67     0.3
+    7.3385e+05    2009/03/20    19:42:17    -152.77    60.484     2.28     0.4
+    7.3385e+05    2009/03/20    19:44:11    -152.76     60.49     0.04     0.7
+    7.3385e+05    2009/03/20    19:46:08    -152.77    60.483       -3    -0.2
+    7.3385e+05    2009/03/20    20:02:49    -152.77    60.484     0.12     0.9
+    7.3385e+05    2009/03/20    20:23:13    -152.74    60.489    -1.39     0.4
+    7.3385e+05    2009/03/20    20:27:29    -152.77    60.491    -2.55     0.3
+    7.3385e+05    2009/03/20    20:35:09    -152.77    60.462     5.19     0.5
+    7.3385e+05    2009/03/20    20:36:50    -152.76    60.487    -2.92     0.4
+    7.3385e+05    2009/03/20    20:39:44    -152.77    60.485     3.52     0.5
+    7.3385e+05    2009/03/20    20:52:01    -152.78    60.474     2.36     0.3
+    7.3385e+05    2009/03/20    21:00:45    -152.76    60.484     0.65       1
+    7.3385e+05    2009/03/20    21:11:41    -152.77    60.483    -2.48     0.3
+    7.3385e+05    2009/03/20    21:13:05    -152.78    60.461      6.4       1
+    7.3385e+05    2009/03/20    21:45:52    -152.76    60.482       -3     0.1
+    7.3385e+05    2009/03/20    21:45:54    -152.81    60.482    -2.74     0.8
+    7.3385e+05    2009/03/20    22:13:19    -152.77    60.488    -2.92     0.1
+    7.3385e+05    2009/03/20    22:20:14    -152.77    60.487      2.8     0.3
+    7.3385e+05    2009/03/20    22:32:48    -152.77    60.501       -3    -0.5
+    7.3385e+05    2009/03/20    22:39:30    -152.76    60.491        1     0.6
+    7.3385e+05    2009/03/20    22:42:14    -152.77     60.49     3.57     0.5
+    7.3385e+05    2009/03/20    22:59:34    -152.78    60.478       -3     0.5
+    7.3385e+05    2009/03/20    23:20:30    -152.77    60.491     0.59     0.3
+    7.3385e+05    2009/03/20    23:43:54    -152.76    60.489     0.48     0.9
+    7.3385e+05    2009/03/20    23:52:53    -152.77     60.49     1.14     0.3
+    7.3385e+05    2009/03/21    00:09:20    -152.72    60.487       -3    -0.9
+    7.3385e+05    2009/03/21    00:09:34    -152.77    60.491     3.04     0.5
+    7.3385e+05    2009/03/21    00:19:32    -152.77    60.489    -2.83       0
+    7.3385e+05    2009/03/21    00:24:39    -152.77    60.487     0.66     0.4
+    7.3385e+05    2009/03/21    00:42:16    -152.77    60.497     2.73     0.4
+    7.3385e+05    2009/03/21    00:44:30    -152.77    60.487    -2.06     0.4
+    7.3385e+05    2009/03/21    00:47:06    -152.77    60.492    -0.14    -0.1
+    7.3385e+05    2009/03/21    00:47:12    -152.77    60.493    -0.49     0.6
+    7.3385e+05    2009/03/21    01:16:51    -152.77    60.483     -0.4     0.6
+
+
+    magtype    etype
+    _______    _____
+
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+
+* Only showing first 50 rows/events - to see all rows/events use:
+*      catalogObject.disp(true)
+</pre><p>Save this dataset so you can use it again later:</p><pre class="codeinput">save(<span class="string">'redoubt_events.mat'</span>, <span class="string">'redoubt_events'</span>)
+</pre><p>The second way is to use the 'subset_expression' which the Antelope expression evaluator interprets:</p><pre class="codeinput">expr = sprintf(<span class="string">'distance(lat, lon, %f, %f) &lt; %f'</span>,redoubtLat, redoubtLon,maxR)
+catalogObject = readEvents(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, dbpath, <span class="keyword">...</span>
+	<span class="string">'subset_expression'</span>, expr)
+</pre><pre class="codeoutput">
+expr =
+
+distance(lat, lon, 60.485300, -152.743100) &lt; 0.179864
+
+Loading data from /home/t/thompsong/src/GISMO/classes/Catalog/demo/antelope/avodb200903
+Got 1397 events
+catalogObject = 
+
+     datenum         date         time        lon       lat      depth    mag 
+    __________    __________    ________    _______    ______    _____    ____
+
+    7.3385e+05    2009/03/20    00:24:41     -152.8    60.481     3.62     0.3
+    7.3385e+05    2009/03/20    07:29:44    -152.74    60.494       -3    -0.3
+    7.3385e+05    2009/03/20    07:43:40    -152.78    60.484       -3     0.4
+    7.3385e+05    2009/03/20    07:48:53    -152.75    60.455     0.44     0.7
+    7.3385e+05    2009/03/20    11:09:21    -152.77    60.497     3.09     0.5
+    7.3385e+05    2009/03/20    11:10:43    -152.77    60.488     0.69     0.8
+    7.3385e+05    2009/03/20    12:20:02    -152.77     60.48    -0.15     0.3
+    7.3385e+05    2009/03/20    13:21:06    -152.76    60.488    -2.78     0.4
+    7.3385e+05    2009/03/20    14:04:39    -152.76     60.48     3.72     0.5
+    7.3385e+05    2009/03/20    15:25:39    -152.76    60.486     -2.9     0.4
+    7.3385e+05    2009/03/20    16:51:47    -152.78    60.483       -3     0.5
+    7.3385e+05    2009/03/20    16:52:08    -152.77    60.501     2.12     0.5
+    7.3385e+05    2009/03/20    17:10:26    -152.77    60.484     0.61     0.9
+    7.3385e+05    2009/03/20    17:17:16    -152.73    60.495       -3    -0.1
+    7.3385e+05    2009/03/20    17:46:27    -152.78    60.505     2.59    -0.3
+    7.3385e+05    2009/03/20    17:46:39    -152.76    60.489    -2.46     0.8
+    7.3385e+05    2009/03/20    17:59:41    -152.77    60.487    -2.67     0.3
+    7.3385e+05    2009/03/20    19:42:17    -152.77    60.484     2.28     0.4
+    7.3385e+05    2009/03/20    19:44:11    -152.76     60.49     0.04     0.7
+    7.3385e+05    2009/03/20    19:46:08    -152.77    60.483       -3    -0.2
+    7.3385e+05    2009/03/20    20:02:49    -152.77    60.484     0.12     0.9
+    7.3385e+05    2009/03/20    20:23:13    -152.74    60.489    -1.39     0.4
+    7.3385e+05    2009/03/20    20:27:29    -152.77    60.491    -2.55     0.3
+    7.3385e+05    2009/03/20    20:35:09    -152.77    60.462     5.19     0.5
+    7.3385e+05    2009/03/20    20:36:50    -152.76    60.487    -2.92     0.4
+    7.3385e+05    2009/03/20    20:39:44    -152.77    60.485     3.52     0.5
+    7.3385e+05    2009/03/20    20:52:01    -152.78    60.474     2.36     0.3
+    7.3385e+05    2009/03/20    21:00:45    -152.76    60.484     0.65       1
+    7.3385e+05    2009/03/20    21:11:41    -152.77    60.483    -2.48     0.3
+    7.3385e+05    2009/03/20    21:13:05    -152.78    60.461      6.4       1
+    7.3385e+05    2009/03/20    21:45:52    -152.76    60.482       -3     0.1
+    7.3385e+05    2009/03/20    21:45:54    -152.81    60.482    -2.74     0.8
+    7.3385e+05    2009/03/20    22:13:19    -152.77    60.488    -2.92     0.1
+    7.3385e+05    2009/03/20    22:20:14    -152.77    60.487      2.8     0.3
+    7.3385e+05    2009/03/20    22:32:48    -152.77    60.501       -3    -0.5
+    7.3385e+05    2009/03/20    22:39:30    -152.76    60.491        1     0.6
+    7.3385e+05    2009/03/20    22:42:14    -152.77     60.49     3.57     0.5
+    7.3385e+05    2009/03/20    22:59:34    -152.78    60.478       -3     0.5
+    7.3385e+05    2009/03/20    23:20:30    -152.77    60.491     0.59     0.3
+    7.3385e+05    2009/03/20    23:43:54    -152.76    60.489     0.48     0.9
+    7.3385e+05    2009/03/20    23:52:53    -152.77     60.49     1.14     0.3
+    7.3385e+05    2009/03/21    00:09:20    -152.72    60.487       -3    -0.9
+    7.3385e+05    2009/03/21    00:09:34    -152.77    60.491     3.04     0.5
+    7.3385e+05    2009/03/21    00:19:32    -152.77    60.489    -2.83       0
+    7.3385e+05    2009/03/21    00:24:39    -152.77    60.487     0.66     0.4
+    7.3385e+05    2009/03/21    00:42:16    -152.77    60.497     2.73     0.4
+    7.3385e+05    2009/03/21    00:44:30    -152.77    60.487    -2.06     0.4
+    7.3385e+05    2009/03/21    00:47:06    -152.77    60.492    -0.14    -0.1
+    7.3385e+05    2009/03/21    00:47:12    -152.77    60.493    -0.49     0.6
+    7.3385e+05    2009/03/21    01:16:51    -152.77    60.483     -0.4     0.6
+
+
+    magtype    etype
+    _______    _____
+
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+    'ml'       'a'  
+
+* Only showing first 50 rows/events - to see all rows/events use:
+*      catalogObject.disp(true)
+</pre><h2>Reading events from a Seisan database<a name="24"></a></h2><p>Here we load events from a Seisan catalog. A Seisan "Sfile" contains all the metadata for 1 event. These Sfiles are stored in a flat-file database structure the path to which is: $SEISAN_TOP/REA/databaseName. Sfiles are organized in year/month subdirectories under this path.</p><p><b>SCAFFOLD: INCLUDE DEMO DATASET FROM MVOE</b></p><p>The following will navigate this where in this case $SEISAN_TOP = '/raid/data/seisan' and the databaseName is MVOE_ which stands for the Montserrat Volcano Observatory Event database. (In Seisan, databaseName is limited to exactly 5 characters).</p><p>This example will load Sfiles from 4 hours on 1st Nov, 1996. This is a slow function to run as MATLAB is slow at parsing text files, and there are many events per day in this particular database.</p><pre class="codeinput">montserrat_events = readEvents(<span class="string">'seisan'</span>, <span class="keyword">...</span>
+    <span class="string">'dbpath'</span>, fullfile(<span class="string">'/raid'</span>,<span class="string">'data'</span>,<span class="string">'MONTSERRAT'</span>,<span class="string">'seisan'</span>,<span class="string">'REA'</span>,<span class="string">'MVOE_'</span>), <span class="keyword">...</span>
+	<span class="string">'startTime'</span>, <span class="string">'1996/11/01 11:00:00'</span>, <span class="keyword">...</span><span class="comment">.</span>
+	<span class="string">'endTime'</span>, <span class="string">'1996/11/01 15:00:00'</span>)
+</pre><pre class="codeoutput">There are 29 sfiles matching your request
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1108-25L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1115-03L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1131-08L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1135-09L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1141-34L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1146-34L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1154-07L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1214-17L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1232-42L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1239-55L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1246-24L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1301-08L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1306-18L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1314-39L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1320-33L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1326-24L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1329-18L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1334-58L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1336-31L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1353-50L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1408-52L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1412-15L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1417-35L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1424-29L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1432-44L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1433-40L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1443-02L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1450-08L.S199611
+Processing /raid/data/MONTSERRAT/seisan/REA/MVOE_/1996/11/01-1459-30L.S199611
+Got 29 events
+montserrat_events = 
+
+     datenum         date         time        lon       lat      depth    mag
+    __________    __________    ________    _______    ______    _____    ___
+
+    7.2933e+05    1996/11/01    11:08:25        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    11:15:03        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    11:31:08        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    11:35:20    -62.177    16.713    1.7      NaN
+    7.2933e+05    1996/11/01    11:41:34        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    11:46:42    -62.156     16.63    3.1      NaN
+    7.2933e+05    1996/11/01    11:54:07        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    12:14:17        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    12:32:42        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    12:39:55        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    12:46:24        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    13:01:08        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    13:06:18        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    13:14:39        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    13:20:43    -62.176    16.713      0      NaN
+    7.2933e+05    1996/11/01    13:26:24        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    13:29:18        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    13:34:58        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    13:36:42    -62.177    16.715      0      NaN
+    7.2933e+05    1996/11/01    13:53:50        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    14:08:52        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    14:12:15        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    14:17:35        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    14:24:40    -62.176    16.714    1.3      NaN
+    7.2933e+05    1996/11/01    14:32:44        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    14:33:40        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    14:43:13    -62.177    16.711    1.8      NaN
+    7.2933e+05    1996/11/01    14:50:08        NaN       NaN    NaN      NaN
+    7.2933e+05    1996/11/01    14:59:30        NaN       NaN    NaN      NaN
+
+
+    magtype    etype
+    _______    _____
+
+    'u'        'h'  
+    'u'        't'  
+    'u'        't'  
+    'u'        'h'  
+    'u'        't'  
+    'u'        'h'  
+    'u'        'h'  
+    'u'        'h'  
+    'u'        'h'  
+    'u'        'h'  
+    'u'        'h'  
+    'u'        'h'  
+    'u'        'h'  
+    'u'        'h'  
+    'u'        'h'  
+    'u'        'h'  
+    'u'        'e'  
+    'u'        'h'  
+    'u'        'h'  
+    'u'        'h'  
+    'u'        't'  
+    'u'        'h'  
+    'u'        'u'  
+    'u'        'h'  
+    'u'        'r'  
+    'u'        'h'  
+    'u'        'h'  
+    'u'        'h'  
+    'u'        'h'  
+
+</pre><p>Save this dataset so you can use it again later:</p><pre class="codeinput">save(<span class="string">'montserrat_events.mat'</span>, <span class="string">'montserrat_events'</span>)
+</pre><p>Only a few of these earthquakes have been located and even fewer have magnitudes. This is common for volcanic earthquakes. Most of these are of type 'h' - a hybrid earthquake.</p><h2>Converting a Zmap data structure to a Catalog object<a name="28"></a></h2><p>ZMap is a graphical application written by Max Wyss &amp; Stefan Wiemer for statistical analysis of catalogs. GISMO can convert a ZMap data structure into a Catalog object with:</p><pre>  catalogObject = readEvents('zmap', zmapdata)</pre><h2>Plotting hypocenter maps<a name="29"></a></h2><p>Catalog objects have three builtin ways for plotting hypocenters</p><p>Reload the Tohoku dataset</p><pre class="codeinput">load <span class="string">tohoku_events.mat</span>
+</pre><p><b>Map view &amp; cross-sections</b></p><pre class="codeinput">tohoku_events.plot()
+</pre><img vspace="5" hspace="5" src="Catalog_cookbook_01.png" alt=""> <p><b>3D-Hypocenters</b></p><pre class="codeinput">tohoku_events.plot3()
+</pre><img vspace="5" hspace="5" src="Catalog_cookbook_02.png" alt=""> <p><b>web map</b></p><pre class="language-matlab">tohoku_events.webmap()
+</pre><h2>Plotting time series of events<a name="35"></a></h2><p><b>Magnitude-time plot</b></p><pre class="codeinput">tohoku_events.plot_time()
+</pre><img vspace="5" hspace="5" src="Catalog_cookbook_03.png" alt=""> <p><b>Earthquake event counts (number of events per unit time)</b> A plot of seismic catalog per day is often called an "event counts" plot. In GISMO, we call this an "event rate plot" and the first step is to generate an EventRate object. Here our binsize is 1/24 days, i.e. 1 hour.</p><pre class="codeinput">eventrateObject = tohoku_events.eventrate(<span class="string">'binsize'</span>, 1/24)
+</pre><pre class="codeoutput">
+eventrateObject = 
+
+  EventRate with properties:
+
+            time: [1x47 double]
+          counts: [1x47 double]
+       mean_rate: [1x47 double]
+     median_rate: [1x47 double]
+         cum_mag: [1x47 double]
+        mean_mag: [1x47 double]
+      median_mag: [1x47 double]
+          energy: [1x47 double]
+    total_counts: 1136
+       total_mag: 9.1024
+         numbins: 47
+         min_mag: [1x47 double]
+         max_mag: [1x47 double]
+           etype: {'earthquake'}
+            snum: 7.3457e+05
+            enum: 7.3457e+05
+         binsize: 0.0417
+        stepsize: 0.0417
+     misc_fields: {}
+     misc_values: {}
+
+</pre><p>Now plot the EventRate object:</p><pre class="codeinput">eventrateObject.plot()
+</pre><img vspace="5" hspace="5" src="Catalog_cookbook_04.png" alt=""> <p>We can do the same thing for another dataset, e.g. redoubt_events</p><pre class="codeinput">redoubt_events.plot_time()
+erobj_red = redoubt_events.eventrate(<span class="string">'binsize'</span>, 1/24)
+erobj_red.plot()
+</pre><pre class="codeoutput">
+erobj_red = 
+
+  EventRate with properties:
+
+            time: [1x71 double]
+          counts: [1x71 double]
+       mean_rate: [1x71 double]
+     median_rate: [1x71 double]
+         cum_mag: [1x71 double]
+        mean_mag: [1x71 double]
+      median_mag: [1x71 double]
+          energy: [1x71 double]
+    total_counts: 1397
+       total_mag: 2.6140
+         numbins: 71
+         min_mag: [1x71 double]
+         max_mag: [1x71 double]
+           etype: {2x1 cell}
+            snum: 7.3385e+05
+            enum: 7.3385e+05
+         binsize: 0.0417
+        stepsize: 0.0417
+     misc_fields: {}
+     misc_values: {}
+
+</pre><img vspace="5" hspace="5" src="Catalog_cookbook_05.png" alt=""> <img vspace="5" hspace="5" src="Catalog_cookbook_06.png" alt=""> <p>To see more of the things we can do with EventRate objects see the EventRate cookbook <a href="EventRate.html">EventRate.html</a></p><h2>Analysis<a name="40"></a></h2><p><b>Peak event rate (PR) and maximum magnitude</b> A common type of analysis is to identify the peak rate in an earthquake sequence such as this preshock-mainshock-aftershock sequence or an earthquake swarm. This can be done with:</p><pre class="codeinput">tohoku_events.plotprmm()
+</pre><pre class="codeoutput">MM=9.1 occurs at 50.0% of time series
+PR=32 occurs at 53.5% of time series
+</pre><img vspace="5" hspace="5" src="Catalog_cookbook_07.png" alt=""> <p>In the command window this returns:     MM=9.1 occurs at 50.0% of time series     PR=32 occurs at 53.5% of time series</p><p>These are labelled on the plot above with PR and MM.</p><p>Now with the Redoubt dataset</p><pre class="codeinput">redoubt_events.plotprmm()
+</pre><pre class="codeoutput">MM=2.0 occurs at 94.9% of time series
+PR=76 occurs at 91.5% of time series
+</pre><img vspace="5" hspace="5" src="Catalog_cookbook_08.png" alt=""> <p><b>b-value and magnitude of completeness</b> Code from "ZMap" (written by Stefan Wiemer and others) has been added to Catalog to compute and plot b-values and the magnitude of completeness.</p><p>Definitions:</p><div><ul><li>b-value: the slope of a plot of the logarithm of the cumulative number of events against magnitude. A measure of the number of small earthquakes to larger earthquakes.</li><li>magnitude of completeness (Mc): all events with magnitude&gt;=Mc are in the catalog. Below Mc, not all events are detected, and below the magnitude detection threshold, no events are captured.</li></ul></div><p>Just calling the bvalue method, i.e.</p><pre class="language-matlab">catalogObject.bvalue()
+</pre><p>displays a menu of techniques available to compute b-value (b) and magnitude of completeness (Mc):</p><pre>   --------------------------------------------------------
+   Usage is: eventsObject.bvalue(mcType)
+   --------------------------------------------------------
+   mcType can be:
+   1: Maximum curvature
+   2: Fixed Mc = minimum magnitude (Mmin)
+   3: Mc90 (90% probability)
+   4: Mc95 (95% probability)
+   5: Best combination (Mc95 - Mc90 - maximum curvature)</pre><p>We will use the first menu option:</p><pre class="codeinput">tohoku_events.bvalue(1)
+</pre><img vspace="5" hspace="5" src="Catalog_cookbook_09.png" alt=""> <p>In this particular example, the b-value is 0.6 and the magnitude of completeness is 4.2.</p><p>Now for the Redoubt events:</p><pre class="codeinput">redoubt_events.bvalue(1)
+</pre><img vspace="5" hspace="5" src="Catalog_cookbook_10.png" alt=""> <h2>Saving Catalog objects to disk<a name="48"></a></h2><p><b>Writing to a MAT file</b> We've already seen how to do this, the general syntax is:    save('myfilename.mat', 'myCatalogObject')</p><p>This can simply be loaded again with:    load('myfilename.mat')</p><p><b>Writing to an Antelope CSS3.0 database</b> This method requires the Antelope toolbox for MATLAB and writes the Catalog as a CSS3.0 flat-file database:</p><p>First make sure there is no database with this name already - else we will be appending to it:</p><pre class="codeinput">delete <span class="string">greatquakes_db*</span>
+</pre><p>Now write to the database</p><pre class="codeinput">greatquakes.write(<span class="string">'antelope'</span>, <span class="string">'greatquakes_db'</span>, <span class="string">'css3.0'</span>)
+</pre><p>This database can be reloaded with:</p><pre class="codeinput">greatquakes2 = readEvents(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>,<span class="string">'greatquakes_db'</span>)
+</pre><pre class="codeoutput">Loading data from greatquakes_db
+Got 20 events
+greatquakes2 = 
+
+     datenum         date         time        lon        lat      depth    mag
+    __________    __________    ________    _______    _______    _____    ___
+
+    7.3103e+05    2001/06/23    20:33:09    -73.561    -16.303      2.2    8.3
+    7.3185e+05    2003/09/25    19:50:07     143.87     41.749       33    8.1
+     7.323e+05    2004/12/23    14:59:00     161.58     -49.71       10      8
+    7.3231e+05    2004/12/26    00:58:52     95.901     3.4125     26.1    8.2
+     7.324e+05    2005/03/28    16:09:35     97.113     2.0964       30    8.1
+    7.3283e+05    2006/06/01    18:57:02     120.88     19.054       13    8.4
+    7.3283e+05    2006/06/05    00:50:31     119.08     17.992      124      8
+      7.33e+05    2006/11/15    11:14:14     153.21     46.681     12.2    8.3
+    7.3306e+05    2007/01/13    04:23:23      154.5     46.231     22.5    8.1
+    7.3313e+05    2007/04/01    20:39:56     157.03    -8.4468      9.5    8.1
+    7.3327e+05    2007/08/15    23:40:58    -76.555    -13.384     41.2      8
+     7.333e+05    2007/09/12    11:10:26      101.4    -4.4637     35.5    8.5
+    7.3405e+05    2009/09/29    17:48:11    -171.94    -15.512     18.5    8.1
+     7.342e+05    2010/02/27    06:34:13    -72.933    -36.148     28.1    8.8
+    7.3457e+05    2011/03/11    05:46:23      142.5     38.296     19.7    9.1
+    7.3497e+05    2012/04/11    08:38:37     93.014     2.2376     26.3    8.6
+    7.3497e+05    2012/04/11    10:43:10     92.428     0.7675     21.6    8.2
+    7.3527e+05    2013/02/06    01:12:27     165.14    -10.738     28.7      8
+    7.3538e+05    2013/05/24    05:44:49     153.28     54.874    608.9    8.3
+    7.3569e+05    2014/04/01    23:46:47    -70.769     -19.61       25    8.2
+
+
+     magtype      etype
+    __________    _____
+
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+    {1x1 cell}    'eq' 
+
+</pre><p>Compare:</p><pre class="codeinput">greatquakes
+</pre><pre class="codeoutput">
+greatquakes = 
+
+     datenum         date         time        lon        lat      depth    mag
+    __________    __________    ________    _______    _______    _____    ___
+
+    7.3569e+05    2014/04/01    23:46:47    -70.769     -19.61       25    8.2
+    7.3538e+05    2013/05/24    05:44:49     153.28     54.874    608.9    8.3
+    7.3527e+05    2013/02/06    01:12:27     165.14    -10.738     28.7      8
+    7.3497e+05    2012/04/11    10:43:10     92.428     0.7675     21.6    8.2
+    7.3497e+05    2012/04/11    08:38:37     93.014     2.2376     26.3    8.6
+    7.3457e+05    2011/03/11    05:46:23      142.5     38.296     19.7    9.1
+     7.342e+05    2010/02/27    06:34:13    -72.933    -36.148     28.1    8.8
+    7.3405e+05    2009/09/29    17:48:11    -171.94    -15.512     18.5    8.1
+     7.333e+05    2007/09/12    11:10:26      101.4    -4.4637     35.5    8.5
+    7.3327e+05    2007/08/15    23:40:58    -76.555    -13.384     41.2      8
+    7.3313e+05    2007/04/01    20:39:56     157.03    -8.4468      9.5    8.1
+    7.3306e+05    2007/01/13    04:23:23      154.5     46.231     22.5    8.1
+      7.33e+05    2006/11/15    11:14:14     153.21     46.681     12.2    8.3
+    7.3283e+05    2006/06/05    00:50:31     119.08     17.992      124      8
+    7.3283e+05    2006/06/01    18:57:02     120.88     19.054       13    8.4
+     7.324e+05    2005/03/28    16:09:35     97.113     2.0964       30    8.1
+    7.3231e+05    2004/12/26    00:58:52     95.901     3.4125     26.1    8.2
+     7.323e+05    2004/12/23    14:59:00     161.58     -49.71       10      8
+    7.3185e+05    2003/09/25    19:50:07     143.87     41.749       33    8.1
+    7.3103e+05    2001/06/23    20:33:09    -73.561    -16.303      2.2    8.3
+
+
+    magtype       etype    
+    _______    ____________
+
+    'MWW'      'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MS'       'earthquake'
+    'MS'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+    'MW'       'earthquake'
+
+</pre><p>This concludes the Catalog cookbook/tutorial.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Reading events into a Catalog object
+% GISMO can read events from many different earthquake catalog file formats
+% (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) using the
+% readEvents() function.
+
+%% The readEvents() function
+% The readEvents() function is used to read event metadata (origin time, 
+% lon, lat, depth, mag etc.) from a variety of catalog data sources and
+% file formats into a Catalog object. 
+%
+% Usage:
+%       catalogObject = readEvents(dataformat, 'param1', _value1_, ...
+%                                                   'paramN', _valueN_)
+% 
+% dataformat may be:
+%%
+%
+% * 'iris' (for IRIS DMC, using irisFetch.m), 
+% * 'antelope' (for a CSS3.0 Antelope/Datascope database)
+% * 'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)
+%
+
+%%
+% The name-value parameter pairs supported are the same as those supported
+% by irisFetch.Events(). Currently these are:
+%%
+% 
+% * _startTime_
+% * _endTime_ 
+% * _eventId_ 
+% * _fetchLimit_
+% * _magnitudeType_
+% * _minimumLongitude_
+% * _maximumLongitude_
+% * _minimumLatitude_
+% * _maximumLatitude_
+% * _minimumMagnitude_
+% * _maximumMagnitude_
+% * _minimumDepth_
+% * _maximumDepth_
+% 
+% And the two convenience parameters:
+%%
+%
+% * _radialcoordinates_ = [ _centerLatitude_, _centerLongitude_, _maximumRadius_ ]
+%
+% * _boxcoordinates_ = [ _minimumLatitude_ _maximumLatitude_ _minimumLongitude_ _maximumLongitude_ ]
+% 
+
+%% Reading events from IRIS DMC
+% To load events into a Catalog object we use the readEvents function. 
+% The first argument is the data source/format - when this is given as 
+% 'iris', readEvents uses the irisFetch.m program to retrieve event data 
+% via the IRIS webservices. To narrow down our data search we can give 
+% readEvents any name-value parameter pairs supported by irisFetch.
+%
+% In this example we will use readEvents to retrieve all events at IRIS DMC 
+% with a magnitude of at least 8.0 between year 2000 and 2014 (inclusive):
+
+greatquakes = readEvents('iris', 'minimumMagnitude', 8.0, ...
+    'starttime', '2000-01-01', 'endtime', '2015-01-01')
+
+%% 
+% What type of data structure is the "greatquakes" variable? To find this
+% we can ask:
+
+class(greatquakes)
+
+%%
+% it is of type "Catalog" - i.e. it is a Catalog object, an instance of the
+% Catalog class.
+
+%%
+% We have retrieved 26 events. To access any particular property we can use
+% dot notation, as if the object were a structure, e.g.:
+
+greatquakes.depth
+greatquakes.mag
+
+%%
+% catalogObject is of type "Catalog". etype contains the event type for 
+% each of the 26 events. In this case each is just  'earthquake', but when 
+% dealing with more diverse dataset, many other etype's are possible. 
+% magtype is whatever magnitude type was assigned by the agency that 
+% provided the magnitude data.
+
+%%
+% Using the methods() function will tell us what operations we can perform
+% on a Catalog object:
+
+methods(greatquakes)
+
+%%
+% Save this dataset so you can use it again later:
+
+save('great_earthquakes.mat', 'greatquakes')
+
+%%
+% Now we'll do another example - we will get events within 200 km of the 
+% great M9.0 Tohoku earthquake that occurred on 2011/03/11. 
+% The mainshock parameters are: 
+% 
+%     Date/Time:  "2011/03/11 05:46:24"
+%     Longitude:  142.372
+%     Latitude:   38.297
+%     Depth:      30 km
+ 
+%%
+% We will limit our search to 1 day before and after the earthquake:
+ 
+mainshocktime = datenum('2011/03/11 05:46:24')
+tohoku_events = readEvents('iris', ...
+            'radialcoordinates', [38.297 142.372 km2deg(200)], ...
+            'starttime', mainshocktime - 1, ...
+            'endtime', mainshocktime + 1);
+
+%%
+% This returns 1136 earthquakes. Let's get a summary:
+
+tohoku_events.summary()
+
+%%
+% Save this dataset so you can use it again later:
+
+save('tohoku_events.mat', 'tohoku_events')
+
+
+%% Readings events from an Antelope database
+% To load event data from an Antelope/Datascope CSS3.0 database you will 
+% need to have Antelope (<http://www.brtt.com/software.html>) installed, 
+% including the Antelope toolbox for MATLAB.
+% 
+%%
+% *SCAFFOLD: NOTE THAT CURRENTLY NOT USING THE RTDB200903 AT ALL* 
+% 
+% For the purpose of this exercise we will be using data from Redoubt 
+% volcano from 2009/03/20 to 2009/03/23. We will use snippets from two 
+% catalogs that are provided with GISMO in Antelope format:
+ 
+%%
+%
+% * The real-time catalog (rtdb200903).
+% * The analyst-reviewed offical AVO catalog (avodb200903).
+
+%%
+% Both catalog segments are included in the "demo" directory. 
+% We will now load the official AVO catalog into an Events object:
+  
+dbpath = demodb('avo');
+avocatalog = readEvents('antelope', 'dbpath', dbpath);
+ 
+%%
+% This should load 1441 events. What if we only want events within 20km of 
+% Redoubt volcano? There are two ways to do this. The first is the use the
+% radialcoordinates parameter:
+
+redoubtLon = -152.7431; 
+redoubtLat = 60.4853;
+maxR = km2deg(20.0);
+redoubt_events = readEvents('antelope', 'dbpath', dbpath, ...
+	'radialcoordinates', [redoubtLat redoubtLon maxR])
+
+%%
+% Save this dataset so you can use it again later:
+
+save('redoubt_events.mat', 'redoubt_events')
+
+%%
+% The second way is to use the 'subset_expression' which the Antelope
+% expression evaluator interprets:
+expr = sprintf('distance(lat, lon, %f, %f) < %f',redoubtLat, redoubtLon,maxR)
+catalogObject = readEvents('antelope', 'dbpath', dbpath, ...
+	'subset_expression', expr)
+
+%% Reading events from a Seisan database
+% Here we load events from a Seisan catalog. A Seisan "Sfile" contains all
+% the metadata for 1 event. These Sfiles are stored in a flat-file database
+% structure the path to which is: $SEISAN_TOP/REA/databaseName. Sfiles are 
+% organized in year/month subdirectories under this path.
+%
+% *SCAFFOLD: INCLUDE DEMO DATASET FROM MVOE*
+
+%%
+% The following will navigate this where in this case 
+% $SEISAN_TOP = '/raid/data/seisan' and the databaseName is MVOE_ which 
+% stands for the Montserrat Volcano Observatory Event database. 
+% (In Seisan, databaseName is limited to exactly 5 characters).
+%
+% This example will load Sfiles from 4 hours on 1st Nov, 1996. This is a slow 
+% function to run as MATLAB is slow at parsing text files, and there are
+% many events per day in this particular database.
+ 
+montserrat_events = readEvents('seisan', ...
+    'dbpath', fullfile('/raid','data','MONTSERRAT','seisan','REA','MVOE_'), ...
+	'startTime', '1996/11/01 11:00:00', ....
+	'endTime', '1996/11/01 15:00:00')
+
+%%
+% Save this dataset so you can use it again later:
+
+save('montserrat_events.mat', 'montserrat_events')
+
+%%
+% Only a few of these earthquakes have been located and even fewer have
+% magnitudes. This is common for volcanic earthquakes. Most of these are of
+% type 'h' - a hybrid earthquake.
+
+%% Converting a Zmap data structure to a Catalog object
+% ZMap is a graphical application written by Max Wyss & Stefan Wiemer for
+% statistical analysis of catalogs. GISMO can convert a ZMap data structure
+% into a Catalog object with:
+%
+%    catalogObject = readEvents('zmap', zmapdata)
+
+%% Plotting hypocenter maps
+% Catalog objects have three builtin ways for plotting hypocenters
+
+%%
+% Reload the Tohoku dataset
+load tohoku_events.mat
+
+%%
+% *Map view & cross-sections*
+tohoku_events.plot()
+
+%%
+% *3D-Hypocenters*
+tohoku_events.plot3()
+
+%%
+% *web map*
+%%
+% 
+%   tohoku_events.webmap()
+
+
+%% Plotting time series of events
+% *Magnitude-time plot*
+
+tohoku_events.plot_time()
+
+%%
+% *Earthquake event counts (number of events per unit time)*
+% A plot of seismic catalog per day is often called an "event counts" plot.
+% In GISMO, we call this an "event rate plot" and the first step is to 
+% generate an EventRate object. Here our binsize is 1/24 days, i.e. 1 hour.
+
+eventrateObject = tohoku_events.eventrate('binsize', 1/24)
+
+%%
+% Now plot the EventRate object:
+eventrateObject.plot()
+
+%%
+% We can do the same thing for another dataset, e.g. redoubt_events
+redoubt_events.plot_time()
+erobj_red = redoubt_events.eventrate('binsize', 1/24)
+erobj_red.plot()
+
+%%
+% To see more of the things we can do with EventRate objects see the
+% EventRate cookbook <EventRate.html>
+
+
+
+%% Analysis
+% *Peak event rate (PR) and maximum magnitude*
+% A common type of analysis is to identify the peak rate in an earthquake
+% sequence such as this preshock-mainshock-aftershock sequence or an 
+% earthquake swarm. This can be done with:
+
+tohoku_events.plotprmm()
+
+
+%%
+% In the command window this returns:
+%     MM=9.1 occurs at 50.0% of time series
+%     PR=32 occurs at 53.5% of time series
+%
+% These are labelled on the plot above with PR and MM.
+
+%%
+% Now with the Redoubt dataset
+redoubt_events.plotprmm()
+
+%%
+% *b-value and magnitude of completeness*
+% Code from "ZMap" (written by Stefan Wiemer and others) has been added to 
+% Catalog to compute and plot b-values and the magnitude of completeness. 
+
+%%
+% Definitions:
+%
+% * b-value: the slope of a plot of the logarithm of the cumulative number of events against magnitude. A measure of the number of small earthquakes to larger earthquakes.
+% * magnitude of completeness (Mc): all events with magnitude>=Mc are in the catalog. Below Mc, not all events are detected, and below the magnitude detection threshold, no events are captured.
+
+%%
+% Just calling the bvalue method, i.e.
+%
+%   catalogObject.bvalue() 
+%
+% displays a menu of techniques available to compute b-value (b) and 
+% magnitude of completeness (Mc):
+%
+%     REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%     Usage is: eventsObject.bvalue(mcType)
+%     REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%     mcType can be:
+%     1: Maximum curvature
+%     2: Fixed Mc = minimum magnitude (Mmin)
+%     3: Mc90 (90% probability)
+%     4: Mc95 (95% probability)
+%     5: Best combination (Mc95 - Mc90 - maximum curvature)
+% 
+% We will use the first menu option:
+
+tohoku_events.bvalue(1)
+
+%%
+% In this particular example, the b-value is 0.6 and the magnitude of 
+% completeness is 4.2.
+
+%%
+% Now for the Redoubt events:
+
+redoubt_events.bvalue(1)
+
+%% Saving Catalog objects to disk
+% *Writing to a MAT file*
+% We've already seen how to do this, the general syntax is:
+%    save('myfilename.mat', 'myCatalogObject')
+
+%%
+% This can simply be loaded again with:
+%    load('myfilename.mat')
+
+%% 
+% *Writing to an Antelope CSS3.0 database*
+% This method requires the Antelope toolbox for MATLAB and writes the 
+% Catalog as a CSS3.0 flat-file database:
+
+%%
+% First make sure there is no database with this name already - else we
+% will be appending to it:
+delete greatquakes_db*
+
+%%
+% Now write to the database
+greatquakes.write('antelope', 'greatquakes_db', 'css3.0')
+
+%% 
+% This database can be reloaded with:
+
+greatquakes2 = readEvents('antelope', 'dbpath','greatquakes_db')
+
+%%
+% Compare:
+
+greatquakes
+
+%%
+% This concludes the Catalog cookbook/tutorial.
+
+
+##### SOURCE END #####
+--></body></html>

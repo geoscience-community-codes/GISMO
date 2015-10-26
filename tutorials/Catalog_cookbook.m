@@ -55,17 +55,27 @@
 % readEvents any name-value parameter pairs supported by irisFetch.
 %
 % In this example we will use readEvents to retrieve all events at IRIS DMC 
-% with a magnitude of at least 7.9 between year 2000 and 2014 (inclusive):
+% with a magnitude of at least 8.0 between year 2000 and 2014 (inclusive):
 
-catalogObject = readEvents('iris', 'minimumMagnitude', 7.9, ...
+greatquakes = readEvents('iris', 'minimumMagnitude', 8.0, ...
     'starttime', '2000-01-01', 'endtime', '2015-01-01')
+
+%% 
+% What type of data structure is the "greatquakes" variable? To find this
+% we can ask:
+
+class(greatquakes)
+
+%%
+% it is of type "Catalog" - i.e. it is a Catalog object, an instance of the
+% Catalog class.
 
 %%
 % We have retrieved 26 events. To access any particular property we can use
 % dot notation, as if the object were a structure, e.g.:
 
-catalogObject.depth
-catalogObject.mag
+greatquakes.depth
+greatquakes.mag
 
 %%
 % catalogObject is of type "Catalog". etype contains the event type for 
@@ -78,7 +88,12 @@ catalogObject.mag
 % Using the methods() function will tell us what operations we can perform
 % on a Catalog object:
 
-methods(catalogObject)
+methods(greatquakes)
+
+%%
+% Save this dataset so you can use it again later:
+
+save('great_earthquakes.mat', 'greatquakes')
 
 %%
 % Now we'll do another example - we will get events within 200 km of the 
@@ -94,7 +109,7 @@ methods(catalogObject)
 % We will limit our search to 1 day before and after the earthquake:
  
 mainshocktime = datenum('2011/03/11 05:46:24')
-catalogObject = readEvents('iris', ...
+tohoku_events = readEvents('iris', ...
             'radialcoordinates', [38.297 142.372 km2deg(200)], ...
             'starttime', mainshocktime - 1, ...
             'endtime', mainshocktime + 1);
@@ -102,12 +117,12 @@ catalogObject = readEvents('iris', ...
 %%
 % This returns 1136 earthquakes. Let's get a summary:
 
-catalogObject.summary()
+tohoku_events.summary()
 
 %%
 % Save this dataset so you can use it again later:
 
-save('tohoku_events.mat', 'catalogObject')
+save('tohoku_events.mat', 'tohoku_events')
 
 
 %% Readings events from an Antelope database
@@ -132,7 +147,7 @@ save('tohoku_events.mat', 'catalogObject')
 % We will now load the official AVO catalog into an Events object:
   
 dbpath = demodb('avo');
-catalogObject = readEvents('antelope', 'dbpath', dbpath);
+avocatalog = readEvents('antelope', 'dbpath', dbpath);
  
 %%
 % This should load 1441 events. What if we only want events within 20km of 
@@ -142,15 +157,20 @@ catalogObject = readEvents('antelope', 'dbpath', dbpath);
 redoubtLon = -152.7431; 
 redoubtLat = 60.4853;
 maxR = km2deg(20.0);
-catalogObject = readEvents('antelope', 'dbpath', dbpath, ...
-	'radialcoordinates', [redoubtLat redoubtLon maxR]);
+redoubt_events = readEvents('antelope', 'dbpath', dbpath, ...
+	'radialcoordinates', [redoubtLat redoubtLon maxR])
+
+%%
+% Save this dataset so you can use it again later:
+
+save('redoubt_events.mat', 'redoubt_events')
 
 %%
 % The second way is to use the 'subset_expression' which the Antelope
 % expression evaluator interprets:
 expr = sprintf('distance(lat, lon, %f, %f) < %f',redoubtLat, redoubtLon,maxR)
 catalogObject = readEvents('antelope', 'dbpath', dbpath, ...
-	'subset_expression', expr);
+	'subset_expression', expr)
 
 %% Reading events from a Seisan database
 % Here we load events from a Seisan catalog. A Seisan "Sfile" contains all
@@ -170,10 +190,15 @@ catalogObject = readEvents('antelope', 'dbpath', dbpath, ...
 % function to run as MATLAB is slow at parsing text files, and there are
 % many events per day in this particular database.
  
-catalogObject = readEvents('seisan', ...
+montserrat_events = readEvents('seisan', ...
     'dbpath', fullfile('/raid','data','MONTSERRAT','seisan','REA','MVOE_'), ...
 	'startTime', '1996/11/01 11:00:00', ....
 	'endTime', '1996/11/01 15:00:00')
+
+%%
+% Save this dataset so you can use it again later:
+
+save('montserrat_events.mat', 'montserrat_events')
 
 %%
 % Only a few of these earthquakes have been located and even fewer have
@@ -181,11 +206,11 @@ catalogObject = readEvents('seisan', ...
 % type 'h' - a hybrid earthquake.
 
 %% Converting a Zmap data structure to a Catalog object
-% ZMap is a graphical application written by Stefan Wiemer and others for
+% ZMap is a graphical application written by Max Wyss & Stefan Wiemer for
 % statistical analysis of catalogs. GISMO can convert a ZMap data structure
 % into a Catalog object with:
-
-catalogObject = readEvents('zmap', zmapdata)
+%
+%    catalogObject = readEvents('zmap', zmapdata)
 
 %% Plotting hypocenter maps
 % Catalog objects have three builtin ways for plotting hypocenters
@@ -196,23 +221,23 @@ load tohoku_events.mat
 
 %%
 % *Map view & cross-sections*
-catalogObject.plot()
+tohoku_events.plot()
 
 %%
 % *3D-Hypocenters*
-catalogObject.plot3()
+tohoku_events.plot3()
 
 %%
 % *web map*
 %%
 % 
-%   catalogObject.webmap()
+%   tohoku_events.webmap()
 
 
 %% Plotting time series of events
 % *Magnitude-time plot*
 
-catalogObject.plot_time()
+tohoku_events.plot_time()
 
 %%
 % *Earthquake event counts (number of events per unit time)*
@@ -220,15 +245,23 @@ catalogObject.plot_time()
 % In GISMO, we call this an "event rate plot" and the first step is to 
 % generate an EventRate object. Here our binsize is 1/24 days, i.e. 1 hour.
 
-eventrateObject = catalogObject.eventrate('binsize', 1/24)
+eventrateObject = tohoku_events.eventrate('binsize', 1/24)
 
 %%
 % Now plot the EventRate object:
 eventrateObject.plot()
 
 %%
+% We can do the same thing for another dataset, e.g. redoubt_events
+redoubt_events.plot_time()
+erobj_red = redoubt_events.eventrate('binsize', 1/24)
+erobj_red.plot()
+
+%%
 % To see more of the things we can do with EventRate objects see the
 % EventRate cookbook <EventRate.html>
+
+
 
 %% Analysis
 % *Peak event rate (PR) and maximum magnitude*
@@ -236,7 +269,8 @@ eventrateObject.plot()
 % sequence such as this preshock-mainshock-aftershock sequence or an 
 % earthquake swarm. This can be done with:
 
-catalogObject.plotprmm()
+tohoku_events.plotprmm()
+
 
 %%
 % In the command window this returns:
@@ -244,6 +278,10 @@ catalogObject.plotprmm()
 %     PR=32 occurs at 53.5% of time series
 %
 % These are labelled on the plot above with PR and MM.
+
+%%
+% Now with the Redoubt dataset
+redoubt_events.plotprmm()
 
 %%
 % *b-value and magnitude of completeness*
@@ -276,36 +314,50 @@ catalogObject.plotprmm()
 % 
 % We will use the first menu option:
 
-catalogObject.bvalue(1)
+tohoku_events.bvalue(1)
 
+%%
 % In this particular example, the b-value is 0.6 and the magnitude of 
 % completeness is 4.2.
 
+%%
+% Now for the Redoubt events:
+
+redoubt_events.bvalue(1)
+
 %% Saving Catalog objects to disk
 % *Writing to a MAT file*
-
-save('mycatalog.mat', 'catalogObject')
+% We've already seen how to do this, the general syntax is:
+%    save('myfilename.mat', 'myCatalogObject')
 
 %%
 % This can simply be loaded again with:
-
-load('myevents_filename.mat')
+%    load('myfilename.mat')
 
 %% 
 % *Writing to an Antelope CSS3.0 database*
 % This method requires the Antelope toolbox for MATLAB and writes the 
 % Catalog as a CSS3.0 flat-file database:
 
-catalogObject.write('antelope', 'myeventsdb', 'css3.0')
+%%
+% First make sure there is no database with this name already - else we
+% will be appending to it:
+delete greatquakes_db*
 
 %%
-% Antelope users: This can then be opened in the normal way with dbe in 
-% Mac/Linux terminal window. For example, the origin table should look like:
- 
-% [[images/dbe.png]]
+% Now write to the database
+greatquakes.write('antelope', 'greatquakes_db', 'css3.0')
 
 %% 
 % This database can be reloaded with:
 
-ev = readEvents('antelope', 'dbpath','myeventsdb')
+greatquakes2 = readEvents('antelope', 'dbpath','greatquakes_db')
+
+%%
+% Compare:
+
+greatquakes
+
+%%
+% This concludes the Catalog cookbook/tutorial.
 
