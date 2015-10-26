@@ -708,14 +708,13 @@ function self = seisan(varargin)
     end
     
     % get dir list of matching sfiles
-    sfiles = list_sfiles(dbpath, snum, enum);
+    sfiles = seisan_sfile.list_sfiles(dbpath, snum, enum);
     
     % loop over sfiles
     for i=1:length(sfiles)
         % read 
         fprintf('Processing %s\n',fullfile(sfiles(i).dir, sfiles(i).name));
-        thiss = read_sfile(sfiles(i).dir, sfiles(i).name, '*', '*');
-
+        thiss = seisan_sfile(fileread(fullfile(sfiles(i).dir, sfiles(i).name)));
         try
             s(i)=thiss;
         catch
@@ -725,7 +724,7 @@ function self = seisan(varargin)
         end
 
         % add to catalog
-        dnum(i)  = s(i).dnum;
+        dnum(i)  = s(i).otime;
         etype{i} = s(i).subclass;
         lat(i) = s(i).latitude;
         lon(i) = s(i).longitude;
@@ -750,89 +749,6 @@ function self = seisan(varargin)
     self = Catalog(dnum', lon', lat', depth', mag', magtype', etype');
     
     debug.printfunctionstack('<')
-end
-
-%% ---------------------------------------------------
-
-function files = list_sfiles(dbpath, snum, enum)
-    % readEvents.list_sfiles Load waveform files from a Seisan database 
-    %   s = list_sfiles(dbpath, snum, enum) search a Seisan
-    %   database for Sfiles matching the time range given by snum
-    %   and enum.
-    %
-    %   Notes:
-    %     Seisan Sfiles are typically stored in a Seisan
-    %     Seisan database, which is a tree of 4-digit-year/2-digit-month 
-    %     directories. They have a name matching DD-HHMM-SSc.SYYYYMM
-    %
-    %   Example:
-    %       Load all data for all stations & channels between 1000 and 1100
-    %       UTC on March 1st, 2001.
-    %           
-    %           dbpath = '/raid/data/seisan/REA/DSNC_';
-    %           snum = datenum(2001,3,1,10,0,0);
-    %           enum = datenum(2001,3,1,11,0,0);
-    %           s = list_sfiles(dbpath, snum, enum)
-    %
-
-    debug.printfunctionstack('>')
-    
-    files = [];
-    
-    % Test dbpath
-    if ~exist(dbpath,'dir')
-        disp(sprintf('dbpath %s not found',dbpath))
-        return
-    end
-        
-    %% Compile a list from all directories from snum to enum
-    sdv = datevec(snum);
-    edv = datevec(enum);
-    fileindex = 0;
-    for yyyy=sdv(1):edv(1)
-       for mm=sdv(2):edv(2)
-           seisandir = fullfile(dbpath, sprintf('%4d',yyyy), sprintf('%02d',mm) );
-           newfiles = dir(fullfile(seisandir, sprintf('*%4d%02d',yyyy,mm)));
-           for i=1:length(newfiles)
-               dnum = sfile2dnum(newfiles(i).name);
-               if dnum >= snum & dnum <= enum
-                   fileindex = fileindex + 1;
-                   newfiles(i).dir = seisandir;
-                   files = [files; newfiles(i)];
-               elseif dnum>enum
-                   break;
-               end
-           end
-       end
-    end
-
-    %% Echo the list of matching sfiles
-    fprintf('There are %d sfiles matching your request\n',numel(files))
-    
-    debug.printfunctionstack('<')
-end
-
-
-%% ---------------------------------------------------
-
-function dnum=sfile2dnum(sfile)
-    % readEvents.sfile2dnum convert the name of a Seisan S-file into a
-    % MATLAB datenum
-    ddstr=sfile(1:2);
-    hhstr=sfile(4:5);
-    mistr=sfile(6:7);
-    ssstr=sfile(9:10);
-    yystr=sfile(14:17);
-    mm=str2num(sfile(18:19));
-    months=['Jan';'Feb';'Mar';'Apr';'May';'Jun';'Jul';'Aug';'Sep';'Oct';'Nov';'Dec'];
-    mmstr=months(mm,:);
-    datestring=[ddstr,'-',mmstr,'-',yystr,' ',hhstr,':',mistr,':',ssstr];
-    try
-        dnum=datenum(datestring);
-    catch
-        warning(sprintf('Could not convert %s to a datenum for sfile=%s. Returning NaN', datestring, sfile));
-        dnum = NaN;
-    end
 end
 
 %% ---------------------------------------------------
