@@ -4,6 +4,7 @@
 classdef Catalog
 
     properties(Dependent) % These all come from table, computed on the fly
+        datenum = [];
         date = [];
         time = [];
         lon = [];
@@ -13,6 +14,11 @@ classdef Catalog
         magtype = {};
         etype = {};
         numberOfEvents = 0;
+    end
+    
+    properties(Dependent, GetAccess='private')
+        snum
+        enum
     end
     
     properties % These are properties of the catalog itself
@@ -35,8 +41,8 @@ classdef Catalog
     end
     
     properties(Hidden) % internal, external code cannot access them
-        table;
-        datetime;
+        table = table([], [],[], [], [], [], {}, {}, ...
+                'VariableNames', {'date' 'time' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype'});
     end
 
     methods
@@ -47,6 +53,9 @@ classdef Catalog
             
             % Parse required, optional and param-value pair arguments,
             % set default values, and add validation conditions
+            if ~exist('time','var')
+                return
+            end
             p = inputParser;
             p.addRequired('time', @isnumeric);
             p.addRequired('lon', @isnumeric);
@@ -75,6 +84,7 @@ classdef Catalog
                 depth = NaN(size(time));
             end
             if isempty(mag)
+                %mag = -Inf(size(time));
                 mag = NaN(size(time));
             end  
             if isempty(magtype) % 'u' for unknown
@@ -83,26 +93,39 @@ classdef Catalog
             if isempty(etype)  % 'u' for unknown
                 etype = cellstr(repmat('u',size(time)));
             end     
-
-            obj.table = table(datestr(time,26), datestr(time,13), lon, lat, depth, mag, magtype, etype, ...
-                'VariableNames', {'date' 'time' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype'});
             
-            obj.datetime  = time';
+            % replace NaN's in mag with -Inf
+            %mag(isnan(mag)) = -Inf;
+            
+%             [dummy,ind] = sort(time');
+%             time = time(ind);
+%             lon = lon(ind);
+%             lat = lat(ind);
+%             depth = depth(ind);
+%             mag = mag(ind);
+%             magtype = magtype{ind};
+%             etype = etype{ind};
+
+            obj.table = table(time, datestr(time,26), datestr(time, 13), lon, lat, depth, mag, magtype, etype, ...
+                'VariableNames', {'datenum' 'date' 'time' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype'});
+            
+            
+            %obj.table = sortrows(obj.table); 
             
             fprintf('Got %d events',height(obj.table));
-            
+
         end
         
         function val = get.date(obj)
-            val = datenum(obj.table.date);
+            val = floor(obj.table.date);
         end
  
         function val = get.time(obj)
             val = datenum(obj.table.time);
         end
         
-        function val = get.datetime(obj)
-            val = obj.datetime;
+        function val = get.datenum(obj)
+            val = obj.table.datenum;
         end       
         
         function val = get.lon(obj)
@@ -132,21 +155,32 @@ classdef Catalog
         function val = get.numberOfEvents(obj)
             val = height(obj.table);
         end
+
+        function val = get.snum(obj)
+            val = min(obj.datenum);
+        end
+        
+        function val = get.enum(obj)
+            val = max(obj.datenum);
+        end
+        
         
         function summary(obj)
             summary(obj.table)
         end
         
-        function disp(obj)
-            disp(obj.table)
-        end
-%% ---------------------------------------------------
-        function val = snum(obj)
-            val = min(obj.time());
-        end
-%% ---------------------------------------------------        
-        function val = enum(obj)
-            val = max(obj.time());
+        function disp(obj, showall)
+            if ~exist('showall','var')
+                showall = false;
+            end
+            if height(obj.table) <= 50 || showall
+                disp(obj.table)
+            else
+                disp(obj.table([1:50],:))
+                
+                disp('* Only showing first 50 rows/events - to see all rows/events use:')
+                disp('*      catalogObject.disp(true)')
+            end
         end
 
 %% ---------------------------------------------------
@@ -311,7 +345,7 @@ classdef Catalog
             
             symsize = get_symsize(catalogObject); 
             
-            xlims = [floor(snum(catalogObject)) ceil(enum(catalogObject))];
+            xlims = [floor(catalogObject.snum) ceil(catalogObject.enum)];
 
 			% time-depth
             if all(isnan(catalogObject.depth))
@@ -320,7 +354,7 @@ classdef Catalog
                 figure;
                 set(gcf,'Color', [1 1 1]);
                 subplot(2,1,1);
-                scatter(catalogObject.time, catalogObject.depth, symsize);
+                scatter(catalogObject.datenum, catalogObject.depth, symsize);
                 set(gca, 'XLim', xlims);
                 datetick('x');
                 xlabel('Date');
@@ -334,8 +368,8 @@ classdef Catalog
             if all(isnan(catalogObject.mag))
                 warning('No magnitude data to plot');
             else
-                scatter(catalogObject.time, catalogObject.mag, symsize);
-                %stem(catalogObject.time, catalogObject.mag);
+                scatter(catalogObject.datenum, catalogObject.mag, symsize);
+                %stem(catalogObject.datenum, catalogObject.mag);
                 set(gca, 'XLim', xlims);
                 datetick('x');
                 xlabel('Date');
@@ -593,7 +627,7 @@ classdef Catalog
             rect=[0 0 1 1];
             h2=axes('position',rect);
             set(h2,'visible','off');
-            a0 = aw-log10((max(catalogObject.time)-min(catalogObject.time))/365);
+            a0 = aw-log10((catalogObject.enum-catalogObject.snum)/365);
 
             text(.53,.88, ['b-value = ',tt1,' +/- ',tt2,',  a value = ',num2str(aw,3)],'FontSize',12);
             text(.53,.85,sol_type,'FontSize',12 );
@@ -618,7 +652,7 @@ classdef Catalog
                         c(i).lon = catalogObject.lon(index);
                         c(i).depth = catalogObject.depth(index);
                     end
-                    c(i).time = catalogObject.time(index);
+                    c(i).time = catalogObject.datenum(index);
                     c(i).mag = catalogObject.mag(index);
                     c(i).etype = catalogObject.etype(index);
                 end
@@ -673,7 +707,7 @@ classdef Catalog
                 % bin the data
                 [time, counts, energy, smallest_energy, ...
                     biggest_energy, median_energy, stdev, median_time_interval] = ...
-                    bin_irregular(catalogObject(i).time, ...
+                    bin_irregular(catalogObject(i).datenum, ...
                     magnitude.mag2eng(catalogObject(i).mag), ...
                     binsize, catalogObject(i).snum, catalogObject(i).enum, stepsize);
 
@@ -706,8 +740,8 @@ classdef Catalog
             else
                 
                 % plot magnitudes
-                subplot(2,1,1), scatter(catalogObject.time, catalogObject.mag, symsize);
-                %stem(catalogObject.time, catalogObject.mag);
+                subplot(2,1,1), scatter(catalogObject.datenum, catalogObject.mag, symsize);
+                %stem(catalogObject.datenum, catalogObject.mag);
                 set(gca, 'XLim', [floor(catalogObject.snum) ceil(catalogObject.enum)]);
                 datetick('x');
                 xlabel('Date');
@@ -716,13 +750,14 @@ classdef Catalog
                 
                 % put 'MM' label by max mag event
                 [mm, mmi] = max(catalogObject.mag);
-                text(catalogObject.time(mmi), catalogObject.mag(mmi), 'MM','color','r');
-                disp(sprintf('MM=%.1f occurs at %.1f%% of time series',mm,100*(catalogObject.time(mmi) - catalogObject.snum)/(catalogObject.enum-catalogObject.snum)));
+                text(catalogObject.datenum(mmi), catalogObject.mag(mmi), 'MM','color','r');
+                disp(sprintf('MM=%.1f occurs at %.1f%% of time series',mm,100*(catalogObject.datenum(mmi) - catalogObject.snum)/(catalogObject.enum-catalogObject.snum)));
                 
                 % plot event rate in 100 equal bins
                 days = catalogObject.enum - catalogObject.snum;
                 binsize = days/100;
                 erobj = catalogObject.eventrate('binsize',binsize);
+                %erobj = catalogObject.eventrate();
                 subplot(2,1,2),plot(erobj.time, erobj.counts);
                 set(gca, 'XLim', [floor(catalogObject.snum) ceil(catalogObject.enum)]);
                 datetick('x');
@@ -740,7 +775,7 @@ classdef Catalog
         function catalogObject2 = subset(catalogObject, indices)
             %Catalog.subset Create a new catalogObject by subsetting based
             %on indices. 
-            catalogObject2 = Catalog(catalogObject.time(indices), ...
+            catalogObject2 = Catalog(catalogObject.datenum(indices), ...
                 catalogObject.lon(indices), ...
                 catalogObject.lat(indices), ...
                 catalogObject.depth(indices), ...
@@ -964,11 +999,11 @@ classdef Catalog
                         dbn = dblookup_table(db,'netmag');
 
                         % write event to event and origin tables
-                        if numel(catalogObject.time)>0
-                            for eventidx = 1:numel(catalogObject.time)
+                        if numel(catalogObject.datenum)>0
+                            for eventidx = 1:numel(catalogObject.datenum)
                                 event.evid = dbnextid(dbe,'evid');
                                 origin.orid = dbnextid(dbo,'orid');
-                                origin.time = datenum2epoch(catalogObject.time(eventidx));
+                                origin.time = datenum2epoch(catalogObject.datenum(eventidx));
                                 origin.lon = catalogObject.lon(eventidx);
                                 origin.lat = catalogObject.lat(eventidx);
                                 origin.depth = catalogObject.depth(eventidx);
@@ -1031,7 +1066,7 @@ classdef Catalog
         %% AUTOBINSIZE        
         function binsize = autobinsize(catalogObject)
         %autobinsize Compute the best bin size based on start and end times
-            binsize = autobinsize(max(catalogObject.time) - min(catalogObject.time));
+            binsize = autobinsize(catalogObject.enum - catalogObject.snum);
         end
 %% ---------------------------------------------------        
         function region = get_region(catalogObject, nsigma)

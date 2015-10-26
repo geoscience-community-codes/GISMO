@@ -23,7 +23,10 @@ function self = readEvents(dataformat, varargin)
 %
 %  An arbitrary number of parameter-value pairs may be specified in order to 
 %  narrow down the search results. Some dataformat choices allow additional
-%  name-value parameter pairs.
+%  name-value parameter pairs.%% READING FROM AN SRU-CATALOG
+%
+%  Example: Read all events from the Dominica Catalog given to Ophelia
+%         cObject = readEvents('sru', '/raid/data/seisan/REA/DMNCA/DominicaCatalog.txt');
 %
 %  By default readEvents will only retrieve basic event metadata such as 
 %  (preferred) origin time, longitude, latitude, depth and magnitude.
@@ -98,20 +101,6 @@ function self = readEvents(dataformat, varargin)
 %               'time > "2009/1/1" & time < "2010/1/1" & ml > 4 & lon > -170.0 & lon < -135.0 & lat > 55.0 & lat < 65.0');
 %
 %
-%% READING FROM AEF SUMMARY FILES
-% 
-%   Object = readEvents('aef', 'dbpath', dbpath, 'param1', value1, ...) 
-%     will attempt to load all Seisan-derived AEF summary files in the 
-%     directory specified by dbpath.
-% 
-%     To subset the data, use parameter name/value pairs (snum, enum, 
-%     minimumMagnitude, minimumDepth, maximumDepth, region). 
-%
-% Example: Read MVO data from station MBWH for all of year 2000:
-%         cObject = readEvents('aef', ...
-%           'dbpath', fullfile('/raid','data','seisan','mbwh_catalog'), 
-%           'startTime', '2000/01/01', 'endTime', '2001/01/01');
-%
 %% READING S-FILES FROM A SEISAN YYYY/MM REA DATABASE
 % 
 %   cObject = readEvents('seisan', 'dbpath', dbpath, 'param1', value1, ...) 
@@ -127,12 +116,6 @@ function self = readEvents(dataformat, varargin)
 %           'dbpath', fullfile('/raid','data','seisan','REA','MVOE_'), ...
 %            'startTime', '2000/01/01', 'endTime', '2000/01/02' );
 %
-%
-%% READING FROM AN SRU-CATALOG
-%
-%  Example: Read all events from the Dominica Catalog given to Ophelia
-%         cObject = readEvents('sru', '/raid/data/seisan/REA/DMNCA/DominicaCatalog.txt');
-% 
 %% See also EVENTS, IRISFETCH, EVENTS_COOKBOOK
 %
 % Author: Glenn Thompson (glennthompson1971@gmail.com)
@@ -141,9 +124,14 @@ function self = readEvents(dataformat, varargin)
 
     switch lower(dataformat)
         case 'iris'
-            if exist('irisfetch.m','file')
-                ev = irisFetch.Events(varargin{:});
-                self = iris(ev);
+            if exist('irisFetch.m','file')
+%                 try
+                    ev = irisFetch.Events(varargin{:});
+                    self = iris(ev);
+%                 catch ME
+%                     ME
+%                     self = Catalog();
+%                 end
             else
                 warning('Cannot find irisFetch.m')
             end
