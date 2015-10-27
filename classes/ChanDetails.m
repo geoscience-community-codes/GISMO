@@ -115,7 +115,7 @@ classdef ChanDetails
          LL = [[obj.latitude]' [obj.longitude]'];
      end
      
-     function sphereplot(obj)
+     function [hSta, hLine,nameList] = sphereplot(obj)
         % sphereplot plots the stations on a sphere that represents the
         % earth.
         %
@@ -129,26 +129,18 @@ classdef ChanDetails
         s=surf(sphx,sphy,sphz,'FaceAlpha',0.7,'edgecolor',[0.85 0.85 0.85],'FaceColor',[1, 1, 1]);
         
         deg2rad = @(x) (pi / 180) .* x;
-        %{
-        % plot lat/lon dots
-        latlines = deg2rad([-90,-60, -45,-30,-15 0, 15, 30 45, 60, 90]);
-        lonlines = deg2rad(-180:10:180);
-        [lonmesh,latmesh] = meshgrid(latlines, lonlines);
-        [y,x,z] = sph2cart(latmesh, lonmesh,1);
-        hold on;
-        % plot3(x,y,z,'.','color',[0.7 0.7 0.7])
-        %}
         LatLon = deg2rad(obj.latlons);
         [x,y,z] = sph2cart(LatLon(:,2), LatLon(:,1),1.05);
         set(gca,'ytick',[],'xtick',[],'ztick',[]);
         hold on;
-        plot3(x,y,z,'bs') % plot stations
+        hSta = scatter3(x,y,z,[],'b','filled'); %allows recoloring individually
         [x2,y2,z2] = sph2cart(LatLon(:,2), LatLon(:,1),1.0);
-        plot3([x,x2]',[y,y2]',[z,z2]','k-') %plot dashes above
+        hLine = plot3([x,x2]',[y,y2]',[z,z2]','k-'); %plot dashes above
         hold off
         axis equal
         axis vis3d
         grid off
+        nameList = {obj.name};
      end
    end
    methods(Static)

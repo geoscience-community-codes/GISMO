@@ -121,7 +121,7 @@ classdef Tracefilter
                case 'B';
                   [b,a] = butter(f.poles, nyq);
                case 'L';
-                  [b,a] = butter(f.poles, nyq);
+                  [b,a] = butter(f.poles, nyq, 'low');
             end
          end % getButter
       end
