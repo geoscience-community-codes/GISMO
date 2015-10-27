@@ -5,17 +5,15 @@ function self = readEvents(dataformat, varargin)
 % GISMO Catalog object.
 %
 % Usage:
-%       catalogObject = readEvents(dataformat, 'param1', _value1_, ...
+%       catalogObject = READEVENTS(dataformat, 'param1', _value1_, ...
 %                                                   'paramN', _valueN_)
 % 
 % dataformat may be:
 %
-%
-% * 'iris' (for IRIS DMC, using irisFetch.m), 
-% * 'antelope' (for a CSS3.0 Antelope/Datascope database)
-% * 'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)
-% * 'zmap' (converts a Zmap data strcture to a Catalog object)
-%
+%   * 'iris' (for IRIS DMC, using irisFetch.m), 
+%   * 'antelope' (for a CSS3.0 Antelope/Datascope database)
+%   * 'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)
+%   * 'zmap' (converts a Zmap data strcture to a Catalog object)
 %
 % The name-value parameter pairs supported are the same as those supported
 % by irisFetch.Events(). Currently these are:
@@ -47,6 +45,12 @@ function self = readEvents(dataformat, varargin)
 % See also CATALOG, IRISFETCH, CATALOG_COOKBOOK
 
 % Author: Glenn Thompson (glennthompson1971@gmail.com)
+
+%% To do:
+% Implement name-value parameter pairs for all methods
+% Test the Antelope method still works after factoring out db_load_origins
+% Test the Seisan method more
+% Add in support for 'get_arrivals'
 
     debug.printfunctionstack('>')
 
@@ -251,161 +255,34 @@ function self = antelope(varargin)
         debug.print_debug(0, 'no database found');
     end
     
-    % LOAD FROM DBNAMELIST
     % Initialize to empty
-    [lat, lon, depth, dnum, time, evid, orid, nass, mag, ml, mb, ms, etype, auth] = deal([]);
-    etype = {}; magtype = {};
+    [lat, lon, depth, time, evid, orid, nass, mag, ml, mb, ms] = deal([]);
+    [etype, auth, magtype]] = deal({});
+
+    % Loop over databases
     for dbpathitem = dbpathlist
         % Load vectors
-        [lon0, lat0, depth0, dnum0, evid0, orid0, nass0, mag0, mb0, ml0, ms0, etype0, auth0, magtype0] = ...
-            dbloadprefors(dbpathitem, subset_expression);
-        if length(lon0) == length(mag0)
+        origins = db_load_origins(dbpath, subset_expression);
+        if length(origins.lon) == length(origins.mag)
             % Concatentate vectors
-            dnum  = cat(1, dnum,  dnum0);           
-            lon   = cat(1, lon,   lon0);
-            lat   = cat(1, lat,   lat0);
-            depth = cat(1, depth, depth0);
-            evid  = cat(1, evid,  evid0);
-            orid  = cat(1, orid,  orid0);
-            nass  = cat(1, nass,  nass0);
-            mag   = cat(1, mag,   mag0);
-            mb   = cat(1, mb,   mb0);
-            ml   = cat(1, ml,   ml0);
-            ms   = cat(1, ms,   ms0);
-            etype  = cat(1, etype, etype0);
-            auth = cat(1,  auth, auth0);
-            magtype = cat(1, magtype, magtype0);
+            time  = cat(1, time,  origins.time);           
+            lon   = cat(1, lon,   origins.lon);
+            lat   = cat(1, lat,   origins.lat);
+            depth = cat(1, depth, origins.depth);
+            evid  = cat(1, evid,  origins.evid);
+            orid  = cat(1, orid,  origins.orid);
+            nass  = cat(1, nass,  origins.nass);
+            mag   = cat(1, mag,   origins.mag);
+            mb   = cat(1, mb,   origins.mb);
+            ml   = cat(1, ml,   origins.ml);
+            ms   = cat(1, ms,   origins.ms);
+            etype  = cat(1, etype, origins.etype);
+            auth = cat(1,  auth, origins.auth);
+            magtype = cat(1, magtype, origins.magtype);
         end
     end
-    mag(mag<-3.0)=NaN;
-    self = Catalog(dnum, lon, lat, depth, mag, magtype, etype);
-    
-    debug.printfunctionstack('<')
-end
-
-%% ---------------------------------------------------
-
-function [lon, lat, depth, dnum, evid, orid, nass, mag, mb, ml, ms, etype, auth, magtype] = dbloadprefors(dbpath, subset_expression)
-
-    debug.printfunctionstack('>')
-
-    numorigins = 0; etype={}; magtype = {};
-    [lat, lon, depth, dnum, time, evid, orid, nass, mag, ml, mb, ms, auth] = deal([]);
-    if iscell(dbpath)
-        dbpath = dbpath{1};
-    end
-    debug.print_debug(0, sprintf('Loading data from %s',dbpath));
-
-    ORIGIN_TABLE_PRESENT = dbtable_present(dbpath, 'origin');
-
-    if (ORIGIN_TABLE_PRESENT)
-        db = dblookup_table(dbopen(dbpath, 'r'), 'origin');
-        numorigins = dbquery(db,'dbRECORD_COUNT');
-        debug.print_debug(1,sprintf('Got %d records from %s.origin',numorigins,dbpath));
-        if numorigins > 0
-            EVENT_TABLE_PRESENT = dbtable_present(dbpath, 'event'); 
-            NETMAG_TABLE_PRESENT = dbtable_present(dbpath, 'netmag');  
-            if (EVENT_TABLE_PRESENT)
-                db = dbjoin(db, dblookup_table(db, 'event') );
-                numorigins = dbquery(db,'dbRECORD_COUNT');
-                debug.print_debug(1,sprintf('Got %d records after joining event with %s.origin',numorigins,dbpath));
-                if numorigins > 0
-                    db = dbsubset(db, 'orid == prefor');
-                    numorigins = dbquery(db,'dbRECORD_COUNT');
-                    debug.print_debug(1,sprintf('Got %d records after subsetting with orid==prefor',numorigins));
-                    if numorigins > 0
-                        db = dbsort(db, 'time');
-                    else
-                        % got no origins after subsetting for prefors - already reported
-                        debug.print_debug(0,sprintf('%d records after subsetting with orid==prefor',numorigins));
-                        return
-                    end
-                else
-                    % got no origins after joining event to origin table - already reported
-                    debug.print_debug(0,sprintf('%d records after joining event table with origin table',numorigins));
-                    return
-                end
-            else
-                debug.print_debug(0,'No event table found, so will use all origins from origin table, not just prefors');
-            end
-        else
-            % got no origins after opening origin table - already reported
-            debug.print_debug(0,sprintf('origin table has %d records',numorigins));
-            return
-        end
-    else
-        debug.print_debug(0,'no origin table found');
-        return
-    end
-
-    numorigins = dbquery(db,'dbRECORD_COUNT');
-    debug.print_debug(2,sprintf('Got %d prefors prior to subsetting',numorigins));
-
-    % Do the subsetting
-    if ~isempty(subset_expression)
-        db = dbsubset(db, subset_expression);
-        numorigins = dbquery(db,'dbRECORD_COUNT');
-        debug.print_debug(2,sprintf('Got %d prefors after subsetting',numorigins));
-    end
-
-    if numorigins>0
-        if EVENT_TABLE_PRESENT
-            [lat, lon, depth, time, evid, orid, nass, ml, mb, ms, auth] = dbgetv(db,'lat', 'lon', 'depth', 'time', 'evid', 'orid', 'nass', 'ml', 'mb', 'ms', 'auth');
-        else
-            [lat, lon, depth, time, orid, nass, ml, mb, ms, auth] = dbgetv(db,'lat', 'lon', 'depth', 'time', 'orid', 'nass', 'ml', 'mb', 'ms', 'auth');  
-            disp('Setting evid == orid');
-            evid = orid;
-        end
-        etype = dbgetv(db,'etype');
-
-
-        % convert etypes?
-        % AVO Classification Codes
-        % 'a' = Volcano-Tectonic (VT)
-        % 'b' = Low-Frequency (LF)
-        % 'h' = Hybrid
-        % 'E' = Regional-Tectonic
-        % 'T' = Teleseismic
-        % 'i' = Shore-Ice
-        % 'C' = Calibrations
-        % 'o' = Other non-seismic
-        % 'x' = Cause unknown
-        % But AVO catalog also contains A, B, G, L, O, R, X
-        % Assuming A, B, O and X are same as a, b, o and x, that still
-        % leaves G, L and R
-
-
-
-        % get largest mag & magtype for this mag
-        [mag,magind] = max([ml mb ms], [], 2);
-        magtypes = {'ml';'mb';'ms'};
-        magtype = magtypes(magind);
-        
-        if NETMAG_TABLE_PRESENT
-            % loop over each origin and find largest mag for each orid in
-            % netmag
-            dbn = dblookup_table(dbopen(dbpath, 'r'), 'netmag');
-            numrecs = dbquery(dbn,'dbRECORD_COUNT');
-            if numrecs > 0
-                [nevid, norid, nmagtype, nmag] = dbgetv(dbn, 'evid', 'orid', 'magtype', 'magnitude');
-            end
-            for oi = 1:numel(orid)
-                oin = find(norid == orid(oi));
-                [mmax, indmax] = max(nmag(oin));
-                if mmax > mag(oi)
-                    mag(oi) = mmax;
-                    magtype{oi} = nmagtype(oin(indmax));
-                end
-            end
-        end
-            
-
-        % convert time from epoch to Matlab datenumber
-        dnum = epoch2datenum(time);
-    end
-
-    % close database
-    dbclose(db);
+    mag(mag<-3.0)=NaN; % I think Antelope uses a dummy value like -9.9
+    self = Catalog(time, lon, lat, depth, mag, magtype, etype);
     
     debug.printfunctionstack('<')
 end
