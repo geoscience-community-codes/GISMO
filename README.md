@@ -1,3 +1,6 @@
+Note - this project is not live yet. Under construction. But you may use it and if you do please report
+problems to help us with debugging.
+
 # GISMO
 A seismic data analysis toolbox for MATLAB. 
 

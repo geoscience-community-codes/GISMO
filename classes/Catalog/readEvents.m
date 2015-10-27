@@ -1,123 +1,51 @@
 function self = readEvents(dataformat, varargin)
-%readEvents: Read seismic events from common file formats & data sources.
-%  readEvents loads events from a seismic event catalog into a GISMO
-%  Catalog object
+%READEVENTS Read seismic events from common file formats & data sources.
+% readEvents can read events from many different earthquake catalog file 
+% formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) into a 
+% GISMO Catalog object.
 %
-%% GENERAL USAGE:
-%
-%  cObject = readEvents(dataformat, 'param1', value1, 'param2', value2 ...)
-%     loads a seismic event catalog into a GISMO/Catalog object.
-%     dataformat is a method by which the source catalog is
-%     retrieved, or format in which the source catalog is stored.
-%
-%  The name-value parameter pairs supported by readEvents mirror those of 
-%  irisFetch.Events, which currently are:
-%      contributor, startTime, endTime, eventId, fetchLimit, latitude, longitude, magnitudeType,
-%      maximumDepth, maximumLatitude, maximumLongitude, maximumMagnitude,
-%      minimumDepth, minimumLatitude, minimumLongitude, minimumMagnitude,
-%      minimumRadius, maximumRadius, offset, updatedAfter.
-%
-%  CONVENIENCE PARAMETERS
-%   'boxcoordinates'    : [minLat, maxLat, minLon, maxLon]   % use NaN as a wildcard
-%   'radialcoordinates' : [Lat, Lon, MaxRadius, MinRadius]   % MinRadius is optional
-%
-%  An arbitrary number of parameter-value pairs may be specified in order to 
-%  narrow down the search results. Some dataformat choices allow additional
-%  name-value parameter pairs.%% READING FROM AN SRU-CATALOG
-%
-%  Example: Read all events from the Dominica Catalog given to Ophelia
-%         cObject = readEvents('sru', '/raid/data/seisan/REA/DMNCA/DominicaCatalog.txt');
-%
-%  By default readEvents will only retrieve basic event metadata such as 
-%  (preferred) origin time, longitude, latitude, depth and magnitude.
-%  However:
-%
-%  cObject = readEvents(..., 'addarrivals', true)
-%
-%  will also include more detailed information, such as phase arrivals and
-%  different measurements of magnitude, if available. Warning - this may 
-%  be slow, especially for large datasets.
-%
-%% READING FROM IRIS/FSDN web services via irisfetch.m:
-%   cObject = readEvents('irisfetch', 'param1', value1, 'param2', value2 ...)
-%             loads events, origins and magnitudes from IRIS-DMC or other
-%             FSDN data sources via irisFetch.m. The allowed parameter-value 
-%             pairs are those allowed by irisFetch.Events, listed above.
-%
-% Examples:
-%
-%   (1) Read all magnitude>7 events from IRIS DMC via irisFetch.m:
-%         cObject = readEvents('iris', 'MinimumMagnitude', 7.0);
-%
-%   (2) Read all events within 20 km of Redoubt volcano from IRIS DMC:
-%        cObject = readEvents('iris','radialcoordinates', [60.4853 -152.7431 km2deg(20)]); 
-%
-%% READING FROM ANTELOPE DATABASES
-%
-%   cObject = readEvents('antelope', 'dbpath', path_to_database, 'param1', value1, ...)
-%     loads events, origins and magnitudes from an Antelope CSS3.0
-%     database using Kent Lindquist's Antelope Toolbox for MATLAB. As a
-%     minimum, the database must have an origin table. All the name-value
-%     parameters pairs supported by 'iris' are supported by 'antelope' too.
-%
-%
-%   cObject = readEvents(..., 'subset_expression', subset_expression)
-%             will subset the database given a valid antelope subset
-%             expression. Any other name-value parameter pairs will be
-%             ignored if subset_expression is given.
-%
-%   If the database is stored in daily or monthly volumes, 
-%          e.g. catalogs/avodb20010101 catalogs/avodb20010102, 
-%   then specify name like:
-%           dbpath = 'catalogs/avodb%YYYY%MM%DD'
-%
-% Examples:
-%   (1) Import all events from the demo database
-%         % get path to demo database
-%         dbpath = demodb('avo');
-%         % read events from database
-%         Object = readEvents('antelope', 'dbpath', dbpath);
-%
-%   (2) As previous example, but use a subset expression also. Here we
-%       subset for origins within 15 km of Redoubt volcano:
-%         Object = readEvents('antelope', 'dbpath', dbpath, ...
-%                   'subset_expression', ...
-%                   'deg2km(distance(lat, lon, 60.4853, -152.7431))<15.0');
-%
-%   (3) Read Alaska Earthquake Center events greater than M=4.0 in 2009
-%       within rectangular region lat = 55 to 65, lon = -170 to -135 from
-%       the "Total" database of all regional earthquakes in Alaska:
-%         Object = readEvents('antelope', ...
-%               'dbpath', '/Seis/catalogs/aeic/Total/Total', ...
-%               'startTime', datenum(2009,1,1), ...
-%               'endTime', datenum(2010,1,1), ...
-%               'minimumMagnitude', 4.0, ...
-%               'boxcoordinates', [-170.0 -135.0 55.0 65.0]);
-%
-%   (4) As 3, but use a subset_expression instead:
-%         Object = readEvents('antelope', ...
-%               'dbpath', '/Seis/catalogs/aeic/Total/Total', ...
-%               'subset_expression', ...
-%               'time > "2009/1/1" & time < "2010/1/1" & ml > 4 & lon > -170.0 & lon < -135.0 & lat > 55.0 & lat < 65.0');
-%
-%
-%% READING S-FILES FROM A SEISAN YYYY/MM REA DATABASE
+% Usage:
+%       catalogObject = readEvents(dataformat, 'param1', _value1_, ...
+%                                                   'paramN', _valueN_)
 % 
-%   cObject = readEvents('seisan', 'dbpath', dbpath, 'param1', value1, ...) 
-%     will attempt to load all Seisan S-files in the 
-%     directory specified by dbpath (which should be the parent of
-%     YYYY/MM directories)
+% dataformat may be:
+%
+%
+% * 'iris' (for IRIS DMC, using irisFetch.m), 
+% * 'antelope' (for a CSS3.0 Antelope/Datascope database)
+% * 'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)
+% * 'zmap' (converts a Zmap data strcture to a Catalog object)
+%
+%
+% The name-value parameter pairs supported are the same as those supported
+% by irisFetch.Events(). Currently these are:
+%
+%     startTime
+%     endTime
+%     eventId
+%     fetchLimit
+%     magnitudeType
+%     minimumLongitude
+%     maximumLongitude
+%     minimumLatitude
+%     maximumLatitude
+%     minimumMagnitude
+%     maximumMagnitude
+%     minimumDepth
+%     maximumDepth
 % 
-%     To subset the data, use parameter name/value pairs (snum, enum, 
-%     minimumMagnitude, minimumDepth, maximumDepth, region).
+% And the two convenience parameters:
 %
-% Example: Read Sfiles from MVOE_ Seisan database for January 2000:
-%     cObject = readEvents('seisandb', ...
-%           'dbpath', fullfile('/raid','data','seisan','REA','MVOE_'), ...
-%            'startTime', '2000/01/01', 'endTime', '2000/01/02' );
+% radialcoordinates = [ centerLatitude, centerLongitude, maximumRadius ]
 %
-%% See also EVENTS, IRISFETCH, EVENTS_COOKBOOK
+% boxcoordinates = [ minimumLatitude maximumLatitude minimumLongitude maximumLongitude ]
+% 
+% For examples, see Catalog_cookbook. Also available at:
+% https://geoscience-community-codes.github.io/GISMO/tutorials/html/Catalog_cookbook.html
 %
+%
+% See also CATALOG, IRISFETCH, CATALOG_COOKBOOK
+
 % Author: Glenn Thompson (glennthompson1971@gmail.com)
 
     debug.printfunctionstack('>')
