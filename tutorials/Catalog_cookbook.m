@@ -1,51 +1,9 @@
 %% Reading events into a Catalog object
 % GISMO can read events from many different earthquake catalog file formats
 % (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) using the
-% readEvents() function.
+% readEvents() function. See the help for this function:
 
-%% The readEvents() function
-% The readEvents() function is used to read event metadata (origin time, 
-% lon, lat, depth, mag etc.) from a variety of catalog data sources and
-% file formats into a Catalog object. 
-%
-% Usage:
-%       catalogObject = readEvents(dataformat, 'param1', _value1_, ...
-%                                                   'paramN', _valueN_)
-% 
-% dataformat may be:
-%%
-%
-% * 'iris' (for IRIS DMC, using irisFetch.m), 
-% * 'antelope' (for a CSS3.0 Antelope/Datascope database)
-% * 'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)
-%
-
-%%
-% The name-value parameter pairs supported are the same as those supported
-% by irisFetch.Events(). Currently these are:
-%%
-% 
-% * _startTime_
-% * _endTime_ 
-% * _eventId_ 
-% * _fetchLimit_
-% * _magnitudeType_
-% * _minimumLongitude_
-% * _maximumLongitude_
-% * _minimumLatitude_
-% * _maximumLatitude_
-% * _minimumMagnitude_
-% * _maximumMagnitude_
-% * _minimumDepth_
-% * _maximumDepth_
-% 
-% And the two convenience parameters:
-%%
-%
-% * _radialcoordinates_ = [ _centerLatitude_, _centerLongitude_, _maximumRadius_ ]
-%
-% * _boxcoordinates_ = [ _minimumLatitude_ _maximumLatitude_ _minimumLongitude_ _maximumLongitude_ ]
-% 
+help readEvents
 
 %% Reading events from IRIS DMC
 % To load events into a Catalog object we use the readEvents function. 
