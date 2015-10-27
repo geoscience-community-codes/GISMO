@@ -189,6 +189,36 @@ classdef channeltag
       
       function result = eq(A, B)
          % expect that both parts are channeltags
+         % INCLUDE WILDCARDS!
+         % Wildcards must be in a scalar.
+         if numel(A) == 1 && any(A.string == '*')
+            if strcmp(A.network,'*')
+               [B.network] = deal('*');
+            end
+            if strcmp(A.channel,'*')
+               [B.channel] = deal('*');
+            end
+            if strcmp(A.station,'*')
+               [B.channel] = deal('*');
+            end
+            if strcmp(A.location,'*')
+               [B.location] = deal('*');
+            end
+         end
+         if numel(B) == 1 && any(B.string=='*')
+            if strcmp(B.network,'*')
+               [A.network] = deal('*');
+            end
+            if strcmp(B.channel,'*')
+               [A.channel] = deal('*');
+            end
+            if strcmp(B.station,'*')
+               [A.channel] = deal('*');
+            end
+            if strcmp(B.location,'*')
+               [A.location] = deal('*');
+            end
+         end
          result = strcmp(A.string(), B.string());
       end%eq
       
