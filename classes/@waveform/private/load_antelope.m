@@ -109,13 +109,22 @@ function [critList, nCrit] = buildAntelopeCriteria(chanTag)
    %
    
    for N = numel(chanTag) : -1: 1
-      critList(N).group(1) = grabCritList('sta', chanTag(N).station);
-      critList(N).group(2) = grabCritList('net', chanTag(N).network);
-      critList(N).group(3) = grabCritList('chan', chanTag(N).channel);
-      critList(N).group(4) = grabCritList('loc', chanTag(N).location);
+      if ~isempty(chanTag(N).station)
+         critList(N).group(1) = grabCritList('sta', chanTag(N).station);
+      end
+      if ~isempty(chanTag(N).network)
+         critList(N).group(2) = grabCritList('net', chanTag(N).network);
+      end
+      if ~isempty(chanTag(N).channel)
+         critList(N).group(3) = grabCritList('chan', chanTag(N).channel);
+      end
+      if ~isempty(chanTag(N).location);
+         critList(N).group(4) = grabCritList('loc', chanTag(N).location);
+      end
    end
    
-   critList.statment =  {}; % PERHAPS UNUSED? CERTAINLY MISSPELLED.
+   %{
+   [critList.statment] =  {}; % PERHAPS UNUSED? CERTAINLY MISSPELLED.
    sta_crit = grabCritList('sta', chanTag.station); % struct with (field, relationship, data)
    cha_crit = grabCritList('chan', chanTag.channel);
    net_crit = grabCritList('net', chanTag.network); % expecting only 1
@@ -127,7 +136,7 @@ function [critList, nCrit] = buildAntelopeCriteria(chanTag)
       if ~isempty(net_crit), critList(i).group(end + 1) = net_crit; end;
       if ~isempty(loc_crit), critList(i).group(end + 1) = loc_crit; end;
    end
-   
+   %}
    critList = critList(:);
    nCrit = numel(critList);
 end
@@ -145,7 +154,9 @@ function A = grabCritList(key, value)
       erid = sprintf('Waveform:load_antelope:no%sTerm',key);
       error(erid,'No %s  requested. To retrieve all %ss use ''*''', key, key);
    else
-      A = [];
+      A.field='';
+      A.relationship = '';
+      A.value = '';
    end
 end
 
