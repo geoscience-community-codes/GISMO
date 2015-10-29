@@ -1,5 +1,5 @@
 %CATALOG the blueprint for Catalog objects in GISMO
-% An Catalog object is a container for event metadata
+% A Catalog object is a container for event metadata
 % See also EventRate, readEvents, Catalog_Cookbook
 classdef Catalog
 
@@ -111,8 +111,8 @@ classdef Catalog
             
             
             %obj.table = sortrows(obj.table); 
-            
-            fprintf('Got %d events',height(obj.table));
+            obj.table = sortrows(obj.table, 'datenum', 'ascend'); 
+            fprintf('Got %d events',obj.numberOfEvents);
 
         end
         
@@ -170,6 +170,12 @@ classdef Catalog
         end
         
         function disp(obj, showall)
+                disp(obj.Properties.VariableNames)
+                properties(obj)
+                methods(obj)
+                fprintf('Number of events: %d\n',obj.numberOfEvents);
+                [maxmag, maxmagindex] = nanmax(obj.mag);
+                fprintf('Biggest event: %f at %s\n',maxmag, datestr(obj.datenum(maxmagindex)));
             if ~exist('showall','var')
                 showall = false;
             end
@@ -184,64 +190,88 @@ classdef Catalog
         end
 
 %% ---------------------------------------------------
-        function save(catalogObject, matfile)
-            %Catalog.save save an catalogObject to a MAT file
-            save(catalogObject,matfile)
-        end
+%        function save(catalogObject, matfile)
+%            %Catalog.save save an catalogObject to a MAT file
+%            save(matfile,'catalogObject')
+%        end
 
 %% ---------------------------------------------------
         function catalogObject = combine(catalogObject1, catalogObject2)
-            % SCAFFOLD: not tested & merge would be better name
-            %Catalog.combine combine two Catalog objects
-            % catalogObject = combine(catalogObject1, catalogObject2)
+            %CATALOG.COMBINE combine two Catalog objects
+            % catalogObject = COMBINE(catalogObject1, catalogObject2)
 
             catalogObject = [];
 
             if nargin<2
-                return
-            end
-            
-            if isempty(catalogObject1)
-                catalogObject = catalogObject2;
-                return
-            end
-            
-            if isempty(catalogObject2)
-                catalogObject = catalogObject1;
-                return
-            end            
-
-            if isempty(catalogObject1.time) & isempty(catalogObject2.time)
+		help Catalog.combine
                 return
             end
 
-            if isempty(catalogObject1.time)
-                catalogObject = catalogObject2;  
-            elseif isempty(catalogObject2.time)
-                catalogObject = catalogObject1;
-            else
-                catalogObject = catalogObject1; 
-                props = {'time';'mag';'lat';'lon';'depth';'etype'};
-                for i=1:length(props)
-                    prop = props{i};
-                    catalogObject.(prop) = [catalogObject1.(prop) catalogObject2.(prop)];
-                end
-            end
+	    catalogObject = Catalog();
+
+	    catalogObject.table = union(catalogObject1.table, catalogObject2.table);
+            
         end
 %% ---------------------------------------------------
 		function webmap(catalogObject)
-            %Catalog.webmap plot hypocenters in map view using webmap         
+            %CATALOG.WEBMAP Plot hypocenters in map view using webmap         
             
+                % Borrow heavily from Loren Shure/Mathworks 'plotEarthquake' example
+
             if all(isnan(catalogObject.lat))
                 warning('No hypocenter data to plot');
                 return
             end
-            lat = catalogObject.lat(~isnan((catalogObject.lat)));
-            lon = catalogObject.lon(~isnan((catalogObject.lat)));
-            webmap
-            wmmarker(lat, lon)
+
+                minmag = nanmin(catalogObject.mag);
+                maxmag = nanmax(catalogObject.mag);
+disp('scaffold: need to come up with names and proper geopoint structure
+                % scale icon color by magnitude
+                cm = parula(10);
+                iconColor = cm(ceil(1+9*(catalogObject.mag-minmag)/(maxmag-minmag)),:);
+                % Convert quakeTable to geopint vector to add as info for each quake
+                quakePoints = geopoint(catalogObject.lat, catalogObject.lon);
+            webmap('Ocean Basemap')
+                wmmarker(quakePoints,'OverlayName','Quake Points',...
+                'FeatureName',names,'Color',iconColor,'AutoFit',false);
+                wmzoom(1)
+                snapnow
+
+%% Load in plate boundaries
+% The data reference for plate
+% boundaries is
+% http://geoscience.wisc.edu/~chuck/MORVEL/PltBoundaries.html
+% Citation: Argus, D. F., Gordon, R. G., and DeMets, C., 2011.
+% Geologically current motion of 56 plates relative to the
+% no-net-rotation reference frame,
+% Geochemistry, Geophysics, Geosystems, accepted for publication,
+% September, 2011.
+[lat, lon] = importPlates('All_boundaries.txt');
+coast = load('coast');
+figure
+worldmap world
+setm(gca,'mlabelparallel',-90,'mlabellocation',90)
+plotm(coast.lat,coast.long,'Color','k')
+plotm(lat,lon,'LineWidth',2)
+
+%% Find the first plate
+% Look for the first NaN and stop there.
+ind = find(isnan(lat),1,'first')
+plotm(lat(1:ind),lon(1:ind),'Color','red','Linewidth',3)
+
+%% Make array of geopoints from the plate boundaries
+bounds = geopoint(lat,lon);
+
+%% Draw plate boundaries on map
+% Center the map on the longitude of largest quake first.
+wmcenter(0,quakeTable.Lon(end))
+wmline(bounds,'FeatureName','Plate Boundaries','Color','m','AutoFit',false)
+wmzoom(1)
+snapnow
+
 
         end
+
 %% ---------------------------------------------------
 		function plot(catalogObject, varargin)
             %Catalog.plot plot hypocenters in map view and cross-sections
@@ -299,7 +329,7 @@ classdef Catalog
         end
 %% ---------------------------------------------------        
 		function plot3(catalogObject, varargin)
-            %Catalog.plot3 plot hypocenters in 3-D
+            %CATALOG.PLOT3 Plot hypocenters in 3-D
             %   catalogObject.plot3()
             %
             %   Optional name/value pairs:
@@ -336,10 +366,9 @@ classdef Catalog
             
         end
   %% ---------------------------------------------------      
-        %% PLOT_TIME
         function plot_time(catalogObject); 
-            %PLOT_TIME plot magnitude and depth against time
-            %   catlog_object.plot_time()
+            %CATALOG.PLOT_TIME Plot magnitude and depth against time
+            %   catalogObject.plot_time()
             
             % Glenn Thompson 2014/06/01
             
@@ -773,25 +802,18 @@ classdef Catalog
         end
 %% ---------------------------------------------------
         function catalogObject2 = subset(catalogObject, indices)
-            %Catalog.subset Create a new catalogObject by subsetting based
+            %CATALOG.SUBSET Create a new catalogObject by subsetting based
             %on indices. 
-            catalogObject2 = Catalog(catalogObject.datenum(indices), ...
-                catalogObject.lon(indices), ...
-                catalogObject.lat(indices), ...
-                catalogObject.depth(indices), ...
-                catalogObject.mag(indices), ...
-                catalogObject.magtype(indices), ...
-                catalogObject.etype(indices));
+            catalogObject = catalogObject(table(indices));
         end
         
 %% ---------------------------------------------------
 
-        function Event(obj, eventnum)
-            % Catalog.Event - Browse an Catalog object one event at a time.
-            %  catalogObject.Event() Browse through an Catalog object one event
+        function eev(obj, eventnum)
+            % CATALOG.EEV - Browse an Catalog object one event at a time.
+            %  catalogObject.EEV() Browse through an Catalog object one event
             %  at a time in a similar way to the Seisan program 'eev'.
 
-            
             if ~exist('eventnum','var')
                 eventnum = 1;
             end
@@ -802,11 +824,11 @@ classdef Catalog
                 if eventnum<1
                     eventnum=1;
                 end
-                if eventnum>numel(obj.time)
-                    eventnum=numel(obj.time);
+                if eventnum>numel(obj.datenum)
+                    eventnum=numel(obj.datenum`);
                 end           
                 % display line for this event
-                dstr=datestr(obj.time(eventnum),31);
+                dstr=datestr(obj.datenum(eventnum),31);
                 subclass=obj.etype{eventnum};
                 mag=obj.mag(eventnum);
                 outstr=sprintf('%s %7.2f %7.2f %7.2 %5.1f %s %s',dstr, obj.lon(eventnum), obj.lat(eventnum), obj.depth(eventnum), mag, obj.magtype{eventnum}, subclass);
@@ -817,7 +839,7 @@ classdef Catalog
                     eventnum=eventnum+1; % ENTER goes to next event 
 
                 elseif (choice(1)=='c') % CLASSIFY
-                    classify_event(time);
+                    classify_event(datenum);
 
                 elseif (choice(1)=='f') % FORWARD N EVENTS
                     num=1;
@@ -848,7 +870,7 @@ classdef Catalog
                         hr=str2num(choice(10:11));
                     end
                     jumptime=datenum(year,month,dd,hr,0,0);
-                    eventnum = min(find(obj.time > jumptime));
+                    eventnum = min(find(obj.datenum >= jumptime));
 
                 elseif (choice(1)=='s') % SUMMARISE - SHOW S FILE or similar data 
                     fprintf('\nTime:\t\t%s\n',dstr);
@@ -976,6 +998,9 @@ classdef Catalog
             % Glenn Thompson, 4 February 2015
  
             switch outformat
+		case {'text';'csv';'xls'} % help table.write for more info
+			write(catalogObject.table, outpath);
+
                 case 'antelope'
                     
                     
