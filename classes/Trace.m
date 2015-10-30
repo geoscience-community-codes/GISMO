@@ -165,6 +165,9 @@ classdef Trace < TraceData
          % For multiple traces, a character array will be returned.
          % see also datestr
          secDurs = [obj.duration];
+         assert(all(~isnan([obj.samplerate])),...
+            'Trace:lastsampletime:Uncalculatable',...
+            'Missing samplerate for one or more waveforms. lastsampletime is incalculable');
          secDurs(secDurs > 0) = secDurs - 1./[obj.samplerate];
          val = [obj.firstsampletime] + secDurs/86400;
          if exist('stringformat','var')
@@ -260,31 +263,24 @@ classdef Trace < TraceData
             alignTime =  datenum(alignTime);
          end
          
-         hasSingleAlignTime = numel(alignTime) == 1;
+         oneAlignTime = numel(alignTime) == 1;
+         hasCompatibleSize = oneAlignTime || ... single align time OR
+            all(size(alignTime) == size(T)) || ... same shape OR
+            (numel(alignTime) == length(T) && ... both vectors have
+            numel(T) == length(alignTime));     % the same length
          
-         if hasSingleAlignTime %use same align time for all waveforms
+         assert(hasCompatibleSize, 'Trace:align:invalidAlignSize',...
+            'alignTime must be either a single time or a matrix the same shape as the traces');
+         
+         if oneAlignTime % same align time for all traces
             alignTime = repmat(alignTime,size(T));
-         elseif isvector(alignTime) && isvector(T)
-            if numel(alignTime) ~= numel(T)
-               error('Waveform:align:invalidAlignSize',...
-                  'The number of Align Times does not match the number of waveforms');
-            else
-               % this situation OK.
-               % ignore possibility that we're comparing a 1xN vs Nx1.
-            end
-         elseif ~all(size(alignTime) == size(T)) %make sure 1:1 ratio for alignTime & waveform
-            if numel(alignTime) == numel(T)
-               error('Waveform:align:invalidAlignSize',...
-                  ['The alignTime matrix is of a different size than the '...
-                  'waveform Matrix.  ']);
-            end
          end
          
          
          newSamplesPerSec = 1 / newSamprate ;  %# samplesPerSecond
          timeStep = newSamplesPerSec * oneSecond;
-         existingStarts = [T.mat_starttime]; %get(w,'start');
-         existingEnds = get(T,'end');
+         existingStarts = T.firstsampletime;
+         existingEnds = T.lastsampltime;
          
          % calculate the offset of the closest "aligned" time, by projecting the
          % desired sample rate and time forward or backward onto these waveforms'
@@ -314,8 +310,8 @@ classdef Trace < TraceData
          
          %% update histories
          % if all waves were aligned to the same time, then handle all history here
-         if hasSingleAlignTime
-            noteRealignment(w, alignTime(1), newSamprate);
+         if oneAlignTime
+            noteRealignment(T, alignTime(1), newSamprate);
          else
             for n=1:numel(T)
                T(n) = noteRealignment(T(n), alignTime(n), newSamprate);
