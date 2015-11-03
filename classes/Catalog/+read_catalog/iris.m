@@ -24,6 +24,14 @@ function self = iris(ev)
     end
     
     request.dataformat = 'iris';
+    time
+    lon
+    lat
+    depth
+    mag
+    magtype
+    etype
+    request
     self = Catalog(time', lon', lat', depth', mag', magtype', etype', 'request', request);
     
     debug.printfunctionstack('<')

@@ -200,13 +200,13 @@ classdef Catalog
             catalogObject = [];
 
             if nargin<2
-		help Catalog.combine
+                help Catalog.combine
                 return
             end
 
-	    catalogObject = Catalog();
+            catalogObject = Catalog();
 
-	    catalogObject.table = union(catalogObject1.table, catalogObject2.table);
+            catalogObject.table = union(catalogObject1.table, catalogObject2.table);
             
         end
 %% ---------------------------------------------------
@@ -220,51 +220,51 @@ classdef Catalog
                 return
             end
 
-                minmag = nanmin(catalogObject.mag);
-                maxmag = nanmax(catalogObject.mag);
-disp('scaffold: need to come up with names and proper geopoint structure
-                % scale icon color by magnitude
-                cm = parula(10);
-                iconColor = cm(ceil(1+9*(catalogObject.mag-minmag)/(maxmag-minmag)),:);
-                % Convert quakeTable to geopint vector to add as info for each quake
-                quakePoints = geopoint(catalogObject.lat, catalogObject.lon);
+            minmag = nanmin(catalogObject.mag);
+            maxmag = nanmax(catalogObject.mag);
+            disp('scaffold: need to come up with names and proper geopoint structure')
+            % scale icon color by magnitude
+            cm = parula(10);
+            iconColor = cm(ceil(1+9*(catalogObject.mag-minmag)/(maxmag-minmag)),:);
+            % Convert quakeTable to geopint vector to add as info for each quake
+            quakePoints = geopoint(catalogObject.lat, catalogObject.lon);
             webmap('Ocean Basemap')
-                wmmarker(quakePoints,'OverlayName','Quake Points',...
-                'FeatureName',names,'Color',iconColor,'AutoFit',false);
-                wmzoom(1)
-                snapnow
+            wmmarker(quakePoints,'OverlayName','Quake Points',...
+            'FeatureName',names,'Color',iconColor,'AutoFit',false);
+            wmzoom(1)
+            snapnow
 
-%% Load in plate boundaries
-% The data reference for plate
-% boundaries is
-% http://geoscience.wisc.edu/~chuck/MORVEL/PltBoundaries.html
-% Citation: Argus, D. F., Gordon, R. G., and DeMets, C., 2011.
-% Geologically current motion of 56 plates relative to the
-% no-net-rotation reference frame,
-% Geochemistry, Geophysics, Geosystems, accepted for publication,
-% September, 2011.
-[lat, lon] = plotEarthquakes.importPlates('All_boundaries.txt');
-coast = load('coast');
-figure
-worldmap world
-setm(gca,'mlabelparallel',-90,'mlabellocation',90)
-plotm(coast.lat,coast.long,'Color','k')
-plotm(lat,lon,'LineWidth',2)
+            %% Load in plate boundaries
+            % The data reference for plate
+            % boundaries is
+            % http://geoscience.wisc.edu/~chuck/MORVEL/PltBoundaries.html
+            % Citation: Argus, D. F., Gordon, R. G., and DeMets, C., 2011.
+            % Geologically current motion of 56 plates relative to the
+            % no-net-rotation reference frame,
+            % Geochemistry, Geophysics, Geosystems, accepted for publication,
+            % September, 2011.
+            [lat, lon] = plotEarthquakes.importPlates('All_boundaries.txt');
+            coast = load('coast');
+            figure
+            worldmap world
+            setm(gca,'mlabelparallel',-90,'mlabellocation',90)
+            plotm(coast.lat,coast.long,'Color','k')
+            plotm(lat,lon,'LineWidth',2)
 
-%% Find the first plate
-% Look for the first NaN and stop there.
-ind = find(isnan(lat),1,'first')
-plotm(lat(1:ind),lon(1:ind),'Color','red','Linewidth',3)
+            %% Find the first plate
+            % Look for the first NaN and stop there.
+            ind = find(isnan(lat),1,'first')
+            plotm(lat(1:ind),lon(1:ind),'Color','red','Linewidth',3)
 
-%% Make array of geopoints from the plate boundaries
-bounds = geopoint(lat,lon);
+            %% Make array of geopoints from the plate boundaries
+            bounds = geopoint(lat,lon);
 
-%% Draw plate boundaries on map
-% Center the map on the longitude of largest quake first.
-wmcenter(0,quakeTable.Lon(end))
-wmline(bounds,'FeatureName','Plate Boundaries','Color','m','AutoFit',false)
-wmzoom(1)
-snapnow
+            %% Draw plate boundaries on map
+            % Center the map on the longitude of largest quake first.
+            wmcenter(0,quakeTable.Lon(end))
+            wmline(bounds,'FeatureName','Plate Boundaries','Color','m','AutoFit',false)
+            wmzoom(1)
+            snapnow
 
 
         end
@@ -822,7 +822,7 @@ snapnow
                     eventnum=1;
                 end
                 if eventnum>numel(obj.datenum)
-                    eventnum=numel(obj.datenum`);
+                    eventnum=numel(obj.datenum);
                 end           
                 % display line for this event
                 dstr=datestr(obj.datenum(eventnum),31);
@@ -1119,89 +1119,89 @@ snapnow
     end
 
     methods(Static)
-	function retrieve(dataformat, varargin)
-%CATALOG.RETRIEVE Read seismic events from common file formats & data sources.
-% readEvents can read events from many different earthquake catalog file 
-% formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) into a 
-% GISMO Catalog object.
-%
-% Usage:
-%       catalogObject = CATALOG.RETRIEVE(dataformat, 'param1', _value1_, ...
-%                                                   'paramN', _valueN_)
-% 
-% dataformat may be:
-%
-%   * 'iris' (for IRIS DMC, using irisFetch.m), 
-%   * 'antelope' (for a CSS3.0 Antelope/Datascope database)
-%   * 'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)
-%   * 'zmap' (converts a Zmap data strcture to a Catalog object)
-%
-% The name-value parameter pairs supported are the same as those supported
-% by irisFetch.Events(). Currently these are:
-%
-%     startTime
-%     endTime
-%     eventId
-%     fetchLimit
-%     magnitudeType
-%     minimumLongitude
-%     maximumLongitude
-%     minimumLatitude
-%     maximumLatitude
-%     minimumMagnitude
-%     maximumMagnitude
-%     minimumDepth
-%     maximumDepth
-% 
-% And the two convenience parameters:
-%
-% radialcoordinates = [ centerLatitude, centerLongitude, maximumRadius ]
-%
-% boxcoordinates = [ minimumLatitude maximumLatitude minimumLongitude maximumLongitude ]
-% 
-% For examples, see Catalog_cookbook. Also available at:
-% https://geoscience-community-codes.github.io/GISMO/tutorials/html/Catalog_cookbook.html
-%
-%
-% See also CATALOG, IRISFETCH, CATALOG_COOKBOOK
+        function self = retrieve(dataformat, varargin)
+        %CATALOG.RETRIEVE Read seismic events from common file formats & data sources.
+        % readEvents can read events from many different earthquake catalog file 
+        % formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) into a 
+        % GISMO Catalog object.
+        %
+        % Usage:
+        %       catalogObject = CATALOG.RETRIEVE(dataformat, 'param1', _value1_, ...
+        %                                                   'paramN', _valueN_)
+        % 
+        % dataformat may be:
+        %
+        %   * 'iris' (for IRIS DMC, using irisFetch.m), 
+        %   * 'antelope' (for a CSS3.0 Antelope/Datascope database)
+        %   * 'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)
+        %   * 'zmap' (converts a Zmap data strcture to a Catalog object)
+        %
+        % The name-value parameter pairs supported are the same as those supported
+        % by irisFetch.Events(). Currently these are:
+        %
+        %     startTime
+        %     endTime
+        %     eventId
+        %     fetchLimit
+        %     magnitudeType
+        %     minimumLongitude
+        %     maximumLongitude
+        %     minimumLatitude
+        %     maximumLatitude
+        %     minimumMagnitude
+        %     maximumMagnitude
+        %     minimumDepth
+        %     maximumDepth
+        % 
+        % And the two convenience parameters:
+        %
+        % radialcoordinates = [ centerLatitude, centerLongitude, maximumRadius ]
+        %
+        % boxcoordinates = [ minimumLatitude maximumLatitude minimumLongitude maximumLongitude ]
+        % 
+        % For examples, see Catalog_cookbook. Also available at:
+        % https://geoscience-community-codes.github.io/GISMO/tutorials/html/Catalog_cookbook.html
+        %
+        %
+        % See also CATALOG, IRISFETCH, CATALOG_COOKBOOK
 
-% Author: Glenn Thompson (glennthompson1971@gmail.com)
+        % Author: Glenn Thompson (glennthompson1971@gmail.com)
 
-%% To do:
-% Implement name-value parameter pairs for all methods
-% Test the Antelope method still works after factoring out db_load_origins
-% Test the Seisan method more
-% Add in support for 'get_arrivals'
+        %% To do:
+        % Implement name-value parameter pairs for all methods
+        % Test the Antelope method still works after factoring out db_load_origins
+        % Test the Seisan method more
+        % Add in support for 'get_arrivals'
 
-    debug.printfunctionstack('>')
+            debug.printfunctionstack('>')
 
-    switch lower(dataformat)
-        case 'iris'
-            if exist('irisFetch.m','file')
-                    ev = irisFetch.Events(varargin{:});
-                    self = read_catalog.iris(ev);
-            else
-                warning('Cannot find irisFetch.m')
+            switch lower(dataformat)
+                case 'iris'
+                    if exist('irisFetch.m','file')
+                            ev = irisFetch.Events(varargin{:});
+                            self = read_catalog.iris(ev);
+                    else
+                        warning('Cannot find irisFetch.m')
+                    end
+                case {'css3.0','antelope', 'datascope'}
+                    self = read_catalog.antelope(varargin{:});
+                case 'seisan'
+                    self = read_catalog.seisan(varargin{:});
+                case 'aef'
+                    self = read_catalog.aef(varargin{:});
+                case 'sru'
+                    self = read_catalog.sru(varargin{:});
+                case 'vdap'
+                    self = read_catalog.vdap(varargin{:});
+                case 'zmap'
+                    self = read_catalog.zmap(varargin{:});
+                otherwise
+                    self = NaN;
+                    fprintf('format %s unknown\n\n',data_source);
             end
-        case {'css3.0','antelope', 'datascope'}
-            self = read_catalog.antelope(varargin{:});
-        case 'seisan'
-            self = read_catalog.seisan(varargin{:});
-        case 'aef'
-            self = read_catalog.aef(varargin{:});
-        case 'sru'
-            self = read_catalog.sru(varargin{:});
-        case 'vdap'
-            self = read_catalog.vdap(varargin{:});
-        case 'zmap'
-            self = read_catalog.zmap(varargin{:});
-        otherwise
-            self = NaN;
-            fprintf('format %s unknown\n\n',data_source);
-    end
-    
-    debug.printfunctionstack('<')
-end
 
-end
+            debug.printfunctionstack('<')
+        end
+
+    end
 end
