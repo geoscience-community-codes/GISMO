@@ -53,9 +53,6 @@ classdef Catalog
             
             % Parse required, optional and param-value pair arguments,
             % set default values, and add validation conditions
-            if ~exist('time','var')
-                return
-            end
             p = inputParser;
             p.addRequired('time', @isnumeric);
             p.addRequired('lon', @isnumeric);
@@ -246,7 +243,7 @@ disp('scaffold: need to come up with names and proper geopoint structure
 % no-net-rotation reference frame,
 % Geochemistry, Geophysics, Geosystems, accepted for publication,
 % September, 2011.
-[lat, lon] = importPlates('All_boundaries.txt');
+[lat, lon] = plotEarthquakes.importPlates('All_boundaries.txt');
 coast = load('coast');
 figure
 worldmap world
@@ -710,7 +707,7 @@ snapnow
             for i=1:numel(catalogObject)
             
                 if ~(binsize>0)
-                    binsize = autobinsize(catalogObject(i));
+                    binsize = binning.autobinsize(catalogObject(i));
                 end
                 if ~(stepsize>0)
                     stepsize = binsize;
@@ -720,7 +717,7 @@ snapnow
                    return;
                 end          
                 if ~(binsize>0)
-                    binsize = autobinsize(catalogObject(i).enum-catalogObject(i).snum);
+                    binsize = binning.autobinsize(catalogObject(i).enum-catalogObject(i).snum);
                 end
                 if ~(stepsize>0)
                     stepsize = binsize;
@@ -736,7 +733,7 @@ snapnow
                 % bin the data
                 [time, counts, energy, smallest_energy, ...
                     biggest_energy, median_energy, stdev, median_time_interval] = ...
-                    bin_irregular(catalogObject(i).datenum, ...
+                    binning.bin_irregular(catalogObject(i).datenum, ...
                     magnitude.mag2eng(catalogObject(i).mag), ...
                     binsize, catalogObject(i).snum, catalogObject(i).enum, stepsize);
 
@@ -1091,7 +1088,7 @@ snapnow
         %% AUTOBINSIZE        
         function binsize = autobinsize(catalogObject)
         %autobinsize Compute the best bin size based on start and end times
-            binsize = autobinsize(catalogObject.enum - catalogObject.snum);
+            binsize = binning.autobinsize(catalogObject.enum - catalogObject.snum);
         end
 %% ---------------------------------------------------        
         function region = get_region(catalogObject, nsigma)
@@ -1121,4 +1118,90 @@ snapnow
                 
     end
 
+    methods(Static)
+	function retrieve(dataformat, varargin)
+%CATALOG.RETRIEVE Read seismic events from common file formats & data sources.
+% readEvents can read events from many different earthquake catalog file 
+% formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) into a 
+% GISMO Catalog object.
+%
+% Usage:
+%       catalogObject = CATALOG.RETRIEVE(dataformat, 'param1', _value1_, ...
+%                                                   'paramN', _valueN_)
+% 
+% dataformat may be:
+%
+%   * 'iris' (for IRIS DMC, using irisFetch.m), 
+%   * 'antelope' (for a CSS3.0 Antelope/Datascope database)
+%   * 'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)
+%   * 'zmap' (converts a Zmap data strcture to a Catalog object)
+%
+% The name-value parameter pairs supported are the same as those supported
+% by irisFetch.Events(). Currently these are:
+%
+%     startTime
+%     endTime
+%     eventId
+%     fetchLimit
+%     magnitudeType
+%     minimumLongitude
+%     maximumLongitude
+%     minimumLatitude
+%     maximumLatitude
+%     minimumMagnitude
+%     maximumMagnitude
+%     minimumDepth
+%     maximumDepth
+% 
+% And the two convenience parameters:
+%
+% radialcoordinates = [ centerLatitude, centerLongitude, maximumRadius ]
+%
+% boxcoordinates = [ minimumLatitude maximumLatitude minimumLongitude maximumLongitude ]
+% 
+% For examples, see Catalog_cookbook. Also available at:
+% https://geoscience-community-codes.github.io/GISMO/tutorials/html/Catalog_cookbook.html
+%
+%
+% See also CATALOG, IRISFETCH, CATALOG_COOKBOOK
+
+% Author: Glenn Thompson (glennthompson1971@gmail.com)
+
+%% To do:
+% Implement name-value parameter pairs for all methods
+% Test the Antelope method still works after factoring out db_load_origins
+% Test the Seisan method more
+% Add in support for 'get_arrivals'
+
+    debug.printfunctionstack('>')
+
+    switch lower(dataformat)
+        case 'iris'
+            if exist('irisFetch.m','file')
+                    ev = irisFetch.Events(varargin{:});
+                    self = read_catalog.iris(ev);
+            else
+                warning('Cannot find irisFetch.m')
+            end
+        case {'css3.0','antelope', 'datascope'}
+            self = read_catalog.antelope(varargin{:});
+        case 'seisan'
+            self = read_catalog.seisan(varargin{:});
+        case 'aef'
+            self = read_catalog.aef(varargin{:});
+        case 'sru'
+            self = read_catalog.sru(varargin{:});
+        case 'vdap'
+            self = read_catalog.vdap(varargin{:});
+        case 'zmap'
+            self = read_catalog.zmap(varargin{:});
+        otherwise
+            self = NaN;
+            fprintf('format %s unknown\n\n',data_source);
+    end
+    
+    debug.printfunctionstack('<')
+end
+
+end
 end

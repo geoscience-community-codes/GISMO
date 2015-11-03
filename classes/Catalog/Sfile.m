@@ -1,4 +1,5 @@
-classdef seisan_sfile
+% Class that describes data in a Seisan S-file
+classdef Sfile
     properties
         etime = NaN
         mainclass = 'U'
@@ -30,11 +31,11 @@ classdef seisan_sfile
     end
     
     methods
-        function s = seisan_sfile(fileContents)
-		%seisan_sfile.seisan_sfile Constructor for seisan_sfile
-        % s = seisan(fileContents)
+        function s = Sfile(fileContents)
+		%Sfile Constructor for Sfile
+        % s = SFILE(fileContents)
         % Example: Read a Seisan S-file from a local file:
-        %     sfileObject = seisan_file(fullfile('/raid/data/MONTSERRAT/seisan/REA/MVOE_/2002/02', '27-2109-46L.S200202SACPZ.IU.COLA.BHZ'))
+        %     sfileObject = SFILE(fullfile('/raid/data/MONTSERRAT/seisan/REA/MVOE_/2002/02', '27-2109-46L.S200202SACPZ.IU.COLA.BHZ'))
         %
         % OUTPUT VARIABLES:
         %   s = a structure containing
@@ -248,8 +249,8 @@ classdef seisan_sfile
     end
     
     methods(Static)
-        function dnum=sfile2dnum(sfilebasename)
-        % sfile2dnum convert the name of a Seisan S-file into a
+        function dnum=filename2datenum(sfilebasename)
+        % SFILE.FILENAME2DATENUM convert the name of a Seisan S-file into a
         % MATLAB datenum
             ddstr=sfilebasename(1:2);
             hhstr=sfilebasename(4:5);
@@ -270,8 +271,8 @@ classdef seisan_sfile
         
         
         function files = list_sfiles(dbpath, snum, enum)
-            % seisan_sfile.list_sfiles Load waveform files from a Seisan database 
-            %   s = list_sfiles(dbpath, snum, enum) search a Seisan
+            % SFILE.LIST_SFILES Load waveform files from a Seisan database 
+            %   s = SFILE.LIST_SFILES(dbpath, snum, enum) search a Seisan
             %   database for Sfiles matching the time range given by snum
             %   and enum.
             %
@@ -287,7 +288,7 @@ classdef seisan_sfile
             %           dbpath = '/raid/data/seisan/REA/DSNC_';
             %           snum = datenum(2001,3,1,10,0,0);
             %           enum = datenum(2001,3,1,11,0,0);
-            %           s = list_sfiles(dbpath, snum, enum)
+            %           s = SFILE.LIST_SFILES(dbpath, snum, enum)
             %
 
             debug.printfunctionstack('>')
@@ -309,7 +310,7 @@ classdef seisan_sfile
                    seisandir = fullfile(dbpath, sprintf('%4d',yyyy), sprintf('%02d',mm) );
                    newfiles = dir(fullfile(seisandir, sprintf('*%4d%02d',yyyy,mm)));
                    for i=1:length(newfiles)
-                       dnum = seisan_sfile.sfile2dnum(newfiles(i).name);
+                       dnum = Sfile.filename2datenum(newfiles(i).name);
                        if dnum >= snum & dnum <= enum
                            fileindex = fileindex + 1;
                            newfiles(i).dir = seisandir;

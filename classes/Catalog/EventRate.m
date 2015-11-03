@@ -789,7 +789,7 @@ end
 function label = metric2label(metric, binsize)
     % label = metric2label(metric, binsize)
     label=metric;
-    blabel = binsizelabel(binsize);
+    blabel = binning.binsizelabel(binsize);
     time_unit = blabel(4:end);
     if strcmp(metric, 'counts')
         label = sprintf('# Events %s',blabel);
