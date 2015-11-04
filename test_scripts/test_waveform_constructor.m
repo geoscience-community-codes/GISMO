@@ -14,7 +14,7 @@ nslctxt = [net, '.', sta, '.', loc, '.', cha];
 hz = 20;
 unit = 'CNT';
 scnl = scnlobject(sta,cha,net,loc);
-tag = channeltag(net,sta,loc,cha);
+tag = ChannelTag(net,sta,loc,cha);
 ds = datasource;
 
 disp('************* starting test  **********');

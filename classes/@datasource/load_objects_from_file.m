@@ -5,7 +5,7 @@ function allObj = load_objects_from_file(ds,searchClass,chanTag,startt,endt)
    %   DATASOURCE is a single datasource object (of type "file")
    %   SEARCHCLASS is a string containing the name of the class you are
    %   searching for.  eg, 'double','waveform', etc.
-   %   CHANTAG is an array of channeltags which hold
+   %   CHANTAG is an array of ChannelTags which hold
    %   network/station/location/channel/network matches.
    %   STARTTIME is the starting time in matlab datenum format
    %   ENDTIME is the ending time in matlab datenum format
@@ -34,7 +34,7 @@ function allObj = load_objects_from_file(ds,searchClass,chanTag,startt,endt)
    %
    % Any object can be loaded from file, however since this was designed to
    % work with seismic data, it must have an ISMEMBER function that takes as
-   % it's parameters the object itself and a channeltag.  Also required is the
+   % it's parameters the object itself and a ChannelTag.  Also required is the
    % [Starts Ends] = GETTIMERANGE(obj) function. (see waveform/gettimerange
    % for an example implementation.
    %

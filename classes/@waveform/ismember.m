@@ -9,7 +9,7 @@ function [results, loc] = ismember(mywave,anythingelse)
    % $Revision$
    c = class(anythingelse);
    switch c
-      case {'scnlobject','channeltag'}
+      case {'scnlobject','ChannelTag'}
          [results, loc]  = ismember(get(mywave,'scnlobject'),anythingelse);
       otherwise
          error('Waveform:ismember:classMismatch',...

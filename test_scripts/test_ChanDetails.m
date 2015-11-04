@@ -16,7 +16,7 @@ classdef test_ChanDetails < matlab.unittest.TestCase
          % make sure the first one works, so we can trust use it to
          % evaluate the other ones
          testCase.assertLength(cdKey, 1);
-         testCase.assertEqual(cdKey.channelinfo,channeltag(ANMO));
+         testCase.assertEqual(cdKey.channelinfo,ChannelTag(ANMO));
          testCase.assertEqual(cdKey.samplerate, 20);
          testCase.assertEqual(cdKey.elevation, 1671);
          testCase.assertEqual(cdKey.latitude, 34.9459, 'absTol', 0.0001);
@@ -32,16 +32,16 @@ classdef test_ChanDetails < matlab.unittest.TestCase
          % test retrieve with a single N.S.L.C string
          chd = ChanDetails.retrieve([], ANMO);
          testCase.verifyEqual(chd(end),cdKey);
-         % test retrieve with channeltag
-         chaninfo = channeltag(ANMO);
+         % test retrieve with ChannelTag
+         chaninfo = ChannelTag(ANMO);
          chd = ChanDetails.retrieve([], chaninfo);
          testCase.verifyEqual(chd(end),cdKey);
          % test retrieve with multiple channeltags
-         chansinfo = channeltag({ANMO, ANTO});
+         chansinfo = ChannelTag({ANMO, ANTO});
          chd = ChanDetails.retrieve([], [chansinfo; chansinfo]);
          testCase.verifySize(chd, [2 2], 'Wrong size returned for multiple Traces');
-         % test retrieve with Trace
-         T = Trace; T.name = ANMO;T.start = datenum('2015-10-21');
+         % test retrieve with SeismicTrace
+         T = SeismicTrace; T.name = ANMO;T.start = datenum('2015-10-21');
          chd = ChanDetails.retrieve([],T);
          testCase.verifyEqual(chd,cdKey);
          % test retrieve with multiple Traces

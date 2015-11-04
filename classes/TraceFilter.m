@@ -1,5 +1,5 @@
-classdef Tracefilter
-   %Tracefilter Simple filtering for Traces
+classdef TraceFilter
+   %TraceFilter Simple filtering for Traces
    %   replaces filterobject
    
    properties
@@ -10,7 +10,7 @@ classdef Tracefilter
    end
    
    methods
-      function f = Tracefilter(filtType, cutoff_, poles_)
+      function f = TraceFilter(filtType, cutoff_, poles_)
          % TRACEFILTER constructor for a filter object
          switch nargin
             case 1
@@ -20,7 +20,7 @@ classdef Tracefilter
                   f.cutoff = get(filtType,'cutoff');
                   f.poles = get(filtType,'poles');
                else
-                  error('unknown Tracefilter usage');
+                  error('unknown TraceFilter usage');
                end
             case 3
                f.type = filtType;
@@ -31,7 +31,7 @@ classdef Tracefilter
          end
       end
       function f = set.type(f, val)
-            assert(numel(f) == 1, 'only can set type for one Tracefilter at a time');
+            assert(numel(f) == 1, 'only can set type for one TraceFilter at a time');
          if ~ischar(val) || numel(val) ~= 1
             error('filter TYPE must be ''B'', ''H'', or ''L'', not a %s',class(val));
          end
@@ -42,7 +42,7 @@ classdef Tracefilter
          end
       end
       function f = set.cutoff(f, val)
-            assert(numel(f) == 1, 'only can set cutoff for one Tracefilter at a time');
+            assert(numel(f) == 1, 'only can set cutoff for one TraceFilter at a time');
          if ~isnumeric(val)
             error('Cutoff frequency should be numeric, not %s',class(val));
          end
@@ -57,7 +57,7 @@ classdef Tracefilter
          end
       end
       function f = set.poles(f, val)
-         assert(numel(f) == 1, 'only can set poles for one Tracefilter at a time');
+         assert(numel(f) == 1, 'only can set poles for one TraceFilter at a time');
          if val >=0,
             f.poles = round(val);
          else
@@ -66,15 +66,15 @@ classdef Tracefilter
       end
       
       function trace = filtfilt(f, trace, NYQ)
-         %FILTFILT - filterobject implementation of FILTFILT, use on waveform Object
-         %   waveform = filtfilt(filterobject, waveform);
-         %   waveform = filtfilt(filterobject, data, NYQ);
+         %FILTFILT - TraceFilter implementation of FILTFILT, use on waveform Object
+         %   waveform = filtfilt(TraceFilter, waveform);
+         %   waveform = filtfilt(TraceFilter, data, NYQ);
          %
          %      'filtfilt' is a function that filters data at a specified
          %      cutoff frequency with zero time shift.
          %
          %      INPUT values are as follows:
-         %        "filterobject" is a filter object
+         %        "TraceFilter" is a filter object
          %        "waveform" is one or more waveform objects
          %        "data" is any data vector (generally of type DOUBLE).
          %        "NYQ" is the nyquist frequency
@@ -92,8 +92,8 @@ classdef Tracefilter
             [b, a] = getButter(f,WN);
             trace = filtfilt(b, a, trace);
             
-         elseif isa(trace,'Trace')
-            assert(numel(f) == 1, 'can only filter using a single Tracefilter at a time');
+         elseif isa(trace,'SeismicTrace')
+            assert(numel(f) == 1, 'can only filter using a single TraceFilter at a time');
             HASGAP = arrayfun(@(x) any(isnan(x.data)), trace);
             if any(HASGAP(:))
                warning('Filterobject:filtfilt:hasNaN',...

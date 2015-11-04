@@ -1,10 +1,10 @@
 function [mseedfiles] = listMiniseedFiles(ds, chantag, snum, enum)
-% LISTMINISEEDFILES retrieve a list of the Miniseed files referenced by a datasource, channeltag object and start/end times.
+% LISTMINISEEDFILES retrieve a list of the Miniseed files referenced by a datasource, ChannelTag object and start/end times.
 % mseedfiles = listMiniseedFiles(ds, chantag, snum)
 % 
 % Input:
 %   ds - a datasource object
-%   chantag - a channeltag object
+%   chantag - a ChannelTag object
 %   snum - start time in Matlab datenum format 
 %       e.g. snum = datenum('1999-01-12 10:00:00')
 %   enum - end time, used only for subsetting database, not for finding

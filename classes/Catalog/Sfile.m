@@ -145,7 +145,7 @@ classdef Sfile
                                     aeflinenum = aeflinenum + 1;
                                     thissta = strtrim(tline(7:10));
                                     thischan = strtrim(tline(12:15));
-                                    aef.ctag(aeflinenum) = channeltag('', thissta, '', thischan);
+                                    aef.ctag(aeflinenum) = ChannelTag('', thissta, '', thischan);
                                     try
                                         %aef.amp(aeflinenum)=str2num(tline(20:27));
                                         aef.amp(aeflinenum)=str2num(tline(18:25));

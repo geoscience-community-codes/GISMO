@@ -1,5 +1,5 @@
 function combined_waveforms = combine (waveformlist)
-   %COMBINE merges waveforms based on start/end times and channeltag info.
+   %COMBINE merges waveforms based on start/end times and ChannelTag info.
    % combined_waveforms = combine (waveformlist) takes a vector of waveforms
    % and combines them based on SCNL information and start/endtimes.
    % DOES NO OTHER CHECKS

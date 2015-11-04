@@ -159,7 +159,7 @@ function val = get(w,prop_name)
          % rerelease this.
          warning('waveform:get:scnlobjectsAreDepricated',...
             ['any usage of scnlobject should be replaced by ', ...
-            '''channelinfo'' which uses the new channeltag class']);
+            '''channelinfo'' which uses the new ChannelTag class']);
          val = scnlobject([w.cha_tag]);
          %must add network & location, too.
          

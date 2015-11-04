@@ -5,7 +5,7 @@ function sites = get_closest_sites(lon, lat, distkm, sitesdb, maxsta, snum, enum
 % from site database sitesdb
 %
 % The sites structure returned has the followed fields:
-%	channeltag - net.sta.loc.chan a channeltag object
+%	channeltag - net.sta.loc.chan a ChannelTag object
 %	longitude	- sites longitude
 %	latitude	- sites latitude
 %	elev	- sites elevation
@@ -182,7 +182,7 @@ while ((c<=numsites) && (stadist(i(c)) < distkm))
     sta = staname{i(c)};
     chan = channame{i(c)};
     net = stanetmap(sta);
-    sites(c).channeltag = channeltag(net, sta, '', chan);
+    sites(c).channeltag = ChannelTag(net, sta, '', chan);
     sites(c).string = string(sites(c).channeltag);
 	sites(c).longitude = longitude(i(c));
 	sites(c).latitude = latitude(i(c));

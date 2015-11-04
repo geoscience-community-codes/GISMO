@@ -2,11 +2,11 @@ classdef testWaveform < matlab.unittest.TestCase
    % TESTWAVEFORM validates the funcionality of Waveform
    %
    % requires xUnit
-   % see also xUnit, channeltag
+   % see also xUnit, ChannelTag
    
    properties
       Dt% = rand(1,1001) .* 1000 - 500;
-      chanTag% = channeltag('IU.ANMO.00.BHZ');
+      chanTag% = ChannelTag('IU.ANMO.00.BHZ');
       dataPath = fileparts(which('test_waveform_class'))
       wf% = waveform(testWaveform.chanTag, 20, fix(now), D, 'm / sec');
    end
@@ -15,7 +15,7 @@ classdef testWaveform < matlab.unittest.TestCase
       function SetUp(testCase)
          % not sure this is working in any way.
          testCase.Dt = rand(1,1001) .* 1000 - 500;
-         testCase.chanTag = channeltag('IU.ANMO.00.BHZ');
+         testCase.chanTag = ChannelTag('IU.ANMO.00.BHZ');
          testCase.wf = waveform(testCase.chanTag, 20, fix(now), testCase.Dt, 'm / sec');
       end
    end
@@ -56,7 +56,7 @@ classdef testWaveform < matlab.unittest.TestCase
       
       function testWinstonCall(testCase)
          ds = datasource('winston','pubavo1.wr.usgs.gov',16022);
-         chanInfo = channeltag.array('AV.ACH.--.EHE');
+         chanInfo = ChannelTag.array('AV.ACH.--.EHE');
          w = waveform(ds,chanInfo,now-1,now-0.995);
          testCase.verifyNumElements(w,1);
          testCase.verifyInstanceOf(w,'waveform');
@@ -76,7 +76,7 @@ classdef testWaveform < matlab.unittest.TestCase
          hz = 20;
          unit = 'CNT';
          scnl = scnlobject(sta,cha,net,loc);
-         tag = channeltag(net,sta,loc,cha);
+         tag = ChannelTag(net,sta,loc,cha);
          ds = datasource;
          disp('CREATE: default')
          w = waveform()
@@ -242,8 +242,8 @@ classdef testWaveform < matlab.unittest.TestCase
          % station: BYR, chan: BHZ_01, 2000/7/14 13:40 ~10 seconds
          fileName = fullfile(testCase.dataPath,'test_data','example_sacfile.sac');
          dsac = datasource('sac',fileName);
-         chanTag(1) = channeltag('...');
-         chanTag(2) = channeltag('.BYR..BHZ_01')
+         chanTag(1) = ChannelTag('...');
+         chanTag(2) = ChannelTag('.BYR..BHZ_01')
          %scnlSac(1) = scnlobject('*','*','*','*');
          %scnlSac(2) = scnlobject('BYR','BHZ_01','*','*');
          
@@ -347,7 +347,7 @@ classdef testWaveform < matlab.unittest.TestCase
             exist('gov.usgs.winston.server.WWSClient', 'class'),IsEqualTo(8), ...
             'Winston does not seem to be installed');
          ds = datasource('winston','pubavo1.wr.usgs.gov',16022);
-         ch = channeltag('AV.ACH.--.EHZ');
+         ch = ChannelTag('AV.ACH.--.EHZ');
          st = now -2;
          ed = st - datenum(0,0,0,0,1,0); % one minute later
          w = waveform(ds, ch, st, ed);
@@ -358,7 +358,7 @@ classdef testWaveform < matlab.unittest.TestCase
       end
       
       function testLoadIRIS(testCase)
-         chanInfo = channeltag('IU.ANMO.00.BHZ');
+         chanInfo = ChannelTag('IU.ANMO.00.BHZ');
          ds = datasource('irisdmcws');
          st = now - [5 1 -3]; %5 days ago, 1 day ago, 3 days in the future
          et = st + datenum(0,0,0,0,1,0);

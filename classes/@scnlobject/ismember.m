@@ -49,11 +49,11 @@ function t = toTag(scnls)
    switch class(scnls)
       case 'scnlobject'
          t = [scnls.tag];
-      case 'channeltag'
+      case 'ChannelTag'
          t = [scnls];
       otherwise
          %try to convert it?
-         t = channeltag(scnls);
+         t = ChannelTag(scnls);
    end
 end
 

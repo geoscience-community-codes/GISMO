@@ -75,9 +75,9 @@ function b = loadobj(a)
             for n=1:numel(b)
                if isstruct(a(n).scnl)
                   scnl = a(n).scnl;
-                  b(n).cha_tag = channeltag(scnl.network,scnl.station,scnl.location,scnl.channel);
+                  b(n).cha_tag = ChannelTag(scnl.network,scnl.station,scnl.location,scnl.channel);
                else
-                  b(n).cha_tag = channeltag(a(n).scnl);
+                  b(n).cha_tag = ChannelTag(a(n).scnl);
                end
                b(n).Fs = a(n).Fs;
                b(n).start = a(n).start;
@@ -99,7 +99,7 @@ function b = loadobj(a)
             
             b = repmat(waveform,size(a));
             for n=1:numel(b)
-               b(n).cha_tag = channeltag(a(n).scnl);
+               b(n).cha_tag = ChannelTag(a(n).scnl);
                b(n).Fs = a(n).Fs;
                b(n).start = a(n).start;
                b(n).data = a(n).data;

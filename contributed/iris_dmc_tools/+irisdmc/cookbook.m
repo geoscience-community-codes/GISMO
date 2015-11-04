@@ -12,7 +12,7 @@ function cookbook
 % CREATE WAVEFORMS
 % These waveforms are empty but contain network_station_channel info
 stas = {'CKN' 'CGL' 'CRP' 'CRP' 'CRP' 'CRP' 'SPU' 'CKL' 'CKT' 'BGL' 'NCG' 'JUNK'};
-chanTags = channeltag.array('AV', stas,'','EHZ'); 
+chanTags = ChannelTag.array('AV', stas,'','EHZ'); 
 for n = numel(scnl) : -1 : 1
    w(n) = set(waveform,'channelifno',chanTags(n));
    w(n) = set(w(n),'DATA',rand(1)*sin(2*pi*rand(1):.05:100));

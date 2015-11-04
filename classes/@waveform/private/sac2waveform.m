@@ -67,7 +67,7 @@ end
 %}
 
 function chanT = getChanneltag(header)
-   chanT = channeltag(deblank(header.KNETWK), ... network
+   chanT = ChannelTag(deblank(header.KNETWK), ... network
       deblank(header.KSTNM),... station
       deblank(header.KHOLE), ... location
       deblank(header.KCMPNM)); % channel

@@ -570,7 +570,7 @@ classdef TraceData
          switch lower(method)
             case 'index'
                assert(numel(starts) == numel(ends), 'number of start and end indices must match');
-               outT = repmat(Trace,numel(Tr),numel(starts));
+               outT = repmat(TraceData,numel(Tr),numel(starts));
                for n=1:numel(T);
                   for t=1:numel(starts)
                      outT(n,t) = Tr(n);

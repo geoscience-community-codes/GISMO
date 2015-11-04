@@ -1,5 +1,5 @@
 classdef test_Trace < matlab.unittest.TestCase
-   %testTrace tests the functionality of the Trace class
+   %testTrace tests the functionality of the SeismicTrace class
    %   Detailed explanation goes here
    
    properties
