@@ -10,7 +10,7 @@ classdef test_ChanDetails < matlab.unittest.TestCase
          ANMO = 'IU.ANMO.00.BHZ';
          ANTO = 'IU.ANTO.00.BHZ';
          % * test retrieve with default source *
-         cdKey = ChanDetails.retrieve([], 'station','ANMO',...
+         cdKey = ChannelDetails.retrieve([], 'station','ANMO',...
             'channel','BHZ','location','00','network','IU',...
             'starttime','2015-10-21');
          % make sure the first one works, so we can trust use it to
@@ -30,22 +30,22 @@ classdef test_ChanDetails < matlab.unittest.TestCase
          testCase.assertGreaterThan(cdKey.endtime, cdKey.starttime);
          
          % test retrieve with a single N.S.L.C string
-         chd = ChanDetails.retrieve([], ANMO);
+         chd = ChannelDetails.retrieve([], ANMO);
          testCase.verifyEqual(chd(end),cdKey);
          % test retrieve with ChannelTag
          chaninfo = ChannelTag(ANMO);
-         chd = ChanDetails.retrieve([], chaninfo);
+         chd = ChannelDetails.retrieve([], chaninfo);
          testCase.verifyEqual(chd(end),cdKey);
          % test retrieve with multiple channeltags
          chansinfo = ChannelTag({ANMO, ANTO});
-         chd = ChanDetails.retrieve([], [chansinfo; chansinfo]);
+         chd = ChannelDetails.retrieve([], [chansinfo; chansinfo]);
          testCase.verifySize(chd, [2 2], 'Wrong size returned for multiple Traces');
          % test retrieve with SeismicTrace
          T = SeismicTrace; T.name = ANMO;T.start = datenum('2015-10-21');
-         chd = ChanDetails.retrieve([],T);
+         chd = ChannelDetails.retrieve([],T);
          testCase.verifyEqual(chd,cdKey);
          % test retrieve with multiple Traces
-         chd = ChanDetails.retrieve([], [T T; T T]);
+         chd = ChannelDetails.retrieve([], [T T; T T]);
          testCase.verifySize(chd, [2, 2], 'Wrong size returned for multiple Traces');
       end
    end
