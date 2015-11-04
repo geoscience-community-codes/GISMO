@@ -109,7 +109,7 @@ classdef Catalog
             
             %obj.table = sortrows(obj.table); 
             obj.table = sortrows(obj.table, 'datenum', 'ascend'); 
-            fprintf('Got %d events',obj.numberOfEvents);
+            fprintf('Got %d events\n',obj.numberOfEvents);
 
         end
         
@@ -167,9 +167,8 @@ classdef Catalog
         end
         
         function disp(obj, showall)
-                disp(obj.Properties.VariableNames)
-                properties(obj)
-                methods(obj)
+%                 properties(obj)
+%                 methods(obj)
                 fprintf('Number of events: %d\n',obj.numberOfEvents);
                 [maxmag, maxmagindex] = nanmax(obj.mag);
                 fprintf('Biggest event: %f at %s\n',maxmag, datestr(obj.datenum(maxmagindex)));
@@ -204,7 +203,7 @@ classdef Catalog
                 return
             end
 
-            catalogObject = Catalog();
+            catalogObject = catalogObject1;
 
             catalogObject.table = union(catalogObject1.table, catalogObject2.table);
             
@@ -227,11 +226,24 @@ classdef Catalog
             cm = parula(10);
             iconColor = cm(ceil(1+9*(catalogObject.mag-minmag)/(maxmag-minmag)),:);
             % Convert quakeTable to geopint vector to add as info for each quake
-            quakePoints = geopoint(catalogObject.lat, catalogObject.lon);
-            webmap('Ocean Basemap')
-            wmmarker(quakePoints,'OverlayName','Quake Points',...
-            'FeatureName',names,'Color',iconColor,'AutoFit',false);
-            wmzoom(1)
+            p = geopoint(catalogObject.lat, catalogObject.lon);
+            %h1=webmap('Ocean Basemap')
+            h1 = webmap()
+            for count=1:length(catalogObject.lat)
+                desc{count} = sprintf('Longitude: %f<br/>Latitude: %f<br/>Depth (km): %f<br/>Magnitude: %.1f', ...
+                    catalogObject.lon(count),...
+                    catalogObject.lat(count),...
+                    catalogObject.depth(count),...
+                    catalogObject.mag(count)  );
+                  
+            end
+
+            iconDir = fullfile(matlabroot,'toolbox','matlab','icons');
+            iconFilename = fullfile(iconDir, 'greencircleicon.gif');
+            wmmarker(p,'OverlayName','Event',...
+            'Color',iconColor,'AutoFit',false,'Icon', iconFilename,'Description',desc);
+            % 'FeatureName',names,'Color',iconColor,'AutoFit',false)
+%             wmzoom(1)
             snapnow
 
             %% Load in plate boundaries
@@ -243,27 +255,17 @@ classdef Catalog
             % no-net-rotation reference frame,
             % Geochemistry, Geophysics, Geosystems, accepted for publication,
             % September, 2011.
-            [lat, lon] = plotEarthquakes.importPlates('All_boundaries.txt');
-            coast = load('coast');
-            figure
-            worldmap world
-            setm(gca,'mlabelparallel',-90,'mlabellocation',90)
-            plotm(coast.lat,coast.long,'Color','k')
-            plotm(lat,lon,'LineWidth',2)
-
-            %% Find the first plate
-            % Look for the first NaN and stop there.
-            ind = find(isnan(lat),1,'first')
-            plotm(lat(1:ind),lon(1:ind),'Color','red','Linewidth',3)
+            %[lat, lon] = plotEarthquakes.importPlates('All_boundaries.txt');
+            load plotEarthquakes/plates.mat
 
             %% Make array of geopoints from the plate boundaries
             bounds = geopoint(lat,lon);
 
             %% Draw plate boundaries on map
             % Center the map on the longitude of largest quake first.
-            wmcenter(0,quakeTable.Lon(end))
+            wmcenter(h1,nanmean(catalogObject.lat),nanmean(catalogObject.lon))
             wmline(bounds,'FeatureName','Plate Boundaries','Color','m','AutoFit',false)
-            wmzoom(1)
+            %wmzoom(1)
             snapnow
 
 
@@ -322,6 +324,20 @@ classdef Catalog
 			ylabel('Latitude');
 			grid on;
 			%set(gca, 'YLim', [region(3) region(4)]);
+            
+%             % world map
+%             load plotEarthquakes/plates.mat
+%             coast = load('coast');
+%             figure
+%             worldmap world
+%             setm(gca,'mlabelparallel',-90,'mlabellocation',90)
+%             plotm(coast.lat,coast.long,'Color','k')
+%             plotm(lat,lon,'LineWidth',2)
+% 
+%             %% Find the first plate
+%             % Look for the first NaN and stop there.
+%             ind = find(isnan(lat),1,'first')
+%             plotm(lat(1:ind),lon(1:ind),'Color','red','Linewidth',3)
 
         end
 %% ---------------------------------------------------        

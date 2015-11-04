@@ -132,7 +132,7 @@ function self = antelope(varargin)
     
     % Initialize to empty
     [lat, lon, depth, time, evid, orid, nass, mag, ml, mb, ms] = deal([]);
-    [etype, auth, magtype]] = deal({});
+    [etype, auth, magtype] = deal({});
 
     % Loop over databases
     for dbpathitem = dbpathlist
