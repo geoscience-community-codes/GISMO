@@ -33,7 +33,7 @@ function origins = db_load_origins(dbpath, subset_expression)
     numorigins = 0;
     origins = struct();
     [lat, lon, depth, time, evid, orid, nass, mag, ml, mb, ms] = deal([]);
-    [etype, auth, magtype]] = deal({});
+    [etype, auth, magtype] = deal({});
     
     
     if iscell(dbpath)
@@ -160,6 +160,7 @@ function origins = db_load_origins(dbpath, subset_expression)
     origins.auth = auth;
     origins.mag = mag;
     origins.magtype = magtype;
+    origins.etype = etype;
 
     debug.printfunctionstack('<')
 end

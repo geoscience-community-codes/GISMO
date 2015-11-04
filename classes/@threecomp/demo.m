@@ -37,7 +37,7 @@ staName = get(w(:,1),'STATION');
 
 
 % PLOT MAP OF DEMO DATA
-cookbook_map(threecomp,w,backAzimuth);
+cookbooks.threecomp_cookbook_map(threecomp,w,backAzimuth);
 
 
 clear TC
