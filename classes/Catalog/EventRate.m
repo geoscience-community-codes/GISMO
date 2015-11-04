@@ -236,7 +236,7 @@ classdef EventRate
             if strcmp(plotmode, 'figures') || length(obj)==1
             
                 for c = 1 : numel(obj)
-                    binsize_str = binsizelabel(obj(c).binsize);
+                    binsize_str = binning.binsizelabel(obj(c).binsize);
                     numsubplots = length(metric);
                     %figure(gcf+1)
                     figure

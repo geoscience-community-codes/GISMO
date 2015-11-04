@@ -4,5 +4,5 @@ if strcmp(lower(name),'antelope')
     ddir = '/opt/antelope/data/db/demo';
 else
     dirname = fileparts(which('startup_GISMO'));
-    ddir = fullfile(dirname,'test_scripts','test_data');
+    ddir = fullfile(dirname,'+test','test_data');
 end

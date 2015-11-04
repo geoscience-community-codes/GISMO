@@ -92,7 +92,7 @@ save('tohoku_events.mat', 'tohoku_events')
 % Both catalog segments are included in the "demo" directory. 
 % We will now load the official AVO catalog into an Events object:
   
-dbpath = demodb('avo');
+dbpath = cookbooks.demodb('avo');
 avocatalog = Catalog.retrieve('antelope', 'dbpath', dbpath);
  
 %%
