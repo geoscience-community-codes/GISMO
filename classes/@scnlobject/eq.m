@@ -3,7 +3,7 @@ function results = eq(A, B)
    switch class(B)
       case 'scnlobject'
          results = [A.tag] == [B.tag];
-      case 'channeltag'
+      case 'ChannelTag'
          results = [A.tag] == [B];
       otherwise
          error('scnlobject:eq:UnrecognizedComparison',...

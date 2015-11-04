@@ -9,7 +9,7 @@ function disp(w)
    if numel(w) > 1;
       disp(' ');
       fprintf('[%s] %s object with fields:\n', size2str(size(w)), class(w));
-      disp('     channeltag');
+      disp('     ChannelTag');
       disp('     start');
       disp('     freq');
       disp('     data');
@@ -41,7 +41,7 @@ function disp(w)
             get(w,'data_length')==0;
          disp('  (incomplete or empty waveform)');
       end
-      fprintf(' channeltag: %-15s   [network.station.location.channel]\n', w.cha_tag.string);
+      fprintf(' ChannelTag: %-15s   [network.station.location.channel]\n', w.cha_tag.string);
       fprintf('      start: %s\n',get(w,'start_str'));
       fprintf('             duration(%s)\n' , get(w,'duration_str'));
       fprintf('       data: %d samples\n', numel(w.data));

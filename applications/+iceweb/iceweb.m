@@ -43,7 +43,7 @@ function iceweb(ds, varargin)
     end
     
     % since the standard way is to create Antelope databases from day-long
-    % miniseed files for each channeltag, and reference these from
+    % miniseed files for each ChannelTag, and reference these from
     % day-long databases, I could add a check here using
     % listMiniSEEDfiles to see if there are any data files for each day
     % before I look for each 10 minute window for that day with
@@ -52,7 +52,7 @@ function iceweb(ds, varargin)
         % check if datasource is Antelope
         % loop over each day from snum to enum
         % call listMiniSEEDfiles
-        % see for which channeltag I get exists=2, and then only use that
+        % see for which ChannelTag I get exists=2, and then only use that
         % list of successful channeltags for that day
         % create timewindows for that day
         % call iceweb_helper for each time window

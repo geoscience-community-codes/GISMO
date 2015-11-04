@@ -30,7 +30,7 @@ function w = load_obspy(request)
       end
       
       stuff =load(filen);
-      chanInfo = channeltag(stuff.network, stuff.station, stuff.location, stuff.channel);
+      chanInfo = ChannelTag(stuff.network, stuff.station, stuff.location, stuff.channel);
       
       w = set(w,...
          'channelinfo',chanInfo,...

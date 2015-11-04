@@ -76,29 +76,29 @@ while numel(Vidx) >= 2
             switch class(val)
                case 'scnlobject'
                   [w.cha_tag] = deal(get(val,'channeltag'));
-               case 'channeltag'
+               case 'ChannelTag'
                   [w.cha_tag] = deal(val);
                case 'char'
-                  [w.cha_tag] = deal(channeltag.parse(val));
+                  [w.cha_tag] = deal(ChannelTag.parse(val));
                otherwise
                   % try it!
-                  [w.cha_tag] = deal(channeltag(val));
+                  [w.cha_tag] = deal(ChannelTag(val));
                   % error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT or CHANNELTAG');
             end
             % whine while we refractor
-            warning('Use set(channeltag) instead') % TODO: Decide if better generic name exists
+            warning('Use set(ChannelTag) instead') % TODO: Decide if better generic name exists
             
          case {'CHANNELINFO', 'CHANNELTAG'}
             switch class(val)
                case 'scnlobject'
-                  [w.cha_tag] = deal(channeltag(char(val)));
-               case 'channeltag'
+                  [w.cha_tag] = deal(ChannelTag(char(val)));
+               case 'ChannelTag'
                   [w.cha_tag] = deal(val);
                case 'char'
-                  [w.cha_tag] = deal(channeltag(val));
+                  [w.cha_tag] = deal(ChannelTag(val));
                otherwise
                   % try it!
-                  [w.cha_tag] = deal(channeltag(val));
+                  [w.cha_tag] = deal(ChannelTag(val));
                   % error('Waveform:set:propertyTypeMismatch','Expected a SCNLOBJECT or CHANNELTAG');
             end
          case {'STATION','NETWORK', 'CHANNEL','LOCATION'}

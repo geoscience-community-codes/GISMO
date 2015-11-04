@@ -1,5 +1,5 @@
-classdef Tracespectra
-   %Tracespectra makes examining Trace spectra easy
+classdef TraceSpectra
+   %TraceSpectra makes examining Trace spectra easy
    %   replaces spectralobject
    
    properties
@@ -13,14 +13,14 @@ classdef Tracespectra
       map
    end
    properties(Hidden)
-      SPECTRAL_MAP = Tracespectra.loadmap;
+      SPECTRAL_MAP = TraceSpectra.loadmap;
    end
    
    methods
-      function s = Tracespectra(varargin)
-         % s = Tracespectra(spectralobject)
-         %      s = Tracespectra(nfft, overlap, freqmax, dBlims)
-         %            manually puts together a spectralobject object
+      function s = TraceSpectra(varargin)
+         % s = TraceSpectra(spectralobject)
+         % s = TraceSpectra(nfft, overlap, freqmax, dBlims)
+         %      manually puts together a TraceSpectra
          %
          %      SPECTRALOBJECT - an existing spectral object
          %      NFFT - Fourier transform window               (default [1024])
@@ -37,7 +37,7 @@ classdef Tracespectra
                   s.freqmax = get(varargin{1},'freqmax');
                   s.dBlims = get(varargin{1},'dBlims');
                else
-                  error('Do not know how to create the Tracespectra from a %s', class(varargin{1}));
+                  error('Do not know how to create the TraceSpectra from a %s', class(varargin{1}));
                end
             case 4
                s.nfft = varargin{1};
@@ -68,19 +68,19 @@ classdef Tracespectra
       end
       %% plotting and spectra-taking functions
       function h = specgram(s, ws, varargin)
-         %SPECGRAM - plots spectrogram of waveforms
-         %  h = specgram(spectralobject, waveforms) Generates a spectrogram from the
+         %specgram - plots spectrogram of waveforms
+         %  h = TraceSpectra.specgram(waveforms) Generates a spectrogram from the
          %  waveform(s), overwriting the current figure.  The return value is a
          %  handle to the spectrogram, and is optional. The spectrograms will be
          %  created in the same shape as the passed waveforms.  ie, if W is a 2x3
-         %  matrix of waveforms, then specgram(spectralobject,W) will generate a 2x3
+         %  matrix of waveforms, then specgram(TraceSpectra,W) will generate a 2x3
          %  plot of spectra.
          %
          %  Many additional behaviors can be modified through the passing of
          %  additional parameters, as listed further below.  These parameters are
          %  always passed in pairs, as such:
          %
-         %  specgram(spectralobject, waveforms,'PARAM1',VALUE1,...,'PARAMn',VALUEn)
+         %  TraceSpectra.specgram(waveforms,'PARAM1',VALUE1,...,'PARAMn',VALUEn)
          %    Any number of these parameters may be passed to specgram.
          %
          %  specgram(..., 'axis', AXIS_HANDLE)
@@ -133,14 +133,14 @@ classdef Tracespectra
          %
          %  The following plots a waveform using an alternate mapping, an xunit of
          %  'hours', and with the y-axis plotted using a log scale.
-         %  ex. specgram(spectralobject, waveform,...
+         %  ex. specgram(TraceSpectra, waveform,...
          %      'colormap', alternateMap,'xunit','h','yscale','log')
          %
          %
          %  Example:
          %    % create an arbitrary subplot, and then plot multiple spectra
          %    a = subplot(3,2,1);
-         %    specgram(spectralobject,waves,'axis',a); % waves is an NxM waveform
+         %    specgram(TraceSpectra,waves,'axis',a); % waves is an NxM waveform
          %
          %
          %  See also SPECTRALOBJECT/SPECGRAM2, WAVEFORM/PLOT, WAVEFORM/FILLGAPS
@@ -162,50 +162,50 @@ classdef Tracespectra
                'most likely you tried to call specgram with an alternate ',...
                'color map without specifying the property ''colormap''']);
          else
-            proplist=  Tracespectra.parseargs(varargin);
+            proplist=  TraceSpectra.parseargs(varargin);
          end
          
          %% search for relevent property pairs passed as parameters
          
          % AXIS: a handle to the axis, defining the area to be used
-         [~,myaxis,proplist] = Tracespectra.getproperty('axis',proplist,0);
+         [~,myaxis,proplist] = TraceSpectra.getproperty('axis',proplist,0);
          
          % POSITION: 1x4 vector, specifying area in which to plot
          %          [left, bottom, width, height]
-         %[~,~,proplist] = Tracespectra.getproperty('position',proplist,[]);
+         %[~,~,proplist] = TraceSpectra.getproperty('position',proplist,[]);
          
          % XUNIT: Specify the time units for the plot. eg, hours, minutes, doy, etc.
          [~, xChoice, proplist] =...
-            Tracespectra.getproperty('xunit',proplist,s.scaling); %'s' is default value for xChoice
+            TraceSpectra.getproperty('xunit',proplist,s.scaling); %'s' is default value for xChoice
          
          % FONTSIZE: specify the font size to be used for all labels within the plot
          [~, currFontSize, proplist] =...
-            Tracespectra.getproperty('fontsize',proplist,currFontSize);%default font size or override?
+            TraceSpectra.getproperty('fontsize',proplist,currFontSize);%default font size or override?
          
          %%take care of additional parsing that affects all waveforms
          
          [~, alternateMap, proplist] = ...
-            Tracespectra.getproperty('colormap',proplist, s.SPECTRAL_MAP); %default map
+            TraceSpectra.getproperty('colormap',proplist, s.SPECTRAL_MAP); %default map
          
          % YSCALE: either 'normal', or 'log'
          [~, yscale, proplist] = ...
-            Tracespectra.getproperty('yscale',proplist,'normal'); %default yscale to 'normal'
+            TraceSpectra.getproperty('yscale',proplist,'normal'); %default yscale to 'normal'
          
          logscale = strcmpi(yscale,'log');
          
          % COLORBAR: Dictate the position of the colorbart relative to the plot
-         [~,colorbarpref,proplist] = Tracespectra.getproperty('colorbar',proplist,'horiz');
+         [~,colorbarpref,proplist] = TraceSpectra.getproperty('colorbar',proplist,'horiz');
                   
          % SUPRESSINNERLABELS: true, false
          [~, suppressLabels, proplist] = ...
-            Tracespectra.getproperty('innerlabels',proplist,false); %only show outside
+            TraceSpectra.getproperty('innerlabels',proplist,false); %only show outside
          
          % SUPRESSXLABELS: true, false
          [~, useXlabel, proplist] = ...
-            Tracespectra.getproperty('useXlabel',proplist,true); %show no x, y labels
+            TraceSpectra.getproperty('useXlabel',proplist,true); %show no x, y labels
          % SUPRESSXLABELS: true, false
          [~, useYlabel, proplist] = ...
-            Tracespectra.getproperty('useYlabel',proplist,true); %show no x, y labels
+            TraceSpectra.getproperty('useYlabel',proplist,true); %show no x, y labels
          
          
          %% figure out exactly WHERE to plot the spectrogram(s)
@@ -225,9 +225,9 @@ classdef Tracespectra
                   
          if numel(ws) > 1
             %create the colorbar if desired
-            Tracespectra.createcolorbar(s, colorbarpref, clabel, currFontSize)
-            h = Tracespectra.subdivide_axes(myaxis,size(ws));
-            remainingproperties = Tracespectra.property2varargin(proplist);
+            TraceSpectra.createcolorbar(s, colorbarpref, clabel, currFontSize)
+            h = TraceSpectra.subdivide_axes(myaxis,size(ws));
+            remainingproperties = TraceSpectra.property2varargin(proplist);
             for n=1:numel(h)
                keepYlabel =  ~suppressLabels || (n <= size(h,1));
                keepXlabel = ~suppressLabels || (mod(n,size(h,2))==0);
@@ -254,7 +254,7 @@ classdef Tracespectra
                ' to replace the NaN values.']);
          end
          
-         [xunit, xfactor] = Tracespectra.parse_xunit(xChoice);
+         [xunit, xfactor] = TraceSpectra.parse_xunit(xChoice);
          
          switch lower(xunit)
             case 'date'
@@ -379,7 +379,7 @@ classdef Tracespectra
          end
 
          %create the colorbar if desired
-         Tracespectra.createcolorbar(s,colorbarpref, clabel, currFontSize);
+         TraceSpectra.createcolorbar(s,colorbarpref, clabel, currFontSize);
          
          %% added a series of functions that help with argument parsing.
          % These were ported from my waveform/plot function.
@@ -479,43 +479,43 @@ classdef Tracespectra
                'axis without specifying the property ''axis''',...
                ' See help spectralobject/specgram for new usage instructions.']);
          else
-            proplist=  Tracespectra.parseargs(varargin);
+            proplist=  TraceSpectra.parseargs(varargin);
          end
          
          %% search for relevent property pairs passed as parameters
          
          % AXIS: a handle to the axis, defining the area to be used
-         [~,myaxis,proplist] = Tracespectra.getproperty('axis',proplist,0);
+         [~,myaxis,proplist] = TraceSpectra.getproperty('axis',proplist,0);
          
          % POSITION: 1x4 vector, specifying area in which to plot
          %          [left, bottom, width, height]
-         [~,mypos,proplist] = Tracespectra.getproperty('position',proplist,[]);
+         [~,mypos,proplist] = TraceSpectra.getproperty('position',proplist,[]);
          
          % COLORBAR: Dictate the position of the colorbart relative to the plot
-         [~,colorbarpref,proplist] = Tracespectra.getproperty('colorbar',proplist,'horiz');
+         [~,colorbarpref,proplist] = TraceSpectra.getproperty('colorbar',proplist,'horiz');
          
          % XUNIT: Specify the time units for the plot.  eg, hours, minutes, doy, etc.
          [~, xChoice, proplist] =...
-            Tracespectra.getproperty('xunit',proplist,s.scaling);
+            TraceSpectra.getproperty('xunit',proplist,s.scaling);
          
          % FONTSIZE: specify the font size to be used for all labels within the plot
          [~, currFontSize, proplist] =...
-            Tracespectra.getproperty('fontsize',proplist,8); %default font size or override?
+            TraceSpectra.getproperty('fontsize',proplist,8); %default font size or override?
          
          % YSCALE: either 'normal', or 'log'
          [~, yscale, proplist] = ...
-            Tracespectra.getproperty('yscale',proplist,'normal'); %default yscale to 'normal'
+            TraceSpectra.getproperty('yscale',proplist,'normal'); %default yscale to 'normal'
          
          % SUPRESSINNERLABELS: true, false
          [~, suppressLabels, proplist] = ...
-            Tracespectra.getproperty('innerlabels',proplist,false); %only show outside
+            TraceSpectra.getproperty('innerlabels',proplist,false); %only show outside
          
          % SUPRESSXLABELS: true, false
          [~, useXlabel, proplist] = ...
-            Tracespectra.getproperty('useXlabel',proplist,true); %show no x, y labels
+            TraceSpectra.getproperty('useXlabel',proplist,true); %show no x, y labels
          % SUPRESSXLABELS: true, false
          [~, useYlabel, proplist] = ...
-            Tracespectra.getproperty('useYlabel',proplist,true); %show no x, y labels
+            TraceSpectra.getproperty('useYlabel',proplist,true); %show no x, y labels
          
          %% figure out exactly WHERE to plot the spectrogram(s)
          %find out area(axis) in which the spectrograms will be plotted
@@ -541,9 +541,9 @@ classdef Tracespectra
                myaxis = gca;
             end
             %create the colorbar if desired
-            Tracespectra.createcolorbar(s,colorbarpref, clabel, currFontSize);
-            h = Tracespectra.subdivide_axes(myaxis,size(ws));
-            remainingproperties = Tracespectra.property2varargin(proplist);
+            TraceSpectra.createcolorbar(s,colorbarpref, clabel, currFontSize);
+            h = TraceSpectra.subdivide_axes(myaxis,size(ws));
+            remainingproperties = TraceSpectra.property2varargin(proplist);
             for n=1:numel(h)
                keepYlabel =  ~suppressLabels || (n <= size(h,1));
                keepXlabel = ~suppressLabels || (mod(n,size(h,2))==0);
@@ -597,7 +597,7 @@ classdef Tracespectra
          title(''); %clear the title
          
          %create the colorbar if desired
-         Tracespectra.createcolorbar(s,colorbarpref, clabel, currFontSize);
+         TraceSpectra.createcolorbar(s,colorbarpref, clabel, currFontSize);
       end
       function [varargout] = fft(s, w)
          %FFT Discrete Fourier transform.  OVERLOADED for waveform & Spectralobject
@@ -639,20 +639,20 @@ classdef Tracespectra
          %   IFFT(spectralobject, X) is the N-point inverse discrete Fourier
          %   transform of X, using the spectralobject's NFFT value for N.
          %
-         %   See also SPECTRALOBJECT/FFT, FFT, FFT2, FFTN, FFTSHIFT, FFTW, IFFT2, IFFTN.
+         %   See also TraceSpectra/FFT, FFT, FFT2, FFTN, FFTSHIFT, FFTW, IFFT2, IFFTN.
          
          if nargin < 2
-            error('Spectralobject:ifft:insufficientArguments',...
+            error('TraceSpectra:ifft:insufficientArguments',...
                'Not enough input arguments. [out]=ifft(spectralobject, waveform)');
          end
          
          if numel(w) > 1
-            error('Spectralobject:ifft:nonScalarWaveform', 'waveform must be scalar (1x1)');
+            error('TraceSpectra:ifft:nonScalarWaveform', 'waveform must be scalar (1x1)');
          end
          
          if ~isa(w,'TraceData')
-            error('Spectralobject:ifft:invalidArgument',...
-               'argument expected to be Trace, but was [%s]', class(w));
+            error('TraceSpectra:ifft:invalidArgument',...
+               'argument expected to be TraceData, but was [%s]', class(w));
          end
          
          if nargout == 0
@@ -663,11 +663,11 @@ classdef Tracespectra
       end
       function [varargout] = pwelch(s,w, varargin)
          %PWELCH   overloaded pwelch for spectralobjects
-         %   pwelch(spectralobject, waveform) - plots the spectral density
-         %       Pxx = pwelch(spectralobject, waveform) - returns the Power Spectral
+         %   pwelch(TraceSpectra, waveform) - plots the spectral density
+         %       Pxx = pwelch(TraceSpectra, waveform) - returns the Power Spectral
          %           Density (PSD) estimate, Pxx, of a discrete-time signal
          %           vector X using Welch's averaged,  modified periodogram method.
-         %       [Pxx, Freqs] = pwelch(spectralobject, waveform) - returns spectral
+         %       [Pxx, Freqs] = pwelch(TraceSpectra, waveform) - returns spectral
          %       density and associated frequency bins.
          %
          %       Options, pwelch(s,w, 'DEFAULT') - plots the spectral density using
@@ -681,7 +681,7 @@ classdef Tracespectra
          
          if nargin < 2
             error('Spectralobject:pwelch:insufficientArguments',...
-               'usage: [out] = pwelch(spectralobject, waveform, [''default'']');
+               'usage: [out] = pwelch(TraceSpectra, waveform, [''default'']');
          end
          
          if ~isscalar(w)
@@ -752,7 +752,7 @@ classdef Tracespectra
          if nargin<1,
             echo ' Error:  vector of plot-axis limits required'
             echo '         else,  use: '
-            echo '    colorbar_axis(spectralobject,loc,clabel,rlab1,rlab2)'
+            echo '    colorbar_axis(TraceSpectra,loc,clabel,rlab1,rlab2)'
             return
          end
          

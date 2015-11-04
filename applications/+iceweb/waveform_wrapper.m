@@ -5,14 +5,14 @@ function w=waveform_wrapper(chantag, snum, enum, ds);
 % options.
 %
 % This function is useful if you have multiple source datasources
-% that might contain the data you care about. For each channeltag
+% that might contain the data you care about. For each ChannelTag
 % requested, every datasource will be tried, and the one that returns 
 % the most data will be used.  
 %
 % 	W = waveform_wrapper(SCNL, SNUM, ENUM, DATASOURCES)
 %
 %	Inputs:
-%		chantag - a vector of type channeltag 
+%		chantag - a vector of type ChannelTag 
 %		snum - start date/time in datenum format
 %		enum - end date/time in datenum format
 %		datasources - a vector of datasources to try
@@ -21,9 +21,9 @@ function w=waveform_wrapper(chantag, snum, enum, ds);
 % 	if ds is a vector of different datasources, it will try all of them.
 %
 % 	It will also try to create waveform objects with a single call of waveform,
-% 	but if this fails, it will call waveform for each channeltag in turn.
+% 	but if this fails, it will call waveform for each ChannelTag in turn.
 %
-%	See also: channeltag, waveform, datasource, datenum
+%	See also: ChannelTag, waveform, datasource, datenum
 
 
 % AUTHOR: Glenn Thompson, UAF-GI
@@ -215,7 +215,7 @@ function print_waveform_call(snum, enum, chantag, ds)
 
     disp('Waveform call:')
     for c=1:numel(chantag)
-        fprintf('\tchantag(%d) = channeltag(''%s'')\n', c, string(chantag(c)));
+        fprintf('\tchantag(%d) = ChannelTag(''%s'')\n', c, string(chantag(c)));
     end
     if (strcmp(get(ds, 'type'), 'winston'))
         fprintf('\tds = datasource(''winston'', ''%s'', %d);\n', get(ds, 'server'), get(ds, 'port'));

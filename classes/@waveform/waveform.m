@@ -1,18 +1,18 @@
 function w = waveform(varargin)
    %WAVEFORM Waveform Class constructor
-   %   w = WAVEFORM(datasource, channeltags, starttimes, endtimes)
+   %   w = WAVEFORM(datasource, ChannelTags, starttimes, endtimes)
    %          loads waveform from the specified DATASOURCE
    %          SCNL stands for STATION-CHANNEL-NETWORK-LOCATION.
    %          multiple start-endtime pairs may be used, while station-channel
-   %          pairs can be provided as an array of channeltags
+   %          pairs can be provided as an array of ChannelTags
    %
    %  w = WAVEFORM() creates a blank waveform
    %
-   %  w = WAVEFORM(channeltag, samplerate, starttime, data, units) creates
+   %  w = WAVEFORM(ChannelTag, samplerate, starttime, data, units) creates
    %      a waveform from consituent parts.
    %
-   %      CHANNELTAG - either 'net.sta.loc.cha' or a channeltag 
-   %             (channeltag replaces the old scnlobject)
+   %      CHANNELTAG - either 'net.sta.loc.cha' or a ChannelTag 
+   %             (ChannelTag replaces the old scnlobject)
    %      SAMPLERATE - Sampling frequency, in Hz       (default nan)
    %      DATA - a vector of seismic amplitudes        (default [])
    %      STARTTIME - Start time, in most any format   (default '1/1/1970')
@@ -46,17 +46,17 @@ function w = waveform(varargin)
    %    % Data returned is for the EHZ channel at each of the three 
    %    % selected stations.
    %
-   %      tags = channeltag({'AV.OKCF..EHZ','AV.PV6..EHZ','AV.SSLS..EHZ'});
+   %      tags = ChannelTag({'AV.OKCF..EHZ','AV.PV6..EHZ','AV.SSLS..EHZ'});
    %      mySource = datasource('winston','servername.here.edu',1255);
    %      w = waveform(mySource, tags, now - 1, now - .98);
    %
-   % see also channeltag, datasource
+   % see also ChannelTag, datasource
    
    % VERSION: 2.0 of waveform objects
    % AUTHOR: Celso Reyes
    
    % considerations when changing the internals:
-   %  when replacing scnl with channeltag, affects loadobj!
+   %  when replacing scnl with ChannelTag, affects loadobj!
    
    global WaveformNamespaceIsLoaded
    if isempty(WaveformNamespaceIsLoaded)
@@ -88,7 +88,7 @@ function w = waveform(varargin)
       case 4
          [arg1, arg2, arg3, arg4] = deal(varargin{:});
          switch class(arg1)
-            case 'datasource' %datsource, channeltag/scnl/text, starttimes, endtimes
+            case 'datasource' %datsource, ChannelTag/scnl/text, starttimes, endtimes
                w = waveformFromDatasource(arg1, as_channeltag(arg2), arg3, arg4);
             otherwise % assumed to be Channeltag or something that can be converted into it
                w = waveformFromParts(as_channeltag(arg1), arg2, arg3, arg4, 'Counts');
@@ -96,7 +96,7 @@ function w = waveform(varargin)
       case 5
          [arg1, arg2, arg3, arg4, arg5] = deal(varargin{:});
          switch class(arg1)
-            case 'datasource' %INPUT(datasource, channeltag, starttimes, endtimes)
+            case 'datasource' %INPUT(datasource, ChannelTag, starttimes, endtimes)
                error(updateWarningID,'Should never get to this section of code');
             otherwise
                if ischar(arg1) && ischar(arg2) %given station, channel
@@ -120,8 +120,8 @@ function w = waveform(varargin)
          error('Waveform:waveform:InvalidWaveformArugments',...
             ['Valid ways of calling waveform include: \n',...
             '   w = WAVEFORM()\n',...
-            '   w = WAVEFORM(datasource, channeltag, starttimes, endtimes)\n',...
-            '   w = WAVEFORM(channeltag, samplefreq, starttime, data, units)\n']);
+            '   w = WAVEFORM(datasource, ChannelTag, starttimes, endtimes)\n',...
+            '   w = WAVEFORM(ChannelTag, samplefreq, starttime, data, units)\n']);
    end
    
    function w = genericWaveform()
@@ -133,7 +133,7 @@ function w = waveform(varargin)
       else
          %create a fresh waveform.  All calls to the waveform object, aside
          %from the "copy" call (case nargin==1) will be initated HERE.
-         blankW.cha_tag = channeltag();
+         blankW.cha_tag = ChannelTag();
          blankW.Fs = nan;
          blankW.start = 719529; % datenum for 1970-01-01
          blankW.data = double([]);

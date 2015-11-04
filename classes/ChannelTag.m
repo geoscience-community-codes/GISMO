@@ -1,29 +1,29 @@
-classdef channeltag
-   %channeltag Summary of this class goes here
-   % channeltag is the class that holds the network, station, location, and channel for a seismic trace
+classdef ChannelTag
+   %ChannelTag Summary of this class goes here
+   % ChannelTag is the class that holds the network, station, location, and channel for a seismic trace
    %
    % This rewrite is designed to be better SEED compatible
    %
-   %  chaTag = channeltag('NW.STA.LO.CHA'); % create from text
-   %  chaTag = channeltag(network, station, location, channel);
-   %  chaTag = channeltag(); %default, blank nscl
+   %  chaTag = ChannelTag('NW.STA.LO.CHA'); % create from text
+   %  chaTag = ChannelTag(network, station, location, channel);
+   %  chaTag = ChannelTag(); %default, blank nscl
    %
-   %  To initialize multiple channeltags at once, use channeltag.array:
+   %  To initialize multiple ChannelTags at once, use ChannelTag.array:
    %
    %  Example using cells of stationID strings
-   %    x = channeltag.array({'NW.STA.LO.CHA','NW.STA.LO.CHA'[,...]});
+   %    x = ChannelTag.array({'NW.STA.LO.CHA','NW.STA.LO.CHA'[,...]});
    %
    %  Example using individual parts
-   %    cha_tags = channeltag.array({'IU','ANMO','00',{'BHZ','BH1','BH2'});
+   %    cha_tags = ChannelTag.array({'IU','ANMO','00',{'BHZ','BH1','BH2'});
    %
    %  note, an array of cha_tags may be created by including cell arrays of
    %  choices. However, all cells that contain multiple strings must be the
    %  same size and shape.
    %
-   %  OK: x = channeltag.array('IU',{'ANMO','ANTO},'00',{'BHE','BH1'}
+   %  OK: x = ChannelTag.array('IU',{'ANMO','ANTO},'00',{'BHE','BH1'}
    %        results in IU.ANMO.00.BHE & IU.ANTO.00.BH1
    %
-   %  NOTOK: x = channeltag.array('IU',{'ANMO','ANTO},'00',{'BHE';'BH1'}
+   %  NOTOK: x = ChannelTag.array('IU',{'ANMO','ANTO},'00',{'BHE';'BH1'}
    %        error because stations (1x2) not same size as channels (2x1)
    %
    %
@@ -31,26 +31,26 @@ classdef channeltag
    
    %{
    %  ----------- WILDCARDS --------------------- 
-   %  channeltag is merely a storage unit for net-sta-chan-loc information. It
+   %  ChannelTag is merely a storage unit for net-sta-chan-loc information. It
    %  is blind to wildcards. However, when used as an argument in WAVEFORM,
-   %  wildcards in the channeltag take on meaning that depends somewhat on the
+   %  wildcards in the ChannelTag take on meaning that depends somewhat on the
    %  DATASOURCE type. In most cases, * wildcards are understood without
    %  issue. Note that '*' differs from ''. The latter excludes this term from
    %  the search altogether. Station and channel cannot be excluded from the
    %  search.
    %
-   %  channeltag('R*','BHZ','XE','') match all stations begining with R
-   %  channeltag('MCK','*','XE','')  match all channels for MCK
-   %  channeltag('R*','*','XE','')   all R* stations. All channels
+   %  ChannelTag('R*','BHZ','XE','') match all stations begining with R
+   %  ChannelTag('MCK','*','XE','')  match all channels for MCK
+   %  ChannelTag('R*','*','XE','')   all R* stations. All channels
    %
    %  The uses above have been tested against Antelope data sources. Note that
    %  in Antelope it would be more common to use the literal wildcards 'R.*'
-   %  or '.*'. When waveform interprets channeltags, it considers these use
+   %  or '.*'. When waveform interprets ChannelTags, it considers these use
    %  the same.
    %
    % EXAMPLE:
    %   s={'ANMO','ANTO'} , n='IU' , L='00' , c={'BHZ,BHE'}
-   %   chaTag=channeltag(s,c,n,L); %  returns a 1x2 channeltag:
+   %   chaTag=ChannelTag(s,c,n,L); %  returns a 1x2 ChannelTag:
    %    chaTag(1) contains ANMO, IU, 00, BHZ
    %    chaTag(2) contains ANTO, IU, 00, BHE
    %}
@@ -80,15 +80,15 @@ classdef channeltag
    end
    
    methods
-      function obj = channeltag(varargin)
-         % construct a channeltag from a string or 4 strings.
-         % chaTag = channeltag('IU', 'ANMO', '00', 'BHZ'); % net, sta, loc, cha
-         % chaTag = channeltag('IU.ANMO.00.BHZ');
+      function obj = ChannelTag(varargin)
+         % construct a ChannelTag from a string or 4 strings.
+         % chaTag = ChannelTag('IU', 'ANMO', '00', 'BHZ'); % net, sta, loc, cha
+         % chaTag = ChannelTag('IU.ANMO.00.BHZ');
          %
          % any of these may be empty ([] or '').
-         % to create multiple channeltags at once, use channeltag.array()
+         % to create multiple ChannelTags at once, use ChannelTag.array()
          %
-         % See also: channeltag.array
+         % See also: ChannelTag.array
          
          % By removing the ability to create many at once, we ensure it won't
          % be done accidentally.
@@ -98,44 +98,44 @@ classdef channeltag
                % inputsThatAreCells = cellfun(@iscell,{N,S,L,C});
                % if any(cellfun(@iscell,{N,S,L,C}))
                if any(cellfun(@iscell,varargin))
-                  error('channeltag:InvalidConversion',...
+                  error('ChannelTag:InvalidConversion',...
                      ['expected strings but received cells.\n', ...
-                     'To create multiple channeltags, use channeltag.array()']);
+                     'To create multiple ChannelTags, use ChannelTag.array()']);
                end
                varargin = strtrim(varargin);
                [obj.network, obj.station, obj.location, obj.channel] = deal(varargin{:});
             case 1
                inObj = varargin{1};
                switch class(inObj)
-                  case 'channeltag'
+                  case 'ChannelTag'
                      obj = inObj;
                   case {'char','struct'}
                      if size(inObj,1) == 1
                      [obj.network, obj.station, obj.location, obj.channel] = ...
-                        channeltag.parse(inObj);
+                        ChannelTag.parse(inObj);
                      else
-                        obj = channeltag.array(varargin{1});
-                        %error('channeltag:InvalidConversion',...
-                        %   'To create multiple channeltags, use channeltag.array()');
+                        obj = ChannelTag.array(varargin{1});
+                        %error('ChannelTag:InvalidConversion',...
+                        %   'To create multiple ChannelTags, use ChannelTag.array()');
                      end
                         
                   case 'cell'
                      if numel(inObj) == 1
                         [obj.network, obj.station, obj.location, obj.channel] = ...
-                           channeltag.parse(inObj{1});
+                           ChannelTag.parse(inObj{1});
                      else
-                        obj = channeltag.array(varargin{1});
-                        %error('channeltag:InvalidConversion',...
-                        %   'To create multiple channeltags, use channeltag.array()');
+                        obj = ChannelTag.array(varargin{1});
+                        %error('ChannelTag:InvalidConversion',...
+                        %   'To create multiple ChannelTags, use ChannelTag.array()');
                      end
                   otherwise
-                     error ('channeltag:InvalidConversion','Invalid number of arguments');
+                     error ('ChannelTag:InvalidConversion','Invalid number of arguments');
                end
                
             case 0
                return
             otherwise
-               error ('channeltag:InvalidConversion','Invalid number of arguments');
+               error ('ChannelTag:InvalidConversion','Invalid number of arguments');
          end
       end
       
@@ -156,9 +156,9 @@ classdef channeltag
          % will match BOTH
          %   'IU.ANMO.00.BHZ' and 'IU.ANMO.01.BHZ'
          if nargin == 2
-            if (ischar(N) && any(N == '.')) || isa(N,'channeltag')
+            if (ischar(N) && any(N == '.')) || isa(N,'ChannelTag')
                % query used single string : 'net.sta.loc.cha'
-               [N, S, L, C] = channeltag.parse(N);
+               [N, S, L, C] = ChannelTag.parse(N);
             else
                error('CHANNELTAG:matching:UnknownMatchType','don''t know how to match it');
             end
@@ -188,7 +188,7 @@ classdef channeltag
       end
       
       function result = eq(A, B)
-         % expect that both parts are channeltags
+         % expect that both parts are ChannelTags
          % INCLUDE WILDCARDS!
          % Wildcards must be in a scalar.
          if numel(A) == 1 && any(A.string == '*')
@@ -228,7 +228,7 @@ classdef channeltag
       
       function val = get(obj, prop)
          %GET for the chaTag object
-         %  result = get(channeltag, property), where PROPERTY is one of the
+         %  result = get(ChannelTag, property), where PROPERTY is one of the
          %  following:
          %    STATION, CHANNEL, LOCATION, NETWORK, chaTag_STRING
          %
@@ -262,7 +262,7 @@ classdef channeltag
       end%get
       
       function obj = set(obj, varargin)
-         %SET - Set properties for channeltag
+         %SET - Set properties for ChannelTag
          %       s = Set(s,prop_name, val, ...)
          %       Valid property names:
          %       STATION, LOCATION, NETWORK, CHANNEL
@@ -275,17 +275,17 @@ classdef channeltag
                case {'STATION','LOCATION','NETWORK','CHANNEL'}
                   if iscell(val) && numel(val) > 1
                      val = val{1};
-                     warning('channeltag:set:TooManyValues',...
+                     warning('ChannelTag:set:TooManyValues',...
                         'Too many property values, only the first will be used');
                   end
                   [obj.(lower(prop))] = deal(val);
                otherwise
-                  error('channeltag:set:UnrecognizedProperty',...
+                  error('ChannelTag:set:UnrecognizedProperty',...
                      'Unrecognized property name : %s',  upper(prop));
             end; %switch
          end; %each property
          if ~isempty(varargin)
-            error('channeltag:set:PropertyValueMismatch',...
+            error('ChannelTag:set:PropertyValueMismatch',...
                'Each property should have a value. [%s] has no matching value', varargin{1});
          end
       end
@@ -344,7 +344,7 @@ classdef channeltag
       end
       
       function res = validate(obj)
-         % make sure channeltag roughly conforms to SEED
+         % make sure ChannelTag roughly conforms to SEED
          nslc_is_char = [ischar(obj.network), ischar(obj.channel),...
              ischar(obj.station), ischar(obj.location)];
          nslc_valid_length = [numel(obj.network) == 2,...
@@ -359,8 +359,8 @@ classdef channeltag
    methods(Static)
       function  [N, S, L, C] = parse(val)
          % parse parses a period-delimeted string
-         % [N, S, L, C] = channeltag.parse('net.sta.loc.cha')
-         if isstruct(val) || isa(val,'channeltag')
+         % [N, S, L, C] = ChannelTag.parse('net.sta.loc.cha')
+         if isstruct(val) || isa(val,'ChannelTag')
             N = val.network;
             S = val.station;
             L = val.location;
@@ -370,7 +370,7 @@ classdef channeltag
             % this. But, this is being designed on R2012a.
             parts =  strsplit(val, '.');
             if numel(parts) ~= 4
-               error('channeltag:parse:InvalidFieldCount',...
+               error('ChannelTag:parse:InvalidFieldCount',...
                   'Expected ''A.B.C.D'' (4 fields), but received %d.', numel(parts));
             end
             if any(val == ' '), 
@@ -378,7 +378,7 @@ classdef channeltag
             end
             [N, S, L, C] = deal(parts{:});
          else
-            error('channeltag:parse:UnknownClass',...
+            error('ChannelTag:parse:UnknownClass',...
                'unknown how to parse: %s', class(val));
          end
          
@@ -397,30 +397,30 @@ classdef channeltag
       end
       
       function cha_tags = array(varargin)
-         % chaTag.array creates multiple channeltags from the input.
+         % chaTag.array creates multiple ChannelTags from the input.
          % cha_tags = chaTag.array({'NET.STA.LOC.CHA','NET2.STA2..CH2'[,...]})
          % cha_tags = chaTag.array(Net/list, Sta/list, Loc/list, Cha/list)
          switch nargin
             case 0
                % return an empty nscltag array
-               cha_tags = channeltag('...');
+               cha_tags = ChannelTag('...');
                cha_tags(:)=[];
             case 1
                % parse a cell array of stations. OR parse an NxM char, where
                % each row is NET.STA.LOC.CHA
                if iscell(varargin{1})
                   for n = numel(varargin{1}) : -1 : 1
-                     cha_tags(n) = channeltag(varargin{1}{n});
+                     cha_tags(n) = ChannelTag(varargin{1}{n});
                   end
                   cha_tags = reshape(cha_tags,size(varargin{1}));
                elseif ischar(varargin{1})
                   char_array = varargin{1};
                   nRows = size(char_array,1);
                   for n = nRows : -1 : 1
-                     cha_tags(1,n) = channeltag(strtrim(char_array(n,:)));
+                     cha_tags(1,n) = ChannelTag(strtrim(char_array(n,:)));
                   end
                else
-                  error('channeltag:array:UnknownInput','expected cell of strings or a char array');
+                  error('ChannelTag:array:UnknownInput','expected cell of strings or a char array');
                end
             case 4
                % expect 1xN char OR arbitrary-sized CELL of 1xN char
@@ -431,28 +431,28 @@ classdef channeltag
                   A = strcat(varargin{1},'.',varargin{2},'.',varargin{3},'.',varargin{4});
                end
                for n = numel(A): -1 : 1
-                  cha_tags(n) = channeltag(A{n});
+                  cha_tags(n) = ChannelTag(A{n});
                end
          end
       end
       
       function test()
-         % default channeltag
-         c = channeltag();
+         % default ChannelTag
+         c = ChannelTag();
          assert(strcmp(c.network,'') && strcmp(c.station,'')...
             && strcmp(c.location,'') && strcmp(c.channel,''))
          % copy
-         c(2) = channeltag();
-         assert(c(1) == c(2)) % test eq for an empty channeltag
+         c(2) = ChannelTag();
+         assert(c(1) == c(2)) % test eq for an empty ChannelTag
          % check array creation
-         c1 = channeltag();
+         c1 = ChannelTag();
          c1.network = 'N1'; c1.station = 'S1'; c1.location = 'L1'; c1.channel = 'C1';
          c2 = c1;
          c2.network = 'N2'; c2.station = 'S2'; c2.location = 'L2'; c2.channel = 'C2';
          assert(c2 ~= c1)
-         tags_fieldcells = channeltag.array({'N1','N2'},{'S1','S2'},{'L1','L2'},{'C1','C2'});
-         tags_textcells = channeltag.array({'N1.S1.L1.C1','N2.S2.L2.C2'});
-         tags_textarray = channeltag.array(['N1.S1.L1.C1';'N2.S2.L2.C2']);
+         tags_fieldcells = ChannelTag.array({'N1','N2'},{'S1','S2'},{'L1','L2'},{'C1','C2'});
+         tags_textcells = ChannelTag.array({'N1.S1.L1.C1','N2.S2.L2.C2'});
+         tags_textarray = ChannelTag.array(['N1.S1.L1.C1';'N2.S2.L2.C2']);
          assert(tags_fieldcells(1) == c1)  
          assert(tags_textcells(1) == c1)
          assert(tags_textarray(1) == c1)
@@ -460,16 +460,16 @@ classdef channeltag
          assert(tags_textcells(2) == c2)
          assert(tags_textarray(2) == c2)
          
-         c = channeltag.array('N',{'S1','S2'},'L',{'C1','C2'});
+         c = ChannelTag.array('N',{'S1','S2'},'L',{'C1','C2'});
          assert(numel(c) == 2)
          assert(strcmp(c(2).station,'S2') && strcmp(c(2).channel,'C2')...
             && strcmp([c.network], 'NN') && strcmp([c.location], 'LL'))
-         tags = channeltag.array('NW','STA1','00', {'A','B','C','D'});
-         tags2 = channeltag.array('NW','STA1','00', {'F','C','A','E'});
+         tags = ChannelTag.array('NW','STA1','00', {'A','B','C','D'});
+         tags2 = ChannelTag.array('NW','STA1','00', {'F','C','A','E'});
          sortedtags = sort(tags2);
          assert(sortedtags(1).channel == 'A' && sortedtags(4).channel == 'F')
          % ismember 
-         assert(ismember(channeltag('NW.STA1.00.B'), tags));
+         assert(ismember(ChannelTag('NW.STA1.00.B'), tags));
          
       end %test
          

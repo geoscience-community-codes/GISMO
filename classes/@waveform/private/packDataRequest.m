@@ -18,7 +18,7 @@ function datarequest = packDataRequest(ds, chanInfo, starts, ends, combineWaves)
    % move to datasource?
    datarequest = struct(...
       'dataSource', ds, ...  % datasource
-      'chanInfo', chanInfo, ...  % channeltag (array)
+      'chanInfo', chanInfo, ...  % ChannelTag (array)
       'startTimes', starts,... % startTime (array)
       'endTimes',ends, ... % endTime (array)
       'combineWaves', combineWaves);  % T/F combine the waveforms if possible?

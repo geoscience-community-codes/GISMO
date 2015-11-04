@@ -55,7 +55,7 @@ classdef Arrival
                 val = p.Results.(field);
                 eval(sprintf('%s = val;',field));
             end
-            ctag = channeltag('',sta,'',chan);
+            ctag = ChannelTag('',sta,'',chan);
             datestr(time,26)
             datestr(time,13)
             ctag.string()

@@ -1,7 +1,7 @@
 function [W, I] = sortby(W, criteria)
    % sortby sorts waveforms based on one of its properties
    % 
-   % Wsorted = sortby(Win) sorts by the channeltag (N.S.L.C)
+   % Wsorted = sortby(Win) sorts by the ChannelTag (N.S.L.C)
    %
    % Wsorted = sortby(Win, criteria), where criteria is a valid "get"
    % request.  ex. starttime, endtime, channelinfo, freq, data_length, etc.

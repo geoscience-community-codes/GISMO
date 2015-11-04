@@ -1,9 +1,9 @@
-classdef ChanDetails
-   %ChanDetails Handles station metadata information
+classdef ChannelDetails
+   %ChannelDetails Handles station metadata information
    %   Access fields as though this were a struct
    %
    %  Request data using
-   %  ChanDetails.retrieve([], ...) retrieve data from default source:
+   %  ChannelDetails.retrieve([], ...) retrieve data from default source:
    %    https://service.iris.edu/fdsnws/station/1/
    %  What follows are parameter-value pairs that filter which data is
    %  retrieved.  These are described in detail from the iris website
@@ -12,17 +12,17 @@ classdef ChanDetails
    %  Examples:
    %    Ex 1. Retrieve all stations that start with A, for network IU. But
    %    only the BH channels (excluding BHZ)
-   %    ChanDetails.retrieve([],'station','A*','network','IU','channel','BH?,-BHZ')
+   %    ChannelDetails.retrieve([],'station','A*','network','IU','channel','BH?,-BHZ')
    %
-   %    Ex 2. Retrieve channel detail for a Trace
-   %    T = Trace; T.name = 'IU.ANMO.00.BHZ'; T.starttime = now-1;
-   %    ChanDetails.retrieve([],T);
+   %    Ex 2. Retrieve channel detail for a SeismicTrace
+   %    T = SeismicTrace; T.name = 'IU.ANMO.00.BHZ'; T.starttime = now-1;
+   %    ChannelDetails.retrieve([],T);
    %
-   %    Ex 3. Retrieve channel detail for channeltag (all channels)
-   %    ct = channeltag('IU.ANMO.00..');
-   %    ChanDetails.retreive([],ct); % results returned in a
+   %    Ex 3. Retrieve channel detail for ChannelTag (all channels)
+   %    ct = ChannelTag('IU.ANMO.00..');
+   %    ChannelDetails.retreive([],ct); % results returned in a
    %
-   %    Results are in an 1XN ChanDetails object
+   %    Results are in an 1XN ChannelDetails object
    
    % NOTE: Starting in r2014b matlab has WEBREAD to access data from
    % restful services.  We could use that with weboptions to provide useful
@@ -121,7 +121,7 @@ classdef ChanDetails
         %
         % example:
         % % grab all BHZ stations in iris catalog, then plot
-        % chandeets = ChanDetails.retrieve([],'channel','BHZ','endafter',datenum(2015,1,1));
+        % chandeets = ChannelDetails.retrieve([],'channel','BHZ','endafter',datenum(2015,1,1));
         % chandeets.sphereplot;
         %
         % TODO: add color or symbol per object?
@@ -150,12 +150,12 @@ classdef ChanDetails
          if numel(varargin) == 1
             switch(class(varargin{1}))
                case 'char'
-                  chdeets = ChanDetails.retrieve(ds,channeltag(varargin{1}));
+                  chdeets = ChannelDetails.retrieve(ds,ChannelTag(varargin{1}));
                   return
-               case {'Trace'}
+               case {'SeismicTrace'}
                   for n=numel(varargin{1}):-1:1
                      me = varargin{1}(n);
-                     ch = ChanDetails.retrieve(ds,...
+                     ch = ChannelDetails.retrieve(ds,...
                         'network',me.network, 'station', me.station, ...
                         'location', me.location, 'channel', me.channel, ...
                         'starttime', me.firstsampletime, 'endtime', me.lastsampletime);
@@ -166,18 +166,18 @@ classdef ChanDetails
                   end
                   chdeets = reshape(chdeets, size(varargin{1}));
                   return
-               case 'channeltag'
+               case 'ChannelTag'
                   % return as cell, because we can't be sure how many are
                   % returned!
                   if numel(varargin{1}) == 1
                      me = varargin{1};
-                     chdeets = ChanDetails.retrieve(ds, ...
+                     chdeets = ChannelDetails.retrieve(ds, ...
                         'network',me.network, 'station', me.station, ...
                         'location', me.location, 'channel', me.channel);
                   else
                      for n=numel(varargin{1}):-1:1
                         me = varargin{1}(n);
-                        chdeets(n) = { ChanDetails.retrieve(ds, ...
+                        chdeets(n) = { ChannelDetails.retrieve(ds, ...
                            'network',me.network, 'station', me.station, ...
                            'location', me.location, 'channel', me.channel)};
                      end
@@ -262,7 +262,7 @@ classdef ChanDetails
          C = textscan(chdeets,'%s %s %s %s %f %f %f %f %f %f %s %f %f %s %f %s %s','delimiter','|','commentstyle','#');
          
          % convert station network channel location to channeltags and clean
-         chanTags = channeltag(strcat(...
+         chanTags = ChannelTag(strcat(...
             C{strcmp(labels,'network')},'.',...
             C{strcmp(labels,'station')},'.',...
             C{strcmp(labels,'location')},'.',...
@@ -277,7 +277,7 @@ classdef ChanDetails
          % parse it
          clear chdeets
          for n=1:numel(chanTags)
-            chdeets(n) = ChanDetails;
+            chdeets(n) = ChannelDetails;
             for x = 1 : numel(labels);
                fn = labels{x};
                if iscell(C{x})

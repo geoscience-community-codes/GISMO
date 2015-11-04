@@ -1,13 +1,13 @@
-classdef Trace < TraceData
-   %TRACE class that handles timeseries manipulation with channel info 
-   %  Trace inherits the ability to manipulate timeseries data from
+classdef SeismicTrace < TraceData
+   %SeismicTrace handles timeseries manipulation with channel info 
+   %  SeismicTrace inherits the ability to manipulate timeseries data from
    %  TraceData, and adds the capability to handle chanel descriptor tags,
    %  handle UserData fields, track history, timestamping, and basic calibration. 
    %
-   %Trace is the replacement class for waveform
+   %SeismicTrace is the replacement class for waveform
    %
-   %see also Trace.retrieve
-   %TraceData, waveform, channeltag
+   %see also SeismicTrace.retrieve
+   %TraceData, waveform, ChannelTag
    
    % Author: Celso Reyes, unless otherwise specified in the class functions
    % Contributions by: Glenn Thompson, Michael West, Carl Tape
@@ -23,25 +23,23 @@ classdef Trace < TraceData
       station % station code
       location % location code
       channel % channel code
-       % Text representation for the start time
-       % see also Trace.firstsampletime, Trace.lastsampletime, mat_start
       start
    end
    
    properties
       % history, stored as a structure of (what, when),
       % where "what" can be anything, and "when" is a matlab datenum
-      % see also Trace.addhistory, Trace.clearhistory
-      history = struct('what','created Trace','when',now); 
+      % see also SeismicTrace.addhistory, SeismicTrace.clearhistory
+      history = struct('what','created SeismicTrace','when',now); 
       % structure containing user-defined fields
       % Field names are case sensitive.
       % Field values can be validated if a UserDataRule is specified.
       % 
-      % see also Trace.UserData, Trace.setUserDataRule,
-      % Trace.renameUserField
+      % see also SeismicTrace.UserData, SeismicTrace.setUserDataRule,
+      % SeismicTrace.renameUserField
       UserData = struct();
       % contains calibration values for this trace.
-      % see also Trace.setcalib, Trace.removecalib, Trace.applycalib
+      % see also SeismicTrace.setcalib, SeismicTrace.removecalib, SeismicTrace.applycalib
       calib = struct('value',1,'applied',false);
       
       %struct that mirrors UserData, but contains two fields:
@@ -53,21 +51,21 @@ classdef Trace < TraceData
       %   eac assignment must have exactly this number of values.
       %   if [min max], then any number of values between min
       %   and max inclusive may be assigned to this.
-      % see also Trace.UserData, Trace.setUserDataRule,
-      % Trace.renameUserField
+      % see also SeismicTrace.UserData, SeismicTrace.setUserDataRule,
+      % SeismicTrace.renameUserField
       UserDataRules 
    end
    
    properties(Hidden)
       mat_starttime % start time in matlab-time
-      channelinfo = channeltag; % channelTag
+      channelinfo = ChannelTag; % channelTag
    end
    
    properties(Hidden, Dependent)
    end
    
    methods
-      function obj = Trace(varargin)
+      function obj = SeismicTrace(varargin)
          obj@TraceData(varargin{:});
          switch nargin
             case 1
@@ -166,7 +164,7 @@ classdef Trace < TraceData
          % see also datestr
          secDurs = [obj.duration];
          assert(all(~isnan([obj.samplerate])),...
-            'Trace:lastsampletime:Uncalculatable',...
+            'SeismicTrace:lastsampletime:Uncalculatable',...
             'Missing samplerate for one or more waveforms. lastsampletime is incalculable');
          secDurs(secDurs > 0) = secDurs - 1./[obj.samplerate];
          val = [obj.firstsampletime] + secDurs/86400;
@@ -201,7 +199,7 @@ classdef Trace < TraceData
       end
       function T = set.name(T, val)
          assert(numel(T) == 1, 'only can set name for individual traces');
-         T.channelinfo = channeltag(val);
+         T.channelinfo = ChannelTag(val);
       end
       
       
@@ -269,7 +267,7 @@ classdef Trace < TraceData
             (numel(alignTime) == length(T) && ... both vectors have
             numel(T) == length(alignTime));     % the same length
          
-         assert(hasCompatibleSize, 'Trace:align:invalidAlignSize',...
+         assert(hasCompatibleSize, 'SeismicTrace:align:invalidAlignSize',...
             'alignTime must be either a single time or a matrix the same shape as the traces');
          
          if oneAlignTime % same align time for all traces
@@ -341,11 +339,11 @@ classdef Trace < TraceData
          % T.UserData.myfield = value;
          %
          % to impose constraings on the values that this field can
-         % retrieve, use: Trace.SetUserDataRule(myfield,...)
+         % retrieve, use: SeismicTrace.SetUserDataRule(myfield,...)
          %
          % to delete the field:
          % T.UserData = rmfield(T.UserData, 'fieldToRemove');
-         % see also Trace.SetUserDataRule, rmfield
+         % see also SeismicTrace.SetUserDataRule, rmfield
          oldfields = fieldnames(T.UserData);
          fn = fieldnames(val);
          fieldToAdd = fn(~ismember(fn, oldfields));
@@ -363,7 +361,7 @@ classdef Trace < TraceData
       end
       
       function T = renameUserField(T, oldField, newField, failSilently)
-         % Trace.renameUserField renames a UserData field
+         % SeismicTrace.renameUserField renames a UserData field
          % T = T.renameuserField(oldName, newName);
          % rename a field if it exists to a new name.
          % Possible sticking-points to deal with:
@@ -541,7 +539,7 @@ classdef Trace < TraceData
          %
          % sortby sorts waveforms based on one of its properties
          %
-         % Wsorted = sortby(Win) sorts by the channeltag (N.S.L.C)
+         % Wsorted = sortby(Win) sorts by the ChannelTag (N.S.L.C)
          %
          % Wsorted = sortby(Win, criteria), where criteria is a valid "get"
          % request.  ex. starttime, endtime, channelinfo, freq, data_length, etc.
@@ -560,8 +558,8 @@ classdef Trace < TraceData
       end
 
       function combined_traces = combine (traces)
-         %TODO: remove references to scnl, and replace with channeltag
-         %COMBINE merges waveforms based on start/end times and channeltag info.
+         %TODO: remove references to scnl, and replace with ChannelTag
+         %COMBINE merges waveforms based on start/end times and ChannelTag info.
          % combined_waveforms = combine (waveformlist) takes a vector of waveforms
          % and combines them based on SCNL information and start/endtimes.
          % DOES NO OTHER CHECKS
@@ -577,7 +575,7 @@ classdef Trace < TraceData
          [uniquechans, ~, chanbin] = unique(chaninfo);
          
          %preallocate
-         combined_traces = repmat(Trace,size(uniquechans));
+         combined_traces = repmat(SeismicTrace,size(uniquechans));
          
          for i=1:numel(uniquechans)
             T = traces(chanbin == i);
@@ -635,7 +633,7 @@ classdef Trace < TraceData
       end
       
       function outW = extract(T, method, startV, endV)
-         %TODO: make this Trace-y.  This is currently written for waveforms
+         %TODO: make this SeismicTrace-y.  This is currently written for waveforms
          %TODO: Decide on proper wording! Should this be multiple functions?
          %EXTRACT creates a waveform with a subset of another's data.
          %   waveform = extract(waveform, 'TIME', startTime, endTime)
@@ -766,7 +764,7 @@ classdef Trace < TraceData
             warning('Waveform:extract:emptyWaveform','no waveforms to extract');
             return
          end
-         outW(numel(T),numel(startV)) = Trace;
+         outW(numel(T),numel(startV)) = SeismicTrace;
          
          for m = 1: numel(startV) %loop through the number of extractions
             for n=1:numel(T); %loop through the waveforms
@@ -902,20 +900,20 @@ classdef Trace < TraceData
          %   The second way of using addhistory follows the syntax of fprintf
          %
          %   Input Arguments
-         %       WAVEFORM: a Trace object
+         %       WAVEFORM: a SeismicTrace object
          %       WHATHAPPENED: absolutely anything.  Really.
          %
          %   AddHistory appends not only what happened, but also keeps track of WHEN
          %   it happened.
          %
          %   example
-         %       T = Trace; %create a blank trace
+         %       T = SeismicTrace; %create a blank trace
          %       T = T.addhistory('the following procedures done by DoIt.m');
          %       N = 1; M = 'Today'
          %       T = T.addhistory('this is sample #%d date:%s',N,M);
          %       % what is actually added: "this is sample #1 date:Today"
          %
-         % See also Trace.history, fprintf
+         % See also SeismicTrace.history, fprintf
          
          if nargin > 2,
             whathappened = sprintf(whathappened, varargin{:});
@@ -932,7 +930,7 @@ classdef Trace < TraceData
          %   trace = trace.clearhistory
          %   clears the history, leaving it blank
          %
-         % See also Trace.addhistory Trace.history.         
+         % See also SeismicTrace.addhistory SeismicTrace.history.         
          T(N).history= T(N).history([]);
       end
       function [myhist] = get.history(t)
@@ -941,13 +939,13 @@ classdef Trace < TraceData
          %       returns a struct describing what's been done to this trace
          %   myhist = trace.history(N)
          %       get Nth element from the history.  End works,too!
-         % See also Trace.addhistory, Trace.clearhistory
+         % See also SeismicTrace.addhistory, SeismicTrace.clearhistory
          myhist = t.history;
       end
       
       %% display functions
       function disp(w)
-         %DISP Trace disp overloaded operator
+         %DISP SeismicTrace disp overloaded operator
          
          
          % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
@@ -972,9 +970,9 @@ classdef Trace < TraceData
          elseif numel(w) == 0
             disp('  No Traces');
             
-         else %single Trace
+         else %single SeismicTrace
             % no longer have test for complete/empty waveform
-            fprintf(' channeltag: %-15s   [network.station.location.channel]\n', w.name);
+            fprintf(' ChannelTag: %-15s   [network.station.location.channel]\n', w.name);
             fprintf('      start: %s\n',w.start);
             secs = mod(w.duration,60);
             mins = mod(fix(w.duration / 60),60);
@@ -1078,7 +1076,7 @@ classdef Trace < TraceData
          %  also, now Y can be autoscaled with the property pair: 'autoscale',true
          %  although it only works for single waveforms...
          %
-         %  see also DATETICK, Trace.plot, PLOT
+         %  see also DATETICK, SeismicTrace.plot, PLOT
          
          % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
          %
@@ -1168,7 +1166,7 @@ classdef Trace < TraceData
          h = plot(Xvalues, double(T,'nan') , varargin{:} );
          
          if useAutoscale
-            yunit = Trace.autoscale(h, yunit);
+            yunit = SeismicTrace.autoscale(h, yunit);
          end
          
          yh = ylabel(yunit,'fontsize',currFontSize);
@@ -1318,7 +1316,7 @@ classdef Trace < TraceData
          %LINKEDPLOT Plot multiple waveform objects as separate linked panels
          %   linkedplot(trace, alignTraces)
          %   where:
-         %       T = a vector of Trace
+         %       T = a vector of SeismicTrace
          %       alignWaveforms is either true or false (default)
          %   T.linkedplot will plot a record section, i.e. each waveform is plotted
          %   against absolute time.
@@ -1511,7 +1509,7 @@ classdef Trace < TraceData
    methods(Static)
       function T = toTrace(item, itemlabel, conversionfunction)
          % convert anything into traces
-         % conversion functions exist outside the Trace class so that
+         % conversion functions exist outside the SeismicTrace class so that
          % adding/removing/changing the conversion functions do not affect
          % this class
          % some envisioned examples
@@ -1535,7 +1533,7 @@ classdef Trace < TraceData
          % convert waveforms into traces
          assert(isa(W,'waveform'));
          for N = numel(W):-1:1
-            T(N) = Trace(W(N));
+            T(N) = SeismicTrace(W(N));
          end
       end
             function T = fakedata(ds, names, starts, ends, miscfilters)
@@ -1553,7 +1551,7 @@ classdef Trace < TraceData
          if ~exist('starts','var')
             % build T from names
          else
-            T = Trace; T.samplerate = 20;
+            T = SeismicTrace; T.samplerate = 20;
             T = repmat(T, numel(names), numel(starts));
             
             for n=1:numel(names)
@@ -1570,7 +1568,7 @@ classdef Trace < TraceData
       end
       
       function T = retrieve(ds, names, starts, ends, miscfilters)
-         % Get a Trace from external data source
+         % Get a SeismicTrace from external data source
          %
          % UNDER CONSTRUCTION. for now, this is a wrapper around waveform.
          % it will use the waveform class to get data, and will then
@@ -1586,10 +1584,10 @@ classdef Trace < TraceData
          % convertToTraces
          % return the traces
          if isa(names,'cell') || isa(names,'char')
-            names = channeltag.array(names);
+            names = ChannelTag.array(names);
          end
          w = waveform(ds, names, starts, ends);
-         T = Trace.waveform2trace(w);
+         T = SeismicTrace.waveform2trace(w);
       end
    end %static methods
 end

@@ -22,7 +22,7 @@ function w = winston_access(varargin)
          p.(MyVars{N}) = varargin{N};
       end
    end
-   thesechans = channeltag(p.station,p.channel,p.network,p.location);
+   thesechans = ChannelTag(p.station,p.channel,p.network,p.location);
    
    mysource = datasource('winston',p.server,p.port);
    w = waveform(mysource, thesechans, datenum(p.tStart), datenum(p.tEnd));

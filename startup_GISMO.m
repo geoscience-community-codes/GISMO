@@ -37,8 +37,7 @@ addContributed(gismopath,'contributed_internal');
 addpath(fullfile(gismopath,'classes'));
 addpath(fullfile(gismopath,'classes','Catalog'));
 addpath(fullfile(gismopath,'classes','rsam'));
-%addpath(fullfile(gismopath,'classes','channeltag'));
-%addpath(fullfile(gismopath,'classes','measurementunit'));
+%addpath(fullfile(gismopath,'classes','ChannelTag'));
 
 % ADD A PATH TO APPLICATIONS e.g. IceWeb
 addpath(genpath(fullfile(gismopath,'applications')));

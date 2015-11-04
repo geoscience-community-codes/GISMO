@@ -8,9 +8,9 @@ function w = apply_calib(w, sites)
     end
     
     for c=1:numel(w)
-        % get the channeltag for this waveform
+        % get the ChannelTag for this waveform
         wchantag = string(get(w(c),'channeltag'));
-        j = strmatch(wchantag, chantagcell); % this is the index of the matching channeltag in sites
+        j = strmatch(wchantag, chantagcell); % this is the index of the matching ChannelTag in sites
         if length(j)==1
             calib = sites(j).calib;
             addfield(w(c), 'calib', calib);
