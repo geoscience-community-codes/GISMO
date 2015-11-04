@@ -86,7 +86,7 @@ function [ eqtc, varargout ] = import_events(dbname, chanfile, starttime, endtim
 % $Date$
 % $Revision$
 
-
+warning('This function likely broken. It needs to be rebuilt on top of core GISMO classes for Catalog and Arrival objects')
 %% Check for valid input
 
 % dbname is checked by dbopen()
