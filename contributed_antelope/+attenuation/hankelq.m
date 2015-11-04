@@ -1,6 +1,6 @@
 function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
-%HANKELQ Compute spectral ratio in two frequency bands and
-%   hankelq(dbpath, expr, freq_high, freq_low, pretrigger_seconds, posttrigger_seconds, max_arrivals ) 
+%HANKELQ Compute spectral ratio in two frequency bands
+%   HANKELQ(dbpath, expr, freq_high, freq_low, pretrigger_seconds, posttrigger_seconds, max_arrivals ) 
 %   Loads arrivals from an arrival table (after subsetting with expr)
 %   retrieves waveform data corresponding to those arrivals, cleans and
 %   plots the waveform data. The spectral ratio in bands around freq_high

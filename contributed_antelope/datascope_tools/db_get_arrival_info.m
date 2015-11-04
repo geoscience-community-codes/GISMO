@@ -1,7 +1,5 @@
-function [arrival,assoc,origin,W] = db_get_arrival_info(INorigin,dbname,varargin)
-
-
-% ARRIVAL = DB_GET_ARRIVAL_INFO(ARRIVAL_LIST,DATABASE_NAME) Returns pertinent 
+function [arrival,assoc,origin,W] = db_get_arrival_info(arid,dbname,varargin)
+% [ARRIVAL, ASSOC, ORIGIN, W] = DB_GET_ARRIVAL_INFO(ARID_LIST, DATABASE_NAME) Returns pertinent 
 % fields from the arrival, assoc and origin tables based on input arrival id numbers (arid);
 % ARRIVAL_LIST must be a vector of arrival id numbers (arid). The returned structures ARRIVAL contains
 % fields pulled from each of the corresponding tables.
@@ -13,11 +11,8 @@ function [arrival,assoc,origin,W] = db_get_arrival_info(INorigin,dbname,varargin
 % $Date$
 % $Revision$
 
-
-
-
-if isnumeric(INorigin)
-	arrival.arid = reshape( INorigin , numel(INorigin), 1 );
+if isnumeric(arid)
+	arrival.arid = reshape( arid , numel(arid), 1 );
 else
     error('First input must be either arrival ids (arid)');
 end
