@@ -1,16 +1,76 @@
 classdef TraceData
-   %TraceData handles the data associated with timeseries.
-   %   Tracedata might be considered a "light" version of the timeseries
+   %TraceData   Handles the data associated with timeseries.
+   %
+   %   Tracedata might be considered a "light" version of the <a
+   %   href="matlab: help timeseries">timeseries</a>
    %   class. Whereas the timeseries class has lots of functionality, it
    %   suffers from much slower execution times.
    %
    %
-   % About TraceData vs Waveform
+   % About TraceData vs <a
+   %   href="matlab: help waveform">waveform</a>
    %
+   % TraceData Properties:
+   %
+   % TraceData Methods:
+   %    Basic Math:
+   %       plus - (+)addition
+   %       minus - (-)subtraction
+   %       times - (.*) element multiplication
+   %       mtimes - (*) matrix multiplication
+   %       rdivide - (./) element division
+   %       
+   %       uminus - (-A) unary minus
+   %       sign - signum of data (returns array of +1, 0, or -1)
+   %       abs - Absolute value
+   %
+   %    Statistics (returns a single value for each trace):
+   %       min - Minimum value of data
+   %       max - Maximum  value of data
+   %       mean - Average value of data
+   %       median - Median value of data
+   %       var - Variance of data
+   %       std - Standard Deviation of data
+   %
+   %    Advance Mathamatical operations:
+   %       diff - Difference and approximate derivative for traces
+   %       integrate - cumulative sums of data
+   %       
+   %       hilbert - Hilbert envelope (real only)
+   %       taper - Apply a taper to the data
+   %       resample - Resample teh data
+   %       demean - Remove the mean
+   %       detrend - Remove trend from data
+   %       clip - Clip the data
+   %       
+   %       extract - Retrieve a subset of the data
+   %       double - retrieve data as 1xN array of double
+   %
+   %       stack - stack all waveforms
+   %       binStack - stack N waveforms at a time (with optional overlap)
+   %       zero2nan - Replace values close to zero with nans
+   %       nyquist - Nyquist frequency (samplerate / 2)
+   %       period - Get Period  (1/samplerate)
+   %
+   %       compatibleWith - Compare units, samplerate and datalength
+   %       assertCompatibleWith - Error if units, samplerate and datalength do not match
+   %       
+   %       fillgaps             
+   %       formattedduration 
+   %       amplitude_spectrum
+   %       setlength - adjust length of trace data to allow batch processing
+   %
+   %       Binary Operators:
+   %       eq - (A==B) true if data, samplerate and units match.
+   %       ne - (A~=B) false if data, samplerate and units match.
+   %    
+   % RE: ERROR recovery
    % trying new tactic. I won't try to anticipate all the various ways
    % someone can provide incompatible data. Instead, I'm going to provide a
    % comment with my expectations which will show up automatically in the
    % displayed error.
+   %
+   % See also Waveform, timeseries
    
    % Waveform functions included in Tracedata:
    %  - functions that manipulate the data itself
@@ -93,7 +153,7 @@ classdef TraceData
       end
       
       function s = formattedduration(obj, fmt)
-         %formattedduration retrieves the duration as a formatted string
+         %formattedduration   Duration as a formatted string
          % s = trace.formattedduration() retrieves the duration in the
          % default format as 'dd:hh:mm:ss.SSS'
          % s = trace.formattedduration(fmt) retrieves duration in format
@@ -115,7 +175,7 @@ classdef TraceData
       
       %% Mathamatical - BASIC OPERATIONS
       function A = plus(A, B)
-         %plus   add something to the TraceData's data,
+         %plus   A + B add something to the TraceData's data,
          %   This will return a TraceData object
          %
          %   valid combinations
@@ -150,7 +210,7 @@ classdef TraceData
       end
       
       function A = minus(A, B)
-         %minus  subtract something from the Trace's data,
+         %minus  A - B subtract something from the Trace's data,
          %   This will return a TraceData object
          %
          %   valid combinations (let TD represent any TraceData object)
@@ -207,8 +267,8 @@ classdef TraceData
       end
       
       function C = mtimes(A, B)
-         %mtimes   matrix multiplication A * B against data within a trace
-         % result is a matrix, vector, or scalar. (NOT a TraceDataObject)
+         %mtimes   A * B matrix multiplication against data within a trace
+         %  result is a matrix, vector, or scalar. (NOT a TraceDataObject)
          if isa(A,'TraceData')
             C = A.data * B;
          else
@@ -240,7 +300,7 @@ classdef TraceData
       end
       
       function A = power(A, B)
-         %.^   Array Power for data within traces
+         %.^   A.^B Array Power for data within traces
          %  A = power(A,B) is called when A or B is an object
          assert(isa(A,'TraceData'),'TraceData:power:invalidType',...
             'for A .^ B, B cannot be a TraceData object');
@@ -252,14 +312,14 @@ classdef TraceData
       end
       
       function A = uminus(A)
-         %uminus   unary minus (-) for traces
+         %uminus   -A Unary minus for traces
          for n=1:numel(A)
             A(n).data = -A(n).data;
          end
       end
       
       function trace = abs(trace)
-         %abs   Absolute value of trace data
+         %abs   |A| Absolute value of trace data
          % T = abs(trace) returns traces containing the absolute values of
          % the data.
          %
@@ -270,7 +330,7 @@ classdef TraceData
       end
       
       function trace = sign(trace)
-         %sign get signum for data in A
+         %sign   Convert each data point to its signum (+1, 0, +1)
          % T = sign(trace) returns a a trace containing the signs of the
          % data, instead of the data.
          %
@@ -722,7 +782,7 @@ classdef TraceData
       end
       
       function t = setlength(t, maxlen)
-         %setlength adjust length of trace data to allow batch processing
+         %setlength   adjust length of trace data to allow batch processing
          %   trace = traces.setlength()
          %       adjusts all traces to the length of the largest, while
          %       zero-padding all shorter traces

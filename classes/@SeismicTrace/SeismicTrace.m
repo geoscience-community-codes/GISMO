@@ -6,8 +6,7 @@ classdef SeismicTrace < TraceData
    %
    %SeismicTrace is the replacement class for waveform
    %
-   %see also SeismicTrace.retrieve
-   %TraceData, waveform, ChannelTag
+   %see also retrieve, TraceData, waveform, ChannelTag
    
    % Author: Celso Reyes, unless otherwise specified in the class functions
    % Contributions by: Glenn Thompson, Michael West, Carl Tape
@@ -66,6 +65,7 @@ classdef SeismicTrace < TraceData
    
    methods
       function obj = SeismicTrace(varargin)
+         % SeismicTrace   Constructor for SeismicTrace objects
          obj@TraceData(varargin{:});
          switch nargin
             case 1
@@ -136,13 +136,15 @@ classdef SeismicTrace < TraceData
          % could add ability to translate from java or datetime
       end
       function val = sampletimes(obj)
-         %sampletimes retrieve matlab date for each sample
-         % replaces get(w, 'timevector')
+         %sampletimes   Retrieve matlab date for each sample
+         %
+         %  Replaces waveform's get(w, 'timevector')
+         
          val = sampletimes@TraceData(obj) + obj.mat_starttime;
       end
       
       function val = firstsampletime(obj, stringformat)
-         % firstsampletime - get time of first sample as matlab date or string.
+         %firstsampletime   Time of first sample as matlab date or string.
          % val = trace.lastsampletime will return as a datenum
          % val = trace.lastsampletime(FORMAT) will return a string
          % formatted according to FORMAT.
@@ -155,13 +157,13 @@ classdef SeismicTrace < TraceData
          end
       end
       function val = lastsampletime(obj, stringformat)
-         % lastsampletime - get time of last sample as matlab date or string.
-         % val = trace.lastsampletime will return as a datenum
-         % val = trace.lastsampletime(FORMAT) will return a string
-         % formatted according to FORMAT.
+         %lastsampletime   Time of last sample as matlab date or string.
+         %  val = trace.lastsampletime will return as a datenum
+         %  val = trace.lastsampletime(FORMAT) will return a string
+         %  formatted according to FORMAT.
          %
-         % For multiple traces, a character array will be returned.
-         % see also datestr
+         %  For multiple traces, a character array will be returned.
+         %  See also datestr
          secDurs = [obj.duration];
          assert(all(~isnan([obj.samplerate])),...
             'SeismicTrace:lastsampletime:Uncalculatable',...
@@ -202,11 +204,10 @@ classdef SeismicTrace < TraceData
          T.channelinfo = ChannelTag(val);
       end
       
-      
       function T = align(T,alignTime, newSamprate, method)
-         %ALIGN resamples a waveform at over a specified interval
-         %   w = w.align(alignTime, newSamprate)
-         %   w = w.align(alignTime, newSamprate, method)
+         %ALIGN   Resample a seismic trace over a specified interval
+         %   T = T.align(alignTime, newSamprate)
+         %   T = T.align(alignTime, newSamprate, method)
          %
          %   Input Arguments
          %       WAVEFORM: waveform object       N-dimensional
@@ -221,7 +222,6 @@ classdef SeismicTrace < TraceData
          %       The output waveform has the new samplerate newSamprate and a
          %       starttime calculated by the specified method, using matlab's
          %       INTERP1 function.
-         %
          %
          %   METHODOLOGY
          %     The alignTime is projected forward or backward in time at the
@@ -249,7 +249,7 @@ classdef SeismicTrace < TraceData
          %
          % See also INTERP1, PLOTMATRIX
          
-         % AUTHOR: Celso Reyes
+         % TODO: Update Examples
          
          oneSecond = 1/86400;
          
@@ -361,7 +361,7 @@ classdef SeismicTrace < TraceData
       end
       
       function T = renameUserField(T, oldField, newField, failSilently)
-         % SeismicTrace.renameUserField renames a UserData field
+         % renameUserField   Rename a UserData field
          % T = T.renameuserField(oldName, newName);
          % rename a field if it exists to a new name.
          % Possible sticking-points to deal with:
@@ -371,6 +371,8 @@ classdef SeismicTrace < TraceData
          % 
          % if failSilently is true, then failures will not result in an
          % error.
+         %TODO TOFIX: Adjust userRules too.
+         
          oldFieldExists = isfield(T.UserData, oldField);
          newFieldExists = isfield(T.UserData, newField);
          sameNames = strcmp(oldField, newField);
@@ -412,6 +414,12 @@ classdef SeismicTrace < TraceData
       end
       
       function testUserField(obj, fn, value)
+         %testUserField   apply the testing rules to a userdata field
+         %  will error with detailed information about how the field fails
+         %  validation.
+         %
+         %  see also setUserDataRule
+         
          if ~isfield(obj.UserDataRules,fn)
             return;
          end
@@ -456,7 +464,7 @@ classdef SeismicTrace < TraceData
       end
       
       function T = setUserDataRule(T, fieldname, allowedType, allowedCount, allowedRange)
-         % setUserDataRule creates rules that govern setting various userdata fields.
+         %setUserDataRule   create rules to govern data entry into userdata fields.
          % T = T.setUserData(fieldname, classname) will have the class
          % checked each time a value is assigned to the UserData
          % field T.UserData.fieldname.
@@ -478,6 +486,7 @@ classdef SeismicTrace < TraceData
          % assignments to T.UserData.code will be a string between 1 and 4
          % characters in length.
          %
+         % See also testUserField, renameUserField, 
          assert(ischar(fieldname))
          if ~exist('allowedType', 'var')
             T.UserDataRules.(fieldname).inUse = false;
@@ -534,20 +543,19 @@ classdef SeismicTrace < TraceData
       
       %%
       function [T, I] = sortby(T, criteria)
-         %TODO: Make this TRACE-y. which involves sorting by User fields
-         %too.
+         %sortby   sort SeismicTraces based on a property
+         % Tsorted = sortby(Tin) sorts by the ChannelTag (N.S.L.C) in
+         % purely alphabetical order. Depending on the length of each
+         % field, the final results may not be in an expected order.
          %
-         % sortby sorts waveforms based on one of its properties
-         %
-         % Wsorted = sortby(Win) sorts by the ChannelTag (N.S.L.C)
-         %
-         % Wsorted = sortby(Win, criteria), where criteria is a valid "get"
-         % request.  ex. starttime, endtime, channelinfo, freq, data_length, etc.
+         % Tsorted = sortby(Tin, criteria), where criteria is a valid property
          %
          % [Wsorted, I] = sortby(Win...) will also return the index list so that
          %     Win(I) = Wsorted
          %
-         % see also: sort, waveform/get
+         % see also: sort
+         
+         %TODO: Make this TRACE-y. which involves sorting by User fields too.
          
          if nargin < 2
             criteria = 'channeltag';
@@ -558,13 +566,13 @@ classdef SeismicTrace < TraceData
       end
 
       function combined_traces = combine (traces)
-         %TODO: remove references to scnl, and replace with ChannelTag
-         %COMBINE merges waveforms based on start/end times and ChannelTag info.
-         % combined_waveforms = combine (waveformlist) takes a vector of waveforms
-         % and combines them based on SCNL information and start/endtimes.
+         %COMBINE   Merge waveforms based on start/end times and ChannelTag
+         %  combined_waveforms = combine(traces) combines based on
+         %  ChannelTag and start/endtimes. 
+         %
          % DOES NO OTHER CHECKS
          
-         % AUTHOR: Celso Reyes
+         %TODO: remove references to scnl, and replace with ChannelTag
          
          if numel(traces) == 0  %nothing to do
             combined_traces = traces;
@@ -886,7 +894,6 @@ classdef SeismicTrace < TraceData
       end
       
       %function ismember
-      %function isvertical (?) don't like this.
       
       %function calib_apply
       %function calib_remove
@@ -943,555 +950,20 @@ classdef SeismicTrace < TraceData
          myhist = t.history;
       end
       
-      %% display functions
-      function disp(w)
-         %DISP SeismicTrace disp overloaded operator
+      %% display functions - contained in external files
+      disp(T)
+      %TODO: use inputParser
+      varargout = plot(T, varargin)
+      linkedplot(T, alignTraces)
+      varargout = legend(T, varargin)
          
-         
-         % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
-         % $Date$
-         % $Revision$
-         
-         if numel(w) > 1;
-            disp(' ');
-            fprintf('[%s] %s containing:\n', size2str(size(w)), class(w));
-            % could present fields that it has in common
-            %could provide a bulkdataselect style output...
-            fprintf('net.sta.lo.cha\tfirstsample\t\t  nsamples\tsamprate\t duration\n');
-            for n=1:numel(w)
-            secs = mod(w(n).duration,60);
-            mins = mod(fix(w(n).duration / 60),60);
-            hrs = fix(w(n).duration / 3600);
-               fprintf('%-10s\t%s\t%9d\t%9.3f\t',...
-                  w(n).name, w(n).start, numel(w(n).data), w(n).samplerate); 
-               fprintf('%02d:%02d:%05.3f\n' , hrs,mins,secs);
-            end;
-            return
-         elseif numel(w) == 0
-            disp('  No Traces');
-            
-         else %single SeismicTrace
-            % no longer have test for complete/empty waveform
-            fprintf(' ChannelTag: %-15s   [network.station.location.channel]\n', w.name);
-            fprintf('      start: %s\n',w.start);
-            secs = mod(w.duration,60);
-            mins = mod(fix(w.duration / 60),60);
-            hrs = fix(w.duration / 3600);
-            fprintf('             duration %02d:%02d:%06.3f\n' , hrs,mins,secs);
-            fprintf('       data: %d samples\n', numel(w.data));
-            fprintf('             range(%f, %f),  mean (%f)\n',min(w), max(w), mean(w));
-            fprintf('sample rate: %-10.4f samples per sec\n',w.samplerate);
-            fprintf('      units: %s\n',w.units);
-            historycount =  numel(w.history);
-            if historycount == 1
-               plural='';
-            else
-               plural = 's';
-            end
-            fprintf('    history: [%d item%s], last modification: %s\n',...
-               historycount, plural, datestr(max([w.history.when])));
-            ud_fields = fieldnames(w.UserData);
-            if isempty(ud_fields)
-               disp('<No user defined fields>');
-            else
-            fprintf('User Defined fields:\n');
-            format compact
-            for n=1:numel(ud_fields);
-               if isstruct(w.UserDataRules) && isfield(w.UserDataRules, ud_fields{n})
-                  fprintf('   *%15s: ',ud_fields{n}); disp(w.UserData.(ud_fields{n}));
-               else
-                  fprintf('    %15s: ',ud_fields{n}); disp(w.UserData.(ud_fields{n}));
-               end
-            end
-            format short
-            disp(' <(*) before fieldname means that rules have been set up governing data input for this field>');
-            end
-         end
-         
-         function DispStr = size2str(sizeval)
-            % helper function that changes the way we view the size
-            %   from : [1 43 2 6] (numeric)  to  '1x43x2x6' (char)
-            
-            DispStr = sprintf('x%d', sizeval);
-            DispStr = DispStr(2:end);
-         end
-      end
-      
-      %% plotting functions
-      function varargout = plot(T, varargin)
-         %TODO: use parse
-         %PLOT plots a waveform object
-         %   h = plot(trace)
-         %   Plots a waveform object, handling the title and axis labeling.  The
-         %      output parameter h is optional.  If u, thto the waveform
-         %   plots will be returned.  These can be used to change properties of the
-         %   plotted waveforms.
-         %
-         %   h = trace.plot(...)
-         %   Plots a waveform object, passing additional parameters to matlab's PLOT
-         %   routine.
-         %
-         %   h = trace.plot('xunit', xvalue, ...)
-         %   sets the xunit property of the graph, which is used to determine how
-         %   the times of the waveform are interpereted.  Possible values for XVALUE
-         %   are 's', 'm', 'h', 'd', 'doy', 'date'.
-         %
-         %        'seconds' - seconds
-         %        'minutes' - minutes
-         %        'hours' - hours
-         %        'day_of_year' - day of year
-         %        'date' - full date
-         %
-         %   for multiple waveforms, specifying XUNITs of 's', 'm', and 'h' will
-         %   cause all the waveforms to be plotted starting at 0.  An XUNIT of
-         %   'date' will force all waveforms to plot starting at their starttimes.
-         %
-         %   the default XUNIT is seconds
-         %
-         %  For the following examples:
-         %  % W is a waveform, and W2 is a smaller waveform (from within W)
-         %  W = waveform('SSLN','SHZ','04/02/2005 01:00:00', '04/02/2005 01:10:00');
-         %  W2 = extract(W,'date','04/02/2005 01:06:10','04/02/2005 01:06:33');
-         %
-         % EXAMPLE 1:
-         %   % This example plots the waveforms at their absolute times...
-         %   W.plot('xunit','date'); % plots the waveform in blue
-         %   hold on;
-         %   h = W2.plot('xunit','date', 'r', 'linewidth', 1);
-         %          %plots your other waveform in red, and with a wider line
-         %
-         % EXAMPLE 2:
-         %   % This example plots the waveforms, starting at time 0
-         %   W.plot(); % plots the waveform in blue with seconds on the x axis
-         %   hold on;
-         %   W2.plot('xunit','s', 'color', [.5 .5 .5]);  % plots your other
-         %                                       % waveform, starting in unison
-         %                                       % with the prev waveform, then
-         %                                       % change the color of the new
-         %                                       % plot to grey (RGB)
-         %
-         %  For a list of properties you can set (such as color, linestyle, etc...)
-         %  type get(h) after plotting something.
-         %
-         %  also, now Y can be autoscaled with the property pair: 'autoscale',true
-         %  although it only works for single waveforms...
-         %
-         %  see also DATETICK, SeismicTrace.plot, PLOT
-         
-         % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
-         %
-         % modified 11/17/2008 by Jason Amundson (amundson@gi.alaska.edu) to allow
-         % for "day of year" flag
-         %
-         % 11/25/2008 changed how parameters are parsed, fixing a bug where you
-         % could not specify both an Xunit and a plot-style ('.', for example)
-         %
-         % individual sample rates used instead of assumed to be equal
-         
-         
-         if isscalar(T),
-            yunit = T.units;
-         else
-            yunit = arrayfun(@(tr) tr.units, T, 'UniformOutput',false); %
-            yunit = unique(yunit);
-         end
-         
-         %Look for an odd number of arguments beyond the first.  If there are an odd
-         %number, then it is expected that the first argument is the formatting
-         %string.
-         [formString, proplist] = getformatstring(varargin);
-         hasExtraArg = ~isempty(formString);
-         [~, useAutoscale, proplist] = getproperty('autoscale',proplist,false);
-         [~, xunit, proplist] = getproperty('xunit',proplist,'s');
-         [~, currFontSize, proplist] = getproperty('fontsize',proplist,10);
-         
-         [xunit, xfactor] = parse_xunit(xunit);
-         
-         switch lower(xunit)
-            case 'date'
-               % we need the actual times...
-               for n=numel(T):-1:1
-                  tv(n) = {T(n).sampletimes};
-               end
-               % preAllocate Xvalues
-               tvl = zeros(size(tv));
-               for n=1:numel(tv)
-                  tvl(n) = numel(tv{n}); %tvl : TimeVectorLength
-               end
-               
-               Xvalues = nan(max(tvl),numel(T)); %fill empties with NaN (no plot)
-               
-               for n=1:numel(tv)
-                  Xvalues(1:tvl(n),n) = tv{n};
-               end
-               
-               
-            case 'day of year'
-               allstarts = [T.mat_starttime];
-               startvec = datevec(allstarts(:));
-               dec31 = datenum(startvec(1)-1,12,31,0,0,0); % 12/31/xxxx of previous year in Matlab format
-               startdoy = datenum(allstarts(:)) - dec31;
-               
-               dl = zeros(size(T));
-               for n=1:numel(T)
-                  dl(n) = numel(T(n).data); %dl : DataLength
-               end
-               
-               Xvalues = nan(max(dl),numel(T));
-               periodsInUnits = T.period() ./ xfactor;
-               for n=1:numel(T)
-                  Xvalues(1:dl(n),n) = (0:dl(n)-1) .* periodsInUnits(n) + startdoy(n);
-                  % (1:dl(n)) .* periodsInUnits(n) + startdoy(n) - periodsInUnits(n);
-               end
-               
-            otherwise,
-               longest = max(arrayfun(@(tr) numel(tr.data), T));
-               while numel(longest) > 1
-                  longest = max(longest);
-               end
-               Xvalues = nan(longest, numel(T));
-               for n=1:numel(T)
-                  dl = numel(T(n).data);
-                  Xvalues(1:dl,n) = (1:dl) ./ T(n).samplerate ./ xfactor;
-               end
-         end
-         
-         if hasExtraArg
-            varargin = [varargin(1),property2varargin(proplist)];
-         else
-            varargin = property2varargin(proplist);
-         end
-         % %
-         
-         h = plot(Xvalues, double(T,'nan') , varargin{:} );
-         
-         if useAutoscale
-            yunit = SeismicTrace.autoscale(h, yunit);
-         end
-         
-         yh = ylabel(yunit,'fontsize',currFontSize);
-         
-         xh = xlabel(xunit,'fontsize',currFontSize);
-         switch lower(xunit)
-            case 'date'
-               datetick('keepticks','keeplimits');
-         end
-         if isscalar(T)
-            th = title(sprintf('%s (%s) @ %3.2f samp/sec',...
-               T.name, T.start, T.samplerate),'interpreter','none');
-         else
-            th = title(sprintf('Multiple Traces.  wave(1) = %s (%s) - starting %s',...
-               T(1).station, T(1).channel, T(1).start),'interpreter','none');
-         end;
-         
-         
-         
-         set(th,'fontsize',currFontSize);
-         set(gca,'fontsize',currFontSize);
-         %% return the graphics handles if desired
-         if nargout >= 1,
-            varargout(1) = {h};
-         end
-         
-         % return additional information in a structure: when varargout ==2
-         plothandles.title = th;
-         plothandles.xunits = xh;
-         plothandles.yunits = yh;
-         if nargout ==2,
-            varargout(2) = {plothandles};
-         end
-         
-         function [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)
-            %GETPROPERTY returns a property value from a property list, or a default
-            %  value if none is available
-            %[isfound, foundvalue, properties] =
-            %      getproperty(desiredproperty,properties,defaultvalue)
-            %
-            % returns a property value (if found) from a property list, removing that
-            % property pair from the list.  only removes the first encountered property
-            % name.
-            
-            pmask = strcmpi(desiredproperty,properties.name);
-            isfound = any(pmask);
-            if isfound
-               foundlist = find(pmask);
-               foundidx = foundlist(1);
-               foundvalue = properties.val{foundidx};
-               properties.name(foundidx) = [];
-               properties.val(foundidx) = [];
-            else
-               if exist('defaultvalue','var')
-                  foundvalue = defaultvalue;
-               else
-                  foundvalue = [];
-               end
-               % do nothing to properties...
-            end
-         end
-         
-         function [formString, proplist] = getformatstring(arglist)
-            hasExtraArg = mod(numel(arglist),2);
-            if hasExtraArg
-               proplist =  parseargs(arglist(2:end));
-               formString = arglist{1};
-            else
-               proplist =  parseargs(arglist);
-               formString = '';
-            end
-         end
-         
-         function c = property2varargin(properties)
-            %PROPERTY2VARARGIN makes a cell array from properties
-            %  c = property2varargin(properties)
-            % properties is a structure with fields "name" and "val"
-            c = {};
-            c(1:2:numel(properties.name)*2) = properties.name;
-            c(2:2:numel(properties.name)*2) = properties.val;
-         end
-         function [properties] = parseargs(arglist)
-            % PARSEARGS creates a structure of parameternames and values from arglist
-            %  [properties] = parseargs(arglist)
-            % parse the incoming arguments, returning a cell with each parameter name
-            % as well as a cell for each parameter value pair.  parseargs will also
-            % doublecheck to ensure that all pnames are actually strings... otherwise,
-            % there will be a mis-parse.
-            %check to make sure these are name-value pairs
-            %
-            % see also waveform/private/getproperty, waveform/private/property2varargin
-            
-            argcount = numel(arglist);
-            evenArgumentCount = mod(argcount,2) == 0;
-            if ~evenArgumentCount
-               error('Waveform:parseargs:propertyMismatch',...
-                  'Odd number of arguments means that these arguments cannot be parameter name-value pairs');
-            end
-            
-            %assign these to output variables
-            properties.name = arglist(1:2:argcount);
-            properties.val = arglist(2:2:argcount);
-            
-            for i=1:numel(properties.name)
-               if ~ischar(properties.name{i})
-                  error('Waveform:parseargs:invalidPropertyName',...
-                     'All property names must be strings.');
-               end
-            end
-         end
-         function [unitName, secondMultiplier] = parse_xunit(unitName)
-            % PARSE_XUNIT returns a labelname and a multiplier for an incoming xunit
-            % value.  This routine was removed to centralize this function
-            % [unitName, secondMultiplier] = parse_xunit(unitName)
-            secsPerMinute = 60;
-            secsPerHour = 3600;
-            secsPerDay = 3600*24;
-            
-            switch lower(unitName)
-               case {'m','minutes'}
-                  unitName = 'Minutes';
-                  secondMultiplier = secsPerMinute;
-               case {'h','hours'}
-                  unitName = 'Hours';
-                  secondMultiplier = secsPerHour;
-               case {'d','days'}
-                  unitName = 'Days';
-                  secondMultiplier = secsPerDay;
-               case {'doy','day_of_year'}
-                  unitName = 'Day of Year';
-                  secondMultiplier = secsPerDay;
-               case 'date',
-                  unitName = 'Date';
-                  secondMultiplier = nan; %inconsequential!
-               case {'s','seconds'}
-                  unitName = 'Seconds';
-                  secondMultiplier = 1;
-                  
-               otherwise,
-                  unitName = 'Seconds';
-                  secondMultiplier = 1;
-            end
-         end
-      end %plot
-      
-      function linkedplot(T, alignTraces)
-         %LINKEDPLOT Plot multiple waveform objects as separate linked panels
-         %   linkedplot(trace, alignTraces)
-         %   where:
-         %       T = a vector of SeismicTrace
-         %       alignWaveforms is either true or false (default)
-         %   T.linkedplot will plot a record section, i.e. each waveform is plotted
-         %   against absolute time.
-         %   T.linkedplot(true) will align the waveforms on their start times.
-         
-         % Glenn Thompson 2014/11/05, generalized after a function I wrote in 2000
-         % to operate on Seisan files only
-         
-         if numel(T)==0
-            warning('no waveforms to plot')
-            return
-         end
-         
-         if ~exist('alignWaveforms', 'var')
-            alignTraces = false;
-         end
-         
-         % get the first start time and last end time
-         starttimes = [T.mat_starttime];
-         % endtimes = T.timeLastSample();
-         SECSPERDAY = 86400;
-         grabendtime = @(X) (X.mat_starttime + (numel(X.data)-1) / (X.samplerate * SECSPERDAY));
-         endtimes = arrayfun(grabendtime, T);
-         endtimes(endtimes < starttimes) = starttimes(endtimes<starttimes); %no negative values!
-         % [starttimes endtimes]=gettimerange(T);
-         snum = min(starttimes(~isnan(starttimes)));
-         enum = max(endtimes(~isnan(endtimes)));
-         
-         % get the longest duration - in mode=='align'
-         durations = endtimes - starttimes;
-         maxduration = max(durations(~isnan(durations)));
-         
-         nwaveforms = numel(T);
-         figure
-         trace_height=0.9/nwaveforms;
-         left=0.1;
-         width=0.8;
-         ax = zeros(1,nwaveforms);
-         for wavnum = 1:nwaveforms
-            myw = T(wavnum);
-            dnum = myw.sampletimes;
-            ax(wavnum) = axes('Position',[left, 0.95-wavnum*trace_height, width, trace_height]);
-            if alignTraces
-               plot((dnum-min(dnum))*SECSPERDAY, myw.data,'-k');
-               set(gca, 'XLim', [0 maxduration*SECSPERDAY]);
-            else
-               plot((dnum-snum)*SECSPERDAY, myw.data,'-k');
-               set(gca, 'XLim', [0 enum-snum]*SECSPERDAY);
-            end
-            ylabel(myw.channelinfo.string,'FontSize',10,'Rotation',90);
-            set(gca,'YTick',[],'YTickLabel','');
-            if wavnum<nwaveforms;
-               set(gca,'XTickLabel','');
-            end
-            
-            % display mean on left, max on right
-            text(0.02,0.85, sprintf('%5.0f',mean(abs(myw.data(~isnan(myw.data))))),'FontSize',10,'Color','b','units','normalized');
-            text(0.4,0.85,sprintf(' %s',datestr(starttimes(wavnum),30)),'FontSize',10,'Color','g','units','normalized');
-            text(0.9,0.85,sprintf('%5.0f',max(abs(myw.data(~isnan(myw.data))))),'FontSize',10,'Color','r','units','normalized');
-         end
-         
-         if exist('ax','var')
-            linkaxes(ax,'x');
-         end
-         
-         % originalXticks = get(gca,'XTickLabel');
-         
-         f = uimenu('Label','X-Ticks');
-         uimenu(f,'Label','time range','Callback',{@daterange, snum, SECSPERDAY});
-         uimenu(f,'Label','quit','Callback','disp(''exit'')',...
-            'Separator','on','Accelerator','Q');
-         
-         function daterange(~, ~, snum, SECSPERDAY)
-            xlim = get(gca, 'xlim');
-            %xticks = linspace(xlim(1), xlim(2), 11);
-            mydate = snum + xlim/SECSPERDAY;
-            datestr(mydate,'yyyy-mm-dd HH:MM:SS.FFF')
-         end
-      end
-      
-      %%
-      function varargout = legend(T, varargin)
-         %legend creates a legend for a waveform graph
-         %  legend(traces) attempts to automatically create a legend based upon
-         %  unique values within the waveforms.  in order, the legend will
-         %  preferentially use station, channel, start time.
-         %
-         %  legend(traces, field1, [field2, [..., fieldn]]) will create a legend,
-         %  using the fieldnames.
-         %
-         %  h = legend(...) returns the handle for the created legend.  this handle
-         %  can be used to later modify the legend entry (such as setting the
-         %  location, etc.)
-         %
-         %  Note: for additional control, use matlab's legend function by passing it
-         %  cells & strings instead of a waveform.
-         %    (hint:useful functions include waveform/get, strcat, sprintf, num2str)
-         %
-         %  see also legend
-         
-         if nargin == 1
-            % automatically determine the legend
-            total_waves = numel(T);
-            cha_tags = [T.channelinfo];
-            ncha_tags = numel(unique(cha_tags));
-            if ncha_tags == 1
-               % all cha_tags represent the same station
-               items = T.start;
-            else
-               uniquestations = unique({cha_tags.station});
-               stationsareunique = numel(uniquestations) == total_waves;
-               issinglestation = isscalar(uniquestations);
-               
-               uniquechannels = unique({cha_tags.channel});
-               channelsareunique = numel(uniquechannels) == total_waves;
-               issinglechannel = isscalar(uniquechannels);
-               
-               if stationsareunique
-                  if issinglechannel
-                     items = {cha_tags.station};
-                  else
-                     items = strcat({cha_tags.station},':',{cha_tags.channel});
-                  end
-               elseif issinglestation
-                  if issinglechannel
-                     items = T.start;
-                  elseif channelsareunique
-                     items = {cha_tags.channel};
-                  else
-                     % 1 station, mixed channels
-                     items = strcat({cha_tags.channel},': ',T.start);
-                  end
-               else %mixed stations
-                  if issinglechannel
-                     items = strcat({cha_tags.station},': ',T.start);
-                  else
-                     items = strcat({cha_tags.station},':', {cha_tags.channel});
-                  end
-               end
-               
-            end
-            
-            
-            
-         else
-            %let the provided fieldnames determine the legend.
-            items = T.(varargin{1});
-            items = anything2textCell(items);
-            
-            for n = 2:nargin-1
-               nextitems = T.(varargin{n});
-               items = strcat(items,':',anything2textCell(nextitems));
-            end
-         end
-         
-         h = legend(items);
-         if nargout == 1
-            varargout = {h};
-         end
-         
-         function stuff = anything2textCell(stuff)
-            %convert anything to a text cell
-            if isnumeric(stuff)
-               stuff=num2str(stuff);
-            elseif iscell(stuff)
-               if isnumeric(stuff{1})
-                  for m=1 : numel(stuff)
-                     stuff(m) = {num2str(stuff{m})};
-                  end
-               end
-            end
-         end
-      end
       function W = trace2waveform(T)
-         % convert traces into waveforms
+         %trace2waveform   convert SeismicTrace into waveform
+         %  w = trace2waveform(Trace)
+         %
+         %  See also waveform, SeismicTrace
+         
+         % TODO: Move this to waveform instead. Maybe
          for n=numel(T):-1:1
             W(n) = waveform;
             W(n) = set(W(n),'channelinfo',T(n).channelinfo,...
@@ -1508,8 +980,8 @@ classdef SeismicTrace < TraceData
    end
    methods(Static)
       function T = toTrace(item, itemlabel, conversionfunction)
-         % convert anything into traces
-         % conversion functions exist outside the SeismicTrace class so that
+         %toTrace   convert anything into traces
+         % conversion functions exist outside SeismicTrace classdef so that
          % adding/removing/changing the conversion functions do not affect
          % this class
          % some envisioned examples
@@ -1520,38 +992,40 @@ classdef SeismicTrace < TraceData
          % T = toTrace( X , 'seisan');
          % T = toTrace( X , 'seisan');
          % T = toTrace( X , 'waveform');
-         %
+         
+         %TODO: either flesh this out, or remove it
+         
          persistent converters
          if isempty(converters)
             converters = [];
             %fill converters based on a directory/package
          end
-         
-         
       end
+      
       function T = waveform2trace(W)
-         % convert waveforms into traces
+         % waveform2trace   convert waveform into SeismicTrace
+         %TODO: This is specific, but doesn't need to be.  If I drop the
+         %assertion, this will automatically try to conver anything to a
+         %trace. maybe.
          assert(isa(W,'waveform'));
          for N = numel(W):-1:1
             T(N) = SeismicTrace(W(N));
          end
       end
-            function T = fakedata(ds, names, starts, ends, miscfilters)
-         % ds is a datasource
-         % T = retrieve(datasouce, names, starts, ends, miscfilters)
-         % names are channeltags OR bulkdataselect (BDS)-type requests
-         %    if BDS type, then starts, ends, miscfilters ignored.
-         % starts is either text, or array fo start times 
-         % find data pointed to by ds, names, starts, ends
-         % convertToTraces
-         % return the traces
+      function T = fakedata(names, starts, ends, samplerate)
+         %fakedata   Crates a SeismicTrace filled with fake data
+         %  T = fakedata(names, starts, ends, samplerate)
          
-         %anticipated trouble: wildcards
+         % anticipated trouble: wildcards
+         
          warning('filling with bogus data');
+         if ischar(names)
+            names = {names};
+         end
          if ~exist('starts','var')
             % build T from names
          else
-            T = SeismicTrace; T.samplerate = 20;
+            T = SeismicTrace; T.samplerate = samplerate;
             T = repmat(T, numel(names), numel(starts));
             
             for n=1:numel(names)
@@ -1568,7 +1042,7 @@ classdef SeismicTrace < TraceData
       end
       
       function T = retrieve(ds, names, starts, ends, miscfilters)
-         % Get a SeismicTrace from external data source
+         %retrieve   Get a SeismicTrace from external data source
          %
          % UNDER CONSTRUCTION. for now, this is a wrapper around waveform.
          % it will use the waveform class to get data, and will then

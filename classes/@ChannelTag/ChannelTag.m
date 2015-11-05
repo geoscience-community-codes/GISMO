@@ -1,6 +1,22 @@
 classdef ChannelTag
    %ChannelTag Summary of this class goes here
-   % ChannelTag is the class that holds the network, station, location, and channel for a seismic trace
+   % ChannelTag Contains network, station, location and channel information
+   %
+   %
+   % ChannelTag Properties:
+   %   network  - network tag   (Generally 2 characters)
+   %   station  - station tag   (Up to 5 alphanumeric characters)
+   %   location - location tag  (2 characters)
+   %   channel  - channel tag   (3 character channel tag)
+   %
+   % ChannelTag Methods:
+   %   string - Retrieve properties as 'network.station.location.channel'
+   %   fixedlengthstrings - 
+   %   getDelimitedString -
+   %   
+   %   sort - Sort in assending order by net.cha.loc.sta
+   %   matching - Field-by-field comparison
+   %   validate - Make sure ChannelTag roughly conforms to SEED  
    %
    % This rewrite is designed to be better SEED compatible
    %
@@ -59,11 +75,6 @@ classdef ChannelTag
    %   This is intended as a stand-alone class. It should know nothing about
    %   any other waveform class.
    
-   % Backwards compatibility notes:
-   %   The old SCNLOBJECT class will use this behind the scenes. Hopefully
-   %   it will be easier to convert code when SNCLOBJECT is producing the
-   %   appropriate warning messages.
-   
    properties
       network  = '';
       station  = '';
@@ -81,17 +92,15 @@ classdef ChannelTag
    
    methods
       function obj = ChannelTag(varargin)
-         % construct a ChannelTag from a string or 4 strings.
-         % chaTag = ChannelTag('IU', 'ANMO', '00', 'BHZ'); % net, sta, loc, cha
-         % chaTag = ChannelTag('IU.ANMO.00.BHZ');
+         %ChannelTag    Construct a ChannelTag from a string or 4 strings.
+         %  chaTag = ChannelTag('IU', 'ANMO', '00', 'BHZ'); % net, sta, loc, cha
+         %  chaTag = ChannelTag('IU.ANMO.00.BHZ');
          %
-         % any of these may be empty ([] or '').
-         % to create multiple ChannelTags at once, use ChannelTag.array()
+         %  any of these may be empty ([] or '').
+         %  to create multiple ChannelTags at once, use ChannelTag.array()
          %
-         % See also: ChannelTag.array
-         
-         % By removing the ability to create many at once, we ensure it won't
-         % be done accidentally.
+         %  See also: array
+         % TODO: Update the details. ChannelTag.array is not necessary anymore
          
          switch nargin
             case 4
@@ -140,7 +149,7 @@ classdef ChannelTag
       end
       
       function [IDX, objs] = matching(objs, N, S, L, C)
-         % matching does field-by-field comparison
+         %matching   Field-by-field comparison
          %
          % idx = cha_tags.matching(Net, Sta, Loc, Cha);
          % idx = cha_tags.matching('net.sta.loc.cha');
@@ -298,6 +307,24 @@ classdef ChannelTag
          end
       end
       
+      function disp(obj)
+         if numel(obj) == 1
+            disp('<a href="matlab:help ChannelTag">ChannelTag</a> with network.station.location.channel:')
+            fprintf('   network: ''%s''\n   station: ''%s''\n  location: ''%s''\n   channel: ''%s''\n',...
+               obj.network,obj.station,obj.location, obj.channel);
+         else
+            disp('<a href="matlab:help ChannelTag">ChannelTag</a> array (network.station.location.channel):')
+            for n=1:numel(obj)
+               if strcmp(obj(n).string,'...')
+                  disp('  ... (empty ChannelTag)');
+               else
+                  disp(['  ', obj(n).string]);
+               end
+            end
+         end
+      end
+            
+      
       function c = char(obj)
          c = obj.string([],'nocell');
       end
@@ -344,7 +371,7 @@ classdef ChannelTag
       end
       
       function res = validate(obj)
-         % make sure ChannelTag roughly conforms to SEED
+         %validate   Make sure ChannelTag roughly conforms to SEED
          nslc_is_char = [ischar(obj.network), ischar(obj.channel),...
              ischar(obj.station), ischar(obj.location)];
          nslc_valid_length = [numel(obj.network) == 2,...
