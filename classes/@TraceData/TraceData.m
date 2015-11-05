@@ -1,19 +1,32 @@
 classdef TraceData
    %TraceData   Handles the data associated with timeseries.
    %
-   %   Tracedata might be considered a "light" version of the <a
+   %   TraceData contains the functionality associated with data
+   %   manipulation, including dealing with units.
+   %
+   %   TraceData might be considered a "light" version of the <a
    %   href="matlab: help timeseries">timeseries</a>
    %   class. Whereas the timeseries class has lots of functionality, it
    %   suffers from much slower execution times.
-   %
+   %?
    %
    % About TraceData vs <a
    %   href="matlab: help waveform">waveform</a>
    %
    % TraceData Properties:
+   %       data       - column of evenly sampled data
+   %       samplerate - number of samples per second
+   %       units      - units for the data, ex. 'counts', 'm / sec'
+   %       duration   - time between first and last samples
    %
    % TraceData Methods:
-   %    Basic Math:
+   %
+   %    Derived properties:
+   %       nyquist - Nyquist frequency (samplerate / 2)
+   %       period - Get Period  (1/samplerate)
+   %       formattedduration - retrieve duration as formatted text
+   %       
+   %    Mathamatical operations:
    %       plus - (+)addition
    %       minus - (-)subtraction
    %       times - (.*) element multiplication
@@ -23,6 +36,10 @@ classdef TraceData
    %       uminus - (-A) unary minus
    %       sign - signum of data (returns array of +1, 0, or -1)
    %       abs - Absolute value
+   %
+   %    Binary Operators:
+   %       eq - (A==B) true if data, samplerate and units match.
+   %       ne - (A~=B) false if data, samplerate and units match.
    %
    %    Statistics (returns a single value for each trace):
    %       min - Minimum value of data
@@ -38,31 +55,26 @@ classdef TraceData
    %       
    %       hilbert - Hilbert envelope (real only)
    %       taper - Apply a taper to the data
-   %       resample - Resample teh data
+   %       resample - Resample the data
    %       demean - Remove the mean
    %       detrend - Remove trend from data
    %       clip - Clip the data
    %       
    %       extract - Retrieve a subset of the data
+   %
+   %    Conversion operations:
    %       double - retrieve data as 1xN array of double
    %
    %       stack - stack all waveforms
    %       binStack - stack N waveforms at a time (with optional overlap)
-   %       zero2nan - Replace values close to zero with nans
-   %       nyquist - Nyquist frequency (samplerate / 2)
-   %       period - Get Period  (1/samplerate)
    %
    %       compatibleWith - Compare units, samplerate and datalength
    %       assertCompatibleWith - Error if units, samplerate and datalength do not match
    %       
-   %       fillgaps             
-   %       formattedduration 
+   %       fillgaps - replace nan values (can replace other values)
+   %       zero2nan - Replace values close to zero with nans  
    %       amplitude_spectrum
-   %       setlength - adjust length of trace data to allow batch processing
-   %
-   %       Binary Operators:
-   %       eq - (A==B) true if data, samplerate and units match.
-   %       ne - (A~=B) false if data, samplerate and units match.
+   %       setlength - adjust length of data to allow batch processing
    %    
    % RE: ERROR recovery
    % trying new tactic. I won't try to anticipate all the various ways
@@ -70,7 +82,7 @@ classdef TraceData
    % comment with my expectations which will show up automatically in the
    % displayed error.
    %
-   % See also Waveform, timeseries
+   % See also Seismictrace, waveform, timeseries
    
    % Waveform functions included in Tracedata:
    %  - functions that manipulate the data itself
@@ -102,6 +114,7 @@ classdef TraceData
    
    methods
       function obj = TraceData(varargin)
+         %TraceData construct a TraceData object
          switch nargin
             case 1
                if isa(varargin{1}, 'waveform')
@@ -117,7 +130,7 @@ classdef TraceData
       end
       
       function obj = set.data(obj, values)
-         % set.data ensures that data is always stored in a column
+         %set.data   Assign values to data as a column
          obj.data = values(:);
       end
       
@@ -129,7 +142,7 @@ classdef TraceData
       end
       
       function p = period(T)
-         %period   calculated as (1 / samplerate)
+         %period   Period, calculated as (1 / samplerate)
          p = 1 ./ [T.samplerate];
          % NOT reshaped
       end
@@ -144,7 +157,7 @@ classdef TraceData
       end
       
       function secondsOfData = get.duration(obj)
-         %returns duration in seconds
+         %secondsOfData   Duration of samples, in seconds
          if isempty(obj.data) || isempty(obj.samplerate)
             secondsOfData = 0;
          else
@@ -175,8 +188,8 @@ classdef TraceData
       
       %% Mathamatical - BASIC OPERATIONS
       function A = plus(A, B)
-         %plus   A + B add something to the TraceData's data,
-         %   This will return a TraceData object
+         %+   Plus.
+         %   C=A+B add something to the TraceData's data.
          %
          %   valid combinations
          %      TraceData + NumericVector; % same length as TraceData.data
@@ -210,20 +223,20 @@ classdef TraceData
       end
       
       function A = minus(A, B)
-         %minus  A - B subtract something from the Trace's data,
-         %   This will return a TraceData object
+         %-  Subtract something from the Trace's data,
+         %   C=A-B This will return a TraceData object
          %
-         %   valid combinations (let TD represent any TraceData object)
+         %   valid combinations
          %      TraceData - NumericVector; % same length as TraceData.data
          %      TraceData - Scalar;
          %
-         %  To avoid ambiguity with the metadata, two traces are subtracted
-         %  by explicitly subtracting the one's data from the other:
+         %   To avoid ambiguity with the metadata, two traces are subtracted
+         %   by explicitly subtracting the one's data from the other:
          %
          %      % assertCompatiblewith(TraceData1, TraceData2); % for debug
          %      TraceData1 - TraceData2.data
          %
-         % See also compatiblewith, assertCompatiblewith
+         %   See also compatiblewith, assertCompatiblewith
          
          if isnumeric(B)
             % A is guaranteed to be a TraceData
@@ -240,18 +253,18 @@ classdef TraceData
       end
       
       function A = times(A,B)
-         %TIMES   A .* B elementwise Trace data multiplication
-         %   A .* B or B .* A
-         % Either A or B can be a scalar, or a vector of same size as the
-         % data elements of the TraceData object.
+         %.*   Elementwise Trace data multiplication
+         %   C=A.*B or C=B.*A when A is a TraceData object
+         %   Either A or B can be a scalar, or a vector of same size as the
+         %   data elements of the TraceData object.
          %
-         %  To avoid ambiguity with the metadata, two traces are multiplied
-         %  by explicitly multiplying one's data with the other:
+         %   To avoid ambiguity with the metadata, two traces are multiplied
+         %   by explicitly multiplying one's data with the other:
          %
          %      % assertCompatiblewith(TraceData1, TraceData2); % for debug
          %      TraceData1 .* TraceData2.data
          %
-         % See also compatiblewith, assertCompatiblewith
+         %  See also compatiblewith, assertCompatiblewith
          if isnumeric(B)
             for n=1:numel(A)
                A(n).data = A(n).data .* B; % B should be either scalar or same size as obj.data
@@ -267,8 +280,10 @@ classdef TraceData
       end
       
       function C = mtimes(A, B)
-         %mtimes   A * B matrix multiplication against data within a trace
-         %  result is a matrix, vector, or scalar. (NOT a TraceDataObject)
+         %*   Matrix multiplication against data within a trace
+         %   C=A*B matrix multiplication against data within a trace
+         %   result is a matrix, vector, or scalar. (NOT a TraceDataObject)
+   
          if isa(A,'TraceData')
             C = A.data * B;
          else
@@ -277,17 +292,18 @@ classdef TraceData
       end
       
       function A = rdivide(A, B)
-         %rdivide   elementwise division A ./ B on trace data
-         % A must be a TraceData object
-         % B can be either a scalar or vector of numbers the same size as A.data
+         %./  Divide data elements of A by B
+         %   C=A./B performs elementwise division on trace data
+         %   A must be a TraceData object
+         %   B can be either a scalar or vector of numbers the same size as A.data
          %
-         %  To avoid ambiguity with the metadata, two traces are multiplied
-         %  by explicitly dividing one's data from the other:
+         %   To avoid ambiguity with the metadata, two traces are multiplied
+         %   by explicitly dividing one's data from the other:
          %
-         %      % assertCompatiblewith(TraceData1, TraceData2); % for debug
-         %      TraceData1 ./ TraceData2.data
+         %   % assertCompatiblewith(TraceData1, TraceData2); % for debug
+         %   TraceData1 ./ TraceData2.data
          %
-         % See also compatiblewith, assertCompatiblewith
+         %   See also times, mtimes, compatiblewith, assertCompatiblewith
          
          if isnumeric(B)
             % A is guaranteed to be a TraceData
@@ -300,8 +316,9 @@ classdef TraceData
       end
       
       function A = power(A, B)
-         %.^   A.^B Array Power for data within traces
-         %  A = power(A,B) is called when A or B is an object
+         %.^   Array power for TraceData
+         %   C=A.^B raises each data element of A to the power B
+
          assert(isa(A,'TraceData'),'TraceData:power:invalidType',...
             'for A .^ B, B cannot be a TraceData object');
          assert(isnumeric(B),'TraceData:power:invalidType',...
@@ -312,18 +329,19 @@ classdef TraceData
       end
       
       function A = uminus(A)
-         %uminus   -A Unary minus for traces
+         %-   Unary minus.
+         %  -A negates the data in A
          for n=1:numel(A)
             A(n).data = -A(n).data;
          end
       end
       
       function trace = abs(trace)
-         %abs   |A| Absolute value of trace data
-         % T = abs(trace) returns traces containing the absolute values of
-         % the data.
+         %Absolute value of trace data
+         %  T = abs(trace) returns traces containing the absolute values of
+         %  the data.
          %
-         %See also abs
+         %See also abs, sign
          for n=1:numel(trace)
             trace(n).data = abs(trace(n).data);
          end
@@ -343,18 +361,18 @@ classdef TraceData
       
       %% more complicated
       function T = diff(T, varargin)
-         % diff   Difference and approximate derivative for traces
-         % A = diff(trace)
-         % A = diff(trace, options) see the builtin diff for details on
-         % available options.
+         %diff   Difference and approximate derivative for traces
+         %  A = diff(trace)
+         %  A = diff(trace, options) see the builtin diff for details on
+         %  available options.
          %
-         % trace must have samplerate and data assigned, otherwise you may
-         % get "a Matrix dimensions must agree" error
+         %  trace must have samplerate and data assigned, otherwise you may
+         %  get "a Matrix dimensions must agree" error
          %
-         % units are automatically changed. Assuming the sample rate is
-         % samples/sec, then the new trace is in currentunits / sec.
+         %  units are automatically changed. Assuming the sample rate is
+         %  samples/sec, then the new trace is in currentunits / sec.
          %
-         % see diff
+         %  See also diff
          if isempty(varargin)
             for I=1:numel(T)
                T(I).data = diff(T(I).data) .* T(I).samplerate; % must have data and sample rate
@@ -375,7 +393,7 @@ classdef TraceData
       end
       
       function T = integrate (T,method)
-         %INTEGRATE   Integrate a tracedata signal
+         %integrate   Integrate a tracedata signal
          %   trace = trace.integrate([method])
          %   goes from Acceleration -> Velocity, and from Velocity -> displacement
          %
@@ -396,7 +414,7 @@ classdef TraceData
          %   little kludgey.
          %
          %
-         %   See also CUMSUM, CUMTRAPZ, trace.diff
+         %   See also cumsum, cumtrapz, diff
          
          Nmax = numel(T);
          allfreq = [T.samplerate];
@@ -438,20 +456,24 @@ classdef TraceData
       
       function A = detrend(A, varargin)
          %detrend   Remove the trend from TraceData
-         %See also detrend
+         %  See also detrend
          for n=1:numel(A);
             A(n).data = detrend(A(n).data,varargin{:});
          end
       end
       
-      %% simple stats
-      function val = bulk_run_on_data(T, F)
-         % will run function F against the data field of each element in T
-         % shape is preserved, and all empty traces return nan
-         % F must return a single value
-         % vals = T.bulk_run_on_data(functionhandle)
+      function val = bulkCalculate(T, F)
+         %bulkCalculate   Run a function against the data 
+         %  vals = T.bulkCalculate(funcHandle) will against the data field
+         %  of each element in T shape is preserved, and all empty
+         %  traces return nan FH must return a single value
          %
-         % See also TraceData.max, TraceData.min, TraceData.mean, TraceData.median
+         %  basically, this will run:
+         %    funcHandle(T.data) 
+         %
+         %  for each trace in T
+         %
+         %  See also max, min, mean, median
          
          val = nan(size(T));
          for n=numel(T) : -1 : 1
@@ -462,61 +484,62 @@ classdef TraceData
       function val = max(T)
          %max   Maximum value for trace data
          F = @(X) max(X.data);
-         val = T.bulk_run_on_data(F);
+         val = T.bulkCalculate(F);
       end
       function val = min(T)
          %min   Minimum value for trace data
          F = @(X) min(X.data);
-         val = T.bulk_run_on_data(F);
+         val = T.bulkCalculate(F);
       end
       function val = mean(T)
-         %mean   Mean value for trace data
+         %mean   Average or mean value for trace data
          F = @(X) mean(X.data(~isnan(X.data)));
-         val = T.bulk_run_on_data(F);
+         val = T.bulkCalculate(F);
       end
       function val = median(T)
-         %median Median value for trace data
+         %median   Median value for trace data
          F = @(X) median(X.data(~isnan(X.data)));
-         val = T.bulk_run_on_data(F);
+         val = T.bulkCalculate(F);
       end
       function val = std(T, varargin)
-         % std   standard deviation for traces
-         % vals = T.std retrieves the std from each trace, returning in an
-         % array of the same shape as T.
-         % vals = T.std(options); lets you declare options as per the
-         % builtin version of std
-         % useful option:
-         %   vals = T.std('omitnan') % or 'includenan'
+         %std   standard deviation for traces
+         %  vals = T.std retrieves the std from each trace, returning in an
+         %  array of the same shape as T.
+         %  vals = T.std(options); lets you declare options as per the
+         %  builtin version of std
+         %  useful option:
+         %  
+         %     vals = T.std('omitnan') % or 'includenan'
          %
-         % See also std, TraceData.bulk_run_on_data
+         %  See also std, TraceData.bulkCalculate
          if exist('varargin','var')
             F = @(X) std(X.data,varargin{:});
          else
             F = @(X) std(X.data);
          end
-         val = T.bulk_run_on_data(F);
+         val = T.bulkCalculate(F);
       end
       function val = var(T, varargin)
-         % var   calulate variance for traces
-         % vals = T.var;
-         % vals = T.var(options); lets you declare options as per the
-         % builtin version of var
-         % useful option:
-         % vals = T.var('omitnan') % or 'includenan'
+         %var   calulate variance for traces
+         %  vals = T.var;
+         %  vals = T.var(options); lets you declare options as per the
+         %  builtin version of var
+         %  useful option:
+         %    vals = T.var('omitnan') % or 'includenan'
          %
-         % See also var, TraceData.bulk_run_on_data
+         %  See also var, TraceData.bulkCalculate
          if exist('varargin','var')
             F = @(X) var(X.data,varargin{:});
          else
             F = @(X) var(X.data);
          end
-         val = T.bulk_run_on_data(F);
+         val = T.bulkCalculate(F);
       end
       %% extended functionality
       function [A, phi, f] = amplitude_spectrum(td)
-         % amplitude_spectrum   Simple method to compute amplitude
-         % spectrum for a trace. Uses the MATLAB fft function.
-         %   [A, phi, f] = amplitude_spectrum(td)
+         %amplitude_spectrum   Simple method to compute amplitude
+         %  spectrum for a trace. Uses the MATLAB fft function.
+         %  [A, phi, f] = amplitude_spectrum(td)
          %
          %   Inputs:
          %       td - a single TraceData
@@ -543,7 +566,7 @@ classdef TraceData
       end
       
       function obj = clip(obj, vals)
-         %CLIP   clips a trace's data at a particular max/min value range
+         %clip   clips a trace's data at a particular max/min value range
          %   clippedtraces = clip(traces, values)
          %
          %   Input Arguments
@@ -612,7 +635,7 @@ classdef TraceData
          %   Example. Retrieve array using nan as filler
          %   d = double(T, @nan);
          %
-         %   See also zero, nan
+         %   See also zeros, nan
          
          if nargin == 1
             createDefaultArray = @zeros;
@@ -817,7 +840,7 @@ classdef TraceData
       end
       
       function T = hilbert(T, n)
-         %HILBERT   Discrete-time analytic Hilbert transform for traces.
+         %hilbert   Discrete-time analytic Hilbert transform for traces.
          %   trace = trace.hilbert()
          %   trace = trace.hilbert(N);
          %
@@ -846,7 +869,7 @@ classdef TraceData
       end
       
       function T = resample(T, method, crunchFactor)
-         %RESAMPLE resamples a trace at over every specified interval
+         %resample   Resample a trace over a specified interval
          %   T = trace.resample(method, crunchfactor)
          %
          %   Input Arguments
@@ -1101,7 +1124,7 @@ classdef TraceData
       
       %% stacking functions
       function out = stack(T)
-         %STACK  stacks data from array of traces
+         %stack  stacks data from array of traces
          %   StackedTraces = stack(traces)
          %   ASSUMES frequencies are the same. data does not need to be the same
          %   length, but shorter traces will be padded with zeros at the end

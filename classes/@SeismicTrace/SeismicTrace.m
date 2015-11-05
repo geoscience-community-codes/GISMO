@@ -1,5 +1,5 @@
 classdef SeismicTrace < TraceData
-   %SeismicTrace handles timeseries manipulation with channel info 
+   %SeismicTrace   handles timeseries manipulation with channel info 
    %  SeismicTrace inherits the ability to manipulate timeseries data from
    %  TraceData, and adds the capability to handle chanel descriptor tags,
    %  handle UserData fields, track history, timestamping, and basic calibration. 
@@ -65,7 +65,13 @@ classdef SeismicTrace < TraceData
    
    methods
       function obj = SeismicTrace(varargin)
-         % SeismicTrace   Constructor for SeismicTrace objects
+         %SeismicTrace   Constructor for SeismicTrace objects
+         %   St=SeismicTrace will return an empty SeismicTrace
+         %   St=SeismicTrace(waveform) creates a SeismicTrace from a
+         %   waveform objct. This might get removed and put into waveform
+         %
+         %   See also TraceData, ChannelTag, Waveform
+         
          obj@TraceData(varargin{:});
          switch nargin
             case 1
@@ -138,19 +144,19 @@ classdef SeismicTrace < TraceData
       function val = sampletimes(obj)
          %sampletimes   Retrieve matlab date for each sample
          %
-         %  Replaces waveform's get(w, 'timevector')
+         %   Replaces waveform's get(w, 'timevector')
          
          val = sampletimes@TraceData(obj) + obj.mat_starttime;
       end
       
       function val = firstsampletime(obj, stringformat)
          %firstsampletime   Time of first sample as matlab date or string.
-         % val = trace.lastsampletime will return as a datenum
-         % val = trace.lastsampletime(FORMAT) will return a string
-         % formatted according to FORMAT.
-         % For multiple traces, a character array will be returned.
+         %  val = trace.lastsampletime will return as a datenum
+         %  val = trace.lastsampletime(FORMAT) will return a string
+         %  formatted according to FORMAT.
+         %  For multiple traces, a character array will be returned.
          %
-         % see also datestr
+         %  See also datestr
          val = [obj.mat_starttime];
          if exist('stringformat','var')
             val = datestr(val,stringformat);
@@ -176,18 +182,31 @@ classdef SeismicTrace < TraceData
       end
          
       function tf = startsbefore(A, B)
+         %startsbefore   Compare starttimes of SeismicTrace
+         %   tf = A.startsbefore (B)  will return TRUE if Trace A starts
+         %   before trace B
          %TODO: make this work for datetime or datenums or datestrings
          tf = A.mat_starttime < B.mat_starttime;
       end
       function tf = startsafter(A, B)
+          %startsafter   Compare starttimes of SeismicTrace
+         %   tf = A.startsafter (B) will return TRUE if Trace A starts after
+         %   Trace B.
          %TODO: make this work for datetime or datenums or datestrings
          tf = A.firstsampletime > B.firstsampletime;
       end
-      function tf = endsbefore(A, B)
+      function tf = endsbefore(A, B) 
+         %endsbefore   Compare last samples of SeismicTrace
+         %   tf = A.endsbefore (B)  will return TRUE if Trace A ends before
+         %   trace B
          %TODO: make this work for datetime or datenums or datestrings
          tf = A.lastsampletime < B.lastsampletime;
       end
       function tf = endsafter(A, B)
+         %endsafter   Compare last samples of SeismicTrace
+         %   tf = A.endsafter (B) will return TRUE if Trace A ends after
+         %   Trace B.
+         %
          %TODO: make this work for datetime or datenums or datestrings
          tf = A.lastsampletime > B.lastsampletime;
       end
@@ -205,7 +224,7 @@ classdef SeismicTrace < TraceData
       end
       
       function T = align(T,alignTime, newSamprate, method)
-         %ALIGN   Resample a seismic trace over a specified interval
+         %align   Resample a seismic trace over a specified interval
          %   T = T.align(alignTime, newSamprate)
          %   T = T.align(alignTime, newSamprate, method)
          %
@@ -361,17 +380,18 @@ classdef SeismicTrace < TraceData
       end
       
       function T = renameUserField(T, oldField, newField, failSilently)
-         % renameUserField   Rename a UserData field
-         % T = T.renameuserField(oldName, newName);
-         % rename a field if it exists to a new name.
-         % Possible sticking-points to deal with:
-         % 1. both oldField and newField exist in T.UserData -> error
-         % 2. newField already exists in T.UserData -> ignore
-         % 3. neither newField or oldfield exists in T.Userdata -> warning
+         %renameUserField   Rename a UserData field
+         %  T = T.renameuserField(oldName, newName);
+         %  rename a field if it exists to a new name.
+         %  Possible sticking-points to deal with:
+         %  1. both oldField and newField exist in T.UserData -> error
+         %  2. newField already exists in T.UserData -> ignore
+         %  3. neither newField or oldfield exists in T.Userdata -> warning
          % 
-         % if failSilently is true, then failures will not result in an
-         % error.
-         %TODO TOFIX: Adjust userRules too.
+         %  if failSilently is true, then failures will not result in an
+         %  error.
+         
+         %  TODO TOFIX: Adjust userRules too.
          
          oldFieldExists = isfield(T.UserData, oldField);
          newFieldExists = isfield(T.UserData, newField);
@@ -566,7 +586,7 @@ classdef SeismicTrace < TraceData
       end
 
       function combined_traces = combine (traces)
-         %COMBINE   Merge waveforms based on start/end times and ChannelTag
+         %combine   Merge waveforms based on start/end times and ChannelTag
          %  combined_waveforms = combine(traces) combines based on
          %  ChannelTag and start/endtimes. 
          %
@@ -589,13 +609,14 @@ classdef SeismicTrace < TraceData
             T = traces(chanbin == i);
             T = timesort(T);
             for j=(numel(T)-1):-1:1
-               T(j) = piece_together(T(j), T(j+1));
+               T(j) = pieceTogether(T(j), T(j+1));
                T(j+1) = [];
             end
             combined_traces(i) = T;
          end
          
-         function Tout = piece_together(T1, T2)
+         function Tout = pieceTogether(T1, T2)
+            %pieceTogether
             if isempty(T1.data)
                Tout = T2;
                return;
@@ -619,6 +640,7 @@ classdef SeismicTrace < TraceData
          end
          
          function T1 = spliceAndPad(T1, T2, nToPad)
+            %spliceAndPad combines two traces that do not overlap
             if nToPad > 0 && ~isinf(nToPad)
                T1.data = [T1.data; nan(nToPad,1); T2.data];
             else
@@ -627,6 +649,7 @@ classdef SeismicTrace < TraceData
          end
          
          function T1 = spliceTrace(T1, T2)
+            %spliceTrace   combines two traces that  overlap
             timesToGrab = sum(T1.sampletimes < T2.firstsampletime);
             samplesRemoved = numel(T1.data) - timesToGrab;
             T1.data = [double(extract(T1,'index',1,timesToGrab)); T2.data];
@@ -640,10 +663,11 @@ classdef SeismicTrace < TraceData
          end
       end
       
-      function outW = extract(T, method, startV, endV)
+      
          %TODO: make this SeismicTrace-y.  This is currently written for waveforms
          %TODO: Decide on proper wording! Should this be multiple functions?
-         %EXTRACT creates a waveform with a subset of another's data.
+      function outW = extract(T, method, startV, endV)
+         %extract   creates a waveform with a subset of another's data.
          %   waveform = extract(waveform, 'TIME', startTime, endTime)
          %       returns a waveform with the subset of data from startTime to
          %       endTime.  Both times are matlab formatted (string or datenum)
@@ -900,7 +924,7 @@ classdef SeismicTrace < TraceData
       
       %% history-related functions
       function T = addhistory(T, whathappened,varargin)
-         %ADDHISTORY function in charge of adding history to a waveform
+         %addhistory   function in charge of adding history to a waveform
          %   trace = trace.addhistory(whathappened);
          %   trace = trace.addhistory(formatString, [variables...])
          %
@@ -933,7 +957,7 @@ classdef SeismicTrace < TraceData
          end
       end
       function T = clearhistory(T)
-         %CLEARHISTORY reset history of a waveform
+         %clearhistory   reset history of a waveform
          %   trace = trace.clearhistory
          %   clears the history, leaving it blank
          %
@@ -941,7 +965,7 @@ classdef SeismicTrace < TraceData
          T(N).history= T(N).history([]);
       end
       function [myhist] = get.history(t)
-         %HISTORY retrieve the history of a waveform object
+         %history   retrieve the history of a waveform object
          %   myhist = trace.history
          %       returns a struct describing what's been done to this trace
          %   myhist = trace.history(N)
@@ -1003,7 +1027,8 @@ classdef SeismicTrace < TraceData
       end
       
       function T = waveform2trace(W)
-         % waveform2trace   convert waveform into SeismicTrace
+         %waveform2trace   convert waveform into SeismicTrace
+         
          %TODO: This is specific, but doesn't need to be.  If I drop the
          %assertion, this will automatically try to conver anything to a
          %trace. maybe.
@@ -1014,7 +1039,7 @@ classdef SeismicTrace < TraceData
       end
       function T = fakedata(names, starts, ends, samplerate)
          %fakedata   Crates a SeismicTrace filled with fake data
-         %  T = fakedata(names, starts, ends, samplerate)
+         %   T = fakedata(names, starts, ends, samplerate)
          
          % anticipated trouble: wildcards
          
@@ -1057,6 +1082,7 @@ classdef SeismicTrace < TraceData
          % find data pointed to by ds, names, starts, ends
          % convertToTraces
          % return the traces
+         
          if isa(names,'cell') || isa(names,'char')
             names = ChannelTag.array(names);
          end
