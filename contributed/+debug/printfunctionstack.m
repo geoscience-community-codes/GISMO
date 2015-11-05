@@ -45,4 +45,4 @@ if numel(st)>1
                 outstr = sprintf('%s%s%s',outstr, symbol,st(c).name);
         end
 end
-debug.print_debug(1, '%s at %s',outstr,datestr(utnow()));
+debug.print_debug(1, '%s at %s',outstr,datestr(now));

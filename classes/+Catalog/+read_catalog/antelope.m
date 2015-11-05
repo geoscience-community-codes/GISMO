@@ -5,7 +5,8 @@ function self = antelope(varargin)
     debug.printfunctionstack('>')
 
     if ~admin.antelope_exists
-        error('This function requires the Antelope toolbox for Matlab'); 
+        warning('This function requires the Antelope toolbox for Matlab'); 
+        self = Catalog([], [], [], [], [], {}, {});
         return;
     end
 
