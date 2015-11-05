@@ -52,8 +52,8 @@ function self = seisan(varargin)
     end
     
     % Check start & end times
-    snum = read_catalog.ensure_dateformat(startTime);
-    enum = read_catalog.ensure_dateformat(endTime);
+    snum = Catalog.read_catalog.ensure_dateformat(startTime);
+    enum = Catalog.read_catalog.ensure_dateformat(endTime);
     
     if ~exist(dbpath, 'dir')
         fprintf('Directory %s not found\n',dbpath);

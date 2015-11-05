@@ -236,7 +236,7 @@ classdef EventRate
             if strcmp(plotmode, 'figures') || length(obj)==1
             
                 for c = 1 : numel(obj)
-                    binsize_str = binning.binsizelabel(obj(c).binsize);
+                    binsize_str = Catalog.binning.binsizelabel(obj(c).binsize);
                     numsubplots = length(metric);
                     %figure(gcf+1)
                     figure
@@ -789,7 +789,7 @@ end
 function label = metric2label(metric, binsize)
     % label = metric2label(metric, binsize)
     label=metric;
-    blabel = binning.binsizelabel(binsize);
+    blabel = Catalog.binning.binsizelabel(binsize);
     time_unit = blabel(4:end);
     if strcmp(metric, 'counts')
         label = sprintf('# Events %s',blabel);

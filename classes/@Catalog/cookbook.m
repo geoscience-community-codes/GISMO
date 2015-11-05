@@ -1,4 +1,4 @@
-%% Reading events into a Catalog object
+%% Catalog Cookbook
 % GISMO can read events from many different earthquake catalog file formats
 % (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) using the
 % Catalog.retrieve() method.
@@ -92,7 +92,7 @@ save('tohoku_events.mat', 'tohoku_events')
 % Both catalog segments are included in the "demo" directory. 
 % We will now load the official AVO catalog into an Events object:
   
-dbpath = cookbooks.demodb('avo');
+dbpath = Catalog.demo.demodb('avo');
 avocatalog = Catalog.retrieve('antelope', 'dbpath', dbpath);
  
 %%
@@ -114,6 +114,7 @@ save('redoubt_events.mat', 'redoubt_events')
 %%
 % The second way is to use the 'subset_expression' which the Antelope
 % expression evaluator interprets:
+
 expr = sprintf('distance(lat, lon, %f, %f) < %f',redoubtLat, redoubtLon,maxR)
 catalogObject = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
 	'subset_expression', expr)
@@ -135,9 +136,10 @@ catalogObject = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
 % This example will load Sfiles from 4 hours on 1st Nov, 1996. This is a slow 
 % function to run as MATLAB is slow at parsing text files, and there are
 % many events per day in this particular database.
- 
+demodir = Catalog.demo.demo_path();
+dbpath = fullfile(demodir,'seisan');
 montserrat_events = Catalog.retrieve('seisan', ...
-    'dbpath', fullfile('/raid','data','MONTSERRAT','seisan','REA','MVOE_'), ...
+    'dbpath', dbpath, ...
 	'startTime', '1996/11/01 11:00:00', ....
 	'endTime', '1996/11/01 15:00:00')
 
@@ -178,7 +180,8 @@ tohoku_events.plot3()
 %%
 % 
 %   tohoku_events.webmap()
-
+tohoku_events.webmap()
+wmzoom(7)
 
 %% Plotting time series of events
 % *Magnitude-time plot*

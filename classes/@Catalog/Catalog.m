@@ -221,14 +221,22 @@ classdef Catalog
 
             minmag = nanmin(catalogObject.mag);
             maxmag = nanmax(catalogObject.mag);
+            if isnan(minmag)
+                minmag=0;
+            end
+            if isnan(maxmag)
+                maxmag=0;
+            end
+            mag = catalogObject.mag;
+            mag(isnan(mag))=0;
             disp('scaffold: need to come up with names and proper geopoint structure')
             % scale icon color by magnitude
             cm = parula(10);
-            iconColor = cm(ceil(1+9*(catalogObject.mag-minmag)/(maxmag-minmag)),:);
+            iconColor = cm(ceil(1+9*(mag-minmag)/(maxmag-minmag)),:);
             % Convert quakeTable to geopint vector to add as info for each quake
             p = geopoint(catalogObject.lat, catalogObject.lon);
             %h1=webmap('Ocean Basemap')
-            h1 = webmap()
+            h1 = webmap();
             for count=1:length(catalogObject.lat)
                 desc{count} = sprintf('Longitude: %f<br/>Latitude: %f<br/>Depth (km): %f<br/>Magnitude: %.1f', ...
                     catalogObject.lon(count),...
@@ -256,15 +264,17 @@ classdef Catalog
             % Geochemistry, Geophysics, Geosystems, accepted for publication,
             % September, 2011.
             %[lat, lon] = plotEarthquakes.importPlates('All_boundaries.txt');
-            load plotEarthquakes/plates.mat
+            load Catalog/plotEarthquakes/plates.mat
 
             %% Make array of geopoints from the plate boundaries
             bounds = geopoint(lat,lon);
 
             %% Draw plate boundaries on map
             % Center the map on the longitude of largest quake first.
-            wmcenter(h1,nanmean(catalogObject.lat),nanmean(catalogObject.lon))
-            wmline(bounds,'FeatureName','Plate Boundaries','Color','m','AutoFit',false)
+            wmcenter(h1,nanmean(catalogObject.lat),nanmean(catalogObject.lon));
+            try
+            wmline(bounds,'FeatureName','Plate Boundaries','Color','m','AutoFit',false);
+            end
             %wmzoom(1)
             snapnow
 
@@ -572,8 +582,8 @@ classdef Catalog
                     nu = length(mag(l));
                     if length(mag(l)) >= 25;
                         %[bv magco stan av] =  bvalca3(catZmap(l,:),2,2);
-                        [mw bv2 stan2 av] =  bvalue_lib.bmemag(mag(l));
-                        bvalue_lib.synthb_aut;
+                        [mw bv2 stan2 av] =  Catalog.bvalue_lib.bmemag(mag(l));
+                        Catalog.bvalue_lib.synthb_aut;
                         dat = [ dat ; i res2];
                     else
                         dat = [ dat ; i nan];
@@ -608,10 +618,10 @@ classdef Catalog
                 %%%%%%%%%%%%%%%%%% mcperc_ca3.m end %%%%%%%%%%%%%%%%%%%%%%
 
                 %CALCULATE MC
-                [fMc] = bvalue_lib.calc_Mc(mag, mcType, fBinning, fMccorr);
+                [fMc] = Catalog.bvalue_lib.calc_Mc(mag, mcType, fBinning, fMccorr);
                 l = mag >= fMc-(fBinning/2);
                 if length(mag(l)) >= Nmin
-                    [fMeanMag, fBValue, fStd_B, fAValue] =  bvalue_lib.calc_bmemag(mag(l), fBinning);
+                    [fMeanMag, fBValue, fStd_B, fAValue] =  Catalog.bvalue_lib.calc_bmemag(mag(l), fBinning);
                 else
                     [fMc, fBValue, fStd_B, fAValue] = deal(NaN);
                 end
@@ -723,7 +733,7 @@ classdef Catalog
             for i=1:numel(catalogObject)
             
                 if ~(binsize>0)
-                    binsize = binning.autobinsize(catalogObject(i));
+                    binsize = Catalog.binning.autobinsize(catalogObject(i));
                 end
                 if ~(stepsize>0)
                     stepsize = binsize;
@@ -733,7 +743,7 @@ classdef Catalog
                    return;
                 end          
                 if ~(binsize>0)
-                    binsize = binning.autobinsize(catalogObject(i).enum-catalogObject(i).snum);
+                    binsize = Catalog.binning.autobinsize(catalogObject(i).enum-catalogObject(i).snum);
                 end
                 if ~(stepsize>0)
                     stepsize = binsize;
@@ -749,7 +759,7 @@ classdef Catalog
                 % bin the data
                 [time, counts, energy, smallest_energy, ...
                     biggest_energy, median_energy, stdev, median_time_interval] = ...
-                    binning.bin_irregular(catalogObject(i).datenum, ...
+                    Catalog.binning.bin_irregular(catalogObject(i).datenum, ...
                     magnitude.mag2eng(catalogObject(i).mag), ...
                     binsize, catalogObject(i).snum, catalogObject(i).enum, stepsize);
 
@@ -1188,29 +1198,29 @@ classdef Catalog
         % Test the Antelope method still works after factoring out db_load_origins
         % Test the Seisan method more
         % Add in support for 'get_arrivals'
-
+            
             debug.printfunctionstack('>')
 
             switch lower(dataformat)
                 case 'iris'
                     if exist('irisFetch.m','file')
                             ev = irisFetch.Events(varargin{:});
-                            self = read_catalog.iris(ev);
+                            self = Catalog.read_catalog.iris(ev);
                     else
                         warning('Cannot find irisFetch.m')
                     end
                 case {'css3.0','antelope', 'datascope'}
-                    self = read_catalog.antelope(varargin{:});
+                    self = Catalog.read_catalog.antelope(varargin{:});
                 case 'seisan'
-                    self = read_catalog.seisan(varargin{:});
+                    self = Catalog.read_catalog.seisan(varargin{:});
                 case 'aef'
-                    self = read_catalog.aef(varargin{:});
+                    self = Catalog.read_catalog.aef(varargin{:});
                 case 'sru'
-                    self = read_catalog.sru(varargin{:});
+                    self = Catalog.read_catalog.sru(varargin{:});
                 case 'vdap'
-                    self = read_catalog.vdap(varargin{:});
+                    self = Catalog.read_catalog.vdap(varargin{:});
                 case 'zmap'
-                    self = read_catalog.zmap(varargin{:});
+                    self = Catalog.read_catalog.zmap(varargin{:});
                 otherwise
                     self = NaN;
                     fprintf('format %s unknown\n\n',data_source);
@@ -1218,6 +1228,7 @@ classdef Catalog
 
             debug.printfunctionstack('<')
         end
-
+        
+        cookbook()
     end
 end

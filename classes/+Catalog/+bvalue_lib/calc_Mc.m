@@ -64,25 +64,25 @@ function [fMc] = calc_Mc(mag, nMethod, fBinning, fMcCorrection)
     switch nMethod
         case 1
             % Maximum curvature
-            fMc = bvalue_lib.calc_McMaxCurvature(mag);
+            fMc = Catalog.bvalue_lib.calc_McMaxCurvature(mag);
         case 2
             % Fixed Mc (Mc = Mmin)
             fMc = min(mag(:,6));
         case 3
             % Automatic Mc90
-            [fDummy, fDummy, fMc] = bvalue_lib.calc_McBest(mag, fBinning);
+            [fDummy, fDummy, fMc] = Catalog.bvalue_lib.calc_McBest(mag, fBinning);
         case 4
             % Automatic Mc95
-            [fDummy, fMc, fDummy] = bvalue_lib.calc_McBest(mag, fBinning);
+            [fDummy, fMc, fDummy] = Catalog.bvalue_lib.calc_McBest(mag, fBinning);
         case 5
             % Best combination (Mc95 - Mc90 - maximum curvature)
-            [fMc, Mc95, Mc90] = bvalue_lib.calc_McBest(mag, fBinning);
+            [fMc, Mc95, Mc90] = Catalog.bvalue_lib.calc_McBest(mag, fBinning);
             if isnan(Mc95) == 0
                 fMc = Mc95;
             elseif isnan(Mc90) == 0
                 fMc = Mc90;
             else
-                fMc = bvalue_lib.calc_McMaxCurvature(mag);
+                fMc = Catalog.bvalue_lib.calc_McMaxCurvature(mag);
             end
     end
 
