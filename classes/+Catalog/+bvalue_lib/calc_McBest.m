@@ -19,7 +19,7 @@ function [fMc, fMc95, fMc90] = calc_McBest(mag, fBinning);
         %vSel = mag >= nCnt - 0.0499;
         nNumberEvents = length(mag(vSel));
         if nNumberEvents >= 25;
-            [fDummy fBValue fDummy fDummy] =  bvalue_lib.bmemag(mag(vSel));
+            [fDummy fBValue fDummy fDummy] =  Catalog.bvalue_lib.bmemag(mag(vSel));
 
             fStartMag = nCnt; % Starting magnitude (hypothetical Mc)
 

@@ -5,6 +5,6 @@ function dbpath = demodb(name)
 if strcmp(lower(name),'antelope')
     dbpath = '/opt/antelope/data/db/demo/demo';
 else
-    dirname = cookbooks.get_test_data_path('');
+    dirname = Catalog.demo.demo_path();
     dbpath = fullfile(dirname,'css3.0', sprintf('%sdb200903',name));
 end

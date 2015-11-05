@@ -323,7 +323,7 @@ classdef Sfile
             end
 
             %% Echo the list of matching sfiles
-            fprintf('There are %d sfiles matching your request\n',numel(files))
+            fprintf('There are %d sfiles matching your request in %s\n',numel(files),dbpath)
 
             debug.printfunctionstack('<')
         end

@@ -1,4 +1,4 @@
-%% The EventRate Class
+%% EventRate Cookbook
 % The EventRate class is for making plots of:
 %   * number of events per unit time (often called "counts")
 %   * energy release rate / cumulative magnitude per unit time

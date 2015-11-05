@@ -56,8 +56,8 @@ function self = antelope(varargin)
     end
     
     % Check start & end times
-    snum = read_catalog.ensure_dateformat(startTime);
-    enum = read_catalog.ensure_dateformat(endTime);
+    snum = Catalog.read_catalog.ensure_dateformat(startTime);
+    enum = Catalog.read_catalog.ensure_dateformat(endTime);
 
     % Create a dbeval subset_expression if not already set.
     if ~exist('subset_expression', 'var') | isempty(subset_expression)

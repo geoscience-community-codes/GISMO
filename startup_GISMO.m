@@ -35,8 +35,8 @@ addContributed(gismopath,'contributed_internal');
 
 % ADD A PATH TO CLASSES (Added by Glenn Thompson)
 addpath(fullfile(gismopath,'classes'));
-addpath(fullfile(gismopath,'classes','Catalog'));
-addpath(fullfile(gismopath,'classes','rsam'));
+%addpath(fullfile(gismopath,'classes','Catalog'));
+%addpath(fullfile(gismopath,'classes','rsam'));
 %addpath(fullfile(gismopath,'classes','ChannelTag'));
 
 % ADD A PATH TO APPLICATIONS e.g. IceWeb
@@ -50,10 +50,12 @@ function addContributed(gismopath, contribDir)
 % add each subdirectory within gismopath/contribDir/ to the matlab path
 dirlist = dir(fullfile(gismopath,contribDir,''));
 dirlist = removeHiddenFiles(dirlist);
-
+addpath(fullfile(gismopath,contribDir));
 for n = 1:numel(dirlist)
-  newpath = fullfile(gismopath,contribDir, dirlist(n).name,'');
+  subdir = dirlist(n).name;
+  newpath = fullfile(gismopath,contribDir, subdir,'');
   if ~isdir(newpath), continue, end  %don't add loose files to the path
+  if subdir(1)=='+', continue, end % don't add package directories
   addpath(newpath);
   %disp(['Adding path:  ' newpath]);
 end

@@ -97,5 +97,3 @@ xlabel('Magnitude')
 ylabel('Cumulative Number')
 title('Goodness of FMD fit to GR')
 set(gca,'Ylim',[1 1300])
-i
-pause
