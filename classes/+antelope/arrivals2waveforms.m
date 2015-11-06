@@ -11,11 +11,12 @@ function w = arrivals2waveforms(dbpath, arrivals, pretrig, posttrig, taper_secon
 
 	% Create datasource
 	ds = datasource('antelope', dbpath);
+    
 	% Loop over arrivals structure
 	for i=1:min([nwaveforms numel(arrivals.arid)])
         scnl = scnlobject(arrivals.sta{i}, arrivals.chan{i});
-		snum = epoch2datenum(arrivals.atime(i) - pretrig - taper_seconds);
-		enum = epoch2datenum(arrivals.atime(i) + posttrig + taper_seconds);
+		snum = epoch2datenum(arrivals.time(i) - pretrig - taper_seconds);
+		enum = epoch2datenum(arrivals.time(i) + posttrig + taper_seconds);
         try
             thisw = waveform(ds, scnl, snum, enum);
         end

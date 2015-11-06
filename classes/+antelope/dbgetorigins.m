@@ -1,7 +1,7 @@
-function origins = db_load_origins(dbpath, subset_expression)
-    %DB_LOAD_ORIGINS Load preferred origins from an Antelope CSS3.0
+function origins = dbgetorigins(dbpath, subset_expression)
+    %DBGETORIGINS Load preferred origins from an Antelope CSS3.0
     %database
-    % origins = DB_LOAD_ORIGINS(dbpath) opens the origin table belonging to
+    % origins = DBGETORIGINS(dbpath) opens the origin table belonging to
     % the database specified by dbpath. The origin table will be joined to
     % the event and netmag tables too, if these are present. Only preferred
     % origins are loaded. The output is a structure containing the fields:
@@ -23,11 +23,12 @@ function origins = db_load_origins(dbpath, subset_expression)
     % All these fields are vectors of numbers, apart from the last 3 which
     % are cell arrays of strings.
     %
-    % origins = DB_LOAD_ORIGINS(dbpath, subset_expression) evaluates the
+    % origins = DBGETORIGINS(dbpath, subset_expression) evaluates the
     % subset specified before reading the origins. subset_expression must
     % be a valid expression accepted by dbe/dbeval.
     
     debug.printfunctionstack('>')
+    
 
     % initialize
     numorigins = 0;
@@ -35,10 +36,21 @@ function origins = db_load_origins(dbpath, subset_expression)
     [lat, lon, depth, time, evid, orid, nass, mag, ml, mb, ms] = deal([]);
     [etype, auth, magtype] = deal({});
     
+    % process command line arguments
+    if ~exist('dbpath','var')
+        warning('No dbpath given')
+        return
+    end
+    if ~exist('subset_expression','var')
+        subset_expression = '';
+        return
+    end 
     
+    % ensure dbpath is a string, not a cell
     if iscell(dbpath)
         dbpath = dbpath{1};
     end
+    
     debug.print_debug(0, sprintf('Loading data from %s',dbpath));
     ORIGIN_TABLE_PRESENT = dbtable_present(dbpath, 'origin');
     if (ORIGIN_TABLE_PRESENT)
@@ -139,7 +151,6 @@ function origins = db_load_origins(dbpath, subset_expression)
             end
         end
             
-
         % convert time from epoch to Matlab datenumber
         time = epoch2datenum(time);
     end

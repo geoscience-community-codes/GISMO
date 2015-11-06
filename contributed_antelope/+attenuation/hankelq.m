@@ -31,13 +31,19 @@ function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
 %       also generic - works with input variables so it can be used on different
 %       databases, for example.
 
+    if ~admin.antelope_exists
+	warning('Antelope not installed on this computer')
+	return
+    end
+
     if ~exist('max_arrivals','var')
         max_arrivals=Inf;
     end
+
     taper_seconds=pretrigger+posttrigger;
 
-    arrivals = readArrivals(dbpath, expr);
-    w = arrivals2waveforms(dbpath, arrivals, pretrigger, posttrigger, taper_seconds, max_arrivals);
+    arrivals = antelope.dbgetarrivals(dbpath, expr);
+    w = antelope.arrivals2waveforms(dbpath, arrivals, pretrigger, posttrigger, taper_seconds, max_arrivals);
     %w = waveform_clean(w);
     [y, t]=plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2);
     

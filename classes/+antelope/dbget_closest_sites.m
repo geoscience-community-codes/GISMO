@@ -1,6 +1,6 @@
-function sites = get_closest_sites(lon, lat, distkm, sitesdb, maxsta, snum, enum, chanmatch)
-%GET_CLOSEST_SITES 
-% sites = get_closest_sites(lon, lat, distkm, sitesdb, maxsta, snum, enum, chanmatch)
+function sites = dbget_closest_sites(lon, lat, distkm, sitesdb, maxsta, snum, enum, chanmatch)
+%DBGET_CLOSEST_SITES Get closest sites from an Antelop database to a given [lon, lat]
+% sites = DBGET_CLOSEST_SITES(lon, lat, distkm, sitesdb, maxsta, snum, enum, chanmatch)
 % load sites within distkm km of a given (LON, LAT) 
 % from site database sitesdb
 %
@@ -13,7 +13,7 @@ function sites = get_closest_sites(lon, lat, distkm, sitesdb, maxsta, snum, enum
 %
 % Example: Get sites within 100km of (-150.0, 60.5) that were
 % operational in 1990:
-% sites = get_closest_sites(-150.0, 60.5, 100.0, '/avort/oprun/dbmaster/master_stations', 10, datenum(1990,1,1), datenum(1991,1,1));
+% sites = DBGET_CLOSEST_SITES(-150.0, 60.5, 100.0, '/avort/oprun/dbmaster/master_stations', 10, datenum(1990,1,1), datenum(1991,1,1));
 
 % AUTHOR: Glenn Thompson, UAF-GI
 % $Date: $
