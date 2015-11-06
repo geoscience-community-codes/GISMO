@@ -1,5 +1,5 @@
 function varargout = plot(T, varargin)
-   %PLOT plots a SeismicTrace
+   %plot   plots a SeismicTrace
    %   h = plot(trace)
    %   Plots a waveform object, handling the title and axis labeling.  The
    %      output parameter h is optional.  If u, thto the waveform
@@ -55,7 +55,7 @@ function varargout = plot(T, varargin)
    %  also, now Y can be autoscaled with the property pair: 'autoscale',true
    %  although it only works for single waveforms...
    %
-   %  see also DATETICK, SeismicTrace.plot, PLOT
+   %  See also datetick, plot
    
    % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
    %
@@ -67,6 +67,7 @@ function varargout = plot(T, varargin)
    %
    % individual sample rates used instead of assumed to be equal
    
+   % TODO: Use inputParser
    
    if isscalar(T),
       yunit = T.units;

@@ -1,18 +1,22 @@
 function linkedplot(T, alignTraces)
-   %LINKEDPLOT Plot multiple waveform objects as separate linked panels
-   %   linkedplot(T, alignTraces)
-   %   where:
-   %       T = a vector of SeismicTrace
-   %       alignWaveforms is either true or false (default)
-   %   T.linkedplot will plot a record section, i.e. each waveform is plotted
-   %   against absolute time.
-   %   T.linkedplot(true) will align the waveforms on their start times.
+   %linkedplot   Plot multiple waveform objects as separate linked panels
+   %   T.linkedplot where T is a vector of SeismicTrace will plot all
+   %   traces against absolute time (starting at time 0)
+   %
+   %   T.linkedplot(alignTraces), where alignTraces is either true or
+   %   false.  If TRUE, then waveforms are aligned based on their start
+   %   times. (Default: FALSE)
+   %
+   %   Example:
+   %      T.linkedplot(true)
+   %
+   %   See also: plot
    
    % Glenn Thompson 2014/11/05, generalized after a function I wrote in 2000
    % to operate on Seisan files only
    
    if numel(T)==0
-      warning('no waveforms to plot')
+      warning('no traces to plot')
       return
    end
    

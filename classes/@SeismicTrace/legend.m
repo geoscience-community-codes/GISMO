@@ -1,5 +1,5 @@
 function varargout = legend(T, varargin)
-   %legend creates a legend for a waveform graph
+   %legend   Create a legend for a waveform graph.
    %  legend(traces) attempts to automatically create a legend based upon
    %  unique values within the waveforms.  in order, the legend will
    %  preferentially use station, channel, start time.
@@ -11,11 +11,11 @@ function varargout = legend(T, varargin)
    %  can be used to later modify the legend entry (such as setting the
    %  location, etc.)
    %
-   %  Note: for additional control, use matlab's legend function by passing it
+   %  For additional control, use matlab's legend function by passing it
    %  cells & strings instead of a waveform.
    %    (hint:useful functions include waveform/get, strcat, sprintf, num2str)
    %
-   %  see also legend
+   %  See also plot, legend
    
    if nargin == 1
       % automatically determine the legend

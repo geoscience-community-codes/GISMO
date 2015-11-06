@@ -1,5 +1,7 @@
 function disp(T)
-   %DISP  Display information about SeismicTrace(s)
+   %disp   Display information about SeismicTrace(s)
+   %
+   % See also disp
    
    if numel(T) > 1;
       disp(' ');
@@ -39,7 +41,7 @@ function disp(T)
       end
       fprintf('    history: [%d item%s], last modification: %s\n',...
          historycount, plural, datestr(max([T.history.when])));
-      ud_fields = fieldnames(T.UserData);
+      ud_fields = fieldnames(T.userdata);
       if isempty(ud_fields)
          disp('<No user defined fields>');
       else
@@ -47,9 +49,9 @@ function disp(T)
          format compact
          for n=1:numel(ud_fields);
             if isstruct(T.UserDataRules) && isfield(T.UserDataRules, ud_fields{n})
-               fprintf('   *%15s: ',ud_fields{n}); disp(T.UserData.(ud_fields{n}));
+               fprintf('   *%15s: ',ud_fields{n}); disp(T.userdata.(ud_fields{n}));
             else
-               fprintf('    %15s: ',ud_fields{n}); disp(T.UserData.(ud_fields{n}));
+               fprintf('    %15s: ',ud_fields{n}); disp(T.userdata.(ud_fields{n}));
             end
          end
          format short

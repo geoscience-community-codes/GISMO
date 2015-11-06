@@ -1,12 +1,13 @@
 classdef SeismicTrace < TraceData
-   %SeismicTrace   handles timeseries manipulation with channel info 
+   %SeismicTrace   Control seismic data including channel and time info
    %  SeismicTrace inherits the ability to manipulate timeseries data from
    %  TraceData, and adds the capability to handle chanel descriptor tags,
-   %  handle UserData fields, track history, timestamping, and basic calibration. 
+   %  handle userdata fields, track history, timestamping, and basic 
+   %  calibration.
    %
-   %SeismicTrace is the replacement class for waveform
+   %  SeismicTrace is the replacement class for waveform
    %
-   %see also retrieve, TraceData, waveform, ChannelTag
+   %  See also retrieve, TraceData, waveform, ChannelTag
    
    % Author: Celso Reyes, unless otherwise specified in the class functions
    % Contributions by: Glenn Thompson, Michael West, Carl Tape
@@ -34,23 +35,23 @@ classdef SeismicTrace < TraceData
       % Field names are case sensitive.
       % Field values can be validated if a UserDataRule is specified.
       % 
-      % see also SeismicTrace.UserData, SeismicTrace.setUserDataRule,
+      % see also SeismicTrace.userdata, SeismicTrace.setUserDataRule,
       % SeismicTrace.renameUserField
-      UserData = struct();
+      userdata = struct();
       % contains calibration values for this trace.
       % see also SeismicTrace.setcalib, SeismicTrace.removecalib, SeismicTrace.applycalib
       calib = struct('value',1,'applied',false);
       
-      %struct that mirrors UserData, but contains two fields:
+      %struct that mirrors userdata, but contains two fields:
       %   allowed_type: a class name (or empty). If this
-      %   exist, then when data is assigned to UserData, it
+      %   exist, then when data is assigned to userdata, it
       %   will be type-checked.
       %   min_count, max_count: if empty,any sized array can be
       %   assigned to this field.  If a single number, then
       %   eac assignment must have exactly this number of values.
       %   if [min max], then any number of values between min
       %   and max inclusive may be assigned to this.
-      % see also SeismicTrace.UserData, SeismicTrace.setUserDataRule,
+      % see also SeismicTrace.userdata, SeismicTrace.setUserDataRule,
       % SeismicTrace.renameUserField
       UserDataRules 
    end
@@ -90,10 +91,15 @@ classdef SeismicTrace < TraceData
                   miscFields = get(varargin{1},'misc_fields');
                   for n = 1: numel(miscFields)
                      if ~isempty(miscFields{n})
-                        obj.UserData.(miscFields{n})= get(varargin{1},miscFields{n});
+                        obj.userdata.(miscFields{n})= get(varargin{1},miscFields{n});
                      end
                   end
+               else
+                  error('SeismicTrace:unknownConversion',...
+                     'Do not know how to make a SeismicTrace from a %s',...
+                     class(varargin{1}));
                end
+                  
          end %switch
       end
       
@@ -180,35 +186,71 @@ classdef SeismicTrace < TraceData
             val = datestr(val,stringformat);
          end
       end
-         
+      
       function tf = startsbefore(A, B)
          %startsbefore   Compare starttimes of SeismicTrace
-         %   tf = A.startsbefore (B)  will return TRUE if Trace A starts
-         %   before trace B
-         %TODO: make this work for datetime or datenums or datestrings
-         tf = A.mat_starttime < B.mat_starttime;
+         %   tf = A.startsbefore(B)  will return TRUE if Trace A starts
+         %   before trace B starts. 
+         %
+         %   If B is something other than a SeismicTrace, then it will try
+         %   to convert to a MATLAB datenum before converting.  
+         %   
+         %   See also: startsafter, endsbefore, endsafter, datenum,
+         %   datetime
+         if isa(B,'SeismicTrace')
+            tf = A.firstsampletime < B.firstsampletime;
+         else % handle datenums, datestrings, or datetimes
+            tf = A.firstsampletime < datenum(B);
+         end
       end
+      
       function tf = startsafter(A, B)
-          %startsafter   Compare starttimes of SeismicTrace
+         %startsafter   Compare starttimes of SeismicTrace
          %   tf = A.startsafter (B) will return TRUE if Trace A starts after
          %   Trace B.
-         %TODO: make this work for datetime or datenums or datestrings
-         tf = A.firstsampletime > B.firstsampletime;
+         %
+         %   If B is something other than a SeismicTrace, then it will try
+         %   to convert to a MATLAB datenum before converting.  
+         %   
+         %   See also: startsafter, endsbefore, endsafter, datenum,
+         %   datetime
+         if isa(B,'SeismicTrace')
+            tf = A.firstsampletime > B.firstsampletime;
+         else % handle datenums, datestrings, or datetimes
+            tf = A.firstsampletime > datenum(B);
+         end
       end
-      function tf = endsbefore(A, B) 
+      function tf = endsbefore(A, B)
          %endsbefore   Compare last samples of SeismicTrace
          %   tf = A.endsbefore (B)  will return TRUE if Trace A ends before
          %   trace B
-         %TODO: make this work for datetime or datenums or datestrings
-         tf = A.lastsampletime < B.lastsampletime;
+         %
+         %   If B is something other than a SeismicTrace, then it will try
+         %   to convert to a MATLAB datenum before converting.  
+         %   
+         %   See also: startsafter, endsbefore, endsafter, datenum,
+         %   datetime
+         if isa(B,'SeismicTrace')
+            tf = A.lastsampletime < B.lastsampletime;
+         else % handle datenums, datestrings, or datetimes
+            tf = A.lastsampletime < datenum(B);
+         end
       end
       function tf = endsafter(A, B)
          %endsafter   Compare last samples of SeismicTrace
          %   tf = A.endsafter (B) will return TRUE if Trace A ends after
          %   Trace B.
          %
-         %TODO: make this work for datetime or datenums or datestrings
-         tf = A.lastsampletime > B.lastsampletime;
+         %   If B is something other than a SeismicTrace, then it will try
+         %   to convert to a MATLAB datenum before converting.  
+         %   
+         %   See also: startsafter, endsbefore, endsafter, datenum,
+         %   datetime
+         if isa(B,'SeismicTrace')
+            tf = A.lastsampletime > B.lastsampletime;
+         else % handle datenums, datestrings, or datetimes
+            tf = A.lastsampletime > datenum(B); 
+         end
       end
       
       function s = get.name(T)
@@ -229,18 +271,18 @@ classdef SeismicTrace < TraceData
          %   T = T.align(alignTime, newSamprate, method)
          %
          %   Input Arguments
-         %       WAVEFORM: waveform object       N-dimensional
-         %       ALIGNTIME: either a single matlab time or a series of times the
-         %       same shape as the input TRACE matrix.
-         %       newSamprate: sample rate (Samples per Second) of the newly aligned
-         %          traces
-         %       METHOD: Any of the methods from function INTERP
-         %          If omitted, then the DEFAULT IS 'pchip'
+         %       T: SeismicTrace      N-dimensional
+         %       ALIGNTIME: either a single matlab time or an array of times
+         %       the same shape as the input TRACE matrix.
+         %       NEWSAMPRATE: sample rate of the newly aligned traces
+         %       in samples/second
+         %       METHOD: Any of the methods listed in function INTERP1
+         %          If omitted, then the default is '<a href="matlab: help pchip">pchip</a>'
          %
          %   Output
          %       The output waveform has the new samplerate newSamprate and a
-         %       starttime calculated by the specified method, using matlab's
-         %       INTERP1 function.
+         %       a starttime calculated by the specified method, using 
+         %       the <a href="matlab: help interp1">interp1</a> function.
          %
          %   METHODOLOGY
          %     The alignTime is projected forward or backward in time at the
@@ -257,18 +299,18 @@ classdef SeismicTrace < TraceData
          %         5999 samples, with the last sample occurring at 12:09:59.830.
          %
          %   Examples of usefulness?  Particle motions, coordinate transformations.
-         %   If used for particle motions, consider MatLab's plotmatrix command.
+         %   If used for particle motions, consider <a href="matlab:help plotmatrix">plotmatrix</a> command.
          %
          %   example:
-         %   OUTDATED>    scnl = sclnobject('KDAK',{'BHZ','BHN','BHE'}); %grab all 3 channels
+         %       chanNames = {'AV.KDAK..BHZ','AV.KDAK.BHN','AV.KDAK.BHE'};
+         %       tags = ChannelTag(chanNames); %grab all 3 channels
          %       % for each component, grab winston data on Kurile Earthquake
-         %   OUTDATED>    w = waveform(mydatasource,scnl,'1/13/2007 04:20:00','1/13/2007 04:30:00');
-         %       w = w.align('1/37/2007 4:22:00', w(1).samplerate);
+         %       T = Trace.retrieve(mydatasource,tags,'1/13/2007 04:20:00','1/13/2007 04:30:00');
+         %       T = T.align('1/37/2007 4:22:00', w(1).samplerate);
          %
          %
-         % See also INTERP1, PLOTMATRIX
+         % See also interp1, plotmatrix
          
-         % TODO: Update Examples
          
          oneSecond = 1/86400;
          
@@ -348,53 +390,60 @@ classdef SeismicTrace < TraceData
       %individually, on a single object
       %
       % waveform/delfield has been replaced by using matlab's rmfield:
-      % T.UserData = rmfield(T.UserData, 'fieldToDelete');
+      % T.userdata = rmfield(T.userdata, 'fieldToDelete');
       
       % isfield is not implemented because matlab's can be used:
-      % isfield(T.UserData,'something');
+      % isfield(T.userdata,'something');
       
-      function T = set.UserData(T, val)
-         %sets UserData fields for a trace object
-         % T.UserData.myfield = value;
+      function T = set.userdata(T, val)
+         %sets userdata fields for a trace object
+         % T.userdata.myfield = value;
          %
          % to impose constraings on the values that this field can
          % retrieve, use: SeismicTrace.SetUserDataRule(myfield,...)
          %
          % to delete the field:
-         % T.UserData = rmfield(T.UserData, 'fieldToRemove');
+         % T.userdata = rmfield(T.userdata, 'fieldToRemove');
          % see also SeismicTrace.SetUserDataRule, rmfield
-         oldfields = fieldnames(T.UserData);
+         oldfields = fieldnames(T.userdata);
          fn = fieldnames(val);
          fieldToAdd = fn(~ismember(fn, oldfields));
          if ~isempty(fieldToAdd) && any(strcmpi(fieldToAdd, oldfields))
             % we have a case change!! uh-oh.
-            error('attempted to add field [''%s''], but a similar field [''%s''] exists.\nCheck your case and try again',...
-               fieldToAdd{1}, oldfields{strcmpi(oldfields, fieldToAdd)});
+            similarlyNamed = oldfields{strcmpi(oldfields, fieldToAdd)};
+            error(['attempted to add field [''%s''], '...
+               'but a similar field [''%s''] exists.\n'...
+               'Check your case and try again'],...
+               fieldToAdd{1}, similarlyNamed);
          end
-         %fn_existing = fieldnames(T.UserData);
+         %fn_existing = fieldnames(T.userdata);
          %newfn = ~ismember(fieldnames(val),val
          for f = 1:numel(fn);
             testUserField(T, fn{f}, val.(fn{f}))
          end
-         T.UserData = val;
+         T.userdata = val;
       end
       
       function T = renameUserField(T, oldField, newField, failSilently)
-         %renameUserField   Rename a UserData field
+         %renameUserField   Rename a userdata field
          %  T = T.renameuserField(oldName, newName);
          %  rename a field if it exists to a new name.
+         % 
+         %  Also renames the associated Rules field
+         %
          %  Possible sticking-points to deal with:
-         %  1. both oldField and newField exist in T.UserData -> error
-         %  2. newField already exists in T.UserData -> ignore
+         %  1. both oldField and newField exist in T.userdata -> error
+         %  2. newField already exists in T.userdata -> ignore
          %  3. neither newField or oldfield exists in T.Userdata -> warning
          % 
          %  if failSilently is true, then failures will not result in an
          %  error.
+         %
+         %  See also: userdata, userDataRule
          
-         %  TODO TOFIX: Adjust userRules too.
          
-         oldFieldExists = isfield(T.UserData, oldField);
-         newFieldExists = isfield(T.UserData, newField);
+         oldFieldExists = isfield(T.userdata, oldField);
+         newFieldExists = isfield(T.userdata, newField);
          sameNames = strcmp(oldField, newField);
          if ~exist('failSilently', 'var'); failSilently = false; end;
          if sameNames
@@ -408,28 +457,38 @@ classdef SeismicTrace < TraceData
          if oldFieldExists
             if newFieldExists %BOTH fields exist
                if (~isempty(newField))  %but the new one isn't empty
-                  error('Both fields already exist, and UserData.%s already contains data',newField);
+                  error('Both fields already exist, and userdata.%s already contains data',newField);
                else % but the new one is empty, so proceed normally
                   if ~failSilently
-                     warning('Both fields exist, but since UserData.%s is empty, its value is being replaced', newField);
+                     warning('Both fields exist, but since userdata.%s is empty, its value is being replaced', newField);
                   end
-                  tmp = T.UserData.(oldField);
-                  T.UserData = rmfield(T.UserData,oldField);
-                  [T.UserData.(newField)] = tmp;
+                  T.userdata = mvField(T.userdata, oldField, newField);
+                  if isfield(T.UserDataRules,oldfield);
+                     T.UserDataRules = mvField(T.UserDataRules,oldField, newField);
+                  end
+                     
                end
             else % only the old field exists, so proceed normally
-               tmp = T.UserData.(oldField);
-               T.UserData = rmfield(T.UserData,oldField);
-               [T.UserData.(newField)] = tmp;
+               
+                  T.userdata = mvField(T.userdata, oldField, newField);
+                  if isfield(T.UserDataRules,oldfield);
+                     T.UserDataRules = mvField(T.UserDataRules,oldField, newField);
+                  end
             end
          else
             if newFieldExists  %only the new field exists
                % already renamed. ignore
             else % neither field exists
                if ~failSilently
-                 warning('field [%s] does not exist in UserData', oldField);
+                 warning('field [%s] does not exist in userdata', oldField);
                end
             end
+         end
+         
+         function subfield = mvField(subfield, oldField, newField)
+            tmp = subfield.(oldField);
+            subfield = rmfield(subfield,oldField);
+            [subfield.(newField)] = tmp;
          end
       end
       
@@ -443,7 +502,7 @@ classdef SeismicTrace < TraceData
          if ~isfield(obj.UserDataRules,fn)
             return;
          end
-         if ~isfield(obj.UserData,fn)
+         if ~isfield(obj.userdata,fn)
             if exist('value','var')
                % continue on
             else
@@ -455,7 +514,7 @@ classdef SeismicTrace < TraceData
             return
          end
          if ~exist('value','var')
-            value = obj.UserData.(fn);
+            value = obj.userdata.(fn);
          end
          % test the type
          if ~isempty(rules.allowed_type) && ...
@@ -486,13 +545,13 @@ classdef SeismicTrace < TraceData
       function T = setUserDataRule(T, fieldname, allowedType, allowedCount, allowedRange)
          %setUserDataRule   create rules to govern data entry into userdata fields.
          % T = T.setUserData(fieldname, classname) will have the class
-         % checked each time a value is assigned to the UserData
-         % field T.UserData.fieldname.
+         % checked each time a value is assigned to the userdata
+         % field T.userdata.fieldname.
          %
          % T = T.setUserDataRule(fieldname, classname, count) controls the
-         % array size for any assignments to T.UserData.fieldname.  count
+         % array size for any assignments to T.userdata.fieldname.  count
          % may be a single number N or a range [nMin nMax]
-         % for any value assigned to T.UserData.fieldname,
+         % for any value assigned to T.userdata.fieldname,
          %    numel(value) == N or Nmin <= numel(value) <= Nmax
          %
          % T = T.setUserDataRule(fieldname, classname, count, range)
@@ -503,7 +562,7 @@ classdef SeismicTrace < TraceData
          % T = T.setUserDataRule('height','double',1, [0 inf]); will ensure
          % that height will always be a scalar positive double
          % ...setUserDataRule('code','char',[1 4]) will ensure that any
-         % assignments to T.UserData.code will be a string between 1 and 4
+         % assignments to T.userdata.code will be a string between 1 and 4
          % characters in length.
          %
          % See also testUserField, renameUserField, 
@@ -564,24 +623,56 @@ classdef SeismicTrace < TraceData
       %%
       function [T, I] = sortby(T, criteria)
          %sortby   sort SeismicTraces based on a property
-         % Tsorted = sortby(Tin) sorts by the ChannelTag (N.S.L.C) in
-         % purely alphabetical order. Depending on the length of each
-         % field, the final results may not be in an expected order.
+         %  Tsorted = sortby(Tin) sorts by the name (N.S.L.C) in
+         %  purely alphabetical order. Depending on the length of each
+         %  field, the final results may not be in an expected order.
          %
-         % Tsorted = sortby(Tin, criteria), where criteria is a valid property
+         %  Tsorted = sortby(Tin, cirt), where CRIT is a valid property
          %
          % [Wsorted, I] = sortby(Win...) will also return the index list so that
          %     Win(I) = Wsorted
          %
+         %   Examples:
+         %   tSorted = T.sortby('samplerate');  % sort by sample rate
+         %   tSorted = T.sortby('firstsample'); % sort by start time
+         %   tSorted = T.sortby('station');     % sort by station name
+         %   tSorted = T.sortby('duration');    % sort by the duration
+         %   tSorted = T.sortby('var');         % sort bythe variance
+         %
+         %   Generally, if you can request a scalar value from a Seismic
+         %   Trace using function A, then 'A' is a valid criteria.
+         %
+         %   Advanced usage:
+         %   sortby also accepts functions, so that the following example is
+         %   valid:
+         %     myfunc = @(x) median(x) - min(x);
+         %     Tsorted = T.sortby(myfunc)
+         %
+         %
          % see also: sort
-         
-         %TODO: Make this TRACE-y. which involves sorting by User fields too.
-         
+                  
          if nargin < 2
-            criteria = 'channeltag';
+            criteria = 'name';
+         end
+         if ischar(criteria)
+            % could be a property or a method
+            if ismember(criteria,properties(T))
+               if ischar(T(1).(criteria))
+               [~,I] = sort({T.(criteria)});
+               else
+               [~,I] = sort([T.(criteria)]);
+               end
+            elseif ismethod(T,criteria)
+               [~,I] = sort(T.(criteria));
+            end
+         elseif isa(criteria, 'function_handle')
+            [~, I] = sort(criteria(T));
+         else
+            error('unable to sort');
+            % TODO: add ability to sort userdata fields
          end
          % sort by a field
-         [~, I] = sort(get(T,criteria));
+         % [~, I] = sort(get(T,criteria));
          T = T(I);
       end
 
@@ -591,9 +682,7 @@ classdef SeismicTrace < TraceData
          %  ChannelTag and start/endtimes. 
          %
          % DOES NO OTHER CHECKS
-         
-         %TODO: remove references to scnl, and replace with ChannelTag
-         
+                  
          if numel(traces) == 0  %nothing to do
             combined_traces = traces;
             return
@@ -622,7 +711,6 @@ classdef SeismicTrace < TraceData
                return;
             end;
             dtSecs = (T2.firstsampletime - T1.lastsampletime) * 86400;
-            %seamless = dTSecs == 
             sampRate = T1.samplerate;
             if sampRate > 1
                sampRate = round(sampRate);
@@ -640,7 +728,7 @@ classdef SeismicTrace < TraceData
          end
          
          function T1 = spliceAndPad(T1, T2, nToPad)
-            %spliceAndPad combines two traces that do not overlap
+            %spliceAndPad   Combine two traces that do not overlap
             if nToPad > 0 && ~isinf(nToPad)
                T1.data = [T1.data; nan(nToPad,1); T2.data];
             else
@@ -745,7 +833,7 @@ classdef SeismicTrace < TraceData
          %         lastsnippet = datenum('6/20/2003 24:00:00');
          %
          %         % divide the day into 1-hour segments.
-         %         % note, 25 peices. equivelent to 0:1:24, including both midnights
+         %         % 25 pieces. equivelent to 0:1:24, including both midnights
          %         alltimes = linspace(firstsnippet, lastsnippet, 25);
          %         starttimes = alltimes(1:end-1);
          %         endtimes = alltimes(2:end);
@@ -764,10 +852,8 @@ classdef SeismicTrace < TraceData
          %          set(gca,'ytick',[0:2:24],'xgrid', 'on','ydir','reverse');
          %          ylabel('Hour');
          %
-         %   See also WAVEFORM/SET -- Sample_Length
-         
-         % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
-         
+         %   See also waveform/extract
+                  
          %% Set up condition variables, and ensure validity of input
          MULTIPLE_WAVES = ~isscalar(T);
          
@@ -917,10 +1003,10 @@ classdef SeismicTrace < TraceData
          end
       end
       
-      %function ismember
+      %TODO: function ismember
       
-      %function calib_apply
-      %function calib_remove
+      %TODO: function calib_apply
+      %TODO: function calib_remove
       
       %% history-related functions
       function T = addhistory(T, whathappened,varargin)
@@ -976,31 +1062,37 @@ classdef SeismicTrace < TraceData
       
       %% display functions - contained in external files
       disp(T)
-      %TODO: use inputParser
       varargout = plot(T, varargin)
       linkedplot(T, alignTraces)
       varargout = legend(T, varargin)
-         
-      function W = trace2waveform(T)
-         %trace2waveform   convert SeismicTrace into waveform
-         %  w = trace2waveform(Trace)
-         %
+   
+      %% conversion functions
+      function W = waveform(T)
+         %waveform   convert SeismicTrace into waveform
+         %   w = waveform(Trace) converts a SeismicTrace into a waveform.
+         %   
          %  See also waveform, SeismicTrace
          
-         % TODO: Move this to waveform instead. Maybe
-         for n=numel(T):-1:1
-            W(n) = waveform;
+         W = repmat(waveform,size(T));
+         for n=1:numel(T)
             W(n) = set(W(n),'channelinfo',T(n).channelinfo,...
                'freq', T(n).samplerate,...
                'data',T(n).data,...
-               'units',T(n).units);
-            ufields = fieldnames(T(n).UserData);
+               'units',T(n).units,...
+               'start',T(n).firstsampletime);
+            ufields = fieldnames(T(n).userdata);
             for z = 1:numel(ufields)
-               W(n) = addfield(W(n), ufields{z}, T(n).UserData, T(n).UserData.(ufields{z}));
+               W(n) = addfield(W(n), ufields{z}, T(n).userdata, T(n).userdata.(ufields{z}));
             end
          end
       end
-      
+      function CT = ChannelTag(T)
+         %ChannelTag   Convert SeismicTrace into ChannelTag
+         %   ct = ChannelTag(trace)
+         %
+         %   see also ChannelTag, SeismicTrace
+         CT = reshape([T.channelinfo], size(T));
+      end
    end
    methods(Static)
       function T = toTrace(item, itemlabel, conversionfunction)
@@ -1026,31 +1118,28 @@ classdef SeismicTrace < TraceData
          end
       end
       
-      function T = waveform2trace(W)
-         %waveform2trace   convert waveform into SeismicTrace
-         
-         %TODO: This is specific, but doesn't need to be.  If I drop the
-         %assertion, this will automatically try to conver anything to a
-         %trace. maybe.
-         assert(isa(W,'waveform'));
-         for N = numel(W):-1:1
-            T(N) = SeismicTrace(W(N));
+      function T = syntheticdata(names, starts, ends, samplerate)
+         %syntheticdata   Crates a SeismicTrace filled with synthetic data
+         %   T = syntheticdata(names, starts, ends, samplerate)
+         %
+         %   See also: randn, sin, SeismicTrace
+         if isempty(names), names = 'NT.STA.LO.CHA'; end
+         if isempty(starts) && isempty(ends)
+            starts = datenum([2015 09 23 15 45 0]);
+            ends = starts + datenum([0 0 0 0 10 0]); % 10 minutes of data
          end
-      end
-      function T = fakedata(names, starts, ends, samplerate)
-         %fakedata   Crates a SeismicTrace filled with fake data
-         %   T = fakedata(names, starts, ends, samplerate)
-         
-         % anticipated trouble: wildcards
-         
-         warning('filling with bogus data');
+         if isempty(samplerate)
+            samplerate = 20;
+         end
+         warning('Creating a SeismicTrace using a noisy sine wave');
          if ischar(names)
             names = {names};
          end
          if ~exist('starts','var')
             % build T from names
          else
-            T = SeismicTrace; T.samplerate = samplerate;
+            T = SeismicTrace; 
+            T.samplerate = samplerate;
             T = repmat(T, numel(names), numel(starts));
             
             for n=1:numel(names)
@@ -1058,8 +1147,9 @@ classdef SeismicTrace < TraceData
             end
             for n=1:numel(starts)
                [T(:,n).start] = deal(starts(n));
-               Nsamples = (ends(n) - starts(n)) * 86400;
-               D = sin((-Nsamples: 2 : Nsamples-1) / 600) * 10 + randn(size(-Nsamples: 2 : Nsamples-1));
+               nSeconds = (ends(n) - starts(n)) * 86400;
+               nSamples = nSeconds * samplerate;
+               D = sin((-nSamples: 2 : nSamples-1) / 600) * 10 + randn(size(-nSamples: 2 : nSamples-1));
                [T(:,n).data] = deal(D);
             end
             % now fill with bogus data
