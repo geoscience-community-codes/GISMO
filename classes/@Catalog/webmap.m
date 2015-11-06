@@ -18,7 +18,6 @@ function webmap(catalogObject)
     end
     mag = catalogObject.mag;
     mag(isnan(mag))=0;
-    disp('scaffold: need to come up with names and proper geopoint structure')
     % scale icon color by magnitude
     cm = parula(10);
     iconColor = cm(ceil(1+9*(mag-minmag)/(maxmag-minmag)),:);
@@ -41,7 +40,7 @@ function webmap(catalogObject)
     'Color',iconColor,'AutoFit',false,'Icon', iconFilename,'Description',desc);
     % 'FeatureName',names,'Color',iconColor,'AutoFit',false)
 %             wmzoom(1)
-    snapnow
+
 
     %% Load in plate boundaries
     % The data reference for plate

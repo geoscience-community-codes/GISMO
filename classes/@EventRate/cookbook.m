@@ -3,6 +3,15 @@
 %   * number of events per unit time (often called "counts")
 %   * energy release rate / cumulative magnitude per unit time
 
+%%
+% First we create a Catalog object from the Redoubt dataset
+dbpath = Catalog.demo.demodb('avo');
+redoubtLon = -152.7431; 
+redoubtLat = 60.4853;
+maxR = km2deg(20.0);
+catalogObject = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
+	'radialcoordinates', [redoubtLat redoubtLon maxR]);
+
 %% 
 % For a quick plot of earthquakes per hour, we create an eventrate object and then plot it. Here our binsize is 1/24 days, i.e. 1 hour.
 
@@ -31,7 +40,7 @@ eventrateObject.plot()
 %%
 % is actually equivalent to typing:
 
-    eventrateObject.plot(), 'metric', 'counts');
+    eventrateObject.plot('metric', 'counts');
 
 %%
 % The full list of metrics that can be plotted are:

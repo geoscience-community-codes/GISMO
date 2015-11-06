@@ -14,11 +14,11 @@
 % with a magnitude of at least 8.0 between year 2000 and 2014 (inclusive):
 
 greatquakes = Catalog.retrieve('iris', 'minimumMagnitude', 8.0, ...
-    'starttime', '2000-01-01', 'endtime', '2015-01-01')
+    'starttime', '2000-01-01', 'endtime', '2015-01-01');
 
 %%
-% We have retrieved 26 events. To access any particular property we can use
-% dot notation, as if the object were a structure, e.g.:
+% To access any particular property we can use dot notation, as if the 
+% object were a structure, e.g.:
 
 greatquakes.etype
 
@@ -54,7 +54,7 @@ save('great_earthquakes.mat', 'greatquakes')
 %%
 % We will limit our search to 1 day before and after the earthquake:
  
-mainshocktime = datenum('2011/03/11 05:46:24')
+mainshocktime = datenum('2011/03/11 05:46:24');
 tohoku_events = Catalog.retrieve('iris', ...
             'radialcoordinates', [38.297 142.372 km2deg(200)], ...
             'starttime', mainshocktime - 1, ...

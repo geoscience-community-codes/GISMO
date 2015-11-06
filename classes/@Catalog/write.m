@@ -26,7 +26,7 @@ case {'text';'csv';'xls'} % help table.write for more info
                 if ~exist('schema','var')
                     schema='css3.0';
                 end
-                dbcreate(dbpath, schema);
+                antelope.dbcreate(dbpath, schema);
 
                 system(sprintf('touch %s.event',dbpath));
                 system(sprintf('touch %s.origin',dbpath));

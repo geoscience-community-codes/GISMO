@@ -52,14 +52,14 @@ function origins = dbgetorigins(dbpath, subset_expression)
     end
     
     debug.print_debug(0, sprintf('Loading data from %s',dbpath));
-    ORIGIN_TABLE_PRESENT = dbtable_present(dbpath, 'origin');
+    ORIGIN_TABLE_PRESENT = antelope.dbtable_present(dbpath, 'origin');
     if (ORIGIN_TABLE_PRESENT)
         db = dblookup_table(dbopen(dbpath, 'r'), 'origin');
         numorigins = dbquery(db,'dbRECORD_COUNT');
         debug.print_debug(1,sprintf('Got %d records from %s.origin',numorigins,dbpath));
         if numorigins > 0
-            EVENT_TABLE_PRESENT = dbtable_present(dbpath, 'event'); 
-            NETMAG_TABLE_PRESENT = dbtable_present(dbpath, 'netmag');  
+            EVENT_TABLE_PRESENT = antelope.dbtable_present(dbpath, 'event'); 
+            NETMAG_TABLE_PRESENT = antelope.dbtable_present(dbpath, 'netmag');  
             if (EVENT_TABLE_PRESENT)
                 db = dbjoin(db, dblookup_table(db, 'event') );
                 numorigins = dbquery(db,'dbRECORD_COUNT');
