@@ -1123,12 +1123,15 @@ classdef SeismicTrace < TraceData
          %   T = syntheticdata(names, starts, ends, samplerate)
          %
          %   See also: randn, sin, SeismicTrace
-         if isempty(names), names = 'NT.STA.LO.CHA'; end
-         if isempty(starts) && isempty(ends)
+         if ~exist('names','var') || isempty(names)
+            names = 'NT.STA.LO.CHA'; end
+         if ~exist('starts','var') || isempty(starts)
             starts = datenum([2015 09 23 15 45 0]);
+         end
+         if ~exist('ends','var') || isempty(ends)
             ends = starts + datenum([0 0 0 0 10 0]); % 10 minutes of data
          end
-         if isempty(samplerate)
+         if ~exist('samplerate','var') || isempty(samplerate)
             samplerate = 20;
          end
          warning('Creating a SeismicTrace using a noisy sine wave');

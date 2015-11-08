@@ -41,7 +41,7 @@ function varargout = plot(T, varargin)
    %
    % EXAMPLE 2:
    %   % This example plots the waveforms, starting at time 0
-   %   W.plot(); % plots the waveform in blue with seconds on the x axis
+   %   W.plot(); % plots the waveform with seconds on the x axis
    %   hold on;
    %   W2.plot('xunit','s', 'color', [.5 .5 .5]);  % plots your other
    %                                       % waveform, starting in unison
@@ -49,25 +49,13 @@ function varargout = plot(T, varargin)
    %                                       % change the color of the new
    %                                       % plot to grey (RGB)
    %
-   %  For a list of properties you can set (such as color, linestyle, etc...)
-   %  type get(h) after plotting something.
    %
    %  also, now Y can be autoscaled with the property pair: 'autoscale',true
    %  although it only works for single waveforms...
    %
    %  See also datetick, plot
    
-   % AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks
-   %
-   % modified 11/17/2008 by Jason Amundson (amundson@gi.alaska.edu) to allow
-   % for "day of year" flag
-   %
-   % 11/25/2008 changed how parameters are parsed, fixing a bug where you
-   % could not specify both an Xunit and a plot-style ('.', for example)
-   %
-   % individual sample rates used instead of assumed to be equal
-   
-   % TODO: Use inputParser
+   % AUTHOR: Celso Reyes, with contribution from Jason Amundson
    
    if isscalar(T),
       yunit = T.units;
@@ -79,11 +67,23 @@ function varargout = plot(T, varargin)
    %Look for an odd number of arguments beyond the first.  If there are an odd
    %number, then it is expected that the first argument is the formatting
    %string.
-   [formString, proplist] = getformatstring(varargin);
-   hasExtraArg = ~isempty(formString);
-   [~, useAutoscale, proplist] = getproperty('autoscale',proplist,false);
-   [~, xunit, proplist] = getproperty('xunit',proplist,'s');
-   [~, currFontSize, proplist] = getproperty('fontsize',proplist,10);
+   
+   evenInputs =  ~mod(nargin,2);
+   hasFormatString = evenInputs && nargin > 1; % including the SeismicTrace
+   if hasFormatString
+      formString = varargin{1};
+      varargin(1)=[];
+   end
+   
+   p = inputParser;
+   p.KeepUnmatched = true;
+   p.CaseSensitive = false;
+   p.StructExpand = false;
+   addParameter(p,'autoscale', false);
+   addParameter(p,'xunit', 's');
+   addParameter(p,'fontsize', 10);
+   p.parse(varargin{:}); % intercepted values end up in p.Results, all the rest goes to p.Unmatched
+   xunit = p.Results.xunit;
    
    [xunit, xfactor] = parse_xunit(xunit);
    
@@ -121,7 +121,6 @@ function varargout = plot(T, varargin)
          periodsInUnits = T.period() ./ xfactor;
          for n=1:numel(T)
             Xvalues(1:dl(n),n) = (0:dl(n)-1) .* periodsInUnits(n) + startdoy(n);
-            % (1:dl(n)) .* periodsInUnits(n) + startdoy(n) - periodsInUnits(n);
          end
          
       otherwise,
@@ -136,22 +135,27 @@ function varargout = plot(T, varargin)
          end
    end
    
-   if hasExtraArg
-      varargin = [varargin(1),property2varargin(proplist)];
+   % put together a new varargin to pass to the plotting routine.
+   f = fieldnames(p.Unmatched);
+   if isempty(f)
+      if hasFormatString; newParams = {formString}; else newParams = {}; end
    else
-      varargin = property2varargin(proplist);
+      v = struct2cell(p.Unmatched);
+      if hasFormatString;
+         newParams = [{formString} horzcat(f,v)];
+      else
+         newParams = horzcat(f,v);
+      end
    end
-   % %
+   h = plot(Xvalues, double(T,'nan') , newParams{:} );
    
-   h = plot(Xvalues, double(T,'nan') , varargin{:} );
-   
-   if useAutoscale
+   if p.Results.autoscale
       yunit = SeismicTrace.autoscale(h, yunit);
    end
    
-   yh = ylabel(yunit,'fontsize',currFontSize);
+   yh = ylabel(yunit,'fontsize',p.Results.fontsize);
    
-   xh = xlabel(xunit,'fontsize',currFontSize);
+   xh = xlabel(xunit,'fontsize',p.Results.fontsize);
    switch lower(xunit)
       case 'date'
          datetick('keepticks','keeplimits');
@@ -164,11 +168,9 @@ function varargout = plot(T, varargin)
          T(1).station, T(1).channel, T(1).start),'interpreter','none');
    end;
    
-   
-   
-   set(th,'fontsize',currFontSize);
-   set(gca,'fontsize',currFontSize);
-   %% return the graphics handles if desired
+   set(th,'fontsize',p.Results.fontsize);
+   set(gca,'fontsize',p.Results.fontsize);
+   % return the graphics handles if desired
    if nargout >= 1,
       varargout(1) = {h};
    end
@@ -180,114 +182,36 @@ function varargout = plot(T, varargin)
    if nargout ==2,
       varargout(2) = {plothandles};
    end
-   
-   function [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)
-      %GETPROPERTY returns a property value from a property list, or a default
-      %  value if none is available
-      %[isfound, foundvalue, properties] =
-      %      getproperty(desiredproperty,properties,defaultvalue)
-      %
-      % returns a property value (if found) from a property list, removing that
-      % property pair from the list.  only removes the first encountered property
-      % name.
-      
-      pmask = strcmpi(desiredproperty,properties.name);
-      isfound = any(pmask);
-      if isfound
-         foundlist = find(pmask);
-         foundidx = foundlist(1);
-         foundvalue = properties.val{foundidx};
-         properties.name(foundidx) = [];
-         properties.val(foundidx) = [];
-      else
-         if exist('defaultvalue','var')
-            foundvalue = defaultvalue;
-         else
-            foundvalue = [];
-         end
-         % do nothing to properties...
-      end
-   end
-   
-   function [formString, proplist] = getformatstring(arglist)
-      hasExtraArg = mod(numel(arglist),2);
-      if hasExtraArg
-         proplist =  parseargs(arglist(2:end));
-         formString = arglist{1};
-      else
-         proplist =  parseargs(arglist);
-         formString = '';
-      end
-   end
-   
-   function c = property2varargin(properties)
-      %PROPERTY2VARARGIN makes a cell array from properties
-      %  c = property2varargin(properties)
-      % properties is a structure with fields "name" and "val"
-      c = {};
-      c(1:2:numel(properties.name)*2) = properties.name;
-      c(2:2:numel(properties.name)*2) = properties.val;
-   end
-   function [properties] = parseargs(arglist)
-      % PARSEARGS creates a structure of parameternames and values from arglist
-      %  [properties] = parseargs(arglist)
-      % parse the incoming arguments, returning a cell with each parameter name
-      % as well as a cell for each parameter value pair.  parseargs will also
-      % doublecheck to ensure that all pnames are actually strings... otherwise,
-      % there will be a mis-parse.
-      %check to make sure these are name-value pairs
-      %
-      % see also waveform/private/getproperty, waveform/private/property2varargin
-      
-      argcount = numel(arglist);
-      evenArgumentCount = mod(argcount,2) == 0;
-      if ~evenArgumentCount
-         error('Waveform:parseargs:propertyMismatch',...
-            'Odd number of arguments means that these arguments cannot be parameter name-value pairs');
-      end
-      
-      %assign these to output variables
-      properties.name = arglist(1:2:argcount);
-      properties.val = arglist(2:2:argcount);
-      
-      for i=1:numel(properties.name)
-         if ~ischar(properties.name{i})
-            error('Waveform:parseargs:invalidPropertyName',...
-               'All property names must be strings.');
-         end
-      end
-   end
-   function [unitName, secondMultiplier] = parse_xunit(unitName)
-      % PARSE_XUNIT returns a labelname and a multiplier for an incoming xunit
-      % value.  This routine was removed to centralize this function
-      % [unitName, secondMultiplier] = parse_xunit(unitName)
-      secsPerMinute = 60;
-      secsPerHour = 3600;
-      secsPerDay = 3600*24;
-      
-      switch lower(unitName)
-         case {'m','minutes'}
-            unitName = 'Minutes';
-            secondMultiplier = secsPerMinute;
-         case {'h','hours'}
-            unitName = 'Hours';
-            secondMultiplier = secsPerHour;
-         case {'d','days'}
-            unitName = 'Days';
-            secondMultiplier = secsPerDay;
-         case {'doy','day_of_year'}
-            unitName = 'Day of Year';
-            secondMultiplier = secsPerDay;
-         case 'date',
-            unitName = 'Date';
-            secondMultiplier = nan; %inconsequential!
-         case {'s','seconds'}
-            unitName = 'Seconds';
-            secondMultiplier = 1;
-            
-         otherwise,
-            unitName = 'Seconds';
-            secondMultiplier = 1;
-      end
-   end
 end %plot
+
+
+function [unitName, secondMultiplier] = parse_xunit(unitName)
+   % parse_xunit returns a labelname and a multiplier for an incoming xunit
+   % value.  This routine was removed to centralize this function
+   % [unitName, secondMultiplier] = parse_xunit(unitName)
+   
+   switch lower(unitName)
+      case {'m','minutes'}
+         unitName = 'Minutes';
+         secondMultiplier = 60; % seconds / minute
+      case {'h','hours'}
+         unitName = 'Hours';
+         secondMultiplier = 3600; % seconds / hour
+      case {'d','days'}
+         unitName = 'Days';
+         secondMultiplier = 86400; % seconds / day
+      case {'doy','day_of_year'}
+         unitName = 'Day of Year';
+         secondMultiplier = 86400; % seconds/ day
+      case 'date',
+         unitName = 'Date';
+         secondMultiplier = nan; %inconsequential!
+      case {'s','seconds'}
+         unitName = 'Seconds';
+         secondMultiplier = 1;
+         
+      otherwise,
+         unitName = 'Seconds';
+         secondMultiplier = 1;
+   end
+end

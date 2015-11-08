@@ -191,7 +191,24 @@ classdef ChannelTag
       end
       
       function [Y, I] = sort(cha_tags)
-         % sort nscls in assending order by net.cha.loc.sta
+         %sort   Sort channels assending name order
+         %   sorted = sort(channeltags) will sort channels in assending
+         %   order using the precidence: Network, Station, Location,
+         %   Channel. The result will be an array of sorted ChannelTags.
+         %   
+         %   [sorted, I] = sort(chantags) will additionally return the
+         %   index, so that chantags(I) = sorted
+         %
+         %   sort is designed to handle SEED-like names, so it will pad each
+         %   value to 5 places before comparing.  
+         %      Example:
+         %        c = ChannelTag({'IU.ANMO.00.BHZ','AV.OKTU..EHZ'})
+         %        sortedC = c.sort()  % or sort(c)
+         %        
+         %  The above example would compare:
+         %    'IU    .ANMO  .00    .BHZ   ' vs
+         %    'AV    .OKTU  .      .EHZ   '
+         %
          [~,I] = sort(cha_tags.fixedlengthstrings(5,5,5,5));
          Y = cha_tags(I);
       end

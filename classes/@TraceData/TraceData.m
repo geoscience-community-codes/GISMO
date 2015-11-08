@@ -4,11 +4,9 @@ classdef TraceData
    %   TraceData contains the functionality associated with data
    %   manipulation, including dealing with units.
    %
-   %   TraceData might be considered a "light" version of the <a
-   %   href="matlab: help timeseries">timeseries</a>
+   %   TraceData might be considered a "light" version of MATLAB's timeseries
    %   class. Whereas the timeseries class has lots of functionality, it
-   %   suffers from much slower execution times.
-   %?
+   %   suffers (at the time of this writing) from much slower execution times.
    %
    % About TraceData vs <a
    %   href="matlab: help waveform">waveform</a>
@@ -23,16 +21,16 @@ classdef TraceData
    %
    %    Derived properties:
    %       nyquist - Nyquist frequency (samplerate / 2)
-   %       period - Get Period  (1/samplerate)
+   %       period - Period  (1/samplerate)
    %       formattedduration - retrieve duration as formatted text
-   %       
+   %
    %    Mathamatical operations:
    %       plus - (+)addition
    %       minus - (-)subtraction
    %       times - (.*) element multiplication
    %       mtimes - (*) matrix multiplication
    %       rdivide - (./) element division
-   %       
+   %
    %       uminus - (-A) unary minus
    %       sign - signum of data (returns array of +1, 0, or -1)
    %       abs - Absolute value
@@ -52,14 +50,14 @@ classdef TraceData
    %    Advance Mathamatical operations:
    %       diff - Difference and approximate derivative for traces
    %       integrate - cumulative sums of data
-   %       
+   %
    %       hilbert - Hilbert envelope (real only)
    %       taper - Apply a taper to the data
    %       resample - Resample the data
    %       demean - Remove the mean
    %       detrend - Remove trend from data
    %       clip - Clip the data
-   %       
+   %
    %       extract - Retrieve a subset of the data
    %
    %    Conversion operations:
@@ -70,12 +68,12 @@ classdef TraceData
    %
    %       compatibleWith - Compare units, samplerate and datalength
    %       assertCompatibleWith - Error if units, samplerate and datalength do not match
-   %       
+   %
    %       fillgaps - replace nan values (can replace other values)
-   %       zero2nan - Replace values close to zero with nans  
+   %       zero2nan - Replace values close to zero with nans
    %       amplitude_spectrum
    %       setlength - adjust length of data to allow batch processing
-   %    
+   %
    % RE: ERROR recovery
    % trying new tactic. I won't try to anticipate all the various ways
    % someone can provide incompatible data. Instead, I'm going to provide a
@@ -97,7 +95,7 @@ classdef TraceData
    %    : getpeaks
    
    properties
-      data % time-series data, kept in a column
+      data = []% time-series data, kept in a column
       samplerate  = NaN % in samples/sec
       units = 'none' % text description of data units
    end
@@ -167,13 +165,14 @@ classdef TraceData
       
       function s = formattedduration(obj, fmt)
          %formattedduration   Duration as a formatted string
-         % s = trace.formattedduration() retrieves the duration in the
-         % default format as 'dd:hh:mm:ss.SSS'
-         % s = trace.formattedduration(fmt) retrieves duration in format
-         % specified.
+         %  s = trace.formattedduration() retrieves the duration in the
+         %  default format as 'dd:hh:mm:ss.SSS'
+         %  s = trace.formattedduration(fmt) retrieves duration in format
+         %  specified.
          %
-         % depends upon the duration class, introduced in r2014b
-         % see duration
+         %  depends upon the duration class, introduced in r2014b
+         %
+         %  See also duration
          secsOfData = obj.duration;
          if exist('duration','class') %available in recent r2014b and later of matlab
             if exist('fmt','var') && ~isempty(fmt)
@@ -283,7 +282,7 @@ classdef TraceData
          %*   Matrix multiplication against data within a trace
          %   C=A*B matrix multiplication against data within a trace
          %   result is a matrix, vector, or scalar. (NOT a TraceDataObject)
-   
+         
          if isa(A,'TraceData')
             C = A.data * B;
          else
@@ -318,7 +317,7 @@ classdef TraceData
       function A = power(A, B)
          %.^   Array power for TraceData
          %   C=A.^B raises each data element of A to the power B
-
+         
          assert(isa(A,'TraceData'),'TraceData:power:invalidType',...
             'for A .^ B, B cannot be a TraceData object');
          assert(isnumeric(B),'TraceData:power:invalidType',...
@@ -463,13 +462,13 @@ classdef TraceData
       end
       
       function val = bulkCalculate(T, F)
-         %bulkCalculate   Run a function against the data 
+         %bulkCalculate   Run a function against the data
          %  vals = T.bulkCalculate(funcHandle) will against the data field
          %  of each element in T shape is preserved, and all empty
          %  traces return nan FH must return a single value
          %
          %  basically, this will run:
-         %    funcHandle(T.data) 
+         %    funcHandle(T.data)
          %
          %  for each trace in T
          %
@@ -508,7 +507,7 @@ classdef TraceData
          %  vals = T.std(options); lets you declare options as per the
          %  builtin version of std
          %  useful option:
-         %  
+         %
          %     vals = T.std('omitnan') % or 'includenan'
          %
          %  See also std, TraceData.bulkCalculate
@@ -1097,7 +1096,7 @@ classdef TraceData
       end
       
       function assertCompatiblewith(A, B)
-         %assertCompatiblewith  asserts units, samplerate, and data length match 
+         %assertCompatiblewith  asserts units, samplerate, and data length match
          %  assertCompatiblewith(A, B) will error unless A and B have
          %  matching units, sample frequencies, and data length. The error
          %  message will describe what is wrong
@@ -1150,7 +1149,7 @@ classdef TraceData
          out.data = sum(double(T),2);
       end
       function stackedTraces = binStack(T,nBins,binOverlap)
-         %binStack   Stack traces with specified number of traces per stack. 
+         %binStack   Stack traces with specified number of traces per stack.
          %
          %USAGE: stk = binStack(T,nBins,binOverlap)
          %    If input T contains 100 traces then:
@@ -1209,34 +1208,55 @@ classdef TraceData
          %  newunit = autoscale(axishandle, oldunit)
          if iscell(oldunit), oldunit = oldunit{1}; end;
          ah = axishandle;
-         for n=numel(ah):-1:1
-            miny(n) = min(get(ah(n),'ydata'));
-            maxy(n) = max(get(ah(n),'ydata'));
-         end
-         ydatamin = min(miny);
-         ydatamax = max(maxy);
-         knownunits = {'pm','nm','mm','cm','m','km'};
-         knownvals = 10.^[-12,-6,-3,-2,0,3];
-         biggest=  log10(max(abs([ydatamin, ydatamax])));
-         currentUnitIdx = find(strcmpi(oldunit(1:2),knownunits));
-         if isempty(currentUnitIdx),
+         % yRange = @(ax) max(get(ax,'ydata')) - min(get(ax,'ydata'));
+         yFarthestFrom0 = @(ax) max(abs(get(ax,'ydata')));
+         % yMaxrange = max(arrayfun(yRange,ah)); % greatest data range from axis
+         ydatamax = max(arrayfun(yFarthestFrom0, ah)); %overal maximum from axis
+         
+         [nominatorUnit, nominatorUnitLength] = extractUnit(oldunit);
+         oldUnitVal = unit2val(nominatorUnit);
+         if isempty(oldUnitVal),
             newunit= oldunit;
             return
          end
-         %biggest_in_meters = biggest * knownvals(currentUnitIdx);
-         %convertFrom = knownvals(currentUnitIdx);
-         newUnitIdx = find(knownvals <= biggest*.1,1,'last');
-         canBeExpressedAs= knownunits(find(knownvals <= biggest*.1));
-         convertTo = canBeExpressedAs{end};
-         if numel(oldunit)>2
-            newunit = [convertTo,oldunit(3:end)];
-         else
-            newunit = convertTo;
+         trueScale = oldUnitVal .* ydatamax;  % ex. 1 mm == 0.001
+         [newunit, newUnitVal] = val2unit(trueScale);
+         oldunit(1:nominatorUnitLength) = [];
+         newunit = [newunit, oldunit];
+                  
+         set(ah,'ydata',get(ah,'ydata').*(oldUnitVal./newUnitVal));
+         
+         function [myunit, unitLength] = extractUnit(unit)
+            unitLength = sum(isletter(unit(1:2)));
+            myunit = unit(1:unitLength);
          end
          
-         set(ah,'ydata',get(ah,'ydata').*(knownvals(currentUnitIdx)./knownvals(newUnitIdx)));
+         function v = unit2val(myunit)
+            %unit2val   returns the associated multiplier for a unit
+            %  unit2val('m') % returns 1
+            %  unit2val('nm') % returns 1.0e-9
+            % expects only the nominator unit eg. 'nm'
+            knownunits = {'pm','nm', '\mum', 'mm','cm','m','km'};
+            knownvals = 10.^[-12, -9, -6, -3, -2, 0, 3];
+            whichunit = ismember(knownunits,myunit);
+            if any(whichunit)
+               v = knownvals(whichunit);
+            else
+               v = []; %not found!
+            end
+         end
+         
+         function [unit, unitval] = val2unit(v)
+            %val2unit   returns the unit and multiplier for a value
+            %  [a,b] = unit2val(0.0023) % a='mm', b=1.0e-3
+            knownunits = {'pm','nm','\mum','mm','cm','m','km'};
+            searchvals = 10.^[-inf, -9, -6, -3, -2, 0, 3]; % tweak this part if anything
+            knownvals =  10.^[-12, -9, -6, -3, -2, 0, 3];
+            whichunit = find((v - searchvals) >= 0, 1, 'last');
+            unit = knownunits(whichunit);
+            unitval = knownvals(whichunit);
+         end
       end
-      
    end
 end
 
