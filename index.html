@@ -31,27 +31,25 @@
       <div class="inner clearfix">
         <section id="main-content">
 <h3>GISMO</h3>
-<p>GISMO is a MATLAB(R) toolbox for seismic data analysis built on a common platform. GISMO consists of two parts: 
+<p>GISMO is a MATLAB(R) toolbox for seismic data analysis built on a common platform.  In particular, GISMO provides a framework that speeds the development time for building research codes around seismic waveform/trace data, event catalog data and instrument responses, without having to know the technical details of different seismic data formats. GISMO consists of two parts: 
 <ol>
-<li>GISMO core classes and packages</li>
+<li>GISMO core data types and toolkits</li>
 <li>an ever-evolving set of contributed codes developed from these core products</li>
 </ol>
-GISMO core includes the <a href="#WAVEFORM">waveform suite</a> and the <a href="#CORRELATION">correlation class</a>, detailed below.</p>
 
-<a name="WAVEFORM"><strong>The Waveform Suite </strong></a>
-The waveform class is designed to allow easy data retrieval from a variety of sources and to make basic waveform  research quick and easy. It is a toolset that allows the creation of more sophisticated programs without having to be concerned with all details. Features include: </span><a href="pics/wavescreen.png"><img src="pics/wavescreen_thumb.png" alt="Screenshot" align="right" border="0" height="313" width="500"></a>
+<h3>GISMO core</h3>
+<a name="WAVEFORM"><strong>waveform (&amp; SeismicTrace)</strong></a>
+The waveform data type - and the SeismicTrace data type which will replace waveform - represents timeseries data, keeping it together with relevant metadata. Features include: </span><a href="pics/wavescreen.png"><img src="pics/wavescreen_thumb.png" alt="Screenshot" align="right" border="0" height="313" width="500"></a>
 <ul>
-<li>Use any regularly sampled data stream </li>
-<li>Mathematical functions: <strong>+</strong>,<strong> -</strong>,<strong> /</strong>,<strong> .*</strong>,<strong> .^</strong></li>
-<li>Standard manipulations: filter, crop, subset, subset, stack, normalize, automatic gain control, demean, detrend, taper, etc.</li>
-<li>Statistics: max,  min, mean, median, etc.</li>
-<li>Waveform operations: hilbert transform, integration and differentiation</li>
-<li>Operate on single waveforms or thousands</li>
-<li>History feature  tracks changes to your waveforms</li>
-<li>Plotting tools for all included data types </li>
-<li>Object architecture provides a stable base for writing more complex programs</li>
+<li> Load seismic waveform data from a variety of data sources (e.g. IRIS DMC, Earthworm/Winston waveservers, Antelope databases) and formats (e.g. Seisan, SAC, MiniSEED)
+<li> Basic manipulations of waveform data, e.g. fill gaps, detrend, taper, filter, integrate, differentiate, stack, extract
+<li> Plot seismograms, helicorders, spectrograms
+<li> Various statistics, e.g. mean, rms, max, min
+<li> Can handle thousands of traces at a time
+<li> Forms the backbone of much of GISMO
 </ul>
-<p>The waveform suite can import data from Antelope databases (requires the BRTT Antelope toolbox), Winston databases, SAC and Seisan files. With minimal coding, most any homegrown Matlab format can take advantage of the waveform architecture. </p>
+
+<p>GISMO can import waveform data from Antelope databases (requires the BRTT Antelope toolbox), Winston databases, SAC and Seisan files and also download data directly from IRIS DMC. With minimal coding, other user-defined formats can be imported. </p>
 <p><span>The waveform object</span>:
 <ul>
 <li>makes playing with data <em>easier</em> by automating the tedious aspects of data manipulation </li>
@@ -59,105 +57,59 @@ The waveform class is designed to allow easy data retrieval from a variety of so
 <li>makes code more <em>portable</em> by reading multiple formats and functioning on multiple systems </li>
 <li>makes troubleshooting <em>faster</em> by providing more detailed messages and warnings <br></li>
 </ul>
-<span>Browse extensive <a href="tutorials/www.giseis.alaska.edu/input/celso/matlabweb/waveform_suite/waveform.htm"> waveform tutorial and matlab object primer</a>.<br>
-<hr>
-<a name="CORRELATION"><strong>The Correlation Class </strong></a>
-<p>This toolbox provides an environment for analyzing waveforms with a suite of related cross-correlation techniques based on a common data object. Features include:</p>
+<span>Browse an extensive <a href="tutorials/www.giseis.alaska.edu/input/celso/matlabweb/waveform_suite/waveform.htm"> waveform tutorial and matlab object primer</a>.<br>
+
+<hr/>
+
+<a name="CORRELATION"><strong>correlation</strong></a>
+<p>Allows a great variety of comparisons between seismic traces, such as:</p>
 <a href="pics/correlation.png"><img src="pics/correlation_thumb.png" alt="Correlation class images" width="500" height="300" border="0" align="right"></a>
-<ul>
-<li><span> Optimized cross-correlation routines capable of handling thousands of traces at a time</span>
-<li><span>Max correlation and lag time determinations for all event pairs (no "master" events) </span>
-<li><span>Dendrogram-type heirarchical clustering of event families</span>
-<li><span>Plotting tools for all included data types</span>
-<li><span> Suite of basic manipulation tools: filter, crop, subset, stack, normalize, automatic gain control, etc.</span> 
-<li>Functions for waveform interferometry
-<li>Optimized differential arrival times following Vandecar and Crosson, 1990                                
-<li><span>Built on the waveform suite</span>
+<ul> 
+<li> max correlation and lag time determination for all event pairs
+<li> Dendrogram-type hierarchical clustering of event families (multiplets)
+<li> Basic manipulations e.g. filter, crop, subset, stack, normalize, automatic gain control
+<li> Waveform interferometry
+<li> Optimized differential arrival times
+<li> Excellent tool for analysis of earthquake swarms                              
+<li><span>Built on the waveform suite, but a few features (linkage, cluster and dendogram plotting) require the Statistics toolbox.</span>
 </ul>
-<p><span>A few features of the correlation class require the statistics toolbox (linkage, cluster and dedrogram plotting). Because data handling is carried out using the waveform suite, data can be imported from Antelope databases, Winston databases, SAC and Seisan files. There is also an import routine for the CORAL format. Since it uses the waveform class, any homegrown format can be imported with limited coding.</span><br>
-<br>
+<br/>
 <span>See <a href="tutorials/correlation/cookbook.html">correlation cookbook</a> for demo of utilities. <br>
 Presentation <a href="http://giseis.alaska.edu/input/west/presentations/gi2008_correlation_toolbox.pdf">&quot;Tools and techniques in seismic waveform correlation&quot;</a>, March 28, 2008 (5 Mb .pdf)</span><br>
-<hr>
+<hr/>
 
-<hr>
-<h3>Citations to GISMO</h3>
+<a name="CATALOG"><strong>Catalog</strong></a>
+<p>Handles earthquake metadata such as origin times, lat/lon/depth coordinates, magnitudes, arrivals. Features include:</p>
 <ul>
-
-<li><a href="http://srl.geoscienceworld.org/content/82/1/104.short">Reyes & West, 2011. The Waveform Suite: A Robust Platform for Manipulating Waveforms in MATLAB</a></li>
-
-<li><a href="http://earthquake.usgs.gov/research/external/reports/G10AP00027.pdf">Cakir & Walsh, 2010. Shallow Seismic Site Characterizations at 23 strong-motion station sites in and near Washington state.</a></li>
-
-<li><a href="https://www.onepetro.org/download/conference-paper/SEG-2010-2059?id=conference-paper%2FSEG-2010-2059">Mikesell et al, 2010, Passive Icemology: Fracture and Model characterization using microseismicity</a></li> 
-
-<li><a href="http://onlinelibrary.wiley.com/doi/10.1029/2011JF002259/full">Mikesell et al., 2012. Monitoring glacier surface seismicity in time and space using Rayleigh waves</a></li>
-
-<li><a href="doi:10.1016/j.jvolgeores.2012.12.015">West, M.E, 2013. Recent eruptions at Bezymianny volcano - a seismological comparison.</a></li>
-
-<li><a href="http://fallmeeting.agu.org/2012/files/2012/12/AGU_Reyes2012.pdf">Reyes et al., 2012. Using IRIS DMC data in your research workflow.</a></li>
-
-<li><a href="doi: 10.1785/0120100198.">Williams et al., 2011. Seismicity at the Cascadia Plate Boundary beneath the Oregon Continental Shelf.</a></li>
-
-<li><a href="http://glaciers.gi.alaska.edu/sites/default/files/MSThesis_LauraLeBlanc.pdf</a>LeBlanc, L.E., 2009. Icequakes and ice motion: a time-series analysis of the dynamics of the Bering Glacier, Alaska.</a></li> 
-
-<li><a href="http://www.aeic.alaska.edu/input/west/papers/2010_pp1769_chap2_burrman_augustine.pdf">Buurman, & West, 2010. Seismic precursors to volcanic explosions during the 2006 eruption of Augustine Volcano.</a></li> 
-
-<li><a href="doi: 10.1785/0120110056">Balfour, N.J. et al., 2012. Identifying active structures using double-difference earthquake relocations in Southwest British Columbia and the San Juan Islands, Washington.</a></li>
-
-<li><a href="doi:10.1016/j.jvolgeores.2011.02.009">Arambula-Mendoza et al., 2011. Seismic activity that accompanied the effusive and explosive eruptions during the 2004-2005 period at Volcan de Colima, Mexico.</a></li>
-
-<li><a href="doi: 10.1111/j.1365-246X.2010.04647.x">Zobin V.M. et al., 2010. Swarms of microearthquakes associated with the 2005 Vulcanian explosion sequence at Volcan de Colima, Mexico.</a></li> 
-
-<li><a href="http://onlinelibrary.wiley.com/doi/10.1002/esp.3206/full">Zimmer et al., 2012. Rock fall dynamics and deposition: an integrated analysis of the 2009 Ahwiyah Point rock fall, Yosemite National Park, USA.</a></li>
-
-<li><a href="http://www.sciencedirect.com/science/article/pii/S0013795215001234">Zimmer & Sitar, 2015. Detection and location of rock falls using seismic and infrasound sensors.</a></li>
-
-<li><a href="http://www.eaee.org/Media/Default/2ECCES/2ecces_esc/2441.pdf">Kiszely & Gyori, 2014. Discrimination methods between microearthquakes and quarry blasts.</a></li>
-
-<li><a href="http://link.springer.com/article/10.1007/s40328-014-0078-0">Kiszely & Gyori, 2015. Separation of quarry blasts from the aftershock sequence of the Oroszlany (Hungary) Jnuary 29, 2011 ML=4.5.</a></li>
-
-<li><a href="http://onlinelibrary.wiley.com/doi/10.1029/2012JF002513/full">Bartholomaus et al., Calving seismicity from iceberg-sea surface interactions.</a></li>
-
-<li><a href="http://onlinelibrary.wiley.com/doi/10.1002/2013JB010836/full">Schulz et al., 2014. An investigation of seismicity clustered near the Cordel field, west central Alberta, and its relation to a nearby disposal well.</a></li>
-
-<li><a href="http://onlinelibrary.wiley.com/doi/10.1002/ggge.20044/full">Montgomery-Brown et al., 2013. Slow slip and tremor search at Kilauea Volcano, Hawaii.</a></li>
-
-<li><a href="http://onlinelibrary.wiley.com/doi/10.1002/2014JB011438/full">Wang & Tape, 2014. Seismic velocity structure and anisotropy of the Alaska subduction zone based on surface wave tomography.</a></li>
-
-<li><a href="http://srl.geoscienceworld.org/content/83/5/834.short">Haney et al., 2012. Causal instrument corrections for short-period and broadband seismometers.</a></li>
-
-<li><a href="http://www.sciencedirect.com/science/article/pii/S0377027313002527">Rodgers et al., 2013. Seismicity accompanying the 1999 eruptive episode at Telica Volcano, Nicaragua.</a></li>
-
-<li><a href="http://onlinelibrary.wiley.com/doi/10.1002/2015GL063455/full">Schultz et al., 2015. Hydraulic fracturing and the Crooked Lake Sequences. Insights gleaned from regional seismic networks.</a></li>
-
-<li><a href="http://www.aeic.alaska.edu/technical_reports/alaska_response_2013_06_13.pdf">Tape, 2012. Assessment of station metadata in Alaska based on analysis of Love waves from the 2012-04-11 Mw 8.6 offshore Sumatra earthquake.</a></li>
-
-<li><a href="http://www.giseis.alaska.edu/input/carl/teaching/seis/lab_response.pdf">Tape, 2014. Instrument response: Lab for Applied Seismology course.</a></li>
-
-<li><a href="http://gji.oxfordjournals.org/content/198/2/906.short">Tarasewicz et al., 2014. Seismogenic magma instrusion before the 2010 eruption of Eyjafjallajokull volcano, Iceland.</a></li>
-
-<li><a href="https://etd.ohiolink.edu/!etd.send_file?accession=miami1369741772&disposition=inline">Holtkamp, 2013. New methods for detecting earthquake swarms and transient motion to characterize how faults slip.</a></li>
-
-<li><a href="http://library.seg.org/doi/abs/10.1190/geo2013-0404.1">Pesicek et al., 2014. Picking versus stacking in a modern microearthquake location: Comparison of results from a surface passive seismic monitoring array in Oklahoma.</a></li>
-
-<li><a href="http://cedar.wwu.edu/wwuet/228/">Hutchinson, 2012. Relocation and analysis of the 2007 Nechako, B.C., seismic swarm: evidence for magmatic intrusion in the lower crust.</a></li>
-
-<li><a href="http://www.bssaonline.org/content/105/4/2081.short">Tape et al., 2015. Transtensional Tectonics of the Minto Flats Fault Zone and Nenana Basin, Central Alaska.</a></li>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<li> Load event catalogs from IRIS DMC, USGS data feeds, Antelope databases, Seisan databases, ZMAP.
+<li> Save event catalogs to Antelope databases.
+<li> Plot hypocenters, magnitudes, event rates, energy release rates.
+<li> Compute b-values, magnitude of completeness.
+<li> Summary statistics
 </ul>
+<a href="pics/correlation.png"><img src="pics/correlation_thumb.png" alt="Correlation class images" width="500" height="300" border="0" align="right"></a>
+<ul> 
+<li> 
+<hr/>
+
+<a name="DEVELOPMENT"><strong>Development</strong></a> 
+<p>Support is being added to:</p>
+<ul>
+<li> correct waveform data for instrument responses retrieved from IRIS DMC and local files
+<li> load waveforms corresponding to arrival times in a catalog
+<li> compute magnitudes
+<li> generate catalogs via STA/LTA event detection and match filtering on continuous waveform data
+<li> locate the source of seismic signals based on arrival times and signal amplitude (using a grid search)
+</ul>
+<hr/>
+
+<a name="USERS"><strong>The GISMO user community</strong></a> 
+<p> There are about 250 GISMO users subscribed to the electronic mailing list. Most GISMO users are professors, graduate students and senior undergraduates at universities in the US, Europe and India. Others work for organizations like USGS and US national labs. GISMO has been downloaded thousands of times and is now available on GitHub. At conferences we find it gratifying to meet new students who have used GISMO as part of their analysis to generate figures for their posters, talks and dissertations.</p>  
+<hr/>
+
+<h3>Contributed code</h3>
+<p> Users can (and have) contributed codes their own codes to GISMO. By the accretion of such codes, all built around core GISMO, we hope the GISMO Toolbox will become increasingly useful for seismology research.</p>
+<hr/>
 
         </section>
 
@@ -187,6 +139,13 @@ Presentation <a href="http://giseis.alaska.edu/input/west/presentations/gi2008_c
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
-
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-69880630-1', 'auto');
+  ga('send', 'pageview');
+</script>
   </body>
 </html>
