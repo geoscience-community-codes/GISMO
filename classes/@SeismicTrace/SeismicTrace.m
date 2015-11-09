@@ -926,6 +926,7 @@ classdef SeismicTrace < TraceData
                         myData = myData(myStartI:myEndI);
                         myStart = myStartTime;
                      end
+                     
                   case 'index'
                      %startV and endV are both indexes into the data
                      
@@ -951,18 +952,7 @@ classdef SeismicTrace < TraceData
                      sampTimes = inW.sampletimes; % grab individual sample times
                      myStart = sampTimes(startV(m));
                      
-                  case 'index&duration'
-                     % startV is an index into the data, endV is a matlab date
-                     myData = myData(startV(m):end); %grab the data starting at our index
-                     
-                     sampTimes = get(inW,'timevector'); % grab individual sample times
-                     sampTimes = sampTimes(startV(m):end); % truncate to match data
-                     
-                     myStart = sampTimes(1); %grab our starting date before hacking it
-                     
-                     sampTimes = sampTimes - sampTimes(1); %set first time to zero
-                     count = sum(sampTimes <= endV(m)) -1;
-                     myData = myData(1:count);
+                     %index&duration deprecated, since apparently never used
                      
                      
                   case 'time&samples'

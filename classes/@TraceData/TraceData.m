@@ -8,8 +8,7 @@ classdef TraceData
    %   class. Whereas the timeseries class has lots of functionality, it
    %   suffers (at the time of this writing) from much slower execution times.
    %
-   % About TraceData vs <a
-   %   href="matlab: help waveform">waveform</a>
+   % About TraceData vs waveform
    %
    % TraceData Properties:
    %       data       - column of evenly sampled data
@@ -316,7 +315,10 @@ classdef TraceData
       
       function A = power(A, B)
          %.^   Array power for TraceData
-         %   C=A.^B raises each data element of A to the power B
+         %   C=A.^B raises each data element of A to the power B and then
+         %   returns the resulting trace(s)
+         %
+         %   See also power
          
          assert(isa(A,'TraceData'),'TraceData:power:invalidType',...
             'for A .^ B, B cannot be a TraceData object');
@@ -329,7 +331,9 @@ classdef TraceData
       
       function A = uminus(A)
          %-   Unary minus.
-         %  -A negates the data in A
+         %   -A negates the data in A and returns the resulting trace(s)
+         %
+         %   see also uminus
          for n=1:numel(A)
             A(n).data = -A(n).data;
          end
@@ -403,7 +407,7 @@ classdef TraceData
          %
          %   tr = trace.integrate('trapz') as above, but uses matlab's
          %   cumtrapz function to perform the integration.
-         
+         %
          %   Input Arguments
          %       trace: tracedata   N-DIMENSIONAL
          %       METHOD: either 'cumtrapz' or 'cumsum'  [default is cumsum]
@@ -411,7 +415,6 @@ classdef TraceData
          %   Actual implementation  merely does a cumulative sum of the trace's
          %   samples, and updates the units accordingly. These units may be a
          %   little kludgey.
-         %
          %
          %   See also cumsum, cumtrapz, diff
          
@@ -447,7 +450,9 @@ classdef TraceData
       
       function A = demean(A)
          %demean   Remove the average from TraceData
-         %see demean
+         %   A = demean(A) will subtract the mean of a trace from its data.
+         %
+         %   See also demean
          for n=1:numel(A);
             A(n) = A(n) - mean(A(n).data(~isnan(A(n).data)));
          end
@@ -455,7 +460,12 @@ classdef TraceData
       
       function A = detrend(A, varargin)
          %detrend   Remove the trend from TraceData
-         %  See also detrend
+         %   A = detrend(A) will subtract the trend of a trace from its
+         %   data.  
+         %   A = detrand(A, ...) allows for additional options.  For an
+         %   explanation of these, see MATLAB's builtin detrend.
+         %
+         %   See also detrend
          for n=1:numel(A);
             A(n).data = detrend(A(n).data,varargin{:});
          end
@@ -482,35 +492,47 @@ classdef TraceData
       end
       function val = max(T)
          %max   Maximum value for trace data
+         %   maxVals = max(traces);
+         %
+         %   See also max
          F = @(X) max(X.data);
          val = T.bulkCalculate(F);
       end
       function val = min(T)
          %min   Minimum value for trace data
+         %   minVals = min(traces);
+         %
+         %   See also min
          F = @(X) min(X.data);
          val = T.bulkCalculate(F);
       end
       function val = mean(T)
          %mean   Average or mean value for trace data
+         %   meanVals = mean(traces);
+         %
+         %   See also mean
          F = @(X) mean(X.data(~isnan(X.data)));
          val = T.bulkCalculate(F);
       end
       function val = median(T)
          %median   Median value for trace data
+         %   medianVals = median(traces);
+         %
+         %   See also median
          F = @(X) median(X.data(~isnan(X.data)));
          val = T.bulkCalculate(F);
       end
       function val = std(T, varargin)
          %std   standard deviation for traces
-         %  vals = T.std retrieves the std from each trace, returning in an
-         %  array of the same shape as T.
-         %  vals = T.std(options); lets you declare options as per the
+         %  vals = std(traces) retrieves the std from each trace, returning
+         %  a traces array of the same shape as T.
+         %  vals = std(traces, options); lets you declare options as per the
          %  builtin version of std
          %  useful option:
          %
          %     vals = T.std('omitnan') % or 'includenan'
          %
-         %  See also std, TraceData.bulkCalculate
+         %  See also std, bulkCalculate
          if exist('varargin','var')
             F = @(X) std(X.data,varargin{:});
          else
@@ -520,13 +542,13 @@ classdef TraceData
       end
       function val = var(T, varargin)
          %var   calulate variance for traces
-         %  vals = T.var;
-         %  vals = T.var(options); lets you declare options as per the
-         %  builtin version of var
+         %  vals = var(traces);
+         %  vals = var(traces,options); lets you declare options as per the
+         %  builtin version of var.
          %  useful option:
-         %    vals = T.var('omitnan') % or 'includenan'
+         %    vals = traces.var(taces,'omitnan') % or 'includenan'
          %
-         %  See also var, TraceData.bulkCalculate
+         %  See also var, bulkCalculate
          if exist('varargin','var')
             F = @(X) var(X.data,varargin{:});
          else
@@ -535,34 +557,7 @@ classdef TraceData
          val = T.bulkCalculate(F);
       end
       %% extended functionality
-      function [A, phi, f] = amplitude_spectrum(td)
-         %amplitude_spectrum   Simple method to compute amplitude
-         %  spectrum for a trace. Uses the MATLAB fft function.
-         %  [A, phi, f] = amplitude_spectrum(td)
-         %
-         %   Inputs:
-         %       td - a single TraceData
-         %
-         %   Outputs:
-         %       A - the amplitude coefficients
-         %       phi - the phase coefficients
-         %       f - the frequency values corresponding to elements of A and phi
-         %
-         %   Example:
-         %       [A phi, f] = amplitude_spectrum(td)
-         %       plot(f,A);
-         %       xlabel('Frequency (Hz)')
-         %       ylabel('Amplitude');
-         %
-         %   Glenn Thompson, November 21, 2014
-         
-         N = length(td.data);
-         NFFT = 2 ^ nextpow2(N); % Next power of 2 from length of y
-         Y = fft(td.data, NFFT); % X will have same length as signal, and will be complex with a magnitude and phase
-         A = 2 * abs(Y(1:NFFT/2+1)) / N;
-         phi = angle(Y);
-         f = td.samplerate / 2 * linspace(0,1,NFFT/2+1);
-      end
+      [A, phi, f] = amplitude_spectrum(td)
       
       function obj = clip(obj, vals)
          %clip   clips a trace's data at a particular max/min value range
@@ -575,9 +570,6 @@ classdef TraceData
          %           traces will be clipped between these two values
          %
          %   All values beyond maximum ranges will be set to the maximum range
-         %
-         %
-         % See also  despike
          
          if nargin < 2,
             vals = [];
@@ -675,16 +667,30 @@ classdef TraceData
          tf = ~eq(A,B);
       end;
       
-      function outT = extract(Tr, method, starts, ends)
+      function outT = extract(Tr, method, startPos, endPos)
          %extract   Retrieve subset of TraceData
+         %
+         %    subTraces = extract(traces, 'index', startPos, endPos)
+         %
+         %
+         %   waveform = T.extract('INDEX', startPos, endPos)
+         %       returns traces with the subset of data from startIndex to
+         %       endIndex.  Essentially, this is equivelent to 
+         %       T.data = T.data(startPos, endPos)
+         %
+         %       data into an array, as in D = get(W,'data'), then returning a
+         %       waveform with the subset of data,
+         %       ie. waveform = set(waveform,'data', D(startIndex:endIndex));
+         %
+         %    See also SeismicTrace/extract
          switch lower(method)
             case 'index'
-               assert(numel(starts) == numel(ends), 'number of start and end indices must match');
-               outT = repmat(TraceData,numel(Tr),numel(starts));
+               assert(numel(startPos) == numel(endPos), 'number of start and end indices must match');
+               outT = repmat(TraceData,numel(Tr),numel(startPos));
                for n=1:numel(T);
-                  for t=1:numel(starts)
+                  for t=1:numel(startPos)
                      outT(n,t) = Tr(n);
-                     outT(n,t).data = Tr(n).data(starts(t), ends(t));
+                     outT(n,t).data = Tr(n).data(startPos(t), endPos(t));
                   end
                end
          end
@@ -1203,60 +1209,10 @@ classdef TraceData
             otherwise
          end
       end
-      function newunit = autoscale(axishandle, oldunit)
-         %autoscale   automatically determine correct y-units for plotting
-         %  newunit = autoscale(axishandle, oldunit)
-         if iscell(oldunit), oldunit = oldunit{1}; end;
-         ah = axishandle;
-         % yRange = @(ax) max(get(ax,'ydata')) - min(get(ax,'ydata'));
-         yFarthestFrom0 = @(ax) max(abs(get(ax,'ydata')));
-         % yMaxrange = max(arrayfun(yRange,ah)); % greatest data range from axis
-         ydatamax = max(arrayfun(yFarthestFrom0, ah)); %overal maximum from axis
-         
-         [nominatorUnit, nominatorUnitLength] = extractUnit(oldunit);
-         oldUnitVal = unit2val(nominatorUnit);
-         if isempty(oldUnitVal),
-            newunit= oldunit;
-            return
-         end
-         trueScale = oldUnitVal .* ydatamax;  % ex. 1 mm == 0.001
-         [newunit, newUnitVal] = val2unit(trueScale);
-         oldunit(1:nominatorUnitLength) = [];
-         newunit = [newunit, oldunit];
-                  
-         set(ah,'ydata',get(ah,'ydata').*(oldUnitVal./newUnitVal));
-         
-         function [myunit, unitLength] = extractUnit(unit)
-            unitLength = sum(isletter(unit(1:2)));
-            myunit = unit(1:unitLength);
-         end
-         
-         function v = unit2val(myunit)
-            %unit2val   returns the associated multiplier for a unit
-            %  unit2val('m') % returns 1
-            %  unit2val('nm') % returns 1.0e-9
-            % expects only the nominator unit eg. 'nm'
-            knownunits = {'pm','nm', '\mum', 'mm','cm','m','km'};
-            knownvals = 10.^[-12, -9, -6, -3, -2, 0, 3];
-            whichunit = ismember(knownunits,myunit);
-            if any(whichunit)
-               v = knownvals(whichunit);
-            else
-               v = []; %not found!
-            end
-         end
-         
-         function [unit, unitval] = val2unit(v)
-            %val2unit   returns the unit and multiplier for a value
-            %  [a,b] = unit2val(0.0023) % a='mm', b=1.0e-3
-            knownunits = {'pm','nm','\mum','mm','cm','m','km'};
-            searchvals = 10.^[-inf, -9, -6, -3, -2, 0, 3]; % tweak this part if anything
-            knownvals =  10.^[-12, -9, -6, -3, -2, 0, 3];
-            whichunit = find((v - searchvals) >= 0, 1, 'last');
-            unit = knownunits(whichunit);
-            unitval = knownvals(whichunit);
-         end
-      end
+      
+      newunit = autoscale(axishandle, oldunit);
+      
+
    end
 end
 
