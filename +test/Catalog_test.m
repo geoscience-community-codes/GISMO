@@ -5,7 +5,7 @@ end
 
 %% Test Functions
 function testFunctionOne(testCase)
-cookbooks.Catalog_cookbook;
+Catalog.cookbook;
 end
 
 %% Optional file fixtures  

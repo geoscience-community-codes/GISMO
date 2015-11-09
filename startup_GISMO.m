@@ -57,7 +57,8 @@ for n = 1:numel(dirlist)
   if ~isdir(newpath), continue, end  %don't add loose files to the path
   if subdir(1)=='+', continue, end % don't add package directories
   addpath(newpath);
-  %disp(['Adding path:  ' newpath]);
+  
+  disp(['Adding path:  ' newpath]);
 end
 
 

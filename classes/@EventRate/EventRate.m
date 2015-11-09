@@ -769,9 +769,13 @@ classdef EventRate
 
     
     end % methods 
-end    
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
    
+    methods(Static)
+        cookbook()
+    end
+
+end
 %% PERCENTILES
 function p=percentiles(vals)
     lenVals = length(vals);

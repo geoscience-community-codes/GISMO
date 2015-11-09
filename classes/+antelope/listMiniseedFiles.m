@@ -1,6 +1,6 @@
 function [mseedfiles] = listMiniseedFiles(ds, chantag, snum, enum)
 % LISTMINISEEDFILES retrieve a list of the Miniseed files referenced by a datasource, ChannelTag object and start/end times.
-% mseedfiles = listMiniseedFiles(ds, chantag, snum)
+% mseedfiles = LISTMINISEEDFILES(ds, chantag, snum)
 % 
 % Input:
 %   ds - a datasource object

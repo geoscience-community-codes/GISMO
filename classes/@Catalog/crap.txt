@@ -1,0 +1,72 @@
+%         function eev(obj)
+%             % Catalog.eev - Browse an Catalog object one event at a time.
+% SAME AS EVENT FUNCTION EXCEPT ATTEMPTS TO USE SFILES TO LOAD WAVFILES
+%                 elseif (choice(1)=='p') % PLOT
+% %                     if strcmp(get(obj,'method'), 'import_aef_file')
+% %                         % AEF SUMMARY FILE FOR MBWH
+% %                         time = obj.time(eventnum);
+% %                         sfilename = time2sfile(time);
+% %                         % read the sfile
+% %                         sfile = readCatalog.read_sfile(fullfile('/raid','data','seisan','MVOE_','REA'), sfilename,'*','*')
+% % %                         wavfiles = {sfile(1).wavfiles};
+% % %                         wavpath = fullfile('/raid','data','seisan','MVOE_', 'WAV', sprintf('%04d', wavfiles{1})
+% % %                         ds = datasource('seisan', wavpath)
+% % %                         w = waveform(ds, scnl, time-PRETRIGGER, time+POSTTRIGGER);
+% %                     end    
+%                     if strcmp(obj.request.dataformat, 'seisan')
+%                         % SEISAN FILE
+%                         scnl = scnlobject('*', '*');
+%                         ds = obj.request.database;
+%                         sfile = obj.request.sfilelist;
+% 
+%                         wavfiles = {sfile(eventnum).wavfiles};
+%                         yyyy = sfile(eventnum).year;
+%                         mm = sfile(eventnum).month;
+%                         time = sfile(eventnum).time;
+%                         dbpath = get(obj, 'dbpath');
+%                         dbpath = strrep(dbpath, 'REA', 'WAV');
+%                         for i=1:numel(wavfiles)
+%                             wavpath = fullfile(dbpath, sprintf('%04d', yyyy), sprintf('%02d', mm), wavfiles{i});
+%                             if ~exist(wavpath, 'file')
+%                                 dbpath = strrep(dbpath, 'WAV', 'WAV2');
+%                                 wavpath = fullfile(dbpath, sprintf('%04d', yyyy), sprintf('%02d', mm), wavfiles{i});
+%                             end
+%                             disp(sprintf('Loading %s',wavpath));
+%                             ds = datasource('seisan', wavpath);
+%                             datestr(time)
+%                             w = waveform(ds, scnl, time-PRETRIGGER, time+POSTTRIGGER);
+%                         end
+%                         if exist('w','var')
+%                             mulplt(w);
+%                         end
+%                     end
+%         function w=towaveform(obj)
+%             % WHAT THE HELL IS THIS - SOMETHING TO DO WITH SEISAN - PERHAPS
+%             % I NEED NEW CLASS Catalog_SEISAN
+%              w{1,1} = waveform();
+%              if strcmp(get(obj,'method'), 'load_seisandb')
+%                 % SEISAN FILE
+%                 scnl = scnlobject('*', '*');
+%                 ds = get(obj, 'datasource');
+%                 sfile = get(obj, 'sfile');
+%                 datestr([sfile.time])
+%                 for k=1:numel([sfile.time])
+%                     wavfiles = {sfile(k).wavfiles};
+%                     yyyy = sfile(k).year;
+%                     mm = sfile(k).month;
+%                     time = sfile(k).time;
+%                     dbpath = get(obj, 'dbpath');
+%                     dbpath = strrep(dbpath, 'REA', 'WAV');
+%                     for i=1:numel(wavfiles)
+%                         wavpath = strtrim(fullfile(dbpath, sprintf('%04d', yyyy), sprintf('%02d', mm), wavfiles{i}));
+%                         if exist(wavpath, 'file')
+%                             %disp(sprintf('Loading %s',wavpath));
+%                             ds = datasource('seisan', wavpath);
+%                             w{k,i}=waveform(ds, scnl, time, time+300/86400);
+%                         else
+%                            disp(sprintf('Not found: %s',wavpath));
+%                         end
+%                     end         
+%                 end
+%              end
+%         end

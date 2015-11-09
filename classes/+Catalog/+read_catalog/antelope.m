@@ -5,7 +5,8 @@ function self = antelope(varargin)
     debug.printfunctionstack('>')
 
     if ~admin.antelope_exists
-        error('This function requires the Antelope toolbox for Matlab'); 
+        warning('This function requires the Antelope toolbox for Matlab'); 
+        self = Catalog([], [], [], [], [], {}, {});
         return;
     end
 
@@ -137,7 +138,7 @@ function self = antelope(varargin)
     % Loop over databases
     for dbpathitem = dbpathlist
         % Load vectors
-        origins = db_load_origins(dbpath, subset_expression);
+        origins = antelope.dbgetorigins(dbpath, subset_expression);
         if length(origins.lon) == length(origins.mag)
             % Concatentate vectors
             time  = cat(1, time,  origins.time);           
