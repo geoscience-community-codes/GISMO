@@ -67,7 +67,74 @@
           </a>
 
           <p class="repo-owner"><a href="https://github.com/geoscience-community-codes/GISMO"></a> is maintained by <a href="https://github.com/geoscience-community-codes">geoscience-community-codes</a>.</p>
-
+		<table width="90%" border="0" align="CENTER">
+			<tr>
+				<td class="backdrop" align="CENTER">
+					<table width="100%" border="0" align="CENTER">
+						<tr>
+						  <td class="td1" valign="TOP"><p><strong><span class="nametx">The GISMO suite</span></strong></p>
+						    <span class="tx1dec"><p>The GISMO suite is a collection of Matlab toolboxes for seismic waveform analysis built on a common platform. GISMO stands for GI Seismology Matlab Objects. The GISMO suite consist of two types of tools: (1) a core codebase of stable toolboxes; and (2) an ever-evolving set of contributed codes developed from these core products. The core products include the <a href="#WAVEFORM">waveform suite</a> and <a href="#CORRELATION">correlation toolbox</a>, detailed below.</p>
+						    <p><span class="nametx"><a href="download.html">Download the GISMO suite</a></span></p><br></span>
+					      <hr></td>
+					  </tr>
+						<tr>
+							<td class="td1" valign="TOP" width="50%"><a name="WAVEFORM"><font class="nametx"><strong>The Waveform Suite </strong></font></a><font class="tx1dec"><span class="nametx">written and maintained by Celso Reyes</span><br>
+						      <br>
+							</font> <span class="tx1dec">The waveform object is designed to allow easy  data retrieval from a variety of sources and to make basic waveform  research quick and easy. It is a toolset that allows the creation of  more sophisticated programs without having to be concerned with all  details. Features include: </span><a href="pics/wavescreen.png"><img src="pics/wavescreen_thumb.png" alt="Screenshot" align="right" border="0" height="313" width="500"></a><ul><li class="tx1dec">Use  any regularly sampled data stream </li>
+						      <li class="tx1dec">Mathematical functions: <strong>+</strong>,<strong> -</strong>,<strong> /</strong>,<strong> .*</strong>,<strong> .^</strong></li>
+							    <li class="tx1dec"> Standard manipulations: filter, crop, subset, subset, stack, normalize, automatic gain control, demean, detrend, taper, etc.</li>
+							    <li class="tx1dec">Statistics: max,  min, mean, median, etc.</li>
+							    <li class="tx1dec">Waveform operations: hilbert transform, integration and differentiation</li>
+							    <li class="tx1dec">Operate on single waveforms or thousands</li>
+							    <li class="tx1dec">History feature  tracks changes to your waveforms</li>
+							    <li class="tx1dec">Plotting tools for all included data types </li>
+							    <li class="tx1dec">Object architecture provides a stable base for writing more complex programs</li>
+						      </ul>
+							  <p class="tx1dec">The waveform toolbox was written and tested in Matlab release 2006b.   Data can be imported from Antelope databases (requires the BRTT Antelope toolbox), Winston databases, SAC and Seisan files.    With minimal coding, most any homegrown Matlab format can take advantage of the waveform architecture. </p>
+							  <p><span class="tx1dec">The waveform object</span>:
+							  <ul>
+							      <li class="tx1dec">makes playing with data <em>easier</em> by automating the tedious aspects of data manipulation </li>
+							      <li class="tx1dec">makes programs more <em>stable</em> by ensuring proper data typing</li>
+							      <li class="tx1dec">makes code more <em>portable</em> by reading multiple formats and functioning on multiple systems </li>
+							      <li class="tx1dec">makes troubleshooting <em>faster</em> by providing more detailed messages and warnings <br>
+							      </li>
+						      </ul>
+							    <span class="tx1dec">Browse extensive <a href="http://www.giseis.alaska.edu/input/celso/matlabweb/waveform_suite/waveform.htm"> waveform tutorial and matlab object primer</a>.<br>
+                                <b>Note that the Waveform suite is also distributed as a stand alone product on the <a 
+href="http://www.mathworks.com/matlabcentral/fileexchange/23809">Matlab Exchange</a>. The version here is bundled with the correlation 
+toolbox and contributed software.</span></b><br>
+                                <br>
+						      </font> </p>
+					<hr></td>
+					  </tr>
+<tr>
+							<td class="td1" valign="TOP" width="50%"><a name="CORRELATION"><font class="nametx"><strong>The Correlation Toolbox </strong></font></a><span class="nametx"> written and maintained by Michael West</span></p>
+							  <p class="tx1dec">This toolbox provides an environment for analyzing waveforms with a suite of related cross-correlation techniques based on a common data object. Features include: 						      </p>
+                              <a href="pics/screen_shot.png"><img src="pics/screen_shot_thumb.png" alt="Screenshot" width="500" height="300" border="0" align="right"></a>
+							  <ul>
+                                <li><span class="tx1dec"> Optimized cross-correlation routines capable of handling thousands of traces at a time	
+                                </span>
+                                <li><span class="tx1dec">Max correlation and lag time determinations for all event pairs (no "master" events) </span>
+                                <li><span class="tx1dec">Dendrogram-type heirarchical clustering of event families 
+                                </span>
+                                <li><span class="tx1dec">Plotting tools for all included data types</span><li><span class="tx1dec"> Suite of basic manipulation tools: filter, crop, subset, stack, normalize, automatic gain control, etc. 
+                                </span>
+                                <li class="tx1dec">Functions for waveform interferometry
+                                <li class="tx1dec">Optimized differential arrival times following Vandecar and Crosson, 1990                                
+                                <li><span class="tx1dec">Built on the waveform toolbox</span>
+                              </ul>
+							  <p><span class="tx1dec">The correlation toolbox was written and tested in Matlab release 2007b. Most functionality should  exist with versions 2006 and later. A few features of the correlation toolbox require the statistics toolbox (linkage, cluster and dedrogram plotting). Because data handling is carried out using the waveform toolbox, data can be imported from Antelope databases, Winston databases, SAC and Seisan files. There is also an import routine for the CORAL format. Since it uses the waveform toolbox, any homegrown format can be imported with limited coding.</span><br>
+							    <br>
+						      <span class="tx1dec">See <a href="correlation_cookbook/correlation_cookbook.html">correlation toolbox cookbook</a> for demo of utilities. <br>
+						      Presentation <a href="http://giseis.alaska.edu/input/west/presentations/gi2008_correlation_toolbox.pdf">&quot;Tools and techniques in seismic waveform correlation&quot;</a>, March 28, 2008 (5 Mb .pdf)</span><br>
+						      </span>							  <font class="tx1dec"></font></p>
+							  <font class="tx1dec"><hr>
+                                  </font></td>
+					  </tr>
+					</table>
+			  </td>
+			</tr>
+		</table>
           <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
         </aside>
       </div>
