@@ -166,6 +166,8 @@ classdef SeismicTrace < TraceData
          val = [obj.mat_starttime];
          if exist('stringformat','var')
             val = datestr(val,stringformat);
+         else
+            val = reshape(val,size(obj));
          end
       end
       function val = lastsampletime(obj, stringformat)
@@ -184,6 +186,8 @@ classdef SeismicTrace < TraceData
          val = [obj.firstsampletime] + secDurs/86400;
          if exist('stringformat','var')
             val = datestr(val,stringformat);
+         else
+            val = reshape(val,size(obj));
          end
       end
       
@@ -996,6 +1000,53 @@ classdef SeismicTrace < TraceData
       %TODO: function ismember
       
       %TODO: function calib_apply
+      function obj = calibapply(obj)
+         %calibapply   scale the data by the nominal calibration value
+         %  scaledtraces = calibapply(traces)
+         %
+         %  because of the nature of floating-point operations, it is
+         %  possible that repeated applications of calibapply and
+         %  calibunapply would introduce rounding errors
+         %
+         %  See also calibunapply
+         appliedIndex = false(numel(obj));
+         for n=1:numel(obj)
+            if ~obj(n).calib.applied
+               obj(n).data = obj(n).data .* obj(n).calib.value;
+               obj(n).calib.applied = true;
+               appliedIndex(n) = true;
+            else
+               warning('SeismicTrace:calibapply:alreadyApplied','Calibratin already applied');
+            end
+         end
+         
+         if any(~appliedIndex)
+            %could use appliedIndex to give more details
+            warning('SeismicTrace:calibapply:alreadyApplied','Calibration already applied');
+         end
+      end
+      function obj = calibunapply(obj)
+         %calibunapply  remove calibration from the data (divide by it)
+         %  unscaledtraces = calibunapply(traces)
+         %
+         %  because of the nature of floating-point operations, it is
+         %  possible that repeated applications of calibapply and
+         %  calibunapply would introduce rounding errors
+         %
+         %  See also calibapply
+         unapplied = false(numel(obj));
+         for n=1:numel(obj)
+            if obj(n).calib.applied
+               obj(n).data = obj(n).data ./ obj(n).calib.value;
+               obj(n).calib.applied = false;
+               unapplied(n) = true;
+            end
+         end
+         if any(~unapplied)
+            %could use appliedIndex to give more details
+            warning('SeismicTrace:calibunapply:notApplied','Calibration was not applied');
+         end
+      end
       %TODO: function calib_remove
       
       %% history-related functions
@@ -1141,8 +1192,8 @@ classdef SeismicTrace < TraceData
             for n=1:numel(starts)
                [T(:,n).start] = deal(starts(n));
                nSeconds = (ends(n) - starts(n)) * 86400;
-               nSamples = nSeconds * samplerate;
-               D = sin((-nSamples: 2 : nSamples-1) / 600) * 10 + randn(size(-nSamples: 2 : nSamples-1));
+               nsamples = nSeconds * samplerate;
+               D = sin((-nsamples: 2 : nsamples-1) / 600) * 10 + randn(size(-nsamples: 2 : nsamples-1));
                [T(:,n).data] = deal(D);
             end
             % now fill with bogus data

@@ -162,6 +162,19 @@ classdef TraceData
          end
       end
       
+      function n = nsamples(obj)
+         %nsamples   number of samples in the trace(s)
+         %   n = nsamples(traces) will return the number of samples for
+         %   each trace in an array of the same size as traces
+         %
+         %   See also numel
+         n = zeros(size(obj));
+         for m=1:numel(obj)
+            n(m) = numel(obj(m).data);
+         end
+      end
+            
+      
       function s = formattedduration(obj, fmt)
          %formattedduration   Duration as a formatted string
          %  s = trace.formattedduration() retrieves the duration in the
@@ -640,11 +653,11 @@ classdef TraceData
                   '''option'' must be either a function handle or function name.');
             end
          end
-         dlens = arrayfun(@(x) numel(x.data), obj);
+         dlens = obj.nsamples();
          maxlen = max(dlens(:));
-         d = createDefaultArray(maxlen,numel(obj));
+         d = createDefaultArray(maxlen, numel(obj));
          for n = 1:numel(obj)
-            d(1:numel(obj(n).data),n) = double(obj(n).data);
+            d(1:dlens(n),n) = double(obj(n).data);
          end
       end
       
@@ -1054,14 +1067,15 @@ classdef TraceData
             error('TraceData:taper:InvalidRSize',...
                'R must either be a scalar value, or must be the same size as the input traces');
          end
+         nsamples = T.nsamples();
          %% Do the window processing
          if exist('R','var')
             for N=1:numel(T)
-               T(N) = T(N) .* window(taperfun, numel(T(N).data), R(N));
+               T(N) = T(N) .* window(taperfun, nsamples(N), R(N));
             end
          else
             for N=1:numel(T)
-               T(N) = T(N) .* window(taperfun, numel(T(N).data));
+               T(N) = T(N) .* window(taperfun, nsamples(N));
             end
          end
          

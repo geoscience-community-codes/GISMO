@@ -57,133 +57,135 @@ function varargout = plot(T, varargin)
    
    % AUTHOR: Celso Reyes, with contribution from Jason Amundson
    
-   if isscalar(T),
-      yunit = T.units;
-   else
-      yunit = arrayfun(@(tr) tr.units, T, 'UniformOutput',false); %
-      yunit = unique(yunit);
-   end
+   
    
    %Look for an odd number of arguments beyond the first.  If there are an odd
    %number, then it is expected that the first argument is the formatting
    %string.
    
-   evenInputs =  ~mod(nargin,2);
-   hasFormatString = evenInputs && nargin > 1; % including the SeismicTrace
-   if hasFormatString
-      formString = varargin{1};
-      varargin(1)=[];
+   [formatDescriptor, params] = peelFormat(varargin);
+   p = parseParameters(params);
+   xunit = p.Results.xunit;
+   [xunit, Xvalues] = prepareXvalues(T, xunit);
+   
+   newParams = buildParameterList(formatDescriptor, p.Unmatched);
+   ax = gca;
+   plotHandles = struct(); % contain the various plotting handles
+   plotHandles.axis = ax;
+   plotHandles.lines = plot(ax, Xvalues, double(T,'nan') , newParams{:} );
+   
+      
+   if p.Results.autoscale
+      % modify yunit and rescale the plot data
+      yunit = SeismicTrace.autoscale(plotHandles.lines, getYunit(T));
+   else 
+      yunit = getYunit(T);
    end
    
+   switch lower(xunit)
+      case 'date'
+         datetick(ax, 'x', 'keepticks','keeplimits');
+      otherwise
+         % do nothing
+   end
+   
+   % label the plot
+   plotHandles.yunits = ylabel(ax, yunit, 'fontsize',p.Results.fontsize);
+   plotHandles.xunits = xlabel(ax, xunit, 'fontsize',p.Results.fontsize);
+   plotHandles.title = title(ax, getTitleText(T), 'interpreter', 'none');
+   set(plotHandles.title,'fontsize', p.Results.fontsize);
+   set(ax,'fontsize', p.Results.fontsize);
+   
+   % return the graphics handles if desired
+   switch nargout
+      case 0
+         % do nothing
+      case 1
+         varargout = {plotHandles.lines};
+      case 2
+         varargout = {plotHandles.lines, plotHandles};
+   end
+end %plot
+
+function [formatDescriptor, params] = peelFormat(params)
+   %Look for an odd number of arguments beyond the first.  If there are an odd
+   %number, then it is expected that the first argument is the formatting
+   %string.
+   hasOddInputs =  mod(numel(params),2);
+   if hasOddInputs
+      formatDescriptor = params{1};
+      params(1)=[];
+   else
+      formatDescriptor = '';
+   end
+   
+end
+function p = parseParameters(argList)
    p = inputParser;
    p.KeepUnmatched = true;
    p.CaseSensitive = false;
    p.StructExpand = false;
-   addParameter(p,'autoscale', false);
-   addParameter(p,'xunit', 's');
-   addParameter(p,'fontsize', 10);
-   p.parse(varargin{:}); % intercepted values end up in p.Results, all the rest goes to p.Unmatched
-   xunit = p.Results.xunit;
-   
-   [xunit, xfactor] = parse_xunit(xunit);
-   
-   switch lower(xunit)
+   if ismethod(p,'addParameter')
+      addParameter(p,'autoscale', false);
+      addParameter(p,'xunit', 's');
+      addParameter(p,'fontsize', 10);
+   else % older usage: pre r2013b
+      addParamValue(p,'autoscale', false);
+      addParamValue(p,'xunit', 's');
+      addParamValue(p,'fontsize', 10);
+   end
+   p.parse(argList{:}); % intercepted values end up in p.Results, all the rest goes to p.Unmatched
+end
+
+function yunit = getYunit(T)
+   if isscalar(T)
+      yunit = T.units;
+   else
+      yunit = arrayfun(@(tr) tr.units, T, 'UniformOutput',false);
+      yunit = unique(yunit);
+   end
+end
+
+function [xLabel, Xvalues] = prepareXvalues(T, xunit)
+   [xLabel, xfactor] = parse_xunit(xunit);
+   switch lower(xLabel)
       case 'date'
-         % we need the actual times...
-         for n=numel(T):-1:1
-            tv(n) = {T(n).sampletimes};
+         traceLengths = T(:).nSamples();
+         Xvalues = nan(max(traceLengths),numel(T)); %fill empties with NaN (no plot)
+         for n=1:numel(T)
+            Xvalues(1:traceLengths(n),n) = T(n).sampletimes;
          end
-         % preAllocate Xvalues
-         tvl = zeros(size(tv));
-         for n=1:numel(tv)
-            tvl(n) = numel(tv{n}); %tvl : TimeVectorLength
-         end
-         
-         Xvalues = nan(max(tvl),numel(T)); %fill empties with NaN (no plot)
-         
-         for n=1:numel(tv)
-            Xvalues(1:tvl(n),n) = tv{n};
-         end
-         
          
       case 'day of year'
-         allstarts = [T.mat_starttime];
-         startvec = datevec(allstarts(:));
-         dec31 = datenum(startvec(1)-1,12,31,0,0,0); % 12/31/xxxx of previous year in Matlab format
+         allstarts = T.firstsampletime();
+         [y, ~, ~] = datevec(allstarts(:));
+         dec31 = datenum(y,12,31,0,0,0); % 12/31/xxxx of previous year in Matlab format
          startdoy = datenum(allstarts(:)) - dec31;
          
-         dl = zeros(size(T));
-         for n=1:numel(T)
-            dl(n) = numel(T(n).data); %dl : DataLength
-         end
-         
+         dl = T.nSamples();
+                  
          Xvalues = nan(max(dl),numel(T));
          periodsInUnits = T.period() ./ xfactor;
          for n=1:numel(T)
             Xvalues(1:dl(n),n) = (0:dl(n)-1) .* periodsInUnits(n) + startdoy(n);
          end
          
-      otherwise,
-         longest = max(arrayfun(@(tr) numel(tr.data), T));
-         while numel(longest) > 1
-            longest = max(longest);
-         end
-         Xvalues = nan(longest, numel(T));
+      otherwise
+         traceLengths = T(:).nSamples();
+         Xvalues = nan(max(traceLengths), numel(T)); %preallocate
+         timescales = [T.samplerate] .* xfactor;
          for n=1:numel(T)
-            dl = numel(T(n).data);
-            Xvalues(1:dl,n) = (1:dl) ./ T(n).samplerate ./ xfactor;
+            Xvalues(1:traceLengths,n) = (1:traceLengths) ./ timescales(n);
          end
    end
-   
-   % put together a new varargin to pass to the plotting routine.
-   f = fieldnames(p.Unmatched);
-   if isempty(f)
-      if hasFormatString; newParams = {formString}; else newParams = {}; end
-   else
-      v = struct2cell(p.Unmatched);
-      if hasFormatString;
-         newParams = [{formString} horzcat(f,v)];
-      else
-         newParams = horzcat(f,v);
-      end
-   end
-   h = plot(Xvalues, double(T,'nan') , newParams{:} );
-   
-   if p.Results.autoscale
-      yunit = SeismicTrace.autoscale(h, yunit);
-   end
-   
-   yh = ylabel(yunit,'fontsize',p.Results.fontsize);
-   
-   xh = xlabel(xunit,'fontsize',p.Results.fontsize);
-   switch lower(xunit)
-      case 'date'
-         datetick('keepticks','keeplimits');
-   end
+end
+function titletext = getTitleText(T)
    if isscalar(T)
-      th = title(sprintf('%s (%s) @ %3.2f samp/sec',...
-         T.name, T.start, T.samplerate),'interpreter','none');
+      titletext = sprintf('%s (%s) @ %3.2f samp/sec', T.name, T.start, T.samplerate);
    else
-      th = title(sprintf('Multiple Traces.  wave(1) = %s (%s) - starting %s',...
-         T(1).station, T(1).channel, T(1).start),'interpreter','none');
+      titletext = sprintf('Multiple Traces.  Trace(1) = %s - starting %s', T(1).name, T(1).start);
    end;
-   
-   set(th,'fontsize',p.Results.fontsize);
-   set(gca,'fontsize',p.Results.fontsize);
-   % return the graphics handles if desired
-   if nargout >= 1,
-      varargout(1) = {h};
-   end
-   
-   % return additional information in a structure: when varargout ==2
-   plothandles.title = th;
-   plothandles.xunits = xh;
-   plothandles.yunits = yh;
-   if nargout ==2,
-      varargout(2) = {plothandles};
-   end
-end %plot
-
+end
 
 function [unitName, secondMultiplier] = parse_xunit(unitName)
    % parse_xunit returns a labelname and a multiplier for an incoming xunit
@@ -213,5 +215,23 @@ function [unitName, secondMultiplier] = parse_xunit(unitName)
       otherwise,
          unitName = 'Seconds';
          secondMultiplier = 1;
+   end
+end
+
+function newParams = buildParameterList(formatDescriptor, paramStruct)
+   fieldList = fieldnames(paramStruct);
+   if isempty(fieldList)
+      if ~isempty(formatDescriptor); 
+         newParams = {formatDescriptor}; 
+      else
+         newParams = {};
+      end
+   else
+      v = struct2cell(paramStruct);
+      if ~isempty(formatDescriptor);
+         newParams = [{formatDescriptor} horzcat(fieldList,v)];
+      else
+         newParams = horzcat(fieldList,v);
+      end
    end
 end
