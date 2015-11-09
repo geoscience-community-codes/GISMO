@@ -150,7 +150,7 @@ function [xLabel, Xvalues] = prepareXvalues(T, xunit)
    [xLabel, xfactor] = parse_xunit(xunit);
    switch lower(xLabel)
       case 'date'
-         traceLengths = T(:).nSamples();
+         traceLengths = T(:).nsamples();
          Xvalues = nan(max(traceLengths),numel(T)); %fill empties with NaN (no plot)
          for n=1:numel(T)
             Xvalues(1:traceLengths(n),n) = T(n).sampletimes;
@@ -162,7 +162,7 @@ function [xLabel, Xvalues] = prepareXvalues(T, xunit)
          dec31 = datenum(y,12,31,0,0,0); % 12/31/xxxx of previous year in Matlab format
          startdoy = datenum(allstarts(:)) - dec31;
          
-         dl = T.nSamples();
+         dl = T.nsamples();
                   
          Xvalues = nan(max(dl),numel(T));
          periodsInUnits = T.period() ./ xfactor;
@@ -171,7 +171,7 @@ function [xLabel, Xvalues] = prepareXvalues(T, xunit)
          end
          
       otherwise
-         traceLengths = T(:).nSamples();
+         traceLengths = T(:).nsamples();
          Xvalues = nan(max(traceLengths), numel(T)); %preallocate
          timescales = [T.samplerate] .* xfactor;
          for n=1:numel(T)
