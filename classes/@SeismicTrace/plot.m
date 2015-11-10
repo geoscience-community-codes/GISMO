@@ -1,18 +1,19 @@
 function varargout = plot(T, varargin)
    %plot   plots a SeismicTrace
-   %   h = plot(trace)
-   %   Plots a waveform object, handling the title and axis labeling.  The
-   %      output parameter h is optional.  If u, thto the waveform
-   %   plots will be returned.  These can be used to change properties of the
-   %   plotted waveforms.
+   %   plot(traces) Plots traces, handling the title and axis labeling.
+   %  
+   %   [h, handles] = plot(traces) will return handles to various elements
+   %   of the plot.  H will contain the line handles, while HANDLES will be
+   %   a struct that includes handles to the line as well as titles and
+   %   axis labels.
    %
-   %   h = trace.plot(...)
+   %   h = plot(traces, ...)
    %   Plots a waveform object, passing additional parameters to matlab's PLOT
-   %   routine.
+   %   routine.  Trace specific parameters are discussed below.
    %
-   %   h = trace.plot('xunit', xvalue, ...)
+   %   h = plot(..., 'xunit', xvalue)
    %   sets the xunit property of the graph, which is used to determine how
-   %   the times of the waveform are interpereted.  Possible values for XVALUE
+   %   the times of the traces are interpereted.  Possible values for XVALUE
    %   are 's', 'm', 'h', 'd', 'doy', 'date'.
    %
    %        'seconds' - seconds
@@ -20,43 +21,46 @@ function varargout = plot(T, varargin)
    %        'hours' - hours
    %        'day_of_year' - day of year
    %        'date' - full date
+   %        'samples' - sample number
    %
-   %   for multiple waveforms, specifying XUNITs of 's', 'm', and 'h' will
-   %   cause all the waveforms to be plotted starting at 0.  An XUNIT of
-   %   'date' will force all waveforms to plot starting at their starttimes.
+   %   for multiple traces, specifying XUNITs of 's', 'm', and 'h' will
+   %   cause all the traces to be plotted starting at 0.  An XUNIT of
+   %   'date' will force all traces to plot starting at their starttimes.
    %
    %   the default XUNIT is seconds
    %
+   %  h = plot(..., 'fontsize', value) will set the fontsize for the axis,
+   %  title, and labels.
+   %
    %  For the following examples:
-   %  % W is a waveform, and W2 is a smaller waveform (from within W)
-   %  W = waveform('SSLN','SHZ','04/02/2005 01:00:00', '04/02/2005 01:10:00');
-   %  W2 = extract(W,'date','04/02/2005 01:06:10','04/02/2005 01:06:33');
+   %  % T is a SeismicTrace, and T2 is a smaller trice (from within T)
+   %  T = SeismicTrace('SSLN','SHZ','04/02/2005 01:00:00', '04/02/2005 01:10:00');
+   %  T2 = extract(T,'date','04/02/2005 01:06:10','04/02/2005 01:06:33');
    %
    % EXAMPLE 1:
-   %   % This example plots the waveforms at their absolute times...
-   %   W.plot('xunit','date'); % plots the waveform in blue
+   %   % This example plots the traces at their absolute times...
+   %   plot(T, 'xunit','date'); % plots the trace
    %   hold on;
-   %   h = W2.plot('xunit','date', 'r', 'linewidth', 1);
-   %          %plots your other waveform in red, and with a wider line
+   %   h = T2.plot('xunit','date', 'r', 'linewidth', 1);
+   %          % plots your other trace in red, and with a wider line
    %
    % EXAMPLE 2:
-   %   % This example plots the waveforms, starting at time 0
-   %   W.plot(); % plots the waveform with seconds on the x axis
+   %   % This example plots the traces, starting at time 0
+   %   plot(T); % plots the waveform with seconds on the x axis
    %   hold on;
-   %   W2.plot('xunit','s', 'color', [.5 .5 .5]);  % plots your other
-   %                                       % waveform, starting in unison
-   %                                       % with the prev waveform, then
+   %   plot(T2, 'xunit','s', 'color', [0.5 0.5 0.5]);  % plots your other
+   %                                       % trace, starting in unison
+   %                                       % with the prev trace, then
    %                                       % change the color of the new
    %                                       % plot to grey (RGB)
    %
    %
-   %  also, now Y can be autoscaled with the property pair: 'autoscale',true
-   %  although it only works for single waveforms...
+   %  Y values can be autoscaled with the property pair: 'autoscale',true
+   %  although it only works for single traces...
    %
    %  See also datetick, plot
    
    % AUTHOR: Celso Reyes, with contribution from Jason Amundson
-   
    
    
    %Look for an odd number of arguments beyond the first.  If there are an odd
@@ -74,11 +78,10 @@ function varargout = plot(T, varargin)
    plotHandles.axis = ax;
    plotHandles.lines = plot(ax, Xvalues, double(T,'nan') , newParams{:} );
    
-      
    if p.Results.autoscale
       % modify yunit and rescale the plot data
       yunit = SeismicTrace.autoscale(plotHandles.lines, getYunit(T));
-   else 
+   else
       yunit = getYunit(T);
    end
    
@@ -108,9 +111,14 @@ function varargout = plot(T, varargin)
 end %plot
 
 function [formatDescriptor, params] = peelFormat(params)
-   %Look for an odd number of arguments beyond the first.  If there are an odd
-   %number, then it is expected that the first argument is the formatting
-   %string.
+   %peelFormat   identifies and removesline format descriptor from the argument list
+   %
+   %   [formatDescriptor, params] = peelFormat(params) will look to see if
+   %   there are an uneven number of [property, value] pairs.  If there are,
+   %   then it is assumed that the first argument is the formatting string
+   %   sample formatting strings: 'b', '-' 's+', etc.
+   %
+   %   See also plot
    hasOddInputs =  mod(numel(params),2);
    if hasOddInputs
       formatDescriptor = params{1};
@@ -120,7 +128,16 @@ function [formatDescriptor, params] = peelFormat(params)
    end
    
 end
+
 function p = parseParameters(argList)
+   %parseParameters   return an inputParer object containing the parsed args
+   %   p = parseParameters(argList)
+   %
+   %   p.Results contains arguments specific to the trace implementation of plot.
+   %   These are: autoscale,xunit, and fontsize
+   %   All other values are returned in p.unmatched.
+   %
+   %   See also inputParser
    p = inputParser;
    p.KeepUnmatched = true;
    p.CaseSensitive = false;
@@ -130,14 +147,15 @@ function p = parseParameters(argList)
       addParameter(p,'xunit', 's');
       addParameter(p,'fontsize', 10);
    else % older usage: pre r2013b
-      addParamValue(p,'autoscale', false);
+      addParamValue(p,'autoscale', false); %#ok<*NVREPL>
       addParamValue(p,'xunit', 's');
       addParamValue(p,'fontsize', 10);
    end
-   p.parse(argList{:}); % intercepted values end up in p.Results, all the rest goes to p.Unmatched
+   p.parse(argList{:});
 end
 
 function yunit = getYunit(T)
+   %getYunit   returns the unique labels for Y based on the traces' units
    if isscalar(T)
       yunit = T.units;
    else
@@ -147,39 +165,52 @@ function yunit = getYunit(T)
 end
 
 function [xLabel, Xvalues] = prepareXvalues(T, xunit)
+   %prepareXvalues   changes x axis based on type of plot
+   %   [xLabel, Xvalues] = prepareXvalues(T, xunit)
+   %
+   %   xunit:
+   %      'date'  - use the sample times for the x axis
+   %      'day of year' - use the day of year for the x axis
+   %      otherwise, uses seconds for the x axis
    [xLabel, xfactor] = parse_xunit(xunit);
+   
    switch lower(xLabel)
       case 'date'
-         traceLengths = T(:).nsamples();
-         Xvalues = nan(max(traceLengths),numel(T)); %fill empties with NaN (no plot)
-         for n=1:numel(T)
-            Xvalues(1:traceLengths(n),n) = T(n).sampletimes;
-         end
+         % sample Times
+         traceToX = @(tr) tr.sampletimes;
          
-      case 'day of year'
-         allstarts = T.firstsampletime();
-         [y, ~, ~] = datevec(allstarts(:));
-         dec31 = datenum(y,12,31,0,0,0); % 12/31/xxxx of previous year in Matlab format
-         startdoy = datenum(allstarts(:)) - dec31;
+      case {'day of year','day_of_year'}
+         % sampleNumber (from 0)  .*  periodInUnits  + dayOfYear
+         traceToX = @(tr) (0:(tr.nsamples()-1)) .* ...
+                          (tr.period() ./ xfactor) + ...
+                          dayOfYearFromTrace(tr);
          
-         dl = T.nsamples();
-                  
-         Xvalues = nan(max(dl),numel(T));
-         periodsInUnits = T.period() ./ xfactor;
-         for n=1:numel(T)
-            Xvalues(1:dl(n),n) = (0:dl(n)-1) .* periodsInUnits(n) + startdoy(n);
-         end
+      case 'samples'
+         % sampleNumber
+         traceToX = @(tr) 1:tr.nsamples;
          
       otherwise
-         traceLengths = T(:).nsamples();
-         Xvalues = nan(max(traceLengths), numel(T)); %preallocate
-         timescales = [T.samplerate] .* xfactor;
-         for n=1:numel(T)
-            Xvalues(1:traceLengths,n) = (1:traceLengths) ./ timescales(n);
-         end
+         % sampleNumber  ./  timescale
+         traceToX = @(tr) (1:tr.nsamples) ./ ...
+            (tr.samplerate .* xfactor);
    end
+   
+   traceLengths = T(:).nsamples();
+   Xvalues = nan(max(traceLengths), numel(T)); %preallocate
+   for n=1:numel(T)
+      Xvalues(1:traceLengths(n),n) = traceToX(T(n));
+   end
+   
 end
+
+function doy = dayOfYearFromTrace(T)
+   %dayOfYearFromTrace
+   [y, ~, ~] = datevec(T.firstsampletime());
+   doy = datenum(T.firstsampletime()) - datenum(y,12,31,0,0,0);
+end
+   
 function titletext = getTitleText(T)
+   %getTitleText   generate title text based on size of trace plus contents
    if isscalar(T)
       titletext = sprintf('%s (%s) @ %3.2f samp/sec', T.name, T.start, T.samplerate);
    else
@@ -188,9 +219,9 @@ function titletext = getTitleText(T)
 end
 
 function [unitName, secondMultiplier] = parse_xunit(unitName)
-   % parse_xunit returns a labelname and a multiplier for an incoming xunit
-   % value.  This routine was removed to centralize this function
-   % [unitName, secondMultiplier] = parse_xunit(unitName)
+   %parse_xunit   returns a labelname and a multiplier for an incoming
+   %   xunit value.  This routine was removed to centralize this function
+   %   [unitName, secondMultiplier] = parse_xunit(unitName)
    
    switch lower(unitName)
       case {'m','minutes'}
@@ -211,7 +242,9 @@ function [unitName, secondMultiplier] = parse_xunit(unitName)
       case {'s','seconds'}
          unitName = 'Seconds';
          secondMultiplier = 1;
-         
+      case {'samples'}
+         unitName = 'Samples';
+         secondMultiplier = nan;
       otherwise,
          unitName = 'Seconds';
          secondMultiplier = 1;
@@ -219,10 +252,11 @@ function [unitName, secondMultiplier] = parse_xunit(unitName)
 end
 
 function newParams = buildParameterList(formatDescriptor, paramStruct)
+   %newParams   creates argument list from to pass to the builtin plot
    fieldList = fieldnames(paramStruct);
    if isempty(fieldList)
-      if ~isempty(formatDescriptor); 
-         newParams = {formatDescriptor}; 
+      if ~isempty(formatDescriptor);
+         newParams = {formatDescriptor};
       else
          newParams = {};
       end
