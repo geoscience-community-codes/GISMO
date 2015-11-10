@@ -13,13 +13,16 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <title>GISMO by geoscience-community-codes</title>
+    <title>The GISMO Toolbox - seismic data analysis in MATLAB</title>
+
   </head>
 
   <body>
     <header>
       <div class="inner">
-        <h1>GISMO</h1>
+	<table><tr>
+        <td><h1>GISMO</h1></td><td><img src="pics/gismo_logo.gif"></td>
+	</tr></table>
         <h2>Seismic Data Analysis toolbox for MATLAB.</h2>
         <a href="https://github.com/geoscience-community-codes/GISMO" class="button"><small>View project on</small> GitHub</a>
       </div>
@@ -33,19 +36,32 @@
 <h1><font color="red">The GISMO repository - including this website  - is under construction.</font></h1>
 <img src="pics/gismo_logo.gif">
 
-<h1>What is GISMO?</h1>
-<p>GISMO is a MATLAB(R) toolbox for seismic data analysis built on a common platform.  In particular, GISMO provides a framework that speeds the development time for building research codes around seismic waveform/trace data, event catalog data and instrument responses. GISMO can import data from IRIS DMC, SAC & Seisan files, Antelope databases, and from ZMAP and CORAL format. With minimal coding, other formats can be imported. </p>
+<ol>
+<li><a href="#what">What is GISMO?</a></li>
+<li><a href="#core">GISMO core</a><li>
+<ul>
+<li>waveform/SeismicTrace</li>
+<li>correlation</li>
+<li>Catalog</li>
+</ul>
+<li><a href="#contrib">Contributed code</a></li>
+</ol>
 
-<h1>Advantages:</h1>
+
+<h1><a name="what">What is GISMO?</a></h1>
+<p>GISMO is a MATLAB toolbox for seismic data analysis built on a common platform.  In particular, GISMO provides a framework that speeds the development time for building research codes around seismic waveform/trace data, event catalog data and instrument responses. GISMO can import data from IRIS DMC, SAC & Seisan files, Antelope databases, and from ZMAP and CORAL format. With minimal coding, other formats can be imported. </p>
+
+<b>Advantages:</b>
 <ul>
 <li>makes playing with data <em>easier</em> by automating the tedious aspects of data manipulation </li>
 <li>makes programs more <em>stable</em> by ensuring proper data typing</li>
 <li>makes code more <em>portable</em> by reading multiple formats and functioning on multiple systems </li>
 <li>makes troubleshooting <em>faster</em> by providing more detailed messages and warnings <br></li>
+<li>encourages <em>community</em> by providing a common framework that researchers can use to develop their codes <br></li>
 </ul>
 </p>
 
-GISMO consists of two parts: 
+<b>GISMO consists of two parts:</b> 
 <ol>
 <li><a href="#core">GISMO core</a> data types and toolkits</li>
 <li>an ever-evolving set of <a href="#contrib">contributed codes</a> developed from these core products</li>
@@ -85,6 +101,7 @@ Presentation <a href="http://giseis.alaska.edu/input/west/presentations/gi2008_c
 
 <h2>Catalog</h2>
 <p>Handles earthquake metadata such as origin times, lat/lon/depth coordinates, magnitudes, arrivals. Features include:</p>
+<a href="pics/correlation.png"><img src="pics/correlation_thumb.png" alt="Correlation class images" width="500" height="300" border="0" align="right"></a>
 <ul>
 <li> Load event catalogs from IRIS DMC, USGS data feeds, Antelope databases, Seisan databases, ZMAP.
 <li> Save event catalogs to Antelope databases.
@@ -92,7 +109,7 @@ Presentation <a href="http://giseis.alaska.edu/input/west/presentations/gi2008_c
 <li> Compute b-values, magnitude of completeness.
 <li> Summary statistics
 </ul>
-<a href="pics/correlation.png"><img src="pics/correlation_thumb.png" alt="Correlation class images" width="500" height="300" border="0" align="right"></a>
+
 <hr/>
 
 <h1><a name="contrib">Contributed code</a></h1>
@@ -102,8 +119,6 @@ Presentation <a href="http://giseis.alaska.edu/input/west/presentations/gi2008_c
         </section>
 
         <aside id="sidebar">
-	<h3>Getting GISMO</h3>
-	<p>We recommend you "git clone" the code with:<br/>git clone git@github.com:geoscience-community-codes/GISMO.git.<br/>Alternatively, get GISMO as a Zip file:</p>
           <a href="https://github.com/geoscience-community-codes/GISMO/wiki/Getting_Started" class="button">
             <small>View</small>
             Get Started
