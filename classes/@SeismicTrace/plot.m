@@ -8,7 +8,7 @@ function varargout = plot(T, varargin)
    %   axis labels.
    %
    %   h = plot(traces, ...)
-   %   Plots a waveform object, passing additional parameters to matlab's PLOT
+   %   Plots a trace, passing additional parameters to matlab's PLOT
    %   routine.  Trace specific parameters are discussed below.
    %
    %   h = plot(..., 'xunit', xvalue)
@@ -46,7 +46,7 @@ function varargout = plot(T, varargin)
    %
    % EXAMPLE 2:
    %   % This example plots the traces, starting at time 0
-   %   plot(T); % plots the waveform with seconds on the x axis
+   %   plot(T); % plots the trace with seconds on the x axis
    %   hold on;
    %   plot(T2, 'xunit','s', 'color', [0.5 0.5 0.5]);  % plots your other
    %                                       % trace, starting in unison

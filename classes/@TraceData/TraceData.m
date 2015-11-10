@@ -73,13 +73,14 @@ classdef TraceData
    %       amplitude_spectrum
    %       setlength - adjust length of data to allow batch processing
    %
-   % RE: ERROR recovery
+   % See also Seismictrace, waveform, timeseries
+   
+   
+   % Error recovery and trapping with traces
    % trying new tactic. I won't try to anticipate all the various ways
    % someone can provide incompatible data. Instead, I'm going to provide a
    % comment with my expectations which will show up automatically in the
    % displayed error.
-   %
-   % See also Seismictrace, waveform, timeseries
    
    % Waveform functions included in Tracedata:
    %  - functions that manipulate the data itself
@@ -89,7 +90,6 @@ classdef TraceData
    %  - functions that require knowledge of location
    %  - function that access user defined fields
    %  - functions that access history
-   %  - simple statistical functions: probably min, max, median, std, var
    %  - additinal not-so-sure-we-need-these functions
    %    : getpeaks
    

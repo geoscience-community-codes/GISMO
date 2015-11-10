@@ -479,44 +479,6 @@ classdef ChannelTag
                end
          end
       end
-      
-      function test()
-         % default ChannelTag
-         c = ChannelTag();
-         assert(strcmp(c.network,'') && strcmp(c.station,'')...
-            && strcmp(c.location,'') && strcmp(c.channel,''))
-         % copy
-         c(2) = ChannelTag();
-         assert(c(1) == c(2)) % test eq for an empty ChannelTag
-         % check array creation
-         c1 = ChannelTag();
-         c1.network = 'N1'; c1.station = 'S1'; c1.location = 'L1'; c1.channel = 'C1';
-         c2 = c1;
-         c2.network = 'N2'; c2.station = 'S2'; c2.location = 'L2'; c2.channel = 'C2';
-         assert(c2 ~= c1)
-         tags_fieldcells = ChannelTag.array({'N1','N2'},{'S1','S2'},{'L1','L2'},{'C1','C2'});
-         tags_textcells = ChannelTag.array({'N1.S1.L1.C1','N2.S2.L2.C2'});
-         tags_textarray = ChannelTag.array(['N1.S1.L1.C1';'N2.S2.L2.C2']);
-         assert(tags_fieldcells(1) == c1)  
-         assert(tags_textcells(1) == c1)
-         assert(tags_textarray(1) == c1)
-         assert(tags_fieldcells(2) == c2)
-         assert(tags_textcells(2) == c2)
-         assert(tags_textarray(2) == c2)
-         
-         c = ChannelTag.array('N',{'S1','S2'},'L',{'C1','C2'});
-         assert(numel(c) == 2)
-         assert(strcmp(c(2).station,'S2') && strcmp(c(2).channel,'C2')...
-            && strcmp([c.network], 'NN') && strcmp([c.location], 'LL'))
-         tags = ChannelTag.array('NW','STA1','00', {'A','B','C','D'});
-         tags2 = ChannelTag.array('NW','STA1','00', {'F','C','A','E'});
-         sortedtags = sort(tags2);
-         assert(sortedtags(1).channel == 'A' && sortedtags(4).channel == 'F')
-         % ismember 
-         assert(ismember(ChannelTag('NW.STA1.00.B'), tags));
-         
-      end %test
-         
          
    end %static methods
 end %classdef
