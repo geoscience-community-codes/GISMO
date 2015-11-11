@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Catalog Cookbook</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-11-05"><meta name="DC.source" content="cookbook.m"><style type="text/css">
+      --><title>Catalog Cookbook</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-11-10"><meta name="DC.source" content="cookbook.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Catalog Cookbook</h1><!--introduction--><p>GISMO can read events from many different earthquake catalog file formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) using the Catalog.retrieve() method.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Reading events from IRIS DMC</a></li><li><a href="#10">Readings events from an Antelope database</a></li><li><a href="#17">Reading events from a Seisan database</a></li><li><a href="#21">Converting a Zmap data structure to a Catalog object</a></li><li><a href="#22">Plotting hypocenter maps</a></li><li><a href="#28">Plotting time series of events</a></li><li><a href="#33">Analysis</a></li><li><a href="#41">Saving Catalog objects to disk</a></li></ul></div><h2>Reading events from IRIS DMC<a name="1"></a></h2><p>To load events into a Catalog object we use the readEvents function. The first argument is the data source/format - when this is given as 'iris', readEvents uses the irisFetch.m program to retrieve event data via the IRIS webservices. To narrow down our data search we can give readEvents any name-value parameter pairs supported by irisFetch.</p><p>In this example we will use readEvents to retrieve all events at IRIS DMC with a magnitude of at least 8.0 between year 2000 and 2014 (inclusive):</p><pre class="codeinput">greatquakes = Catalog.retrieve(<span class="string">'iris'</span>, <span class="string">'minimumMagnitude'</span>, 8.0, <span class="keyword">...</span>
+  </style></head><body><div class="content"><h1>Catalog Cookbook</h1><!--introduction--><p>GISMO can read events from many different earthquake catalog file formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) using the Catalog.retrieve() method.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Reading events from IRIS DMC</a></li><li><a href="#10">Readings events from an Antelope database</a></li><li><a href="#17">Reading events from a Seisan database</a></li><li><a href="#21">Converting a Zmap data structure to a Catalog object</a></li><li><a href="#22">Plotting hypocenter maps</a></li><li><a href="#28">Plotting time series of events</a></li><li><a href="#33">Analysis</a></li><li><a href="#41">Saving Catalog objects to disk</a></li></ul></div><h2>Reading events from IRIS DMC<a name="1"></a></h2><p>To load events into a Catalog object we use the Catalog.retrieve method. The first argument is the data source/format - when this is given as 'iris', retrieve uses the irisFetch.m program to retrieve event data via the IRIS webservices. To narrow down our data search we can give retrieve any name-value parameter pairs supported by irisFetch.</p><p>In this example we will use retrieve to retrieve all events at IRIS DMC with a magnitude of at least 8.0 between year 2000 and 2014 (inclusive):</p><pre class="codeinput">greatquakes = Catalog.retrieve(<span class="string">'iris'</span>, <span class="string">'minimumMagnitude'</span>, 8.0, <span class="keyword">...</span>
     <span class="string">'starttime'</span>, <span class="string">'2000-01-01'</span>, <span class="string">'endtime'</span>, <span class="string">'2015-01-01'</span>);
 </pre><pre class="codeoutput">fetching...
 
@@ -744,13 +744,13 @@ Biggest event: 9.100000 at 11-Mar-2011 05:46:23
 % Catalog.retrieve() method.
 
 %% Reading events from IRIS DMC
-% To load events into a Catalog object we use the readEvents function. 
+% To load events into a Catalog object we use the Catalog.retrieve method. 
 % The first argument is the data source/format - when this is given as 
-% 'iris', readEvents uses the irisFetch.m program to retrieve event data 
+% 'iris', retrieve uses the irisFetch.m program to retrieve event data 
 % via the IRIS webservices. To narrow down our data search we can give 
-% readEvents any name-value parameter pairs supported by irisFetch.
+% retrieve any name-value parameter pairs supported by irisFetch.
 %
-% In this example we will use readEvents to retrieve all events at IRIS DMC 
+% In this example we will use retrieve to retrieve all events at IRIS DMC 
 % with a magnitude of at least 8.0 between year 2000 and 2014 (inclusive):
 
 greatquakes = Catalog.retrieve('iris', 'minimumMagnitude', 8.0, ...
