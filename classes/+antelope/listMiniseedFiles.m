@@ -55,7 +55,7 @@ for c=1:length(chantag)
 			disp('Failed on dblookup_table wfdisc\n');
 			continue;
 		end
-		expr = sprintf('sta=="%s" && chan=="%s" && time <= %f && endtime >= %f',chantag(c).station,chantag(c).channel,datenum2epoch(enum),datenum2epoch(snum));
+		expr = sprintf('sta=="%s" && chan=="%s" && time <= %f && endtime >= %f',get(chantag(c),'station'), get(chantag(c),'channel'), datenum2epoch(enum), datenum2epoch(snum));
 		try
 			debug.print_debug(2, 'Trying dbsubset with: %s\n',expr);
 			db=dbsubset(db,expr);

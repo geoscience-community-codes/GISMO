@@ -42,6 +42,10 @@ classdef miniseed
          %	POSSIBILITY OF SUCH DAMAGE.
          
          % MODIFIED Oct 2015 by Celso Reyes
+         % Constuctor added Nov 2015 Glenn Thompson
+         % This class needs work. It uses global variables (bad). Has ugly
+         % code for parsing varargin. makeplot stuff can probably be
+         % eliminated.
    
    properties
       X % structure of blocks, containing headers, blockettes, data
@@ -65,6 +69,13 @@ classdef miniseed
    end
    
    methods
+       
+       function ms = miniseed(mseedfile)
+           %MINISEED.MINISEED Constructor method for miniseed class
+           % ms = miniseed(miniseedfilepath)
+           ms = ms.rdmseed(mseedfile);
+       end
+       
       function ms = rdmseed(ms, varargin)
          %RDMSEED Read miniSEED format file.
          %	X = RDMSEED(F) reads file F and returns a M-by-1 structure X containing
