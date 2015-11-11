@@ -9,13 +9,7 @@ function debuglevel=get_debug()
 %    See also debug.set_debug, debug.print_debug, debug.printfunctionstack, setpref.
 
 % AUTHOR: Glenn Thompson, UAF-GI
-% $Date: $
-% $Revision: -1 $
 
-   try	
-    	debuglevel = getpref('runmode', 'debug');
-   catch
-        debuglevel = 0;
-   end
+debuglevel = debug.print_debug();
 
 return 

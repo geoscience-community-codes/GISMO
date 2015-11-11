@@ -4,7 +4,7 @@ function [mseedfiles] = listMiniseedFiles(ds, chantag, snum, enum)
 % 
 % Input:
 %   ds - a datasource object
-%   chantag - a ChannelTag object
+%   chantag - a ChannelTag object (or scnlobject)
 %   snum - start time in Matlab datenum format 
 %       e.g. snum = datenum('1999-01-12 10:00:00')
 %   enum - end time, used only for subsetting database, not for finding
@@ -49,10 +49,10 @@ for c=1:length(chantag)
             end
 		end
 		try
-			debug.print_debug(2,'Opening table %s.wfdisc\n',dbname{1});
+			debug.print_debug(2,'Opening table %s.wfdisc',dbname{1});
 			db=dblookup_table(db,'wfdisc');
 		catch
-			disp('Failed on dblookup_table wfdisc\n');
+			disp('Failed on dblookup_table wfdisc');
 			continue;
 		end
 		expr = sprintf('sta=="%s" && chan=="%s" && time <= %f && endtime >= %f',get(chantag(c),'station'), get(chantag(c),'channel'), datenum2epoch(enum), datenum2epoch(snum));
@@ -64,7 +64,7 @@ for c=1:length(chantag)
 			continue;
 		end
 		try
-			debug.print_debug(2,'Trying dbquery for RECORD_COUNT\n');
+			debug.print_debug(2,'Trying dbquery for RECORD_COUNT');
 			nrecs = dbquery(db, 'dbRECORD_COUNT');
 		catch
 			debug.print_debug(2,'Failed on dbquery');
@@ -76,7 +76,16 @@ for c=1:length(chantag)
 			try
 				debug.print_debug(2, 'Getting dir, dfile, time, endtime\n');
 				[ddir, ddfile] = dbgetv(db, 'dir', 'dfile', 'time', 'endtime');
-                ddfullfile = fullfile(dbdir, ddir, ddfile); % ddir and ddfile are both cell arrays & file paths are relative to db dir
+                if ~(strcmp(class(ddir),'cell'))
+                    ddir={ddir};
+                    ddfile={ddfile};
+                end
+                if debug.get_debug()>0
+                    dbdir
+                    ddir
+                    ddfile
+                end
+                ddfullfile = fullfile(dbdir, ddir, ddfile) % ddir and ddfile are both cell arrays & file paths are relative to db dir
                 uniquefile = unique(ddfullfile); % if there are two time segments pointing to same file, there are two wfdisc records. but we want only the unique dir/dfile combos here
                 % could check here if enum <= endtime, and if not repeat
                 % this for "dbname = getfilename(ds, chantag, enum)" 
@@ -84,10 +93,7 @@ for c=1:length(chantag)
 			catch
 				debug.print_debug(2,'Failed on dbgetv');
 			end
-			if ~(strcmp(class(ddir),'cell'))
-				ddir={ddir};
-				ddfile={ddfile};
-            end
+
 %           GT 20150916 I do not think it is possible to have multiple uniquefiles because getfilename returns database for a specific time, not time range            
 % 			for k=1:numel(uniquefile)
 % 				mseedfiles(c).filepath{k} = uniquefile{k};
