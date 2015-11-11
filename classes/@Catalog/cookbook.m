@@ -4,13 +4,13 @@
 % Catalog.retrieve() method.
 
 %% Reading events from IRIS DMC
-% To load events into a Catalog object we use the readEvents function. 
+% To load events into a Catalog object we use the Catalog.retrieve method. 
 % The first argument is the data source/format - when this is given as 
-% 'iris', readEvents uses the irisFetch.m program to retrieve event data 
+% 'iris', retrieve uses the irisFetch.m program to retrieve event data 
 % via the IRIS webservices. To narrow down our data search we can give 
-% readEvents any name-value parameter pairs supported by irisFetch.
+% retrieve any name-value parameter pairs supported by irisFetch.
 %
-% In this example we will use readEvents to retrieve all events at IRIS DMC 
+% In this example we will use retrieve to retrieve all events at IRIS DMC 
 % with a magnitude of at least 8.0 between year 2000 and 2014 (inclusive):
 
 greatquakes = Catalog.retrieve('iris', 'minimumMagnitude', 8.0, ...
