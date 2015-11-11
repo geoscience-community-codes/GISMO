@@ -5,7 +5,7 @@ end
 
 %% Test Functions
 function testFunctionOne(testCase)
-samp=100;
+fsamp=100;
 fsignal = 2; % 2Hz signal
 t=0:1/fsamp:60; % 60s of data, 100Hz sampling rate
 size(t)
