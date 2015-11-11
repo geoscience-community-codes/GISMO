@@ -1,0 +1,427 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      -->
+      <title>The SCNLOBJECT cookbook</title>
+      <meta name="generator" content="MATLAB 7.7">
+      <meta name="date" content="2009-04-16">
+      <meta name="m-file" content="scnlcookbook"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head>
+   <body>
+      <div class="content">
+         <h1>The SCNLOBJECT cookbook</h1>
+         <!--introduction-->
+         <p>This cookbook is designed to familiarize yourself with the scnlobjects used within waveform.  There's not really all that
+            much to them, so there'll not be much to this, either.
+         </p>
+         <!--/introduction-->
+         <h2>Contents</h2>
+         <div>
+            <ul>
+               <li><a href="#1">Ways to create SCNLOBJECTS</a></li>
+               <li><a href="#2">Using SET to modify a SCNLOBJECT</a></li>
+               <li><a href="#3">Grouping SCNLOBJECTS through concatenation</a></li>
+               <li><a href="#4">Create a couple scnls with <i>wildcard</i> values</a></li>
+               <li><a href="#6">Find out what manipulations can be done with scnlobjects</a></li>
+               <li><a href="#7">using ISMEMBER to see if a particular locale (SCNLOBJECT) is represented</a></li>
+               <li><a href="#9">using <i>ISMEMBER</i> with wildcards</a></li>
+               <li><a href="#11">Use GET to see which stations we have...</a></li>
+               <li><a href="#14">Using UNIQUE to whittle down a bunch of scnlobjects</a></li>
+            </ul>
+         </div>
+         <h2>Ways to create SCNLOBJECTS<a name="1"></a></h2>
+         <p>Scnlobjects are comprised of only four fields:</p>
+         <div>
+            <ul>
+               <li>Station</li>
+               <li>Channel</li>
+               <li>Network</li>
+               <li>Location</li>
+            </ul>
+         </div>
+         <p><i>STATION</i> and <i>CHANNEL</i> are not optional, while <i>NETWORK</i> and <i>LOCATION</i> are.
+         </p><pre class="codeinput"><span class="comment">% Create a series of scnls for seismic stations on Redoubt volcano</span>
+
+red = scnlobject(<span class="string">'RED'</span>,<span class="string">'EHZ'</span>,<span class="string">'AV'</span>,<span class="string">'--'</span>) <span class="comment">% full declaration</span>
+rso = scnlobject(<span class="string">'RSO'</span>,<span class="string">'EHZ'</span>,<span class="string">'AV'</span>)      <span class="comment">% leaving out location</span>
+
+<span class="comment">% 3-component station, this creates rdbw as a 1x3 scnlobject.</span>
+rdbw = scnlobject(<span class="string">'RDBW'</span>,{<span class="string">'BHZ'</span>,<span class="string">'BHE'</span>,<span class="string">'BHN'</span>},<span class="string">'AV'</span>)
+</pre><pre class="codeoutput"> 
+red =
+ 
+   station: RED
+   channel: EHZ
+   network: AV
+  location: --
+ 
+rso =
+ 
+   station: RSO
+   channel: EHZ
+   network: AV
+  location: --
+ 
+rdbw =
+ 
+ 
+1x3 scnlobject object with fields:
+    station
+    channel
+    network
+   location
+</pre><h2>Using SET to modify a SCNLOBJECT<a name="2"></a></h2>
+         <p>use SET to create another 3 component broadband using rdbw as a template...</p><pre class="codeinput">rdjh = set(rdbw,<span class="string">'station'</span>,<span class="string">'RDJH'</span>);
+</pre><h2>Grouping SCNLOBJECTS through concatenation<a name="3"></a></h2>
+         <p>and finally, create something that will parse through all stations</p><pre class="codeinput">redstas = [red rso rdbw rdjh]
+</pre><pre class="codeoutput"> 
+redstas =
+ 
+ 
+1x8 scnlobject object with fields:
+    station
+    channel
+    network
+   location
+</pre><h2>Create a couple scnls with <i>wildcard</i> values<a name="4"></a></h2>
+         <p>The value '*' can be entered in place of a field, so that searches can be made.</p><pre class="codeinput">anyehz = scnlobject(<span class="string">'*'</span>,<span class="string">'EHZ'</span>,<span class="string">'*'</span>,<span class="string">'*'</span>) <span class="comment">% this one prints as an example...</span>
+anybroadband = scnlobject(<span class="string">'*'</span>,{<span class="string">'BHZ'</span>,<span class="string">'BHE'</span>,<span class="string">'BHN'</span>},<span class="string">'*'</span>,<span class="string">'*'</span>);
+anyNorthComponent = scnlobject(<span class="string">'*'</span>,{<span class="string">'EHN'</span>,<span class="string">'SHN'</span>,<span class="string">'BHN'</span>},<span class="string">'*'</span>,<span class="string">'*'</span>);
+</pre><pre class="codeoutput"> 
+anyehz =
+ 
+   station: *
+   channel: EHZ
+   network: *
+  location: *
+</pre><p>Let's display all the variables we've got, thus far</p><pre class="codeinput">whos
+</pre><pre class="codeoutput">  Name                    Size            Bytes  Class         Attributes
+
+  IsInList                1x8                 8  logical                 
+  ans                     1x8              2348  scnlobject              
+  anyNorthComponent       1x3              1012  scnlobject              
+  anybroadband            1x3              1012  scnlobject              
+  anyehz                  1x1               508  scnlobject              
+  manyscnls               1x19             5220  scnlobject              
+  mybroadbands            1x6              1828  scnlobject              
+  n                       1x1                 8  double                  
+  rdbw                    1x3              1042  scnlobject              
+  rdjh                    1x3              1042  scnlobject              
+  red                     1x1               516  scnlobject              
+  redstas                 1x8              2348  scnlobject              
+  rso                     1x1               516  scnlobject              
+  stationsOfInterest      1x2               776  scnlobject              
+  whereInList             1x8                64  double                  
+
+</pre><h2>Find out what manipulations can be done with scnlobjects<a name="6"></a></h2><pre class="codeinput">methods(redstas)  <span class="comment">% I could have typed "methods(scnlobject)", instead</span>
+</pre><pre class="codeoutput">
+Methods for class scnlobject:
+
+disp        eq          ismember    set         
+display     get         scnlobject  unique      
+
+</pre><h2>using ISMEMBER to see if a particular locale (SCNLOBJECT) is represented<a name="7"></a></h2>
+         <p>Ismember will not only tell you if a scnlobject exists, but is also capable of telling <i>WHERE</i></p><pre class="codeinput">[IsInList, whereInList] = ismember(rso,redstas)
+</pre><pre class="codeoutput">
+IsInList =
+
+     1
+
+
+whereInList =
+
+     2
+
+</pre><p><i>ismember</i> is sensitive to the order in which you place the scnlobjects. The size of the returned values match the size of the first
+            argument. The previous example asks '' <b>where can <i>RSO</i> be found in <i>REDSTAS</i>?</b> '', while the following example essentially asks '' <b>which <i>REDSTAS</i> can be found in  <i>RSO</i> (and where)?</b>''
+         </p><pre class="codeinput">[IsInList, whereInList] = ismember(redstas,rso)
+</pre><pre class="codeoutput">
+IsInList =
+
+     0     1     0     0     0     0     0     0
+
+
+whereInList =
+
+     0     1     0     0     0     0     0     0
+
+</pre><h2>using <i>ISMEMBER</i> with wildcards<a name="9"></a></h2>
+         <p>The <i>ismember</i> function looks for a scnlobject in an array of scnlobjects. Lets grab the EHZ component stations using a search, then display
+            each one
+         </p><pre class="codeinput">stationsOfInterest = redstas(ismember(redstas,anyehz)) <span class="comment">%should get 2</span>
+
+<span class="keyword">for</span> n = 1 : numel(stationsOfInterest);
+  display(stationsOfInterest(n));
+<span class="keyword">end</span>
+</pre><pre class="codeoutput"> 
+stationsOfInterest =
+ 
+ 
+1x2 scnlobject object with fields:
+    station
+    channel
+    network
+   location
+ 
+ =
+ 
+   station: RED
+   channel: EHZ
+   network: AV
+  location: --
+ 
+ =
+ 
+   station: RSO
+   channel: EHZ
+   network: AV
+  location: --
+</pre><p>repeat the exercise for broadband and  stations... there should be 6</p><pre class="codeinput">mybroadbands = redstas(ismember(redstas,anybroadband));
+size(mybroadbands)
+</pre><pre class="codeoutput">
+ans =
+
+     1     6
+
+</pre><h2>Use GET to see which stations we have...<a name="11"></a></h2>
+         <p>Get can also retrieve CHANNEL, NETWORK, and LOCATION information.</p><pre class="codeinput">get(mybroadbands,<span class="string">'station'</span>)
+</pre><pre class="codeoutput">
+ans = 
+
+    'RDBW'    'RDBW'    'RDBW'    'RDJH'    'RDJH'    'RDJH'
+
+</pre><p>There are 3 of each because there are three components to each.</p><pre class="codeinput">strcat(get(mybroadbands,<span class="string">'station'</span>),<span class="string">'|'</span>,get(mybroadbands,<span class="string">'channel'</span>))
+</pre><pre class="codeoutput">
+ans = 
+
+  Columns 1 through 5
+
+    'RDBW|BHZ'    'RDBW|BHE'    'RDBW|BHN'    'RDJH|BHZ'    'RDJH|BHE'
+
+  Column 6
+
+    'RDJH|BHN'
+
+</pre><p>to get a vertical list, I could transpose mybroadbands using (')</p><pre class="codeinput">strcat( get(mybroadbands', <span class="string">'station'</span>) , <span class="string">'|'</span> , get(mybroadbands', <span class="string">'channel'</span>) )
+</pre><pre class="codeoutput">
+ans = 
+
+    'RDBW|BHZ'
+    'RDBW|BHE'
+    'RDBW|BHN'
+    'RDJH|BHZ'
+    'RDJH|BHE'
+    'RDJH|BHN'
+
+</pre><h2>Using UNIQUE to whittle down a bunch of scnlobjects<a name="14"></a></h2>
+         <p>Assume that for some reason, you have a list of scnlobjects with some members being repeated.  This may happen when you retrieve
+            scnlobjects from a group of waveforms.  You'd like to know which station/channels are actually being represented within your
+            data set.  Here's how:
+         </p><pre class="codeinput"><span class="comment">% set up the situation as listed:</span>
+manyscnls = [redstas, red, rso, red, redstas]
+
+<span class="comment">% Find out which ones we have:</span>
+unique(manyscnls)
+</pre><pre class="codeoutput"> 
+manyscnls =
+ 
+ 
+1x19 scnlobject object with fields:
+    station
+    channel
+    network
+   location
+ 
+ans =
+ 
+ 
+1x8 scnlobject object with fields:
+    station
+    channel
+    network
+   location
+</pre><p>Here endeth the cookbook.</p>
+<hr/><p>Please send feedback to: <i> celso &lt;at&gt; gi &lt;dot&gt; alaska &lt;dot&gt; edu </i></p>
+<table><tr>
+ <td>Was this useful?</td> <td><a href="../wasuseful.html">YES</a></td><td><a href="../wasnotuseful.html">NO</a> </td>
+</tr></table>
+
+         <p class="footer"><br>
+            Published with MATLAB&reg; 7.7<br></p>
+      </div>
+      <!--
+##### SOURCE BEGIN #####
+%% The SCNLOBJECT cookbook
+% This cookbook is designed to familiarize yourself with the scnlobjects
+% used within waveform.  There's not really all that much to them, so
+% there'll not be much to this, either.
+
+%% Ways to create SCNLOBJECTS
+% Scnlobjects are comprised of only four fields: 
+%
+% * Station 
+% * Channel 
+% * Network
+% * Location
+%
+% _STATION_ and _CHANNEL_ are not optional, while _NETWORK_ and _LOCATION_ are.
+
+% Create a series of scnls for seismic stations on Redoubt volcano
+
+red = scnlobject('RED','EHZ','AV','REPLACE_WITH_DASH_DASH') % full declaration
+rso = scnlobject('RSO','EHZ','AV')      % leaving out location
+
+% 3-component station, this creates rdbw as a 1x3 scnlobject.
+rdbw = scnlobject('RDBW',{'BHZ','BHE','BHN'},'AV')
+
+%% Using SET to modify a SCNLOBJECT
+% use SET to create another 3 component broadband using rdbw as a template...
+rdjh = set(rdbw,'station','RDJH');
+
+%% Grouping SCNLOBJECTS through concatenation
+% and finally, create something that will parse through all stations
+redstas = [red rso rdbw rdjh]
+
+%% Create a couple scnls with _wildcard_ values
+% The value '*' can be entered in place of a field, so that searches can be
+% made.
+anyehz = scnlobject('*','EHZ','*','*') % this one prints as an example...
+anybroadband = scnlobject('*',{'BHZ','BHE','BHN'},'*','*');
+anyNorthComponent = scnlobject('*',{'EHN','SHN','BHN'},'*','*');
+
+%%
+% Let's display all the variables we've got, thus far
+whos
+
+%% Find out what manipulations can be done with scnlobjects
+methods(redstas)  % I could have typed "methods(scnlobject)", instead
+
+%% using ISMEMBER to see if a particular locale (SCNLOBJECT) is represented
+% Ismember will not only tell you if a scnlobject exists, but is also
+% capable of telling _WHERE_
+[IsInList, whereInList] = ismember(rso,redstas)
+
+%%
+% _ismember_ is sensitive to the order in which you place the scnlobjects.
+% The size of the returned values match the size of the first argument.
+% The previous example asks '' *where can _RSO_ be found in _REDSTAS_?* '',
+% while the following example essentially asks '' *which _REDSTAS_ can be
+% found in  _RSO_ (and where)?*'' 
+[IsInList, whereInList] = ismember(redstas,rso)
+
+%% using _ISMEMBER_ with wildcards
+% The _ismember_ function looks for a scnlobject in an array of
+% scnlobjects.
+% Lets grab the EHZ component stations using a search, then display each one
+stationsOfInterest = redstas(ismember(redstas,anyehz)) %should get 2
+
+for n = 1 : numel(stationsOfInterest);
+  display(stationsOfInterest(n));
+end
+
+%%
+% repeat the exercise for broadband and  stations... there should be 6
+mybroadbands = redstas(ismember(redstas,anybroadband));
+size(mybroadbands)
+
+%% Use GET to see which stations we have...
+% Get can also retrieve CHANNEL, NETWORK, and LOCATION information.
+get(mybroadbands,'station')
+
+%%
+% There are 3 of each because there are three components to each.
+strcat(get(mybroadbands,'station'),'|',get(mybroadbands,'channel'))
+
+%%
+% to get a vertical list, I could transpose mybroadbands using (')
+strcat( get(mybroadbands', 'station') , '|' , get(mybroadbands', 'channel') )
+
+%% Using UNIQUE to whittle down a bunch of scnlobjects
+% Assume that for some reason, you have a list of scnlobjects with some
+% members being repeated.  This may happen when you retrieve scnlobjects
+% from a group of waveforms.  You'd like to know which station/channels
+% are actually being represented within your data set.  Here's how:
+
+% set up the situation as listed:
+manyscnls = [redstas, red, rso, red, redstas]
+
+% Find out which ones we have:
+unique(manyscnls)
+
+%%
+% Here endeth the lesson.
+##### SOURCE END #####
+-->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-8415966-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+   </body>
+</html>

@@ -1,0 +1,252 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      -->
+      <title>Waveform Suite Example: Remove a Calibration Pulse</title>
+      <meta name="generator" content="MATLAB 7.7">
+      <meta name="date" content="2009-04-14">
+      <meta name="m-file" content="remove_calib_sample"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head>
+   <body>
+      <div class="content">
+         <h1>Waveform Suite Example: Remove a Calibration Pulse</h1>
+         <!--introduction-->
+         <p>This example shows how to load data into a waveform, filter it, do a few manipulations, and then plot the results.</p>
+         <p>Created by Celso Reyes for use with the Waveform Suite April, 2009</p>
+         <!--/introduction-->
+         <h2>Contents</h2>
+         <div>
+            <ul>
+               <li><a href="#1">Load the data</a></li>
+               <li><a href="#2">Here is what the original data look like</a></li>
+               <li><a href="#3">Tease out the calibration pulse</a></li>
+               <li><a href="#5">plot waveform along with the detected calibration pulse</a></li>
+               <li><a href="#6">plot the two individual peices, showing the gap between</a></li>
+               <li><a href="#7">now, make a grand-unified waveform</a></li>
+            </ul>
+         </div>
+         <h2>Load the data<a name="1"></a></h2>
+         <p>For this example, I'll load some data that I'm sure contains a calibration pulse.  While the example data is stored as a <a href="../waveform.html">waveform</a> in a .mat file, declaring a different <a href="../datasource.html">datasource</a> will let you grab it from just about anywhere else.
+         </p><pre class="codeinput">ds = datasource(<span class="string">'file'</span>,<span class="string">'J:/DATA/example.mat'</span>);
+
+<span class="comment">% My predefined winston_datasource was loaded at startup.</span>
+ds = winston_datasource;
+scnl = scnlobject(<span class="string">'LSSE'</span>,<span class="string">'SHZ'</span>,<span class="string">'AV'</span>,<span class="string">'--'</span>);
+w = waveform(ds,scnl,<span class="string">'3/31/2009 09:00:00'</span>,<span class="string">'3/31/2009 09:15:00'</span>);
+</pre><pre class="codeoutput">2009-04-14 17:09:59: pubavo1.wr.usgs.gov:16022/connection opened.
+2009-04-14 17:10:04: pubavo1.wr.usgs.gov:16022/connection closed.
+</pre><h2>Here is what the original data look like<a name="2"></a></h2><pre class="codeinput">plot(w,<span class="string">'xunit'</span>,<span class="string">'minutes'</span>);
+legend(<span class="string">'Orig. Waveform'</span>);
+</pre><img vspace="5" hspace="5" src="remove_calib_sample_01.png" alt=""> <h2>Tease out the calibration pulse<a name="3"></a></h2>
+         <p>Here are the characteristics/assumptions used to detect a calibration pulse:</p>
+         <div>
+            <ul>
+               <li>A calibration pulse exists in the data</li>
+               <li>First section of pulse has a 21 Hz dominant signal</li>
+               <li>At 21 hz, the dominant signal <b>is</b> the calibration pulse
+               </li>
+               <li>Calibration pulse is 60 seconds long</li>
+            </ul>
+         </div>
+         <p>Here's the <a href="../filterobject.html">filter</a> we'll use: bandpass 20-22 Hz butterworth, 5 poles
+         </p><pre class="codeinput">calibFilter = filterobject(<span class="string">'b'</span>,[20,22],5);
+
+<span class="comment">% get the envelope of the filtered data</span>
+h = hilbert(filtfilt(calibFilter,w));
+
+<span class="comment">% use the raw numbers for comparison</span>
+d = double(h);
+
+<span class="comment">% The calibration start is marked by the first big spike in the filtered</span>
+<span class="comment">% data that reaches at least 3/4 the maximum amplitude</span>
+calibStartIndex = find(d&gt; (max(h).* 0.75),1,<span class="string">'first'</span>);
+
+<span class="comment">% Then, determine the end by knowing the pulse lasts one minute</span>
+calibEndIndex = calibStartIndex + get(w,<span class="string">'freq'</span>) * 60;
+dv = get(w,<span class="string">'timevector'</span>);
+
+<span class="comment">%Extract the calibration pulse for later use (if desired)</span>
+calibWaveform = extract(w,<span class="string">'time'</span>,dv(calibStartIndex),dv(calibEndIndex));
+</pre><h2>plot waveform along with the detected calibration pulse<a name="5"></a></h2><pre class="codeinput">plot([w,calibWaveform],<span class="string">'xunit'</span>,<span class="string">'date'</span>);
+legend(<span class="string">'Orig. Wave'</span>,<span class="string">'Calib'</span>);
+</pre><img vspace="5" hspace="5" src="remove_calib_sample_02.png" alt=""> <h2>plot the two individual peices, showing the gap between<a name="6"></a></h2>
+         <p>Now, grab the segments of the data to either side of the pulse.</p><pre class="codeinput">noCalib =  extract(w,<span class="string">'time'</span>,dv([1,calibEndIndex]),dv([calibStartIndex-15,end]));
+
+plot(noCalib,<span class="string">'xunit'</span>,<span class="string">'date'</span>);
+legend(<span class="string">'First Part'</span>,<span class="string">'Second Part'</span>);
+</pre><img vspace="5" hspace="5" src="remove_calib_sample_03.png" alt=""> <h2>now, make a grand-unified waveform<a name="7"></a></h2><pre class="codeinput">w = combine(noCalib)
+plot(w,<span class="string">'xunit'</span>,<span class="string">'date'</span>);
+legend(<span class="string">'1-wave, no calib'</span>);
+</pre><pre class="codeoutput"> 
+w =
+ 
+   station:   LSSE		 network: AV
+   channel:    SHZ		location: --
+     start: 31-Mar-2009 09:00:00.000
+            duration(00:15:00.020)
+      data: 45001 samples
+      freq: 50.000000 Hz
+     units: Counts
+    With misc fields...
+    * HISTORY: [3x2] cell object
+</pre><img vspace="5" hspace="5" src="remove_calib_sample_04.png" alt=""> 
+<hr/>
+<p>Please send feedback to: <i> celso &lt;at&gt; gi &lt;dot&gt; alaska &lt;dot&gt; edu </i></p>
+<table><tr>
+ <td>Was this useful?</td> <td><a href="../wasuseful.html">YES</a></td><td><a href="../wasnotuseful.html">NO</a> </td>
+</tr></table>
+
+<p class="footer"><br>
+            Published with MATLAB&reg; 7.7<br></p>
+      </div>
+      <!--
+##### SOURCE BEGIN #####
+%% Waveform Suite Example: Remove a Calibration Pulse
+% This example shows how to load data into a waveform, filter it, do a few
+% manipulations, and then plot the results.
+%
+% Created by Celso Reyes
+% for use with the Waveform Suite
+% April, 2009
+
+%% Load the data
+% For this example, I'll load some data that I'm sure contains a
+% calibration pulse.  While the example data is stored as a <../waveform.html waveform> in a
+% .mat file, declaring a different <../datasource.html datasource> will let you grab it from
+% just about anywhere else.
+ds = datasource('file','J:/DATA/example.mat');
+
+% My predefined winston_datasource was loaded at startup. 
+ds = winston_datasource; 
+scnl = scnlobject('LSSE','SHZ','AV','REPLACE_WITH_DASH_DASH');
+w = waveform(ds,scnl,'3/31/2009 09:00:00','3/31/2009 09:15:00');
+
+%% Here is what the original data look like
+plot(w,'xunit','minutes');
+legend('Orig. Waveform');
+
+%% Tease out the calibration pulse
+% Here are the characteristics/assumptions used to detect a calibration
+% pulse:
+% 
+% * A calibration pulse exists in the data
+% * First section of pulse has a 21 Hz dominant signal
+% * At 21 hz, the dominant signal *is* the calibration pulse
+% * Calibration pulse is 60 seconds long
+
+%%
+% Here's the <../filterobject.html filter> we'll use: bandpass 20-22 Hz butterworth, 5 poles
+calibFilter = filterobject('b',[20,22],5);
+
+% get the envelope of the filtered data
+h = hilbert(filtfilt(calibFilter,w)); 
+
+% use the raw numbers for comparison
+d = double(h); 
+
+% The calibration start is marked by the first big spike in the filtered
+% data that reaches at least 3/4 the maximum amplitude
+calibStartIndex = find(d> (max(h).* 0.75),1,'first');
+
+% Then, determine the end by knowing the pulse lasts one minute
+calibEndIndex = calibStartIndex + get(w,'freq') * 60;
+dv = get(w,'timevector');
+
+%Extract the calibration pulse for later use (if desired)
+calibWaveform = extract(w,'time',dv(calibStartIndex),dv(calibEndIndex));
+
+%% plot waveform along with the detected calibration pulse
+plot([w,calibWaveform],'xunit','date');
+legend('Orig. Wave','Calib');
+
+%% plot the two individual peices, showing the gap between 
+% Now, grab the segments of the data to either side of the pulse.
+noCalib =  extract(w,'time',dv([1,calibEndIndex]),dv([calibStartIndex-15,end]));
+
+plot(noCalib,'xunit','date');
+legend('First Part','Second Part');
+
+%% now, make a grand-unified waveform
+w = combine(noCalib)
+plot(w,'xunit','date');
+legend('1-wave, no calib');
+
+
+
+
+
+##### SOURCE END #####
+-->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-8415966-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+   </body>
+</html>

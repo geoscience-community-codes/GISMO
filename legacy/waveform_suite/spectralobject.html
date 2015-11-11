@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>  
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="A test html document, used for designing my web pages" />
+    <meta name="keywords" content="stuff" />
+    <title>Waveform Suite for Matlab: Working with Spectralobjects</title>
+    <link type="text/css" rel="stylesheet" href="wavesuite.css" />
+  </head>
+  
+  <body>
+  <div id="allcontent">
+  <div id="header">
+  <a name="define"/>
+    <p><img id = "photo" src="images/lilwave.gif" alt="waveform icon" /></p>
+    <h1>The <em>Spectralobject</em> class
+  </h1>
+  <p>The spectralobject exists to allow for easy spectra generation and manipulation</p>
+  </div>
+  
+  <div id="main">
+    <p>A spectralobject is comprised of some basic spectaral-based routines that allow
+	you to analyze data in the frequency domain.  It actually contains only 
+	the following information:</p>
+
+<ul>
+  <li><b>nfft</b> - the number of samples that are in each fourier transform 
+  window</li>
+  <li><b>overlap</b> - how many sample values are repeated between each 
+  sampling of your spectra</li>
+  <li><b>Frequency maximum</b> - determines the highest frequency that will 
+  be graphed.</li>
+  <li><b>dB limits</b> - limits in dB for plotting the spectra. If the color
+  palate is unchanged, then anything less than the min dB will be plotted in 
+  blue, and anything over the max dB will be Pink.</li>
+</ul>
+	
+	
+	<a name="create"></a>
+    <h2>Creating a spectralobject </h2>
+	
+	<dl class="functions">
+<dt>s = spectralobject(nfft, overlap, freq_max, dBLims)</dt>
+<dd>creates a spectral object with the specified nfft(fourier transform window), overlap(how many 
+sample values are repeated between lines of your spectra), the maximum frequency graphed, 
+and the dB limits.
+<ol class="specificexample">
+  <li>s = spectralobject(1024,924, 5, [40 80])<br/>
+  assuming a sample frequency of 100samp/sec, then this creates a spectral object
+  with nfft = 1024 (approx 10 seconds), sampling every second (100 samples),
+  graphing with a maximum frequency of 5 hz and a dB scale between 40 and 80.</li>
+  <li>s = spectralobject()<br/> creates a default spectralobject. This has  nfft&nbsp;=&nbsp;1024, overlap&nbsp;=&nbsp;nfft&nbsp;*&nbsp;0.8, freqmax&nbsp;=&nbsp;8, and a range for dB of 35&nbsp;to&nbsp;75</li>
+  </ol>
+  </dd>
+  </dl>
+	
+	<a name="functions"/>
+	<h2>Functions of note</h2>
+	<dl class="functions">
+	 <dt>fft</dt>
+	 <dd>fast fourier transform</dd>
+	 <dt>ifft</dt>
+	 <dd>inverse fft</dd>
+	 <dt>pwelch</dt>
+	 <dd>power spectral density</dd>
+	 <dt>setmap</dt>
+	 <dd>change the default colormap used with spectrograms</dd>
+	 <dt>specgram</dt>
+	 <dd>plot the spectrogram of waveforms.  If used with multiple waveforms, the resulting spectrograms will be presented in the same shape.  That is, if the waveform has 2 rows, then there will be two spectrograms, one above the other.  Likewise, if the waveform is 2x4, then there will be 8 plots organized in 2 rows, 4 cols.
+	<ol class="specificexample">
+	  <li>specgram(spectralobject,waveform)<br/>plot a standard spectrogram.  The layout of the spectrogram windows depends upon <code>size(waveform)</code> </li>
+	  <li>specgram(spectralobject,waveform,'xunit',unitname)<br/>Change the units from the default (seconds) to some other unit, such as 'minutes', 'hours', etc...</li>
+	</ol>
+	</dd>
+	
+	
+	<dt>specgram2</dt>
+	<dd>plot the spectrogram of waveforms along with the waveform.
+	<ol class="specificexample">
+	  <li>specgram2(spectralobject,waveform)<br/>
+	  plots the spectorgram with the waveform along the top</li>
+	  <li>specgram2(spectralobject,waveform,'axis',gca)<br/>
+	  as above, but specify a specific axis.</li>
+	</ol>
+	</dd>
+	</dl>
+	
+	<a name="example"/>
+	<h2>Example</h2>
+	<blockquote class="matlabsession">
+	<p class="user">plot(w);<span class="comment">plot waveform</span></p>
+	<p class="computer">
+	<img src="images/w_plot.gif" alt="my plot" /><br/></p>
+	<p class="user">s = specgram(1024,924,10,[50 100];<span class="comment">create a spectralobject</span></p>
+	<p class="user">specgram2(s,w);<span class="comment">spectra for waveform</span></p>
+	<p class="computer"><img src="images/w_specgram_2.gif" alt="single spectrogram" /><br/></p>	
+	
+	<p class="user">w = repmat(w,2,2);<span class="comment">make w a 2x2 waveform</span></p>
+	<p class="user">specgram2(s,w);<span class="comment">spectra for waveform</span></p>
+	<p class="computer"><img src="images/w_specgram_bunch.gif" alt="2x2 spectrogram" width="450px" /><br/></p>
+	</blockquote>
+<hr/><p>Please send feedback to: <i> celso &lt;at&gt; gi &lt;dot&gt; alaska &lt;dot&gt; edu </i></p>
+  </div>
+  <div id="navigation">
+  <p><span class="suite_title">Waveform Suite</span><br/> for MATLAB</p>
+    <p><b>download</b></p><hr/>
+	<p>
+	<a href="waveform.html">waveform</a><br/>
+	<a href="scnlobject.html">scnlobject</a><br/>
+	<a href="datasource.html">datasource</a><br/>
+	<a href="filterobject.html">filterobject </a><br/>
+	</p><div class="here"><p><a href="spectralobject.html">spectralobject</a></p>
+	
+	<ul><li><a href="#define">Definition</a></li>
+	<li><a href="#create">Creating</a></li>
+	<li><a href="#functions">Functions</a></li>
+	<li><a href="#example">Examples</a></li></ul>
+	</div>
+	<hr/>
+	<p><a href="../feline_example/tutorial_and_code_frameset.htm">object tutorial</a></p>
+	
+	<hr/><p> <a href="waveform_suite_example_index.html">Waveform Suite Examples</a>
+  </p><hr/>
+  <p><a href="../../index.html">Celso's homepage</a></p>
+   <!-- CSS & XHTML validation approval -->
+      <!-- CSS & XHTML validation approval -->
+<p>
+    <a href="http://validator.w3.org/check?uri=referer"><img
+        src="http://www.w3.org/Icons/valid-xhtml10-blue"
+        alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
+  </p>
+  <p>
+<a href="http://jigsaw.w3.org/css-validator/check/referer">
+    <img style="border:0;width:88px;height:31px"
+        src="http://jigsaw.w3.org/css-validator/images/vcss-blue"
+        alt="Valid CSS!" />
+</a>
+</p>
+  </div> <!-- navigation -->
+  </div> <!-- all content -->
+  <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-8415966-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+  </body>
+</html>

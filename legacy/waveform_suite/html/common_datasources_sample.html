@@ -1,0 +1,196 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      -->
+      <title>Definitions for commonly used waveform objects, to be loaded at startup</title>
+      <meta name="generator" content="MATLAB 7.7">
+      <meta name="date" content="2009-04-14">
+      <meta name="m-file" content="common_datasources_sample"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head>
+   <body>
+      <div class="content">
+         <h1>Definitions for commonly used waveform objects, to be loaded at startup</h1>
+         <!--introduction-->
+         <p>This data file is called by <tt>startup.m</tt>.  Therefore, all the variables declared in here are created in my desktop environment.
+         </p>
+         <p>Created by Celso Reyes for use with the Waveform Suite April, 2009</p>
+         <!--/introduction-->
+         <h2>Contents</h2>
+         <div>
+            <ul>
+               <li><a href="#1">Define commonly used</a> <a href="../datasource.html">datasources</a></li>
+               <li><a href="#2">predefine the Okmok stations (<a href="../scnlobject.html">scnlobjects</a>) used for my raw files</a></li>
+            </ul>
+         </div>
+         <h2>Define commonly used <a href="../datasource.html">datasources</a><a name="1"></a></h2><pre class="codeinput"><span class="comment">% antelope continuous waveform database</span>
+ds_antelope = datasource(<span class="string">'antelope'</span>,<span class="keyword">...</span>
+  <span class="string">'/iwrun/op/db/archive/archive_%04d/archive_%04d_%02d_%02d'</span>,<span class="keyword">...</span>
+  <span class="string">'year'</span>,<span class="string">'year'</span>,<span class="string">'month'</span>,<span class="string">'day'</span>);
+
+<span class="comment">% collection of unprocessed waveforms, stored locally as .mat files</span>
+ds_rawfiles = datasource(<span class="string">'file'</span>,<span class="keyword">...</span>
+  <span class="string">'/home/celso/okmokraw/%04d/%02d/OkmokRaw_%04d_%02d_%02d_%s.mat'</span>,<span class="keyword">...</span>
+  <span class="string">'year'</span>,<span class="string">'month'</span>,<span class="string">'year'</span>,<span class="string">'month'</span>,<span class="string">'day'</span>,<span class="string">'station'</span>);
+
+<span class="comment">% a winston server (not currently available)</span>
+ds_winston = datasource(<span class="string">'winston'</span>,<span class="string">'mylocalwaveserver.giseis.alaska.edu'</span>,12345);
+</pre><h2>predefine the Okmok stations (<a href="../scnlobject.html">scnlobjects</a>) used for my raw files<a name="2"></a></h2><pre class="codeinput"><span class="comment">% All these definitions may be overkill, but I use them A LOT!!</span>
+
+<span class="comment">% Short-Period stations...</span>
+
+<span class="comment">%after some time in 2004, we changed from the notations of shz to ehz, so</span>
+<span class="comment">%keep both 'cause I often query the database for 2003 data.</span>
+OKsta.sp.ehz = scnlobject (<span class="keyword">...</span>
+  {<span class="string">'OKAK'</span>,<span class="string">'OKCF'</span>,<span class="string">'OKER'</span>,<span class="string">'OKRE'</span>,<span class="string">'OKSP'</span>,<span class="string">'OKTU'</span>,<span class="string">'OKWE'</span>,<span class="string">'OKWR'</span>}<span class="keyword">...</span><span class="comment"> stations</span>
+  ,<span class="string">'EHZ'</span>,<span class="keyword">...</span><span class="comment"> all use the same channel</span>
+  <span class="string">'AV'</span><span class="keyword">...</span><span class="comment"> and are on the same network</span>
+  );
+
+<span class="comment">%now create older versions (pre mid-2004) by replacing EHZ with SHZ</span>
+OKsta.sp.shz = set(OKsta.sp.ehz,<span class="string">'channel'</span>,<span class="string">'SHZ'</span>);
+
+<span class="comment">% Broadband stations...</span>
+OKsta.bb.hz = scnlobject({<span class="string">'OKCE'</span>,<span class="string">'OKSO'</span>,<span class="string">'OKFG'</span>,<span class="string">'OKCD'</span>},<span class="string">'BHZ'</span>,<span class="string">'AV'</span>);
+OKsta.bb.hn = set(OKsta.bb.hz,<span class="string">'channel'</span>,<span class="string">'BHN'</span>);
+OKsta.bb.he = set(OKsta.bb.hz,<span class="string">'channel'</span>,<span class="string">'BHE'</span>);
+OKsta.bb.all = [OKsta.bb.hz, OKsta.bb.hn, OKsta.bb.he];
+
+<span class="comment">% Commonly used combinations...</span>
+OKsta.all.current = [OKsta.sp.ehz, OKsta.bb.all];
+OKsta.all.oldstyle = [OKsta.sp.shz, OKsta.bb.all];
+</pre>
+<hr/><p>Please send feedback to: <i> celso &lt;at&gt; gi &lt;dot&gt; alaska &lt;dot&gt; edu </i></p>
+<table><tr>
+ <td>Was this useful?</td> <td><a href="../wasuseful.html">YES</a></td><td><a href="../wasnotuseful.html">NO</a> </td>
+</tr></table>
+
+<p class="footer"><br>
+            Published with MATLAB&reg; 7.7<br></p>
+      </div>
+      <!--
+##### SOURCE BEGIN #####
+%% Definitions for commonly used waveform objects, to be loaded at startup
+% This data file is called by |startup.m|.  Therefore, all the variables
+% declared in here are created in my desktop environment.
+%
+% Created by Celso Reyes
+% for use with the Waveform Suite
+% April, 2009
+
+%% Define commonly used <../datasource.html datasources>
+
+% antelope continuous waveform database
+ds_antelope = datasource('antelope',...
+  '/iwrun/op/db/archive/archive_%04d/archive_%04d_%02d_%02d',...
+  'year','year','month','day');
+  
+% collection of unprocessed waveforms, stored locally as .mat files
+ds_rawfiles = datasource('file',...
+  '/home/celso/okmokraw/%04d/%02d/OkmokRaw_%04d_%02d_%02d_%s.mat',...
+  'year','month','year','month','day','station');
+
+% a winston server (not currently available)
+ds_winston = datasource('winston','mylocalwaveserver.giseis.alaska.edu',12345);
+
+%%  predefine the Okmok stations (<../scnlobject.html scnlobjects>) used for my raw files
+
+% All these definitions may be overkill, but I use them A LOT!!
+
+% Short-Period stations...
+
+%after some time in 2004, we changed from the notations of shz to ehz, so
+%keep both 'cause I often query the database for 2003 data.
+OKsta.sp.ehz = scnlobject (...
+  {'OKAK','OKCF','OKER','OKRE','OKSP','OKTU','OKWE','OKWR'}... stations
+  ,'EHZ',... all use the same channel
+  'AV'... and are on the same network
+  );
+
+%now create older versions (pre mid-2004) by replacing EHZ with SHZ
+OKsta.sp.shz = set(OKsta.sp.ehz,'channel','SHZ');
+
+% Broadband stations...
+OKsta.bb.hz = scnlobject({'OKCE','OKSO','OKFG','OKCD'},'BHZ','AV');
+OKsta.bb.hn = set(OKsta.bb.hz,'channel','BHN');
+OKsta.bb.he = set(OKsta.bb.hz,'channel','BHE');
+OKsta.bb.all = [OKsta.bb.hz, OKsta.bb.hn, OKsta.bb.he];
+
+% Commonly used combinations...
+OKsta.all.current = [OKsta.sp.ehz, OKsta.bb.all];
+OKsta.all.oldstyle = [OKsta.sp.shz, OKsta.bb.all];
+
+##### SOURCE END #####
+-->
+   </body>
+   <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-8415966-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</html>

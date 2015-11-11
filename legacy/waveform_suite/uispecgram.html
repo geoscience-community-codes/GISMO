@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>  
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="The UISpecgram utility, explained" />
+    <meta name="keywords" content="stuff" />
+    <title>Waveform Suite Example: uispecgram</title>
+    <link type="text/css" rel="stylesheet" href="wavesuite.css" />
+  </head>
+  
+  <body>
+  <div id="allcontent">
+  <div id="header">
+    <p><img id = "photo" src="images/lilwave.gif" alt="waveform icon" /></p>
+    <h1>The <em>uispecgram</em> utility
+  </h1>
+  <p>Interactively generate spectrogram figures</p>
+  </div>
+  
+  <div id="main">
+    <p>uispecgram is an interactive tool that allows you to create and modify spectrograms.  The completed spectrogram may then be printed or exported.  Also, the spectralobject settings that are generated through this utility can be saved, so that the same style spectrogram can be created in the future.<br/> 
+    </p>
+	<p>calls to uispecgram require a waveform object.  An example .mat file, containing two calibration pulses can be found <a href="calib_examples.mat">here</a>.  The example calibrations are in two variables, called <i>dfr_calib</i> and <i>red_calib</i>.<br/>  For the following example, we will use dfr_calib.</p>
+	<hr/>
+	<p><code><pre>
+>> load calib_examples.mat dfr_calib
+>>dfr_calib
+	
+	dfr_calib =
+ 
+   station:    DFR		 network: AV
+   channel:    EHZ		location: --
+     start: 05-May-2009 21:40:55.000
+            duration(00:01:00.010)
+      data: 6001 samples
+      freq: 100.000000 Hz
+     units: Counts
+    With misc fields...
+    * HISTORY: [1x2] cell object
+	
+>> uispecgram(dfr_calib); %bring up the following interactive window
+
+	</pre></code></p><hr/>
+    <h2>Parts of the spectra viewer window</h2><p>
+	<img src="images/uispecgram_numbered_transparent.png" alt="main uispecgram window, annotated"/>
+    </p>
+	<ol>
+	  <li><i>File menu</i>: choose <i>specgram2</i> to replot the current figure in a new window so that it can be saved or printed</li>
+	  <li><i>Waveform menu</i>: currently disabled</li>
+	  <li><i>Number of samples</i> in the FFT.</li>
+	  <li><i>Percent overlap</i>, or time between samples</li>
+	  <li><i>Update</i>: Choose AutoUpdate to have the figure redraw as each option is selected.  Otherwise, make desired changes and then click the <i>update</i> button.</li>
+	  <li><i>Waveform Wiggles display</i></li>
+	  <li><i>Spectrogram window</i></li>
+	  <li><i>Maximum displayed frequency slider</i></li>
+	  <li><i>Sliders</i> for the max and min decible range</li>
+	  <li><i>Colorbar</i> showing the color value for each dB</li>
+	</ol>
+	<hr/>
+	<p>The values can then be modified to suit your needs.  Here, I've changed all the values somewhat to make the spectrogram <em>pop</em></p>
+    <p>
+	<img src="images/uispecgram2.png" alt="uispecgram window, now modified with new values"/>
+    </p>
+    <p>When you choose to plot it by clicking specgram2 from the file menu, a new window will appear.</p>
+	<p>	
+	<img src="images/uispecgram2_specgram2.png" alt="resulting spectrogram, as plotted by uispecgram2"/>
+    </p>
+	<p>Also, the spectralobject that was needed to create the figure will be displayed in the main matlab window:<br/><code><pre>
+ans =
+ 
+       nfft: 512
+       over: 460.8
+    freqmax: 25
+     dBlims: [50  100]
+	</code></pre></p>
+    <p>this can then be used to create your own spectralobject in the future:<br>
+	<code>s = spectralobject(512, 460.8, 25, [50 100])</code>
+    </p>
+  </div>
+  <div id="navigation">
+  <p><span class="suite_title">Waveform Suite</span><br/> for MATLAB</p>
+    <p><a href="download.html"><b>download</b></a></p><hr/>
+	<p>
+	<a href="waveform.html">waveform</a><br/>
+	<a href="scnlobject.html">scnlobject</a><br/>
+	<a href="datasource.html">datasource</a><br/>
+	<a href="filterobject.html">filterobject </a><br/>
+	<a href="spectralobject.html">spectralobject</a></p>
+	<hr/>
+	<p><a href="../feline_example/tutorial_and_code_frameset.htm">object tutorial</a></p>
+	
+	<hr/><p>  <a href="waveform_suite_example_index.html">Waveform Suite Examples</a>
+  </p><hr/>
+  <p><a href="../../index.html">Celso's homepage</a></p>
+   <!-- CSS & XHTML validation approval -->
+  </div> <!-- navigation -->
+  </div> <!-- all content -->
+  </body>
+  <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-8415966-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+</html>

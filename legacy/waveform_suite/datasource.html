@@ -1,0 +1,270 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>  
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Information about using datasources to intellegently retrieve waveform data into matlab via the waveform suite." />
+    <meta name="keywords" content="waveform suite, MATLAB, Antelope, WINSTON, SAC, Seisan, guide, seismology, tutorial, datasource class" />
+    <title>Waveform Suite for Matlab: Working with the Datasource Class</title>
+    <link type="text/css" rel="stylesheet" href="wavesuite.css" />
+  </head>
+  
+  <body>
+    <div id="allcontent">
+      <div id="header">
+        <p><img id = "photo" src="images/lilwave.gif" alt="waveform icon" /></p>
+        <h1>The <em>Datasource</em> class
+        </h1>
+        <p>Datasource objects are the gateway between objects
+        (such as waveform) and their databases or stored files.</p>
+      </div>
+      <a name="define"></a>
+      <div id="main">
+        <p>The datasource class was added to the waveform suite in spring 2009, and
+          has since proven a valuable way to insulate the waveform class from the 
+          (often changing) data streams.  This class has provided the flexability to
+          allow anyone to easily extend the waveform class to understand and import 
+          any number of file or database formats.
+        </p>
+        <p>The datasource and waveform classes already have the innate ability to 
+          work with several database and file formats.  A quick list of predefined formats follows:
+        </p>
+        <ul><li><b>Antelope</b> - Accessing an antelope database requires that the antelope
+            toolbox for matlab be installed.  This toolbox is available from Boulder Real
+          Time Technologies.</li>
+          <li><b>Winston</b> - Accessing a winston wave server requires that the appropriate
+            java libraries be installed.  At the time of this writing, these utilities
+          are included in the usgs.jar file, available with the SWARM program.</li>
+          <li><b>SAC</b> - No additional utilities are required to access SAC 
+          (Seismic Analysis Code) files.</li>
+          <li><b>SEISAN</b> - No additional utilities are required to import files 
+            from the SEISmic ANalysis system.  However, due to SEISAN's file naming conventions,
+            datasource will not likely be able to automatically determine which file is desired.  
+            In this case, the datasource class will need to be created with specific filenames, rather
+          than with intelligent paths.</li>
+          <li><b>FILE</b> - Datasource is capable of looking within .mat files for all variables of 
+            a desired type.  This allows it to parse specific data from files with waveform variables of
+          any array size, any name, or even if they are contained within cells.	</li>
+        </ul>
+        
+        <p>Commonly used datasources may best be saved saved in either a .mat
+          datafile or a .m script, where they can be loaded without constantly 
+          needing to be re-entered.  If these are placed in an .m script, then
+        that script may be called at startup by including it in startup.m</p>
+        
+        <a name="create"></a>
+        <h2>Creating a datasource</h2>
+        <dl class="functions">
+          <dt>ds = datasource(type, filename, [parameter1][, parameter2][...])</dt>
+          <dd>creates a datasource of type "type"  from constituent parts. Additional 
+            parameters depend upon the datasource type.
+            <ol class="specificexample">
+              <li><a name="create_antelope"/>ds = datasource('antelope',databasepath)<br/>
+                associates this datasource with a specific database.  With additional parameters, the
+              datasource may be able to traverse a directory tree to determine the correct database.</li>
+              <li><a name="create_winston"/>ds = datasource('winston',server, port)<br/>
+              associates the datasource with a winston wave server</li>
+              <li><a name="create_sac"/>ds = datasource('sac',filelocation)<br/>
+                associates the datasource with a SAC file.  With additional parameters, 
+                the datasource may be able to traverse a directory tree to determine 
+              the correct file.</li>
+              <li><a name="create_file"/>ds = datasource('file',filelocation)<br/>
+                associates the datasource with a SAC file.  With additional parameters, 
+                the datasource may be able to traverse a directory tree to determine 
+              the correct file.</li>
+              <li><a name="create_seisan"/>ds = datasource('seisan',filelocation)<br/>
+                associates the datasource with a SEISAN file.  With additional parameters, 
+                the datasource may be able to traverse a directory tree to determine the 
+              correct seisan file.</li>		  
+              <li><a name="create_user"/>ds = datasource(@interpreter,filelocation)<br/>
+                associates the datasource with any function designed to read a file, 
+                and then translate it into an object(or objects) via that object's 
+                constructor method.  With additional parameters, the datasource may 
+              be able to traverse a directory tree to determine the correct file.</li>
+            </ol>
+          </dd>
+          
+          
+          <dt>ds = datasource('winston', server, port)</dt>
+          <dd>creates a datasource for a winston wave server.
+          </dd>
+          <dt>ds = datasource(@interpreter,filelocation)</dt>
+          <dd>associates the datasource with any function designed to read a file, 
+            and then translate it into an object(or objects) via that object's 
+            constructor method.  With additional parameters, the datasource may 
+          be able to traverse a directory tree to determine the correct file.</dd>
+        </dl>
+        <h3>Creating an interpreter (import) function</h3>
+        <p>Interpreter functions translate a file of any type into an array of 
+        one or more objects.</p>
+        <p>The internals of the interpreter are a black-box to the 
+          datasource class-- it doesn't care how or where the interpreter 
+          retrieves the data.  All that matters is that the function 
+          accepts a character array (string) as an argument and that it 
+          returns one or more objects of the appropriate class.  (For the 
+          waveform suite, that would be, <i>surprise</i>, a waveform 
+          object).  If no objects are found, then an empty array may be 
+          returned.
+        </p>
+        <p>Datasource will check to ensure that the datafile exists, so the
+          interpeter function is guarenteed that much.  However, the 
+          existence of a file doesn't mean that it is of the proper type.
+          The interpreter is responsible for generating an error if the 
+          file is unparsable.
+        </p>
+        <h3>Information about filenames and parameters</h3>
+        <p>Interpreter functions translate a file of any type into an array of 
+        one or more objects.</p>
+        <a name="modify"/>
+        <h2>Modifying Datasources</h2>
+        <p>The filenames (path, directory, files) associated with a 
+        datasource can be cahnged with the setfile command.  Also, the 
+        interpreter function can be changed with the setinterpreter 
+        command.  For additional changes, a new datafile should be 
+        created.</p>
+        <a name="functions"/>
+        <h2>Functions of note</h2>
+        <dl class="functions">
+          <dt>getfilename</dt><dd>retrieve file names associated with scnl and date-time information
+            <ol class="specificexample">
+              <li>getfilename(ds,myscnlobject, startTime)<br/>
+                returns the filename associated with the place described by myscnlobject
+                at time startTime.<br/>
+                <i>ie</i>, if the filename is dependant upon the date of the requested 
+              data, then the startTime is used to determine that date.</li>
+              
+              <li>getfilename(ds,[], [])<br/>return the generic form of the filename, 
+              where each data-dependent field is enclosed with brackets. </li>
+            </ol>
+          </dd>
+          <dt>subdivide_files_by_date</dt>
+          <dd>given a datasource and daterange return list of files.
+            <ol class="specificexample">
+              <li>fns = subdivide_files_by_date(ds,startTime,endTime)<br/>
+                returns a list of all files that have data during the timerange for a
+                particular datasource ds.
+              </li>
+              <li>fn(ab,cd)<br/>Use ab and CD</li>
+            </ol>
+          </dd>
+        </dl>
+        <a name="example"/>
+        <div id="examples">
+          <h2>Examples</h2>
+          <ul>
+            <li><h4>Example 1: example of an interpreter function</h4>
+              <p>Here is a listing of a simple, yet relatively complete interpreter function.
+              Notice the error checks, and how it handles the waveforms</p>
+              <blockquote class="filelisting">
+                <p>function w = load_crazyformat(filename)</p>
+                <p class="comment">LOAD_CRAZYFORMAT loads my old ad-hoc data from .mat files into waveforms.</p>
+                <p class="comment">data is stored in a matlab file FILENAME as a variable
+                  named "data" of type struct. Its fields are "location" (5 digits for station,
+                  2 digits will become channel), "values" which will map to data, and start, 
+                which will map to the same name.  All data is sampled at 20 samples per second.</p>
+                <p>dataIn = load(filename);<br/>
+                  <span class="comment">should now have data in dataIn.data</span><br/>
+                  if ~exist('dataIn','var')<br/>
+                  &nbsp;&nbsp;error('DataImporter:unknownFormat',...<br/>
+                  &nbsp;&nbsp;'The file was not interpretable as a crazyformat (.CF) file');<br/>
+                  end;<br/>
+                  try<br/>
+                  &nbsp;&nbsp;w = repmat(waveform,size(dataIn.data));<span class="comment">preallocate</span><br/>
+                  &nbsp;&nbsp;for n=1:numel(dataIn.data)<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;station = dataIn.data(n).location(1:5);<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;channel = dataIn.data(n).location(6:7);<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;data = dataIn.data(n).values;<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;thisscnl = scnlobject(station,channel);<br/>
+                  &nbsp;&nbsp;&nbsp;&nbsp;w(n) = set(w(n),'scnl',thisscnl,'start',start,'data',data,'freq',20);<br/>
+                  &nbsp;&nbsp;end<br/>
+                  catch<br/>	
+                  &nbsp;&nbsp;error('DataImporter:parseError',...<br/>
+                  &nbsp;&nbsp;'Unable to parse... unexpected error with fields');<br/>
+                  end<br/>
+                  w = w(~isempty(w));<br/>
+                  w = addhistory(clearhistory(w),'Imported from a crazyformat file');
+                </p>
+              </blockquote>
+              <p> and here's an example matlab session that uses the load_crazyformat function...</p>
+              <blockquote class="matlabsession">
+                <p class="user">ds = datasource(@load_crazyformat,...<br/>
+                  'C:/mydatafile/%04d/%03d.mat','year','jday')
+                  <span class="comment">assoc with my interpreter.</span><br/>
+                <span class="aside">- notice the filename depends on the year and julian day</span></p>
+                <p class="computer">ds = <br/>
+                  type: USER_DEFINED<br/>
+                  location: C:/mydatafile/[YEAR]/[JDAY].mat<br/>
+                  Interpreting Function: load_crazyformat</p>
+                <p class="user">scnl = scnlobject('STA01','LL');
+                  <span class="comment">this is station/channel of interest
+                  </span><br/>
+                  <span class="user">
+                    w = waveform(ds,scnl,'2/5/2009','2/6/2009')
+                  </span>
+                <span class="comment">load a single waveform</span><br/></p>
+                <p class="computer"> w =  1 x 1 wavform object <br/><span class="aside">--details of waveform displayed here--</span></p>
+                
+                <p class="user">stanums = 1:25;<span class="comment">we'll load 25 stations that have numerical names</span><br/>
+                  <span class="user">stanames = strcat('STA',num2str(stanums,'%02d'));</span>
+                  <span class="comment">change numbers into names like "STA03"</span><br/>
+                  <span class="user">scnl = scnlobject(stanames,'LL');</span>
+                  <span class="comment">create 1x25 station/channel list</span><br/>
+                  <span class="user">w = waveform(ds,scnl,'2/5/2009 02:00', 2/9/2009 14:00)</span>
+                <span class="comment">load all stations for this 4.5-day period</span><br/></p>
+                <p class="computer"> w =  1 x 25 wavform object <br/><span class="aside">--details of waveform displayed here--</span></p>
+                
+              </blockquote>
+            </li>
+          </ul>
+<hr/><p>Please send feedback to: <i> celso &lt;at&gt; gi &lt;dot&gt; alaska &lt;dot&gt; edu </i></p>
+        </div> <!-- examples -->  
+      </div> <!-- main -->
+      <div id="navigation">
+        <p><span class="suite_title">Waveform Suite</span><br/> for MATLAB</p><p>
+        <a href="download.html"><b>download</b></a></p><hr/><p>
+          <a href="waveform.html">waveform</a><br/>
+        <a href="scnlobject.html">scnlobject</a></p>
+        <div class="here"><p>
+          <b>datasource</b></p>
+          <ul><li><a href="#define">Introduction</a></li>
+            <li><a href="#create">Creating</a></li>
+            <li><a href="#modify">Modifying</a></li>
+            <li><a href="#functions">Functions</a></li>
+          <li><a href="#example">Examples</a></li></ul>
+        </div>
+        <p>
+          <a href="filterobject.html">filterobject </a><br/>
+        <a href="spectralobject.html">spectralobject</a></p>
+        <hr/>
+        <p><a href="../feline_example/tutorial_and_code_frameset.htm">object tutorial</a></p>
+        
+        <hr/><p> <a href="waveform_suite_example_index.html">Waveform Suite Examples</a>
+        </p><hr/>
+        <p><a href="../../index.html">Celso's homepage</a></p><hr/>
+        <!-- CSS & XHTML validation approval -->
+        <p>
+          <a href="http://validator.w3.org/check?uri=referer"><img
+              src="http://www.w3.org/Icons/valid-xhtml10-blue"
+            alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
+        </p>
+        <p>
+          <a href="http://jigsaw.w3.org/css-validator/check/referer">
+            <img style="border:0;width:88px;height:31px"
+                 src="http://jigsaw.w3.org/css-validator/images/vcss-blue"
+                 alt="Valid CSS!" />
+          </a>
+        </p>
+        
+      </div><!-- navigation -->
+    </div><!-- allcontent -->
+	<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-8415966-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+  </body>
+</html>

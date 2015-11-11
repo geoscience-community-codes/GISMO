@@ -1,0 +1,384 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      -->
+      <title>Waveform Suite Example: Plot examples</title>
+      <meta name="generator" content="MATLAB 7.7">
+      <meta name="date" content="2009-04-14">
+      <meta name="m-file" content="plotting_sample"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head>
+   <body>
+      <div class="content">
+         <h1>Waveform Suite Example: Plot examples</h1>
+         <!--introduction-->
+         <p>Here, we'll load some old data from Okmok Volcano and play around with a variety of ways to plot it.</p>
+         <p>Created by Celso Reyes for use with the Waveform Suite April, 2010</p>
+         <!--/introduction-->
+         <h2>Contents</h2>
+         <div>
+            <ul>
+               <li><a href="#1">Describe the data to load</a></li>
+               <li><a href="#4">load the data, combining where appropriate</a></li>
+               <li><a href="#6">Plot the resulting data</a></li>
+               <li><a href="#8">Plot with minutes on the x-axis instead...</a></li>
+               <li><a href="#14">Extract a section of data, using the mouse</a></li>
+               <li><a href="#16">Tweak the spectralobject</a></li>
+               <li><a href="#17">Waveform handles unit changes</a></li>
+               <li><a href="#18">mathamatical operations on waveform objects</a></li>
+            </ul>
+         </div>
+         <h2>Describe the data to load<a name="1"></a></h2>
+         <p>This doesn't have to be a step unto itself, but it helps keep things straight.</p>
+         <p>Define a <a href="../datasource.html">datasource</a> object that points to our data.  This step is usually done in a separate file because it is often that the same datasources
+            are reused.  Instead of defining everywhere, just load or run the appropriate file.
+         </p><pre class="codeinput">ds = datasource(<span class="string">'file'</span>,<span class="keyword">...</span><span class="comment"> I'm loading waveforms saved in .mat files</span>
+  <span class="string">'J:/DATA/okmokraw/%04d/%02d/OkmokRaw_%04d_%02d_%02d_%s.mat'</span>,<span class="keyword">...</span><span class="comment"> file format string.</span>
+  <span class="string">'year'</span>,<span class="string">'month'</span>,<span class="string">'year'</span>,<span class="string">'month'</span>,<span class="string">'day'</span>,<span class="string">'station'</span>) <span class="comment">% values referred to by the format string</span>
+</pre><pre class="codeoutput"> 
+ds =
+ 
+      type: FILE
+  location: J:/DATA/okmokraw/[YEAR]/[MONTH]/OkmokRaw_[YEAR]_[MONTH]_[DAY]_[STATION].mat
+</pre><p>Now declare the stations of interest.</p><pre class="codeinput">stations = {<span class="string">'OKID'</span>,<span class="string">'OKRE'</span>,<span class="string">'OKER'</span>,<span class="string">'OKWR'</span>,<span class="string">'OKWE'</span>};
+
+<span class="comment">% the asterisk, below, is a wildcard because</span>
+<span class="comment">% we're unconcerned with the network.</span>
+scnls = scnlobject(stations,<span class="string">'SHZ'</span>,<span class="string">'*'</span>);
+starttime = <span class="string">'2/23/2004 22:20'</span>;
+endtime = <span class="string">'2/23/2004 23:20'</span>;
+</pre><h2>load the data, combining where appropriate<a name="4"></a></h2><pre class="codeinput">w = waveform(ds,scnls,starttime,endtime)
+</pre><pre class="codeoutput">Upgrading waveform to new version... v1.10
+Upgrading waveform to new version... v1.10
+Upgrading waveform to new version... v1.10
+Upgrading waveform to new version... v1.10
+Upgrading waveform to new version... v1.10
+ 
+w =
+ 
+ 
+[1x5] waveform object with fields:
+     station
+     channel
+     start
+     freq
+     data
+     units
+   with common fields...
+    'CALIB'
+    'HISTORY'
+
+</pre><p>The data we just loaded happend to be saved as an older version of waveform. The suite is smart enough to update each waveform
+            as it is loaded into memory.  The archive on disk remains untouched.
+         </p>
+         <h2>Plot the resulting data<a name="6"></a></h2>
+         <p>Notice that</p><pre class="codeinput">plot(w);
+legend(w);
+</pre><img vspace="5" hspace="5" src="plotting_sample_01.png" alt=""> <p>Yuck!  Notice that station OKWR looks ill. Let's loose that one.  Also, lets change the x-axis to minutes because that may
+            seem more meaningful than seconds.
+         </p><pre class="codeinput">w = w(~strcmpi(get(w,<span class="string">'station'</span>),<span class="string">'OKWR'</span>));
+</pre><h2>Plot with minutes on the x-axis instead...<a name="8"></a></h2><pre class="codeinput">plot(w,<span class="string">'xunit'</span>,<span class="string">'minutes'</span>);
+legend(w,<span class="string">'station'</span>, <span class="string">'channel'</span>);
+</pre><img vspace="5" hspace="5" src="plotting_sample_02.png" alt=""> <p>Filter it to look for more meaning</p><pre class="codeinput">f = filterobject <span class="comment">% default filterobject</span>
+</pre><pre class="codeoutput"> 
+f =
+ 
+      type: B (Bandpass)
+    cutoff: 0.8           5 Hz
+     poles: 2
+</pre><pre class="codeinput">clf
+wf = filtfilt(f,w);
+plot(wf,<span class="string">'xunit'</span>,<span class="string">'minutes'</span>);
+history(w(1))
+</pre><pre class="codeoutput">
+ans = 
+
+    'CREATED'
+    'Set START'
+    'Updated to version 1.1'
+    'Set START'
+    'Extracted, using time'
+    'SPLICEPOINT: 23-Feb-2004 23:00:00, removed 0 points (overlap)'
+
+</pre><img vspace="5" hspace="5" src="plotting_sample_03.png" alt=""> <p>Maybe there's something to be seen in the spectra...</p><pre class="codeinput">s = spectralobject;
+specgram(s,w,<span class="string">'xunit'</span>,<span class="string">'minutes'</span>);
+</pre><img vspace="5" hspace="5" src="plotting_sample_04.png" alt=""> <p>Oops.  since <tt>w</tt> was <tt>1x4</tt>, so was the spectrogram.  Instead, I'll use <tt>w'</tt>, which is <tt>4x1</tt> and should therefore be much more legible.
+         </p><pre class="codeinput">specgram(s,w',<span class="string">'xunit'</span>,<span class="string">'minutes'</span>);
+</pre><img vspace="5" hspace="5" src="plotting_sample_05.png" alt=""> <p>Ah. Now it's more obvious that there was some tremor occuring during the first 26 minutes.  Also, it is seen strongest at
+            OKER and OKWE, appears extremly difusely at OKRE, but doesn't appear at all at OKID
+         </p>
+         <h2>Extract a section of data, using the mouse<a name="14"></a></h2>
+         <p>For grins, I'd like to get a closer look at the calibration pulse from station OKWE</p><pre class="codeinput">clf
+
+<span class="comment">%plot OKWE-SHZ, but with x-units of date</span>
+plot(w(4),<span class="string">'xunit'</span>,<span class="string">'date'</span>);
+axis <span class="string">tight</span>;
+
+<span class="comment">% now with the mouse, pick the beginning &amp; end point of the calib pulse</span>
+[x, y] = ginput(2);
+pickedtimes = datestr(x)
+<span class="comment">% and now, grab the section of waveform that contains the pulse</span>
+mypulse = extract(w(4),<span class="string">'time'</span>,x(1),x(2));
+
+subplot(2,1,1);
+plot([w(4), mypulse],<span class="string">'xunit'</span>,<span class="string">'date'</span>);
+subplot(2,1,2);
+plot(mypulse);
+</pre><pre class="codeoutput">
+pickedtimes =
+
+23-Feb-2004 22:26:15
+23-Feb-2004 22:27:18
+
+</pre><img vspace="5" hspace="5" src="plotting_sample_06.png" alt=""> <p>and tie it up in a nice bow-- plot spectrogram alongside the waveform</p><pre class="codeinput">specgram2(s,mypulse)
+</pre><img vspace="5" hspace="5" src="plotting_sample_07.png" alt=""> <h2>Tweak the spectralobject<a name="16"></a></h2>
+         <p>Make it prettier!</p><pre class="codeinput">s = spectralobject(512,510,25,[50 100]);
+specgram2(s,mypulse);
+</pre><img vspace="5" hspace="5" src="plotting_sample_08.png" alt=""> <h2>Waveform handles unit changes<a name="17"></a></h2>
+         <p>When Integrating and Differentiating, the waveform class takes care of units management.</p><pre class="codeinput">subplot(3,1,1); plot(diff(mypulse));
+legend(<span class="string">'acceleration'</span>);
+
+subplot(3,1,2); plot(mypulse,<span class="string">'r'</span>,<span class="string">'xunit'</span>,<span class="string">'minutes'</span>);
+legend(<span class="string">'velocity'</span>);
+
+<span class="comment">% also, all the standard plotting properties are still understood</span>
+subplot(3,1,3); plot(integrate(mypulse),<span class="string">'k-.'</span>,<span class="string">'linewidth'</span>,2);
+legend(<span class="string">'displacement'</span>);
+</pre><img vspace="5" hspace="5" src="plotting_sample_09.png" alt=""> <h2>mathamatical operations on waveform objects<a name="18"></a></h2>
+         <p>Notice that, in this case the units are unchanged...</p><pre class="codeinput">subplot(2,1,1);
+plot([mypulse,hilbert(mypulse)]);
+legend(<span class="string">'pulse'</span>,<span class="string">'hilbert of pulse'</span>)
+subplot(2,1,2);
+scaled = mypulse ./ max(abs(mypulse));
+plot([abs(scaled) + 1, scaled - 1, ((-scaled) * 3 + 5)]);
+legend(<span class="string">'abs(wave) + 1'</span>,<span class="string">'wave - 1'</span>,<span class="string">'-wave * 3 + 5'</span>);
+</pre><img vspace="5" hspace="5" src="plotting_sample_10.png" alt=""> <p><i>note</i>: typing  <tt>scaled -1</tt> instead of <tt>scaled - 1</tt> will cause MATLAB to error with : <tt>??? Error using ==&gt; horzcat</tt> because it will try to concatenate a double (-1) to a waveform, which makes no sense.
+         </p><pre class="codeinput">history(scaled)
+</pre><pre class="codeoutput">
+ans = 
+
+    'CREATED'
+    'Set START'
+    'Updated to version 1.1'
+    'Set START'
+    'Extracted, using time'
+    'SPLICEPOINT: 23-Feb-2004 23:00:00, removed 0 points (overlap)'
+    'Set START'
+    'Extracted, using time'
+    'Divided by 1665'
+
+</pre>
+<hr/><p>Please send feedback to: <i> celso &lt;at&gt; gi &lt;dot&gt; alaska &lt;dot&gt; edu </i></p>
+<table><tr>
+ <td>Was this useful?</td> <td><a href="../wasuseful.html">YES</a></td><td><a href="../wasnotuseful.html">NO</a> </td>
+</tr></table>
+<p class="footer"><br>
+            Published with MATLAB&reg; 7.7<br></p>
+      </div>
+      <!--
+##### SOURCE BEGIN #####
+%% Waveform Suite Example: Plot examples
+% Here, we'll load some old data from Okmok Volcano and play around with a
+% variety of ways to plot it.
+%
+% Created by Celso Reyes
+% for use with the Waveform Suite
+% April, 2009
+
+
+%% Describe the data to load
+% This doesn't have to be a step unto itself, but it helps keep things
+% straight.
+
+%%
+% Define a <../datasource.html datasource> object that points to our data.  This step is usually
+% done in a separate file because it is often that the same datasources are
+% reused.  Instead of defining everywhere, just load or run the appropriate
+% file.
+ds = datasource('file',... I'm loading waveforms saved in .mat files
+  'J:/DATA/okmokraw/%04d/%02d/OkmokRaw_%04d_%02d_%02d_%s.mat',... file format string.
+  'year','month','year','month','day','station') % values referred to by the format string
+
+%%
+% Now declare the stations of interest.  
+stations = {'OKID','OKRE','OKER','OKWR','OKWE'};
+
+% the asterisk, below, is a wildcard because 
+% we're unconcerned with the network.
+scnls = scnlobject(stations,'SHZ','*');
+starttime = '2/23/2004 22:20';
+endtime = '2/23/2004 23:20';
+
+%% load the data, combining where appropriate
+w = waveform(ds,scnls,starttime,endtime)
+%%
+% The data we just loaded happend to be saved as an older version of
+% waveform. The suite is smart enough to update each waveform as it is
+% loaded into memory.  The archive on disk remains untouched.
+
+%% Plot the resulting data
+% Notice that 
+plot(w);
+legend(w);
+%% 
+% Yuck!  Notice that station OKWR looks ill. Let's loose that one.  Also,
+% lets change the x-axis to minutes because that may seem more meaningful
+% than seconds.
+w = w(~strcmpi(get(w,'station'),'OKWR'));
+%% Plot with minutes on the x-axis instead...
+plot(w,'xunit','minutes');
+legend(w,'station','channel');
+
+%% 
+% Filter it to look for more meaning
+f = filterobject % default filterobject
+%%
+clf
+wf = filtfilt(f,w);
+plot(wf,'xunit','minutes');
+history(w(1))
+%%
+% Maybe there's something to be seen in the spectra...
+s = spectralobject;
+specgram(s,w,'xunit','minutes');
+%%
+% Oops.  since |w| was |1x4|, so was the spectrogram.  Instead, I'll use
+% |w'|, which is |4x1| and should therefore be much more legible.
+
+specgram(s,w','xunit','minutes');
+
+%%
+% Ah. Now it's more obvious that there was some tremor occuring during the
+% first 26 minutes.  Also, it is seen strongest at OKER and OKWE, appears
+% extremly difusely at OKRE, but doesn't appear at all at OKID
+%% Extract a section of data, using the mouse
+% For grins, I'd like to get a closer look at the calibration pulse from
+% station OKWE
+
+clf
+
+%plot OKWE-SHZ, but with x-units of date
+plot(w(4),'xunit','date');
+axis tight;
+
+% now with the mouse, pick the beginning & end point of the calib pulse
+[x, y] = ginput(2);
+pickedtimes = datestr(x)
+% and now, grab the section of waveform that contains the pulse
+mypulse = extract(w(4),'time',x(1),x(2));
+
+subplot(2,1,1);
+plot([w(4), mypulse],'xunit','date');
+subplot(2,1,2);
+plot(mypulse);
+
+%%
+% and tie it up in a nice bowREPLACE_WITH_DASH_DASH plot spectrogram alongside the waveform
+specgram2(s,mypulse)
+
+%% Tweak the spectralobject
+% Make it prettier!
+s = spectralobject(512,510,25,[50 100]);
+specgram2(s,mypulse);
+
+%% Waveform handles unit changes
+% When Integrating and Differentiating, the waveform class takes care of
+% units management.
+subplot(3,1,1); plot(diff(mypulse));      
+legend('acceleration');
+
+subplot(3,1,2); plot(mypulse,'r','xunit','minutes');        
+legend('velocity');
+
+% also, all the standard plotting properties are still understood
+subplot(3,1,3); plot(integrate(mypulse),'k-.','linewidth',2); 
+legend('displacement');
+%% mathamatical operations on waveform objects
+% Notice that, in this case the units are unchanged...
+subplot(2,1,1);
+plot([mypulse,hilbert(mypulse)]);
+legend('pulse','hilbert of pulse')
+subplot(2,1,2);
+scaled = mypulse ./ max(abs(mypulse));
+plot([abs(scaled) + 1, scaled - 1, ((-scaled) * 3 + 5)]);
+legend('abs(wave) + 1','wave - 1','-wave * 3 + 5');
+ 
+%%
+% _note_: typing  |scaled -1| instead of |scaled - 1| will cause MATLAB to
+% error with : |??? Error using ==> horzcat| because it will try to
+% concatenate a double (-1) to a waveform, which makes no sense.
+
+history(scaled)
+##### SOURCE END #####
+--><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-8415966-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+   </body>
+</html>

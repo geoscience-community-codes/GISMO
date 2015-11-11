@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"><meta name="description" content="Information about using spectralobjects with the waveform suite for MATLAB" /><meta name="keywords" content="waveform suite, MATLAB, guide, seismology, tutorial, filterobject class" /><title>Working with Spectralobjects</title><link type="text/css" rel="stylesheet" href="wavemanuals.css"></head>
+
+<body>  <a name="top"/>  <div id="top_navigation" class="navButtons">	<p><a href="../../index.html">home</a> |	<a href="waveform.html">waveform</a> | 	<a href="scnlobject.html">scnlobject</a> | 	<a href="datasource.html">datasource</a> | 	<a href="filterobject.html">filterobject </a>| 	<span class="activePage">spectralobject</span> | 	<a href="../feline_example/tutorial_and_code_frameset.htm">object tutorial</a>
+    <br/> <a href="waveform_suite_example_index.html">Examples of my waveform suite in use</a></p>  </div>
+<hr/>
+<h1>SPECTRALOBJECT</h1><div id="summary_pane">The spectralobject exists to allow for easy spectra generation and manipulation</div><hr/><div id="toc">
+<h2>Table of Contents</h2>
+<ol>
+  <li><a href="#creating_spectralobjects">Creating a spectralobject </a> - Constructing spectralobjects.</li>  <li><a href="#spectralobject_contents">What's in a spectralobject?</a> - physical data structure of spectral objects and using the <em>get</em> command to get at them </li>
+  <li><a href="#changing_spectralobject">Making direct changes to the spectralobject </a> - using the set command to change your spectralobject </li>
+  <li><a href="#gen_spectralobject">Generating Spectrograms</a> - information on specgram and specgram2 </li>
+</ol></div><hr/>
+<h2><a name="creating_spectralobjects"></a>Creating a spectralobject </h2>
+<p><code class="constructor_code">s = spectralobject(nfft, overlap, freq_max, dBLims)</code><br/>creates a spectral object with the specified nfft(fourier transform window), overlap(how many sample values are repeated between lines of your spectra), the maximum frequency graphed, and the dB limits. see <a href="#changing_spectralobject">set</a>, below, for more information. </p>
+<ol>
+  <li><code class="use_example"> s = spectralobject(1024,924, 5, [40 80])<br/>
+  </code>assuming a sample frequency of 100samp/sec, then this creates a spectral object with   nfft = 1024 (approx 10 seconds), sampling every second (100 samples), graphing with a freq   max of 5 hz and a dB scale of 40 to 80.</li>
+</ol>
+<p><code class="constructor_code">s = spectralobject()</code><br/>
+creates a default spectralobject. This has  nfft = 1024, overlap = nfft * 0.8, freqmax = 8, and a range for dB of 35 to 75 </p>
+<h2><a name="spectralobject_contents"></a>What's in a spectralobject?</h2>
+<p>A spectralobject contains only the following information:</p>
+<ul>
+  <li>nfft - fourier transform window</li>
+  <li>overlap - how many sample values are repeated between lines of your spectra</li>
+  <li>Frequency maximum - the maximum frequency graphed</li>
+  <li>dB limits</li>
+</ul>
+<p>You can use the <code>struct(spectralobject)</code> command to return the absolutely raw data and see for yourself... <em>struct</em> returns a structure based on the listed object. </p>
+<p>However, much more information can be asked of it via the <strong>spectralobject/get</strong> routine. </p>
+<ul>
+  <li><code>get(w,'nfft')</code> - the length of the fourier transform window.</li>
+  <li><code>get(w,'over')</code> - returns the overlap. Effectively, samples are taken of   a waveform segment with length nfft, and is sampled every (nfft - overlap) samples.</li>
+  <li><code>get(w,'freqmax')</code> - when plotting spectra, this sets the top-graph limit </li>
+  <li><code>get(w,'dBlims')</code> - returns a vector with start and end values for the dB limits. </li>
+</ul>
+<h2><a name="changing_spectralobject"></a>Making direct changes to your spectralobject </h2>
+<p>Using set, you can change the values of your waveform data. The general form of set is:</p>
+<p>modifiedSpectralObject = set(originalSpectralObject, 'PropertyToChange', newValue)</p>
+<ul>
+  <li><code>set(s,'nfft',value)</code> - set the fourier transform window length. A larger nfft   value allows for better frequency resolution, but worse spatial resolution and vice-versa. Value   should be a power of two. </li>
+  <li><code>set(s,'over',value)</code> - set the overlap value. this should be less than the   nfft. Effectively, samples are taken of a waveform segment with length nfft, and is sampled   every (nfft - overlap) samples.</li>
+  <li><code>set(s,'freqmax', value)</code> - change the maximum frequency that is graphed for   this spectra </li>
+  <li><code>set(s,'dblims', value)</code> - change the decibel limits of the spectral plots. This   will affect which spectral amplitudes appear as what color. That is, this is the value to change   if you get a blank (blue or pink) spectrogram. </li>
+</ul>
+<p>in practice, it is just as easy to create a brand new spectral object rather than modify an existing one using set... </p>
+<h2><a name="gen_spectralobject"></a>Generating spectrograms </h2>
+<h3>specgram - plot a spectrogram </h3>
+<code>function specgram(spectralobject, mywaveform)</code>
+<p>This does something or else. </p>
+<h3>specgram2 - plot a spectrogram including the waveform and a dB colorbar. </h3>
+<code>function specgram(spectralobject, mywaveform)</code>
+<p>If the wave parameter is a vector of waveform objects, then <strong>plot</strong> will plot them all on the same axis, and to scale.</p><a href="#top">top of page</a>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"><meta name="description" content="Information about using filterobjects with the waveform suite for MATLAB" /><meta name="keywords" content="waveform suite, MATLAB, guide, seismology, tutorial, filterobject class" /><title>Working with Filterobjects</title><link type="text/css" rel="stylesheet" href="wavemanuals.css">
+</head>
+
+<body>  <a name="top"/>  <div id="top_navigation" class="navButtons">	<p><a href="../../index.html">home</a> |	<a href="waveform.htm">waveform</a> | 	<a href="scnlobject.htm">scnlobject</a> | 	<a href="datasource.htm">datasource</a> | 	<span class="activePage">filterobject </span>| 	<a href="spectralobject.htm">spectralobject</a> | 	<a href="../feline_example/tutorial_and_code_frameset.htm">object tutorial</a>    <br/> <a href="wave_example1.htm">Examples of my waveform suite in use</a></p>  </div>
+<hr/>
+<h1>FILTEROBJECT</h1>
+<h3>Table of Contents</h3>
+<ol>
+  <li><a href="#creating_waveforms">Creating a filterobject </a> - Constructing filterobjects.</li>
+  <li><a href="#waveform_contents">What's in a filterobject?</a> - physical data structure of filterobjects and using the get command to get at your info </li>
+  <li><a href="#changing_waveform">Making direct changes to the filterobject </a> - using the get command to change your filterobject </li>
+  <li><a href="#other_functions">the filtfilt method</a> - information on usefully using the filterobject </li>
+</ol>
+<p><a href="wave_example1.htm">Examples of my waveform suite in use</a></p>
+<h2><a name="creating_waveforms"></a>Creating a filterobject </h2>
+<p><span class="style1"><br/>
+      <strong><code>f = filterobject(type, cutoff, poles)</code></strong><br/>
+</span>creates a filter from consituent parts. valid values for type are 'b' for bandpass, 'L', for low-pass, and 'H' for high-pass. The cutoff is a single value for either low-pass or high-pass filters, or 2-dimensional vector in the case of a bandpass filter. </p>
+<ol>
+  <li><span class="style1"> <span class="style2"><code> f = filterobject('l',0.02, 2) <br/>
+  </code></span></span><code>creates a low-pass filter for 50 second and longer signals with two poles. </code></li>
+  <li><span class="style1"><span class="style2"><code>f = filterobject('b',[.8 5], 3 </code></span></span><span class="style1"><span class="style2"><code>)</code></span></span> <span class="style1"><span class="style2"><code><br/>
+  </code></span></span><code> creates a band-pass filter for the standard range 0.8 to 5 hz, with three poles </code></li>
+  <li><span class="style1"><span class="style2"><code>f = filterobject('h',3,2)</code></span></span><span class="style1"><span class="style2"><code><br/>
+  </code></span></span><code>create a high-pass filter for 3 hz and higher signals.</code><span class="style1"></span></li>
+</ol>
+<p><span class="style4">  <code>f = filterobject </code></span> <br/>
+  create a default filterobject. This is a band-pass filter for between 0.8 and 5 hz, with two poles. <span class="style1"></span></p>
+<p><span class="style1"><br/>
+    <span class="style5"><code>f = filterobject(somefilter</code></span></span><strong><code>)</code> </strong><br/>
+makes a duplicate filterobject from another one. This is a behind the scenes sort of behavior, and for all intents and purposes you would just use <code>newfilt = oldfilt</code>. </p>
+<h2>  <a name="waveform_contents"></a>What's in a filterobject?</h2>
+<p>A filterobject contains only the following information: </p>
+<ul>
+  <li>type</li>
+  <li>cutoff</li>
+  <li>poles</li>
+</ul>
+<p>You can use the <code>struct(filterobject)</code> command to return the absolutely raw data and see for yourself... <em>struct</em> returns a structure based on the listed object. </p>
+<p>However, much more information can be asked of it via the <strong>filterobject/get</strong> routine. </p>
+<ul>
+  <li><code>get(w,'type')</code> - returns the type of filter, either 'B', 'L', or 'H' -- corresponding to Bandpass, Low-Pass, and High-pass respectively. </li>
+  <li><code>get(w,'cutoff')</code> - returns the frequency cutoff. </li>
+  <li><code>get(w,'poles')</code> - returns the number of poles used in this filter <br/>
+  </li>
+</ul>
+<h2><a name="changing_waveform"></a>Making direct changes to your filterobject</h2>
+<p>Using set, you can change the values of your filter data. The general form of set is:</p>
+<p>modifiedFilterobject = set(originalFilterobject, 'PropertyToChange', newValue)</p>
+<ul>
+  <li><code>set(w,'type',value)</code> - valid values for type are 'b' for bandpass, 'L', for low-pass, and 'H' for high-pass.</li>
+  <li><code>set(w,'cutoff',value)</code> - The cutoff is a single value for either low-pass or high-pass filters, or 2-dimensional vector in the case of a bandpass filter. This must be less than the nyquist frequency of your waveform. </li>
+  <li><code>set(w,'poles', value)</code> - set the number of poles to be used in this filter. <br/>
+  </li>
+</ul>
+<h2><a name="other_functions"></a>The filtfilt command </h2>
+<h3>filtfilt - zero phase forward and backward filter a waveform. </h3>
+<pre>function filteredwaveform = filtfilt(myfilter, mywaveform)
+</pre>
+<hr/>
+<p><a href="wave_example1.htm">Examples of the waveform suite in use</a></p>
+<div id="bottom_navigation" class="navButtons"><p><a href="../../index.html">home</a> |<a href="waveform.htm">waveform</a> | <a href="spectralobject.htm">spectralobject</a> | <span class="activePage"><a href="filterobject.htm">filterobject </a></span>| <a href="datasource.htm">datasource</a> | <a href="scnlobject.htm">scnlobject</a> | <a href="http://www.avo.alaska.edu/input/celso/matlabweb/feline_example/tutorial_and_code_frameset.htm">object tutorial</a></p></div>
+</body>
+</html>

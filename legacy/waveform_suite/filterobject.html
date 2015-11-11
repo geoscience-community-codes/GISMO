@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+					"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>  
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Information about using filterobjects with the waveform suite for MATLAB" />
+    <meta name="keywords" content="waveform suite, MATLAB, guide, seismology, tutorial, filterobject class" />
+    <title>Waveform Suite for Matlab: Working with Waveforms</title>
+    <link type="text/css" rel="stylesheet" href="wavesuite.css" />
+  </head>
+  
+  <body>
+  <div id="allcontent">
+  <div id="header">
+    <p><img id = "photo" src="images/lilwave.gif" alt="waveform icon" /></p>
+    
+  <a name="define"/>
+  <h1>The <em>Filterobject</em> class
+  </h1>
+  <p>Filterobjects provide a simple way to apply filters to waveforms.</p>
+  </div>
+  <div id="main">
+    <p>The filterobject class is an extremely simplistic class that is capable of applying a zero-phase butterworth filter to a waveform object.  The advantage of this class as opposed to matlab's built-in filtfilt is that it knows how to interpret waveform data (including knowledge of nyquist frequencies &amp; such), updates a waveform's history with the filter that was applied, and returns a waveform.  Whereas, all the book keeping for filtering would otherwise have to be handled by the programmer.
+    </p>
+	
+	<p>Filterobjects are simple in that they only require three pieces of information:
+</p>
+<ul><li><b>Filter Type</b>describes the behavior of the filter.  The type may be high-pass, low-pass, or bandpass</li>
+<li><b>Cutoff Value(s)</b> are the frequencies describing the edges of the filter.  For high-pass filters, it is the lowest frequency to pass. For low-pass filters, it dictates the highest frequency allowed to pass.  For bandpass filters, this is a pair of numbers, representing both ends of the passband. </li>
+<li><b>Poles</b> are the number of poles created for the filter</li>
+</ul>
+
+<a name="create"/>
+<h2>Creating a filterobject </h2>
+<dl class="functions">
+<dt>f = filterobject(type, cutoff, poles)</dt>
+<dd>creates a filterobject with the chosen parameters.
+<ol class="specificexample">
+  <li>f = filterobject('l',0.02, 2)<br/>
+  creates a low-pass filter for 50 second and longer signals with two poles.</li>
+  
+  <li>f = filterobject('b',[.8 5], 3)<br/>
+  creates a band-pass filter for the standard range 0.8 to 5 hz, with three poles</li>
+  <li>f = filterobject('h',3,2)<br/>
+  create a high-pass filter for 3 hz and higher signals.</li>
+</ol>
+</dd>
+<dt>f = filterobject</dt>
+<dd>create a default filterobject. This is a band-pass filter for between 0.8 and 5 hz, with two poles.
+</dd>
+</dl>
+<a name="functions"/>
+	<h2>Functions of note</h2>
+	<dl class="functions"><dt>filtfilt</dt><dd>apply a zero-phase butterworth filter to the waveform(s).  Because this runs both forward and backward through the data, it effectively doubles the filter's poles.<ol class="specificexample">
+	  <li>filteredwave = filtfilt(filterobject,waveform)<br/>filters a waveform</li>
+	  <li>filtereddata = filtfilt(filterobject,data,nyq)<br/>Use without a waveform</li>
+	</ol>
+	</dd>
+	</dl>
+<hr/><p>Please send feedback to: <i> celso &lt;at&gt; gi &lt;dot&gt; alaska &lt;dot&gt; edu </i></p>
+  </div>
+  <div id="navigation">
+  <p><span class="suite_title">Waveform Suite</span><br/> for MATLAB</p>
+    <p><b>download</b></p><hr/>
+	<p>
+	<a href="waveform.html">waveform</a><br/>
+	<a href="scnlobject.html">scnlobject</a><br/>
+	<a href="datasource.html">datasource</a><br/></p>
+	<div class="here">
+	<p ><a href="filterobject.html">filterobject </a>
+	</p><ul><li><a href="#define">Definition</a></li>
+	<li><a href="#create">Creating</a></li>
+	<li><a href="#functions">Functions</a></li>
+	<li><a href="#examples">Examples</a></li></ul>
+	</div>
+	<p><a href="spectralobject.html">spectralobject</a></p>
+	<hr/>
+	<p><a href="../feline_example/tutorial_and_code_frameset.htm">object tutorial</a></p>
+	
+	<hr/><p> <a href="wave_example1.htm">Waveform Suite Examples</a>
+  </p><hr/>
+  <p><a href="../../index.html">Celso's homepage</a></p>  
+  <!-- CSS & XHTML validation approval -->
+<p>
+    <a href="http://validator.w3.org/check?uri=referer"><img
+        src="http://www.w3.org/Icons/valid-xhtml10-blue"
+        alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a>
+  </p>
+  <p>
+<a href="http://jigsaw.w3.org/css-validator/check/referer">
+    <img style="border:0;width:88px;height:31px"
+        src="http://jigsaw.w3.org/css-validator/images/vcss-blue"
+        alt="Valid CSS!" />
+</a>
+</p>
+  </div> <!-- navigation -->
+  </div> <!-- all content -->
+  <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-8415966-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+  </body>
+</html>
