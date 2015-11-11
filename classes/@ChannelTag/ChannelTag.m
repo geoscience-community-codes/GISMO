@@ -1,6 +1,22 @@
 classdef ChannelTag
    %ChannelTag Summary of this class goes here
-   % ChannelTag is the class that holds the network, station, location, and channel for a seismic trace
+   % ChannelTag Contains network, station, location and channel information
+   %
+   %
+   % ChannelTag Properties:
+   %   network  - network tag   (Generally 2 characters)
+   %   station  - station tag   (Up to 5 alphanumeric characters)
+   %   location - location tag  (2 characters)
+   %   channel  - channel tag   (3 character channel tag)
+   %
+   % ChannelTag Methods:
+   %   string - Retrieve properties as 'network.station.location.channel'
+   %   fixedlengthstrings - 
+   %   getDelimitedString -
+   %   
+   %   sort - Sort in assending order by net.cha.loc.sta
+   %   matching - Field-by-field comparison
+   %   validate - Make sure ChannelTag roughly conforms to SEED  
    %
    % This rewrite is designed to be better SEED compatible
    %
@@ -59,11 +75,6 @@ classdef ChannelTag
    %   This is intended as a stand-alone class. It should know nothing about
    %   any other waveform class.
    
-   % Backwards compatibility notes:
-   %   The old SCNLOBJECT class will use this behind the scenes. Hopefully
-   %   it will be easier to convert code when SNCLOBJECT is producing the
-   %   appropriate warning messages.
-   
    properties
       network  = '';
       station  = '';
@@ -81,17 +92,15 @@ classdef ChannelTag
    
    methods
       function obj = ChannelTag(varargin)
-         % construct a ChannelTag from a string or 4 strings.
-         % chaTag = ChannelTag('IU', 'ANMO', '00', 'BHZ'); % net, sta, loc, cha
-         % chaTag = ChannelTag('IU.ANMO.00.BHZ');
+         %ChannelTag    Construct a ChannelTag from a string or 4 strings.
+         %  chaTag = ChannelTag('IU', 'ANMO', '00', 'BHZ'); % net, sta, loc, cha
+         %  chaTag = ChannelTag('IU.ANMO.00.BHZ');
          %
-         % any of these may be empty ([] or '').
-         % to create multiple ChannelTags at once, use ChannelTag.array()
+         %  any of these may be empty ([] or '').
+         %  to create multiple ChannelTags at once, use ChannelTag.array()
          %
-         % See also: ChannelTag.array
-         
-         % By removing the ability to create many at once, we ensure it won't
-         % be done accidentally.
+         %  See also: array
+         % TODO: Update the details. ChannelTag.array is not necessary anymore
          
          switch nargin
             case 4
@@ -140,7 +149,7 @@ classdef ChannelTag
       end
       
       function [IDX, objs] = matching(objs, N, S, L, C)
-         % matching does field-by-field comparison
+         %matching   Field-by-field comparison
          %
          % idx = cha_tags.matching(Net, Sta, Loc, Cha);
          % idx = cha_tags.matching('net.sta.loc.cha');
@@ -182,7 +191,24 @@ classdef ChannelTag
       end
       
       function [Y, I] = sort(cha_tags)
-         % sort nscls in assending order by net.cha.loc.sta
+         %sort   Sort channels assending name order
+         %   sorted = sort(channeltags) will sort channels in assending
+         %   order using the precidence: Network, Station, Location,
+         %   Channel. The result will be an array of sorted ChannelTags.
+         %   
+         %   [sorted, I] = sort(chantags) will additionally return the
+         %   index, so that chantags(I) = sorted
+         %
+         %   sort is designed to handle SEED-like names, so it will pad each
+         %   value to 5 places before comparing.  
+         %      Example:
+         %        c = ChannelTag({'IU.ANMO.00.BHZ','AV.OKTU..EHZ'})
+         %        sortedC = c.sort()  % or sort(c)
+         %        
+         %  The above example would compare:
+         %    'IU    .ANMO  .00    .BHZ   ' vs
+         %    'AV    .OKTU  .      .EHZ   '
+         %
          [~,I] = sort(cha_tags.fixedlengthstrings(5,5,5,5));
          Y = cha_tags(I);
       end
@@ -298,6 +324,24 @@ classdef ChannelTag
          end
       end
       
+      function disp(obj)
+         if numel(obj) == 1
+            disp('<a href="matlab:help ChannelTag">ChannelTag</a> with network.station.location.channel:')
+            fprintf('   network: ''%s''\n   station: ''%s''\n  location: ''%s''\n   channel: ''%s''\n',...
+               obj.network,obj.station,obj.location, obj.channel);
+         else
+            disp('<a href="matlab:help ChannelTag">ChannelTag</a> array (network.station.location.channel):')
+            for n=1:numel(obj)
+               if strcmp(obj(n).string,'...')
+                  disp('  ... (empty ChannelTag)');
+               else
+                  disp(['  ', obj(n).string]);
+               end
+            end
+         end
+      end
+            
+      
       function c = char(obj)
          c = obj.string([],'nocell');
       end
@@ -344,7 +388,7 @@ classdef ChannelTag
       end
       
       function res = validate(obj)
-         % make sure ChannelTag roughly conforms to SEED
+         %validate   Make sure ChannelTag roughly conforms to SEED
          nslc_is_char = [ischar(obj.network), ischar(obj.channel),...
              ischar(obj.station), ischar(obj.location)];
          nslc_valid_length = [numel(obj.network) == 2,...
@@ -435,44 +479,6 @@ classdef ChannelTag
                end
          end
       end
-      
-      function test()
-         % default ChannelTag
-         c = ChannelTag();
-         assert(strcmp(c.network,'') && strcmp(c.station,'')...
-            && strcmp(c.location,'') && strcmp(c.channel,''))
-         % copy
-         c(2) = ChannelTag();
-         assert(c(1) == c(2)) % test eq for an empty ChannelTag
-         % check array creation
-         c1 = ChannelTag();
-         c1.network = 'N1'; c1.station = 'S1'; c1.location = 'L1'; c1.channel = 'C1';
-         c2 = c1;
-         c2.network = 'N2'; c2.station = 'S2'; c2.location = 'L2'; c2.channel = 'C2';
-         assert(c2 ~= c1)
-         tags_fieldcells = ChannelTag.array({'N1','N2'},{'S1','S2'},{'L1','L2'},{'C1','C2'});
-         tags_textcells = ChannelTag.array({'N1.S1.L1.C1','N2.S2.L2.C2'});
-         tags_textarray = ChannelTag.array(['N1.S1.L1.C1';'N2.S2.L2.C2']);
-         assert(tags_fieldcells(1) == c1)  
-         assert(tags_textcells(1) == c1)
-         assert(tags_textarray(1) == c1)
-         assert(tags_fieldcells(2) == c2)
-         assert(tags_textcells(2) == c2)
-         assert(tags_textarray(2) == c2)
-         
-         c = ChannelTag.array('N',{'S1','S2'},'L',{'C1','C2'});
-         assert(numel(c) == 2)
-         assert(strcmp(c(2).station,'S2') && strcmp(c(2).channel,'C2')...
-            && strcmp([c.network], 'NN') && strcmp([c.location], 'LL'))
-         tags = ChannelTag.array('NW','STA1','00', {'A','B','C','D'});
-         tags2 = ChannelTag.array('NW','STA1','00', {'F','C','A','E'});
-         sortedtags = sort(tags2);
-         assert(sortedtags(1).channel == 'A' && sortedtags(4).channel == 'F')
-         % ismember 
-         assert(ismember(ChannelTag('NW.STA1.00.B'), tags));
-         
-      end %test
-         
          
    end %static methods
 end %classdef

@@ -236,15 +236,16 @@ elseif nargin==1 && strncmpi(varargin{1},'DEM',3)
     
 %% OPEN HTML COOKBOOK
 elseif nargin==1 && strncmpi(varargin{1},'COO',3)
-    p = which('correlation_cookbook');
+   %COOKBOOK
+    p = which('cookbook');
     if isempty(p)
         error('Sorry. The correlation cookbook was not found.');
     end
     p = p(1:end-22);
-    slash = p(end);
-    web([p 'html' slash 'correlation_cookbook.html']);
+    %slash = p(end);
+    %web([p 'html' slash 'correlation_cookbook.html']);
     c = [];
-    
+    cookbook(correlation);
 %% OPEN README FILE
 elseif nargin==1 && strncmpi(varargin{1},'REA',3)
     p = which('correlation/correlation');
@@ -372,7 +373,7 @@ if get(c,'TRACES')
     c = detrend(c);
     if ~check(c,'FREQ')
         c = align(c);
-    elseif ~check(c,'SAMP')
+    elseif ~check(c,'SAMPLES')
         c = verify(c);
     end    
 end

@@ -125,5 +125,38 @@ classdef TraceFilter
             end
          end % getButter
       end
+      function disp(f)
+         if numel(f) > 1
+            matSz= num2str(size(f),'%dx');
+            matSz(1:end-1) % get rid of extra "x" at end.
+            fprintf(' [%s] TraceFilters:\n', matSz(1:end-1));
+            for n=1:numel(f)
+               fprintf('%d:  %9s %s with cutoff [%s] and %d poles\n',...
+                  n, TraceFilter.char2type(f(n).type), class(f(n)),...
+                  num2str(f(n).cutoff), f(n).poles); 
+            end
+         else
+            %display a single TraceFilter
+            linkText = sprintf('<a href="matlab: help %s">%s</a>', class(f), class(f));
+            disp([linkText ' with properties:']);
+            fprintf('%  type: ''%c'' (%s)\n', f.type, TraceFilter.char2type(f.type));
+         end
+      end
+   end %method section
+   methods(Static, Hidden)
+      function t = char2type(c)
+         %char2type   returns the long name of the passband type
+         %   t = char2type(c).  
+         %   example:
+         %     t = char2type('B'); % returns 'bandpass'
+         switch c
+            case 'B'
+               t = 'band-pass';
+            case 'L'
+               t = 'low-pass';
+            case 'H'
+               t = 'high-pass';
+         end
+      end
    end
 end
