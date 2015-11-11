@@ -8,7 +8,7 @@ function combined_waveforms = combine (waveformlist)
    % $Date$
    % $Revision$
    
-   if numel(waveformlist) == 0  %nothing to do
+   if numel(waveformlist) < 2  %nothing to do
       combined_waveforms = waveformlist;
       return
    end
