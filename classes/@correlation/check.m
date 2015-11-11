@@ -73,8 +73,8 @@ function isValid = do_offset(c)
    srt_offset = ( get(c,'Trig') - get(c,'Start') ) * 86400;
    end_offset = ( get(c,'End') - get(c,'Trig') ) * 86400;
    
-   isValid = ( max(srt_offset) - min(srt_offset) ) <= get(c,'Period') && ...
-      ( max(end_offset) - min(end_offset) ) <= get(c,'Period');
+   isValid = all(( max(srt_offset) - min(srt_offset) ) <= get(c,'Period')) && ...
+      all(( max(end_offset) - min(end_offset) ) <= get(c,'Period'));
 end
 
 
