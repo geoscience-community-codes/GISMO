@@ -1,15 +1,15 @@
-function w = loadsacfile(fileList)
+function w = load(fileList)
 
-%LOADSACFILE Load SAC files.
-% W = LOADSACFILE(FILELIST) Read the contents of one or more SAC files into
+%SACLOAD Load SAC files into MATLAB as waveform objects
+% W = SACLOAD(FILELIST) Read the contents of one or more SAC files into
 % a waveform matrix W. FILELIST is a cell containing the complete path and
-% file names of individual SAC files. Wildcards are not recognized. W is
-% the same size as FILELIST. If a particular file is not found, the
-% corresponding output element is an empty waveform.
+% file names of individual SAC files. Wildcards are not recognized. W is a
+% waveform object of the same size as FILELIST. If a particular file is not 
+% found, the corresponding output element is an empty waveform.
 %
 % Example:
 % >> fileList = {'file1.sac' 'file2.sac' 'file3.sac'};
-% >> w=loadsac2(fileList)
+% >> w=sacload(fileList)
 % w =
 % [1x3] waveform object with fields:
 %     station
@@ -18,7 +18,7 @@ function w = loadsacfile(fileList)
 %
 % NOTE: more sophisticated reads from sac files are possible using the
 % datasource and waveform routines. Users are advised to consider accessing
-% data through this approach, in lieu of LOADSACFILE, as it may offer
+% data through this approach, in lieu of SACLOAD, as it may offer
 % greater functionality.
 %
 % see also waveform datasource datasource/setfile
@@ -28,7 +28,7 @@ function w = loadsacfile(fileList)
 % $Revision$
 
 
-if iscell(fileList)
+if ~isa(fileList,'cell')
     error('File names must be cells');
 end
 
