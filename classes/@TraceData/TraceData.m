@@ -15,6 +15,7 @@ classdef TraceData
    %       samplerate - number of samples per second
    %       units      - units for the data, ex. 'counts', 'm / sec'
    %       duration   - time between first and last samples
+   %       hasnan     - true if any value is nan
    %
    % TraceData Methods:
    %
@@ -23,6 +24,8 @@ classdef TraceData
    %       period - Period  (1/samplerate)
    %       formattedduration - retrieve duration as formatted text
    %
+   %    additional Methods:
+   %       nsamples  - return number of data samples
    %    Mathamatical operations:
    %       plus - (+)addition
    %       minus - (-)subtraction
@@ -101,6 +104,7 @@ classdef TraceData
    
    properties(Dependent)
       duration % duration in seconds. To get matlab duration, divide by 86400
+      hasnan;
    end
    
    properties(Hidden=true)
@@ -126,6 +130,12 @@ classdef TraceData
          end %switch
       end
       
+      function tf = get.hasnan(obj)
+         %get.hasnan   functional hasnan allows for
+         % NOTE: technically, hasnan could be set as data is entered.
+         %   any([T.hasnan])
+         tf = any(isnan(obj.data));
+      end
       function obj = set.data(obj, values)
          %set.data   Assign values to data as a column
          obj.data = values(:);
