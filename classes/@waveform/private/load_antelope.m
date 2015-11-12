@@ -263,18 +263,9 @@ function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, cr
    rawDb = mydb;   % keep a copy of the pre-subset (raw) database
    
    % subset the data based upon the desired criteria
+   criteriaList = keepCriteriaThatMatchDatabaseFields(criteriaList, mydb);
+   allExp = getAsExpressions(criteriaList);
    
-   dbFields = dbquery(mydb, 'dbTABLE_FIELDS');
-   critFields = {criteriaList.field};
-   % ensure criteria matches a field in the database
-     validCritIdx = true(size(critFields));
-   for whichCritField = 1:numel(critFields)
-      validCritIdx(whichCritField) = ~isempty(critFields{whichCritField}) && ...
-           ismember(critFields{whichCritField}, dbFields);
-   end
-   criteriaList = criteriaList(validCritIdx); 
-  allExp = getAsExpressions(criteriaList);
-      
    %subset the database based on this particular criterion
    mydb = dbsubset(mydb,allExp);
    if safe_dbnrecs(mydb) == 0
@@ -323,6 +314,17 @@ function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, cr
    end
 end
 
+function  critList = keepCriteriaThatMatchDatabaseFields(critList, mydb)
+   dbFields = dbquery(mydb, 'dbTABLE_FIELDS');
+   critFields = {critList.field};  % all criteria we've parsed
+   validCritIdx = true(size(critFields)); % preallocation
+   for n = 1:numel(critFields)
+      validCritIdx(n) = ...                %make sure:
+         ~isempty(critFields{n}) && ...    % isn't empty and
+         ismember(critFields{n}, dbFields);%  is a database field
+   end
+   critList = critList(validCritIdx);   %keep only good ones
+end
 function allExp = getAsExpressions(criteria)
    for n=1:numel(criteria)
       eachExp(n) = crit2expression(criteria(n)); %#ok<AGROW>

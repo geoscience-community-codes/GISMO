@@ -1,6 +1,18 @@
 function [mseedfiles] = listMiniseedFiles(ds, chantag, snum, enum)
 % LISTMINISEEDFILES retrieve a list of the Miniseed files referenced by a datasource, ChannelTag object and start/end times.
-% mseedfiles = LISTMINISEEDFILES(ds, chantag, snum)
+% mseedfiles = LISTMINISEEDFILES(ds, chantag, snum, enum) Uses the
+% datasource/getfilename method to retrieve the filepath for data
+% corresponding to ds, chantag and snum (enum is ignored because it is not
+% implemented by datasource/getfilename). Also checks if each filepath
+% returned exists. Does not check if the file is a valid Miniseed file,
+% although that could be tested via a modification to the miniseed class.
+%
+% It can be useful to call this function prior to a waveform call, e.g.
+%    flist = listMiniseedFiles(ds, scnl, snum, enum)
+%    if sum(flist.exists)>0
+%        w = waveform(ds, scnl, snum, enum)
+%    end
+%
 % 
 % Input:
 %   ds - a datasource object
@@ -15,8 +27,7 @@ function [mseedfiles] = listMiniseedFiles(ds, chantag, snum, enum)
 %       filepath = path from current directory to MiniSEED file as given by
 %                   database dir & dpath fields
 %       exists = whether that path exists on the current system
-%
-%    See also miniseedExists
+
 
 % AUTHOR: Glenn Thompson, UAF-GI
 % $Date: $
