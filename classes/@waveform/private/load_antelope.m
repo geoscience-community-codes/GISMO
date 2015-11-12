@@ -11,68 +11,80 @@ function outputWaveforms = load_antelope(request, specificDatabase)
    % AUTHOR: Celso Reyes
    % MODIFICATIONS: Glenn Thompson, Carl Tape
    
-   
    %TODO: maybe order of operations can be changed to avoid unpacking
    %request when unnecessary.
-   TRY_MULTIDAY = false;
-   wBlank = waveform;
-   wEmpty = wBlank([]);
-   [ds, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request);
+   
+   [~, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request);
    assert(numel(startTimes) == numel(endTimes),...
       'Waveform:load_antelope:startEndMismatch', 'Unequal number of start and end times');
-   
-   [criteria, nCriteria] = buildAntelopeCriteria(chanInfo);
-   database =  getfilename(ds,chanInfo, startTimes);
-   
-   if TRY_MULTIDAY
-      % the next 2 lines enable multiday data retrieval. However, splicing them may be tricky.
-      dbDatesToCheck = subdivide_files_by_date(ds,startTimes, endTimes); %#ok<UNRCH>
-      database =  getfilename(ds,chanInfo, dbDatesToCheck);
+      
+   %call this routine for each database, then return the waveforms.
+   if exist('specificDatabase','var')
+      database = specificDatabase;
+      outputWaveforms = emptyWaveform();
+      
+      [criteria, nCriteria] = buildAntelopeCriteria(chanInfo);
+      for i = 1:nCriteria
+         %if multiple traces will result, then there may be multiple records for tr
+         [tr, database, fdb] = get_antelope_traces(...
+            startTimes, endTimes, criteria(i).group, database);
+         w = cycleThroughTraces(tr, combineWaves);
+         outputWaveforms = [outputWaveforms; w]; %#ok<AGROW>
+      end
+      dbclose(fdb);
+   else
+      outputWaveforms = RecursivelyLoadFromEachDatabase(request);
    end
-   
-   %for multiple databases, call this routine for each one, then return the waveforms.
-   if ~exist('specificDatabase','var')
-      % [~,inds] = unique(database); database = database(sort(inds)); % no longer necessary as of r2012a
-      database = unique(database, 'stable'); %  avoid changing requested order
-      antelope_load_fn = @(oneDB) load_antelope(request, oneDB);
-      outputWaveforms = cellfun(antelope_load_fn, database, 'uniformOutput',false); % each cell
-      outputWaveforms = transpose(vertcat(outputWaveforms{:}));
-      return;
+end
+
+function outputWaveforms = RecursivelyLoadFromEachDatabase(request)
+   TRY_MULTIDAY = false;
+   database = getDatabase(request, TRY_MULTIDAY);
+   database = unique(database, 'stable'); %  avoid changing requested order
+   outputWaveforms = emptyWaveform();
+   for n = 1 : numel(database)
+      w = load_antelope(request, database(n));
+      outputWaveforms = [outputWaveforms; w(:)]; %#ok<AGROW>
    end
-   
-   database = specificDatabase;
-   
-   outputWaveforms = wEmpty;
-   for i = 1:nCriteria
-      %if multiple traces will result, then there may be multiple records for tr
-      [tr, database, fdb] = get_antelope_traces(...
-         startTimes,endTimes,criteria(i).group, database);
-      w = cycleThroughTraces(tr, combineWaves);
-      %one tr exists for each timerequest within each scnl.
-      outputWaveforms = [outputWaveforms; [w.waves]']; %#ok<AGROW>
+end
+
+function w = emptyWaveform()
+   w = waveform;
+   w = w([]);
+end
+
+function database = getDatabase(request, TRY_MULTIDAY)
+   [ds, chanInfo, startTimes, endTimes] = unpackDataRequest(request);
+   if TRY_MULTIDAY %good luck splicing
+      dbDatesToCheck = subdivide_files_by_date(ds,startTimes, endTimes);
+      database =  getfilename(ds,chanInfo, dbDatesToCheck); 
+   else
+      database =  getfilename(ds,chanInfo, startTimes);
    end
-   dbclose(fdb);
 end
 
 function w = cycleThroughTraces(tr, COMBINE_WAVEFORMS)
+   %cycleThroughTraces  converts each trace into one or more waveforms
+   %   returns a Nx1 waveform
    w(numel(tr)).waves = waveform;
    for traceidx = 1:numel(tr)
-      w(traceidx) = wavesfromtraces(tr, traceindex, COMBINE_WAVEFORMS);
+      w(traceidx) = wavesfromtraces(tr, traceidx, COMBINE_WAVEFORMS);
    end
+   w = [w.waves]; %horizontal cat
+   w = w(:);
 end
 
 function w_scnl = wavesfromtraces(tr, traceidx, COMBINE_WAVEFORMS)
    if ~isstruct(tr{traceidx}) % marker for no data
-      wBlank = waveform;
-      w_scnl.waves = wBlank([]);
+      w_scnl.waves = emptyWaveform();
    else
       w_scnl.waves = traceToWaveform(tr{traceidx}); %create waveform list
       trdestroy(tr{traceidx});
    end
-   if COMBINE_WAVEFORMS && numel(w_scnl.waves) > 1, %combine all of this trace's records
+   if COMBINE_WAVEFORMS %combine all of this trace's records
       w_scnl.waves = combine(w_scnl.waves);
    end;
-   w_scnl.waves = reshape(w_scnl.waves, 1, numel(w_scnl.waves));
+   w_scnl.waves = reshape(w_scnl.waves,  numel(w_scnl.waves), 1);
 end
    
 %% helper functions
@@ -123,20 +135,6 @@ function [critList, nCrit] = buildAntelopeCriteria(chanTag)
       end
    end
    
-   %{
-   [critList.statment] =  {}; % PERHAPS UNUSED? CERTAINLY MISSPELLED.
-   sta_crit = grabCritList('sta', chanTag.station); % struct with (field, relationship, data)
-   cha_crit = grabCritList('chan', chanTag.channel);
-   net_crit = grabCritList('net', chanTag.network); % expecting only 1
-   loc_crit = grabCritList('loc', chanTag.location); % expecting only 1
-   
-   for i=1:numel(sta_crit)
-      critList(i).group(1) = sta_crit(i);
-      critList(i).group(2) = cha_crit(i);
-      if ~isempty(net_crit), critList(i).group(end + 1) = net_crit; end;
-      if ~isempty(loc_crit), critList(i).group(end + 1) = loc_crit; end;
-   end
-   %}
    critList = critList(:);
    nCrit = numel(critList);
 end
@@ -265,17 +263,9 @@ function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, cr
    rawDb = mydb;   % keep a copy of the pre-subset (raw) database
    
    % subset the data based upon the desired criteria
-   % GT: TRYING TO DEBUG 11/11/2015 ***************
-   dbFields = dbquery(mydb, 'dbTABLE_FIELDS') % GT: UNCOMMENTED *********
-   critFields = {criteriaList.field} % GT: UNCOMMENTED *********
-   critFields = {'sta' 'chan'} % GT: ADDED to remove [] field
-   % ensure criteria matches a field in the database
-   criteriaList = criteriaList(ismember(critFields, dbFields)) % GT: UNCOMMENTED *********
-   criteriaList.field % GT: ADDED ************
-   criteriaList.relationship % GT: ADDED ************
-   criteriaList.value % GT: ADDED ************
-   allExp = getAsExpressions(criteriaList); % GT: FAILS HERE ************
-      
+   criteriaList = keepCriteriaThatMatchDatabaseFields(criteriaList, mydb);
+   allExp = getAsExpressions(criteriaList);
+   
    %subset the database based on this particular criterion
    mydb = dbsubset(mydb,allExp);
    if safe_dbnrecs(mydb) == 0
@@ -316,7 +306,7 @@ function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, cr
    closeIfAppropriate(mydb, onFinishCloseDB);
    
    function cleanUpFail(varargin)
-      % tidy up database and records and display warning
+      %cleanUpFail   tidy up database and records and display warning
       closeIfAppropriate(mydb, onFinishCloseDB);
       tr = { -1 };
       filteredDb = dbinvalid;
@@ -324,8 +314,21 @@ function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, cr
    end
 end
 
+function  critList = keepCriteriaThatMatchDatabaseFields(critList, mydb)
+   dbFields = dbquery(mydb, 'dbTABLE_FIELDS');
+   critFields = {critList.field};  % all criteria we've parsed
+   validCritIdx = true(size(critFields)); % preallocation
+   for n = 1:numel(critFields)
+      validCritIdx(n) = ...                %make sure:
+         ~isempty(critFields{n}) && ...    % isn't empty and
+         ismember(critFields{n}, dbFields);%  is a database field
+   end
+   critList = critList(validCritIdx);   %keep only good ones
+end
 function allExp = getAsExpressions(criteria)
-   eachExp = arrayfun(crit2expression, criteria);
+   for n=1:numel(criteria)
+      eachExp(n) = crit2expression(criteria(n)); %#ok<AGROW>
+   end
    allExp = eachExp{1};
    for i= 2 : (numel(eachExp))
       allExp = [allExp,' && ', eachExp{i}]; %#ok<AGROW>
@@ -333,15 +336,17 @@ function allExp = getAsExpressions(criteria)
 end
 
 function cle = crit2expression(cl)
-   if ischar(cl.data)
-      cle = {sprintf('%s%s/%s/',cl.field, cl.relationship, cl.data)};
+   if ischar(cl.value)
+      cle = {sprintf('%s%s/%s/',cl.field, cl.relationship, cl.value)};
    else
-      cle =  {sprintf('%s %s %s',cl.field,cl.relationship,num2str(cl.data))};
+      cle =  {sprintf('%s %s %s',cl.field,cl.relationship,num2str(cl.value))};
    end
 end
 
 
 function n = safe_dbnrecs(mydb)
+   %safe_dbnrecs   return either the number of records or 0
+   %   n = safe_dbnrecs(mydb)  when accessing dbnrecs fails, this returns 0
    try
       n = dbnrecs(mydb);
    catch
@@ -367,7 +372,7 @@ function X = makecell(X)
 end
 
 function allw = traceToWaveform(tr)
-   % TRACETOWAVEFORM converts traceobjects to waveforms
+   %traceToWaveform converts traceobjects to waveforms
    %    w = traceToWaveform(blankwaveform, all_tracobjects)
    %
    % Note: this may return multiple waveform objects, depending upon
@@ -432,23 +437,24 @@ function allw = traceToWaveform(tr)
    end
 end
 
-function [units, data_type] = segtype2units(segtype)
+function [units, data_description] = segtype2units(unitCode)
+   %segtype2units   retrieves unit and description based on the segtype code
    %'segtype' in antelope datasets indicate the natural units of the detector
-   persistent segUnits
-   if isempty(segUnits)
-      segUnits = getSegUnits();
+   persistent codeKey
+   if isempty(codeKey)
+      codeKey = createCodeKey();
    end
-   if segUnits.isKey(segtype)
-      details = segUnits(segtype);
+   if codeKey.isKey(unitCode)
+      details = codeKey(unitCode);
       units = details{1};
-      data_type = details{2};
+      data_description = details{2};
    else
-      [units, data_type] = deal('null');
+      [units, data_description] = deal('null');
    end
    
-   function SU = getSegUnits()
+   function SU = createCodeKey()
+      %createSegUnits   creates a map  where SU(char) = {units, data_description}
       SU = containers.Map;
-      %  segtype = {units , data_type}
       SU('A') = {'nm / sec / sec','acceleration'};
       SU('B') = {'25 mw / m / m','UV (sunburn) index(NOAA)'};
       SU('D') = {'nm', 'displacement'};

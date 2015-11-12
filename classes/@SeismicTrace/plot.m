@@ -252,7 +252,7 @@ function [unitName, secondMultiplier] = parse_xunit(unitName)
 end
 
 function newParams = buildParameterList(formatDescriptor, paramStruct)
-   %newParams   creates argument list from to pass to the builtin plot
+   %newParams   creates argument list from a struct to pass to the builtin plot
    fieldList = fieldnames(paramStruct);
    if isempty(fieldList)
       if ~isempty(formatDescriptor);
