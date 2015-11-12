@@ -1,17 +1,41 @@
 classdef TraceSpectra
-   %TraceSpectra makes examining Trace spectra easy
-   %   replaces spectralobject
+   %TraceSpectra   Simple spectral analysis for SeismicTrace(s)
+   %
+   %   most uses will require the Signal Processing Toolbox
+   %
+   %   TraceSpectra properties:
+   %      nfft - length of the fft
+   %      over - amount of overlap (number of samples)
+   %      freqmax - maximum frequency for display
+   %      dBlims - decibel limits  for display [lower upper]
+   %      scaling - scaling factor (one of 's','m','h','d','date','doy')
+   %
+   %   TraceSpectra methods:
+   %      fft - Discrete Fourier transform.
+   %      ifft -  Inverse discrete Fourier transform.
+   %      pwelch - Power Spectral Density estimate via Welch's method. (best to instead use psd, below) 
+   %    
+   %    Newer (more powerful) representations:
+   %      psd  - Power Spectral Density, using newer matlab techniques
+   %      spectrogram - spectrogram Spectrogram using a Short-Time Fourier Transform (STFT).
+   %
+   %    display methods:
+   %      specgram - plot the spectra
+   %      specgram2 - plot the spectra and trace together
    %
    %   s.specgram(trace)
+   %
+   %   See also SeismicTrace, fft, ifft, pwelch, specgram
+   
    properties
       nfft = 1024; % length of the fft
-      over = 1024 * 0.8; %a mount of overlap
+      over = 1024 * 0.8; % amount of overlap (number of samples)
       freqmax = 8; % maximum frequency for display
-      dBlims =  [50 100]; % decibel limits
+      dBlims =  [50 100]; % decibel limits  for display [lower upper] (affects clim)
       scaling = 's'; % scaling factor (one of 's','m','h','d','date','doy')
    end
    properties(Dependent, Hidden)
-      map
+      map % colormap 
    end
    properties(Hidden)
       SPECTRAL_MAP = TraceSpectra.loadmap;
@@ -136,7 +160,7 @@ classdef TraceSpectra
          end
       end
       function [varargout] = pwelch(s,w, varargin)
-         %PWELCH   overloaded pwelch for spectralobjects
+         %PWELCH   overloaded Power Spectral Density estimate via Welch's method.
          %   pwelch(TraceSpectra, waveform) - plots the spectral density
          %       Pxx = pwelch(TraceSpectra, waveform) - returns the Power Spectral
          %           Density (PSD) estimate, Pxx, of a discrete-time signal
@@ -151,7 +175,7 @@ classdef TraceSpectra
          %   NOTE: voltage offsets may cause a large spike for lowest Pxx value.
          %   NOTE: NaN values will result in blank
          %
-         % See also pwelch, waveform/fillgaps
+         % See also pwelch, TraceSpectra.fillgaps
          
          if nargin < 2
             error('Spectralobject:pwelch:insufficientArguments',...
@@ -159,17 +183,17 @@ classdef TraceSpectra
          end
          
          if ~isscalar(w)
-            error('Spectralobject:pwelch:nonScalarWaveform',...
+            error('TraceSpectra:pwelch:nonScalarWaveform',...
                'waveform must be scalar (1x1)');
          end
          
-         if ~isa(w,'waveform')
-            error('Spectralobject:pwelch:invalidArgument',...
-               'second argument expected to be WAVEFORM, but was [%s]', class(w));
+         if ~isa(w,'TraceData')
+            error('TraceSpectra:pwelch:invalidArgument',...
+               'second argument expected to be trace, but was [%s]', class(w));
          end
          
-         if any(isnan(double(w)))
-            warning('Spectralobject:pwelch:nanValue',...
+         if any([w.hasnan])
+            warning('TraceSpectra:pwelch:nanValue',...
                ['This waveform has at least one NaN value. ',...
                'Remove NaN values by either splitting up the',...
                ' waveform into non-NaN sections or by using ',...
@@ -178,11 +202,91 @@ classdef TraceSpectra
          if nargin == 3
             if strcmpi(varargin{1}, 'DEFAULT')
                %disp('defaulting')
-               window = [];
-               over = [];
+               s.window = [];
+               s.over = [];
             end
          end
          [varargout{1:nargout}] =  pwelch(double(w),numel(w.data),s.over,s.nfft,w.samplerate);
+      end
+      function [varargout] = spectrogram(s, w, varargin)
+         %spectrogram   spectrogram Spectrogram using a Short-Time Fourier Transform (STFT).
+         %   run(s, trace) will attempt to run any matlab spectral function
+         %   of the form  fn(X, window, noverlap, nfft, fs) with a default
+         %   window of length nfft
+         %
+         %   example:
+         %      s = TraceSpectra;
+         %      T = SeismicTrace.synthetic()
+         %      spectrogram(s, T)
+         %
+         %   See also: spectrogram, periodogram
+         assert(numel(w) == 1, 'This function requires a single SeismicTrace');
+         switch nargout
+            case 0
+               spectrogram(w.data, [], s.nfft, round(s.over), w.samplerate);
+            case 1
+               a = spectrogram(w.data, [], s.nfft, round(s.over), w.samplerate);
+               varargout = {a};
+            case 2
+               [a, b] = spectrogram(w.data, [], s.nfft, round(s.over), w.samplerate);
+               varargout = {a,b};
+            case 3
+               [a, b, c] = spectrogram(w.data, [], s.nfft, round(s.over), w.samplerate);
+               varargout = {a,b,c};
+            otherwise
+               error('TraceSpectra:run:unexpectedNumberOfOutputs',...
+                  'Unanticipated number of outputs. expected between 0 and 3');
+         end
+      end
+      function [varargout] = psd(s, w, estimator, varargin)
+         %psd   Power Spectral Density, using newer matlab techniques
+         %   psd(s, trace, estimator) will attempt to run the Power Spectral Density function
+         %   of the form  fn(X, window, noverlap, nfft, fs) with a default
+         %   window of length nfft
+         %  
+         %   only works on a single trace at a time
+         %
+         %   a list of estimators can be found by looking at the help for spectrum.psd
+         % 
+         %      Valid psd estimators (as of 2012b:):
+         %             periodogram    mcov
+         %             welch          mtm
+         %             burg           yulear
+         %             cov
+         %
+         %   example:
+         %      s = TraceSpectra;
+         %      T = SeismicTrace.synthetic()
+         %      estimator = spectrum.pwelch; %choose a valid estimator
+         %      s.psd(T, estimator); % plot
+         %      Hpsd = s.psd(T, estimator); % return values in a psd object
+         %
+         %   See also: spectrum.psd, spectrum.welch, spectrum.burg,
+         %   spectrum.cov, spectrum.mcov, spectrum.mtm, spectrum.yulear,
+         %   spectrum.periodogram
+         
+         assert(numel(w) == 1, 'This function requires a single SeismicTrace');
+         
+         % suppressed the warning about psd being oudated (FDEPR) because I am
+         % using the new one. Because estimator is a variable, mlint can't
+         % tell the difference.
+         
+         switch nargout
+            case 0
+               psd(estimator, w.data, 'fs', w.samplerate,'nfft',s.nfft); %#ok<*FDEPR>
+            case 1
+               a = psd(estimator, w.data, 'fs', w.samplerate,'nfft',s.nfft);
+               varargout = {a};
+            case 2
+               [a, b] = psd(estimator, w.data, 'fs', w.samplerate,'nfft',s.nfft);
+               varargout = {a,b};
+            case 3
+               [a, b, c] = psd(estimator, w.data, 'fs', w.samplerate,'nfft',s.nfft);
+               varargout = {a,b,c};
+            otherwise
+               error('TraceSpectra:run:unexpectedNumberOfOutputs',...
+                  'Unanticipated number of outputs. expected between 0 and 3');
+         end
       end
       
       function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)
@@ -231,8 +335,6 @@ classdef TraceSpectra
          end
          
          if nargin>1,
-            lower=s.dBlims(1);
-            upper=s.dBlims(2);
             paxis = s.dBlims;
          end
          
@@ -274,8 +376,8 @@ classdef TraceSpectra
             end
          else
             t = paxis;
-            cmin=t(1);
-            cmax=t(2);
+            % cmin=t(1); %apparently not used
+            % cmax=t(2); %apparently not used
          end
          
          h = gca;
@@ -326,7 +428,7 @@ classdef TraceSpectra
             
             % Create color stripe
             n = size(colormap,1);
-            image([0 1],t,[1:n]'); set(ax,'Ydir','normal')
+            image([0 1],t,(1:n)'); set(ax,'Ydir','normal')
             
             if nargin>2,
                set(ax,'ylabel',text(0,0,clabel, 'FontSize', fontsize));
@@ -346,7 +448,8 @@ classdef TraceSpectra
                end
             end
             %d=date;
-            yshift=.12*(ypos(2)-ypos(1));
+            
+            % yshift=.12*(ypos(2)-ypos(1));
             %  text(xpos(1)+2.0,ypos(1)-yshift,0.,d)
             
             % Create color axis
@@ -361,19 +464,29 @@ classdef TraceSpectra
             labels = []; width = [];
             
             set (gca, 'FontSize', fontsize)  %This sets the font size
-            for i=1:length(yticks),
-               labels = [labels;text(1+0*xspace,yticks(i),deblank(ylabels(i,:)), ...
+            for i=length(yticks):-1:1
+               % unknown length for each, so cannot preallocat
+               labels(i) = text(1+0*xspace,yticks(i),deblank(ylabels(i,:)), ...
+                  'HorizontalAlignment','right', ...
+                  'VerticalAlignment','middle', ...
+                  'FontName',get(ax,'FontName'), ...
+                  'FontSize',get(ax,'FontSize'), ...
+                  'FontAngle',get(ax,'FontAngle'), ...
+                  'FontWeight',get(ax,'FontWeight'));
+               %{
+               labels(i) = [text(1+0*xspace,yticks(i),deblank(ylabels(i,:)), ...
                   'HorizontalAlignment','right', ...
                   'VerticalAlignment','middle', ...
                   'FontName',get(ax,'FontName'), ...
                   'FontSize',get(ax,'FontSize'), ...
                   'FontAngle',get(ax,'FontAngle'), ...
                   'FontWeight',get(ax,'FontWeight'))];
-               width = [width;get(labels(i),'Extent')];
+               %}
+               width((i*4 - 3):i*4) = get(labels(i),'Extent');
             end
             
             % Shift labels over so that they line up
-            [dum,k] = max(width(:,3)); width = width(k,3);
+            [~,k] = max(width(:,3)); width = width(k,3);
             for i=1:length(labels),
                pos = get(labels(i),'Position');
                set(labels(i),'Position',[pos(1)+width pos(2:3)])
@@ -381,7 +494,7 @@ classdef TraceSpectra
             
             % If we need an exponent then draw one
             [ymax,k] = max(abs(yticks));
-            if abs(abs(str2num(ylabels(k,:)))-ymax)>sqrt(eps),
+            if abs(abs(str2num(ylabels(k,:)))-ymax)>sqrt(eps), %#ok<ST2NM>
                ex = log10(max(abs(yticks)));
                ex = sign(ex)*ceil(abs(ex));
                l = text(0,ylim(2)+2*yspace,'x 10', ...
@@ -408,12 +521,13 @@ classdef TraceSpectra
             if isempty(ax),
                pos = get(h,'Position');           %[left,bottom,width,height]
                stripe = 0.05; space = 0.1;       %stripe = 0.075
-               ori=get(gcf,'paperorientation');
                if fsize<=16,
                   sfact=1;
                else
                   sfact=2;
                end
+               
+               % ori=get(gcf,'paperorientation');
                %    if ori=='landscape', stripe = 0.05; end
                %    if fsize<=26,
                %      set(h,'Position',...
@@ -452,7 +566,7 @@ classdef TraceSpectra
             end
             
             %  image(t,[0 1],[1:n]); set(ax,'Ydir','normal')
-            image(t,[0 1],[n1:n2]); set(ax,'Ydir','normal')
+            image(t,[0 1],n1:n2); set(ax,'Ydir','normal')
             set(ax,'yticklabelmode','manual')
             set(ax,'yticklabel','')
             
@@ -473,8 +587,9 @@ classdef TraceSpectra
                   text(xpos(2)-xshift,ypos(1)-1.0,0.,rlab2);
                end
             end
-            d=date;
-            xshift=.15*(xpos(2)-xpos(1));
+            
+            % d=date;
+            % xshift=.15*(xpos(2)-xpos(1));
             %  text(xpos(1)-xshift,ypos(1)-3.5,0.,d)
             
             %set(gca,'xtick',[])
@@ -488,6 +603,7 @@ classdef TraceSpectra
          
          if nargout>0, handle = ax; end
       end
+    
    end %methods
    methods(Access=protected)
       p = parseSpecgramInputs(me, cellOfArgs)

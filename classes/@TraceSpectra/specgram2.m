@@ -80,7 +80,7 @@ function h = specgram2(s, T, varargin)
    
    if ~isa(T,'TraceData')
             try
-               ws = SeismicTrace(ws);
+               T = SeismicTrace(T);
                disp('successfully converted to a SeismicTrace');
             catch er
       error('Spectralobject:specgram2:invalidArgument','Should work on a trace (ex. TraceData, SeismicTrace), not a %s',class(T));
