@@ -1,17 +1,18 @@
 classdef TraceFilter
    %TraceFilter   Simple butterworth filtering for Traces
+   %
    %   replaces filterobject
    
    properties
       type = 'B';  % could be 'B'andpass, 'H'ighpass, or 'L'lowpass
       cutoff = [0.8 5];  % filter cutoffs [lower bound, upper bound]
-      poles = 2;
-      
+      poles = 2;  % number of poles
    end
    
    methods
       function f = TraceFilter(filtType, cutoff_, poles_)
-         %TRACEFILTER   constructor for a filter object
+         %TRACEFILTER   construct a TraceFilter
+         %
          switch nargin
             case 1
                if isa(filtType,'filterobject')
@@ -161,4 +162,6 @@ classdef TraceFilter
          end
       end
    end
+   methods(Static)
+      cookbook() %run the filter cookbook
 end

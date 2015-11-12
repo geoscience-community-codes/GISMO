@@ -142,15 +142,12 @@ function p = parseParameters(argList)
    p.KeepUnmatched = true;
    p.CaseSensitive = false;
    p.StructExpand = false;
-   if ismethod(p,'addParameter')
+   if verLessThan('matlab','8.2'); %r2013b
+      addParameter = @addParamValue;
+   end
       addParameter(p,'autoscale', false);
       addParameter(p,'xunit', 's');
       addParameter(p,'fontsize', 10);
-   else % older usage: pre r2013b
-      addParamValue(p,'autoscale', false); %#ok<*NVREPL>
-      addParamValue(p,'xunit', 's');
-      addParamValue(p,'fontsize', 10);
-   end
    p.parse(argList{:});
 end
 

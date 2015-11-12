@@ -79,11 +79,16 @@ function h = specgram2(s, T, varargin)
    %   See also SPECTRALOBJECT/SPECGRAM
    
    if ~isa(T,'TraceData')
-      error('Spectralobject:specgram2:invalidArgument','Second input argument should be a trace (ex. TraceData, SeismicTrace), not a %s',class(T));
+            try
+               ws = SeismicTrace(ws);
+               disp('successfully converted to a SeismicTrace');
+            catch er
+      error('Spectralobject:specgram2:invalidArgument','Should work on a trace (ex. TraceData, SeismicTrace), not a %s',class(T));
+            end
    end
    
    %% search for relevent property pairs passed as parameters
-   p = parseInputs(s, varargin);
+   p = parseSpecgramInputs(s, varargin);
    
    %% figure out exactly WHERE to plot the spectrogram(s)
    %find out area(axis) in which the spectrograms will be plotted
@@ -108,7 +113,8 @@ function h = specgram2(s, T, varargin)
       %create the colorbar if desired
       TraceSpectra.createcolorbar(s,p.Results.colorbar, clabel, p.Results.fontsize);
       h = TraceSpectra.subdivide_axes(myaxis, size(T));
-      remainingproperties = TraceSpectra.property2varargin(proplist);
+      % remainingproperties = TraceSpectra.property2varargin(proplist);
+      remainingproperties = TraceSpectra.buildParameterList( p.Unmatched);
       for n=1:numel(h)
          keepYlabel =  ~p.Results.innerlabels || (n <= size(h,1));
          keepXlabel = ~p.Results.innerlabels || (mod(n,size(h,2))==0);
@@ -120,7 +126,6 @@ function h = specgram2(s, T, varargin)
             'useYlabel',keepYlabel,...
             'colorbar','none',...
             remainingproperties{:});
-         
       end
       return
    end
@@ -138,7 +143,7 @@ function h = specgram2(s, T, varargin)
    
    %plot the spectra
    ax_spectra = subplot('position',spectraPosition(pos));
-   additionalParams = buildParameterList(p.Unmatched);
+   additionalParams = TraceSpectra.buildParameterList( p.Unmatched);
    specgram(s,T,...
       'xunit',p.Results.xunit,...
       'fontsize',p.Results.fontsize,...
@@ -172,43 +177,4 @@ end
 function specPos = spectraPosition(pos)
    %spectraPosition   spectra occupies the bottom 85% of the axis
    specPos = pos .* [1, 1, 1, 0.85 ];
-end
-
-
-function p = parseInputs(me, cellOfArgs)
-   p = inputParser;
-   p.StructExpand = true;
-   p.KeepUnmatched = true;
-   p.CaseSensitive = false;
-   %NOTE: older version of matlab requires addParamValue instead of addParamter
-   % AXIS: a handle to the axis, defining the area to be used
-   p.addParameter('axis', 0); %myaxis
-   % POSITION: 1x4 vector, specifying area in which to plot [left, bottom, width, height]
-   p.addParameter('position', []);
-   % COLORBAR: Dictate the position of the colorbart relative to the plot
-   p.addParameter('colorbar', 'horiz');
-   % XUNIT: Specify the time units for the plot.  eg, hours, minutes, doy, etc.
-   p.addParameter('xunit', me.scaling);
-   % FONTSIZE: specify the font size to be used for all labels within the plot
-   p.addParameter('fontsize', 10);
-   % YSCALE: either 'normal', or 'log'
-   p.addParameter('yscale', 'normal');
-   % SUPRESSINNERLABELS: true, false
-   p.addParameter('innerlabels', false);
-   % USEXLABELS: true, false
-   p.addParameter('useXlabel', true);
-   % USEYLABELS: true, false
-   p.addParameter('useYlabel', true);
-   p.parse(cellOfArgs{:});
-end
-
-function newParams = buildParameterList(paramStruct)
-   %newParams   creates argument list from a struct
-   fieldList = fieldnames(paramStruct);
-   if isempty(fieldList)
-      newParams = {};
-   else
-      v = struct2cell(paramStruct);
-      newParams = horzcat(fieldList,v);
-   end
 end

@@ -83,9 +83,13 @@
          currFontSize = 8;
          %enforce input arguments.
          if ~isa(ws,'TraceData')
-            error('Second input argument should be a TraceData, not a %s',class(ws));
+            try
+               ws = SeismicTrace(ws);
+            catch er
+               error('Second input argument should be a TraceData, not a %s',class(ws));
+            end
          end
-         p = parseInputs(s, varargin);
+         p = parseSpecgramInputs(s, varargin);
 
          %% search for relevent property pairs passed as parameters
          myaxis = p.Results.axis; % area to be used
@@ -120,7 +124,7 @@
             %create the colorbar if desired
             TraceSpectra.createcolorbar(s, colorbarpref, clabel, currFontSize)
             h = TraceSpectra.subdivide_axes(myaxis,size(ws));
-            remainingproperties = buildParameterList(p.Unmatched);
+            remainingproperties = TraceSpectra.buildParameterList(p.Unmatched);
             for n=1:numel(h)
                keepYlabel =  ~suppressLabels || (n <= size(h,1));
                keepXlabel = ~suppressLabels || (mod(n,size(h,2))==0);
@@ -162,7 +166,7 @@
                xunit = [xunit, ' (', datestr(startvec,'yyyy'),')'];
                
             otherwise,
-               dl= 1:ws:nsamples(); %dl : DataLength
+               dl= 1:ws.nsamples(); %dl : DataLength
                Xvalues = dl .* ws.period ./ xfactor;
          end
          
@@ -279,45 +283,4 @@
          
 
       end %specgram
-      
-function p = parseInputs(me, cellOfArgs)
-   %TODO: Unify(?) specgram2 and specgram parseInputs
-   p = inputParser;
-   p.StructExpand = true;
-   p.KeepUnmatched = true;
-   p.CaseSensitive = false;
-   %NOTE: older version of matlab requires addParamValue instead of addParamter
-   % AXIS: a handle to the axis, defining the area to be used
-   p.addParameter('axis', 0); %myaxis
-   % POSITION: 1x4 vector, specifying area in which to plot [left, bottom, width, height]
-   p.addParameter('position', []);
-   % alternateMap: COLORMAP:
-   p.addParameter('colormap', me.SPECTRAL_MAP);
-   % COLORBAR: Dictate the position of the colorbart relative to the plot
-   p.addParameter('colorbar', 'horiz');
-   % XUNIT: Specify the time units for the plot.  eg, hours, minutes, doy, etc.
-   p.addParameter('xunit', me.scaling);
-   % FONTSIZE: specify the font size to be used for all labels within the plot
-   p.addParameter('fontsize', 10);
-   % YSCALE: either 'normal', or 'log'
-   p.addParameter('yscale', 'normal');
-   % SUPRESSINNERLABELS: true, false
-   p.addParameter('innerlabels', false);
-   % USEXLABELS: true, false
-   p.addParameter('useXlabel', true);
-   % USEYLABELS: true, false
-   p.addParameter('useYlabel', true);
-   p.parse(cellOfArgs{:});
-end
 
-function newParams = buildParameterList(paramStruct)
-   %newParams   creates argument list from a struct
-   %TODO: Unify(?) specgram2 and specgram buildParameterList
-   fieldList = fieldnames(paramStruct);
-   if isempty(fieldList)
-      newParams = {};
-   else
-      v = struct2cell(paramStruct);
-      newParams = horzcat(fieldList,v);
-   end
-end
