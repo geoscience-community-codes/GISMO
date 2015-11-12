@@ -68,7 +68,7 @@ function w = cycleThroughTraces(tr, COMBINE_WAVEFORMS)
    %   returns a Nx1 waveform
    w(numel(tr)).waves = waveform;
    for traceidx = 1:numel(tr)
-      w(traceidx) = wavesfromtraces(tr, traceindex, COMBINE_WAVEFORMS);
+      w(traceidx) = wavesfromtraces(tr, traceidx, COMBINE_WAVEFORMS);
    end
    w = [w.waves]; %horizontal cat
    w = w(:);
@@ -267,8 +267,13 @@ function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, cr
    dbFields = dbquery(mydb, 'dbTABLE_FIELDS');
    critFields = {criteriaList.field};
    % ensure criteria matches a field in the database
-   criteriaList = criteriaList(ismember(critFields, dbFields));
-   allExp = getAsExpressions(criteriaList);
+     validCritIdx = true(size(critFields));
+   for whichCritField = 1:numel(critFields)
+      validCritIdx(whichCritField) = ~isempty(critFields{whichCritField}) && ...
+           ismember(critFields{whichCritField}, dbFields);
+   end
+   criteriaList = criteriaList(validCritIdx); 
+  allExp = getAsExpressions(criteriaList);
       
    %subset the database based on this particular criterion
    mydb = dbsubset(mydb,allExp);
@@ -329,10 +334,10 @@ function allExp = getAsExpressions(criteria)
 end
 
 function cle = crit2expression(cl)
-   if ischar(cl.data)
-      cle = {sprintf('%s%s/%s/',cl.field, cl.relationship, cl.data)};
+   if ischar(cl.value)
+      cle = {sprintf('%s%s/%s/',cl.field, cl.relationship, cl.value)};
    else
-      cle =  {sprintf('%s %s %s',cl.field,cl.relationship,num2str(cl.data))};
+      cle =  {sprintf('%s %s %s',cl.field,cl.relationship,num2str(cl.value))};
    end
 end
 

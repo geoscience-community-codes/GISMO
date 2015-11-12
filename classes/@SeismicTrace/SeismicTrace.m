@@ -77,6 +77,13 @@ classdef SeismicTrace < TraceData
          switch nargin
             case 1
                if isa(varargin{1}, 'waveform')
+                  if numel(varargin{1}) > 1
+                     for n=1:numel(varargin{1})
+                        st(n) = SeismicTrace(varargin{1}(n));
+                     end
+                     obj = reshape(st,size(varargin{1}));
+                     return
+                  end
                   obj.channelinfo = get(varargin{1},'channeltag');
                   obj.mat_starttime = get(varargin{1}, 'start');
                   
@@ -1221,7 +1228,7 @@ classdef SeismicTrace < TraceData
             names = ChannelTag.array(names);
          end
          w = waveform(ds, names, starts, ends);
-         T = SeismicTrace.waveform2trace(w);
+         T = SeismicTrace(w);
       end
    end %static methods
 end
