@@ -265,12 +265,16 @@ function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, cr
    rawDb = mydb;   % keep a copy of the pre-subset (raw) database
    
    % subset the data based upon the desired criteria
-   
-   dbFields = dbquery(mydb, 'dbTABLE_FIELDS');
-   critFields = {criteriaList.field};
+   % GT: TRYING TO DEBUG 11/11/2015 ***************
+   dbFields = dbquery(mydb, 'dbTABLE_FIELDS') % GT: UNCOMMENTED *********
+   critFields = {criteriaList.field} % GT: UNCOMMENTED *********
+   critFields = {'sta' 'chan'} % GT: ADDED to remove [] field
    % ensure criteria matches a field in the database
-   criteriaList = criteriaList(ismember(critFields, dbFields));
-   allExp = getAsExpressions(criteriaList);
+   criteriaList = criteriaList(ismember(critFields, dbFields)) % GT: UNCOMMENTED *********
+   criteriaList.field % GT: ADDED ************
+   criteriaList.relationship % GT: ADDED ************
+   criteriaList.value % GT: ADDED ************
+   allExp = getAsExpressions(criteriaList); % GT: FAILS HERE ************
       
    %subset the database based on this particular criterion
    mydb = dbsubset(mydb,allExp);

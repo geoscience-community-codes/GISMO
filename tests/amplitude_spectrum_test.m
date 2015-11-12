@@ -5,6 +5,7 @@ end
 
 %% Test Functions
 function testFunctionOne(testCase)
+%%
 fsamp=100;
 fsignal = 2; % 2Hz signal
 t=0:1/fsamp:60; % 60s of data, 100Hz sampling rate
@@ -19,6 +20,7 @@ subplot(2,1,2), plot(w)
 figure
 plot(f,A)
 set(gca,'XLim',[0 3])
+%%
 end
 
 %% Optional file fixtures  
