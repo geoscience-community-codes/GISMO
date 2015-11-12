@@ -1,5 +1,4 @@
 function w = medfilt1(w,size)
-
 %MEDFILT1: Wrapper function for applying 1-D Median Filter (Signal 
 %          Processing Toolbox) to waveform data
 %

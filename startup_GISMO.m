@@ -7,6 +7,7 @@ function startup_GISMO(gismopath)
 % read 'contributed_style_guide.txt' in the GISMO directory.
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+% Modified: Glenn Thompson Aug 2015 onwards
 
 % CHECK COMPATIBILITY
 % Should consider added a compatibility checkign mechanism at some point. 
@@ -22,6 +23,9 @@ if ~exist('gismopath', 'var')
 	gismopath = fileparts(gismofile); % first argout is the path
 end
 
+% ADD PATH TO CORE
+addpath(fullfile(gismopath,'classes'));
+
 % ADD A PATH TO EACH DIRCTORY IN CONTRIBUTED
 addContributed(gismopath,'contributed');
 
@@ -33,17 +37,14 @@ end
 % ADD A PATH TO EACH DIRCTORY IN CONTRIBUTED_INTERNAL
 addContributed(gismopath,'contributed_internal');
 
-% ADD A PATH TO CLASSES (Added by Glenn Thompson)
-addpath(fullfile(gismopath,'classes'));
-%addpath(fullfile(gismopath,'classes','Catalog'));
-%addpath(fullfile(gismopath,'classes','rsam'));
-%addpath(fullfile(gismopath,'classes','ChannelTag'));
-
 % ADD A PATH TO APPLICATIONS e.g. IceWeb
 addpath(genpath(fullfile(gismopath,'applications')));
 
 % ADD A PATH TO JAR FILES
 javaaddpath(fullfile(gismopath,'contributed','iris_dmc_tools','IRIS-WS-2.0.15.jar'))
+
+% ADD PATH TO TESTS
+addpath(fullfile(gismopath, 'tests'));
 
 %%
 function addContributed(gismopath, contribDir)

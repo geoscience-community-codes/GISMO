@@ -1,4 +1,4 @@
-function print_debug(level, varargin)
+function value = print_debug(level, varargin)
 % PRINT_DEBUG optionally display text based on the debug level.
 %
 %    PRINT_DEBUG is useful for controlling the level of verboseness in a MATLAB application.
@@ -26,34 +26,27 @@ function print_debug(level, varargin)
 % $Date: 2012-04-11 08:15:09 -0800 (Wed, 11 Apr 2012) $
 % $Revision: 348 $
 % Modified by Glenn Thompson: 2010-03-10: Added error handling for case that runmode pref hasn't been set
-% Modified by Glenn Thompson: 2010-03-10: To use multiple levels of debug (0 = none, 1 = some, 2 = higher):
+% Modified by Glenn Thompson: 2010-03-10: To use multiple levels of debug (0 = none, 1 = some, 2 = higher, etc.):
 % Modified by Celso Reyes: 2015: made value persistent to speed up,flipped
 % arguments, allowed for multiple arguments to make calling routines easier
-% to read.
-% function.
-
+% to read function.
+% Glenn Thompson 2015: restored order of verboseness (increasing numbers =
+% more verbose). Implemented workarounds for set_debug and get_debug.
+value = [];
 persistent Lev
-% GT 20150916 this part does not seem to work
-%    if isempty(Lev)
-%       try
-%          Lev = getpref('runmode', 'debug');
-%       catch
-%          setpref('runmode','debug', 0); % might wish to alert user, or set it in a more gismo-sounding location.
-%          Lev = 0;
-%       end
-%    end
-% GT 20150916 replacing above with this
-    if isempty(Lev)
+
+    if isempty(Lev) % if Lev not already set
         Lev = 0;
     end
-    if numel(varargin) == 0
+    if ~exist('level','var') % this is for debug.get_debug()
+        value = Lev;
+        return
+    end
+    if numel(varargin) == 0 % this is for debug.set_debug(level)
         Lev = level;
         return
     end
-    % GT 20150916 this part seems to be wrong. only if Lev>=level should we
-    % display debug statement
-    %if level >= Lev
-    if level <= Lev
+    if level <= Lev % the main thing - printing out based on Lev
         if numel(varargin) == 1
          disp(varargin{:})
         else
