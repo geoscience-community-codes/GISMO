@@ -194,7 +194,7 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
             
             %% Get waveform data
             debug.print_debug(0, sprintf('%s %s: Getting waveforms for %s from %s to %s at %s',mfilename, datestr(utnow), subnet , datestr(snum), datestr(enum)));
-            w = waveform_wrapper([sites.channeltag], snum, enum, ds);
+            w = waveform_wrapper(ds, [sites.channeltag], snum, enum);
 
 
 	    %% Save waveform data to 1 hour MAT file

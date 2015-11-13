@@ -65,8 +65,11 @@ for c=1:length(chantag)
 		catch
 			disp('Failed on dblookup_table wfdisc');
 			continue;
-		end
-		expr = sprintf('sta=="%s" && chan=="%s" && time <= %f && endtime >= %f',get(chantag(c),'station'), get(chantag(c),'channel'), datenum2epoch(enum), datenum2epoch(snum));
+        end
+        sta=strrep(get(chantag(c),'station'),'*','.*');
+        chan=strrep(get(chantag(c),'channel'),'*','.*');
+		%expr = sprintf('sta="%s" && chan=="%s" && time <= %f && endtime >= %f',get(chantag(c),'station'), get(chantag(c),'channel'), datenum2epoch(enum), datenum2epoch(snum));
+		expr = sprintf('sta=~/%s/ && chan=~/%s/ && time <= %f && endtime >= %f',sta, chan, datenum2epoch(enum), datenum2epoch(snum));
 		try
 			debug.print_debug(2, 'Trying dbsubset with: %s\n',expr);
 			db=dbsubset(db,expr);
@@ -96,7 +99,7 @@ for c=1:length(chantag)
                     ddir
                     ddfile
                 end
-                ddfullfile = fullfile(dbdir, ddir, ddfile) % ddir and ddfile are both cell arrays & file paths are relative to db dir
+                ddfullfile = fullfile(dbdir, ddir, ddfile); % ddir and ddfile are both cell arrays & file paths are relative to db dir
                 uniquefile = unique(ddfullfile); % if there are two time segments pointing to same file, there are two wfdisc records. but we want only the unique dir/dfile combos here
                 % could check here if enum <= endtime, and if not repeat
                 % this for "dbname = getfilename(ds, chantag, enum)" 
