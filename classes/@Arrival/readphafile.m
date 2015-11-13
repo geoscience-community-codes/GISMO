@@ -25,15 +25,11 @@ function self=readphafile(phafilename)
 
 self = [];
 c=0;
-%     %% read the headers and data
      fid = fopen(phafilename);
-     %C = textscan(fid,'%4s%2c%1c%1d%1d%10d%5.2f%7c%5.2f%3c%1d%3c%4.0f%3.2f%10c%1d%1d%2c%1c%5.2f%5.0f%29c%1c%1c%1c%1c%1c');
      tline = fgetl(fid);
      while ischar(tline)
          tline = tline(1:min([50 length(tline)])); % ignore characters after 50th
          tline = deblank(tline);
-         %2c%1c%1d%1d%10d%5.2f       %5.2f%3c%1d   %4.0f%3.2f          %1d%1d%2c%1c%5.2f%5.0f')
-        %[sta,iphase,polarity,pweight,yrmodyhrmn,sec,ssec,srmk,sweight,maxamp,period,s,v,rmk,timecor,f_p_time]
         if length(tline)>=24
              clear a
                  a.stacode = tline(1:4);
