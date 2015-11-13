@@ -1,4 +1,4 @@
-function w=waveform_wrapper(chantag, snum, enum, ds);
+function w=waveform_wrapper(ds, chantag, snum, enum);
 % WAVEFORM_WRAPPER try multiple datasource objects in 
 % "all" and "single" extractmodes, until we either have a waveform
 % for each chantag between times given, or have exhausted all
@@ -9,13 +9,13 @@ function w=waveform_wrapper(chantag, snum, enum, ds);
 % requested, every datasource will be tried, and the one that returns 
 % the most data will be used.  
 %
-% 	W = waveform_wrapper(SCNL, SNUM, ENUM, DATASOURCES)
+% 	W = waveform_wrapper(DATASOURCES, CHANTAG, SNUM, ENUM)
 %
 %	Inputs:
+%		datasources - a vector of datasources to try
 %		chantag - a vector of type ChannelTag 
 %		snum - start date/time in datenum format
 %		enum - end date/time in datenum format
-%		datasources - a vector of datasources to try
 %
 % 	The main advantage of this wrapper for automation is that
 % 	if ds is a vector of different datasources, it will try all of them.
@@ -31,10 +31,24 @@ function w=waveform_wrapper(chantag, snum, enum, ds);
 % $Revision: -1 $
 
     debug.printfunctionstack('>');
+    
+    % convert scnlobject to channeltag
+    for c=1:numel(chantag)
+        if strcmp(class(chantag(c)),'scnlobject')
+            thischantag = ChannelTag(get(chantag(c),'network'), ...
+                                    get(chantag(c),'station'), ...
+                                    get(chantag(c),'location'),...
+                                    get(chantag(c),'channel') );
+            chantag(c) = thischantag;
+        else
+            class(chantag(c))
+        end
+    end
 
     % change channel tag if this is MV network because channels in wfdisc table
     % are like SHZ_--
     for c=1:numel(chantag)
+        class(chantag(c))
         if strcmp(chantag(c).network, 'MV')
             chantag(c).channel = sprintf('%s_--',chantag(c).channel);
         end

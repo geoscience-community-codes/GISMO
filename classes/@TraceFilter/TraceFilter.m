@@ -1,17 +1,28 @@
 classdef TraceFilter
    %TraceFilter   Simple butterworth filtering for Traces
+   %
+   %   TraceFilter Properties:
+   %      type - describes the passband type of filter.  ('B', 'L', or 'H')
+   %      cutoff - upper and lower bounds for the filter 
+   %      poles - number of poles for the filter
+   %
+   %   TraceFilter Methods:
+   %      filtfilt - Zero-phase forward and reverse butterworth filtering.
+   %
    %   replaces filterobject
+   %
+   %   see also: butter, filtfilt
    
    properties
       type = 'B';  % could be 'B'andpass, 'H'ighpass, or 'L'lowpass
       cutoff = [0.8 5];  % filter cutoffs [lower bound, upper bound]
-      poles = 2;
-      
+      poles = 2;  % number of poles
    end
    
    methods
       function f = TraceFilter(filtType, cutoff_, poles_)
-         %TRACEFILTER   constructor for a filter object
+         %TRACEFILTER   construct a TraceFilter
+         %
          switch nargin
             case 1
                if isa(filtType,'filterobject')
@@ -82,6 +93,10 @@ classdef TraceFilter
          %   See also FILTFILT, BUTTER
          
          % Check, if w is a number array, just quick & dirty it...
+         if isa(trace,'waveform')
+            disp('converting waveform(s) to SeismicTrace(s)');
+            trace = SeismicTrace(trace);
+         end
          if isnumeric(trace)
             WN = f.cutoff / NYQ;
             [b, a] = getButter(f,WN);
@@ -89,7 +104,7 @@ classdef TraceFilter
             
          elseif isa(trace,'SeismicTrace')
             assert(numel(f) == 1, 'can only filter using a single TraceFilter at a time');
-            assertCutoffCountMatchesType();
+            assertCutoffCountMatchesType(f);
             HASGAP = arrayfun(@(x) any(isnan(x.data)), trace);
             if any(HASGAP(:))
                warning('Filterobject:filtfilt:hasNaN',...
@@ -160,5 +175,8 @@ classdef TraceFilter
                t = 'high-pass';
          end
       end
+   end
+   methods(Static)
+      cookbook() %run the filter cookbook
    end
 end
