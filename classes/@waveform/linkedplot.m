@@ -1,12 +1,11 @@
 function linkedplot(w, alignWaveforms)
 %LINKEDPLOT Plot multiple waveform objects as separate linked panels
-%   linkedplot(w, alignWaveforms) 
+%   LINKEDPLOT(w, alignWaveforms) 
 %   where:
 %       w = a vector of waveform objects
 %       alignWaveforms is either true or false (default)
-%   linkedplot(w) will plot a record section, i.e. each waveform is plotted
-%   against absolute time.
-%   linkedplot(w, true) will align the waveforms on their start times.
+%   LINKEDPLOT(w) will plot each waveform is plotted against absolute time.
+%   LINKEDPLOT(w, true) will align the waveforms on their start times.
 
 % Glenn Thompson 2014/11/05, generalized after a function I wrote in 2000
 % to operate on Seisan files only

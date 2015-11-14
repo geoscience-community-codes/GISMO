@@ -20,7 +20,13 @@ function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)
 %    would be convenient if empty waveforms (NaN-padded?) were returned for
 %    missing stations. Same logic for channels. 
 %
+% Note that seg faults seem so far to be related to opening too many
+% databases and running out of memory to load more. I think I now have the
+% right combination of dbfree and dbclose to avoid this.
+%
+%
 % Glenn Thompson, 2015/11/13
+
 
     % set return variables blank in case we exit early
     w = [];
@@ -48,11 +54,19 @@ function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)
         starttime = min(st);
         endtime = max(et);
     end
+    
+    % save this view to a database & display starttime & endtime for
+    % troubleshooting
+    dbunjoin( db,'/tmp/newdb');    
+    format long
+    disp(starttime);
+    disp(endtime);
 
     % create trace table & close database
     try
         fprintf('Bulk mode')
         tr = trload_css(db, starttime, endtime);
+        st=tr2struct(tr)
         w = trace2waveform(tr);
         % sometimes this fails with error like:
             % Warning: some failure reading and interpreting the data for AKT:HHZ at 11/16/2011 (320) 15:44:27.706
@@ -88,7 +102,6 @@ function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)
                 end
             end
             try
-                %dbclose(db2);
                 dbfree(db2)
             catch ME
                 ME.identifier
