@@ -7,8 +7,8 @@ classdef antelopesource < dataretrieval.spatiotemporal_database
       isopen = false; % status of antelope database
       searchcriteria % collection of search parameter strings to send to antelope
       chaninfo % array of channelTags
-      startdate % one or more startdates
-      enddate   % one or more enddates (matching # of startdate)
+      matlabstart % one or more startdates (in matlab format)
+      matlabend   % one or more enddates in matlab format (matching # of startdate)
       dbpointer = []; % antelope database pointer
       filtereddb = []; % antelope database pointer (filtered)
       trpointer = { -1 }; % pointer to antelope trace
@@ -20,9 +20,77 @@ classdef antelopesource < dataretrieval.spatiotemporal_database
    properties(Dependent)
       nrecs  % number or records for current database ptr
       dbfields % field names for current database ptr
+      epochstart % start time(s) as epoch number
+      epochend % end time(s) as  epoch number
    end
    
    methods
+      % DATE get/set
+      function val = get.epochstart(obj)
+         val = antelopsource.mat2epoch(obj.matlabstart);
+      end
+      function val = get.epochend(obj)
+         val = antelopesource.mat2epoch(obj.matlabend);
+      end
+      function obj = set.epochstart(obj, val)
+         obj.matlabstart = antelopesource.epoch2mat(val);
+      end
+      function obj = set.epochend(obj, val)
+         obj.matlabend = antelopesource.epoch2mat(val);
+      end
+      function obj = set.matlabstart(obj, val)
+         if ischar(val) || iscell(val)
+            val = datnum(val);
+         end
+         obj.matlabstart = val;
+      end
+      function obj = set.matlabend(obj, val)
+         if ischar(val) || iscell(val)
+            val = datnum(val);
+         end
+         obj.matlabend = val;
+      end
+         
+      function data = retrieve(obj, where_, from_ , until_)
+         assert(numel(datenum(from_)) == numel(datenum(until_)),...
+            'Waveform:load_antelope:startEndMismatch', 'Unequal number of start and end times');
+         % fill antelope source with proper search criteria
+         obj.matlabstart = from_;
+         obj.matlabend = until_;
+         obj.chaninfo = where_;
+         % database to open needs to be determined from all the above
+         % do once for each date? each channel?
+         obj = obj.open('r');
+         % the following needs to be repeated for each where_
+         obj = obj.subsetbyLocation(1);
+         obj = obj.subsetbyTime(1);
+         try
+            w = obj.getAllTraces();
+         catch
+            w = obj.getTracesOneAtATime();
+         end
+         
+                  
+         % return if no rows
+         if dbnrecs(obj.dbpointer)==0
+            %no data returned
+            return
+         end
+         fprintf('Got %d matching records\n',dbnrecs(db));
+         [wfid,sta,chan,st,et]=dbgetv(db, 'wfid','sta','chan','time', 'endtime');
+         sta = cellstr(sta);
+         chan = cellstr(chan);
+         for c=1:numel(sta)
+            fprintf('%12d %s %s %f %f\n',wfid(c), sta{c}, chan{c}, st(c), et(c));
+         end
+         
+         % if starttime and endtime blank, get from min/max times in wfdisc table
+         if isempty(starttime) & isempty(endtime)
+            starttime = min(st);
+            endtime = max(et);
+         end
+      end
+      
       function p = get.dbfields(obj)
          try
             p = dbquery(obj.dbpointer,'dbTABLE_FIELDS');
@@ -86,13 +154,16 @@ classdef antelopesource < dataretrieval.spatiotemporal_database
             any(strcmpi(fieldnames(obj.dbpointer),'database'));
       end
       
-      function data = retrieve(obj, where_, from_ , until_)
-         assert(numel(datenum(from_)) == numel(datenum(until_)),...
-            'Waveform:load_antelope:startEndMismatch', 'Unequal number of start and end times');
-         obj.startdate = datenum(from_);
-         obj.enddate = datenum(until_);
-         error('unimplemented antelope data source');
+
+      function obj = subsetbyLocation(obj, n)
+         searchstr = antelopesource.buildSearchCriterion(obj.chaninfo(n));
+         obj.dbpointer = dbsubset(obj.dbpointer, searchstr);
       end
+      function obj = subsetbyTime(obj, n)
+         searchstr = sprintf('time <= %f && endtime >= %f',obj.epochend(n), obj.epochstart(n))
+         obj.dbpointer = dbsubset(obj.dbpointer, searchstr);
+      end
+         
       
       outputWaveforms = load_antelope(request, specificDatabase)
       
@@ -153,12 +224,7 @@ classdef antelopesource < dataretrieval.spatiotemporal_database
          sc(cellfun(@isempty,sc))=[]; %remove empty values
          obj.searchcriteria = sc;
          
-         function sc = buildSearchCriterion(chaninfo)
-            sc = addto('','sta',chaninfo.station);
-            sc = addto(sc,'chan',chaninfo.channel);
-            sc = addto(sc,'net',chaninfo.network);
-            sc = addto(sc,'loc',chaninfo.location);
-         end
+
          
          function x = addto(x, fieldname, value)
             %addto   appends ' && fieldname=/value/' to x
@@ -181,6 +247,13 @@ classdef antelopesource < dataretrieval.spatiotemporal_database
    methods(Static, Access=protected)
       [units, data_description] = segtype2units(unitCode)
       
+      function sc = buildSearchCriterion(chaninfo)
+         sc = addto('','sta',chaninfo.station);
+         sc = addto(sc,'chan',chaninfo.channel);
+         % the following aren't understood, and therefore aren't used
+         %sc = addto(sc,'net',chaninfo.network);
+         %sc = addto(sc,'loc',chaninfo.location);
+      end
       function w = emptyWaveform()
          %emptyWaveform   create an empty waveform
          w = waveform;
@@ -205,6 +278,26 @@ classdef antelopesource < dataretrieval.spatiotemporal_database
          end
       end
       
+      function Ep = mat2epoch(M)
+         %mat2epoch   convert matlab time to epoch time (millisecond precision)
+         %   uses Antelope's conversion
+         %
+         %   if string is converted, then expected format is: 'yyyy-mm-dd HH:MM:SS.FFF'
+         %
+         %   See also str2epoch, datestr
+         if isnumeric(M)
+            M = datestr(M,'yyyy-mm-dd HH:MM:SS.FFF');
+         end
+         Ep = str2epoch(M);  
+      end
+      function M = epoch2mat(Ep)
+         %epoch2mat   convert epoch time to matlab time (millisecond precision)
+         %   Uses Antelope's conversion
+         %
+         %  See also epoch2str, datenum
+         M = datenum(epoch2str(Ep,'%G %T'));
+      end
+         
    end
    
 end
