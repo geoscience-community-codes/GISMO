@@ -1,8 +1,10 @@
-function d = xcorr1xr_orig(d)
+function d = xcorr1xr(d)
 
-% This function performs cross correlations in sets by correlating one
-% trace against a row of traces at once. Generally it is faster than the
-% one at a time implimentation. All steps are included in this function.
+% This function performs cross correlations of one correlation object
+% against another. Traces from the second object are added and correlated
+% one by one with the first in sets by correlating one trace against a row
+% of traces at once. Generally it is faster than the one at a time
+% implimentation. All steps are included in this function.
 % That is, no calls to the Matlab built-in xcorr are used.
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
@@ -52,9 +54,7 @@ for n =1:N
         tclock = toc/86400;
         completed = sum(N-n:N-1)/((N*N-N)/2);
         fin = datestr(starttime + tclock/completed,16);
-        if completed<0.5
-            disp([num2str(100*completed,'%2.0f') '% completed. Estimated completion at ' fin '...']);
-        end;
+        disp([num2str(100*completed,'%2.0f') '% completed. Estimated completion at ' fin '...']);
     end;
 end
 
@@ -67,10 +67,9 @@ d.L = d.L - d.L';
 % DISPLAY RUN TIMES
 tclock = toc;
 tcpu = cputime-t0;
-if tclock>20
-    disp(['Clock time to complete correlations: ' num2str(tclock,'%5.1f') ' s']);
-    disp(['CPU time to complete correlations:   ' num2str(tcpu,'%5.1f') ' s']);
-end;
+disp(['Clock time to complete correlations: ' num2str(tclock,'%5.1f') ' s']);
+disp(['CPU time to complete correlations:   ' num2str(tcpu,'%5.1f') ' s']);
+
 
 
 
