@@ -10,21 +10,19 @@ classdef ChannelTag
    %   channel  - channel tag   (3 character channel tag)
    %
    % ChannelTag Methods:
+   %   char - Retrieve properties as 'network.station.location.channel'
    %   string - Retrieve properties as 'network.station.location.channel'
-   %   fixedlengthstrings - 
-   %   getDelimitedString -
+   %   fixedlengthstrings -  return strings of a fixed length
+   %   eq - == for channeltags, with simple '*' wildcard support
+   %   ne - ~= for channeltag (no wilcard support)
    %   
    %   sort - Sort in assending order by net.cha.loc.sta
    %   matching - Field-by-field comparison
-   %   validate - Make sure ChannelTag roughly conforms to SEED  
    %
-   % This rewrite is designed to be better SEED compatible
-   %
+   % Examples of ChannelTag construction:
    %  chaTag = ChannelTag('NW.STA.LO.CHA'); % create from text
    %  chaTag = ChannelTag(network, station, location, channel);
    %  chaTag = ChannelTag(); %default, blank nscl
-   %
-   %  To initialize multiple ChannelTags at once, use ChannelTag.array:
    %
    %  Example using cells of stationID strings
    %    x = ChannelTag.array({'NW.STA.LO.CHA','NW.STA.LO.CHA'[,...]});
@@ -42,8 +40,6 @@ classdef ChannelTag
    %  NOTOK: x = ChannelTag.array('IU',{'ANMO','ANTO},'00',{'BHE';'BH1'}
    %        error because stations (1x2) not same size as channels (2x1)
    %
-   %
-   %  NOTE: WILDCARDS,  NOT IMPLEMENTED as of 2015-07-31!!!!!
    
    %{
    %  ----------- WILDCARDS --------------------- 
@@ -71,23 +67,11 @@ classdef ChannelTag
    %    chaTag(2) contains ANTO, IU, 00, BHE
    %}
    
-   % Programming notes:
-   %   This is intended as a stand-alone class. It should know nothing about
-   %   any other waveform class.
-   
    properties
       network  = '';
       station  = '';
       location = '';
       channel  = '';
-   end
-   
-   properties (Constant=true)
-      ENFORCE_SEED_COMPLIANCE = getpref('gismo','seed_compliant',false); % currently unused
-   end
-   
-   properties (Access=protected)
-      % bulkIsValid = @(x) ischar(x)|| (iscell(x) && all(cellfun(@ischar,x)) );
    end
    
    methods
@@ -212,43 +196,11 @@ classdef ChannelTag
          [~,I] = sort(cha_tags.fixedlengthstrings(5,5,5,5));
          Y = cha_tags(I);
       end
-      
-      function result = eq(A, B)
-         % expect that both parts are ChannelTags
-         % INCLUDE WILDCARDS!
-         % Wildcards must be in a scalar.
-         if numel(A) == 1 && any(A.string == '*')
-            if strcmp(A.network,'*')
-               [B.network] = deal('*');
-            end
-            if strcmp(A.channel,'*')
-               [B.channel] = deal('*');
-            end
-            if strcmp(A.station,'*')
-               [B.channel] = deal('*');
-            end
-            if strcmp(A.location,'*')
-               [B.location] = deal('*');
-            end
-         end
-         if numel(B) == 1 && any(B.string=='*')
-            if strcmp(B.network,'*')
-               [A.network] = deal('*');
-            end
-            if strcmp(B.channel,'*')
-               [A.channel] = deal('*');
-            end
-            if strcmp(B.station,'*')
-               [A.channel] = deal('*');
-            end
-            if strcmp(B.location,'*')
-               [A.location] = deal('*');
-            end
-         end
-         result = strcmp(A.string(), B.string());
-      end%eq
+      result = eq(A, B)
       
       function result = ne(A, B)
+         %~=   for ChannelTag. 
+         %   wilcards aren't considered
          result = ~strcmp(A.string,B.string);
       end
       
@@ -258,9 +210,12 @@ classdef ChannelTag
          %  following:
          %    STATION, CHANNEL, LOCATION, NETWORK, chaTag_STRING
          %
+         %  *Depricated*
+         %
          % If the results of a single chaTag are requested, then a string is returned.
          % Otherwise, a cell of values will be returned.
          
+         error('Old Usage. instead of "get", ,use the field name directly.  eg. x = ch.station');
          
          prop = lower(prop);
          
@@ -288,11 +243,15 @@ classdef ChannelTag
       end%get
       
       function obj = set(obj, varargin)
-         %SET - Set properties for ChannelTag
-         %       s = Set(s,prop_name, val, ...)
-         %       Valid property names:
-         %       STATION, LOCATION, NETWORK, CHANNEL
+         %SET  Set properties for ChannelTag
+         %    s = Set(s,prop_name, val, ...)
+         %    Valid property names:
+         %    STATION, LOCATION, NETWORK, CHANNEL
+         %
+         %    * Depricated*
+         %    See also: get.channel, get.location, get.network, get.station
          
+         error('UPGRADE: using set for a ChannelTag. use field notation instead. eg. ch.station = X');
          idx = [1 2];
          while numel(varargin) > 1 % for each property
             [prop, val] = deal(varargin{idx});
@@ -317,6 +276,9 @@ classdef ChannelTag
       end
       
       function s = fixedlengthstrings(objs, netLen, staLen, locLen, chaLen)
+         %fixedlengthstrings   return strings of a fixed length
+         %    s = fixedlengthstrings(objs, netLen, staLen, locLen, chaLen)
+         
          strformat = sprintf('%%-%ds.%%-%ds.%%-%ds.%%-%ds',netLen,staLen,locLen,chaLen);
          for n = numel(objs) : -1 : 1
             chaTag = objs(n);
@@ -325,6 +287,7 @@ classdef ChannelTag
       end
       
       function disp(obj)
+         %disp   display the ChannelTag details
          if numel(obj) == 1
             disp('<a href="matlab:help ChannelTag">ChannelTag</a> with network.station.location.channel:')
             fprintf('   network: ''%s''\n   station: ''%s''\n  location: ''%s''\n   channel: ''%s''\n',...
@@ -343,11 +306,12 @@ classdef ChannelTag
             
       
       function c = char(obj)
+         %char   convert a ChannelTag to its string representation
          c = obj.string([],'nocell');
       end
          
       function s = string(obj, delim, option)
-         % string returns string representation of the nscltag(s)
+         %string returns string representation of the channelTag(s)
          % s = chaTag.string()  will return the string representation 
          %      (1xn char) in the format NET.STA.LOC.CHA
          %
@@ -382,28 +346,29 @@ classdef ChannelTag
          end
          
          function s = getDelimitedString(obj, delim)
+            %getDelimitedString   return a string with delimited fields
+            %   getDelimitedString(chtag, delim) returns the fields in
+            %   network,station, location, channel order, with the
+            %   specified delimiter in between.
+            %
+            %   example:
+            %     >> ch = ChannelTag('NT.STA.00.BHZ');
+            %     >> s = getDelimitedString(ch, ':'); 
+            %     s = 
+            %        'NT:STA:00:BHZ'
+            %
             s = [obj.network, delim, obj.station, delim,...
                      obj.location, delim, obj.channel];
          end
-      end
-      
-      function res = validate(obj)
-         %validate   Make sure ChannelTag roughly conforms to SEED
-         nslc_is_char = [ischar(obj.network), ischar(obj.channel),...
-             ischar(obj.station), ischar(obj.location)];
-         nslc_valid_length = [numel(obj.network) == 2,...
-            numel(obj.station) <= 5 && numel(obj.station) > 0, ...
-            numel(obj.location) == 2, ...
-            numel(obj.channel) == 3];
-         res = all(nslc_is_char & nslc_valid_length);
       end
             
    end%methods
    
    methods(Static)
       function  [N, S, L, C] = parse(val)
-         % parse parses a period-delimeted string
-         % [N, S, L, C] = ChannelTag.parse('net.sta.loc.cha')
+         %parse   parse a period-delimeted string into NET,STA,LOC,CHA
+         %     [N, S, L, C] = ChannelTag.parse('net.sta.loc.cha')
+         
          if isstruct(val) || isa(val,'ChannelTag')
             N = val.network;
             S = val.station;
@@ -427,6 +392,7 @@ classdef ChannelTag
          end
          
          function  C = strsplit(s, delim)
+            %strsplit   return a cell created from a string.
             % C = strsplit(str, delim) returns cell created from string
             %  ex. C = strsplit('A.B..D','.') -> {'A', 'B', '', 'D'}
             % can (probably) be commented out or removed in r2015a+
