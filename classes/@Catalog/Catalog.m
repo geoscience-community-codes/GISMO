@@ -1,6 +1,6 @@
 %CATALOG the blueprint for Catalog objects in GISMO
 % A Catalog object is a container for event metadata
-% See also EventRate, readEvents, Catalog_Cookbook
+% See also EventRate, Catalog.cookbook
 classdef Catalog
 
     properties(Dependent) % These all come from table, computed on the fly
@@ -91,7 +91,7 @@ classdef Catalog
                 etype = cellstr(repmat('u',size(time)));
             end     
            
-            obj.table = table(time, datestr(time,26), datestr(time, 13), lon, lat, depth, mag, magtype, etype, ...
+            obj.table = table(time, cellstr(datestr(time,26)), cellstr(datestr(time, 13)), lon, lat, depth, mag, cellstr(magtype), cellstr(etype), ...
                 'VariableNames', {'datenum' 'date' 'time' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype'});
             
             obj.table = sortrows(obj.table, 'datenum', 'ascend'); 
@@ -163,6 +163,7 @@ classdef Catalog
         eev(obj, eventnum)
         write(catalogObject, outformat, outpath, schema)
         catalogObject2 = subset(catalogObject, indices)
+        addarrivals(catalogObject, format, filepath);
     end
 %% ---------------------------------------------------
     methods (Access=protected, Hidden=true)
@@ -241,11 +242,10 @@ classdef Catalog
         %
         % boxcoordinates = [ minimumLatitude maximumLatitude minimumLongitude maximumLongitude ]
         % 
-        % For examples, see Catalog_cookbook. Also available at:
+        % For examples, see Catalog.cookbook. Also available at:
         % https://geoscience-community-codes.github.io/GISMO/tutorials/html/Catalog_cookbook.html
         %
-        %
-        % See also CATALOG, IRISFETCH, CATALOG_COOKBOOK
+        % See also CATALOG, IRISFETCH, CATALOG.COOKBOOK
 
         % Author: Glenn Thompson (glennthompson1971@gmail.com)
 

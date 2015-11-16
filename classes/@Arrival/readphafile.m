@@ -59,6 +59,12 @@ self = self';
 end
 
 function dnum = str2datenum(yrmodyhrmn, sec);
+    if isempty(sec) % no arrival
+        dnum = 0;
+        return
+    end
+    
+    % there is an arrival because sec not blank
     yr = yrmodyhrmn(1:2);
     if str2num(yr)<30
         yyyy = 2000 + str2num(yr);

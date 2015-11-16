@@ -131,7 +131,7 @@ function origins = dbgetorigins(dbpath, subset_expression)
         % get largest mag & magtype for this mag
         [mag,magind] = max([ml mb ms], [], 2);
         magtypes = {'ml';'mb';'ms'};
-        magtype = magtypes(magind);
+        magtype = cellstr(magtypes(magind));
         
         if NETMAG_TABLE_PRESENT
             % loop over each origin and find largest mag for each orid in
@@ -140,13 +140,14 @@ function origins = dbgetorigins(dbpath, subset_expression)
             numrecs = dbquery(dbn,'dbRECORD_COUNT');
             if numrecs > 0
                 [nevid, norid, nmagtype, nmag] = dbgetv(dbn, 'evid', 'orid', 'magtype', 'magnitude');
+                nmagtype = cellstr(nmagtype);
             end
             for oi = 1:numel(orid)
                 oin = find(norid == orid(oi));
                 [mmax, indmax] = max(nmag(oin));
                 if mmax > mag(oi)
                     mag(oi) = mmax;
-                    magtype{oi} = nmagtype(oin(indmax));
+                    magtype{oi} = char(nmagtype(oin(indmax)));
                 end
             end
         end
@@ -168,10 +169,10 @@ function origins = dbgetorigins(dbpath, subset_expression)
     origins.ml = ml;
     origins.mb = mb;
     origins.ms = ms;
-    origins.auth = auth;
+    origins.auth = cellstr(auth);
     origins.mag = mag;
-    origins.magtype = magtype;
-    origins.etype = etype;
+    origins.magtype = cellstr(magtype)
+    origins.etype = cellstr(etype);
 
     debug.printfunctionstack('<')
 end

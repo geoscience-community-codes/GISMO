@@ -6,7 +6,6 @@ function self = seisan(varargin)
     debug.printfunctionstack('>')
     
     % Process input arguments
-    % Process input arguments
     p = inputParser;
     p.addParamValue('dbpath', @isstr);
     p.addParamValue('startTime', []);  

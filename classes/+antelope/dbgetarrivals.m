@@ -41,26 +41,29 @@ function a = dbgetarrivals(databasePath, subset_expr)
     %% Load the earthquake catalogue
     
     % Initialize output so we don't crash if return early
-    a = struct('sta', [], 'chan',[], 'time', [], 'arid',[], 'amp',[], ...
-        'snr',[], 'seaz', [], 'deltim', [], 'iphase', {}, 'delta', [], 'otime', [], ...
-        'orid', [], 'evid', [], 'timeres', [], 'traveltime', []);
+    [asta, achan, aiphase] = deal({});
+    [atime, aamp, asnr, aseaz, adeltime, adelta, aotime, atimeres, atraveltime] = deal([]);
+    [aarid, aorid, aevid] = deal([]);
 
     % Check the database descriptor exists - if not abort
     if ~exist(databasePath, 'file')
         warning(sprintf('Database %s does not exist, please type in a different one',databasePath));
+        a = struct('sta', [], 'chan',[], 'time', [], 'arid',[], 'amp',[], ...
+            'snr',[], 'seaz', [], 'deltim', [], 'iphase', {}, 'delta', [], 'otime', [], ...
+            'orid', [], 'evid', [], 'timeres', [], 'traveltime', []);
         return
     end
     debug.print_debug(0, sprintf('Loading data from %s',databasePath));
-    ARRIVAL_TABLE_PRESENT = dbtable_present(databasePath, 'arrival');    
+    ARRIVAL_TABLE_PRESENT = antelope.dbtable_present(databasePath, 'arrival');    
     if (ARRIVAL_TABLE_PRESENT) % Open the arrival table, subset if expr exists
         db = dbopen(databasePath, 'r');
         db = dblookup_table(db, 'arrival');
         numarrivals = dbquery(db,'dbRECORD_COUNT');
-        debug.print_debug(1,sprintf('Got %d records from %s.arrival',numarrivals,dbpath));
+        debug.print_debug(1,sprintf('Got %d records from %s.arrival',numarrivals,databasePath));
         if numarrivals > 0
-            ASSOC_TABLE_PRESENT = dbtable_present(dbpath, 'assoc'); 
-            ORIGIN_TABLE_PRESENT = dbtable_present(dbpath, 'origin'); 
-            EVENT_TABLE_PRESENT = dbtable_present(dbpath, 'event');  
+            ASSOC_TABLE_PRESENT = antelope.dbtable_present(databasePath, 'assoc'); 
+            ORIGIN_TABLE_PRESENT = antelope.dbtable_present(databasePath, 'origin'); 
+            EVENT_TABLE_PRESENT = antelope.dbtable_present(databasePath, 'event');  
             
             if (ASSOC_TABLE_PRESENT)              
                 % open and join the assoc table
@@ -86,33 +89,53 @@ function a = dbgetarrivals(databasePath, subset_expr)
             
             if dbnrecs(db)>0
     
-                % read (some) fields & close db
-                [a.sta, a.chan, a.time, a.phase, a.arid, a.amp, a.snr, a.deltim] = dbgetv(db, 'sta', 'chan', 'arrival.time', 'iphase', 'arid', 'amp', 'snr', 'deltim');
+%                 % read (some) fields & close db
+%                 size(dbgetv(db,'sta'))
+%                 size(dbgetv(db,'chan'))
+%                 size(dbgetv(db,'arrival.time'))
+%                 size(dbgetv(db,'iphase'))
+%                 size(dbgetv(db,'arid'))
+%                 size(dbgetv(db,'amp'))
+%                 size(dbgetv(db,'snr'))
+%                size(dbgetv(db,'deltim'))
+                [asta, achan, atime, aiphase, aarid, aamp, asnr, adeltim] = dbgetv(db, 'sta', 'chan', 'arrival.time', 'iphase', 'arid', 'amp', 'snr', 'deltim');
+                a.sta = asta;
                 if (ASSOC_TABLE_PRESENT)
-                    [a.delta, a.seaz, a.esaz, a.timeres] = dbgetv(db, 'assoc.delta', 'assoc.seaz', 'assoc.esaz', 'assoc.timeres');
+                    [adelta, aseaz, aesaz, atimeres] = dbgetv(db, 'assoc.delta', 'assoc.seaz', 'assoc.esaz', 'assoc.timeres');
                 end
                 if (ORIGIN_TABLE_PRESENT)
-                    [a.otime, a.orid, a.evid] = dbgetv(db, 'origin.time', 'origin.orid', 'origin.evid');
-                    a.traveltime = a.time - a.otime;
+                    [aotime, aorid, aevid] = dbgetv(db, 'origin.time', 'origin.orid', 'origin.evid');
+                    atraveltime = atime - aotime;
                 end
  
                 dbclose(db);   
 
                 % Cell arrays don't get created if only 1 row
-                if strcmp(class(a.sta),'char')
-                   a.sta = {a.sta};
-                   a.chan = {a.chan};
-                   a.iphase = {a.iphase};
-                end
+                asta = cellstr(asta);
+                achan = cellstr(achan);
+                aiphase = cellstr(aiphase);
 
                 % Times are all in epoch
-                a.time = epoch2datenum(a.time);
-                a.otime = epoch2datenum(a.otime);
-
-                % Display counts
-                fprintf('\n%d arrivals\n',numel(a.time));
+                 atime = epoch2datenum(atime);
+                 aotime = epoch2datenum(aotime);
+                
             end
         end
     end
+    a.sta = asta;
+    a.chan = achan;
+    a.time = atime;
+    a.arid = aarid;
+    a.amp = aamp;
+    a.snr = asnr;
+    a.seaz = aseaz;
+    a.deltim = adeltim;
+    a.iphase = aiphase;
+    a.delta = adelta;
+    a.otime = aotime;
+    a.orid = aorid;
+    a.evid = aevid;
+    a.timeres = atimeres;
+    a.traveltime = atraveltime;
 
 end
