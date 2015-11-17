@@ -68,11 +68,11 @@ end
 %% Check offsets
 function isValid = do_offset(c)
    
-   srt_offset = (c.trig - get(c,'Start') ) * 86400;
-   end_offset = ( get(c,'End') - c.trig ) * 86400;
+   srt_offset = (c.trig - c.traces.firstsampletime() ) * 86400;
+   end_offset = (  c.traces.lastsampletime() - c.trig ) * 86400;
    
-   isValid = all(( max(srt_offset) - min(srt_offset) ) <= get(c,'Period')) && ...
-      all(( max(end_offset) - min(end_offset) ) <= get(c,'Period'));
+   isValid = all(( max(srt_offset) - min(srt_offset) ) <= c.traces(1).period) && ...
+      all(( max(end_offset) - min(end_offset) ) <= c.traces(1).period);
 end
 
 

@@ -211,6 +211,11 @@ classdef NewCorrelation
          
          % LOAD DATA VIA WAVEFORM. SEND SPECIAL CASES TO SUBROUTINE
          
+         for nm=1:numel(varargin)
+            if isa(varargin{nm},'waveform')
+               varargin{nm} = SeismicTrace(varargin{nm});
+            end
+         end
          %% NO DATA
          if nargin==0
             return
@@ -285,16 +290,14 @@ classdef NewCorrelation
             c.trig = co.trig;
             
             %% FROM A WAVEFORM WITHOUT TRIGGERS
-         elseif nargin==1 && isa(varargin{1},'waveform')
-            c.W = varargin{1};
-            c.W = reshape(c.W,numel(c.W),1);
-            c.trig = get(c.W,'START') + 0.25*(get(c.W,'END')-get(c.W,'START'));
+         elseif nargin==1 && isa(varargin{1},'SeismicTrace')
+            c.traces = varargin{1};
+            c.trig = c.traces.firstsampletime() + 0.25*(get(c.W,'END') - c.traces.firstsampletime());
             c.trig = reshape(c.trig,numel(c.trig),1);
             
             %% FROM A WAVEFORM WITH TRIGGERS
-         elseif nargin==2 && isa(varargin{1},'waveform')
-            c.W = varargin{1};
-            c.W = reshape(c.W,numel(c.W),1);
+         elseif nargin==2 && isa(varargin{1},'SeismicTrace')
+            c.traces = varargin{1};
             if isa(varargin{2},'double')
                c.trig = varargin{2};
                c.trig = reshape(c.trig,numel(c.trig),1);
@@ -390,16 +393,16 @@ classdef NewCorrelation
             % READ IN WAVEFORM OBJECTS
             good =true(size(trig));
             fprintf('Creating matrix of waveforms ...');
-            w = waveform;
+            wf = waveform;
             
             for i = 1:length(trig)
                try
                   if ~isnan(archive)
-                     w(i) = waveform(stat,chan,trig(i)+pretrig/86400,trig(i)+posttrig/86400,archive);
+                     wf(i) = waveform(stat,chan,trig(i)+pretrig/86400,trig(i)+posttrig/86400,archive);
                   else
-                     w(i) = waveform(stat,chan,trig(i)+pretrig/86400,trig(i)+posttrig/86400);
+                     wf(i) = waveform(stat,chan,trig(i)+pretrig/86400,trig(i)+posttrig/86400);
                   end
-                  freq(i) = get(w(i),'Fs');
+                  freq(i) = get(wf(i),'Fs');
                   fprintf('.');
                catch
                   disp(' ');
@@ -410,17 +413,17 @@ classdef NewCorrelation
             disp(' ');
             %
             % CHECK TO SEE IF ANY DATA WAS READ IN
-            if length(w)==0
+            if length(wf)==0
                error('This data not is available from the specified database.');
             end
             %
             % STORE ONLY GOOD TRACES
-            w = w(good);
+            wf = wf(good);
             trig = trig(good);
             freq = freq(good);
             %
             % FILL CORRELATION STRUCTURE
-            c.W = reshape(w,length(w),1);
+            c.W = reshape(wf,length(wf),1);
             c.trig = reshape(trig,length(trig),1);
          end
          
@@ -430,16 +433,16 @@ classdef NewCorrelation
          %% FUNCTION: LOAD FROM A WINSTON DATABASE
          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
          
-         function c = loadfromwinston(stat,chan,trig,pretrig,posttrig,netwk,loc,server,port);
+         function c = loadfromwinston(stat,chan,trig,pretrig,posttrig,netwk,loc,server,port)
             
             % READ IN WAVEFORM OBJECTS
             good = true(size(trig));
             fprintf('Creating matrix of waveforms ...');
-            w = waveform;
+            wf = waveform;
             for i = 1:length(trig)
                try
-                  w(i) = waveform(stat,chan,trig(i)+pretrig/86400,trig(i)+posttrig/86400,netwk,loc,server,port);
-                  freq(i) = get(w(i),'Fs');
+                  wf(i) = waveform(stat,chan,trig(i)+pretrig/86400,trig(i)+posttrig/86400,netwk,loc,server,port);
+                  freq(i) = get(wf(i),'Fs');
                   fprintf('.');
                catch
                   disp(' ');
@@ -450,26 +453,26 @@ classdef NewCorrelation
             disp(' ');
             %
             % CHECK TO SEE IF ANY DATA WAS READ IN
-            if length(w)==0
+            if numel(wf)==0
                error('This data not is available from the specified database.');
             end
             %
             % STORE ONLY GOOD TRACES
-            w = w(good);
+            wf = wf(good);
             trig = trig(good);
             freq = freq(good);
             %
             % RESAMPLE TRACES TO MAXIMUM FREQUENCY
-            fmax = round(max(freq))
+            fmax = round(max(freq));
             for i = 1:length(trig)
-               if get(w(i),'FREQ') ~= fmax
-                  w(i) = align(w(i),trig(i),fmax);
+               if get(wf(i),'FREQ') ~= fmax
+                  wf(i) = align(wf(i),trig(i),fmax);
                   disp(['Trace no. ' num2str(i) ' is being resampled to ' num2str(fmax) ' Hz']);
                end
             end
             %
             % FILL CORRELATION STRUCTURE
-            c.W = reshape(w,length(w),1);
+            c.W = reshape(wf,length(wf),1);
             c.trig = reshape(trig,length(trig),1);
          end
          
@@ -503,6 +506,7 @@ classdef NewCorrelation
             %c.W = reshape(w,length(w),1);
          end %convert_coral
       end %NewCorrelation
+
       function waves = get.W(obj)
          warning('getting waveform instead of traces');
          waves = waveform(obj.traces);

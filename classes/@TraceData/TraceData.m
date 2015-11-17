@@ -1176,7 +1176,7 @@ classdef TraceData
          %   See also trace.align
          
          out = T(1);
-         out.station = [out.station ' - stack (' num2str(T) ')'];
+         out.station = [out.station ' - stack (' num2str(numel(T)) ')'];
          out.data = sum(double(T),2);
       end
       function stackedTraces = binStack(T,nBins,binOverlap)

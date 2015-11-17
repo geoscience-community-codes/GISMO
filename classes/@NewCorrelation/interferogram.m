@@ -61,8 +61,8 @@ end
 
 
 % SET WINDOW WIDTH
-srt_offset = ( get(c,'Start') - c.trig ) * 86400;
-end_offset = ( get(c,'End') - c.trig ) * 86400;
+srt_offset = ( c.traces.firstsampletime() - c.trig ) * 86400;
+end_offset = ( c.traces.lastsampletime() - c.trig ) * 86400;
 if length(varargin)>=1
     width = varargin{1};
 else
@@ -121,7 +121,7 @@ end;
 
 % PLACE OUTPUT INTO FIRST WAVEFORM FIELD
 i = [1:c.ntraces]';
-c.traces(1) = addfield(c.traces(1),'Interferogram_index',i);
-c.traces(1) = addfield(c.traces(1),'Interferogram_time',t);
-c.traces(1) = addfield(c.traces(1),'Interferogram_maxcorr',CC);
-c.traces(1) = addfield(c.traces(1),'Interferogram_lag',LL);
+c.traces(1).userdata.interferogram_index = i;
+c.traces(1).userdata.interferogram_time = t;% = addfield(c.traces(1),'Interferogram_time',t);
+c.traces(1).userdata.interferogram_maxcorr = CC;% = addfield(c.traces(1),'Interferogram_maxcorr',CC);
+c.traces(1).userdata.interferogram_lag = LL;% = addfield(c.traces(1),'Interferogram_lag',LL);

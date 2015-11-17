@@ -61,12 +61,12 @@ end
 
     
 % CHECK IF TRACES ARE EQUALLY CROPPED
-pretrig  = get(c1,'START') - c1.trig;
-posttrig = get(c1,'END')   - c1.trig;
+pretrig  = c1.traces.firstsampletime() - c1.trig;
+posttrig = c1.traces.lastsampletime() - c1.trig;
 if (mean(pretrig)~=pretrig(1)) || (mean(posttrig)~=posttrig(1))
     center = mean([pretrig ; posttrig])*86400;
-    pretrig = center - (0.5 * c1.data_length * get(c1,'Period'));
-    posttrig = pretrig + (c1.data_length+1) * get(c1,'Period');
+    pretrig = center - (0.5 * c1.data_length * c1.traces(1).period); %periods assumed to be same!
+    posttrig = pretrig + (c1.data_length+1) * c1.traces(1).period;
     % is it the right length?
     c1 = crop(c1,pretrig,posttrig);
 end

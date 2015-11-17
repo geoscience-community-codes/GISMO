@@ -148,20 +148,20 @@ function correlationVariables = cookbook(corr)
    
    
    %% Coverting waveform and correlation objects
-   % Inside the CORRELATION object, waveforms are stored as WAVEFORM objects.
-   % It is possible to extract and then reinsert waveforms. This is use for
+   % Inside the CORRELATION object, waveforms are stored as Seismic Traces.
+   % It is possible to extract and then reinsert them. This is use for
    % carrying out trace manipulations that do not exist in the CORRELATION
    % toolbox. Be aware if reinserting waveforms that it is possible to
    % manipulate waveforms in ways that may be incompatible with the
    % correlation object, removing waveforms, for example, or altering
    % timestamps.
    
-   w  = waveform(c1);
-   for n = 1:numel(w)
-      w(n) = w(n).^2 .* sign(w(n));
+   T  = c1.traces;
+   for n = 1:numel(T)
+      T(n) = T(n).^2 .* sign(T(n).data);
    end
-   c2 = NewCorrelation(c1,w);
-   
+   c2 = c1;
+   c2.traces = T;
    
    %% Sign traces
    % SIGN effectively removes the ampltiude information from traces. In some
@@ -233,10 +233,12 @@ function correlationVariables = cookbook(corr)
    
    correlationVariables.c1 = c1;
    correlationVariables.c2 = c2;
+   if exist('corr','var'),
    correlationVariables.corr = corr;
+   end;
    correlationVariables.corr_matrix = corr_matrix;
    correlationVariables.index = index;
    correlationVariables.n = n;
-   correlationVariables.w = w;
+   correlationVariables.T = T;
   
 end

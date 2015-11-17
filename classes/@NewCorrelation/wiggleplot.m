@@ -28,12 +28,21 @@ if norm==0
     % GET MEAN TRACE AMPLITUDE FOR SCALING BELOW (when norm = 0)
     maxlist = max(abs(c.traces(ord)));
     normval = mean(maxlist);
-    d =  double(c.traces(ord) .*( -scale ./ normval)+ [1:numel(ord)]','nan'); % do not normalize trace amplitudes
+    offsets = 1:numel(ord);
+    for n=1:c.ntraces;
+       c.traces(ord(n)) = c.traces(ord(n)) .*( -scale ./ normval) + offsets(n);
+    end
+    d=double(c.traces);
+    %d =  double(c.traces(ord) .*( -scale ./ normval) + offsets(:),'nan'); % do not normalize trace amplitudes
 else
     abs_max(abs_max==0) = 1; % ignore zero traces
     offsets = [1:numel(ord)]';
     normalizer = (-scale ./ abs_max);
-    d = double(c.W(ord) .* normalizer + offsets,'nan'); % normalize trace amplitudes
+    for n=1:numel(ord)
+       c.traces(ord(n)) = c.traces(ord(n)) .* normalizer(n) + offsets(n);
+    end;
+    d = double(c.traces,'nan');
+    % d = double(c.W(ord) .* normalizer + offsets,'nan'); % normalize trace amplitudes
 end
 
 plot(tr,d,'b-','LineWidth',1);

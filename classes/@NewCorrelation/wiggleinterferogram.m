@@ -9,14 +9,15 @@ function wiggleinterferogram(c,scale,type,norm,range)
 
 
 % EXTRACT IMAGE
-w = get(c,'WAVES');
-if isempty(get(w(1),'interferogram_time'))
+udfields = c.traces(1).userdata;
+if ~isfield(udfields,'interferogram_time')  || ...
+      isempty(udfields.interferogram_time)
     error('PLOT INTERFER method can only be used following INTERFEROGRAM function');
 end    
-I.time  = get(w(1),'INTERFEROGRAM_TIME');
-I.index = get(w(1),'INTERFEROGRAM_INDEX');
-I.CC    = get(w(1),'INTERFEROGRAM_MAXCORR');
-I.LL    = get(w(1),'INTERFEROGRAM_LAG');
+I.time  = c.traces(1).userdata.interferogram_time; %get(w(1),'INTERFEROGRAM_TIME');
+I.index = c.traces(1).userdata.interferogram_index; %get(w(1),'INTERFEROGRAM_INDEX');
+I.CC    = c.traces(1).userdata.interferogram_maxcorr; %get(w(1),'INTERFEROGRAM_MAXCORR');
+I.LL    = c.traces(1).userdata.interferogram_lag; %get(w(1),'INTERFEROGRAM_LAG');
 
 % SET COLOR SCALE FOR LAG PLOT
 I.LL = I.LL ./ range;
@@ -123,7 +124,11 @@ if norm==0
     % GET MEAN TRACE AMPLITUDE FOR SCALING BELOW (when norm = 0)
     maxlist = max(abs(c.traces(ord)));
     normval = mean(maxlist);
-    d =  double(c.W(ord) .*( -scale ./ normval)+ [1:numel(ord)]','nan'); % do not normalize trace amplitudes
+    for n=1:numel(ord)
+       c.traces(ord(n)) = c.traces(ord(n)) .*( -scale ./ normval) + n;
+    end
+    d = double(c.traces,'nan');
+    %d =  double(c.W(ord) .*( -scale ./ normval)+ [1:numel(ord)]','nan'); % do not normalize trace amplitudes
 else
     abs_max(abs_max==0) = 1; % ignore zero traces
     

@@ -263,6 +263,8 @@ function newParams = buildParameterList(formatDescriptor, paramStruct)
          newParams = [{formatDescriptor} horzcat(fieldList,v)];
       else
          newParams = horzcat(fieldList,v);
+         newParams = newParams';
+         newParams = newParams(:);
       end
    end
 end

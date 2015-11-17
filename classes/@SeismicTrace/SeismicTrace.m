@@ -186,11 +186,16 @@ classdef SeismicTrace < TraceData
          %  For multiple traces, a character array will be returned.
          %  See also datestr
          secDurs = [obj.duration];
+         secDurs = secDurs(:);
          assert(all(~isnan([obj.samplerate])),...
             'SeismicTrace:lastsampletime:Uncalculatable',...
             'Missing samplerate for one or more waveforms. lastsampletime is incalculable');
-         secDurs(secDurs > 0) = secDurs - 1./[obj.samplerate];
-         val = [obj.firstsampletime] + secDurs/86400;
+         idx = secDurs > 0;
+         ps_idx = 1./[obj(idx).samplerate];
+         secDurs_idx = secDurs(idx);
+         secDurs(idx) = secDurs_idx - ps_idx(:);
+         fst = obj.firstsampletime();
+         val = fst(:) + secDurs(:)/86400;
          if exist('stringformat','var')
             val = datestr(val,stringformat);
          else
@@ -349,8 +354,8 @@ classdef SeismicTrace < TraceData
          
          newSamplesPerSec = 1 / newSamprate ;  %# samplesPerSecond
          timeStep = newSamplesPerSec * oneSecond;
-         existingStarts = T.firstsampletime;
-         existingEnds = T.lastsampltime;
+         existingStarts = T.firstsampletime();
+         existingEnds = T.lastsampletime();
          
          % calculate the offset of the closest "aligned" time, by projecting the
          % desired sample rate and time forward or backward onto these waveforms'

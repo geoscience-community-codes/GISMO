@@ -46,7 +46,12 @@ D = zeros(length(N),length(T));
 count = 0;
 absmax = max(abs(c.traces(ord)));
 absmax(absmax==0) = scale; %next line will be negated for zero-scale
-d = double(c.W(ord) .* (scale ./ absmax));
+
+    for n=1:numel(ord)
+       c.traces(ord(n)) = c.traces(ord(n)) .* (scale ./ absmax(n));
+    end;
+    d = double(c.traces); %nan fill??
+% d = double(c.W(ord) .* (scale ./ absmax));
 for i = 1:numel(ord)
 	count = count + 1;
    %d = get(c.W(ord(i)),'DATA');            %%%d = c.w(:,i);

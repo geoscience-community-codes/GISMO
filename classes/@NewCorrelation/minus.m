@@ -85,8 +85,8 @@ end
 
 
 % CHECK IF TRACES ARE EQUALLY CROPPED
-pretrig  = get(c1,'START') - c1.trig;
-posttrig = get(c1,'END')   - c1.trig;
+pretrig  = c1.traces.firstsampletime() - c1.trig; %ALL? just one?
+posttrig = c1.traces.lastsampletime()  - c1.trig;
 if (mean(pretrig)~=pretrig(1)) || (mean(posttrig)~=posttrig(1))
     center = mean([pretrig ; posttrig])*86400;
     pretrig = center - (0.5 * c1.nsamples * get(c1,'Period'));

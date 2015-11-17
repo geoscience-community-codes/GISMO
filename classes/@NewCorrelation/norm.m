@@ -68,13 +68,13 @@ function c = norm(c,varargin)
          for i = index
             maxd = max(abs(c2.traces(i)));
             if maxd ~= 0
-               c.traces(i) = c.traces(i) /  maxd;
+               c.traces(i) = c.traces(i) ./  maxd;
             end;
          end
          
       case 'SCA' % scaled
          for i = index
-            c.traces(i) = c.traces(i) * scale;
+            c.traces(i) = c.traces(i) .* scale;
          end
          
       case {'RMS', 'STD'}
@@ -82,7 +82,7 @@ function c = norm(c,varargin)
             d2 = c2.traces(i).data;
             stdd = 0.5 * std(abs(d2));
             if stdd ~= 0
-               c.traces(i) = c.traces(i) / stdd;
+               c.traces(i) = c.traces(i) ./ stdd;
             end;
          end
    end

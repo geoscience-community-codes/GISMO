@@ -116,7 +116,7 @@ text(PosX,PosY,['Cluster #' num2str(nclust)],'Color','k','FontWeight','bold');
 subplot('Position',[.5 .99-.094*n .47 .09]);
 c1 = subset(c1,include);
 Ts = 86400 * (c1.traces.firstsampletime() - c1.trig);
-Te = 86400 * (get(c1.W,'END')-c1.trig); %TODO: replace end
+Te = 86400 * (c1.traces.lastsampletime() - c1.trig); %TODO: maybe off-by 1?
 c1 = stack(c1);
 c1 = norm(c1);
 c1 = crop(c1,mean(Ts),mean(Te));
