@@ -53,9 +53,9 @@ switch upper(prop_name)
     case {'TRIG_MATLAB'}
         val = c.trig;
     case {'CORR'}
-        val = c.C;
+        val = c.corrmatrix;
     case {'LAG'}
-        val = c.L;
+        val = c.lags;
     case {'STAT'}
         val = c.stat;
     case {'LINK'}

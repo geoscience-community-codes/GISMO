@@ -10,7 +10,7 @@ function corrplot(c)
 % PREP PLOT
 figure('Color','w','Position',[50 50 600 500]);
 set(gcf,'DefaultAxesFontSize',14);
-imagesc(c.C);
+imagesc(c.corrmatrix);
 title('Maximum correlation coefficient');
 
 

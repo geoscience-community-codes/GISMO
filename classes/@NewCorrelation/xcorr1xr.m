@@ -24,8 +24,8 @@ l = (1./d.Fs)*[-M+1:M-1]';        % lag vector
 % next two lines are equivalent ways to get normalization coefficients
 wcoeff = 1./sqrt(sum(d.w.*d.w));
 %for i = 1:size(d.w,2), wcoeff(i) = 1./norm(d.w(:,i)); end;
-d.C = eye(length(d.trig),'single');
-d.L = zeros(length(d.trig),'single');
+d.corrmatrix = eye(length(d.trig),'single');
+d.lags = zeros(length(d.trig),'single');
 
 
 % GET FFT OF TRACES
@@ -64,13 +64,13 @@ for n =1:N
             if abs(Ltmp)<eps('single')
                 Ltmp = 0;
             end
-            d.L(n,cols(z))  = Ltmp;
-            d.C(n,cols(z)) = polyval( p , d.L(n,cols(z)) ) .* wcoeff(n) .* wcoeff(cols(z));
+            d.lags(n,cols(z))  = Ltmp;
+            d.corrmatrix(n,cols(z)) = polyval( p , d.lags(n,cols(z)) ) .* wcoeff(n) .* wcoeff(cols(z));
         end
     elseif style == 0     % NO POLYNOMIAL INTERPOLATION
         [maxval,indx1] = max(corr);
-        d.C(n,cols) = maxval .* wcoeff(n) .* wcoeff(cols);   % normalized maximum correlation
-        d.L(n,cols) = l(indx1) + (pretrig(cols) - pretrig(n)); % lag in seconds
+        d.corrmatrix(n,cols) = maxval .* wcoeff(n) .* wcoeff(cols);   % normalized maximum correlation
+        d.lags(n,cols) = l(indx1) + (pretrig(cols) - pretrig(n)); % lag in seconds
     end
 
     if (n==100) | (n==1000)
@@ -85,15 +85,16 @@ end
 
 
 % REPLACE NaNs WITH ZEROS
-f = find(isnan(d.C));
-d.C(f) = 0;
-f = find(isnan(d.L));
-d.L(f) = 0;
+%TODO: Move this into new function to be used elsewhere (?)
+f = find(isnan(d.corrmatrix));
+d.corrmatrix(f) = 0;
+f = find(isnan(d.lags));
+d.lags(f) = 0;
 
 
 % FILL LOWER TRIANGULAR PART OF MATRICES
-d.C = d.C + d.C' - eye(size(d.C));
-d.L = d.L - d.L';
+d.corrmatrix = d.corrmatrix + d.corrmatrix' - eye(size(d.corrmatrix));
+d.lags = d.lags - d.lags';
 
 
 % DISPLAY RUN TIMES

@@ -1,4 +1,4 @@
-function eventplot(c,scale,howmany);
+function eventplot(c,scale,howmany)
 
 % Private method. See ../plot for details.
 
@@ -11,7 +11,7 @@ function eventplot(c,scale,howmany);
 %     error('LINK field must be filled in input object');
 % end;
 
-if isempty(c.correlations)
+if isempty(c.corrmatrix)
     error('CORR field must be filled in input object');
 end;
 
@@ -19,7 +19,7 @@ if isempty(c.clust)
     error('CLUST field must be filled in input object');
 end;
 
-if ~isempty(get(c.lags)
+if ~isempty(c.lags)
     warning('Time corrections from LAG field have not been applied to traces. ADJUSTTRIG may be necessary');
 end;
 

@@ -102,7 +102,7 @@ function correlationVariables = cookbook(corr)
    c = sort(c);
    plot(c,'corr');
    set(gcf,'Position',[50 50 500 400]);
-   corr_matrix = c.correlations;
+   corr_matrix = c.corrmatrix;
    corr_matrix(1:5,1:5)
    
    %% Lag matrix

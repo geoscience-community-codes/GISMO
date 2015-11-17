@@ -53,7 +53,7 @@ end
 
 % CHECK IF TRACES ARE DESCRITIZED ON THE SAME INVERVALS
 t = 86400 * (c1.trig - c1.traces.firstsampletime());
-Fs = c1.samplerate;%get(c1,'Fs');
+Fs = c1.samplerate;
 sampleshift = mod(t,1/Fs);
 if (mean(sampleshift) ~= sampleshift)   % if all sampleshifts are the same
     c1 = align(c1);
@@ -91,6 +91,6 @@ c.trig(end+1) = c1.trig(1);
 c.stat = [];
 c.link = [];
 c.clust = [];
-if size(c.C,1) > 0
-    c = xcorr(c,'row', get(c,'TRACES') );
+if size(c.corrmatrix,1) > 0
+    c = xcorr(c,'row', c.ntraces);
 end

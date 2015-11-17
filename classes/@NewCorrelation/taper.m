@@ -48,7 +48,7 @@ end
 
     
 % APPLY TAPER
-c.W = taper(c.W,R,style);
+c.traces = c.traces.taper(style, R);
     
 
 

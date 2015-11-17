@@ -62,15 +62,15 @@ end
 if ~ISDETECTION
     if numel(varargin)==1
         phaseList = varargin{1};
-        if numel(phaseList)==get(c,'TRACES')
+        if numel(phaseList)== c.ntraces
             phaseList = phaseList;
-        elseif numel(phaseList)~=get(c,'TRACES') && numel(phaseList)~=1
+        elseif numel(phaseList)~= c.ntraces && numel(phaseList)~=1
             error('phase list argument must be cell array of length 1 or N, where N is the number of traces in the correlation object');
         elseif numel(phaseList)==1
             if ischar(phaseList)
                 phaseList = {phaseList};
             end
-            phaseList = repmat(phaseList,get(c,'TRACES'),1);
+            phaseList = repmat(phaseList, c.ntraces,1);
         end
     elseif ~isempty(get(c,'CLUST'))
         disp('assigning phase names based on cluster field');
@@ -81,7 +81,7 @@ if ~ISDETECTION
         end
     else
         disp('assigning default phase name "P"');
-        phaseList = repmat({'P'},get(c,'TRACES'),1);
+        phaseList = repmat({'P'},c.ntraces,1);
     end;
     
 end

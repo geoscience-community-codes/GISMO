@@ -35,8 +35,8 @@ end
 
 
 c = varargin{1};
-c.C = [];
-c.L = [];
+c.corrmatrix = [];
+c.lags = [];
 c.stat = [];
 c.link = [];
 c.clust = [];

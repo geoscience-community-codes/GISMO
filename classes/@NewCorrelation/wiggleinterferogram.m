@@ -38,7 +38,7 @@ box on; hold on;
 
 
 % FIX ORDER OF TRACES
-ord = 1:get(c,'TRACES');
+ord = 1:c.ntraces;
 
 
 % GET MEAN TRACE AMPLITUDE FOR SCALING BELOW (when norm = 0)
@@ -145,13 +145,8 @@ xlabel('Relative Time,(s)','FontSize',8);
 
 % replace dates with station names if stations are different
 if ~check(c,'STA')
-    sta  = get(c,'STA');
-    chan = get(c,'CHAN');
-    
-    for i=1:get(c,'TRACES')
-       labels(i) = strcat( sta(i) , '_' , chan(i) );
-    end
-    set( gca , 'YTick' , [1:1:get(c,'TRACES')] );
+    labels = strcat(c.station , '_', c.channel);
+    set( gca , 'YTick' , 1:c.ntraces);
     set( gca , 'YTickLabel' , labels );
 end
 

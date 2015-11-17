@@ -29,18 +29,18 @@ index = reshape(index,length(index),1);
 
 % SELCT DESIRED DATA
 
-c.W = c.W(index);
+c.traces = c.traces(index);
 
 c.trig = c.trig(index);
 
-if ~isempty(c.C)
-    c.C = c.C(index,:);
-    c.C = c.C(:,index);
+if ~isempty(c.corrmatrix)
+    c.corrmatrix = c.corrmatrix(index,:);
+    c.corrmatrix = c.corrmatrix(:,index);
 end;
 
-if ~isempty(c.L)
-    c.L = c.L(index,:);
-    c.L = c.L(:,index);
+if ~isempty(c.lags)
+    c.lags = c.lags(index,:);
+    c.lags = c.lags(:,index);
 end;
 
 if ~isempty(c.stat)

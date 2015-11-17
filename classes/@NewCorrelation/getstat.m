@@ -39,14 +39,14 @@ if nargin <= 0
     error('Wrong number of inputs');
 end
 
-if isempty(get(c,'CORR'))
+if isempty(c.corrmatrix)
     error('CORR and LAG fields must be filled in input object');
     error('See xcorr function');
 end
 
    
 % GET MEAN AND STD OF MAX. CROSS CORRELATION (EQ. 4)
-Ztmp = c.C - 0.3*eye(size(c.C));
+Ztmp = c.corrmatrix - 0.3*eye(size(c.corrmatrix));
 Z = 0.5 * log((1+Ztmp)./(1-Ztmp));
 Zmean = mean(Z);
 Zrmshi = mean(Z) + std(Z);
@@ -58,7 +58,7 @@ Rrmslo = (exp(2*Zrmslo)-1)./(exp(2*Zrmslo)+1);
 
 
 % BUILD A AND dT
-n = size(c.C,1);
+n = size(c.corrmatrix,1);
 m = n*(n-1)/2+1;
 A = sparse(m,n);
 A(m,:) = 1;
@@ -72,8 +72,8 @@ for i = 1:n-1
 		count = count + 1;
 		A(count,i) = 1;	
 		A(count,j) = -1;
-		dT(count) = c.L(i,j);
-		W(count,count) = c.C(i,j);
+		dT(count) = c.lags(i,j);
+		W(count,count) = c.corrmatrix(i,j);
 	end;
 end;
 
@@ -88,7 +88,7 @@ T = inv( A' * A ) * A' * dT;			% unweighted
 % ESTIMATE RESIDUALS, STD
 for i = 1:n
 	for j = 1:n
-		res(i,j) = c.L(i,j) - ( T(i) - T(j) );	%eq. 7
+		res(i,j) = c.lags(i,j) - ( T(i) - T(j) );	%eq. 7
 	end;
 end;
 Trms = std(res)';		% ~eq. 8

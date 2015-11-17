@@ -3,7 +3,7 @@ function c=xcorr(c,varargin)
 % C = XCORR(C)
 % This function calculates and fills in the correlation and lag fields in a
 % correlation object. The input is a correlation object, presumeably with
-% empty correlation and lag fields. c.C is a matrix of maximum correlation
+% empty correlation and lag fields. c.corrmatrix is a matrix of maximum correlation
 % values normalized so that autocorrelations are 1. c.L is the lag in
 % seconds between the two waveforms. That is, c.L is a small time
 % correction which, when added to the second trigger value, will allow the
@@ -101,8 +101,8 @@ end
 
 
 % ASSIGN CORRELATION PARAMETERS TO ORIGINAL DATA
-c.correlations = d.C;
-c.lags = d.L;
+c.corrmatrix = d.corrmatrix;
+c.lags = d.lags;
 end
 % CREATE MATRIX OF WAVEFORM DATA
    function M = getwavematrix(c)

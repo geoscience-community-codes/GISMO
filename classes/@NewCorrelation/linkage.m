@@ -28,7 +28,7 @@ function c = linkage(c,varargin)
 % $Date$
 % $Revision$
 
-% REQUIRES STATISTICS TOOLBOX
+% REQUIRES STATISTICS and MACHINE LEARNING TOOLBOX
 
 if nargin <= 0
     error('Not enough inputs');
@@ -39,7 +39,7 @@ if c.ntraces < 2
     error('correlationLinkageTooFewTraces','Correlation object must contain at least two traces to use the LINKAGE function');
 end;
 
-K = 1.001 - c.C;			% create dissimilarity matrix
+K = 1.001 - c.corrmatrix;			% create dissimilarity matrix
 K = K - diag(diag(K));			% remove diagonal (required format)
 Y = squareform(K);          % transform to "pdist" vector format
 

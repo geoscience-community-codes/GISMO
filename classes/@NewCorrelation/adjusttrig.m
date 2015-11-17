@@ -100,22 +100,22 @@ end
 
 if calctype(1:3)=='LSQ'
     if size(c.stat,1)==0
-        c = getstat(c);
+        c = c.getstat();
     end;
     tshift = c.stat(:,4);
     c.trig = c.trig - tshift/86400;
-    c.L = [];
+    c.lags = [];
 
 elseif calctype(1:3)=='MIN'
-    [tmp,centerevent] = min(abs(mean(c.L)));
-    tshift = double(c.L(centerevent,:)');	% in seconds
+    [tmp,centerevent] = min(abs(mean(c.lags)));
+    tshift = double(c.lags(centerevent,:)');	% in seconds
     c.trig = c.trig - tshift/86400;
-    c.L = [];
+    c.lags = [];
 
 elseif calctype(1:3)=='MED'
-    tshift = double(median(c.L)');	
+    tshift = double(median(c.lags)');	
     c.trig = c.trig - tshift/86400;
-    c.L = [];
+    c.lags = [];
     
 % "index" method is a bit ad hoc. It co-ops the "index" term, originally
 % created for the 'MIN' method.
@@ -123,11 +123,11 @@ elseif calctype(1:3)=='IND'
     if length(index) > 1
         error('INDEX method must specify only a single value');
     elseif index==0
-       index = get(c,'TRACES'); 
+       index = c.ntraces;
     end
-    tshift = double(c.L(index,:)');	% in seconds
+    tshift = double(c.lags(index,:)');	% in seconds
     c.trig = c.trig - tshift/86400;
-    c.L = [];
+    c.lags = [];
 
 elseif calctype(1:3)=='CLU'
     error('CLUSTER OPTION NOT FUNCTIONAL YET');

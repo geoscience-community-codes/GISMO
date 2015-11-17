@@ -7,7 +7,7 @@ function c = minus(c,varargin)
 %
 % C = MINUS(C)
 % Short hand version of MINUS where I is assumed to be the last trace in
-% the list. That is, MINUS(C, get(C,'TRACES') ). This use is common
+% the list. That is, MINUS(C, C.ntraces ). This use is common
 % following the STACK routine.
 %
 % Before using MINUS, time windows need to be cropped to the same interval
@@ -56,7 +56,7 @@ if ( length(varargin) == 1 )
         error('Only one trace can be subtracted from the others');
     end
 else
-    I = get(c,'TRACES');
+   I = c.ntraces;
 end
 
 if check(c,'SCALE')
@@ -101,8 +101,8 @@ for i = 1:length(c.trig)
     c.traces(i).data = set( c.W(i) , 'Data' , d);
     c.trig(i) = c1.trig(i);
 end
-c.C = [];
-c.L = [];
+c.corrmatrix = [];
+c.lags = [];
 c.stat = [];
 c.link = [];
 c.clust = [];

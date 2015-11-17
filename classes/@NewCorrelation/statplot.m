@@ -29,10 +29,10 @@ title('Best fit delay time and 1\sigma error');
 xfill = [ [1:length(T)]' ; [length(T):-1:1]' ];
 yfill = [T+Trms ; flipud(T-Trms)];
 fill(xfill,yfill,[.9 .9 .9]);
-plot(c.L','b.','MarkerSize',5);
+plot(c.lags','b.','MarkerSize',5);
 plot(T,'ko-','LineWidth',2);
 xlim([1 length(T)]);
-maxval = 1.05*max(max(abs(c.L)));
+maxval = 1.05*max(max(abs(c.lags)));
 ylim([-1*maxval maxval]);
 
 

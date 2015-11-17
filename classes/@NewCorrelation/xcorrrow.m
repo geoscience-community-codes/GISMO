@@ -29,28 +29,28 @@ wcoeff = 1./sqrt(sum(d.w.*d.w));
 
 % CREATE MATRICES IF NEEDED
 nn = get(c,'traces');
-if (size(c.C,1) == 0)
-    c.C = nan(nn);
+if (size(c.corrmatrix,1) == 0)
+    c.corrmatrix = nan(nn);
 end
-if (size(c.L,1) == 0)
-    c.L = nan(nn);
+if (size(c.lags,1) == 0)
+    c.lags = nan(nn);
 end
 
 
 % do not overwrite matrices if they are only being added to
-if size(c.C,1)==0
-    d.C = eye(length(d.trig),'single');
+if size(c.corrmatrix,1)==0
+    d.corrmatrix = eye(length(d.trig),'single');
     eraseC = 1;
 else
-    d.C = c.C;
+    d.corrmatrix = c.corrmatrix;
     eraseC = 0;
 end
 
-if size(c.L,1)==0
-    d.L = zeros(length(d.trig),'single');
+if size(c.lags,1)==0
+    d.lags = zeros(length(d.trig),'single');
     eraseL = 1;
 else
-    d.L = c.L;
+    d.lags = c.lags;
     eraseL = 0;
 end
 
@@ -83,26 +83,26 @@ for n = index
         if abs(Ltmp)<eps('single')
             Ltmp = 0;
         end
-        d.L(n,cols(z))  = Ltmp;
-        d.C(n,cols(z)) = polyval( p , d.L(n,cols(z)) ) .* wcoeff(n) .* wcoeff(cols(z));
+        d.lags(n,cols(z))  = Ltmp;
+        d.corrmatrix(n,cols(z)) = polyval( p , d.lags(n,cols(z)) ) .* wcoeff(n) .* wcoeff(cols(z));
     end
 
 end
 
 % FILL IN OTHER HALF OF MATRIX
-d.C(:,index) = d.C(index,:)';
+d.corrmatrix(:,index) = d.corrmatrix(index,:)';
 
 if eraseL
-    d.L = [];
+    d.lags = [];
 else
-    d.L(:,index) = -1* d.L(index,:)';
+    d.lags(:,index) = -1* d.lags(index,:)';
 end
 
 
 if eraseC
-    d.C = [];
+    d.corrmatrix = [];
 else
-    d.C(:,index) = d.C(index,:)';
+    d.corrmatrix(:,index) = d.corrmatrix(index,:)';
 end
 
 

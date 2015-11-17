@@ -1,4 +1,4 @@
-function c = strip(c,varargin)
+function c = strip(c)
 
 % c = STRIP(c)
 % This function "deletes" the correlation matrix from the
@@ -14,15 +14,7 @@ function c = strip(c,varargin)
 % $Date$
 % $Revision$
 
-
-
-% READ & CHECK ARGUMENTS
-if (nargin>1)
-    error('Wrong number of inputs');
-end; 
-    
-% CALL WAVEFORM/ALIGN
-c.C = [];
+c.corrmatrix = [];
 
 
 

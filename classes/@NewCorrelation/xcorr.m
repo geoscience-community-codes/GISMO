@@ -3,7 +3,7 @@ function c=xcorr(c,varargin)
 % C = XCORR(C)
 % This function calculates and fills in the correlation and lag fields in a
 % correlation object. The input is a correlation object, presumeably with
-% empty correlation and lag fields. c.C is a matrix of maximum correlation
+% empty correlation and lag fields. c.corrmatrix is a matrix of maximum correlation
 % values normalized so that autocorrelations are 1. c.L is the lag time in
 % between the two waveforms required for maximum correlation. To acheive
 % maximum alignment, the value in position (i,j) should be added to the
@@ -137,9 +137,5 @@ end;
 
 
 % ASSIGN CORRELATION PARAMETERS TO ORIGINAL DATA
-c = set( c , 'CORR' , d.C );
-c = set( c , 'LAG'  , d.L  );
-clear d
-
-
-
+c.corrmatrix = d.corrmatrix;
+c.lags = d.lags;

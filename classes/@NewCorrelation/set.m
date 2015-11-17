@@ -21,13 +21,13 @@ end
 
 switch upper(prop_name)
     case {'WAVEFORMS' 'WAVEFORM' 'WAVES'}
-        c.W = reshape(val,length(val),1);
+        c.W = reshape(val,length(val),1); % make 1 column
     case {'TRIG'}
         c.trig = reshape(val,length(val),1);
     case {'CORR'}
-        c.C = val;
+        c.corrmatrix = val;
     case {'LAG'}
-        c.L = val;
+        c.lags = val;
     case {'STAT'}
         c.stat = val;
     case {'LINK'}

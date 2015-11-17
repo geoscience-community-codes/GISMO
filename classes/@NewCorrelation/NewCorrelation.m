@@ -4,7 +4,7 @@ classdef NewCorrelation
    properties
             traces %  % c.W
             trig % will be triggers; % c.trig
-            correlations
+            corrmatrix
             lags % will be lags; % c.L
             stat % will be statistics; % c.stat
             link % might be links;% c.link
@@ -14,7 +14,7 @@ classdef NewCorrelation
    properties(Dependent)
       % properties that existed prior to rewrite
       W % traces as waveforms
-      C % correlations
+      C % correlation matrix corrmatrix
       L % Lags
       
       % new properties
@@ -149,7 +149,7 @@ classdef NewCorrelation
          %
          % The first two fields define the data traces. The last five fields are
          % products derived from these data. (Programming note: Internally, these
-         % fields are referred to as c.trig, c.W, c.C, c.L, c.stat, c.link, and
+         % fields are referred to as c.trig, c.W, c.corrmatrix, c.lags, c.stat, c.link, and
          % c.clust, respectively.)
          %
          % The STAT field contains columns of statistics that can be assigned one
@@ -219,7 +219,7 @@ classdef NewCorrelation
             oldC = varargin{1};
             c.W = get(oldC,'waves'); %  % c.W
             c.trig = get(oldC,'trig'); % will be triggers; % c.trig
-            c.C = get(oldC,'corr');
+            c.corrmatrix = get(oldC,'corr');
             c.lags = get(oldC,'lag');% will be lags; % c.L
             c.stat = get(oldC,'stat'); % will be statistics; % c.stat
             c.link = get(oldC,'link'); % might be links;% c.link
@@ -229,7 +229,7 @@ classdef NewCorrelation
          elseif nargin==2 && isa(varargin{1},'correlation')
             c = varargin{1};
             w = varargin{2};
-            if get(c,'TRACES') ~= numel(w)
+            if c.ntraces ~= numel(w)
                error('Correlation and waveform objects must have the same number of elements');
             end
             c.traces = w;
@@ -503,7 +503,7 @@ classdef NewCorrelation
          end %convert_coral
       end %NewCorrelation
       function waves = get.W(obj)
-         % warning('getting waveform instead of trace');
+         warning('getting waveform instead of traces');
          waves = waveform(obj.traces);
       end
       function obj = set.W(obj, waves)
@@ -511,18 +511,27 @@ classdef NewCorrelation
          obj.traces = SeismicTrace(waves);
       end
       function X = get.C(obj)
-         X = obj.correlations;
+         warning('use c.corrmatrix instead of c.C')
+         X = obj.corrmatrix;
       end
       function obj = set.C(obj, C)
-         obj.correlations = C;
+         warning('use c.corrmatrix instead of c.C')
+         obj.corrmatrix = C;
       end
       function X = get.L(obj)
+         warning('use c.lags instead of c.L')
          X = obj.lags;
       end
       function obj = set.L(obj, lags)
+         warning('use c.lags instead of c.L')
          obj.lags = lags;
       end
       
+      function c = set.traces(c, T)
+         c.traces = T(:); % ensure traces are in a column
+         %TODO: Should this also wipe all the calculated values?
+      end
+            
       function sta = get.station(obj)
          sta = {obj.traces.station};
       end
@@ -544,7 +553,7 @@ classdef NewCorrelation
          sr = obj.traces(1).samplerate;
       end
       function n = get.data_length(obj)
-         n = numel(obj.traces(1).nsamples);
+         n = obj.traces(1).nsamples;
       end
       % ==> adjusttrig.m <==
       c = adjusttrig(c,varargin)

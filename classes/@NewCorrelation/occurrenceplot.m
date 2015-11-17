@@ -83,11 +83,11 @@ if ~isempty(get(c1,'LAG'))
 	c1 = adjusttrig(c1);
 end
 
-traces = get(c1,'TRACES');
-if traces > 50
-	include = 1:round(traces/20):traces;
+nTraces = c1.ntraces;
+if nTraces > 50
+	include = 1:round(nTraces/20):nTraces;
 else
-	include = 1:1:traces;
+	include = 1:1:nTraces;
 end
 
 
@@ -142,7 +142,7 @@ PosX = XLIMS(2) - 0.03*(XLIMS(2)-XLIMS(1));
 YLIMS = get(gca,'Ylim');
 set(gca,'Ylim',YLIMS);  % not sure why this is necessary?
 PosY = YLIMS(2) - 0.15*(YLIMS(2)-YLIMS(1));
-text(PosX,PosY,[ num2str(numel(include)) ' of ' num2str(traces) ' traces shown'],'Color','k','FontWeight','bold','HorizontalAlignment','Right');
+text(PosX,PosY,[ num2str(numel(include)) ' of ' num2str(nTraces) ' traces shown'],'Color','k','FontWeight','bold','HorizontalAlignment','Right');
  
 
 

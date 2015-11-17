@@ -15,7 +15,7 @@ disp(' ');
 %
 showline('WAVEFORMS', c.traces, 'vector');
 showline('TRIG', c.trig, 'vector');
-showline('CORR', c.C, 'square matrix');
+showline('CORR', c.corrmatrix, 'square matrix');
 showline('LAG', c.lags, 'square matrix');
 showline('STAT', c.stat, 'matrix');
 showline('LINK', c.link, 'matrix');

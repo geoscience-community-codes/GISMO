@@ -15,7 +15,6 @@ box on; hold on;
 % GET TIME MAX AND MINS
 tmin =  999999;
 tmax = -999999;
-count = 0;
 wstartrels = 86400 .* (get(c.W(ord),'START_MATLAB') - c.trig(ord));
 wlengths = get(c.W(ord),'DATA_LENGTH');
 wFs = get(c.W(ord),'Freq');
@@ -83,13 +82,8 @@ colormap(cmap);
 
 % replace dates with station names if stations are different
 if ~check(c,'STA')
-    sta  = get(c,'STA');
-    chan = get(c,'CHAN');
-    labels = strcat(sta,'_', chan);
-%     for i=1:get(c,'TRACES')
-%        labels(i) = strcat( sta(i) , '_' , chan(i) );
-%     end
-    set( gca , 'YTick' , [1:1:get(c,'TRACES')] );
+    labels = strcat(c.station , '_', c.channel);
+    set( gca , 'YTick' , 1:1:c.ntraces);
     set( gca , 'YTickLabel' , labels );
 end
 

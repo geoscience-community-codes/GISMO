@@ -11,8 +11,8 @@ function d = xcorr1x1(d)
 
 
 % CREATE EMPTY CORRELATION AND LAG MATRICES
-d.C = eye(length(d.trig),'single');
-d.L = zeros(length(d.trig),'single');
+d.corrmatrix = eye(length(d.trig),'single');
+d.lags = zeros(length(d.trig),'single');
 
 
 % TIME THE PROCESS
@@ -44,9 +44,9 @@ for i = 1:length(d.trig)
 		%[corr,l]=xcorr(d1,d2,'coeff');
 		[corr,l]=feval(Hxcorr,d1,d2,'coeff');
 
-		[maxval,index] = max(corr);
-		d.C(i,j)=corr(index);
-		d.L(i,j)=l(index)/d.Fs + shift; % lag in seconds
+		[~,index] = max(corr);
+		d.corrmatrix(i,j)=corr(index);
+		d.lags(i,j)=l(index)/d.Fs + shift; % lag in seconds
 	
 		% SHOW PROGRESS
  		if (mod(count,round(numcorr/4))==0)
@@ -59,8 +59,8 @@ end;
 
 
 % FILL LOWER TRIANGULAR PART OF MATRICES
-d.C = d.C + d.C' - eye(size(d.C));
-d.L = d.L - d.L';
+d.corrmatrix = d.corrmatrix + d.corrmatrix' - eye(size(d.corrmatrix));
+d.lags = d.lags - d.lags';
 
 
 % DISPLAY RUN TIMES

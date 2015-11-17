@@ -1034,6 +1034,7 @@ classdef TraceData
          % See also window
          % AUTHOR: Michael West
          % Modified: Celso Reyes
+         a=ver;
          HAVE_SIGBOX = ismember('Signal Processing Toolbox',{a.Name});
          if ~HAVE_SIGBOX
             error('TraceData:taper:signalToolboxNotInstalled',...

@@ -86,9 +86,9 @@ end
 
 % SET MASTER TRACE
 if length(varargin)==3
-    trace = varargin{3};
+    masterIdx = varargin{3};
 else
-    trace = get(c,'TRACES');
+    masterIdx = c.ntraces; % last trace
 end
 
 
@@ -98,7 +98,7 @@ if length(varargin)>3
 end
 
 
-disp(['Time step: ' num2str(tstep,'%4.3f') '    Window width: ' num2str(width,'%4.3f') '    Reference trace no.: ' num2str(trace,'%2.0f') ]);
+disp(['Time step: ' num2str(tstep,'%4.3f') '    Window width: ' num2str(width,'%4.3f') '    Reference trace no.: ' num2str(masterIdx,'%2.0f') ]);
 
 
 % CALC INTERFEROGRAM VOLUME
@@ -110,53 +110,18 @@ for i = 1:length(t);
     if (mod(i,10)==1)
         disp(['Center of time window: ' num2str(t(i),'%4.3f') ' ...']);
     end
-    ctmp = crop(c,t(i)-width,t(i)+width);
-    ctmp = xcorr(ctmp,'row',trace);
-    corr = get(ctmp,'CORR');
+    ctmp = c.crop(t(i)-width,t(i)+width);
+    ctmp = xcorr(ctmp,'row',masterIdx);
+    corr = ctmp.corrmatrix;
     lag  = ctmp.lags;
-    CC(:,i) = corr(:,trace);
-    LL(:,i) = lag(:,trace);
+    CC(:,i) = corr(:,masterIdx);
+    LL(:,i) = lag(:,masterIdx);
 end;
 
 
 % PLACE OUTPUT INTO FIRST WAVEFORM FIELD
-i = [1:get(c,'TRACES')]';
-c.W(1) = addfield(c.W(1),'Interferogram_index',i);
-c.W(1) = addfield(c.W(1),'Interferogram_time',t);
-c.W(1) = addfield(c.W(1),'Interferogram_maxcorr',CC);
-c.W(1) = addfield(c.W(1),'Interferogram_lag',LL);
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% Original code which correlates and saves all traces against all traces
-% Works great, but is computationally unnecessary
-%
-% 
-% % CALC INTERFEROGRAM VOLUME
-% % FYI: 3D matrix order is (Y,X,Z)
-% n = size(get(c,'CORR'),1);
-% [T,N1,N2] = meshgrid(t,1:n,1:n);
-% CC = [];
-% LL = [];
-% times = [];
-% for i = 1:length(t);
-%     times = cat(1,times,t(i));
-%     if (mod(i,10)==1)
-%         disp(['Time step: ' num2str(t(i),'%4.3f') ' ...']);
-%     end
-%     ctmp = crop(c,t(i)-width,t(i)+width);
-%     %ctmp = taper(ctmp);
-%     ctmp = xcorr(ctmp);
-%     CC(:,i,:) = get(ctmp,'CORR');
-%     LL(:,i,:) = get(ctmp,'LAG');
-% end;
-%
-% % PREPARE OUTPUT
-% I = [];
-% i = [1:get(c,'TRACES')]';
-% t = times';
-% CC = squeeze(CC(:,:,end));
-% LL = squeeze(LL(:,:,end));
+i = [1:c.ntraces]';
+c.traces(1) = addfield(c.traces(1),'Interferogram_index',i);
+c.traces(1) = addfield(c.traces(1),'Interferogram_time',t);
+c.traces(1) = addfield(c.traces(1),'Interferogram_maxcorr',CC);
+c.traces(1) = addfield(c.traces(1),'Interferogram_lag',LL);
