@@ -15,11 +15,11 @@ function occurrenceplot(c,scale,clusternum)
 %     error('CORR field must be filled in input object');
 % end;
 
-if isempty(get(c,'CLUST'))
+if isempty(c.clust)
     error('CLUST field must be filled in input object');
 end;
 
-if ~isempty(get(c,'LAG'))
+if ~isempty(c.lags)
     disp('Note: Time corrections from LAG field have not been applied to traces. Each cluster will be aligned for plotting only. Note that actual data is unaffected.');
 end;
 
@@ -79,7 +79,7 @@ print(gcf, '-depsc2', 'FIG.ps')
 function doplotrow(c1,n,nmax,bins,nclust)
 
 
-if ~isempty(get(c1,'LAG'))
+if ~isempty(c1.lags)
 	c1 = adjusttrig(c1);
 end
 
@@ -93,7 +93,7 @@ end
 
 % DO HISTOGRAM PLOT
 subplot('Position',[.07 .99-.094*n .42 .09]);
-T = get(c1,'TRIG');
+T = c1.trig;
 N = histc(T,bins);
 h1 = bar(bins,N,'b');
 hold on;
@@ -121,12 +121,12 @@ c1 = stack(c1);
 c1 = norm(c1);
 c1 = crop(c1,mean(Ts),mean(Te));
 %TODO: replace waveform usage with SeismicTrace (traces)
-w = get(c1,'WAVEFORMS');
-xlim([0 get(w(end),'DURATION_EPOCH')]);
+w = c1.traces;
+xlim([0 w(end).duration]);
 plot(w,'Color',[.7 .7 .7],'LineWidth',.5);
 hold on;
 plot(w(end),'Color','k','LineWidth',1);
-xlim([0 get(w(end),'DURATION_EPOCH')]);
+xlim([0 w(end).duration]);
 ylabel(' '); set(gca,'YTickLabel',[]);
 title('');
 if n ~= nmax

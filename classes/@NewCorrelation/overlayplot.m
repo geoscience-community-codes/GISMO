@@ -38,7 +38,7 @@ for i = 1:length(c1.trig)-1
     d = scale * d/normval;
     d = -1 * d; 				% because scale is reversed below
     wstartrel = c1.relativeStartTime(i);
-	tr = wstartrel + [ 0:length(d)-1]'/ c1.traces(i).samplerate; %get(c1.W(i),'Fs'); 
+	tr = wstartrel + [ 0:length(d)-1]'/ c1.traces(i).samplerate;
 	plot(tr,d,'-','Color',[.4 .4 1],'LineWidth',1);
     % save min and max relative trace times
 	if tr(1) < tmin

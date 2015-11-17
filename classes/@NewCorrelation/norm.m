@@ -45,7 +45,7 @@ function c = norm(c,varargin)
       index  = varargin{2};
       varargin = varargin(1:end-1);
    else
-      index = 1:get(c,'Traces');
+      index = 1:c.ntraces;
    end
    
    

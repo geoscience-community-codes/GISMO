@@ -43,7 +43,7 @@ if ~ischar(dbOut)
     disp('Second input parameter must be a text string');
 end
 
-if ~isempty(get(c,'LAG'))
+if ~isempty(c.lags)
     disp('Note: Time corrections from LAG field have not been applied to traces. Consider using ADJUSTTRIG prior to writing out');
     disp(' ');
 end;
@@ -72,9 +72,9 @@ if ~ISDETECTION
             end
             phaseList = repmat(phaseList, c.ntraces,1);
         end
-    elseif ~isempty(get(c,'CLUST'))
+    elseif ~isempty(c.clust)
         disp('assigning phase names based on cluster field');
-        clust = get(c,'CLUST');
+        clust = c.clust;
         phaseList = cell(size(clust));
         for n = 1:numel(clust)
             phaseList(n) = {['c' num2str(clust(n),'%02.0f')]};
@@ -106,9 +106,9 @@ end
 
 % WRITE ARRIVAL TABLE OR TEXT FILE
 if ~ISDETECTION
-    trig = get(c,'TRIG');
-    sta = get(c,'STATION'); %sta = sta{1};
-    chan = get(c,'CHANNEL'); %chan = chan{1};
+    trig = c.trig;
+    sta = c.stations; %sta = sta{1};
+    chan = c.channels; %chan = chan{1};
     if admin.antelope_exists
         % TODO: check for database table
         disp(['Writing database table ' dbOut '.arrival']);

@@ -33,7 +33,7 @@ agcsamp = round( agcwin * c.samplerate );
 
 % LOOP THROUGH TRACES APPLYING GAIN
 for tracenum = 1:length(c.traces)
-   d = get(c.traces(tracenum),'DATA');
+   d = c.traces(tracenum).data;
    scale = zeros( length(d)-2*agcsamp , 1 );
    for index=-1*agcsamp:agcsamp
       scale=scale + abs( d(agcsamp+index+1:agcsamp+index+length(scale)) );

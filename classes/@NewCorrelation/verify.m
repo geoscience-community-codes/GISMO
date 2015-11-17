@@ -10,7 +10,7 @@ function c = verify(c)
 % $Revision$
 
 
-lengths = [c.traces.nsamples]; % get(c.W,'DATA_LENGTH');
+lengths = [c.traces.nsamples];
 ideal = mode(lengths);
 f = find(lengths~=ideal);
 
@@ -18,7 +18,7 @@ for i = f'
 	if (lengths(i)>ideal)
 		c.traces(i) = extract(c.traces(i),'INDEX',1,ideal);
 	elseif (lengths(i)<ideal)
-		d = c.traces(i).data; % get(c.W(i),'DATA');
+		d = c.traces(i).data;
 		wtmp = zeros(ideal,1);
 		wtmp(1:length(d)) = d;
 		c.traces(i).data = wtmp;

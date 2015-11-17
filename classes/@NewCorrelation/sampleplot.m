@@ -23,7 +23,7 @@ for i = ord
 	d = -1 * d; 				% because scale is reversed below
    wstartrel = c.relativeStartTime(i);
 	%wstartrel = 86400*(c.traces(i).firstsampletime()-c.trig(i));	% relative start time (trigger is at zero)
-	tr = wstartrel + [ 0:length(d)-1]'/get(c.W(i),'Fs'); 
+	tr = wstartrel + [ 0:length(d)-1]'/ c.traces(i).samplerate;
 	plot(tr,d+count,'b.','LineWidth',1);
     % save min and max relative trace times
 	if tr(1) < tmin

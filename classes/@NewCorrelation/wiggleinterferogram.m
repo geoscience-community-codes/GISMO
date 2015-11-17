@@ -109,8 +109,8 @@ end
 
 % --------------------------------
     wstartrel = c.relativeStartTime(ord);
-freq = [c.traces(ord).samplerate]; % get(c.W(ord),'Fs');
-lengths = [c.traces(ord).nsamples]; % get(c.W(ord),'data_length');
+freq = [c.traces(ord).samplerate];
+lengths = [c.traces(ord).nsamples];
 tr = nan(max(lengths),numel(ord)); %pre allocate with nan to not plot
 abs_max =  max(abs(c.traces(ord)));
 for count = 1:numel(ord)

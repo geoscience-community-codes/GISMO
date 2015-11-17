@@ -61,19 +61,19 @@ end
 
     
 % CHECK IF TRACES ARE EQUALLY CROPPED
-pretrig  = get(c1,'START') - get(c1,'TRIG');
-posttrig = get(c1,'END')   - get(c1,'TRIG');
+pretrig  = get(c1,'START') - c1.trig;
+posttrig = get(c1,'END')   - c1.trig;
 if (mean(pretrig)~=pretrig(1)) || (mean(posttrig)~=posttrig(1))
     center = mean([pretrig ; posttrig])*86400;
-    pretrig = center - (0.5 * get(c1,'DATA_LENGTH') * get(c1,'Period'));
-    posttrig = pretrig + (get(c1,'DATA_LENGTH')+1) * get(c1,'Period');
+    pretrig = center - (0.5 * c1.data_length * get(c1,'Period'));
+    posttrig = pretrig + (c1.data_length+1) * get(c1,'Period');
     % is it the right length?
     c1 = crop(c1,pretrig,posttrig);
 end
 
 
 % ADJUST STACK LENGTH BY ONE SAMPLE IF NECESSARY
-if (get(c1,'DATA_LENGTH') < get(c,'DATA_LENGTH'))
+if (c1.data_length < c.data_length)
     for i = 1:length(c1.trig)
         Ttmp = c1.traces(i);
         data = Ttmp.data;
