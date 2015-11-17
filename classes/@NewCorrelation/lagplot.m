@@ -1,4 +1,5 @@
-function lagplot(c);
+function lagplot(c)
+   %lagplot
 
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
@@ -9,15 +10,16 @@ function lagplot(c);
 % PREP PLOT
 figure('Color','w','Position',[50 50 600 500]);
 set(gcf,'DefaultAxesFontSize',14);
-imagesc(c.L);
+imagesc(c.lags);
 title('Lag time for maximum correlation (s)');
 
 
 
 % ADD DATES TO AXES
 n = length(c.trig);
-set(gca,'XTick',[1:round(n/25):n]);
-set(gca,'YTick',[1:round(n/25):n]);
+ticvals = 1:round(n/25):n;
+set(gca,'XTick',ticvals);
+set(gca,'YTick',ticvals);
 yt = get(gca,'YTick');
 set(gca,'YTickLabel',datestr(c.trig(yt),'yyyy-mm-dd HH:MM'),'FontSize',6);
 

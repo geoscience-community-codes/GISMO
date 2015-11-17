@@ -28,20 +28,20 @@ if nargin <= 0
     error('Wrong number of inputs');
 end
 
-if isempty(get(c,'CLUST'))
+if isempty(c.clust)
     error('CLUSTER field must be filled in input argument. See HELP CLUSTER');
 end
 
 
-for n = 1:max(get(c,'CLUST'))
+for n = 1:max(c.clust)
     f = find(c,'CLUST',n);
     c1 = subset(c,f);
     family.rank(n) = n;
     family.numel(n) = numel(f);
     family.index(n) = {f};
-    family.begin(n) = min(get(c1,'TRIG'));
-    family.finish(n) = max(get(c1,'TRIG'));
-    family.trig(n) = {get(c1,'TRIG')};
+    family.begin(n) = min(c1.trig);
+    family.finish(n) = max(c1.trig);
+    family.trig(n) = {c1.trig};
 end
 
 

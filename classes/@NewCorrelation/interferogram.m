@@ -61,8 +61,8 @@ end
 
 
 % SET WINDOW WIDTH
-srt_offset = ( get(c,'Start') - get(c,'Trig') ) * 86400;
-end_offset = ( get(c,'End') - get(c,'Trig') ) * 86400;
+srt_offset = ( get(c,'Start') - c.trig ) * 86400;
+end_offset = ( get(c,'End') - c.trig ) * 86400;
 if length(varargin)>=1
     width = varargin{1};
 else
@@ -113,7 +113,7 @@ for i = 1:length(t);
     ctmp = crop(c,t(i)-width,t(i)+width);
     ctmp = xcorr(ctmp,'row',trace);
     corr = get(ctmp,'CORR');
-    lag  = get(ctmp,'LAG');
+    lag  = ctmp.lags;
     CC(:,i) = corr(:,trace);
     LL(:,i) = lag(:,trace);
 end;

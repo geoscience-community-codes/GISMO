@@ -27,7 +27,7 @@ function index = find(c,varargin)
 % READ & CHECK ARGUMENTS
 
 
-if length(varargin)==0
+if numel(varargin)==0
    error('More arguments needed');
 else
     type = varargin{1};
@@ -52,7 +52,7 @@ elseif strncmpi(type,'BIG',3)
 else
     error('This use of find is not recognized');
 end;
-
+end
 
 
 
@@ -64,7 +64,7 @@ end;
 % FIND CLUSTERS
 %
 
-function index = find_clu(c,n);
+function index = find_clu(c,n)
 if isempty(c.clust)
 	error('No cluster information available. Consider using the linkage and cluster functions.');
 end
@@ -77,14 +77,14 @@ index = [];
 for i = 1:length(n)
     index = cat(1,index,find(c.clust==fami(n(i))));
 end
-
+end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % FIND BIGGEST CLUSTERS
 %
 
-function index = find_big(c,n);
+function index = find_big(c,n)
 
 famsize = histc(c.clust,[0:max(c.clust)]+.5  );
 [famsize,fami] = sort(famsize,'descend');
@@ -98,4 +98,4 @@ f = find(famsize>=n);
 for i = 1:length(f)
     index = cat(1,index,find(c.clust==fami(f(i))));
 end
-
+end

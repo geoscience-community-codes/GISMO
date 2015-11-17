@@ -13,9 +13,7 @@ box on; hold on;
 
 
 % GET TEMP CORRELATION OBJECT 
-c1 = NewCorrelation(c);
-c1 = set(c1,'WAVEFORMS', get(c,'WAVEFORMS') );
-c1 = set(c1,'TRIG', get(c,'TRIG') );
+c1 = c;
 c1 = subset(c1,ord);
 c1 = norm(c1);
 c1 = stack(c1);
@@ -25,7 +23,7 @@ c1 = norm(c1);
 % GET MEAN TRACE AMPLITUDE FOR SCALING BELOW
 maxlist = [];
 for i = 1:length(c1.trig)
-    maxlist(end+1) = max(abs( get(c1.W(i),'DATA') ));
+    maxlist(end+1) = max(abs( c1.traces(i).data ));
 end;
 normval = mean(maxlist);
 

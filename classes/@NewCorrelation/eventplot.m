@@ -11,15 +11,15 @@ function eventplot(c,scale,howmany);
 %     error('LINK field must be filled in input object');
 % end;
 
-if isempty(get(c,'CORR'))
+if isempty(c.correlations)
     error('CORR field must be filled in input object');
 end;
 
-if isempty(get(c,'CLUST'))
+if isempty(c.clust)
     error('CLUST field must be filled in input object');
 end;
 
-if ~isempty(get(c,'LAG'))
+if ~isempty(get(c.lags)
     warning('Time corrections from LAG field have not been applied to traces. ADJUSTTRIG may be necessary');
 end;
 

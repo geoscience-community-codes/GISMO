@@ -113,11 +113,10 @@ classdef TraceFilter
                   'this, use trace.fillgaps to replace NaN with an appropriate'...
                   ' value.  \nSee also trace.fillgaps.']);
             end
-            
-            nyquists = f.cutoff ./ trace.nyquist();
-            
+                        
             for n = 1 : numel(trace);
-               [b, a] = getButter(f,nyquists(n));
+               WN = f.cutoff / trace(n).nyquist();     %only one filter is assumed!
+               [b, a] = getButter(f,WN);
                trace(n).data = filtfilt(b, a,trace(n).data);
             end
             

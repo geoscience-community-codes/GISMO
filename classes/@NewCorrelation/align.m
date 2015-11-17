@@ -1,5 +1,6 @@
 function c = align(c,varargin)
-
+%align   resample traces so that a sample falls exactly on trigger time.
+%
 % c = ALIGN(c)
 % This function resamples the traces in a correlation object so that one
 % sample falls precisely on the trigger time. By aligning the samples in
@@ -19,8 +20,6 @@ function c = align(c,varargin)
 % $Revision$
 
 
-
-
 % READ & CHECK ARGUMENTS
 if (nargin>2)
     error('Wrong number of inputs');
@@ -30,16 +29,13 @@ end;
 if nargin==2
     alignfreq = varargin{1};
 else
-    alignfreq = get(c,'Fs');
+    alignfreq = c.samplerate;
 end
     
-    
-% CALL WAVEFORM/ALIGN
-c.W = align(c.W,c.trig,alignfreq);
+% CALL TRACE/ALIGN
+c.traces = align(c.traces, c.trig, alignfreq);
 c = verify(c);
-
-
-
+end
 
 
 

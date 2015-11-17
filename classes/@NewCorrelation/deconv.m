@@ -51,3 +51,4 @@ save
 for n = 1:traces
     c.W(n) = set( c.W(n) , 'DATA' , Z(:,n) );
 end
+end

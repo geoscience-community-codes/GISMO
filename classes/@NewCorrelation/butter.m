@@ -1,5 +1,5 @@
 function c = butter(c,varargin)
-
+%butter   create and apply a butterworth filter to the traces
 % C = BUTTER(C,[TYPE],CUTOFF,[POLES])
 % This function creates and applies a butterworth filter to each waveform
 % in the correlation object. The function returns a correlation object.
@@ -58,7 +58,7 @@ end;
         
 
 % CHECK FREQUENCY RANGE
-if cutoff(end) >= get(c,'NYQ')
+if cutoff(end) >= c.traces(1).nyquist()
     error('Frequency cutoffs exceed the Nyquist frequency')
 end;
   
@@ -70,10 +70,9 @@ end;
 % 1/cutoff(1)
 
 
-        
 % APPLY FILTER
-f = filterobject(type,cutoff,poles);
-c.W = filtfilt(f,c.W);
+f = TraceFilter(type,cutoff,poles);
+c.traces = f.filtfilt(c.traces);
 
 
 

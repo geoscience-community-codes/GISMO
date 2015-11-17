@@ -21,7 +21,7 @@ end
 
 
 for i = 1:nargin
-    if ~isa(varargin{i},'correlation')
+    if ~isa(varargin{i},'correlation') && ~isa(varargin{i},'NewCorrelation')
         error('All inputs must be correlation objects');
     end
     if get(varargin{i},'Fs') ~= get(varargin{1},'Fs')
@@ -43,7 +43,7 @@ c.clust = [];
 
 for i = 2:nargin
     cin = varargin{i};
-    c.W = cat(1,c.W,cin.W);    
+    c.traces = cat(1,c.traces,cin.traces);    
     c.trig = cat(1,c.trig,cin.trig);
 end
 

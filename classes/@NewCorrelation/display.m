@@ -13,23 +13,23 @@ disp(' ');
 disp([inputname(1),' = '])
 disp(' ');
 %
-[i,j] = size(c.W);
-disp(['  WAVEFORMS: ' num2str(i) 'x' num2str(j) ' vector']);
-%
-[i,j] = size(c.trig);
-disp(['       TRIG: ' num2str(i) 'x' num2str(j) ' vector']);
-%
-[i,j] = size(c.C);
-disp(['       CORR: ' num2str(i) 'x' num2str(j) ' square matrix']);
-%
-[i,j] = size(c.L);
-disp(['        LAG: ' num2str(i) 'x' num2str(j) ' square matrix']);
-%
-[i,j] = size(c.stat);
-disp(['       STAT: ' num2str(i) 'x' num2str(j) ' matrix']);
-%
-[i,j] = size(c.link);
-disp(['       LINK: ' num2str(i) 'x' num2str(j) ' matrix']);
-%
-[i,j] = size(c.clust);
-disp(['      CLUST: ' num2str(i) 'x' num2str(j) ' vector']);
+showline('WAVEFORMS', c.traces, 'vector');
+showline('TRIG', c.trig, 'vector');
+showline('CORR', c.C, 'square matrix');
+showline('LAG', c.lags, 'square matrix');
+showline('STAT', c.stat, 'matrix');
+showline('LINK', c.link, 'matrix');
+showline('CLUST', c.clust, 'vector');
+end
+
+function showline(fname, value, desc)
+   fprintf('%11s: %s %s\n',fname, getsizestr(value), desc);
+end
+
+function s = getsizestr(val)
+   sz = size(val);
+   s = num2str(sz(1));
+   for n=2:numel(sz)
+      s = [s,'x',num2str(sz(n))];
+   end
+end

@@ -79,7 +79,7 @@ function c = norm(c,varargin)
          
       case {'RMS', 'STD'}
          for i = index
-            d2 = get(c2.W(i),'DATA');
+            d2 = c2.traces(i).data;
             stdd = 0.5 * std(abs(d2));
             if stdd ~= 0
                c.W(i) = c.W(i) / stdd;

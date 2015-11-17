@@ -12,6 +12,6 @@ function c = integrate(c)
 % $Date$
 % $Revision$
 
-c.W = detrend(c.W);
-c.W = demean(c.W);
-c.W = integrate(c.W);
+c.traces = detrend(c.traces);
+c.traces = demean(c.traces);
+c.traces = integrate(c.traces);

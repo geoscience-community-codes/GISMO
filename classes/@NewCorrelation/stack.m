@@ -42,18 +42,18 @@ if (length(varargin)==1)
 end
 
 
-% CREATE CORREATION OBJECT FOR INTERNAL MANIPULATIONS
-c1 = NewCorrelation;
-c1 = set(c1,'WAVEFORM', get(c,'WAVEFORM') );
-c1 = set(c1,'TRIG', get(c,'TRIG') );
+% CREATE CORRELATION OBJECT FOR INTERNAL MANIPULATIONS
+c1 = NewCorrelation();
+c1.traces = c.traces;
+c1.trig = c.trig;
 if exist('index')
    c1 = subset(c1,index); 
 end
 
 
 % CHECK IF TRACES ARE DESCRITIZED ON THE SAME INVERVALS
-t = 86400 * (c1.trig - get(c1.W,'START'));
-Fs = get(c1,'Fs');
+t = 86400 * (c1.trig - c1.traces.firstsampletime());
+Fs = c1.samplerate;%get(c1,'Fs');
 sampleshift = mod(t,1/Fs);
 if (mean(sampleshift) ~= sampleshift)   % if all sampleshifts are the same
     c1 = align(c1);

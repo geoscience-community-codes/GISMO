@@ -36,7 +36,7 @@ function val = get(c,prop_name)
 % $Date$
 % $Revision$
 
-
+error('using NewCorrelation/get')
 if nargin <= 1
     error('Not enough inputs');
 end
@@ -44,11 +44,7 @@ end
 % got rid of test for c
                        
 switch upper(prop_name)
-    case {'WAVEFORMS'}
-        val = c.W;
-    case {'WAVEFORM'}
-        val = c.W;
-    case {'WAVES'}
+    case {'WAVEFORMS', 'WAVEFORM', 'WAVES'}
         val = c.W;
     case {'TRIG'}
         val = c.trig;
@@ -56,8 +52,6 @@ switch upper(prop_name)
         val = cellstr(datestr(c.trig,'dd-mmm-yyyy HH:MM:SS.FFF'));
     case {'TRIG_MATLAB'}
         val = c.trig;
-    case {'TRIG_EPOCH'}
-        disp('TRIG_EPOCH property not currently implimented');
     case {'CORR'}
         val = c.C;
     case {'LAG'}
@@ -73,58 +67,19 @@ switch upper(prop_name)
         
     % FROM WAVEFORM/GET (SCALAR OUTPUT)
     case {'DATA_LENGTH'}
-       vals = c.traces.nsamples();
-        %vals = get(c.W,'DATA_LENGTH');  
-         %checkvals(vals);
-       val = vals(1);   
+       val = c.traces(1).nsamples();
     case {'FS'}
-       vals = c.traces.samplerate;
-        vals = get(c.W,'FS');  
-        %checkvals(vals);
-        val = vals(1);
-%     case {'PERIOD'}
-%         val = get(c.W(1),'PERIOD');
-%     case {'NYQ'}
-%         val = get(c.W(1),'NYQ');
-
+       val = c.traces(1).samplerate;
+        
 %     % FROM WAVEFORM/GET (VECTOR)
     case {'STATION', 'STA'}
         val = {c.traces.station};
     case {'COMPONENT', 'CHAN'}
         val = {c.traces.channel};
-%     case {'CHAN'}
-%         val = get(c.W,'COMPONENT');        
-% 
-%     case {'START'}
-%         val = get(c.W,'START_MATLAB');
-%     case {'END'}
-%         val = get(c.W,'END_MATLAB');
-%  
-%     case {'START_STR'}
-%         val = get(c.W,'START_STR');
-%     case {'START_MATLAB'}
-%         val = get(c.W,'START_MATLAB');
-%     case {'START_EPOCH'}
-%         val = get(c.W,'START_EPOCH');
-% 
-%     case {'END_STR'}
-%         val = get(c.W,'END_STR');
-%     case {'END_MATLAB'}
-%         val = get(c.W,'END_MATLAB');
-%     case {'END_EPOCH'}
-%         val = get(c.W,'END_EPOCH');
-%      
-%     case {'DURATION_STR'}
-%         val = get(c.W,'DURATION_STR');
-%     case {'DURATION_MATLAB'}
-%         val = get(c.W,'DURATION_MATLAB');
-%     case {'DURATION_EPOCH'}
-%         val = get(c.W,'DURATION_EPOCH');    
 
  % OTHER ROUTINES
     case {'DATA'}
         val = double(c.traces);
-        
         
     otherwise
         try 
@@ -134,7 +89,7 @@ switch upper(prop_name)
             error([upper(prop_name) ' is not a valid argument for correlation/get']);
         end
 end;
-
+end
 
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CHECKVALS
@@ -149,5 +104,5 @@ if ~same
     % from within other scripts
     % warning('Waveforms have different frequencies or different numbers of samples. Consider VERIFY function');
 end;
-
+end
 

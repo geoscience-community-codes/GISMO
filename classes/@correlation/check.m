@@ -133,7 +133,7 @@ end
 
 function A = ensureCell(A)
    if ~iscell(A)
-      chan = {A};
+      A = {A};
    end
 end
 

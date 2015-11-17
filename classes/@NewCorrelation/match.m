@@ -50,8 +50,8 @@ disp(['Tolerance for successful match is: ' num2str(tolerance) ' seconds']);
 
 
 % FIND ELEMENTS THAT MATCH
-trig1 = get(c1,'TRIG');
-trig2 = get(c2,'TRIG');
+trig1 = c1.trig;
+trig2 = c2.trig;
 matchIndex = [];
 for n = 1:numel(trig1)
     [minVal,minIndex] = min(abs(trig2 - trig1(n))*86400);

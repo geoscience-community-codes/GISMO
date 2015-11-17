@@ -1,5 +1,5 @@
 function c=cluster(c,varargin)
-
+%cluster   Construct agglomerative clusters from linkage for Seismic Traces
 % c = CLUSTER(c,CUTOFF) cuts the "branches" of the linkage tree to create
 % discrete clusters.  CLUSTER reads the LINK field (must be filled) and
 % fills in the CLUST field. The first argument and the returned value are
@@ -42,14 +42,14 @@ function c=cluster(c,varargin)
 % $Date$
 % $Revision$
 
-
+% REQUIRES STATISTICS & MACHINE LEARNING TOOLBOX
 
 if nargin <= 1
     error('Not enough inputs');
 end
 
 
-if isempty(get(c,'LINK'))
+if isempty(c.link)
     error('LINK field must be filled in input object');
     error('See correlation/linkage function');
 end

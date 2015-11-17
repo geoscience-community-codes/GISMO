@@ -1,5 +1,5 @@
-function dendrogramplot(c);
-
+function dendrogramplot(c)
+%dendrogramplot   create a dendrogram plot
 % Private method. See ../plot for details.
 
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
@@ -7,11 +7,11 @@ function dendrogramplot(c);
 % $Revision$
 
 
-if isempty(get(c,'LINK'))
+if isempty(c.link)
     error('LINK field must be filled in input object');
 end;
 
-if ~isempty(get(c,'LAG'))
+if ~isempty(c.lags)
     disp('NOTE: Time corrections from LAG field have not been applied to traces yet.');
 end;
 
@@ -29,14 +29,12 @@ set(gcf,'Position',[0 0 640 1024]);
 set(gca,'XDir','reverse');
 label = 1- str2num(get(gca,'XTickLabel'));
 set(gca,'XTickLabel',label);
-%xlabel('distance (dissimilarlity)','FontSize',16);
 xlabel('inter-cluster correlation','FontSize',16);
 
 
 % MODIFY Y AXIS LABELS
 if ~isempty(c.clust)
     YT = (get(gca,'YTickLabel'));
-	%YT = strcat(YT,' (',num2str(c.clust(perm)),')');
     set(gca,'YTickLabel',YT);
     ylabel('event number (and cluster)','FontSize',16);
 end

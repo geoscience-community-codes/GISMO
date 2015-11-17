@@ -1,5 +1,4 @@
 function c = diff(c)
-
 % DIFF differentiate each trace.
 %
 % C = DIFF(C) differentiate each trace through a call to WAVEFORM/DIFF.
@@ -10,4 +9,5 @@ function c = diff(c)
 % $Revision$
 
 
-c.W = diff(c.W);
+c.traces = diff(c.traces);
+end

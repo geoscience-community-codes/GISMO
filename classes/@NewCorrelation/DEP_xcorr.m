@@ -78,13 +78,7 @@ end
 % for matrices. This structure is based on the correlation object version
 % 0. 
 
-d.start = get(c1.W,'START_MATLAB');
-d.Fs    = get(c1.W(1),'Fs');
-d.trig  = c1.trig;
-d.w     = [];
-for i = 1:length(c1.W)
-    d.w(:,i) = get(c1.W(i),'DATA');
-end;
+d = getwavematrix(c1)
 clear c1
 
 
@@ -107,17 +101,16 @@ end
 
 
 % ASSIGN CORRELATION PARAMETERS TO ORIGINAL DATA
-c = set( c , 'CORR' , d.C );
-c = set( c , 'LAG'  , d.L  );
-clear d
-
-
+c.correlations = d.C;
+c.lags = d.L;
+end
 % CREATE MATRIX OF WAVEFORM DATA
-    function d = getwavematrix(c)
-d.start = get(c.W,'START_MATLAB');
-d.Fs    = get(c.W(1),'Fs');
-d.trig  = c.trig;
-d.w     = [];
+   function M = getwavematrix(c)
+M.start = c.traces.firstsampletime(); %should this be just 1?
+M.Fs    = c.traces(1).samplerate;
+M.trig  = c.trig;
+M.w     = [];
 for i = 1:length(c.W)
-    d.w(:,i) = get(c.W(i),'DATA');
+    M.w(:,i) = c.traces(i).data;
 end;
+   end

@@ -54,14 +54,11 @@ function c = adjusttrig(c,varargin)
 % with the INDEX modifier. To change this, it would be best to rewrite the
 % argument handling.
 
-
-
 % CHECK ARGUMENTS
 
 if length(varargin)>2
 	error('Too many arguments');
 end;
-
 
 % SELECT SUBROUTINE
 if length(varargin)>=1 && isnumeric(varargin{1})      % use shifttriggers
@@ -69,7 +66,7 @@ if length(varargin)>=1 && isnumeric(varargin{1})      % use shifttriggers
     c = shifttriggers(c,trigshift);
 else
     % check if LAG field in filled                    % use adjusttriggers
-    if isempty(get(c,'LAG'))
+    if isempty(c.lags)
         error('LAG field must be filled in input object');
         error('See correlation/adjusttrig function');
     end;
@@ -86,15 +83,20 @@ else
 c = adjusttriggers(c,calctype,dosubset);
 end
 
-
 % SHIFT TRIGGER TIMES UNIFORMLY
 function c = shifttriggers(c,trigshift)
 c.trig = c.trig + trigshift/86400;
 
-
 % ALIGN TRIGGER TIMES
 function c = adjusttriggers(c,calctype,index)
-
+switch calctype(1:3)
+   case 'LSQ'
+   case 'MIN'
+   case 'MED'
+   case 'IND'
+   case 'CLU'
+   otherwise
+end
 
 if calctype(1:3)=='LSQ'
     if size(c.stat,1)==0

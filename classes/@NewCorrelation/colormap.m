@@ -1,5 +1,5 @@
 function c = colormap(c,varargin)
-
+%colormap   apply a colormap to the cross-correlation
 % C = COLORMAP(C)
 % Apply the standard correlation toolbox colormap for cross-correlation
 % values. This is the same colormap used in PLOT(C,'CORR').

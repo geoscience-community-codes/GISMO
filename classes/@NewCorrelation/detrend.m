@@ -1,6 +1,5 @@
 function c = detrend(c,varargin);
-
-% DETREND removes the slope of each trace.
+% DETREND   removes the slope of each trace.
 %
 % C = DETREND(C) removes the trend from each trace. In most cases it is
 % unnecessary to call this function directly. By default, all traces are
@@ -11,4 +10,5 @@ function c = detrend(c,varargin);
 % $Date$
 % $Revision$
 
-c.W = detrend(c.W);
+c.traces = detrend(c.traces);
+end

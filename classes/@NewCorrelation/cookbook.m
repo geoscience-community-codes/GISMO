@@ -79,7 +79,7 @@ function correlationVariables = cookbook(corr)
    % data. It is important to at least apply a high pass filter to data before
    % cross-correlating as long period rolls can greatly bias the correlation.
    
-   c = crop(c,-4,12);
+   c = c.crop(-4,12);
    c = taper(c);
    c = butter(c,[.5 10]);
    
@@ -102,7 +102,7 @@ function correlationVariables = cookbook(corr)
    c = sort(c);
    plot(c,'corr');
    set(gcf,'Position',[50 50 500 400]);
-   corr_matrix = get(c,'CORR');
+   corr_matrix = c.correlations;
    corr_matrix(1:5,1:5)
    
    %% Lag matrix
@@ -111,7 +111,7 @@ function correlationVariables = cookbook(corr)
    
    plot(c,'lag');
    set(gcf,'Position',[50 50 500 400]);
-   lag_matrix = get(c,'LAG');
+   lag_matrix = c.lags;
    lag_matrix(1:5,1:5)
    
    

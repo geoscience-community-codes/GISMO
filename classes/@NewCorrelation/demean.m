@@ -11,4 +11,5 @@ function c = demean(c,varargin);
 % $Date$
 % $Revision$
 
-c.W = demean(c.W);
+c.traces = demean(c.traces);
+end

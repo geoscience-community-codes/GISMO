@@ -64,9 +64,8 @@ function c=xcorr(c,varargin)
 
 algorithm = '1xr';
 c1 = NewCorrelation;
-c1 = set(c1,'WAVEFORM', get(c,'WAVEFORM') );
-c1 = set(c1,'TRIG', get(c,'TRIG') );
-
+c1.traces = c.traces;
+c1.trig = c.trig;
 
 
 % CHECK FOR TRACE SUBSET
@@ -104,10 +103,10 @@ end;
 % improves computation speed because fft and other routines are optomized
 % for matrices. This structure is based on the correlation object version
 % 0. 
-d.start = get(c1.W,'START_MATLAB');
-d.Fs    = get(c1.W(1),'Fs');
+d.start = c1.traces.firstsampletime();
+d.Fs    = c1.traces(1).samplerate();
 d.trig  = c1.trig;
-d.w = double(c1.W);
+d.w = double(c1.traces);
 % d.w     = [];
 % for i = 1:length(c1.W)
 %     d.w(:,i) = get(c1.W(i),'DATA');

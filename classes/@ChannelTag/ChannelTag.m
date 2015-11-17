@@ -215,7 +215,7 @@ classdef ChannelTag
          % If the results of a single chaTag are requested, then a string is returned.
          % Otherwise, a cell of values will be returned.
          
-         error('Old Usage. instead of "get", ,use the field name directly.  eg. x = ch.station');
+         warning('Old Usage. instead of "get", ,use the field name directly.  eg. x = ch.station');
          
          prop = lower(prop);
          

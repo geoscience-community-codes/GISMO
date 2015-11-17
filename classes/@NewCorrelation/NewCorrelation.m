@@ -4,7 +4,7 @@ classdef NewCorrelation
    properties
             traces %  % c.W
             trig % will be triggers; % c.trig
-            correlations;
+            correlations
             lags % will be lags; % c.L
             stat % will be statistics; % c.stat
             link % might be links;% c.link
@@ -12,9 +12,23 @@ classdef NewCorrelation
    end
    
    properties(Dependent)
+      % properties that existed prior to rewrite
       W % traces as waveforms
       C % correlations
       L % Lags
+      
+      % new properties
+      ntraces % number of traces
+      data_length % length of first trace (should all be same)
+      % properties associated with the waveforms / traces
+      station % station name for each trace
+      channel % channel name for each trace
+      network % network name for each trace
+      location % location name for each trace
+      
+      samplerate % sample rate (for first trace)
+      data % all the trace's data as a matrix
+      
    end
       
    methods
@@ -299,7 +313,7 @@ classdef NewCorrelation
          
          
          %% ADJUST DATA LENGTH AND SAMPLE RATE IF NECESSARY
-         if get(c,'TRACES')
+         if ~isempty(c.traces)
             c = demean(c);
             c = detrend(c);
             if ~check(c,'FREQ')
@@ -509,6 +523,29 @@ classdef NewCorrelation
          obj.lags = lags;
       end
       
+      function sta = get.station(obj)
+         sta = {obj.traces.station};
+      end
+      function net = get.network(obj)
+         net = {obj.traces.network};
+      end
+      function loc = get.location(obj)
+         loc = {obj.traces.location};
+      end
+      function cha = get.channel(obj)
+         cha = {obj.traces.channel};
+      end
+      
+      function n = get.ntraces(obj)
+         n = numel(obj.traces);
+      end
+      
+      function sr = get.samplerate(obj)
+         sr = obj.traces(1).samplerate;
+      end
+      function n = get.data_length(obj)
+         n = numel(obj.traces(1).nsamples);
+      end
       % ==> adjusttrig.m <==
       c = adjusttrig(c,varargin)
       
@@ -528,7 +565,7 @@ classdef NewCorrelation
       val = check(c,varargin)
       
       % ==> cluster.m <==
-      c=cluster(c,varargin)
+      c = cluster(c,varargin)
       
       % ==> colormap.m <==
       c = colormap(c,varargin)
@@ -561,10 +598,10 @@ classdef NewCorrelation
       val = get(c,prop_name)
       
       % ==> getclusterstat.m <==
-      family=getclusterstat(c)
+      family = getclusterstat(c)
       
       % ==> getstat.m <==
-      c=getstat(c)
+      c = getstat(c)
       
       % ==> hilbert.m <==
       c = hilbert(c,n)
@@ -664,22 +701,6 @@ classdef NewCorrelation
       
       % ==> wiggleplot.m <==
       wiggleplot(c,scale,ord,norm)
-     %{ 
-      % ==> xcorr1x1.m <==
-      d = xcorr1x1(d);
-      
-      % ==> xcorr1xr.m <==
-      d = xcorr1xr(d,style)
-      
-      % ==> xcorr1xr_orig.m <==
-      d = xcorr1xr_orig(d)
-      
-      % ==> xcorrdec.m <==
-      d = xcorrdec(d)
-      
-      % ==> xcorrrow.m <==
-      d = xcorrrow(d,c,index)
-      %}
    end
    methods(Static)
       % ==> cookbook.m <==

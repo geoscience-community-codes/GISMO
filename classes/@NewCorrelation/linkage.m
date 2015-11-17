@@ -1,5 +1,5 @@
-function c = linkage(c,varargin);
-
+function c = linkage(c,varargin)
+%linkage   Agglomerative hierarchical cluster tree for Seismic Traces
 % c = LINKAGE(c) Creates a hierarchical cluster tree for all waveforms in
 % the correlation object. It reads the CORR field (must be filled) and
 % fills in the LINK field. This iuse is identical to c =
@@ -28,29 +28,20 @@ function c = linkage(c,varargin);
 % $Date$
 % $Revision$
 
+% REQUIRES STATISTICS TOOLBOX
 
 if nargin <= 0
     error('Not enough inputs');
 end
 
 
-if get(c,'TRACES')<2
+if c.ntraces < 2
     error('correlationLinkageTooFewTraces','Correlation object must contain at least two traces to use the LINKAGE function');
 end;
-
-
-% if isempty(get(c,'LAG'))
-%     error('LAG field must be filled in input object');
-%     error('See correlation/linkage function');
-% end;
-
-
-
 
 K = 1.001 - c.C;			% create dissimilarity matrix
 K = K - diag(diag(K));			% remove diagonal (required format)
 Y = squareform(K);          % transform to "pdist" vector format
-
 
 if nargin == 1
     c.link = linkage(Y,'average');
@@ -58,4 +49,4 @@ else
     c.link = linkage(Y,varargin{:});
 end
 
-
+end

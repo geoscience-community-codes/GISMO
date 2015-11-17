@@ -1,5 +1,6 @@
 function c = agc(c,varargin)
-
+%acg   apply automatic gain control to each trace
+%
 % This function applies automatic gain control (AGC) to each trace. This 
 % process, commonly used in seismic reflection processing, applies a
 % variable scale to each trace such that the amplitude along the entire
@@ -22,17 +23,29 @@ if (length(varargin) >= 2)
     error('Too many inputs');
 end
 
-
-
-
 if length(varargin)==1
 	agcwin = varargin{1};
 else
 	agcwin = 0.5;
 end;
-agcsamp = round( agcwin * get(c.W(1),'Fs') );
+agcsamp = round( agcwin * c.samplerate );
 
 
+% LOOP THROUGH TRACES APPLYING GAIN
+for tracenum = 1:length(c.traces)
+   d = get(c.traces(tracenum),'DATA');
+   scale = zeros( length(d)-2*agcsamp , 1 );
+   for index=-1*agcsamp:agcsamp
+      scale=scale + abs( d(agcsamp+index+1:agcsamp+index+length(scale)) );
+   end;
+   scale = scale/mean(abs(scale));
+   scale = [ones(agcsamp,1)*scale(1) ; scale ; ones(agcsamp,1)*scale(end)];
+   d = d./scale;
+   c.traces(tracenum).data =  d;
+end;
+
+%{
+ old implementation
 % LOOP THROUGH TRACES APPLYING GAIN
 for tracenum = 1:length(c.W)
    w = get(c.W(tracenum),'DATA');
@@ -45,4 +58,6 @@ for tracenum = 1:length(c.W)
    w = w./scale;
    c.W(tracenum) = set(c.W(tracenum),'DATA',w);
 end;
+%}
 
+end

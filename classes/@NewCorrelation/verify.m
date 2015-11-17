@@ -21,7 +21,7 @@ for i = f'
 		d = get(c.W(i),'DATA');
 		wtmp = zeros(ideal,1);
 		wtmp(1:length(d)) = d;
-		c.W(i) = set(c.W(i),'DATA',wtmp);
+		c.traces(i).data = wtmp;
 	end
 end
 

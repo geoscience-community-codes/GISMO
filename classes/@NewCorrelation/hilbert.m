@@ -23,7 +23,7 @@ function c = hilbert(c,n)
 
 
 if exist('n','var'),
-    c.W = hilbert(c.W,n);
+    c.traces = hilbert(c.traces,n);
 else
-    c.W = hilbert(c.W);
+    c.traces = hilbert(c.traces);
 end
