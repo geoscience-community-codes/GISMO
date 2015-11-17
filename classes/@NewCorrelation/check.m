@@ -37,9 +37,7 @@ function val = check(c,varargin)
    
    
    % GET INPUT PARAMETERS
-   if ~isa(c,'correlation')
-      disp('First input parameter must be a correlation object');
-   end
+   
    
    if isempty(varargin)
       error('Wrong number of inputs');
@@ -70,71 +68,48 @@ end
 %% Check offsets
 function isValid = do_offset(c)
    
-   srt_offset = ( get(c,'Trig') - get(c,'Start') ) * 86400;
-   end_offset = ( get(c,'End') - get(c,'Trig') ) * 86400;
+   srt_offset = (c.trig - c.traces.firstsampletime() ) * 86400;
+   end_offset = (  c.traces.lastsampletime() - c.trig ) * 86400;
    
-   isValid = all(( max(srt_offset) - min(srt_offset) ) <= get(c,'Period')) && ...
-      all(( max(end_offset) - min(end_offset) ) <= get(c,'Period'));
+   isValid = all(( max(srt_offset) - min(srt_offset) ) <= c.traces(1).period) && ...
+      all(( max(end_offset) - min(end_offset) ) <= c.traces(1).period);
 end
 
 
 %% Check station codes
 function isValid = do_stations(c)
-   
-   sta = get(c,'STA');
-   sta = ensureCell(sta);
+   sta = c.stations;
    isValid = isempty([sta{:}]) || all(strcmpi(sta(1), sta));
 end
 
 %% Check channel codes
 function isValid = do_channels(c)
    
-   chan = get(c,'CHAN');
-   chan = ensureCell(chan);
+   chan = c.channels;
    isValid = isempty([chan{:}]) || all(strcmpi(chan(1), chan));
 end
 
 %% Check frequencies
 function isValid = do_frequency(c)
-   isValid = true;
-   w = get(c,'WAVES');
-   x = get(w,'FREQ');
-   if numel(x)>0       % not sure why this loop is needed but it works ???numel(x)
-      tf = find(x==x(1));
-      if length(find(tf)) ~= get(c,'traces')
-         isValid = false;
-      end
-   end
+   x = [c.traces.samplerate];
+   isValid = all(x == x(1));
 end
 
 
 %% Check number of samples in traces
 function isValid = do_samples(c)
-   isValid = true;
-   w = get(c,'WAVES');
-   x = get(w,'DATA_LENGTH');
-   if numel(x)>0
-      tf = find(x==x(1));
-      if length(find(tf)) ~= get(c,'traces')
-         isValid = false;
-      end
-   end
+   x = c.traces.nsamples();
+   isValid = all(x == x(1));
 end
 
 
 %% Check absolute amplitude of the traces
 function isValid = do_scale(c)
    
-   d = get(c,'DATA');
+   d = double(c.traces);
    x = max(abs(d));
    f = x>0;
    isValid = ( max(x) / mean(x(f)) ) <= 1.5;
-end
-
-function A = ensureCell(A)
-   if ~iscell(A)
-      A = {A};
-   end
 end
 
 

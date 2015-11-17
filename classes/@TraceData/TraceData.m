@@ -381,7 +381,7 @@ classdef TraceData
          % See also sign
          for n=1:numel(trace)
             trace(n).data = sign(trace(n).data);
-            trace(n).units = ['sign(', trace(n).units, ')'];
+            %trace(n).units = ['sign(', trace(n).units, ')'];
          end
       end
       
@@ -1034,6 +1034,7 @@ classdef TraceData
          % See also window
          % AUTHOR: Michael West
          % Modified: Celso Reyes
+         a=ver;
          HAVE_SIGBOX = ismember('Signal Processing Toolbox',{a.Name});
          if ~HAVE_SIGBOX
             error('TraceData:taper:signalToolboxNotInstalled',...
@@ -1175,7 +1176,7 @@ classdef TraceData
          %   See also trace.align
          
          out = T(1);
-         out.station = [out.station ' - stack (' num2str(T) ')'];
+         out.station = [out.station ' - stack (' num2str(numel(T)) ')'];
          out.data = sum(double(T),2);
       end
       function stackedTraces = binStack(T,nBins,binOverlap)
