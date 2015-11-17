@@ -34,9 +34,9 @@ if numel(varargin)==1
     end
     index = varargin{1};
 else
-    index = 1:numel(c.W);
+    index = 1:c.ntraces;
 end
-if max(index)>numel(c.W)
+if max(index)>c.ntraces
 	error('correlation:waveform','index exceeds the number of traces'); 
 end
 

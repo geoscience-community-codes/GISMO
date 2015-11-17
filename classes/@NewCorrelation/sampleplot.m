@@ -18,10 +18,11 @@ tmax = -999999;
 count = 0;
 for i = ord
 	count = count + 1;
-    d = get(c.W(i),'DATA');            %%%d = c.w(:,i);
+   d = c.traces(i).data;            %%%d = c.w(:,i);
 	d = scale * d/max(abs(d));		% apply a uniform amplitude scale;
 	d = -1 * d; 				% because scale is reversed below
-	wstartrel = 86400*(get(c.W(i),'START_MATLAB')-c.trig(i));	% relative start time (trigger is at zero)
+   wstartrel = c.relativeStartTime(i);
+	%wstartrel = 86400*(c.traces(i).firstsampletime()-c.trig(i));	% relative start time (trigger is at zero)
 	tr = wstartrel + [ 0:length(d)-1]'/get(c.W(i),'Fs'); 
 	plot(tr,d+count,'b.','LineWidth',1);
     % save min and max relative trace times
@@ -42,15 +43,7 @@ set(gca,'YTick',1:length(ord));
 set(gca,'YTickLabel',datestr(c.trig(ord)),'FontSize',6);
 xlabel('Relative Time,(s)','FontSize',8);
 
-
-
-
-% replace dates with station names if stations are different
-if ~check(c,'STA')
-    labels = strcat(c.station , '_', c.channel);
-    set( gca , 'YTick' , 1:1:c.ntraces);
-    set( gca , 'YTickLabel' , labels );
-end
+maybeReplaceYticksWithStationNames(c,gca)
 
 %PRINT OUT FIGURE
 set(gcf, 'paperorientation', 'portrait');

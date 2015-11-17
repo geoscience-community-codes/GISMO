@@ -30,7 +30,7 @@ end
 
 % FIND CLUSTERS AND STACK TRACES
 c1 = NewCorrelation;   % get new correlation object without correlation info
-c1.W = c.W;
+c1.traces = c.traces;
 c1.trig = c.trig;
 for i = 1:howmany
     index{i} = find(c,'CLU',i);

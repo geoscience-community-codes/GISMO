@@ -13,26 +13,22 @@ function c = cat(varargin)
 % $Revision$
 
 
-
-if nargin <= 1
+if nargin < 2
     error('Not enough inputs');
 end
 
+varargin{1} = ensureType(varargin{1});
+expectedSamplerate = varargin{1}.samplerate;
+expectedDatalength = varargin{1}.data_length;
 
-
-for i = 1:nargin
-    if ~isa(varargin{i},'correlation') && ~isa(varargin{i},'NewCorrelation')
-        error('All inputs must be correlation objects');
-    end
-    if get(varargin{i},'Fs') ~= get(varargin{1},'Fs')
-        error('All inputs must have the same sampling frequency');
-    end
-    if size(get(varargin{i},'DATA_LENGTH'),1) ~= size(get(varargin{1},'DATA_LENGTH'),1)
-        error('All inputs must have the same trace length');
-    end
+% make sure that the inputs are compatible
+for i = 2:nargin
+   varargin{i} = ensureType(varargin{i});
+   assert(varargin{i}.samplerate == expectedSamplerate,...
+      'All inputs must have the same sampling frequency');
+   assert(varargin{i}.data_length == expectedDatalength,...
+      'All inputs must have the same trace length');
 end
-
-
 
 c = varargin{1};
 c.corrmatrix = [];
@@ -46,7 +42,13 @@ for i = 2:nargin
     c.traces = cat(1,c.traces,cin.traces);    
     c.trig = cat(1,c.trig,cin.trig);
 end
+end
 
-
+function c = ensureType(c)
+   if ~isa(c,'NewCorrelation')
+      c = NewCorrelation(c); % c must be a correlation or be convertable into one.
+   end
+end
+         
 
 

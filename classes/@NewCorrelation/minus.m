@@ -98,7 +98,7 @@ end
 toSubtract = c1.traces(I).data; %this trace will be subtracted from all
 for i = 1:length(c.trig)
     d = c1.traces(i).data - toSubtract;
-    c.traces(i).data = set( c.W(i) , 'Data' , d);
+    c.traces(i).data = d;
     c.trig(i) = c1.trig(i);
 end
 c.corrmatrix = [];

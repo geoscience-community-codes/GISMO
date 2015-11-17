@@ -21,7 +21,7 @@ function d = xcorr1xr(d,style)
 [M,N] = size(d.w);
 pretrig = 86400*(d.trig-d.start);   % time between trace start and trigger
 l = (1./d.Fs)*[-M+1:M-1]';        % lag vector
-% next two lines are equivalent ways to get normalization coefficients
+% next two lines are equivalent ways to determine normalization coefficients
 wcoeff = 1./sqrt(sum(d.w.*d.w));
 %for i = 1:size(d.w,2), wcoeff(i) = 1./norm(d.w(:,i)); end;
 d.corrmatrix = eye(length(d.trig),'single');

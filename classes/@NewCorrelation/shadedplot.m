@@ -15,9 +15,9 @@ box on; hold on;
 % GET TIME MAX AND MINS
 tmin =  999999;
 tmax = -999999;
-wstartrels = 86400 .* (get(c.W(ord),'START_MATLAB') - c.trig(ord));
-wlengths = get(c.W(ord),'DATA_LENGTH');
-wFs = get(c.W(ord),'Freq');
+wstartrels = c.relativeStartTime(ord);
+wlengths = [c.traces(ord).nsamples];
+wFs = [c.traces(ord).samplerate];
 
 for i = 1:numel(ord)
 	%wstartrel = 86400*(get(c.W(i),'START_MATLAB')-c.trig(i));	% relative start time (trigger is at zero)
@@ -44,7 +44,7 @@ N = 1:length(ord);
 T =  tmin : p : tmax ;
 D = zeros(length(N),length(T));
 count = 0;
-absmax = max(abs(c.W(ord)));
+absmax = max(abs(c.traces(ord)));
 absmax(absmax==0) = scale; %next line will be negated for zero-scale
 d = double(c.W(ord) .* (scale ./ absmax));
 for i = 1:numel(ord)
@@ -77,17 +77,7 @@ cmap = [ 0 0 1;
 cmap = interp1([-1 0 1],cmap,[-1:.1:1],'linear');
 colormap(cmap);
 
-
-
-
-% replace dates with station names if stations are different
-if ~check(c,'STA')
-    labels = strcat(c.station , '_', c.channel);
-    set( gca , 'YTick' , 1:1:c.ntraces);
-    set( gca , 'YTickLabel' , labels );
-end
-
-
+maybeReplaceYticksWithStationNames(c,gca)
 
 %PRINT OUT FIGURE
 set(gcf, 'paperorientation', 'portrait');

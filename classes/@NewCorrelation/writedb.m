@@ -138,9 +138,9 @@ end
 
 % WRITE DETECTION TABLE
 if ISDETECTION
-    trig = get(c,'TRIG');
-    sta = get(c,'STATION');
-    chan = get(c,'CHANNEL');
+    trig = c.trig;
+    sta = c.stations;
+    chan = c.channels;
     % TODO: check for database table
     disp(['Writing database table ' dbOut '.detection']);
     db = dbopen(dbOut,'r+');

@@ -145,7 +145,7 @@ elseif calctype(1:3)=='CLU'
         c1 = subset(c,f);
         c1 = adjusttrig(c1,'min',index);  % check use of index
         c.trig(f) = c1.trig;
-        c.W(f) = c1.W;
+        c.traces(f) = c1.traces;
     end
     if DOLINK==1
        c.link = []; 

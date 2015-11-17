@@ -107,10 +107,6 @@ d.start = c1.traces.firstsampletime();
 d.Fs    = c1.traces(1).samplerate();
 d.trig  = c1.trig;
 d.w = double(c1.traces);
-% d.w     = [];
-% for i = 1:length(c1.W)
-%     d.w(:,i) = get(c1.W(i),'DATA');
-% end;
 clear c1
 
 

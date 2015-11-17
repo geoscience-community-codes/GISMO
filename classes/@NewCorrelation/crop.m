@@ -46,7 +46,7 @@ posttrig=posttrig(1);
 
 % CROP EACH TRACES
 sampRate = c.samplerate;
-wStarts = c.traces.firstsampletime(); % get(c.W,'start_matlab');
+wStarts = c.traces.firstsampletime();
 imax = numel(wStarts);
 Mo = c.data_length; % get(c,'Data_Length');
 M = round(sampRate*(posttrig-pretrig));

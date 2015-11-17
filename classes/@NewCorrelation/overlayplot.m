@@ -34,11 +34,11 @@ tmax = -999999;
 count = 0;
 for i = 1:length(c1.trig)-1
 	count = count + 1;
-    d = get(c1.W(i),'DATA');
+    d = c1.traces(i).data;
     d = scale * d/normval;
     d = -1 * d; 				% because scale is reversed below
-	wstartrel = 86400*(get(c1.W(i),'START_MATLAB')-c1.trig(i));	% relative start time (trigger is at zero)
-	tr = wstartrel + [ 0:length(d)-1]'/get(c1.W(i),'Fs'); 
+    wstartrel = c1.relativeStartTime(i);
+	tr = wstartrel + [ 0:length(d)-1]'/ c1.traces(i).samplerate; %get(c1.W(i),'Fs'); 
 	plot(tr,d,'-','Color',[.4 .4 1],'LineWidth',1);
     % save min and max relative trace times
 	if tr(1) < tmin
@@ -52,11 +52,11 @@ end;
 
 
 % PLOT THE STACK OF TRACES
-d = get(c1.W(end),'DATA');
+d = c1.traces(end).data;
 d = scale * d/normval;			
-d = -1 * d; 				
-wstartrel = 86400*(get(c1.W(end),'START_MATLAB')-c1.trig(end));
-tr = wstartrel + [ 0:length(d)-1]'/get(c1.W(end),'Fs'); 
+d = -1 * d;
+    wstartrel = c1.relativeStartTime(c1.ntraces);
+tr = wstartrel + [ 0:length(d)-1]' / c1.traces(end).samplerate; 
 plot(tr,d,'k-','LineWidth',2);
 
 

@@ -13,8 +13,7 @@ box on;
 % hold on;
 
 % LOOP THROUGH WAVEFORMS
-%wstartrel = 86400 *( get(c.W(ord),'START_MATLAB') - c.trig(ord));% relative start time (trigger is at zero)
-wstartrel = 86400 *( c.traces(ord).firstsampletime() - c.trig(ord));% relative start time (trigger is at zero)
+wstartrel = c.relativeStartTime(ord);
 freq = [c.traces(ord).samplerate]; % get(c.W(ord),'Fs');
 lengths = [c.traces(ord).nsamples];  %lengths = get(c.W(ord),'data_length');
 tr = nan(max(lengths),numel(ord)); %pre allocate with nan to not plot
@@ -49,12 +48,7 @@ set(gca,'YDir','reverse',...
 
 xlabel('Relative Time,(s)','FontSize',8);
 
-% replace dates with station names if stations are different
-if ~check(c,'STA')
-    labels = strcat(c.station , '_', c.channel);
-    set( gca , 'YTick' , 1:1:c.ntraces);
-    set( gca , 'YTickLabel' , labels );
-end
+maybeReplaceYticksWithStationNames(c,gca)
 
 %PRINT OUT FIGURE
 set(gcf, 'paperorientation', 'portrait');

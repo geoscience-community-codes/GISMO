@@ -44,7 +44,7 @@ ord = 1:c.ntraces;
 % GET MEAN TRACE AMPLITUDE FOR SCALING BELOW (when norm = 0)
 maxlist = [];
 for i = ord
-    maxlist(end+1) = max(abs( get(c.W(i),'DATA') ));
+    maxlist(end+1) = max(abs( c.traces(i).data ));
 end;
 normval = mean(maxlist);
 
@@ -108,11 +108,11 @@ end
 % end;
 
 % --------------------------------
-wstartrel = 86400 *( get(c.W(ord),'START_MATLAB') - c.trig(ord));% relative start time (trigger is at zero)
-freq = get(c.W(ord),'Fs');
-lengths = get(c.W(ord),'data_length');
+    wstartrel = c.relativeStartTime(ord);
+freq = [c.traces(ord).samplerate]; % get(c.W(ord),'Fs');
+lengths = [c.traces(ord).nsamples]; % get(c.W(ord),'data_length');
 tr = nan(max(lengths),numel(ord)); %pre allocate with nan to not plot
-abs_max =  max(abs(c.W(ord)));
+abs_max =  max(abs(c.traces(ord)));
 for count = 1:numel(ord)
     tr(1:lengths(count),ord(count)) = ...
         wstartrel(count) + [ 0:lengths(count)-1]'/freq(count);
@@ -121,7 +121,7 @@ end;
 % scale is negative because it is reversed below
 if norm==0
     % GET MEAN TRACE AMPLITUDE FOR SCALING BELOW (when norm = 0)
-    maxlist = max(abs(c.W(ord)));
+    maxlist = max(abs(c.traces(ord)));
     normval = mean(maxlist);
     d =  double(c.W(ord) .*( -scale ./ normval)+ [1:numel(ord)]','nan'); % do not normalize trace amplitudes
 else
@@ -141,17 +141,7 @@ set(gca,'YTickLabel',datestr(c.trig(ord)),'FontSize',6);
 xlabel('Relative Time,(s)','FontSize',8);
 
 
-
-
-% replace dates with station names if stations are different
-if ~check(c,'STA')
-    labels = strcat(c.station , '_', c.channel);
-    set( gca , 'YTick' , 1:c.ntraces);
-    set( gca , 'YTickLabel' , labels );
-end
-
-
-
+maybeReplaceYticksWithStationNames(c,gca)
 
 %PRINT OUT FIGURE
 set(gcf, 'paperorientation', 'landscape');

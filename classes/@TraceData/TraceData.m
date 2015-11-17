@@ -381,7 +381,7 @@ classdef TraceData
          % See also sign
          for n=1:numel(trace)
             trace(n).data = sign(trace(n).data);
-            trace(n).units = ['sign(', trace(n).units, ')'];
+            %trace(n).units = ['sign(', trace(n).units, ')'];
          end
       end
       

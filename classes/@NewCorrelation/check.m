@@ -68,8 +68,8 @@ end
 %% Check offsets
 function isValid = do_offset(c)
    
-   srt_offset = ( get(c,'Trig') - get(c,'Start') ) * 86400;
-   end_offset = ( get(c,'End') - get(c,'Trig') ) * 86400;
+   srt_offset = (c.trig - get(c,'Start') ) * 86400;
+   end_offset = ( get(c,'End') - c.trig ) * 86400;
    
    isValid = all(( max(srt_offset) - min(srt_offset) ) <= get(c,'Period')) && ...
       all(( max(end_offset) - min(end_offset) ) <= get(c,'Period'));
@@ -78,14 +78,14 @@ end
 
 %% Check station codes
 function isValid = do_stations(c)
-   sta = {c.traces.station};
+   sta = c.stations;
    isValid = isempty([sta{:}]) || all(strcmpi(sta(1), sta));
 end
 
 %% Check channel codes
 function isValid = do_channels(c)
    
-   chan = {c.traces.channel};
+   chan = c.channels;
    isValid = isempty([chan{:}]) || all(strcmpi(chan(1), chan));
 end
 

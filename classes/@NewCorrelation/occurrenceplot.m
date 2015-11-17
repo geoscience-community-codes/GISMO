@@ -115,11 +115,12 @@ text(PosX,PosY,['Cluster #' num2str(nclust)],'Color','k','FontWeight','bold');
 % DO STACK PLOT
 subplot('Position',[.5 .99-.094*n .47 .09]);
 c1 = subset(c1,include);
-Ts = 86400*(get(c1.W,'START')-c1.trig);
-Te = 86400*(get(c1.W,'END')-c1.trig);
+Ts = 86400 * (c1.traces.firstsampletime() - c1.trig);
+Te = 86400 * (get(c1.W,'END')-c1.trig); %TODO: replace end
 c1 = stack(c1);
 c1 = norm(c1);
 c1 = crop(c1,mean(Ts),mean(Te));
+%TODO: replace waveform usage with SeismicTrace (traces)
 w = get(c1,'WAVEFORMS');
 xlim([0 get(w(end),'DURATION_EPOCH')]);
 plot(w,'Color',[.7 .7 .7],'LineWidth',.5);

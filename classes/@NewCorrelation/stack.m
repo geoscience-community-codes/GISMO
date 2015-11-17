@@ -75,17 +75,17 @@ end
 % ADJUST STACK LENGTH BY ONE SAMPLE IF NECESSARY
 if (get(c1,'DATA_LENGTH') < get(c,'DATA_LENGTH'))
     for i = 1:length(c1.trig)
-        Wtmp = c1.W(i);
-        data = get(Wtmp,'DATA');
+        Ttmp = c1.traces(i);
+        data = Ttmp.data;
         data(end+1) = data(end);
-        Wtmp = set(Wtmp,'DATA',data);
-        c1.W(i) = Wtmp;
+        Ttmp.data = data;
+        c1.traces(i) = Ttmp;
     end
     %disp('Stack was padded with one additional sample for consistency');
 end
 
 
-c.W(end+1) = stack(c1.W);
+c.traces(end+1) = stack(c1.traces);
 c = verify(c);        %%%%%%% added on 12/15/2007 %%%%%%%%%%%%%%%%%
 c.trig(end+1) = c1.trig(1);
 c.stat = [];

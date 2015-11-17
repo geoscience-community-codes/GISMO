@@ -16,17 +16,17 @@ end;
 
 % GENERAL PARAMETERS
 c = verify(c);
-traces = get(c,'Traces');
-keyTrace = traces;
+nTraces = c.ntraces;
+keyTrace = nTraces;
 
 
-X = fft(double(c.W));             
-Y = repmat( fft(double(c.traces(keyTrace))) , 1 , traces );    
+X = fft(double(c.traces));             
+Y = repmat( fft(double(c.traces(keyTrace))) , 1 , nTraces );    
 
 save
 
 Z = ifft(X.*conj(Y));  
-for n = 1:traces
+for n = 1:nTraces
     c.traces(n).data =  Z(:,n);
 end
 end

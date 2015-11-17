@@ -44,20 +44,4 @@ for tracenum = 1:length(c.traces)
    c.traces(tracenum).data =  d;
 end;
 
-%{
- old implementation
-% LOOP THROUGH TRACES APPLYING GAIN
-for tracenum = 1:length(c.W)
-   w = get(c.W(tracenum),'DATA');
-   scale=zeros( length(w)-2*agcsamp , 1 );
-   for index=-1*agcsamp:agcsamp
-      scale=scale + abs( w(agcsamp+index+1:agcsamp+index+length(scale)) );
-   end;
-   scale = scale/mean(abs(scale));
-   scale = [ones(agcsamp,1)*scale(1) ; scale ; ones(agcsamp,1)*scale(end)];
-   w = w./scale;
-   c.W(tracenum) = set(c.W(tracenum),'DATA',w);
-end;
-%}
-
 end

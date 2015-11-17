@@ -22,13 +22,13 @@ function d = xcorrrow(d,c,index)
 [M,N] = size(d.w);
 pretrig = 86400*(d.trig-d.start);   % time between trace start and trigger
 l = (1./d.Fs)*[-M+1:M-1]';        % lag vector
-% next two lines are equivalent ways to get normalization coefficients
+% next two lines are equivalent ways to determine normalization coefficients
 wcoeff = 1./sqrt(sum(d.w.*d.w));
 %for i = 1:size(d.w,2), wcoeff(i) = 1./norm(d.w(:,i)); end;
 
 
 % CREATE MATRICES IF NEEDED
-nn = get(c,'traces');
+nn = c.ntraces;
 if (size(c.corrmatrix,1) == 0)
     c.corrmatrix = nan(nn);
 end

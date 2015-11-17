@@ -63,7 +63,7 @@ switch upper(prop_name)
     case {'CLUST'}
         val = c.clust;
     case {'TRACES'}
-        val = size(c.W,1);
+        val = c.ntraces;
         
     % FROM WAVEFORM/GET (SCALAR OUTPUT)
     case {'DATA_LENGTH'}
@@ -73,9 +73,9 @@ switch upper(prop_name)
         
 %     % FROM WAVEFORM/GET (VECTOR)
     case {'STATION', 'STA'}
-        val = {c.traces.station};
+        val = c.stations;
     case {'COMPONENT', 'CHAN'}
-        val = {c.traces.channel};
+        val = c.channels;
 
  % OTHER ROUTINES
     case {'DATA'}
@@ -84,6 +84,7 @@ switch upper(prop_name)
     otherwise
         try 
             % see if it is a valid waveform property
+            warning('accessing a waveform property %s. ', propname);
             val = get(c.W,prop_name);
         catch
             error([upper(prop_name) ' is not a valid argument for correlation/get']);

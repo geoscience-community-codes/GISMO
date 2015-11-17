@@ -29,12 +29,11 @@ end;
 
 % GENERAL PARAMETERS
 c = verify(c);
-traces = get(c,'Traces');
-keyTrace = traces;
+keyTrace = c.ntraces;
 
 
-X = fft(double(c.W));      % all traces       
-Y = repmat( fft(double(c.W(keyTrace))) , 1 , traces );   % single trace 
+X = fft(double(c.traces));      % all traces       
+Y = repmat( fft(double(c.traces(keyTrace))) , 1 , c.ntraces );   % single trace 
 
 
 
@@ -48,7 +47,7 @@ Z = ifft( numerator ./ denominator );
 
 save
 
-for n = 1:traces
-    c.W(n) = set( c.W(n) , 'DATA' , Z(:,n) );
+for n = 1:c.ntraces
+   c.traces(n).data = Z(:,n);
 end
 end

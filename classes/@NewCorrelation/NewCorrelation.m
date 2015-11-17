@@ -1,6 +1,7 @@
 classdef NewCorrelation
    %Correlation
    % written by Mike West, rewritten into the new MATLAB classes by Celso Reyes
+   
    properties
             traces %  % c.W
             trig % will be triggers; % c.trig
@@ -21,10 +22,10 @@ classdef NewCorrelation
       ntraces % number of traces
       data_length % length of first trace (should all be same)
       % properties associated with the waveforms / traces
-      station % station name for each trace
-      channel % channel name for each trace
-      network % network name for each trace
-      location % location name for each trace
+      stations % station name for each trace
+      channels % channel name for each trace
+      networks % network name for each trace
+      locations % location name for each trace
       
       samplerate % sample rate (for first trace)
       data % all the trace's data as a matrix
@@ -532,16 +533,16 @@ classdef NewCorrelation
          %TODO: Should this also wipe all the calculated values?
       end
             
-      function sta = get.station(obj)
+      function sta = get.stations(obj)
          sta = {obj.traces.station};
       end
-      function net = get.network(obj)
+      function net = get.networks(obj)
          net = {obj.traces.network};
       end
-      function loc = get.location(obj)
+      function loc = get.locations(obj)
          loc = {obj.traces.location};
       end
-      function cha = get.channel(obj)
+      function cha = get.channels(obj)
          cha = {obj.traces.channel};
       end
       
@@ -554,6 +555,26 @@ classdef NewCorrelation
       end
       function n = get.data_length(obj)
          n = obj.traces(1).nsamples;
+      end
+      
+      function n = relativeStartTime(c, i)
+         %relativeStartTime  relative start time (trigger is at zero)
+         % t = c.relativeStartTime(index) will return the relativeStartTime
+         % of the indexth trace, by subtracting the indexth trigger
+         
+         %old usage, before traces
+         % wstartrel = 86400 *( get(c.W(i),'START_MATLAB') - c.trig(i));
+         n = 86400 * (c.traces(i).firstsampletime()-c.trig(i));
+      end
+      
+      
+      function maybeReplaceYticksWithStationNames(c,ax)
+         % replace dates with station names if stations are different
+         if ~check(c,'STA')
+            labels = strcat(c.stations , '_', c.channels);
+            set( ax , 'YTick' , 1:1:c.ntraces);
+            set( ax , 'YTickLabel' , labels );
+         end
       end
       % ==> adjusttrig.m <==
       c = adjusttrig(c,varargin)
