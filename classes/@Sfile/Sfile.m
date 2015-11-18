@@ -28,6 +28,7 @@ classdef Sfile
         bbdur = NaN
         spdur = NaN
         aef = struct()
+        arrivals 
     end
     
     methods
@@ -182,6 +183,10 @@ classdef Sfile
                 if lineend == '6'
                     s.wavfiles = strread(strtrim(tline(2:79)), '%s');
                     %wavfile{1} = tline(2:36);
+                end
+                
+                if lineend == '7'
+                    s.arrivals = Arrival.retrieve_seisan(fileContents, s.otime);
                 end
 
                 % Process Type E line, Hyp error estimates
