@@ -154,7 +154,6 @@ classdef antelopesource < dataretrieval.spatiotemporal_database
             any(strcmpi(fieldnames(obj.dbpointer),'database'));
       end
       
-
       function obj = subsetbyLocation(obj, n)
          searchstr = antelopesource.buildSearchCriterion(obj.chaninfo(n));
          obj.dbpointer = dbsubset(obj.dbpointer, searchstr);
@@ -163,8 +162,7 @@ classdef antelopesource < dataretrieval.spatiotemporal_database
          searchstr = sprintf('time <= %f && endtime >= %f',obj.epochend(n), obj.epochstart(n))
          obj.dbpointer = dbsubset(obj.dbpointer, searchstr);
       end
-         
-      
+            
       outputWaveforms = load_antelope(request, specificDatabase)
       
       function outputWaveforms = RecursivelyLoadFromEachDatabase(request)

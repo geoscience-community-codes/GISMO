@@ -26,6 +26,7 @@ classdef TraceData
    %
    %    additional Methods:
    %       nsamples  - return number of data samples
+   %
    %    Mathamatical operations:
    %       plus - (+)addition
    %       minus - (-)subtraction
@@ -36,6 +37,8 @@ classdef TraceData
    %       uminus - (-A) unary minus
    %       sign - signum of data (returns array of +1, 0, or -1)
    %       abs - Absolute value
+   %
+   %       forEach - apply a function element-wise Tnew(n) = f(T(n), values(n))
    %
    %    Binary Operators:
    %       eq - (A==B) true if data, samplerate and units match.
@@ -122,6 +125,20 @@ classdef TraceData
                   obj.samplerate = get(varargin{1},'freq');
                   obj.data = get(varargin{1},'data');
                   obj.units = get(varargin{1}, 'units');
+                  
+               elseif isa(varargin{1},'TraceData') && ~strcmp(class(varargin{1}),'TraceData')
+                  if numel(varargin{1})==1;
+                  obj.data = varargin{1}.data;
+                  obj.samplerate = varargin{1}.samplerate;
+                  obj.units = varargin{1}.units;
+                  else
+                     for n=1:numel(varargin{1})
+                        obj(n) = TraceData(varargin{1}(n));
+                     end
+                     reshape(obj,size(varargin{1}));
+                  end
+               else
+                  error('Unknown conversion');
                end
             case 3 % TraceData(data, samplerate, units);
                obj.data = varargin{1};
@@ -222,7 +239,7 @@ classdef TraceData
          %      % assertCompatiblewith(TraceData1, TraceData2); % for debug
          %      TraceData1 + TraceData2.data
          %
-         % See also compatiblewith, assertCompatiblewith
+         % See also minus, arrayApply, compatiblewith, assertCompatiblewith
          
          if ~isa(A, 'TraceData')
             [A, B] = deal(B, A); % swap values
@@ -257,7 +274,7 @@ classdef TraceData
          %      % assertCompatiblewith(TraceData1, TraceData2); % for debug
          %      TraceData1 - TraceData2.data
          %
-         %   See also compatiblewith, assertCompatiblewith
+         %   See also plus, arrayApply, compatiblewith, assertCompatiblewith
          
          if isnumeric(B)
             % A is guaranteed to be a TraceData
@@ -285,7 +302,7 @@ classdef TraceData
          %      % assertCompatiblewith(TraceData1, TraceData2); % for debug
          %      TraceData1 .* TraceData2.data
          %
-         %  See also compatiblewith, assertCompatiblewith
+         %  See also arrayApply, mtimes, compatiblewith, assertCompatiblewith
          if isnumeric(B)
             for n=1:numel(A)
                A(n).data = A(n).data .* B; % B should be either scalar or same size as obj.data
@@ -304,7 +321,8 @@ classdef TraceData
          %*   Matrix multiplication against data within a trace
          %   C=A*B matrix multiplication against data within a trace
          %   result is a matrix, vector, or scalar. (NOT a TraceDataObject)
-         
+         %
+         %   See also times, arrayApply
          if isa(A,'TraceData')
             C = A.data * B;
          else
@@ -324,7 +342,7 @@ classdef TraceData
          %   % assertCompatiblewith(TraceData1, TraceData2); % for debug
          %   TraceData1 ./ TraceData2.data
          %
-         %   See also times, mtimes, compatiblewith, assertCompatiblewith
+         %   See also times, mtimes, arrayApply, compatiblewith, assertCompatiblewith
          
          if isnumeric(B)
             % A is guaranteed to be a TraceData
@@ -341,7 +359,7 @@ classdef TraceData
          %   C=A.^B raises each data element of A to the power B and then
          %   returns the resulting trace(s)
          %
-         %   See also power
+         %   See also power, arrayApply
          
          assert(isa(A,'TraceData'),'TraceData:power:invalidType',...
             'for A .^ B, B cannot be a TraceData object');
@@ -513,6 +531,83 @@ classdef TraceData
          end
          val(hasdata) = arrayfun(F,T(hasdata));
       end
+      
+      function T = forEach(T, f, values, varargin)
+         %forEach  applies a function element-wise to an array B(n) = f(T(n), values(n))
+         %   VALUES must be a numeric array of the same size (shape) as T.
+         %   Either T or VALUES could also be individual values. 
+         %   
+         %   When numel(T)==1:
+         %   the output will be an array of T the same size as VALUES.
+         %
+         %   When numel(V)==1, 
+         %   you might as well use the standard operator instead.  
+         %       eg.  T = T + VALUE;
+         %  
+         %  the function f can either be a function handle, string name of
+         %  a function  (such as 'plus'), or the valid representation of a
+         %  simple mathamatical function, such as: '.*'  './'  '+'  '-'  '.^'
+         %
+         %  This means that
+         %       Tsq = forEach(T, @power, valueArray);
+         %  is equivelent to
+         %       Tsq = T.forEach('power', valueArray);
+         %  which is equivelent to
+         %       Tsq = T.forEach('.^', valueArray);
+         %
+         %
+         %  apply(...,'loose') ignores the size restriction, but
+         %  enforces the number of elements.  Most useful in getting around
+         %  applying something 1xN to something Nx1
+         %
+         %  example:
+         %    % add offset to each trace
+         %    offsets = 1:numel(T);
+         %    Toffset = T.apply('+', offsets, 'loose');
+         %
+         %  example:
+         %    % you can also create your own function of the form f(T,x):
+         %    myfn = @(T, x) T .* x + x;
+         %    newT = T.apply(T, myfn, values)
+         %
+         % See also times, rdivide, plus, minus, power
+         TisScalar = numel(T)==1;
+         VisScalar = numel(values)==1;
+         eitherIsScalar = TisScalar || VisScalar;
+         ignoreShape = eitherIsScalar || (~isempty(varargin) && strcmpi(varargin{end},'loose'));
+         if ignoreShape
+            assert(eitherIsScalar || numel(values)==numel(T), ...
+               'Both the traces and values must have the same number of elements T:[%d] vs values:[%d',...
+               numel(T), numel(values) );
+         else
+            assert(eitherIsScalar || all(size(values)==size(T)),...
+               ['Both the traces and the values must be the same size.'...
+               'T:[%s] vs values:[%s]\n',...
+               'Use arrayApply(...,''loose'') if only the number of elements matters'],...
+               TraceData.size2str(T), TraceData.size2str(values));
+         end
+         if ischar(f)
+            f=str2func(f);
+         end
+         
+         if VisScalar
+            T = f(T, values); % not necessary to use arrayApply when either is a scalar
+            return
+         elseif TisScalar
+            T = repmat(T,size(values));
+            for n=1:numel(values)
+               T(n) = f(T(n), values(n));
+            end
+            return
+         end
+         
+         for n=1:numel(T)
+            T(n) = f(T(n), values(n));
+         end
+      end
+         
+         
+      
       function val = max(T)
          %max   Maximum value for trace data
          %   maxVals = max(traces);
@@ -1204,11 +1299,27 @@ classdef TraceData
             end
          end
       end
+      function info(T)
+            fprintf('[%s] TraceData array with:\n', TraceData.size2str(T));
+            fprintf('  nSaples  sampleRate      Units Duration(sec)   min      max   hasnan?\n');
+         for n=1:numel(T)
+            if T(n).hasnan; hnt = 'Y'; else hnt = 'N';end
+            fprintf('%8d    %f %10s   %8.3f  %8.3f  %8.3f     %s \n',...
+               T(n).nsamples, T(n).samplerate, T(n).units, T(n).duration, min(T(n)), max(T(n)), hnt);
+         end
+      end
+       %}     
    end
    
    %% protected methods
-   methods(Access=protected)
-      %none
+   methods(Static, Access=protected)
+      function s = size2str(A)
+         sz = size(A);
+         s = num2str(sz(1));
+         for n=2:numel(sz)
+            s = [s, 'x', num2str(sz(n))];
+         end
+      end
    end
    
    methods(Static)

@@ -7,6 +7,9 @@ classdef SeismicTrace < TraceData
    %
    %  SeismicTrace is the replacement class for waveform
    %
+   %  Much functionality is provided by the TraceData class, so see the
+   %  help for that class for more details
+   %
    %  See also retrieve, TraceData, waveform, ChannelTag
    
    % Author: Celso Reyes, unless otherwise specified in the class functions
