@@ -126,6 +126,8 @@ function [obj, rawDb, filteredDb] =  get_antelope_traces(obj)
       if someDataExists
          %%% Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data.
          % This error needs to be handled. So adding a try..catch..end around the original instruction.
+         trStructs = safe_trload(db, st, et);
+         T = trstruct2SeismicTrace(trStructs);
          try
             obj.trpointer{mytimeIDX} = trload_css(mydb, antelope_starts(mytimeIDX), antelope_ends(mytimeIDX)); %#ok<AGROW>
          catch

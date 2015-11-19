@@ -28,19 +28,20 @@ if norm==0
     % GET MEAN TRACE AMPLITUDE FOR SCALING BELOW (when norm = 0)
     maxlist = max(abs(c.traces(ord)));
     normval = mean(maxlist);
-    offsets = 1:numel(ord);
-    for n=1:c.ntraces;
-       c.traces(ord(n)) = c.traces(ord(n)) .*( -scale ./ normval) + offsets(n);
-    end
-    d=double(c.traces);
+    c.traces(ord) = forEach(c.traces(ord), @times, -scale ./ normval, 'loose');
+    c.traces(ord) = forEach(c.traces(ord), @plus, 1:numel(ord), 'loose');
+    %for n=1:c.ntraces;
+    %   c.traces(ord(n)) = c.traces(ord(n)) .*( -scale ./ normval) + offsets(n);
+    %end
+    d=double(c.traces, 'nan');
     %d =  double(c.traces(ord) .*( -scale ./ normval) + offsets(:),'nan'); % do not normalize trace amplitudes
 else
     abs_max(abs_max==0) = 1; % ignore zero traces
-    offsets = [1:numel(ord)]';
-    normalizer = (-scale ./ abs_max);
-    for n=1:numel(ord)
-       c.traces(ord(n)) = c.traces(ord(n)) .* normalizer(n) + offsets(n);
-    end;
+    % TRACES(ORD) = TRACES(ORD) .* NORMALIZER(N) + OFFSET(N)
+    
+    % read: as  "For each Trace, multiply against BLAH"
+    c.traces(ord) = forEach(c.traces(ord),'.*', -scale ./ abs_max, 'loose');
+    c.traces(ord) = forEach(c.traces(ord), '+', 1:numel(ord), 'loose');
     d = double(c.traces,'nan');
     % d = double(c.W(ord) .* normalizer + offsets,'nan'); % normalize trace amplitudes
 end

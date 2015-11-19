@@ -154,7 +154,6 @@ classdef antelopesource < dataretrieval.spatiotemporal_database
             any(strcmpi(fieldnames(obj.dbpointer),'database'));
       end
       
-
       function obj = subsetbyLocation(obj, n)
          searchstr = antelopesource.buildSearchCriterion(obj.chaninfo(n));
          obj.dbpointer = dbsubset(obj.dbpointer, searchstr);
@@ -163,8 +162,7 @@ classdef antelopesource < dataretrieval.spatiotemporal_database
          searchstr = sprintf('time <= %f && endtime >= %f',obj.epochend(n), obj.epochstart(n))
          obj.dbpointer = dbsubset(obj.dbpointer, searchstr);
       end
-         
-      
+            
       outputWaveforms = load_antelope(request, specificDatabase)
       
       function outputWaveforms = RecursivelyLoadFromEachDatabase(request)
@@ -297,7 +295,115 @@ classdef antelopesource < dataretrieval.spatiotemporal_database
          %  See also epoch2str, datenum
          M = datenum(epoch2str(Ep,'%G %T'));
       end
+      
+      function trs = trsTrimStarts(trs, desiredStartEpoch)
+         %trsTrimStarts   trims data and adjusts starttime of trStructs
+         %   trs = trsTrimStarts(trs, desiredStartEpoch)
+         %   adjusts the trs.time, trs.strtime, and trs.data fields
+         %
+         %   if desiredStartEpoch < trs.time, this does nothing.
+         %
+         %   See also tr2struct
+         for n=1:numel(trs)
+            actualStartEpoch = trs(n).time;
+            secondsToTrim = desiredStartEpoch - actualStartEpoch;
+            if secondsToTrim < 0, continue; end
+            samplesToTrim = fix(secondsToTrim * trs(n).samplerate);
+            secondsActuallyTrimmed =  samplesToTrim / trs(n).samplerate;
+            trs(n).time = actualStartEpoch - secondsActuallyTrimmed;
+            trs(n).data(1:samplesToTrim) = []; % remove leading samples
+            startString = trs(n).strtime;
+            startMat = datenum(startString);
+            matSecondsTrimmed = datenum([0,0,0,0,0,secondsActuallyTrimmed]);
+            trs(n).strtime = datestr(startMat - matSecondsTrimmed,...
+               'mm/dd/yyyy HH:MM:SS.FFF'); %notice date format!
+         end
          
+      end
+      
+      function trStructs = safe_trload(db, st, et)
+         %safe_trload   load a trace (get the struct) and expand time range on failure
+         %  trStructs = safe_trload(db, startEpoch, endEpoch)
+         %  assumes that db is already subset
+         %  returned trace structure may have more data than expected
+         earliestStart = min([db.start]);
+         tr = [];
+         while st >= min([db.start])
+            try
+               tr = trload_css(mydb, st, et);
+            catch
+               st = max(st - 60, earliestStart); % back up 60 seconds & try again
+            end
+         end
+         if isempty(tr)
+            error('Unable to acess data by merely backing up in time');
+         end
+         trsplice(tr, 20)
+         trStructs = tr2struct(tr);
+         trfree(tr);
+         trStructs = antelopesource.trsTrimStarts(trStructs, st);
+      end
+      
+      function T = trstruct2SeismicTrace(trs)
+         %trstruct2SeismicTrace  convert all trstructs to SeismicTraces
+         %  trstruct2SeismicTrace(trs) where trs is the result of tr2struct,
+         %  performed on a tr pointer.
+         T = SeismicTrace();
+         T = repmat(T,size(trs));
+         for n=1:numel(trs)
+            T(n).start = trs(n).strtime;
+            T(n).data = trs(n).data;
+            T(n).station = trs(n).sta;
+            T(n).channel = trs(n).chan;
+            T(n).network = trs(n).net;
+            T(n).samplerate = trs(n).samprate;
+            T(n).units = segtype2units(trs(n).segtype);
+            T(n).calib.applied = false;
+            T(n).calib.value = trs(n).calib;
+         end
+      end
    end
    
-end
+   end
+
+   %{
+   example of a trStuct
+   ans = 
+          evid: -1
+          arid: -1
+           net: '-'
+           sta: 'AKT'
+          chan: 'HHZ'
+          time: 1.3215e+09
+       endtime: 1.3215e+09
+     processid: -1
+         nsamp: 93399
+      samprate: 99.9985
+       instype: '-'
+         calib: 1.3962
+        calper: -1
+      response: 0
+      datatype: 'sd'
+       segtype: 'V'
+      procflag: 0
+          data: [93399x1 double]
+           lat: -999
+           lon: -999
+          elev: -999
+        refsta: '-'
+        dnorth: 0
+         deast: 0
+        edepth: 0
+          hang: 0
+          vang: 0
+       comment: 0
+            m0: 0
+            m1: 0
+           mt0: -1.0000e+10
+           mt1: -1.0000e+10
+    bundletype: 0
+         dbptr: [1x1 struct]
+       strtime: '11/16/2011  16:27:50.006'
+    strendtime: '11/16/2011  16:43:23.999'
+
+   %}
