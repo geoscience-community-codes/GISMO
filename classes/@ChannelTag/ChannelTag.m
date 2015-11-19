@@ -251,7 +251,7 @@ classdef ChannelTag
          %    * Depricated*
          %    See also: get.channel, get.location, get.network, get.station
          
-         error('UPGRADE: using set for a ChannelTag. use field notation instead. eg. ch.station = X');
+         warning('Old usage: using set for a ChannelTag. use field notation instead. eg. ch.station = X');
          idx = [1 2];
          while numel(varargin) > 1 % for each property
             [prop, val] = deal(varargin{idx});

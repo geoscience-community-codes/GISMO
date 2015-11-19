@@ -108,16 +108,16 @@ classdef threecomp
             
             
             % CHECK FOR NOVERIFY ARGUMENT
-            DOVERIFY = 1;
-            INTERNAL = 0;
+            DOVERIFY = true;
+            INTERNAL = false;
             if length(varargin)>=2
                 if ischar(varargin{end})
                     if strcmpi(varargin{end},'NOVERIFY')
-                        DOVERIFY = 0;
+                        DOVERIFY = false;
                         varargin = varargin(1:end-1);
                     elseif strcmpi(varargin{end},'INTERNAL')
-                        INTERNAL = 1;
-                        DOVERIFY = 0;
+                        INTERNAL = true;
+                        DOVERIFY = false;
                         varargin = varargin(1:end-1);
                     else
                         error('Threecomp:threecomp:badTextArgument','Text argument not recognized');

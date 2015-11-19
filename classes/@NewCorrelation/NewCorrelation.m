@@ -3,21 +3,22 @@ classdef NewCorrelation
    % written by Mike West, rewritten into the new MATLAB classes by Celso Reyes
    
    properties
-            traces %  % c.W
-            trig % will be triggers; % c.trig
-            corrmatrix
-            lags % will be lags; % c.L
-            stat % will be statistics; % c.stat
-            link % might be links;% c.link
-            clust % will be clusters;% c.clust
+      traces %  % c.W
+      trig % will be triggers; % c.trig
+      corrmatrix % correlation similarity matrix
+      lags % will be lags; % c.L
+      stat % will be statistics; % c.stat
+      link % might be links;% c.link
+      clust % will be clusters;% c.clust
    end
    
-   properties(Dependent)
+   properties(Dependent, Hidden)
       % properties that existed prior to rewrite
       W % traces as waveforms
       C % correlation matrix corrmatrix
       L % Lags
-      
+   end
+   properties(Dependent)
       % new properties
       ntraces % number of traces
       data_length % length of first trace (should all be same)
@@ -29,9 +30,8 @@ classdef NewCorrelation
       
       samplerate % sample rate (for first trace)
       data % all the trace's data as a matrix
-      
    end
-      
+   
    methods
       function c = NewCorrelation(varargin)
          
@@ -266,15 +266,15 @@ classdef NewCorrelation
             
             %% OPEN HTML COOKBOOK
          elseif nargin==1 && strncmpi(varargin{1},'COO',3)
-            %COOKBOOK
-            p = which('cookbook');
-            if isempty(p)
-               error('Sorry. The correlation cookbook was not found.');
-            end
-            p = p(1:end-22);
-            %slash = p(end);
-            %web([p 'html' slash 'correlation_cookbook.html']);
-            c = [];
+%             %COOKBOOK
+%             p = which('cookbook');
+%             if isempty(p)
+%                error('Sorry. The correlation cookbook was not found.');
+%             end
+%             p = p(1:end-22);
+%             %slash = p(end);
+%             %web([p 'html' slash 'correlation_cookbook.html']);
+%             c = [];
             cookbook(correlation);
             %% OPEN README FILE
          elseif nargin==1 && strncmpi(varargin{1},'REA',3)
@@ -313,9 +313,7 @@ classdef NewCorrelation
          else
             error('Invalid input values to correlation');
          end;
-         
-         
-         
+                  
          %% ADJUST DATA LENGTH AND SAMPLE RATE IF NECESSARY
          if ~isempty(c.traces)
             c = demean(c);
@@ -335,7 +333,7 @@ classdef NewCorrelation
          %% FUNCTION: LOAD WAVEFORM DATA FROM A DATASOURCE
          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
          
-         function c = loadfromdatasource(ds,scnl,trig,pretrig,posttrig);
+         function c = loadfromdatasource(ds,scnl,trig,pretrig,posttrig)
             
             % TODO: This function needs to rewritten if/when waveform is able to
             % identify which traces are empty instead of skipping them. This should
@@ -506,7 +504,7 @@ classdef NewCorrelation
             %c.W = reshape(w,length(w),1);
          end %convert_coral
       end %NewCorrelation
-
+      
       function waves = get.W(obj)
          warning('getting waveform instead of traces');
          waves = waveform(obj.traces);
@@ -536,7 +534,7 @@ classdef NewCorrelation
          c.traces = T(:); % ensure traces are in a column
          %TODO: Should this also wipe all the calculated values?
       end
-            
+      
       function sta = get.stations(obj)
          sta = {obj.traces.station};
       end
@@ -580,180 +578,79 @@ classdef NewCorrelation
             set( ax , 'YTickLabel' , labels );
          end
       end
-      % ==> adjusttrig.m <==
+      
+      %% functions that exist in other files
       c = adjusttrig(c,varargin)
       
-      % ==> agc.m <==
-      c = agc(c,varargin)
-      
-      % ==> align.m <==
-      c = align(c,varargin)
-      
-      % ==> butter.m <==
-      c = butter(c,varargin)
-      
-      % ==> cat.m <==
+      c = agc(c,varargin)       % automatic gain control      
+      c = align(c,varargin)      
+      c = butter(c,varargin)      
       c = cat(varargin)
-      
-      % ==> check.m <==
       val = check(c,varargin)
-      
-      % ==> cluster.m <==
       c = cluster(c,varargin)
-      
-      % ==> colormap.m <==
       c = colormap(c,varargin)
-      
-      % ==> conv.m <==
       c = conv(c,varargin)
-      
-      % ==> crop.m <==
       c = crop(c,varargin)
-      
-      % ==> deconv.m <==
       c = deconv(c,varargin)
-      
-      % ==> demean.m <==
       c = demean(c,varargin);
-      
-      % ==> detrend.m <==
       c = detrend(c,varargin);
-      
-      % ==> diff.m <==
       c = diff(c)
-      
-      % ==> display.m <==
       display(c)
-      
-      % ==> find.m <==
       index = find(c,varargin)
-      
-      % ==> get.m <==
-      val = get(c,prop_name)
-      
-      % ==> getclusterstat.m <==
       family = getclusterstat(c)
-      
-      % ==> getstat.m <==
       c = getstat(c)
-      
-      % ==> hilbert.m <==
       c = hilbert(c,n)
-      
-      % ==> integrate.m <==
       c = integrate(c)
-      
-      % ==> interferogram.m <==
       [c,t,i,CC,LL] = interferogram(c,varargin)
-      
-      % ==> linkage.m <==
       c = linkage(c,varargin);
-      
-      % ==> match.m <==
       [c1,c2] = match(c1,c2,varargin)
-      
-      % ==> minus.m <==
       c = minus(c,varargin)
-      
-      % ==> norm.m <==
       c = norm(c,varargin)
-      
-      %==> plot.m <==
       plot(c,varargin)
-      
-      %==> set.m <==
-      c = set(c, prop_name, val)
-      
-      %==> sign.m <==
       c = sign(c,varargin);
-      
-      % ==> sort.m <==
       c = sort(c,varargin)
-      
-      % ==> stack.m <==
       c = stack(c,varargin)
-      
-      % ==> strip.m <==
       c = strip(c,varargin)
-      
-      % ==> subset.m <==
       c = subset(c,index)
-      
-      % ==> taper.m <==
       c = taper(c,varargin)
-      
-      % ==> verify.m <==
       c = verify(c)
-      
-      % ==> waveform.m <==
       w = waveform(c,varargin)
-      
-      % ==> writedb.m <==
       writedb(c,dbOut,varargin)
-      
-      %==> xcorr.m <==
       c = xcorr(c,varargin)
       
    end %methods
    
    methods(Access=private)
-      % ==> corrplot.m <==
       corrplot(c)
-      
-      % ==> dendrogramplot.m <==
       dendrogramplot(c);
-      
-      % ==> eventplot.m <==
       eventplot(c,scale,howmany);
-      
-      % ==> getval.m <==
       A = getval(OBJ,PROP)
-      
-      % ==> lagplot.m <==
       lagplot(c);
-      
-      % ==> makesynthwaves.m <==
       c = makesynthwaves(n);
-      
-      % ==> occurrenceplot.m <==
       occurrenceplot(c,scale,clusternum)
-      
-      % ==> overlayplot.m <==
       overlayplot(c,scale,ord)
-      
-      % ==> sampleplot.m <==
       sampleplot(c,scale,ord)
-      
-      % ==> shadedplot.m <==
       shadedplot(c,scale,ord)
-      
-      % ==> statplot.m <==
       statplot(c);
-      
-      % ==> wiggleinterferogram.m <==
       wiggleinterferogram(c,scale,type,norm,range)
-      
-      % ==> wiggleplot.m <==
       wiggleplot(c,scale,ord,norm)
    end
+   
+   methods(Hidden)
+      %These methods still work, but aren't being promoted
+      c = set(c, prop_name, val); % instead of set, use direct access
+      val = get(c,prop_name) % instead of get, use direct access
+   end
+   
    methods(Static)
-      % ==> cookbook.m <==
       correlationVariables = cookbook(corr)
    end
+   
    methods(Access=private, Static)
-      % ==> xcorr1x1.m <==
       d = xcorr1x1(d);
-      
-      % ==> xcorr1xr.m <==
       d = xcorr1xr(d,style)
-      
-      % ==> xcorr1xr_orig.m <==
       d = xcorr1xr_orig(d)
-      
-      % ==> xcorrdec.m <==
       d = xcorrdec(d)
-      
-      % ==> xcorrrow.m <==
       d = xcorrrow(d,c,index)
    end
 end
