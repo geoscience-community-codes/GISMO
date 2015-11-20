@@ -1,10 +1,9 @@
-function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)
+function allw=antelope2waveform(dbpath, chantag, starttime, endtime)
 %ANTELOPE2WAVEFORM Load waveform objects from Antelope database
-% W=ANTELOPE2WAVEFORM(DBPATH, STA_EXPR, CHAN_EXPR, STARTTIME, ENDTIME) will
+% W=ANTELOPE2WAVEFORM(DBPATH, CHANTAG, STARTTIME, ENDTIME) will
 % load a vector of waveform objects from an Antelope database containing a
 % wfdisc table. The database given by DBPATH is subsetted for the given
-% STA_EXPR and CHAN_EXPR which must be valid dbsubset expressions that work
-% in dbe. The database is also subsetted from STARTTIME to ENDTIME which
+% CHANTAG. The database is also subsetted from STARTTIME to ENDTIME which
 % must be in epoch format, not MATLAB datenum. The returned waveform
 % objects are NaN-padded from STARTTIME to ENDTIME.
 % Internally ANTELOPE2WAVEFORM uses trload_css and trextract_data.
@@ -29,9 +28,11 @@ function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)
 
 
     % set return variables blank in case we exit early
+    allw = [];
     w = [];
 
     % open the database, subset
+    dbpath
     db = dbopen( dbpath,'r' );
     db = dblookup_table( db,'wfdisc' );
     
@@ -41,15 +42,28 @@ function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)
     % chan='EH*'. Can even be sta = {'R*'; 'S*'}. Could open database, get a unique set of stations and
     % channels and then match against requests. 
     % COuld have logic like:
-    % stalist = {ctag.station}, chalist = {ctag.channel}
-    % for c=1:numel(stalist)
-    %  expr = sprintf('%s || sta=~/%s/ && chan=~/%s', expr, stalist{c}, ...
-    %        chanlist{c});
-    % end
+    stalist = {chantag.station};
+    chanlist = {chantag.channel};
+    expr = ' ';
+    for c=1:numel(stalist)
+        stalist{c}
+        chanlist{c}
+        if c==1
+            expr = sprintf('(sta=~/%s/ && chan=~/%s/)', stalist{c}, chanlist{c});
+        else
+            expr = expr + sprintf('(sta=~/%s/ && chan=~/%s/)', stalist{c}, chanlist{c});
+        end
+        if c<numel(stalist);
+            expr = expr + ' || ';
+        end
+    end
+    
     % should really add network and location to this logic
     % then we could open database, find the unique sta-chan for matching rows
     % and then attempt to return one waveform object for each request
-    db = dbsubset(db, sprintf('sta=~/%s/ && chan=~/%s/ ',sta, chan));
+    
+    db = dbsubset(db, expr);
+    dbnrecs(db)
     db = dbsubset(db, sprintf('time <= %f && endtime >= %f',endtime,starttime));
     
     % return if no rows
@@ -60,16 +74,31 @@ function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)
     [wfid,sta,chan,st,et]=dbgetv(db, 'wfid','sta','chan','time', 'endtime');
     sta = cellstr(sta);
     chan = cellstr(chan);
-    for c=1:numel(sta)
-        fprintf('%12d %s %s %f %f\n',wfid(c), sta{c}, chan{c}, st(c), et(c));
+    if debug.get_debug()>1
+        for c=1:numel(sta)
+            fprintf('%12d %s %s %f %f\n',wfid(c), sta{c}, chan{c}, st(c), et(c));
+        end
     end
-    % make lists of the unique station & channel combos - should end up
-    % with one waveform object for each (rather than one per row)
-    u.sta = unique(sta);
-    u.chan = unique(chan);
-    % hmm, still have a problem though that if requested without wildcards
-    % we should return exactly the set of sta/chans requested. So we need
-    % to check for wildcards in ctag.station and ctag.channel.
+    
+    % Does the input include wildcards?
+    wildcards = false;
+    for c=1:numel(stalist)
+        if strfind(stalist{c},'*') 
+            wildcards = true;
+        end
+        if strfind(chanlist{c},'*') 
+            wildcards = true;
+        end
+    end  
+    
+    % Create the list of channeltags to return
+    if wildcards 
+        chantag_out = ChannelTag.array('',sta,'',chan);
+        chantagstr = chantag_out.string();
+        chantag_out = ChannelTag.array(unique(chantagstr));
+    else
+        chantag_out = chantag;
+    end
 
     % if starttime and endtime blank, get from min/max times in wfdisc table
     if isempty(starttime) & isempty(endtime)
@@ -77,13 +106,6 @@ function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)
         endtime = max(et);
     end
     
-    % save this view to a database & display starttime & endtime for
-    % troubleshooting
-    dbunjoin( db,'/tmp/newdb');    
-    format long
-    disp(starttime);
-    disp(endtime);
-
     % create trace table & close database
     try
         fprintf('Bulk mode')
@@ -133,9 +155,25 @@ function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)
     end
     dbclose( db );
     w = combine(w);
-    w=pad(w,epoch2datenum(starttime), epoch2datenum(endtime), NaN);
+    
     
     % now check we have one waveform object per request sta-chan combo
+    allw = waveform(chantag_out(1), 0, epoch2datenum(starttime), [], '');
+    for c=2:numel(chantag_out)
+        allw = [allw; waveform(chantag_out(c), 0, epoch2datenum(starttime), [], '')];
+    end
+    
+    for c=1:numel(w)
+        sta = get(w(c),'station');
+        chan = get(w(c),'channel');
+        for cc=1:numel(chantag_out)
+            if strcmp(sta, chantag_out(cc).station) & strcmp(chan, chantag_out(cc).channel)
+                allw(cc) = w(c);
+            end
+        end
+    end
+    allw=pad(allw,epoch2datenum(starttime), epoch2datenum(endtime), NaN);
+    
 end
 
 function w = trace2waveform(tr)
