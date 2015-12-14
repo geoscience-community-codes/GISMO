@@ -1,20 +1,17 @@
-function self=read_bob_file(varargin)
-%READ_BOB_FILE Load RSAM-like data from a BOB file into a SAM object.
-% SAM is a generic term used here to represent any continuous data
+function rsamobj=load(varargin)
+%RSAM.LOAD Load RSAM-like data from a BOB file into an RSAM object.
+% RSAM is a generic term used here to represent any continuous data
 % sampled at a regular time interval (usually 1 minute). This is a 
 % format widely used within the USGS Volcano Hazards Programme which
 % originally stems from the RSAM system (Endo & Murray, 1989)
-%
-% Written for loading and plotting RSAM data at the Montserrat Volcano 
-% Observatory (MVO), and then similar measurements derived from the VME 
-% "ltamon" program and ampengfft and rbuffer2bsam which took Seisan 
-% waveform files as input. 
 %
 % RSAM data are historically stored in "BOB" format, which consists
 % of a 4 byte floating number for each minute of the year, for a 
 % single station-channel.
 %
-% s = read_bob_file('file', file, 'snum', snum, 'enum', enum, 'sta', sta, 'chan', chan, 'measure', measure, 'seismogram_type', seismogram_type, 'units', units)
+% Usage:
+%
+% s = rsam.load('file', file, 'snum', snum, 'enum', enum, 'sta', sta, 'chan', chan, 'measure', measure, 'seismogram_type', seismogram_type, 'units', units)
 %
 %     file        % the path to the file. Substitutions enabled
 %                 'SSSS' replaced with sta
@@ -30,6 +27,17 @@ function self=read_bob_file(varargin)
 %     seismogram_type % e.g. 'velocity' or 'displacement', default is 'raw'
 %     units       % units to label y-axis, e.g. 'nm/s' or 'nm' or 'cm2', default is 'counts'
 %
+% Example: Plot the entire RSAM record for station MLGT (MVO analog
+% network)
+% 
+%     file = '/Users/thompsong/Dropbox/MVOnetwork/SEISMICDATA/RSAM_1/%station%year.DAT';
+%     sta = 'MLGT';
+%     chan = 'SHZ';
+%     snum = datenum(1995,7,1);
+%     enum = datenum(2004,12,31,23,59,59);
+%     s = rsam.load('file', file, 'snum', snum, 'enum', enum, 'sta', sta, 'chan', chan);
+%     s.plot()
+%
 % See also: sam, oneMinuteData
     self = rsam(); % Create a blank sam object
     
@@ -37,31 +45,53 @@ function self=read_bob_file(varargin)
         matlab_extensions.process_options(varargin, 'file', '', 'snum', self.snum, 'enum', self.enum, 'sta', self.sta, ...
         'chan', self.chan, 'measure', self.measure, 'seismogram_type', self.seismogram_type, 'units', self.units, 'dnum', self.dnum, 'data', self.data);
 
-    %%%% CREATING SAM OBJECT FROM A BOB FILE            
-    % check if filename has a year in it, if it does
-    % make sure snum doesn't start before this year
-    % and enum doesn't end after this year
-    if ~isempty(file)
-        dummy = regexp(file, '(\d+)', 'match');
-        if ~isempty(dummy)
-            yyyy = str2num(dummy{end});
-            d=datevec(now);yearnow=d(1);clear d
-            if yyyy>=1980 & yyyy<=yearnow
-                self.snum = max([self.snum datenum(yyyy,1,1)]);
-                self.enum = min([self.enum datenum(yyyy,12,31,23,59,59)]);
-            end
+    % make sta & chan same length & cell arrays
+    self.sta = cellstr(self.sta);
+    self.chan = cellstr(self.chan);
+    if numel(self.sta)>1 & numel(self.chan)==1
+        for c=2:numel(self.sta)
+            self.chan{c} = self.chan{1};
         end
+    end
+    if numel(self.chan)>1 & numel(self.sta)==1
+        for c=2:numel(self.chan)
+            self.sta{c} = self.sta{1};
+        end
+    end     
+    
+    % create an rsam object corresponding to each request
+    for c=1:numel(self.sta)
+        rsamobj(c) = self;
+        rsamobj(c).sta = self.sta{c};
+        rsamobj(c).chan = self.chan{c};
 
-        % Generate a list of files
-        self = findfiles(self, file);
+        %%%% CREATING SAM OBJECT FROM A BOB FILE            
+        % check if filename has a year in it, if it does
+        % make sure snum doesn't start before this year
+        % and enum doesn't end after this year
+        if ~isempty(file)
+            dummy = regexp(file, '(\d+)', 'match');
+            if ~isempty(dummy)
+                yyyy = str2num(dummy{end});
+                d=datevec(now);yearnow=d(1);clear d
+                if yyyy>=1980 & yyyy<=yearnow
+                    rsamobj(c).snum = max([rsamobj(c).snum datenum(yyyy,1,1)]);
+                    rsamobj(c).enum = min([rsamobj(c).enum datenum(yyyy,12,31,23,59,59)]);
+                end
+            end
+        
+            % Generate a list of files
+            rsamobj(c) = findfiles(rsamobj(c), file);
 
-        % Load the data
-        for f = self.files
-            if f.found
-                self = load(self,f);
+            % Load the data
+            for f = rsamobj(c).files
+                if f.found
+                    rsamobj(c) = readbob(rsamobj(c),f);
+                end
             end
         end
     end
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
@@ -70,15 +100,17 @@ function self = findfiles(self, file)
     % snum and enum given.
 
     filenum = 0;
+        
+    thisfile = file;
 
     % substitute for station
-    file = regexprep(file, '%station', self.sta);
+    thisfile = regexprep(thisfile, '%station', self.sta);
 
     % substitute for channel
-    file = regexprep(file, '%channel', self.chan);
+    thisfile = regexprep(thisfile, '%channel', self.chan);
 
     % substitute for measure
-    file = regexprep(file, '%measure', self.measure);             
+    thisfile = regexprep(thisfile, '%measure', self.measure);             
 
     % set start year and month, and end year and month
     [syyy sm]=datevec(self.snum);
@@ -87,7 +119,7 @@ function self = findfiles(self, file)
     for yyyy=syyy:eyyy
 
         filenum = filenum + 1;
-        files(filenum) = struct('file', file, 'snum', self.snum, 'enum', self.enum, 'found', false);
+        files(filenum) = struct('file', thisfile, 'snum', self.snum, 'enum', self.enum, 'found', false);
 
         % Check year against start year 
         if yyyy~=syyy
@@ -113,9 +145,10 @@ function self = findfiles(self, file)
         end
     end
     self.files = files;
+    
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
-function self = load(self, f)
+function self = readbob(self, f)
 % Purpose:
 %    Loads derived data from a binary file in the BOB RSAM format
 %    The pointer position at which to reading from the binary file is determined from f.snum 

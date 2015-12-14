@@ -11,10 +11,6 @@ classdef rsam
 % "ltamon" program and ampengfft and rbuffer2bsam which took Seisan 
 % waveform files as input. 
 %
-% RSAM data are historically stored in "BOB" format, which consists
-% of a 4 byte floating number for each minute of the year, for a 
-% single station-channel.
-%
 % s = rsam() creates an empty RSAM object.
 %
 % s = rsam(dnum, data, 'sta', sta, 'chan', chan, 'measure', measure, 'seismogram_type', seismogram_type, 'units', units)
@@ -113,160 +109,18 @@ classdef rsam
                 end
             end
         end
-% % %         function result=snum(self)
-% % %             result = nanmin(self.dnum);
-% % %         end
-% % %         function result=enum(self)
-% % %             result = nanmax(self.dnum);
-% % %         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
-        function self = findfiles(self, file)
-            % Generate a list of files corresponding to the file pattern,
-            % snum and enum given.
-
-            filenum = 0;
-
-            % substitute for station
-            file = regexprep(file, 'SSSS', self.sta);
-            
-            % substitute for channel
-            file = regexprep(file, 'CCC', self.chan);
-            
-            % substitute for measure
-            file = regexprep(file, 'MMMM', self.measure);             
-
-            % set start year and month, and end year and month
-            [syyy sm]=datevec(self.snum);
-            [eyyy em]=datevec(self.enum);
-           
-            for yyyy=syyy:eyyy
-                
-                filenum = filenum + 1;
-                files(filenum) = struct('file', file, 'snum', self.snum, 'enum', self.enum, 'found', false);
-    
-                % Check year against start year 
-                if yyyy~=syyy
-                    % if not the first year, start on 1st Jan
-                    files(filenum).snum = datenum(yyyy,1,1);
-                end
-   
-                % Check year against end year
-                if yyyy~=eyyy
-                    % if not the last year, end at 31st Dec
-                    files(filenum).enum = datenum(yyyy,12,31,23,59,59);
-                end   
-   
-                % Substitute for year        
-                files(filenum).file = regexprep(files(filenum).file, 'YYYY', sprintf('%04d',yyyy) );
-                debug.print_debug(2,sprintf('Output file: %s',files(filenum).file))
-  
-                if exist(files(filenum).file, 'file')
-                    files(filenum).found = true;
-                    debug.print_debug(3,' - found\n');
-                else
-                    debug.print_debug(2,' - not found\n');
-                end
-            end
-            self.files = files;
-        end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
-        function self = load(self)
-        % Purpose:
-        %    Loads derived data from a binary file in the BOB RSAM format
-        %    The pointer position at which to reading from the binary file is determined from f.snum 
-        %    Load all the data from f.snum to f.enum. So if timewindow is 12:34:56 to 12:44:56, 
-        %    it is the samples at 12:35, ..., 12:44 - i.e. 10 of them. 
-        %    
-        % Input:
-        %    f - a structure which contains 'file', 'snum', 'enum' and 'found' parameters
-        % Author:
-        %   Glenn Thompson, MVO, 2000
-
-            % initialise return variables
-            datafound=false;
-            dnum=[];
-            data=[];
-            
-            f = self.files;
-
-            [yyyy mm]=datevec(f.snum);
-            days=365;
-            if mod(yyyy,4)==0
-                days=366;
-            end
-
-            datapointsperday = 1440;
-            headersamples = 0;
-            tz=0;
-            if strfind(f.file,'RSAM') 
-                headersamples=datapointsperday;% for PC-SEIS RSAM data there is a 1 day header
-                tz=-4;% for Montserrat RSAM data time zone is off by 4 hours
-            end
-            startsample = ceil( (f.snum-datenum(yyyy,1,1))*datapointsperday)+headersamples;
-            endsample   = (f.enum-datenum(yyyy,1,1)) *datapointsperday + headersamples;
-            %endsample   = floor( max([ datenum(yyyy,12,31,23,59,59) f.enum-datenum(yyyy,1,1) ]) *datapointsperday);
-            nsamples    = endsample - startsample + 1;
-
-            % create dnum & blank data vector
-            dnum = matlab_extensions.ceilminute(f.snum)+(0:nsamples-1)/datapointsperday - tz/24;
-            data(1:length(dnum))=NaN;
-            
-            if f.found    
-                % file found
-                debug.print_debug(0, sprintf( 'Loading data from %s, position %d to %d of %d', ...
-                     f.file, startsample,(startsample+nsamples-1),(datapointsperday*days) )); 
-   
-                fid=fopen(f.file,'r', 'l'); % big-endian for Sun, little-endian for PC
-
-                % Position the pointer
-                offset=(startsample)*4;
-                fseek(fid,offset,'bof');
-   
-                % Read the data
-                [data,numlines] = fread(fid, nsamples, 'float32');
-                fclose(fid);
-                debug.print_debug(0, sprintf('mean of data loaded is %e',nanmean(data)));
-   
-                % Transpose to give same dimensions as dnum
-                data=data';
-
-                % Test for Nulls
-                if length(find(data>0)) > 0
-                    datafound=true;
-                end    
-            else
-               debug.print_debug(0, sprintf('File %s not found', f.file));
-            end
-            
-            % Now paste together the matrices
-            self.dnum = matlab_extensions.catmatrices(dnum, self.dnum);
-            self.data = matlab_extensions.catmatrices(data, self.data);
-
-            if ~datafound
-                debug.print_debug(0, sprintf('%s: No data loaded from file %s',mfilename,f.file));
-            end
-
-            % eliminate any data outside range asked for - MAKE THIS A
-            % SEPARATE FN IF AT ALL
-            i = find(self.dnum >= self.snum & self.dnum <= self.enum);
-            self.dnum = self.dnum(i);
-            self.data = self.data(i);
-            
-            % Fill NULL values with NaN
-            i = find(self.data == -998);
-            self.data(i) = NaN;
-            i = find(self.data == 0);
-            self.data(i) = NaN;
-            
-        end
+        
+        
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
         function fs = Fs(self)
-            l = length(self.dnum);
-            s = self.dnum(2:l) - self.dnum(1:l-1);
-            fs = 1.0/(median(s)*86400);
+            for c=1:length(self)
+                l = length(self(c).dnum);
+                s = self(c).dnum(2:l) - self(c).dnum(1:l-1);
+                fs(c) = 1.0/(median(s)*86400);
+            end
         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function s=subset(self, snum, enum)
             s = self;
             i = find(self.dnum>=snum & self.dnum <= enum);
@@ -276,7 +130,11 @@ classdef rsam
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
         function toTextFile(self, filepath)
            % toTextFile(filepath);
-            %
+            if numel(self)>1
+                warning('Cannot write multiple RSAM objects to the same file');
+                return
+            end
+            
             fout=fopen(filepath, 'w');
             for c=1:length(self.dnum)
                 fprintf(fout, '%15.8f\t%s\t%5.3e\n',self.dnum(c),datestr(self.dnum(c),'yyyy-mm-dd HH:MM:SS.FFF'),self.data(c));
@@ -284,13 +142,13 @@ classdef rsam
             fclose(fout);
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%          
-        function handlePlot = plot(rsam_vector, varargin)
+        function handles = plot(rsamobj, varargin)
             % RSAM/PLOT plot rsam data
-            % handle = plot(rsam_vector, yaxisType, h, addgrid, addlegend, fillbelow, plotspikes, plottransients, plottremor);
+            % handle = plot(rsamobj, yaxisType, h, addgrid, addlegend, fillbelow, plotspikes, plottransients, plottremor);
             % to change where the legend plots set the global variable legend_ypos
             % a positive value will be within the axes, a negative value will be below
             % default is -0.2. For within the axes, log(20) is a reasonable value.
-            % yaxisType is like 'logarithmic' or 'linear'
+            % yaxisType is 'logarithmic' or 'linear'
             % h is an axes handle (or an array of axes handles)
             % use h = generatePanelHandles(numgraphs)
 
@@ -300,7 +158,7 @@ classdef rsam
             % % GTHO 2009/10/26 Changed legend position to -0.2
             [yaxisType, h, addgrid, addlegend, fillbelow] = ...
                 matlab_extensions.process_options(varargin, ...
-                'yaxisType', 'logarithmic', 'h', [], 'addgrid', false, ...
+                'yaxisType', 'linear', 'h', [], 'addgrid', false, ...
                 'addlegend', false, 'fillbelow', false);
             legend_ypos = -0.2;
 
@@ -308,19 +166,20 @@ classdef rsam
             lineColour={[0 0 0]; [0 0 1]; [1 0 0]; [0 1 0]; [.4 .4 0]; [0 .4 0 ]; [.4 0 0]; [0 0 .4]; [0.5 0.5 0.5]; [0.25 .25 .25]};
 
             % Plot the data graphs
-            for c = 1:length(rsam_vector)
-                self = rsam_vector(c);
+            for c = 1:numel(rsamobj)
+                self = rsamobj(c);
                 hold on; 
                 t = self.dnum;
                 y = self.data;
 
                 debug.print_debug(10,sprintf('Data length: %d',length(y)));
-
-                if ~strcmp(rsam_vector(c).units, 'Hz')
+                handles(c) = subplot(numel(rsamobj), 1, c);
+                
+                %if ~strcmp(rsamobj(c).units, 'Hz') 
+                if strcmp(yaxisType(1:3), 'log')
                     % make a logarithmic plot, with a marker size and add the station name below the x-axis like a legend
                     y = log10(y);  % use log plots
-
-                    handlePlot = plot(t, y, '-', 'Color', lineColour{c}, 'MarkerSize', 1.0);
+                    plot(t, y, '.', 'Color', lineColour{c}, 'MarkerSize', 1.0);
 
                     if strfind(self.measure, 'dr')
                         %ylabel(sprintf('%s (cm^2)',self(c).measure));
@@ -342,30 +201,22 @@ classdef rsam
                     % plot on a linear axis, with station name as a y label
                     % datetick too, add measure as title, fiddle with the YTick's and add max(y) in top left corner
                     if ~fillbelow
-                        handlePlot = plot(t, y, '-', 'Color', lineColour{c});
+                        plot(t, y, '.', 'Color', lineColour{c});
                     else
-                        handlePlot = fill([min(t) t max(t)], [min([y 0]) y min([y 0])], lineColour{c});
+                        fill([min(t) t max(t)], [min([y 0]) y min([y 0])], lineColour{c});
                     end
 
-                    if c ~= length(rsam_vector)
+                    if c ~= length(rsamobj)
                         set(gca,'XTickLabel','');
                     end
-
-%                     yt=get(gca,'YTick');
-%                     ytinterval = (yt(2)-yt(1))/2; 
-%                     yt = yt(1) + ytinterval: ytinterval: yt(end);
-%                     ytl = yt';
-%                     ylim = get(gca, 'YLim');
-%                     set(gca, 'YLim', [0 ylim(2)],'YTick',yt);
-%                     %ylabelstr = sprintf('%s.%s %s (%s)', self.sta, self.chan, self.measure, self.units);
-%                     ylabelstr = sprintf('%s', self.sta);
-%                     ylabel(ylabelstr);
                     datetick('x','keeplimits');
                 end
+                ylabel(sprintf('%s.%s',rsamobj(c).sta, rsamobj(c).chan));
 
                 if addgrid
                     grid on;
                 end
+                
                 if addlegend && length(y)>0
                     xlim = get(gca, 'XLim');
                     legend_ypos = 0.9;
@@ -373,6 +224,8 @@ classdef rsam
                 end
 
             end
+            
+            linkaxes(handles,'x');
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function scrollplot(s)
@@ -621,13 +474,13 @@ classdef rsam
                 file = filepattern; 
 
                 % substitute for station
-                file = regexprep(file, 'SSSS', upper(self(c).sta));
+                file = regexprep(file, '%station', upper(self(c).sta));
 
                 % substitute for channel
-                file = regexprep(file, 'CCC', upper(self(c).chan));
+                file = regexprep(file, '%channel', upper(self(c).chan));
 
                 % substitute for measure
-                file = regexprep(file, 'MMMM', self(c).measure);             
+                file = regexprep(file, '%measure', self(c).measure);             
 
                 % since dnum may not be ordered and contiguous, this function
                 % should write data based on dnum only
@@ -651,7 +504,7 @@ classdef rsam
                 [eyyy em]=datevec(self(c).enum);
 
                 if syyy~=eyyy
-		    if ~strfind(filepattern, 'YYYY')
+		    if ~strfind(filepattern, '%year')
                     	error('can only save RSAM data to BOB file if all data within 1 year (or you can add YYYY in your file pattern)');
 		    end
                 end 
@@ -665,7 +518,7 @@ classdef rsam
                 	end
 
                 	% Substitute for year        
-                	fname = regexprep(file, 'YYYY', sprintf('%04d',yyyy) );
+                	fname = regexprep(file, '%year', sprintf('%04d',yyyy) );
                 	debug.print_debug(2,sprintf('Looking for file: %s\n',fname));
 
                 	if ~exist(fname,'file')
@@ -1003,7 +856,7 @@ classdef rsam
             w = addfield(w, 'reduced', self.reduced);
             w = addfield(w, 'measure', self.measure);
         end
-        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function w=getwaveform(self, datapath)
         % rsam.getwaveform() Get the waveform corresponding to the RSAM data
         %   w = rsamobject.getwaveform() will attempt to get the waveform
@@ -1022,7 +875,7 @@ classdef rsam
             scnl = scnlobject(self.sta, self.chan)
             w = load_seisan_waveforms(datapath, min(self.dnum), max(self.dnum), scnl);
         end
-        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)
         %DURATION_AMPLITUDE Use the duration-amplitde
         %Compute the fraction of a data series above each
@@ -1250,6 +1103,7 @@ classdef rsam
             end	
             
         end    
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function [aw,tt1, tt2, tmc, mag_zone]=bvalue(this, mcType, method)
             %BVALUE evaluate b-value, a-value and magnitude of completeness
             % of an earthquake catalog stored in a Catalog object.
@@ -1758,6 +1612,11 @@ classdef rsam
             end
 
         end
+    end
+    
+    methods(Static)
+        rsamobj = load(varargin);
+        test();
     end
 
 end % classdef

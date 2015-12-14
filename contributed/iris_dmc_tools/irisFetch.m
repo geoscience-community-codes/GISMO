@@ -1,12 +1,5 @@
 classdef irisFetch
-   % IRISFETCH allows seamless access to data stored within the IRIS-DMC via FDSN services
-   %
-   % irisFetch Methods:
-   %
-   % irisFetch waveform retrieval Methods:
-   %    Traces - retrieve sac-equivalent waveforms with channel metadata
-   %
-   % irisFetch FDSN station webservice Methods:
+    bservice Methods:
    %    Channels - retrieve metadata as an array of channels
    %    Stations - retrieve metadata as an array of stations
    %    Networks - retrieve metadata as an array of networks

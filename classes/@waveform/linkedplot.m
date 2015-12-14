@@ -56,9 +56,9 @@ function linkedplot(w, alignWaveforms)
         end
         
         % display mean on left, max on right
-        text(0.02,0.85, sprintf('%5.0f',nanmean(abs(data))),'FontSize',10,'Color','b','units','normalized');
+        text(0.02,0.85, sprintf('%5.0f',nanmean(data)),'FontSize',10,'Color','b','units','normalized');
         text(0.4,0.85,sprintf(' %s',datestr(starttimes(wavnum),30)),'FontSize',10,'Color','g','units','normalized');
-        text(0.9,0.85,sprintf('%5.0f',nanmax(abs(data))),'FontSize',10,'Color','r','units','normalized');
+        text(0.9,0.85,sprintf('%5.0f',nanmax(abs(detrend(data)))),'FontSize',10,'Color','r','units','normalized');
     end
     
     if exist('ax','var')
