@@ -54,27 +54,34 @@ function self = seisan(varargin)
     snum = Catalog.read_catalog.ensure_dateformat(startTime);
     enum = Catalog.read_catalog.ensure_dateformat(endTime);
     
-    if ~exist(dbpath, 'dir')
-        fprintf('Directory %s not found\n',dbpath);
-        self = struct;
-        return;
-    end
+    if exist(dbpath, 'dir')
+        % get dir list of matching sfiles
+        sfiles = Sfile.list_sfiles(dbpath, snum, enum);
     
-    % get dir list of matching sfiles
-    sfiles = Sfile.list_sfiles(dbpath, snum, enum);
-    
-    % loop over sfiles
-    for i=1:length(sfiles)
-        % read 
-        fprintf('Processing %s\n',fullfile(sfiles(i).dir, sfiles(i).name));
-        thiss = Sfile(fileread(fullfile(sfiles(i).dir, sfiles(i).name)));
-        try
-            s(i)=thiss;
-        catch
-            s(i)
-            thiss
-            error('Wrong number of fields?')
+        % loop over sfiles
+        for i=1:length(sfiles)
+            % read 
+            fprintf('Processing %s\n',fullfile(sfiles(i).dir, sfiles(i).name));
+            thiss = Sfile(fileread(fullfile(sfiles(i).dir, sfiles(i).name)));
+            try
+                s(i)=thiss;
+            catch
+                s(i)
+                thiss
+                error('Wrong number of fields?')
+            end
         end
+    else
+        if exist(dbpath,'file')
+            thiss = Sfile(fileread(dbpath));
+        else
+            fprintf('Directory %s not found\n',dbpath);
+            self = struct;
+            return
+        end
+    end
+     
+    for i=1:numel(s)
 
         % add to catalog
         dnum(i)  = s(i).otime;

@@ -65,6 +65,7 @@ classdef Sfile
             % Read lines into cell array
             lines = strread(fileContents, '%s', 'delimiter', sprintf('\n'));
             linenum = 1;
+            numorigins = 0; alls = [];
 
 			while linenum <= numel(lines),
                 tline = fileContents(1+(linenum-1)*82:min([length(fileContents) 80+(linenum-1)*82]));
@@ -78,6 +79,11 @@ classdef Sfile
                 end
                 
                 if lineend == '1'
+                    numorigins = numorigins + 1
+                    if numorigins > 1
+                        alls = [alls s];
+                        clear s;
+                    end
                     if length(strtrim(tline(2:20)))  >= 14
                         s.year = str2num(tline(2:5));
                         s.month = str2num(tline(7:8));
@@ -249,6 +255,7 @@ classdef Sfile
             end
             
             s.aef = aef;
+            alls = [alls s];
             debug.printfunctionstack('<')
         end
     end
