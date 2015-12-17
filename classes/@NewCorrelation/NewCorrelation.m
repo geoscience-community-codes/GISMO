@@ -1,6 +1,7 @@
 classdef NewCorrelation
    %Correlation
-   % written by Mike West, rewritten into the new MATLAB classes by Celso Reyes
+   % Authored by Mike West, Geophysical Institute, Univ. of Fairbanks
+   % rewritten into the new MATLAB classes by Celso Reyes
    
    properties
       traces %  % c.W
@@ -64,10 +65,8 @@ classdef NewCorrelation
          % format (serial day) or a recognized string format (see HELP DATENUM).
          % TRIG must be the same length as WAVEFORM or be a scalar value.
          %
-         % CORRELATION('DEMO')
-         % Opens the demo dataset for correlation. This dataset contains a single
-         % correlation object of 100 traces. It is the data source for the cookbook
-         % demos.
+         % CORRELATION('DEMO') DEPRECATED
+         % use   NewCorrelation.demo()   instead
          %
          % C = CORRELATION(datasource,scnlobjects,trig,pretrig,posttrig)
          % creates a correlation object using the sta/chan/net/loc codes contained
@@ -94,7 +93,11 @@ classdef NewCorrelation
          %                       are times in seconds relative to the trigger
          %                         time.
          %
-         % C = CORRELATION(C,W) replaces the waveforms in correlation object C with
+         % C = CORRELATION(C,W)  DEPRECATED
+         % use: C.traces = W
+         %   This will make sure that things are compatible
+         % ORIGINAL DESCRIPTION BELOW
+         % replaces the waveforms in correlation object C with
          % the waveform object W. This is useful for manipulating waveforms with
          % tools outside the correlation toolbox.
          % Example:
@@ -164,50 +167,14 @@ classdef NewCorrelation
          % for details of how these statistics are calculated.
          %
          %
-         %
-         % ------- DEPRECATED USES -----------------------------------------------
-         %
-         % The following uses are still recognized by CORRELATION. However they have
-         % been deprecated in favor of methods that make use of the datasource and
-         % sncl objects beginning in waveform 1.10.
-         %
-         % ANTELOPE
-         %    CORRELATION('stat','chan',trig,pretrig,posttrig)
-         %    CORRELATION('stat','chan',trig,pretrig,posttrig,'archive')
-         %
-         % WINSTON
-         %    CORRELATION('stat','chan',trig,pretrig,posttrig,'netwk','loc','server',port)
-         %
-         % While these calls to correlation may continue to work, they will not be
-         % maintained and may disappear. Best to migrate to the newer flavor of
-         % waveform. While the addition of two extra lines of code may seem a step
-         % backward, the new approach is significantly more robust and much faster.
-         %
-         % EXAMPLE OF PREFERRED FORMAT:
-         % Deprecated usage:
-         %   correlation('stat','chan',trig,pretrig,posttrig,'archive')
-         %
-         % Preferred usage:
-         %   ds = datasource('antelope','archive');
-         %   scnl = scnlobject('sta','chan');
-         %   correlation(ds,scnl,trig,pretrig,posttrig)
-         %
          % It is worth first investing time to understand the WAVEFORM, DATASOURCE,
          % SCNLOBJECT objects on which CORRELATION is built.
          % See also datasource waveform scnlobject
          
-         % AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-         % $Date$
-         % $Revision$
-         
-         
-         
-         
-         % CHECK THAT WAVEFORM OBJECT IS SET UP
-         if exist('waveform','file') ~= 2
-            error('The @WAVEFORM suite must be in the path to use the correlation toolbox.')
+         % CHECK THAT WAVEFORM IS SET UP
+         if ~exist('waveform','file')
+            error('The Waveform Suite must be in the path to use the correlation toolbox.')
          end
-         
          
          % LOAD DATA VIA WAVEFORM. SEND SPECIAL CASES TO SUBROUTINE
          
@@ -216,105 +183,73 @@ classdef NewCorrelation
                varargin{nm} = SeismicTrace(varargin{nm});
             end
          end
-         %% NO DATA
-         if nargin==0
-            return
-            
-            %% ANOTHER CORRELATION OBJECT
-         elseif nargin==1 && isa(varargin{1},'correlation')
-            oldC = varargin{1};
-            c.W = get(oldC,'waves'); %  % c.W
-            c.trig = get(oldC,'trig'); % will be triggers; % c.trig
-            c.corrmatrix = get(oldC,'corr');
-            c.lags = get(oldC,'lag');% will be lags; % c.L
-            c.stat = get(oldC,'stat'); % will be statistics; % c.stat
-            c.link = get(oldC,'link'); % might be links;% c.link
-            c.clust = get(oldC,'clust');% will be clusters;% c.clust
-            
-            %% REPLACE WAVEFORM IN EXISTING CORRELATION OBJECT
-         elseif nargin==2 && isa(varargin{1},'correlation')
-            c = varargin{1};
-            w = varargin{2};
-            if c.ntraces ~= numel(w)
-               error('Correlation and waveform objects must have the same number of elements');
-            end
-            c.traces = w;
-            
-            %% BUILD FROM A STRUCTURE (CORAL)
-         elseif isa(varargin{1},'struct')
-            %if isfield(varargin{1}(1),'data') && isfield(varargin{1}(1),'staCode') && isfield(varargin{1}(1),'staChannel')
-            if isfield(varargin{1},'data') && isfield(varargin{1},'staCode') && isfield(varargin{1},'staChannel')
-               c = convert_coral(varargin{1});
-            end
-            % add other "struct" processing blocks here as an embedded elseif
-            
-            %% BUILD FROM A DATASOURCE
-         elseif isa(varargin{1},'datasource')
-            ds = varargin{1};
-            scnl = varargin{2};
-            trig = reshape(varargin{3},length(varargin{3}),1);
-            pretrig = varargin{4};
-            posttrig = varargin{5};
-            c = loadfromdatasource(ds,scnl,trig,pretrig,posttrig);
-            c = verify(c);
-            c = crop(c,pretrig,posttrig);
-            
-            %% DEMO DATASET
-         elseif nargin==1 && strncmpi(varargin{1},'DEM',3)
-            oldcorrobj = load('demo_data_100'); %stresstest
-            c = NewCorrelation(oldcorrobj.c);
-            
-            %% OPEN HTML COOKBOOK
-         elseif nargin==1 && strncmpi(varargin{1},'COO',3)
-%             %COOKBOOK
-%             p = which('cookbook');
-%             if isempty(p)
-%                error('Sorry. The correlation cookbook was not found.');
-%             end
-%             p = p(1:end-22);
-%             %slash = p(end);
-%             %web([p 'html' slash 'correlation_cookbook.html']);
-%             c = [];
-            cookbook(correlation);
-            %% OPEN README FILE
-         elseif nargin==1 && strncmpi(varargin{1},'REA',3)
-            p = which('correlation/correlation');
-            p = p(1:end-13);
-            web([p 'README.txt']);
-            c = [];
-            
-            %% WITH SYNTHETIC DATA
-         elseif nargin==1 && isa(varargin{1},'double')
-            co = makesynthwaves(varargin{1});
-            c.W = co.W;
-            c.trig = co.trig;
-            
-            %% FROM A WAVEFORM WITHOUT TRIGGERS
-         elseif nargin==1 && isa(varargin{1},'SeismicTrace')
-            c.traces = varargin{1};
-            c.trig = c.traces.firstsampletime() + 0.25*(get(c.W,'END') - c.traces.firstsampletime());
-            c.trig = reshape(c.trig,numel(c.trig),1);
-            
-            %% FROM A WAVEFORM WITH TRIGGERS
-         elseif nargin==2 && isa(varargin{1},'SeismicTrace')
-            c.traces = varargin{1};
-            if isa(varargin{2},'double')
-               c.trig = varargin{2};
-               c.trig = reshape(c.trig,numel(c.trig),1);
-            else
-               error('Time format for TRIG field not recognized');
-            end
-            % adjust length of trigger field input
-            if numel(c.trig)==1
-               c.trig = c.trig*ones(size(c.W));
-            elseif  numel(c.trig)~=numel(c.W)
-               error('correlation:correlation:wrongTriggerLength','Trigger argument must be of length 1 or the same as the number of waveforms');
-            end
-         else
+         
+
+         switch nargin
+            case 0
+               return; % create a blank (default) NewCorrelation object
+            case 1
+               switch class(varargin{1});
+                  case 'SeismicTrace'
+                     % USAGE: NewCorrelation(SeismicTrace) load from waveforms (no specified triggers)
+                     c.traces = varargin{1};
+                     c.trig = c.traces.firstsampletime() + 0.25*(get(c.W,'END') - c.traces.firstsampletime());
+                     c.trig = reshape(c.trig,numel(c.trig),1);
+                     
+                  case 'correlation'
+                     % USAGE: NewCorrelation(correlation), make new from old
+                     c = c.convertFromOld(varargin{1});
+                     
+                  case {'double'}
+                     % USAGE: NewCorrelation(N), make synthetic data for N traces
+                     co = makesynthwaves(varargin{1});
+                     c.W = co.W;
+                     c.trig = co.trig;
+                     
+                  case 'struct'
+                     % USAGE: NewCorrelation(coralStruct)
+                     if NewCorrelation.mightBeCoral(varargin{1})
+                        c = convert_coral(varargin{1});
+                     end
+               end
+            case 2
+               if isa(varargin{1},'correlation')
+                  % TODO: finesse this error
+                  error('set the waveforms in the correlation object instead\n c.traces = w');
+                  % USAGE: NewCorrelation(NewCorr, W), replace waveforms
+                  c = varargin{1};
+                  w = varargin{2};
+                  if c.ntraces ~= numel(w)
+                     error('Correlation and waveform objects must have the same number of elements');
+                  end
+                  c.traces = w;
+               elseif isa(varargin{1},'SeismicTrace')
+                  % USAGE: NewCorrelation(traces, triggers), populate with waveform and triggers
+                  assert(isnumeric(c.trig), 'Time format for TRIG field not recognized');
+                  c.traces = varargin{1};
+                  c.trig = varargin{2};
+                  c.trig = reshape(c.trig,numel(c.trig),1);
+                  % adjust length of trigger field input
+                  if numel(c.trig)==1
+                     c.trig = c.trig*ones(size(c.W));
+                  elseif  numel(c.trig)~=numel(c.W)
+                     error('correlation:correlation:wrongTriggerLength',...
+                        'Trigger argument must be of length 1 or the same as the number of waveforms');
+                  end
+               end
+            case 5  % build from a datasource
+               % USAGE: NewCorrelation(ds, scnl, trig, pretrig, posttrig)
+               assert(isa(varargin{1},'datasource'));
+               [ds, scnl, trig_, pretrig, posttrig] = deal(varargin{:});
+               trig_ = reshape(trig_,length(trig_),1);
+               c = loadfromdatasource(ds, scnl, trig_, pretrig, posttrig);
+               c = verify(c);
+               c = crop(c,pretrig,posttrig);
+            otherwise
             error('Invalid input values to correlation');
-         end;
-                  
-         %% ADJUST DATA LENGTH AND SAMPLE RATE IF NECESSARY
+         end
+         
+         %% REMOVE TRENDS AND ADJUST DATA LENGTH AND SAMPLE RATE IF NECESSARY
          if ~isempty(c.traces)
             c = demean(c);
             c = detrend(c);
@@ -332,7 +267,6 @@ classdef NewCorrelation
          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
          %% FUNCTION: LOAD WAVEFORM DATA FROM A DATASOURCE
          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-         
          function c = loadfromdatasource(ds,scnl,trig,pretrig,posttrig)
             
             % TODO: This function needs to rewritten if/when waveform is able to
@@ -592,8 +526,8 @@ classdef NewCorrelation
       c = conv(c,varargin)
       c = crop(c,varargin)
       c = deconv(c,varargin)
-      c = demean(c,varargin);
-      c = detrend(c,varargin);
+      c = demean(c,varargin)
+      c = detrend(c,varargin)
       c = diff(c)
       display(c)
       index = find(c,varargin)
@@ -602,12 +536,12 @@ classdef NewCorrelation
       c = hilbert(c,n)
       c = integrate(c)
       [c,t,i,CC,LL] = interferogram(c,varargin)
-      c = linkage(c,varargin);
+      c = linkage(c,varargin)
       [c1,c2] = match(c1,c2,varargin)
       c = minus(c,varargin)
       c = norm(c,varargin)
       plot(c,varargin)
-      c = sign(c,varargin);
+      c = sign(c,varargin)
       c = sort(c,varargin)
       c = stack(c,varargin)
       c = strip(c,varargin)
@@ -634,6 +568,16 @@ classdef NewCorrelation
       statplot(c);
       wiggleinterferogram(c,scale,type,norm,range)
       wiggleplot(c,scale,ord,norm)
+      
+      function c = convertFromOld(c, oldC)
+         c.W = get(oldC,'waves'); %  % c.W
+         c.trig = get(oldC,'trig'); % will be triggers; % c.trig
+         c.corrmatrix = get(oldC,'corr');
+         c.lags = get(oldC,'lag');% will be lags; % c.L
+         c.stat = get(oldC,'stat'); % will be statistics; % c.stat
+         c.link = get(oldC,'link'); % might be links;% c.link
+         c.clust = get(oldC,'clust');% will be clusters;% c.clust
+      end
    end
    
    methods(Hidden)
@@ -644,6 +588,17 @@ classdef NewCorrelation
    
    methods(Static)
       correlationVariables = cookbook(corr)
+      function c = demo()
+         % demo   load the demo dataset
+         % Opens the demo dataset for correlation. This dataset contains a single
+         % correlation object of 100 traces. It is the data source for the cookbook
+         % demos.
+         
+         % TODO: Resave data file as NewCorrelation
+         oldcorrobj = load('demo_data_100'); %stresstest
+            c = NewCorrelation(oldcorrobj.c);
+      end
+         
    end
    
    methods(Access=private, Static)
@@ -652,6 +607,10 @@ classdef NewCorrelation
       d = xcorr1xr_orig(d)
       d = xcorrdec(d)
       d = xcorrrow(d,c,index)
+      
+      function tf = mightBeCoral(aStruct)
+         tf = isfield(aStruct,'data') && isfield(aStruct,'staCode') && isfield(aStruct,'staChannel');
+      end
    end
 end
 
