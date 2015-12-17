@@ -3,6 +3,9 @@
 % $Revision$
 ############################
 
+NewCorrelation now takes over the functionality of Correlation, but is implemented as modern
+matlab classes - Celso
+- Instead of correlation('cookbook'), use NewCorrelation.cookbook()
 
 Contents
 	- Install notes
