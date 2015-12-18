@@ -24,10 +24,10 @@ function c = subset(c,index)
 
 
 % RESHAPE AS COLUMN VECTOR
-index = reshape(index,length(index),1);
+index = index(:); % reshape(index,length(index),1);
 
 
-% SELCT DESIRED DATA
+% SELECT DESIRED DATA
 
 c.traces = c.traces(index);
 

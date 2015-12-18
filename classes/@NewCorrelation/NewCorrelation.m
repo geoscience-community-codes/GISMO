@@ -439,12 +439,15 @@ classdef NewCorrelation
          end %convert_coral
       end %NewCorrelation
       
+      %{
+      Note about setting NewCorrelation fields:
+      %}
       function waves = get.W(obj)
-         warning('getting waveform instead of traces');
+         warning('getting waveforms instead of traces');
          waves = waveform(obj.traces);
       end
       function obj = set.W(obj, waves)
-         % warning('setting waveform instead of trace');
+         % warning('setting waveforms instead of trace');
          obj.traces = SeismicTrace(waves);
       end
       function X = get.C(obj)
@@ -465,6 +468,7 @@ classdef NewCorrelation
       end
       
       function c = set.traces(c, T)
+         % NOTE: To avoid problems with "subset", size of T is not checked!
          c.traces = T(:); % ensure traces are in a column
          %TODO: Should this also wipe all the calculated values?
       end
