@@ -1,21 +1,47 @@
-function save(self, filepattern)
-    % RSAM/SAVE - save an rsam-like object to an RSAM/BOB binary
-    % file
-    %
+function save(self, filepattern, varargin)
+    %RSAM/SAVE - save an rsam object to file.
     %
     % Examples:
-    %   1. save data to myfile.bob
-    %       r.save('myfile.bob')
+    %   1. save data to a BOB binary file myfile.dat
+    %       r.save('myfile.dat')
     %
-    %   2. save to file like YEAR_STATION_CHANNEL_MEASURE.bob
-    %       r.save('YYYY_SSSS_CCC_MMMM.bob')
+    %   2. save to BOB binary file YEAR_STATION_CHANNEL_MEASURE.dat
+    %       r.save('%year_%station_%channel_%measure.dat')
     %
+    %   3. save to a text file mydata.txt
+    %       r.save('mydata.txt','format','text')
 
-    for c=1:numel(self)
+    % set default values, and add validation conditions
+    p = inputParser;
+    p.addOptional('format','binary',@ischar);
+    p.parse(varargin{:});
+    fields = fieldnames(p.Results);
+    for i=1:length(fields)
+        field=fields{i};
+        val = p.Results.(field);
+        eval(sprintf('%s = val;',field));
+    end
+
+    if strcmp('format','text')
+        % toTextFile(filepath);
+        if numel(self)>1
+            warning('Cannot write multiple RSAM objects to the same file');
+            return
+        end
+
+        fout=fopen(filepath, 'w');
+        for c=1:length(self.dnum)
+            fprintf(fout, '%15.8f\t%s\t%5.3e\n',self.dnum(c),datestr(self.dnum(c),'yyyy-mm-dd HH:MM:SS.FFF'),self.data(c));
+        end
+        fclose(fout);
+    elseif strcmp('format','binary')
+
+
+      for c=1:numel(self)
 
         dnum = self(c).dnum;
         data = self(c).data;
-        file = filepattern; 
+        file = filepattern;
 
         % substitute for station
         file = regexprep(file, '%station', upper(self(c).sta));
@@ -110,5 +136,6 @@ function save(self, filepattern)
                 fclose(fid);
             end
         end
+      end
     end
 end

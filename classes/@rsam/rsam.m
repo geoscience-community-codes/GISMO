@@ -71,83 +71,68 @@ classdef rsam
         seismogram_type = 'raw';
         reduced = struct('Q', Inf, 'sourcelat', NaN, 'sourcelon', NaN, 'distance', NaN, 'waveType', '', 'isReduced', false, 'f', NaN, 'waveSpeed', NaN, 'stationlat', NaN, 'stationlon', NaN); 
         units = 'counts';
-        use = true;
+        %use = true;
         files = '';
         sta = '';
         chan = '';
         snum = -Inf;
         enum = Inf;
-        spikes = []; % a vector of rsam objects that describe large spikes
-        % in the data. Populated after running 'despike' method. These are
-        % removed simultaneously from the data vector.
-        transientEvents = []; % a vector of rsam objects that describe
-        % transient events in the data that might correspond to vt, rf, lp
-        % etc. Populated after running 'despike' method with the
-        % 'transientEvents' argument. These are not removed from the data
-        % vector, but are instead returned in the continuousData vector.
-        continuousData = []; % 
-        continuousEvents = []; % a vector of rsam objects that describe tremor
+        %spikes = []; % a vector of rsam objects that describe large spikes
+            % in the data. Populated after running 'despike' method. These are
+            % removed simultaneously from the data vector.
+        %transientEvents = []; % a vector of rsam objects that describe
+            % transient events in the data that might correspond to vt, rf, lp
+            % etc. Populated after running 'despike' method with the
+            % 'transientEvents' argument. These are not removed from the data
+            % vector, but are instead returned in the continuousData vector.
+        %continuousData = []; %
+        %continuousEvents = []; % a vector of rsam objects that describe tremor
 
     end
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     methods(Access = public)
 
-        function self=rsam(dnum, data, varargin)
+        function self=rsam(varargin)
             if nargin==0
                 return;
             end
-            
-            if nargin>1
-                self.dnum = dnum;
-                self.data = data;
-                if nargin>2
-                          
-                    [self.sta, self.chan, self.measure, self.seismogram_type, self.units, self.snum, self.enum] = ...
-                        matlab_extensions.process_options(varargin, 'sta', self.sta, ...
-                        'chan', self.chan, 'measure', self.measure, 'seismogram_type', self.seismogram_type, 'units', self.units, 'snum', self.snum, 'enum', self.enum);
-            
-                end
+
+            % set default values, and add validation conditions
+            p = inputParser;
+            p.addRequired('dnum', @isnumeric);
+            p.addRequired('data', @isnumeric);
+            p.addRequired('sta', @ischar);
+            p.addRequired('chan', @ischar);
+            p.addOptional('measure', self.measure, @ischar);
+            p.addOptional('seismogram_type', self.seismogram_type, @ischar);
+            p.addOptional('units', self.units, @ischar);
+            p.addRequired('snum', @isnumeric);
+            p.addRequired('enum', @isnumeric);
+            %p.parse(dnum, data, sta, chan, measure, seismogram_type, units, snum, enum);
+            p.parse(varargin);
+            fields = fieldnames(p.Results);
+            for i=1:length(fields)
+                field=fields{i};
+                val = p.Results.(field);
+                eval(sprintf('self.%s = val;',field));
             end
         end
         
         % Prototypes
-        save(self);
-        plot(self, varagin);
-        resample(self, varargin);
-        despike(self, spiketype, maxRatio);
+        save(self, varargin);
+        plot(self, varargin);
+        [r,errflag]=divide(self1, self2);
+        [r,errflag]=add(rsam_vector);
+        [r,errflag]=subtract(self1,self2);
+        [r,errflag]=geometricMean(rsam_vector);
+        r=smooth(self,windowlength,avtype);
+        [r,errflag]=resample(self, varargin);
+        fs = fsamp(self);
+        s=subset(self, snum, enum);
+        [r,errflag]=despike(self, spiketype, maxRatio);
         [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone);
-        
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-        function fs = Fs(self)
-            for c=1:length(self)
-                l = length(self(c).dnum);
-                s = self(c).dnum(2:l) - self(c).dnum(1:l-1);
-                fs(c) = 1.0/(median(s)*86400);
-            end
-        end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function s=subset(self, snum, enum)
-            for c=1:numel(self)
-                s(c) = self(c);
-                i = find(self(c).dnum>=snum & self(c).dnum <= enum);
-                s(c).dnum = self(c).dnum(i);
-                s(c).data = self(c).data(i);
-            end
-        end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-        function toTextFile(self, filepath)
-           % toTextFile(filepath);
-            if numel(self)>1
-                warning('Cannot write multiple RSAM objects to the same file');
-                return
-            end
-            
-            fout=fopen(filepath, 'w');
-            for c=1:length(self.dnum)
-                fprintf(fout, '%15.8f\t%s\t%5.3e\n',self.dnum(c),datestr(self.dnum(c),'yyyy-mm-dd HH:MM:SS.FFF'),self.data(c));
-            end
-            fclose(fout);
-        end
+
+
     end % end of dynamic methods
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
     methods(Access = public, Static)
@@ -156,6 +141,7 @@ classdef rsam
         rsamobj = detectTremorEvents(stationName, chan, DP, snum, enum, spikeRatio, transientEventRatio, STA_minutes, LTA_minutes, stepsize, ratio_on, ratio_off, plotResults);
         rsamobj = load(varargin);
         test();
+        Cookbook()
     end
 
 end % classdef

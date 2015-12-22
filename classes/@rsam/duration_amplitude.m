@@ -15,8 +15,10 @@ function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)
 %       (None) A graph is plotted, the user clicks two points, and
 %       from that slope, the characteristic amplitude is computed
 %       and shown on the screen.
+format short
+for c=1:numel(self)
 
-    y = self.data;
+    y = self(c).data;
     n = length(y);
     a = abs(y);
     max_amplitude = max(a);
@@ -29,11 +31,11 @@ function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)
     x = min_amplitude;
     while x < max_amplitude,
         i = find(a>x);
-        f = length(i);
+        f = length(i)/n;
         index = index+1;
         frequency(index) = f;
         threshold(index) = x;
-        x = x * 1.2;
+        x = x * 1.1;
     end
     clear x y a  f  n  min_amplitude max_amplitude index ;
 
@@ -56,10 +58,10 @@ function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)
     switch law
         case {'exponential'}
             x = threshold;
-            xlabelstr = 'RMS Displacement(nm)';
+            xlabelstr = 'Amplitude';
         case {'power'}
             x = log10(threshold);
-            xlabelstr = 'log10(RMS Displacement(nm))';
+            xlabelstr = 'log10(Amplitude)';
         otherwise
             error('law unknown')
     end
@@ -69,7 +71,7 @@ function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)
     figure
     plot(x,y,'o');
     xlabel(xlabelstr);
-    ylabel('log10(Cumulative Minutes)');
+    ylabel('log10(fraction of data with A>x)');
     hold on;
     %set(gca,'XLim',[xmin xmax]);
 
@@ -123,7 +125,7 @@ function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)
                     error('law unknown')
             end
 
-            disp(sprintf('characteristic D_R_S=%.2f cm^2, R^2=%.2f',lambda,r2));
+            disp(sprintf('lambda=%.2f cm^2, R^2=%.2f',lambda,r2));
 
             % draw the fitted line
             xf = [min(wx) max(wx)];
@@ -189,7 +191,7 @@ function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)
                             error('law unknown')
                     end
 
-                    disp(sprintf('characteristic D_R_S=%.2f cm^2, R^2=%.2f',lambda,r2));
+                    disp(sprintf('lambda=%.2f, R^2=%.2f',lambda,r2));
 
                     % draw the fitted line
                     xf = [min(wx) max(wx)];
@@ -210,9 +212,9 @@ function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)
                     r2str=sprintf('%.2f',r2);
                     lambdastr=sprintf('%.2f',lambda);
                     if strcmp(law,'exponential')
-                        tstr = [self.sta,' \lambda=',lambdastr,' R^2=',r2str];
+                        tstr = [self(c).sta,' \lambda=',lambdastr,' R^2=',r2str];
                     else
-                        tstr = [self.sta,' \gamma=',lambdastr,' R^2=',r2str];
+                        tstr = [self(c).sta,' \gamma=',lambdastr,' R^2=',r2str];
                     end
 
                     text(xpos, ypos, tstr, ...
@@ -223,5 +225,5 @@ function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)
             end
         end
     end	
-
+end
 end

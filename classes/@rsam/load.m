@@ -14,10 +14,10 @@ function rsamobj=load(varargin)
 % s = rsam.load('file', file, 'snum', snum, 'enum', enum, 'sta', sta, 'chan', chan, 'measure', measure, 'seismogram_type', seismogram_type, 'units', units)
 %
 %     file        % the path to the file. Substitutions enabled
-%                 'SSSS' replaced with sta
-%                 'CCC' replaced with chan
-%                 'MMMM' replaced with measure
-%                 'YYYY' replaced with year (from snum:enum)
+%                 '%station' replaced with sta
+%                 '%channel' replaced with chan
+%                 '%measure' replaced with measure
+%                 '%year' replaced with year (from snum:enum)
 %                 These allow looping over many year files
 %     snum        % the start datenum
 %     enum        % the end   datenum

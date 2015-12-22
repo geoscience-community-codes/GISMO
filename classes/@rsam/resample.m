@@ -1,11 +1,11 @@
-function self = resample(self, varargin)
-%RESAMPLE resamples a rsam object at over every specified intercrunchfactor
-%   rsamobject2 = rsamobject.resample('method', method, 'factor', crunchfactor)
-%  or
-%   rsamobject2 = rsamobject.resample(method, 'minutes', minutes)
-%
+function self = resample(self,  numminutes, method)
+%RESAMPLE resamples a rsam object at a sample interval of NUMMINUTES using
+%METHOD
+%   rsamobject2 = rsamobject.resample(NUMMINUTES, METHOD)
 %   Input Arguments
 %       rsamobject: rsam object       N-dimensional
+%
+%       NUMMINUTES:       downsample to this sample period
 %
 %       METHOD: which method of sampling to perform within each sample
 %                window
@@ -20,22 +20,10 @@ function self = resample(self, varargin)
 %           'absmedian' : median deviation from zero (added 2011/06/01)
 %           'builtin': Use MATLAB's built in resample routine
 %
-%       CRUNCHFACTOR : the number of samples making up the sample window
-%       MINUTES:       downsample to this sample period
-%       (CRUNCHFACTOR will be calculated internally)
-%
 % Examples:
-%   rsamobject.resample('method', 'mean')
-%       Downsample the rsam object with an automatically determined
-%           sampling period based on timeseries length.
-%   rsamobject.resample('method', 'max', 'factor', 5) grab the max value of every 5
-%       samples and return that in a waveform of adjusted frequency. The output
-%       rsam object will have 1/5th of the samples, e.g. from 1
-%       minute sampling to 5 minutes.
-%   rsamobject.resample('method', 'max', 'minutes', 10) downsample the data at
-%       10 minute sample period       
-
-    [method, crunchfactor, minutes] = matlab_extensions.process_options(varargin, 'method', self.measure, 'factor', 0, 'minutes', 0);
+%   rsamobject.resample(10, 'max') downsample the data at
+%       10 minute sample period, where each 10-minute sample is the max within that
+%       10 minute time window
 
     persistent STATS_INSTALLED;
 
@@ -43,30 +31,23 @@ function self = resample(self, varargin)
       STATS_INSTALLED = ~isempty(ver('stats'));
     end
 
-    if ~(round(crunchfactor) == crunchfactor) 
-        disp ('crunchfactor needs to be an integer');
+    if ~(round(numminutes) == numminutes) 
+        warning('numminutes must be an integer');
         return;
     end
 
+    if ~exist('method','var')
+        method = 'mean';
+    end
+    
     for i=1:numel(self)
-        samplingIntervalMinutes = 1.0 / (60 * self(i).Fs());
-        if crunchfactor==0 & minutes==0 % choose automatically
-            choices = [1 2 5 10 30 60 120 240 360 ];
-            days = max(self(i).dnum) - min(self(i).dnum);
-            choice=max(find(days > choices));
-            minutes=choices(choice);
-        end
+        samplingIntervalMinutes = 1.0 / (60 * self(i).fsamp());
+        crunchfactor = round(numminutes / samplingIntervalMinutes);
 
-        if minutes > samplingIntervalMinutes
-            crunchfactor = round(minutes / samplingIntervalMinutes);
-        end
 
-        if isempty(method)
-            method = 'mean';
-        end
 
         if crunchfactor > 1
-            debug.print_debug(3, sprintf('Changing sampling interval to %d', minutes))
+            debug.print_debug(3, sprintf('Changing sampling interval to %d', numminutes))
 
             rowcount = ceil(length(self(i).data) / crunchfactor);
             maxcount = rowcount * crunchfactor;
@@ -149,6 +130,9 @@ function self = resample(self, varargin)
 
             end
             self(i).measure = method;
+            bad = isnan(self(i).dnum);
+            self(i).dnum(bad) = [];
+            self(i).data(bad) = [];
         end
     end  
 end

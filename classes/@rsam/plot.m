@@ -12,14 +12,14 @@ function handles = plot(rsamobj, varargin)
     %
     % % GTHO 2009/10/26 Changed marker size from 5.0 to 1.0
     % % GTHO 2009/10/26 Changed legend position to -0.2
-    [yaxisType, h, addgrid, addlegend, fillbelow] = ...
+    [yaxisType, h, addgrid, addlegend, fillbelow, linestyle] = ...
         matlab_extensions.process_options(varargin, ...
         'yaxisType', 'linear', 'h', [], 'addgrid', false, ...
-        'addlegend', false, 'fillbelow', false);
+        'addlegend', false, 'fillbelow', false, 'linestyle', '.');
     legend_ypos = -0.2;
 
     % colours to plot each station
-    lineColour={[0 0 0]; [0 0 1]; [1 0 0]; [0 1 0]; [.4 .4 0]; [0 .4 0 ]; [.4 0 0]; [0 0 .4]; [0.5 0.5 0.5]; [0.25 .25 .25]};
+    lineColour={[0 0 1]; [1 0 0]; [0 1 0]; [.4 .4 0]; [0 .4 0 ]; [.4 0 0]; [0 0 .4]; [0.5 0.5 0.5]; [0.25 .25 .25]; [0 0 0]};
 
     % Plot the data graphs
     for c = 1:numel(rsamobj)
@@ -35,7 +35,7 @@ function handles = plot(rsamobj, varargin)
         if strcmp(yaxisType(1:3), 'log')
             % make a logarithmic plot, with a marker size and add the station name below the x-axis like a legend
             y = log10(y);  % use log plots
-            plot(t, y, '.', 'Color', lineColour{c}, 'MarkerSize', 1.0);
+            plot(t, y, linestyle, 'Color', lineColour{c}, 'MarkerSize', 1.0);
 
             if strfind(self.measure, 'dr')
                 %ylabel(sprintf('%s (cm^2)',self(c).measure));
@@ -57,7 +57,7 @@ function handles = plot(rsamobj, varargin)
             % plot on a linear axis, with station name as a y label
             % datetick too, add measure as title, fiddle with the YTick's and add max(y) in top left corner
             if ~fillbelow
-                plot(t, y, '.', 'Color', lineColour{c});
+                plot(t, y, linestyle, 'Color', lineColour{c});
             else
                 fill([min(t) t max(t)], [min([y 0]) y min([y 0])], lineColour{c});
             end
