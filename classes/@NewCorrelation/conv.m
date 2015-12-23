@@ -15,7 +15,7 @@ if (nargin>2)
 end;
 
 % GENERAL PARAMETERS
-c = verify(c);
+c = unifytracelengths(c);
 nTraces = c.ntraces;
 keyTrace = nTraces;
 

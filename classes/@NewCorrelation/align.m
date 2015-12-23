@@ -34,7 +34,7 @@ end
     
 % CALL TRACE/ALIGN
 c.traces = align(c.traces, c.trig, alignfreq);
-c = verify(c);
+c = unifytracelengths(c);
 end
 
 

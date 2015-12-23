@@ -1,7 +1,7 @@
 classdef NewCorrelation
    %Correlation
-   % Authored by Mike West, Geophysical Institute, Univ. of Fairbanks
-   % rewritten into the new MATLAB classes by Celso Reyes
+   %  Authored by Mike West, Geophysical Institute, Univ. of Fairbanks
+   %  rewritten into the new MATLAB classes by Celso Reyes
    
    properties
       traces %  % c.W
@@ -243,7 +243,7 @@ classdef NewCorrelation
                [ds, scnl, trig_, pretrig, posttrig] = deal(varargin{:});
                trig_ = reshape(trig_,length(trig_),1);
                c = loadfromdatasource(ds, scnl, trig_, pretrig, posttrig);
-               c = verify(c);
+               c = unifytracelengths(c);
                c = crop(c,pretrig,posttrig);
             otherwise
             error('Invalid input values to correlation');
@@ -256,7 +256,7 @@ classdef NewCorrelation
             if ~check(c,'FREQ')
                c = align(c);
             elseif ~check(c,'SAMPLES')
-               c = verify(c);
+               c = unifytracelengths(c);
             end
          end
          
@@ -551,7 +551,7 @@ classdef NewCorrelation
       c = strip(c,varargin)
       c = subset(c,index)
       c = taper(c,varargin)
-      c = verify(c)
+      c = unifytracelengths(c)
       w = waveform(c,varargin)
       writedb(c,dbOut,varargin)
       c = xcorr(c,varargin)

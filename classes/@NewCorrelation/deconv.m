@@ -28,7 +28,7 @@ end;
 
 
 % GENERAL PARAMETERS
-c = verify(c);
+c = unifytracelengths(c);
 keyTrace = c.ntraces;
 
 

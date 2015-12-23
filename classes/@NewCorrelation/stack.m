@@ -86,7 +86,7 @@ end
 
 
 c.traces(end+1) = stack(c1.traces);
-c = verify(c);        %%%%%%% added on 12/15/2007 %%%%%%%%%%%%%%%%%
+c = unifytracelengths(c); 
 c.trig(end+1) = c1.trig(1);
 c.stat = [];
 c.link = [];
