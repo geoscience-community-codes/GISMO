@@ -19,11 +19,7 @@ function c = align(c,varargin)
 % $Date$
 % $Revision$
 
-
-% READ & CHECK ARGUMENTS
-if (nargin>2)
-    error('Wrong number of inputs');
-end;
+narginchk(1,2)
 
 
 if nargin==2
