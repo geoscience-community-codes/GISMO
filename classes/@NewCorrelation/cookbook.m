@@ -30,7 +30,7 @@ function correlationVariables = cookbook(corr)
    % demo dataset of 100 traces drawn from a broadband sensor AU13 at
    % Augustine volcano.
    
-   c = NewCorrelation('DEMO');
+   c = NewCorrelation.demo();
    
    
    %% Load traces from an outside datasource
