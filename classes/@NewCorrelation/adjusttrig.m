@@ -1,6 +1,6 @@
 function c = adjusttrig(c,varargin)
 
-% ADJUSTTRIG adjusts the trigger times of each trace
+% ADJUSTTRIG  adjusts the trigger times of each trace
 %   C = ADJUSTTRIG(C) The first use below applies a uniform time shift to
 %   the triggers. All other uses adjust the trigger times based on the
 %   cross correlation lag times. These uses require the LAG field to be
@@ -62,8 +62,8 @@ end;
 
 % SELECT SUBROUTINE
 if length(varargin)>=1 && isnumeric(varargin{1})      % use shifttriggers
-    trigshift = varargin{1};
-    c = shifttriggers(c,trigshift);
+    secondsToShift = varargin{1};
+    c = shifttriggers(c,secondsToShift);
 else
     % check if LAG field in filled                    % use adjusttriggers
     if isempty(c.lags)
@@ -82,11 +82,11 @@ else
     end;
 c = adjusttriggers(c,calctype,dosubset);
 end
-
+end
 % SHIFT TRIGGER TIMES UNIFORMLY
-function c = shifttriggers(c,trigshift)
-c.trig = c.trig + trigshift/86400;
-
+function c = shifttriggers(c,changeInSeconds)
+c.trig = c.trig + changeInSeconds/86400;
+end
 % ALIGN TRIGGER TIMES
 function c = adjusttriggers(c,calctype,index)
 switch calctype(1:3)
@@ -165,4 +165,4 @@ if (index~=0)
     f = find(abs(tshift)<=index);
     c = subset(c,f);
 end;
-
+end

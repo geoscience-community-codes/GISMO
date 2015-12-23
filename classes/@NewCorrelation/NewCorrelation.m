@@ -23,6 +23,7 @@ classdef NewCorrelation
       % new properties
       ntraces % number of traces
       data_length % length of first trace (should all be same)
+      
       % properties associated with the waveforms / traces
       stations % station name for each trace
       channels % channel name for each trace
@@ -498,13 +499,11 @@ classdef NewCorrelation
       end
       
       function n = relativeStartTime(c, i)
-         %relativeStartTime  relative start time (trigger is at zero)
-         % t = c.relativeStartTime(index) will return the relativeStartTime
-         % of the indexth trace, by subtracting the indexth trigger
+         %relativeStartTime  start time, relative to trigger
+         %  t = c.relativeStartTime(index) will return the relativeStartTime
+         %  of the indexth trace, by subtracting the indexth trigger
          
-         %old usage, before traces
-         % wstartrel = 86400 *( get(c.W(i),'START_MATLAB') - c.trig(i));
-         n = 86400 * (c.traces(i).firstsampletime()-c.trig(i));
+         n = 86400 * (c.traces(i).firstsampletime() - c.trig(i));
       end
       
       
@@ -551,7 +550,6 @@ classdef NewCorrelation
       c = strip(c,varargin)
       c = subset(c,index)
       c = taper(c,varargin)
-      c = unifytracelengths(c)
       w = waveform(c,varargin)
       writedb(c,dbOut,varargin)
       c = xcorr(c,varargin)
@@ -561,7 +559,7 @@ classdef NewCorrelation
    methods(Access=private)
       corrplot(c)
       dendrogramplot(c);
-      eventplot(c,scale,howmany);
+      eventplot(c,scale,howmany)
       A = getval(OBJ,PROP)
       lagplot(c);
       c = makesynthwaves(n);
@@ -570,6 +568,7 @@ classdef NewCorrelation
       sampleplot(c,scale,ord)
       shadedplot(c,scale,ord)
       statplot(c);
+      c = unifytracelengths(c)
       wiggleinterferogram(c,scale,type,norm,range)
       wiggleplot(c,scale,ord,norm)
       
