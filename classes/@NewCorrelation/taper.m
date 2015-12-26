@@ -7,14 +7,10 @@ function c = taper(c,varargin)
    % example, if R = 0.1 then the taper at each end of the trace is 5% of the
    % total trace length. Note that if R is set to 1 the resulting taper is a
    % hanning window. This is a wrapper script to the taper function in the
-   % waveform toolbox. If R is a vector of the same size as WAVEFORM. See HELP
+   % waveform toolbox. See HELP
    % WAVEFORM/TAPER for specifics.
    %
    %C = TAPER(C) same as above with a default taper of R = 0.2.
-   %
-   % Note that TAPER will also accept R as a vector of length equal to the
-   % number of traces. For the purposes of the correlation toolbox, it is not
-   % clear to me when/if this might ever be useful - MEW.
    %
    
    % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
@@ -26,24 +22,25 @@ function c = taper(c,varargin)
    
    
    % GET TAPER STYLE
-   style = 'cosine';
-   if length(varargin)>0
-      if ischar(varargin{end})
-         style = varargin{end};
-         varargin = varargin(1:end-1);
-      end
+   if ~isempty(varargin) && ischar(varargin{end})
+      style = varargin{end};
+      varargin = varargin(1:end-1);
+   else
+      style = 'cosine';
    end
    
-   
    % COSINE TAPER
-   if strcmpi(upper(style),'COSINE')
-      if length(varargin)==1
-         R = varargin{1};
-      elseif length(varargin)==0
-         R = 0.2;
-      else
-         error('Wrong number of inputs for cosine taper');
-      end
+   switch upper(style)
+      case 'COSINE'
+         if length(varargin)==1
+            R = varargin{1};
+         elseif length(varargin)==0
+            R = 0.2;
+         else
+            error('Wrong number of inputs for cosine taper');
+         end
+      otherwise
+         % do nothing
    end
    
    

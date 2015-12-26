@@ -44,7 +44,7 @@ function c = crop(c,varargin)
    pretrig= pretrig(1);
    posttrig=posttrig(1);
    
-   % CROP EACH TRACES
+   % CROP EACH TRACE
    sampRate = c.samplerate;
    wStarts = c.traces.firstsampletime();
    imax = numel(wStarts);
@@ -52,25 +52,25 @@ function c = crop(c,varargin)
    M = round(sampRate*(posttrig-pretrig));
    wstartrel = 86400*(wStarts-c.trig);	% relative start time, typically negative
    s1_all = round(sampRate * (wstartrel - pretrig));
+   needsPadding = s1_all > 0;
    samp_per_day = 86400 * sampRate;
-   %%start2 = zeros(imax,1);
-   d = double(c.traces);
+   T = c.traces; %it is more efficient to modify traces and then put back into NewCorrelation
    for i = 1:imax
       %samples to pad or crop
       w2 = zeros(M,1);
-      if s1_all(i) > 0                         % beginning of traces must be PADDED
-         s2 =  min([Mo M-s1_all(i)]);         % number of data samples to include
-         w2(s1_all(i)+1:s1_all(i)+s2) = d(1:s2,i);     % Pad beginning with zeros
-         start2 = wStarts(i)-(s1_all(i))/samp_per_day;
+      if needsPadding(i); %s1_all(i) > 0                         % beginning of traces must be PADDED
+         s2 =  min([Mo, M-s1_all(i)]);         % number of data samples to include
+         w2(s1_all(i)+(1:s2)) = T(i).data(1:s2); % Pad beginning with zeros
+         start2 = wStarts(i) - (s1_all(i))/samp_per_day;
       else
          s1 = -1*s1_all(i);                   % beginning of traces must be CLIPPED
-         s2 =  min([Mo-s1 M]);         % number of data samples to include
-         w2(1:s2) = d(s1+1:s1+s2,i);     % crop beginning
+         s2 =  min([Mo-s1, M]);         % number of data samples to include
+         w2(1:s2) = T(i).data(s1 + (1:s2)); %crop beginning
          start2 = wStarts(i)+(s1)/samp_per_day;
       end;
-      c.traces(i).data = w2;
-      c.traces(i).start = start2;
+      T(i).data = w2;
+      T(i).start = start2;
    end;
-   % c.traces = addhistory(c.traces,'correlation/crop');
+   c.traces = T; %assign all changed traces at once.
 end
 

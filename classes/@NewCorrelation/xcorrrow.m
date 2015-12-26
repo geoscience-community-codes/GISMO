@@ -1,7 +1,7 @@
 function d = xcorrrow(d,c,index)
    
    %XCORRROW Cross correlation for one or more traces.
-   % D = XCORR1XR(D,C,STYLE) This private function performs cross correlations
+   % D = XCORRROW(D,C,STYLE) This private function performs cross correlations
    % for a subset of traces. It differs from the XCORR1XR algorithm in that it
    % fills both halves of the correlation matrix. While this is unnecessary
    % when correlating all waveforms, it is necessary when doing just a subset
@@ -19,9 +19,9 @@ function d = xcorrrow(d,c,index)
    
    
    % PREP NECESSARY TERMS
-   [M,N] = size(d.w);
+   [nWrows,nWcols] = size(d.w);
    pretrig = 86400*(d.trig-d.start);   % time between trace start and trigger
-   l = (1./d.Fs)*[-M+1:M-1]';        % lag vector
+   l = (1./d.Fs)*[-nWrows+1:nWrows-1]';        % lag vector
    % next two lines are equivalent ways to determine normalization coefficients
    wcoeff = 1./sqrt(sum(d.w.*d.w));
    %for i = 1:size(d.w,2), wcoeff(i) = 1./norm(d.w(:,i)); end;
@@ -29,39 +29,63 @@ function d = xcorrrow(d,c,index)
    
    % CREATE MATRICES IF NEEDED
    nn = c.ntraces;
-   if (size(c.corrmatrix,1) == 0)
+   if isempty(c.corrmatrix)  %  (size(c.corrmatrix,1) == 0)
       c.corrmatrix = nan(nn);
    end
-   if (size(c.lags,1) == 0)
+   if isempty(c.lags) % (size(c.lags,1) == 0)
       c.lags = nan(nn);
    end
    
    
    % do not overwrite matrices if they are only being added to
-   if size(c.corrmatrix,1)==0
+   eraseCorrmatrix = isempty(c.corrmatrix); % size(c.corrmatrix,1)==0
+   if eraseCorrmatrix
       d.corrmatrix = eye(length(d.trig),'single');
-      eraseC = 1;
    else
       d.corrmatrix = c.corrmatrix;
-      eraseC = 0;
    end
    
-   if size(c.lags,1)==0
+   eraseLags = isempty(c.lags); 
+   
+   if eraseLags
       d.lags = zeros(length(d.trig),'single');
-      eraseL = 1;
    else
       d.lags = c.lags;
-      eraseL = 0;
    end
    
    
    % GET FFT OF TRACES
-   X = fft(d.w,2^nextpow2(2*M-1));
-   Xc = conj(X);
-   [MX,NX] = size(X);
+   fftVals = fft(d.w,2^nextpow2(2*nWrows-1));
+   Xc = conj(fftVals);
+   [MX,NX] = size(fftVals);
    
    
    % LOOP THROUGH ROWS OF SIMILARITY MATRIX
+   cols = 1:nWcols;
+   singleEps = eps('single');
+   for n = index
+      % multiply fourier series and transform back to time domain
+      CC = repmat(fftVals(:,n), 1, nWcols) .* Xc(:,cols);
+      corr = ifft(CC);
+      corr = corr([end-nWrows+2:end,1:nWrows],:);
+      
+      % USE POLYNOMIAL INTERPOLATION
+      [~, indx1] = max(corr(2:end-1,:));
+      [mm,nn] = size(corr);
+      indx2 = (indx1+1) + mm*[0:nn-1];     % convert to matrix index
+      lag = repmat( l , 1 , nn );
+      lagM   = lag([ indx2-1 ; indx2 ; indx2+1 ]) + repmat(pretrig(cols)'-pretrig(n)',3,1);
+      corrM  = corr([ indx2-1 ; indx2 ; indx2+1 ]);
+      for z = 1:numel(cols)
+         p = polyfit( lagM(:,z) , corrM(:,z) , 2 );
+         Ltmp = -0.5*p(2)/p(1);
+         if abs(Ltmp) < singleEps
+            Ltmp = 0;
+         end
+         d.lags(n,cols(z))  = Ltmp;
+         d.corrmatrix(n,cols(z)) = polyval( p , d.lags(n,cols(z)) ) .* wcoeff(n) .* wcoeff(cols(z));
+      end
+   %{
    for n = index
       cols = 1:N;
       % multiply fourier series and transform back to time domain
@@ -86,20 +110,20 @@ function d = xcorrrow(d,c,index)
          d.lags(n,cols(z))  = Ltmp;
          d.corrmatrix(n,cols(z)) = polyval( p , d.lags(n,cols(z)) ) .* wcoeff(n) .* wcoeff(cols(z));
       end
-      
+      %}
    end
    
    % FILL IN OTHER HALF OF MATRIX
    d.corrmatrix(:,index) = d.corrmatrix(index,:)';
    
-   if eraseL
+   if eraseLags
       d.lags = [];
    else
       d.lags(:,index) = -1* d.lags(index,:)';
    end
    
    
-   if eraseC
+   if eraseCorrmatrix
       d.corrmatrix = [];
    else
       d.corrmatrix(:,index) = d.corrmatrix(index,:)';

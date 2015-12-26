@@ -15,21 +15,17 @@ function occurrenceplot(c,scale,clusternum)
    %     error('CORR field must be filled in input object');
    % end;
    
-   if isempty(c.clust)
-      error('CLUST field must be filled in input object');
-   end;
-   
+   assert(~isempty(c.clust), 'CLUST field must be filled in input object');
    if ~isempty(c.lags)
       disp('Note: Time corrections from LAG field have not been applied to traces. Each cluster will be aligned for plotting only. Note that actual data is unaffected.');
    end;
    
    % TEST FOR NUMBER OF CLUSTERS
-   if (max(clusternum) > max(c.clust))
-      error(['Exceeded maximum cluster number. There are only ' num2str(max(c.clust)) ' clusters in this set of traces']);
-   end
-   if (numel(clusternum)> 10)
-      error('The occurence plot is limited to no more than 8 clusters. Consider making two plots');
-   end
+   assert(max(clusternum) <= max(c.clust),...
+      'Exceeded maximum cluster number. There are only %d clusters in this set of traces', max(c.clust));
+   
+   assert(numel(clusternum) <= 10, 'The occurence plot is limited to no more than 8 clusters. Consider making two plots');
+   
    
    
    

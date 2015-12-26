@@ -1,4 +1,4 @@
-function index = find(c,varargin)
+function index = find(c, type, value)
    
    % INDEX = FIND(c,'CLUST',WHICH_CLUSTER)
    % Returns a list of trace numbers belonging to the cluster specified by
@@ -14,7 +14,7 @@ function index = find(c,varargin)
    %
    % INDEX = FIND(c,'BIG',SIZE)
    % Returns a list of trace numbers belonging to any cluster that has at
-   % leats SIZE number of traces. For example, to get all clusters that
+   % least SIZE number of traces. For example, to get all clusters that
    % contain 5 or more traces:
    %   INDEX = FIND(c,'BIG',5)
    %
@@ -24,73 +24,19 @@ function index = find(c,varargin)
    % $Revision$
    
    
-   % READ & CHECK ARGUMENTS
+   assert(~isempty(c.clust),'Cluster information is not yet set, but can be set with linkage(...) and cluster(...).');
    
+   %Find operations are trivial because clusters are assigned numbers by
+   %their size in c.cluster(...), meaning that c.clust==1 is the largest,
+   %c.clust==2 is the second, etc.
    
-   if numel(varargin)==0
-      error('More arguments needed');
-   else
-      type = varargin{1};
-   end
-   
-   
-   % EXECUTE FIND TYPE
-   if strncmpi(type,'CLU',3)
-      n = varargin{2};
-      if isa(n,'double')
-         index = find_clu(c,n);
-      else
-         error('second argument must be a number');
-      end
-   elseif strncmpi(type,'BIG',3)
-      n = varargin{2};
-      if isa(n,'double')
-         index = find_big(c,n);
-      else
-         error('second argument must be a number');
-      end
-   else
-      error('This use of find is not recognized');
-   end;
-end
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% FIND CLUSTERS
-%
-
-function index = find_clu(c,n)
-   if isempty(c.clust)
-      error('No cluster information available. Consider using the linkage and cluster functions.');
-   end
-   famsize = histc(c.clust,[0:max(c.clust)]+.5  );
-   [famsize,fami] = sort(famsize,'descend');
-   if n > max(c.clust)
-      error(['There are only ' num2str(max(c.clust)) ' clusters']);
-   end
-   index = [];
-   for i = 1:length(n)
-      index = cat(1,index,find(c.clust==fami(n(i))));
-   end
-end
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% FIND BIGGEST CLUSTERS
-%
-
-function index = find_big(c,n)
-   
-   famsize = histc(c.clust,[0:max(c.clust)]+.5  );
-   [famsize,fami] = sort(famsize,'descend');
-   if n > max(famsize)
-      disp(['There are no clusters with more than ' num2str(max(famsize)) ' traces']);
-   end
-   index = [];
-   
-   f = find(famsize>=n);
-   
-   for i = 1:length(f)
-      index = cat(1,index,find(c.clust==fami(f(i))));
+   switch upper(type)
+      case {'CLUST', 'CLU'}
+         index = find( c.clust == value );
+      case {'BIG'}
+         [famsize, famnum] = hist(c.clust, unique(c.clust));
+         index = find(ismember(c.clust, famnum(famsize>=value)));
+      otherwise
+         error('This use of find is not recognized');
    end
 end

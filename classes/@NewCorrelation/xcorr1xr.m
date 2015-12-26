@@ -36,7 +36,7 @@ function d = xcorr1xr(d,style)
    
    % TIME THE PROCESS
    starttime = now;
-   tic;
+   myTimer = tic;
    t0 = cputime;
    numcorr = ((length(d.trig))^2-length(d.trig))/2;
    count = 0;
@@ -73,7 +73,7 @@ function d = xcorr1xr(d,style)
          d.lags(n,cols) = l(indx1) + (pretrig(cols) - pretrig(n)); % lag in seconds
       end
       
-      if (n==100) | (n==1000)
+      if (n==100) || (n==1000)
          tclock = toc/86400;
          completed = sum(N-n:N-1)/((N*N-N)/2);
          fin = datestr(starttime + tclock/completed,16);
@@ -86,19 +86,17 @@ function d = xcorr1xr(d,style)
    
    % REPLACE NaNs WITH ZEROS
    %TODO: Move this into new function to be used elsewhere (?)
-   f = find(isnan(d.corrmatrix));
-   d.corrmatrix(f) = 0;
-   f = find(isnan(d.lags));
-   d.lags(f) = 0;
+   d.corrmatrix(isnan(d.corrmatrix)) = 0;
+   d.lags(isnan(d.lags)) = 0;
    
    
    % FILL LOWER TRIANGULAR PART OF MATRICES
-   d.corrmatrix = d.corrmatrix + d.corrmatrix' - eye(size(d.corrmatrix));
+   d.corrmatrix = NewCorrelation.fillLowerTriangleFromUpper(d.corrmatrix);
    d.lags = d.lags - d.lags';
    
    
    % DISPLAY RUN TIMES
-   tclock = toc;
+   tclock = toc(myTimer);
    tcpu = cputime-t0;
    if tclock>20
       disp(['Clock time to complete correlations: ' num2str(tclock,'%5.1f') ' s']);

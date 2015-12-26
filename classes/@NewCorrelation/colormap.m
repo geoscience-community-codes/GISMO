@@ -1,4 +1,4 @@
-function c = colormap(c,varargin)
+function c = colormap(c,mapname)
    %colormap   apply a colormap to the cross-correlation
    % C = COLORMAP(C)
    % Apply the standard correlation toolbox colormap for cross-correlation
@@ -19,31 +19,26 @@ function c = colormap(c,varargin)
    
    
    % READ & CHECK ARGUMENTS
-   if (nargin>2)
-      error('Wrong number of inputs');
-   end;
+   narginchk(1,2)
    
-   if nargin==2
-      mapname = varargin{1};
-   else
+   if ~exist('mapname','var')
       mapname = 'CORR';
    end
    
-   % GET COLORMAP
-   if strncmpi(mapname,'COR',3)
-      cmap = load('colormap_corr.txt');
-      colormap(cmap);
-      caxis([0 1]);
-   elseif strncmpi(mapname,'LAG',3)
-      cmap = load('colormap_lag.txt');
-      colormap(cmap);
-   elseif strncmpi(mapname,'LTC',3)
-      cmap = load('colormap_corr.txt');
-      cmap = ( cmap + ones(size(cmap)) ) /2;
-      colormap(cmap);
-      caxis([0 1]);
-   else
-      disp('Color scale not recognized');
-   end;
+   switch upper(mapname)
+      case {'CORR', 'COR'}
+         cmap = load('colormap_corr.txt');
+         colormap(cmap);
+         caxis([0 1]);
+      case 'LAG'
+         cmap = load('colormap_lag.txt');
+         colormap(cmap);
+      case {'LTCORR', 'LTC'}
+         cmap = load('colormap_corr.txt');
+         cmap = ( cmap + ones(size(cmap)) ) /2;
+         colormap(cmap);
+         caxis([0 1]);
+      otherwise
+         error('Color scale not recognized');
+   end
 end
-

@@ -3,6 +3,10 @@ classdef NewCorrelation
    %  Authored by Mike West, Geophysical Institute, Univ. of Fairbanks
    %  rewritten into the new MATLAB classes by Celso Reyes
    
+   %TODO: writing traces is inefficient because of set.traces. convert this
+   %to both an internal and external version, where internal TRUSTS always
+   %a column, and external doesn't.
+   
    properties
       traces %  % c.W
       trig % will be triggers; % c.trig
@@ -610,6 +614,10 @@ classdef NewCorrelation
       d = xcorr1xr_orig(d)
       d = xcorrdec(d)
       d = xcorrrow(d,c,index)
+      function m = fillLowerTriangleFromUpper(m)
+         % FILL LOWER TRIANGULAR PART OF MATRICES
+         m = m + m' - eye(size(m));
+      end
       
       function tf = mightBeCoral(aStruct)
          tf = isfield(aStruct,'data') && isfield(aStruct,'staCode') && isfield(aStruct,'staChannel');

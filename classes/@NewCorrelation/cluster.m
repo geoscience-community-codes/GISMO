@@ -34,6 +34,9 @@ function c=cluster(c,varargin)
    % dissimilarity value. Note that this version of CLUSTER is currently
    % incompatible with the 'MaxClust' option.
    %
+   % Clusters numbers are in descending frequency order.  That is, the
+   % largest cluster is cluster #1, the second is #2, etc.
+   %
    % The following two examples are identical:
    %   c = CLUSTER(c,0.8)
    %	c = CLUSTER(c,'CUTOFF',0.2,'Criterion','distance')
@@ -44,15 +47,9 @@ function c=cluster(c,varargin)
    
    % REQUIRES STATISTICS & MACHINE LEARNING TOOLBOX
    
-   if nargin <= 1
-      error('Not enough inputs');
-   end
+   narginchk(2,inf)
    
-   
-   if isempty(c.link)
-      error('LINK field must be filled in input object');
-      error('See correlation/linkage function');
-   end
+   assert(~isempty(c.link), 'LINK field must already have values/nSee correlation/linkage function');
    
    
    Y = c.link;
@@ -64,17 +61,13 @@ function c=cluster(c,varargin)
    
    
    % RENUMBER CLUSTERS SO THAT LARGEST IS #1, 2ND LARGEST IS #2, ...
-   allval = unique(tmpclust);
-   for n = 1:numel(allval)
-      allnum(n) = numel(find(tmpclust==allval(n)));
-   end
-   [allnum,index] = sort(allnum,'descend');
+   [allnum, allval] = hist(tmpclust, unique(tmpclust));
+   [~,index] = sort(allnum,'descend');
    allval = allval(index);
    
    c.clust = zeros(size(tmpclust));
    for n = 1:numel(allval)
-      f = find(tmpclust==allval(n));
-      c.clust(f) = n;
+      c.clust(tmpclust==allval(n)) = n;
    end;
 end
 

@@ -16,7 +16,7 @@ function d = xcorr1x1(d)
    
    
    % TIME THE PROCESS
-   tic;
+   myTimer = tic;
    t0 = cputime;
    numcorr = ((length(d.trig))^2-length(d.trig))/2;
    count = 0;
@@ -59,12 +59,12 @@ function d = xcorr1x1(d)
    
    
    % FILL LOWER TRIANGULAR PART OF MATRICES
-   d.corrmatrix = d.corrmatrix + d.corrmatrix' - eye(size(d.corrmatrix));
+   d.corrmatrix = NewCorrelation.fillLowerTriangleFromUpper(d.corrmatrix);
    d.lags = d.lags - d.lags';
    
    
    % DISPLAY RUN TIMES
-   tclock = toc;
+   tclock = toc(myTimer);
    tcpu = cputime-t0;
    disp(['Clock time to complete correlations: ' num2str(tclock,'%5.1f') ' s']);
    disp(['CPU time to complete correlations:   ' num2str(tcpu,'%5.1f') ' s']);
