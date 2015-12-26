@@ -1,4 +1,4 @@
-function [c1,c2] = match(c1,c2,varargin)
+function [c1,c2] = match(c1,c2,toleranceInSeconds)
    
    %Retain matching elements of two correlation objects.
    %
@@ -21,32 +21,15 @@ function [c1,c2] = match(c1,c2,varargin)
    % $Revision$
    
    
-   
-   
-   
    % READ & CHECK ARGUMENTS
-   if (nargin>3)
-      error('Wrong number of inputs');
-   end;
+   narginchk(2,3);
    
-   %{
-if ~strcmpi(class(c1),'correlation') | ~strcmpi(class(c2),'correlation')
-    error('First and second arguments must be a correlation object');
-end
-   %}
-   if length(varargin)>=1
-      if isnumeric(varargin{1})
-         tolerance = varargin{1};
-      else
-         error('TOLERANCE MUST BE A SCALAR NUMBER IN SECONDS');
-      end
-   else
-      tolerance = 1;   % time misfit tolerance in seconds
+   if ~exist('tolerance','var')
+      toleranceInSeconds = 1;
    end
+   assert(isnumeric(toleranceInSeconds), 'Tolerance must be a number in seconds')
    
-   disp(['Tolerance for successful match is: ' num2str(tolerance) ' seconds']);
-   
-   
+   disp(['Tolerance for successful match is: ' num2str(toleranceInSeconds) ' seconds']);
    
    
    % FIND ELEMENTS THAT MATCH
@@ -55,7 +38,7 @@ end
    matchIndex = [];
    for n = 1:numel(trig1)
       [minVal,minIndex] = min(abs(trig2 - trig1(n))*86400);
-      if minVal < tolerance
+      if minVal < toleranceInSeconds
          matchIndex(n) = minIndex;
       else
          matchIndex(n) = 0;

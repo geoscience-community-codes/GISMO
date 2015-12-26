@@ -30,11 +30,6 @@ function c = linkage(c,varargin)
    
    % REQUIRES STATISTICS and MACHINE LEARNING TOOLBOX
    
-   if nargin <= 0
-      error('Not enough inputs');
-   end
-   
-   
    if c.ntraces < 2
       error('correlationLinkageTooFewTraces','Correlation object must contain at least two traces to use the LINKAGE function');
    end;

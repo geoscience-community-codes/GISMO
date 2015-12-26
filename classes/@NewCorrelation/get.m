@@ -36,10 +36,9 @@ function val = get(c,prop_name)
    % $Date$
    % $Revision$
    
-   error('using NewCorrelation/get')
-   if nargin <= 1
-      error('Not enough inputs');
-   end
+   warning('using NewCorrelation/get, alternate ways exist of accessing data.')
+   
+   narginchk(2,inf)
    
    % got rid of test for c
    

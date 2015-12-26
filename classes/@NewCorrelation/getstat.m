@@ -32,12 +32,6 @@ function c=getstat(c)
    % $Date$
    % $Revision$
    % TODO: needs better handling of xcorr=1 values (MEW - 11/20/06)
-   %
-   
-   
-   if nargin <= 0
-      error('Wrong number of inputs');
-   end
    
    if isempty(c.corrmatrix)
       error('CORR and LAG fields must be filled in input object');

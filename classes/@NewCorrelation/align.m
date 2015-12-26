@@ -1,4 +1,4 @@
-function c = align(c,varargin)
+function c = align(c, alignfreq)
 %align   resample traces so that a sample falls exactly on trigger time.
 %
 % c = ALIGN(c)
@@ -21,11 +21,8 @@ function c = align(c,varargin)
 
 narginchk(1,2)
 
-
-if nargin==2
-    alignfreq = varargin{1};
-else
-    alignfreq = c.samplerate;
+if ~exist('alignfreq','var')
+   alignfreq = c.samplerate;
 end
     
 % CALL TRACE/ALIGN

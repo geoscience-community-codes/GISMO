@@ -12,10 +12,7 @@ function c = cat(varargin)
    % $Date$
    % $Revision$
    
-   
-   if nargin < 2
-      error('Not enough inputs');
-   end
+   narginchk(2,inf);
    
    varargin{1} = ensureType(varargin{1});
    expectedSamplerate = varargin{1}.samplerate;

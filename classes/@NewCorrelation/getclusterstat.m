@@ -21,13 +21,6 @@ function family=getclusterstat(c)
    % $Date$
    % $Revision$
    
-   
-   
-   
-   if nargin <= 0
-      error('Wrong number of inputs');
-   end
-   
    if isempty(c.clust)
       error('CLUSTER field must be filled in input argument. See HELP CLUSTER');
    end
