@@ -6,10 +6,7 @@ function dendrogramplot(c)
    % $Date$
    % $Revision$
    
-   
-   if isempty(c.link)
-      error('LINK field must be filled in input object');
-   end;
+   assert(~isempty(c.link), 'LINK field must be filled in input object');
    
    if ~isempty(c.lags)
       disp('NOTE: Time corrections from LAG field have not been applied to traces yet.');
@@ -17,7 +14,7 @@ function dendrogramplot(c)
    
    
    % CREATE DENDROGRAM PLOT
-   [H,tmp,perm] = dendrogram(c.link,length(c.trig),'Orientation','right');
+   [H,~,perm] = dendrogram(c.link,length(c.trig),'Orientation','right');
    set(gcf,'Color','w','Position',[50 50 680 880]);
    ylabel('event number','FontSize',16);
    set(gca,'XGrid','on');

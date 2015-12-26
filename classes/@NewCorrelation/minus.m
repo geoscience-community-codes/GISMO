@@ -1,4 +1,4 @@
-function c = minus(c,varargin)
+function c = minus(c,I)
    
    % C = MINUS(C,I)
    % The function subtracts the waveform specified by trace index I from all
@@ -45,19 +45,10 @@ function c = minus(c,varargin)
    
    
    % READ & CHECK ARGUMENTS
-   if (nargin>2)
-      error('Wrong number of inputs');
-   end;
-   
-   
-   if ( length(varargin) == 1 )
-      I = varargin;
-      if length(I) > 1
-         error('Only one trace can be subtracted from the others');
-      end
-   else
+   if ~exist('I','var')
       I = c.ntraces;
-   end
+   end;
+   assert(numel(I)==1, 'Only one trace can be subtracted from the others');
    
    if check(c,'SCALE')
       disp('Warning: Traces appear to have very different overall amplitudes');

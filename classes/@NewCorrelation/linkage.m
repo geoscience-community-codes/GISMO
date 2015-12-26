@@ -30,9 +30,7 @@ function c = linkage(c,varargin)
    
    % REQUIRES STATISTICS and MACHINE LEARNING TOOLBOX
    
-   if c.ntraces < 2
-      error('correlationLinkageTooFewTraces','Correlation object must contain at least two traces to use the LINKAGE function');
-   end;
+   assert(c.ntraces >= 2, 'correlationLinkageTooFewTraces','LINKAGE requires that object contains at least two traces');
    
    K = 1.001 - c.corrmatrix;			% create dissimilarity matrix
    K = K - diag(diag(K));			% remove diagonal (required format)

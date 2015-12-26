@@ -34,8 +34,7 @@ function c=getstat(c)
    % TODO: needs better handling of xcorr=1 values (MEW - 11/20/06)
    
    if isempty(c.corrmatrix)
-      error('CORR and LAG fields must be filled in input object');
-      error('See xcorr function');
+      error('CORR and LAG fields must be filled in input object.\nSee xcorr function');
    end
    
    
