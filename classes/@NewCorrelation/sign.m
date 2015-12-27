@@ -1,4 +1,4 @@
-function c = sign(c,varargin);
+function c = sign(c)
    
    % SIGN convert traces to the sign of their data (+1, 0, -1)
    %
