@@ -1,4 +1,5 @@
 function c=xcorr(c,varargin)
+% function c=xcorr(c,varargin)
    
    % C = XCORR(C)
    % This function calculates and fills in the correlation and lag fields in a
@@ -38,60 +39,62 @@ function c=xcorr(c,varargin)
    % in. The syntax is a bit clunky. This routine requires the 'row' algorithm
    % and the INDEX list. The two must be used together. Polynomial
    % interpolation of lag values is always used with this algorithm.
-   %
-   %
-   % -- DEPRICATED ALGORITHMS ---------------------------------------------
-   % Because these algorithms seem to have little or no advantages over the
-   % '1xr' algorithm they will likely not be updated or improved.
-   %
-   % C = XCORR(C,...,'dec') Same as 1xr but decomposes complex numbers for
-   % calculation. Mathworks suggests this approach may be faster in some
-   % circumstances. However, initial testing found it slower that the 1xr
-   % algorithm.
-   %
-   % C = XCORR(C,...,'1x1') Use single trace against single trace algorithm.
-   % Conceivably faster when memory is very limited. In practice I have yet to
-   % encounter a situation where this algorithm benchmarks faster than the
-   % 1xr.
-   
+
+   % FIXME FIXME FIXME mid-correction
    % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
    % $Date$
    % $Revision$
    
+   algorithm = '1xr'
+   triggerRange = [];
+   switch nargin
+      case 1 % xcorr(C) :  default behavior
+         algorithm = '1xr'
+      case 2 % xcorr(C, algorithm)
+         algorithm = varargin{1};
+      case 3 % xcorr(C, [pretrig posttrig], algorithm)
+         if isnumeric(varargin{1})
+            triggerRange = varargin{1};
+            algorithm = varargin{2};
+         else
+      case 3 % xcorr(C, 'row', indexList)
+      case 4 % xcorr(C, [pretrig posttrig], 'row', indexList)
+   end
+   %}
    
-   
-   % GET INPUT PARAMETERS
-   
-   algorithm = '1xr';
    c1 = NewCorrelation;
    c1.traces = c.traces;
    c1.trig = c.trig;
    
+   if ~exist('algorithm','var') || isempty(algorithm)
+      algorithm = '1xr';
+   end
+   
+   if exist('triggerRange','var') && ~isempty(triggerRange)
+      assert(numel(triggerRange)==2, 'triggerRange needs to be two numbers: [pretrig, posttrig]');
+      c1 = crop(c, triggerRange(1), triggerRange(2));
+   end
+  
    
    % CHECK FOR TRACE SUBSET
-   if length(varargin)>1
-      if isa(varargin{end},'double')
+   if length(varargin)>1 && isnumeric(varargin{end})
          index = varargin{end};
          varargin = varargin(1:end-1);
-      end;
-   end;
+   end
    
    % CHECK ALGORITHM
-   if ~isempty(varargin)
-      if ischar(varargin{end})
+   if ~isempty(varargin) && ischar(varargin{end})
          algorithm = lower(varargin{end});
          varargin = varargin(1:end-1);
-      end;
-   end;
+   end
    
+      
    % APPLY CROPPING
-   if ~isempty(varargin)
-      if length(varargin{end})==2       % check for cropping values
+   if ~isempty(varargin)  && length(varargin{end}) == 2 % check for cropping values
          pretrig =  varargin{1}(1);
          posttrig = varargin{1}(2);
          c1 = crop(c,pretrig,posttrig);
-      end
-   end;
+   end
    
    
    
@@ -113,24 +116,20 @@ function c=xcorr(c,varargin)
    % EXECUTE CROSS CORRELATION
    if exist('pretrig','var') && exist('posttrig','var')
       disp(['using ' algorithm ' algorithm on the time interval [' num2str(pretrig) ' ' num2str(posttrig) '] ...' ]);
-   else
-      %disp(['using ' algorithm ' algorithm ...']);
    end
-   %because we're passing struct instead of object, these are now static
-   if strcmp(algorithm,'1x1')==1
-      d = xcorr1x1(d);
-   elseif strcmp(algorithm,'1xr')
-      d = NewCorrelation.xcorr1xr(d,0);
-   elseif strncmpi(algorithm,'int',3)
-      d = NewCorrelation.xcorr1xr(d,1);
-   elseif strcmp(algorithm,'dec')
-      d = NewCorrelation.xcorrdec(d);
-   elseif strcmp(algorithm,'row')
-      d = NewCorrelation.xcorrrow(d,c,index);
-   else
-      error('Correlation algorithm not recognized');
-   end;
    
+   %because we're passing struct instead of object, these are now static
+   switch algorithm
+      case '1xr'
+         d = NewCorrelation.xcorr1xr(d,0);
+      case 'int'
+         d = NewCorrelation.xcorr1xr(d,1);
+      case 'row'
+          assert(exist('index','var'), 'algorithm ''row'' requires an index parameter');
+          d = NewCorrelation.xcorrrow(d,c,index);
+      otherwise
+         error('Correlation algorithm not recognized');
+   end 
    
    % ASSIGN CORRELATION PARAMETERS TO ORIGINAL DATA
    c.corrmatrix = d.corrmatrix;
