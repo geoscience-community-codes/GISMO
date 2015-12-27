@@ -1,4 +1,4 @@
-function c = agc(c,varargin)
+function c = agc(c,windowInSeconds)
    %acg   apply automatic gain control to each trace
    %
    % This function applies automatic gain control (AGC) to each trace. This
@@ -18,17 +18,11 @@ function c = agc(c,varargin)
    % $Date$
    % $Revision$
    
-   
-   if (length(varargin) >= 2)
-      error('Too many inputs');
+   if ~exist('windowInSeconds','var')
+      windowInSeconds = 0.5; 
    end
    
-   if length(varargin)==1
-      agcwin = varargin{1};
-   else
-      agcwin = 0.5;
-   end;
-   agcsamp = round( agcwin * c.samplerate );
+   agcsamp = round( windowInSeconds * c.samplerate );
    
    
    % LOOP THROUGH TRACES APPLYING GAIN

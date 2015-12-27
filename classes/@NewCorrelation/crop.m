@@ -1,4 +1,4 @@
-function c = crop(c,varargin)
+function c = crop(c, pretrig, posttrig)
    %crop   crop all waveforms to a time window
    % c = CROP(c,[PRETRIG POSTTRIG])
    % This function crop all waveforms to a time window defined by pretrig and
@@ -22,27 +22,15 @@ function c = crop(c,varargin)
    % $Date$
    % $Revision$
    
+   narginchk(2,3);
+   if ~exist('posttrig','var')
+      assert(numel(pretrig) == 2, 'When CROP has only two arguments, the latter must be a two element vector.');
+      posttrig = pretrig(2);
+      pretrig = pretrig(1);
+   end
    
-   % READ & CHECK ARGUMENTS
-   
-   
-   if (nargin==3)
-      pretrig =  varargin{1};
-      posttrig = varargin{2};
-   elseif (nargin==2)
-      tmp = varargin{1};
-      if numel(tmp)~=2
-         error('When CROP has only two arguments, the latter must be a two element vector. See HELP CORRELATION/CROP')
-      end
-      pretrig = tmp(1);
-      posttrig = tmp(2);
-   else
-      error('Wrong number of inputs');
-   end;
-   
-   %added cr
-   pretrig= pretrig(1);
-   posttrig=posttrig(1);
+   assert(numel(pretrig) == 1, 'Single trigger time required for pretrig')
+   assert(numel(posttrig) == 1, 'Single trigger time allowed for posttrig')
    
    % CROP EACH TRACE
    sampRate = c.samplerate;

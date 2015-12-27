@@ -1,4 +1,4 @@
-function val = check(c,varargin)
+function val = check(c, whatToCheck)
    
    % Check various features of a correlation object.
    %
@@ -36,16 +36,7 @@ function val = check(c,varargin)
    % $Revision$
    
    
-   % GET INPUT PARAMETERS
-   
-   
-   if isempty(varargin)
-      error('Wrong number of inputs');
-   end
-   
-   type = varargin{1};
-   
-   switch upper(type)
+   switch upper(whatToCheck)
       case {'OFFSET'}
          val = do_offset(c);
       case {'STA'}

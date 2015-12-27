@@ -1,4 +1,4 @@
-function [c,t,i,CC,LL] = interferogram(c,varargin)
+function [c,t,i,CC,LL] = interferogram(c, width, timestep, masterIdx)
    
    % C = INTERFEROGRAM(C)
    % This function calculates an interferogram from the waveforms in a
@@ -63,43 +63,28 @@ function [c,t,i,CC,LL] = interferogram(c,varargin)
    % SET WINDOW WIDTH
    srt_offset = ( c.traces.firstsampletime() - c.trig ) * 86400;
    end_offset = ( c.traces.lastsampletime() - c.trig ) * 86400;
-   if length(varargin)>=1
-      width = varargin{1};
-   else
+   
+   if ~exist('width','var') || isempty(width)
       width = ( mean(end_offset)-mean(srt_offset) ) / 20;
    end
    
    
-   % SET TIME STEP
-   if length(varargin)>=2
-      if length(varargin{2}) == 1
-         tstep = varargin{2};
-         t = mean(srt_offset) : tstep : mean(end_offset);
-      else
-         t = varargin{2};
-      end
-   else
-      tstep = ( mean(end_offset)-mean(srt_offset) ) / 50;
-      t = mean(srt_offset) : tstep : mean(end_offset);
+   if ~exist('timestep','var') || isempty('length')
+      timestep = ( mean(end_offset)-mean(srt_offset) ) / 50;
    end
    
-   
-   % SET MASTER TRACE
-   if length(varargin)==3
-      masterIdx = varargin{3};
+   if length(timestep)  > 1
+      % user specified center time for each window
+      t = timestep;
    else
+      t = mean(srt_offset) : timestep : mean(end_offset);
+   end
+   
+   if ~exist('masterIdx','var')
       masterIdx = c.ntraces; % last trace
    end
    
-   
-   % CHECK INPUT TERMS
-   if length(varargin)>3
-      error('Wrong number of inputs');
-   end
-   
-   
-   disp(['Time step: ' num2str(tstep,'%4.3f') '    Window width: ' num2str(width,'%4.3f') '    Reference trace no.: ' num2str(masterIdx,'%2.0f') ]);
-   
+   fprintf('Time step: %4.3f    Window width: %4.3f    Reference trace no.: %2d\n', timestep, width, masterIdx); 
    
    % CALC INTERFEROGRAM VOLUME
    CC = [];
@@ -121,8 +106,10 @@ function [c,t,i,CC,LL] = interferogram(c,varargin)
    
    % PLACE OUTPUT INTO FIRST WAVEFORM FIELD
    i = [1:c.ntraces]';
-   c.traces(1).userdata.interferogram_index = i;
-   c.traces(1).userdata.interferogram_time = t;% = addfield(c.traces(1),'Interferogram_time',t);
-   c.traces(1).userdata.interferogram_maxcorr = CC;% = addfield(c.traces(1),'Interferogram_maxcorr',CC);
-   c.traces(1).userdata.interferogram_lag = LL;% = addfield(c.traces(1),'Interferogram_lag',LL);
+   T = c.traces(1);
+   T.userdata.interferogram_index = i;
+   T.userdata.interferogram_time = t;
+   T.userdata.interferogram_maxcorr = CC;
+   T.userdata.interferogram_lag = LL;
+   c.traces(1) = T;
 end

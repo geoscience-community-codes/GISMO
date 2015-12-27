@@ -523,17 +523,17 @@ classdef NewCorrelation
       %% functions that exist in other files
       c = adjusttrig(c,varargin)
       
-      c = agc(c,varargin)       % automatic gain control      
-      c = align(c,varargin)      
+      c = agc(c,windowInSeconds)       % automatic gain control      
+      c = align(c,alignFrequency)      
       c = butter(c,varargin)      
       c = cat(varargin)
-      val = check(c,varargin)
+      val = check(c,whatToCheck)
       c = cluster(c,varargin)
-      c = colormap(c,varargin)
-      c = conv(c,varargin)
-      c = crop(c,varargin)
-      c = deconv(c,varargin)
-      c = demean(c,varargin)
+      c = colormap(c,mapname)
+      c = conv(c)
+      c = crop(c, pretrig, posttrig)
+      % c = deconv(c)  remarked out because it isn't working yet.
+      c = demean(c)
       c = detrend(c,varargin)
       c = diff(c)
       display(c)

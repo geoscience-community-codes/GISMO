@@ -1,4 +1,4 @@
-function c = detrend(c,varargin);
+function c = detrend(c)
    % DETREND   removes the slope of each trace.
    %
    % C = DETREND(C) removes the trend from each trace. In most cases it is

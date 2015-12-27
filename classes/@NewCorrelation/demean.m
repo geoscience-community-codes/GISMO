@@ -1,4 +1,4 @@
-function c = demean(c,varargin);
+function c = demean(c)
    
    % DEMEAN removes the mean of each trace.
    %

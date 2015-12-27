@@ -1,4 +1,4 @@
-function c = conv(c,varargin)
+function c = conv(c)
 %conv   convolve all traces with the final trace
 % c = CONV(c) convolves all traces with the final trace. By default the new
 % correlation object has traces that are 2*N-1 samples long, where the
@@ -7,12 +7,6 @@ function c = conv(c,varargin)
 % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
 % $Date$
 % $Revision$
-
-
-% READ & CHECK ARGUMENTS
-if (nargin>2)
-    error('Wrong number of inputs');
-end;
 
 % GENERAL PARAMETERS
 c = unifytracelengths(c);
