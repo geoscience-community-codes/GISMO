@@ -22,7 +22,7 @@ function shadedplot(c,scale,ord)
    for i = 1:numel(ord)
       %wstartrel = 86400*(get(c.W(i),'START_MATLAB')-c.trig(i));	% relative start time (trigger is at zero)
       %tr = wstartrel + [ 0:get(c.W(i),'DATA_LENGTH')-1]'/get(c.W(i),'Fs');
-      tr = wstartrels(i) + [ 0:wlengths(i)-1]'/wFs(i);
+      tr = wstartrels(i) + ( 0:wlengths(i)-1)'/wFs(i);
       
       % save min and max relative trace times
       if tr(1) < tmin
@@ -59,7 +59,7 @@ function shadedplot(c,scale,ord)
       %    d = scale * d/max(abs(d));		% apply a uniform amplitude scale;
       %end
       % DONE ABOVE: wstartrel = 86400*(get(c.W(i),'START_MATLAB')-c.trig(i));	% relative start time (trigger is at zero)
-      [tmp,startindex] = min(abs(T-wstartrels(i)));
+      [~,startindex] = min(abs(T-wstartrels(i)));
       D( count ,  startindex : (startindex+wlengths(i)-1) ) = d(:,i);
    end;
    imagesc(T,N,D);
@@ -69,7 +69,7 @@ function shadedplot(c,scale,ord)
    axis([tmin tmax 0.5 length(ord)+0.5]);
    set(gca,'YDir','reverse');
    n = length(ord);
-   set(gca,'YTick',[1:round(n/50):n]);
+   set(gca,'YTick',(1:round(n/50):n));
    yt = get(gca,'YTick');
    set(gca,'YTickLabel',datestr(c.trig(ord(yt))),'FontSize',6);
    xlabel('Relative Time,(s)','FontSize',8);
@@ -79,7 +79,7 @@ function shadedplot(c,scale,ord)
    cmap = [ 0 0 1;
       1 1 1
       1 0 0];
-   cmap = interp1([-1 0 1],cmap,[-1:.1:1],'linear');
+   cmap = interp1([-1 0 1],cmap, -1:.1:1, 'linear');
    colormap(cmap);
    
    maybeReplaceYticksWithStationNames(c,gca)

@@ -21,14 +21,15 @@ function wiggleinterferogram(c,scale,type,norm,range)
    
    % SET COLOR SCALE FOR LAG PLOT
    I.LL = I.LL ./ range;
-   f = find((I.LL)<-1); I.LL(f)=-1;      % eliminate outliers
-   f = find((I.LL)> 1); I.LL(f)= 1;
+   
+   I.LL(I.LL < -1) = -1; % eliminate negative outliers
+   I.LL(I.LL > 1) = 1; %eliminate positive outliers
+   
    I.LL = 31.5 * I.LL;
    I.LL = round(I.LL + 32.5);                       % shift to positive indices
    
    I.TRANS = I.CC - 0.6;
-   f = find(I.TRANS<0);
-   I.TRANS(f) = 0;
+   I.TRANS(I.TRANS < 0) = 0;
    I.TRANS = round(0.75*10*I.TRANS);
    I.LL = I.LL + 64*I.TRANS;
    
@@ -43,9 +44,11 @@ function wiggleinterferogram(c,scale,type,norm,range)
    
    
    % GET MEAN TRACE AMPLITUDE FOR SCALING BELOW (when norm = 0)
-   maxlist = [];
+   maxlist = nan(size(ord));
+   n=1;
    for i = ord
-      maxlist(end+1) = max(abs( c.traces(i).data ));
+      maxlist(n) = max(abs( c.traces(i).data ));
+      n=n+1;
    end;
    normval = mean(maxlist);
    
@@ -66,48 +69,14 @@ function wiggleinterferogram(c,scale,type,norm,range)
       colormap(cmap);
       hcb = colorbar;
       set(hcb,'YLim',[193 256]);
-      set(hcb,'YTick',193+64*[0:.125:1]);
-      set(hcb,'YTickLabel',range*[-1:.25:1]);
+      set(hcb,'YTick',193+64 * (0:.125:1) );
+      set(hcb,'YTickLabel',range * (-1:.25:1));
       
       hold on;
    else
       error('Plot type not recognized.');
    end
-   
-   % SET COLOR
-   
-   
-   
-   % LOOP THROUGH WAVEFORMS
-   % tmin =  999999;
-   % tmax = -999999;
-   % count = 0;
-   % for i = ord
-   % 	count = count + 1;
-   %     d = get(c.W(i),'DATA');            %%%d = c.w(:,i);
-   % 	if norm==0
-   %         d = scale * d/normval;			% do not normalize trace amplitudes
-   %     else
-   %         if max(abs(d))==0
-   %             d = scale * d;              	% ignore zero traces
-   %         else
-   %             d = scale * d/max(abs(d));		% normalize trace amplitudes
-   %         end
-   %     end
-   %     d = -1 * d; 				% because scale is reversed below
-   % 	wstartrel = 86400*(get(c.W(i),'START_MATLAB')-c.trig(i));	% relative start time (trigger is at zero)
-   % 	tr = wstartrel + [ 0:length(d)-1]'/get(c.W(i),'Fs');
-   % 	plot(tr,d+count,'k-','LineWidth',1.5);
-   %     % save min and max relative trace times
-   % 	if tr(1) < tmin
-   % 		tmin = tr(1);
-   % 	end;
-   % 	if tr(end) > tmax
-   % 		tmax = tr(end);
-   % 	end;
-   %
-   % end;
-   
+         
    % --------------------------------
    wstartrel = c.relativeStartTime(ord);
    freq = [c.traces(ord).samplerate];
@@ -116,7 +85,7 @@ function wiggleinterferogram(c,scale,type,norm,range)
    abs_max =  max(abs(c.traces(ord)));
    for count = 1:numel(ord)
       tr(1:lengths(count),ord(count)) = ...
-         wstartrel(count) + [ 0:lengths(count)-1]'/freq(count);
+         wstartrel(count) + (0:lengths(count)-1)'/freq(count);
    end;
    
    % scale is negative because it is reversed below
@@ -132,7 +101,7 @@ function wiggleinterferogram(c,scale,type,norm,range)
    else
       abs_max(abs_max==0) = 1; % ignore zero traces
       
-      d = double(c.W(ord) .* (-scale ./ abs_max)+[1:numel(ord)]','nan'); % normalize trace amplitudes
+      d = double(c.W(ord) .* (-scale ./ abs_max) + (1:numel(ord))','nan'); % normalize trace amplitudes
    end
    
    plot(tr,d,'k-','LineWidth',1.5);

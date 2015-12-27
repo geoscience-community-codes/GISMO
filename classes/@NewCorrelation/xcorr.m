@@ -1,6 +1,5 @@
 function c=xcorr(c,varargin)
-% function c=xcorr(c,varargin)
-   
+   % xcorr   calculate the correlation and lag for traces
    % C = XCORR(C)
    % This function calculates and fills in the correlation and lag fields in a
    % correlation object. The input is a correlation object, presumeably with
@@ -40,62 +39,41 @@ function c=xcorr(c,varargin)
    % and the INDEX list. The two must be used together. Polynomial
    % interpolation of lag values is always used with this algorithm.
 
-   % FIXME FIXME FIXME mid-correction
    % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
    % $Date$
    % $Revision$
    
-   algorithm = '1xr'
    triggerRange = [];
+   algorithm = '1xr';
    switch nargin
       case 1 % xcorr(C) :  default behavior
-         algorithm = '1xr'
-      case 2 % xcorr(C, algorithm)
-         algorithm = varargin{1};
+         %algorithm = '1xr';
+      case 2 % xcorr(C, [pretrig posttrig])
+         %algorithm = '1xr';
+         triggerRange = varargin{1};
       case 3 % xcorr(C, [pretrig posttrig], algorithm)
-         if isnumeric(varargin{1})
+         if isnumeric(varargin{1}) 
+            % xcorr(C, [pretrig posttrig], algorithm)
             triggerRange = varargin{1};
             algorithm = varargin{2};
          else
-      case 3 % xcorr(C, 'row', indexList)
+            % xcorr(C, 'row', indexList)
+            algorithm = varargin{1}; 
+            index = varargin{2};
+         end
       case 4 % xcorr(C, [pretrig posttrig], 'row', indexList)
-   end
-   %}
-   
-   c1 = NewCorrelation;
-   c1.traces = c.traces;
-   c1.trig = c.trig;
-   
-   if ~exist('algorithm','var') || isempty(algorithm)
-      algorithm = '1xr';
+         triggerRange = varargin{1};
+         algorithm = varargin{2};
+         index = varargin{3};
+      otherwise
+         error('xcorr paramters not understood');
    end
    
-   if exist('triggerRange','var') && ~isempty(triggerRange)
+   c1 = NewCorrelation(c.traces, c.trig);
+   if ~isempty(triggerRange)
       assert(numel(triggerRange)==2, 'triggerRange needs to be two numbers: [pretrig, posttrig]');
-      c1 = crop(c, triggerRange(1), triggerRange(2));
+      c1 = crop(c1, triggerRange(1), triggerRange(2));
    end
-  
-   
-   % CHECK FOR TRACE SUBSET
-   if length(varargin)>1 && isnumeric(varargin{end})
-         index = varargin{end};
-         varargin = varargin(1:end-1);
-   end
-   
-   % CHECK ALGORITHM
-   if ~isempty(varargin) && ischar(varargin{end})
-         algorithm = lower(varargin{end});
-         varargin = varargin(1:end-1);
-   end
-   
-      
-   % APPLY CROPPING
-   if ~isempty(varargin)  && length(varargin{end}) == 2 % check for cropping values
-         pretrig =  varargin{1}(1);
-         posttrig = varargin{1}(2);
-         c1 = crop(c,pretrig,posttrig);
-   end
-   
    
    
    % CREATE MATRIX OF DATA FROM WAVEFORM ARRAY
@@ -122,7 +100,10 @@ function c=xcorr(c,varargin)
    switch algorithm
       case '1xr'
          d = NewCorrelation.xcorr1xr(d,0);
-      case 'int'
+      case {'int'}
+         error('NewCorrelation:xcorr:oldusage',...
+            'use ''interp'' instead of ''int''');
+      case 'interp'
          d = NewCorrelation.xcorr1xr(d,1);
       case 'row'
           assert(exist('index','var'), 'algorithm ''row'' requires an index parameter');

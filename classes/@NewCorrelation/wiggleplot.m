@@ -20,7 +20,7 @@ function wiggleplot(c,scale,ord,norm)
    abs_max =  max(abs(c.traces(ord))); % max(abs(c.W(ord)));
    for count = 1:numel(ord)
       tr(1:lengths(count),count) = ...
-         wstartrel(count) + [ 0:lengths(count)-1]'/freq(count);
+         wstartrel(count) + (0:lengths(count)-1)' / freq(count);
    end;
    
    % scale is negative because it is reversed below

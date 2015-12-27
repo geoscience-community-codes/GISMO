@@ -20,10 +20,9 @@ function d = xcorr1xr(d,style)
    % PREP NECESSARY TERMS
    [M,N] = size(d.w);
    pretrig = 86400*(d.trig-d.start);   % time between trace start and trigger
-   l = (1./d.Fs)*[-M+1:M-1]';        % lag vector
+   l = (1./d.Fs)*(-M+1:M-1)';        % lag vector
    % next two lines are equivalent ways to determine normalization coefficients
    wcoeff = 1./sqrt(sum(d.w.*d.w));
-   %for i = 1:size(d.w,2), wcoeff(i) = 1./norm(d.w(:,i)); end;
    d.corrmatrix = eye(length(d.trig),'single');
    d.lags = zeros(length(d.trig),'single');
    
@@ -31,15 +30,12 @@ function d = xcorr1xr(d,style)
    % GET FFT OF TRACES
    X = fft(d.w,2^nextpow2(2*M-1));
    Xc = conj(X);
-   [MX,NX] = size(X);
    
    
    % TIME THE PROCESS
    starttime = now;
    myTimer = tic;
    t0 = cputime;
-   numcorr = ((length(d.trig))^2-length(d.trig))/2;
-   count = 0;
    
    
    % LOOP THROUGH ROWS OF SIMILARITY MATRIX
@@ -52,9 +48,9 @@ function d = xcorr1xr(d,style)
       
       
       if style == 1       % USE POLYNOMIAL INTERPOLATION
-         [maxtest,indx1] = max(corr(2:end-1,:));
+         [~,indx1] = max(corr(2:end-1,:));
          [mm,nn] = size(corr);
-         indx2 = (indx1+1) + mm*[0:nn-1];                 % convert to matrix index
+         indx2 = (indx1+1) + mm*(0:nn-1);                 % convert to matrix index
          lag = repmat( l , 1 , size(corr,2) );
          lagM   = lag([ indx2-1 ; indx2 ; indx2+1 ]) + repmat(pretrig(cols)'-pretrig(n)',3,1);
          corrM  = corr([ indx2-1 ; indx2 ; indx2+1 ]);
@@ -74,7 +70,7 @@ function d = xcorr1xr(d,style)
       end
       
       if (n==100) || (n==1000)
-         tclock = toc/86400;
+         tclock = toc(myTimer)/86400;
          completed = sum(N-n:N-1)/((N*N-N)/2);
          fin = datestr(starttime + tclock/completed,16);
          if completed<0.5

@@ -19,14 +19,13 @@ function [c1,c2] = match(c1,c2,toleranceInSeconds)
    % AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
    % $Date$
    % $Revision$
-   
-   
-   % READ & CHECK ARGUMENTS
+      
    narginchk(2,3);
    
    if ~exist('tolerance','var')
       toleranceInSeconds = 1;
    end
+   
    assert(isnumeric(toleranceInSeconds), 'Tolerance must be a number in seconds')
    
    disp(['Tolerance for successful match is: ' num2str(toleranceInSeconds) ' seconds']);
@@ -35,7 +34,7 @@ function [c1,c2] = match(c1,c2,toleranceInSeconds)
    % FIND ELEMENTS THAT MATCH
    trig1 = c1.trig;
    trig2 = c2.trig;
-   matchIndex = [];
+   matchIndex = zeros(size(trig1));
    for n = 1:numel(trig1)
       [minVal,minIndex] = min(abs(trig2 - trig1(n))*86400);
       if minVal < toleranceInSeconds
@@ -51,7 +50,7 @@ function [c1,c2] = match(c1,c2,toleranceInSeconds)
    c1 = subset(c1,index);
    
    % SUBSET FIRST CORRELATION OBJECT
-   index = matchIndex(find(matchIndex));
-   c2 = subset(c2,index);
+   index2 = matchIndex(index);
+   c2 = subset(c2,index2);
    
 end

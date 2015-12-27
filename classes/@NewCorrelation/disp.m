@@ -1,4 +1,4 @@
-function display(c)
+function disp(c)
    
    % CORRELATION/DISPLAY Command window display of a correlation object
    % See help correlation for fields

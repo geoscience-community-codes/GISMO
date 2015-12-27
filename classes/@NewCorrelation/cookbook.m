@@ -60,7 +60,7 @@ function correlationVariables = cookbook(corr)
    % fields contained with each CORRELATION object.
    
    methods(c)
-   display(c)
+   disp(c)
    
    
    %% Plot raw data

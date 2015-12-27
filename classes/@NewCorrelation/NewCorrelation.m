@@ -40,21 +40,12 @@ classdef NewCorrelation
    
    methods
       function c = NewCorrelation(varargin)
-         
-         %
-         % --------- DOCUMENTATION ------------------------------------------------
-         % | CORRELATION('COOKBOOK') View html-format correlation demo cookbook.  |
-         % | CORRELATION('README') View detailed version and install information. |
-         % |   (see below of description of fields within a correlation object)   |
-         % ------------------------------------------------------------------------
-         %
-         %
          % CORRELATION Correlation class constructor, version 1.5.
          %
          % C = CORRELATION creates an empty correlation object. For explanation see the
          % description below that follows the usage examples.
          %
-         % C = CORRELATION(WAVEFORM)
+         % C = CORRELATION(SeismicTrace)
          % Create a correlation object from an existing waveform object. In a pinch
          % this formulation can be used, however, it lacks one critical element.
          % Without a trigger time, the correlation object has no information about
@@ -236,8 +227,8 @@ classdef NewCorrelation
                   c.trig = reshape(c.trig,numel(c.trig),1);
                   % adjust length of trigger field input
                   if numel(c.trig)==1
-                     c.trig = c.trig*ones(size(c.W));
-                  elseif  numel(c.trig)~=numel(c.W)
+                     c.trig = c.trig*ones(size(c.traces));
+                  elseif  numel(c.trig)~=numel(c.traces)
                      error('correlation:correlation:wrongTriggerLength',...
                         'Trigger argument must be of length 1 or the same as the number of waveforms');
                   end
@@ -536,7 +527,7 @@ classdef NewCorrelation
       c = demean(c)
       c = detrend(c)
       c = diff(c)
-      display(c)
+      disp(c)
       index = find(c,type, value)
       family = getclusterstat(c)
       c = getstat(c)
@@ -609,10 +600,10 @@ classdef NewCorrelation
    end
    
    methods(Access=private, Static)
-      d = xcorr1x1(d);
+      % d = xcorr1x1(d);
       d = xcorr1xr(d,style)
-      d = xcorr1xr_orig(d)
-      d = xcorrdec(d)
+      % d = xcorr1xr_orig(d)
+      % d = xcorrdec(d)
       d = xcorrrow(d,c,index)
       function m = fillLowerTriangleFromUpper(m)
          % FILL LOWER TRIANGULAR PART OF MATRICES
