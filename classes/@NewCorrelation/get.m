@@ -83,10 +83,10 @@ function val = get(c,prop_name)
       otherwise
          try
             % see if it is a valid waveform property
-            warning('accessing a waveform property %s. ', propname);
+            warning('accessing a waveform property %s. ', prop_name);
             val = get(c.W,prop_name);
-         catch
-            error([upper(prop_name) ' is not a valid argument for correlation/get']);
+         catch er
+            error('''%s'' is not a valid argument for correlation/get\n%s\n', prop_name, er.message);
          end
    end;
 end

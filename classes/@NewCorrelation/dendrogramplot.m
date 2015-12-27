@@ -14,7 +14,7 @@ function dendrogramplot(c)
    
    
    % CREATE DENDROGRAM PLOT
-   [H,~,perm] = dendrogram(c.link,length(c.trig),'Orientation','right');
+   [~,~,perm] = dendrogram(c.link,length(c.trig),'Orientation','right');
    set(gcf,'Color','w','Position',[50 50 680 880]);
    ylabel('event number','FontSize',16);
    set(gca,'XGrid','on');

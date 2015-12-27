@@ -34,7 +34,7 @@ function c = taper(c,varargin)
       case 'COSINE'
          if length(varargin)==1
             R = varargin{1};
-         elseif length(varargin)==0
+         elseif isempty(varargin)
             R = 0.2;
          else
             error('Wrong number of inputs for cosine taper');

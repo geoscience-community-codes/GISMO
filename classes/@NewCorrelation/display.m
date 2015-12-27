@@ -27,9 +27,7 @@ function showline(fname, value, desc)
 end
 
 function s = getsizestr(val)
-   sz = size(val);
-   s = num2str(sz(1));
-   for n=2:numel(sz)
-      s = [s,'x',num2str(sz(n))];
-   end
+   s = num2str(size(val),'%dx');
+   s(s == ' ') = [];
+   s = s(1:end-1);
 end

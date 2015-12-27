@@ -51,22 +51,22 @@ function c=getstat(c)
    
    
    % BUILD A AND dT
-   n = size(c.corrmatrix,1);
-   m = n*(n-1)/2+1;
-   A = sparse(m,n);
+   nTraces = size(c.corrmatrix,1);
+   m = nTraces*(nTraces-1)/2+1;
+   A = sparse(m,nTraces);
    A(m,:) = 1;
    dT = zeros(m,1);
    W = speye(m);
    I = zeros(m,1);
    J = zeros(m,1);
    count = 0;
-   for i = 1:n-1
-      for j = (i+1):n
+   for p = 1:nTraces-1
+      for q = (p+1):nTraces
          count = count + 1;
-         A(count,i) = 1;
-         A(count,j) = -1;
-         dT(count) = c.lags(i,j);
-         W(count,count) = c.corrmatrix(i,j);
+         A(count,p) = 1;
+         A(count,q) = -1;
+         dT(count) = c.lags(p,q);
+         W(count,count) = c.corrmatrix(p,q);
       end;
    end;
    
@@ -79,9 +79,9 @@ function c=getstat(c)
    
    
    % ESTIMATE RESIDUALS, STD
-   for i = 1:n
-      for j = 1:n
-         res(i,j) = c.lags(i,j) - ( T(i) - T(j) );	%eq. 7
+   for p = 1:nTraces
+      for q = 1:nTraces
+         res(p,q) = c.lags(p,q) - ( T(p) - T(q) );	%eq. 7
       end;
    end;
    Trms = std(res)';		% ~eq. 8

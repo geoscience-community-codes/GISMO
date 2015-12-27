@@ -32,7 +32,7 @@ function eventplot(c,scale,howmany)
    c1 = NewCorrelation;   % get new correlation object without correlation info
    c1.traces = c.traces;
    c1.trig = c.trig;
-   for i = 1:howmany
+   for i = howmany: -1 : 1
       index{i} = find(c,'CLU',i);
       ntraces(i) = length(index{i});
       c1 = stack(c1,index{i});
@@ -40,7 +40,7 @@ function eventplot(c,scale,howmany)
    
    
    % MAKE PLOT OF STACKS
-   c1 = subset(c1,[ length(c1.trig)-howmany+1 : length(c1.trig) ]);
+   c1 = subset(c1, (length(c1.trig)-howmany+1):length(c1.trig) );
    plot(c1,'wig',scale);
    set(gcf,'Position',[50 500 850 300]);
    Xlim = get(gca,'Xlim');
@@ -55,7 +55,6 @@ function eventplot(c,scale,howmany)
    xright = max(c.trig) + 0.05*(max(c.trig)-min(c.trig));
    box on; hold on;
    for i = 1:length(ntraces)
-      t = index{i};
       plot([xleft xright],[i i],'k:');
       plot(c.trig(index{i}),i*ones(size(index{i})),'ko','MarkerFaceColor',[.5 .5 1]);
       text(xleft,i-0.3,['  #' num2str(i)],'HorizontalAlignment','Left');
