@@ -1,29 +1,30 @@
 function c = hilbert(c,n)
-
-%HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.
-%   waveform = hilbert(waveform)
-%   waveform = hilbert(waveform, N);
-%
-% This function does not return the complete (complex) hilbert transform,
-% but rather the absolutely value of the transform typically used in
-% seismology. To keep the imaginary values, use the built-in hilbert
-% transform. 
-%
-% Be careful if cross correlating the hilbert transforms of waveforms.
-% Becuase the nilbert transformed data is not oscillatory around zero in
-% the traditional waveform sense, unexpected behaviors can result.
-% Caveat Emptor!
-%
-% See HILBERT for the meaning of "N"
-
-
-% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date$
-% $Revision$
-
-
-if exist('n','var'),
-    c.traces = hilbert(c.traces,n);
-else
-    c.traces = hilbert(c.traces);
+   
+   %HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.
+   %   waveform = hilbert(waveform)
+   %   waveform = hilbert(waveform, N);
+   %
+   % This function does not return the complete (complex) hilbert transform,
+   % but rather the absolutely value of the transform typically used in
+   % seismology. To keep the imaginary values, use the built-in hilbert
+   % transform.
+   %
+   % Be careful if cross correlating the hilbert transforms of waveforms.
+   % Becuase the nilbert transformed data is not oscillatory around zero in
+   % the traditional waveform sense, unexpected behaviors can result.
+   % Caveat Emptor!
+   %
+   % See HILBERT for the meaning of "N"
+   
+   
+   % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+   % $Date$
+   % $Revision$
+   
+   
+   if exist('n','var'),
+      c.traces = hilbert(c.traces,n);
+   else
+      c.traces = hilbert(c.traces);
+   end
 end

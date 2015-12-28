@@ -30,61 +30,58 @@ function c = norm(c,varargin)
    
    % READ & CHECK ARGUMENTS
    
+   % TODO: fine tune the way traces are reassigned.
    
-   % CHECK FOR RANGE
-   if (length(varargin)==3) && isnumeric(varargin{2}) && isnumeric(varargin{3})
-      c2 = crop(c,varargin{2},varargin{3});
-      varargin = varargin(1:end-2);
-   else
-      c2 = c;
-   end
+   %SPECIFY THE NORMALIZATION METHOD
+   method = normalizationMethod(varargin);
+   c = cropIfRequested(c, varargin);
    
-   
-   % CHECK FOR INDEX LIST
-   if (length(varargin)==2) && isnumeric(varargin{1})
-      index  = varargin{2};
-      varargin = varargin(1:end-1);
+   % determine the index
+   if numel(varargin) == 2 % NORM(C, METHOD / SCALE, INDEX)
+      index = varargin{2};
    else
       index = 1:c.ntraces;
    end
-   
-   
-   % CHOOSE NORMALIZATION TYPE
-   if (length(varargin)==1) && ischar(varargin{1})
-      method = varargin{1};
-   elseif  (length(varargin)==1) && isnumeric(varargin{1})
-      method = 'sca';
-      scale = varargin{1};
-   elseif  (nargin==1)
-      method = 'max';
-   else
-      error('Incorrect inputs');
-   end;
-   
-   
-   % NORMALIZE EACH TRACES
+      
+   % NORMALIZE EACH TRACE
    switch upper(method(1:3))
       case 'MAX'
          for i = index
-            maxd = max(abs(c2.traces(i)));
+            maxd = max(abs(c.traces(i)));
             if maxd ~= 0
                c.traces(i) = c.traces(i) ./  maxd;
             end;
          end
          
       case 'SCA' % scaled
-         for i = index
-            c.traces(i) = c.traces(i) .* scale;
-         end
+            c.traces(index) = c.traces(index) .* scale;
          
       case {'RMS', 'STD'}
          for i = index
-            d2 = c2.traces(i).data;
+            d2 = c.traces(i).data;
             stdd = 0.5 * std(abs(d2));
             if stdd ~= 0
                c.traces(i) = c.traces(i) ./ stdd;
             end;
          end
+   end
+end
+
+function m = normalizationMethod(val)
+   if isempty(val)
+      m = 'max';
+   elseif isnumeric(val{1})
+      m = 'sca';
+   elseif ischar(val{1})
+      m = val{1};
+   else
+      error('unknown normalization method');
+   end
+end
+
+function c = cropIfRequested(c, vals)
+   if numel(vals) == 3
+      c = crop(c,vals{2:3});
    end
 end
 

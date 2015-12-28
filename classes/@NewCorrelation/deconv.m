@@ -1,4 +1,4 @@
-function c = deconv(c,varargin)
+function c = deconv(c)
 
 % c = DECONV(c) convolves all traces with the final trace. By default the new
 % correlation object has traces that are 2*N-1 samples long, where the
@@ -20,15 +20,9 @@ function c = deconv(c,varargin)
 
 error('This code is not yet functional. Sorry - MEW');
 
-% READ & CHECK ARGUMENTS
-if (nargin>2)
-    error('Wrong number of inputs');
-end;
-
-
 
 % GENERAL PARAMETERS
-c = verify(c);
+c = unifytracelengths(c);
 keyTrace = c.ntraces;
 
 

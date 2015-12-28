@@ -1,4 +1,4 @@
-function c = stack(c,varargin)
+function c = stack(c,index)
 
 % c = STACK(c)
 % This function appends a stacked waveform to the end of the correlation
@@ -32,21 +32,11 @@ function c = stack(c,varargin)
 % $Revision$
 
 
-% READ & CHECK ARGUMENTS
-if (nargin>2)
-    error('Wrong number of inputs');
-end;
-
-if (length(varargin)==1)
-   index = varargin{1}; 
-end
-
-
 % CREATE CORRELATION OBJECT FOR INTERNAL MANIPULATIONS
 c1 = NewCorrelation();
 c1.traces = c.traces;
 c1.trig = c.trig;
-if exist('index')
+if exist('index','var')
    c1 = subset(c1,index); 
 end
 
@@ -86,7 +76,7 @@ end
 
 
 c.traces(end+1) = stack(c1.traces);
-c = verify(c);        %%%%%%% added on 12/15/2007 %%%%%%%%%%%%%%%%%
+c = unifytracelengths(c); 
 c.trig(end+1) = c1.trig(1);
 c.stat = [];
 c.link = [];

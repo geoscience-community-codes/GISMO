@@ -1,70 +1,71 @@
 function d = xcorr1x1(d)
-
-% This function is the same as xcwfm1xr except that it uses matlab's xcorr
-% function and cycles through cross correlations individually instead by
-% row. It appears to run somewhat slower.
-% 
-
-% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date$
-% $Revision$
-
-
-% CREATE EMPTY CORRELATION AND LAG MATRICES
-d.corrmatrix = eye(length(d.trig),'single');
-d.lags = zeros(length(d.trig),'single');
-
-
-% TIME THE PROCESS
-tic;
-t0 = cputime;
-numcorr = ((length(d.trig))^2-length(d.trig))/2;
-count = 0;
-
-
-% GET XCORR FUNCTION HANDLE
-Hxcorr = @xcorr;
-
-
-% LOOP THROUGH FIRST WAVEFORM
-for i = 1:length(d.trig)	
-    d1 = d.w(:,i);
-    st1 = d.start(i);
-
-	% LOOP THROUGH SECOND WAVEFORM
-	for j = (i+1):length(d.trig)
-		count = count + 1;	
-		d2 = d.w(:,j);
-        st2 = d.start(j);
-        
-        % "shift" allows flexibility in when the waveforms actually start
-		shift = 86400*((d.trig(j)-st2)-(d.trig(i)-st1));
-		
-		% DO CORRELATION		
-		%[corr,l]=xcorr(d1,d2,'coeff');
-		[corr,l]=feval(Hxcorr,d1,d2,'coeff');
-
-		[~,index] = max(corr);
-		d.corrmatrix(i,j)=corr(index);
-		d.lags(i,j)=l(index)/d.Fs + shift; % lag in seconds
-	
-		% SHOW PROGRESS
- 		if (mod(count,round(numcorr/4))==0)
-			disp([num2str(count) ' of ' num2str(numcorr,'%2.0f') ' complete (' num2str(100*count/numcorr,'%2.0f') '%)']);
-		end;
-
-	end;
-
-end;
-
-
-% FILL LOWER TRIANGULAR PART OF MATRICES
-d.corrmatrix = d.corrmatrix + d.corrmatrix' - eye(size(d.corrmatrix));
-d.lags = d.lags - d.lags';
-
-
-% DISPLAY RUN TIMES
-tclock = toc;
-tcpu = cputime-t0;
-disp(['Clock time to complete correlations: ' num2str(tclock,'%5.1f') ' s']);
-disp(['CPU time to complete correlations:   ' num2str(tcpu,'%5.1f') ' s']);
+   
+   % This function is the same as xcwfm1xr except that it uses matlab's xcorr
+   % function and cycles through cross correlations individually instead by
+   % row. It appears to run somewhat slower.
+   %
+   
+   % Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
+   % $Date$
+   % $Revision$
+   
+   
+   % CREATE EMPTY CORRELATION AND LAG MATRICES
+   d.corrmatrix = eye(length(d.trig),'single');
+   d.lags = zeros(length(d.trig),'single');
+   
+   
+   % TIME THE PROCESS
+   myTimer = tic;
+   t0 = cputime;
+   numcorr = ((length(d.trig))^2-length(d.trig))/2;
+   count = 0;
+   
+   
+   % GET XCORR FUNCTION HANDLE
+   Hxcorr = @xcorr;
+   
+   
+   % LOOP THROUGH FIRST WAVEFORM
+   for i = 1:length(d.trig)
+      d1 = d.w(:,i);
+      st1 = d.start(i);
+      
+      % LOOP THROUGH SECOND WAVEFORM
+      for j = (i+1):length(d.trig)
+         count = count + 1;
+         d2 = d.w(:,j);
+         st2 = d.start(j);
+         
+         % "shift" allows flexibility in when the waveforms actually start
+         shift = 86400*((d.trig(j)-st2)-(d.trig(i)-st1));
+         
+         % DO CORRELATION
+         %[corr,l]=xcorr(d1,d2,'coeff');
+         [corr,l]=feval(Hxcorr,d1,d2,'coeff');
+         
+         [~,index] = max(corr);
+         d.corrmatrix(i,j)=corr(index);
+         d.lags(i,j)=l(index)/d.Fs + shift; % lag in seconds
+         
+         % SHOW PROGRESS
+         if (mod(count,round(numcorr/4))==0)
+            disp([num2str(count) ' of ' num2str(numcorr,'%2.0f') ' complete (' num2str(100*count/numcorr,'%2.0f') '%)']);
+         end;
+         
+      end;
+      
+   end;
+   
+   
+   % FILL LOWER TRIANGULAR PART OF MATRICES
+   d.corrmatrix = NewCorrelation.fillLowerTriangleFromUpper(d.corrmatrix);
+   d.lags = d.lags - d.lags';
+   
+   
+   % DISPLAY RUN TIMES
+   tclock = toc(myTimer);
+   tcpu = cputime-t0;
+   disp(['Clock time to complete correlations: ' num2str(tclock,'%5.1f') ' s']);
+   disp(['CPU time to complete correlations:   ' num2str(tcpu,'%5.1f') ' s']);
+end

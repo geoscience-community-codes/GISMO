@@ -1103,8 +1103,10 @@ classdef SeismicTrace < TraceData
          %   trace = trace.clearhistory
          %   clears the history, leaving it blank
          %
-         % See also SeismicTrace.addhistory SeismicTrace.history.         
-         T(N).history= T(N).history([]);
+         % See also SeismicTrace.addhistory SeismicTrace.history.
+         for N = 1: numel(T)
+            T(N).history= T(N).history([]);
+         end
       end
       function [myhist] = get.history(t)
          %history   retrieve the history of a waveform object
