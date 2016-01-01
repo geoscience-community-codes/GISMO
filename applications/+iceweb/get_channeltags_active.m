@@ -1,4 +1,5 @@
 function goodsites = get_channeltags_active(sites, snum)
+   % get_channeltags_active   return sites that were active on a date
     % sites active for this day
     k=0;
     %goodsites = [];

@@ -1,4 +1,5 @@
 function makespectrogramthumbnails(spectrogramFilename, spectrogramFraction)
+   % makespectrogramthumbnails
 import debug.*
 printfunctionstack('>');
 %print_debug('> makespectrogramthumbnails', 2);
@@ -53,3 +54,4 @@ imwrite(X,map,thumbnailfile,'PNG');
 close;
 
 printfunctionstack('<');
+end

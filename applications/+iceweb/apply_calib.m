@@ -1,5 +1,5 @@
 function w = apply_calib(w, sites)
-    % ADD RESPONSE FROM SUBNETS TO WAVEFORM OBJECTS
+    % apply_calib   add response from subnets to waveforms
     
     % get a cell array like {'MV.MBRY..BHZ';'MV.MBLG..SHZ'; ...} from
     % sites.channeltag

@@ -1,5 +1,5 @@
 function timewindow = get_timewindow(utdnum_stop, numMins, utdnum_start) 
-% GET_TIMEWINDOW
+% GET_TIMEWINDOW   returns the Matlab datenums corresponding to the start and end of a time window
 %
 % Usage:  timewindow = get_timewindow([utdnum, [numMins, [utdnum_start]]])
 %
@@ -51,15 +51,16 @@ if (nargin == 3)
 	timewindow.start = snum_array;
 	timewindow.stop = enum_array;
 end	
-	
+end
 
 %%%%%%%%%%%%%%%%%%%
 function dnum1=boundaryBeforeDnum(dnum, numMins)
 dayFraction		=	rem(dnum,1); 
 minutesIntoThisDay	=	dayFraction*1440;
 dnum1 			= 	dnum - rem(minutesIntoThisDay, numMins)/1440;
+end
 
 function dnum1=boundaryAfterDnum(dnum, numMins)
 dnum1 = boundaryBeforeDnum(dnum, numMins) + numMins/1440; 
-
+end
 

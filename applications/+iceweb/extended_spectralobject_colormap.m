@@ -1,4 +1,5 @@
 function h = extended_spectralobject_colormap()
+   % extended_spectralobject_colormap   returns a colormap
 h = [1.0000    1.0000    1.0000
     0.9412    0.9412    0.9412
     0.8824    0.8824    0.8824
@@ -96,7 +97,7 @@ h = [1.0000    1.0000    1.0000
     0.6235    0.2762         0
     0.6118    0.2381         0
     0.6000    0.2000         0];
-    
+end
 
     
     

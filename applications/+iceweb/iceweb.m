@@ -1,4 +1,5 @@
 function iceweb(ds, varargin)
+   %iceweb   main driver for iceweb program
     debug.printfunctionstack('>');
     % Process arguments
     [thisrunmode, snum, enum, nummins, delaymins, thissubnet, matfile] = matlab_extensions.process_options(varargin, 'runmode', 'archive', 'snum', 0, 'enum', 0, 'nummins', 10, 'delaymins', 0, 'thissubnet', '', 'matfile', 'pf/tremor_runtime.mat');
@@ -7,7 +8,7 @@ function iceweb(ds, varargin)
         PARAMS.runmode = thisrunmode;
         clear thisrunmode;
     else
-        warning(sprintf('matfile %s not found',matfile))
+        warning('matfile %s not found',matfile)
         return
     end
 
@@ -16,8 +17,8 @@ function iceweb(ds, varargin)
     if exist(statefile, 'file') && ~strcmp(PARAMS.runmode, 'test')
         load(statefile)
         if strcmp(thissubnet, subnet0)
-		%snum = snum0;
-	end
+           %snum = snum0;
+        end
     end
 
     % subset on thissubnet
