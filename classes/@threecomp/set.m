@@ -14,20 +14,16 @@ function TC = set(TC, fieldName, val)
 
 
 % CHECK INPUT
-if nargin ~= 3
-    error('Incorrect number of inputs');
-end
-if ~isa(TC,'threecomp')
-    error('First argument must be a threecomp object');
-end
+narginchk(3,3);
+
 if ~ischar(fieldName)
-    error('Second argument must be a character string');
+    error('''field'' must be a character string');
 end
 
 switch upper(fieldName)
     
-    case {'WAVEFORM'}
-        if ~isa(val,'waveform')
+    case {'WAVEFORM', 'TRACE'}
+        if ~(isa(val,'waveform') || isa(val,'SeismicTrace'))
             error('VALUE is not a waveform object');
         end
         if size(val,2)~=3
@@ -37,12 +33,8 @@ switch upper(fieldName)
         
         
     case {'BACKAZIMUTH'}
-        if ~isa(val,'double')
-            error('VALUE is not of type double');
-        end
-        if val<0 || val>=360
-            error('BACKAZIMUTH must be between 0-360');
-        end
+       assert(isnumeric(val),'VALUE is not numeric');
+       assert(val >=0 && val <360, 'BACKAZIMUTH must be between 0-360');
         if numel(val)==1
             val = repmat(val,size(TC));
         end                     % NOt WORKING SOMEWHERE HERE>>>>>
