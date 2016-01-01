@@ -105,13 +105,20 @@ classdef rsam
                 self.dnum = dnum;
                 self.data = data;
                 if nargin>2
-                          
-                    [self.sta, self.chan, self.measure, self.seismogram_type, self.units, self.snum, self.enum] = ...
-                        matlab_extensions.process_options(varargin, 'sta', self.sta, ...
-                        'chan', self.chan, 'measure', self.measure, 'seismogram_type', self.seismogram_type, 'units', self.units, 'snum', self.snum, 'enum', self.enum);
-            
+                   classFields = {'sta','chan','measure','seismogram_type','units','snum','enum'};
+                   p = inputParser;
+                   for n=1:numel(classFields)
+                      p.addParameter(classFields{n}, self.(classFields{n}));
+                   end
+                   p.parse(varargin{:});
+                   
+                   % modify class values based on user-provided values
+                   for n = 1:numel(classFields)
+                      self.(classFields{n}) = p.Results.(classFields{n});
+                   end
                 end
             end
+            
         end
 % % %         function result=snum(self)
 % % %             result = nanmin(self.dnum);
@@ -291,10 +298,20 @@ classdef rsam
             %
             % % GTHO 2009/10/26 Changed marker size from 5.0 to 1.0
             % % GTHO 2009/10/26 Changed legend position to -0.2
-            [yaxisType, h, addgrid, addlegend, fillbelow] = ...
-                matlab_extensions.process_options(varargin, ...
-                'yaxisType', 'logarithmic', 'h', [], 'addgrid', false, ...
-                'addlegend', false, 'fillbelow', false);
+            
+            % parse variable input arguments
+            p = inputParser;
+            p.addParameter('addgrid',false);
+            p.addParameter('addlegend', false);
+            p.addParameter('fillbelow', false);
+            
+            %apparently unused options
+            p.addParameter('yaxisType','logarithmic'); % or linear
+            p.addParameter('h', []);
+            
+            p.parse(varargin);
+        
+            
             legend_ypos = -0.2;
 
             % colours to plot each station
@@ -313,7 +330,8 @@ classdef rsam
                     % make a logarithmic plot, with a marker size and add the station name below the x-axis like a legend
                     y = log10(y);  % use log plots
 
-                    handlePlot = plot(t, y, '-', 'Color', lineColour{c}, 'MarkerSize', 1.0);
+                    handlePlot = plot(t, y, '-', 'Color', lineColour{c},...
+                       'MarkerSize', 1.0);
 
                     if strfind(self.measure, 'dr')
                         %ylabel(sprintf('%s (cm^2)',self(c).measure));
@@ -323,7 +341,8 @@ classdef rsam
                         for count = 1:length(Yticks)
                             Yticklabels{count}=num2str(Yticks(count),3);
                         end
-                        set(gca, 'YLim', [min(Ytickmarks) max(Ytickmarks)],'YTick',Ytickmarks,'YTickLabel',Yticklabels);
+                        set(gca, 'YLim', [min(Ytickmarks) max(Ytickmarks)],...
+                           'YTick',Ytickmarks,'YTickLabel',Yticklabels);
                     end
                     axis tight
                     datetick('x','keeplimits')
@@ -334,7 +353,7 @@ classdef rsam
 
                     % plot on a linear axis, with station name as a y label
                     % datetick too, add measure as title, fiddle with the YTick's and add max(y) in top left corner
-                    if ~fillbelow
+                    if ~p.Results.fillbelow
                         handlePlot = plot(t, y, '-', 'Color', lineColour{c});
                     else
                         handlePlot = fill([min(t) t max(t)], [min([y 0]) y min([y 0])], lineColour{c});
@@ -356,10 +375,10 @@ classdef rsam
                     datetick('x','keeplimits');
                 end
 
-                if addgrid
+                if p.Results.addgrid
                     grid on;
                 end
-                if addlegend && ~isempty(y)
+                if p.Results.addlegend && ~isempty(y)
                     xlim = get(gca, 'XLim');
                     legend_ypos = 0.9;
                     legend_xpos = c/10;    
@@ -411,12 +430,19 @@ classdef rsam
                 %'callback',S,'min',0,'max',xmax-dx);
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-        function plotyy(obj1, obj2, varargin)   
-            [snum, enum, fun1, fun2] = matlab_extensions.process_options(varargin, 'snum', max([obj1.dnum(1) obj2.dnum(1)]), 'enum', min([obj1.dnum(end) obj2.dnum(end)]), 'fun1', 'plot', 'fun2', 'plot');
-            [ax, h1, h2] = plotyy(obj1.dnum, obj1.data, obj2.dnum, obj2.data, fun1, fun2);
+        function plotyy(obj1, obj2, varargin)
+           p = inputParser;
+           p.addParameter('snum',max([obj1.dnum(1) obj2.dnum(1)]));
+           p.addParameter('enum', min([obj1.dnum(end) obj2.dnum(end)]));
+           p.addParameter('fun1','plot');
+           p.addParameter('fun2','plot');
+           p.parse(varargin{:});
+           Args = p.Results;
+  
+            [ax, ~, ~] = plotyy(obj1.dnum, obj1.data, obj2.dnum, obj2.data, Args.fun1, Args.fun2);
             datetick('x');
             set(ax(2), 'XTick', [], 'XTickLabel', {});
-            set(ax(1), 'XLim', [snum enum]);
+            set(ax(1), 'XLim', [Args.snum Args.enum]);
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
         function self = reduce(self, waveType, sourcelat, sourcelon, stationlat, stationlon, varargin)
@@ -424,8 +450,14 @@ classdef rsam
             % s.distance and waveSpeed assumed to be in metres (m)
             % (INPUT) s.data assumed to be in nm or Pa
             % (OUTPUT) s.data in cm^2 or Pa.m
-            [self.reduced.waveSpeed, f] = matlab_extensions.process_options(varargin, 'waveSpeed', 2000, 'f', 2.0);
-            if self.reduced.isReduced == true
+            p = inputParser;
+            p.addParameter('waveSpeed', 2000);
+            p.addParamter('f', 2.0);
+            p.parse(varargin{:});
+            
+            self.reduced.waveSpeed = p.Results.waveSpeed;
+            
+            if self.reduced.isReduced
                 disp('Data are already reduced');
                 return;
             end
@@ -444,7 +476,7 @@ classdef rsam
                             self.data = self.data * r; % cm^2
                             self.units = 'cm^2';
                         case 'surface'
-                            wavelength = ws / f; % cm
+                            wavelength = ws / p.Results.f; % cm
                             try
                                     self.data = self.data .* sqrt(r * wavelength); % cm^2
                             catch
@@ -509,9 +541,17 @@ classdef rsam
             %                   continuousEvents property populated
             
             % Process input variables
-            [stalen, ltalen, stepsize, ratio_on, ratio_off, boolplot, boollist] = matlab_extensions.process_options(varargin, ...
-                'stalen', 10, 'ltalen', 120, 'stepsize', 10, 'ratio_on', 1.5, 'ratio_off', 1.1, ...
-                'boolplot', false, 'boollist', true);
+            p = inputParser;
+            p.addParameter('stalen', 10);
+            p.addParameter('ltalen', 120);
+            p.addParameter('stepsize', 10);
+            p.addParameter('ratio_on', 1.5);
+            p.addParameter('ratio_off', 1.1);
+            p.addParameter('boolplot', false, @islogical);
+            p.addParameter('boollist', true, @islogical);
+            
+            p.parse(varargin{:}); % use p.Results.(paramName)
+            
             
             % Initialize detector variables
             trigger_on=false; % no tremorEvent yet
@@ -534,9 +574,9 @@ classdef rsam
             
             % Loop over timeWindows
             % 
-            for sampleNumber=ltalen: stepsize: length(self.data)
+            for sampleNumber=p.Results.ltalen: p.Results.stepsize: length(self.data)
                 timeWindowNumber=timeWindowNumber+1;
-                startSample = sampleNumber-ltalen+1;
+                startSample = sampleNumber-p.Results.ltalen+1;
                 endSample = sampleNumber;
                 timeWindow.startSample(timeWindowNumber) = startSample;
                 timeWindow.endSample(timeWindowNumber) = endSample;        
@@ -551,7 +591,7 @@ classdef rsam
                 end
                 
                 % Compute the short term average for this timeWindow
-                timeWindow.sta(timeWindowNumber) = nanmean(self.data(endSample-stalen+1:endSample)) + eps; % add eps so never 0
+                timeWindow.sta(timeWindowNumber) = nanmean(self.data(endSample-p.Results.stalen+1:endSample)) + eps; % add eps so never 0
 
                 % Make sta & lta equal to last good values when NaN
                 if isnan(timeWindow.sta(timeWindowNumber))
@@ -569,7 +609,7 @@ classdef rsam
                 timeWindow.ratio(timeWindowNumber) = timeWindow.sta(timeWindowNumber)./timeWindow.lta(timeWindowNumber);        
                 
                 if trigger_on % EVENT IN PROCESS, CHECK FOR DETRIGGER
-                    if timeWindow.ratio(timeWindowNumber) < ratio_off
+                    if timeWindow.ratio(timeWindowNumber) < p.Results.ratio_off
                         % trigger off condition
                         disp(sprintf('TREMOR EVENT: %s to %s, max amp %e', datestr(self.dnum(eventStartSample)), datestr(self.dnum(endSample)), max(self.data(eventStartSample:endSample)) ))
                         %tremorEvent(eventNumber) = rsam_event(self.dnum(eventStartSample:endSample), self.data(eventStartSample:endSample), '', scnl, ltalen);
@@ -580,7 +620,7 @@ classdef rsam
                         eventStartSample = -1;
                     end
                 else % BACKGROUND, CHECK FOR TRIGGER
-                    if timeWindow.ratio(timeWindowNumber) > ratio_on
+                    if timeWindow.ratio(timeWindowNumber) > p.Results.ratio_on
                         % trigger on condition
                         eventNumber = eventNumber + 1;
                         eventStartSample = endSample; % event is triggered at time of sample at end of timewindow
@@ -746,13 +786,23 @@ classdef rsam
         %   rsamobject.resample('method', 'max', 'minutes', 10) downsample the data at
         %       10 minute sample period       
         
-            [method, crunchfactor, minutes] = matlab_extensions.process_options(varargin, 'method', self.measure, 'factor', 0, 'minutes', 0);
-        
+           
             persistent STATS_INSTALLED;
 
             if isempty(STATS_INSTALLED)
               STATS_INSTALLED = ~isempty(ver('stats'));
             end
+            
+            p = inputParser;
+            p.addParameter('method',self.measure);
+            p.addParameter('factor', 0); % crunchfactor
+            p.addParameter('minutes', 0);
+            
+            p.parse(varargin{:});
+            
+            crunchfactor = p.Results.factor;
+            method = p.Results.method;
+            minutes = p.Results.minutes;
 
             if ~(round(crunchfactor) == crunchfactor) 
                 disp ('crunchfactor needs to be an integer');
@@ -761,7 +811,7 @@ classdef rsam
 
             for i=1:numel(self)
                 samplingIntervalMinutes = 1.0 / (60 * self(i).Fs());
-                if crunchfactor==0 & minutes==0 % choose automatically
+                if crunchfactor==0 && minutes==0 % choose automatically
                     choices = [1 2 5 10 30 60 120 240 360 ];
                     days = max(self(i).dnum) - min(self(i).dnum);
                     choice=max(find(days > choices));
