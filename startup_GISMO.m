@@ -26,6 +26,9 @@ end
 % ADD PATH TO CORE
 addpath(fullfile(gismopath,'classes'));
 
+% ADD PATH TO PREVIOUS CORE
+addpath(fullfile(gismopath,'classes','deprecated'));
+
 % ADD A PATH TO EACH DIRCTORY IN CONTRIBUTED
 addContributed(gismopath,'contributed');
 
