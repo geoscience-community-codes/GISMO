@@ -24,13 +24,6 @@ function pm = extract(TC,varargin)
 % $Date$
 % $Revision$
 
-
-if ~isa(TC,'threecomp')
-    error('Threecomp:extract:badArgument', ...
-        ['First argument must be a threecomp object.']);
-end
-
-
 % GET TIME WINDOW
 if length(varargin)>=1
     if isa(varargin{1},'double') && numel(varargin{1})==2

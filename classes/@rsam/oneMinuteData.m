@@ -40,13 +40,26 @@ classdef oneMinuteData
     
     methods(Access = public)
 
-        function self=oneMinuteData(varargin)
-            [self.dnum, self.data, self.sta, self.chan, self.measure, self.seismogram_type, self.units] = ...
-                matlab_extensions.process_options(varargin, 'dnum', [], 'data', [], 'sta', self.sta, ...
-                'chan', self.chan, 'measure', self.measure, 'seismogram_type', self.seismogram_type, 'units', self.units);
-            self.snum = min(self.dnum);
-            self.enum = max(self.dnum);
-        end
+       function self=oneMinuteData(varargin)
+          
+          p = inputParser;
+          p.addParameter('dnum',[]);
+          p.addParameter('data',[]);
+          classFields = {'sta','chan','measure','seismogram_type','units'};
+          for n=1:numel(classFields)
+             p.addParameter(classFields{n}, self.(classFields{n}));
+          end
+          p.parse(varargin{:});
+          
+          % modify class values based on user-provided values
+          for n = 1:numel(classFields)
+             self.(classFields{n}) = p.Results.(classFields{n});
+          end
+          self.dnum = p.Results.dnum;
+          self.data = p.Results.data;
+          self.snum = min(self.dnum);
+          self.enum = max(self.dnum);
+       end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
         function fs = Fs(self) % check the sampling frequency
@@ -116,13 +129,23 @@ classdef oneMinuteData
                 %'callback',S,'min',0,'max',xmax-dx);
         end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-        function plotyy(obj1, obj2, varargin)   
-            [snum, enum, fun1, fun2] = matlab_extensions.process_options(varargin, 'snum', max([obj1.dnum(1) obj2.dnum(1)]), 'enum', min([obj1.dnum(end) obj2.dnum(end)]), 'fun1', 'plot', 'fun2', 'plot');
-            [ax, h1, h2] = plotyy(obj1.dnum, obj1.data, obj2.dnum, obj2.data, fun1, fun2);
+function plotyy(obj1, obj2, varargin)
+   %
+   
+   % NOTE: this function is Exactly the same as rsam.plotyy
+           p = inputParser;
+           p.addParameter('snum',max([obj1.dnum(1) obj2.dnum(1)]));
+           p.addParameter('enum', min([obj1.dnum(end) obj2.dnum(end)]));
+           p.addParameter('fun1','plot');
+           p.addParameter('fun2','plot');
+           p.parse(varargin{:});
+           Args = p.Results;
+  
+            [ax, ~, ~] = plotyy(obj1.dnum, obj1.data, obj2.dnum, obj2.data, Args.fun1, Args.fun2);
             datetick('x');
             set(ax(2), 'XTick', [], 'XTickLabel', {});
-            set(ax(1), 'XLim', [snum enum]);
-        end
+            set(ax(1), 'XLim', [Args.snum Args.enum]);
+end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%      
         function save(self, file)
             dnum = self.dnum;
@@ -253,15 +276,28 @@ classdef oneMinuteData
         %
         %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-            [method, crunchfactor, minutes] = matlab_extensions.process_options(varargin, 'method', self.measure, 'factor', 0, 'minutes', 0);
-        
+            
             persistent STATS_INSTALLED;
 
             if isempty(STATS_INSTALLED)
               STATS_INSTALLED = ~isempty(ver('stats'));
             end
 
-            if ~(round(crunchfactor) == crunchfactor) 
+            hasIntegerValue = @(x) round(x) == x;  %can be used to validate parameter
+            
+            % NOTE: This parameter combo also exists in rsam/resample
+            p = inputParser;
+            p.addParameter('method',self.measure);
+            p.addParameter('factor', 0); % crunchfactor
+            p.addParameter('minutes', 0);
+            
+            p.parse(varargin{:});
+            
+            crunchfactor = p.Results.factor;
+            method = p.Results.method;
+            minutes = p.Results.minutes;
+            
+            if ~(hasIntegerValue(crunchfactor)) 
                 disp ('crunchfactor needs to be an integer');
                 return;
             end
