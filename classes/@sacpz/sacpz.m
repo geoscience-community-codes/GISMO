@@ -74,9 +74,10 @@ classdef sacpz
          epochs = splitEpochs(fileContents);
          
          for N = 1 : numel(epochs)
-            [obj(N).p, obj(N).z, obj(N).k] = parsePZC(responsePart(epochs(N)));
+            [rawHeader, rawResp] = splitAt(epochs{N}, '*', 'last');
+            [obj(N).p, obj(N).z, obj(N).k] = parsePZC(rawResp);
             
-            H = getHeaderLines(epochs(N));
+            H = getHeaderLines(rawHeader);
             
             [hFields, hValues] = cellfun(@parseHeaderLine, H, 'UniformOutput', false);
             
@@ -137,20 +138,19 @@ classdef sacpz
             X(~isLikelyEpoch) = [];
          end
          
-         function PZC = responsePart(t)
-            % the response follows the last asterisk in the epoch.
-            splitPoint = find(t{1}=='*',1, 'last');
-            PZC = t{1}(splitPoint+1:end);
+         function [A, B] = splitAt(s, c, firstOrLast)
+            idx = find(s==c, 1, firstOrLast);
+            if isempty(idx)
+               A = s;
+               B = '';
+            else
+               A = s(1:idx-1);
+               B = s(idx+1:end);
+            end               
          end
-            
+                     
          function tLines = getHeaderLines(t)
             % getHeaderLines   returns header as cell of 1 line/variable
-            
-            % grab only header
-            splitPoint = find(t{1}=='*',1, 'last');
-            t = t{1}(1:splitPoint);
-            
-            % remove extraneous asterisks
             t(t=='*') = '';
             
             % split header into individual lines
@@ -163,18 +163,11 @@ classdef sacpz
                      
          function [field, val] = parseHeaderLine(t)
             % expects FIELDNAME   (maybesomething) :  VALUE
-            colLoc = find(t==':',1,'first');
-            if colLoc
-               field = t(1:colLoc-1);
-               val = strtrim(t(colLoc+1:end));
-            else
-               field=''; val = ''; %error parsing!
-            end
-            parenLoc = find(field =='(',1,'first');
-            if parenLoc
-               field = field(1:parenLoc-1);
-            end
-            field = strtrim(field);
+            [field, val] = splitAt(t, ':', 'first');
+            val = strtrim(val);
+            
+            % keep only the non-parenthesized string
+            field = strtrim(splitAt(field, '(', 'first'));
          end
          
          function [p, z, c] = parsePZC(t)
@@ -199,7 +192,7 @@ classdef sacpz
             header = find(strncmp(fName, lines, fLen));
             if ~isempty(header)
                nValues = str2double(lines{header}((fLen+1):end));
-               for q = 1 : nValues
+               for q = nValues: -1 : 1
                   vals = str2num(lines{header + q});
                   x(q,1) = vals(1) + vals(2) * 1i;
                end
