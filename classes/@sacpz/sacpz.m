@@ -70,28 +70,34 @@ classdef sacpz
             fieldmap = getFieldmap();
          end
          
+         % SACPZ file may contain multiple epochs
          epochs = splitEpochs(fileContents);
          
-         %[H, PZC] = splitHeader(epochs(1));
          for N = 1 : numel(epochs)
-            [raw.H, raw.PZC] = splitHeader(epochs(N));
-            [raw.Hf, raw.Hv] = cellfun(@parseHeaderVariables,raw.H,'UniformOutput', false);
-            [obj(N).p, obj(N).z, obj(N).k] = parsePZC(raw.PZC);
-            for M = 1:numel(raw.Hf);
-               f = raw.Hf{M};
+            [obj(N).p, obj(N).z, obj(N).k] = parsePZC(responsePart(epochs(N)));
+            
+            H = getHeaderLines(epochs(N));
+            
+            [hFields, hValues] = cellfun(@parseHeaderLine, H, 'UniformOutput', false);
+            
+            for M = 1:numel(hFields)
+               f = hFields{M};
                % convert
                switch f
                   case {'START','END', 'CREATED'}
-                     v = datenum(raw.Hv{M},'yyyy-mm-ddTHH:MM:SS');
+                     v = datenum(hValues{M},'yyyy-mm-ddTHH:MM:SS');
+                     
                   case {'LONGITUDE','LATITUDE','ELEVATION',...
                         'DEPTH','DIP','AZIMUTH','SAMPLE RATE','A0'}
-                     v = str2double(raw.Hv{M});
+                     v = str2double(hValues{M});
+                     
                   case {'INSTGAIN', 'SENSITIVITY'}
-                     [v, units] = splitOffUnits(raw.Hv{M});
+                     [v, units] = splitOffUnits(hValues{M});
                      unitfield = [f, 'UNITS'];
                      obj(N).(fieldmap(unitfield)) = units;
+                     
                   otherwise
-                     v = raw.Hv{M};
+                     v = hValues{M};
                end
                
                if fieldmap.isKey(f)
@@ -119,28 +125,43 @@ classdef sacpz
             end
          end
          
-         function  X = splitEpochs(t)
+         function  X = splitEpochs(multipleEpochs)
             % splitEpochs   returns cell for each epoch
-            % two blank lines represent a break
-            X = strsplit(t,'\n\n\n');
+            % divisions between epochs are represented in the SACPZ file as
+            % multiple blank lines.
+            % Each epoch starts with a line of asterisks
+            % '* **********[...]'
+            X = strsplit(multipleEpochs,'\n\n\n');
             X(cellfun(@isempty,X)) = [];
             isLikelyEpoch = cellfun(@(x) strncmp('* **',x,4'),X);
             X(~isLikelyEpoch) = [];
          end
          
-         function [H, PZC] = splitHeader(t)
-            % remove all the * from the header, get rid of resulting empty lines
+         function PZC = responsePart(t)
+            % the response follows the last asterisk in the epoch.
             splitPoint = find(t{1}=='*',1, 'last');
             PZC = t{1}(splitPoint+1:end);
+         end
+            
+         function tLines = getHeaderLines(t)
+            % getHeaderLines   returns header as cell of 1 line/variable
+            
+            % grab only header
+            splitPoint = find(t{1}=='*',1, 'last');
             t = t{1}(1:splitPoint);
+            
+            % remove extraneous asterisks
             t(t=='*') = '';
+            
+            % split header into individual lines
             tLines = textscan(t,'%s','delimiter','\n');
+            
+            %tidy up
             tLines = strtrim(tLines{:});
             tLines(cellfun(@isempty,tLines)) = [];
-            H = tLines;
          end
-         
-         function [field, val] = parseHeaderVariables(t)
+                     
+         function [field, val] = parseHeaderLine(t)
             % expects FIELDNAME   (maybesomething) :  VALUE
             colLoc = find(t==':',1,'first');
             if colLoc
@@ -157,61 +178,62 @@ classdef sacpz
          end
          
          function [p, z, c] = parsePZC(t)
-            p=[];z=[];c=NaN;
             lines = textscan(t,'%s','delimiter','\n');
             lines = lines{:};
-            ZeroHeader = find(strncmp('ZEROS',lines,5));
-            PoleHeader = find(strncmp('POLES',lines,5));
+            
+            z = getComplex('ZEROS', lines);
+            p = getComplex('POLES', lines);
+            
             ConstHeader= strncmp('CONSTANT',lines,8);
             
-            if ~isempty(ZeroHeader)
-               nZeros = str2double(lines{ZeroHeader}(6:end));
-               for q = 1 : nZeros
-                  vals = str2num(lines{ZeroHeader + q});
-                  z(q,1) = vals(1) + vals(2) * 1i;
-               end
-            end
-            
-            if ~isempty(PoleHeader)
-               nPoles = str2num(lines{PoleHeader}(6:end));
-               for q = 1 : nPoles
-                  vals = str2num(lines{PoleHeader + q});
-                  p(q,1) = vals(1) + vals(2) * 1i;
-               end
-            end
-            
             if any(ConstHeader)
-               c = str2num(lines{ConstHeader}(9:end));
+               c = str2double(lines{ConstHeader}(9:end));
+            else
+               c = NaN;
+            end
+         end
+         
+         function x = getComplex(fName, lines)
+            x = [];
+            fLen = length(fName);
+            header = find(strncmp(fName, lines, fLen));
+            if ~isempty(header)
+               nValues = str2double(lines{header}((fLen+1):end));
+               for q = 1 : nValues
+                  vals = str2num(lines{header + q});
+                  x(q,1) = vals(1) + vals(2) * 1i;
+               end
             end
          end
          
          function M = getFieldmap()
-   M = containers.Map('KeyType', 'char', 'ValueType', 'char') ;
-   M('NETWORK') = 'network';
-   M('STATION') = 'station';
-   M('LOCATION') = 'location';
-   M('CHANNEL') = 'channel';
-   M('CREATED') = 'created';
-   M('START') = 'starttime';
-   M('END')='endtime';
-   M('DESCRIPTION') = 'description';
-   M('LATITUDE') = 'latitude';
-   M('LONGITUDE') = 'longitude';
-   M('ELEVATION') = 'elevation';
-   M('DEPTH') = 'depth';
-   M('DIP') = 'dip';
-   M('AZIMUTH') = 'azimuth';
-   M('SAMPLE RATE') = 'samplerate';
-   M('INPUT UNIT') = 'inputunit';
-   M('OUTPUT UNIT') = 'outputunit';
-   M('INSTTYPE') = 'instrumenttype';
-   M('INSTGAIN') = 'instrumentgain';
-   M('INSTGAINUNITS') = 'instrumentgainunits';
-   M('SENSITIVITY') = 'sensitivity';
-   M('SENSITIVITYUNITS') = 'sensitivityunits';
-   M('COMMENT') = 'comment';
-   M('A0') = 'a0';
-end
+            % getFieldmap  maps SACPZ text headers to sacpz object fields
+            M = containers.Map('KeyType', 'char', 'ValueType', 'char') ;
+            M('NETWORK') = 'network';
+            M('STATION') = 'station';
+            M('LOCATION') = 'location';
+            M('CHANNEL') = 'channel';
+            M('CREATED') = 'created';
+            M('START') = 'starttime';
+            M('END')='endtime';
+            M('DESCRIPTION') = 'description';
+            M('LATITUDE') = 'latitude';
+            M('LONGITUDE') = 'longitude';
+            M('ELEVATION') = 'elevation';
+            M('DEPTH') = 'depth';
+            M('DIP') = 'dip';
+            M('AZIMUTH') = 'azimuth';
+            M('SAMPLE RATE') = 'samplerate';
+            M('INPUT UNIT') = 'inputunit';
+            M('OUTPUT UNIT') = 'outputunit';
+            M('INSTTYPE') = 'instrumenttype';
+            M('INSTGAIN') = 'instrumentgain';
+            M('INSTGAINUNITS') = 'instrumentgainunits';
+            M('SENSITIVITY') = 'sensitivity';
+            M('SENSITIVITYUNITS') = 'sensitivityunits';
+            M('COMMENT') = 'comment';
+            M('A0') = 'a0';
+         end
       end
 
 
