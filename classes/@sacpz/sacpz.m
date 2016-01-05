@@ -4,6 +4,7 @@ classdef sacpz
 		z = [];
 		p = [];
 		k = [];
+      created = NaN;
         starttime = NaN;
         endtime = NaN;
         network = '';
@@ -23,145 +24,196 @@ classdef sacpz
         instrumenttype = '';
         instrumentgain = '';
         instrumentgainunits = '';
+        comment = '';
         sensitivity = '';
         sensitivityunits = '';
         a0 = NaN;
 	end
 	methods
-		function obj = sacpz(fileContents)
-		%sacpz.sacpz Constructor for sacpz
-        % sacpz(fileContents)
-        % Examples:
-        % 1. Read a sacpz file:
-        %     pz = sacpz(fileread('SACPZ.IU.COLA.BHZ'))
-        % 2. Read from a webservices URL (SCAFFOLD: code can only handle 1 time period / channel currently)
-        %     pz = sacpz(webread('http://service.iris.edu/irisws/sacpz/1/query?net=AV&sta=OKSO&loc=--&cha=BHZ&starttime=2011-03-21T00:00:00'))
-			obj.z = []; obj.p = []; obj.k = NaN;
-            tic
-            lines = strread(fileContents, '%s', 'delimiter', sprintf('\n'));
-            c = 1;
-			while c <= numel(lines),
-                thisline = lines{c};
-                disp(thisline)
-				if (numel(thisline)>0 & thisline(1)=='*')
-                    if strfind(thisline, 'NETWORK');
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.network = sscanf(thisline, '%s', 1);
-                    elseif strfind(thisline, 'STATION');
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.station = sscanf(thisline, '%s', 1);
-                    elseif strfind(thisline, 'LOCATION')  ;  
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.location = sscanf(thisline, '%s', 1);
-                    elseif strfind(thisline, 'CHANNEL')  ;
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.channel = sscanf(thisline, '%s', 1);                        
-                    elseif strfind(thisline, 'START')  ;
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.starttime = datenum(sscanf(thisline, '%s', 1),'yyyy-mm-dd');
-                    elseif strfind(thisline, 'END')  ;
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.endtime = datenum(sscanf(thisline, '%s', 1), 'yyyy-mm-dd'); 
-                    elseif strfind(thisline, 'DESCRIPTION') ; 
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.description = thisline;
-                    elseif strfind(thisline, 'LATITUDE')  ;
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.latitude = sscanf(thisline, '%f', 1); 
-                    elseif strfind(thisline, 'LONGITUDE')  ;
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.longitude = sscanf(thisline, '%f', 1);                         
-                    elseif strfind(thisline, 'ELEVATION')  ;
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.elevation = sscanf(thisline, '%f', 1);
-                    elseif strfind(thisline, 'DEPTH') ; 
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.elevation = sscanf(thisline, '%f', 1)                        
-                    elseif strfind(thisline, 'DIP')  ;
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.dip = sscanf(thisline, '%f', 1);                        
-                    elseif strfind(thisline, 'AZIMUTH')  ;
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.azimuth = sscanf(thisline, '%f', 1);                        
-                    elseif strfind(thisline, 'SAMPLE RATE')  ;
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.samplerate = sscanf(thisline, '%f', 1); 
-                    elseif strfind(thisline, 'INPUT UNIT')  ;
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.inputunit = sscanf(thisline, '%s', 1); 
-                    elseif strfind(thisline, 'OUTPUT UNIT')  ;
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.outputunit = sscanf(thisline, '%s', 1);   
-                    elseif strfind(thisline, 'INSTTYPE')  ;
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.instrumenttype = thisline;
-                    elseif strfind(thisline, 'INSTGAIN')  ;
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        tmpfields = strread(thisline, '%s', 'delimiter', ' ');
-                        obj.instrumentgain = sscanf(tmpfields{1}, '%e', 1);
-                        obj.instrumentgainunits = tmpfields{2};
-                        clear tmpfields
-                    elseif strfind(thisline, 'SENSITIVITY')  ;
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        tmpfields = strread(thisline, '%s', 'delimiter', ' ');
-                        obj.sensitivity = sscanf(tmpfields{1}, '%e', 1);
-                        obj.sensitivityunits = tmpfields{2};
-                        clear tmpfields
-                    elseif strfind(thisline, 'A0')  ;
-                        idx = strfind(thisline,':');
-                        thisline = strtrim(thisline(idx+1:end));
-                        obj.a0 = sscanf(thisline, '%f', 1);   
-                    end
-                    c = c + 1;
-					continue
-                end
-				if strfind(thisline,'ZEROS')
-                    thisline = strrep(thisline, 'ZEROS', '');
-                    numzeros = sscanf(thisline, '%d', 1);
-                    for zidx = 1:numzeros
-                        c = c + 1;
-                        thisline = lines{c};
-                        a = sscanf(thisline,'%e',2);
-                        obj.z(zidx, 1) = a(1) + 1j*a(2);
-                    end
-                end
-				if strfind(thisline,'POLES')
-                    thisline = strrep(thisline, 'POLES', '');
-                    numpoles = sscanf(thisline, '%d', 1);
-                    for pidx = 1:numpoles
-                        c = c + 1;
-                        thisline = lines{c};
-                        a = sscanf(thisline,'%e',2);
-                        obj.p(pidx, 1) = a(1) + 1j*a(2);
-                    end
-                end
-				if strfind(thisline,'CONSTANT')
-                    thisline = strrep(thisline, 'CONSTANT', '');
-					obj.k = sscanf(thisline, '%f',1);
-                end
-                c = c + 1;
+      function s = sacpz(filename)
+         %sacpz.sacpz Constructor for sacpz
+         % pz = sacpz(fileContents)
+         % pz = sacpz(webpage)  %defined by 'http://...'
+         % pz = sacpz(file)
+         %
+         % will return one sacpz object for each epoch in file
+         
+         % Examples:
+         % 1. Read a sacpz file:
+         %     pz = sacpz(fileread('SACPZ.IU.COLA.BHZ'))
+         % 2. Read from a webservices URL (SCAFFOLD: code can only handle 1 time period / channel currently)
+         %     pz = sacpz(webread('http://service.iris.edu/irisws/sacpz/1/query?net=AV&sta=OKSO&loc=--&cha=BHZ&starttime=2011-03-21T00:00:00'))
+         
+         if nargin == 0
+            return;
+         end
+         % read file into variable for later processing
+         if length(filename)>7 && strncmpi(filename,'http://',7)
+            fcontents = webread(filename);
+         elseif exist(filename,'file')
+            fcontents = fileread(filename);
+         else
+            fcontents = filename;
+         end
+         
+         if isempty(fcontents)
+            return;
+         end
+         
+         s = s.new_readroutine(fcontents);
+         
+      end
+      
+      function obj = new_readroutine(obj, fileContents)
+         persistent fieldmap
+         if isempty(fieldmap)
+            fieldmap = getFieldmap();
+         end
+         
+         epochs = splitEpochs(fileContents);
+         
+         %[H, PZC] = splitHeader(epochs(1));
+         for N = 1 : numel(epochs)
+            [raw.H, raw.PZC] = splitHeader(epochs(N));
+            [raw.Hf, raw.Hv] = cellfun(@parseHeaderVariables,raw.H,'UniformOutput', false);
+            [obj(N).p, obj(N).z, obj(N).k] = parsePZC(raw.PZC);
+            for M = 1:numel(raw.Hf);
+               f = raw.Hf{M};
+               % convert
+               switch f
+                  case {'START','END', 'CREATED'}
+                     v = datenum(raw.Hv{M},'yyyy-mm-ddTHH:MM:SS');
+                  case {'LONGITUDE','LATITUDE','ELEVATION',...
+                        'DEPTH','DIP','AZIMUTH','SAMPLE RATE','A0'}
+                     v = str2double(raw.Hv{M});
+                  case {'INSTGAIN', 'SENSITIVITY'}
+                     [v, units] = splitOffUnits(raw.Hv{M});
+                     unitfield = [f, 'UNITS'];
+                     obj(N).(fieldmap(unitfield)) = units;
+                  otherwise
+                     v = raw.Hv{M};
+               end
+               
+               if fieldmap.isKey(f)
+                  obj(N).(fieldmap(f)) = v;
+               else
+                  error('%s is not a known key', f);
+               end
             end
-            toc
-		end
+         end
+         
+         function [val, unit] = splitOffUnits(val)
+            % splitOffUnits    adds units field in obj and returns numeric measurement
+            % For use in sacpz lines such as:
+            %  SENSITIVITY       : 8.485070e+08 (M/S)
+            if isempty(val)
+               unit = '';
+               return;
+            end
+            tmp = textscan(val,'%f %s');
+            val = tmp{1};
+            if ~isempty(tmp{2})
+               unit = tmp{2}{1};
+            else
+               unit = '';
+            end
+         end
+         
+         function  X = splitEpochs(t)
+            % splitEpochs   returns cell for each epoch
+            % two blank lines represent a break
+            X = strsplit(t,'\n\n\n');
+            X(cellfun(@isempty,X)) = [];
+            isLikelyEpoch = cellfun(@(x) strncmp('* **',x,4'),X);
+            X(~isLikelyEpoch) = [];
+         end
+         
+         function [H, PZC] = splitHeader(t)
+            % remove all the * from the header, get rid of resulting empty lines
+            splitPoint = find(t{1}=='*',1, 'last');
+            PZC = t{1}(splitPoint+1:end);
+            t = t{1}(1:splitPoint);
+            t(t=='*') = '';
+            tLines = textscan(t,'%s','delimiter','\n');
+            tLines = strtrim(tLines{:});
+            tLines(cellfun(@isempty,tLines)) = [];
+            H = tLines;
+         end
+         
+         function [field, val] = parseHeaderVariables(t)
+            % expects FIELDNAME   (maybesomething) :  VALUE
+            colLoc = find(t==':',1,'first');
+            if colLoc
+               field = t(1:colLoc-1);
+               val = strtrim(t(colLoc+1:end));
+            else
+               field=''; val = ''; %error parsing!
+            end
+            parenLoc = find(field =='(',1,'first');
+            if parenLoc
+               field = field(1:parenLoc-1);
+            end
+            field = strtrim(field);
+         end
+         
+         function [p, z, c] = parsePZC(t)
+            p=[];z=[];c=NaN;
+            lines = textscan(t,'%s','delimiter','\n');
+            lines = lines{:};
+            ZeroHeader = find(strncmp('ZEROS',lines,5));
+            PoleHeader = find(strncmp('POLES',lines,5));
+            ConstHeader= strncmp('CONSTANT',lines,8);
+            
+            if ~isempty(ZeroHeader)
+               nZeros = str2double(lines{ZeroHeader}(6:end));
+               for q = 1 : nZeros
+                  vals = str2num(lines{ZeroHeader + q});
+                  z(q,1) = vals(1) + vals(2) * 1i;
+               end
+            end
+            
+            if ~isempty(PoleHeader)
+               nPoles = str2num(lines{PoleHeader}(6:end));
+               for q = 1 : nPoles
+                  vals = str2num(lines{PoleHeader + q});
+                  p(q,1) = vals(1) + vals(2) * 1i;
+               end
+            end
+            
+            if any(ConstHeader)
+               c = str2num(lines{ConstHeader}(9:end));
+            end
+         end
+         
+         function M = getFieldmap()
+   M = containers.Map('KeyType', 'char', 'ValueType', 'char') ;
+   M('NETWORK') = 'network';
+   M('STATION') = 'station';
+   M('LOCATION') = 'location';
+   M('CHANNEL') = 'channel';
+   M('CREATED') = 'created';
+   M('START') = 'starttime';
+   M('END')='endtime';
+   M('DESCRIPTION') = 'description';
+   M('LATITUDE') = 'latitude';
+   M('LONGITUDE') = 'longitude';
+   M('ELEVATION') = 'elevation';
+   M('DEPTH') = 'depth';
+   M('DIP') = 'dip';
+   M('AZIMUTH') = 'azimuth';
+   M('SAMPLE RATE') = 'samplerate';
+   M('INPUT UNIT') = 'inputunit';
+   M('OUTPUT UNIT') = 'outputunit';
+   M('INSTTYPE') = 'instrumenttype';
+   M('INSTGAIN') = 'instrumentgain';
+   M('INSTGAINUNITS') = 'instrumentgainunits';
+   M('SENSITIVITY') = 'sensitivity';
+   M('SENSITIVITYUNITS') = 'sensitivityunits';
+   M('COMMENT') = 'comment';
+   M('A0') = 'a0';
+end
+      end
+
 
         %% -----------------------------------------------
 		function plot(obj)
@@ -224,5 +276,65 @@ end
 
 
 
+%{
+Notes about the format of a SACPZ file:
+- header information surrounded by lines of '*'
+- Each header field starts with '*'
+- Some header fields include a second variable name eg. '(KNETWK)'
+  + these fields are surrounded by parenthesis 
+- Header values follow ':'
+- INSTGAIN and SENSITIVITY have (or may not have) 2 value & unit
+- CREATED, START, END all are dates
 
+- Header is followed by list of Poles, Zeros, and Constant.
+  + Number of values for Poles & Zeros is listed on first line
+  + Poles & Zeros are complex numbers
+  + CONSTANT may or may not appear.
+
+- Each epoch is separated by multiple spaces
+%}
+
+%{
+<SAMPLE SACPZ FILE follows>
+* **********************************
+* NETWORK   (KNETWK): IU
+* STATION    (KSTNM): ANMO
+* LOCATION   (KHOLE): 00
+* CHANNEL   (KCMPNM): BH1
+* CREATED           : 2016-01-04T11:50:14
+* START             : 1998-10-26T20:00:00
+* END               : 2000-10-19T16:00:00
+* DESCRIPTION       : Albuquerque, New Mexico, USA
+* LATITUDE          : 34.945900
+* LONGITUDE         : -106.457200
+* ELEVATION         : 1700.0
+* DEPTH             : 150.0
+* DIP               : 90.0
+* AZIMUTH           : 280.0
+* SAMPLE RATE       : 20.0
+* INPUT UNIT        : M
+* OUTPUT UNIT       : COUNTS
+* INSTTYPE          : Geotech KS-54000 Borehole Seismometer
+* INSTGAIN          : 2.023580e+03 (M/S)
+* COMMENT           : orientation changed 1997,099
+* SENSITIVITY       : 8.485070e+08 (M/S)
+* A0                : 8.608300e+04
+* **********************************
+ZEROS	3
+	+0.000000e+00	+0.000000e+00	
+	+0.000000e+00	+0.000000e+00	
+	+0.000000e+00	+0.000000e+00	
+POLES	5
+	-5.943130e+01	+0.000000e+00	
+	-2.271210e+01	+2.710650e+01	
+	-2.271210e+01	-2.710650e+01	
+	-4.800400e-03	+0.000000e+00	
+	-7.319900e-02	+0.000000e+00	
+CONSTANT	7.304203e+13
+
+
+* **********************************
+* NETWORK   (KNETWK): IU
+<ETC>
+%}
 
