@@ -33,7 +33,7 @@ if length(varargin)>=1
        error('Threecomp:spin:badOrientationList','orientation argument must be a numeric vector');
    end
 else   
-    bearing = [0:10:360]';   
+    bearing = (0:10:360)';   
 end
 
 
@@ -71,7 +71,6 @@ ylabel('Horizontal orientation (degrees)','FontSize',14);
 
    
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Add lines to label backazimuth
 %
 % TODO: Disabled because the plotting function doesn't wrap 0 appropriately.

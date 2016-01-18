@@ -2,7 +2,25 @@ function iceweb(ds, varargin)
    %iceweb   main driver for iceweb program
     debug.printfunctionstack('>');
     % Process arguments
-    [thisrunmode, snum, enum, nummins, delaymins, thissubnet, matfile] = matlab_extensions.process_options(varargin, 'runmode', 'archive', 'snum', 0, 'enum', 0, 'nummins', 10, 'delaymins', 0, 'thissubnet', '', 'matfile', 'pf/tremor_runtime.mat');
+    p = inputParser;
+    
+       p.addParameter('runmode', 'archive');
+       p.addParameter('snum', 0);
+       p.addParameter('enum', 0);
+       p.addParameter('nummins', 10);
+       p.addParameter('delaymins', 0);
+       p.addParameter('thissubnet', '');
+       p.addParameter('matfile', 'pf/tremor_runtime.mat');
+       p.parse(varargin{:});
+       
+       thisrunmode = p.Results.runmode;
+       snum = p.Results.snum;
+       enum = p.Results.enum;
+       nummins = p.Results.nummins;
+       delaymins = p.Results.delaymins;
+       thissubnet = p.Results.thissubnet;
+       matfile = p.Results.matfile;
+       
     if exist(matfile, 'file')
         load(matfile);
         PARAMS.runmode = thisrunmode;

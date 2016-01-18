@@ -105,13 +105,20 @@ classdef rsam
                 self.dnum = dnum;
                 self.data = data;
                 if nargin>2
-                          
-                    [self.sta, self.chan, self.measure, self.seismogram_type, self.units, self.snum, self.enum] = ...
-                        matlab_extensions.process_options(varargin, 'sta', self.sta, ...
-                        'chan', self.chan, 'measure', self.measure, 'seismogram_type', self.seismogram_type, 'units', self.units, 'snum', self.snum, 'enum', self.enum);
-            
+                   classFields = {'sta','chan','measure','seismogram_type','units','snum','enum'};
+                   p = inputParser;
+                   for n=1:numel(classFields)
+                      p.addParameter(classFields{n}, self.(classFields{n}));
+                   end
+                   p.parse(varargin{:});
+                   
+                   % modify class values based on user-provided values
+                   for n = 1:numel(classFields)
+                      self.(classFields{n}) = p.Results.(classFields{n});
+                   end
                 end
             end
+            
         end
 % % %         function result=snum(self)
 % % %             result = nanmin(self.dnum);
@@ -124,8 +131,6 @@ classdef rsam
             % Generate a list of files corresponding to the file pattern,
             % snum and enum given.
 
-            filenum = 0;
-
             % substitute for station
             file = regexprep(file, 'SSSS', self.sta);
             
@@ -136,38 +141,42 @@ classdef rsam
             file = regexprep(file, 'MMMM', self.measure);             
 
             % set start year and month, and end year and month
-            [syyy sm]=datevec(self.snum);
-            [eyyy em]=datevec(self.enum);
-           
-            for yyyy=syyy:eyyy
-                
-                filenum = filenum + 1;
-                files(filenum) = struct('file', file, 'snum', self.snum, 'enum', self.enum, 'found', false);
-    
-                % Check year against start year 
-                if yyyy~=syyy
-                    % if not the first year, start on 1st Jan
-                    files(filenum).snum = datenum(yyyy,1,1);
-                end
-   
-                % Check year against end year
-                if yyyy~=eyyy
-                    % if not the last year, end at 31st Dec
-                    files(filenum).enum = datenum(yyyy,12,31,23,59,59);
-                end   
-   
-                % Substitute for year        
-                files(filenum).file = regexprep(files(filenum).file, 'YYYY', sprintf('%04d',yyyy) );
-                debug.print_debug(2,sprintf('Output file: %s',files(filenum).file))
-  
-                if exist(files(filenum).file, 'file')
-                    files(filenum).found = true;
-                    debug.print_debug(3,' - found\n');
-                else
-                    debug.print_debug(2,' - not found\n');
-                end
+            [syyy, ~]=datevec(self.snum);
+            [eyyy, ~]=datevec(self.enum);
+            
+            years = syyy:eyyy;
+            if numel(years) <= 1
+               starts = self.snum;
+               ends = self.enum;
+            else
+               %unless it is 1st year, start on 1st Jan
+               starts = [self.snum, datenum(syyy+1:eyyy,1,1)];
+               %unless it is last year, end on 31st Dec
+               ends = [datenum(syyy:eyyy-1,12,31,23,59,59), self.enum];
             end
-            self.files = files;
+            
+            files_(numel(starts)) = struct(...
+               'file', []...     % file name
+               , 'snum', [] ...  % start date
+               , 'enum', [] ...  % end date
+               , 'found', []);   % file exists
+                
+            for N = 1 : numel(years)
+               files_(N).snum = starts(N);
+               files_(N).enum = ends(N);
+               
+               fileWithYearReplaced = regexprep(file, 'YYYY', num2str(years(N), '%04d') );
+               debug.print_debug(2, 'Output file: %s', fileWithYearReplaced);
+               files_(N).file = fileWithYearReplaced;
+               
+               files_(N).found = exist(fileWithYearReplaced, 'file');
+               if files_(N).found
+                  debug.print_debug(3,' - found\n');
+               else
+                  debug.print_debug(2,' - not found\n');
+               end
+            end
+            self.files = files_;
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
         function self = load(self)
@@ -183,13 +192,10 @@ classdef rsam
         %   Glenn Thompson, MVO, 2000
 
             % initialise return variables
-            datafound=false;
-            dnum=[];
-            data=[];
             
             f = self.files;
 
-            [yyyy mm]=datevec(f.snum);
+            [yyyy, ~]=datevec(f.snum);
             days=365;
             if mod(yyyy,4)==0
                 days=366;
@@ -204,12 +210,11 @@ classdef rsam
             end
             startsample = ceil( (f.snum-datenum(yyyy,1,1))*datapointsperday)+headersamples;
             endsample   = (f.enum-datenum(yyyy,1,1)) *datapointsperday + headersamples;
-            %endsample   = floor( max([ datenum(yyyy,12,31,23,59,59) f.enum-datenum(yyyy,1,1) ]) *datapointsperday);
             nsamples    = endsample - startsample + 1;
 
             % create dnum & blank data vector
-            dnum = matlab_extensions.ceilminute(f.snum)+(0:nsamples-1)/datapointsperday - tz/24;
-            data(1:length(dnum))=NaN;
+            dnum_ = matlab_extensions.ceilminute(f.snum)+(0:nsamples-1)/datapointsperday - tz/24;
+            data_ = nan(1,length(dnum_));
             
             if f.found    
                 % file found
@@ -223,40 +228,35 @@ classdef rsam
                 fseek(fid,offset,'bof');
    
                 % Read the data
-                [data,numlines] = fread(fid, nsamples, 'float32');
+                [data_, ~] = fread(fid, nsamples, 'float32');
                 fclose(fid);
-                debug.print_debug(0, sprintf('mean of data loaded is %e',nanmean(data)));
+                debug.print_debug(0, sprintf('mean of data loaded is %e',nanmean(data_)));
    
                 % Transpose to give same dimensions as dnum
-                data=data';
+                data_=data_';
 
                 % Test for Nulls
-                if length(find(data>0)) > 0
-                    datafound=true;
-                end    
+                datafound = any(data_ > 0);
             else
+               datafound = false;
                debug.print_debug(0, sprintf('File %s not found', f.file));
             end
             
             % Now paste together the matrices
-            self.dnum = matlab_extensions.catmatrices(dnum, self.dnum);
-            self.data = matlab_extensions.catmatrices(data, self.data);
+            self.dnum = matlab_extensions.catmatrices(dnum_, self.dnum);
+            self.data = matlab_extensions.catmatrices(data_, self.data);
 
             if ~datafound
                 debug.print_debug(0, sprintf('%s: No data loaded from file %s',mfilename,f.file));
             end
 
-            % eliminate any data outside range asked for - MAKE THIS A
-            % SEPARATE FN IF AT ALL
-            i = find(self.dnum >= self.snum & self.dnum <= self.enum);
-            self.dnum = self.dnum(i);
-            self.data = self.data(i);
+            % eliminate any data outside range asked for
+            myRange = self.dnum >= self.snum & self.dnum <= self.enum;
+            self.dnum = self.dnum(myRange);
+            self.data = self.data(myRange);
             
             % Fill NULL values with NaN
-            i = find(self.data == -998);
-            self.data(i) = NaN;
-            i = find(self.data == 0);
-            self.data(i) = NaN;
+            self.data(self.data == -998 | self.data == 0) = NaN;
             
         end
 
@@ -298,10 +298,20 @@ classdef rsam
             %
             % % GTHO 2009/10/26 Changed marker size from 5.0 to 1.0
             % % GTHO 2009/10/26 Changed legend position to -0.2
-            [yaxisType, h, addgrid, addlegend, fillbelow] = ...
-                matlab_extensions.process_options(varargin, ...
-                'yaxisType', 'logarithmic', 'h', [], 'addgrid', false, ...
-                'addlegend', false, 'fillbelow', false);
+            
+            % parse variable input arguments
+            p = inputParser;
+            p.addParameter('addgrid',false);
+            p.addParameter('addlegend', false);
+            p.addParameter('fillbelow', false);
+            
+            %apparently unused options
+            p.addParameter('yaxisType','logarithmic'); % or linear
+            p.addParameter('h', []);
+            
+            p.parse(varargin);
+        
+            
             legend_ypos = -0.2;
 
             % colours to plot each station
@@ -320,7 +330,8 @@ classdef rsam
                     % make a logarithmic plot, with a marker size and add the station name below the x-axis like a legend
                     y = log10(y);  % use log plots
 
-                    handlePlot = plot(t, y, '-', 'Color', lineColour{c}, 'MarkerSize', 1.0);
+                    handlePlot = plot(t, y, '-', 'Color', lineColour{c},...
+                       'MarkerSize', 1.0);
 
                     if strfind(self.measure, 'dr')
                         %ylabel(sprintf('%s (cm^2)',self(c).measure));
@@ -330,7 +341,8 @@ classdef rsam
                         for count = 1:length(Yticks)
                             Yticklabels{count}=num2str(Yticks(count),3);
                         end
-                        set(gca, 'YLim', [min(Ytickmarks) max(Ytickmarks)],'YTick',Ytickmarks,'YTickLabel',Yticklabels);
+                        set(gca, 'YLim', [min(Ytickmarks) max(Ytickmarks)],...
+                           'YTick',Ytickmarks,'YTickLabel',Yticklabels);
                     end
                     axis tight
                     datetick('x','keeplimits')
@@ -341,7 +353,7 @@ classdef rsam
 
                     % plot on a linear axis, with station name as a y label
                     % datetick too, add measure as title, fiddle with the YTick's and add max(y) in top left corner
-                    if ~fillbelow
+                    if ~p.Results.fillbelow
                         handlePlot = plot(t, y, '-', 'Color', lineColour{c});
                     else
                         handlePlot = fill([min(t) t max(t)], [min([y 0]) y min([y 0])], lineColour{c});
@@ -363,10 +375,10 @@ classdef rsam
                     datetick('x','keeplimits');
                 end
 
-                if addgrid
+                if p.Results.addgrid
                     grid on;
                 end
-                if addlegend && length(y)>0
+                if p.Results.addlegend && ~isempty(y)
                     xlim = get(gca, 'XLim');
                     legend_ypos = 0.9;
                     legend_xpos = c/10;    
@@ -418,12 +430,19 @@ classdef rsam
                 %'callback',S,'min',0,'max',xmax-dx);
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-        function plotyy(obj1, obj2, varargin)   
-            [snum, enum, fun1, fun2] = matlab_extensions.process_options(varargin, 'snum', max([obj1.dnum(1) obj2.dnum(1)]), 'enum', min([obj1.dnum(end) obj2.dnum(end)]), 'fun1', 'plot', 'fun2', 'plot');
-            [ax, h1, h2] = plotyy(obj1.dnum, obj1.data, obj2.dnum, obj2.data, fun1, fun2);
+        function plotyy(obj1, obj2, varargin)
+           p = inputParser;
+           p.addParameter('snum',max([obj1.dnum(1) obj2.dnum(1)]));
+           p.addParameter('enum', min([obj1.dnum(end) obj2.dnum(end)]));
+           p.addParameter('fun1','plot');
+           p.addParameter('fun2','plot');
+           p.parse(varargin{:});
+           Args = p.Results;
+  
+            [ax, ~, ~] = plotyy(obj1.dnum, obj1.data, obj2.dnum, obj2.data, Args.fun1, Args.fun2);
             datetick('x');
             set(ax(2), 'XTick', [], 'XTickLabel', {});
-            set(ax(1), 'XLim', [snum enum]);
+            set(ax(1), 'XLim', [Args.snum Args.enum]);
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
         function self = reduce(self, waveType, sourcelat, sourcelon, stationlat, stationlon, varargin)
@@ -431,8 +450,14 @@ classdef rsam
             % s.distance and waveSpeed assumed to be in metres (m)
             % (INPUT) s.data assumed to be in nm or Pa
             % (OUTPUT) s.data in cm^2 or Pa.m
-            [self.reduced.waveSpeed, f] = matlab_extensions.process_options(varargin, 'waveSpeed', 2000, 'f', 2.0);
-            if self.reduced.isReduced == true
+            p = inputParser;
+            p.addParameter('waveSpeed', 2000);
+            p.addParamter('f', 2.0);
+            p.parse(varargin{:});
+            
+            self.reduced.waveSpeed = p.Results.waveSpeed;
+            
+            if self.reduced.isReduced
                 disp('Data are already reduced');
                 return;
             end
@@ -451,7 +476,7 @@ classdef rsam
                             self.data = self.data * r; % cm^2
                             self.units = 'cm^2';
                         case 'surface'
-                            wavelength = ws / f; % cm
+                            wavelength = ws / p.Results.f; % cm
                             try
                                     self.data = self.data .* sqrt(r * wavelength); % cm^2
                             catch
@@ -516,9 +541,17 @@ classdef rsam
             %                   continuousEvents property populated
             
             % Process input variables
-            [stalen, ltalen, stepsize, ratio_on, ratio_off, boolplot, boollist] = matlab_extensions.process_options(varargin, ...
-                'stalen', 10, 'ltalen', 120, 'stepsize', 10, 'ratio_on', 1.5, 'ratio_off', 1.1, ...
-                'boolplot', false, 'boollist', true);
+            p = inputParser;
+            p.addParameter('stalen', 10);
+            p.addParameter('ltalen', 120);
+            p.addParameter('stepsize', 10);
+            p.addParameter('ratio_on', 1.5);
+            p.addParameter('ratio_off', 1.1);
+            p.addParameter('boolplot', false, @islogical);
+            p.addParameter('boollist', true, @islogical);
+            
+            p.parse(varargin{:}); % use p.Results.(paramName)
+            
             
             % Initialize detector variables
             trigger_on=false; % no tremorEvent yet
@@ -541,9 +574,9 @@ classdef rsam
             
             % Loop over timeWindows
             % 
-            for sampleNumber=ltalen: stepsize: length(self.data)
+            for sampleNumber=p.Results.ltalen: p.Results.stepsize: length(self.data)
                 timeWindowNumber=timeWindowNumber+1;
-                startSample = sampleNumber-ltalen+1;
+                startSample = sampleNumber-p.Results.ltalen+1;
                 endSample = sampleNumber;
                 timeWindow.startSample(timeWindowNumber) = startSample;
                 timeWindow.endSample(timeWindowNumber) = endSample;        
@@ -558,7 +591,7 @@ classdef rsam
                 end
                 
                 % Compute the short term average for this timeWindow
-                timeWindow.sta(timeWindowNumber) = nanmean(self.data(endSample-stalen+1:endSample)) + eps; % add eps so never 0
+                timeWindow.sta(timeWindowNumber) = nanmean(self.data(endSample-p.Results.stalen+1:endSample)) + eps; % add eps so never 0
 
                 % Make sta & lta equal to last good values when NaN
                 if isnan(timeWindow.sta(timeWindowNumber))
@@ -576,7 +609,7 @@ classdef rsam
                 timeWindow.ratio(timeWindowNumber) = timeWindow.sta(timeWindowNumber)./timeWindow.lta(timeWindowNumber);        
                 
                 if trigger_on % EVENT IN PROCESS, CHECK FOR DETRIGGER
-                    if timeWindow.ratio(timeWindowNumber) < ratio_off
+                    if timeWindow.ratio(timeWindowNumber) < p.Results.ratio_off
                         % trigger off condition
                         disp(sprintf('TREMOR EVENT: %s to %s, max amp %e', datestr(self.dnum(eventStartSample)), datestr(self.dnum(endSample)), max(self.data(eventStartSample:endSample)) ))
                         %tremorEvent(eventNumber) = rsam_event(self.dnum(eventStartSample:endSample), self.data(eventStartSample:endSample), '', scnl, ltalen);
@@ -587,7 +620,7 @@ classdef rsam
                         eventStartSample = -1;
                     end
                 else % BACKGROUND, CHECK FOR TRIGGER
-                    if timeWindow.ratio(timeWindowNumber) > ratio_on
+                    if timeWindow.ratio(timeWindowNumber) > p.Results.ratio_on
                         % trigger on condition
                         eventNumber = eventNumber + 1;
                         eventStartSample = endSample; % event is triggered at time of sample at end of timewindow
@@ -753,13 +786,23 @@ classdef rsam
         %   rsamobject.resample('method', 'max', 'minutes', 10) downsample the data at
         %       10 minute sample period       
         
-            [method, crunchfactor, minutes] = matlab_extensions.process_options(varargin, 'method', self.measure, 'factor', 0, 'minutes', 0);
-        
+           
             persistent STATS_INSTALLED;
 
             if isempty(STATS_INSTALLED)
               STATS_INSTALLED = ~isempty(ver('stats'));
             end
+            
+            p = inputParser;
+            p.addParameter('method',self.measure);
+            p.addParameter('factor', 0); % crunchfactor
+            p.addParameter('minutes', 0);
+            
+            p.parse(varargin{:});
+            
+            crunchfactor = p.Results.factor;
+            method = p.Results.method;
+            minutes = p.Results.minutes;
 
             if ~(round(crunchfactor) == crunchfactor) 
                 disp ('crunchfactor needs to be an integer');
@@ -768,7 +811,7 @@ classdef rsam
 
             for i=1:numel(self)
                 samplingIntervalMinutes = 1.0 / (60 * self(i).Fs());
-                if crunchfactor==0 & minutes==0 % choose automatically
+                if crunchfactor==0 && minutes==0 % choose automatically
                     choices = [1 2 5 10 30 60 120 240 360 ];
                     days = max(self(i).dnum) - min(self(i).dnum);
                     choice=max(find(days > choices));
@@ -1518,7 +1561,7 @@ classdef rsam
             self.units = units;
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        function makebobfile(outfile, days);
+        function makebobfile(outfile, days)
             % makebobfile(outfile, days);
             datapointsperday = 1440;
             samplesperyear = days*datapointsperday;
@@ -1561,7 +1604,7 @@ classdef rsam
             end
 
             if length(calibStart) > 1
-                disp(sprintf('%d calibration periods found: nothing will be done',length(calibStart)));
+                fprintf('%d calibration periods found: nothing will be done\n',length(calibStart));
                 %figure;
                 %c=1:length(y);
                 %plot(c,y,'.')
@@ -1571,7 +1614,7 @@ classdef rsam
                 %calibStart = input('Enter start sample');
                 %calibEnd = input('Enter end sample');
             end
-            if length(calibStart) > 0
+            if ~empty(calibStart)
                 % mask the data according to time of day
                 tstart = (calibStart - 2) / 1440
                 tend = (calibEnd ) / 1440

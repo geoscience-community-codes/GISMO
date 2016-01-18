@@ -31,11 +31,24 @@ function self=read_bob_file(varargin)
 %     units       % units to label y-axis, e.g. 'nm/s' or 'nm' or 'cm2', default is 'counts'
 %
 % See also: sam, oneMinuteData
+
     self = rsam(); % Create a blank sam object
     
-    [file, self.snum, self.enum, self.sta, self.chan, self.measure, self.seismogram_type, self.units, self.dnum, self.data] = ...
-        matlab_extensions.process_options(varargin, 'file', '', 'snum', self.snum, 'enum', self.enum, 'sta', self.sta, ...
-        'chan', self.chan, 'measure', self.measure, 'seismogram_type', self.seismogram_type, 'units', self.units, 'dnum', self.dnum, 'data', self.data);
+    classFields = {'sta','chan','measure','seismogram_type','units','snum','enum', 'dnum', 'data'};
+    p = inputParser;
+    p.addParameter('file', '');
+    for n=1:numel(classFields)
+       p.addParameter(classFields{n}, self.(classFields{n}));
+    end
+    p.parse(varargin{:});
+    
+    % modify class values based on user-provided values
+    for n = 1:numel(classFields)
+       self.(classFields{n}) = p.Results.(classFields{n});
+    end
+    file = p.Results.file;
+        
+        
 
     %%%% CREATING SAM OBJECT FROM A BOB FILE            
     % check if filename has a year in it, if it does
