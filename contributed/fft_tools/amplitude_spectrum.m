@@ -31,6 +31,6 @@ function [A, phi, f] = amplitude_spectrum(w)
     NFFT = 2^nextpow2(N); % Next power of 2 from length of y
     Y=fft(signal,NFFT); % X will have same length as signal, and will be complex with a magnitude and phase
     A=2*abs(Y(1:NFFT/2+1))/N;
-    phi = angle(Y);
+    phi = angle(Y(1:NFFT/2+1));
     f = Fs/2*linspace(0,1,NFFT/2+1);
 end
