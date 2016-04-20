@@ -1,30 +1,34 @@
 %CATALOG the blueprint for Catalog objects in GISMO
 % A Catalog object is a container for event metadata
-% See also EventRate, readEvents, Catalog_Cookbook
+% See also EventRate, readEvents, Catalog/Cookbook
 classdef Catalog
 
     properties(Dependent) % These all come from table, computed on the fly
-        datenum = [];
-        date = [];
-        time = [];
-        lon = [];
-        lat = [];
-        depth = [];
-        mag = [];
-        magtype = {};
-        etype = {};
+        otime = [];%0; % origin time
+        date = {};%0;%[];
+        time = {};%0;%[];
+        lon = [];%0;%[];
+        lat = [];%0;%[];
+        depth = [];%0;%[];
+        mag = [];%0;%[];
+        magtype = {};%{'mu'};%{};
+        etype = {};%{'u'};%{};
+        ontime = [];%0;%[];
+        offtime = [];%0;
+        
         numberOfEvents = 0;
+  
     end
     
-    properties(Dependent, GetAccess='private')
-        snum
-        enum
-    end
+%     properties(Dependent, GetAccess='private')
+%         snum
+%         enum
+%     end
     
     properties % These are properties of the catalog itself
         request = struct();
-%         request.starttime = -Inf;
-%         request.endtime = Inf;
+%         request.startTime = -Inf;
+%         request.endTime = Inf;
 %         request.dataformat = '';
 %         request.minimumLongitude = -Inf;
 %         request.maximumLongitude = Inf; 
@@ -38,78 +42,113 @@ classdef Catalog
 %         request.maximumMagnitude = Inf;
         arrivals = {};
 %         magnitudes = {};
+        waveforms = {}; % cell array with one vector waveform objects per event
     end
     
     properties(Hidden) % internal, external code cannot access them
-        table = table([], [],[], [], [], [], {}, {}, ...
-                'VariableNames', {'date' 'time' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype'});
+        table = table([], [], [],[], [], [], [], {}, {}, [], [], ...
+                'VariableNames', ...
+                {'otime' 'date' 'time' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype' 'ontime' 'offtime'});
     end
 
     methods
 
-        function obj = Catalog(time, lon, lat, depth, mag, magtype, etype, varargin)
+        %function obj = Catalog(otime, lon, lat, depth, mag, magtype, etype, varargin)
+        function obj = Catalog(varargin)
             %Catalog.Catalog constructor for Catalog object
             % catalogObject = Catalog(lat, lon, depth, time, mag, etype, varargin)
+            
+            % Blank constructor
+            if nargin==0
+                return
+            end
             
             % Parse required, optional and param-value pair arguments,
             % set default values, and add validation conditions
             p = inputParser;
-            p.addRequired('time', @isnumeric);
-            p.addRequired('lon', @isnumeric);
-            p.addRequired('lat', @isnumeric);
-            p.addRequired('depth', @isnumeric);
-            p.addRequired('mag', @isnumeric);
-            p.addRequired('magtype', @iscell);
-            p.addRequired('etype', @iscell);
+            p.addOptional('otime', 0, @isnumeric)
+            p.addOptional('lon', NaN, @isnumeric)
+            p.addOptional('lat', NaN, @isnumeric)
+            p.addOptional('depth', NaN, @isnumeric);
+            p.addOptional('mag', NaN, @isnumeric);
+            p.addOptional('magtype', {'un'}, @iscell);
+            p.addOptional('etype', {'u'}, @iscell);
             p.addOptional('request',struct());
-            p.parse(time, lon, lat, depth, mag, magtype, etype, varargin{:});
+            p.addOptional('ontime', 0, @isnumeric)
+            p.addOptional('offtime', 0, @isnumeric)
+            %p.parse(otime, lon, lat, depth, mag, magtype, etype, varargin{:});
+            p.parse(varargin{:});
             fields = fieldnames(p.Results);
             for i=1:length(fields)
                 field=fields{i};
                 val = p.Results.(field);
                 eval(sprintf('%s = val;',field));
             end
-            
+             
+  
+
+           % If we only have trigger on (&off) times but not origin times,
+           % set origin times equal to ontimes
+           if isempty(otime) & ~isempty(ontime)
+               otime = ontime;
+           end
+           
+           % reshape
+           s=size(otime);
+           s1=min(s);
+           s2=max(s);
+           otime = reshape(otime, [s2 s1]);
+           
             % Fill empty vectors to size of time
             if isempty(lon)
-                lon = NaN(size(time));
+                lon = NaN(s2,s1);
             end
             if isempty(lat)
-                lat = NaN(size(time));
+                lat = NaN(s2,s1);
             end   
             if isempty(depth)
-                depth = NaN(size(time));
+                depth = NaN(s2,s1);
             end
             if isempty(mag)
-                %mag = -Inf(size(time));
-                mag = NaN(size(time));
+                mag = NaN(s2,s1);
             end  
             if isempty(magtype) % 'u' for unknown
-                magtype = cellstr(repmat('u',size(time)));
+                magtype = cellstr(repmat('u',[s2 s1]));
             end 
             if isempty(etype)  % 'u' for unknown
-                etype = cellstr(repmat('u',size(time)));
-            end     
+                etype = cellstr(repmat('u',[s2 s1]));
+            end   
+            if isempty(ontime)  % 'u' for unknown
+                ontime = NaN(s2,s1);
+            end   
+            if isempty(offtime)  % 'u' for unknown
+                offtime = NaN(s2,s1);
+            end   
+           lon = reshape(lon, [s2 s1]);
+           lat = reshape(lat, [s2 s1]);
+           depth = reshape(depth, [s2 s1]);
+           mag = reshape(mag, [s2 s1]);
+           magtype = reshape(magtype, [s2 s1]);
+           ontime = reshape(ontime, [s2 s1]);
+           offtime = reshape(offtime, [s2 s1]);
+           clear s s1 s2
            
-            obj.table = table(time, datestr(time,26), datestr(time, 13), lon, lat, depth, mag, magtype, etype, ...
-                'VariableNames', {'datenum' 'date' 'time' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype'});
+           dstr = datestr(otime, 'yyyy_mm_dd');
+           tstr = datestr(otime, 'HH:MM:SS.fff'); 
+           tstr = tstr(:,1:10);
+
+           obj.table = table(otime, dstr, tstr, ...
+               lon, lat, depth, mag, magtype, etype, ontime, offtime, ...
+                'VariableNames', {'otime' 'yyyy_mm_dd' 'hh_mm_ss' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype' 'ontime' 'offtime'});   
             
-            obj.table = sortrows(obj.table, 'datenum', 'ascend'); 
+            obj.table = sortrows(obj.table, 'otime', 'ascend'); 
             fprintf('Got %d events\n',obj.numberOfEvents);
 
         end
         
-        function val = get.date(obj)
-            val = floor(obj.table.date);
-        end
- 
-        function val = get.time(obj)
-            val = datenum(obj.table.time);
-        end
-        
-        function val = get.datenum(obj)
-            val = obj.table.datenum;
-        end       
+        function val = get.otime(obj)
+            val = obj.table.otime;
+        end 
         
         function val = get.lon(obj)
             val = obj.table.lon;
@@ -135,16 +174,22 @@ classdef Catalog
             val = obj.table.etype;
         end
         
+        function val = get.ontime(obj)
+            val = obj.table.ontime;
+        end
+        
+        function val = get.offtime(obj)
+            val = obj.table.offtime;
+        end
+        
         function val = get.numberOfEvents(obj)
             val = height(obj.table);
         end
-
-        function val = get.snum(obj)
-            val = min(obj.datenum);
-        end
         
-        function val = get.enum(obj)
-            val = max(obj.datenum);
+        function t=gettimerange(obj)
+            snum = nanmin([obj.table.otime; obj.table.ontime]);
+            enum = nanmax([obj.table.otime; obj.table.offtime]);
+            t = [snum enum];
         end
           
         % Prototypes
@@ -163,6 +208,7 @@ classdef Catalog
         eev(obj, eventnum)
         write(catalogObject, outformat, outpath, schema)
         catalogObject2 = subset(catalogObject, indices)
+        catalogObject = addwaveforms(catalogObject, w);
     end
 %% ---------------------------------------------------
     methods (Access=protected, Hidden=true)
@@ -280,6 +326,9 @@ classdef Catalog
                 otherwise
                     self = NaN;
                     fprintf('format %s unknown\n\n',data_source);
+            end
+            if isempty(self)
+                self=Catalog();
             end
 
             debug.printfunctionstack('<')

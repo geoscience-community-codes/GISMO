@@ -12,10 +12,10 @@
 %
 % In this example we will use retrieve to retrieve all events at IRIS DMC 
 % with a magnitude of at least 8.0 between year 2000 and 2014 (inclusive):
-
+1
 greatquakes = Catalog.retrieve('iris', 'minimumMagnitude', 8.0, ...
     'starttime', '2000-01-01', 'endtime', '2015-01-01');
-
+2
 %%
 % To access any particular property we can use dot notation, as if the 
 % object were a structure, e.g.:

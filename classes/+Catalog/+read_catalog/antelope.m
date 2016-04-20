@@ -3,12 +3,12 @@ function self = antelope(varargin)
 % Requires Antelope and the Antelope toolbox from BRTT.
 
     debug.printfunctionstack('>')
-
-    if ~admin.antelope_exists
-        warning('This function requires the Antelope toolbox for Matlab'); 
-        self = Catalog([], [], [], [], [], {}, {});
-        return;
-    end
+    self = 0;
+%     if ~admin.antelope_exists
+%         warning('This function requires the Antelope toolbox for Matlab'); 
+%         self = Catalog([], [], [], [], [], {}, {});
+%         return;
+%     end
 
     % Process input arguments
     p = inputParser;

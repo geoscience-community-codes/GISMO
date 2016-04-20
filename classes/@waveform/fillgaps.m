@@ -57,7 +57,7 @@ function w = fillgaps(w,value, gapvalue)
        case 'interp' % blame Glenn, inspired by http://www.mathworks.com/matlabcentral/fileexchange/8225-naninterp by E Rodriguez
            for N = 1:numel(w);
                X = get(w(N),'data');
-               X(isnan(X)) = interp1(find(~isnan(X)), X(~isnan(X)), find(isnan(X)),'cubic');
+               X(isnan(X)) = interp1(find(~isnan(X)), X(~isnan(X)), find(isnan(X)),'spline');
                w(N) = set(w(N),'data',X);
            end
       otherwise

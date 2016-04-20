@@ -1,6 +1,8 @@
 function binsize = autobinsize(daysdiff)
     % Copied after modgiseis.xpy/autobinsize
     % Try and keep to around 100 bins or less
+%     [tstart tend] = cobj.gettimerange();
+%     daysdiff = tend - tstart;
     if daysdiff <= 2.0/24  % less than 2 hours of data, use a binsize of 1 minute
         binsize = 1.0/1440;
     elseif daysdiff <= 4.0  % less than 4 days of data, use a binsize of 1 hour

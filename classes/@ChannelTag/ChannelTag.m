@@ -210,12 +210,12 @@ classdef ChannelTag
          %  following:
          %    STATION, CHANNEL, LOCATION, NETWORK, chaTag_STRING
          %
-         %  *Depricated*
+         %  *Deprecated*
          %
          % If the results of a single chaTag are requested, then a string is returned.
          % Otherwise, a cell of values will be returned.
          
-         warning('Old Usage. instead of "get", ,use the field name directly.  eg. x = ch.station');
+         %warning('Old Usage. instead of "get", ,use the field name directly.  eg. x = ch.station');
          
          prop = lower(prop);
          
@@ -248,10 +248,10 @@ classdef ChannelTag
          %    Valid property names:
          %    STATION, LOCATION, NETWORK, CHANNEL
          %
-         %    * Depricated*
+         %    * Deprecated*
          %    See also: get.channel, get.location, get.network, get.station
          
-         warning('Old usage: using set for a ChannelTag. use field notation instead. eg. ch.station = X');
+         %warning('Old usage: using set for a ChannelTag. use field notation instead. eg. ch.station = X');
          idx = [1 2];
          while numel(varargin) > 1 % for each property
             [prop, val] = deal(varargin{idx});

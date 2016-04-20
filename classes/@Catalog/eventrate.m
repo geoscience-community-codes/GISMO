@@ -18,23 +18,13 @@ function erobj=eventrate(catalogObject, varargin)
     stepsize = p.Results.stepsize;
 
     for i=1:numel(catalogObject)
-
+        [snum enum]=catalogObject(i).gettimerange();
         if ~(binsize>0)
-            binsize = Catalog.binning.autobinsize(catalogObject(i));
+            binsize = Catalog.binning.autobinsize(enum-snum);
         end
         if ~(stepsize>0)
             stepsize = binsize;
-        end      
-        if (stepsize > binsize)
-           disp(sprintf('Invalid value for stepsize (%f days). Cannot be greater than binsize (%f days).',stepsize, binsize));
-           return;
         end          
-        if ~(binsize>0)
-            binsize = Catalog.binning.autobinsize(catalogObject(i).enum-catalogObject(i).snum);
-        end
-        if ~(stepsize>0)
-            stepsize = binsize;
-        end      
         if (stepsize > binsize)
            disp(sprintf('Invalid value for stepsize (%f days). Cannot be greater than binsize (%f days).',stepsize, binsize));
            return;
@@ -46,15 +36,15 @@ function erobj=eventrate(catalogObject, varargin)
         % bin the data
         [time, counts, energy, smallest_energy, ...
             biggest_energy, median_energy, stdev, median_time_interval] = ...
-            Catalog.binning.bin_irregular(catalogObject(i).datenum, ...
+            Catalog.binning.bin_irregular(catalogObject(i).otime, ...
             magnitude.mag2eng(catalogObject(i).mag), ...
-            binsize, catalogObject(i).snum, catalogObject(i).enum, stepsize);
+            binsize, snum, enum, stepsize);
 
         % create the Event Rate object
-        total_counts = length(catalogObject(i).time);
+        total_counts = length(catalogObject(i).otime);
         numbins = numel(time);
         erobj(i) = EventRate(time, counts, energy, median_energy, ...
             smallest_energy, biggest_energy, median_time_interval, total_counts, ...
-            catalogObject(i).snum, catalogObject(i).enum, etypes, binsize, stepsize, numbins);
+            snum, enum, etypes, binsize, stepsize, numbins);
     end
 end
