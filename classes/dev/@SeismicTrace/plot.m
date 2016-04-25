@@ -143,11 +143,13 @@ function p = parseParameters(argList)
    p.CaseSensitive = false;
    p.StructExpand = false;
    if verLessThan('matlab','8.2'); %r2013b
-      addParameter = @addParamValue;
+      apv = @addParamValue;
+   else
+      apv = @addParameter;
    end
-      addParameter(p,'autoscale', false);
-      addParameter(p,'xunit', 's');
-      addParameter(p,'fontsize', 10);
+      apv(p,'autoscale', false);
+      apv(p,'xunit', 's');
+      apv(p,'fontsize', 10);
    p.parse(argList{:});
 end
 
