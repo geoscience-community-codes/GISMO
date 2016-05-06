@@ -181,6 +181,7 @@ function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)
     linkaxes(ax,'x')
     hold on
     a=axis();
+    xlabel('Time (s)')
     plot([a(1) a(2)],[th_on th_on],'r');
     plot([a(1) a(2)],[th_off th_off],'g');
     for count=1:size(ta_secs,1)

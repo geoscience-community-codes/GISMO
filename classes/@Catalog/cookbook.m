@@ -12,10 +12,10 @@
 %
 % In this example we will use retrieve to retrieve all events at IRIS DMC 
 % with a magnitude of at least 8.0 between year 2000 and 2014 (inclusive):
-1
+
 greatquakes = Catalog.retrieve('iris', 'minimumMagnitude', 8.0, ...
     'starttime', '2000-01-01', 'endtime', '2015-01-01');
-2
+
 %%
 % To access any particular property we can use dot notation, as if the 
 % object were a structure, e.g.:
@@ -91,9 +91,10 @@ save('tohoku_events.mat', 'tohoku_events')
 %%
 % Both catalog segments are included in the "demo" directory. 
 % We will now load the official AVO catalog into an Events object:
-  
-dbpath = Catalog.demo.demodb('avo');
-avocatalog = Catalog.retrieve('antelope', 'dbpath', dbpath);
+if admin.antelope_exists
+    dbpath = Catalog.demo.demodb('avo');
+    avocatalog = Catalog.retrieve('antelope', 'dbpath', dbpath);
+end
  
 %%
 % This should load 1441 events. What if we only want events within 20km of 
@@ -185,7 +186,6 @@ wmzoom(7)
 
 %% Plotting time series of events
 % *Magnitude-time plot*
-
 tohoku_events.plot_time()
 
 %%
@@ -300,7 +300,7 @@ greatquakes.write('antelope', 'greatquakes_db', 'css3.0')
 %% 
 % This database can be reloaded with:
 
-greatquakes2 = Catalog.retrieve('antelope', 'dbpath','greatquakes_db')
+greatquakes2 = Catalog.retrieve('antelope', 'dbpath', 'greatquakes_db')
 
 %%
 % Compare:

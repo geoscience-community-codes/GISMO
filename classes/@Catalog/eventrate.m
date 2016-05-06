@@ -18,7 +18,9 @@ function erobj=eventrate(catalogObject, varargin)
     stepsize = p.Results.stepsize;
 
     for i=1:numel(catalogObject)
-        [snum enum]=catalogObject(i).gettimerange();
+        timerange = catalogObject(i).gettimerange();
+        snum=timerange(1);
+        enum=timerange(2);
         if ~(binsize>0)
             binsize = Catalog.binning.autobinsize(enum-snum);
         end

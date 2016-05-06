@@ -26,7 +26,7 @@ function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFracti
 
 debug.printfunctionstack('>');
 
-save lastspecgramcall.mat s w spectrogramFraction mycolormap
+
 
 result = 0;
 
@@ -49,6 +49,7 @@ if ~exist('mycolormap', 'var')
     mycolormap = jet; % should be using SPECTRAL_MAP here?
 end
 
+%save lastspecgramcall.mat s w spectrogramFraction mycolormap
 debug.print_debug(2, sprintf('%d waveform objects',numel(w)));
 
 % Default colormap is JET. Override that here.
@@ -85,7 +86,7 @@ for c=1:numw
             F(1)=0.001;
         end
 
-        [spectrogramPosition, tracePosition] = calculatePanelPositions(numw, c, spectrogramFraction, 0.08, 0.05, 0.88, 0.95);
+        [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numw, c, spectrogramFraction, 0.08, 0.05, 0.88, 0.95);
         axes('position', spectrogramPosition);
         T = wt.start + T/86400;
         F = F(1:max(index));

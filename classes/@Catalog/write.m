@@ -12,8 +12,8 @@ function write(catalogObject, outformat, outpath, schema)
     % Glenn Thompson, 4 February 2015
 
     switch outformat
-case {'text';'csv';'xls'} % help table.write for more info
-    write(catalogObject.table, outpath);
+        case {'text';'csv';'xls'} % help table.write for more info
+            write(catalogObject.table, outpath);
 
         case 'antelope'
 
@@ -38,11 +38,11 @@ case {'text';'csv';'xls'} % help table.write for more info
                 dbn = dblookup_table(db,'netmag');
 
                 % write event to event and origin tables
-                if numel(catalogObject.datenum)>0
-                    for eventidx = 1:numel(catalogObject.datenum)
+                if numel(catalogObject.otime)>0
+                    for eventidx = 1:numel(catalogObject.otime)
                         event.evid = dbnextid(dbe,'evid');
                         origin.orid = dbnextid(dbo,'orid');
-                        origin.time = datenum2epoch(catalogObject.datenum(eventidx));
+                        origin.time = datenum2epoch(catalogObject.otime(eventidx));
                         origin.lon = catalogObject.lon(eventidx);
                         origin.lat = catalogObject.lat(eventidx);
                         origin.depth = catalogObject.depth(eventidx);

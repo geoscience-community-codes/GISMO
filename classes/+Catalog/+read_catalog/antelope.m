@@ -158,6 +158,7 @@ function self = antelope(varargin)
         end
     end
     mag(mag<-3.0)=NaN; % I think Antelope uses a dummy value like -9.9
+    %self = Catalog(epoch2datenum(time), lon, lat, depth, mag, magtype, etype);
     self = Catalog(time, lon, lat, depth, mag, magtype, etype);
     
     debug.printfunctionstack('<')

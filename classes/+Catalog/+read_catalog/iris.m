@@ -6,7 +6,7 @@ function self = iris(ev)
   
     for i=1:length(ev) % Loop over each element in vector
 
-        time(i) = datenum(ev(i).PreferredTime);
+        otime(i) = datenum(ev(i).PreferredTime);
         lon(i) = ev(i).PreferredLongitude;
         lat(i) = ev(i).PreferredLatitude;
         depth(i) = ev(i).PreferredDepth;
@@ -24,7 +24,7 @@ function self = iris(ev)
     end
     
     request.dataformat = 'iris';
-    self = Catalog(time', lon', lat', depth', mag', magtype', etype', 'request', request);
+    self = Catalog(otime', lon', lat', depth', mag', magtype', etype', 'request', request);
     
     debug.printfunctionstack('<')
     

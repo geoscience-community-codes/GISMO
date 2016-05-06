@@ -16,7 +16,7 @@ function c = subclassify(catalogObject, subclasses)
                 c(i).lon = catalogObject.lon(index);
                 c(i).depth = catalogObject.depth(index);
             end
-            c(i).time = catalogObject.datenum(index);
+            c(i).otime = catalogObject.otime(index);
             c(i).mag = catalogObject.mag(index);
             c(i).etype = catalogObject.etype(index);
         end

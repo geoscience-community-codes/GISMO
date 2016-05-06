@@ -13,11 +13,11 @@ function eev(obj, eventnum)
         if eventnum<1
             eventnum=1;
         end
-        if eventnum>numel(obj.datenum)
-            eventnum=numel(obj.datenum);
+        if eventnum>numel(obj.otime)
+            eventnum=numel(obj.otime);
         end           
         % display line for this event
-        dstr=datestr(obj.datenum(eventnum),31);
+        dstr=datestr(obj.otime(eventnum),31);
         subclass=obj.etype{eventnum};
         mag=obj.mag(eventnum);
         outstr=sprintf('%s %7.2f %7.2f %7.2 %5.1f %s %s',dstr, obj.lon(eventnum), obj.lat(eventnum), obj.depth(eventnum), mag, obj.magtype{eventnum}, subclass);
@@ -29,6 +29,7 @@ function eev(obj, eventnum)
 
         elseif (choice(1)=='c') % CLASSIFY
             classify_event(datenum);
+% ^^ does this line need obj.otime?
 
         elseif (choice(1)=='f') % FORWARD N EVENTS
             num=1;
@@ -59,7 +60,7 @@ function eev(obj, eventnum)
                 hr=str2num(choice(10:11));
             end
             jumptime=datenum(year,month,dd,hr,0,0);
-            eventnum = min(find(obj.datenum >= jumptime));
+            eventnum = min(find(obj.otime >= jumptime));
 
         elseif (choice(1)=='s') % SUMMARISE - SHOW S FILE or similar data 
             fprintf('\nTime:\t\t%s\n',dstr);

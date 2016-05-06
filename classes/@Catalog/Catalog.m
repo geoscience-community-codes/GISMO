@@ -1,29 +1,24 @@
-%CATALOG the blueprint for Catalog objects in GISMO
+ls%CATALOG the blueprint for Catalog objects in GISMO
 % A Catalog object is a container for event metadata
 % See also EventRate, readEvents, Catalog/Cookbook
 classdef Catalog
 
     properties(Dependent) % These all come from table, computed on the fly
-        otime = [];%0; % origin time
-        date = {};%0;%[];
-        time = {};%0;%[];
-        lon = [];%0;%[];
-        lat = [];%0;%[];
-        depth = [];%0;%[];
-        mag = [];%0;%[];
-        magtype = {};%{'mu'};%{};
-        etype = {};%{'u'};%{};
-        ontime = [];%0;%[];
-        offtime = [];%0;
+        otime = [];% origin time
+        date = {};
+        time = {};
+        lon = [];
+        lat = [];
+        depth = [];
+        mag = [];
+        magtype = {};
+        etype = {};
+        ontime = [];
+        offtime = [];
         
         numberOfEvents = 0;
   
     end
-    
-%     properties(Dependent, GetAccess='private')
-%         snum
-%         enum
-%     end
     
     properties % These are properties of the catalog itself
         request = struct();
@@ -66,16 +61,16 @@ classdef Catalog
             % Parse required, optional and param-value pair arguments,
             % set default values, and add validation conditions
             p = inputParser;
-            p.addOptional('otime', 0, @isnumeric)
-            p.addOptional('lon', NaN, @isnumeric)
-            p.addOptional('lat', NaN, @isnumeric)
-            p.addOptional('depth', NaN, @isnumeric);
-            p.addOptional('mag', NaN, @isnumeric);
+            p.addOptional('otime', [], @isnumeric)
+            p.addOptional('lon', [], @isnumeric)
+            p.addOptional('lat', [], @isnumeric)
+            p.addOptional('depth', [], @isnumeric);
+            p.addOptional('mag', [], @isnumeric);
             p.addOptional('magtype', {'un'}, @iscell);
             p.addOptional('etype', {'u'}, @iscell);
             p.addOptional('request',struct());
-            p.addOptional('ontime', 0, @isnumeric)
-            p.addOptional('offtime', 0, @isnumeric)
+            p.addOptional('ontime', [], @isnumeric)
+            p.addOptional('offtime', [], @isnumeric)
             %p.parse(otime, lon, lat, depth, mag, magtype, etype, varargin{:});
             p.parse(varargin{:});
             fields = fieldnames(p.Results);
@@ -84,8 +79,6 @@ classdef Catalog
                 val = p.Results.(field);
                 eval(sprintf('%s = val;',field));
             end
-             
-  
 
            % If we only have trigger on (&off) times but not origin times,
            % set origin times equal to ontimes
@@ -118,6 +111,7 @@ classdef Catalog
             if isempty(etype)  % 'u' for unknown
                 etype = cellstr(repmat('u',[s2 s1]));
             end   
+
             if isempty(ontime)  % 'u' for unknown
                 ontime = NaN(s2,s1);
             end   
@@ -129,8 +123,10 @@ classdef Catalog
            depth = reshape(depth, [s2 s1]);
            mag = reshape(mag, [s2 s1]);
            magtype = reshape(magtype, [s2 s1]);
-           ontime = reshape(ontime, [s2 s1]);
-           offtime = reshape(offtime, [s2 s1]);
+           if numel(ontime)==s1*s2
+               ontime = reshape(ontime, [s2 s1]);
+               offtime = reshape(offtime, [s2 s1]);
+           end
            clear s s1 s2
            
            dstr = datestr(otime, 'yyyy_mm_dd');

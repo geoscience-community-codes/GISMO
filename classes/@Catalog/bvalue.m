@@ -206,7 +206,8 @@ function bvalue(catalogObject, mcType)
     rect=[0 0 1 1];
     h2=axes('position',rect);
     set(h2,'visible','off');
-    a0 = aw-log10((catalogObject.enum-catalogObject.snum)/365);
+    t=catalogObject.gettimerange();
+    a0 = aw-log10((t(2)-t(1))/365);
 
     text(.53,.88, ['b-value = ',tt1,' +/- ',tt2,',  a value = ',num2str(aw,3)],'FontSize',12);
     text(.53,.85,sol_type,'FontSize',12 );
