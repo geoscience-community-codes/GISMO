@@ -1,13 +1,18 @@
-function linkedplot(w, alignWaveforms)
-%LINKEDPLOT Plot multiple waveform objects as separate linked panels
-%   LINKEDPLOT(w, alignWaveforms) 
+function plot_panels(w, alignWaveforms)
+%PLOT_PANELS Plot multiple waveform objects as separate linked panels
+%   PLOT_PANELS(w, alignWaveforms) 
 %   where:
 %       w = a vector of waveform objects
 %       alignWaveforms is either true or false (default)
-%   LINKEDPLOT(w) will plot each waveform is plotted against absolute time.
-%   LINKEDPLOT(w, true) will align the waveforms on their start times.
+%   PLOT_PANELS(w) will plot each waveform is plotted against absolute time.
+%   PLOT_PANELS(w, true) will align the waveforms on their start times.
+%
+% Along the top of each trace are displayed 3 numbers in different colors:
+%   blue - the mean offset of the trace
+%   green - the start date/time of the trace
+%   red - the maximum amplitude of the trace
 
-% Glenn Thompson 2014/11/05, generalized after a function I wrote in 2000
+% Glenn Thompson 2014/11/05, generalized after a function written in 2000
 % to operate on Seisan files only
 
     if numel(w)==0
@@ -39,12 +44,14 @@ function linkedplot(w, alignWaveforms)
         dnum=get(w(wavnum),'timevector'); 
         sta=get(w(wavnum),'station');
         chan=get(w(wavnum),'channel');
-        ax(wavnum)=axes('Position',[left 0.95-wavnum*trace_height width trace_height]);   
+        offset = nanmean(data);
+        y=data-offset;
+        ax(wavnum)=axes('Position',[left 0.98-wavnum*trace_height width trace_height]);   
         if alignWaveforms
-            plot((dnum-min(dnum))*SECSPERDAY, data,'-k');
+            plot((dnum-min(dnum))*SECSPERDAY, y,'-k');
             set(gca, 'XLim', [0 maxduration*SECSPERDAY]);
         else
-            plot((dnum-snum)*SECSPERDAY, data,'-k');
+            plot((dnum-snum)*SECSPERDAY, y,'-k');
             set(gca, 'XLim', [0 enum-snum]*SECSPERDAY);
         end
 %         xlim = get(gca, 'XLim');
@@ -56,11 +63,12 @@ function linkedplot(w, alignWaveforms)
         end
         
         % display mean on left, max on right
-        text(0.02,0.85, sprintf('%5.0f',nanmean(abs(data))),'FontSize',10,'Color','b','units','normalized');
+        
+        text(0.02,0.85, sprintf('%5.0f',offset),'FontSize',10,'Color','b','units','normalized');
         text(0.4,0.85,sprintf(' %s',datestr(starttimes(wavnum),30)),'FontSize',10,'Color','g','units','normalized');
-        text(0.9,0.85,sprintf('%5.0f',nanmax(abs(data))),'FontSize',10,'Color','r','units','normalized');
+        text(0.9,0.85,sprintf('%5.0f',nanmax(abs(y))),'FontSize',10,'Color','r','units','normalized');
     end
-    
+    xlabel('Time (s)');
     if exist('ax','var')
         linkaxes(ax,'x');
         
@@ -70,8 +78,9 @@ function linkedplot(w, alignWaveforms)
 %         set(h,'Enable','on');
 
     end
+
     
-    originalXticks = get(gca,'XTickLabels');
+    originalXticks = get(gca,'XTickLabel');
     
     f = uimenu('Label','X-Ticks');
 %     uimenu(f,'Label','seconds since start time','Callback',{@secondssince, originalXticks});

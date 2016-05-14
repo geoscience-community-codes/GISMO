@@ -1,5 +1,4 @@
 function correlation_diagnostics(varargin)
-
 % Test correlation toolbox
 %
 % CORRELATION_DIAGNOSTICS('CONSTRUCTOR')

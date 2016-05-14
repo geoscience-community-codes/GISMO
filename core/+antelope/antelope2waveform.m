@@ -30,6 +30,15 @@ function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)
 
     % set return variables blank in case we exit early
     w = [];
+    if isa(dbpath,'cell')
+        dbpath = dbpath{1};
+    end
+    wfdisctable = sprintf('%s.wfdisc',dbpath);
+    if ~exist(wfdisctable, 'file')
+        disp(sprintf('%s: does not exist',wfdisctable));
+        return
+    end
+        
 
     % open the database, subset
     db = dbopen( dbpath,'r' );

@@ -1,4 +1,6 @@
 %% Main function to generate tests
+% to run this use
+%   runtests('Catalog_test')
 function tests = Catalog_test()
 tests = functiontests(localfunctions);
 end

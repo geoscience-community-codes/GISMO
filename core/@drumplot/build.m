@@ -57,7 +57,7 @@ function varargout = build(h)
     % pad waveform object
     [snum enum] = gettimerange(h.wave);
     snum = matlab_extensions.floorminute(snum, h.mpl);
-    enum = matlab_extensions.ceilminute(enum, h.mpl); 
+    enum = matlab_extensions.ceilminute(enum, h.mpl);
     h.wave = pad(h.wave, snum, enum, NaN);
 
     % find start and end times for each line
@@ -90,7 +90,7 @@ function varargout = build(h)
     B.scale=h.scale/(B.number_of_lines*max_amplitude);
 
     %% PLOT DRUMPLOT TRACES WITH EVENT OVERLAY
-    for n = 1:B.number_of_lines
+    for n = 1:B.number_of_lines+1 % Glenn 20160513: Not sure why I had to add 1 here, but without always miss the last line of data
           B.line_offset(n) = (B.number_of_lines-n+0.5)/B.number_of_lines; % Trace offset from bottom
           B.line_waveform_continuous(n) = B.line_waveform_continuous(n) * B.scale + B.line_offset(n);
           plot(B.line_waveform_continuous(n), 'color', h.trace_color, 'xunit', 'minutes');

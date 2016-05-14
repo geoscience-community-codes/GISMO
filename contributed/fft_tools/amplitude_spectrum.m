@@ -1,6 +1,6 @@
 function [A, phi, f] = amplitude_spectrum(w)
     % waveform.amplitude_spectrum Simple method to compute amplitude
-    % spectrum for a waveform object. Uses the MATLAB fft function.
+    % spectrum for a single waveform object. Uses the MATLAB fft function.
     %   [A, phi, f] = amplitude_spectrum(w)
     %
     %   Inputs:

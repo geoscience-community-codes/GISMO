@@ -1,4 +1,4 @@
-ls%CATALOG the blueprint for Catalog objects in GISMO
+%CATALOG the blueprint for Catalog objects in GISMO
 % A Catalog object is a container for event metadata
 % See also EventRate, readEvents, Catalog/Cookbook
 classdef Catalog
