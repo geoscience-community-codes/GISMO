@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Catalog Cookbook</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2015-11-10"><meta name="DC.source" content="cookbook.m"><style type="text/css">
+      --><title>Catalog Cookbook</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-05-18"><meta name="DC.source" content="cookbook.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,8 +66,8 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Catalog Cookbook</h1><!--introduction--><p>GISMO can read events from many different earthquake catalog file formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) using the Catalog.retrieve() method.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Reading events from IRIS DMC</a></li><li><a href="#10">Readings events from an Antelope database</a></li><li><a href="#17">Reading events from a Seisan database</a></li><li><a href="#21">Converting a Zmap data structure to a Catalog object</a></li><li><a href="#22">Plotting hypocenter maps</a></li><li><a href="#28">Plotting time series of events</a></li><li><a href="#33">Analysis</a></li><li><a href="#41">Saving Catalog objects to disk</a></li></ul></div><h2>Reading events from IRIS DMC<a name="1"></a></h2><p>To load events into a Catalog object we use the Catalog.retrieve method. The first argument is the data source/format - when this is given as 'iris', retrieve uses the irisFetch.m program to retrieve event data via the IRIS webservices. To narrow down our data search we can give retrieve any name-value parameter pairs supported by irisFetch.</p><p>In this example we will use retrieve to retrieve all events at IRIS DMC with a magnitude of at least 8.0 between year 2000 and 2014 (inclusive):</p><pre class="codeinput">greatquakes = Catalog.retrieve(<span class="string">'iris'</span>, <span class="string">'minimumMagnitude'</span>, 8.0, <span class="keyword">...</span>
-    <span class="string">'starttime'</span>, <span class="string">'2000-01-01'</span>, <span class="string">'endtime'</span>, <span class="string">'2015-01-01'</span>);
+  </style></head><body><div class="content"><h1>Catalog Cookbook</h1><!--introduction--><p>GISMO can read events from many different earthquake catalog file formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) using the Catalog.retrieve() method.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Reading events from IRIS DMC</a></li><li><a href="#9">Readings events from an Antelope database</a></li><li><a href="#17">Reading events from a Seisan database</a></li><li><a href="#21">Converting a Zmap data structure to a Catalog object</a></li><li><a href="#22">Plotting hypocenter maps</a></li><li><a href="#28">Plotting time series of events</a></li><li><a href="#33">Analysis</a></li><li><a href="#41">Saving Catalog objects to disk</a></li></ul></div><h2>Reading events from IRIS DMC<a name="1"></a></h2><p>To load events into a Catalog object we use the Catalog.retrieve method. The first argument is the data source/format - when this is given as 'iris', retrieve uses the irisFetch.m program to retrieve event data via the IRIS webservices. To narrow down our data search we can give retrieve any name-value parameter pairs supported by irisFetch.</p><p>In this example we will use retrieve to retrieve all events at IRIS DMC with a magnitude of at least 8.0 from year 2000 to 2014 (inclusive):</p><pre class="codeinput">greatquakes = Catalog.retrieve(<span class="string">'iris'</span>, <span class="string">'minimumMagnitude'</span>, 8.0, <span class="keyword">...</span>
+    <span class="string">'starttime'</span>, <span class="string">'2000-01-01'</span>, <span class="string">'endtime'</span>, <span class="string">'2015-01-01'</span>)
 </pre><pre class="codeoutput">fetching...
 
 
@@ -75,42 +75,77 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 parsing into MATLAB structures
 Got 20 events
-</pre><p>To access any particular property we can use dot notation, as if the object were a structure, e.g.:</p><pre class="codeinput">greatquakes.etype
+
+greatquakes = 
+
+
+ans =
+
+Catalog
+
+Number of events: 20
+Biggest event: 9.100000 at 11-Mar-2011 05:46:23
+      otime       yyyy_mm_dd     hh_mm_ss       lon        lat      depth    mag    magtype       etype        ontime    offtime
+    __________    __________    __________    _______    _______    _____    ___    _______    ____________    ______    _______
+
+    7.3103e+05    2001_06_23    20:33:09.3    -73.561    -16.303      2.2    8.3    'MW'       'earthquake'    NaN       NaN    
+    7.3185e+05    2003_09_25    19:50:07.2     143.87     41.749       33    8.1    'MW'       'earthquake'    NaN       NaN    
+     7.323e+05    2004_12_23    14:59:00.6     161.58     -49.71       10      8    'MW'       'earthquake'    NaN       NaN    
+    7.3231e+05    2004_12_26    00:58:52.0     95.901     3.4125     26.1    8.2    'MW'       'earthquake'    NaN       NaN    
+     7.324e+05    2005_03_28    16:09:35.2     97.113     2.0964       30    8.1    'MW'       'earthquake'    NaN       NaN    
+    7.3283e+05    2006_06_01    18:57:02.9     120.88     19.054       13    8.4    'MS'       'earthquake'    NaN       NaN    
+    7.3283e+05    2006_06_05    00:50:31.5     119.08     17.992      124      8    'MS'       'earthquake'    NaN       NaN    
+      7.33e+05    2006_11_15    11:14:14.5     153.21     46.681     12.2    8.3    'MW'       'earthquake'    NaN       NaN    
+    7.3306e+05    2007_01_13    04:23:23.2      154.5     46.231     22.5    8.1    'MW'       'earthquake'    NaN       NaN    
+    7.3313e+05    2007_04_01    20:39:56.5     157.03    -8.4468      9.5    8.1    'MW'       'earthquake'    NaN       NaN    
+    7.3327e+05    2007_08_15    23:40:58.4    -76.555    -13.384     41.2      8    'MW'       'earthquake'    NaN       NaN    
+     7.333e+05    2007_09_12    11:10:26.8      101.4    -4.4637     35.5    8.5    'MW'       'earthquake'    NaN       NaN    
+    7.3405e+05    2009_09_29    17:48:11.5    -171.94    -15.512     18.5    8.1    'MW'       'earthquake'    NaN       NaN    
+     7.342e+05    2010_02_27    06:34:13.3    -72.933    -36.148     28.1    8.8    'MW'       'earthquake'    NaN       NaN    
+    7.3457e+05    2011_03_11    05:46:23.2      142.5     38.296     19.7    9.1    'MW'       'earthquake'    NaN       NaN    
+    7.3497e+05    2012_04_11    08:38:37.8     93.014     2.2376     26.3    8.6    'MW'       'earthquake'    NaN       NaN    
+    7.3497e+05    2012_04_11    10:43:10.5     92.428     0.7675     21.6    8.2    'MW'       'earthquake'    NaN       NaN    
+    7.3527e+05    2013_02_06    01:12:27.0     165.14    -10.738     28.7      8    'MW'       'earthquake'    NaN       NaN    
+    7.3538e+05    2013_05_24    05:44:49.6     153.28     54.874    608.9    8.3    'MW'       'earthquake'    NaN       NaN    
+    7.3569e+05    2014_04_01    23:46:47.2    -70.769     -19.61       25    8.2    'MWW'      'earthquake'    NaN       NaN    
+
+</pre><p>To access any particular property we can use dot notation, as if the object were a structure, e.g.:</p><pre class="codeinput">greatquakes.mag
 </pre><pre class="codeoutput">
-ans = 
+ans =
 
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
-    'earthquake'
+    8.3000
+    8.1000
+    8.0000
+    8.2000
+    8.1000
+    8.4000
+    8.0000
+    8.3000
+    8.1000
+    8.1000
+    8.0000
+    8.5000
+    8.1000
+    8.8000
+    9.1000
+    8.6000
+    8.2000
+    8.0000
+    8.3000
+    8.2000
 
-</pre><p>etype contains the event type for each of the 26 events. In this case each is just  'earthquake', but when dealing with more diverse dataset, many other etype's are possible. magtype is whatever magnitude type was assigned by the agency that provided the magnitude data.</p><p>greatquakes is a Catalog object, an instance of the Catalog class. To see a list of functions ("methods" in object-oriented speak) we can apply to a Catalog object, use the methods command:</p><pre class="codeinput">methods(greatquakes)
+</pre><p>greatquakes is a Catalog object, an instance of the Catalog class. To see a list of functions ("methods" in object-oriented speak) we can apply to a Catalog object, use the methods command:</p><pre class="codeinput">methods(greatquakes)
 </pre><pre class="codeoutput">
 Methods for class Catalog:
 
-Catalog      disp         hist         plot_counts  subclassify  webmap       
-bvalue       eev          plot         plot_time    subset       write        
-combine      eventrate    plot3        plotprmm     summary      
+Catalog       disp          hist          plot_time     summary       
+addwaveforms  eev           plot          plotprmm      webmap        
+bvalue        eventrate     plot3         subclassify   write         
+combine       gettimerange  plot_counts   subset        
 
 Static methods:
 
-cookbook     retrieve     
+cookbook      retrieve      
 
 </pre><p>Save this dataset so you can use it again later:</p><pre class="codeinput">save(<span class="string">'great_earthquakes.mat'</span>, <span class="string">'greatquakes'</span>)
 </pre><p>Now we'll do another example - we will get events within 200 km of the great M9.0 Tohoku earthquake that occurred on 2011/03/11. The mainshock parameters are:</p><pre>   Date/Time:  "2011/03/11 05:46:24"
@@ -132,16 +167,16 @@ Got 1136 events
 </pre><pre class="codeoutput">
 Variables:
 
-    datenum: 1136x1 double
+    otime: 1136x1 double
         Values:
 
             min       7.3457e+05
             median    7.3457e+05
             max       7.3457e+05
 
-    date: 1136x10 char
+    yyyy_mm_dd: 1136x10 char
 
-    time: 1136x8 char
+    hh_mm_ss: 1136x10 char
 
     lon: 1136x1 double
         Values:
@@ -176,369 +211,263 @@ Variables:
 
     etype: 1136x1 cell string
 
+    ontime: 1136x1 double
+        Values:
+
+            min        NaN    
+            median     NaN    
+            max        NaN    
+            NaNs      1136    
+
+    offtime: 1136x1 double
+        Values:
+
+            min        NaN     
+            median     NaN     
+            max        NaN     
+            NaNs      1136     
+
 </pre><p>Save this dataset so you can use it again later:</p><pre class="codeinput">save(<span class="string">'tohoku_events.mat'</span>, <span class="string">'tohoku_events'</span>)
-</pre><h2>Readings events from an Antelope database<a name="10"></a></h2><p>To load event data from an Antelope/Datascope CSS3.0 database you will need to have Antelope (<a href="http://www.brtt.com/software.html">http://www.brtt.com/software.html</a>) installed, including the Antelope toolbox for MATLAB.</p><p><b>SCAFFOLD: NOTE THAT CURRENTLY NOT USING THE RTDB200903 AT ALL</b></p><p>For the purpose of this exercise we will be using data from Redoubt volcano from 2009/03/20 to 2009/03/23. We will use snippets from two catalogs that are provided with GISMO in Antelope format:</p><div><ul><li>The real-time catalog (rtdb200903).</li><li>The analyst-reviewed offical AVO catalog (avodb200903).</li></ul></div><p>Both catalog segments are included in the "demo" directory. We will now load the official AVO catalog into an Events object:</p><pre class="codeinput">dbpath = Catalog.demo.demodb(<span class="string">'avo'</span>);
+</pre><h2>Readings events from an Antelope database<a name="9"></a></h2><p>To load event data from an Antelope/Datascope CSS3.0 database you will need to have Antelope (<a href="http://www.brtt.com/software.html">http://www.brtt.com/software.html</a>) installed, including the Antelope toolbox for MATLAB  (ATM). To see if ATM is installed, use the admin.antelope_exists() command, e.g.</p><pre class="codeinput"><span class="keyword">if</span> admin.antelope_exists()
+    disp(<span class="string">'Antelope Toolbox for MATLAB found'</span>)
+<span class="keyword">else</span>
+    disp(<span class="string">'Sorry, Antelope not found'</span>)
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Antelope Toolbox for MATLAB found
+</pre><p>If you do not have ATM installed, any attempt to read from an Antelope database will result in a warning like:</p><pre>     Warning: Sorry, cannot read event Catalog from Antelope database as Antelope toolbox for MATLAB not found</pre><p>and an empty Catalog object will be returned.</p><pre class="codeinput"><span class="comment">%</span>
+</pre><p>For the purpose of this exercise we will be using data from Redoubt volcano from 2009/03/20 to 2009/03/23. We will use snippets from two catalogs that are provided with GISMO in Antelope format:</p><div><ul><li>The real-time catalog (rtdb200903).</li><li>The analyst-reviewed offical AVO catalog (avodb200903).</li></ul></div><p>Both catalog segments are included in the "demo" directory. We will now load the official AVO catalog into an Events object:</p><pre class="codeinput">dbpath = Catalog.demo.demodb(<span class="string">'avo'</span>);
 avocatalog = Catalog.retrieve(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, dbpath);
-</pre><pre class="codeoutput">Loading data from /home/glenn/src/GISMO/classes/+Catalog/+demo/css3.0/avodb200903
+</pre><pre class="codeoutput">Loading data from /Users/glennthompson/src/GISMO/core/+Catalog/+demo/css3.0/avodb200903
 Got 1441 events
 </pre><p>This should load 1441 events. What if we only want events within 20km of Redoubt volcano? There are two ways to do this. The first is the use the radialcoordinates parameter:</p><pre class="codeinput">redoubtLon = -152.7431;
 redoubtLat = 60.4853;
 maxR = km2deg(20.0);
 redoubt_events = Catalog.retrieve(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, dbpath, <span class="keyword">...</span>
-	<span class="string">'radialcoordinates'</span>, [redoubtLat redoubtLon maxR])
-</pre><pre class="codeoutput">Loading data from /home/glenn/src/GISMO/classes/+Catalog/+demo/css3.0/avodb200903
+    <span class="string">'radialcoordinates'</span>, [redoubtLat redoubtLon maxR])
+</pre><pre class="codeoutput">Loading data from /Users/glennthompson/src/GISMO/core/+Catalog/+demo/css3.0/avodb200903
 Got 1397 events
 
 redoubt_events = 
 
+
+ans =
+
+Catalog
+
 Number of events: 1397
 Biggest event: 2.000000 at 22-Mar-2009 20:21:20
-     datenum         date         time        lon       lat      depth    mag 
-    __________    __________    ________    _______    ______    _____    ____
+      otime       yyyy_mm_dd     hh_mm_ss       lon       lat      depth    mag     magtype    etype    ontime    offtime
+    __________    __________    __________    _______    ______    _____    ____    _______    _____    ______    _______
 
-    7.3385e+05    2009/03/20    00:24:41     -152.8    60.481     3.62     0.3
-    7.3385e+05    2009/03/20    07:29:44    -152.74    60.494       -3    -0.3
-    7.3385e+05    2009/03/20    07:43:40    -152.78    60.484       -3     0.4
-    7.3385e+05    2009/03/20    07:48:53    -152.75    60.455     0.44     0.7
-    7.3385e+05    2009/03/20    11:09:21    -152.77    60.497     3.09     0.5
-    7.3385e+05    2009/03/20    11:10:43    -152.77    60.488     0.69     0.8
-    7.3385e+05    2009/03/20    12:20:02    -152.77     60.48    -0.15     0.3
-    7.3385e+05    2009/03/20    13:21:06    -152.76    60.488    -2.78     0.4
-    7.3385e+05    2009/03/20    14:04:39    -152.76     60.48     3.72     0.5
-    7.3385e+05    2009/03/20    15:25:39    -152.76    60.486     -2.9     0.4
-    7.3385e+05    2009/03/20    16:51:47    -152.78    60.483       -3     0.5
-    7.3385e+05    2009/03/20    16:52:08    -152.77    60.501     2.12     0.5
-    7.3385e+05    2009/03/20    17:10:26    -152.77    60.484     0.61     0.9
-    7.3385e+05    2009/03/20    17:17:16    -152.73    60.495       -3    -0.1
-    7.3385e+05    2009/03/20    17:46:27    -152.78    60.505     2.59    -0.3
-    7.3385e+05    2009/03/20    17:46:39    -152.76    60.489    -2.46     0.8
-    7.3385e+05    2009/03/20    17:59:41    -152.77    60.487    -2.67     0.3
-    7.3385e+05    2009/03/20    19:42:17    -152.77    60.484     2.28     0.4
-    7.3385e+05    2009/03/20    19:44:11    -152.76     60.49     0.04     0.7
-    7.3385e+05    2009/03/20    19:46:08    -152.77    60.483       -3    -0.2
-    7.3385e+05    2009/03/20    20:02:49    -152.77    60.484     0.12     0.9
-    7.3385e+05    2009/03/20    20:23:13    -152.74    60.489    -1.39     0.4
-    7.3385e+05    2009/03/20    20:27:29    -152.77    60.491    -2.55     0.3
-    7.3385e+05    2009/03/20    20:35:09    -152.77    60.462     5.19     0.5
-    7.3385e+05    2009/03/20    20:36:50    -152.76    60.487    -2.92     0.4
-    7.3385e+05    2009/03/20    20:39:44    -152.77    60.485     3.52     0.5
-    7.3385e+05    2009/03/20    20:52:01    -152.78    60.474     2.36     0.3
-    7.3385e+05    2009/03/20    21:00:45    -152.76    60.484     0.65       1
-    7.3385e+05    2009/03/20    21:11:41    -152.77    60.483    -2.48     0.3
-    7.3385e+05    2009/03/20    21:13:05    -152.78    60.461      6.4       1
-    7.3385e+05    2009/03/20    21:45:52    -152.76    60.482       -3     0.1
-    7.3385e+05    2009/03/20    21:45:54    -152.81    60.482    -2.74     0.8
-    7.3385e+05    2009/03/20    22:13:19    -152.77    60.488    -2.92     0.1
-    7.3385e+05    2009/03/20    22:20:14    -152.77    60.487      2.8     0.3
-    7.3385e+05    2009/03/20    22:32:48    -152.77    60.501       -3    -0.5
-    7.3385e+05    2009/03/20    22:39:30    -152.76    60.491        1     0.6
-    7.3385e+05    2009/03/20    22:42:14    -152.77     60.49     3.57     0.5
-    7.3385e+05    2009/03/20    22:59:34    -152.78    60.478       -3     0.5
-    7.3385e+05    2009/03/20    23:20:30    -152.77    60.491     0.59     0.3
-    7.3385e+05    2009/03/20    23:43:54    -152.76    60.489     0.48     0.9
-    7.3385e+05    2009/03/20    23:52:53    -152.77     60.49     1.14     0.3
-    7.3385e+05    2009/03/21    00:09:20    -152.72    60.487       -3    -0.9
-    7.3385e+05    2009/03/21    00:09:34    -152.77    60.491     3.04     0.5
-    7.3385e+05    2009/03/21    00:19:32    -152.77    60.489    -2.83       0
-    7.3385e+05    2009/03/21    00:24:39    -152.77    60.487     0.66     0.4
-    7.3385e+05    2009/03/21    00:42:16    -152.77    60.497     2.73     0.4
-    7.3385e+05    2009/03/21    00:44:30    -152.77    60.487    -2.06     0.4
-    7.3385e+05    2009/03/21    00:47:06    -152.77    60.492    -0.14    -0.1
-    7.3385e+05    2009/03/21    00:47:12    -152.77    60.493    -0.49     0.6
-    7.3385e+05    2009/03/21    01:16:51    -152.77    60.483     -0.4     0.6
-
-
-    magtype    etype
-    _______    _____
-
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
+    7.3385e+05    2009_03_20    00:24:41.6     -152.8    60.481     3.62     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    07:29:44.8    -152.74    60.494       -3    -0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    07:43:40.6    -152.78    60.484       -3     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    07:48:53.5    -152.75    60.455     0.44     0.7    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    11:09:21.9    -152.77    60.497     3.09     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    11:10:43.2    -152.77    60.488     0.69     0.8    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    12:20:02.7    -152.77     60.48    -0.15     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    13:21:06.0    -152.76    60.488    -2.78     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    14:04:39.6    -152.76     60.48     3.72     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    15:25:39.3    -152.76    60.486     -2.9     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    16:51:47.1    -152.78    60.483       -3     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    16:52:08.1    -152.77    60.501     2.12     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    17:10:26.7    -152.77    60.484     0.61     0.9    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    17:17:16.1    -152.73    60.495       -3    -0.1    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    17:46:27.3    -152.78    60.505     2.59    -0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    17:46:39.2    -152.76    60.489    -2.46     0.8    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    17:59:41.8    -152.77    60.487    -2.67     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    19:42:17.3    -152.77    60.484     2.28     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    19:44:11.7    -152.76     60.49     0.04     0.7    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    19:46:08.9    -152.77    60.483       -3    -0.2    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    20:02:49.4    -152.77    60.484     0.12     0.9    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    20:23:13.9    -152.74    60.489    -1.39     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    20:27:29.6    -152.77    60.491    -2.55     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    20:35:09.7    -152.77    60.462     5.19     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    20:36:50.5    -152.76    60.487    -2.92     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    20:39:44.5    -152.77    60.485     3.52     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    20:52:01.3    -152.78    60.474     2.36     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    21:00:45.1    -152.76    60.484     0.65       1    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    21:11:41.9    -152.77    60.483    -2.48     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    21:13:05.4    -152.78    60.461      6.4       1    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    21:45:52.3    -152.76    60.482       -3     0.1    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    21:45:54.8    -152.81    60.482    -2.74     0.8    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    22:13:19.7    -152.77    60.488    -2.92     0.1    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    22:20:14.2    -152.77    60.487      2.8     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    22:32:48.9    -152.77    60.501       -3    -0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    22:39:30.5    -152.76    60.491        1     0.6    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    22:42:14.6    -152.77     60.49     3.57     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    22:59:34.3    -152.78    60.478       -3     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    23:20:30.0    -152.77    60.491     0.59     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    23:43:54.8    -152.76    60.489     0.48     0.9    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    23:52:53.7    -152.77     60.49     1.14     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:09:20.6    -152.72    60.487       -3    -0.9    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:09:34.6    -152.77    60.491     3.04     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:19:32.5    -152.77    60.489    -2.83       0    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:24:39.7    -152.77    60.487     0.66     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:42:16.9    -152.77    60.497     2.73     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:44:30.9    -152.77    60.487    -2.06     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:47:06.5    -152.77    60.492    -0.14    -0.1    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:47:12.3    -152.77    60.493    -0.49     0.6    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    01:16:51.1    -152.77    60.483     -0.4     0.6    'ml'       'a'      NaN       NaN    
 
 * Only showing first 50 rows/events - to see all rows/events use:
 *      catalogObject.disp(true)
-</pre><p>Save this dataset so you can use it again later:</p><pre class="codeinput">save(<span class="string">'redoubt_events.mat'</span>, <span class="string">'redoubt_events'</span>)
-</pre><p>The second way is to use the 'subset_expression' which the Antelope expression evaluator interprets:</p><pre class="codeinput">expr = sprintf(<span class="string">'distance(lat, lon, %f, %f) &lt; %f'</span>,redoubtLat, redoubtLon,maxR)
-catalogObject = Catalog.retrieve(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, dbpath, <span class="keyword">...</span>
-	<span class="string">'subset_expression'</span>, expr)
+</pre><p>Anyone familiar with Antelope will know that it subsets databases by using a dbeval subset expression, and the command above does this internally. You can also specify a subset expression directly. The following example is completely equivalent to that above:</p><pre class="codeinput">expr = sprintf(<span class="string">'distance(lat, lon, %f, %f) &lt; %f'</span>,redoubtLat, redoubtLon,maxR)
+redoubt_events = Catalog.retrieve(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, dbpath, <span class="keyword">...</span>
+    <span class="string">'subset_expression'</span>, expr)
 </pre><pre class="codeoutput">
 expr =
 
 distance(lat, lon, 60.485300, -152.743100) &lt; 0.179864
 
-Loading data from /home/glenn/src/GISMO/classes/+Catalog/+demo/css3.0/avodb200903
+Loading data from /Users/glennthompson/src/GISMO/core/+Catalog/+demo/css3.0/avodb200903
 Got 1397 events
 
-catalogObject = 
+redoubt_events = 
+
+
+ans =
+
+Catalog
 
 Number of events: 1397
 Biggest event: 2.000000 at 22-Mar-2009 20:21:20
-     datenum         date         time        lon       lat      depth    mag 
-    __________    __________    ________    _______    ______    _____    ____
+      otime       yyyy_mm_dd     hh_mm_ss       lon       lat      depth    mag     magtype    etype    ontime    offtime
+    __________    __________    __________    _______    ______    _____    ____    _______    _____    ______    _______
 
-    7.3385e+05    2009/03/20    00:24:41     -152.8    60.481     3.62     0.3
-    7.3385e+05    2009/03/20    07:29:44    -152.74    60.494       -3    -0.3
-    7.3385e+05    2009/03/20    07:43:40    -152.78    60.484       -3     0.4
-    7.3385e+05    2009/03/20    07:48:53    -152.75    60.455     0.44     0.7
-    7.3385e+05    2009/03/20    11:09:21    -152.77    60.497     3.09     0.5
-    7.3385e+05    2009/03/20    11:10:43    -152.77    60.488     0.69     0.8
-    7.3385e+05    2009/03/20    12:20:02    -152.77     60.48    -0.15     0.3
-    7.3385e+05    2009/03/20    13:21:06    -152.76    60.488    -2.78     0.4
-    7.3385e+05    2009/03/20    14:04:39    -152.76     60.48     3.72     0.5
-    7.3385e+05    2009/03/20    15:25:39    -152.76    60.486     -2.9     0.4
-    7.3385e+05    2009/03/20    16:51:47    -152.78    60.483       -3     0.5
-    7.3385e+05    2009/03/20    16:52:08    -152.77    60.501     2.12     0.5
-    7.3385e+05    2009/03/20    17:10:26    -152.77    60.484     0.61     0.9
-    7.3385e+05    2009/03/20    17:17:16    -152.73    60.495       -3    -0.1
-    7.3385e+05    2009/03/20    17:46:27    -152.78    60.505     2.59    -0.3
-    7.3385e+05    2009/03/20    17:46:39    -152.76    60.489    -2.46     0.8
-    7.3385e+05    2009/03/20    17:59:41    -152.77    60.487    -2.67     0.3
-    7.3385e+05    2009/03/20    19:42:17    -152.77    60.484     2.28     0.4
-    7.3385e+05    2009/03/20    19:44:11    -152.76     60.49     0.04     0.7
-    7.3385e+05    2009/03/20    19:46:08    -152.77    60.483       -3    -0.2
-    7.3385e+05    2009/03/20    20:02:49    -152.77    60.484     0.12     0.9
-    7.3385e+05    2009/03/20    20:23:13    -152.74    60.489    -1.39     0.4
-    7.3385e+05    2009/03/20    20:27:29    -152.77    60.491    -2.55     0.3
-    7.3385e+05    2009/03/20    20:35:09    -152.77    60.462     5.19     0.5
-    7.3385e+05    2009/03/20    20:36:50    -152.76    60.487    -2.92     0.4
-    7.3385e+05    2009/03/20    20:39:44    -152.77    60.485     3.52     0.5
-    7.3385e+05    2009/03/20    20:52:01    -152.78    60.474     2.36     0.3
-    7.3385e+05    2009/03/20    21:00:45    -152.76    60.484     0.65       1
-    7.3385e+05    2009/03/20    21:11:41    -152.77    60.483    -2.48     0.3
-    7.3385e+05    2009/03/20    21:13:05    -152.78    60.461      6.4       1
-    7.3385e+05    2009/03/20    21:45:52    -152.76    60.482       -3     0.1
-    7.3385e+05    2009/03/20    21:45:54    -152.81    60.482    -2.74     0.8
-    7.3385e+05    2009/03/20    22:13:19    -152.77    60.488    -2.92     0.1
-    7.3385e+05    2009/03/20    22:20:14    -152.77    60.487      2.8     0.3
-    7.3385e+05    2009/03/20    22:32:48    -152.77    60.501       -3    -0.5
-    7.3385e+05    2009/03/20    22:39:30    -152.76    60.491        1     0.6
-    7.3385e+05    2009/03/20    22:42:14    -152.77     60.49     3.57     0.5
-    7.3385e+05    2009/03/20    22:59:34    -152.78    60.478       -3     0.5
-    7.3385e+05    2009/03/20    23:20:30    -152.77    60.491     0.59     0.3
-    7.3385e+05    2009/03/20    23:43:54    -152.76    60.489     0.48     0.9
-    7.3385e+05    2009/03/20    23:52:53    -152.77     60.49     1.14     0.3
-    7.3385e+05    2009/03/21    00:09:20    -152.72    60.487       -3    -0.9
-    7.3385e+05    2009/03/21    00:09:34    -152.77    60.491     3.04     0.5
-    7.3385e+05    2009/03/21    00:19:32    -152.77    60.489    -2.83       0
-    7.3385e+05    2009/03/21    00:24:39    -152.77    60.487     0.66     0.4
-    7.3385e+05    2009/03/21    00:42:16    -152.77    60.497     2.73     0.4
-    7.3385e+05    2009/03/21    00:44:30    -152.77    60.487    -2.06     0.4
-    7.3385e+05    2009/03/21    00:47:06    -152.77    60.492    -0.14    -0.1
-    7.3385e+05    2009/03/21    00:47:12    -152.77    60.493    -0.49     0.6
-    7.3385e+05    2009/03/21    01:16:51    -152.77    60.483     -0.4     0.6
-
-
-    magtype    etype
-    _______    _____
-
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
-    'ml'       'a'  
+    7.3385e+05    2009_03_20    00:24:41.6     -152.8    60.481     3.62     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    07:29:44.8    -152.74    60.494       -3    -0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    07:43:40.6    -152.78    60.484       -3     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    07:48:53.5    -152.75    60.455     0.44     0.7    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    11:09:21.9    -152.77    60.497     3.09     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    11:10:43.2    -152.77    60.488     0.69     0.8    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    12:20:02.7    -152.77     60.48    -0.15     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    13:21:06.0    -152.76    60.488    -2.78     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    14:04:39.6    -152.76     60.48     3.72     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    15:25:39.3    -152.76    60.486     -2.9     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    16:51:47.1    -152.78    60.483       -3     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    16:52:08.1    -152.77    60.501     2.12     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    17:10:26.7    -152.77    60.484     0.61     0.9    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    17:17:16.1    -152.73    60.495       -3    -0.1    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    17:46:27.3    -152.78    60.505     2.59    -0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    17:46:39.2    -152.76    60.489    -2.46     0.8    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    17:59:41.8    -152.77    60.487    -2.67     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    19:42:17.3    -152.77    60.484     2.28     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    19:44:11.7    -152.76     60.49     0.04     0.7    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    19:46:08.9    -152.77    60.483       -3    -0.2    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    20:02:49.4    -152.77    60.484     0.12     0.9    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    20:23:13.9    -152.74    60.489    -1.39     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    20:27:29.6    -152.77    60.491    -2.55     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    20:35:09.7    -152.77    60.462     5.19     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    20:36:50.5    -152.76    60.487    -2.92     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    20:39:44.5    -152.77    60.485     3.52     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    20:52:01.3    -152.78    60.474     2.36     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    21:00:45.1    -152.76    60.484     0.65       1    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    21:11:41.9    -152.77    60.483    -2.48     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    21:13:05.4    -152.78    60.461      6.4       1    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    21:45:52.3    -152.76    60.482       -3     0.1    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    21:45:54.8    -152.81    60.482    -2.74     0.8    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    22:13:19.7    -152.77    60.488    -2.92     0.1    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    22:20:14.2    -152.77    60.487      2.8     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    22:32:48.9    -152.77    60.501       -3    -0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    22:39:30.5    -152.76    60.491        1     0.6    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    22:42:14.6    -152.77     60.49     3.57     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    22:59:34.3    -152.78    60.478       -3     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    23:20:30.0    -152.77    60.491     0.59     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    23:43:54.8    -152.76    60.489     0.48     0.9    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_20    23:52:53.7    -152.77     60.49     1.14     0.3    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:09:20.6    -152.72    60.487       -3    -0.9    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:09:34.6    -152.77    60.491     3.04     0.5    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:19:32.5    -152.77    60.489    -2.83       0    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:24:39.7    -152.77    60.487     0.66     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:42:16.9    -152.77    60.497     2.73     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:44:30.9    -152.77    60.487    -2.06     0.4    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:47:06.5    -152.77    60.492    -0.14    -0.1    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    00:47:12.3    -152.77    60.493    -0.49     0.6    'ml'       'a'      NaN       NaN    
+    7.3385e+05    2009_03_21    01:16:51.1    -152.77    60.483     -0.4     0.6    'ml'       'a'      NaN       NaN    
 
 * Only showing first 50 rows/events - to see all rows/events use:
 *      catalogObject.disp(true)
+</pre><p>Save this dataset so you can use it again later:</p><pre class="codeinput">save(<span class="string">'redoubt_events.mat'</span>, <span class="string">'redoubt_events'</span>)
 </pre><h2>Reading events from a Seisan database<a name="17"></a></h2><p>Here we load events from a Seisan catalog. A Seisan "Sfile" contains all the metadata for 1 event. These Sfiles are stored in a flat-file database structure the path to which is: $SEISAN_TOP/REA/databaseName. Sfiles are organized in year/month subdirectories under this path.</p><p><b>SCAFFOLD: INCLUDE DEMO DATASET FROM MVOE</b></p><p>The following will navigate this where in this case $SEISAN_TOP = '/raid/data/seisan' and the databaseName is MVOE_ which stands for the Montserrat Volcano Observatory Event database. (In Seisan, databaseName is limited to exactly 5 characters).</p><p>This example will load Sfiles from 4 hours on 1st Nov, 1996. This is a slow function to run as MATLAB is slow at parsing text files, and there are many events per day in this particular database.</p><pre class="codeinput">demodir = Catalog.demo.demo_path();
 dbpath = fullfile(demodir,<span class="string">'seisan'</span>);
 montserrat_events = Catalog.retrieve(<span class="string">'seisan'</span>, <span class="keyword">...</span>
     <span class="string">'dbpath'</span>, dbpath, <span class="keyword">...</span>
 	<span class="string">'startTime'</span>, <span class="string">'1996/11/01 11:00:00'</span>, <span class="keyword">...</span><span class="comment">.</span>
 	<span class="string">'endTime'</span>, <span class="string">'1996/11/01 15:00:00'</span>)
-</pre><pre class="codeoutput">There are 29 sfiles matching your request in /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1108-25L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1115-03L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1131-08L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1135-09L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1141-34L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1146-34L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1154-07L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1214-17L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1232-42L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1239-55L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1246-24L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1301-08L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1306-18L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1314-39L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1320-33L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1326-24L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1329-18L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1334-58L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1336-31L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1353-50L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1408-52L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1412-15L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1417-35L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1424-29L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1432-44L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1433-40L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1443-02L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1450-08L.S199611
-Processing /home/glenn/src/GISMO/classes/+Catalog/+demo/seisan/1996/11/01-1459-30L.S199611
+</pre><pre class="codeoutput">There are 29 sfiles matching your request in /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1108-25L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1115-03L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1131-08L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1135-09L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1141-34L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1146-34L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1154-07L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1214-17L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1232-42L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1239-55L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1246-24L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1301-08L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1306-18L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1314-39L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1320-33L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1326-24L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1329-18L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1334-58L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1336-31L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1353-50L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1408-52L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1412-15L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1417-35L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1424-29L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1432-44L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1433-40L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1443-02L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1450-08L.S199611
+Processing /Users/glennthompson/src/GISMO/core/+Catalog/+demo/seisan/1996/11/01-1459-30L.S199611
 Got 29 events
 
 montserrat_events = 
 
+
+ans =
+
+Catalog
+
 Number of events: 29
 Biggest event: NaN at 01-Nov-1996 11:08:25
-     datenum         date         time        lon       lat      depth    mag
-    __________    __________    ________    _______    ______    _____    ___
+      otime       yyyy_mm_dd     hh_mm_ss       lon       lat      depth    mag    magtype    etype    ontime    offtime
+    __________    __________    __________    _______    ______    _____    ___    _______    _____    ______    _______
 
-    7.2933e+05    1996/11/01    11:08:25        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    11:15:03        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    11:31:08        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    11:35:20    -62.177    16.713    1.7      NaN
-    7.2933e+05    1996/11/01    11:41:34        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    11:46:42    -62.156     16.63    3.1      NaN
-    7.2933e+05    1996/11/01    11:54:07        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    12:14:17        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    12:32:42        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    12:39:55        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    12:46:24        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    13:01:08        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    13:06:18        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    13:14:39        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    13:20:43    -62.176    16.713      0      NaN
-    7.2933e+05    1996/11/01    13:26:24        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    13:29:18        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    13:34:58        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    13:36:42    -62.177    16.715      0      NaN
-    7.2933e+05    1996/11/01    13:53:50        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    14:08:52        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    14:12:15        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    14:17:35        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    14:24:40    -62.176    16.714    1.3      NaN
-    7.2933e+05    1996/11/01    14:32:44        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    14:33:40        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    14:43:13    -62.177    16.711    1.8      NaN
-    7.2933e+05    1996/11/01    14:50:08        NaN       NaN    NaN      NaN
-    7.2933e+05    1996/11/01    14:59:30        NaN       NaN    NaN      NaN
-
-
-    magtype    etype
-    _______    _____
-
-    'u'        'h'  
-    'u'        't'  
-    'u'        't'  
-    'u'        'h'  
-    'u'        't'  
-    'u'        'h'  
-    'u'        'h'  
-    'u'        'h'  
-    'u'        'h'  
-    'u'        'h'  
-    'u'        'h'  
-    'u'        'h'  
-    'u'        'h'  
-    'u'        'h'  
-    'u'        'h'  
-    'u'        'h'  
-    'u'        'e'  
-    'u'        'h'  
-    'u'        'h'  
-    'u'        'h'  
-    'u'        't'  
-    'u'        'h'  
-    'u'        'u'  
-    'u'        'h'  
-    'u'        'r'  
-    'u'        'h'  
-    'u'        'h'  
-    'u'        'h'  
-    'u'        'h'  
+    7.2933e+05    1996_11_01    11:08:25.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    11:15:03.0        NaN       NaN    NaN      NaN    'u'        't'      NaN       NaN    
+    7.2933e+05    1996_11_01    11:31:08.0        NaN       NaN    NaN      NaN    'u'        't'      NaN       NaN    
+    7.2933e+05    1996_11_01    11:35:20.0    -62.177    16.713    1.7      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    11:41:34.0        NaN       NaN    NaN      NaN    'u'        't'      NaN       NaN    
+    7.2933e+05    1996_11_01    11:46:42.9    -62.156     16.63    3.1      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    11:54:07.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    12:14:17.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    12:32:42.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    12:39:55.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    12:46:24.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    13:01:08.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    13:06:18.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    13:14:39.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    13:20:43.0    -62.176    16.713      0      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    13:26:24.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    13:29:18.0        NaN       NaN    NaN      NaN    'u'        'e'      NaN       NaN    
+    7.2933e+05    1996_11_01    13:34:58.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    13:36:42.0    -62.177    16.715      0      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    13:53:50.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    14:08:52.0        NaN       NaN    NaN      NaN    'u'        't'      NaN       NaN    
+    7.2933e+05    1996_11_01    14:12:15.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    14:17:35.0        NaN       NaN    NaN      NaN    'u'        'u'      NaN       NaN    
+    7.2933e+05    1996_11_01    14:24:40.0    -62.176    16.714    1.3      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    14:32:44.0        NaN       NaN    NaN      NaN    'u'        'r'      NaN       NaN    
+    7.2933e+05    1996_11_01    14:33:40.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    14:43:13.0    -62.177    16.711    1.8      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    14:50:08.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
+    7.2933e+05    1996_11_01    14:59:30.0        NaN       NaN    NaN      NaN    'u'        'h'      NaN       NaN    
 
 </pre><p>Save this dataset so you can use it again later:</p><pre class="codeinput">save(<span class="string">'montserrat_events.mat'</span>, <span class="string">'montserrat_events'</span>)
 </pre><p>Only a few of these earthquakes have been located and even fewer have magnitudes. This is common for volcanic earthquakes. Most of these are of type 'h' - a hybrid earthquake.</p><h2>Converting a Zmap data structure to a Catalog object<a name="21"></a></h2><p>ZMap is a graphical application written by Max Wyss &amp; Stefan Wiemer for statistical analysis of catalogs. GISMO can convert a ZMap data structure into a Catalog object with:</p><pre>  catalogObject = Catalog.retrieve('zmap', zmapdata)</pre><h2>Plotting hypocenter maps<a name="22"></a></h2><p>Catalog objects have three builtin ways for plotting hypocenters</p><p>Reload the Tohoku dataset</p><pre class="codeinput">load <span class="string">tohoku_events.mat</span>
@@ -624,119 +553,79 @@ PR=76 occurs at 91.5% of time series
 </pre><img vspace="5" hspace="5" src="cookbook_11.png" alt=""> <p>In this particular example, the b-value is 0.6 and the magnitude of completeness is 4.2.</p><p>Now for the Redoubt events:</p><pre class="codeinput">redoubt_events.bvalue(1)
 </pre><img vspace="5" hspace="5" src="cookbook_12.png" alt=""> <h2>Saving Catalog objects to disk<a name="41"></a></h2><p><b>Writing to a MAT file</b> We've already seen how to do this, the general syntax is:    save('myfilename.mat', 'myCatalogObject')</p><p>This can simply be loaded again with:    load('myfilename.mat')</p><p><b>Writing to an Antelope CSS3.0 database</b> This method requires the Antelope toolbox for MATLAB and writes the Catalog as a CSS3.0 flat-file database:</p><p>First make sure there is no database with this name already - else we will be appending to it:</p><pre class="codeinput">delete <span class="string">greatquakes_db*</span>
 </pre><p>Now write to the database</p><pre class="codeinput">greatquakes.write(<span class="string">'antelope'</span>, <span class="string">'greatquakes_db'</span>, <span class="string">'css3.0'</span>)
-</pre><p>This database can be reloaded with:</p><pre class="codeinput">greatquakes2 = Catalog.retrieve(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>,<span class="string">'greatquakes_db'</span>)
+</pre><p>This database can be reloaded with:</p><pre class="codeinput">greatquakes2 = Catalog.retrieve(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, <span class="string">'greatquakes_db'</span>)
 </pre><pre class="codeoutput">Loading data from greatquakes_db
 Got 20 events
 
 greatquakes2 = 
 
+
+ans =
+
+Catalog
+
 Number of events: 20
 Biggest event: 9.100000 at 11-Mar-2011 05:46:23
-     datenum         date         time        lon        lat      depth    mag
-    __________    __________    ________    _______    _______    _____    ___
+      otime       yyyy_mm_dd     hh_mm_ss       lon        lat      depth    mag     magtype      etype    ontime    offtime
+    __________    __________    __________    _______    _______    _____    ___    __________    _____    ______    _______
 
-    7.3103e+05    2001/06/23    20:33:09    -73.561    -16.303      2.2    8.3
-    7.3185e+05    2003/09/25    19:50:07     143.87     41.749       33    8.1
-     7.323e+05    2004/12/23    14:59:00     161.58     -49.71       10      8
-    7.3231e+05    2004/12/26    00:58:52     95.901     3.4125     26.1    8.2
-     7.324e+05    2005/03/28    16:09:35     97.113     2.0964       30    8.1
-    7.3283e+05    2006/06/01    18:57:02     120.88     19.054       13    8.4
-    7.3283e+05    2006/06/05    00:50:31     119.08     17.992      124      8
-      7.33e+05    2006/11/15    11:14:14     153.21     46.681     12.2    8.3
-    7.3306e+05    2007/01/13    04:23:23      154.5     46.231     22.5    8.1
-    7.3313e+05    2007/04/01    20:39:56     157.03    -8.4468      9.5    8.1
-    7.3327e+05    2007/08/15    23:40:58    -76.555    -13.384     41.2      8
-     7.333e+05    2007/09/12    11:10:26      101.4    -4.4637     35.5    8.5
-    7.3405e+05    2009/09/29    17:48:11    -171.94    -15.512     18.5    8.1
-     7.342e+05    2010/02/27    06:34:13    -72.933    -36.148     28.1    8.8
-    7.3457e+05    2011/03/11    05:46:23      142.5     38.296     19.7    9.1
-    7.3497e+05    2012/04/11    08:38:37     93.014     2.2376     26.3    8.6
-    7.3497e+05    2012/04/11    10:43:10     92.428     0.7675     21.6    8.2
-    7.3527e+05    2013/02/06    01:12:27     165.14    -10.738     28.7      8
-    7.3538e+05    2013/05/24    05:44:49     153.28     54.874    608.9    8.3
-    7.3569e+05    2014/04/01    23:46:47    -70.769     -19.61       25    8.2
-
-
-     magtype      etype
-    __________    _____
-
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
-    {1x1 cell}    'eq' 
+    7.3103e+05    2001_06_23    20:33:09.3    -73.561    -16.303      2.2    8.3    {1x1 cell}    'eq'     NaN       NaN    
+    7.3185e+05    2003_09_25    19:50:07.2     143.87     41.749       33    8.1    {1x1 cell}    'eq'     NaN       NaN    
+     7.323e+05    2004_12_23    14:59:00.6     161.58     -49.71       10      8    {1x1 cell}    'eq'     NaN       NaN    
+    7.3231e+05    2004_12_26    00:58:52.0     95.901     3.4125     26.1    8.2    {1x1 cell}    'eq'     NaN       NaN    
+     7.324e+05    2005_03_28    16:09:35.2     97.113     2.0964       30    8.1    {1x1 cell}    'eq'     NaN       NaN    
+    7.3283e+05    2006_06_01    18:57:02.9     120.88     19.054       13    8.4    {1x1 cell}    'eq'     NaN       NaN    
+    7.3283e+05    2006_06_05    00:50:31.5     119.08     17.992      124      8    {1x1 cell}    'eq'     NaN       NaN    
+      7.33e+05    2006_11_15    11:14:14.5     153.21     46.681     12.2    8.3    {1x1 cell}    'eq'     NaN       NaN    
+    7.3306e+05    2007_01_13    04:23:23.2      154.5     46.231     22.5    8.1    {1x1 cell}    'eq'     NaN       NaN    
+    7.3313e+05    2007_04_01    20:39:56.5     157.03    -8.4468      9.5    8.1    {1x1 cell}    'eq'     NaN       NaN    
+    7.3327e+05    2007_08_15    23:40:58.4    -76.555    -13.384     41.2      8    {1x1 cell}    'eq'     NaN       NaN    
+     7.333e+05    2007_09_12    11:10:26.8      101.4    -4.4637     35.5    8.5    {1x1 cell}    'eq'     NaN       NaN    
+    7.3405e+05    2009_09_29    17:48:11.5    -171.94    -15.512     18.5    8.1    {1x1 cell}    'eq'     NaN       NaN    
+     7.342e+05    2010_02_27    06:34:13.3    -72.933    -36.148     28.1    8.8    {1x1 cell}    'eq'     NaN       NaN    
+    7.3457e+05    2011_03_11    05:46:23.2      142.5     38.296     19.7    9.1    {1x1 cell}    'eq'     NaN       NaN    
+    7.3497e+05    2012_04_11    08:38:37.8     93.014     2.2376     26.3    8.6    {1x1 cell}    'eq'     NaN       NaN    
+    7.3497e+05    2012_04_11    10:43:10.5     92.428     0.7675     21.6    8.2    {1x1 cell}    'eq'     NaN       NaN    
+    7.3527e+05    2013_02_06    01:12:27.0     165.14    -10.738     28.7      8    {1x1 cell}    'eq'     NaN       NaN    
+    7.3538e+05    2013_05_24    05:44:49.6     153.28     54.874    608.9    8.3    {1x1 cell}    'eq'     NaN       NaN    
+    7.3569e+05    2014_04_01    23:46:47.2    -70.769     -19.61       25    8.2    {1x1 cell}    'eq'     NaN       NaN    
 
 </pre><p>Compare:</p><pre class="codeinput">greatquakes
 </pre><pre class="codeoutput">
 greatquakes = 
 
+
+ans =
+
+Catalog
+
 Number of events: 20
 Biggest event: 9.100000 at 11-Mar-2011 05:46:23
-     datenum         date         time        lon        lat      depth    mag
-    __________    __________    ________    _______    _______    _____    ___
+      otime       yyyy_mm_dd     hh_mm_ss       lon        lat      depth    mag    magtype       etype        ontime    offtime
+    __________    __________    __________    _______    _______    _____    ___    _______    ____________    ______    _______
 
-    7.3103e+05    2001/06/23    20:33:09    -73.561    -16.303      2.2    8.3
-    7.3185e+05    2003/09/25    19:50:07     143.87     41.749       33    8.1
-     7.323e+05    2004/12/23    14:59:00     161.58     -49.71       10      8
-    7.3231e+05    2004/12/26    00:58:52     95.901     3.4125     26.1    8.2
-     7.324e+05    2005/03/28    16:09:35     97.113     2.0964       30    8.1
-    7.3283e+05    2006/06/01    18:57:02     120.88     19.054       13    8.4
-    7.3283e+05    2006/06/05    00:50:31     119.08     17.992      124      8
-      7.33e+05    2006/11/15    11:14:14     153.21     46.681     12.2    8.3
-    7.3306e+05    2007/01/13    04:23:23      154.5     46.231     22.5    8.1
-    7.3313e+05    2007/04/01    20:39:56     157.03    -8.4468      9.5    8.1
-    7.3327e+05    2007/08/15    23:40:58    -76.555    -13.384     41.2      8
-     7.333e+05    2007/09/12    11:10:26      101.4    -4.4637     35.5    8.5
-    7.3405e+05    2009/09/29    17:48:11    -171.94    -15.512     18.5    8.1
-     7.342e+05    2010/02/27    06:34:13    -72.933    -36.148     28.1    8.8
-    7.3457e+05    2011/03/11    05:46:23      142.5     38.296     19.7    9.1
-    7.3497e+05    2012/04/11    08:38:37     93.014     2.2376     26.3    8.6
-    7.3497e+05    2012/04/11    10:43:10     92.428     0.7675     21.6    8.2
-    7.3527e+05    2013/02/06    01:12:27     165.14    -10.738     28.7      8
-    7.3538e+05    2013/05/24    05:44:49     153.28     54.874    608.9    8.3
-    7.3569e+05    2014/04/01    23:46:47    -70.769     -19.61       25    8.2
+    7.3103e+05    2001_06_23    20:33:09.3    -73.561    -16.303      2.2    8.3    'MW'       'earthquake'    NaN       NaN    
+    7.3185e+05    2003_09_25    19:50:07.2     143.87     41.749       33    8.1    'MW'       'earthquake'    NaN       NaN    
+     7.323e+05    2004_12_23    14:59:00.6     161.58     -49.71       10      8    'MW'       'earthquake'    NaN       NaN    
+    7.3231e+05    2004_12_26    00:58:52.0     95.901     3.4125     26.1    8.2    'MW'       'earthquake'    NaN       NaN    
+     7.324e+05    2005_03_28    16:09:35.2     97.113     2.0964       30    8.1    'MW'       'earthquake'    NaN       NaN    
+    7.3283e+05    2006_06_01    18:57:02.9     120.88     19.054       13    8.4    'MS'       'earthquake'    NaN       NaN    
+    7.3283e+05    2006_06_05    00:50:31.5     119.08     17.992      124      8    'MS'       'earthquake'    NaN       NaN    
+      7.33e+05    2006_11_15    11:14:14.5     153.21     46.681     12.2    8.3    'MW'       'earthquake'    NaN       NaN    
+    7.3306e+05    2007_01_13    04:23:23.2      154.5     46.231     22.5    8.1    'MW'       'earthquake'    NaN       NaN    
+    7.3313e+05    2007_04_01    20:39:56.5     157.03    -8.4468      9.5    8.1    'MW'       'earthquake'    NaN       NaN    
+    7.3327e+05    2007_08_15    23:40:58.4    -76.555    -13.384     41.2      8    'MW'       'earthquake'    NaN       NaN    
+     7.333e+05    2007_09_12    11:10:26.8      101.4    -4.4637     35.5    8.5    'MW'       'earthquake'    NaN       NaN    
+    7.3405e+05    2009_09_29    17:48:11.5    -171.94    -15.512     18.5    8.1    'MW'       'earthquake'    NaN       NaN    
+     7.342e+05    2010_02_27    06:34:13.3    -72.933    -36.148     28.1    8.8    'MW'       'earthquake'    NaN       NaN    
+    7.3457e+05    2011_03_11    05:46:23.2      142.5     38.296     19.7    9.1    'MW'       'earthquake'    NaN       NaN    
+    7.3497e+05    2012_04_11    08:38:37.8     93.014     2.2376     26.3    8.6    'MW'       'earthquake'    NaN       NaN    
+    7.3497e+05    2012_04_11    10:43:10.5     92.428     0.7675     21.6    8.2    'MW'       'earthquake'    NaN       NaN    
+    7.3527e+05    2013_02_06    01:12:27.0     165.14    -10.738     28.7      8    'MW'       'earthquake'    NaN       NaN    
+    7.3538e+05    2013_05_24    05:44:49.6     153.28     54.874    608.9    8.3    'MW'       'earthquake'    NaN       NaN    
+    7.3569e+05    2014_04_01    23:46:47.2    -70.769     -19.61       25    8.2    'MWW'      'earthquake'    NaN       NaN    
 
-
-    magtype       etype    
-    _______    ____________
-
-    'MW'       'earthquake'
-    'MW'       'earthquake'
-    'MW'       'earthquake'
-    'MW'       'earthquake'
-    'MW'       'earthquake'
-    'MS'       'earthquake'
-    'MS'       'earthquake'
-    'MW'       'earthquake'
-    'MW'       'earthquake'
-    'MW'       'earthquake'
-    'MW'       'earthquake'
-    'MW'       'earthquake'
-    'MW'       'earthquake'
-    'MW'       'earthquake'
-    'MW'       'earthquake'
-    'MW'       'earthquake'
-    'MW'       'earthquake'
-    'MW'       'earthquake'
-    'MW'       'earthquake'
-    'MWW'      'earthquake'
-
-</pre><p>This concludes the Catalog cookbook/tutorial.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+</pre><p>This concludes the Catalog cookbook/tutorial.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Catalog Cookbook
 % GISMO can read events from many different earthquake catalog file formats
@@ -751,23 +640,16 @@ Biggest event: 9.100000 at 11-Mar-2011 05:46:23
 % retrieve any name-value parameter pairs supported by irisFetch.
 %
 % In this example we will use retrieve to retrieve all events at IRIS DMC 
-% with a magnitude of at least 8.0 between year 2000 and 2014 (inclusive):
+% with a magnitude of at least 8.0 from year 2000 to 2014 (inclusive):
 
 greatquakes = Catalog.retrieve('iris', 'minimumMagnitude', 8.0, ...
-    'starttime', '2000-01-01', 'endtime', '2015-01-01');
+    'starttime', '2000-01-01', 'endtime', '2015-01-01')
 
 %%
 % To access any particular property we can use dot notation, as if the 
 % object were a structure, e.g.:
 
-greatquakes.etype
-
-%%
-% etype contains the event type for 
-% each of the 26 events. In this case each is just  'earthquake', but when 
-% dealing with more diverse dataset, many other etype's are possible. 
-% magtype is whatever magnitude type was assigned by the agency that 
-% provided the magnitude data.
+greatquakes.mag
 
 %%
 % greatquakes is a Catalog object, an instance of the Catalog class. To see
@@ -814,11 +696,24 @@ save('tohoku_events.mat', 'tohoku_events')
 %% Readings events from an Antelope database
 % To load event data from an Antelope/Datascope CSS3.0 database you will 
 % need to have Antelope (<http://www.brtt.com/software.html>) installed, 
-% including the Antelope toolbox for MATLAB.
+% including the Antelope toolbox for MATLAB  (ATM). To see if ATM is
+% installed, use the admin.antelope_exists() command, e.g.
+if admin.antelope_exists()
+    disp('Antelope Toolbox for MATLAB found')
+else
+    disp('Sorry, Antelope not found')
+end
+
+%%
+% If you do not have ATM installed, any attempt to read from an Antelope
+% database will result in a warning like:
+%
+%       Warning: Sorry, cannot read event Catalog from Antelope database as Antelope toolbox for MATLAB not found
+%
+% and an empty Catalog object will be returned.
+
 % 
 %%
-% *SCAFFOLD: NOTE THAT CURRENTLY NOT USING THE RTDB200903 AT ALL* 
-% 
 % For the purpose of this exercise we will be using data from Redoubt 
 % volcano from 2009/03/20 to 2009/03/23. We will use snippets from two 
 % catalogs that are provided with GISMO in Antelope format:
@@ -831,10 +726,9 @@ save('tohoku_events.mat', 'tohoku_events')
 %%
 % Both catalog segments are included in the "demo" directory. 
 % We will now load the official AVO catalog into an Events object:
-  
 dbpath = Catalog.demo.demodb('avo');
 avocatalog = Catalog.retrieve('antelope', 'dbpath', dbpath);
- 
+
 %%
 % This should load 1441 events. What if we only want events within 20km of 
 % Redoubt volcano? There are two ways to do this. The first is the use the
@@ -844,20 +738,22 @@ redoubtLon = -152.7431;
 redoubtLat = 60.4853;
 maxR = km2deg(20.0);
 redoubt_events = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
-	'radialcoordinates', [redoubtLat redoubtLon maxR])
+    'radialcoordinates', [redoubtLat redoubtLon maxR])
+
+%%
+% Anyone familiar with Antelope will know that it subsets databases by
+% using a dbeval subset expression, and the command above does this
+% internally. You can also specify a subset expression directly. The
+% following example is completely equivalent to that above:
+
+expr = sprintf('distance(lat, lon, %f, %f) < %f',redoubtLat, redoubtLon,maxR)
+redoubt_events = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
+    'subset_expression', expr)
 
 %%
 % Save this dataset so you can use it again later:
-
 save('redoubt_events.mat', 'redoubt_events')
 
-%%
-% The second way is to use the 'subset_expression' which the Antelope
-% expression evaluator interprets:
-
-expr = sprintf('distance(lat, lon, %f, %f) < %f',redoubtLat, redoubtLon,maxR)
-catalogObject = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
-	'subset_expression', expr)
 
 %% Reading events from a Seisan database
 % Here we load events from a Seisan catalog. A Seisan "Sfile" contains all
@@ -925,7 +821,6 @@ wmzoom(7)
 
 %% Plotting time series of events
 % *Magnitude-time plot*
-
 tohoku_events.plot_time()
 
 %%
@@ -1040,7 +935,7 @@ greatquakes.write('antelope', 'greatquakes_db', 'css3.0')
 %% 
 % This database can be reloaded with:
 
-greatquakes2 = Catalog.retrieve('antelope', 'dbpath','greatquakes_db')
+greatquakes2 = Catalog.retrieve('antelope', 'dbpath', 'greatquakes_db')
 
 %%
 % Compare:

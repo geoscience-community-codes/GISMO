@@ -1,0 +1,1628 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>EventRate</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-05-18"><meta name="DC.source" content="EventRate.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#3">EXAMPLES:</a></li><li><a href="#4">PROPERTIES</a></li><li><a href="#5">METHODS</a></li><li><a href="#6">See also Catalog, Catalog_lite</a></li><li><a href="#7">AUTHOR: Glenn Thompson</a></li><li><a href="#8">PROPERTIES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a></li><li><a href="#9">PUBLIC METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</a></li><li><a href="#10">CONSTRUCTOR</a></li><li><a href="#11">----------------------------------------------</a></li><li><a href="#12">GETTERS</a></li><li><a href="#14">FROM HERE ON THE PLOTMODES HAVE NOT BEEN UPDATED</a></li><li><a href="#16">PYTHONPLOT</a></li><li><a href="#17">HELENAPLOT</a></li><li><a href="#18">SAUSAGEPLOT</a></li><li><a href="#19">IMPORTSWARMDB</a></li><li><a href="#20">ADDFIELD</a></li><li><a href="#21">SET</a></li><li><a href="#22">GET</a></li><li><a href="#25">PERCENTILES</a></li><li><a href="#26">PLOT_PERCENTILES</a></li></ul></div><pre class="codeinput"><span class="keyword">classdef</span> EventRate
+</pre><pre class="codeinput"><span class="comment">%EventRate Event Rate class constructor.</span>
+<span class="comment">%</span>
+<span class="comment">%    EventRate is a class that has been developed around plotting earthquake</span>
+<span class="comment">%    counts - i.e. the rate of events per unit time. It has evolved to compute</span>
+<span class="comment">%    other metrics such the hourly mean event rate, median event rate, mean</span>
+<span class="comment">%    magnitude and cumulative magnitude, which are important metrics for an AVO</span>
+<span class="comment">%    swarm tracking system.</span>
+<span class="comment">%</span>
+<span class="comment">%    EventRate can import information from:</span>
+<span class="comment">%    (1) a Catalog object.</span>
+<span class="comment">%    (2) a Datascope database written in the "swarms1.0" schema, defined at AVO.</span>
+<span class="comment">%        This is the format used by the swarm tracking system (Thompson &amp;</span>
+<span class="comment">%        West, 2010).</span>
+<span class="comment">%</span>
+<span class="comment">%    ER = EventRate(Catalog_OBJECT, 'binsize', BINSIZE) creates an eventrate object</span>
+<span class="comment">%    from a Catalog object using non-overlapping bins of BINSIZE days.</span>
+<span class="comment">%</span>
+<span class="comment">%    ER = EventRate(Catalog_OBJECT, 'binsize', BINSIZE, 'stepsize', STEPSIZE) creates an eventrate object</span>
+<span class="comment">%    using overlapping bins. If omitted STEPSIZE==BINSIZE.</span>
+<span class="comment">%</span>
+</pre><h2>EXAMPLES:<a name="3"></a></h2><pre>     First create a catalog object from the demo database:
+         dbpath = demodb('avo')
+         catalogObject = readEvents('datascope', 'dbpath', dbpath, ...
+                'dbeval', ...
+                'deg2km(distance(lat, lon, 60.4853, -152.7431))&lt;15.0' ...
+                );</pre><pre>     (1) Create an eventrate object using a binsize of 1 day:
+         erobj = catalogObject.eventrate('binsize', 1);</pre><pre>     (2) Create an eventrate object using a binsize of 1 hour:
+         erobj = catalogObject.eventrate('binsize', 1/24);</pre><pre>     (3) Create an eventrate object using a binsize of 1 hour but a stepsize of 5 minutes:
+         erobj = catalogObject.eventrate('binsize', 1/24, 'stepsize', 5/1440);</pre><pre>     (4) Create a vector of eventrate objects subclassified using event types 'r', 'e', 'l', 'h', 't':
+             erobj = eventrate(catalogObject, 1, 'etypes', 'relht');
+         To plot counts on separate figures:
+             erobj.plot()
+         To plot counts and energy panels, each event type as a separate figure:
+             erobj.plot('metric', {'counts';'energy'});
+         To plot counts and energy panels on separate figures, each event type as panels:
+             erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'panels');
+         To plot counts and energy panels on separate figures, each event type stacked:
+             erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');</pre><pre>     (5) A full example:
+             catalogObject = catalog(fullfile(MVO_DATA, 'mbwh_catalog'), 'seisan', 'snum', datenum(1996,10,1), 'enum', datenum(2004,3,1), 'region', 'Montserrat')
+             erobj = eventrate(catalogObject, 365/12, 'stepsize', 1, 'etypes', 'thlr');
+             erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');</pre><h2>PROPERTIES<a name="4"></a></h2><pre>  For a list of all properties type properties(EventRate)</pre><pre>  time                % (array) time of the center of each bin as a DATENUM</pre><pre>  METRICS:
+      counts 		     % (array) number of events in each bin
+      mean_rate           % (array) number of events per hour in each bin
+      median_rate	     % (array) reciprocal of the median time interval between events. Represented as an hourly rate.
+      cum_mag		     % (array) total sum of energy in each bin, represented as a magnitude.
+      mean_mag		     % (array) mean magnitude of events in each bin
+      median_mag          % (array) median magnitude of events in each bin
+      min_mag             % (array) smallest magnitude in each bin
+      max_mag             % (array) largest magnitude in each bin</pre><pre>  SUMMARY DATA:
+      numbins             % (scalar) number of bins used for grouping
+                              events
+      total_counts        % (scalar) sum of counts
+      total_mag           % (scalar) total sum of energy of all catalogObjects, represented as a magnitude</pre><pre>  METADATA:
+      etype               % event type/classification.
+      snum                % (scalar) start date/time in DATENUM format
+      enum                % (scalar) end date/time in DATENUM format
+      binsize             % (scalar) bin size in days
+      stepsize            % (scalar) step size in days
+      region              % (4-element vector) [minlon maxlon minlat maxlat]
+      minmag              % (scalar) magnitudes smaller than this were eliminated
+      dbroot              % path to the original data on disk
+      archiveformat       % indicates if the source is a flat file, or
+                            'daily' or 'monthly' volumes
+      auth                % auth of the events</pre><h2>METHODS<a name="5"></a></h2><pre>  For a list of all methods type methods EventRate</pre><h2>See also Catalog, Catalog_lite<a name="6"></a></h2><h2>AUTHOR: Glenn Thompson<a name="7"></a></h2><h2>PROPERTIES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%<a name="8"></a></h2><pre class="codeinput">    properties(GetAccess = <span class="string">'public'</span>, SetAccess = <span class="string">'public'</span>)
+        time = [];          <span class="comment">% (array) in datenum format</span>
+        counts = []; 		<span class="comment">% (array) number of events in each bin</span>
+		mean_rate = [];      <span class="comment">% (array) number of events per hour in each bin</span>
+		median_rate = [];	<span class="comment">% (array) reciprocal of the median time interval between events. Represented as an hourly rate.</span>
+		cum_mag = [];		<span class="comment">% (array) total sum of energy in each bin, represented as a magnitude.</span>
+		mean_mag = [];		<span class="comment">% (array)</span>
+        median_mag = [];     <span class="comment">% (array)</span>
+        energy = [];
+        total_counts = [];   <span class="comment">% (scalar) sum of counts</span>
+		total_mag = [];      <span class="comment">% (scalar) total sum of energy of all catalogObjects, represented as a magnitude</span>
+        numbins = [];        <span class="comment">% (scalar)</span>
+        min_mag = [];
+        max_mag = [];
+        etype = <span class="string">'*'</span>;
+        snum = 0;
+        enum = now;
+        binsize = 1;
+        stepsize = 1;
+        misc_fields = {};
+        misc_values = {};
+    <span class="keyword">end</span>
+</pre><h2>PUBLIC METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%<a name="9"></a></h2><pre class="codeinput">	methods
+</pre><h2>CONSTRUCTOR<a name="10"></a></h2><pre class="codeinput">        <span class="keyword">function</span> self = EventRate(time, counts, energy, median_energy, <span class="keyword">...</span>
+                smallest_energy, biggest_energy, median_time_interval, total_counts, <span class="keyword">...</span>
+                snum, enum, etypes, binsize, stepsize, numbins)
+            self.time = time;
+            self.counts = counts;
+            self.median_rate = 1 ./ (median_time_interval * 24);
+            self.median_rate(counts&lt;10) = 0;
+            self.median_rate = max([self.counts / (24 * binsize); self.median_rate]);
+            self.median_mag = magnitude.eng2mag(median_energy);
+            self.energy = energy;
+            self.total_counts = total_counts;
+            self.numbins = numbins;
+            self.min_mag = magnitude.eng2mag(smallest_energy);
+            self.max_mag = magnitude.eng2mag(biggest_energy);
+            self.etype = etypes;
+            self.snum = snum;
+            self.enum = enum;
+            self.binsize = binsize;
+            self.stepsize = stepsize;
+        <span class="keyword">end</span>
+</pre><pre class="codeoutput error">Error using EventRate (line 136)
+Not enough input arguments.
+</pre><h2>----------------------------------------------<a name="11"></a></h2><h2>GETTERS<a name="12"></a></h2><pre class="codeinput">        <span class="keyword">function</span> cum_mag = get.cum_mag(erobj)
+            cum_mag = magnitude.eng2mag(erobj.energy);
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> mean_mag = get.mean_mag(erobj)
+            mean_mag = magnitude.eng2mag(erobj.energy./erobj.counts);
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> mean_rate = get.mean_rate(erobj)
+            mean_rate = erobj.counts / (24 * erobj.binsize);
+        <span class="keyword">end</span>
+        <span class="keyword">function</span> total_mag = get.total_mag(erobj)
+            total_mag = magnitude.eng2mag(sum(erobj.energy));
+        <span class="keyword">end</span>
+
+        <span class="keyword">function</span> plot(obj, varargin)
+            <span class="comment">%EventRate/plot</span>
+            <span class="comment">%   Plot metrics of an EventRate object</span>
+            <span class="comment">%</span>
+            <span class="comment">%   The following metrics are available:</span>
+            <span class="comment">%</span>
+            <span class="comment">%        counts 		     % number of events in each bin</span>
+            <span class="comment">%        mean_rate           % number of events per hour in each bin</span>
+            <span class="comment">%        median_rate	     % reciprocal of the median time interval between events. Represented as an hourly rate.</span>
+            <span class="comment">%        energy              % total sum of energy in each bin</span>
+            <span class="comment">%        cum_mag		     % total sum of energy in each bin, represented as a magnitude.</span>
+            <span class="comment">%        mean_mag		     % mean magnitude of events in each bin</span>
+            <span class="comment">%        median_mag          % median magnitude of events in each bin</span>
+            <span class="comment">%        min_mag             % smallest magnitude in each bin</span>
+            <span class="comment">%</span>
+            <span class="comment">%   erobj.plot() or plot(erobj) will produce a plot of event</span>
+            <span class="comment">%   counts per unit time. The time unit is given by erobj.binsize</span>
+            <span class="comment">%   days.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   erobj.plot('metric', list_of_metrics) will plot each metric</span>
+            <span class="comment">%   requested in list_of_metrics in a separate panel.</span>
+            <span class="comment">%   list_of_metrics should be a cell array of valid metric</span>
+            <span class="comment">%   strings. However, it may be a string if only one metric is</span>
+            <span class="comment">%   requested.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   erobj.plot('metric', 'counts') is equivalent to</span>
+            <span class="comment">%   erobj.plot() and erobj.plot('metric', {'counts'})</span>
+            <span class="comment">%</span>
+            <span class="comment">%   erobj.plot('metric', 'mean_rate') is similar, but the</span>
+            <span class="comment">%   mean_rate is always events per hour, regardless of the</span>
+            <span class="comment">%   binsize. So if erobj.binsize = 1 (day), counts will be</span>
+            <span class="comment">%   exactly 24 * mean_rate.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   erobj.plot('metric', {'counts';'cum_mag'}) will plot counts</span>
+            <span class="comment">%   in one panel and the cumulative magnitude per bin in</span>
+            <span class="comment">%   another panel.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   In general any number of metrics can be given in</span>
+            <span class="comment">%   list_of_metrics.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   If erobj is an array of eventrate structures (e.g. one per</span>
+            <span class="comment">%   etype), each is plotted on a separate figure. However the</span>
+            <span class="comment">%   plotmode variable overrides this:</span>
+            <span class="comment">%</span>
+            <span class="comment">%     plot(eventrate_vector, 'plotmode', 'panels') will plot them</span>
+            <span class="comment">%     in separate panels on the same figure</span>
+            <span class="comment">%</span>
+            <span class="comment">%     plot(eventrate_vector, 'plotmode', 'single') will plot them</span>
+            <span class="comment">%     in a single panel</span>
+
+            p = inputParser;
+            p.addParamValue(<span class="string">'metric'</span>, {<span class="string">'counts'</span>}, @(c) iscell(c)||isstr(c));
+            p.addParamValue(<span class="string">'plotmode'</span>, <span class="string">'figures'</span>, @isstr);
+            p.addParamValue(<span class="string">'smooth'</span>, 1, @isnumeric);
+            p.parse(varargin{:});
+            metric = p.Results.metric;
+            plotmode = p.Results.plotmode;
+            smoothbins = p.Results.smooth; <span class="comment">% NOT DOING ANYTHING WITH THIS YET BUT COULD SMOOTH COUNTS OVER SEVERAL BINS</span>
+            <span class="keyword">if</span> ~iscell(metric)
+                metric = {metric};
+            <span class="keyword">end</span>
+            numMetrics = numel(metric);
+            colors = {[0 0.5 0] [0 0 1]};
+
+            <span class="comment">% plot each etype on a separate figure, each metric as a</span>
+            <span class="comment">% subplot</span>
+
+            <span class="keyword">if</span> strcmp(plotmode, <span class="string">'figures'</span>) || length(obj)==1
+</pre><pre class="codeinput">                <span class="keyword">for</span> c = 1 : numel(obj)
+                    binsize_str = Catalog.binning.binsizelabel(obj(c).binsize);
+                    numsubplots = length(metric);
+                    <span class="comment">%figure(gcf+1)</span>
+                    figure
+                    set(gcf,<span class="string">'Color'</span>, [1 1 1]);
+                    <span class="keyword">for</span> cc = 1: numsubplots <span class="comment">% number of metrics to plot</span>
+                        <span class="comment">%eval(  sprintf('data = obj(c).%s;',metric{cc} ) );</span>
+                        data = obj(c).(metric{cc});
+                        <span class="comment">% replace -Inf values as they mess up plots</span>
+                        ydata = data; <span class="comment">% ydata is the data we will plot, but we keep data for cumulative energy etc.</span>
+                        <span class="keyword">if</span> smoothbins &gt; 1
+                            ydata = smooth(ydata, smoothbins);
+                        <span class="keyword">end</span>
+                        ydata(isinf(data))=NaN;
+                        mindata = nanmin(ydata);
+                        ydata(isnan(ydata))=mindata; <span class="comment">% we replace NaNs and Infs in data with nanmin(data) in ydata</span>
+                        <span class="keyword">if</span> (obj(c).binsize == obj(c).stepsize) &amp; ( strcmp(metric{cc}, <span class="string">'counts'</span>) | strcmp(metric{cc}, <span class="string">'energy'</span>) | strcmp(metric{cc}, <span class="string">'cum_mag'</span>) )
+                            <span class="keyword">if</span> strfind(metric{cc}, <span class="string">'mag'</span>)
+                                cumdata = magnitude.eng2mag(cumsum(magnitude.mag2eng(data)));
+                                subplot(numsubplots,1,cc), [ax, h1, h2] = plotyy(obj(c).time, ydata, obj(c).time, cumdata, @stairs, @plot );
+                                set(h1, <span class="string">'Color'</span>, colors{1});
+                            <span class="keyword">else</span>
+                                <span class="comment">%subplot(numsubplots,1,cc), [ax, h1, h2] = plotyy(obj(c).time, data, obj(c).time, cumsum(data), @bar, @plot );</span>
+                                subplot(numsubplots,1,cc), [ax, h1, h2] = plotyy(obj(c).time, ydata, obj(c).time, cumsum(data), @stairs, @plot );
+                                <span class="comment">%set(h1, 'FaceColor', colors{1}, 'EdgeColor', colors{1})</span>
+                                <span class="comment">%set(h1, 'BarWidth', 1);</span>
+                                <span class="comment">%set(h1, 'LineWidth', 0.1);</span>
+                            <span class="keyword">end</span>
+                            datetick(ax(1), <span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+                            title(ax(1), metric2label(metric{cc}, obj(c).binsize), <span class="string">'Color'</span>, colors{1}, <span class="string">'FontSize'</span>,12)
+                            datetick(ax(2), <span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+                            ylabel(ax(2),<span class="string">'Cumulative'</span>, <span class="string">'Color'</span>, colors{2}, <span class="string">'FontSize'</span>,12)
+                            set(h1, <span class="string">'Color'</span>, colors{1});
+                            set(h2, <span class="string">'Color'</span>, colors{2}, <span class="string">'LineWidth'</span>, 2);
+                            set(ax(1), <span class="string">'YColor'</span>, colors{1});
+                            set(ax(2), <span class="string">'YColor'</span>, colors{2});
+                            linkaxes(ax, <span class="string">'x'</span>);
+                        <span class="keyword">else</span>
+
+                            <span class="keyword">if</span> strfind(metric{cc}, <span class="string">'mag'</span>)
+                                subplot(numsubplots,1,cc), stairs(obj(c).time, ydata, <span class="string">'Color'</span>, colors{1});
+                            <span class="keyword">else</span>
+                                <span class="comment">%subplot(numsubplots,1,cc), bar(obj(c).time, data, 'FaceColor', colors{1}, 'EdgeColor', colors{1}, 'BarWidth', 1, 'LineWidth', 0.1);</span>
+                                subplot(numsubplots,1,cc), stairs(obj(c).time, ydata, <span class="string">'Color'</span>, colors{1});
+                            <span class="keyword">end</span>
+                            datetick(<span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+                            title(metric2label(metric{cc}, obj(c).binsize), <span class="string">'FontSize'</span>,12)
+                        <span class="keyword">end</span>
+                        axis <span class="string">tight</span>;
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+</pre><h2>FROM HERE ON THE PLOTMODES HAVE NOT BEEN UPDATED<a name="14"></a></h2><pre class="codeinput">            <span class="keyword">elseif</span> strcmp(plotmode, <span class="string">'panels'</span>)
+                <span class="comment">% Each metric on a separate figure, showing all requested</span>
+                <span class="comment">% subclasses on separate panels</span>
+                  <span class="keyword">for</span> c = 1 : numel(metric)
+                    figure(gcf+c)
+
+                    numsubplots = length(obj);
+
+                    <span class="keyword">for</span> cc = numsubplots: -1: 1
+                        <span class="keyword">if</span> strcmp(metric{c},<span class="string">'energy'</span>)
+                            <span class="comment">%data = cumsum(magnitude.mag2eng(obj(cc).cum_mag));</span>
+                            data = (magnitude.mag2eng(obj(cc).cum_mag));
+
+                        <span class="keyword">else</span>
+                            <span class="comment">% eval(  sprintf('data = obj(cc).%s;',metric{c} ) );</span>
+                            data = obj(cc).(metric{c});
+                        <span class="keyword">end</span>
+                        <span class="keyword">if</span> smoothbins &gt; 1
+                            data = smooth(data, smoothbins);
+                        <span class="keyword">end</span>
+                        <span class="comment">% where to position the axes</span>
+                        pos(1) = 0.1;
+                        pos(2) = 0.1+(0.95-0.1)*(cc-1)/numsubplots;
+                        pos(3) = 0.8;
+                        pos(4) = (0.8*(0.95-0.1)/numsubplots);
+                        axes(<span class="string">'position'</span>, pos);
+
+                        <span class="comment">% plot</span>
+                        bar( obj(cc).time, data, <span class="string">'EdgeColor'</span>, <span class="string">'none'</span>, <span class="string">'FaceColor'</span>, [0 0 0] );
+<span class="comment">%                         hold on;</span>
+<span class="comment">%                         sdata = smooth(data, 30, 'lowess');</span>
+<span class="comment">%                         plot( obj(cc).time, sdata, 'k-', 'linewidth', 2);</span>
+
+
+                        <span class="comment">% range and label</span>
+                        datetick(<span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+                        set(gca, <span class="string">'XLim'</span>, [obj(cc).snum obj(cc).enum]);
+                        ymax = nanmax(matlab_extensions.catmatrices(1, data));
+<span class="comment">%                         ymax = min([max(sdata)*2 max(data)*1.01]);</span>
+                        set(gca, <span class="string">'YLim'</span>, [0 ymax]);
+                        ylabel(obj(cc).etype);
+
+
+
+                    <span class="keyword">end</span>
+                    <span class="comment">%suptitle(metric{c});</span>
+                    fprintf(<span class="string">'metric for figure %d is %s\n'</span>, gcf, metric{c});
+                  <span class="keyword">end</span>
+
+
+            <span class="keyword">elseif</span> strcmp(plotmode, <span class="string">'single'</span>)
+                  <span class="comment">% Each metric on a separate figure, showing all requested</span>
+                  <span class="comment">% subclasses on the same panel</span>
+                  colour = <span class="string">'rgbcm'</span>;
+                  <span class="keyword">for</span> c = 1 : numel(metric)
+                    figure(gcf+c)
+
+                    <span class="keyword">for</span> cc = 1: length(obj)
+                        <span class="keyword">if</span> strcmp(metric{c},<span class="string">'energy'</span>)
+                            <span class="comment">%data = cumsum(magnitude.mag2eng(obj(cc).cum_mag));</span>
+                            data = (magnitude.mag2eng(obj(cc).cum_mag));
+                        <span class="keyword">else</span>
+                            <span class="comment">% eval(  sprintf('data = obj(cc).%s;',metric{c} ) );</span>
+                            data = obj(cc).(metric{c});
+                        <span class="keyword">end</span>
+
+                        <span class="keyword">if</span> smoothbins &gt; 1
+                            data = smooth(data, smoothbins);
+                        <span class="keyword">end</span>
+
+                        plot( obj(cc).time, data, sprintf(<span class="string">'-%c'</span>,colour(cc)) );
+                        hold <span class="string">on</span>;
+                        datetick(<span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+                        set(gca, <span class="string">'XLim'</span>, [obj(cc).snum obj(cc).enum]);
+                        <span class="comment">%ymax = nanmax(matlab_extensions.catmatrices(1, data));</span>
+                        <span class="comment">%set(gca, 'YLim', [0 ymax]);</span>
+                        <span class="comment">%ylabel(obj(cc).etype);</span>
+                    <span class="keyword">end</span>
+                    suptitle(metric{c});
+                  <span class="keyword">end</span>
+
+
+             <span class="keyword">elseif</span> strcmp(plotmode, <span class="string">'stacked'</span>)
+                 <span class="comment">% Each metric on a separate figure, showing all subclasses</span>
+                 <span class="comment">% stacked on the same panel</span>
+                  colour = <span class="string">'rgbcm'</span>;
+                  <span class="keyword">for</span> c = 1 : numel(metric)
+                    figure(gcf+c)
+                    data =[];
+                    <span class="keyword">for</span> cc = 1: length(obj)
+                        <span class="keyword">if</span> strcmp(metric{c},<span class="string">'energy'</span>)
+                            data = (magnitude.mag2eng(obj(cc).cum_mag));
+                        <span class="keyword">else</span>
+                            <span class="comment">%eval(  sprintf('data(:,cc) = obj(cc).%s;',metric{c} ) );</span>
+                            data(:,cc) = obj(cc).(metric{c});
+                            <span class="keyword">if</span> findstr(metric{c}, <span class="string">'mag'</span>)
+                                disp(<span class="string">'Warning: It is meaningless to stack magnitude data'</span>);
+                                data(data&lt;0)=0;
+                                data(isnan(data))=0;
+                            <span class="keyword">end</span>
+                        <span class="keyword">end</span>
+                        <span class="keyword">if</span> smoothbins &gt; 1
+                            data = smooth(data, smoothbins);
+                        <span class="keyword">end</span>
+
+                        <span class="comment">%bar( obj(cc).time, data, 1, 'stack' );</span>
+                        area(obj(cc).time, data);
+                        datetick(<span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+                        set(gca, <span class="string">'XLim'</span>, [obj(cc).snum obj(cc).enum]);
+                        suptitle(metric{c});
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+</pre><h2>PYTHONPLOT<a name="16"></a></h2><pre class="codeinput">        <span class="keyword">function</span> pythonplot(obj)
+            obj.plot(<span class="string">'metric'</span>, {<span class="string">'counts'</span>;<span class="string">'cum_mag'</span>});
+        <span class="keyword">end</span>
+</pre><h2>HELENAPLOT<a name="17"></a></h2><pre class="codeinput">        <span class="keyword">function</span> helenaplot(obj)
+            <span class="keyword">for</span> c=1:length(obj)
+                figure
+                set(gcf,<span class="string">'Color'</span>, [1 1 1]);
+                cumcummag = magnitude.eng2mag(cumsum(magnitude.mag2eng(obj(c).cum_mag)));
+                [ax, h1, h2] = plotyy(obj(c).time, cumcummag, obj(c).time, cumsum(obj(c).energy), @plot, @plot);
+                datetick(ax(1), <span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+                datetick(ax(2), <span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+                ylabel(ax(1), <span class="string">'Cumulative Magnitude'</span>, <span class="string">'FontSize'</span>,12);
+                ylabel(ax(2), <span class="string">'Cumulative Energy'</span>, <span class="string">'FontSize'</span>,12);
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+
+
+        <span class="keyword">function</span> pvalue(obj)
+            logt = log10(obj.time-obj.time(1));
+            logc = log10(obj.counts);
+            plot(logt, logc);
+            p = logt \ logc'
+<span class="comment">%             p = polyfit(logt, logc, 1)</span>
+<span class="comment">%             hold on</span>
+<span class="comment">%             logt1 = min(logt);</span>
+<span class="comment">%             logc1 = polyval(p, logt1);</span>
+<span class="comment">%             logt2 = max(logt);</span>
+<span class="comment">%             logc2 = polyval(p, logt2);</span>
+<span class="comment">%             line([logt1 logt2], [logc1 logc2]);</span>
+        <span class="keyword">end</span>
+</pre><h2>SAUSAGEPLOT<a name="18"></a></h2><pre class="codeinput">        <span class="keyword">function</span> sausageplot(obj, numBinsToUse, varargin)
+            <span class="comment">%sausageplot</span>
+            <span class="comment">%    Under development, this function attempts to replicate the</span>
+            <span class="comment">%    capabilities of sausageplot.xpy written by Glenn Thompson</span>
+            <span class="comment">%    at AVO.</span>
+            p = inputParser;
+            p.addRequired(<span class="string">'numBinsToUse'</span>, @isnumeric);
+            p.addOptional(<span class="string">'numPoints'</span>, 1, @isnumeric);
+            p.addOptional(<span class="string">'radii'</span>, [], @isnumeric);
+            p.parse(numBinsToUse, varargin{:});
+            numBinsToUse = p.Results.numBinsToUse;
+            numPoints = p.Results.numPoints;
+            radii = p.Results.radii;
+<span class="comment">%             % Page size, dots-per-inch and scale settings</span>
+<span class="comment">%             fh = figure()</span>
+<span class="comment">%             if numBinsToUse &gt; NUMPOINTS</span>
+<span class="comment">%                 dpi = 6*(numBinsToUse+1);</span>
+<span class="comment">%                 axes_width = 0.8 * (NUMPOINTS + 1) / (numBinsToUse + 1);</span>
+<span class="comment">%                 axes_height = 0.8;</span>
+<span class="comment">%             else</span>
+<span class="comment">%                 dpi = 6*(NUMPOINTS+1);</span>
+<span class="comment">%                 axes_width = 0.8;</span>
+<span class="comment">%                 axes_height = 0.8 * (numBinsToUse + 1) / (NUMPOINTS + 1);</span>
+<span class="comment">%             end</span>
+<span class="comment">%             fh.set_dpi(dpi)</span>
+<span class="comment">%             fh.set_size_inches((10.0,10.0),forward=True)</span>
+<span class="comment">%             fig2ax1 = fig2.add_axes([0.1, 0.85-axes_height, axes_width, axes_height]);</span>
+<span class="comment">%             print_pixels(fig2, fig2ax1, numBinsToUse, NUMPOINTS);</span>
+<span class="comment">%             colormapname = 'hot_r';</span>
+            MAXMAGCOLORBAR = 5.0;
+            MINMAGCOLORBAR = 1.0;
+            <span class="comment">% Marker size configuration</span>
+<span class="comment">%             SCALEFACTOR = 84.0 / dpi;</span>
+<span class="comment">%             MAXMARKERSIZE = 43.0 * SCALEFACTOR;</span>
+<span class="comment">%             MINMARKERSIZE = 4.0 * SCALEFACTOR;</span>
+            PTHRESHOLD = 50;
+            <span class="keyword">for</span> c = 1:length(obj)
+                <span class="comment">% set up weekending list for yticklabels</span>
+                binendstr = {};
+                <span class="keyword">for</span> bin_index=numel(obj.time)-numBinsToUse+1: numel(obj.time)
+                    bin_index
+                    dstr = datestr(obj.time(bin_index))
+                    binendstr{bin_index} = dstr;
+                <span class="keyword">end</span>
+                pointlabels = {};
+                <span class="keyword">for</span> i=1:length(numPoints)
+                    <span class="comment">% filter here based on points and radii</span>
+                    j = 1:length(obj(c).counts); <span class="comment">% replace this</span>
+                    counts = obj(c).counts(j);
+                    cummag = obj(c).cum_mag(j);
+                    prcntile = percentiles(obj(c).counts);
+                    <span class="comment">%pointlabels{i} = sprintf('%s(%d)', point_label{i}, counts(-1));</span>
+                    pointlabels{i}=<span class="string">''</span>;
+                    <span class="keyword">for</span> bin_index=numel(obj.time)-numBinsToUse+1: numel(obj.time)<span class="comment">%-numBinsToUse-1: 1: 0</span>
+                        y = obj(c).counts(bin_index);
+                        magnitude = obj(c).cum_mag(bin_index);
+                        p = y2percentile(y,prcntile);
+                        <span class="keyword">if</span> y&gt;0
+                            colorVal = scalarMap.to_rgba(magnitude)
+                            msize = MINMARKERSIZE + (p-PTHRESHOLD) * (MAXMARKERSIZE - MINMARKERSIZE) / (100-PTHRESHOLD);
+                            <span class="keyword">if</span> msize&lt;MINMARKERSIZE
+                                msize=MINMARKERSIZE;
+                            <span class="keyword">end</span>
+<span class="comment">%                             fig2ax1.plot(i+0.5, w, 's', color=colorVal, markersize=msize, linewidth=0 );</span>
+                            scatter(i+0.5, bin_index, msize, y, <span class="string">'s'</span>, <span class="string">'filled'</span>)
+                            <span class="keyword">if</span> msize &gt; MAXMARKERSIZE * 0.3
+                                text(i+0.5, bin_index, num2str(y))
+<span class="comment">%                                fig2ax1.text(i+0.5, w, '%d', y, horizontalalignment='center', verticalalignment='center', fontsize = 8 * SCALEFACTOR)</span>
+                            <span class="keyword">end</span>
+                        <span class="keyword">end</span>
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+
+                <span class="comment">% Adding xticks, yticks, labels, grid</span>
+<span class="comment">%                 fig2ax1.set_axisbelow(True) % I think this puts grid and tickmarks below actual data plotted</span>
+
+                <span class="comment">% x-axis</span>
+<span class="comment">%                 fig2ax1.set_xticks(np.arange(.5,NUMVOLCANOES+.5,1))</span>
+                set(gca, <span class="string">'XTick'</span>, 0.5:1:numPoints+0.5);
+<span class="comment">%                 fig2ax1.set_xlim([-0.5, NUMVOLCANOES+0.5])</span>
+                set(gca, <span class="string">'XLim'</span>, [-0.5 numPoints+0.5])
+<span class="comment">%                 fig2ax1.xaxis.grid(True, linestyle='-', color='gray')</span>
+                grid <span class="string">on</span>;
+                set(gca, <span class="string">'XTickLabel'</span>, pointlabels)
+<span class="comment">%                 fig2ax1.xaxis.set_ticks_position('top')</span>
+<span class="comment">%                 fig2ax1.xaxis.set_label_position('top')</span>
+                <span class="comment">%plt.setp( fig2ax1.get_xticklabels(), rotation=45, horizontalalignment='left', fontsize=10*SCALEFACTOR )</span>
+
+                <span class="comment">% y-axis</span>
+<span class="comment">%                 fig2ax1.set_yticks(np.arange(-number_of_weeks_to_plot-0.5, 0, 1))</span>
+                set(gca, <span class="string">'YTick'</span>, -numBinsToUse-0.5: 1: 0)
+<span class="comment">%                 fig2ax1.set_yticklabels(weekending)</span>
+                set(gca, <span class="string">'YTickLabel'</span>, binendstr)
+<span class="comment">%                 fig2ax1.set_ylim([-number_of_weeks_to_plot - 0.5, -0.5])</span>
+                set(gca, <span class="string">'YLim'</span>, -numBinsToUse -0.5 : 1 : -0.5)
+<span class="comment">%                 plt.setp( fig2ax1.get_yticklabels(), fontsize=10*SCALEFACTOR )</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+</pre><h2>IMPORTSWARMDB<a name="19"></a></h2><pre class="codeinput">        <span class="keyword">function</span> obj = importswarmdb(obj, dbname, auth, snum, enum)
+            <span class="comment">% IMPORTSWARMDB</span>
+            <span class="comment">% Load a swarm database metrics table into an EventRate object</span>
+            <span class="comment">% eventrate = importswarmdb(erobj, dbname, auth, snum, enum);</span>
+            <span class="comment">%</span>
+            <span class="comment">% INPUT:</span>
+            <span class="comment">%	dbname		the path of the database (must have a 'metrics' table)</span>
+            <span class="comment">%	auth		name of the grid to load swarm tracking metrics for</span>
+            <span class="comment">%	snum,enum	start and end datenumbers (Matlab time format, see 'help datenum')</span>
+            <span class="comment">%</span>
+            <span class="comment">% OUTPUT:</span>
+            <span class="comment">%	obj		an eventrate object</span>
+            <span class="comment">%</span>
+            <span class="comment">% Example:</span>
+            <span class="comment">%	erobj = importswarmdb('/avort/devrun/dbswarm/swarm_metadata', 'RD_lo', datenum(2010, 7, 1), datenum(2010, 7, 14) );</span>
+
+            <span class="comment">% Glenn Thompson, 20100714</span>
+
+            <span class="comment">% initialize</span>
+            obj.dbroot = dbname;
+            obj.snum = snum;
+            obj.enum = enum;
+            obj.auth = auth;
+
+            <span class="comment">% check that database exists</span>
+            dbtablename = sprintf(<span class="string">'%s.metrics'</span>,dbname);
+            <span class="keyword">if</span> exist(dbtablename,<span class="string">'file'</span>)
+                <span class="comment">% load the data</span>
+                <span class="keyword">try</span>
+                    db = dbopen(dbname, <span class="string">'r'</span>);
+                <span class="keyword">catch</span> me
+                    fprintf(<span class="string">'Error: Could not open %s for reading'</span>,dbname);
+                        <span class="keyword">return</span>;
+                <span class="keyword">end</span>
+                db = dblookup_table(db, <span class="string">'metrics'</span>);
+                <span class="keyword">if</span> (dbquery(db, <span class="string">'dbRECORD_COUNT'</span>)==0)
+                    fprintf(<span class="string">'Error: Could not open %s for reading'</span>,dbtablename);
+                    <span class="keyword">return</span>;
+                <span class="keyword">end</span>
+                db = dbsubset(db, sprintf(<span class="string">'auth ~= /.*%s.*/'</span>,auth));
+                numrows = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+                debug.print_debug(sprintf(<span class="string">'Got %d rows after auth subset'</span>,numrows),2);
+                sepoch = datenum2epoch(snum);
+                eepoch = datenum2epoch(enum);
+                db = dbsubset(db, sprintf(<span class="string">'timewindow_starttime &gt;= %f &amp;&amp; timewindow_endtime &lt;= %f'</span>,sepoch,eepoch));
+                numrows = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+                debug.print_debug(sprintf(<span class="string">'Got %d rows after time subset'</span>,numrows),2);
+
+                <span class="keyword">if</span> numrows &gt; 0
+                    <span class="comment">% Note that metrics are only saved when mean_rate &gt;= 1.</span>
+                    <span class="comment">% Therefore there will be lots of mean_rate==0 timewindows not in</span>
+                    <span class="comment">% database.</span>
+                    [tempsepoch, tempeepoch, mean_rate, median_rate, mean_mag, cum_mag] = dbgetv(db,<span class="string">'timewindow_starttime'</span>, <span class="string">'timewindow_endtime'</span>, <span class="string">'mean_rate'</span>, <span class="string">'median_rate'</span>, <span class="string">'mean_ml'</span>, <span class="string">'cum_ml'</span>);
+                    obj.binsize = (tempeepoch(1) - tempsepoch(1))/86400;
+                    obj.stepsize = min(tempsepoch(2:end) - tempsepoch(1:end-1))/86400;
+                    obj.time = snum+obj.stepsize:obj.stepsize:enum;
+                    obj.numbins = length(obj.time);
+                    obj.mean_rate = zeros(obj.numbins, 1);
+                    obj.counts = zeros(obj.numbins, 1);
+                    obj.median_rate = zeros(obj.numbins, 1);
+                    obj.mean_mag = zeros(obj.numbins, 1);
+                    obj.cum_mag = zeros(obj.numbins, 1);
+                    <span class="keyword">for</span> c=1:length(tempeepoch)
+                        tempenum = epoch2datenum(tempeepoch(c));
+                        i = find(obj.time == tempenum);
+                        obj.mean_rate(i) = mean_rate(c);
+                        obj.counts(i) = mean_rate(c) * (obj.binsize * 24);
+                        obj.median_rate(i) = median_rate(c);
+                        obj.mean_mag(i) = mean_mag(c);
+                        obj.cum_mag(i) = cum_mag(c);
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+                dbclose(db);
+
+            <span class="keyword">else</span>
+                <span class="comment">% error - table does not exist</span>
+                fprintf(<span class="string">'Error: %s does not exist'</span>,dbtablename);
+                <span class="keyword">return</span>;
+            <span class="keyword">end</span>
+
+            obj.total_counts = sum(obj.counts)*obj.stepsize/obj.binsize;
+
+        <span class="keyword">end</span>
+</pre><h2>ADDFIELD<a name="20"></a></h2><pre class="codeinput">        <span class="keyword">function</span> obj = addfield(obj,fieldname,val)
+            <span class="comment">%ADDFIELD add fields and values to object(s)</span>
+            <span class="comment">%   obj = addfield(obj, fieldname, value)</span>
+            <span class="comment">%   This function creates a new user defined field, and fills it with the</span>
+            <span class="comment">%   included value.  If fieldname exists, it will overwrite the existing</span>
+            <span class="comment">%   value.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   Input Arguments</span>
+            <span class="comment">%       obj: an EventRate object</span>
+            <span class="comment">%       fieldname: a string name</span>
+            <span class="comment">%       value: a value to be added for those fields.  Value can be anything</span>
+            <span class="comment">%</span>
+            <span class="comment">%   EventRate objects can hold user-defined fields.  To access the contents,</span>
+            <span class="comment">%   use EventRate/get.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   Example:</span>
+            <span class="comment">%       % add a field called "TESTFIELD", containing the numbers 1-45</span>
+            <span class="comment">%       obj = addfield(obj,'TestField',1:45);</span>
+            <span class="comment">%</span>
+            <span class="comment">%       % add a cell field called "MISHMOSH"</span>
+            <span class="comment">%       obj = addfield(obj,'mishmosh',{'hello';'world'});</span>
+            <span class="comment">%</span>
+            <span class="comment">%       % see the result</span>
+            <span class="comment">%       disp(obj)</span>
+            <span class="comment">%</span>
+            <span class="comment">% See also EventRate/set, EventRate/get</span>
+
+            <span class="comment">% AUTHOR: Glenn Thompson</span>
+
+            <span class="keyword">if</span> ischar(fieldname)
+                mask = strcmp(fieldname, properties(obj));
+                <span class="keyword">if</span> any(mask)
+                    obj = obj.set(fieldname, val);
+                <span class="keyword">else</span>
+                    mask = strcmp(upper(fieldname),obj.misc_fields);
+                    <span class="keyword">if</span> any(mask)
+                        obj = obj.set(fieldname, val);
+                    <span class="keyword">else</span>
+                        obj.misc_fields = [obj.misc_fields, upper(fieldname)];
+                        obj = obj.set(upper(fieldname), val);
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+            <span class="keyword">else</span>
+                error(<span class="string">'%s:addfield:invalidFieldname'</span>,<span class="string">'fieldname must be a string'</span>, class(catalogObject))
+            <span class="keyword">end</span>
+
+        <span class="keyword">end</span>
+</pre><h2>SET<a name="21"></a></h2><pre class="codeinput">        <span class="keyword">function</span> obj = set(obj, varargin)
+            <span class="comment">%SET Set properties for EventRate object(s)</span>
+            <span class="comment">%   obj = set(obj,'property_name', val, ['property_name2', val2])</span>
+            <span class="comment">%   SET is one of the two gateway functions of an object, such as EventRate.</span>
+            <span class="comment">%   Properties that are changed through SET are typechecked and otherwise</span>
+            <span class="comment">%   scrutinized before being stored within the EventRate object.  This</span>
+            <span class="comment">%   ensures that the other EventRate methods are all retrieving valid data,</span>
+            <span class="comment">%   thereby increasing the reliability of the code.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   Another strong advantage to using SET and GET to change and retrieve</span>
+            <span class="comment">%   properties, rather than just assigning them to EventRate object directly,</span>
+            <span class="comment">%   is that the underlying data structure can change and grow without</span>
+            <span class="comment">%   harming the code that is written based on the EventRate object.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   For a list of valid property names, type:</span>
+            <span class="comment">%       properties(obj)</span>
+            <span class="comment">%</span>
+            <span class="comment">%   If user-defined fields were added to the EventRate object (ie, through</span>
+            <span class="comment">%   addField), these fieldnames are also available through set.</span>
+            <span class="comment">%</span>
+            <span class="comment">%   Examples:</span>
+            <span class="comment">%       (1) Change the description property</span>
+            <span class="comment">%           obj = obj.set('description','hello world');</span>
+            <span class="comment">%</span>
+            <span class="comment">%       (2) Add new a field called CLOSEST_STATION with</span>
+            <span class="comment">%           % the value 'MBLG'</span>
+            <span class="comment">%           obj = obj.addfield('CLOSEST_STATION','MBLG');</span>
+            <span class="comment">%</span>
+            <span class="comment">%           % change the value of the CLOSEST_STATION field</span>
+            <span class="comment">%           obj = obj.set('CLOSEST_STATION','MBWH');</span>
+            <span class="comment">%</span>
+            <span class="comment">%  See also EventRate/get, EventRate/addfield</span>
+
+            Vidx = 1 : numel(varargin);
+
+            <span class="keyword">while</span> numel(Vidx) &gt;= 2
+                prop_name = upper(varargin{Vidx(1)});
+                val = varargin{Vidx(2)};
+                mask = strcmp(upper(prop_name),upper(properties(obj)));
+                <span class="keyword">if</span> any(mask)
+                    mc = metaclass(obj);
+                    i = find(mask);
+                    prop_name = mc.PropertyList(i).Name;
+                    <span class="keyword">if</span> isempty(mc.PropertyList(i).GetMethod)
+                        <span class="comment">%eval(sprintf('obj.%s=val;',prop_name));</span>
+                        obj.(prop_name) = val;
+                    <span class="keyword">else</span>
+                        warning(<span class="string">'Property %s is a derived property and cannot be set'</span>,prop_name);
+                    <span class="keyword">end</span>
+                <span class="keyword">else</span>
+                    <span class="keyword">switch</span> prop_name
+                        <span class="keyword">case</span> obj.misc_fields
+                            mask = strcmp(prop_name,obj.misc_fields);
+                            obj.misc_values(mask) = {val};
+                        <span class="keyword">otherwise</span>
+                            error(<span class="string">'%s:set:unknownProperty'</span>,<span class="keyword">...</span>
+                                <span class="string">'can''t understand property name : %s'</span>, mfilename,prop_name);
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+                Vidx(1:2) = []; <span class="comment">%done with those parameters, move to the next ones...</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+</pre><h2>GET<a name="22"></a></h2><pre class="codeinput">        <span class="keyword">function</span> val = get(obj,prop_name)
+            <span class="comment">%GET Get EventRate properties</span>
+            <span class="comment">%   val = get(EventRate_object,'property_name')</span>
+            <span class="comment">%</span>
+            <span class="comment">%   To see valid property names, type:</span>
+            <span class="comment">%       properties(EventRate_object)</span>
+            <span class="comment">%</span>
+            <span class="comment">%       If additional fields were added to EventRate using ADDFIELD, then</span>
+            <span class="comment">%       values from these can be retrieved using the fieldname</span>
+            <span class="comment">%</span>
+            <span class="comment">%   See also EventRate/SET, EventRate/ADDFIELD, Catalog/GET</span>
+
+            mask = strcmp(prop_name, properties(obj));
+            <span class="keyword">if</span> any(mask)
+                <span class="comment">% eval(sprintf('val=obj.%s;',prop_name));</span>
+                val = obj.(prop_name);
+            <span class="keyword">else</span>
+                mask = strcmp(upper(prop_name),obj.misc_fields);
+                <span class="keyword">if</span> any(mask)
+                    val = obj.misc_values{mask};
+                <span class="keyword">else</span>
+                    warning(<span class="string">'%s:get:unrecognizedProperty'</span>,<span class="keyword">...</span>
+                        <span class="string">'Unrecognized property name : %s'</span>,  class(obj), prop_name);
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+</pre><pre class="codeinput">    <span class="keyword">end</span> <span class="comment">% methods</span>
+
+
+    methods(Static)
+        cookbook()
+    <span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><h2>PERCENTILES<a name="25"></a></h2><pre class="codeinput"><span class="keyword">function</span> p=percentiles(vals)
+    lenVals = length(vals);
+    <span class="keyword">for</span> i=1:100
+        p(i) = vals(floor(i/100 * (lenVals-1))+1);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><h2>PLOT_PERCENTILES<a name="26"></a></h2><pre class="codeinput"><span class="keyword">function</span> plot_percentiles(p)
+    figure(gcf+1, <span class="string">'Color'</span>, [1 1 1])
+    plot(1:100, p);
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> label = metric2label(metric, binsize)
+    <span class="comment">% label = metric2label(metric, binsize)</span>
+    label=metric;
+    blabel = Catalog.binning.binsizelabel(binsize);
+    time_unit = blabel(4:end);
+    <span class="keyword">if</span> strcmp(metric, <span class="string">'counts'</span>)
+        label = sprintf(<span class="string">'# Events %s'</span>,blabel);
+    <span class="keyword">elseif</span> strcmp(metric, <span class="string">'energy'</span>)
+        label = sprintf(<span class="string">'Energy %s'</span>,blabel);
+    <span class="keyword">elseif</span> strcmp(metric, <span class="string">'mean_rate'</span>)
+        label = sprintf(<span class="string">'Mean # events per hour (binsize %s)'</span>, time_unit);
+    <span class="keyword">elseif</span> strcmp(metric, <span class="string">'median_rate'</span>)
+        label = sprintf(<span class="string">'Median # events per hour (binsize %s)'</span>, time_unit);
+    <span class="keyword">elseif</span> strcmp(metric, <span class="string">'cum_mag'</span>)
+        label = sprintf(<span class="string">'Cumulative Magnitude per hour (binsize %s)'</span>, time_unit);;
+    <span class="keyword">elseif</span> strcmp(metric, <span class="string">'mean_mag'</span>)
+        label = sprintf(<span class="string">'Mean Magnitude per hour (binsize %s)'</span>, time_unit);
+    <span class="keyword">elseif</span> strcmp(metric, <span class="string">'median_mag'</span>)
+        label = sprintf(<span class="string">'Median Magnitude per hour (binsize %s)'</span>, time_unit);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+classdef EventRate
+%EventRate Event Rate class constructor.
+% 
+%    EventRate is a class that has been developed around plotting earthquake
+%    counts - i.e. the rate of events per unit time. It has evolved to compute
+%    other metrics such the hourly mean event rate, median event rate, mean 
+%    magnitude and cumulative magnitude, which are important metrics for an AVO
+%    swarm tracking system.
+%
+%    EventRate can import information from:
+%    (1) a Catalog object. 
+%    (2) a Datascope database written in the "swarms1.0" schema, defined at AVO. 
+%        This is the format used by the swarm tracking system (Thompson &
+%        West, 2010).
+%
+%    ER = EventRate(Catalog_OBJECT, 'binsize', BINSIZE) creates an eventrate object
+%    from a Catalog object using non-overlapping bins of BINSIZE days. 
+%
+%    ER = EventRate(Catalog_OBJECT, 'binsize', BINSIZE, 'stepsize', STEPSIZE) creates an eventrate object
+%    using overlapping bins. If omitted STEPSIZE==BINSIZE.
+%
+%%   EXAMPLES:
+%
+%       First create a catalog object from the demo database:
+%           dbpath = demodb('avo')
+%           catalogObject = readEvents('datascope', 'dbpath', dbpath, ...
+%                  'dbeval', ...
+%                  'deg2km(distance(lat, lon, 60.4853, -152.7431))<15.0' ...
+%                  );
+%
+%       (1) Create an eventrate object using a binsize of 1 day:
+%           erobj = catalogObject.eventrate('binsize', 1);
+%
+%       (2) Create an eventrate object using a binsize of 1 hour:
+%           erobj = catalogObject.eventrate('binsize', 1/24);
+%
+%       (3) Create an eventrate object using a binsize of 1 hour but a stepsize of 5 minutes:
+%           erobj = catalogObject.eventrate('binsize', 1/24, 'stepsize', 5/1440);
+%
+%       (4) Create a vector of eventrate objects subclassified using event types 'r', 'e', 'l', 'h', 't':
+%               erobj = eventrate(catalogObject, 1, 'etypes', 'relht');
+%           To plot counts on separate figures:
+%               erobj.plot()
+%           To plot counts and energy panels, each event type as a separate figure:
+%               erobj.plot('metric', {'counts';'energy'});
+%           To plot counts and energy panels on separate figures, each event type as panels:
+%               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'panels'); 
+%           To plot counts and energy panels on separate figures, each event type stacked:
+%               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');
+%
+%       (5) A full example:
+%               catalogObject = catalog(fullfile(MVO_DATA, 'mbwh_catalog'), 'seisan', 'snum', datenum(1996,10,1), 'enum', datenum(2004,3,1), 'region', 'Montserrat')
+%               erobj = eventrate(catalogObject, 365/12, 'stepsize', 1, 'etypes', 'thlr');
+%               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');
+%
+%
+%%   PROPERTIES
+%
+%    For a list of all properties type properties(EventRate)
+%
+%    time                % (array) time of the center of each bin as a DATENUM
+%
+%    METRICS:
+%        counts 		     % (array) number of events in each bin
+%        mean_rate           % (array) number of events per hour in each bin
+%        median_rate	     % (array) reciprocal of the median time interval between events. Represented as an hourly rate.
+%        cum_mag		     % (array) total sum of energy in each bin, represented as a magnitude.
+%        mean_mag		     % (array) mean magnitude of events in each bin 
+%        median_mag          % (array) median magnitude of events in each bin
+%        min_mag             % (array) smallest magnitude in each bin
+%        max_mag             % (array) largest magnitude in each bin
+%
+%    SUMMARY DATA:
+%        numbins             % (scalar) number of bins used for grouping
+%                                events
+%        total_counts        % (scalar) sum of counts
+%        total_mag           % (scalar) total sum of energy of all catalogObjects, represented as a magnitude
+%
+%    METADATA:
+%        etype               % event type/classification. 
+%        snum                % (scalar) start date/time in DATENUM format
+%        enum                % (scalar) end date/time in DATENUM format
+%        binsize             % (scalar) bin size in days
+%        stepsize            % (scalar) step size in days
+%        region              % (4-element vector) [minlon maxlon minlat maxlat]
+%        minmag              % (scalar) magnitudes smaller than this were eliminated
+%        dbroot              % path to the original data on disk
+%        archiveformat       % indicates if the source is a flat file, or
+%                              'daily' or 'monthly' volumes
+%        auth                % auth of the events
+%
+%%   METHODS
+%
+%    For a list of all methods type methods EventRate 
+%
+%
+%%   See also Catalog, Catalog_lite
+%
+%% AUTHOR: Glenn Thompson
+
+% $Date: 2014-05-06 14:52:40 -0800 (Tue, 06 May 2014) $
+% $Revision: 404 $
+
+%% PROPERTIES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    properties(GetAccess = 'public', SetAccess = 'public')
+        time = [];          % (array) in datenum format
+        counts = []; 		% (array) number of events in each bin
+		mean_rate = [];      % (array) number of events per hour in each bin
+		median_rate = [];	% (array) reciprocal of the median time interval between events. Represented as an hourly rate.
+		cum_mag = [];		% (array) total sum of energy in each bin, represented as a magnitude.
+		mean_mag = [];		% (array)   
+        median_mag = [];     % (array)
+        energy = [];
+        total_counts = [];   % (scalar) sum of counts
+		total_mag = [];      % (scalar) total sum of energy of all catalogObjects, represented as a magnitude	
+        numbins = [];        % (scalar)
+        min_mag = [];
+        max_mag = [];
+        etype = '*';
+        snum = 0;
+        enum = now;
+        binsize = 1;
+        stepsize = 1;
+        misc_fields = {};
+        misc_values = {};
+    end
+    
+ %% PUBLIC METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   
+	methods
+        %% CONSTRUCTOR
+        function self = EventRate(time, counts, energy, median_energy, ...
+                smallest_energy, biggest_energy, median_time_interval, total_counts, ...
+                snum, enum, etypes, binsize, stepsize, numbins)
+            self.time = time;
+            self.counts = counts;          
+            self.median_rate = 1 ./ (median_time_interval * 24); 
+            self.median_rate(counts<10) = 0;
+            self.median_rate = max([self.counts / (24 * binsize); self.median_rate]);      
+            self.median_mag = magnitude.eng2mag(median_energy);
+            self.energy = energy;
+            self.total_counts = total_counts;  	
+            self.numbins = numbins;
+            self.min_mag = magnitude.eng2mag(smallest_energy);
+            self.max_mag = magnitude.eng2mag(biggest_energy);
+            self.etype = etypes;
+            self.snum = snum;
+            self.enum = enum;
+            self.binsize = binsize;
+            self.stepsize = stepsize;
+        end
+        
+        %% REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+        %% GETTERS
+        function cum_mag = get.cum_mag(erobj)
+            cum_mag = magnitude.eng2mag(erobj.energy);
+        end
+        function mean_mag = get.mean_mag(erobj)
+            mean_mag = magnitude.eng2mag(erobj.energy./erobj.counts);
+        end
+        function mean_rate = get.mean_rate(erobj)
+            mean_rate = erobj.counts / (24 * erobj.binsize);
+        end
+        function total_mag = get.total_mag(erobj)
+            total_mag = magnitude.eng2mag(sum(erobj.energy));
+        end
+       
+        function plot(obj, varargin) 
+            %EventRate/plot
+            %   Plot metrics of an EventRate object
+            %
+            %   The following metrics are available:
+            %  
+            %        counts 		     % number of events in each bin
+            %        mean_rate           % number of events per hour in each bin
+            %        median_rate	     % reciprocal of the median time interval between events. Represented as an hourly rate.
+            %        energy              % total sum of energy in each bin
+            %        cum_mag		     % total sum of energy in each bin, represented as a magnitude.
+            %        mean_mag		     % mean magnitude of events in each bin 
+            %        median_mag          % median magnitude of events in each bin
+            %        min_mag             % smallest magnitude in each bin   
+            %
+            %   erobj.plot() or plot(erobj) will produce a plot of event
+            %   counts per unit time. The time unit is given by erobj.binsize
+            %   days.
+            %   
+            %   erobj.plot('metric', list_of_metrics) will plot each metric
+            %   requested in list_of_metrics in a separate panel.
+            %   list_of_metrics should be a cell array of valid metric
+            %   strings. However, it may be a string if only one metric is
+            %   requested.
+            %
+            %   erobj.plot('metric', 'counts') is equivalent to
+            %   erobj.plot() and erobj.plot('metric', {'counts'})
+            %
+            %   erobj.plot('metric', 'mean_rate') is similar, but the
+            %   mean_rate is always events per hour, regardless of the
+            %   binsize. So if erobj.binsize = 1 (day), counts will be
+            %   exactly 24 * mean_rate.
+            %
+            %   erobj.plot('metric', {'counts';'cum_mag'}) will plot counts
+            %   in one panel and the cumulative magnitude per bin in
+            %   another panel. 
+            %
+            %   In general any number of metrics can be given in
+            %   list_of_metrics.
+            %
+            %   If erobj is an array of eventrate structures (e.g. one per
+            %   etype), each is plotted on a separate figure. However the 
+            %   plotmode variable overrides this:
+            % 
+            %     plot(eventrate_vector, 'plotmode', 'panels') will plot them
+            %     in separate panels on the same figure
+            % 
+            %     plot(eventrate_vector, 'plotmode', 'single') will plot them
+            %     in a single panel
+            
+            p = inputParser;
+            p.addParamValue('metric', {'counts'}, @(c) iscell(c)||isstr(c));
+            p.addParamValue('plotmode', 'figures', @isstr);
+            p.addParamValue('smooth', 1, @isnumeric);
+            p.parse(varargin{:});
+            metric = p.Results.metric;
+            plotmode = p.Results.plotmode;
+            smoothbins = p.Results.smooth; % NOT DOING ANYTHING WITH THIS YET BUT COULD SMOOTH COUNTS OVER SEVERAL BINS
+            if ~iscell(metric)
+                metric = {metric};
+            end
+            numMetrics = numel(metric);
+            colors = {[0 0.5 0] [0 0 1]};
+
+            % plot each etype on a separate figure, each metric as a
+            % subplot
+           
+            if strcmp(plotmode, 'figures') || length(obj)==1
+            
+                for c = 1 : numel(obj)
+                    binsize_str = Catalog.binning.binsizelabel(obj(c).binsize);
+                    numsubplots = length(metric);
+                    %figure(gcf+1)
+                    figure
+                    set(gcf,'Color', [1 1 1]);
+                    for cc = 1: numsubplots % number of metrics to plot
+                        %eval(  sprintf('data = obj(c).%s;',metric{cc} ) );
+                        data = obj(c).(metric{cc});
+                        % replace -Inf values as they mess up plots
+                        ydata = data; % ydata is the data we will plot, but we keep data for cumulative energy etc.
+                        if smoothbins > 1
+                            ydata = smooth(ydata, smoothbins);
+                        end
+                        ydata(isinf(data))=NaN;
+                        mindata = nanmin(ydata); 
+                        ydata(isnan(ydata))=mindata; % we replace NaNs and Infs in data with nanmin(data) in ydata
+                        if (obj(c).binsize == obj(c).stepsize) & ( strcmp(metric{cc}, 'counts') | strcmp(metric{cc}, 'energy') | strcmp(metric{cc}, 'cum_mag') )
+                            if strfind(metric{cc}, 'mag')
+                                cumdata = magnitude.eng2mag(cumsum(magnitude.mag2eng(data)));           
+                                subplot(numsubplots,1,cc), [ax, h1, h2] = plotyy(obj(c).time, ydata, obj(c).time, cumdata, @stairs, @plot );
+                                set(h1, 'Color', colors{1});
+                            else
+                                %subplot(numsubplots,1,cc), [ax, h1, h2] = plotyy(obj(c).time, data, obj(c).time, cumsum(data), @bar, @plot );
+                                subplot(numsubplots,1,cc), [ax, h1, h2] = plotyy(obj(c).time, ydata, obj(c).time, cumsum(data), @stairs, @plot );
+                                %set(h1, 'FaceColor', colors{1}, 'EdgeColor', colors{1})
+                                %set(h1, 'BarWidth', 1);
+                                %set(h1, 'LineWidth', 0.1);
+                            end
+                            datetick(ax(1), 'x','keeplimits');
+                            title(ax(1), metric2label(metric{cc}, obj(c).binsize), 'Color', colors{1}, 'FontSize',12)
+                            datetick(ax(2), 'x','keeplimits');
+                            ylabel(ax(2),'Cumulative', 'Color', colors{2}, 'FontSize',12)
+                            set(h1, 'Color', colors{1});
+                            set(h2, 'Color', colors{2}, 'LineWidth', 2);
+                            set(ax(1), 'YColor', colors{1});
+                            set(ax(2), 'YColor', colors{2});
+                            linkaxes(ax, 'x');
+                        else
+
+                            if strfind(metric{cc}, 'mag')           
+                                subplot(numsubplots,1,cc), stairs(obj(c).time, ydata, 'Color', colors{1});
+                            else
+                                %subplot(numsubplots,1,cc), bar(obj(c).time, data, 'FaceColor', colors{1}, 'EdgeColor', colors{1}, 'BarWidth', 1, 'LineWidth', 0.1);
+                                subplot(numsubplots,1,cc), stairs(obj(c).time, ydata, 'Color', colors{1});
+                            end
+                            datetick('x','keeplimits');
+                            title(metric2label(metric{cc}, obj(c).binsize), 'FontSize',12)                        
+                        end
+                        axis tight;
+                    end
+                end
+                
+                %% FROM HERE ON THE PLOTMODES HAVE NOT BEEN UPDATED
+            elseif strcmp(plotmode, 'panels')
+                % Each metric on a separate figure, showing all requested 
+                % subclasses on separate panels
+                  for c = 1 : numel(metric)
+                    figure(gcf+c)
+                    
+                    numsubplots = length(obj);
+
+                    for cc = numsubplots: -1: 1
+                        if strcmp(metric{c},'energy')
+                            %data = cumsum(magnitude.mag2eng(obj(cc).cum_mag));
+                            data = (magnitude.mag2eng(obj(cc).cum_mag));
+
+                        else
+                            % eval(  sprintf('data = obj(cc).%s;',metric{c} ) );
+                            data = obj(cc).(metric{c});
+                        end
+                        if smoothbins > 1
+                            data = smooth(data, smoothbins);
+                        end                      
+                        % where to position the axes
+                        pos(1) = 0.1;
+                        pos(2) = 0.1+(0.95-0.1)*(cc-1)/numsubplots;
+                        pos(3) = 0.8;
+                        pos(4) = (0.8*(0.95-0.1)/numsubplots);
+                        axes('position', pos);
+                        
+                        % plot
+                        bar( obj(cc).time, data, 'EdgeColor', 'none', 'FaceColor', [0 0 0] );
+%                         hold on;
+%                         sdata = smooth(data, 30, 'lowess');
+%                         plot( obj(cc).time, sdata, 'k-', 'linewidth', 2);
+                        
+                        
+                        % range and label
+                        datetick('x','keeplimits');
+                        set(gca, 'XLim', [obj(cc).snum obj(cc).enum]);
+                        ymax = nanmax(matlab_extensions.catmatrices(1, data));
+%                         ymax = min([max(sdata)*2 max(data)*1.01]);
+                        set(gca, 'YLim', [0 ymax]);
+                        ylabel(obj(cc).etype);
+                        
+                        
+                        
+                    end
+                    %suptitle(metric{c});
+                    fprintf('metric for figure %d is %s\n', gcf, metric{c});
+                  end               
+                
+                  
+            elseif strcmp(plotmode, 'single')
+                  % Each metric on a separate figure, showing all requested
+                  % subclasses on the same panel
+                  colour = 'rgbcm';
+                  for c = 1 : numel(metric)
+                    figure(gcf+c)
+
+                    for cc = 1: length(obj)
+                        if strcmp(metric{c},'energy')
+                            %data = cumsum(magnitude.mag2eng(obj(cc).cum_mag));
+                            data = (magnitude.mag2eng(obj(cc).cum_mag));
+                        else
+                            % eval(  sprintf('data = obj(cc).%s;',metric{c} ) );
+                            data = obj(cc).(metric{c});
+                        end
+                        
+                        if smoothbins > 1
+                            data = smooth(data, smoothbins);
+                        end    
+                        
+                        plot( obj(cc).time, data, sprintf('-%c',colour(cc)) );
+                        hold on;
+                        datetick('x','keeplimits');
+                        set(gca, 'XLim', [obj(cc).snum obj(cc).enum]);
+                        %ymax = nanmax(matlab_extensions.catmatrices(1, data));
+                        %set(gca, 'YLim', [0 ymax]);
+                        %ylabel(obj(cc).etype);
+                    end
+                    suptitle(metric{c});
+                  end         
+                
+                  
+             elseif strcmp(plotmode, 'stacked')
+                 % Each metric on a separate figure, showing all subclasses
+                 % stacked on the same panel
+                  colour = 'rgbcm';
+                  for c = 1 : numel(metric)
+                    figure(gcf+c)
+                    data =[];
+                    for cc = 1: length(obj)
+                        if strcmp(metric{c},'energy')
+                            data = (magnitude.mag2eng(obj(cc).cum_mag));
+                        else
+                            %eval(  sprintf('data(:,cc) = obj(cc).%s;',metric{c} ) );
+                            data(:,cc) = obj(cc).(metric{c});
+                            if findstr(metric{c}, 'mag')
+                                disp('Warning: It is meaningless to stack magnitude data');
+                                data(data<0)=0;
+                                data(isnan(data))=0;
+                            end
+                        end
+                        if smoothbins > 1
+                            data = smooth(data, smoothbins);
+                        end    
+                    
+                        %bar( obj(cc).time, data, 1, 'stack' );
+                        area(obj(cc).time, data);
+                        datetick('x','keeplimits');
+                        set(gca, 'XLim', [obj(cc).snum obj(cc).enum]);
+                        suptitle(metric{c});
+                    end
+                end               
+            end        
+        end
+
+        %% PYTHONPLOT
+        function pythonplot(obj)
+            obj.plot('metric', {'counts';'cum_mag'});
+        end
+        
+        %% HELENAPLOT
+        function helenaplot(obj)
+            for c=1:length(obj)
+                figure
+                set(gcf,'Color', [1 1 1]);
+                cumcummag = magnitude.eng2mag(cumsum(magnitude.mag2eng(obj(c).cum_mag)));
+                [ax, h1, h2] = plotyy(obj(c).time, cumcummag, obj(c).time, cumsum(obj(c).energy), @plot, @plot);
+                datetick(ax(1), 'x','keeplimits');
+                datetick(ax(2), 'x','keeplimits');
+                ylabel(ax(1), 'Cumulative Magnitude', 'FontSize',12);
+                ylabel(ax(2), 'Cumulative Energy', 'FontSize',12);
+            end
+        end
+
+        
+        function pvalue(obj)
+            logt = log10(obj.time-obj.time(1));
+            logc = log10(obj.counts);
+            plot(logt, logc);
+            p = logt \ logc'
+%             p = polyfit(logt, logc, 1)
+%             hold on
+%             logt1 = min(logt);
+%             logc1 = polyval(p, logt1);
+%             logt2 = max(logt);
+%             logc2 = polyval(p, logt2);  
+%             line([logt1 logt2], [logc1 logc2]);
+        end
+            
+            
+        %% SAUSAGEPLOT
+        function sausageplot(obj, numBinsToUse, varargin)
+            %sausageplot
+            %    Under development, this function attempts to replicate the
+            %    capabilities of sausageplot.xpy written by Glenn Thompson
+            %    at AVO.
+            p = inputParser;
+            p.addRequired('numBinsToUse', @isnumeric);
+            p.addOptional('numPoints', 1, @isnumeric);
+            p.addOptional('radii', [], @isnumeric);
+            p.parse(numBinsToUse, varargin{:});
+            numBinsToUse = p.Results.numBinsToUse;
+            numPoints = p.Results.numPoints;
+            radii = p.Results.radii;
+%             % Page size, dots-per-inch and scale settings
+%             fh = figure()
+%             if numBinsToUse > NUMPOINTS
+%                 dpi = 6*(numBinsToUse+1);
+%                 axes_width = 0.8 * (NUMPOINTS + 1) / (numBinsToUse + 1);
+%                 axes_height = 0.8;
+%             else
+%                 dpi = 6*(NUMPOINTS+1);
+%                 axes_width = 0.8;
+%                 axes_height = 0.8 * (numBinsToUse + 1) / (NUMPOINTS + 1);
+%             end
+%             fh.set_dpi(dpi)
+%             fh.set_size_inches((10.0,10.0),forward=True)
+%             fig2ax1 = fig2.add_axes([0.1, 0.85-axes_height, axes_width, axes_height]);
+%             print_pixels(fig2, fig2ax1, numBinsToUse, NUMPOINTS);
+%             colormapname = 'hot_r';
+            MAXMAGCOLORBAR = 5.0;
+            MINMAGCOLORBAR = 1.0;
+            % Marker size configuration
+%             SCALEFACTOR = 84.0 / dpi;
+%             MAXMARKERSIZE = 43.0 * SCALEFACTOR;
+%             MINMARKERSIZE = 4.0 * SCALEFACTOR;
+            PTHRESHOLD = 50;
+            for c = 1:length(obj)
+                % set up weekending list for yticklabels
+                binendstr = {};
+                for bin_index=numel(obj.time)-numBinsToUse+1: numel(obj.time)
+                    bin_index
+                    dstr = datestr(obj.time(bin_index))
+                    binendstr{bin_index} = dstr;
+                end
+                pointlabels = {};
+                for i=1:length(numPoints)
+                    % filter here based on points and radii
+                    j = 1:length(obj(c).counts); % replace this
+                    counts = obj(c).counts(j);
+                    cummag = obj(c).cum_mag(j);
+                    prcntile = percentiles(obj(c).counts);
+                    %pointlabels{i} = sprintf('%s(%d)', point_label{i}, counts(-1));
+                    pointlabels{i}='';
+                    for bin_index=numel(obj.time)-numBinsToUse+1: numel(obj.time)%-numBinsToUse-1: 1: 0
+                        y = obj(c).counts(bin_index);
+                        magnitude = obj(c).cum_mag(bin_index);
+                        p = y2percentile(y,prcntile);
+                        if y>0
+                            colorVal = scalarMap.to_rgba(magnitude)
+                            msize = MINMARKERSIZE + (p-PTHRESHOLD) * (MAXMARKERSIZE - MINMARKERSIZE) / (100-PTHRESHOLD);
+                            if msize<MINMARKERSIZE
+                                msize=MINMARKERSIZE;
+                            end
+%                             fig2ax1.plot(i+0.5, w, 's', color=colorVal, markersize=msize, linewidth=0 );
+                            scatter(i+0.5, bin_index, msize, y, 's', 'filled')
+                            if msize > MAXMARKERSIZE * 0.3
+                                text(i+0.5, bin_index, num2str(y))
+%                                fig2ax1.text(i+0.5, w, '%d', y, horizontalalignment='center', verticalalignment='center', fontsize = 8 * SCALEFACTOR)
+                            end
+                        end
+                    end
+                end
+
+                % Adding xticks, yticks, labels, grid
+%                 fig2ax1.set_axisbelow(True) % I think this puts grid and tickmarks below actual data plotted
+
+                % x-axis
+%                 fig2ax1.set_xticks(np.arange(.5,NUMVOLCANOES+.5,1))
+                set(gca, 'XTick', 0.5:1:numPoints+0.5);
+%                 fig2ax1.set_xlim([-0.5, NUMVOLCANOES+0.5])
+                set(gca, 'XLim', [-0.5 numPoints+0.5])
+%                 fig2ax1.xaxis.grid(True, linestyle='-', color='gray')
+                grid on;
+                set(gca, 'XTickLabel', pointlabels)
+%                 fig2ax1.xaxis.set_ticks_position('top')
+%                 fig2ax1.xaxis.set_label_position('top')
+                %plt.setp( fig2ax1.get_xticklabels(), rotation=45, horizontalalignment='left', fontsize=10*SCALEFACTOR )
+
+                % y-axis
+%                 fig2ax1.set_yticks(np.arange(-number_of_weeks_to_plot-0.5, 0, 1))
+                set(gca, 'YTick', -numBinsToUse-0.5: 1: 0)
+%                 fig2ax1.set_yticklabels(weekending)
+                set(gca, 'YTickLabel', binendstr)
+%                 fig2ax1.set_ylim([-number_of_weeks_to_plot - 0.5, -0.5])
+                set(gca, 'YLim', -numBinsToUse -0.5 : 1 : -0.5)
+%                 plt.setp( fig2ax1.get_yticklabels(), fontsize=10*SCALEFACTOR )
+            end
+        end
+
+
+         
+        %% IMPORTSWARMDB
+        function obj = importswarmdb(obj, dbname, auth, snum, enum)
+            % IMPORTSWARMDB
+            % Load a swarm database metrics table into an EventRate object
+            % eventrate = importswarmdb(erobj, dbname, auth, snum, enum);  
+            %
+            % INPUT:
+            %	dbname		the path of the database (must have a 'metrics' table)
+            %	auth		name of the grid to load swarm tracking metrics for
+            %	snum,enum	start and end datenumbers (Matlab time format, see 'help datenum')
+            %
+            % OUTPUT:
+            %	obj		an eventrate object
+            %
+            % Example:
+            %	erobj = importswarmdb('/avort/devrun/dbswarm/swarm_metadata', 'RD_lo', datenum(2010, 7, 1), datenum(2010, 7, 14) );
+
+            % Glenn Thompson, 20100714
+
+            % initialize
+            obj.dbroot = dbname;
+            obj.snum = snum;
+            obj.enum = enum;
+            obj.auth = auth;
+
+            % check that database exists
+            dbtablename = sprintf('%s.metrics',dbname);
+            if exist(dbtablename,'file')
+                % load the data
+                try
+                    db = dbopen(dbname, 'r');
+                catch me
+                    fprintf('Error: Could not open %s for reading',dbname);
+                        return;
+                end
+                db = dblookup_table(db, 'metrics');
+                if (dbquery(db, 'dbRECORD_COUNT')==0)
+                    fprintf('Error: Could not open %s for reading',dbtablename);
+                    return;
+                end
+                db = dbsubset(db, sprintf('auth ~= /.*%s.*/',auth));
+                numrows = dbquery(db,'dbRECORD_COUNT');
+                debug.print_debug(sprintf('Got %d rows after auth subset',numrows),2);
+                sepoch = datenum2epoch(snum);
+                eepoch = datenum2epoch(enum);
+                db = dbsubset(db, sprintf('timewindow_starttime >= %f && timewindow_endtime <= %f',sepoch,eepoch));
+                numrows = dbquery(db,'dbRECORD_COUNT');
+                debug.print_debug(sprintf('Got %d rows after time subset',numrows),2);
+
+                if numrows > 0
+                    % Note that metrics are only saved when mean_rate >= 1.
+                    % Therefore there will be lots of mean_rate==0 timewindows not in
+                    % database.
+                    [tempsepoch, tempeepoch, mean_rate, median_rate, mean_mag, cum_mag] = dbgetv(db,'timewindow_starttime', 'timewindow_endtime', 'mean_rate', 'median_rate', 'mean_ml', 'cum_ml');
+                    obj.binsize = (tempeepoch(1) - tempsepoch(1))/86400;
+                    obj.stepsize = min(tempsepoch(2:end) - tempsepoch(1:end-1))/86400;
+                    obj.time = snum+obj.stepsize:obj.stepsize:enum;
+                    obj.numbins = length(obj.time);
+                    obj.mean_rate = zeros(obj.numbins, 1);
+                    obj.counts = zeros(obj.numbins, 1);
+                    obj.median_rate = zeros(obj.numbins, 1);
+                    obj.mean_mag = zeros(obj.numbins, 1);
+                    obj.cum_mag = zeros(obj.numbins, 1);
+                    for c=1:length(tempeepoch)
+                        tempenum = epoch2datenum(tempeepoch(c));
+                        i = find(obj.time == tempenum);
+                        obj.mean_rate(i) = mean_rate(c);
+                        obj.counts(i) = mean_rate(c) * (obj.binsize * 24);
+                        obj.median_rate(i) = median_rate(c); 
+                        obj.mean_mag(i) = mean_mag(c);
+                        obj.cum_mag(i) = cum_mag(c);
+                    end
+                end
+                dbclose(db);
+
+            else
+                % error - table does not exist
+                fprintf('Error: %s does not exist',dbtablename);
+                return;
+            end
+
+            obj.total_counts = sum(obj.counts)*obj.stepsize/obj.binsize;
+
+        end
+        
+        %% ADDFIELD
+        function obj = addfield(obj,fieldname,val)
+            %ADDFIELD add fields and values to object(s) 
+            %   obj = addfield(obj, fieldname, value)
+            %   This function creates a new user defined field, and fills it with the
+            %   included value.  If fieldname exists, it will overwrite the existing
+            %   value.
+            %
+            %   Input Arguments
+            %       obj: an EventRate object
+            %       fieldname: a string name
+            %       value: a value to be added for those fields.  Value can be anything
+            %
+            %   EventRate objects can hold user-defined fields.  To access the contents, 
+            %   use EventRate/get.
+            %
+            %   Example:
+            %       % add a field called "TESTFIELD", containing the numbers 1-45
+            %       obj = addfield(obj,'TestField',1:45);
+            %
+            %       % add a cell field called "MISHMOSH"
+            %       obj = addfield(obj,'mishmosh',{'hello';'world'});
+            %
+            %       % see the result
+            %       disp(obj) 
+            %
+            % See also EventRate/set, EventRate/get
+
+            % AUTHOR: Glenn Thompson
+
+            if ischar(fieldname)
+                mask = strcmp(fieldname, properties(obj));
+                if any(mask)
+                    obj = obj.set(fieldname, val);
+                else
+                    mask = strcmp(upper(fieldname),obj.misc_fields);
+                    if any(mask)
+                        obj = obj.set(fieldname, val);
+                    else
+                        obj.misc_fields = [obj.misc_fields, upper(fieldname)];
+                        obj = obj.set(upper(fieldname), val);
+                    end
+                end   
+            else
+                error('%s:addfield:invalidFieldname','fieldname must be a string', class(catalogObject))
+            end
+
+        end
+
+        %% SET
+        function obj = set(obj, varargin)
+            %SET Set properties for EventRate object(s)
+            %   obj = set(obj,'property_name', val, ['property_name2', val2])
+            %   SET is one of the two gateway functions of an object, such as EventRate.
+            %   Properties that are changed through SET are typechecked and otherwise
+            %   scrutinized before being stored within the EventRate object.  This
+            %   ensures that the other EventRate methods are all retrieving valid data,
+            %   thereby increasing the reliability of the code.
+            %
+            %   Another strong advantage to using SET and GET to change and retrieve
+            %   properties, rather than just assigning them to EventRate object directly,
+            %   is that the underlying data structure can change and grow without
+            %   harming the code that is written based on the EventRate object.
+            %
+            %   For a list of valid property names, type:
+            %       properties(obj)
+            %   
+            %   If user-defined fields were added to the EventRate object (ie, through
+            %   addField), these fieldnames are also available through set.
+            %
+            %   Examples:
+            %       (1) Change the description property
+            %           obj = obj.set('description','hello world');
+            %
+            %       (2) Add new a field called CLOSEST_STATION with
+            %           % the value 'MBLG'
+            %           obj = obj.addfield('CLOSEST_STATION','MBLG');
+            %
+            %           % change the value of the CLOSEST_STATION field
+            %           obj = obj.set('CLOSEST_STATION','MBWH');
+            %
+            %  See also EventRate/get, EventRate/addfield
+
+            Vidx = 1 : numel(varargin);
+
+            while numel(Vidx) >= 2
+                prop_name = upper(varargin{Vidx(1)});
+                val = varargin{Vidx(2)};
+                mask = strcmp(upper(prop_name),upper(properties(obj)));
+                if any(mask)
+                    mc = metaclass(obj);
+                    i = find(mask);
+                    prop_name = mc.PropertyList(i).Name;
+                    if isempty(mc.PropertyList(i).GetMethod)
+                        %eval(sprintf('obj.%s=val;',prop_name));
+                        obj.(prop_name) = val;
+                    else
+                        warning('Property %s is a derived property and cannot be set',prop_name);
+                    end
+                else
+                    switch prop_name
+                        case obj.misc_fields
+                            mask = strcmp(prop_name,obj.misc_fields);
+                            obj.misc_values(mask) = {val};
+                        otherwise
+                            error('%s:set:unknownProperty',...
+                                'can''t understand property name : %s', mfilename,prop_name);
+                    end
+                end
+                Vidx(1:2) = []; %done with those parameters, move to the next ones...
+            end 
+        end     
+        
+        %% GET
+        function val = get(obj,prop_name)
+            %GET Get EventRate properties
+            %   val = get(EventRate_object,'property_name')
+            %
+            %   To see valid property names, type:
+            %       properties(EventRate_object)
+            %
+            %       If additional fields were added to EventRate using ADDFIELD, then
+            %       values from these can be retrieved using the fieldname
+            %
+            %   See also EventRate/SET, EventRate/ADDFIELD, Catalog/GET
+
+            mask = strcmp(prop_name, properties(obj));
+            if any(mask)
+                % eval(sprintf('val=obj.%s;',prop_name));
+                val = obj.(prop_name);
+            else
+                mask = strcmp(upper(prop_name),obj.misc_fields);
+                if any(mask)
+                    val = obj.misc_values{mask};
+                else
+                    warning('%s:get:unrecognizedProperty',...
+                        'Unrecognized property name : %s',  class(obj), prop_name);
+                end
+            end
+        end
+
+    
+    end % methods 
+
+   
+    methods(Static)
+        cookbook()
+    end
+
+end
+%% PERCENTILES
+function p=percentiles(vals)
+    lenVals = length(vals);
+    for i=1:100
+        p(i) = vals(floor(i/100 * (lenVals-1))+1);
+    end
+end
+
+%% PLOT_PERCENTILES
+function plot_percentiles(p)
+    figure(gcf+1, 'Color', [1 1 1])
+    plot(1:100, p);
+end
+
+function label = metric2label(metric, binsize)
+    % label = metric2label(metric, binsize)
+    label=metric;
+    blabel = Catalog.binning.binsizelabel(binsize);
+    time_unit = blabel(4:end);
+    if strcmp(metric, 'counts')
+        label = sprintf('# Events %s',blabel);
+    elseif strcmp(metric, 'energy')
+        label = sprintf('Energy %s',blabel);
+    elseif strcmp(metric, 'mean_rate')
+        label = sprintf('Mean # events per hour (binsize %s)', time_unit);
+    elseif strcmp(metric, 'median_rate')
+        label = sprintf('Median # events per hour (binsize %s)', time_unit);
+    elseif strcmp(metric, 'cum_mag')
+        label = sprintf('Cumulative Magnitude per hour (binsize %s)', time_unit);;
+    elseif strcmp(metric, 'mean_mag')
+        label = sprintf('Mean Magnitude per hour (binsize %s)', time_unit);
+    elseif strcmp(metric, 'median_mag')
+        label = sprintf('Median Magnitude per hour (binsize %s)', time_unit);
+    end
+end
+
+
+##### SOURCE END #####
+--></body></html>
