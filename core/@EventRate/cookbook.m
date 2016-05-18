@@ -1,7 +1,8 @@
 %% EventRate Cookbook
 % The EventRate class is for making plots of:
-%   * number of events per unit time (often called "counts")
-%   * energy release rate / cumulative magnitude per unit time
+%
+% * number of events per unit time (often called "counts")
+% * energy release rate / cumulative magnitude per unit time
 
 %% Simple EventRate example
 % First we create a Catalog object from the Redoubt dataset
@@ -13,7 +14,7 @@ catalogObject = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
 	'radialcoordinates', [redoubtLat redoubtLon maxR]);
 
 %% 
-% For a quick plot of earthquakes per hour, we create an eventrate object and then plot it. Here our binsize is 1/24 days, i.e. 1 hour.
+% For a quick plot of earthquakes per hour, we create an EventRate object and then plot it. Here our binsize is 1/24 days, i.e. 1 hour.
 
 eventrateObject = catalogObject.eventrate('binsize', 1/24);
 eventrateObject.plot()
@@ -40,7 +41,7 @@ plot(eventrateObject);
 % do exactly the same thing. The first is the object-oriented style 
 % OBJECT.METHOD(INPUT PARAMETERS), the second is the functional style 
 % FUNCTION(OBJECT, INPUT PARAMETERS). The object oriented style is 
-% preferable
+% preferable.
 
 %% Event rates for overlapping time windows
 % Sometimes it is desirable to compute event rate metrics for sliding - 
@@ -48,7 +49,7 @@ plot(eventrateObject);
 % parameter. If omitted, stepsize defaults to the binsize - which is the 
 % length of the time window. So in the previous example, both binsize 
 % and stepsize were 1.0 hours. But we can just as easily compute an 
-% eventrate object for the same Events object with a binsize of 1 hour, 
+% EventRate object for the same EventRate object with a binsize of 1 hour, 
 % and stepsize of 1 minute. This effectively converts a Catalog into a set
 % of continuous metrics, measured every minute, directly comparable to
 % 1-minute RSAM.
@@ -80,7 +81,7 @@ eventrateObject.plot()
 % * energy
 
 %%
-% All of these are properties of an eventrate object except for energy, which is computed from _cum_mag_ on-the-fly. Several can be plotted at once in subplots of the same figure using a cell array:
+% All of these are properties of an EventRate object except for energy, which is computed from _cum_mag_ on-the-fly. Several can be plotted at once in subplots of the same figure using a cell array:
 
 eventrateObject.plot('metric', {'mean_rate'; 'median_rate'; 'mean_mag'; 'cum_mag'});
 

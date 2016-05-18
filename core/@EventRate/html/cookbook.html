@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>EventRate Cookbook</h1><!--introduction--><p>The EventRate class is for making plots of:   * number of events per unit time (often called "counts")   * energy release rate / cumulative magnitude per unit time</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Simple EventRate example</a></li><li><a href="#9">Event rates for overlapping time windows</a></li><li><a href="#10">Plots of other event rate metrics</a></li><li><a href="#19">Other plot types</a></li></ul></div><h2>Simple EventRate example<a name="1"></a></h2><p>First we create a Catalog object from the Redoubt dataset</p><pre class="codeinput">dbpath = Catalog.demo.demodb(<span class="string">'avo'</span>);
+  </style></head><body><div class="content"><h1>EventRate Cookbook</h1><!--introduction--><p>The EventRate class is for making plots of:</p><div><ul><li>number of events per unit time (often called "counts")</li><li>energy release rate / cumulative magnitude per unit time</li></ul></div><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Simple EventRate example</a></li><li><a href="#9">Event rates for overlapping time windows</a></li><li><a href="#10">Plots of other event rate metrics</a></li><li><a href="#19">Other plot types</a></li></ul></div><h2>Simple EventRate example<a name="1"></a></h2><p>First we create a Catalog object from the Redoubt dataset</p><pre class="codeinput">dbpath = Catalog.demo.demodb(<span class="string">'avo'</span>);
 redoubtLon = -152.7431;
 redoubtLat = 60.4853;
 maxR = km2deg(20.0);
@@ -95,8 +95,9 @@ eventrateObject.plot(<span class="string">'metric'</span>, <span class="string">
 ##### SOURCE BEGIN #####
 %% EventRate Cookbook
 % The EventRate class is for making plots of:
-%   * number of events per unit time (often called "counts")
-%   * energy release rate / cumulative magnitude per unit time
+%
+% * number of events per unit time (often called "counts")
+% * energy release rate / cumulative magnitude per unit time
 
 %% Simple EventRate example
 % First we create a Catalog object from the Redoubt dataset
