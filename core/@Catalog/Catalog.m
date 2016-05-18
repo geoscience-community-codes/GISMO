@@ -308,7 +308,12 @@ classdef Catalog
                         warning('Cannot find irisFetch.m')
                     end
                 case {'css3.0','antelope', 'datascope'}
-                    self = Catalog.read_catalog.antelope(varargin{:});
+                    if admin.antelope_exists()
+                        self = Catalog.read_catalog.antelope(varargin{:});
+                    else
+                        warning('Sorry, cannot read event Catalog from Antelope database as Antelope toolbox for MATLAB not found')
+                        self = Catalog();
+                    end
                 case 'seisan'
                     self = Catalog.read_catalog.seisan(varargin{:});
                 case 'aef'

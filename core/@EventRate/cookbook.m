@@ -3,7 +3,7 @@
 %   * number of events per unit time (often called "counts")
 %   * energy release rate / cumulative magnitude per unit time
 
-%%
+%% Simple EventRate example
 % First we create a Catalog object from the Redoubt dataset
 dbpath = Catalog.demo.demodb('avo');
 redoubtLon = -152.7431; 
@@ -19,41 +19,67 @@ eventrateObject = catalogObject.eventrate('binsize', 1/24);
 eventrateObject.plot()
 
 %%
-% Change to a smaller bin size of just 1 minute:
+% Change to a smaller bin size of 20 minutes:
 
 eventrateObject = catalogObject.eventrate('binsize', 20/1440);
 plot(eventrateObject);
 
 %%
-% Note that `eventrateObject.plot()` and `plot(eventrateObject)` do exactly the same thing. The first is the object-oriented style `OBJECT.METHOD(INPUT PARAMETERS)`, the second is the functional style `FUNCTION(OBJECT, INPUT PARAMETERS)`. We could just as easily do `eventrate(catalogObject, 'binsize', 20/1440)` too, but the object oriented style is preferable.
+% Note that
+
+%%
+%   eventrateObject.plot()
+
+%%
+% and
+
+%%
+%   plot(eventrateObject)
+
+%%
+% do exactly the same thing. The first is the object-oriented style 
+% OBJECT.METHOD(INPUT PARAMETERS), the second is the functional style 
+% FUNCTION(OBJECT, INPUT PARAMETERS). The object oriented style is 
+% preferable
 
 %% Event rates for overlapping time windows
-% Sometimes it is desirable to compute event rate metrics for sliding - i.e. overlapping - time windows. This is easily done with the 'stepsize' parameter. If omitted, stepsize defaults to the binsize - which is the length of the time window. So in the previous example, both binsize and stepsize were 1.0 hours. But we can just as easily compute an eventrate object for the same Events object with a binsize of 1 hour, and stepsize of just 5 minutes. 
+% Sometimes it is desirable to compute event rate metrics for sliding - 
+% i.e. overlapping - time windows. This is easily done with the 'stepsize' 
+% parameter. If omitted, stepsize defaults to the binsize - which is the 
+% length of the time window. So in the previous example, both binsize 
+% and stepsize were 1.0 hours. But we can just as easily compute an 
+% eventrate object for the same Events object with a binsize of 1 hour, 
+% and stepsize of 1 minute. This effectively converts a Catalog into a set
+% of continuous metrics, measured every minute, directly comparable to
+% 1-minute RSAM.
 
-eventrateObject = catalogObject.eventrate('binsize', 1/24,  'stepsize', 5/1440);
+eventrateObject = catalogObject.eventrate('binsize', 1/24,  'stepsize', 1/1440);
 eventrateObject.plot()
 
 %% Plots of other event rate metrics
-
-    eventrateObject.plot() 
+%%
+%   eventrateObject.plot() 
 
 %%
-% is actually equivalent to typing:
+% is equivalent to typing:
 
-    eventrateObject.plot('metric', 'counts');
+%%
+%   eventrateObject.plot('metric', 'counts');
 
 %%
 % The full list of metrics that can be plotted are:
+
 %%
-%
-%	* counts
-%	* mean_rate
-% 	* median_rate
-%	* cum_mag
-%	* mean_mag
-%	* median_mag
-%	* energy
-%
+% 
+% * counts
+% * mean_rate
+% * median_rate
+% * cum_mag
+% * mean_mag
+% * median_mag
+% * energy
+
+%%
 % All of these are properties of an eventrate object except for energy, which is computed from _cum_mag_ on-the-fly. Several can be plotted at once in subplots of the same figure using a cell array:
 
 eventrateObject.plot('metric', {'mean_rate'; 'median_rate'; 'mean_mag'; 'cum_mag'});

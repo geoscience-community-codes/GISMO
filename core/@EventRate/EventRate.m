@@ -412,7 +412,7 @@ classdef EventRate
         %% HELENAPLOT
         function helenaplot(obj)
             for c=1:length(obj)
-                figure(gcf+1)
+                figure
                 set(gcf,'Color', [1 1 1]);
                 cumcummag = magnitude.eng2mag(cumsum(magnitude.mag2eng(obj(c).cum_mag)));
                 [ax, h1, h2] = plotyy(obj(c).time, cumcummag, obj(c).time, cumsum(obj(c).energy), @plot, @plot);

@@ -11,23 +11,16 @@
 % retrieve any name-value parameter pairs supported by irisFetch.
 %
 % In this example we will use retrieve to retrieve all events at IRIS DMC 
-% with a magnitude of at least 8.0 between year 2000 and 2014 (inclusive):
+% with a magnitude of at least 8.0 from year 2000 to 2014 (inclusive):
 
 greatquakes = Catalog.retrieve('iris', 'minimumMagnitude', 8.0, ...
-    'starttime', '2000-01-01', 'endtime', '2015-01-01');
+    'starttime', '2000-01-01', 'endtime', '2015-01-01')
 
 %%
 % To access any particular property we can use dot notation, as if the 
 % object were a structure, e.g.:
 
-greatquakes.etype
-
-%%
-% etype contains the event type for 
-% each of the 26 events. In this case each is just  'earthquake', but when 
-% dealing with more diverse dataset, many other etype's are possible. 
-% magtype is whatever magnitude type was assigned by the agency that 
-% provided the magnitude data.
+greatquakes.mag
 
 %%
 % greatquakes is a Catalog object, an instance of the Catalog class. To see
@@ -74,11 +67,24 @@ save('tohoku_events.mat', 'tohoku_events')
 %% Readings events from an Antelope database
 % To load event data from an Antelope/Datascope CSS3.0 database you will 
 % need to have Antelope (<http://www.brtt.com/software.html>) installed, 
-% including the Antelope toolbox for MATLAB.
+% including the Antelope toolbox for MATLAB  (ATM). To see if ATM is
+% installed, use the admin.antelope_exists() command, e.g.
+if admin.antelope_exists()
+    disp('Antelope Toolbox for MATLAB found')
+else
+    disp('Sorry, Antelope not found')
+end
+
+%%
+% If you do not have ATM installed, any attempt to read from an Antelope
+% database will result in a warning like:
+%
+%       Warning: Sorry, cannot read event Catalog from Antelope database as Antelope toolbox for MATLAB not found
+%
+% and an empty Catalog object will be returned.
+
 % 
 %%
-% *SCAFFOLD: NOTE THAT CURRENTLY NOT USING THE RTDB200903 AT ALL* 
-% 
 % For the purpose of this exercise we will be using data from Redoubt 
 % volcano from 2009/03/20 to 2009/03/23. We will use snippets from two 
 % catalogs that are provided with GISMO in Antelope format:
@@ -91,11 +97,9 @@ save('tohoku_events.mat', 'tohoku_events')
 %%
 % Both catalog segments are included in the "demo" directory. 
 % We will now load the official AVO catalog into an Events object:
-if admin.antelope_exists
-    dbpath = Catalog.demo.demodb('avo');
-    avocatalog = Catalog.retrieve('antelope', 'dbpath', dbpath);
-end
- 
+dbpath = Catalog.demo.demodb('avo');
+avocatalog = Catalog.retrieve('antelope', 'dbpath', dbpath);
+
 %%
 % This should load 1441 events. What if we only want events within 20km of 
 % Redoubt volcano? There are two ways to do this. The first is the use the
@@ -105,20 +109,22 @@ redoubtLon = -152.7431;
 redoubtLat = 60.4853;
 maxR = km2deg(20.0);
 redoubt_events = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
-	'radialcoordinates', [redoubtLat redoubtLon maxR])
+    'radialcoordinates', [redoubtLat redoubtLon maxR])
+
+%%
+% Anyone familiar with Antelope will know that it subsets databases by
+% using a dbeval subset expression, and the command above does this
+% internally. You can also specify a subset expression directly. The
+% following example is completely equivalent to that above:
+
+expr = sprintf('distance(lat, lon, %f, %f) < %f',redoubtLat, redoubtLon,maxR)
+redoubt_events = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
+    'subset_expression', expr)
 
 %%
 % Save this dataset so you can use it again later:
-
 save('redoubt_events.mat', 'redoubt_events')
 
-%%
-% The second way is to use the 'subset_expression' which the Antelope
-% expression evaluator interprets:
-
-expr = sprintf('distance(lat, lon, %f, %f) < %f',redoubtLat, redoubtLon,maxR)
-catalogObject = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
-	'subset_expression', expr)
 
 %% Reading events from a Seisan database
 % Here we load events from a Seisan catalog. A Seisan "Sfile" contains all
