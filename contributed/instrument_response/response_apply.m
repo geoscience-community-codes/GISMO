@@ -79,6 +79,7 @@ rawData = reshape(rawData,1,dataLength);
 % Create a zero padded Tukey taper
 %    Taper size is determined by the high pass filter frequency
 %    Tapered waveform is zeros padded on either end to triple the trace length
+% Glenn 20160519: could the follow commands be simplified using tukeywin?
 taperFullWidth = round(0.5/(filterBand(1)*period))*2; % guarantees an even number
 taperAmp = hanning(taperFullWidth)';
 taperAmp = [taperAmp(1:(taperFullWidth/2)) ones(1,(dataLength-taperFullWidth)) taperAmp(((taperFullWidth/2)+1):taperFullWidth)];
@@ -112,6 +113,7 @@ newData = real(ifft(ifftshift(fftshift(fft(rawData)).*(respInvFull))));
 
 % BANDPASS FILTER THE DATA
 [z q] = butter(get(filterObj,'POLES'),[(filterBand(1)/nyquist) (filterBand(2)/nyquist)]);
+% Glenn 20160519 could the follow 3 lines be replaced using filtfilt?
 newData = filter(z,q,newData);
 newData = filter(z,q,fliplr(newData));
 newData = fliplr(newData);

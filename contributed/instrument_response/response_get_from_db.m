@@ -65,11 +65,11 @@ if dbquery(db,'dbRECORD_COUNT')==0     % check for open channels
 end
 dbInst = dblookup_table(db, 'instrument');
 if ~dbquery(dbInst,'dbTABLE_PRESENT')
-    error('Database does not contain a sensor table.');
+    error('Database does not contain an instrument table.');
 end
 dbCalib = dblookup_table(db, 'calibration');
 if ~dbquery(dbCalib,'dbTABLE_PRESENT')
-    error('Database does not contain a sensor table.');
+    error('Database does not contain a calibration table.');
 end
 db = dbjoin(db, dbInst);
 db = dbjoin(db, dbCalib);

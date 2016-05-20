@@ -20,8 +20,7 @@ function testFunctionOne(testCase)
     ds = datasource('uaf_continuous');
     chan='BHZ*';
     sta = 'COLA';
-    w=waveform(ds, scnlobject(sta,chan), startTime, endTime);
-    show(w)
+    w=waveform(ds, scnlobject(sta,chan), startTime, endTime)
 end
 
 function testFunctionTwo(testCase)
@@ -32,8 +31,7 @@ function testFunctionTwo(testCase)
     ds = datasource('uaf_continuous');
     chan='BHZ*';
     sta = {'COLA';'COR'};
-    w=waveform(ds, scnlobject(sta,chan), startTime, endTime);
-    show(w)
+    w=waveform(ds, scnlobject(sta,chan), startTime, endTime)
 end
 
 
@@ -46,8 +44,7 @@ function testFunctionThree(testCase)
     chan = 'BHZ_01';
     dbpath = '/home/admin/databases/BEAAR/wf/beaar';
     ds = datasource('antelope',dbpath);
-    w=waveform(ds, scnlobject(sta,chan), startTime, endTime);
-    show(w)
+    w=waveform(ds, scnlobject(sta,chan), startTime, endTime)
 end
 
 function testFunctionFour(testCase)
@@ -58,8 +55,7 @@ function testFunctionFour(testCase)
     chan = 'BHZ_01';
     dbpath = '/home/admin/databases/BEAAR/wf/beaar';
     ds = datasource('antelope',dbpath);
-    w=waveform(ds, scnlobject(sta,chan), startTime, endTime);
-    show(w)
+    w=waveform(ds, scnlobject(sta,chan), startTime, endTime)
 end
  
 function testFunctionSix(testCase)
@@ -70,8 +66,7 @@ function testFunctionSix(testCase)
     chan = 'HHZ*';
     scnl = scnlobject(sta,chan,'','');
     ds = datasource('uaf_continuous');
-    w = waveform(ds,scnl,startTime,endTime);
-    show(w)
+    w = waveform(ds,scnl,startTime,endTime)
 end
 
 function testFunctionSeven(testCase)
@@ -82,8 +77,7 @@ function testFunctionSeven(testCase)
     chan = 'EHZ';
     scnl = scnlobject(sta,chan,'','');
     ds = datasource('uaf_continuous');
-    w = waveform(ds,scnl,startTime,endTime);
-    show(w)
+    w = waveform(ds,scnl,startTime,endTime)
 end
 
 function testFunctionEight(testCase)
@@ -94,8 +88,7 @@ function testFunctionEight(testCase)
     chan = 'EHZ';
     scnl = scnlobject(sta,chan,'','');
     ds = datasource('uaf_continuous');
-    w = waveform(ds,scnl,startTimes,endTimes);
-    show(w)
+    w = waveform(ds,scnl,startTimes,endTimes)
 end
 
 %% Optional file fixtures  
@@ -142,9 +135,4 @@ function tryAllSources(ds, sta, chan, startTime, endTime)
 %     w = antelope.antelope2waveform(dbpath, sta, chan, startTime, endTime)
 end
 
-function show(w)
-    for c=1:numel(w)
-        w(c)
-    end
-end
 

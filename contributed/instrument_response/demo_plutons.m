@@ -1,6 +1,6 @@
 %
 
-dbName = '/home/field/databases/PLUTONS/wf/plutons';
+dbName = '/home/admin/databases/PLUTONS/wf/plutons';
 ds = datasource('antelope',dbName);
 
 

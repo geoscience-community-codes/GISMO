@@ -1,4 +1,4 @@
-function w = resample(w,method, val)
+function w = resample(w,method, crunchfactor)
    %RESAMPLE resamples a waveform at over every specified interval
    %   w = resample(waveform, method, crunchfactor)
    %
@@ -9,8 +9,8 @@ function w = resample(w,method, val)
    %                window
    %           'max' : maximum value
    %           'min' : minimum value
-   %           'mean': average value
-   %           'median' : mean value
+   %           'mean': average (mean) value
+   %           'median' : median value
    %           'rms' : rms value (added 2011/06/01)
    %           'absmax': absolute maximum value (greatest deviation from zero)
    %           'absmin': absolute minimum value (smallest deviation from zero)
@@ -51,19 +51,24 @@ function w = resample(w,method, val)
       STATS_INSTALLED = ~isempty(ver('stats'));
    end
    
-   if ~(round(val) == val)
-      disp ('val needs to be an integer');
+   if ~(round(crunchfactor) == crunchfactor)
+      disp ('crunchfactor needs to be an integer greater than 1');
+      return;
+   end;
+   
+   if round(crunchfactor)==1
+       disp('crunchfactor needs to be an integer greater than 1');
       return;
    end;
    
    for i=1:numel(w)
-      rowcount = ceil(length(w(i).data) / val);
-      maxcount = rowcount * val;
+      rowcount = ceil(length(w(i).data) / crunchfactor);
+      maxcount = rowcount * crunchfactor;
       if length(w(i).data) < maxcount
          w(i).data(end+1:maxcount) = mean(w(i).data((rowcount-1)*maxcount : end)); %pad it with the avg value
       end;
       
-      d = reshape(w(i).data,val,rowcount); % produces ( val x rowcount) matrix
+      d = reshape(w(i).data,crunchfactor,rowcount); % produces ( crunchfactor x rowcount) matrix
       switch upper(method)
          
          case 'MAX'
@@ -133,10 +138,10 @@ function w = resample(w,method, val)
          case 'BUILTIN'
             
             % assume W is an existing waveform
-            ResampleD = resample(w(i).data,1,val);  % see matlab's RESAMPLE for specifics
+            ResampleD = resample(w(i).data,1,crunchfactor);  % see matlab's RESAMPLE for specifics
             w(i).data = ResampleD(:);
             % (frequency is already updated below)
-            %w(i) = set(w(i), 'Freq', get(w(i),'freq') ./ val);
+            %w(i) = set(w(i), 'Freq', get(w(i),'freq') ./ crunchfactor);
             
          otherwise
             error('Waveform:resample:UnknownSampleMethod',...
@@ -145,6 +150,6 @@ function w = resample(w,method, val)
       end;
       
       %adjust the frequency
-      w(i) = set(w(i),'Freq', get(w(i),'Freq') ./ val);
+      w(i) = set(w(i),'Freq', get(w(i),'Freq') ./ crunchfactor);
    end
 end
