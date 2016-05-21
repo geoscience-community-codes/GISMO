@@ -164,7 +164,7 @@ function self = load(self, f)
     nsamples    = endsample - startsample + 1;
 
     % create dnum & blank data vector
-    dnum = matlab_extensions.ceilminute(f.snum)+(0:nsamples-1)/datapointsperday - tz/24;
+    dnum = ceilminute(f.snum)+(0:nsamples-1)/datapointsperday - tz/24;
     data(1:length(dnum))=NaN;
 
     if f.found    
@@ -193,8 +193,8 @@ function self = load(self, f)
     end
 
     % Now paste together the matrices
-    self.dnum = matlab_extensions.catmatrices(dnum, self.dnum);
-    self.data = matlab_extensions.catmatrices(data, self.data);
+    self.dnum = catmatrices(dnum, self.dnum);
+    self.data = catmatrices(data, self.data);
 
     if ~datafound
         debug.print_debug(sprintf('%s: No data loaded from file %s',mfilename,f.file),1);

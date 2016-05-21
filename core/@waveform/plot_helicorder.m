@@ -6,7 +6,7 @@ function [ output_args ] = plot_helicorder( w )
 % Glenn Thompson 20160513
     for c=1:numel(w)
         h = drumplot(demean(w(c)));
-        build(h);
+        plot(h);
     end
 end
 

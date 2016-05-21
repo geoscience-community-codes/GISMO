@@ -29,8 +29,8 @@ B.end = A(endIdx);
 % v0 = [];
 % v1= ([ 2 3 4 7 11 12 13 14 17 19 20])
 % v2 = [0, v1, 0];
-% matlab_extensions.contiguous([ 2 3 4 7 11 12 13 14 17 19 20])
+% contiguous([ 2 3 4 7 11 12 13 14 17 19 20])
 % expectedStarts = [2 11 19];
 % expectedEnds = [4 14 20];
-% matlab_extensions.contiguous([ 0 2 3 4 7 11 12 13 14 17 19 20 22])
+% contiguous([ 0 2 3 4 7 11 12 13 14 17 19 20 22])
 % SAME RESULTS.

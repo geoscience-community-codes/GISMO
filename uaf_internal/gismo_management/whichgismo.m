@@ -62,8 +62,8 @@ end
 
 NewSource = paths{f,2};
 disp(['Adding GISMO components from ' NewSource ' ...']);
-if exist('rmgismo')==2
-   rmgismo;
+if exist('admin.rmgismo')==2
+   admin.rmgismo;
 else
     error('Program not found: RMGISMO. Path not changed.');
 end

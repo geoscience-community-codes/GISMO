@@ -37,14 +37,17 @@ if exist('dbopen','file') && exist('trload_css','file'); %  test for antelope
   addContributed(gismopath,'contributed_antelope');
 end
 
-% ADD A PATH TO EACH DIRCTORY IN CONTRIBUTED_INTERNAL
-addContributed(gismopath,'contributed_internal');
+% ADD A PATH TO EACH DIRCTORY IN UAF_INTERNAL
+addContributed(gismopath,'uaf_internal');
 
 % ADD A PATH TO APPLICATIONS e.g. IceWeb
 addpath(genpath(fullfile(gismopath,'applications')));
 
 % ADD A PATH TO JAR FILES
 javaaddpath(fullfile(gismopath,'contributed','iris_dmc_tools','IRIS-WS-2.0.15.jar'))
+
+% ADD PATH TO GISMO LIBRARY FUNCTIONS
+addpath(fullfile(gismopath, 'libgismo'));
 
 % ADD PATH TO TESTS
 addpath(fullfile(gismopath, 'tests'));

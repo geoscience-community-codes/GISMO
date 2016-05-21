@@ -184,8 +184,8 @@ function [Xtickmarks,Xticklabels]=findMinuteMarks(timewindow);
 debug.printfunctionstack('>');
 
 % calculate where minute marks should be, and labels
-snum = matlab_extensions.ceilminute(timewindow.start);
-enum = matlab_extensions.floorminute(timewindow.stop);
+snum = ceilminute(timewindow.start);
+enum = floorminute(timewindow.stop);
 
 % Number of minute marks should be no greater than 20
 numMins = (enum - snum) * 1440;

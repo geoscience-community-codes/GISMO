@@ -359,9 +359,9 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
                         % each minute?
 
                         % Now downsample to 1 sample per minute
-                        dnum = unique(matlab_extensions.floorminute(thisT));
+                        dnum = unique(floorminute(thisT));
                         for k=1:length(dnum)
-                            p = find(matlab_extensions.floorminute(thisT) == dnum(k));
+                            p = find(floorminute(thisT) == dnum(k));
                             downsampled_peakf(k) = nanmean(PEAK_F(p));
                             downsampled_meanf(k) = nanmean(MEAN_F(p));  
                             downsampled_findex(k) = nanmean(F_INDEX(p));

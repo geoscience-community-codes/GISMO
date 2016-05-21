@@ -213,7 +213,7 @@ classdef rsam
             nsamples    = endsample - startsample + 1;
 
             % create dnum & blank data vector
-            dnum_ = matlab_extensions.ceilminute(f.snum)+(0:nsamples-1)/datapointsperday - tz/24;
+            dnum_ = ceilminute(f.snum)+(0:nsamples-1)/datapointsperday - tz/24;
             data_ = nan(1,length(dnum_));
             
             if f.found    
@@ -243,8 +243,8 @@ classdef rsam
             end
             
             % Now paste together the matrices
-            self.dnum = matlab_extensions.catmatrices(dnum_, self.dnum);
-            self.data = matlab_extensions.catmatrices(data_, self.data);
+            self.dnum = catmatrices(dnum_, self.dnum);
+            self.data = catmatrices(data_, self.data);
 
             if ~datafound
                 debug.print_debug(0, sprintf('%s: No data loaded from file %s',mfilename,f.file));

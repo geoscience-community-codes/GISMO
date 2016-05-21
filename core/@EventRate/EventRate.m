@@ -326,7 +326,7 @@ classdef EventRate
                         % range and label
                         datetick('x','keeplimits');
                         set(gca, 'XLim', [obj(cc).snum obj(cc).enum]);
-                        ymax = nanmax(matlab_extensions.catmatrices(1, data));
+                        ymax = nanmax(catmatrices(1, data));
 %                         ymax = min([max(sdata)*2 max(data)*1.01]);
                         set(gca, 'YLim', [0 ymax]);
                         ylabel(obj(cc).etype);
@@ -363,7 +363,7 @@ classdef EventRate
                         hold on;
                         datetick('x','keeplimits');
                         set(gca, 'XLim', [obj(cc).snum obj(cc).enum]);
-                        %ymax = nanmax(matlab_extensions.catmatrices(1, data));
+                        %ymax = nanmax(catmatrices(1, data));
                         %set(gca, 'YLim', [0 ymax]);
                         %ylabel(obj(cc).etype);
                     end

@@ -56,10 +56,9 @@ function varargout = plot(h)
     %% INITIALIZE BUILDER STRUCTURE FIELDS
     % pad waveform object
     [snum enum] = gettimerange(h.wave);
-    snum = matlab_extensions.floorminute(snum, h.mpl);
-    enum = matlab_extensions.ceilminute(enum, h.mpl);
-    h.wave = pad(h.wave, snum, enum, NaN);
-
+    snum = floorminute(snum+1/86400, h.mpl);
+    enum = ceilminute(enum-1/86400, h.mpl);
+    
     % find start and end times for each line
     B.number_of_lines = 1440*(enum-snum)/h.mpl;
     days_per_line = (enum-snum)/B.number_of_lines;
@@ -90,15 +89,15 @@ function varargout = plot(h)
     B.scale=h.scale/(B.number_of_lines*max_amplitude);
 
     %% PLOT DRUMPLOT TRACES WITH EVENT OVERLAY
-    for n = 1:B.number_of_lines+1 % Glenn 20160513: Not sure why I had to add 1 here, but without always miss the last line of data
-          B.line_offset(n) = (B.number_of_lines-n+0.5)/B.number_of_lines; % Trace offset from bottom
-          B.line_waveform_continuous(n) = B.line_waveform_continuous(n) * B.scale + B.line_offset(n);
-          plot(B.line_waveform_continuous(n), 'color', h.trace_color, 'xunit', 'minutes');
-          hold on;
-          if ~isempty(B.line_waveform_events)
-              B.line_waveform_events(n) = B.line_waveform_events(n) * B.scale + B.line_offset(n);
-              plot(B.line_waveform_events(n), 'color', h.event_color, 'xunit', 'minutes');
-          end 
+    for n = 1:B.number_of_lines % Glenn 20160513: For cookbook examples I had to add 1 here. Not sure why. Doesn't work in other cases
+      B.line_offset(n) = (B.number_of_lines-n+0.5)/B.number_of_lines; % Trace offset from bottom
+      B.line_waveform_continuous(n) = B.line_waveform_continuous(n) * B.scale + B.line_offset(n);
+      plot(B.line_waveform_continuous(n), 'color', h.trace_color, 'xunit', 'minutes');
+      hold on;
+      if ~isempty(B.line_waveform_events)
+          B.line_waveform_events(n) = B.line_waveform_events(n) * B.scale + B.line_offset(n);
+          plot(B.line_waveform_events(n), 'color', h.event_color, 'xunit', 'minutes');
+      end
     end % Finished plotting all drumplot trace data
 
     %% ADD FINISHING TOUCHES TO DRUMPLOT FIGURE
@@ -138,7 +137,7 @@ function add_y_ticks(h,B)
     if ~isempty(h.wave)
         ylabel(B.ax,'')
         tick_positions = B.line_offset;
-        tick_labels = datestr(B.starttimes,13);
+        tick_labels = datestr(B.starttimes,15);
         set(B.ax,'YTick',fliplr(tick_positions))
         set(B.ax,'YTickLabel',flipud(tick_labels))
     end

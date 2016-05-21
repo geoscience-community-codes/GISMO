@@ -17,15 +17,15 @@ function wavef = load_irisdmcws(request)
    datefmt = @(dt) datestr(dt, 'yyyy-mm-dd HH:MM:SS.FFF');
    idx = 0;
    for d = 1 : numel(sTime);
-   for tag = allChanInfo
-      thisWave = irisFetchTraces(...
-         tag.network, tag.station, tag.location, tag.channel, datefmt(sTime(d)), datefmt(eTime(d)));
-      nWaves = numel(thisWave);
-      if nWaves > 0
-         wavef(idx + 1 : idx + nWaves) = thisWave;
-         idx = numel(wavef);
-      end;
-   end
+       for tag = allChanInfo
+          thisWave = irisFetchTraces(...
+             tag.network, tag.station, tag.location, tag.channel, datefmt(sTime(d)), datefmt(eTime(d)));
+          nWaves = numel(thisWave);
+          if nWaves > 0
+             wavef(idx + 1 : idx + nWaves) = thisWave;
+             idx = numel(wavef);
+          end;
+       end
    end
    wavef = addhistory(clearhistory(wavef),'Imported from IRIS DMC');
 end
