@@ -9,7 +9,7 @@ function spectrogram( w )
 % Glenn Thompson 2016/05/19 to provide a simple, fast way to geenrate nice
 % spectrograms without having to delve into specgram and specgram2
 if numel(w)>1
-    w = reshape(numel(w), 1);
+    w = reshape(w, numel(w), 1);
 end
 s = spectralobject(1024, 924, 10, [60 120]);
 iceweb.spectrogram_iceweb(s, w);

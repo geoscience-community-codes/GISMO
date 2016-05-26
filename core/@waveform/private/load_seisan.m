@@ -4,13 +4,14 @@ function w = load_seisan(request)
    
    % Glenn Thompson 2016/05/25 based on load_miniseed
    % request.combineWaves is ignored
-   
+   w=[];
    if isstruct(request)
       [thisSource, chanInfo, startTimes, endTimes, ~] = unpackDataRequest(request);
       for i=1:numel(chanInfo)
          for j=1:numel(startTimes)
-            thisfilename = getfilename(thisSource,chanInfo(i),startTimes(j));
-            w(i,j) = load_seisan_file(thisfilename{1}); %, startTimes(j), endTimes(j));
+            thisfilename = getfilename(thisSource,chanInfo(i),startTimes(j))
+            thisw = load_seisan_file(thisfilename{1}); %, startTimes(j), endTimes(j));
+            w = [w thisw];
          end
       end
       w = w(:);

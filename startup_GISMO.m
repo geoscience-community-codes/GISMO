@@ -45,6 +45,7 @@ addpath(genpath(fullfile(gismopath,'applications')));
 
 % ADD A PATH TO JAR FILES
 javaaddpath(fullfile(gismopath,'contributed','iris_dmc_tools','IRIS-WS-2.0.15.jar'))
+javaaddpath(fullfile(gismopath,'core','swarm.jar'))
 
 % ADD PATH TO GISMO LIBRARY FUNCTIONS
 addpath(fullfile(gismopath, 'libgismo'));

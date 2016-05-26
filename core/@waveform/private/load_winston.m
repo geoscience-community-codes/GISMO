@@ -95,8 +95,11 @@ end
 
 %% Adding the Java path
 function success = getWinstonWorking()
-   if usejava('jvm')
-      introuble = ~exist('gov.usgs.winston.server.WWSClient', 'class');
+   if usejava('jvm') 
+       % path updated by Glenn Thompson 20160526 based on tar -tvf
+       % swarm.jar | grep WWSClient
+      introuble = ~exist('gov.usgs.volcanoes.winston.legacyServer.WWSClient', 'class');
+      %gov/usgs/volcanoes/winston/legacyServer/
    else
       disp('Java not enabled on this machine. Winston will not work.')
       return
