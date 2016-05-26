@@ -1,5 +1,10 @@
 function s = waveform2rsam(w, method, samplingPeriod)
 %WAVEFORM2RSAM create an RSAM-like object from a waveform object
+% RSAM data are typically 1 sample per minute, where each sample is the 
+% average amplitude of that minute of data. They are used extensively used
+% in volcano monitoring.
+%
+% Usage:
 %   s = rsam(waveform, method, samplingPeriod)
 %
 %   Input Arguments

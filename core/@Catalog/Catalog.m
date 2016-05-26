@@ -22,8 +22,6 @@ classdef Catalog
     
     properties % These are properties of the catalog itself
         request = struct();
-%         request.startTime = -Inf;
-%         request.endTime = Inf;
 %         request.dataformat = '';
 %         request.minimumLongitude = -Inf;
 %         request.maximumLongitude = Inf; 
@@ -58,19 +56,27 @@ classdef Catalog
                 return
             end
             
+            % Table constructor
+            if nargin==1
+                if isa(varargin{1},'table')
+                    obj.table = varargin{1};
+                end
+                return
+            end
+            
             % Parse required, optional and param-value pair arguments,
             % set default values, and add validation conditions
             p = inputParser;
-            p.addOptional('otime', [], @isnumeric)
+            p.addOptional('otime', [], @isnumeric) % positional
             p.addOptional('lon', [], @isnumeric)
             p.addOptional('lat', [], @isnumeric)
             p.addOptional('depth', [], @isnumeric);
             p.addOptional('mag', [], @isnumeric);
             p.addOptional('magtype', {'un'}, @iscell);
             p.addOptional('etype', {'u'}, @iscell);
-            p.addOptional('request',struct());
-            p.addOptional('ontime', [], @isnumeric)
-            p.addOptional('offtime', [], @isnumeric)
+            p.addParameter('request', struct(), @isstruct); % optional name-param pairs
+            p.addParameter('ontime', [], @isnumeric)
+            p.addParameter('offtime', [], @isnumeric)
             %p.parse(otime, lon, lat, depth, mag, magtype, etype, varargin{:});
             p.parse(varargin{:});
             fields = fieldnames(p.Results);
@@ -198,7 +204,7 @@ classdef Catalog
         plot_time(catalogObject)
         hist(catalogObject)
         bvalue(catalogObject, mcType)     
-        subclassify(catalogObject, subclasses)         
+        catalogObjects=subclassify(catalogObject, subclasses)         
         erobj=eventrate(catalogObject, varargin)
         plotprmm(catalogObject)
         eev(obj, eventnum)

@@ -5,19 +5,28 @@ function w = load_sac(request)
    % request.combineWaves is ignored
    
    if isstruct(request)
-      [thisSource, chanInfo, startTimes, ~, ~] = unpackDataRequest(request);
+      [thisSource, chanInfo, startTimes, endTimes, ~] = unpackDataRequest(request);
       for i=1:numel(chanInfo)
          for j=1:numel(startTimes)
             thisfilename = getfilename(thisSource,chanInfo(i),startTimes(j));
             w(i,j) = loadSacByFilenames(thisfilename);
+            w(i,j) = extract(w(i,j), 'time', startTimes(j), endTimes(j)); % added by Glenn 2016/05/25
          end
       end
       w = w(:);
       
    else
-      %dataRequest should be a filename
-      w = loadSacByFilenames(request);
+      %request should be a filename
+      % modified by Glenn 2016/05/25
+      thisFilename = request;
+      if exist(thisFilename, 'file')
+          w = loadSacByFilenames(thisFilename);
+      else
+          w = waveform();
+          warning(sprintf('File %s does not exist',thisFilename));
+      end
    end
+   
 end
 
 function w = loadSacByFilenames(filename)

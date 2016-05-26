@@ -111,7 +111,7 @@ function ds = datasource(whichsource, varargin)
                   ds.type = whichsource;
             end
             
-         case {'file','sac', 'seisan', 'obspy'}
+         case {'file','sac', 'seisan', 'obspy', 'miniseed'}
             if numel(varargin) == 0
                error('when setting the datasource to %s the filesource must be declared',upper(whichsource));
             end

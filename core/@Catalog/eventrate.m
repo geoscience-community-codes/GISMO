@@ -18,35 +18,39 @@ function erobj=eventrate(catalogObject, varargin)
     stepsize = p.Results.stepsize;
 
     for i=1:numel(catalogObject)
-        timerange = catalogObject(i).gettimerange();
-        snum=timerange(1);
-        enum=timerange(2);
-        if ~(binsize>0)
-            binsize = Catalog.binning.autobinsize(enum-snum);
+        if catalogObject(i).numberOfEvents > 0
+%             timerange = catalogObject(i).gettimerange();
+%             snum=timerange(1);
+%             enum=timerange(2);
+            snum = catalogObject(i).request.startTime;
+            enum = catalogObject(i).request.endTime;
+            if ~(binsize>0)
+                binsize = Catalog.binning.autobinsize(enum-snum);
+            end
+            if ~(stepsize>0)
+                stepsize = binsize;
+            end          
+            if (stepsize > binsize)
+               disp(sprintf('Invalid value for stepsize (%f days). Cannot be greater than binsize (%f days).',stepsize, binsize));
+               return;
+            end 
+
+            % Find out how many event types we have
+            etypes = unique(catalogObject(i).etype);      
+
+            % bin the data
+            [time, counts, energy, smallest_energy, ...
+                biggest_energy, median_energy, stdev, median_time_interval] = ...
+                Catalog.binning.bin_irregular(catalogObject(i).otime, ...
+                magnitude.mag2eng(catalogObject(i).mag), ...
+                binsize, snum, enum, stepsize);
+
+            % create the Event Rate object
+            total_counts = length(catalogObject(i).otime);
+            numbins = numel(time);
+            erobj(i) = EventRate(time, counts, energy, median_energy, ...
+                smallest_energy, biggest_energy, median_time_interval, total_counts, ...
+                snum, enum, etypes, binsize, stepsize, numbins);
         end
-        if ~(stepsize>0)
-            stepsize = binsize;
-        end          
-        if (stepsize > binsize)
-           disp(sprintf('Invalid value for stepsize (%f days). Cannot be greater than binsize (%f days).',stepsize, binsize));
-           return;
-        end 
-
-        % Find out how many event types we have
-        etypes = unique(catalogObject(i).etype);      
-
-        % bin the data
-        [time, counts, energy, smallest_energy, ...
-            biggest_energy, median_energy, stdev, median_time_interval] = ...
-            Catalog.binning.bin_irregular(catalogObject(i).otime, ...
-            magnitude.mag2eng(catalogObject(i).mag), ...
-            binsize, snum, enum, stepsize);
-
-        % create the Event Rate object
-        total_counts = length(catalogObject(i).otime);
-        numbins = numel(time);
-        erobj(i) = EventRate(time, counts, energy, median_energy, ...
-            smallest_energy, biggest_energy, median_time_interval, total_counts, ...
-            snum, enum, etypes, binsize, stepsize, numbins);
     end
 end

@@ -1,10 +1,35 @@
-function w = load_seisan(fn)%dataRequest)
+function w = load_seisan(request)
+   %LOAD_SEISAN loads a waveform from SEISAN files
+   % combineWaves isn't currently used!
+   
+   % Glenn Thompson 2016/05/25 based on load_miniseed
+   % request.combineWaves is ignored
+   
+   if isstruct(request)
+      [thisSource, chanInfo, startTimes, endTimes, ~] = unpackDataRequest(request);
+      for i=1:numel(chanInfo)
+         for j=1:numel(startTimes)
+            thisfilename = getfilename(thisSource,chanInfo(i),startTimes(j));
+            w(i,j) = load_seisan_file(thisfilename{1}); %, startTimes(j), endTimes(j));
+         end
+      end
+      w = w(:);
+      
+   else
+      %request should be a filename
+      thisFilename = request;
+      if exist(thisFilename, 'file')
+        w = load_seisan_file(thisFilename);
+      else
+          w = waveform();
+          warning(sprintf('File %s does not exist',thisFilename));
+      end
+   end
+end
+
+
+function w = load_seisan_file(fn)%dataRequest)
    % Read a v7.0 or later SEISAN file
-   % example file is currently :'c:\2008-05-12-0630-00S.INSN__054'
-   % dataRequest has the fields dataSource, scnls, startTimes, and endTimes
-   % only looks in first file, currently.
-   %dataRequest.startTimes = subdivide_files_by_date(dataRequest.dataSource,dataRequest.startTimes,dataRequest.endTimes);
-   %fn = getfilename(dataRequest.dataSource,dataRequest.scnls,dataRequest.startTimes);
    w  = waveform; %initialize, in case nothing works
    MACHINEFORMAT = 'l';
    %disp('Little Endian');

@@ -1,5 +1,5 @@
 function eng=mag2eng(mag);
-% MAG2ENG Convert (a vector of) energy(/ies) into (a vector of) equivalent magnitude(s).
+% MAG2ENG Convert (a vector of) magnitude into (a vector of) equivalent energy(ies).
 %   
 %   Conversion is based on the the following formula from Hanks and Kanamori (1979):
 %
@@ -21,7 +21,7 @@ function eng=mag2eng(mag);
 
 % for events without a magnitude, change it to -0.5 for energy calculation purposes
 
-	mag(find(isnan(mag))) = -0.5;
+	mag(find(isnan(mag))) = -Inf;
 	eng = power(10, (1.5 * mag + 4.7));
 
 

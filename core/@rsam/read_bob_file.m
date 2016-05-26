@@ -71,7 +71,7 @@ function self=read_bob_file(varargin)
         % Load the data
         for f = self.files
             if f.found
-                self = self.load(f);
+                self = self.load();
             end
         end
     end
