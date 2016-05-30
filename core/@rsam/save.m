@@ -12,7 +12,6 @@ function save(self, filepattern)
     %
 
     for c=1:numel(self)
-
         dnum = self(c).dnum;
         data = self(c).data;
         file = filepattern; 
@@ -31,8 +30,6 @@ function save(self, filepattern)
 
         if length(dnum)~=length(data)
                 debug.print_debug(0,sprintf('%s: Cannot save to %s because data and time vectors are different lengths',mfilename,filename));
-                size(dnum)
-                size(data)
                 return;
         end
 
@@ -83,6 +80,8 @@ function save(self, filepattern)
             diff=dnumy(2:end) - dnumy(1:end-1);
             i = find(diff > 1.5/1440 | diff < 0.5/1440);        
 
+            disp(sprintf('Saving to %s',fname));
+            
             if length(i)>0
                 % slow mode
 

@@ -12,4 +12,6 @@ if numel(w)>1
     w = reshape(w, numel(w), 1);
 end
 s = spectralobject(1024, 924, 10, [60 120]);
-iceweb.spectrogram_iceweb(s, w);
+iceweb.spectrogram_iceweb(s, w, 0.75);
+
+    

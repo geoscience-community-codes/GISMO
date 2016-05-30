@@ -13,7 +13,7 @@ function self = load(self)
     % initialise return variables
 
     f = self.files;
-
+    
     [yyyy, ~]=datevec(f.snum);
     days=365;
     if mod(yyyy,4)==0

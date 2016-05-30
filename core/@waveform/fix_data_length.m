@@ -34,6 +34,8 @@ function w = fix_data_length(w, maxlen)
    % $Date$
    % $Revision$
    
+   % Note: Glenn Thompson 2016 - this function could be simplified by using
+   % waveform/get_time_range and waveform/pad
    Wcount = numel(w);
    
    if ~exist('maxlen','var')

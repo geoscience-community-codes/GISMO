@@ -40,13 +40,9 @@ end
 function [w, successful] = getFromWinston(chanTag,stime,etime,ds)
    %include
    successful = false;
-   if ~exist('gov.usgs.winston.server.WWSClient', 'class')
-      giveNoJarWarning();
-      return
-   end
    
    w = set(waveform,'channeltag',chanTag);  %initialize a waveform
-   WWS = gov.usgs.winston.server.WWSClient(get(ds,'server'),get(ds,'port'));
+   WWS = gov.usgs.volcanoes.winston.legacyServer.WWSClient(get(ds,'server'),get(ds,'port'));
    
    %grab the winston data, then close the database
    mychan = chanTag.channel;
@@ -82,46 +78,19 @@ function [w, successful] = getFromWinston(chanTag,stime,etime,ds)
    successful = true; %successfully completed
 end
 
-function giveNoJarWarning()
-   warning('Waveform:load_winston:missingJars',...
-      'The winston files may not be on this system.')
-   disp('To correct, acquire the files listed above');
-   disp('If you have already installed SWARM, then these .jar files already');
-   disp('exist in your swarm/lib directory (or something close to it...');
-   disp('');
-   %disp('Edit Matlab''s classpath.txt file (located in the toolbox/local');
-   %disp('directory) and add the location of these .jar files.');
-end
 
 %% Adding the Java path
 function success = getWinstonWorking()
+   success = false;
    if usejava('jvm') 
        % path updated by Glenn Thompson 20160526 based on tar -tvf
        % swarm.jar | grep WWSClient
-      introuble = ~exist('gov.usgs.volcanoes.winston.legacyServer.WWSClient', 'class');
-      %gov/usgs/volcanoes/winston/legacyServer/
-   else
-      disp('Java not enabled on this machine. Winston will not work.')
-      return
-   end
-
-   if introuble
-      error('waveform:load_winston:noDefaultJar',[...
-         'please add the winston java file to your javaclasspath.'...
-         'One such file is usgs.jar, found in the swarm/lib directory (if swarm is installed)\n'...
-         '  ex.  javaaddpath(''/usr/local/swarm/lib/usgs.jar'')\n'...
-         'to obtain a jar, try contacting the manager of your swarm or winston database']);
-      
-      % will no longer attempt to connect to jar on internet, since that
-      % could potentially not be safe!
-      %{
-      % surrogate_jar = 'http://www.avo.alaska.edu/Input/celso/swarmstuff/usgs.jar';
-      % [~,success] = urlread(surrogate_jar);%can we read the usgs.jar? if not don't bother to add it.
-      if success
-         javaaddpath(surrogate_jar);
-         introuble = ~exist('gov.usgs.winston.server.WWSClient', 'class');
+      if exist('gov.usgs.volcanoes.winston.legacyServer.WWSClient', 'class');
+          success = true;
+      else
+        warning('gov.usgs.volcanoes.winston.legacyServer.WWSClient not found');
       end
-      %}
-   end;
-   success = ~introuble;
+   else
+      warning('Java not enabled on this machine. Winston will not work.')
+   end
 end

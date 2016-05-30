@@ -20,9 +20,9 @@ function self = resample(self, varargin)
 %           'absmedian' : median deviation from zero (added 2011/06/01)
 %           'builtin': Use MATLAB's built in resample routine
 %
-%       CRUNCHFACTOR : the number of samples making up the sample window
+%       FACTOR : the number of samples making up the sample window
 %       MINUTES:       downsample to this sample period
-%       (CRUNCHFACTOR will be calculated internally)
+%       (FACTOR will be calculated internally)
 %
 % Examples:
 %   rsamobject.resample('method', 'mean')

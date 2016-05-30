@@ -24,6 +24,9 @@ function w = resample(w,method, crunchfactor)
    % samples and return that in a waveform of adjusted frequency.  as a
    % result, the waveform will have 1/5 of the samples
    %
+   % ** Warning ** When downsampling data, waveform/resample does not apply
+   % an anti-aliasing filter. So you may need to low-pass filter your data first!
+   %
    %
    % To use matlab's built-in RESAMPLE method...
    %       % assume W is an existing waveform

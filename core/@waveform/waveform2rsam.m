@@ -53,5 +53,5 @@ for i = 1:numel(w)
     crunchfactor = min([round(samplingPeriod / Wsamplingperiod) numel(get(w(i),'data'))]);
     wabs = set(w(i), 'data', abs(get(w(i),'data')) );
     wresamp = resample(wabs, method, crunchfactor);
-    s(i) = rsam(get(wresamp,'timevector'), get(wresamp,'data')', 'sta', get(wresamp, 'station'), 'chan', get(wresamp, 'channel'), 'units', get(wresamp, 'units'), 'snum', get(wresamp, 'start'), 'enum', get(wresamp, 'end'));
+    s(i) = rsam(get(wresamp,'timevector')', get(wresamp,'data')', 'sta', get(wresamp, 'station'), 'chan', get(wresamp, 'channel'), 'units', get(wresamp, 'units'), 'snum', get(wresamp, 'start'), 'enum', get(wresamp, 'end'));
 end

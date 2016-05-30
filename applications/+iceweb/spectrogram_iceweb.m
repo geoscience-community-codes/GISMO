@@ -96,7 +96,7 @@ for c=1:numw
         colormap(mycolormap);
 
         % Change Y-Labels to 'sta.chan'
-        ylabel( sprintf('%s.%s',get(w(c), 'station'), get(w(c), 'channel')), 'FontSize', 10);
+        ylabel( sprintf('%s\n%s',get(w(c), 'station'), get(w(c), 'channel')), 'FontSize', 10);
         xlabel('')
         title('')
         set(gca,'XLim', [wt.start wt.stop]);
