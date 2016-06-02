@@ -48,7 +48,7 @@ function outputWaveforms = load_antelope(request, specificDatabase)
       % station or channel may have a wildcard, but not both
       % need to expand this wildcard
       
-      % get sta and chan cell arrays
+      % get sta and chan cell arrays (same length)
       if isa(chanInfo, 'ChannelTag')
             sta = {chanInfo.station};
             chan = {chanInfo.channel};
@@ -59,25 +59,54 @@ function outputWaveforms = load_antelope(request, specificDatabase)
           error('variable chanInfo is of unknown type')
       end
       
-      % expand station wildcard
+      % seems like sta and chan always returned as cell arrays
       stawildcard = false;
-      if strcmp(sta,'*') 
-         stawildcard = true;
-         % This code expands wildcard based on stations in wfdisc table
-         stadb = dbopen(database,'r');
-         stadb = dblookup_table(stadb,'wfdisc');
-         sta = unique(dbgetv(stadb,'sta'))';
-         sta(strncmp(sta,'+',1)) = []; % get rid of stations beginning with "+"
+      chanwildcard = false;
+      allsta = {};
+      allchan = {};
+      for stachannum = 1:numel(sta)
+          
+          thissta = sta{stachannum};
+          thischan = chan{stachannum};
+      
+          % expand station wildcard
+          if strfind(thissta,'*') 
+             thissta = strrep(thissta, '*', '.*');
+             stawildcard = true;
+             % This code expands wildcard based on stations in wfdisc table
+             stadb = dbopen(database,'r');
+             stadb = dblookup_table(stadb,'wfdisc');
+             stadb = dbsubset(stadb, sprintf('sta=~/%s/',thissta)); 
+             thissta = unique(dbgetv(stadb,'sta'))';
+             thissta(strncmp(thissta,'+',1)) = []; % get rid of stations beginning with "+"
+             
+             % SCAFFOLD: might need to close db here
+          end
+
+          % expand channel wildcard
+          if strfind(thischan,'*')
+             thischan = strrep(thischan, '*', '.*');
+             chanwildcard = true;
+             % This code expands wildcard based on channels in wfdisc table
+             chandb = dbopen(database,'r');
+             chandb = dblookup_table(chandb,'wfdisc');
+             chandb = dbsubset(chandb, sprintf('chan=~/%s/',thischan)); 
+             thischan = unique(dbgetv(chandb,'chan'))';
+             
+             % SCAFFOLD: might need to close db here
+          end
+      
+          % Append the final list of stations and channels to all
+          allsta = [allsta thissta];
+          allchan = [allchan thischan];
+          
+          
       end
       
-      % expand channel wildcard
-      chanwildcard = false;
-      if strcmp(chan,'*')
-         chanwildcard = true;
-         % This code expands wildcard based on channels in wfdisc table
-         chandb = dbopen(database,'r');
-         chandb = dblookup_table(chandb,'wfdisc');
-         chan = unique(dbgetv(chandb,'chan'))';
+      % change variables back
+      if stawildcard || chanwildcard
+          sta = allsta;
+          chan = allchan;
       end
       
       % create expression for station & channel combinations
@@ -162,7 +191,7 @@ function outputWaveforms = load_antelope(request, specificDatabase)
       % Get calling function. 
       [ST,I] = dbstack();
       switch(ST(2).name)
-          case 'RecursivelyLoadFromEachDatabase', disp('looping over multiple databases')
+          case 'RecursivelyLoadFromEachDatabase', debug.print_debug(1,'looping over multiple databases')
           otherwise % assume called with an explicit dbpath argument, which means need to combine and pad waveforms here
                 outputWaveforms = combine(outputWaveforms);
                 outputWaveforms = pad(outputWaveforms, request.startTimes(1), request.endTimes(1), NaN);    
@@ -247,6 +276,8 @@ function [w, rawDb, filteredDb] =  get_traces(startDatenums, endDatenums, expr, 
    % Modifications
    %%% Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data. Added try...catch..end to handle this.
    
+   w = {emptyWaveform()};
+   
    useExistingDatabasePtr =  isAntelopeDatabasePtr(database);
    
    if useExistingDatabasePtr
@@ -260,6 +291,8 @@ function [w, rawDb, filteredDb] =  get_traces(startDatenums, endDatenums, expr, 
          return;
       end
    end
+   
+   
    
    % do not close the database if a pointer is asked for in the return arguments
    onFinishCloseDB = nargout < 2;
@@ -295,7 +328,7 @@ function [w, rawDb, filteredDb] =  get_traces(startDatenums, endDatenums, expr, 
    if safe_dbnrecs(mydb) == 0
       cleanUpFail('Waveform:load_antelope:dataNotFound', 'No records found for criteria [%s].', expr);
       return;
-   end;
+   end
 
    filteredDb = mydb;
    
