@@ -3,6 +3,8 @@
 % https://code.google.com/p/gismotools/source/detail?r=397
 % Modified by Glenn Thompson to break down into testable sections
 % Testing waveform via trload_css, which breaks for unknown reasons
+
+% Added tests for other datasources
 function tests = trloadcss_test()
     % warning on
     % coredir=fileparts(fileparts(which('Catalog')));
@@ -81,7 +83,23 @@ function testFunctionSeven(testCase)
 end
 
 function testFunctionEight(testCase)
-%% example 7 - test multiple start/endtimes
+%% example 8 - Carl's test case, wildcard sta & wildcard chan (not designed for, but workaround added)
+    startTime = 7.338198148159491e+05;  % 2009-02-15 19:33:20
+    endTime = 7.338198194455787e+05;
+    sta = 'COR';
+    sta = 'C*';
+    chan = 'BHZ*';
+    datestr(startTime)
+    % this will work, even though COR is the problem
+    %scnl = scnlobject({'COLA','COR','KDAK'},chan,'','');
+    % this will fail when asking for all stations
+    scnl = scnlobject(sta,chan,'','');
+    ds = datasource('uaf_continuous');
+    w = waveform(ds,scnl,startTime,endTime); whos w
+end
+
+function testFunctionNine(testCase)
+%% example 9 - test multiple start/endtimes (not supported in load_antelope)
     startTimes = ['2009/03/21 23:00:00';'2009/03/22 01:00:00'];
     endTimes = ['2009/03/21 23:05:00';'2009/03/22 01:05:00'];
     sta = {'REF';'RSO'};
@@ -89,6 +107,10 @@ function testFunctionEight(testCase)
     scnl = scnlobject(sta,chan,'','');
     ds = datasource('uaf_continuous');
     w = waveform(ds,scnl,startTimes,endTimes)
+end
+
+function testIRIS(testCase)
+w=waveform(datasource('irisdmcws'), ChannelTag('IU.ANMO.10.BHZ'), '2010-02-27 06:30:00','2010-02-27 10:30:00')
 end
 
 %% Optional file fixtures  

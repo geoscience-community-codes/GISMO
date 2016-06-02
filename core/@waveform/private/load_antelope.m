@@ -143,8 +143,26 @@ function outputWaveforms = load_antelope(request, specificDatabase)
               end
           end
 
+      else % multiple stations and channels - not supported but we'll try
+          expr = '(sta=~/';
+          for count=1:numel(sta)
+              expr = [expr,sta{count}]; 
+              if count<numel(sta)
+                  expr = [expr,'|'];
+              else
+                  expr = [expr,'/) '];
+              end
+          end
+          expr = [expr '&& (chan=~/'];
+          for count=1:numel(chan)
+              expr = [expr,chan{count}]; 
+              if count<numel(chan)
+                  expr = [expr,'|'];
+              else
+                  expr = [expr,'/) '];
+              end
+          end
       end
-         
          
       % Glenn 2016/05/12 Get the trace objects
       [wcell, database, fdb] = get_traces(startDatenums, endDatenums, expr, database, combineWaves);
