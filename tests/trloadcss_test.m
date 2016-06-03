@@ -36,8 +36,6 @@ function testFunctionTwo(testCase)
     w=waveform(ds, scnlobject(sta,chan), startTime, endTime)
 end
 
-
-
 function testFunctionThree(testCase)
 %% example 5 BEAAR station DH1 is a problem)
     startTime = '2000/07/31 22:44:38';
@@ -110,7 +108,13 @@ function testFunctionNine(testCase)
 end
 
 function testIRIS(testCase)
-w=waveform(datasource('irisdmcws'), ChannelTag('IU.ANMO.10.BHZ'), '2010-02-27 06:30:00','2010-02-27 10:30:00')
+    w=waveform(datasource('irisdmcws'), ChannelTag('IU.ANMO.10.BHZ'), '2010-02-27 06:30:00','2010-02-27 10:30:00')
+end
+
+function testWinston(testCase)
+     ds = datasource('winston','pubavo1.wr.usgs.gov',16022);
+     chanInfo = ChannelTag.array('AV.REF.--.EHZ');
+     w = waveform(ds,chanInfo,now-1,now-0.995)
 end
 
 %% Optional file fixtures  
