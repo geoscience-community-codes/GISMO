@@ -36,8 +36,6 @@ function testFunctionTwo(testCase)
     w=waveform(ds, scnlobject(sta,chan), startTime, endTime)
 end
 
-
-
 function testFunctionThree(testCase)
 %% example 5 BEAAR station DH1 is a problem)
     startTime = '2000/07/31 22:44:38';
@@ -86,7 +84,6 @@ function testFunctionEight(testCase)
 %% example 8 - Carl's test case, wildcard sta & wildcard chan (not designed for, but workaround added)
     startTime = 7.338198148159491e+05;  % 2009-02-15 19:33:20
     endTime = 7.338198194455787e+05;
-    sta = 'COR';
     sta = 'C*';
     chan = 'BHZ*';
     datestr(startTime)
@@ -99,14 +96,29 @@ function testFunctionEight(testCase)
 end
 
 function testFunctionNine(testCase)
-%% example 9 - test multiple start/endtimes (not supported in load_antelope)
-    startTimes = ['2009/03/21 23:00:00';'2009/03/22 01:00:00'];
-    endTimes = ['2009/03/21 23:05:00';'2009/03/22 01:05:00'];
-    sta = {'REF';'RSO'};
-    chan = 'EHZ';
+%% example 9 - test 
+    startTime = '2010-09-18 14:14:42';
+    endTime = '2010-09-18 14:16:12';
+    sta = 'X*';
+    chan = '*';
+    scnl = scnlobject(sta,chan,'','');
+    ds = datasource('antelope','/home/admin/databases/YAHTSE/wf/yahtse');
+    w = waveform(ds,scnl,startTime,endTime)
+end
+
+function testFunctionTen(testCase)
+%% example 10 - Carl's test case, wildcard sta & wildcard chan (not designed for, but workaround added)
+    startTime = 7.338198148159491e+05;  % 2009-02-15 19:33:20
+    endTime = 7.338198194455787e+05;
+    sta = 'C*';
+    chan = 'BHZ*';
+    datestr(startTime)
+    % this will work, even though COR is the problem
+    %scnl = scnlobject({'COLA','COR','KDAK'},chan,'','');
+    % this will fail when asking for all stations
     scnl = scnlobject(sta,chan,'','');
     ds = datasource('uaf_continuous');
-    w = waveform(ds,scnl,startTimes,endTimes)
+    w = waveform(ds,scnl,startTime,endTime); whos w
 end
 
 function testIRIS(testCase)

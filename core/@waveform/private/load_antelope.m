@@ -77,7 +77,17 @@ function outputWaveforms = load_antelope(request, specificDatabase)
              stadb = dbopen(database,'r');
              stadb = dblookup_table(stadb,'wfdisc');
              stadb = dbsubset(stadb, sprintf('sta=~/%s/',thissta)); 
-             thissta = unique(dbgetv(stadb,'sta'))';
+             if dbnrecs(stadb)>0
+                matching_stations = dbgetv(stadb,'sta');
+                if numel(matching_stations)>0
+                    thissta = unique(matching_stations)';
+                else
+                    return
+                end
+             else
+                 return
+             end
+             
              thissta(strncmp(thissta,'+',1)) = []; % get rid of stations beginning with "+"
              
              % SCAFFOLD: might need to close db here
@@ -91,7 +101,17 @@ function outputWaveforms = load_antelope(request, specificDatabase)
              chandb = dbopen(database,'r');
              chandb = dblookup_table(chandb,'wfdisc');
              chandb = dbsubset(chandb, sprintf('chan=~/%s/',thischan)); 
-             thischan = unique(dbgetv(chandb,'chan'))';
+             if dbnrecs(chandb)>0
+                matching_chans = dbgetv(chandb,'chan');
+                if numel(matching_chans)>0
+                    thischan = unique(matching_chans)';
+                else
+                    return
+                 %thischan = {''};
+                end
+             else
+                 return
+             end
              
              % SCAFFOLD: might need to close db here
           end
