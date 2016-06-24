@@ -10,7 +10,6 @@ function [ w ] = pad( w, snum, enum, padvalue )
 %       w2 = pad(w, min(snum), max(enum), 0)
 
 % Glenn Thompson USF
-
     if ~exist('padvalue','var')
         padvalue=0; % could also be nanmean?
     end
@@ -18,6 +17,9 @@ function [ w ] = pad( w, snum, enum, padvalue )
 	for waveform_num=1:numel(w)
         
         thisw = w(waveform_num);
+        if isempty(thisw)
+            continue;
+        end
 		y = get(thisw,'data');
 		fs = get(thisw,'freq');
 		[wsnum wenum] = gettimerange(thisw);

@@ -185,8 +185,10 @@ function outputWaveforms = load_antelope(request, specificDatabase)
       end
          
       % Glenn 2016/05/12 Get the trace objects
-      [wcell, database, fdb] = get_traces(startDatenums, endDatenums, expr, database, combineWaves);
-      w=wcell{:};
+      [w, database, fdb] = get_traces(startDatenums, endDatenums, expr, database, combineWaves);
+      if iscell(w)
+          w=w{:};
+      end
       
       % Glenn 2016/05/12 Close db if open
       if fdb.database ~= -102   % fdb ~= dbinvalid
@@ -277,11 +279,11 @@ function database = getDatabase(request, TRY_MULTIDAY)
 end
 
 %%
-function [w, rawDb, filteredDb] =  get_traces(startDatenums, endDatenums, expr, database, combineWaves)
+function [w, rawDb, filteredDb] =  get_traces(startDatenum, endDatenum, expr, database, combineWaves)
    % GET_TRACES gets interesting data from database, and returns the tracebuf object
-   % [tr(1:end)] =  get_antelope_trace(startDatenums, endDatenums, criteriaList, database)
-   %    STARTDATE is a matlab datenum
-   %    ENDDATE is also in matlab datenum
+   % [tr(1:end)] =  get_antelope_trace(startDatenum, endDatenum, criteriaList, database)
+   %    STARTDATENUM is a matlab datenum
+   %    ENDDATENUM is also in matlab datenum
    %    EXPR is the expression list formed from the station & channel
    %    combinations
    %    DATABASE can either be a database name, or an open antelope database
@@ -335,8 +337,8 @@ function [w, rawDb, filteredDb] =  get_traces(startDatenums, endDatenums, expr, 
    % do not close the database if a pointer is asked for in the return arguments
    onFinishCloseDB = nargout < 2;
    
-   start_epochs = mep2dep(startDatenums);
-   end_epochs = mep2dep(endDatenums);
+   start_epoch = mep2dep(startDatenum);
+   end_epoch = mep2dep(endDatenum);
    
    %if the database isn't already open, then open it for reading
    if ~useExistingDatabasePtr
@@ -367,46 +369,48 @@ function [w, rawDb, filteredDb] =  get_traces(startDatenums, endDatenums, expr, 
       cleanUpFail('Waveform:load_antelope:dataNotFound', 'No records found for criteria [%s].', expr);
       return;
    end
-
+   debug.print_debug(1, sprintf('Found %d matching wfdisc records after sta/chan subset', safe_dbnrecs(mydb)));
+   
    filteredDb = mydb;
    
    [wfdisctime, wfdiscendtime] = dbgetv(mydb,'time','endtime');
+   
+   
    %% Get the tracebuf object for this starttime, endtime
-   % Loop through all times.  Result is tr(1:numel(startDatenums) of all tracebuffers.
-   for mytimeIDX = 1:numel(start_epochs)
-      someDataExists = any(start_epochs(mytimeIDX)<= wfdiscendtime & end_epochs(mytimeIDX) >= wfdisctime);
-     
-      if someDataExists
-          
+    someDataExists = any(start_epoch<= wfdiscendtime & end_epoch >= wfdisctime);
+
+    if someDataExists
+
          % time subset
          nbefore = safe_dbnrecs(mydb);
-         expr_time = sprintf('time < %f  && endtime > %f ',end_epochs(mytimeIDX), start_epochs(mytimeIDX));
+         expr_time = sprintf('time < %f  && endtime > %f ',end_epoch, start_epoch);
          dbptr = dbsubset(mydb, expr_time);
+         debug.print_debug(1, sprintf('Found %d matching wfdisc records after time subset', safe_dbnrecs(mydb)));
+
 
          % Display matching records
          if debug.get_debug()>0
              nnow = safe_dbnrecs(dbptr);
-            fprintf('Found %d matching time records (had %d before time subset):',nnow,nbefore);
-            for c=1:safe_dbnrecs(dbptr)
-                dbptr.record = c-1;
-                [wfid, sta, chan, wftime, wfendtime]=dbgetv(dbptr , 'wfid','sta','chan','time', 'endtime');
-                fprintf('%12d %s %s %s %s\n',wfid, sta, chan, datestr(epoch2datenum(wftime)), datestr(epoch2datenum(wfendtime)));   
-            end
+             fprintf('Found %d matching time records (had %d before time subset):',nnow,nbefore);
+             for c=1:safe_dbnrecs(dbptr)                
+                    dbptr.record = c-1;                   
+                    [wfid, sta, chan, wftime, wfendtime]=dbgetv(dbptr , 'wfid','sta','chan','time', 'endtime');                   
+                    fprintf('%12d %s %s %s %s\n',wfid, sta, chan, datestr(epoch2datenum(wftime)), datestr(epoch2datenum(wfendtime)));             
+             end
          end
 
          %%% Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data.
          % This error needs to be handled. So adding a try..catch..end around the original instruction.
          try
-            debug.print_debug(1,sprintf('\nTRYING TO LOAD TRACES FROM WHOLE WFDISC SUBSET IN ONE GO\n'));
-            tr = trload_css(dbptr, start_epochs(mytimeIDX), end_epochs(mytimeIDX));
-            trsplice(tr,20);            
-            %st = tr2struct(tr)
-            w0 = trace2waveform(tr);  % Glenn's simple method
-            %w0 = traceToWaveform(tr);  % Celso's more sophisticated method
-            %w0 = cycleThroughTraces(tr, combineWaves); % This is even more
-            %sophisticated, and calls traceToWaveform and others, but
-            %causes seg faults.
-            trdestroy( tr );
+                debug.print_debug(1,sprintf('\nTRYING TO LOAD TRACES FROM WHOLE WFDISC SUBSET IN ONE GO\n'));
+                tr = trload_css(dbptr, start_epoch, end_epoch);
+                trsplice(tr,20);            
+                w0 = trace2waveform(tr)  % Glenn's simple method
+                %w0 = traceToWaveform(tr);  % Celso's more sophisticated method
+                %w0 = cycleThroughTraces(tr, combineWaves); % This is even more
+                %sophisticated, and calls traceToWaveform and others, but
+                %causes seg faults.
+                trdestroy( tr );
          catch
                 debug.print_debug(1,sprintf('\nBulk mode failed\nTRYING TO LOAD TRACES FROM ONE WFDISC ROW AT A TIME\n'));
                 w0 = [];
@@ -418,7 +422,7 @@ function [w, rawDb, filteredDb] =  get_traces(startDatenums, endDatenums, expr, 
                     [wfid, sta, chan, st, et]=dbgetv(dbptr_one_record , 'wfid','sta','chan','time', 'endtime');
                     debug.print_debug(1,sprintf('%12d %s %s %f %f\n',wfid, sta, chan, st, et));
                     try
-                        tr = trload_css(dbptr_one_record , start_epochs(mytimeIDX), end_epochs(mytimeIDX));
+                        tr = trload_css(dbptr_one_record , start_epoch, end_epoch);
                         trsplice(tr,20);
                         w0 = [w0;trace2waveform(tr)];  % Glenn's simple method
                         %w0 = [w0;traceToWaveform(tr)];  % Celso's more sophisticated method
@@ -429,7 +433,7 @@ function [w, rawDb, filteredDb] =  get_traces(startDatenums, endDatenums, expr, 
                     catch ME
                         if strcmp(ME.identifier, 'MATLAB:unassignedOutputs')
                             % no trace table returned by trload_css
-                            w0 = [w0; waveform(ChannelTag('',sta,'',chan), NaN, epoch2datenum(start_epochs(mytimeIDX)), [], '')];
+                            w0 = [w0; waveform(ChannelTag('',sta,'',chan), NaN, epoch2datenum(start_epoch), [], '')];
                         else
                             rethrow(ME)
                         end
@@ -442,14 +446,15 @@ function [w, rawDb, filteredDb] =  get_traces(startDatenums, endDatenums, expr, 
                     end     
                 end             
          end
-      else
-         w0=waveform(); 
-      end
-      w{mytimeIDX} = combine(w0);
-      %w{mytimeIDX} = pad(w{mytimeIDX}, startDatenums(mytimeIDX), endDatenums(mytimeIDX), NaN);
-      %w{mytimeIDX} = w0;
-      clear w0
-   end %mytimeIDX
+    else
+        debug.print_debug(0, 'Time subset failed to find any matching records in wfdisc table')
+        w0=waveform(); 
+    end
+    w = combine(w0);
+    %w = pad(w, startDatenum, endDatenum, NaN);
+    %w = w0;
+    clear w0
+
    closeIfAppropriate(mydb, onFinishCloseDB);
    
    function cleanUpFail(varargin)
@@ -473,32 +478,64 @@ function w = trace2waveform(tr)
         fprintf('\n\nMatching trace objects are:\n');
     end
 
-    % create empty waveform variables
-    wt = repmat(waveform(),safe_dbnrecs(tr),1);
-
-    % load data and metadata from trace table into waveform objects
-    for cc=1:safe_dbnrecs(tr)
-        tr.record = cc-1;
-        [trnet, trsta, trchan, trtime, trendtime, trnsamp, trsamprate, trinstype, trcalib, trcalper, trresponse, trdatatype, trsegtype] = dbgetv(tr, 'net', 'sta', 'chan', 'time', 'endtime', 'nsamp', 'samprate','instype','calib','calper','response','datatype','segtype');
-        trtime = epoch2datenum(trtime);
-        trendtime = epoch2datenum(trendtime);
-        trdata=trextract_data( tr );
-        npts=length(trdata);
-        if debug.get_debug() > 0
-            fprintf('%s\t%s\t%s\t%s\t%d\t%f\t%d\n',trsta,trchan,datestr(trtime),datestr(trendtime),trnsamp,trsamprate,npts);       
+%     % create empty waveform variables
+%     wt = repmat(waveform(),safe_dbnrecs(tr),1);
+    
+    % Load the trace table into a trace structure
+    st = tr2struct(tr);
+    
+    for cc=1:numel(st)
+        y = st(cc).data;
+        calib = st(cc).calib;
+        if abs(calib) > 0
+            y = y * calib;
         end
-        if strcmp(trnet,'-')
-            trnet='';
-        end
-        [trunits, ~] = segtype2units(trsegtype);
-        wt(cc) = waveform(ChannelTag(trnet,trsta,'',trchan), trsamprate, trtime, trdata*trcalib, trunits);
-        wt(cc) = addfield(wt(cc),'calib', trcalib);
-        if trcalib~=0
+        [trunits, ~] = segtype2units(st(cc).segtype);
+        wt(cc) = waveform(ChannelTag(st(cc).net, st(cc).sta, '',st(cc).chan), st(cc).samprate, epoch2datenum(st(cc).time), y, trunits);
+        
+        if calib~=0
+            wt(cc) = addfield(wt(cc),'calib', st(cc).calib);
             wt(cc) = addfield(wt(cc), 'calibration_applied', 'YES');
         else
             wt(cc) = addfield(wt(cc), 'calibration_applied', 'NO');
         end
     end
+    
+%         [trunits, ~] = segtype2units(trsegtype);
+%         wt(cc) = waveform(ChannelTag(trnet,trsta,'',trchan), trsamprate, trtime, trdata*trcalib, trunits);
+%         wt(cc) = addfield(wt(cc),'calib', trcalib);
+%         if trcalib~=0
+%             wt(cc) = addfield(wt(cc), 'calibration_applied', 'YES');
+%         else
+%             wt(cc) = addfield(wt(cc), 'calibration_applied', 'NO');
+%         end    
+    
+
+%     % load data and metadata from trace table into waveform objects
+%     for cc=1:safe_dbnrecs(tr)
+%         tr.record = cc-1;
+%         
+%         pause(5)
+%         [trnet, trsta, trchan, trtime, trendtime, trnsamp, trsamprate, trinstype, trcalib, trcalper, trresponse, trdatatype, trsegtype] = dbgetv(tr, 'net', 'sta', 'chan', 'time', 'endtime', 'nsamp', 'samprate','instype','calib','calper','response','datatype','segtype');
+%         trtime = epoch2datenum(trtime);
+%         trendtime = epoch2datenum(trendtime);
+%         trdata=trextract_data( tr );
+%         npts=length(trdata);
+%         if debug.get_debug() > 0
+%             fprintf('%s\t%s\t%s\t%s\t%d\t%f\t%d\n',trsta,trchan,datestr(trtime),datestr(trendtime),trnsamp,trsamprate,npts);       
+%         end
+%         if strcmp(trnet,'-')
+%             trnet='';
+%         end
+%         [trunits, ~] = segtype2units(trsegtype);
+%         wt(cc) = waveform(ChannelTag(trnet,trsta,'',trchan), trsamprate, trtime, trdata*trcalib, trunits);
+%         wt(cc) = addfield(wt(cc),'calib', trcalib);
+%         if trcalib~=0
+%             wt(cc) = addfield(wt(cc), 'calibration_applied', 'YES');
+%         else
+%             wt(cc) = addfield(wt(cc), 'calibration_applied', 'NO');
+%         end
+%     end
     w = combine(wt); % combine waveforms based on ChannelTag (I think)
     clear wt
 

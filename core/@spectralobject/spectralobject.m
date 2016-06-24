@@ -54,6 +54,8 @@ switch nargin
         
         if ~isempty(dBlims)
             s = set(s,'dblims',dBlims);
+        else
+            s.dBlims = [];
         end
         
         if exist('scaling','var')

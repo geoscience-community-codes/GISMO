@@ -225,7 +225,8 @@ end
 %%%%%%%%%%%%%%%%
 function val = grabEndTime(w)
    if isempty(w)
-      val = [];
+      %val = [];
+      val = w.start;
       return
    end
    dlens = get(w,'data_length');

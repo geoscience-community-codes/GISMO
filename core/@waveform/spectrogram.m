@@ -1,8 +1,11 @@
-function spectrogram( w )
+function spectrogram( w, s )
 %SPECTROGRAM Plot an IceWeb-style spectrogram
-%   spectrogram(w) Creates an IceWeb style spectrogram by wrapping the
-%   function iceweb.spectrogram_iceweb(). For greater control, call that
-%   function directly, or use spectralobject/specgram or
+%   spectrogram(w, s) Creates an IceWeb style spectrogram by wrapping the
+%   function iceweb.spectrogram_iceweb(). If s is omitted it defaults to:
+%       spectralobject(1024, 924, 10, [60 120]);
+%
+% For greater control, call that
+%   iceweb.spectrogram_iceweb() directly, or use spectralobject/specgram or
 %   spectralobject/specgram2 (not clear how these differ). Note that
 %   spectrogram_iceweb() is significantly faster.
 
@@ -11,7 +14,9 @@ function spectrogram( w )
 if numel(w)>1
     w = reshape(w, numel(w), 1);
 end
-s = spectralobject(1024, 924, 10, [60 120]);
+if ~exist('s','var')
+    s = spectralobject(1024, 924, 10, [60 120]);
+end
 iceweb.spectrogram_iceweb(s, w, 0.75);
 
     

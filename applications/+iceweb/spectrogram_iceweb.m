@@ -63,7 +63,7 @@ end
 
 nfft = round(get(s,'nfft'));
 overlap = floor(get(s, 'over'));
-dBlims = get(s, 'dBlims'); 
+dBlims = get(s, 'dBlims')
 fmax = get(s, 'freqmax');
 
 % Set appropriate date ticks
@@ -81,7 +81,9 @@ for c=1:numw
         [S,F,T] = spectrogram(data, nfft, nfft/2, nfft, fsamp);
 
         Y = 20*log10(abs(S)+eps);
-        index = find(F <= fmax); 
+        fmax
+        max(F)
+        index = find(F <= fmax)
         if F(1)==0,
             F(1)=0.001;
         end
@@ -91,7 +93,24 @@ for c=1:numw
         T = wt.start + T/86400;
         F = F(1:max(index));
         Y = Y(1:max(index),:);
-        imagesc(T,F,Y,dBlims); 
+        S = S(1:max(index),:);
+        if isempty(dBlims)
+            imagesc(T,F,abs(S));
+            % mean frequency
+            numerator = abs(S)' * F;
+            denominator = sum(abs(S),1);
+            meanF = numerator./denominator';
+            hold on; plot(T,meanF,'k','LineWidth',3);
+            % peak frequency
+            [maxvalue,maxindex] = max(abs(S));
+            size(maxindex)
+            fmax = F(maxindex);
+            size(fmax)
+            hold on; plot(T,fmax,'r','LineWidth',3);
+            
+        else
+            imagesc(T,F,Y,dBlims); 
+        end
         axis xy;
         colormap(mycolormap);
 
