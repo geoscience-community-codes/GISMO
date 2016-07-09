@@ -32,7 +32,9 @@ set(gcf,'Position',[0 0 640 1024]);
 
 % SWITCH X AXIS LABELS
 set(gca,'XDir','reverse');
-label = 1- str2num(get(gca,'XTickLabel'));
+% Fix by GT based on email by Kyle Brill, July 2016, see Issue 51
+%label = 1- str2num(get(gca,'XTickLabel'));
+label = 1- str2double(get(gca,'XTickLabel'));
 set(gca,'XTickLabel',label);
 %xlabel('distance (dissimilarlity)','FontSize',16);
 xlabel('inter-cluster correlation','FontSize',16);

@@ -50,7 +50,9 @@ end
 c1 = correlation;
 c1 = set(c1,'WAVEFORM', get(c,'WAVEFORM') );
 c1 = set(c1,'TRIG', get(c,'TRIG') );
-if exist('index')
+% Fix by GT based on email from Kyle Brill, July 2016. See issue 51
+% if exist('index')
+if exist('index', 'var')
    c1 = subset(c1,index); 
 end
 
