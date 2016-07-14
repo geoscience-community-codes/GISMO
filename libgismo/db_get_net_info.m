@@ -5,7 +5,7 @@ function net = db_get_net_info(stalist,dbname)
 % The database must include a "snetsta" table.
 %
 % Example:
-%    net = db_get_net_info({'AUL' 'YKW5' 'ATTU'},'/aerun/sum/params/Stations/master_stations')
+%    net = db_get_net_info({'AUL' 'YKW5' 'ATTU'},'/aec/db/stations/master_stations')
 % 
 % Yun Wang 03/25/2012
 
@@ -24,12 +24,12 @@ for n = 1:nr;
     db1 = dbsubset(db,['sta==''' sta{n} '''']);
     recnum = dbquery(db1,'dbRECORD_COUNT');
     if recnum == 0
-       %disp(sprintf('Station %s is missing in "snetsta" table', sta{n})); 
+       %fprintf('Station %s is missing in "snetsta" table', sta{n}); 
        net(n) = {'--'};
     elseif recnum ==1
        net(n) = {dbgetv(db1,'snet')};
     else
-       fprintf('Station %s has more than 1 record found in "snetsta" table, use the first record\n',sta{n}));
+       fprintf('Station %s has more than 1 record found in "snetsta" table, use the first record\n',sta{n});
        nettemp = dbgetv(db1,'snet');
        net(n)=nettemp(1);
     end    
