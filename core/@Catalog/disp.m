@@ -9,7 +9,11 @@ for c=1:numel(obj)
 %     if numel(obj)>1
 %         subclass = obj(c).table.etype{1};
 %     end
+    try
     disp(sprintf('%s object: Event type: %s',class(obj(c)),obj(c).request.subclass));
+    catch
+
+    end
     fprintf('Number of events: %d\n',obj(c).numberOfEvents);
     if obj(c).numberOfEvents > 0
         [maxmag, maxmagindex] = nanmax(obj(c).mag);
