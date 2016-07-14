@@ -72,8 +72,8 @@ classdef Catalog
             p.addOptional('lat', [], @isnumeric)
             p.addOptional('depth', [], @isnumeric);
             p.addOptional('mag', [], @isnumeric);
-            p.addOptional('magtype', {'un'}, @iscell);
-            p.addOptional('etype', {'u'}, @iscell);
+            p.addOptional('magtype', {}, @iscell);
+            p.addOptional('etype', {}, @iscell);
             p.addParameter('request', struct(), @isstruct); % optional name-param pairs
             p.addParameter('ontime', [], @isnumeric)
             p.addParameter('offtime', [], @isnumeric)
@@ -96,55 +96,59 @@ classdef Catalog
            s=size(otime);
            s1=min(s);
            s2=max(s);
-           otime = reshape(otime, [s2 s1]);
            
-            % Fill empty vectors to size of time
-            if isempty(lon)
-                lon = NaN(s2,s1);
-            end
-            if isempty(lat)
-                lat = NaN(s2,s1);
-            end   
-            if isempty(depth)
-                depth = NaN(s2,s1);
-            end
-            if isempty(mag)
-                mag = NaN(s2,s1);
-            end  
-            if isempty(magtype) % 'u' for unknown
-                magtype = cellstr(repmat('u',[s2 s1]));
-            end 
-            if isempty(etype)  % 'u' for unknown
-                etype = cellstr(repmat('u',[s2 s1]));
-            end   
+           if s1*s2 > 0
+           
+               otime = reshape(otime, [s2 s1]);
 
-            if isempty(ontime)  % 'u' for unknown
-                ontime = NaN(s2,s1);
-            end   
-            if isempty(offtime)  % 'u' for unknown
-                offtime = NaN(s2,s1);
-            end   
-           lon = reshape(lon, [s2 s1]);
-           lat = reshape(lat, [s2 s1]);
-           depth = reshape(depth, [s2 s1]);
-           mag = reshape(mag, [s2 s1]);
-           magtype = reshape(magtype, [s2 s1]);
-           if numel(ontime)==s1*s2
-               ontime = reshape(ontime, [s2 s1]);
-               offtime = reshape(offtime, [s2 s1]);
+                % Fill empty vectors to size of time
+                if isempty(lon)
+                    lon = NaN(s2,s1);
+                end
+                if isempty(lat)
+                    lat = NaN(s2,s1);
+                end   
+                if isempty(depth)
+                    depth = NaN(s2,s1);
+                end
+                if isempty(mag)
+                    mag = NaN(s2,s1);
+                end  
+                if isempty(magtype) % 'u' for unknown
+                    magtype = cellstr(repmat('u',[s2 s1]));
+                end 
+                if isempty(etype)  % 'u' for unknown
+                    etype = cellstr(repmat('u',[s2 s1]));
+                end   
+
+                if isempty(ontime)  % 'u' for unknown
+                    ontime = NaN(s2,s1);
+                end   
+                if isempty(offtime)  % 'u' for unknown
+                    offtime = NaN(s2,s1);
+                end   
+               lon = reshape(lon, [s2 s1]);
+               lat = reshape(lat, [s2 s1]);
+               depth = reshape(depth, [s2 s1]);
+               mag = reshape(mag, [s2 s1]);
+               magtype = reshape(magtype, [s2 s1]);
+               if numel(ontime)==s1*s2
+                   ontime = reshape(ontime, [s2 s1]);
+                   offtime = reshape(offtime, [s2 s1]);
+               end
+               clear s s1 s2
+
+               dstr = datestr(otime, 'yyyy_mm_dd');
+               tstr = datestr(otime, 'HH:MM:SS.fff'); 
+               tstr = tstr(:,1:10);
+
+               obj.table = table(otime, dstr, tstr, ...
+                   lon, lat, depth, mag, magtype, etype, ontime, offtime, ...
+                    'VariableNames', {'otime' 'yyyy_mm_dd' 'hh_mm_ss' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype' 'ontime' 'offtime'});   
+
+                obj.table = sortrows(obj.table, 'otime', 'ascend'); 
+                fprintf('Got %d events\n',obj.numberOfEvents);
            end
-           clear s s1 s2
-           
-           dstr = datestr(otime, 'yyyy_mm_dd');
-           tstr = datestr(otime, 'HH:MM:SS.fff'); 
-           tstr = tstr(:,1:10);
-
-           obj.table = table(otime, dstr, tstr, ...
-               lon, lat, depth, mag, magtype, etype, ontime, offtime, ...
-                'VariableNames', {'otime' 'yyyy_mm_dd' 'hh_mm_ss' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype' 'ontime' 'offtime'});   
-            
-            obj.table = sortrows(obj.table, 'otime', 'ascend'); 
-            fprintf('Got %d events\n',obj.numberOfEvents);
 
         end
         
