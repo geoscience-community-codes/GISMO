@@ -17,14 +17,14 @@
 .tab { margin-left: 40px; }
 -->
 </style>
-<title>Test data for the GISMO Toolbox</title>
+<title>Demo data for the GISMO Toolbox</title>
 
   </head>
 
   <body>
     <header>
       <div class="inner">
-        <span><h1>GISMO</h1><h2>test data</h2></span>
+        <span><h1>GISMO</h1><h2>demo data</h2></span>
         <a href="https://github.com/geoscience-community-codes/GISMO" class="button"><small>View project on</small> GitHub</a>
       </div>
     </header>
@@ -35,11 +35,11 @@
         <section id="main-content">
 
 
-<h1><a name="what">What is GISMO test data?</a></h1>
-<p>This directory contains test data in different formats. These are used by the testing routines in GISMO to verify that code modifications do not break the code. 
+<h1><a name="what">What is GISMO demo data?</a></h1>
+<p>This directory contains sample data in a variety of common seismic formats. These are used in tutorials, longer examples, and for testing GISMO as new features are added to ensure the robustness of each new release. 
 <p>
 <ul>
-	<li>css3.0: Databases compatible with Antelope</li>
+	<li><b>css3.0</b><br/>Databases in Center for Seismic Studies 3.0 schema format. This is the relational database format used by Antelope, and used heavily in nuclear test monitoring and regional earthquake monitoring communities. The most important database tables are origin (which contains event metadata) and wfdisc (which describes the waveform data available). </li>
 	<ul>
 		<li>antelope2waveform_testdb: wfdisc</li>
 		<li>avodb200903: event origin</li>
@@ -47,9 +47,9 @@
 		<li>demodb: wfdisc</li>
 		<li>rtdb200903: event origin</li>
 	</ul>
-	<li>MiniSeed</li>
+	<li><b>MiniSeed</b><br/>waveform data files in MiniSEED format</li>
 	<ul>
-		<li>REF.EHZ.2009.079</li>
+		<li><b>REF.EHZ.2009.079</b><br/>MiniSEED file for station REF, channel EHZ on day 79 of 2009 (March 20).</li>
 		<li>REF.EHZ.2009.080</li>
 		<li>REF.EHZ.2009.081</li>
 		<li>REF.EHZ.2009.082</li>
@@ -58,26 +58,26 @@
 		<li>RSO.EHZ.2009.081</li>
 		<li>RSO.EHZ.2009.082</li>
 	</ul>
-	<li>RSAM</li>
+	<li><b>RSAM</b><br/>Real-time Seismic Amplitude Measurement files in binary "BOB" format. Each sample represents the average amplitude (in counts) for 1-minute. Each file is for one station channel per year. RSAM has been by volcano observatories since the mid-1980s.</li>
 	<ul>
-		<li>MOMN2015.DAT</li>
+		<li>MOMN2015.DAT<br/>RSAM data for Momotombo North station in 2015.</li>
 	</ul>
-	<li>sac</li>
+	<li><b>sac</b><br/>waveform data files in SAC format</li>
 	<ul>
 		<li>example_sacfile.sac</li>
 		<li>IU.COLA.10.BHZ.M.2002.307.220803.SAC</li>
 		<li>REF.EHZ.2009-03-22.sac</li>
 	</ul>
-	<li>sacpz</li>
+	<li><b>sacpz</b><br/>Pole-zero instrument response files</li>
 	<ul>	
-		<li>SACPZ.IU.COLA.10.BHE</li>
-		<li>SACPZ.IU.COLA.10.BHN</li>
-		<li>SACPZ.IU.COLA.10.BHZ</li>
+		<li><b>SACPZ.IU.COLA.10.BHE</b>: sacpz file for the east component of station COLA</li>
+		<li><b>SACPZ.IU.COLA.10.BHN</b>: sacpz file for the north component of station COLA</li>
+		<li><b>SACPZ.IU.COLA.10.BHZ</b>: sacpz file for the vertical component of station COLA</li>
 	</ul>
-	<li>seisan<br/>Part of the Seisan database for the Montserrat Volcano Observatory event catalog</li>
+	<li><b>seisan</b><br/>Part of the Seisan databases for the Montserrat Volcano Observatory. The two databases are MVOE_ which stands for MVO events, and DSNC_ which stands for digital seismic network continuous. The WAV directory contains waveform data files in Seisan format under a directory structure DATABASENAME/YEAR/MONTH. The REA directory contains event metadata files ("Sfiles" in Seisan terminology) containing information like event time, hypocenter coordinates, magnitude and phase arrivals used etc.</li>
 	<ul>
-		<li>REA/MVOE_/1996/11<br/>1 month of the MVO event catalog. The directory contains one Sfile per event.</li>
-		<li>WAV/MVOE_/1996/11<br/>Contains 1 segmented waveform file (in Seisan format) for each Sfile in REA.</li>
+		<li><b>REA/MVOE_/1996/11</b><br/>MVO event catalog metadata for Nov 1996. Contains 1084 Sfiles.</li>
+		<li><b>WAV/MVOE_/2001/02</b><br/>Contains 1 segmented waveform file (in Seisan format).</li>
 	</ul>
 </ul>
 
