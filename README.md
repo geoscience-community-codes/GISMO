@@ -1,9 +1,5 @@
-Note - this project is not live yet. Under construction. But you may use it and if you do please report
-problems to help us with debugging. Comments welcome.
-gthompson (at) usf (dot) edu
-
 # GISMO
-A seismic data analysis toolbox for MATLAB. 
+A seismic data analysis toolbox for MATLAB. It can be useful for research, monitoring and education.
 
 Links:
 <ul>
@@ -12,3 +8,5 @@ Links:
 <li><a href="http://geoscience-community-codes.github.io/GISMO/">GISMO website</a></li>
 </ul>
 
+Comments welcome. Send email to: 
+gthompson (at) usf (dot) edu
