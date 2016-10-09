@@ -48,9 +48,9 @@ persistent Lev
     end
     if level <= Lev % the main thing - printing out based on Lev
         if numel(varargin) == 1
-         disp(varargin{:})
+         disp(varargin{:});
         else
-         fprintf(varargin{:})
+         fprintf(varargin{:});
          fprintf('\n');
         end
     end

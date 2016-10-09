@@ -255,7 +255,7 @@ classdef Catalog
     methods(Static)
         function self = retrieve(dataformat, varargin)
         %CATALOG.RETRIEVE Read seismic events from common file formats & data sources.
-        % readEvents can read events from many different earthquake catalog file 
+        % retrieve can read events from many different earthquake catalog file 
         % formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) into a 
         % GISMO Catalog object.
         %

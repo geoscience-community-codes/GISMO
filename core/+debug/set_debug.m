@@ -21,6 +21,6 @@ function set_debug(debuglevel)
         %setpref('runmode', 'debug', debuglevel);
         
     % with
-        debug.print_debug(debuglevel)
+        debug.print_debug(debuglevel);
 
 end

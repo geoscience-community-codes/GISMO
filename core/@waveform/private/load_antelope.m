@@ -231,7 +231,7 @@ function outputWaveforms = load_antelope(request, specificDatabase)
       % Get calling function. 
       [ST,I] = dbstack();
       switch(ST(2).name)
-          case 'RecursivelyLoadFromEachDatabase', debug.print_debug(1,'looping over multiple databases')
+          case 'RecursivelyLoadFromEachDatabase', debug.print_debug(1,'looping over multiple databases');
           otherwise % assume called with an explicit dbpath argument, which means need to combine and pad waveforms here
                 outputWaveforms = combine(outputWaveforms);
                 outputWaveforms = pad(outputWaveforms, request.startTimes(1), request.endTimes(1), NaN);    
@@ -405,7 +405,7 @@ function [w, rawDb, filteredDb] =  get_traces(startDatenum, endDatenum, expr, da
                 debug.print_debug(1,sprintf('\nTRYING TO LOAD TRACES FROM WHOLE WFDISC SUBSET IN ONE GO\n'));
                 tr = trload_css(dbptr, start_epoch, end_epoch);
                 trsplice(tr,20);            
-                w0 = trace2waveform(tr)  % Glenn's simple method
+                w0 = trace2waveform(tr);  % Glenn's simple method
                 %w0 = traceToWaveform(tr);  % Celso's more sophisticated method
                 %w0 = cycleThroughTraces(tr, combineWaves); % This is even more
                 %sophisticated, and calls traceToWaveform and others, but
@@ -439,7 +439,7 @@ function [w, rawDb, filteredDb] =  get_traces(startDatenum, endDatenum, expr, da
                         end
                     end
                     try
-                        dbfree(dbptr_one_record )
+                        dbfree(dbptr_one_record );
                     catch ME
                         ME.identifier
                         rethrow ME
@@ -495,6 +495,7 @@ function w = trace2waveform(tr)
         
         if calib~=0
             wt(cc) = addfield(wt(cc),'calib', st(cc).calib);
+            wt(cc) = set(wt(cc), 'units', trunits);
             wt(cc) = addfield(wt(cc), 'calibration_applied', 'YES');
         else
             wt(cc) = addfield(wt(cc), 'calibration_applied', 'NO');

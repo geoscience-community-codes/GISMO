@@ -130,7 +130,11 @@ function outW = extract(w, method, startV, endV)
       warning('Waveform:extract:emptyWaveform','no waveforms to extract');
       return
    end
-   outW(numel(w),numel(startV)) = waveform;
+   
+   % changed by glenn thompson 20161006 as it was losing calibration
+   % information
+   %outW(numel(w),numel(startV)) = waveform; % removed
+   outW = w; % added
    
    for m = 1: numel(startV) %loop through the number of extractions
       for n=1:numel(w); %loop through the waveforms

@@ -1,4 +1,4 @@
-function plot_panels(w, alignWaveforms)
+function fh=plot_panels(w, alignWaveforms)
 %PLOT_PANELS Plot multiple waveform objects as separate linked panels
 %   PLOT_PANELS(w, alignWaveforms) 
 %   where:
@@ -35,15 +35,20 @@ function plot_panels(w, alignWaveforms)
     SECSPERDAY = 60 * 60 * 24;
     
     nwaveforms = numel(w);
-    figure
+    fh=figure
     trace_height=0.9/nwaveforms;
     left=0.1;
     width=0.8;
     for wavnum = 1:nwaveforms
         data=get(w(wavnum),'data');
         dnum=get(w(wavnum),'timevector'); 
-        sta=get(w(wavnum),'station');
-        chan=get(w(wavnum),'channel');
+        try
+            sta=get(w(wavnum),'station');
+            chan=get(w(wavnum),'channel');
+        catch
+            sta='';
+            chan='';
+        end
         offset = nanmean(data);
         y=data-offset;
         ax(wavnum)=axes('Position',[left 0.98-wavnum*trace_height width trace_height]);   
