@@ -1,0 +1,238 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of response_get_from_db</title>
+  <meta name="keywords" content="response_get_from_db">
+  <meta name="description" content="RESPONSE_GET_FROM_DB Get instrument response from database.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">instrument_response</a> &gt; response_get_from_db.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed/instrument_response&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>response_get_from_db
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>RESPONSE_GET_FROM_DB Get instrument response from database.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [response] = response_get_from_db(station, channel, time, frequencies, dbName) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">RESPONSE_GET_FROM_DB Get instrument response from database.
+  RESPONSE = RESPONSE_DB_GET_RESPONSE(STATION, CHANNEL,TIME, FREQUENCIES, DBNAME) 
+  returns a structure which contains the full instrument response for the
+  input STATION and CHANNEL at the given TIME. TIME is specified in
+  standard Matlab serial date (output of DATENUM). FREQUENCIES is a vector
+  of frequencies, specified in Hz, for which the response will be
+  calculated. DBNAME is the name of the database which must contain a
+  sensor, instrument and calibration table.
+
+ Specific assignments from  Antleope databases: 
+       time:        Matlab time used in database query
+       calib:       Calib value from the **calibration** table
+       source:      The name of the actual response file
+       status:      The status line returned by dbfilename
+
+  The salient components of this code are from Kent Lindquist's
+  Antelope Toolbox for Matlab.
+
+
+ see also <a href="response_structure_description.html" class="code" title="function response_structure_description">response_structure_description</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>	ISMEMBER for scnlobjects</li><li><a href="../../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>	scnl (deprecated) : object that holds the stations, channel, network, and location for</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/ismember.html" class="code" title="function [results, loc] = ismember(mywave,anythingelse)">ismember</a>	ISMEMBER waveform implementation of ismember</li><li><a href="../../../GISMO/core/dev/+dataretrieval/@antelopesource/segtype2units.html" class="code" title="function [units, data_description] = segtype2units(unitCode)">segtype2units</a>	segtype2units   retrieves unit and description based on the segtype code</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>	EPOCH = DATENUM2EPOCH(TIME) translates Matlab numeric</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="response_apply.html" class="code" title="function wNew = response_apply(w,filterObj,sourceType,source)">response_apply</a>	RESPONSE_APPLY Deconvolve an instrument response from a waveform object.</li><li><a href="response_cookbook.html" class="code" title="">response_cookbook</a>	% Instrument response cookbook</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [units, type_of_data] = segtype2units(segtype)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [response] = response_get_from_db(station, channel, time, frequencies, dbName)</a>
+0002 
+0003 <span class="comment">%RESPONSE_GET_FROM_DB Get instrument response from database.</span>
+0004 <span class="comment">%  RESPONSE = RESPONSE_DB_GET_RESPONSE(STATION, CHANNEL,TIME, FREQUENCIES, DBNAME)</span>
+0005 <span class="comment">%  returns a structure which contains the full instrument response for the</span>
+0006 <span class="comment">%  input STATION and CHANNEL at the given TIME. TIME is specified in</span>
+0007 <span class="comment">%  standard Matlab serial date (output of DATENUM). FREQUENCIES is a vector</span>
+0008 <span class="comment">%  of frequencies, specified in Hz, for which the response will be</span>
+0009 <span class="comment">%  calculated. DBNAME is the name of the database which must contain a</span>
+0010 <span class="comment">%  sensor, instrument and calibration table.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Specific assignments from  Antleope databases:</span>
+0013 <span class="comment">%       time:        Matlab time used in database query</span>
+0014 <span class="comment">%       calib:       Calib value from the **calibration** table</span>
+0015 <span class="comment">%       source:      The name of the actual response file</span>
+0016 <span class="comment">%       status:      The status line returned by dbfilename</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%  The salient components of this code are from Kent Lindquist's</span>
+0019 <span class="comment">%  Antelope Toolbox for Matlab.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% see also response_structure_description</span>
+0023 
+0024 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0025 <span class="comment">%         (includes ideas borrowed from G. Thompson's db2response.m)</span>
+0026 <span class="comment">% $Date$</span>
+0027 <span class="comment">% $Revision$</span>
+0028 
+0029 
+0030 
+0031 
+0032 <span class="comment">% CHECK ARGUMENTS</span>
+0033 <span class="comment">% % % % % % if ~admin.antelope_exists</span>
+0034 <span class="comment">% % % % % %     error('This function requires Antelope');</span>
+0035 <span class="comment">% % % % % % end</span>
+0036 <span class="keyword">if</span> (nargin ~= 5)
+0037     error(<span class="string">'Incorrect number of arguments'</span>);
+0038 <span class="keyword">end</span>
+0039 <span class="comment">% if  ~exist([dbName '.sensor'], 'file') ||  ~exist([dbName '.instrument'], 'file') ||  ~exist([dbName '.calibration'], 'file')</span>
+0040 <span class="comment">%     error(['Database ' dbName '  is missing sensor, instrument and/or calibration tables']);</span>
+0041 <span class="comment">% end</span>
+0042 <span class="keyword">if</span> ~isvector(frequencies)
+0043     error(<span class="string">'FREQUENCIES argument must be a 1xn or nx1 vector'</span>);
+0044 <span class="keyword">end</span>
+0045 frequencies = reshape(frequencies,1,numel(frequencies));
+0046 
+0047 
+0048 
+0049 
+0050 
+0051 <span class="comment">% GET DATABASE RECORDS</span>
+0052 <span class="keyword">try</span>
+0053     db = dbopen(dbName,<span class="string">'r'</span>);
+0054 <span class="keyword">catch</span>
+0055     error([<span class="string">'Could not open database: '</span> dbName]);
+0056 <span class="keyword">end</span>
+0057 dbSensor = dblookup_table(db, <span class="string">'sensor'</span>);
+0058 <span class="keyword">if</span> ~dbquery(dbSensor,<span class="string">'dbTABLE_PRESENT'</span>)
+0059     error(<span class="string">'Database does not contain a sensor table.'</span>);
+0060 <span class="keyword">end</span>
+0061 epochTime = <a href="../../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>(time);
+0062 db = dbsubset(dbSensor, sprintf(<span class="string">'sta==&quot;%s&quot; &amp;&amp; chan==&quot;%s&quot; &amp;&amp; time&lt;=%f &amp;&amp; endtime&gt;=%f'</span>,station, channel, epochTime, epochTime));
+0063 <span class="keyword">if</span> dbquery(db,<span class="string">'dbRECORD_COUNT'</span>)==0     <span class="comment">% check for open channels</span>
+0064     db = dbsubset(db, sprintf(<span class="string">'sta==&quot;%s&quot; &amp;&amp; chan==&quot;%s&quot; &amp;&amp; time&lt;=%f'</span>,station, channel, epochTime));
+0065 <span class="keyword">end</span>
+0066 dbInst = dblookup_table(db, <span class="string">'instrument'</span>);
+0067 <span class="keyword">if</span> ~dbquery(dbInst,<span class="string">'dbTABLE_PRESENT'</span>)
+0068     error(<span class="string">'Database does not contain an instrument table.'</span>);
+0069 <span class="keyword">end</span>
+0070 dbCalib = dblookup_table(db, <span class="string">'calibration'</span>);
+0071 <span class="keyword">if</span> ~dbquery(dbCalib,<span class="string">'dbTABLE_PRESENT'</span>)
+0072     error(<span class="string">'Database does not contain a calibration table.'</span>);
+0073 <span class="keyword">end</span>
+0074 db = dbjoin(db, dbInst);
+0075 db = dbjoin(db, dbCalib);
+0076 db = dbsubset(db, sprintf(<span class="string">'sta==&quot;%s&quot; &amp;&amp; chan==&quot;%s&quot; &amp;&amp; calibration.time&lt;=%f &amp;&amp;  calibration.endtime&gt;=%f'</span>,station, channel, epochTime, epochTime) );
+0077 
+0078 
+0079 <span class="comment">% HANDLE EXCEPTIONS</span>
+0080 <span class="keyword">if</span> dbquery(db,<span class="string">'dbRECORD_COUNT'</span>)&gt;1
+0081     warning([<span class="string">'Database contains more than one response for '</span> station <span class="string">'_'</span> channel <span class="string">' at '</span> datestr(time,31)  <span class="string">'. Using first one'</span>]);
+0082 <span class="keyword">elseif</span> dbquery(db,<span class="string">'dbRECORD_COUNT'</span>)==0
+0083     error([<span class="string">'Database does not contain response information for '</span> station <span class="string">'_'</span> channel <span class="string">' at '</span> datestr(time,31)]);
+0084 <span class="keyword">end</span>
+0085 
+0086 
+0087 
+0088 <span class="comment">% INITIALIZE THE OUTPUT ARGUMENT</span>
+0089 response.scnl = <a href="../../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(station,channel,<span class="string">''</span>,<span class="string">''</span>);
+0090 response.time = time;
+0091 response.frequencies = [];
+0092 response.values = [];
+0093 response.calib = [];
+0094 response.units = [];
+0095 response.sampleRate = [];
+0096 response.source = [];
+0097 response.status = [];
+0098 
+0099 
+0100 
+0101 <span class="comment">% READ IN RESPONSE INFO (POSITIVE VALUES ONLY)</span>
+0102 db.record = 0;
+0103 [response.sampleRate, response.calib, segtype,dir,dfile] = dbgetv(db, <span class="string">'samprate'</span>, <span class="string">'calib'</span>, <span class="string">'segtype'</span>,<span class="string">'dir'</span>,<span class="string">'dfile'</span>);
+0104 [response.units] = <a href="../../../GISMO/core/dev/+dataretrieval/@antelopesource/segtype2units.html" class="code" title="function [units, data_description] = segtype2units(unitCode)">segtype2units</a>(segtype);
+0105 <span class="comment">%response.frequencies = 0 : response.sampleRate/numSamples : response.sampleRate/2;</span>
+0106 response.frequencies = frequencies;
+0107 [response.respFile,response.status] = dbfilename(db);
+0108 <span class="keyword">if</span> exist(response.respFile, <span class="string">'file'</span>)
+0109     respObject = dbresponse(response.respFile);
+0110     response.values = eval_response(respObject, 2 * pi * response.frequencies);
+0111     free_response(respObject);
+0112 <span class="keyword">else</span>
+0113     warning([<span class="string">'File '</span> response.respFile <span class="string">' cannot be opened.'</span>]);
+0114     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'** Response for '</span> station <span class="string">'_'</span> channel <span class="string">' at '</span> datestr(time,31) <span class="string">' will be set to an array of zeros'</span>]);
+0115     response.values = 0 * response.frequencies;
+0116 <span class="keyword">end</span>
+0117 dbclose(db);
+0118 response.frequencies = reshape( response.frequencies , numel(response.frequencies) , 1 ) ;
+0119 response.values = reshape( response.values , numel(response.values) , 1 ) ;
+0120 
+0121 
+0122 
+0123 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0124 <span class="comment">% CONVERT SEGTYPE TO UNITS</span>
+0125 <span class="comment">%   (this function was lifted from @waveform/private/load_antelope)</span>
+0126 <span class="comment">%</span>
+0127 <a name="_sub1" href="#_subfunctions" class="code">function [units, type_of_data] = segtype2units(segtype)</a>
+0128 <span class="comment">%'segtype' in antelope datasets indicate the natural units of the detector</span>
+0129 segTypes = <span class="string">'ABDHIJKMPRSTVWabcdfhimnoprstuvw-'</span>;
+0130 segUnits = {<span class="string">'A'</span>,<span class="string">'nm / sec / sec'</span>,<span class="string">'acceleration'</span>;
+0131   <span class="string">'B'</span>, <span class="string">'25 mw / m / m'</span>,<span class="string">'UV (sunburn) index(NOAA)'</span>;
+0132   <span class="string">'D'</span>, <span class="string">'nm'</span>, <span class="string">'displacement'</span>;
+0133   <span class="string">'H'</span>,<span class="string">'Pa'</span>,<span class="string">'hydroacoustic'</span>;
+0134   <span class="string">'I'</span>,<span class="string">'Pa'</span>,<span class="string">'infrasound'</span>;
+0135   <span class="string">'J'</span>,<span class="string">'watts'</span>,<span class="string">'power (Joulses/sec) (UCSD)'</span>;
+0136   <span class="string">'K'</span>,<span class="string">'kPa'</span>,<span class="string">'generic pressure (UCSB)'</span>;
+0137   <span class="string">'M'</span>,<span class="string">'mm'</span>,<span class="string">'Wood-Anderson drum recorder'</span>;
+0138   <span class="string">'P'</span>,<span class="string">'mb'</span>,<span class="string">'barometric pressure'</span>;
+0139   <span class="string">'R'</span>,<span class="string">'mm'</span>,<span class="string">'rain fall (UCSD)'</span>;
+0140   <span class="string">'S'</span>,<span class="string">'nm / m'</span>,<span class="string">'strain'</span>;
+0141   <span class="string">'T'</span>,<span class="string">'sec'</span>,<span class="string">'time'</span>;
+0142   <span class="string">'V'</span>,<span class="string">'nm / sec'</span>,<span class="string">'velocity'</span>;
+0143   <span class="string">'W'</span>,<span class="string">'watts / m / m'</span>, <span class="string">'insolation'</span>;
+0144   <span class="string">'a'</span>,<span class="string">'deg'</span>, <span class="string">'azimuth'</span>
+0145   <span class="string">'b'</span>,<span class="string">'bits/ sec'</span>, <span class="string">'bit rate'</span>;
+0146   <span class="string">'c'</span>,<span class="string">'counts'</span>, <span class="string">'dimensionless integer'</span>;
+0147   <span class="string">'d'</span>,<span class="string">'m'</span>, <span class="string">'depth or height (e.g., water)'</span>;
+0148   <span class="string">'f'</span>,<span class="string">'micromoles / sec / m /m'</span>, <span class="string">'photoactive radiation flux'</span>;
+0149   <span class="string">'h'</span>,<span class="string">'pH'</span>,<span class="string">'hydrogen ion concentration'</span>;
+0150   <span class="string">'i'</span>,<span class="string">'amp'</span>,<span class="string">'electric curent'</span>
+0151   <span class="string">'m'</span>,<span class="string">'bitmap'</span>,<span class="string">'dimensionless bitmap'</span>;
+0152   <span class="string">'n'</span>,<span class="string">'nanoradians'</span>,<span class="string">'angle (tilt)'</span>;
+0153   <span class="string">'o'</span>,<span class="string">'mg/l'</span>,<span class="string">'diliution of oxygen (Mark VanScoy)'</span>;
+0154   <span class="string">'p'</span>,<span class="string">'percent'</span>,<span class="string">'percentage'</span>;
+0155   <span class="string">'r'</span>,<span class="string">'in'</span>,<span class="string">'rainfall (UCSD)'</span>;
+0156   <span class="string">'s'</span>,<span class="string">'m / sec'</span>, <span class="string">'speed (e.g., wind)'</span>;
+0157   <span class="string">'t'</span>,<span class="string">'C'</span>,<span class="string">'temperature'</span>;
+0158   <span class="string">'u'</span>,<span class="string">'microsiemens/cm'</span>,<span class="string">'conductivity'</span>;
+0159   <span class="string">'v'</span>,<span class="string">'volts'</span>,<span class="string">'electric potential'</span>;
+0160   <span class="string">'w'</span>,<span class="string">'rad / sec'</span>, <span class="string">'rotation rate'</span>;
+0161   <span class="string">'-'</span>,<span class="string">'null'</span>,<span class="string">'null'</span>};
+0162 <span class="keyword">if</span> ~<a href="../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(segtype,segTypes)
+0163   segtype=  <span class="string">'-'</span>;
+0164 <span class="keyword">end</span>
+0165 thisseg = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(segtype==segTypes);
+0166 units = segUnits{thisseg,2};
+0167 type_of_data = segUnits{thisseg,3};
+0168 
+0169 
+0170</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

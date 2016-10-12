@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of tremorstalta</title>
+  <meta name="keywords" content="tremorstalta">
+  <meta name="description" content="rsam.detect Run an STA/LTA detector on a rsam object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@rsam</a> &gt; tremorstalta.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@rsam&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>tremorstalta
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>rsam.detect Run an STA/LTA detector on a rsam object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [self, timeWindow] = tremorstalta(self, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> rsam.detect Run an STA/LTA detector on a rsam object  
+   [rsamobject, timeWindow] = rsam.detect(varargin)
+   
+   For sample N, the STA is calculated from samples
+   N-stalen+1:N and the LTA from N-ltalen+1:N
+   
+   Optional input name/value pairs:
+       'stalen'    - length of STA timeWindow in samples (minutes)
+                       [Default 10]
+       'ltalen'    - length of LTA timeWindow in samples (minutes)
+                       [Default 120]
+       'stepsize'  - number of samples to move sliding timeWindow
+                       [Default stalen]
+       'ratio_on'  - the STA/LTA ratio for which to trigger on
+                       [Default 1.5]
+       'ratio_off' - the STA/LTA ratio for which to trigger
+                       off [Default 1.1]
+       'boolplot'  - if set to true, plot the STA, LTA, ratio
+           and trigger on &amp; trigger off times (Default false)
+       'boollist'  - if set to true, list the tremor event on 
+           and off times (Default false) 
+
+   Outputs:
+       timeWindow  - a structure with fields (all vectors):
+           startSample - start sample number of each timeWindow
+           endSample - end sample number of each timeWindow
+           starttime - start time of each timeWindow
+           endtime - end time of each timeWindow
+           sta - short term average of each timeWindow
+           lta - long term average of each timeWindow
+           ratio - sta:lta ratio of each timeWindow
+       rsamobject - the input rsamobject but with the 
+                   continuousEvents property populated</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="rsam.html" class="code" title="">rsam</a>	</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [self, timeWindow] = tremorstalta(self, varargin)</a>
+0002     <span class="comment">% rsam.detect Run an STA/LTA detector on a rsam object</span>
+0003     <span class="comment">%   [rsamobject, timeWindow] = rsam.detect(varargin)</span>
+0004     <span class="comment">%</span>
+0005     <span class="comment">%   For sample N, the STA is calculated from samples</span>
+0006     <span class="comment">%   N-stalen+1:N and the LTA from N-ltalen+1:N</span>
+0007     <span class="comment">%</span>
+0008     <span class="comment">%   Optional input name/value pairs:</span>
+0009     <span class="comment">%       'stalen'    - length of STA timeWindow in samples (minutes)</span>
+0010     <span class="comment">%                       [Default 10]</span>
+0011     <span class="comment">%       'ltalen'    - length of LTA timeWindow in samples (minutes)</span>
+0012     <span class="comment">%                       [Default 120]</span>
+0013     <span class="comment">%       'stepsize'  - number of samples to move sliding timeWindow</span>
+0014     <span class="comment">%                       [Default stalen]</span>
+0015     <span class="comment">%       'ratio_on'  - the STA/LTA ratio for which to trigger on</span>
+0016     <span class="comment">%                       [Default 1.5]</span>
+0017     <span class="comment">%       'ratio_off' - the STA/LTA ratio for which to trigger</span>
+0018     <span class="comment">%                       off [Default 1.1]</span>
+0019     <span class="comment">%       'boolplot'  - if set to true, plot the STA, LTA, ratio</span>
+0020     <span class="comment">%           and trigger on &amp; trigger off times (Default false)</span>
+0021     <span class="comment">%       'boollist'  - if set to true, list the tremor event on</span>
+0022     <span class="comment">%           and off times (Default false)</span>
+0023     <span class="comment">%</span>
+0024     <span class="comment">%   Outputs:</span>
+0025     <span class="comment">%       timeWindow  - a structure with fields (all vectors):</span>
+0026     <span class="comment">%           startSample - start sample number of each timeWindow</span>
+0027     <span class="comment">%           endSample - end sample number of each timeWindow</span>
+0028     <span class="comment">%           starttime - start time of each timeWindow</span>
+0029     <span class="comment">%           endtime - end time of each timeWindow</span>
+0030     <span class="comment">%           sta - short term average of each timeWindow</span>
+0031     <span class="comment">%           lta - long term average of each timeWindow</span>
+0032     <span class="comment">%           ratio - sta:lta ratio of each timeWindow</span>
+0033     <span class="comment">%       rsamobject - the input rsamobject but with the</span>
+0034     <span class="comment">%                   continuousEvents property populated</span>
+0035 
+0036     <span class="comment">% Process input variables</span>
+0037     p = inputParser;
+0038     p.addParameter(<span class="string">'stalen'</span>, 10);
+0039     p.addParameter(<span class="string">'ltalen'</span>, 120);
+0040     p.addParameter(<span class="string">'stepsize'</span>, 10);
+0041     p.addParameter(<span class="string">'ratio_on'</span>, 1.5);
+0042     p.addParameter(<span class="string">'ratio_off'</span>, 1.1);
+0043     p.addParameter(<span class="string">'boolplot'</span>, false, @islogical);
+0044     p.addParameter(<span class="string">'boollist'</span>, true, @islogical);
+0045 
+0046     p.parse(varargin{:}); <span class="comment">% use p.Results.(paramName)</span>
+0047 
+0048 
+0049     <span class="comment">% Initialize detector variables</span>
+0050     trigger_on=false; <span class="comment">% no tremorEvent yet</span>
+0051     <span class="comment">% Make sta &amp; lta equal - no trigger</span>
+0052     sta_lastgood = eps; <span class="comment">% some non-zero value so ratio ok</span>
+0053     lta_lastgood = eps; <span class="comment">% some non-zero value so ratio ok</span>
+0054 
+0055     <span class="comment">% Create a timeWindow structure / initialize as empty</span>
+0056     timeWindowNumber = 0; <span class="comment">% timeWindowNumber is based on how many times stepsize fits in to data length</span>
+0057     timeWindow.startSample = [];
+0058     timeWindow.endSample = [];
+0059     timeWindow.starttime = [];
+0060     timeWindow.endtime = [];
+0061     timeWindow.sta = [];
+0062     timeWindow.lta = [];
+0063     timeWindow.ratio = [];
+0064 
+0065 
+0066     eventNumber = 0;
+0067 
+0068     <span class="comment">% Loop over timeWindows</span>
+0069     <span class="comment">%</span>
+0070     <span class="keyword">for</span> sampleNumber=p.Results.ltalen: p.Results.stepsize: length(self.data)
+0071         timeWindowNumber=timeWindowNumber+1;
+0072         startSample = sampleNumber-p.Results.ltalen+1;
+0073         endSample = sampleNumber;
+0074         timeWindow.startSample(timeWindowNumber) = startSample;
+0075         timeWindow.endSample(timeWindowNumber) = endSample;        
+0076         timeWindow.starttime(timeWindowNumber) = self.dnum(startSample);
+0077         timeWindow.endtime(timeWindowNumber) = self.dnum(endSample);
+0078 
+0079         <span class="comment">% Compute the long term average for this timeWindow</span>
+0080         <span class="keyword">if</span> ~trigger_on <span class="comment">% sticky lta</span>
+0081             timeWindow.lta(timeWindowNumber) = nanmean(self.data(startSample:endSample)) + eps; <span class="comment">% add eps so never 0</span>
+0082         <span class="keyword">else</span>
+0083             timeWindow.lta(timeWindowNumber) = lta_lastgood;
+0084         <span class="keyword">end</span>
+0085 
+0086         <span class="comment">% Compute the short term average for this timeWindow</span>
+0087         timeWindow.sta(timeWindowNumber) = nanmean(self.data(endSample-p.Results.stalen+1:endSample)) + eps; <span class="comment">% add eps so never 0</span>
+0088 
+0089         <span class="comment">% Make sta &amp; lta equal to last good values when NaN</span>
+0090         <span class="keyword">if</span> isnan(timeWindow.sta(timeWindowNumber))
+0091             timeWindow.sta(timeWindowNumber) = sta_lastgood;
+0092         <span class="keyword">else</span>
+0093             sta_lastgood = timeWindow.sta(timeWindowNumber);
+0094         <span class="keyword">end</span>
+0095         <span class="keyword">if</span> isnan(timeWindow.lta(timeWindowNumber))
+0096             timeWindow.lta(timeWindowNumber) = lta_lastgood;
+0097         <span class="keyword">else</span>
+0098             lta_lastgood = timeWindow.lta(timeWindowNumber);
+0099         <span class="keyword">end</span>   
+0100 
+0101         <span class="comment">% Compute the ratio</span>
+0102         timeWindow.ratio(timeWindowNumber) = timeWindow.sta(timeWindowNumber)./timeWindow.lta(timeWindowNumber);        
+0103 
+0104         <span class="keyword">if</span> trigger_on <span class="comment">% EVENT IN PROCESS, CHECK FOR DETRIGGER</span>
+0105             <span class="keyword">if</span> timeWindow.ratio(timeWindowNumber) &lt; p.Results.ratio_off
+0106                 <span class="comment">% trigger off condition</span>
+0107                 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(sprintf(<span class="string">'TREMOR EVENT: %s to %s, max amp %e'</span>, datestr(self.dnum(eventStartSample)), datestr(self.dnum(endSample)), <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(self.data(eventStartSample:endSample)) ))
+0108                 <span class="comment">%tremorEvent(eventNumber) = rsam_event(self.dnum(eventStartSample:endSample), self.data(eventStartSample:endSample), '', scnl, ltalen);</span>
+0109                 tremordnum = self.dnum(eventStartSample:endSample);
+0110                 tremordata = self.data(eventStartSample:endSample);
+0111                 tremorEvent(eventNumber) = <a href="rsam.html" class="code" title="">rsam</a>(<span class="string">'dnum'</span>, tremordnum, <span class="string">'data'</span>, tremordata,  <span class="string">'sta'</span>, self.sta, <span class="string">'chan'</span>, self.chan, <span class="string">'seismogram_type'</span>, self.seismogram_type, <span class="string">'units'</span>, self.units, <span class="string">'measure'</span>, self.measure);
+0112                 trigger_on = false;
+0113                 eventStartSample = -1;
+0114             <span class="keyword">end</span>
+0115         <span class="keyword">else</span> <span class="comment">% BACKGROUND, CHECK FOR TRIGGER</span>
+0116             <span class="keyword">if</span> timeWindow.ratio(timeWindowNumber) &gt; p.Results.ratio_on
+0117                 <span class="comment">% trigger on condition</span>
+0118                 eventNumber = eventNumber + 1;
+0119                 eventStartSample = endSample; <span class="comment">% event is triggered at time of sample at end of timewindow</span>
+0120                 trigger_on = true;
+0121             <span class="keyword">end</span>
+0122         <span class="keyword">end</span>
+0123 
+0124     <span class="keyword">end</span>
+0125     <span class="keyword">if</span> exist(<span class="string">'tremorEvent'</span>,<span class="string">'var'</span>)
+0126         self.continuousEvents = tremorEvent;
+0127     <span class="keyword">end</span>
+0128 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

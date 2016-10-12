@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of diff</title>
+  <meta name="keywords" content="diff">
+  <meta name="description" content="DIFF Differentiate waveform">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; diff.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>diff
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>DIFF Differentiate waveform</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function w = diff (w) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DIFF Differentiate waveform
+   waveform = diff(waveform)
+   goes from Displacement -&gt; Velocity -&gt; Acceleration
+
+   Input Arguments
+       WAVEFORM: a waveform object   N-DIMENSIONAL
+
+   Uses matlab's DIFF function to differentiate.  The way it handles the
+   units may be a little kludegy.
+
+   See also <a href="diff.html" class="code" title="function w = diff (w)">DIFF</a>, WAVEFORM/INTEGRATE</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="diff.html" class="code" title="function w = diff (w)">diff</a>	DIFF Differentiate waveform</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../../GISMO/core/@rsam/oneMinuteData.html" class="code" title="">oneMinuteData</a>	</li><li><a href="../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>	RSAM/SAVE - save an rsam-like object to an RSAM/BOB binary</li><li><a href="../../../GISMO/core/@spectralobject/colorbar_axis.html" class="code" title="function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)">colorbar_axis</a>	COLORBAR - Display color bar (color scale).</li><li><a href="diff.html" class="code" title="function w = diff (w)">diff</a>	DIFF Differentiate waveform</li><li><a href="zero2nan.html" class="code" title="function w = zero2nan(w,mgl)">zero2nan</a>	ZERO2NAN: This function takes a waveform with gaps that have been filled</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>	</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li><li><a href="../../../GISMO/libgismo/contiguous.html" class="code" title="function B = contiguous(A)">contiguous</a>	CONTIGUOUS  find contiguous sequences in an input vector of integers</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = diff (w)</a>
+0002    <span class="comment">%DIFF Differentiate waveform</span>
+0003    <span class="comment">%   waveform = diff(waveform)</span>
+0004    <span class="comment">%   goes from Displacement -&gt; Velocity -&gt; Acceleration</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">%   Input Arguments</span>
+0007    <span class="comment">%       WAVEFORM: a waveform object   N-DIMENSIONAL</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">%   Uses matlab's DIFF function to differentiate.  The way it handles the</span>
+0010    <span class="comment">%   units may be a little kludegy.</span>
+0011    <span class="comment">%</span>
+0012    <span class="comment">%   See also DIFF, WAVEFORM/INTEGRATE</span>
+0013    
+0014    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0015    <span class="comment">% $Date$</span>
+0016    <span class="comment">% $Revision$</span>
+0017    
+0018    Nmax = numel(w);
+0019    
+0020    allFreq = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'freq'</span>);
+0021    
+0022    allUnits = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'units'</span>); <span class="comment">%cell if numel(w)&gt;1, char otherwise</span>
+0023    
+0024    <span class="keyword">if</span> ~iscell(allUnits)
+0025       allUnits = {allUnits};
+0026    <span class="keyword">end</span>
+0027    
+0028    <span class="keyword">for</span> I = 1 : Nmax
+0029       w(I) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(I),<span class="string">'data'</span>,<a href="diff.html" class="code" title="function w = diff (w)">diff</a>(w(I).data) .* allFreq(I));
+0030       tempUnits = allUnits{I};
+0031       whereInUnits = strfind(tempUnits,<span class="string">' * sec'</span>);
+0032       <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(whereInUnits)
+0033          w(I) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(I),<span class="string">'units'</span>, [tempUnits, <span class="string">' / sec'</span>]);
+0034       <span class="keyword">else</span>
+0035          tempUnits(whereInUnits(1) :whereInUnits(1)+5) = [];
+0036          w(I) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(I),<span class="string">'units'</span>,tempUnits);
+0037       <span class="keyword">end</span>
+0038    <span class="keyword">end</span>
+0039 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

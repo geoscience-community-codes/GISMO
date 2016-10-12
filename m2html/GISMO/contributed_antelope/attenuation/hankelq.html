@@ -1,0 +1,265 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of hankelq</title>
+  <meta name="keywords" content="hankelq">
+  <meta name="description" content="HANKELQ Compute spectral ratio in two frequency bands">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed_antelope</a> &gt; <a href="index.html">attenuation</a> &gt; hankelq.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed_antelope/attenuation&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>hankelq
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>HANKELQ Compute spectral ratio in two frequency bands</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">HANKELQ Compute spectral ratio in two frequency bands
+   HANKELQ(dbpath, expr, freq_high, freq_low, pretrigger_seconds, posttrigger_seconds, max_arrivals ) 
+   Loads arrivals from an arrival table (after subsetting with expr)
+   retrieves waveform data corresponding to those arrivals, cleans and
+   plots the waveform data. The spectral ratio in bands around freq_high
+   and freq_low is computed. When done for multiple earthquakes, a plot of this the 
+   natural log of this ratio versus travel time has a slope from which Q
+   can be measured.
+   pretrigger_seconds is the number of seconds before the arrival time to
+   get waveform data for.
+   posttrigger_seconds is the number of seconds after the arrival time to
+   get waveform data for.
+   max_arrivals is the maximum number of arrivals to process. 
+
+     Based on the method of Arthur Hankel, &quot;The Effects of Attenuation and
+     Site Response on the Spectra of Microearthquakes in the Northeastern
+     Caribbean&quot;, BSSA, 72, 4, 1379-1402.
+
+   Example:
+       hankelq('/raid/data/antelope/databases/PLUTONS/dbmerged', 'sta==''PLWB'' &amp;&amp; iphase==''P''', 20, 5, 0.3, 1.28, 10);
+
+   History:
+     April 2014: Glenn Thompson
+       Original version: load arrivals, load waveforms and plot waveforms
+     April-November 2014: Heather McFarlin
+       Modified to also plot amplitude spectra
+     November 20, 2014: Glenn Thompson
+       Completely overhauled &amp; modularized.
+       Modified method to compute amplitude spectra. Now computes Q too. Now
+       also generic - works with input variables so it can be used on different
+       databases, for example.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li><li><a href="../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>	FILTEROBJECT constructor for a filter object</li><li><a href="../../../GISMO/core/@filterobject/filtfilt.html" class="code" title="function w =filtfilt(f, w, NYQ)">filtfilt</a>	FILTFILT - filterobject implementation of FILTFILT, use on waveform Object</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/@waveform/gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>	GETTIMERANGE returns the list of start and end times from a waveform array</li><li><a href="../../../GISMO/core/@waveform/integrate.html" class="code" title="function w = integrate (w,method)">integrate</a>	INTEGRATE integrates a waveform signal</li><li><a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>	TIMES (.*) overloaded Array multiply for WAVEFORM objects.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../GISMO/core/dev/@TraceData/amplitude_spectrum.html" class="code" title="function [A, phi, f] = amplitude_spectrum(td)">amplitude_spectrum</a>	amplitude_spectrum   Simple method to compute amplitude</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li><li><a href="../../../GISMO/deprecated/fft_tools/amplitude_spectrum.html" class="code" title="function w = add_spectral_data(w)">amplitude_spectrum</a>	add_spectral_data Simple method to compute frequency</li><li><a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>	TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [y, t] = plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)</a>
+0002 <span class="comment">%HANKELQ Compute spectral ratio in two frequency bands</span>
+0003 <span class="comment">%   HANKELQ(dbpath, expr, freq_high, freq_low, pretrigger_seconds, posttrigger_seconds, max_arrivals )</span>
+0004 <span class="comment">%   Loads arrivals from an arrival table (after subsetting with expr)</span>
+0005 <span class="comment">%   retrieves waveform data corresponding to those arrivals, cleans and</span>
+0006 <span class="comment">%   plots the waveform data. The spectral ratio in bands around freq_high</span>
+0007 <span class="comment">%   and freq_low is computed. When done for multiple earthquakes, a plot of this the</span>
+0008 <span class="comment">%   natural log of this ratio versus travel time has a slope from which Q</span>
+0009 <span class="comment">%   can be measured.</span>
+0010 <span class="comment">%   pretrigger_seconds is the number of seconds before the arrival time to</span>
+0011 <span class="comment">%   get waveform data for.</span>
+0012 <span class="comment">%   posttrigger_seconds is the number of seconds after the arrival time to</span>
+0013 <span class="comment">%   get waveform data for.</span>
+0014 <span class="comment">%   max_arrivals is the maximum number of arrivals to process.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%     Based on the method of Arthur Hankel, &quot;The Effects of Attenuation and</span>
+0017 <span class="comment">%     Site Response on the Spectra of Microearthquakes in the Northeastern</span>
+0018 <span class="comment">%     Caribbean&quot;, BSSA, 72, 4, 1379-1402.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%   Example:</span>
+0021 <span class="comment">%       hankelq('/raid/data/antelope/databases/PLUTONS/dbmerged', 'sta==''PLWB'' &amp;&amp; iphase==''P''', 20, 5, 0.3, 1.28, 10);</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%   History:</span>
+0024 <span class="comment">%     April 2014: Glenn Thompson</span>
+0025 <span class="comment">%       Original version: load arrivals, load waveforms and plot waveforms</span>
+0026 <span class="comment">%     April-November 2014: Heather McFarlin</span>
+0027 <span class="comment">%       Modified to also plot amplitude spectra</span>
+0028 <span class="comment">%     November 20, 2014: Glenn Thompson</span>
+0029 <span class="comment">%       Completely overhauled &amp; modularized.</span>
+0030 <span class="comment">%       Modified method to compute amplitude spectra. Now computes Q too. Now</span>
+0031 <span class="comment">%       also generic - works with input variables so it can be used on different</span>
+0032 <span class="comment">%       databases, for example.</span>
+0033 
+0034     <span class="keyword">if</span> ~admin.antelope_exists
+0035     warning(<span class="string">'Antelope not installed on this computer'</span>)
+0036     <span class="keyword">return</span>
+0037     <span class="keyword">end</span>
+0038 
+0039     <span class="keyword">if</span> ~exist(<span class="string">'max_arrivals'</span>,<span class="string">'var'</span>)
+0040         max_arrivals=Inf;
+0041     <span class="keyword">end</span>
+0042 
+0043     taper_seconds=pretrigger+posttrigger;
+0044 
+0045     arrivals = antelope.dbgetarrivals(dbpath, expr);
+0046     w = antelope.arrivals2waveforms(dbpath, arrivals, pretrigger, posttrigger, taper_seconds, max_arrivals);
+0047     <span class="comment">%w = waveform_clean(w);</span>
+0048     [y, t]=<a href="#_sub1" class="code" title="subfunction [y, t] = plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2)">plot_arrival_waveforms</a>(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2);
+0049     
+0050     <span class="comment">% This is the figure we use to derive q from spectral ratios for</span>
+0051     <span class="comment">% earthquakes of different distances (travel times)</span>
+0052     <span class="comment">% Q comes from the slope</span>
+0053     figure;
+0054     <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(t, y, <span class="string">'o'</span>);
+0055     ylabel(<span class="string">'ln(A_1/A_2)'</span>)
+0056     xlabel(<span class="string">'travel time (s)'</span>)
+0057     p = polyfit(t,y,1);
+0058     xlim=<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca,<span class="string">'XLim'</span>);
+0059     yline = polyval(p, xlim);
+0060     hold on;
+0061     <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(xlim, yline)
+0062     
+0063     slope = (yline(2) - yline(1)) / (xlim(2) - xlim(1));
+0064     q = - pi * (f1 - f2) / slope;
+0065     title(sprintf(<span class="string">'Q = %.0f'</span>, q));
+0066 <span class="keyword">end</span>
+0067 
+0068 <a name="_sub1" href="#_subfunctions" class="code">function [y, t] = plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2)</a>
+0069     FMIN = 1.0;
+0070     close all
+0071     
+0072     <span class="comment">%% open an output file</span>
+0073     fid=fopen([mfilename,<span class="string">'.txt'</span>],<span class="string">'w'</span>);
+0074     
+0075     taper_fraction = (taper_seconds * 2) / (taper_seconds * 2 + pretrigger + posttrigger);
+0076     
+0077     <span class="comment">% get travel time for p-wave</span>
+0078     p_time = arrivals.time-arrivals.otime;
+0079 
+0080     <span class="comment">% time conversion</span>
+0081     anum = <a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(arrivals.time);
+0082 
+0083     <span class="keyword">for</span> i=1:<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([max_arrivals numel(w)])
+0084         signal = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(i),<span class="string">'data'</span>);
+0085         N = length(signal);
+0086         <span class="keyword">if</span> N&gt;0
+0087             
+0088             <span class="comment">% taper, filter to remove long period noise, and cut out tapered signal to leave only</span>
+0089             <span class="comment">% untapered signal</span>
+0090             wf = w(i);
+0091             
+0092             taperwin=tukeywin(N, taper_fraction);
+0093             signal=signal.*taperwin;   
+0094             wf = <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(wf, <span class="string">'data'</span>, signal);
+0095             fmax = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(wf, <span class="string">'freq'</span>) * 0.4;
+0096             fobj = <a href="../../../GISMO/core/@filterobject/filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>(<span class="string">'b'</span>, [FMIN fmax], 2); 
+0097             wf = <a href="../../../GISMO/core/@filterobject/filtfilt.html" class="code" title="function w =filtfilt(f, w, NYQ)">filtfilt</a>(fobj, wf);
+0098             [snum, enum]=<a href="../../../GISMO/core/@waveform/gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>(wf);
+0099             wf=subtime(wf, snum+taper_seconds/86400, enum-taper_seconds/86400);
+0100             
+0101             <span class="comment">% integrate</span>
+0102             dwf = <a href="../../../GISMO/core/@correlation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>(wf);
+0103 
+0104             <span class="comment">% Plot waveform</span>
+0105             figure(i)
+0106             subplot(3,1,1);
+0107             <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(w(i), <span class="string">'xunit'</span>, <span class="string">'date'</span>, <span class="string">'color'</span>, <span class="string">'r'</span>); <span class="comment">%unfiltered signal</span>
+0108             hold on;
+0109             <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(wf, <span class="string">'xunit'</span>, <span class="string">'date'</span>, <span class="string">'color'</span>, <span class="string">'g'</span>); <span class="comment">%filtered signal</span>
+0110             xlabel(sprintf(<span class="string">'Time with arrival at %s'</span>,datestr(anum(i), <span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>)));
+0111             ylabel(<span class="string">'Velocity'</span>); 
+0112             title(sprintf(<span class="string">'%s.%s'</span>,arrivals.sta{i},arrivals.chan{i}));
+0113             <span class="comment">% plot arrival time as grey dotted line</span>
+0114             ylim=<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca,<span class="string">'YLim'</span>);
+0115             <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>([anum(i) anum(i)],ylim,<span class="string">'Color'</span>,[0.5 0.5 0.5], <span class="string">'linestyle'</span>, <span class="string">'--'</span>)
+0116             hold off            
+0117             
+0118             subplot(3,1,2);
+0119             <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(dwf, <span class="string">'xunit'</span>, <span class="string">'date'</span>, <span class="string">'color'</span>, <span class="string">'b'</span>); <span class="comment">%filtered &amp; integrated signal</span>
+0120             xlabel(sprintf(<span class="string">'Time with arrival at %s'</span>,datestr(anum(i), <span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>)));
+0121             ylabel(<span class="string">'Displacement'</span>); 
+0122             title(sprintf(<span class="string">'%s.%s'</span>,arrivals.sta{i},arrivals.chan{i}));
+0123             <span class="comment">% plot arrival time as grey dotted line</span>
+0124             ylim=<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca,<span class="string">'YLim'</span>);
+0125             hold on
+0126             <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>([anum(i) anum(i)],ylim,<span class="string">'Color'</span>,[0.5 0.5 0.5], <span class="string">'linestyle'</span>, <span class="string">'--'</span>)
+0127             hold off  
+0128             
+0129             <span class="comment">% compute and plot amplitude spectrum</span>
+0130             [A, phi, f] = <a href="../../../GISMO/core/dev/@TraceData/amplitude_spectrum.html" class="code" title="function [A, phi, f] = amplitude_spectrum(td)">amplitude_spectrum</a>(dwf);
+0131             subplot(3,1,3)
+0132             <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(f,A);
+0133             <span class="comment">%loglog(f, A)</span>
+0134             xlabel(<span class="string">'Frequency (Hz)'</span>)
+0135             ylabel(<span class="string">'Displacement Amplitude Spectrum'</span>)
+0136             
+0137             <span class="comment">% evaluate the spectral ratio</span>
+0138             A1=<a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(A(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(f&gt;=f1*0.9 &amp; f&lt;=f1*1.1))); <span class="comment">%  for 20 Hz, this is 18-22 Hz</span>
+0139             A2=<a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(A(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(f&gt;=f2*0.8 &amp; f&lt;=f2*1.2 ))); <span class="comment">% for 5 Hz this is 4-6 Hz</span>
+0140             <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(sprintf(<span class="string">'A1 = %6.3f, A2 = %6.3f, A1/A2 = %5.2f'</span>,A1, A2, A1/A2));
+0141 
+0142             <span class="comment">% add title</span>
+0143             outstr=sprintf(<span class="string">'phase=%s orid=%d seaz=%6.2f delta=%5.3f depth=%5.1f\nA1=%5.3f A2=%5.3f A1/A2=%5.2f\n'</span>,arrivals.phase{i}, arrivals.orid(i), arrivals.seaz(i), arrivals.delta(i), arrivals.depth(i), A1, A2, A1/A2);
+0144             title(outstr)
+0145 
+0146             <span class="comment">% write out to file &amp; close plot</span>
+0147             filename=sprintf(<span class="string">'%s-%d'</span>,mfilename,i);
+0148             print(<span class="string">'-dpng'</span>, figure(i),filename)
+0149             close
+0150             
+0151             <span class="comment">% compute y=ln A1/A2 &amp; t for formula 2 in Hankel (1982)</span>
+0152             y(i) = log(A1/A2);
+0153             [<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>, phasenames] = arrtimes(arrivals.delta(i), arrivals.depth(i));
+0154             phase_index = 1;
+0155             found = false;
+0156             <span class="keyword">while</span> phase_index &lt;= length(<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>) &amp; ~found
+0157                 thisphase = lower(phasenames{phase_index});
+0158                 thisphase = thisphase(1);
+0159                 <span class="keyword">if</span> strcmp(lower(arrivals.phase{i}), thisphase)
+0160                     t(i)=<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>(phase_index);
+0161                     found=true;
+0162                 <span class="keyword">end</span>
+0163                 phase_index = phase_index + 1;
+0164             <span class="keyword">end</span>
+0165              
+0166             <span class="comment">%% write out to file</span>
+0167             fprintf(fid,<span class="string">'%14.2f %8.2f %6.3f %5.1f %4.1f %4.1f %e %e\n'</span>, p_time(i), t(i), arrivals.delta(i), arrivals.depth(i), f1, f2, A1, A2);
+0168                
+0169         <span class="keyword">end</span>
+0170 
+0171     <span class="keyword">end</span>
+0172     
+0173     <span class="comment">%% close output file</span>
+0174     fclose(fid);
+0175 <span class="keyword">end</span> 
+0176 
+0177 
+0178 
+0179 
+0180 
+0181 
+0182 
+0183 
+0184 
+0185 
+0186</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

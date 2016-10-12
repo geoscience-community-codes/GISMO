@@ -1,0 +1,411 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sacpz</title>
+  <meta name="keywords" content="sacpz">
+  <meta name="description" content="SACPZ Class for reading SAC pole-zero files downloaded from IRIS">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@sacpz</a> &gt; sacpz.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@sacpz&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>sacpz
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>SACPZ Class for reading SAC pole-zero files downloaded from IRIS</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SACPZ Class for reading SAC pole-zero files downloaded from IRIS</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed/iris_dmc_tools/+irisdmc/about.html" class="code" title="function about">about</a>	Tools for interacting with the IRIS DMC web services.</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/about.html" class="code" title="function about">about</a>	Tools for master event cross correlation against long time series.</li><li><a href="../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/about.html" class="code" title="function about">about</a>	Tools for exploring travel time and ray coverage.</li><li><a href="../../../GISMO/core/+admin/about.html" class="code" title="function about">about</a>	Tools for maintaining and programming in the GISMO environment.</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="sacpz.html" class="code" title="">sacpz</a>	SACPZ Class for reading SAC pole-zero files downloaded from IRIS</li><li><a href="../../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>	scnl (deprecated) : object that holds the stations, channel, network, and location for</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/about.html" class="code" title="function about">about</a>	Miscellaneous tools for working with waveforms.</li><li><a href="../../../GISMO/uaf_internal/AEIC_AVO/+aeic_catalog/about.html" class="code" title="function about">about</a>	Tools for interfacing with the AEIC earthquake catalog.</li><li><a href="../../../GISMO/uaf_internal/AEIC_AVO/+check/about.html" class="code" title="function about">about</a>	Tools for checking various types of data integrity.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed/iris_dmc_tools/irisFetch.html" class="code" title="">irisFetch</a>	</li><li><a href="sacpz.html" class="code" title="">sacpz</a>	SACPZ Class for reading SAC pole-zero files downloaded from IRIS</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function s = sacpz(filename)</a></li><li><a href="#_sub2" class="code">function obj = new_readroutine(obj, fileContents)</a></li><li><a href="#_sub3" class="code">function [val, unit] = splitOffUnits(val)</a></li><li><a href="#_sub4" class="code">function  X = splitEpochs(multipleEpochs)</a></li><li><a href="#_sub5" class="code">function PZC = responsePart(t)</a></li><li><a href="#_sub6" class="code">function tLines = getHeaderLines(t)</a></li><li><a href="#_sub7" class="code">function [field, val] = parseHeaderLine(t)</a></li><li><a href="#_sub8" class="code">function [p, z, c] = parsePZC(t)</a></li><li><a href="#_sub9" class="code">function x = getComplex(fName, lines)</a></li><li><a href="#_sub10" class="code">function M = getFieldmap()</a></li><li><a href="#_sub11" class="code">function plot(obj)</a></li><li><a href="#_sub12" class="code">function [num,den] = transfer(obj)</a></li><li><a href="#_sub13" class="code">function response = to_response_structure(obj, frequencies)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%SACPZ Class for reading SAC pole-zero files downloaded from IRIS</span>
+0002 classdef <a href="sacpz.html" class="code" title="">sacpz</a>
+0003     properties
+0004         z = [];
+0005         p = [];
+0006         k = [];
+0007       created = NaN;
+0008         starttime = NaN;
+0009         endtime = NaN;
+0010         network = <span class="string">''</span>;
+0011         station = <span class="string">''</span>;
+0012         location = <span class="string">''</span>;
+0013         channel = <span class="string">''</span>;
+0014         latitude = NaN;
+0015         longitude = NaN;
+0016         depth = NaN;
+0017         elevation = NaN;
+0018         dip = NaN;
+0019         azimuth = NaN;
+0020         samplerate = NaN;
+0021         description = <span class="string">''</span>;
+0022         inputunit = <span class="string">''</span>;
+0023         outputunit = <span class="string">''</span>;
+0024         instrumenttype = <span class="string">''</span>;
+0025         instrumentgain = <span class="string">''</span>;
+0026         instrumentgainunits = <span class="string">''</span>;
+0027         comment = <span class="string">''</span>;
+0028         sensitivity = <span class="string">''</span>;
+0029         sensitivityunits = <span class="string">''</span>;
+0030         a0 = NaN;
+0031     <span class="keyword">end</span>
+0032     methods
+0033       <a name="_sub0" href="#_subfunctions" class="code">function s = sacpz(filename)</a>
+0034          <span class="comment">%sacpz.sacpz Constructor for sacpz</span>
+0035          <span class="comment">% pz = sacpz(fileContents)</span>
+0036          <span class="comment">% pz = sacpz(webpage)  %defined by 'http://...'</span>
+0037          <span class="comment">% pz = sacpz(file)</span>
+0038          <span class="comment">%</span>
+0039          <span class="comment">% will return one sacpz object for each epoch in file</span>
+0040          
+0041          <span class="comment">% Examples:</span>
+0042          <span class="comment">% 1. Read a sacpz file:</span>
+0043          <span class="comment">%     pz = sacpz(fileread('SACPZ.IU.COLA.BHZ'))</span>
+0044          <span class="comment">% 2. Read from a webservices URL (SCAFFOLD: code can only handle 1 time period / channel currently)</span>
+0045          <span class="comment">%     pz = sacpz(webread('http://service.iris.edu/irisws/sacpz/1/query?net=AV&amp;sta=OKSO&amp;loc=--&amp;cha=BHZ&amp;starttime=2011-03-21T00:00:00'))</span>
+0046          
+0047          <span class="keyword">if</span> nargin == 0
+0048             <span class="keyword">return</span>;
+0049          <span class="keyword">end</span>
+0050          <span class="comment">% read file into variable for later processing</span>
+0051          <span class="keyword">if</span> length(filename)&gt;7 &amp;&amp; strncmpi(filename,<span class="string">'http://'</span>,7)
+0052             fcontents = webread(filename);
+0053          <span class="keyword">elseif</span> exist(filename,<span class="string">'file'</span>)
+0054             fcontents = fileread(filename);
+0055          <span class="keyword">else</span>
+0056             fcontents = filename;
+0057          <span class="keyword">end</span>
+0058          
+0059          <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(fcontents)
+0060             <span class="keyword">return</span>;
+0061          <span class="keyword">end</span>
+0062          
+0063          s = s.new_readroutine(fcontents);
+0064          
+0065       <span class="keyword">end</span>
+0066       
+0067       <a name="_sub1" href="#_subfunctions" class="code">function obj = new_readroutine(obj, fileContents)</a>
+0068          <span class="keyword">persistent</span> fieldmap
+0069          <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(fieldmap)
+0070             fieldmap = <a href="#_sub10" class="code" title="subfunction M = getFieldmap()">getFieldmap</a>();
+0071          <span class="keyword">end</span>
+0072          
+0073          <span class="comment">% SACPZ file may contain multiple epochs</span>
+0074          epochs = <a href="#_sub4" class="code" title="subfunction  X = splitEpochs(multipleEpochs)">splitEpochs</a>(fileContents);
+0075          
+0076          <span class="keyword">for</span> N = 1 : numel(epochs)
+0077             [obj(N).p, obj(N).z, obj(N).k] = <a href="#_sub8" class="code" title="subfunction [p, z, c] = parsePZC(t)">parsePZC</a>(<a href="#_sub5" class="code" title="subfunction PZC = responsePart(t)">responsePart</a>(epochs(N)));
+0078             
+0079             H = <a href="#_sub6" class="code" title="subfunction tLines = getHeaderLines(t)">getHeaderLines</a>(epochs(N));
+0080             
+0081             [hFields, hValues] = cellfun(@<a href="#_sub7" class="code" title="subfunction [field, val] = parseHeaderLine(t)">parseHeaderLine</a>, H, <span class="string">'UniformOutput'</span>, false);
+0082             
+0083             <span class="keyword">for</span> M = 1:numel(hFields)
+0084                f = hFields{M};
+0085                <span class="comment">% convert</span>
+0086                <span class="keyword">switch</span> f
+0087                   <span class="keyword">case</span> {<span class="string">'START'</span>,<span class="string">'END'</span>, <span class="string">'CREATED'</span>}
+0088                      v = datenum(hValues{M},<span class="string">'yyyy-mm-ddTHH:MM:SS'</span>);
+0089                      
+0090                   <span class="keyword">case</span> {<span class="string">'LONGITUDE'</span>,<span class="string">'LATITUDE'</span>,<span class="string">'ELEVATION'</span>,<span class="keyword">...</span>
+0091                         <span class="string">'DEPTH'</span>,<span class="string">'DIP'</span>,<span class="string">'AZIMUTH'</span>,<span class="string">'SAMPLE RATE'</span>,<span class="string">'A0'</span>}
+0092                      v = str2double(hValues{M});
+0093                      
+0094                   <span class="keyword">case</span> {<span class="string">'INSTGAIN'</span>, <span class="string">'SENSITIVITY'</span>}
+0095                      [v, units] = <a href="#_sub3" class="code" title="subfunction [val, unit] = splitOffUnits(val)">splitOffUnits</a>(hValues{M});
+0096                      unitfield = [f, <span class="string">'UNITS'</span>];
+0097                      obj(N).(fieldmap(unitfield)) = units;
+0098                      
+0099                   <span class="keyword">otherwise</span>
+0100                      v = hValues{M};
+0101                <span class="keyword">end</span>
+0102                
+0103                <span class="keyword">if</span> fieldmap.isKey(f)
+0104                   obj(N).(fieldmap(f)) = v;
+0105                <span class="keyword">else</span>
+0106                   error(<span class="string">'%s is not a known key'</span>, f);
+0107                <span class="keyword">end</span>
+0108             <span class="keyword">end</span>
+0109          <span class="keyword">end</span>
+0110          
+0111          <a name="_sub2" href="#_subfunctions" class="code">function [val, unit] = splitOffUnits(val)</a>
+0112             <span class="comment">% splitOffUnits    adds units field in obj and returns numeric measurement</span>
+0113             <span class="comment">% For use in sacpz lines such as:</span>
+0114             <span class="comment">%  SENSITIVITY       : 8.485070e+08 (M/S)</span>
+0115             <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(val)
+0116                unit = <span class="string">''</span>;
+0117                <span class="keyword">return</span>;
+0118             <span class="keyword">end</span>
+0119             tmp = textscan(val,<span class="string">'%f %s'</span>);
+0120             val = tmp{1};
+0121             <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(tmp{2})
+0122                unit = tmp{2}{1};
+0123             <span class="keyword">else</span>
+0124                unit = <span class="string">''</span>;
+0125             <span class="keyword">end</span>
+0126          <span class="keyword">end</span>
+0127          
+0128          <a name="_sub3" href="#_subfunctions" class="code">function  X = splitEpochs(multipleEpochs)</a>
+0129             <span class="comment">% splitEpochs   returns cell for each epoch</span>
+0130             <span class="comment">% divisions between epochs are represented in the SACPZ file as</span>
+0131             <span class="comment">% multiple blank lines.</span>
+0132             <span class="comment">% Each epoch starts with a line of asterisks</span>
+0133             <span class="comment">% '* **********[...]'</span>
+0134             X = strsplit(multipleEpochs,<span class="string">'\n\n\n'</span>);
+0135             X(cellfun(@<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>,X)) = [];
+0136             isLikelyEpoch = cellfun(@(x) strncmp(<span class="string">'* **'</span>,x,4'),X);
+0137             X(~isLikelyEpoch) = [];
+0138          <span class="keyword">end</span>
+0139          
+0140          <a name="_sub4" href="#_subfunctions" class="code">function PZC = responsePart(t)</a>
+0141             <span class="comment">% the response follows the last asterisk in the epoch.</span>
+0142             splitPoint = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(t{1}==<span class="string">'*'</span>,1, <span class="string">'last'</span>);
+0143             PZC = t{1}(splitPoint+1:end);
+0144          <span class="keyword">end</span>
+0145             
+0146          <a name="_sub5" href="#_subfunctions" class="code">function tLines = getHeaderLines(t)</a>
+0147             <span class="comment">% getHeaderLines   returns header as cell of 1 line/variable</span>
+0148             
+0149             <span class="comment">% grab only header</span>
+0150             splitPoint = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(t{1}==<span class="string">'*'</span>,1, <span class="string">'last'</span>);
+0151             t = t{1}(1:splitPoint);
+0152             
+0153             <span class="comment">% remove extraneous asterisks</span>
+0154             t(t==<span class="string">'*'</span>) = <span class="string">''</span>;
+0155             
+0156             <span class="comment">% split header into individual lines</span>
+0157             tLines = textscan(t,<span class="string">'%s'</span>,<span class="string">'delimiter'</span>,<span class="string">'\n'</span>);
+0158             
+0159             <span class="comment">%tidy up</span>
+0160             tLines = strtrim(tLines{:});
+0161             tLines(cellfun(@<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>,tLines)) = [];
+0162          <span class="keyword">end</span>
+0163                      
+0164          <a name="_sub6" href="#_subfunctions" class="code">function [field, val] = parseHeaderLine(t)</a>
+0165             <span class="comment">% expects FIELDNAME   (maybesomething) :  VALUE</span>
+0166             colLoc = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(t==<span class="string">':'</span>,1,<span class="string">'first'</span>);
+0167             <span class="keyword">if</span> colLoc
+0168                field = t(1:colLoc-1);
+0169                val = strtrim(t(colLoc+1:end));
+0170             <span class="keyword">else</span>
+0171                field=<span class="string">''</span>; val = <span class="string">''</span>; <span class="comment">%error parsing!</span>
+0172             <span class="keyword">end</span>
+0173             parenLoc = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(field ==<span class="string">'('</span>,1,<span class="string">'first'</span>);
+0174             <span class="keyword">if</span> parenLoc
+0175                field = field(1:parenLoc-1);
+0176             <span class="keyword">end</span>
+0177             field = strtrim(field);
+0178          <span class="keyword">end</span>
+0179          
+0180          <a name="_sub7" href="#_subfunctions" class="code">function [p, z, c] = parsePZC(t)</a>
+0181             lines = textscan(t,<span class="string">'%s'</span>,<span class="string">'delimiter'</span>,<span class="string">'\n'</span>);
+0182             lines = lines{:};
+0183             
+0184             z = <a href="#_sub9" class="code" title="subfunction x = getComplex(fName, lines)">getComplex</a>(<span class="string">'ZEROS'</span>, lines);
+0185             p = <a href="#_sub9" class="code" title="subfunction x = getComplex(fName, lines)">getComplex</a>(<span class="string">'POLES'</span>, lines);
+0186             
+0187             ConstHeader= strncmp(<span class="string">'CONSTANT'</span>,lines,8);
+0188             
+0189             <span class="keyword">if</span> any(ConstHeader)
+0190                c = str2double(lines{ConstHeader}(9:end));
+0191             <span class="keyword">else</span>
+0192                c = NaN;
+0193             <span class="keyword">end</span>
+0194          <span class="keyword">end</span>
+0195          
+0196          <a name="_sub8" href="#_subfunctions" class="code">function x = getComplex(fName, lines)</a>
+0197             x = [];
+0198             fLen = length(fName);
+0199             header = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(strncmp(fName, lines, fLen));
+0200             <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(header)
+0201                nValues = str2double(lines{header}((fLen+1):end));
+0202                <span class="keyword">for</span> q = 1 : nValues
+0203                   vals = str2num(lines{header + q});
+0204                   x(q,1) = vals(1) + vals(2) * 1i;
+0205                <span class="keyword">end</span>
+0206             <span class="keyword">end</span>
+0207          <span class="keyword">end</span>
+0208          
+0209          <a name="_sub9" href="#_subfunctions" class="code">function M = getFieldmap()</a>
+0210             <span class="comment">% getFieldmap  maps SACPZ text headers to sacpz object fields</span>
+0211             M = containers.Map(<span class="string">'KeyType'</span>, <span class="string">'char'</span>, <span class="string">'ValueType'</span>, <span class="string">'char'</span>) ;
+0212             M(<span class="string">'NETWORK'</span>) = <span class="string">'network'</span>;
+0213             M(<span class="string">'STATION'</span>) = <span class="string">'station'</span>;
+0214             M(<span class="string">'LOCATION'</span>) = <span class="string">'location'</span>;
+0215             M(<span class="string">'CHANNEL'</span>) = <span class="string">'channel'</span>;
+0216             M(<span class="string">'CREATED'</span>) = <span class="string">'created'</span>;
+0217             M(<span class="string">'START'</span>) = <span class="string">'starttime'</span>;
+0218             M(<span class="string">'END'</span>)=<span class="string">'endtime'</span>;
+0219             M(<span class="string">'DESCRIPTION'</span>) = <span class="string">'description'</span>;
+0220             M(<span class="string">'LATITUDE'</span>) = <span class="string">'latitude'</span>;
+0221             M(<span class="string">'LONGITUDE'</span>) = <span class="string">'longitude'</span>;
+0222             M(<span class="string">'ELEVATION'</span>) = <span class="string">'elevation'</span>;
+0223             M(<span class="string">'DEPTH'</span>) = <span class="string">'depth'</span>;
+0224             M(<span class="string">'DIP'</span>) = <span class="string">'dip'</span>;
+0225             M(<span class="string">'AZIMUTH'</span>) = <span class="string">'azimuth'</span>;
+0226             M(<span class="string">'SAMPLE RATE'</span>) = <span class="string">'samplerate'</span>;
+0227             M(<span class="string">'INPUT UNIT'</span>) = <span class="string">'inputunit'</span>;
+0228             M(<span class="string">'OUTPUT UNIT'</span>) = <span class="string">'outputunit'</span>;
+0229             M(<span class="string">'INSTTYPE'</span>) = <span class="string">'instrumenttype'</span>;
+0230             M(<span class="string">'INSTGAIN'</span>) = <span class="string">'instrumentgain'</span>;
+0231             M(<span class="string">'INSTGAINUNITS'</span>) = <span class="string">'instrumentgainunits'</span>;
+0232             M(<span class="string">'SENSITIVITY'</span>) = <span class="string">'sensitivity'</span>;
+0233             M(<span class="string">'SENSITIVITYUNITS'</span>) = <span class="string">'sensitivityunits'</span>;
+0234             M(<span class="string">'COMMENT'</span>) = <span class="string">'comment'</span>;
+0235             M(<span class="string">'A0'</span>) = <span class="string">'a0'</span>;
+0236          <span class="keyword">end</span>
+0237       <span class="keyword">end</span>
+0238 
+0239 
+0240         <span class="comment">%% -----------------------------------------------</span>
+0241         <a name="_sub10" href="#_subfunctions" class="code">function plot(obj)</a>
+0242             <span class="comment">%sacpz.plot() Plot poles &amp; zeros, impulse response &amp; frequency</span>
+0243             <span class="comment">%response</span>
+0244             
+0245             <span class="comment">% Poles (x) &amp; zeros (o) plot with unit circle</span>
+0246             figure(1)
+0247             zplane(obj.z, obj.p)
+0248             
+0249             <span class="comment">% Impulse response</span>
+0250             figure(2)
+0251             sos = zp2sos(obj.z, obj.p, obj.k);
+0252             impz(sos)
+0253             
+0254             <span class="comment">% Frequency response</span>
+0255             figure(3)
+0256             freqz(sos)
+0257             
+0258             <span class="comment">% Filter visualization GUI</span>
+0259             <span class="comment">%fvtool(sos)</span>
+0260         <span class="keyword">end</span>
+0261         
+0262         <a name="_sub11" href="#_subfunctions" class="code">function [num,den] = transfer(obj)</a>
+0263             <span class="comment">% sacpz.transfer Compute the numerator and denominator of the</span>
+0264             <span class="comment">% transfer function with the zeros and poles given in a sacpz</span>
+0265             <span class="comment">% object.</span>
+0266             [num,den] = zp2tf(obj.z, obj.p, obj.k);
+0267         <span class="keyword">end</span>
+0268             
+0269         <span class="comment">%% -----------------------------------------------</span>
+0270         <a name="_sub12" href="#_subfunctions" class="code">function response = to_response_structure(obj, frequencies)</a>
+0271             <span class="comment">%sacpz.to_response_structure(frequencies) Create response</span>
+0272             <span class="comment">%structure from sacpz object</span>
+0273         
+0274             <span class="comment">% INITIALIZE THE OUTPUT ARGUMENT</span>
+0275             response.scnl = <a href="../../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(obj.station,obj.channel,obj.network,obj.location);
+0276             response.time = obj.starttime;
+0277             response.frequencies = reshape(frequencies,numel(frequencies),1);
+0278             response.values = [];
+0279             response.calib = NaN;
+0280             response.units = obj.outputunit;
+0281             response.sampleRate = obj.samplerate;
+0282             response.source = <span class="string">'FUNCTION: RESPONSE_GET_FROM_POLEZERO'</span>;
+0283             response.status = [];
+0284 
+0285 
+0286             <span class="comment">% Pole/zeros can be normalized with the following if not already normalized:</span>
+0287             normalization = 1/<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(polyval(poly(obj.z),2*pi*1j)/polyval(poly(obj.p),2*pi*1j));
+0288 
+0289 
+0290             <span class="comment">% CALCULATE COMPLEX RESPONSE AT SPECIFIED FREQUENCIES USING</span>
+0291             <span class="comment">% LAPLACE TRANSFORM FUNCTION freqs</span>
+0292             ws = (2*pi) .* response.frequencies;
+0293             response.values = freqs(normalization*poly(obj.z),poly(obj.p),ws);
+0294 
+0295         <span class="keyword">end</span>
+0296     <span class="keyword">end</span>
+0297 <span class="keyword">end</span>
+0298 
+0299 
+0300 
+0301 <span class="comment">%{</span>
+0302 Notes <a href="../../../GISMO/contributed/iris_dmc_tools/+irisdmc/about.html" class="code" title="function about">about</a> the format of a SACPZ file:
+0303 - header information surrounded by lines of <span class="string">'*'</span>
+0304 - Each header field starts with <span class="string">'*'</span>
+0305 - Some header fields include a second variable name eg. <span class="string">'(KNETWK)'</span>
+0306   + these fields are surrounded by parenthesis 
+0307 - Header values follow <span class="string">':'</span>
+0308 - INSTGAIN and SENSITIVITY have (or may not have) 2 value &amp; unit
+0309 - CREATED, START, END all are dates
+0310 
+0311 - Header is followed by list of Poles, Zeros, and Constant.
+0312   + Number of values <span class="keyword">for</span> Poles &amp; Zeros is listed on first line
+0313   + Poles &amp; Zeros are complex numbers
+0314   + CONSTANT may or may not appear.
+0315 
+0316 - Each epoch is separated by multiple spaces
+0317 <span class="comment">%}</span>
+0318 
+0319 <span class="comment">%{</span>
+0320 &lt;SAMPLE SACPZ FILE follows&gt;
+0321 * **********************************
+0322 * NETWORK   (KNETWK): IU
+0323 * STATION    (KSTNM): ANMO
+0324 * LOCATION   (KHOLE): 00
+0325 * CHANNEL   (KCMPNM): BH1
+0326 * CREATED           : 2016-01-04T11:50:14
+0327 * START             : 1998-10-26T20:00:00
+0328 * END               : 2000-10-19T16:00:00
+0329 * DESCRIPTION       : Albuquerque, New Mexico, USA
+0330 * LATITUDE          : 34.945900
+0331 * LONGITUDE         : -106.457200
+0332 * ELEVATION         : 1700.0
+0333 * DEPTH             : 150.0
+0334 * DIP               : 90.0
+0335 * AZIMUTH           : 280.0
+0336 * SAMPLE RATE       : 20.0
+0337 * INPUT UNIT        : M
+0338 * OUTPUT UNIT       : COUNTS
+0339 * INSTTYPE          : Geotech KS-54000 Borehole Seismometer
+0340 * INSTGAIN          : 2.023580e+03 (M/S)
+0341 * COMMENT           : orientation changed 1997,099
+0342 * SENSITIVITY       : 8.485070e+08 (M/S)
+0343 * A0                : 8.608300e+04
+0344 * **********************************
+0345 ZEROS    3
+0346     +0.000000e+00    +0.000000e+00    
+0347     +0.000000e+00    +0.000000e+00    
+0348     +0.000000e+00    +0.000000e+00    
+0349 POLES    5
+0350     -5.943130e+01    +0.000000e+00    
+0351     -2.271210e+01    +2.710650e+01    
+0352     -2.271210e+01    -2.710650e+01    
+0353     -4.800400e-03    +0.000000e+00    
+0354     -7.319900e-02    +0.000000e+00    
+0355 CONSTANT    7.304203e+13
+0356 
+0357 
+0358 * **********************************
+0359 * NETWORK   (KNETWK): IU
+0360 &lt;ETC&gt;
+0361 <span class="comment">%}</span>
+0362</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

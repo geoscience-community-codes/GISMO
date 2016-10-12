@@ -1,0 +1,364 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of get</title>
+  <meta name="keywords" content="get">
+  <meta name="description" content="GET Get waveform properties">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; get.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>get
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>GET Get waveform properties</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function val = get(w,prop_name) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GET Get waveform properties
+   val = get(waveform,prop_name)
+
+   Valid property names:
+       CHANNELTAG, NETWORK, STATION, LOCATION, CHANNEL,
+       CHANNELINFO : (gets the info as a string 'Net.Sta.Loc.Cha')
+       FREQ, START_STR,
+       END_STR, DATA, NYQ, PERIOD
+     also:
+       START, END : return datenum format (MatLab's format)
+       START_EPOCH, END_EPOCH : return epoch format.
+
+       DATA_LENGTH : return number of elements in data
+
+       The following return time duration of data
+       DURATION_STR :  text format
+       DURATION: matlab (datenum) format
+       DURATION_EPOCH : antelope (epoch) format (just # of seconds)
+
+       TIMEVECTOR : return a vector of same length as data with
+                    matlab-formatted times.
+
+       MISC_FIELDS: gets a list of fields that were added to this waveform
+       UNITS : Find out what units the data is in (ex. counts, nm/s)
+
+   If waveform is N-dimensional, then VAL will be a cell of the same
+   dimensions.  If GET would return single-values for the property, then
+   VAL will be a matrix of type DOUBLE, arranged in the same dimensions.
+
+       If additional fields were added to waveform using ADDFIELD, then
+       values from these can be retrieved using the fieldname
+
+       Example: Create a waveform, add a field, then get the field
+           W = waveform;
+           W = addfield(W,'P-pick', datenum('1/5/2007 02:12:15'));
+           misc = get(W,'MISC_FIELDS'); %returns a cell with 'P-pick'
+           PickTime = get(W,'P-pick'); % (same as) PickTime = get(W,misc);
+
+
+   See also WAVEFORM/GETM, WAVEFORM/SET, WAVEFORM/ADDFIELD,
+   WAVEFORM/DELFIELD</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>	scnl (deprecated) : object that holds the stations, channel, network, and location for</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/private/mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>	convert a matlab date to an epoch date</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/apply_calib.html" class="code" title="function w = apply_calib(w, sites)">apply_calib</a>	ADD RESPONSE FROM SUBNETS TO WAVEFORM OBJECTS</li><li><a href="../../../GISMO/applications/+iceweb/iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li><li><a href="../../../GISMO/applications/+iceweb/makespectrogramthumbnails.html" class="code" title="function makespectrogramthumbnails(spectrogramFilename, spectrogramFraction)">makespectrogramthumbnails</a>	</li><li><a href="../../../GISMO/applications/+iceweb/spectrogram_iceweb.html" class="code" title="function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)">spectrogram_iceweb</a>	SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of</li><li><a href="../../../GISMO/applications/+iceweb/waveform_remove_empty.html" class="code" title="function w2 = waveform_remove_empty(w);">waveform_remove_empty</a>	WAVEFORM_REMOVE_EMPTY remove empty waveform objects from a vector of waveform objects</li><li><a href="../../../GISMO/applications/+iceweb/waveform_wrapper.html" class="code" title="function w=waveform_wrapper(ds, chantag, snum, enum);">waveform_wrapper</a>	WAVEFORM_WRAPPER try multiple datasource objects in</li><li><a href="../../../GISMO/applications/uispecgram.html" class="code" title="function varargout = uispecgram(varargin)">uispecgram</a>	UISPECGRAM M-file for uispecgram.fig</li><li><a href="../../../GISMO/contributed/correlation_derived/corrderived_plot_swarm_history.html" class="code" title="function corrderived_plot_swarm_history(c,varargin)">corrderived_plot_swarm_history</a>	CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms</li><li><a href="../../../GISMO/contributed/instrument_response/demo_plutons.html" class="code" title="">demo_plutons</a>	</li><li><a href="../../../GISMO/contributed/instrument_response/response_apply.html" class="code" title="function wNew = response_apply(w,filterObj,sourceType,source)">response_apply</a>	RESPONSE_APPLY Deconvolve an instrument response from a waveform object.</li><li><a href="../../../GISMO/contributed/iris_dmc_tools/+irisdmc/station_meta.html" class="code" title="function [w,successList] = station_meta(w,varargin)">station_meta</a>	station_meta adds station metadata to a waveform</li><li><a href="../../../GISMO/contributed/iris_dmc_tools/dmc_station_meta.html" class="code" title="function [w,successList] = dmc_station_meta(w,varargin)">dmc_station_meta</a>	DMC_STATION_META adds station metadata to a waveform</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/plot_stats.html" class="code" title="function plot_stats(W)">plot_stats</a>	PLOT_STATS plot statistics from master correlation algorithm</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/scan.html" class="code" title="function [WW,WWxc] = scan(WW,WWsnippet,threshold)">scan</a>	SCAN scans a waveform for events which match a master.</li><li><a href="../../../GISMO/contributed/master_correlation/mastercorr_extract.html" class="code" title="function varargout = mastercorr_extract(W,varargin)">mastercorr_extract</a>	MASTERCORR_EXTRACT extract matches to the master waveform</li><li><a href="../../../GISMO/contributed/master_correlation/mastercorr_plot_stats.html" class="code" title="function mastercorr_plot_stats(W)">mastercorr_plot_stats</a>	MASTERCORR_PLOT_STATS plot statistics from master correlation algorithm</li><li><a href="../../../GISMO/contributed/master_correlation/mastercorr_scan.html" class="code" title="function [WW,WWxc] = mastercorr_scan(WW,WWsnippet,threshold)">mastercorr_scan</a>	MASTERCORR_SCAN scans a waveform for events which match a master.</li><li><a href="../../../GISMO/contributed_antelope/attenuation/hankelq.html" class="code" title="function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)">hankelq</a>	HANKELQ Compute spectral ratio in two frequency bands</li><li><a href="../../../GISMO/contributed_antelope/double_difference/dd_process_scp.html" class="code" title="function dd_process_scp(dbname,scpfile,varargin)">dd_process_scp</a>	DD_PROCESS_SCP Process correlations by station and channel</li><li><a href="../../../GISMO/contributed_antelope/import_events/import_events.html" class="code" title="function [ eqtc, varargout ] = import_events(dbname, chanfile, starttime, endtime, phase, delay, enddelay, varargin)">import_events</a>	IMPORT_EVENTS Import waveforms associated with earthquake events.</li><li><a href="../../../GISMO/contributed_antelope/reduced_displacement/reducedisp_calc.html" class="code" title="function w = reducedisp_calc(w,dist,varargin)">reducedisp_calc</a>	WAVEFORM = REDUCEDISP(WAVEFORM,DISTANCE) This function calculates the</li><li><a href="../../../GISMO/contributed_antelope/reduced_displacement/reducedisp_wfmeas.html" class="code" title="function reducedisp_wfmeas(varargin);">reducedisp_wfmeas</a>	REDUCEDISP_WFMEAS(STARTTIME,ENDTIME,SCNL,DIST,DS,DBOUT,FILT,TIMESTEP,ALGORITHM)</li><li><a href="../../../GISMO/contributed_antelope/reduced_displacement/reducedisp_write_wfmeas.html" class="code" title="function reducedisp_write_wfmeas(dbname,w,flt,algorithm);">reducedisp_write_wfmeas</a>	Opens DBNAME and inserts new reduced dispacement rows, one</li><li><a href="../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/arrival_histogram.html" class="code" title="function arrival_histogram(dbName)">arrival_histogram</a>	ARRIVAL_HISTOGRAM compare the number of arrivals to each station.</li><li><a href="../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/depth_section.html" class="code" title="function depth_section(dbName)">depth_section</a>	DEPTH_SECTION plot depth sections of ray coverage.</li><li><a href="../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/tt_curve.html" class="code" title="function traveltime(dbName,varargin)">tt_curve</a>	TRAVELTIME make travel time plots.</li><li><a href="../../../GISMO/core/+Detection/sta_lta.html" class="code" title="function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)">sta_lta</a>	STA_LTA: Short-Time-Average/Long-Time-Average event detector.</li><li><a href="../../../GISMO/core/+antelope/candidate/db_lookupunits.html" class="code" title="function units = lookupunits(w,station,component)">db_lookupunits</a>	LOOKUPUNITS checks the antelope database to find out what units are</li><li><a href="../../../GISMO/core/+antelope/listMiniseedFiles.html" class="code" title="function [mseedfiles] = listMiniseedFiles(ds, chantag, snum, enum)">listMiniseedFiles</a>	LISTMINISEEDFILES retrieve a list of the Miniseed files referenced by a datasource, ChannelTag object and start/end times.</li><li><a href="../../../GISMO/core/+scnlobject/cookbook.html" class="code" title="">cookbook</a>	% The SCNLOBJECT cookbook</li><li><a href="../../../GISMO/core/@EventRate/EventRate.html" class="code" title="">EventRate</a>	</li><li><a href="../../../GISMO/core/@correlation/DEP_xcorr.html" class="code" title="function c=xcorr(c,varargin)">DEP_xcorr</a>	C = XCORR(C)</li><li><a href="../../../GISMO/core/@correlation/adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG adjusts the trigger times of each trace</li><li><a href="../../../GISMO/core/@correlation/agc.html" class="code" title="function c = agc(c,varargin)">agc</a>	This function applies automatic gain control (AGC) to each trace. This</li><li><a href="../../../GISMO/core/@correlation/align.html" class="code" title="function c = align(c,varargin)">align</a>	c = ALIGN(c)</li><li><a href="../../../GISMO/core/@correlation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>	C = BUTTER(C,[TYPE],CUTOFF,[POLES])</li><li><a href="../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="../../../GISMO/core/@correlation/check.html" class="code" title="function val = check(c,varargin)">check</a>	Check various features of a correlation object.</li><li><a href="../../../GISMO/core/@correlation/cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	c = CLUSTER(c,CUTOFF) cuts the "branches" of the linkage tree to create</li><li><a href="../../../GISMO/core/@correlation/conv.html" class="code" title="function c = conv(c,varargin)">conv</a>	c = CONV(c) convolves all traces with the final trace. By default the new</li><li><a href="../../../GISMO/core/@correlation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../GISMO/core/@correlation/correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="../../../GISMO/core/@correlation/crop.html" class="code" title="function c = crop(c,varargin)">crop</a>	c = CROP(c,[PRETRIG POSTTRIG])</li><li><a href="../../../GISMO/core/@correlation/deconv.html" class="code" title="function c = deconv(c,varargin)">deconv</a>	c = DECONV(c) convolves all traces with the final trace. By default the new</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/getclusterstat.html" class="code" title="function family=getclusterstat(c)">getclusterstat</a>	GETCLUSTERSTAT gets detais of individual correlation clusters.</li><li><a href="../../../GISMO/core/@correlation/getstat.html" class="code" title="function c=getstat(c)">getstat</a>	c = GETSTAT(c)</li><li><a href="../../../GISMO/core/@correlation/interferogram.html" class="code" title="function [c,t,i,CC,LL] = interferogram(c,varargin)">interferogram</a>	C = INTERFEROGRAM(C)</li><li><a href="../../../GISMO/core/@correlation/linkage.html" class="code" title="function c = linkage(c,varargin);">linkage</a>	c = LINKAGE(c) Creates a hierarchical cluster tree for all waveforms in</li><li><a href="../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>	Retain matching elements of two correlation objects.</li><li><a href="../../../GISMO/core/@correlation/minus.html" class="code" title="function c = minus(c,varargin)">minus</a>	C = MINUS(C,I)</li><li><a href="../../../GISMO/core/@correlation/norm.html" class="code" title="function c = norm(c,varargin)">norm</a>	C = NORM(C)</li><li><a href="../../../GISMO/core/@correlation/private/corrplot.html" class="code" title="function corrplot(c)">corrplot</a>	Called internally by correlation/plot to plot correlation matrix.</li><li><a href="../../../GISMO/core/@correlation/private/dendrogramplot.html" class="code" title="function dendrogramplot(c);">dendrogramplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/eventplot.html" class="code" title="function eventplot(c,scale,howmany);">eventplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/getval.html" class="code" title="function A = getval(OBJ,PROP)">getval</a>	Function to extract a cell array from an</li><li><a href="../../../GISMO/core/@correlation/private/lagplot.html" class="code" title="function lagplot(c);">lagplot</a>	Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</li><li><a href="../../../GISMO/core/@correlation/private/occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/overlayplot.html" class="code" title="function overlayplot(c,scale,ord)">overlayplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/sampleplot.html" class="code" title="function sampleplot(c,scale,ord)">sampleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/shadedplot.html" class="code" title="function shadedplot(c,scale,ord)">shadedplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/xcorrrow.html" class="code" title="function d = xcorrrow(d,c,index)">xcorrrow</a>	XCORRROW Cross correlation for one or more traces.</li><li><a href="../../../GISMO/core/@correlation/stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li><li><a href="../../../GISMO/core/@correlation/verify.html" class="code" title="function c = verify(c)">verify</a>	VERIFY</li><li><a href="../../../GISMO/core/@correlation/writedb.html" class="code" title="function writedb(c,dbOut,varargin)">writedb</a>	WRITEDB write antelope database tables</li><li><a href="../../../GISMO/core/@correlation/xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	C = XCORR(C)</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@datasource/display.html" class="code" title="function display(ds)">display</a>	DISPLAY - datasource display overloaded operator</li><li><a href="../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>	GETFILENAME returns a filename that is associated with a single SCNL</li><li><a href="../../../GISMO/core/@datasource/isunassigned.html" class="code" title="function val = isunassigned(ds)">isunassigned</a>	ISUNASSIGNED is true when no data source is associated with this object</li><li><a href="../../../GISMO/core/@datasource/query_file.html" class="code" title="function [scnls starttimes endtimes] = query_file(ds, filename)">query_file</a>	QUERY_FILE retrieves scnl, starttime and endtime information for all</li><li><a href="../../../GISMO/core/@drumplot/cookbook.html" class="code" title="">cookbook</a>	% drumplot cookbook</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../GISMO/core/@filterobject/display.html" class="code" title="function display(f)">display</a>	DISPLAY - Filterobject display overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/filtfilt.html" class="code" title="function w =filtfilt(f, w, NYQ)">filtfilt</a>	FILTFILT - filterobject implementation of FILTFILT, use on waveform Object</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@rsam/duration_amplitude.html" class="code" title="function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)">duration_amplitude</a>	DURATION_AMPLITUDE Use the duration-amplitde</li><li><a href="../../../GISMO/core/@rsam/oneMinuteData.html" class="code" title="">oneMinuteData</a>	</li><li><a href="../../../GISMO/core/@rsam/scrollplot.html" class="code" title="function scrollplot(s)">scrollplot</a>	Created by Steven Lord, slord@mathworks.com</li><li><a href="../../../GISMO/core/@scnlobject/display.html" class="code" title="function display(scnl)">display</a>	DISPLAY - scnlobject display overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>	ISMEMBER for scnlobjects</li><li><a href="../../../GISMO/core/@spectralobject/colorbar_axis.html" class="code" title="function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)">colorbar_axis</a>	COLORBAR - Display color bar (color scale).</li><li><a href="../../../GISMO/core/@spectralobject/display.html" class="code" title="function display(s)">display</a>	DISPLAY - spectralobject display overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>	FFT Discrete Fourier transform.  OVERLOADED for waveform & Spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/ifft.html" class="code" title="function [varargout] = ifft(s, w)">ifft</a>	IFFT Inverse discrete Fourier transform.  OVERLOADED FOR Spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/private/subdivide_axes.html" class="code" title="function sub_h = subdivide_axes(h,sizes)">subdivide_axes</a>	returns handles for sub-axes of axis(h).  These axes are createdb y</li><li><a href="../../../GISMO/core/@spectralobject/pwelch.html" class="code" title="function varargout = pwelch(s,w, varargin)">pwelch</a>	PWELCH   overloaded pwelch for spectralobjects</li><li><a href="../../../GISMO/core/@spectralobject/specgram.html" class="code" title="function h = specgram(s, ws, varargin)">specgram</a>	SPECGRAM - plots spectrogram of waveforms</li><li><a href="../../../GISMO/core/@spectralobject/specgram2.html" class="code" title="function specgram2(s, ws, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li><li><a href="../../../GISMO/core/@threecomp/align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>	ALIGN Align and trim traces in threecomp object.</li><li><a href="../../../GISMO/core/@threecomp/cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="../../../GISMO/core/@threecomp/cookbook_map.html" class="code" title="function cookbook_map(TC,W,backAzimuth)">cookbook_map</a>	COOKBOOK_MAP Plots a simple map to accompany cookbook data</li><li><a href="../../../GISMO/core/@threecomp/demo.html" class="code" title="function [w,backAzimuth,trigger,staLat,staLon,origLat,origLon] = demo(TC)">demo</a>	DEMO</li><li><a href="../../../GISMO/core/@threecomp/diagnostic.html" class="code" title="function diagnostic(threecomp)">diagnostic</a>	DIAGNOSTIC check for accurate behavior of threecomp object.</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/particlemotion.html" class="code" title="function TC = particlemotion(TC, varargin)">particlemotion</a>	PARTICLEMOTION calculates particle motion vectors for threecomp object</li><li><a href="../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../GISMO/core/@threecomp/plot2.html" class="code" title="function fh=plot2(TC,varargin)">plot2</a>	PLOT2 a figure of three component traces (deprecated).</li><li><a href="../../../GISMO/core/@threecomp/plot3.html" class="code" title="function plot3(TC)">plot3</a>	PLOT3 Interactively make 3D plot of particle motion vector evolution</li><li><a href="../../../GISMO/core/@threecomp/plotpm.html" class="code" title="function plotpm(TC);">plotpm</a>	PLOTPM Plot particle motion coefficients.</li><li><a href="../../../GISMO/core/@threecomp/private/create_demo_data.html" class="code" title="">create_demo_data</a>	This script was used once to create the demo dataset</li><li><a href="../../../GISMO/core/@threecomp/rotate.html" class="code" title="function TC = rotate(TC,varargin)">rotate</a>	Rotate component orientations</li><li><a href="../../../GISMO/core/@threecomp/spin.html" class="code" title="function [TC,c2, c3] = spin(TCin,varargin)">spin</a>	SPIN rotate and plot horizontal components</li><li><a href="../../../GISMO/core/@threecomp/success.html" class="code" title="function [mask,conflicts] = success(TC)">success</a>	SUCCESS Checks the success of a conversion to threecomp object.</li><li><a href="../../../GISMO/core/@threecomp/threecomp.html" class="code" title="">threecomp</a>	THREECOMP Object for three component waveform data</li><li><a href="../../../GISMO/core/@threecomp/verify.html" class="code" title="function [conflicts] = verify(TC)">verify</a>	VERIFY Check for property conflicts in the threecomp object.</li><li><a href="align.html" class="code" title="function w = align(w,alignTime, newFrequency, method)">align</a>	ALIGN resamples a waveform at over a specified interval</li><li><a href="combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and ChannelTag info.</li><li><a href="diff.html" class="code" title="function w = diff (w)">diff</a>	DIFF Differentiate waveform</li><li><a href="disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="display.html" class="code" title="function display(w)">display</a>	DISPLAY Waveform Display overloaded operator</li><li><a href="double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>	FILLGAPS - fill missing data with values of your choice</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="getm.html" class="code" title="function varargout = getm(w,varargin)">getm</a>	GETM Get MULTIPLE waveform properties</li><li><a href="gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>	GETTIMERANGE returns the list of start and end times from a waveform array</li><li><a href="integrate.html" class="code" title="function w = integrate (w,method)">integrate</a>	INTEGRATE integrates a waveform signal</li><li><a href="isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>	ISFIELD checks the presence of waveform fields.</li><li><a href="ismember.html" class="code" title="function [results, loc] = ismember(mywave,anythingelse)">ismember</a>	ISMEMBER waveform implementation of ismember</li><li><a href="isvertical.html" class="code" title="function [bool] = isvertical(W)">isvertical</a>	isvertical: Find all vertical component waveforms (boolean output)</li><li><a href="legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>	legend creates a legend for a waveform graph</li><li><a href="loadobj.html" class="code" title="function b = loadobj(a)">loadobj</a>	LOADOBJ updates older versions of waveform class upon loading</li><li><a href="medfilt1.html" class="code" title="function w = medfilt1(w,size)">medfilt1</a>	MEDFILT1: Wrapper function for applying 1-D Median Filter (Signal</li><li><a href="mrdivide.html" class="code" title="function C = mrdivide(W,B)">mrdivide</a>	MRDIVIDE (/) Slash or right matrix divide for WAVEFORMS.</li><li><a href="pad.html" class="code" title="function [ w ] = pad( w, snum, enum, padvalue )">pad</a>	PAD Pad a waveform from snum to enum</li><li><a href="plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="plot_panels.html" class="code" title="function fh=plot_panels(w, alignWaveforms)">plot_panels</a>	PLOT_PANELS Plot multiple waveform objects as separate linked panels</li><li><a href="plot_spectrum.html" class="code" title="function s = plot_spectrum(w)">plot_spectrum</a>	add_spectral_data Simple method to compute frequency</li><li><a href="plus.html" class="code" title="function w = plus(w,q)">plus</a>	PLUS (+) waveform addition     w + q</li><li><a href="../../../GISMO/core/@waveform/private/as_channeltag.html" class="code" title="function obj = as_channeltag(obj)">as_channeltag</a>	</li><li><a href="../../../GISMO/core/@waveform/private/autoscale.html" class="code" title="function newunit = autoscale(axishandle, oldunit)">autoscale</a>	will automatically find the correct y-unites with which to plot something</li><li><a href="../../../GISMO/core/@waveform/private/get_load_routine.html" class="code" title="function myLoadRoutine = get_load_routine(ds, use_wkaround)">get_load_routine</a>	determine the load function based upon the datasource's type</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope_old.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope_old</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope_workaround.html" class="code" title="function outputWaveforms = load_antelope_workaround(datarequest, COMBINE_WAVEFORMS, specificDatabase)">load_antelope_workaround</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_from_datasource.html" class="code" title="function w = load_from_datasource(ds, chans, startt, endt, combine_waves, usewkaround)">load_from_datasource</a>	load_from_datasource</li><li><a href="../../../GISMO/core/@waveform/private/load_winston.html" class="code" title="function allWaves = load_winston(request)">load_winston</a>	LOAD_WINSTON handles retrieval of data from a winston waveserver.</li><li><a href="../../../GISMO/core/@waveform/private/offset2time.html" class="code" title="function [whichtime] = offset2time(w,offset)">offset2time</a>	</li><li><a href="../../../GISMO/core/@waveform/private/time2offset.html" class="code" title="function [offset actualTime] = time2offset(w,whichTime)">time2offset</a>	time2offset returns the offset within a waveform's data for time T</li><li><a href="../../../GISMO/core/@waveform/private/waveform2sacheader.html" class="code" title="function header = waveform2sacheader(w)">waveform2sacheader</a>	WAVEFORM2SACHEADER generates a SAC header from a waveform object</li><li><a href="rdivide.html" class="code" title="function W = rdivide(W,divisor)">rdivide</a>	RDIVIDE (./) Right array divide for WAVEFORMS.</li><li><a href="remove_calib.html" class="code" title="function w = remove_calib(w)">remove_calib</a>	WAVEFORM = REMOVE_CALIB(WAVEFORM) removes calibration factor</li><li><a href="resample.html" class="code" title="function w = resample(w,method, crunchfactor)">resample</a>	RESAMPLE resamples a waveform at over every specified interval</li><li><a href="savesac.html" class="code" title="function w = savesac(w, direc, fname)">savesac</a>	SAVESAC  creates a SAC file from a waveform</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="sortby.html" class="code" title="function [W, I] = sortby(W, criteria)">sortby</a>	sortby sorts waveforms based on one of its properties</li><li><a href="stack.html" class="code" title="function out = stack(w)">stack</a>	STACK stacks data from array of waveforms</li><li><a href="times.html" class="code" title="function A = times(A,B)">times</a>	TIMES (.*) overloaded Array multiply for WAVEFORM objects.</li><li><a href="waveform2rsam.html" class="code" title="function s = waveform2rsam(w, method, samplingPeriod)">waveform2rsam</a>	WAVEFORM2RSAM create an RSAM-like object from a waveform object</li><li><a href="waveform2sound.html" class="code" title="function isSuccessful = waveform2sound(w, speedup, outfile)">waveform2sound</a>	WAVEFORM2SOUND generate an audio file from a waveform object.</li><li><a href="zero2nan.html" class="code" title="function w = zero2nan(w,mgl)">zero2nan</a>	ZERO2NAN: This function takes a waveform with gaps that have been filled</li><li><a href="../../../GISMO/core/dev/+dataretrieval/@antelopesource/traceToWaveform.html" class="code" title="function allw = traceToWaveform(obj)">traceToWaveform</a>	traceToWaveform converts traceobjects to waveforms</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/corrplot.html" class="code" title="function corrplot(c)">corrplot</a>	corrplot   plot the correlation matrix</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/dendrogramplot.html" class="code" title="function dendrogramplot(c)">dendrogramplot</a>	dendrogramplot   create a dendrogram plot</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/eventplot.html" class="code" title="function eventplot(c,scale,howmany)">eventplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/getval.html" class="code" title="function A = getval(OBJ,PROP)">getval</a>	Function to extract a cell array from an</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/lagplot.html" class="code" title="function lagplot(c)">lagplot</a>	lagplot</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/minus.html" class="code" title="function c = minus(c,I)">minus</a>	C = MINUS(C,I)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/shadedplot.html" class="code" title="function shadedplot(c,scale,ord)">shadedplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/linkedplot.html" class="code" title="function linkedplot(T, alignTraces)">linkedplot</a>	linkedplot   Plot multiple waveform objects as separate linked panels</li><li><a href="../../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>	</li><li><a href="../../../GISMO/core/dev/@TraceData/autoscale.html" class="code" title="function newunit = autoscale(axishandle, oldunit)">autoscale</a>	autoscale   automatically determine correct y-units for plotting</li><li><a href="../../../GISMO/core/dev/@TraceFilter/TraceFilter.html" class="code" title="">TraceFilter</a>	</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/specgram.html" class="code" title="function h = specgram(s, T, varargin)">specgram</a>	specgram - plots spectrogram of traces</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/specgram2.html" class="code" title="function h = specgram2(s, T, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li><li><a href="../../../GISMO/deprecated/+waveform_extensions/sta_lta.html" class="code" title="function events = sta_lta(wave,varargin)">sta_lta</a>	STA_LTA: Short-Time-Average/Long-Time-Average event detector.</li><li><a href="../../../GISMO/deprecated/@helicorder/build.html" class="code" title="function varargout = build(h)">build</a>	BUILD: Helicorder builder function. A helicorder object (h) contains no</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/nan2sst.html" class="code" title="function sst = nan2sst(nan)">nan2sst</a>	</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/nan2wfa.html" class="code" title="function wfa = nan2wfa(nan)">nan2wfa</a>	</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/ssd2sst.html" class="code" title="function sst = ssd2sst(ssd,w)">ssd2sst</a>	</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/sst2nan.html" class="code" title="function nan = sst2nan(sst,w)">sst2nan</a>	</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/sst2ssd.html" class="code" title="function ssd = sst2ssd(sst,w)">sst2ssd</a>	</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/sst2val.html" class="code" title="function w = sst2val(sst,w,val)">sst2val</a>	SST2VAL: Set sections of waveform w to single value. Useful for setting</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/wfa2nan.html" class="code" title="function nan = wfa2nan(wfa, varargin)">wfa2nan</a>	</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/wfa2sst.html" class="code" title="function sst = wfa2sst(wfa)">wfa2sst</a>	</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/compute.html" class="code" title="function w = compute(w);">compute</a>	COMPUTE calculates the fast fourier transform of a waveform object</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/freqindex.html" class="code" title="function W = freqindex(W,varargin)">freqindex</a>	WAVEFORM = FREQINDEX(WAVEFORM) calculates the frequency index of a waveform.</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li><li><a href="../../../GISMO/deprecated/fft_tools/amplitude_spectrum.html" class="code" title="function w = add_spectral_data(w)">amplitude_spectrum</a>	add_spectral_data Simple method to compute frequency</li><li><a href="../../../GISMO/deprecated/fft_tools/wf_fft.html" class="code" title="function w = wf_fft(w);">wf_fft</a>	WAVEFORM = WF_FFT(WAVEFORM)  calculate frequency spectrum of a waveform.</li><li><a href="../../../GISMO/deprecated/fft_tools/wf_fftplot.html" class="code" title="function wf_fftplot(w);">wf_fftplot</a>	WF_FFTPLOT(WAVEFORM) plot fourier transform of the data.</li><li><a href="../../../GISMO/deprecated/fft_tools/wf_fi.html" class="code" title="function W = wf_fi(W,varargin)">wf_fi</a>	WAVEFORM = WF_FI(WAVEFORM) calculates the frequency index of a waveform.</li><li><a href="../../../GISMO/tests/correlation_diagnostics.html" class="code" title="function correlation_diagnostics(varargin)">correlation_diagnostics</a>	Test correlation toolbox</li><li><a href="../../../GISMO/tests/testScnlobject.html" class="code" title="">testScnlobject</a>	</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../GISMO/training/messitup.html" class="code" title="function [w]=messitup(w)">messitup</a>	</li><li><a href="../../../GISMO/uaf_internal/AEIC_AVO/+check/crossfeed.html" class="code" title="function crossfeed(varargin)">crossfeed</a>	CROSSFEED Checks for crossfeeding and duplicate data channels</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function val = grabEndTime(w)</a></li><li><a href="#_sub2" class="code">function val = stringDate(myDate)</a></li><li><a href="#_sub3" class="code">function val = durationDate(myDate)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function val = get(w,prop_name)</a>
+0002    <span class="comment">%GET Get waveform properties</span>
+0003    <span class="comment">%   val = get(waveform,prop_name)</span>
+0004    <span class="comment">%</span>
+0005    <span class="comment">%   Valid property names:</span>
+0006    <span class="comment">%       CHANNELTAG, NETWORK, STATION, LOCATION, CHANNEL,</span>
+0007    <span class="comment">%       CHANNELINFO : (gets the info as a string 'Net.Sta.Loc.Cha')</span>
+0008    <span class="comment">%       FREQ, START_STR,</span>
+0009    <span class="comment">%       END_STR, DATA, NYQ, PERIOD</span>
+0010    <span class="comment">%     also:</span>
+0011    <span class="comment">%       START, END : return datenum format (MatLab's format)</span>
+0012    <span class="comment">%       START_EPOCH, END_EPOCH : return epoch format.</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">%       DATA_LENGTH : return number of elements in data</span>
+0015    <span class="comment">%</span>
+0016    <span class="comment">%       The following return time duration of data</span>
+0017    <span class="comment">%       DURATION_STR :  text format</span>
+0018    <span class="comment">%       DURATION: matlab (datenum) format</span>
+0019    <span class="comment">%       DURATION_EPOCH : antelope (epoch) format (just # of seconds)</span>
+0020    <span class="comment">%</span>
+0021    <span class="comment">%       TIMEVECTOR : return a vector of same length as data with</span>
+0022    <span class="comment">%                    matlab-formatted times.</span>
+0023    <span class="comment">%</span>
+0024    <span class="comment">%       MISC_FIELDS: gets a list of fields that were added to this waveform</span>
+0025    <span class="comment">%       UNITS : Find out what units the data is in (ex. counts, nm/s)</span>
+0026    <span class="comment">%</span>
+0027    <span class="comment">%   If waveform is N-dimensional, then VAL will be a cell of the same</span>
+0028    <span class="comment">%   dimensions.  If GET would return single-values for the property, then</span>
+0029    <span class="comment">%   VAL will be a matrix of type DOUBLE, arranged in the same dimensions.</span>
+0030    <span class="comment">%</span>
+0031    <span class="comment">%       If additional fields were added to waveform using ADDFIELD, then</span>
+0032    <span class="comment">%       values from these can be retrieved using the fieldname</span>
+0033    <span class="comment">%</span>
+0034    <span class="comment">%       Example: Create a waveform, add a field, then get the field</span>
+0035    <span class="comment">%           W = waveform;</span>
+0036    <span class="comment">%           W = addfield(W,'P-pick', datenum('1/5/2007 02:12:15'));</span>
+0037    <span class="comment">%           misc = get(W,'MISC_FIELDS'); %returns a cell with 'P-pick'</span>
+0038    <span class="comment">%           PickTime = get(W,'P-pick'); % (same as) PickTime = get(W,misc);</span>
+0039    <span class="comment">%</span>
+0040    <span class="comment">%</span>
+0041    <span class="comment">%   See also WAVEFORM/GETM, WAVEFORM/SET, WAVEFORM/ADDFIELD,</span>
+0042    <span class="comment">%   WAVEFORM/DELFIELD</span>
+0043    
+0044    <span class="comment">%  11/28/2008 added WAVEFORM_OBJECT_VERSION, which returns a single version</span>
+0045    <span class="comment">%  field from the waveform object.  This is set with the constructor, and</span>
+0046    <span class="comment">%  is used in load_obj.</span>
+0047    
+0048    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0049    <span class="comment">% $Date$</span>
+0050    <span class="comment">% $Revision$</span>
+0051    
+0052    
+0053    <span class="comment">%global mep2dep</span>
+0054    
+0055    <span class="comment">%val_CELL = cell(size(w));</span>
+0056    <span class="comment">%val = val_CELL;</span>
+0057    usedcell = false;
+0058    singleWave = isscalar(w);
+0059    <span class="keyword">switch</span> upper(prop_name)
+0060       
+0061       <span class="comment">% IDENTIFICATION PROPERTIES</span>
+0062       <span class="keyword">case</span> {<span class="string">'STATION'</span>,<span class="string">'CHANNEL'</span>,<span class="string">'NETWORK'</span>,<span class="string">'LOCATION'</span>} <span class="comment">%type:CELL</span>
+0063          val = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>([w.cha_tag],prop_name);
+0064          usedcell = true;
+0065          
+0066       <span class="keyword">case</span> {<span class="string">'COMPONENT'</span>} <span class="comment">%type:CELL   GRANDFATHERED IN...</span>
+0067          val = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>([w.cha_tag],<span class="string">'channel'</span>);
+0068          usedcell = true;
+0069          
+0070          <span class="comment">% DATA DESCRIBING PROPERTIES</span>
+0071          
+0072       <span class="keyword">case</span> {<span class="string">'FS'</span>, <span class="string">'FREQ'</span>} <span class="comment">%type:DOUBLE</span>
+0073          val = [w.Fs];
+0074          
+0075       <span class="keyword">case</span> <span class="string">'DATA'</span> <span class="comment">%type:DOUBLE</span>
+0076          <span class="keyword">if</span> singleWave
+0077             val = w.data;
+0078          <span class="keyword">else</span>
+0079             val = {w.data}; <span class="comment">%cells of data values</span>
+0080             usedcell = true;
+0081          <span class="keyword">end</span>
+0082          
+0083       <span class="keyword">case</span> <span class="string">'NYQ'</span> <span class="comment">%type:DOUBLE</span>
+0084          val = [w.Fs] ./ 2;
+0085          
+0086       <span class="keyword">case</span> <span class="string">'PERIOD'</span> <span class="comment">%type:DOUBLE</span>
+0087          val = 1 ./ [w.Fs];
+0088          
+0089       <span class="keyword">case</span> <span class="string">'DATA_LENGTH'</span> <span class="comment">%type:DOUBLE</span>
+0090          val = zeros(size(w));
+0091          <span class="keyword">for</span> N = 1: numel(w)
+0092             val(N) = numel(w(N).data);
+0093          <span class="keyword">end</span>
+0094          
+0095          <span class="comment">% TIME PROPERTIES</span>
+0096          
+0097       <span class="keyword">case</span> {<span class="string">'START_STR'</span>} <span class="comment">%type:CELL</span>
+0098          val = <a href="#_sub2" class="code" title="subfunction val = stringDate(myDate)">stringDate</a>([w.start]);
+0099          usedcell = true;
+0100          
+0101       <span class="keyword">case</span> {<span class="string">'START_EPOCH'</span>} <span class="comment">%type:DOUBLE</span>
+0102          val = <a href="../../../GISMO/core/@waveform/private/mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>([w.start]);
+0103          
+0104       <span class="keyword">case</span> {<span class="string">'START_MATLAB'</span>, <span class="string">'START'</span>} <span class="comment">%type:DOUBLE</span>
+0105          val = [w.start];
+0106          
+0107       <span class="keyword">case</span> {<span class="string">'END_STR'</span>} <span class="comment">%type:CELL</span>
+0108          val = <a href="#_sub2" class="code" title="subfunction val = stringDate(myDate)">stringDate</a>(<a href="#_sub1" class="code" title="subfunction val = grabEndTime(w)">grabEndTime</a>(w));
+0109          usedcell = true;
+0110          
+0111       <span class="keyword">case</span> {<span class="string">'END_EPOCH'</span>} <span class="comment">%type:DOUBLE</span>
+0112          val = <a href="../../../GISMO/core/@waveform/private/mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>(<a href="#_sub1" class="code" title="subfunction val = grabEndTime(w)">grabEndTime</a>(w));
+0113          
+0114       <span class="keyword">case</span> {<span class="string">'END_MATLAB'</span>, <span class="string">'END'</span>} <span class="comment">%type:DOUBLE</span>
+0115          val = <a href="#_sub1" class="code" title="subfunction val = grabEndTime(w)">grabEndTime</a>(w);
+0116          
+0117       <span class="keyword">case</span> {<span class="string">'DURATION_STR'</span>} <span class="comment">%type:CELL</span>
+0118          endvec = <a href="#_sub1" class="code" title="subfunction val = grabEndTime(w)">grabEndTime</a>(w(:)) - [w(:).start];
+0119          <span class="keyword">if</span> numel(w) == 0
+0120             val = <a href="#_sub3" class="code" title="subfunction val = durationDate(myDate)">durationDate</a>(nan);
+0121          <span class="keyword">elseif</span> singleWave
+0122             val = <a href="#_sub3" class="code" title="subfunction val = durationDate(myDate)">durationDate</a>(endvec);
+0123          <span class="keyword">else</span>
+0124             val = cell(size(w));
+0125             <span class="keyword">for</span> N = 1 : numel(w)
+0126                val(N) = {<a href="#_sub3" class="code" title="subfunction val = durationDate(myDate)">durationDate</a>(endvec(N))};
+0127             <span class="keyword">end</span>
+0128             usedcell = true;
+0129          <span class="keyword">end</span>
+0130       <span class="keyword">case</span> {<span class="string">'DURATION_EPOCH'</span>} <span class="comment">%type:DOUBLE</span>
+0131          val = (<a href="#_sub1" class="code" title="subfunction val = grabEndTime(w)">grabEndTime</a>(w) - [w.start]) * 86400;
+0132          <span class="comment">%epoch time is # of seconds.</span>
+0133          
+0134       <span class="keyword">case</span> {<span class="string">'DURATION_MATLAB'</span>, <span class="string">'DURATION'</span>} <span class="comment">%type:DOUBLE</span>
+0135          val = <a href="#_sub1" class="code" title="subfunction val = grabEndTime(w)">grabEndTime</a>(w) - [w.start];
+0136          
+0137       <span class="keyword">case</span> {<span class="string">'TIMEVECTOR'</span>} <span class="comment">%type:CELL</span>
+0138          val = cell(size(w));
+0139          <span class="keyword">for</span> N = 1 : numel(w)
+0140             Xvalues = linspace(w(N).start,<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(N),<span class="string">'end'</span>),length(w(N).data)+1);
+0141             val{N} = Xvalues(1:end-1)';
+0142          <span class="keyword">end</span>
+0143          usedcell = true;
+0144          
+0145       <span class="keyword">case</span> {<span class="string">'MISC_FIELDS'</span>} <span class="comment">%type:CELL</span>
+0146          val = {w.misc_fields};
+0147          usedcell = true;
+0148          
+0149       <span class="keyword">case</span> {<span class="string">'UNITS'</span>} <span class="comment">%type : CELL</span>
+0150          val = {w.units};
+0151          usedcell = true;
+0152          
+0153       <span class="keyword">case</span> {<span class="string">'WAVEFORM_OBJECT_VERSION'</span>}
+0154          val = w(1).version;
+0155          
+0156       <span class="keyword">case</span> {<span class="string">'SCNLOBJECT'</span>} <span class="comment">% legacy only</span>
+0157          <span class="comment">% I'm making this whiny for now so it is obvious when things need to</span>
+0158          <span class="comment">% be changed.  This warning should probably be pulled out once we</span>
+0159          <span class="comment">% rerelease this.</span>
+0160          warning(<span class="string">'waveform:get:scnlobjectsAreDepricated'</span>,<span class="keyword">...</span>
+0161             [<span class="string">'any usage of scnlobject should be replaced by '</span>, <span class="keyword">...</span>
+0162             <span class="string">'''channelinfo'' which uses the new ChannelTag class'</span>]);
+0163          val = <a href="../../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>([w.cha_tag]);
+0164          <span class="comment">%must add network &amp; location, too.</span>
+0165          
+0166       <span class="keyword">case</span> {<span class="string">'CHANNELTAG'</span>}
+0167          val = [w.cha_tag];
+0168          
+0169       <span class="keyword">case</span> {<span class="string">'CHANNELINFO'</span>}
+0170          val = string([w.cha_tag]);
+0171          
+0172       <span class="keyword">case</span> {<span class="string">'HISTORY'</span>}
+0173          val = cell(size(w));
+0174          <span class="keyword">for</span> n=1:numel(w)
+0175             val(n) = {w(n).history};
+0176          <span class="keyword">end</span>
+0177          usedcell = true;
+0178          
+0179       <span class="keyword">otherwise</span>
+0180          <span class="comment">%perhaps we're trying to get at one of the miscelleneous fields?</span>
+0181          val = cell(size(w));
+0182          <span class="keyword">for</span> n = 1 : numel(w)
+0183             <span class="comment">%loc is the position...</span>
+0184             <span class="comment">%w(n).misc_fields should ALWAYS already be in uppercase</span>
+0185             mask = strcmp(upper(prop_name),w(n).misc_fields);
+0186             <span class="comment">%fieldwasfound = any(mask);</span>
+0187             <span class="comment">%[fieldwasfound, loc] = ismember(prop_name, w(n).misc_fields);</span>
+0188             <span class="keyword">if</span> any(mask)
+0189                
+0190                val{n} = w(n).misc_values{mask};
+0191                <span class="comment">%val{n} = w(n).misc_values{m};</span>
+0192             <span class="keyword">else</span>
+0193                error(<span class="string">'Waveform:get:unrecognizedProperty'</span>,<span class="keyword">...</span>
+0194                   <span class="string">'Unrecognized property name : %s'</span>,  prop_name);
+0195             <span class="keyword">end</span>
+0196          <span class="keyword">end</span>
+0197          <span class="comment">%check to see if value can be returned as a numeric value instead</span>
+0198          <span class="comment">%of cell.  Only if all values are numeric AND scalar</span>
+0199          numberize = true;
+0200          <span class="keyword">for</span> n=1:numel(val)
+0201             <span class="keyword">if</span> ~(isnumeric(val{n}) &amp;&amp; isscalar(val{n}))
+0202                numberize = false;
+0203                usedcell = true;
+0204                <span class="keyword">break</span>
+0205             <span class="keyword">end</span>
+0206          <span class="keyword">end</span>
+0207          <span class="keyword">if</span> numberize,
+0208             Z = val;
+0209             val = nan(size(Z));
+0210             <span class="keyword">for</span> n=1:numel(Z)
+0211                val(n) = Z{n};
+0212             <span class="keyword">end</span>
+0213          <span class="keyword">end</span>
+0214          
+0215    <span class="keyword">end</span>;
+0216    <span class="keyword">if</span> (numel(val) == numel(w)) <span class="comment">%THIS TEST CONDITIONALIZED 4/16/2008</span>
+0217       val = reshape(val,size(w)); <span class="comment">%return values in proper shape</span>
+0218    <span class="keyword">end</span>
+0219    <span class="keyword">if</span> usedcell &amp;&amp; singleWave
+0220       <span class="keyword">if</span> isa(val,<span class="string">'cell'</span>)
+0221          val = val{1}; <span class="comment">% return the actual value, not a cell array</span>
+0222       <span class="keyword">end</span>
+0223    <span class="keyword">end</span>;
+0224 <span class="keyword">end</span>
+0225 <span class="comment">%%%%%%%%%%%%%%%%</span>
+0226 <a name="_sub1" href="#_subfunctions" class="code">function val = grabEndTime(w)</a>
+0227    <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(w)
+0228       <span class="comment">%val = [];</span>
+0229       val = w.start;
+0230       <span class="keyword">return</span>
+0231    <span class="keyword">end</span>
+0232    dlens = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'data_length'</span>);
+0233    dlens = dlens(:);
+0234    
+0235    myfrq = [w.Fs];
+0236    myfrq = myfrq(:);
+0237    
+0238    seclen = dlens ./ myfrq;
+0239    to_add = datenum([zeros(numel(w),5) seclen])';
+0240    svals = [w(:).start];
+0241    val = svals +  to_add;
+0242    
+0243    <span class="comment">%endvec = datevec([w.start]) + [0 0 0 0 0 length(w.data)/w.Fs];</span>
+0244    <span class="comment">%endvec = datevec([w.start]) + [0 0 0 0 0 get(w,'data_length') ./ get(w,'Freq')];</span>
+0245    <span class="comment">%val = datenum(endvec);</span>
+0246 
+0247 <span class="keyword">end</span>
+0248 <span class="comment">%%%%%%%%%%%%%%%%</span>
+0249 <a name="_sub2" href="#_subfunctions" class="code">function val = stringDate(myDate)</a>
+0250    <span class="keyword">if</span> isnan(myDate)
+0251       warning(<span class="string">'waveform:get:undefinedDate'</span>,<span class="string">'Undefined date'</span>);
+0252       val = 0;
+0253       <span class="keyword">return</span>
+0254    <span class="keyword">end</span>
+0255    val = datestr(myDate,<span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>);
+0256 <span class="keyword">end</span>
+0257 <span class="comment">%%%%%%%%%%%%%%%%</span>
+0258 <a name="_sub3" href="#_subfunctions" class="code">function val = durationDate(myDate)</a>
+0259    
+0260    <span class="keyword">if</span> isnan(myDate)
+0261       <span class="comment">%this likely happened because the frequency was undefined (NaN)</span>
+0262       val = <span class="string">''</span>;
+0263       <span class="keyword">return</span>;
+0264    <span class="keyword">end</span>
+0265    
+0266    myDate = myDate(:);
+0267    [yr, mo, da] = datevec(myDate);
+0268    val = <span class="string">''</span>;
+0269    <span class="comment">%if yr, val = [val sprintf('%2d years ',yr)]; end</span>
+0270    <span class="comment">%if mo, val = [val sprintf('%2d months ',mo)]; end</span>
+0271    <span class="keyword">if</span> (yr+mo+da)&gt;1,
+0272       val = [val sprintf(<span class="string">'%4d days '</span>,fix(myDate))];
+0273    <span class="keyword">end</span>
+0274    val = [val datestr(myDate,<span class="string">'HH:MM:SS.FFF'</span>)];
+0275 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

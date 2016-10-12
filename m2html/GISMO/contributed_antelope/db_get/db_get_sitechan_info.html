@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of db_get_sitechan_info</title>
+  <meta name="keywords" content="db_get_sitechan_info">
+  <meta name="description" content="SITE = DB_GET_SITECHAN_INFO(STATION_LIST,CHANNEL_LIST,DATE,DATABASE_NAME)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed_antelope</a> &gt; <a href="index.html">db_get</a> &gt; db_get_sitechan_info.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed_antelope/db_get&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>db_get_sitechan_info
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>SITE = DB_GET_SITECHAN_INFO(STATION_LIST,CHANNEL_LIST,DATE,DATABASE_NAME)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function sitechan = db_get_sitechan_info(stalist,chanlist,datetime,dbname) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> SITE = DB_GET_SITECHAN_INFO(STATION_LIST,CHANNEL_LIST,DATE,DATABASE_NAME)
+ This function takes a list of stations and channels and populates the
+ location fields from the database given. The database must include a
+ sitechan table. STATION_LIST and CHANNEL_LIST can be vectors of cells, or
+ matrices of characters where each line holds one station of channel name.
+ If either the station list or the channel list is a scalar while the
+ other is a vector, it is expanded to the size of the other. The DATE
+ field is required to resolve conflicts when a station configuration has
+ changed through time. Typically the date will match waveform, origin or
+ arrival data that is being extracted from the database. The date should
+ be given is a string format recognized by antelope, or as a matlab-format
+ numeric time.
+
+ Example:
+    sitechan = db_get_sitechan_info({'AUL' 'AUL' 'AUL'},{'BHZ' 'BHN' 'BHE'},'7/1/2007','dbtmp')
+ Same as:
+    sitechan = db_get_sitechan_info('AUL',{'BHZ' 'BHN' 'BHE'},733224,'dbtmp')</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function sitechan = db_get_sitechan_info(stalist,chanlist,datetime,dbname)</a>
+0002 
+0003 
+0004 <span class="comment">% SITE = DB_GET_SITECHAN_INFO(STATION_LIST,CHANNEL_LIST,DATE,DATABASE_NAME)</span>
+0005 <span class="comment">% This function takes a list of stations and channels and populates the</span>
+0006 <span class="comment">% location fields from the database given. The database must include a</span>
+0007 <span class="comment">% sitechan table. STATION_LIST and CHANNEL_LIST can be vectors of cells, or</span>
+0008 <span class="comment">% matrices of characters where each line holds one station of channel name.</span>
+0009 <span class="comment">% If either the station list or the channel list is a scalar while the</span>
+0010 <span class="comment">% other is a vector, it is expanded to the size of the other. The DATE</span>
+0011 <span class="comment">% field is required to resolve conflicts when a station configuration has</span>
+0012 <span class="comment">% changed through time. Typically the date will match waveform, origin or</span>
+0013 <span class="comment">% arrival data that is being extracted from the database. The date should</span>
+0014 <span class="comment">% be given is a string format recognized by antelope, or as a matlab-format</span>
+0015 <span class="comment">% numeric time.</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% Example:</span>
+0018 <span class="comment">%    sitechan = db_get_sitechan_info({'AUL' 'AUL' 'AUL'},{'BHZ' 'BHN' 'BHE'},'7/1/2007','dbtmp')</span>
+0019 <span class="comment">% Same as:</span>
+0020 <span class="comment">%    sitechan = db_get_sitechan_info('AUL',{'BHZ' 'BHN' 'BHE'},733224,'dbtmp')</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%</span>
+0023 
+0024 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0025 <span class="comment">% $Date$</span>
+0026 <span class="comment">% $Revision$</span>
+0027 <span class="comment">% TODO: Current version does not output ctype and descrip fields</span>
+0028 
+0029 
+0030 
+0031 <span class="comment">% FORMAT INPUT AS CELLS</span>
+0032 <span class="keyword">if</span> ischar(stalist)
+0033    stalist = cellstr(stalist); 
+0034 <span class="keyword">end</span>
+0035 <span class="keyword">if</span> ischar(chanlist)
+0036    chanlist = cellstr(chanlist); 
+0037 <span class="keyword">end</span>
+0038 
+0039 
+0040 <span class="comment">% FORMAT INPUT INTO COLUMNS</span>
+0041 stalist =  reshape( stalist , numel(stalist), 1 );
+0042 chanlist = reshape( chanlist , numel(chanlist), 1 );
+0043 <span class="keyword">if</span> numel(stalist)==1 &amp; numel(chanlist)&gt;1
+0044     stalist = repmat(stalist,numel(chanlist),1);
+0045 <span class="keyword">end</span>
+0046 <span class="keyword">if</span> numel(chanlist)==1 &amp; numel(stalist)&gt;1
+0047     chanlist = repmat(chanlist,numel(stalist),1);
+0048 <span class="keyword">end</span>
+0049 sitechan.sta =  stalist;
+0050 sitechan.chan = chanlist;
+0051 
+0052 
+0053 <span class="comment">% PREP DAY OF YEAR</span>
+0054 <span class="keyword">if</span> isreal(datetime)
+0055    datetime = datestr(datetime,<span class="string">'mm/dd/yy HH:MM:SS.FFF'</span>); 
+0056 <span class="keyword">end</span>
+0057 jday = num2str(yearday(str2epoch(datetime)));
+0058 
+0059 
+0060 <span class="comment">% GET SITE INFO</span>
+0061 db = dbopen(dbname,<span class="string">'r'</span>);
+0062 db = dblookup_table(db,<span class="string">'sitechan'</span>);
+0063 nlist = [];
+0064 <span class="keyword">for</span> n = 1:length(sitechan.sta);
+0065     db1 = dbsubset(db,[<span class="string">'sta=='''</span> sitechan.sta{n} <span class="string">''''</span>]);
+0066     db1 = dbsubset(db1,[<span class="string">'chan=='''</span> sitechan.chan{n} <span class="string">''''</span>]);
+0067     db1 = dbsubset(db1,[<span class="string">'ondate&lt;='''</span> jday <span class="string">''' '</span>]);
+0068     db1 = dbsubset(db1,[<span class="string">'offdate&gt;='''</span> jday <span class="string">''' || offdate==NULL'</span>]);
+0069     recnum = dbquery(db1,<span class="string">'dbRECORD_COUNT'</span>);
+0070     <span class="comment">% can't load descrip field. Cell structure causes problems I don't want</span>
+0071     <span class="comment">% to spend time on. Not sure how ctype field is handled.</span>
+0072     <span class="comment">%[ sitechan.ondate(n) , sitechan.offdate(n) , sitechan.ctype(n) ,</span>
+0073     <span class="comment">%sitechan.hang(n) , sitechan.vang(n) , sitechan.descrip(n)] = dbgetv(db1,'ondate','offdate','ctype','hang','vang','descrip');</span>
+0074    
+0075     
+0076     <span class="comment">% HANDLE EXCEPTIONS</span>
+0077     <span class="keyword">if</span> dbquery(db1,<span class="string">'dbRECORD_COUNT'</span>)&gt;1
+0078         warning([<span class="string">'Database contains more than one set of sitechan info '</span> sitechan.sta{n} <span class="string">'_'</span>  sitechan.chan{n} <span class="string">' at yearday '</span> jday  <span class="string">'. Using first one'</span>]);
+0079     <span class="keyword">elseif</span> dbquery(db1,<span class="string">'dbRECORD_COUNT'</span>)==0
+0080         error([<span class="string">'Database does not contain sitechan info for '</span> sitechan.sta{n} <span class="string">'_'</span>  sitechan.chan{n} <span class="string">' at yearday '</span> jday  <span class="string">'.'</span>]);
+0081     <span class="keyword">end</span>
+0082     db1.record = 0;
+0083     [ sitechan.ondate(n) , sitechan.offdate(n) , sitechan.hang(n) , sitechan.vang(n)] = dbgetv(db1,<span class="string">'ondate'</span>,<span class="string">'offdate'</span>,<span class="string">'hang'</span>,<span class="string">'vang'</span>);
+0084 <span class="keyword">end</span>
+0085 dbclose(db);
+0086 sitechan.ondate = reshape( sitechan.ondate , numel(sitechan.ondate), 1 );
+0087 sitechan.offdate = reshape( sitechan.offdate , numel(sitechan.offdate), 1 );
+0088 <span class="comment">%sitechan.ctype = reshape( sitechan.ctype , numel(sitechan.ctype), 1 );</span>
+0089 sitechan.hang = reshape( sitechan.hang , numel(sitechan.hang), 1 );
+0090 sitechan.vang = reshape( sitechan.vang , numel(sitechan.vang), 1 );
+0091 <span class="comment">%sitechan.descrip = reshape( sitechan.descrip , numel(sitechan.descrip), 1 );</span>
+0092 
+0093</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

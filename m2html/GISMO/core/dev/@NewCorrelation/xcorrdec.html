@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of xcorrdec</title>
+  <meta name="keywords" content="xcorrdec">
+  <meta name="description" content="Same algorithm as xcorr1xr, except this function decomposes the complex">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; xcorrdec.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>xcorrdec
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Same algorithm as xcorr1xr, except this function decomposes the complex</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function d = xcorrdec(d) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Same algorithm as xcorr1xr, except this function decomposes the complex
+ numbers into their real and imaginary parts before doing the math.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@spectralobject/fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>	FFT Discrete Fourier transform.  OVERLOADED for waveform & Spectralobject</li><li><a href="../../../../GISMO/core/@spectralobject/ifft.html" class="code" title="function [varargout] = ifft(s, w)">ifft</a>	IFFT Inverse discrete Fourier transform.  OVERLOADED FOR Spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/DEP_xcorr.html" class="code" title="function c=xcorr(c,varargin)">DEP_xcorr</a>	C = XCORR(C)</li><li><a href="../../../../GISMO/core/@correlation/xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	C = XCORR(C)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function d = xcorrdec(d)</a>
+0002    
+0003    <span class="comment">% Same algorithm as xcorr1xr, except this function decomposes the complex</span>
+0004    <span class="comment">% numbers into their real and imaginary parts before doing the math.</span>
+0005    
+0006    <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0007    <span class="comment">% $Date$</span>
+0008    <span class="comment">% $Revision$</span>
+0009    
+0010    <span class="comment">% PREP NECESSARY TERMS</span>
+0011    [M,N] = size(d.w);
+0012    pretrig = 86400*(d.trig-d.start);   <span class="comment">% time between trace start and trigger</span>
+0013    l = (1./d.Fs)*[-M+1:M-1]';        <span class="comment">% lag vector</span>
+0014    wcoeff = 1./sqrt(sum(d.w.*d.w));
+0015    d.corrmatrix = eye(length(d.trig),<span class="string">'single'</span>);
+0016    d.lags = zeros(length(d.trig),<span class="string">'single'</span>);
+0017    
+0018    
+0019    <span class="comment">% GET FFT OF TRACES</span>
+0020    X = <a href="../../../../GISMO/core/@spectralobject/fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>(d.w,2^nextpow2(2*M-1));
+0021    [MX,NX] = size(X);
+0022    
+0023    
+0024    <span class="comment">% DECOMPOSE COMPLEX INTO REAL AND IMAG PARTS</span>
+0025    Xr = real(X);
+0026    Xi = imag(X);
+0027    
+0028    
+0029    <span class="comment">% TIME THE PROCESS</span>
+0030    starttime = now;
+0031    tic;
+0032    t0 = cputime;
+0033    numcorr = ((length(d.trig))^2-length(d.trig))/2;
+0034    count = 0;
+0035    
+0036    <span class="comment">% LOOP THROUGH ROWS OF SIMILARITY MATRIX</span>
+0037    i = sqrt(-1); 
+0038    <span class="keyword">for</span> n =1:N
+0039       cols = n:N;
+0040       <span class="comment">% multiply fourier series and transform back to time domain</span>
+0041       CC =   (Xr(:,n)*ones(1,length(cols))).*Xr(:,cols) <span class="keyword">...</span>
+0042          - i*(Xr(:,n)*ones(1,length(cols))).*Xi(:,cols) <span class="keyword">...</span>
+0043          + i*(Xi(:,n)*ones(1,length(cols))).*Xr(:,cols) <span class="keyword">...</span>
+0044          +   (Xi(:,n)*ones(1,length(cols))).*Xi(:,cols);
+0045       
+0046       corr = <a href="../../../../GISMO/core/@spectralobject/ifft.html" class="code" title="function [varargout] = ifft(s, w)">ifft</a>(CC);
+0047       corr = [corr(end-M+2:<span class="keyword">end</span>,:);corr(1:M,:)];
+0048       
+0049       <span class="comment">% save only max correlation value</span>
+0050       [maxval,index] = <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(corr);
+0051       d.corrmatrix(n,cols)=maxval .* wcoeff(n) .* wcoeff(cols);   <span class="comment">% normalized maximum correlation</span>
+0052       d.lags(n,cols)=l(index) + (pretrig(cols) - pretrig(n)); <span class="comment">% lag in seconds</span>
+0053       
+0054       <span class="keyword">if</span> (n==100) || (n==1000)
+0055          tclock = toc/86400;
+0056          completed = sum(N-n:N-1)/((N*N-N)/2);
+0057          fin = datestr(starttime + tclock/completed,16);
+0058          <a href="disp.html" class="code" title="function disp(c)">disp</a>([num2str(100*completed,<span class="string">'%2.0f'</span>) <span class="string">'% completed. Estimated completion at '</span> fin <span class="string">'...'</span>]);
+0059       <span class="keyword">end</span>;
+0060    <span class="keyword">end</span>
+0061    
+0062    
+0063    <span class="comment">% FILL LOWER TRIANGULAR PART OF MATRICES</span>
+0064    d.corrmatrix = NewCorrelation.fillLowerTriangleFromUpper(d.corrmatrix);
+0065    d.lags = d.lags - d.lags';
+0066    
+0067    
+0068    <span class="comment">% DISPLAY RUN TIMES</span>
+0069    tclock = toc;
+0070    tcpu = cputime-t0;
+0071    <a href="disp.html" class="code" title="function disp(c)">disp</a>([<span class="string">'Clock time to complete correlations: '</span> num2str(tclock,<span class="string">'%5.1f'</span>) <span class="string">' s'</span>]);
+0072    <a href="disp.html" class="code" title="function disp(c)">disp</a>([<span class="string">'CPU time to complete correlations:   '</span> num2str(tcpu,<span class="string">'%5.1f'</span>) <span class="string">' s'</span>]);
+0073    
+0074 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

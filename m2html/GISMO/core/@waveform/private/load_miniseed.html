@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of load_miniseed</title>
+  <meta name="keywords" content="load_miniseed">
+  <meta name="description" content="LOAD_MINISEED loads a waveform from MINISEED files">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; load_miniseed.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>load_miniseed
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>LOAD_MINISEED loads a waveform from MINISEED files</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = load_miniseed(request) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">LOAD_MINISEED loads a waveform from MINISEED files
+ combineWaves isn't currently used!</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/contributed/ReadMSEEDFast/ReadMSEEDFast.html" class="code" title="function [signalStruct] = ReadMSEEDFast(fileName)">ReadMSEEDFast</a>	ReadMSEEDFast( fileName )</li><li><a href="../../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>	GETFILENAME returns a filename that is associated with a single SCNL</li><li><a href="../../../../GISMO/core/@rsam/extract.html" class="code" title="function s=extract(self, snum, enum)">extract</a>	</li><li><a href="../../../../GISMO/core/@scnlobject/ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>	ChannelTag Converter from scnlobject to ChannelTag</li><li><a href="../../../../GISMO/core/@threecomp/extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../../../GISMO/core/@waveform/extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="unpackDataRequest.html" class="code" title="function [dataSource, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request)">unpackDataRequest</a>	</li><li><a href="../../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>	TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get_load_routine.html" class="code" title="function myLoadRoutine = get_load_routine(ds, use_wkaround)">get_load_routine</a>	determine the load function based upon the datasource's type</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function w = mseedfilename2waveform(thisfilename, snum, enum)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = load_miniseed(request)</a>
+0002    <span class="comment">%LOAD_MINISEED loads a waveform from MINISEED files</span>
+0003    <span class="comment">% combineWaves isn't currently used!</span>
+0004    
+0005    <span class="comment">% Glenn Thompson 2016/05/25 based on load_sac</span>
+0006    <span class="comment">% request.combineWaves is ignored</span>
+0007    
+0008    <span class="keyword">if</span> isstruct(request)
+0009       [thisSource, chanInfo, startTimes, endTimes, ~] = <a href="unpackDataRequest.html" class="code" title="function [dataSource, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request)">unpackDataRequest</a>(request);
+0010       <span class="keyword">for</span> i=1:numel(chanInfo)
+0011          <span class="keyword">for</span> j=1:numel(startTimes)
+0012             thisfilename = <a href="../../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>(thisSource,chanInfo(i),startTimes(j));
+0013             w(i,j) = <a href="#_sub1" class="code" title="subfunction w = mseedfilename2waveform(thisfilename, snum, enum)">mseedfilename2waveform</a>(thisfilename{1}, startTimes(j), endTimes(j));
+0014          <span class="keyword">end</span>
+0015       <span class="keyword">end</span>
+0016       w = w(:);
+0017       
+0018    <span class="keyword">else</span>
+0019       <span class="comment">%request should be a filename</span>
+0020       thisFilename = request;
+0021       <span class="keyword">if</span> exist(thisFilename, <span class="string">'file'</span>)
+0022         w = <a href="#_sub1" class="code" title="subfunction w = mseedfilename2waveform(thisfilename, snum, enum)">mseedfilename2waveform</a>(thisFilename);
+0023       <span class="keyword">else</span>
+0024           w = <a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>();
+0025           warning(sprintf(<span class="string">'File %s does not exist'</span>,thisFilename));
+0026       <span class="keyword">end</span>
+0027    <span class="keyword">end</span>
+0028 <span class="keyword">end</span>
+0029 
+0030 <a name="_sub1" href="#_subfunctions" class="code">function w = mseedfilename2waveform(thisfilename, snum, enum)</a>
+0031     s = <a href="../../../../GISMO/contributed/ReadMSEEDFast/ReadMSEEDFast.html" class="code" title="function [signalStruct] = ReadMSEEDFast(fileName)">ReadMSEEDFast</a>(thisfilename); <span class="comment">% written by Martin Mityska</span>
+0032     w = <a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>();
+0033     w.data = s.data;
+0034     w.start = <a href="../../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(s.startTime);
+0035     w.Fs = s.sampleRate;
+0036     w.cha_tag = <a href="../../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(s.network, s.station, s.location, s.channel);
+0037     w = <a href="../../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>(w, <span class="string">'time'</span>, snum, enum);
+0038 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of waveform2sound</title>
+  <meta name="keywords" content="waveform2sound">
+  <meta name="description" content="WAVEFORM2SOUND generate an audio file from a waveform object.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; waveform2sound.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>waveform2sound
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>WAVEFORM2SOUND generate an audio file from a waveform object.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function isSuccessful = waveform2sound(w, speedup, outfile) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">WAVEFORM2SOUND generate an audio file from a waveform object.
+   success = waveform2sound(waveform, speedup)
+
+   Input Arguments
+       WAVEFORM - a single waveform produces a mono output.  Two waveforms
+                produce stereo, with waveform(1)=Left, waveform(2)=Right
+       SPEEDUP - speed factor (typically 60 or 100 to get into human hearing range)
+       OUTFILE - complete path and filename for output audio file.
+               Extension determines sound file type (.wav, .flac, .ogg)
+
+       If OUTFILE is omitted, sound is played instead of saved to audio
+       file.
+
+   Output Argument
+       SUCCESS - a logical value (true/false) indicating on whether this
+               worked or not
+
+   See also AUDIOWRITE</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/demean.html" class="code" title="function c = demean(c,varargin);">demean</a>	DEMEAN removes the mean of each trace.</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@rsam/resample.html" class="code" title="function self = resample(self, varargin)">resample</a>	RESAMPLE resamples a rsam object at over every specified intercrunchfactor</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="demean.html" class="code" title="function w = demean (w)">demean</a>	DEMEAN remove offset voltage from signal</li><li><a href="double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="fix_data_length.html" class="code" title="function w = fix_data_length(w, maxlen)">fix_data_length</a>	FIX_DATA_LENGTH adjust length of waveform data to allow batch processing</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>	GETTIMERANGE returns the list of start and end times from a waveform array</li><li><a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="resample.html" class="code" title="function w = resample(w,method, crunchfactor)">resample</a>	RESAMPLE resamples a waveform at over every specified interval</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/demean.html" class="code" title="function c = demean(c)">demean</a>	DEMEAN removes the mean of each trace.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function isSuccessful = waveform2sound(w, speedup, outfile)</a>
+0002 <span class="comment">%WAVEFORM2SOUND generate an audio file from a waveform object.</span>
+0003 <span class="comment">%   success = waveform2sound(waveform, speedup)</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   Input Arguments</span>
+0006 <span class="comment">%       WAVEFORM - a single waveform produces a mono output.  Two waveforms</span>
+0007 <span class="comment">%                produce stereo, with waveform(1)=Left, waveform(2)=Right</span>
+0008 <span class="comment">%       SPEEDUP - speed factor (typically 60 or 100 to get into human hearing range)</span>
+0009 <span class="comment">%       OUTFILE - complete path and filename for output audio file.</span>
+0010 <span class="comment">%               Extension determines sound file type (.wav, .flac, .ogg)</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%       If OUTFILE is omitted, sound is played instead of saved to audio</span>
+0013 <span class="comment">%       file.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%   Output Argument</span>
+0016 <span class="comment">%       SUCCESS - a logical value (true/false) indicating on whether this</span>
+0017 <span class="comment">%               worked or not</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%   See also AUDIOWRITE</span>
+0020 
+0021 <span class="comment">% AUTHOR: Glenn Thompson</span>
+0022 <span class="comment">% Previous version by Celso Reyes no longer worked (wavwrite discontinued)</span>
+0023 <span class="comment">% and seemed overly complex (requiring files from Celso's GI account. It has</span>
+0024 <span class="comment">% been moved to the deprecated folder.</span>
+0025     isSuccessful = false;
+0026     <span class="comment">%our conventions</span>
+0027     LEFT = 1;
+0028     RIGHT = 2;
+0029 
+0030     <span class="keyword">if</span> numel(w) &gt; 2 <span class="comment">%too many waveforms, we'll use first two for stereo</span>
+0031         warning(<span class="string">'Waveform:waveform2sound:tooManyWaveforms'</span>,<span class="string">'Only using first two waveforms!'</span>);
+0032         w = [w(1) w(2)];
+0033     <span class="keyword">elseif</span> isscalar(w)
+0034         w = [w(1) w(1)];
+0035     <span class="keyword">end</span>
+0036 
+0037     w = <a href="demean.html" class="code" title="function w = demean (w)">demean</a>(w); <span class="comment">%make sure we're centered about zero...</span>
+0038 
+0039     <span class="comment">% ensure that both waveforms have same sampling rate</span>
+0040     samprate = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'freq'</span>);
+0041     <span class="keyword">if</span> round(samprate(1))~=round(samprate(2))
+0042         minsamprate = round(<a href="min.html" class="code" title="function [Y, I] = min(w)">min</a>(samprate));
+0043         [maxsamprate,index] = round(<a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>(samprate));
+0044         crunchfactor = maxsamprate / minsamprate;
+0045         w(index) = <a href="resample.html" class="code" title="function w = resample(w,method, crunchfactor)">resample</a>(w(index), <span class="string">'mean'</span>, crunchfactor);
+0046     <span class="keyword">end</span>
+0047 
+0048     <span class="comment">% normalize the waveforms</span>
+0049     <span class="keyword">for</span> n = 1 : numel(w)
+0050         loudestSample = <a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="abs.html" class="code" title="function w = abs(w)">abs</a>(<a href="double.html" class="code" title="function n = double(W, option)">double</a>(w(n))));
+0051         w(n) = w(n) / loudestSample;     
+0052         clear loudestSample
+0053     <span class="keyword">end</span>
+0054     w = <a href="fix_data_length.html" class="code" title="function w = fix_data_length(w, maxlen)">fix_data_length</a>(w);     <span class="comment">%make our waveforms the same length</span>
+0055 
+0056     <span class="comment">% new sampling rate</span>
+0057     samprate = round(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(1),<span class="string">'freq'</span>)) * round(speedup);
+0058     
+0059     <span class="keyword">if</span> exist(<span class="string">'outfile'</span>,<span class="string">'var'</span>)
+0060         <span class="comment">% write sound file</span>
+0061         <span class="keyword">try</span>
+0062 
+0063             titlestr = sprintf(<span class="string">'waveform object'</span>);
+0064             [snum, enum] = <a href="gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>(w(1));
+0065             nslc = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'ChannelTag'</span>);
+0066             commentstr = sprintf(<span class="string">'%s to %s. %s and %s'</span>,datestr(snum),datestr(enum),nslc(1).string(),nslc(2).string());
+0067             audiowrite(outfile, [<a href="double.html" class="code" title="function n = double(W, option)">double</a>(w(LEFT)), <a href="double.html" class="code" title="function n = double(W, option)">double</a>(w(RIGHT))], samprate, <span class="string">'title'</span>, titlestr, <span class="string">'comment'</span>, commentstr)
+0068             isSuccessful = true;
+0069         <span class="keyword">end</span>
+0070     <span class="keyword">else</span>
+0071         a=audioplayer([<a href="double.html" class="code" title="function n = double(W, option)">double</a>(w(LEFT)), <a href="double.html" class="code" title="function n = double(W, option)">double</a>(w(RIGHT))], samprate);
+0072         a=audioplayer(<a href="double.html" class="code" title="function n = double(W, option)">double</a>(w(LEFT)), samprate)
+0073         a.play()
+0074         isSuccessful = true;
+0075     <span class="keyword">end</span>
+0076 
+0077 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

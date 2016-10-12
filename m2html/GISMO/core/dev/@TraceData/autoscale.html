@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of autoscale</title>
+  <meta name="keywords" content="autoscale">
+  <meta name="description" content="autoscale   automatically determine correct y-units for plotting">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@TraceData</a> &gt; autoscale.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@TraceData&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>autoscale
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>autoscale   automatically determine correct y-units for plotting</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function newunit = autoscale(axishandle, oldunit) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">autoscale   automatically determine correct y-units for plotting
+  newunit = autoscale(axishandle, oldunit) autoscales the data in an
+  axis by considering its range and units, then determines a new unit.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>	ISMEMBER for scnlobjects</li><li><a href="../../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/ismember.html" class="code" title="function [results, loc] = ismember(mywave,anythingelse)">ismember</a>	ISMEMBER waveform implementation of ismember</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="TraceData.html" class="code" title="">TraceData</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [myunit, unitLength] = extractUnit(unit)</a></li><li><a href="#_sub2" class="code">function v = unit2val(myunit)</a></li><li><a href="#_sub3" class="code">function [unit, unitval] = val2unit(v)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function newunit = autoscale(axishandle, oldunit)</a>
+0002    <span class="comment">%autoscale   automatically determine correct y-units for plotting</span>
+0003    <span class="comment">%  newunit = autoscale(axishandle, oldunit) autoscales the data in an</span>
+0004    <span class="comment">%  axis by considering its range and units, then determines a new unit.</span>
+0005    
+0006    <span class="comment">%TODO: (maybe) make this TraceData dependent, and not axis dependent.</span>
+0007    
+0008    <span class="keyword">if</span> iscell(oldunit), oldunit = oldunit{1}; <span class="keyword">end</span>;
+0009    ah = axishandle;
+0010    
+0011    <span class="comment">% yRange = @(ax) max(get(ax,'ydata')) - min(get(ax,'ydata'));</span>
+0012    <span class="comment">% yMaxrange = max(arrayfun(yRange,ah)); % greatest data range from axis</span>
+0013    
+0014    yFarthestFrom0 = @(ax) <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'ydata'</span>)));
+0015    ydatamax = <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(arrayfun(yFarthestFrom0, ah)); <span class="comment">%overal maximum from axis</span>
+0016    
+0017    [nominatorUnit, nominatorUnitLength] = <a href="#_sub1" class="code" title="subfunction [myunit, unitLength] = extractUnit(unit)">extractUnit</a>(oldunit);
+0018    oldUnitVal = <a href="#_sub2" class="code" title="subfunction v = unit2val(myunit)">unit2val</a>(nominatorUnit);
+0019    <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(oldUnitVal),
+0020       newunit= oldunit;
+0021       <span class="keyword">return</span>
+0022    <span class="keyword">end</span>
+0023    trueScale = oldUnitVal .* ydatamax;  <span class="comment">% ex. 1 mm == 0.001</span>
+0024    [newunit, newUnitVal] = <a href="#_sub3" class="code" title="subfunction [unit, unitval] = val2unit(v)">val2unit</a>(trueScale);
+0025    oldunit(1:nominatorUnitLength) = [];
+0026    newunit = [newunit, oldunit];
+0027    
+0028    <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ah,<span class="string">'ydata'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ah,<span class="string">'ydata'</span>).*(oldUnitVal./newUnitVal));
+0029    
+0030    <a name="_sub1" href="#_subfunctions" class="code">function [myunit, unitLength] = extractUnit(unit)</a>
+0031       unitLength = sum(isletter(unit(1:2)));
+0032       myunit = unit(1:unitLength);
+0033    <span class="keyword">end</span>
+0034    
+0035    <a name="_sub2" href="#_subfunctions" class="code">function v = unit2val(myunit)</a>
+0036       <span class="comment">%unit2val   returns the associated multiplier for a unit</span>
+0037       <span class="comment">%  unit2val('m') % returns 1</span>
+0038       <span class="comment">%  unit2val('nm') % returns 1.0e-9</span>
+0039       <span class="comment">% expects only the nominator unit eg. 'nm'</span>
+0040       knownunits = {<span class="string">'pm'</span>,<span class="string">'nm'</span>, <span class="string">'\mum'</span>, <span class="string">'mm'</span>,<span class="string">'cm'</span>,<span class="string">'m'</span>,<span class="string">'km'</span>};
+0041       knownvals = 10.^[-12, -9, -6, -3, -2, 0, 3];
+0042       whichunit = <a href="../../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(knownunits,myunit);
+0043       <span class="keyword">if</span> any(whichunit)
+0044          v = knownvals(whichunit);
+0045       <span class="keyword">else</span>
+0046          v = []; <span class="comment">%not found!</span>
+0047       <span class="keyword">end</span>
+0048    <span class="keyword">end</span>
+0049    
+0050    <a name="_sub3" href="#_subfunctions" class="code">function [unit, unitval] = val2unit(v)</a>
+0051       <span class="comment">%val2unit   returns the unit and multiplier for a value</span>
+0052       <span class="comment">%  [a,b] = unit2val(0.0023) % a='mm', b=1.0e-3</span>
+0053       knownunits = {<span class="string">'pm'</span>,<span class="string">'nm'</span>,<span class="string">'\mum'</span>,<span class="string">'mm'</span>,<span class="string">'cm'</span>,<span class="string">'m'</span>,<span class="string">'km'</span>};
+0054       searchvals = 10.^[-inf, -9, -6, -3, -2, 0, 3]; <span class="comment">% tweak this part if anything</span>
+0055       knownvals =  10.^[-12, -9, -6, -3, -2, 0, 3];
+0056       whichunit = <a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>((v - searchvals) &gt;= 0, 1, <span class="string">'last'</span>);
+0057       unit = knownunits(whichunit);
+0058       unitval = knownvals(whichunit);
+0059    <span class="keyword">end</span>
+0060 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

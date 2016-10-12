@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of amplitude_spectrum_test</title>
+  <meta name="keywords" content="amplitude_spectrum_test">
+  <meta name="description" content="% Main function to generate tests">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">tests</a> &gt; amplitude_spectrum_test.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/tests&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>amplitude_spectrum_test
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>% Main function to generate tests</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function tests = amplitude_spectrum_test() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Main function to generate tests</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../GISMO/core/dev/@TraceData/amplitude_spectrum.html" class="code" title="function [A, phi, f] = amplitude_spectrum(td)">amplitude_spectrum</a>	amplitude_spectrum   Simple method to compute amplitude</li><li><a href="../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li><li><a href="../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li><li><a href="../../GISMO/deprecated/fft_tools/amplitude_spectrum.html" class="code" title="function w = add_spectral_data(w)">amplitude_spectrum</a>	add_spectral_data Simple method to compute frequency</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function testFunctionOne(testCase)</a></li><li><a href="#_sub2" class="code">function setupOnce(testCase)</a></li><li><a href="#_sub3" class="code">function teardownOnce(testCase)</a></li><li><a href="#_sub4" class="code">function setup(testCase)</a></li><li><a href="#_sub5" class="code">function teardown(testCase)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%% Main function to generate tests</span>
+0002 <a name="_sub0" href="#_subfunctions" class="code">function tests = amplitude_spectrum_test()</a>
+0003 tests = functiontests(localfunctions);
+0004 <span class="keyword">end</span>
+0005 
+0006 <span class="comment">%% Test Functions</span>
+0007 <a name="_sub1" href="#_subfunctions" class="code">function testFunctionOne(testCase)</a>
+0008 <span class="comment">%%</span>
+0009 fsamp=100;
+0010 fsignal = 2; <span class="comment">% 2Hz signal</span>
+0011 t=0:1/fsamp:60; <span class="comment">% 60s of data, 100Hz sampling rate</span>
+0012 size(t)
+0013 y=20*sin(2 * pi * fsignal * t) + randn(size(t)); <span class="comment">% bury a sinusoid signal in normally-distributed noise</span>
+0014 figure
+0015 subplot(2,1,1),<a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(t,y)
+0016 w=<a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0017 w=<a href="../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w,<span class="string">'data'</span>,y,<span class="string">'freq'</span>,fsamp);
+0018 subplot(2,1,2), <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(w)
+0019 [A, phi, f] = <a href="../../GISMO/core/dev/@TraceData/amplitude_spectrum.html" class="code" title="function [A, phi, f] = amplitude_spectrum(td)">amplitude_spectrum</a>(w);
+0020 figure
+0021 <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(f,A)
+0022 <a href="../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca,<span class="string">'XLim'</span>,[0 3])
+0023 <span class="comment">%%</span>
+0024 <span class="keyword">end</span>
+0025 
+0026 <span class="comment">%% Optional file fixtures</span>
+0027 <a name="_sub2" href="#_subfunctions" class="code">function setupOnce(testCase)  </a><span class="comment">% do not change function name</span>
+0028 <span class="comment">% set a new path, for example</span>
+0029 <span class="keyword">end</span>
+0030 
+0031 <a name="_sub3" href="#_subfunctions" class="code">function teardownOnce(testCase)  </a><span class="comment">% do not change function name</span>
+0032 <span class="comment">% change back to original path, for example</span>
+0033 <span class="keyword">end</span>
+0034 
+0035 <span class="comment">%% Optional fresh fixtures</span>
+0036 <a name="_sub4" href="#_subfunctions" class="code">function setup(testCase)  </a><span class="comment">% do not change function name</span>
+0037 <span class="comment">% open a figure, for example</span>
+0038 close all
+0039 <span class="keyword">end</span>
+0040 
+0041 <a name="_sub5" href="#_subfunctions" class="code">function teardown(testCase)  </a><span class="comment">% do not change function name</span>
+0042 <span class="comment">% close figure, for example</span>
+0043 close all
+0044 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

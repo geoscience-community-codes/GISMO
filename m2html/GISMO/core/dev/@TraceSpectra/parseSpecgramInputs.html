@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of parseSpecgramInputs</title>
+  <meta name="keywords" content="parseSpecgramInputs">
+  <meta name="description" content="parseSpecgramInputs   handles inputs for specgram functions">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@TraceSpectra</a> &gt; parseSpecgramInputs.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@TraceSpectra&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>parseSpecgramInputs
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>parseSpecgramInputs   handles inputs for specgram functions</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function p = parseSpecgramInputs(me, cellOfArgs) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">parseSpecgramInputs   handles inputs for specgram functions
+   p = parseSpecgramInputs(obj, cell_of_arguments) will parse the
+   cell of arguments into an inputParser.  specgram-specific
+   arguments will be returned in p.Results, while any additional
+   arguments will be returned in p.Unmatched.
+
+   specifically looks for:
+      'axis' - a handle to the axis, defining the area to be used
+      'position' - 1x4 vector, specifying area in which to plot [left, bottom, width, height]
+      'colorbar' - Position of the colorbar relative to the plot
+      'colormap' - alternate colormap
+      'xunit' - Specify the time units for the plot.  eg, hours, minutes, doy, etc.
+      'fontsize' -  specify the font size to be used for all labels within the plot
+      'yscale' - either 'normal', or 'log'
+      'innerlabels' -  true/false
+      'useXlabel' - true/false
+      'useYlabel' - true/false</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li><li><a href="specgram.html" class="code" title="function h = specgram(s, T, varargin)">specgram</a>	specgram - plots spectrogram of traces</li><li><a href="specgram2.html" class="code" title="function h = specgram2(s, T, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function p = parseSpecgramInputs(me, cellOfArgs)</a>
+0002    <span class="comment">%parseSpecgramInputs   handles inputs for specgram functions</span>
+0003    <span class="comment">%   p = parseSpecgramInputs(obj, cell_of_arguments) will parse the</span>
+0004    <span class="comment">%   cell of arguments into an inputParser.  specgram-specific</span>
+0005    <span class="comment">%   arguments will be returned in p.Results, while any additional</span>
+0006    <span class="comment">%   arguments will be returned in p.Unmatched.</span>
+0007    <span class="comment">%</span>
+0008    <span class="comment">%   specifically looks for:</span>
+0009    <span class="comment">%      'axis' - a handle to the axis, defining the area to be used</span>
+0010    <span class="comment">%      'position' - 1x4 vector, specifying area in which to plot [left, bottom, width, height]</span>
+0011    <span class="comment">%      'colorbar' - Position of the colorbar relative to the plot</span>
+0012    <span class="comment">%      'colormap' - alternate colormap</span>
+0013    <span class="comment">%      'xunit' - Specify the time units for the plot.  eg, hours, minutes, doy, etc.</span>
+0014    <span class="comment">%      'fontsize' -  specify the font size to be used for all labels within the plot</span>
+0015    <span class="comment">%      'yscale' - either 'normal', or 'log'</span>
+0016    <span class="comment">%      'innerlabels' -  true/false</span>
+0017    <span class="comment">%      'useXlabel' - true/false</span>
+0018    <span class="comment">%      'useYlabel' - true/false</span>
+0019    p = inputParser;
+0020    p.StructExpand = true;
+0021    p.KeepUnmatched = true;
+0022    p.CaseSensitive = false;
+0023    <span class="keyword">if</span> verLessThan(<span class="string">'matlab'</span>,<span class="string">'8.2'</span>) <span class="comment">%2013b</span>
+0024       addParameter = @addParamValue; <span class="comment">% usage is the same as of 2015b</span>
+0025    <span class="keyword">end</span>
+0026    <span class="comment">%NOTE: older version of matlab requires addParamValue instead of addParamter</span>
+0027    addParameter(p,<span class="string">'axis'</span>, 0); <span class="comment">%myaxis</span>
+0028    addParameter(p,<span class="string">'position'</span>, []);
+0029    addParameter(p,<span class="string">'colorbar'</span>, <span class="string">'horiz'</span>);
+0030    addParameter(p,<span class="string">'colormap'</span>, me.SPECTRAL_MAP);
+0031    addParameter(p,<span class="string">'xunit'</span>, me.scaling);
+0032    addParameter(p,<span class="string">'fontsize'</span>, 10);
+0033    addParameter(p,<span class="string">'yscale'</span>, <span class="string">'normal'</span>);
+0034    addParameter(p,<span class="string">'innerlabels'</span>, false);
+0035    addParameter(p,<span class="string">'useXlabel'</span>, true);
+0036    addParameter(p,<span class="string">'useYlabel'</span>, true);
+0037    p.parse(cellOfArgs{:});
+0038 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

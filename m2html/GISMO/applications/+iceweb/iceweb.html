@@ -1,0 +1,492 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of iceweb</title>
+  <meta name="keywords" content="iceweb">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">applications</a> &gt; <a href="index.html">+iceweb</a> &gt; iceweb.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/applications/+iceweb&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>iceweb
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function iceweb(ds, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="apply_calib.html" class="code" title="function w = apply_calib(w, sites)">apply_calib</a>	ADD RESPONSE FROM SUBNETS TO WAVEFORM OBJECTS</li><li><a href="apply_filter.html" class="code" title="function w = apply_filter(w, PARAMS)">apply_filter</a>	</li><li><a href="extended_spectralobject_colormap.html" class="code" title="function h = extended_spectralobject_colormap()">extended_spectralobject_colormap</a>	</li><li><a href="get_channeltags_active.html" class="code" title="function goodsites = get_channeltags_active(sites, snum)">get_channeltags_active</a>	sites active for this day</li><li><a href="get_spectrogram_filename.html" class="code" title="function spectrogramFilename = get_spectrogram_filename(paths, subnet, dnum)">get_spectrogram_filename</a>	</li><li><a href="get_timewindow.html" class="code" title="function timewindow = get_timewindow(utdnum_stop, numMins, utdnum_start)">get_timewindow</a>	GET_TIMEWINDOW</li><li><a href="makespectrogramthumbnails.html" class="code" title="function makespectrogramthumbnails(spectrogramFilename, spectrogramFraction)">makespectrogramthumbnails</a>	</li><li><a href="saveImageFile.html" class="code" title="function result = saveImageFile(arg1, arg2, arg3);">saveImageFile</a>	saveImageFile(IMGDIR, fname, res);</li><li><a href="show_sites.html" class="code" title="function show_sites(sites)">show_sites</a>	</li><li><a href="spectrogram_iceweb.html" class="code" title="function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)">spectrogram_iceweb</a>	SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of</li><li><a href="waveform_remove_empty.html" class="code" title="function w2 = waveform_remove_empty(w);">waveform_remove_empty</a>	WAVEFORM_REMOVE_EMPTY remove empty waveform objects from a vector of waveform objects</li><li><a href="waveform_wrapper.html" class="code" title="function w=waveform_wrapper(ds, chantag, snum, enum);">waveform_wrapper</a>	WAVEFORM_WRAPPER try multiple datasource objects in</li><li><a href="../../../GISMO/core/+antelope/listMiniseedFiles.html" class="code" title="function [mseedfiles] = listMiniseedFiles(ds, chantag, snum, enum)">listMiniseedFiles</a>	LISTMINISEEDFILES retrieve a list of the Miniseed files referenced by a datasource, ChannelTag object and start/end times.</li><li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>	DETREND removes the slope of each trace.</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>	DATASOURCE constructor for a datasource object.</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>	Purpose:</li><li><a href="../../../GISMO/core/@rsam/rsam.html" class="code" title="">rsam</a>	</li><li><a href="../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>	RSAM/SAVE - save an rsam-like object to an RSAM/BOB binary</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/detrend.html" class="code" title="function w = detrend (w, varargin)">detrend</a>	DETREND remove linear trend from a waveform</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>	FILLGAPS - fill missing data with values of your choice</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/@waveform/gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>	GETTIMERANGE returns the list of start and end times from a waveform array</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/pad.html" class="code" title="function [ w ] = pad( w, snum, enum, padvalue )">pad</a>	PAD Pad a waveform from snum to enum</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/detrend.html" class="code" title="function c = detrend(c)">detrend</a>	DETREND   removes the slope of each trace.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/linkedplot.html" class="code" title="function linkedplot(T, alignTraces)">linkedplot</a>	linkedplot   Plot multiple waveform objects as separate linked panels</li><li><a href="../../../GISMO/deprecated/@helicorder/build.html" class="code" title="function varargout = build(h)">build</a>	BUILD: Helicorder builder function. A helicorder object (h) contains no</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/helicorder.html" class="code" title="function h = helicorder(varargin)">helicorder</a>	HELICORDER: Helicorder generates a multi-line display of input waveform</li><li><a href="../../../GISMO/libgismo/floorminute.html" class="code" title="function dnum=floorminute(dnum,nummins)">floorminute</a>	FLOORMINUTE round up datenum to next minute mark</li><li><a href="../../../GISMO/libgismo/utnow.html" class="code" title="function utdnum=utnow()">utnow</a>	UTNOW</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="testday.html" class="code" title="">testday</a>	</li><li><a href="unrest.html" class="code" title="">unrest</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function iceweb_helper(paths, PARAMS, subnets, tw, ds)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function iceweb(ds, varargin)</a>
+0002     debug.printfunctionstack(<span class="string">'&gt;'</span>);
+0003     <span class="comment">% Process arguments</span>
+0004     p = inputParser;
+0005     
+0006        p.addParameter(<span class="string">'runmode'</span>, <span class="string">'archive'</span>);
+0007        p.addParameter(<span class="string">'snum'</span>, 0);
+0008        p.addParameter(<span class="string">'enum'</span>, 0);
+0009        p.addParameter(<span class="string">'nummins'</span>, 10);
+0010        p.addParameter(<span class="string">'delaymins'</span>, 0);
+0011        p.addParameter(<span class="string">'thissubnet'</span>, <span class="string">''</span>);
+0012        p.addParameter(<span class="string">'matfile'</span>, <span class="string">'pf/tremor_runtime.mat'</span>);
+0013        p.parse(varargin{:});
+0014        
+0015        thisrunmode = p.Results.runmode;
+0016        snum = p.Results.snum;
+0017        enum = p.Results.enum;
+0018        nummins = p.Results.nummins;
+0019        delaymins = p.Results.delaymins;
+0020        thissubnet = p.Results.thissubnet;
+0021        matfile = p.Results.matfile;
+0022        
+0023     <span class="keyword">if</span> exist(matfile, <span class="string">'file'</span>)
+0024         <a href="../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>(matfile);
+0025         PARAMS.runmode = thisrunmode;
+0026         clear thisrunmode;
+0027     <span class="keyword">else</span>
+0028         warning(sprintf(<span class="string">'matfile %s not found'</span>,matfile))
+0029         <span class="keyword">return</span>
+0030     <span class="keyword">end</span>
+0031 
+0032     <span class="comment">% load state</span>
+0033     statefile = sprintf(<span class="string">'iceweb_%s_state.mat'</span>,thissubnet);
+0034     <span class="keyword">if</span> exist(statefile, <span class="string">'file'</span>) &amp;&amp; ~strcmp(PARAMS.runmode, <span class="string">'test'</span>)
+0035         <a href="../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>(statefile)
+0036         <span class="keyword">if</span> strcmp(thissubnet, subnet0)
+0037         <span class="comment">%snum = snum0;</span>
+0038     <span class="keyword">end</span>
+0039     <span class="keyword">end</span>
+0040 
+0041     <span class="comment">% subset on thissubnet</span>
+0042     <span class="keyword">if</span> ~strcmp(thissubnet, <span class="string">''</span>) 
+0043         index = 0;
+0044         <span class="keyword">for</span> c=1:length(subnets)
+0045             <span class="keyword">if</span> strcmp(subnets(c).name, thissubnet)
+0046                 index = c;
+0047             <span class="keyword">end</span>
+0048         <span class="keyword">end</span>
+0049         <span class="keyword">if</span> index &gt; 0
+0050             subnets = subnets(index);
+0051             debug.print_debug(1, <span class="string">'subnet found'</span>)
+0052         <span class="keyword">else</span>
+0053             warning(<span class="string">'subnet not found'</span>)
+0054             <span class="keyword">return</span>;
+0055         <span class="keyword">end</span>
+0056     <span class="keyword">end</span>
+0057 
+0058     <span class="comment">% end time</span>
+0059     <span class="keyword">if</span> enum==0
+0060         enum = <a href="../../../GISMO/libgismo/utnow.html" class="code" title="function utdnum=utnow()">utnow</a> - delaymins/1440;
+0061     <span class="keyword">end</span>
+0062     
+0063     <span class="comment">% since the standard way is to create Antelope databases from day-long</span>
+0064     <span class="comment">% miniseed files for each ChannelTag, and reference these from</span>
+0065     <span class="comment">% day-long databases, I could add a check here using</span>
+0066     <span class="comment">% listMiniSEEDfiles to see if there are any data files for each day</span>
+0067     <span class="comment">% before I look for each 10 minute window for that day with</span>
+0068     <span class="comment">% waveform_wrapper</span>
+0069     <span class="comment">%   steps:</span>
+0070         <span class="comment">% check if datasource is Antelope</span>
+0071         <span class="comment">% loop over each day from snum to enum</span>
+0072         <span class="comment">% call listMiniSEEDfiles</span>
+0073         <span class="comment">% see for which ChannelTag I get exists=2, and then only use that</span>
+0074         <span class="comment">% list of successful channeltags for that day</span>
+0075         <span class="comment">% create timewindows for that day</span>
+0076         <span class="comment">% call iceweb_helper for each time window</span>
+0077         
+0078     <span class="comment">% NEW STUFF TO IMPLEMENT ABOVE SUGGESTION - MIGHT NOT WORK   %%% NOTE THIS ASSUMES MINISEED FILES THROUGH ANTELOPE %%%%%%%%%%</span>
+0079     <span class="keyword">if</span> exist(<span class="string">'ds'</span>,<span class="string">'var'</span>) &amp; strcmp(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ds,<span class="string">'type'</span>),<span class="string">'antelope'</span>)
+0080 
+0081         <span class="keyword">for</span> c=1:numel(subnets)
+0082         debug.print_debug(1,<span class="string">'Sites from MAT file - should be all in range'</span>)
+0083             sites = subnets(c).sites;
+0084         <a href="show_sites.html" class="code" title="function show_sites(sites)">show_sites</a>(sites)
+0085             <span class="keyword">for</span> dnum = floor(snum):ceil(enum)
+0086                 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(datestr(dnum))
+0087                    
+0088                 <span class="comment">% subset to channels active for today according to</span>
+0089                 <span class="comment">% site/sitechan db</span>
+0090                 todaysites = <a href="get_channeltags_active.html" class="code" title="function goodsites = get_channeltags_active(sites, snum)">get_channeltags_active</a>(sites, dnum); <span class="comment">% subset to channeltags valid</span>
+0091                 <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(todaysites)
+0092                     <span class="keyword">continue</span>;
+0093                 <span class="keyword">end</span>
+0094         debug.print_debug(1,<span class="string">'Subsetting to sites active today'</span>)
+0095         <a href="show_sites.html" class="code" title="function show_sites(sites)">show_sites</a>(todaysites)
+0096 
+0097                 <span class="comment">% change channel tag if this is MV network because channels in wfdisc table</span>
+0098                 <span class="comment">% are like SHZ_--</span>
+0099                 chantag = [todaysites.channeltag];
+0100                 <span class="keyword">for</span> cc=1:numel(chantag)
+0101                     <span class="keyword">if</span> strcmp(chantag(cc).network, <span class="string">'MV'</span>)
+0102                         chantag(cc).channel = sprintf(<span class="string">'%s_--'</span>,chantag(cc).channel);
+0103                     <span class="keyword">end</span>
+0104                 <span class="keyword">end</span>
+0105 
+0106                 <span class="comment">% subset to sites for which the files pointed to by the</span>
+0107                 <span class="comment">% wfdisc table, actually exist</span>
+0108                 m = <a href="../../../GISMO/core/+antelope/listMiniseedFiles.html" class="code" title="function [mseedfiles] = listMiniseedFiles(ds, chantag, snum, enum)">listMiniseedFiles</a>(ds, chantag, dnum, dnum+1);
+0109                 todaysites = todaysites([m.exists]==2);
+0110                 tw = <a href="get_timewindow.html" class="code" title="function timewindow = get_timewindow(utdnum_stop, numMins, utdnum_start)">get_timewindow</a>(<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([enum dnum+1]), nummins, <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>([dnum snum]));
+0111         debug.print_debug(1,<span class="string">'Subsetting to sites with miniseed files'</span>)
+0112         <a href="show_sites.html" class="code" title="function show_sites(sites)">show_sites</a>(todaysites)
+0113 
+0114                 newsubnets = subnets(c);
+0115                 newsubnets.sites = todaysites;
+0116 
+0117 
+0118                 <span class="keyword">if</span> ~strcmp(PARAMS.runmode,<span class="string">'test'</span>)
+0119                     <span class="comment">% loop over timewindows</span>
+0120                     <span class="keyword">for</span> count = 1:length(tw.start)
+0121                         thistw.start = tw.start(count);    
+0122                         thistw.stop = tw.stop(count);    
+0123                         <a href="#_sub1" class="code" title="subfunction iceweb_helper(paths, PARAMS, subnets, tw, ds)">iceweb_helper</a>(paths, PARAMS, newsubnets, thistw, ds);
+0124                     <span class="keyword">end</span>
+0125                 <span class="keyword">end</span>
+0126         <span class="keyword">end</span>    
+0127         <span class="keyword">end</span>
+0128     <span class="keyword">else</span>
+0129         <span class="comment">% THE WAY WE USED TO DO IT</span>
+0130         <span class="comment">% timewindows</span>
+0131         <span class="keyword">if</span> snum==0
+0132             tw = <a href="get_timewindow.html" class="code" title="function timewindow = get_timewindow(utdnum_stop, numMins, utdnum_start)">get_timewindow</a>(enum, nummins);
+0133         <span class="keyword">else</span>
+0134             tw = <a href="get_timewindow.html" class="code" title="function timewindow = get_timewindow(utdnum_stop, numMins, utdnum_start)">get_timewindow</a>(enum, nummins, snum);
+0135         <span class="keyword">end</span>
+0136         snum = enum - nummins/1440;
+0137 
+0138         <span class="comment">% loop over timewindows backwards, thereby prioritizing most recent data</span>
+0139         <span class="keyword">for</span> count = length(tw.start) : -1 : 1
+0140             thistw.start = tw.start(count);    
+0141             thistw.stop = tw.stop(count);    
+0142             <span class="keyword">if</span> ~strcmp(runmode,<span class="string">'test'</span>)
+0143                 <a href="#_sub1" class="code" title="subfunction iceweb_helper(paths, PARAMS, subnets, tw, ds)">iceweb_helper</a>(paths, PARAMS, subnets, thistw);
+0144             <span class="keyword">end</span>
+0145         <span class="keyword">end</span>
+0146     <span class="keyword">end</span>
+0147     debug.printfunctionstack(<span class="string">'&lt;'</span>);
+0148 <span class="keyword">end</span>
+0149 
+0150 
+0151 <a name="_sub1" href="#_subfunctions" class="code">function iceweb_helper(paths, PARAMS, subnets, tw, ds)</a>
+0152     debug.printfunctionstack(<span class="string">'&gt;'</span>);
+0153 
+0154     MILLISECOND_IN_DAYS = (1 / 86400000);
+0155 
+0156     makeSamFiles = false;
+0157     makeSoundFiles = true; 
+0158 
+0159     <span class="keyword">if</span> ~exist(<span class="string">'ds'</span>,<span class="string">'var'</span>)
+0160         <span class="keyword">for</span> c=1:numel(PARAMS.datasource)
+0161             <span class="keyword">if</span> strcmp(PARAMS.datasource(c).type, <span class="string">'antelope'</span>)
+0162                 ds(c) = <a href="../../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(PARAMS.datasource(c).type, PARAMS.datasource(c).path);
+0163 <span class="comment">%                 ds(c) = datasource('antelope', ...</span>
+0164 <span class="comment">%                '/raid/data/MONTSERRAT/antelope/db/db%04d%02d%02d',...</span>
+0165 <span class="comment">%                'year','month','day');</span>
+0166             <span class="keyword">else</span>
+0167                 ds(c) = <a href="../../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(PARAMS.datasource(c).type, PARAMS.datasource(c).path, str2num(PARAMS.datasource(c).port));
+0168             <span class="keyword">end</span>
+0169         <span class="keyword">end</span>
+0170     <span class="keyword">end</span>
+0171     <span class="comment">%gismo_datasource = gismo_datasource(1);</span>
+0172 
+0173     <span class="comment">%% LOOP OVER SUBNETS / SITES</span>
+0174     <span class="keyword">for</span> subnet_num=1:length(subnets)
+0175         <span class="comment">% which subnet?</span>
+0176         subnet = subnets(subnet_num).name;
+0177 
+0178         <span class="comment">% get IceWeb sites</span>
+0179         sites = subnets(subnet_num).sites;
+0180         <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(sites)
+0181             <span class="keyword">continue</span>;
+0182         <span class="keyword">end</span>
+0183 
+0184         <span class="comment">% loop over all elements of tw</span>
+0185         <span class="keyword">for</span> twcount = 1:length(tw.start)
+0186 
+0187             snum = tw.start(twcount);
+0188             enum = tw.stop(twcount) - MILLISECOND_IN_DAYS; <span class="comment">% try to skip last sample</span>
+0189 
+0190         <span class="comment">% load state</span>
+0191         statefile = sprintf(<span class="string">'iceweb_%s_state.mat'</span>,subnet);
+0192         <span class="keyword">if</span> exist(statefile, <span class="string">'file'</span>)
+0193         <a href="../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>(statefile)
+0194         <span class="keyword">if</span> strcmp(subnet, subnet0)
+0195             <span class="keyword">if</span> snum &lt; snum0 <span class="comment">% skip</span>
+0196                 <span class="comment">%continue</span>
+0197             <span class="keyword">end</span>
+0198         <span class="keyword">end</span>
+0199         <span class="keyword">end</span>
+0200         
+0201         <span class="comment">% save state</span>
+0202         ds0=ds; sites0=sites; snum0=snum; enum0=enum; subnet0 = subnet;
+0203         <a href="../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>(statefile, <span class="string">'ds0'</span>, <span class="string">'sites0'</span>, <span class="string">'snum0'</span>, <span class="string">'enum0'</span>, <span class="string">'subnet0'</span>);
+0204         clear ds0 sites0 snum0 enum0 subnet0
+0205 
+0206             <span class="comment">% Have we already process this timewindow?</span>
+0207             spectrogramFilename = <a href="get_spectrogram_filename.html" class="code" title="function spectrogramFilename = get_spectrogram_filename(paths, subnet, dnum)">get_spectrogram_filename</a>(paths,subnet,snum);
+0208              <span class="keyword">if</span> exist(spectrogramFilename, <span class="string">'file'</span>)
+0209                  <span class="comment">%fprintf('%s already exists - skipping\n',spectrogramFilename);</span>
+0210                  <span class="comment">%continue</span>
+0211              <span class="keyword">end</span>
+0212             
+0213             <span class="comment">%% Get waveform data</span>
+0214             debug.print_debug(0, sprintf(<span class="string">'%s %s: Getting waveforms for %s from %s to %s at %s'</span>,mfilename, datestr(<a href="../../../GISMO/libgismo/utnow.html" class="code" title="function utdnum=utnow()">utnow</a>), subnet , datestr(snum), datestr(enum)));
+0215             w = <a href="waveform_wrapper.html" class="code" title="function w=waveform_wrapper(ds, chantag, snum, enum);">waveform_wrapper</a>(ds, [sites.channeltag], snum, enum);
+0216 
+0217 
+0218         <span class="comment">%% Save waveform data to 1 hour MAT file</span>
+0219         dv = datevec(snum);
+0220         yyyy = dv(1);
+0221         jjj = floor(snum - datenum(yyyy,1,1) + 1);
+0222         hh = dv(4);
+0223         matfiletopdir = <span class="string">'/raid/data/matfiles'</span>;
+0224         wavmatfile = sprintf(<span class="string">'%s/%s/%04d/%03d/%s.%04d.%03d.%02d.mat'</span>,matfiletopdir,subnet,yyyy,jjj,subnet,yyyy,jjj,hh);
+0225             clear dv yyyy jjj hh
+0226         mkdir(fileparts(wavmatfile));
+0227         <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(sprintf(<span class="string">'Saving waveform data to %s'</span>,wavmatfile));
+0228         <a href="../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>(wavmatfile);
+0229         <span class="keyword">continue</span>
+0230 
+0231             <span class="comment">%% PRE_PROCESS DATA</span>
+0232             
+0233             <span class="comment">% Eliminate empty waveform objects</span>
+0234             w = <a href="waveform_remove_empty.html" class="code" title="function w2 = waveform_remove_empty(w);">waveform_remove_empty</a>(w);
+0235             <span class="keyword">if</span> numel(w)==0
+0236                 debug.print_debug(0, <span class="string">'No waveform data returned - skipping'</span>);
+0237                 <span class="keyword">continue</span>
+0238             <span class="keyword">end</span>
+0239 
+0240             <span class="comment">% Clean the waveforms</span>
+0241             w = <a href="../../../GISMO/core/@waveform/fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>(w, <span class="string">'interp'</span>);
+0242             w = <a href="../../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>(w);
+0243 
+0244             <span class="comment">% Apply calibs which should be stored within sites structure to</span>
+0245             <span class="comment">% waveform objects to convert from counts to real physical</span>
+0246             <span class="comment">% units</span>
+0247             w = <a href="apply_calib.html" class="code" title="function w = apply_calib(w, sites)">apply_calib</a>(w, sites);
+0248 
+0249             <span class="comment">% Apply filter to all signals</span>
+0250             w = <a href="apply_filter.html" class="code" title="function w = apply_filter(w, PARAMS)">apply_filter</a>(w, PARAMS);
+0251             
+0252             <span class="comment">% Pad all waveforms to same start/end</span>
+0253             [wsnum wenum] = <a href="../../../GISMO/core/@waveform/gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>(w); <span class="comment">% assume gaps already filled, signal</span>
+0254             w = <a href="../../../GISMO/core/@waveform/pad.html" class="code" title="function [ w ] = pad( w, snum, enum, padvalue )">pad</a>(w, <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([snum wsnum]), <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>([enum wenum]), 0);
+0255             
+0256             <span class="comment">% Save RSAM data</span>
+0257             rsamobj = <a href="../../../GISMO/core/@rsam/rsam.html" class="code" title="">rsam</a>(w);
+0258             rsamobj.save(fullfile(<span class="string">'spectrograms'</span>, subnet, <span class="string">'SSSS.CCC.YYYY.rsam'</span>));
+0259             
+0260             <span class="comment">%% CREATE &amp; SAVE WAVEFORM PLOT</span>
+0261             close all
+0262             <a href="../../../GISMO/core/dev/@SeismicTrace/linkedplot.html" class="code" title="function linkedplot(T, alignTraces)">linkedplot</a>(w)
+0263             <span class="comment">%s = input('continue?');</span>
+0264             [spdir,spbase,spext] = fileparts(spectrogramFilename);
+0265             mulpltFilename = fullfile(spdir, sprintf(<span class="string">'mulplt_%s%s'</span>,spbase,spext));
+0266             orient tall;
+0267             <a href="saveImageFile.html" class="code" title="function result = saveImageFile(arg1, arg2, arg3);">saveImageFile</a>(mulpltFilename, 72);    
+0268             
+0269 <span class="comment">%             %% CREATE &amp; SAVE HELICORDER PLOT</span>
+0270 <span class="comment">%             % SCAFFOLD</span>
+0271              <span class="keyword">try</span> <span class="comment">% crashing with</span>
+0272 <span class="comment">% %                  Index exceeds matrix dimensions.</span>
+0273 <span class="comment">% %</span>
+0274 <span class="comment">% %                 Error in helicorder/build&gt;pad_w (line 339)</span>
+0275 <span class="comment">% %                       dat = [pad1; get(w(n),'data')];</span>
+0276 <span class="comment">% %</span>
+0277 <span class="comment">% %                 Error in helicorder/build (line 68)</span>
+0278 <span class="comment">% %                 h = pad_w(h);          % If front of waveform is missing, fill with NaN</span>
+0279 <span class="comment">% %</span>
+0280 <span class="comment">% %                 Error in iceweb&gt;iceweb_helper (line 208)</span>
+0281 <span class="comment">% %                             build(heliplot)</span>
+0282 <span class="comment">% %</span>
+0283 <span class="comment">% %                 Error in iceweb (line 93)</span>
+0284 <span class="comment">% %                                     iceweb_helper(paths, PARAMS, newsubnets, thistw, ds);</span>
+0285 <span class="comment">% %</span>
+0286 <span class="comment">% %                 Error in unrest (line 20)</span>
+0287 <span class="comment">% %                 iceweb(ds, 'thissubnet', 'Sakurajima', 'snum', datenum(2015,6,3), 'enum', datenum(2015,6, 7), 'delaymins', 0, 'matfile', 'pf/Sakurajima.mat',</span>
+0288 <span class="comment">% %                 'nummins', mins, 'runmode', 'archive');</span>
+0289                  close all
+0290          <span class="keyword">for</span> wi=1:numel(w)
+0291                      heliplot = <a href="../../../GISMO/deprecated/@helicorder/helicorder.html" class="code" title="function h = helicorder(varargin)">helicorder</a>(w(wi),<span class="string">'mpl'</span>,3);
+0292                      <a href="../../../GISMO/deprecated/@helicorder/build.html" class="code" title="function varargout = build(h)">build</a>(heliplot)
+0293              ct = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(wi),<span class="string">'channeltag'</span>);
+0294                      helicorderFilename = fullfile(spdir, sprintf(<span class="string">'heli_%s_%s.%s.%s'</span>,spbase,ct.station,ct.channel,spext));
+0295                      orient tall;
+0296                      <a href="saveImageFile.html" class="code" title="function result = saveImageFile(arg1, arg2, arg3);">saveImageFile</a>(helicorderFilename, 72); 
+0297             clear ct helicorderFilename 
+0298          <span class="keyword">end</span>
+0299         clear wi
+0300              <span class="keyword">end</span>
+0301             
+0302 
+0303             <span class="comment">%% PLOT SPECTROGRAM</span>
+0304             close all
+0305             debug.print_debug(1, sprintf(<span class="string">'Creating %s'</span>,spectrogramFilename))
+0306             <span class="comment">%specgram_iceweb(PARAMS.spectralobject, w, 0.75, extended_spectralobject_colormap);</span>
+0307             <span class="comment">%specgram_wrapper(PARAMS.spectralobject, w, 0.75, extended_spectralobject_colormap);</span>
+0308 <span class="comment">%             try</span>
+0309                 spectrogramFraction = 0.75;
+0310 
+0311         <span class="comment">% restrict spectrogram to Z channels only</span>
+0312         w2=[];
+0313         <span class="keyword">for</span> wi=1:numel(w)
+0314             ct=<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(wi),<span class="string">'channeltag'</span>);
+0315             <span class="keyword">if</span> strfind(ct.channel,<span class="string">'Z'</span>)
+0316                 w2 = [w2 w(wi)];
+0317             <span class="keyword">end</span>
+0318         <span class="keyword">end</span>
+0319 
+0320                 [sgresult, Tcell, Fcell, Ycell] = <a href="spectrogram_iceweb.html" class="code" title="function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)">spectrogram_iceweb</a>(PARAMS.spectralobject, w2, spectrogramFraction, <a href="extended_spectralobject_colormap.html" class="code" title="function h = extended_spectralobject_colormap()">extended_spectralobject_colormap</a>);
+0321         clear w2 wi ct 
+0322                 <span class="keyword">if</span> sgresult &gt; 0 <span class="comment">% sgresult = number of waveforms for which a spectrogram was successfully plotted</span>
+0323                     <span class="comment">%% SAVE SPECTROGRAM PLOT TO IMAGE FILE AND CREATE THUMBNAIL</span>
+0324                     orient tall;
+0325 
+0326                     <span class="keyword">if</span> <a href="saveImageFile.html" class="code" title="function result = saveImageFile(arg1, arg2, arg3);">saveImageFile</a>(spectrogramFilename, 72)
+0327 
+0328                         fileinfo = dir(spectrogramFilename); <span class="comment">% getting a weird Index exceeds matrix dimensions error here.</span>
+0329                         debug.print_debug(0, sprintf(<span class="string">'%s %s: spectrogram PNG size is %d'</span>,mfilename, datestr(<a href="../../../GISMO/libgismo/utnow.html" class="code" title="function utdnum=utnow()">utnow</a>), fileinfo.bytes));    
+0330 
+0331                         <span class="comment">% make thumbnails</span>
+0332                         <a href="makespectrogramthumbnails.html" class="code" title="function makespectrogramthumbnails(spectrogramFilename, spectrogramFraction)">makespectrogramthumbnails</a>(spectrogramFilename, spectrogramFraction);
+0333 
+0334                     <span class="keyword">end</span>
+0335                     close all
+0336 
+0337                     <span class="comment">%% save spectral data</span>
+0338                     frequency_index_divider = 5.0; <span class="comment">% Hz</span>
+0339                     <span class="keyword">for</span> spi = 1:numel(Fcell)
+0340                         thisY = Ycell{spi};
+0341                         thisF = Fcell{spi};
+0342                         thisT = Tcell{spi};
+0343                         sta = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(spi),<span class="string">'station'</span>);
+0344                         chan = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(spi),<span class="string">'channel'</span>);
+0345 
+0346                         <span class="comment">% peakF and meanF for each spectrogram window</span>
+0347                         [Ymax,imax] = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(thisY);
+0348                         PEAK_F = thisF(imax);
+0349                         MEAN_F = (thisF' * thisY)./sum(thisY);
+0350 
+0351                         <span class="comment">% frequency index for each spectrogram window</span>
+0352                         fUpperIndices = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(thisF &gt; frequency_index_divider);
+0353                         fLowerIndices = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(thisF &lt; frequency_index_divider);                    
+0354                         fupper = sum(thisY(fUpperIndices,:));
+0355                         flower = sum(thisY(fLowerIndices,:));
+0356                         F_INDEX = log2(fupper ./ flower);
+0357 
+0358                         <span class="comment">% Peak spectral value in each frequency bin - or in</span>
+0359                         <span class="comment">% each minute?</span>
+0360 
+0361                         <span class="comment">% Now downsample to 1 sample per minute</span>
+0362                         dnum = <a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(<a href="../../../GISMO/libgismo/floorminute.html" class="code" title="function dnum=floorminute(dnum,nummins)">floorminute</a>(thisT));
+0363                         <span class="keyword">for</span> k=1:length(dnum)
+0364                             p = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(<a href="../../../GISMO/libgismo/floorminute.html" class="code" title="function dnum=floorminute(dnum,nummins)">floorminute</a>(thisT) == dnum(k));
+0365                             downsampled_peakf(k) = nanmean(PEAK_F(p));
+0366                             downsampled_meanf(k) = nanmean(MEAN_F(p));  
+0367                             downsampled_findex(k) = nanmean(F_INDEX(p));
+0368                             suby = thisY(:,p);
+0369                 <span class="keyword">if</span> size(suby,2) == 1
+0370                                 max_in_each_freq_band(:,k) = suby;
+0371                 <span class="keyword">else</span>
+0372                                 max_in_each_freq_band(:,k) = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(suby');
+0373                  <span class="keyword">end</span>
+0374                         <span class="keyword">end</span>
+0375 
+0376         <span class="comment">%                 % Plot for verification</span>
+0377         <span class="comment">%                 close all</span>
+0378         <span class="comment">%                 subplot(2,1,1),plot(dnum,downsampled_peakf,':');datetick('x');</span>
+0379         <span class="comment">%                 hold on</span>
+0380         <span class="comment">%                 plot(dnum,downsampled_meanf);datetick('x');</span>
+0381         <span class="comment">%                 subplot(2,1,2),plot(dnum,downsampled_findex);datetick('x');</span>
+0382         <span class="comment">%                 anykey = input('Press any key to continue');</span>
+0383 
+0384                         <span class="comment">% Save data</span>
+0385                         r1 = <a href="../../../GISMO/core/@rsam/rsam.html" class="code" title="">rsam</a>(dnum, downsampled_peakf, <span class="string">'sta'</span>, sta, <span class="keyword">...</span>
+0386                             <span class="string">'chan'</span>, chan, <span class="string">'measure'</span>, <span class="string">'peakf'</span>, <span class="keyword">...</span>
+0387                             <span class="string">'units'</span>, <span class="string">'Hz'</span>, <span class="string">'snum'</span>, <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(dnum), <span class="string">'enum'</span>, <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(dnum));
+0388                         r1.save(fullfile(<span class="string">'spectrograms'</span>, subnet, <span class="string">'SSSS.CCC.YYYY.peakf'</span>))
+0389 
+0390                         r2 = <a href="../../../GISMO/core/@rsam/rsam.html" class="code" title="">rsam</a>(dnum, downsampled_meanf, <span class="string">'sta'</span>, sta, <span class="keyword">...</span>
+0391                             <span class="string">'chan'</span>, chan, <span class="string">'measure'</span>, <span class="string">'meanf'</span>, <span class="keyword">...</span>
+0392                             <span class="string">'units'</span>, <span class="string">'Hz'</span>, <span class="string">'snum'</span>, <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(dnum), <span class="string">'enum'</span>, <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(dnum));
+0393                         r2.save(fullfile(<span class="string">'spectrograms'</span>, subnet, <span class="string">'SSSS.CCC.YYYY.meanf'</span>))
+0394 
+0395                         r3 = <a href="../../../GISMO/core/@rsam/rsam.html" class="code" title="">rsam</a>(dnum, downsampled_findex, <span class="string">'sta'</span>, sta, <span class="keyword">...</span>
+0396                             <span class="string">'chan'</span>, chan, <span class="string">'measure'</span>, <span class="string">'findex'</span>, <span class="keyword">...</span>
+0397                             <span class="string">'units'</span>, <span class="string">'none'</span>, <span class="string">'snum'</span>, <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(dnum), <span class="string">'enum'</span>, <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(dnum));
+0398                         r3.save(fullfile(<span class="string">'spectrograms'</span>, subnet, <span class="string">'SSSS.CCC.YYYY.findex'</span>)) 
+0399 
+0400                         specdatafilename = fullfile(<span class="string">'spectrograms'</span>, subnet, datestr(<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(dnum),<span class="string">'yyyy/mm/dd'</span>), sprintf( <span class="string">'%s_%s_%s.mat'</span>, datestr(<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(dnum),30), sta, chan) );
+0401                         specdatadir = fileparts(specdatafilename); <span class="comment">% make the directory in case it does not exist</span>
+0402                         mkdir(specdatadir); <span class="comment">% make the directory in case it does not exist</span>
+0403                         <a href="../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>(specdatafilename, <span class="string">'dnum'</span>, <span class="string">'max_in_each_freq_band'</span>) 
+0404                         clear r1 r2 r3 k p   downsampled_peakf downsampled_meanf <span class="keyword">...</span>
+0405                             downsampled_findex fUpperIndices fLowerIndices flower <span class="keyword">...</span>
+0406                             fupper F_INDEX PEAK_F MEAN_F Ymax imax thisY thisF thisT <span class="keyword">...</span>
+0407                             suby max_in_each_freq_band
+0408 
+0409                     <span class="keyword">end</span>
+0410                 <span class="keyword">end</span>
+0411 
+0412                 <span class="comment">%% SOUND FILES</span>
+0413                 <span class="keyword">if</span> makeSoundFiles
+0414                     <span class="keyword">try</span>
+0415                         <span class="comment">% 20120221 Added a &quot;sound file&quot; like 201202211259.sound which simply records order of stachans in waveform object so</span>
+0416                         <span class="comment">% php script can match spectrogram panel with appropriate wav file</span>
+0417                         <span class="comment">% 20121101 GTHO COmment: Could replace use of bnameroot below with strrep, since it is just used to change file extensions</span>
+0418                         <span class="comment">% e.g. strrep(spectrogramFilename, '.png', sprintf('_%s_%s.wav', sta, chan))</span>
+0419                         [dname, bnameroot, bnameext] = fileparts(spectrogramFilename);
+0420                         soundfilelist = fullfile(dname, filesep, [bnameroot,<span class="string">'.sound'</span>]);
+0421                         fsound = fopen(soundfilelist,<span class="string">'a'</span>);
+0422                         <span class="keyword">for</span> c=1:length(w)
+0423                             soundfilename = fullfile(dname, sprintf(<span class="string">'%s_%s_%s.wav'</span>,bnameroot, <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(c),<span class="string">'station'</span>), <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(c), <span class="string">'channel'</span>)  ) );
+0424                             fprintf(fsound,<span class="string">'%s\n'</span>, soundfilename);  
+0425                             debug.print_debug(0, sprintf(<span class="string">'Writing to %s'</span>,soundfilename)); 
+0426                             data = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(c),<span class="string">'data'</span>);
+0427                             m = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(data);
+0428                             <span class="keyword">if</span> m == 0
+0429                                 m = 1;
+0430                             <span class="keyword">end</span> 
+0431                             data = data / m;
+0432                             wavwrite(data, <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(c), <span class="string">'freq'</span>) * 120, soundfilename);
+0433                         <span class="keyword">end</span>
+0434                         fclose(fsound);
+0435                     <span class="keyword">end</span>
+0436                 <span class="keyword">end</span>
+0437 <span class="comment">%             end</span>
+0438         <span class="keyword">end</span>
+0439     <span class="keyword">end</span>
+0440 
+0441     debug.printfunctionstack(<span class="string">'&lt;'</span>);
+0442 <span class="keyword">end</span>
+0443</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

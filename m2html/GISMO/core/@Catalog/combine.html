@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of combine</title>
+  <meta name="keywords" content="combine">
+  <meta name="description" content="CATALOG.COMBINE combine two Catalog objects">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@Catalog</a> &gt; combine.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@Catalog&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>combine
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>CATALOG.COMBINE combine two Catalog objects</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function catalogObject = combine(catalogObject1, catalogObject2) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CATALOG.COMBINE combine two Catalog objects
+ catalogObject = COMBINE(catalogObject1, catalogObject2)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/waveform_wrapper.html" class="code" title="function w=waveform_wrapper(ds, chantag, snum, enum);">waveform_wrapper</a>	WAVEFORM_WRAPPER try multiple datasource objects in</li><li><a href="../../../GISMO/core/+antelope/antelope2waveform.html" class="code" title="function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)">antelope2waveform</a>	ANTELOPE2WAVEFORM Load waveform objects from Antelope database</li><li><a href="Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope_old.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope_old</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope_workaround.html" class="code" title="function outputWaveforms = load_antelope_workaround(datarequest, COMBINE_WAVEFORMS, specificDatabase)">load_antelope_workaround</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_from_datasource.html" class="code" title="function w = load_from_datasource(ds, chans, startt, endt, combine_waves, usewkaround)">load_from_datasource</a>	load_from_datasource</li><li><a href="../../../GISMO/core/dev/+dataretrieval/@antelopesource/antelopesource.html" class="code" title="">antelopesource</a>	</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/sst2nan.html" class="code" title="function nan = sst2nan(sst,w)">sst2nan</a>	</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/sst2val.html" class="code" title="function w = sst2val(sst,w,val)">sst2val</a>	SST2VAL: Set sections of waveform w to single value. Useful for setting</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/wfa2nan.html" class="code" title="function nan = wfa2nan(wfa, varargin)">wfa2nan</a>	</li><li><a href="../../../GISMO/tests/waveform_antelope_test.html" class="code" title="function tests = waveform_antelope_test()">waveform_antelope_test</a>	% Main function to generate tests</li><li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function catalogObject = combine(catalogObject1, catalogObject2)</a>
+0002     <span class="comment">%CATALOG.COMBINE combine two Catalog objects</span>
+0003     <span class="comment">% catalogObject = COMBINE(catalogObject1, catalogObject2)</span>
+0004 
+0005     catalogObject = [];
+0006 
+0007     <span class="keyword">if</span> nargin&lt;2
+0008         help Catalog.combine
+0009         <span class="keyword">return</span>
+0010     <span class="keyword">end</span>
+0011 
+0012     catalogObject = catalogObject1;
+0013 
+0014     catalogObject.table = union(catalogObject1.table, catalogObject2.table);
+0015 
+0016 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

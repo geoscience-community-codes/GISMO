@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of strip</title>
+  <meta name="keywords" content="strip">
+  <meta name="description" content="c = STRIP(c)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@correlation</a> &gt; strip.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@correlation&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>strip
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>c = STRIP(c)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function c = strip(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> c = STRIP(c)
+ This function &quot;deletes&quot; the correlation matrix from the
+ correlation object. This frees up considerable memory. It also removes
+ the necessity to keep these CPU-intensive fields updated. For example,
+ when the stack function adds a new trace, it automatically calls XCORR to
+ add correlation info for the new trace. If the CORR matrix is empty, then
+ it skips this potentially time consumming step. Realistically, once the
+ link field as been filled (via the LINKAGE function), the correlation
+ matrix is often no longer needed.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = strip(c,varargin)</a>
+0002 
+0003 <span class="comment">% c = STRIP(c)</span>
+0004 <span class="comment">% This function &quot;deletes&quot; the correlation matrix from the</span>
+0005 <span class="comment">% correlation object. This frees up considerable memory. It also removes</span>
+0006 <span class="comment">% the necessity to keep these CPU-intensive fields updated. For example,</span>
+0007 <span class="comment">% when the stack function adds a new trace, it automatically calls XCORR to</span>
+0008 <span class="comment">% add correlation info for the new trace. If the CORR matrix is empty, then</span>
+0009 <span class="comment">% it skips this potentially time consumming step. Realistically, once the</span>
+0010 <span class="comment">% link field as been filled (via the LINKAGE function), the correlation</span>
+0011 <span class="comment">% matrix is often no longer needed.</span>
+0012 
+0013 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0014 <span class="comment">% $Date$</span>
+0015 <span class="comment">% $Revision$</span>
+0016 
+0017 
+0018 
+0019 <span class="comment">% READ &amp; CHECK ARGUMENTS</span>
+0020 <span class="keyword">if</span> (nargin&gt;1)
+0021     error(<span class="string">'Wrong number of inputs'</span>);
+0022 <span class="keyword">end</span>;
+0023 
+0024 <span class="keyword">if</span> ~isa(c,<span class="string">'correlation'</span>)
+0025     error(<span class="string">'First input must be a correlation object'</span>);
+0026 <span class="keyword">end</span> 
+0027     
+0028 <span class="comment">% CALL WAVEFORM/ALIGN</span>
+0029 c.C = [];
+0030 
+0031 
+0032 
+0033 
+0034 
+0035 
+0036 
+0037 
+0038</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cookbook</title>
+  <meta name="keywords" content="cookbook">
+  <meta name="description" content="% EventRate Cookbook">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@EventRate</a> &gt; cookbook.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@EventRate&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>cookbook
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>% EventRate Cookbook</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% EventRate Cookbook
+ The EventRate class is for making plots of:
+
+ * number of events per unit time (often called &quot;counts&quot;)
+ * energy release rate / cumulative magnitude per unit time</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="EventRate.html" class="code" title="">EventRate</a>	</li><li><a href="../../../GISMO/core/@correlation/correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="../../../GISMO/core/@drumplot/drumplot.html" class="code" title="">drumplot</a>	DRUMPLOT the blueprint for drumplot objects in GISMO</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@TraceFilter/TraceFilter.html" class="code" title="">TraceFilter</a>	</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%% EventRate Cookbook</span>
+0002 <span class="comment">% The EventRate class is for making plots of:</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% * number of events per unit time (often called &quot;counts&quot;)</span>
+0005 <span class="comment">% * energy release rate / cumulative magnitude per unit time</span>
+0006 
+0007 <span class="comment">%% Simple EventRate example</span>
+0008 <span class="comment">% First we create a Catalog object from the Redoubt dataset</span>
+0009 dbpath = Catalog.demo.demodb(<span class="string">'avo'</span>);
+0010 redoubtLon = -152.7431; 
+0011 redoubtLat = 60.4853;
+0012 maxR = km2deg(20.0);
+0013 catalogObject = Catalog.retrieve(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, dbpath, <span class="keyword">...</span>
+0014     <span class="string">'radialcoordinates'</span>, [redoubtLat redoubtLon maxR]);
+0015 
+0016 <span class="comment">%%</span>
+0017 <span class="comment">% For a quick plot of earthquakes per hour, we create an EventRate object and then plot it. Here our binsize is 1/24 days, i.e. 1 hour.</span>
+0018 
+0019 eventrateObject = catalogObject.eventrate(<span class="string">'binsize'</span>, 1/24);
+0020 eventrateObject.plot()
+0021 
+0022 <span class="comment">%%</span>
+0023 <span class="comment">% Change to a smaller bin size of 20 minutes:</span>
+0024 
+0025 eventrateObject = catalogObject.eventrate(<span class="string">'binsize'</span>, 20/1440);
+0026 <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(eventrateObject);
+0027 
+0028 <span class="comment">%%</span>
+0029 <span class="comment">% Note that</span>
+0030 
+0031 <span class="comment">%%</span>
+0032 <span class="comment">%   eventrateObject.plot()</span>
+0033 
+0034 <span class="comment">%%</span>
+0035 <span class="comment">% and</span>
+0036 
+0037 <span class="comment">%%</span>
+0038 <span class="comment">%   plot(eventrateObject)</span>
+0039 
+0040 <span class="comment">%%</span>
+0041 <span class="comment">% do exactly the same thing. The first is the object-oriented style</span>
+0042 <span class="comment">% OBJECT.METHOD(INPUT PARAMETERS), the second is the functional style</span>
+0043 <span class="comment">% FUNCTION(OBJECT, INPUT PARAMETERS). The object oriented style is</span>
+0044 <span class="comment">% preferable.</span>
+0045 
+0046 <span class="comment">%% Event rates for overlapping time windows</span>
+0047 <span class="comment">% Sometimes it is desirable to compute event rate metrics for sliding -</span>
+0048 <span class="comment">% i.e. overlapping - time windows. This is easily done with the 'stepsize'</span>
+0049 <span class="comment">% parameter. If omitted, stepsize defaults to the binsize - which is the</span>
+0050 <span class="comment">% length of the time window. So in the previous example, both binsize</span>
+0051 <span class="comment">% and stepsize were 1.0 hours. But we can just as easily compute an</span>
+0052 <span class="comment">% EventRate object for the same EventRate object with a binsize of 1 hour,</span>
+0053 <span class="comment">% and stepsize of 1 minute. This effectively converts a Catalog into a set</span>
+0054 <span class="comment">% of continuous metrics, measured every minute, directly comparable to</span>
+0055 <span class="comment">% 1-minute RSAM.</span>
+0056 
+0057 eventrateObject = catalogObject.eventrate(<span class="string">'binsize'</span>, 1/24,  <span class="string">'stepsize'</span>, 1/1440);
+0058 eventrateObject.plot()
+0059 
+0060 <span class="comment">%% Plots of other event rate metrics</span>
+0061 <span class="comment">%%</span>
+0062 <span class="comment">%   eventrateObject.plot()</span>
+0063 
+0064 <span class="comment">%%</span>
+0065 <span class="comment">% is equivalent to typing:</span>
+0066 
+0067 <span class="comment">%%</span>
+0068 <span class="comment">%   eventrateObject.plot('metric', 'counts');</span>
+0069 
+0070 <span class="comment">%%</span>
+0071 <span class="comment">% The full list of metrics that can be plotted are:</span>
+0072 
+0073 <span class="comment">%%</span>
+0074 <span class="comment">%</span>
+0075 <span class="comment">% * counts</span>
+0076 <span class="comment">% * mean_rate</span>
+0077 <span class="comment">% * median_rate</span>
+0078 <span class="comment">% * cum_mag</span>
+0079 <span class="comment">% * mean_mag</span>
+0080 <span class="comment">% * median_mag</span>
+0081 <span class="comment">% * energy</span>
+0082 
+0083 <span class="comment">%%</span>
+0084 <span class="comment">% All of these are properties of an EventRate object except for energy, which is computed from _cum_mag_ on-the-fly. Several can be plotted at once in subplots of the same figure using a cell array:</span>
+0085 
+0086 eventrateObject.plot(<span class="string">'metric'</span>, {<span class="string">'mean_rate'</span>; <span class="string">'median_rate'</span>; <span class="string">'mean_mag'</span>; <span class="string">'cum_mag'</span>});
+0087 
+0088 <span class="comment">%%</span>
+0089 <span class="comment">% They can of course be plotted in separate figure windows:</span>
+0090 
+0091 eventrateObject.plot(<span class="string">'metric'</span>, <span class="string">'mean_rate'</span>)
+0092 eventrateObject.plot(<span class="string">'metric'</span>, <span class="string">'median_rate'</span>)
+0093 eventrateObject.plot(<span class="string">'metric'</span>, <span class="string">'mean_mag'</span>)
+0094 eventrateObject.plot(<span class="string">'metric'</span>, <span class="string">'cum_mag'</span>)
+0095 
+0096 <span class="comment">%%</span>
+0097 <span class="comment">% These are the same metrics, binsize and stepsize used by the [AVO swarm tracking system] (http://www.aeic.alaska.edu/input/west/papers/2009_srl_thompson_redoubtSwarms.pdf).</span>
+0098 
+0099 <span class="comment">%% Other plot types</span>
+0100 <span class="comment">% Two more simple plot types are:</span>
+0101 
+0102 eventrateObject.helenaplot()
+0103 
+0104 <span class="comment">%%</span>
+0105 <span class="comment">% and:</span>
+0106 
+0107 eventrateObject.pythonplot()
+0108 
+0109 <span class="comment">%%</span>
+0110 <span class="comment">% End of tutorial</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

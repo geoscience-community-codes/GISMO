@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of compare_sst</title>
+  <meta name="keywords" content="compare_sst">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">GISMO</a> &gt; <a href="#">deprecated</a> &gt; <a href="../../index.html">@helicorder</a> &gt; <a href="#">private</a> &gt; <a href="index.html">SST</a> &gt; compare_sst.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/deprecated/@helicorder/private/SST&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>compare_sst
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function match = compare_sst(sst_1,sst_2) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">
+COMPARE_SST: This is a work in progress
+
+USAGE: results = compare_sst(sst_1,sst_2)
+
+INPUTS: sst_1, sst_2
+
+OUTPUTS: match
+
+ See also <a href="add_sst.html" class="code" title="function sst_out = add_sst(sst_1,sst_2,varargin)">ADD_SST</a>, <a href="chk_t.html" class="code" title="function varargout = chk_t(type,varargin)">CHK_T</a>, <a href="compare_sst.html" class="code" title="function match = compare_sst(sst_1,sst_2)">COMPARE_SST</a>, <a href="delete_sst.html" class="code" title="function sub_sst = delete_sst(sst,t1,t2,edge_mode)">DELETE_SST</a>, <a href="extract_sst.html" class="code" title="function sub_sst = extract_sst(sst,t1,t2,edge_mode)">EXTRACT_SST</a>, <a href="is_sst.html" class="code" title="function bool = is_sst(sst)">IS_SST</a>,
+          <a href="istequal.html" class="code" title="function bool = istequal(t1,t2)">ISTEQUAL</a>, <a href="merge_sst.html" class="code" title="function sst = merge_sst(sst,varargin)">MERGE_SST</a>, <a href="search_sst.html" class="code" title="function [N P] = search_sst(t,sst)">SEARCH_SST</a>, <a href="sort_sst.html" class="code" title="function sst = sort_sst(sst)">SORT_SST</a>, NAN2SST, SSD2SST,
+          SST2NAN, SST2SSD, SST2VAL, SST2WFA, WFA2SST
+
+ Author: Dane Ketner, Alaska Volcano Observatory
+ $Date$
+ $Revision$</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="../../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>	Retain matching elements of two correlation objects.</li><li><a href="../../../../../GISMO/core/dev/@NewCorrelation/match.html" class="code" title="function [c1,c2] = match(c1,c2,toleranceInSeconds)">match</a>	Retain matching elements of two correlation objects.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function match = compare_sst(sst_1,sst_2)</a>
+0002 <span class="comment">%</span>
+0003 <span class="comment">%COMPARE_SST: This is a work in progress</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%USAGE: results = compare_sst(sst_1,sst_2)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%INPUTS: sst_1, sst_2</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%OUTPUTS: match</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% See also ADD_SST, CHK_T, COMPARE_SST, DELETE_SST, EXTRACT_SST, IS_SST,</span>
+0012 <span class="comment">%          ISTEQUAL, MERGE_SST, SEARCH_SST, SORT_SST, NAN2SST, SSD2SST,</span>
+0013 <span class="comment">%          SST2NAN, SST2SSD, SST2VAL, SST2WFA, WFA2SST</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Author: Dane Ketner, Alaska Volcano Observatory</span>
+0016 <span class="comment">% $Date$</span>
+0017 <span class="comment">% $Revision$</span>
+0018 
+0019 l1 = size(sst_1,1);
+0020 l2 = size(sst_2,1);
+0021 
+0022 n1 = 1;
+0023 n2 = 1;
+0024 
+0025 ce1 = sst_1(n1,:);
+0026 ce2 = sst_2(n2,:);
+0027 
+0028 done = 0;
+0029 <a href="../../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a> = [];
+0030 
+0031 <span class="comment">% Short Hand: A __ B</span>
+0032 <span class="comment">% NL - A is Left of B w/ No Overlap    A----A  B----B</span>
+0033 <span class="comment">% NR - A is Right of B w/ No Overlap   B----B  A----A</span>
+0034 <span class="comment">% OL - A Overlaps B From Left Side     A--B------A--B</span>
+0035 <span class="comment">% OR - A Overlaps B From Right Side    B--A------B--A</span>
+0036 <span class="comment">% OI - A Overlaps &amp; is Inside of B     B--A------A--B</span>
+0037 <span class="comment">% OO - A Overlaps &amp; is Outside of B    A--B------B--A</span>
+0038 
+0039 <span class="keyword">while</span> done == 0
+0040    <span class="keyword">if</span> ce1(2) &lt;= ce2(1)
+0041       <span class="comment">% ce1 NL ce2</span>
+0042       n1 = n1+1;
+0043    <span class="keyword">elseif</span> ce1(1) &gt;= ce2(2)
+0044       <span class="comment">% ce1 NR ce2</span>
+0045       n2 = n2+1;
+0046    <span class="keyword">elseif</span> ce1(1) &lt; ce2(1) &amp;&amp; ce1(2) &gt; ce2(1) &amp;&amp; ce1(2) &lt; ce2(2)
+0047       <span class="comment">% ce1 OL ce2</span>
+0048       d1 = ce1(2)-ce1(1);
+0049       d2 = ce2(2)-ce2(1);
+0050       od = ce1(2)-ce2(1);
+0051       <a href="../../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a> = [<a href="../../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>; n1 n2 d1 d2 od];
+0052       n1 = n1 + 1;
+0053    <span class="keyword">elseif</span> ce1(1) &gt; ce2(1) &amp;&amp; ce1(1) &lt; ce2(2) &amp;&amp; ce1(2) &gt; ce2(2)
+0054       <span class="comment">% ce1 OR ce2</span>
+0055       d1 = ce1(2)-ce1(1);
+0056       d2 = ce2(2)-ce2(1);
+0057       od = ce2(2)-ce1(1);
+0058       <a href="../../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a> = [<a href="../../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>; n1 n2 d1 d2 od];
+0059       n2 = n2 + 1;
+0060    <span class="keyword">elseif</span> ce1(1) &gt;= ce2(1) &amp;&amp; ce1(2) &lt;= ce2(2)
+0061       <span class="comment">% ce1 OI ce2</span>
+0062       d1 = ce1(2)-ce1(1);
+0063       d2 = ce2(2)-ce2(1);
+0064       od = d1;
+0065       <a href="../../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a> = [<a href="../../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>; n1 n2 d1 d2 od];
+0066       n1 = n1 + 1;
+0067    <span class="keyword">elseif</span> (ce1(1) &lt; ce2(1) &amp;&amp; ce1(2) &gt;= ce2(2))||<span class="keyword">...</span>
+0068           (ce1(1) &lt;= ce2(1) &amp;&amp; ce1(2) &gt; ce2(2))
+0069       <span class="comment">% ce1 OO ce2</span>
+0070       d1 = ce1(2)-ce1(1);
+0071       d2 = ce2(2)-ce2(1);
+0072       od = d2;
+0073       <a href="../../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a> = [<a href="../../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>; n1 n2 d1 d2 od];
+0074       n2 = n2 + 1;
+0075    <span class="keyword">end</span>
+0076    <span class="keyword">if</span> n1 &lt;= l1, ce1 = sst_1(n1,:); <span class="keyword">else</span> done = 1; <span class="keyword">end</span>
+0077    <span class="keyword">if</span> n2 &lt;= l2, ce2 = sst_2(n2,:); <span class="keyword">else</span> done = 1; <span class="keyword">end</span>
+0078 <span class="keyword">end</span>
+0079 
+0080 <a href="../../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>(:,3:5) = <a href="../../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>(:,3:5)*24*60*60;
+0081 d1_tot = sum(<a href="../../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>(:,3));
+0082 d2_tot = sum(<a href="../../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>(:,4));
+0083 od_tot = sum(<a href="../../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>(:,5));
+0084  
+0085       
+0086</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of testday</title>
+  <meta name="keywords" content="testday">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">applications</a> &gt; <a href="index.html">+iceweb</a> &gt; testday.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/applications/+iceweb&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>testday
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li><li><a href="setup.html" class="code" title="function setup(subnet, snum, enum, setupfile, chanmatch)">setup</a>	</li><li><a href="../../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>	DATASOURCE constructor for a datasource object.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 mins=60;
+0002 debug.set_debug(1);
+0003 
+0004 
+0005 <span class="comment">%% Sakurajima</span>
+0006 <span class="comment">%chanmatch = 'chan=~/[BESH]H[ENZ]/  || chan=~/BD[FL123]/';</span>
+0007 <span class="comment">%ds = datasource('antelope', ...</span>
+0008        <span class="comment">%'/raid/data/sakurajima/Seismic_Infrasound/SAK_dbs/GT/dbSAK_GT');</span>
+0009 <span class="comment">%setup('Sakurajima', datenum(2015,5,18), datenum(2015,6,7), 'pf/setup_Sakurajima.pf', chanmatch)</span>
+0010 <span class="comment">%iceweb(ds, 'thissubnet', 'Sakurajima', 'snum', datenum(2015,5,18), 'enum', datenum(2015,6,7), 'delaymins', 0, 'matfile', 'pf/Sakurajima.mat', 'nummins', mins, 'runmode', 'archive');</span>
+0011 
+0012 <span class="comment">%% Montserrat</span>
+0013 <span class="comment">% chanmatch = 'chan=~/[BESH]H[ENZ]/  || chan=~/BD[FL123]/';</span>
+0014 <span class="comment">%chanmatch = 'chan=~/[BESH]H[ENZ]/';</span>
+0015 chanmatch = <span class="string">'chan=~/[BESH]HZ/'</span>;
+0016 ds = <a href="../../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'antelope'</span>, <span class="keyword">...</span>
+0017         <span class="string">'/raid/data/MONTSERRAT/antelope/db/db%04d%02d%02d'</span>,<span class="keyword">...</span>
+0018         <span class="string">'year'</span>,<span class="string">'month'</span>,<span class="string">'day'</span>);
+0019 <a href="setup.html" class="code" title="function setup(subnet, snum, enum, setupfile, chanmatch)">setup</a>(<span class="string">'Montserrat'</span>, datenum(1995,7,1), datenum(2009,1,1), <span class="string">'pf/setup_Montserrat.pf'</span>, chanmatch)
+0020 <span class="comment">%montserrat_remove_analog_sites</span>
+0021 <a href="iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>(ds, <span class="string">'thissubnet'</span>, <span class="string">'Montserrat'</span>, <span class="string">'snum'</span>, datenum(1998,2,19), <span class="string">'enum'</span>, datenum(1998,2,19,23,59,59), <span class="string">'delaymins'</span>, 0, <span class="string">'matfile'</span>, <span class="string">'pf/Montserrat.mat'</span>, <span class="string">'nummins'</span>, mins, <span class="string">'runmode'</span>, <span class="string">'test'</span>);
+0022 
+0023 <span class="comment">%% Others yet to be converted to iceweb</span>
+0024 <span class="comment">% NOTE:</span>
+0025 <span class="comment">%   iceweb is just run in a single matlab session without waveform mat files and no rtexec</span>
+0026 <span class="comment">%   tremor_loadwaveformdata is for running concurrently with an rtexec system mixed with live data and creates waveform mat files)</span>
+0027 <span class="comment">%tremor_loadwaveformdata('thissubnet', 'Pavlof', 'snum', datenum(2013, 5, 17), 'enum', datenum(2013, 5, 18), 'delaymins', 0, 'matfile', 'pf/tremor_runtime.mat', 'nummins', mins, 'runmode', 'archive');</span>
+0028 <span class="comment">%tremor_loadwaveformdata('thissubnet', 'Pavlof', 'snum', datenum(2013, 5, 16), 'enum', datenum(2013, 5, 17), 'delaymins', 0, 'matfile', 'pf/tremor_runtime.mat', 'nummins', mins, 'runmode', 'archive');</span>
+0029 <span class="comment">%tremor_loadwaveformdata('thissubnet', 'Pavlof', 'snum', datenum(2013, 5, 15), 'enum', datenum(2013, 5, 16), 'delaymins', 0, 'matfile', 'pf/tremor_runtime.mat', 'nummins', mins, 'runmode', 'archive');</span>
+0030 <span class="comment">%tremor_loadwaveformdata('thissubnet', 'Pavlof', 'snum', datenum(2013, 5, 14), 'enum', datenum(2013, 5, 15), 'delaymins', 0, 'matfile', 'pf/tremor_runtime.mat', 'nummins', mins, 'runmode', 'archive');</span>
+0031 
+0032 <span class="comment">%tremor_loadwaveformdata('thisubnet', 'Redoubt', 'snum', datenum(2009, 3, 23, 0, 0, 0), 'enum', datenum(2009, 4, 5), 'nummins', mins, 'runmode', 'archive');</span>
+0033 <span class="comment">%tremor_loadwaveformdata('thisubnet', 'Redoubt', 'snum', datenum(2009, 3, 19), 'enum', datenum(2009, 3, 23), 'nummins', mins, 'runmode', 'archive');</span>
+0034 <span class="comment">%tremor_loadwaveformdata('thisubnet', 'Redoubt', 'snum', datenum(2009, 1, 1, 0, 0, 0), 'enum', datenum(2009, 3, 19), 'nummins', mins, 'runmode', 'archive');</span>
+0035 <span class="comment">%tremor_loadwaveformdata('thisubnet', 'Redoubt', 'snum', datenum(2009, 4, 5), 'enum', datenum(2009, 4, 12), 'nummins', mins, 'runmode', 'archive');</span>
+0036 <span class="comment">%tremor_loadwaveformdata('thisubnet', 'Redoubt', 'snum', datenum(2009, 4, 12), 'enum', datenum(2009, 6, 1), 'nummins', mins, 'runmode', 'archive');</span>
+0037 <span class="comment">%tremor_loadwaveformdata('thisubnet', 'Redoubt', 'snum', datenum(2008, 11, 1), 'enum', datenum(2009, 1, 1), 'nummins', mins, 'runmode', 'archive');</span>
+0038 <span class="comment">%tremor_loadwaveformdata('thisubnet', 'Redoubt', 'snum', datenum(2008, 9, 1), 'enum', datenum(2008, 11, 1), 'nummins', mins, 'runmode', 'archive');</span>
+0039 <span class="comment">%tremor_loadwaveformdata('thisubnet', 'Okmok', 'snum', datenum(2008, 7, 15), 'enum', datenum(2008, 8, 20), 'nummins', mins, 'runmode', 'archive');</span>
+0040 <span class="comment">%tremor_loadwaveformdata('thisubnet', 'Pavlof', 'snum', datenum(2007, 8, 11), 'enum', datenum(2007, 9, 15), 'nummins', mins, 'runmode', 'archive');</span>
+0041 <span class="comment">%tremor_loadwaveformdata('thisubnet', 'Augustine', 'snum', datenum(2005, 12, 1), 'enum', datenum(2006, 3, 15), 'nummins', mins, 'runmode', 'archive');</span>
+0042 <span class="comment">%tremor_loadwaveformdata('thisubnet', 'Shishaldin', 'snum', datenum(1999, 2, 15), 'enum', datenum(1999, 5, 27), 'nummins', mins, 'runmode', 'archive');</span>
+0043 <span class="comment">%tremor_loadwaveformdata('thisubnet', 'Pavlof', 'snum', datenum(1996, 9, 10), 'enum', datenum(1997, 1, 1), 'nummins', mins, 'runmode', 'archive');</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

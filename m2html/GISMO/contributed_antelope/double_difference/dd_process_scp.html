@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dd_process_scp</title>
+  <meta name="keywords" content="dd_process_scp">
+  <meta name="description" content="DD_PROCESS_SCP Process correlations by station and channel">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed_antelope</a> &gt; <a href="index.html">double_difference</a> &gt; dd_process_scp.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed_antelope/double_difference&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>dd_process_scp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>DD_PROCESS_SCP Process correlations by station and channel</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function dd_process_scp(dbname,scpfile,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DD_PROCESS_SCP Process correlations by station and channel
+
+ DD_PROCESS_SCP(DBNAME,SCP_FILE) cross correlates arrivals for the same
+ phase and station. SCP_FILE follows the format written by the program
+ DD_MAKE_SCP. For each line in an SCP_FILE, DD_PROCESS_SCP reads all
+ available waveforms, performs cross correlations and stores the results
+ is a temporary directory. If no directory name is specified the files are
+ written into TMP_MATDD_CORR.
+
+ DD_PROCESS_SCP(DBNAME,SCP_FILE,DIRNAME) same as above, except
+ that the correlation files are written into a directory named DIRNAME.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@correlation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>	C = BUTTER(C,[TYPE],CUTOFF,[POLES])</li><li><a href="../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="../../../GISMO/core/@correlation/correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../GISMO/core/@correlation/xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	C = XCORR(C)</li><li><a href="../../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>	DATASOURCE constructor for a datasource object.</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>	RSAM/SAVE - save an rsam-like object to an RSAM/BOB binary</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>	scnl (deprecated) : object that holds the stations, channel, network, and location for</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>	ADDFIELD add fields and values to waveform object(s)                V1.1</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>	butter   create and apply a butterworth filter to the traces</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	xcorr   calculate the correlation and lag for traces</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>	TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [W,tracesFound] = load_by_orid(dbname,STA,CHAN,IPHASE,pretrig,posttrig)</a></li><li><a href="#_sub2" class="code">function [linenum,linestr,C,minimumCorrelation,maximumLag] = correlate(W,pretrig,posttrig,hpf,lpf,sta,iphase,minCorr,maxLag)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function dd_process_scp(dbname,scpfile,varargin)</a>
+0002 
+0003 <span class="comment">%DD_PROCESS_SCP Process correlations by station and channel</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% DD_PROCESS_SCP(DBNAME,SCP_FILE) cross correlates arrivals for the same</span>
+0006 <span class="comment">% phase and station. SCP_FILE follows the format written by the program</span>
+0007 <span class="comment">% DD_MAKE_SCP. For each line in an SCP_FILE, DD_PROCESS_SCP reads all</span>
+0008 <span class="comment">% available waveforms, performs cross correlations and stores the results</span>
+0009 <span class="comment">% is a temporary directory. If no directory name is specified the files are</span>
+0010 <span class="comment">% written into TMP_MATDD_CORR.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% DD_PROCESS_SCP(DBNAME,SCP_FILE,DIRNAME) same as above, except</span>
+0013 <span class="comment">% that the correlation files are written into a directory named DIRNAME.</span>
+0014 
+0015 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0016 <span class="comment">% $Date$</span>
+0017 <span class="comment">% $Revision$</span>
+0018 
+0019 
+0020 
+0021 <span class="comment">% CHECK FOR VALID DATABASE</span>
+0022 <span class="keyword">try</span>
+0023     db = dbopen(dbname,<span class="string">'r'</span>);
+0024     dbclose(db);
+0025 <span class="keyword">catch</span>
+0026     error([<span class="string">'Could not open database: '</span> dbname]);
+0027 <span class="keyword">end</span>
+0028 
+0029 
+0030 <span class="comment">% CHECK INPUTS</span>
+0031 <span class="keyword">if</span> nargin==3
+0032     directoryname = varargin{1};
+0033 <span class="keyword">elseif</span> nargin==2
+0034     directoryname = <span class="string">'TMP_MATDD_CORR'</span>;
+0035 <span class="keyword">else</span>
+0036     error(<span class="string">'Incorrect number of inputs'</span>);
+0037 <span class="keyword">end</span>
+0038 
+0039 
+0040 <span class="comment">% READ AND PARSE SCP FILE</span>
+0041 <span class="keyword">try</span>
+0042     fid = fopen(scpfile);
+0043 <span class="keyword">catch</span>
+0044    error([<span class="string">'Unable to open scp file: '</span> scpfile]); 
+0045 <span class="keyword">end</span>
+0046 <span class="comment">% check for header file</span>
+0047 C = textscan(fid,<span class="string">'%s %s %s %s %s %s %s %s %s %s'</span>,1);
+0048 test1 = C{4};
+0049 test2 = C{8};
+0050 test1 = str2num(test1{1});
+0051 test2 = str2num(test2{1});
+0052 <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(test1) || ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(test2)
+0053     error(<span class="string">'SCP file is formatted incorrectly or missing a header line'</span>);
+0054 <span class="keyword">end</span>
+0055 C = textscan(fid,<span class="string">'%s %s %s %n %n %n %n %n %n %n'</span>);
+0056 fclose(fid);
+0057 sta = C{1};
+0058 chan = C{2};
+0059 iphase = C{3};
+0060 npick = C{4};
+0061 pretrig = C{5};
+0062 posttrig = C{6};
+0063 minCorr = C{7};
+0064 maxLag = C{8};
+0065 hpf = C{9};
+0066 lpf = C{10};
+0067 clear C test1 test2 
+0068 
+0069 
+0070 <span class="comment">% CREATE OUTPUT DIRECTORY IF NEEDED</span>
+0071 tmp = exist(directoryname,<span class="string">'dir'</span>);
+0072 <span class="keyword">if</span> (tmp~=7)
+0073     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'Creating directory: '</span> directoryname <span class="string">' ...'</span>]);
+0074     mkdir(directoryname);
+0075 <span class="keyword">end</span>
+0076     
+0077 
+0078 <span class="comment">% CYCLE THROUGH ALL SCP LINES</span>
+0079 <span class="keyword">for</span> n =1:length(sta)
+0080     <span class="keyword">if</span> npick(n)&gt;3
+0081         [W,tracesFound] = <a href="#_sub1" class="code" title="subfunction [W,tracesFound] = load_by_orid(dbname,STA,CHAN,IPHASE,pretrig,posttrig)">load_by_orid</a>(dbname,sta{n},chan{n},iphase{n},pretrig(n),posttrig(n));
+0082         <span class="keyword">if</span> tracesFound &amp;&amp; ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(W)
+0083             [linenum,linestr,C,minimumCorrelation,maximumLag] = <a href="#_sub2" class="code" title="subfunction [linenum,linestr,C,minimumCorrelation,maximumLag] = correlate(W,pretrig,posttrig,hpf,lpf,sta,iphase,minCorr,maxLag)">correlate</a>(W,pretrig(n),posttrig(n),hpf(n),lpf(n),sta{n},iphase{n},minCorr(n),maxLag(n));
+0084             <a href="../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>([directoryname <span class="string">'/corr_'</span> sta{n} <span class="string">'_'</span> chan{n} <span class="string">'_'</span> iphase{n}],<span class="string">'C'</span>,<span class="string">'linenum'</span>,<span class="string">'linestr'</span>,<span class="string">'minimumCorrelation'</span>,<span class="string">'maximumLag'</span>);
+0085         <span class="keyword">end</span>
+0086     <span class="keyword">end</span>
+0087 <span class="keyword">end</span>
+0088 
+0089 
+0090 
+0091 
+0092 
+0093 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0094 <span class="comment">% LOAD DATA FOR AN INDIVIDUAL STATION, CHANNEL, IPHASE TRIPLET</span>
+0095 
+0096 <a name="_sub1" href="#_subfunctions" class="code">function [W,tracesFound] = load_by_orid(dbname,STA,CHAN,IPHASE,pretrig,posttrig)</a>
+0097 
+0098 
+0099 W = [];
+0100 
+0101 <span class="comment">% LOAD VALUES FROM DATABASE</span>
+0102 <span class="keyword">try</span>
+0103     db = dbopen(dbname,<span class="string">'r'</span>);
+0104     db = dblookup_table(db,<span class="string">'origin'</span>);
+0105     db1 = dblookup_table(db,<span class="string">'event'</span>);
+0106     db = dbjoin(db,db1);
+0107     db = dbsubset(db,<span class="string">'orid==prefor'</span>);
+0108     db1 = dblookup_table(db,<span class="string">'assoc'</span>);
+0109     db = dbjoin(db,db1);
+0110     db1 = dblookup_table(db,<span class="string">'arrival'</span>);
+0111     db = dbjoin(db,db1);
+0112 <span class="keyword">catch</span>
+0113     error([<span class="string">'Could not open all required database tables in: '</span> dbname]);
+0114 <span class="keyword">end</span>
+0115 
+0116 <span class="comment">% subset required rows</span>
+0117 db = dbsubset(db,[<span class="string">'sta==&quot;'</span> STA <span class="string">'&quot;'</span>]);
+0118 db = dbsubset(db,[<span class="string">'iphase==&quot;'</span> IPHASE <span class="string">'&quot;'</span>]);
+0119 tracesFound= dbquery(db,<span class="string">'dbRECORD_COUNT'</span>)
+0120 <span class="keyword">if</span> tracesFound == 0
+0121     warning([<span class="string">'No arrivals found. Skipping '</span> STA <span class="string">'_'</span> CHAN <span class="string">' '</span> IPHASE']);
+0122     <span class="keyword">return</span>
+0123 <span class="keyword">end</span>
+0124 
+0125     
+0126 <span class="comment">% nrecords = dbquery(db,'dbRECORD_COUNT')</span>
+0127 [or_time,orid,ar_time] = dbgetv(db,<span class="string">'origin.time'</span>,<span class="string">'orid'</span>,<span class="string">'arrival.time'</span>);
+0128 ar_time = <a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(ar_time);
+0129 or_time = <a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(or_time);
+0130 dbclose(db)
+0131 
+0132 
+0133 
+0134 <span class="comment">% LOAD WAVEFORMS</span>
+0135 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'Loading '</span> STA <span class="string">'_'</span> CHAN <span class="string">' '</span> IPHASE <span class="string">' phase ('</span> num2str(numel(ar_time)) <span class="string">' arrivals) ...'</span>]);
+0136 ds = <a href="../../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'antelope'</span>,dbname);
+0137 <span class="keyword">for</span> n = 1:numel(ar_time)
+0138     scnl = <a href="../../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(STA,CHAN);
+0139     startTime = ar_time(n)+(pretrig-3)/86400;
+0140     endTime = ar_time(n)+(posttrig+3)/86400;
+0141    <span class="keyword">try</span>
+0142       w = <a href="../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds,scnl,startTime,endTime);
+0143       w = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'ORID'</span>,orid(n));
+0144       w = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'ORIGIN_TIME'</span>,or_time(n));
+0145       w = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'ARRIVAL_TIME'</span>,ar_time(n));
+0146       W = <a href="../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1,W,w);
+0147    <span class="keyword">catch</span>
+0148       <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'    Not able to load arrival at '</span> datestr(ar_time(n),31) <span class="string">'   (no. '</span> num2str(n) <span class="string">')'</span> ]);
+0149    <span class="keyword">end</span>
+0150 <span class="keyword">end</span>
+0151 
+0152 
+0153 
+0154 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0155 <span class="comment">% CORRELATE WAVEFORMS</span>
+0156 
+0157 <a name="_sub2" href="#_subfunctions" class="code">function [linenum,linestr,C,minimumCorrelation,maximumLag] = correlate(W,pretrig,posttrig,hpf,lpf,sta,iphase,minCorr,maxLag)</a>
+0158 
+0159 orid = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(W,<span class="string">'ORID'</span>);
+0160 ar_time = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(W,<span class="string">'ARRIVAL_TIME'</span>);
+0161 C = <a href="../../../GISMO/core/@correlation/correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>(W,ar_time);
+0162 C = <a href="../../../GISMO/core/@correlation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>(C,[hpf lpf]);
+0163 C = <a href="../../../GISMO/core/@correlation/xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>(C,[pretrig posttrig],<span class="string">'interp'</span>);
+0164 corr = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(C,<span class="string">'CORR'</span>);
+0165 lag = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(C,<span class="string">'LAG'</span>);
+0166 
+0167 
+0168 <span class="comment">% PRE-ALLOCATE ARRAYS</span>
+0169 numberOfRows = sum(1:numel(orid)-1);
+0170 linestr = repmat({<span class="string">'placeHolder'</span>},[numberOfRows 1]);
+0171 linenum = zeros(numberOfRows,1);
+0172 minimumCorrelation = -999 * ones(numberOfRows,1);
+0173 maximumLag = -999 * ones(numberOfRows,1);
+0174 
+0175 
+0176 <span class="comment">% WRITE STRINGS OF CORRELATION VALUES</span>
+0177 rowNumber = 0;
+0178 fprintf(<span class="string">'   writing cross correlation pairs:       '</span>);
+0179 <span class="keyword">for</span> n = 1:length(orid)
+0180     <span class="keyword">for</span> m = n+1:length(orid)
+0181         rowNumber = rowNumber+1;
+0182         params = sprintf(<span class="string">'%-8s %6.3f %6.3f %-3s'</span> , sta , lag(n,m) , (corr(n,m))^2 , iphase );
+0183         linenum(rowNumber,1:2) = [orid(n) orid(m)];
+0184         linestr(rowNumber) = {params};
+0185         minimumCorrelation(rowNumber) = minCorr;
+0186         maximumLag(rowNumber) = maxLag;
+0187     <span class="keyword">end</span>
+0188     fprintf(<span class="string">'\b\b\b\b\b\b%5.0f%%'</span>,rowNumber/numberOfRows*100);
+0189 <span class="keyword">end</span>
+0190 fprintf(<span class="string">'\n'</span>);
+0191 
+0192</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

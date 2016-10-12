@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of findfiles</title>
+  <meta name="keywords" content="findfiles">
+  <meta name="description" content="Generate a list of files corresponding to the file pattern,">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@rsam</a> &gt; findfiles.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@rsam&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>findfiles
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Generate a list of files corresponding to the file pattern,</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function self = findfiles(self, file) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Generate a list of files corresponding to the file pattern,
+ snum and enum given.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="read_bob_file.html" class="code" title="function self=read_bob_file(varargin)">read_bob_file</a>	READ_BOB_FILE Load RSAM-like data from a BOB file into a SAM object.</li><li><a href="rsam.html" class="code" title="">rsam</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function self = findfiles(self, file)</a>
+0002     <span class="comment">% Generate a list of files corresponding to the file pattern,</span>
+0003     <span class="comment">% snum and enum given.</span>
+0004 
+0005     <span class="comment">% substitute for station</span>
+0006     file = regexprep(file, <span class="string">'SSSS'</span>, self.sta);
+0007 
+0008     <span class="comment">% substitute for channel</span>
+0009     file = regexprep(file, <span class="string">'CCC'</span>, self.chan);
+0010 
+0011     <span class="comment">% substitute for measure</span>
+0012     file = regexprep(file, <span class="string">'MMMM'</span>, self.measure);             
+0013 
+0014     <span class="comment">% set start year and month, and end year and month</span>
+0015     [syyy, ~]=datevec(self.snum);
+0016     [eyyy, ~]=datevec(self.enum);
+0017 
+0018     years = syyy:eyyy;
+0019     <span class="keyword">if</span> numel(years) &lt;= 1
+0020        starts = self.snum;
+0021        ends = self.enum;
+0022     <span class="keyword">else</span>
+0023        <span class="comment">%unless it is 1st year, start on 1st Jan</span>
+0024        starts = [self.snum, datenum(syyy+1:eyyy,1,1)];
+0025        <span class="comment">%unless it is last year, end on 31st Dec</span>
+0026        ends = [datenum(syyy:eyyy-1,12,31,23,59,59), self.enum];
+0027     <span class="keyword">end</span>
+0028 
+0029     files_(numel(starts)) = struct(<span class="keyword">...</span>
+0030        <span class="string">'file'</span>, []<span class="keyword">...</span><span class="comment">     % file name</span>
+0031        , <span class="string">'snum'</span>, [] <span class="keyword">...</span><span class="comment">  % start date</span>
+0032        , <span class="string">'enum'</span>, [] <span class="keyword">...</span><span class="comment">  % end date</span>
+0033        , <span class="string">'found'</span>, []);   <span class="comment">% file exists</span>
+0034 
+0035     <span class="keyword">for</span> N = 1 : numel(years)
+0036        files_(N).snum = starts(N);
+0037        files_(N).enum = ends(N);
+0038 
+0039        fileWithYearReplaced = regexprep(file, <span class="string">'YYYY'</span>, num2str(years(N), <span class="string">'%04d'</span>) );
+0040        debug.print_debug(2, <span class="string">'Output file: %s'</span>, fileWithYearReplaced);
+0041        files_(N).file = fileWithYearReplaced;
+0042 
+0043        files_(N).found = exist(fileWithYearReplaced, <span class="string">'file'</span>);
+0044        <span class="keyword">if</span> files_(N).found
+0045           debug.print_debug(3,<span class="string">' - found\n'</span>);
+0046        <span class="keyword">else</span>
+0047           debug.print_debug(2,<span class="string">' - not found\n'</span>);
+0048        <span class="keyword">end</span>
+0049     <span class="keyword">end</span>
+0050     self.files = files_;
+0051 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

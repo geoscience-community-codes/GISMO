@@ -1,0 +1,245 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of resample</title>
+  <meta name="keywords" content="resample">
+  <meta name="description" content="RESAMPLE resamples a rsam object at over every specified intercrunchfactor">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@rsam</a> &gt; resample.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@rsam&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>resample
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>RESAMPLE resamples a rsam object at over every specified intercrunchfactor</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function self = resample(self, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">RESAMPLE resamples a rsam object at over every specified intercrunchfactor
+   rsamobject2 = rsamobject.resample('method', method, 'factor', crunchfactor)
+  or
+   rsamobject2 = rsamobject.resample(method, 'minutes', minutes)
+
+   Input Arguments
+       rsamobject: rsam object       N-dimensional
+
+       METHOD: which method of sampling to perform within each sample
+                window
+           'max' : maximum value
+           'min' : minimum value
+           'mean': average value
+           'median' : mean value
+           'rms' : rms value (added 2011/06/01)
+           'absmax': absolute maximum value (greatest deviation from zero)
+           'absmin': absolute minimum value (smallest deviation from zero)
+           'absmean' : mean deviation from zero (added 2011/06/01)
+           'absmedian' : median deviation from zero (added 2011/06/01)
+           'builtin': Use MATLAB's built in resample routine
+
+       FACTOR : the number of samples making up the sample window
+       MINUTES:       downsample to this sample period
+       (FACTOR will be calculated internally)
+
+ Examples:
+   rsamobject.resample('method', 'mean')
+       Downsample the rsam object with an automatically determined
+           sampling period based on timeseries length.
+   rsamobject.resample('method', 'max', 'factor', 5) grab the max value of every 5
+       samples and return that in a waveform of adjusted frequency. The output
+       rsam object will have 1/5th of the samples, e.g. from 1
+       minute sampling to 5 minutes.
+   rsamobject.resample('method', 'max', 'minutes', 10) downsample the data at
+       10 minute sample period</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>	MEDIAN middlemost value of waveform's sorted data.</li><li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>	STD Standard deviation of a waveform</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="plotrsam.html" class="code" title="function [rsamobjects, ah]=plotrsam(sta, chan, snum, enum, DATAPATH)">plotrsam</a>	[rsamobjects, ah]=plotrsam_wrapper(sta, chan, snum, enum, DATAPATH)</li><li><a href="../../../GISMO/core/@waveform/resample.html" class="code" title="function w = resample(w,method, crunchfactor)">resample</a>	RESAMPLE resamples a waveform at over every specified interval</li><li><a href="../../../GISMO/core/@waveform/waveform2rsam.html" class="code" title="function s = waveform2rsam(w, method, samplingPeriod)">waveform2rsam</a>	WAVEFORM2RSAM create an RSAM-like object from a waveform object</li><li><a href="../../../GISMO/core/@waveform/waveform2sound.html" class="code" title="function isSuccessful = waveform2sound(w, speedup, outfile)">waveform2sound</a>	WAVEFORM2SOUND generate an audio file from a waveform object.</li><li><a href="../../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function self = resample(self, varargin)</a>
+0002 <span class="comment">%RESAMPLE resamples a rsam object at over every specified intercrunchfactor</span>
+0003 <span class="comment">%   rsamobject2 = rsamobject.resample('method', method, 'factor', crunchfactor)</span>
+0004 <span class="comment">%  or</span>
+0005 <span class="comment">%   rsamobject2 = rsamobject.resample(method, 'minutes', minutes)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%   Input Arguments</span>
+0008 <span class="comment">%       rsamobject: rsam object       N-dimensional</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%       METHOD: which method of sampling to perform within each sample</span>
+0011 <span class="comment">%                window</span>
+0012 <span class="comment">%           'max' : maximum value</span>
+0013 <span class="comment">%           'min' : minimum value</span>
+0014 <span class="comment">%           'mean': average value</span>
+0015 <span class="comment">%           'median' : mean value</span>
+0016 <span class="comment">%           'rms' : rms value (added 2011/06/01)</span>
+0017 <span class="comment">%           'absmax': absolute maximum value (greatest deviation from zero)</span>
+0018 <span class="comment">%           'absmin': absolute minimum value (smallest deviation from zero)</span>
+0019 <span class="comment">%           'absmean' : mean deviation from zero (added 2011/06/01)</span>
+0020 <span class="comment">%           'absmedian' : median deviation from zero (added 2011/06/01)</span>
+0021 <span class="comment">%           'builtin': Use MATLAB's built in resample routine</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%       FACTOR : the number of samples making up the sample window</span>
+0024 <span class="comment">%       MINUTES:       downsample to this sample period</span>
+0025 <span class="comment">%       (FACTOR will be calculated internally)</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% Examples:</span>
+0028 <span class="comment">%   rsamobject.resample('method', 'mean')</span>
+0029 <span class="comment">%       Downsample the rsam object with an automatically determined</span>
+0030 <span class="comment">%           sampling period based on timeseries length.</span>
+0031 <span class="comment">%   rsamobject.resample('method', 'max', 'factor', 5) grab the max value of every 5</span>
+0032 <span class="comment">%       samples and return that in a waveform of adjusted frequency. The output</span>
+0033 <span class="comment">%       rsam object will have 1/5th of the samples, e.g. from 1</span>
+0034 <span class="comment">%       minute sampling to 5 minutes.</span>
+0035 <span class="comment">%   rsamobject.resample('method', 'max', 'minutes', 10) downsample the data at</span>
+0036 <span class="comment">%       10 minute sample period</span>
+0037 
+0038 
+0039     <span class="keyword">persistent</span> STATS_INSTALLED;
+0040 
+0041     <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(STATS_INSTALLED)
+0042       STATS_INSTALLED = ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(ver(<span class="string">'stats'</span>));
+0043     <span class="keyword">end</span>
+0044 
+0045     p = inputParser;
+0046     p.addParameter(<span class="string">'method'</span>,self.measure);
+0047     p.addParameter(<span class="string">'factor'</span>, 0); <span class="comment">% crunchfactor</span>
+0048     p.addParameter(<span class="string">'minutes'</span>, 0);
+0049 
+0050     p.parse(varargin{:});
+0051 
+0052     crunchfactor = p.Results.factor;
+0053     method = p.Results.method;
+0054     minutes = p.Results.minutes;
+0055 
+0056     <span class="keyword">if</span> ~(round(crunchfactor) == crunchfactor) 
+0057         <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a> (<span class="string">'crunchfactor needs to be an integer'</span>);
+0058         <span class="keyword">return</span>;
+0059     <span class="keyword">end</span>
+0060 
+0061     <span class="keyword">for</span> i=1:numel(self)
+0062         samplingIntervalMinutes = 1.0 / (60 * self(i).Fs());
+0063         <span class="keyword">if</span> crunchfactor==0 &amp;&amp; minutes==0 <span class="comment">% choose automatically</span>
+0064             choices = [1 2 5 10 30 60 120 240 360 ];
+0065             days = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(self(i).dnum) - <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(self(i).dnum);
+0066             choice=<a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(days &gt; choices));
+0067             minutes=choices(choice);
+0068         <span class="keyword">end</span>
+0069 
+0070         <span class="keyword">if</span> minutes &gt; samplingIntervalMinutes
+0071             crunchfactor = round(minutes / samplingIntervalMinutes);
+0072         <span class="keyword">end</span>
+0073 
+0074         <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(method)
+0075             method = <span class="string">'mean'</span>;
+0076         <span class="keyword">end</span>
+0077 
+0078         <span class="keyword">if</span> crunchfactor &gt; 1
+0079             debug.print_debug(3, sprintf(<span class="string">'Changing sampling interval to %d'</span>, minutes))
+0080 
+0081             rowcount = ceil(length(self(i).data) / crunchfactor);
+0082             maxcount = rowcount * crunchfactor;
+0083             <span class="keyword">if</span> length(self(i).data) &lt; maxcount
+0084                 self(i).dnum(end+1:maxcount) = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(self(i).dnum((rowcount-1)*maxcount : end)); <span class="comment">%pad it with the avg value</span>
+0085                 self(i).data(end+1:maxcount) = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(self(i).data((rowcount-1)*maxcount : end)); <span class="comment">%pad it with the avg value</span>
+0086             <span class="keyword">end</span>
+0087             d = reshape(self(i).data,crunchfactor,rowcount); <span class="comment">% produces ( crunchfactor x rowcount) matrix</span>
+0088             t = reshape(self(i).dnum,crunchfactor,rowcount);
+0089             self(i).dnum = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(t, 1);
+0090             <span class="keyword">switch</span> upper(method)
+0091 
+0092                 <span class="keyword">case</span> <span class="string">'MAX'</span>
+0093                     <span class="keyword">if</span> STATS_INSTALLED
+0094                                 self(i).data = nanmax(d, [], 1);
+0095                     <span class="keyword">else</span>
+0096                                 self(i).data = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(d, [], 1);
+0097                     <span class="keyword">end</span>
+0098 
+0099                 <span class="keyword">case</span> <span class="string">'MIN'</span>
+0100                     <span class="keyword">if</span> STATS_INSTALLED
+0101                                 self(i).data = nanmin(d, [], 1);
+0102                     <span class="keyword">else</span>
+0103                                 self(i).data = <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(d, [], 1);
+0104                     <span class="keyword">end</span>
+0105 
+0106                 <span class="keyword">case</span> <span class="string">'MEAN'</span>
+0107                     <span class="keyword">if</span> STATS_INSTALLED
+0108                                 self(i).data = nanmean(d, 1);
+0109                     <span class="keyword">else</span>
+0110                                 self(i).data = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(d, 1);
+0111                     <span class="keyword">end</span>
+0112 
+0113                 <span class="keyword">case</span> <span class="string">'MEDIAN'</span>
+0114                     <span class="keyword">if</span> STATS_INSTALLED
+0115                                 self(i).data = nanmedian(d, 1);
+0116                     <span class="keyword">else</span>
+0117                                 self(i).data = <a href="../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>(d, 1);
+0118                     <span class="keyword">end</span>
+0119 
+0120                 <span class="keyword">case</span> <span class="string">'RMS'</span>
+0121                     <span class="keyword">if</span> STATS_INSTALLED
+0122                                 self(i).data = nanstd(d, [], 1);
+0123                     <span class="keyword">else</span>
+0124                                 self(i).data = <a href="../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>(d, [], 1);
+0125                     <span class="keyword">end</span>
+0126 
+0127                 <span class="keyword">case</span> <span class="string">'ABSMAX'</span>
+0128                     <span class="keyword">if</span> STATS_INSTALLED
+0129                                 self(i).data = nanmax(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d),[],1);
+0130                     <span class="keyword">else</span>
+0131                                 self(i).data = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d),[],1);
+0132                     <span class="keyword">end</span>
+0133 
+0134 
+0135                 <span class="keyword">case</span> <span class="string">'ABSMIN'</span>
+0136                     <span class="keyword">if</span> STATS_INSTALLED
+0137                                 self(i).data = nanmin(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d),[],1);
+0138                     <span class="keyword">else</span>    
+0139                                 self(i).data = <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d),[],1);
+0140                     <span class="keyword">end</span>
+0141 
+0142                 <span class="keyword">case</span> <span class="string">'ABSMEAN'</span>
+0143                     <span class="keyword">if</span> STATS_INSTALLED
+0144                                 self(i).data = nanmean(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d), 1);
+0145                     <span class="keyword">else</span>
+0146                                 self(i).data = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d), 1);
+0147                     <span class="keyword">end</span>
+0148 
+0149                 <span class="keyword">case</span> <span class="string">'ABSMEDIAN'</span>
+0150                     <span class="keyword">if</span> STATS_INSTALLED
+0151                                 self(i).data = nanmedian(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d), 1);
+0152                     <span class="keyword">else</span>
+0153                                 self(i).data = <a href="../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d), 1);
+0154                     <span class="keyword">end</span> 
+0155 
+0156                 <span class="keyword">otherwise</span>
+0157                     error(<span class="string">'rsam:resample:UnknownResampleMethod'</span>,<span class="keyword">...</span>
+0158                       <span class="string">'Don''t know what you mean by resample via %s'</span>, method);
+0159 
+0160             <span class="keyword">end</span>
+0161             self(i).measure = method;
+0162         <span class="keyword">end</span>
+0163     <span class="keyword">end</span>  
+0164 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

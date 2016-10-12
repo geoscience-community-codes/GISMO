@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of double</title>
+  <meta name="keywords" content="double">
+  <meta name="description" content="DOUBLE returns a waveform's data as a double type">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; double.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>double
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>DOUBLE returns a waveform's data as a double type</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function n = double(W, option) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DOUBLE returns a waveform's data as a double type
+   N = double(waveform  [, option] )
+   this is just a fancy way of saying get(W,'data')
+   but can handle vectors of W. The data lengths of the vectors do not
+   need to be the same.  By default it will zero-pad the end of all short
+   vectors.  Using the OPTION, you can specify a NaN padding instead.
+
+   Input Arguments
+       WAVEFORM: a waveform object   assumed as 1xN DIMENSIONAL
+               (If not, it will be treated as though it were 1xN!)
+       OPTION: Handle to any function that creates an array of a
+               dictated size.  The chosen function should work like:
+               A = (nRows,nCols); and return a double array of the
+               appropriate size. ex. @ones, @zeros, @nan.
+
+   Output Arguments
+       N: the columns of data
+
+   example:
+       % let W(1) be a waveform with data [0 1 2 5 3]
+       % let W(2) be a waveform with data [2 5]
+
+       Y = double(W);
+       % Y is now [[ 0 2; 1 5; 2 0; 5 0; 3 0]
+
+       Z = double(W,@nan); pads with NaN instead of zeros
+       % Z is now [ 0 2; 1 5; 2 NaN; 5 NaN; 3 NaN]
+
+ See also WAVEFORM/GET, NAN</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed/ReadMSEEDFast/ReadMSEEDFast.html" class="code" title="function [signalStruct] = ReadMSEEDFast(fileName)">ReadMSEEDFast</a>	ReadMSEEDFast( fileName )</li><li><a href="../../../GISMO/contributed/correlation_derived/corrderived_plot_swarm_history.html" class="code" title="function corrderived_plot_swarm_history(c,varargin)">corrderived_plot_swarm_history</a>	CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms</li><li><a href="../../../GISMO/contributed/instrument_response/response_apply.html" class="code" title="function wNew = response_apply(w,filterObj,sourceType,source)">response_apply</a>	RESPONSE_APPLY Deconvolve an instrument response from a waveform object.</li><li><a href="../../../GISMO/contributed/iris_dmc_tools/irisFetch.html" class="code" title="">irisFetch</a>	</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/scan.html" class="code" title="function [WW,WWxc] = scan(WW,WWsnippet,threshold)">scan</a>	SCAN scans a waveform for events which match a master.</li><li><a href="../../../GISMO/contributed/master_correlation/mastercorr_scan.html" class="code" title="function [WW,WWxc] = mastercorr_scan(WW,WWsnippet,threshold)">mastercorr_scan</a>	MASTERCORR_SCAN scans a waveform for events which match a master.</li><li><a href="../../../GISMO/core/@correlation/adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG adjusts the trigger times of each trace</li><li><a href="../../../GISMO/core/@correlation/conv.html" class="code" title="function c = conv(c,varargin)">conv</a>	c = CONV(c) convolves all traces with the final trace. By default the new</li><li><a href="../../../GISMO/core/@correlation/crop.html" class="code" title="function c = crop(c,varargin)">crop</a>	c = CROP(c,[PRETRIG POSTTRIG])</li><li><a href="../../../GISMO/core/@correlation/deconv.html" class="code" title="function c = deconv(c,varargin)">deconv</a>	c = DECONV(c) convolves all traces with the final trace. By default the new</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/private/shadedplot.html" class="code" title="function shadedplot(c,scale,ord)">shadedplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	C = XCORR(C)</li><li><a href="../../../GISMO/core/@filterobject/filtfilt.html" class="code" title="function w =filtfilt(f, w, NYQ)">filtfilt</a>	FILTFILT - filterobject implementation of FILTFILT, use on waveform Object</li><li><a href="../../../GISMO/core/@spectralobject/fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>	FFT Discrete Fourier transform.  OVERLOADED for waveform & Spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/ifft.html" class="code" title="function [varargout] = ifft(s, w)">ifft</a>	IFFT Inverse discrete Fourier transform.  OVERLOADED FOR Spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/pwelch.html" class="code" title="function varargout = pwelch(s,w, varargin)">pwelch</a>	PWELCH   overloaded pwelch for spectralobjects</li><li><a href="../../../GISMO/core/@spectralobject/specgram.html" class="code" title="function h = specgram(s, ws, varargin)">specgram</a>	SPECGRAM - plots spectrogram of waveforms</li><li><a href="../../../GISMO/core/@threecomp/extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="../../../GISMO/core/@threecomp/particlemotion.html" class="code" title="function TC = particlemotion(TC, varargin)">particlemotion</a>	PARTICLEMOTION calculates particle motion vectors for threecomp object</li><li><a href="../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../GISMO/core/@threecomp/plotpm.html" class="code" title="function plotpm(TC);">plotpm</a>	PLOTPM Plot particle motion coefficients.</li><li><a href="../../../GISMO/core/@threecomp/rotate.html" class="code" title="function TC = rotate(TC,varargin)">rotate</a>	Rotate component orientations</li><li><a href="combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and ChannelTag info.</li><li><a href="mrdivide.html" class="code" title="function C = mrdivide(W,B)">mrdivide</a>	MRDIVIDE (/) Slash or right matrix divide for WAVEFORMS.</li><li><a href="mtimes.html" class="code" title="function A = mtimes(A, B)">mtimes</a>	MTIMES (*) Overloaded Matrix multiply for waveforms (UNIMPLEMENTED!).</li><li><a href="plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="plus.html" class="code" title="function w = plus(w,q)">plus</a>	PLUS (+) waveform addition     w + q</li><li><a href="power.html" class="code" title="function a = power(a, b)">power</a>	POWER (.^) waveform implementation of element-by-element power (.^)</li><li><a href="../../../GISMO/core/@waveform/private/load_winston.html" class="code" title="function allWaves = load_winston(request)">load_winston</a>	LOAD_WINSTON handles retrieval of data from a winston waveserver.</li><li><a href="../../../GISMO/core/@waveform/private/set_sacheader.html" class="code" title="function header = set_sacheader(header,property, val)">set_sacheader</a>	set_sacheader    modify sac header variables</li><li><a href="rdivide.html" class="code" title="function W = rdivide(W,divisor)">rdivide</a>	RDIVIDE (./) Right array divide for WAVEFORMS.</li><li><a href="stack.html" class="code" title="function out = stack(w)">stack</a>	STACK stacks data from array of waveforms</li><li><a href="times.html" class="code" title="function A = times(A,B)">times</a>	TIMES (.*) overloaded Array multiply for WAVEFORM objects.</li><li><a href="waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="waveform2sound.html" class="code" title="function isSuccessful = waveform2sound(w, speedup, outfile)">waveform2sound</a>	WAVEFORM2SOUND generate an audio file from a waveform object.</li><li><a href="../../../GISMO/core/dev/+dataretrieval/@antelopesource/antelopesource.html" class="code" title="">antelopesource</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG  adjusts the trigger times of each trace</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/check.html" class="code" title="function val = check(c, whatToCheck)">check</a>	Check various features of a correlation object.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/conv.html" class="code" title="function c = conv(c)">conv</a>	conv   convolve all traces with the final trace</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/deconv.html" class="code" title="function c = deconv(c)">deconv</a>	c = DECONV(c) convolves all traces with the final trace. By default the new</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/shadedplot.html" class="code" title="function shadedplot(c,scale,ord)">shadedplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	xcorr   calculate the correlation and lag for traces</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>	</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../GISMO/tests/test_TraceData.html" class="code" title="">test_TraceData</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function n = double(W, option)</a>
+0002    <span class="comment">%DOUBLE returns a waveform's data as a double type</span>
+0003    <span class="comment">%   N = double(waveform  [, option] )</span>
+0004    <span class="comment">%   this is just a fancy way of saying get(W,'data')</span>
+0005    <span class="comment">%   but can handle vectors of W. The data lengths of the vectors do not</span>
+0006    <span class="comment">%   need to be the same.  By default it will zero-pad the end of all short</span>
+0007    <span class="comment">%   vectors.  Using the OPTION, you can specify a NaN padding instead.</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">%   Input Arguments</span>
+0010    <span class="comment">%       WAVEFORM: a waveform object   assumed as 1xN DIMENSIONAL</span>
+0011    <span class="comment">%               (If not, it will be treated as though it were 1xN!)</span>
+0012    <span class="comment">%       OPTION: Handle to any function that creates an array of a</span>
+0013    <span class="comment">%               dictated size.  The chosen function should work like:</span>
+0014    <span class="comment">%               A = (nRows,nCols); and return a double array of the</span>
+0015    <span class="comment">%               appropriate size. ex. @ones, @zeros, @nan.</span>
+0016    <span class="comment">%</span>
+0017    <span class="comment">%   Output Arguments</span>
+0018    <span class="comment">%       N: the columns of data</span>
+0019    <span class="comment">%</span>
+0020    <span class="comment">%   example:</span>
+0021    <span class="comment">%       % let W(1) be a waveform with data [0 1 2 5 3]</span>
+0022    <span class="comment">%       % let W(2) be a waveform with data [2 5]</span>
+0023    <span class="comment">%</span>
+0024    <span class="comment">%       Y = double(W);</span>
+0025    <span class="comment">%       % Y is now [[ 0 2; 1 5; 2 0; 5 0; 3 0]</span>
+0026    <span class="comment">%</span>
+0027    <span class="comment">%       Z = double(W,@nan); pads with NaN instead of zeros</span>
+0028    <span class="comment">%       % Z is now [ 0 2; 1 5; 2 NaN; 5 NaN; 3 NaN]</span>
+0029    <span class="comment">%</span>
+0030    <span class="comment">% See also WAVEFORM/GET, NAN</span>
+0031    
+0032    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0033    <span class="comment">% $Date$</span>
+0034    <span class="comment">% $Revision$</span>
+0035    
+0036    <span class="keyword">if</span> numel(W) &lt;= 1
+0037       n = W.data; <span class="comment">%  assumption --&gt; data is already a column of double!</span>
+0038       <span class="keyword">return</span>
+0039    <span class="keyword">end</span>
+0040    
+0041    <span class="keyword">if</span> nargin == 1
+0042       createDefaultArray = @zeros;
+0043    <span class="keyword">else</span>
+0044       <span class="keyword">if</span> ischar(option)
+0045          createDefaultArray = str2func(option);
+0046       <span class="keyword">elseif</span> isa(option,<span class="string">'function_handle'</span>)
+0047          createDefaultArray = option;
+0048       <span class="keyword">else</span>
+0049          error(<span class="string">'waveform:double:invalidOption'</span>,<span class="keyword">...</span>
+0050             <span class="string">'''option'' must be either a function handle or function name.'</span>);
+0051       <span class="keyword">end</span>
+0052    <span class="keyword">end</span>
+0053    
+0054    m = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(W,<span class="string">'data_length'</span>);
+0055    <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(m)
+0056       n = [];
+0057       <span class="keyword">return</span>
+0058    <span class="keyword">end</span>
+0059    
+0060    m=m(:);
+0061    <span class="keyword">if</span> all(m == m(1))
+0062       n = [W(:).data]; <span class="comment">% easy-peazy since all data is of same length.</span>
+0063    <span class="keyword">else</span>
+0064       n = createDefaultArray(<a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>(m),numel(W));
+0065       <span class="keyword">for</span> x=1:numel(W)
+0066          n(1:m(x),x) = W(x).data; <span class="comment">% assumes that data is a column of double!</span>
+0067       <span class="keyword">end</span>
+0068    <span class="keyword">end</span>
+0069 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

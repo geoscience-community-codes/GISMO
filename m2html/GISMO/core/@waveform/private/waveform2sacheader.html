@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of waveform2sacheader</title>
+  <meta name="keywords" content="waveform2sacheader">
+  <meta name="description" content="WAVEFORM2SACHEADER generates a SAC header from a waveform object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; waveform2sacheader.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>waveform2sacheader
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>WAVEFORM2SACHEADER generates a SAC header from a waveform object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function header = waveform2sacheader(w) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> WAVEFORM2SACHEADER generates a SAC header from a waveform object
+
+    See also: waveform/private/readsacfile, waveform/private/sac2waveform,
+    waveform/private/writesac, waveform/private/set_sacheader</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>	ADDFIELD add fields and values to waveform object(s)                V1.1</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="set_sacheader.html" class="code" title="function header = set_sacheader(header,property, val)">set_sacheader</a>	set_sacheader    modify sac header variables</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@waveform/savesac.html" class="code" title="function w = savesac(w, direc, fname)">savesac</a>	SAVESAC  creates a SAC file from a waveform</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function header = waveform2sacheader(w)</a>
+0002    <span class="comment">% WAVEFORM2SACHEADER generates a SAC header from a waveform object</span>
+0003    <span class="comment">%</span>
+0004    <span class="comment">%    See also: waveform/private/readsacfile, waveform/private/sac2waveform,</span>
+0005    <span class="comment">%    waveform/private/writesac, waveform/private/set_sacheader</span>
+0006    
+0007    <span class="comment">% VERSION: 1.1 of waveform objects</span>
+0008    <span class="comment">% AUTHOR: Celso Reyes</span>
+0009    <span class="comment">%    modified from Michael Thorne (4/2004)</span>
+0010    <span class="comment">% LASTUPDATE: 9/2/2009</span>
+0011    
+0012    
+0013    <span class="comment">% currently a roundabout way to do things.  This will change. -CR</span>
+0014    
+0015    <span class="keyword">if</span> numel(w) &gt; 1,
+0016       error(<span class="string">'Waveform:waveform2sacheader:tooManyWaveforms'</span>,<span class="keyword">...</span>
+0017          <span class="string">'can only run waveform2sacheader on a single waveform'</span>);
+0018    <span class="keyword">end</span>
+0019    
+0020    <span class="comment">%set real header variables</span>
+0021    <span class="comment">%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+0022    h(1:70) = -12345;
+0023    header(1:70) = h(1:70)';
+0024    
+0025    <span class="comment">%set required header variables</span>
+0026    <span class="comment">%head = header(2,1) - header(1,1);</span>
+0027    w = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'DELTA'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'period'</span>));
+0028    <span class="comment">% header=set_sacheader(header,'DELTA',deltaTime);</span>
+0029    <span class="comment">%head = header(1,1);</span>
+0030    w = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'B'</span>,0);
+0031    w = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'E'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'end_epoch'</span>) - <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'start_epoch'</span>));
+0032    w = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'NPTS'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'data_length'</span>));
+0033    <span class="comment">%header=set_sacheader(header,'B',beginTime);</span>
+0034    <span class="comment">%head = header(numel(header(:,1)),1);</span>
+0035    <span class="comment">%header=set_sacheader(header,'E',endTime);</span>
+0036    header=<a href="set_sacheader.html" class="code" title="function header = set_sacheader(header,property, val)">set_sacheader</a>(header,<span class="string">'DEPMIN'</span>,<a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'data'</span>)));
+0037    header=<a href="set_sacheader.html" class="code" title="function header = set_sacheader(header,property, val)">set_sacheader</a>(header,<span class="string">'DEPMAX'</span>,<a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'data'</span>)));
+0038    header=<a href="set_sacheader.html" class="code" title="function header = set_sacheader(header,property, val)">set_sacheader</a>(header,<span class="string">'DEPMEN'</span>,<a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'data'</span>)));
+0039    
+0040    <span class="comment">%set logical and integer header variables:</span>
+0041    <span class="comment">%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+0042    h(71:110) = -12345;
+0043    header(71:110) = h(71:110)';
+0044    
+0045    <span class="comment">%set required header variables</span>
+0046    header=<a href="set_sacheader.html" class="code" title="function header = set_sacheader(header,property, val)">set_sacheader</a>(header,<span class="string">'IFTYPE'</span>,true);
+0047    header=<a href="set_sacheader.html" class="code" title="function header = set_sacheader(header,property, val)">set_sacheader</a>(header,<span class="string">'LEVEN'</span>,true);
+0048    header=<a href="set_sacheader.html" class="code" title="function header = set_sacheader(header,property, val)">set_sacheader</a>(header,<span class="string">'LCALDA'</span>,true);
+0049    header=<a href="set_sacheader.html" class="code" title="function header = set_sacheader(header,property, val)">set_sacheader</a>(header,<span class="string">'LOVROK'</span>,true);
+0050    version = 6;
+0051    header=<a href="set_sacheader.html" class="code" title="function header = set_sacheader(header,property, val)">set_sacheader</a>(header,<span class="string">'NVHDR'</span>,version);
+0052    head = 0;
+0053    header=<a href="set_sacheader.html" class="code" title="function header = set_sacheader(header,property, val)">set_sacheader</a>(header,<span class="string">'LPSPOL'</span>,head);
+0054    
+0055    <span class="comment">%set character header variables:</span>
+0056    <span class="comment">%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+0057    h8 = <span class="string">'-12345  '</span>;
+0058    <span class="comment">% h8 = [45 49 50 51 52 53 32 32];</span>
+0059    h16 = [45 49 50 51 52 53 32 32 32 32 32 32 32 32 32 32];
+0060    header(111:118)=h8';
+0061    header(119:134)=h16';
+0062    header(135:142)=h8';
+0063    header(143:150)=h8';
+0064    header(151:158)=h8';
+0065    header(159:166)=h8';
+0066    header(167:174)=h8';
+0067    header(175:182)=h8';
+0068    header(183:190)=h8';
+0069    header(191:198)=h8';
+0070    header(199:206)=h8';
+0071    header(207:214)=h8';
+0072    header(215:222)=h8';
+0073    header(223:230)=h8';
+0074    header(231:238)=h8';
+0075    header(239:246)=h8';
+0076    header(247:254)=h8';
+0077    header(255:262)=h8';
+0078    header(263:270)=h8';
+0079    header(271:278)=h8';
+0080    header(279:286)=h8';
+0081    header(287:294)=h8';
+0082    header(295:302)=h8';
+0083    
+0084    <span class="comment">%% go through all fields and change 'em (if they'll change...)</span>
+0085    
+0086    <span class="comment">% check units</span>
+0087    <span class="keyword">switch</span> lower(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'units'</span>))
+0088       <span class="keyword">case</span> <span class="string">'nm'</span> <span class="comment">%idisp</span>
+0089          IDEP_ref = 6;
+0090       <span class="keyword">case</span> <span class="string">'nm / sec'</span> <span class="comment">%ivel</span>
+0091          IDEP_ref = 7;
+0092       <span class="keyword">case</span> <span class="string">'nm / sec / sec'</span> <span class="comment">%iacc</span>
+0093          IDEP_ref = 8;
+0094       <span class="keyword">case</span> <span class="string">'volts'</span> <span class="comment">%ivolts</span>
+0095          IDEP_ref = 50;
+0096       <span class="keyword">otherwise</span> <span class="comment">%case 5 = iunkn</span>
+0097          IDEP_ref = 5;
+0098    <span class="keyword">end</span>
+0099    w = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'IDEP'</span>,IDEP_ref);
+0100    
+0101    <span class="comment">% update fields based on the actual station data...</span>
+0102    w = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'KSTNM'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'station'</span>));
+0103    w = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'KCMPNM'</span>, <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'channel'</span>));
+0104    w = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'KNETWK'</span>, <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'network'</span>));
+0105    
+0106    [Y,M,D,h,m,s] = datevec( <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'start'</span>) );
+0107    JD = floor(datenum(Y,M,D,h,m,s) - datenum(Y-1,12,31,0,0,0)); <span class="comment">% modified per C. Tape, 2012/03/19</span>
+0108    w = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'NZYEAR'</span>,Y);
+0109    w = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'NZJDAY'</span>,JD);
+0110    w = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'NZHOUR'</span>,h);
+0111    w = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'NZMIN'</span>,m);
+0112    w = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'NZSEC'</span>,fix(s));
+0113    w = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'NZMSEC'</span>,(s - fix(s)) * 1000);
+0114    
+0115    
+0116    fieldsToChange = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'misc_fields'</span>);
+0117    
+0118    <span class="comment">%now, actually generate the header values</span>
+0119    <span class="keyword">for</span> n=1: numel(fieldsToChange)
+0120       header = <a href="set_sacheader.html" class="code" title="function header = set_sacheader(header,property, val)">set_sacheader</a>(header,fieldsToChange{n}, <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,fieldsToChange{n}));
+0121    <span class="keyword">end</span>
+0122 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

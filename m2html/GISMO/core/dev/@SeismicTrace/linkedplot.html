@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of linkedplot</title>
+  <meta name="keywords" content="linkedplot">
+  <meta name="description" content="linkedplot   Plot multiple waveform objects as separate linked panels">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@SeismicTrace</a> &gt; linkedplot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@SeismicTrace&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>linkedplot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>linkedplot   Plot multiple waveform objects as separate linked panels</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function linkedplot(T, alignTraces) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">linkedplot   Plot multiple waveform objects as separate linked panels
+   T.linkedplot where T is a vector of SeismicTrace will plot all
+   traces against absolute time (starting at time 0)
+
+   T.linkedplot(alignTraces), where alignTraces is either true or
+   false.  If TRUE, then waveforms are aligned based on their start
+   times. (Default: FALSE)
+
+   Example:
+      T.linkedplot(true)
+
+   See also: <a href="plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li><li><a href="../../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/applications/+iceweb/iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li><li><a href="SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function daterange(~, ~, snum, SECSPERDAY)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function linkedplot(T, alignTraces)</a>
+0002    <span class="comment">%linkedplot   Plot multiple waveform objects as separate linked panels</span>
+0003    <span class="comment">%   T.linkedplot where T is a vector of SeismicTrace will plot all</span>
+0004    <span class="comment">%   traces against absolute time (starting at time 0)</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">%   T.linkedplot(alignTraces), where alignTraces is either true or</span>
+0007    <span class="comment">%   false.  If TRUE, then waveforms are aligned based on their start</span>
+0008    <span class="comment">%   times. (Default: FALSE)</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">%   Example:</span>
+0011    <span class="comment">%      T.linkedplot(true)</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">%   See also: plot</span>
+0014    
+0015    <span class="comment">% Glenn Thompson 2014/11/05, generalized after a function I wrote in 2000</span>
+0016    <span class="comment">% to operate on Seisan files only</span>
+0017    
+0018    <span class="keyword">if</span> numel(T)==0
+0019       warning(<span class="string">'no traces to plot'</span>)
+0020       <span class="keyword">return</span>
+0021    <span class="keyword">end</span>
+0022    
+0023    <span class="keyword">if</span> ~exist(<span class="string">'alignWaveforms'</span>, <span class="string">'var'</span>)
+0024       alignTraces = false;
+0025    <span class="keyword">end</span>
+0026    
+0027    <span class="comment">% get the first start time and last end time</span>
+0028    starttimes = [T.mat_starttime];
+0029    <span class="comment">% endtimes = T.timeLastSample();</span>
+0030    SECSPERDAY = 86400;
+0031    grabendtime = @(X) (X.mat_starttime + (numel(X.data)-1) / (X.samplerate * SECSPERDAY));
+0032    endtimes = arrayfun(grabendtime, T);
+0033    endtimes(endtimes &lt; starttimes) = starttimes(endtimes&lt;starttimes); <span class="comment">%no negative values!</span>
+0034    <span class="comment">% [starttimes endtimes]=gettimerange(T);</span>
+0035    snum = <a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(starttimes(~isnan(starttimes)));
+0036    enum = <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(endtimes(~isnan(endtimes)));
+0037    
+0038    <span class="comment">% get the longest duration - in mode=='align'</span>
+0039    durations = endtimes - starttimes;
+0040    maxduration = <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(durations(~isnan(durations)));
+0041    
+0042    nwaveforms = numel(T);
+0043    figure
+0044    trace_height=0.9/nwaveforms;
+0045    left=0.1;
+0046    width=0.8;
+0047    ax = zeros(1,nwaveforms);
+0048    <span class="keyword">for</span> wavnum = 1:nwaveforms
+0049       myw = T(wavnum);
+0050       dnum = myw.sampletimes;
+0051       ax(wavnum) = axes(<span class="string">'Position'</span>,[left, 0.95-wavnum*trace_height, width, trace_height]);
+0052       <span class="keyword">if</span> alignTraces
+0053          <a href="plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>((dnum-<a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(dnum))*SECSPERDAY, myw.data,<span class="string">'-k'</span>);
+0054          <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'XLim'</span>, [0 maxduration*SECSPERDAY]);
+0055       <span class="keyword">else</span>
+0056          <a href="plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>((dnum-snum)*SECSPERDAY, myw.data,<span class="string">'-k'</span>);
+0057          <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'XLim'</span>, [0 enum-snum]*SECSPERDAY);
+0058       <span class="keyword">end</span>
+0059       ylabel(myw.channelinfo.string,<span class="string">'FontSize'</span>,10,<span class="string">'Rotation'</span>,90);
+0060       <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca,<span class="string">'YTick'</span>,[],<span class="string">'YTickLabel'</span>,<span class="string">''</span>);
+0061       <span class="keyword">if</span> wavnum&lt;nwaveforms;
+0062          <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca,<span class="string">'XTickLabel'</span>,<span class="string">''</span>);
+0063       <span class="keyword">end</span>
+0064       
+0065       <span class="comment">% display mean on left, max on right</span>
+0066       text(0.02,0.85, sprintf(<span class="string">'%5.0f'</span>,<a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(myw.data(~isnan(myw.data))))),<span class="string">'FontSize'</span>,10,<span class="string">'Color'</span>,<span class="string">'b'</span>,<span class="string">'units'</span>,<span class="string">'normalized'</span>);
+0067       text(0.4,0.85,sprintf(<span class="string">' %s'</span>,datestr(starttimes(wavnum),30)),<span class="string">'FontSize'</span>,10,<span class="string">'Color'</span>,<span class="string">'g'</span>,<span class="string">'units'</span>,<span class="string">'normalized'</span>);
+0068       text(0.9,0.85,sprintf(<span class="string">'%5.0f'</span>,<a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(myw.data(~isnan(myw.data))))),<span class="string">'FontSize'</span>,10,<span class="string">'Color'</span>,<span class="string">'r'</span>,<span class="string">'units'</span>,<span class="string">'normalized'</span>);
+0069    <span class="keyword">end</span>
+0070    
+0071    <span class="keyword">if</span> exist(<span class="string">'ax'</span>,<span class="string">'var'</span>)
+0072       linkaxes(ax,<span class="string">'x'</span>);
+0073    <span class="keyword">end</span>
+0074    
+0075    <span class="comment">% originalXticks = get(gca,'XTickLabel');</span>
+0076    
+0077    f = uimenu(<span class="string">'Label'</span>,<span class="string">'X-Ticks'</span>);
+0078    uimenu(f,<span class="string">'Label'</span>,<span class="string">'time range'</span>,<span class="string">'Callback'</span>,{@<a href="#_sub1" class="code" title="subfunction daterange(~, ~, snum, SECSPERDAY)">daterange</a>, snum, SECSPERDAY});
+0079    uimenu(f,<span class="string">'Label'</span>,<span class="string">'quit'</span>,<span class="string">'Callback'</span>,<span class="string">'disp(''exit'')'</span>,<span class="keyword">...</span>
+0080       <span class="string">'Separator'</span>,<span class="string">'on'</span>,<span class="string">'Accelerator'</span>,<span class="string">'Q'</span>);
+0081    
+0082    <a name="_sub1" href="#_subfunctions" class="code">function daterange(~, ~, snum, SECSPERDAY)</a>
+0083       xlim = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca, <span class="string">'xlim'</span>);
+0084       <span class="comment">%xticks = linspace(xlim(1), xlim(2), 11);</span>
+0085       mydate = snum + xlim/SECSPERDAY;
+0086       datestr(mydate,<span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>)
+0087    <span class="keyword">end</span>
+0088 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

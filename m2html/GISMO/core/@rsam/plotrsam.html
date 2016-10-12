@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plotrsam</title>
+  <meta name="keywords" content="plotrsam">
+  <meta name="description" content="[rsamobjects, ah]=plotrsam_wrapper(sta, chan, snum, enum, DATAPATH)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@rsam</a> &gt; plotrsam.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@rsam&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>plotrsam
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>[rsamobjects, ah]=plotrsam_wrapper(sta, chan, snum, enum, DATAPATH)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [rsamobjects, ah]=plotrsam(sta, chan, snum, enum, DATAPATH) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> [rsamobjects, ah]=plotrsam_wrapper(sta, chan, snum, enum, DATAPATH)
+ 
+   Inputs:
+       sta - station code
+       chan - channel code
+       snum - start datenum
+       enum - end datenum
+       DATAPATH - path to data, including pattern
+
+   Outputs:
+       rsamobjects - vector of rsam objects
+       ah - vector of axes handles
+
+   Examples:
+       1. Data from the digital seismic network, Montserrat
+           DP = fullfile('/raid','data','antelope','mvo','SSSS_CCC_YYYY.DAT');
+           [rsamobjects, ah] = rsam.plotrsam('MBWH','SHZ',datenum(2001,2,24), datenum(2001,3,3), DP);
+       2. Data from the analog seismic network, Montserrat
+           DP = fullfile(DROPBOX, 'DOME', 'SEISMICDATA', 'RSAM_1', 'SSSSYYYY.DAT');
+           [rsamobjects, ah] = rsam.plotrsam('MWHZ','',datenum(1996,7,1), datenum(1996,8,13), DP);
+   Could use the following logic in a wrapper to decide DP:
+       strfind(sta{i},'MB') &amp; ~strcmp(sta{i},'MBET')</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="plotrsam.html" class="code" title="function [rsamobjects, ah]=plotrsam(sta, chan, snum, enum, DATAPATH)">plotrsam</a>	[rsamobjects, ah]=plotrsam_wrapper(sta, chan, snum, enum, DATAPATH)</li><li><a href="resample.html" class="code" title="function self = resample(self, varargin)">resample</a>	RESAMPLE resamples a rsam object at over every specified intercrunchfactor</li><li><a href="rsam.html" class="code" title="">rsam</a>	</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../GISMO/core/@waveform/resample.html" class="code" title="function w = resample(w,method, crunchfactor)">resample</a>	RESAMPLE resamples a waveform at over every specified interval</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="plotrsam.html" class="code" title="function [rsamobjects, ah]=plotrsam(sta, chan, snum, enum, DATAPATH)">plotrsam</a>	[rsamobjects, ah]=plotrsam_wrapper(sta, chan, snum, enum, DATAPATH)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [rsamobjects, ah]=plotrsam(sta, chan, snum, enum, DATAPATH)</a>
+0002 <span class="comment">% [rsamobjects, ah]=plotrsam_wrapper(sta, chan, snum, enum, DATAPATH)</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   Inputs:</span>
+0005 <span class="comment">%       sta - station code</span>
+0006 <span class="comment">%       chan - channel code</span>
+0007 <span class="comment">%       snum - start datenum</span>
+0008 <span class="comment">%       enum - end datenum</span>
+0009 <span class="comment">%       DATAPATH - path to data, including pattern</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   Outputs:</span>
+0012 <span class="comment">%       rsamobjects - vector of rsam objects</span>
+0013 <span class="comment">%       ah - vector of axes handles</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%   Examples:</span>
+0016 <span class="comment">%       1. Data from the digital seismic network, Montserrat</span>
+0017 <span class="comment">%           DP = fullfile('/raid','data','antelope','mvo','SSSS_CCC_YYYY.DAT');</span>
+0018 <span class="comment">%           [rsamobjects, ah] = rsam.plotrsam('MBWH','SHZ',datenum(2001,2,24), datenum(2001,3,3), DP);</span>
+0019 <span class="comment">%       2. Data from the analog seismic network, Montserrat</span>
+0020 <span class="comment">%           DP = fullfile(DROPBOX, 'DOME', 'SEISMICDATA', 'RSAM_1', 'SSSSYYYY.DAT');</span>
+0021 <span class="comment">%           [rsamobjects, ah] = rsam.plotrsam('MWHZ','',datenum(1996,7,1), datenum(1996,8,13), DP);</span>
+0022 <span class="comment">%   Could use the following logic in a wrapper to decide DP:</span>
+0023 <span class="comment">%       strfind(sta{i},'MB') &amp; ~strcmp(sta{i},'MBET')</span>
+0024 
+0025     <span class="comment">% validate</span>
+0026     <span class="keyword">if</span> nargin ~= 5
+0027         help <a href="rsam.html" class="code" title="">rsam</a>&gt;<a href="plotrsam.html" class="code" title="function [rsamobjects, ah]=plotrsam(sta, chan, snum, enum, DATAPATH)">plotrsam</a>()
+0028         <span class="keyword">return</span>
+0029     <span class="keyword">end</span>
+0030 
+0031     <span class="comment">% initialise</span>
+0032     <span class="keyword">if</span> ~iscell(sta)
+0033         sta={sta};
+0034     <span class="keyword">end</span>
+0035     <span class="keyword">if</span> ~iscell(chan)
+0036         chan={chan};
+0037     <span class="keyword">end</span>
+0038     numsta = length(sta);
+0039     numrsams = 0;
+0040     rsamobjects = [];
+0041     ah = [];
+0042 
+0043     <span class="comment">% load data</span>
+0044     <span class="keyword">for</span> i=1:numsta
+0045         s = <a href="rsam.html" class="code" title="">rsam</a>(<span class="string">'file'</span>, DATAPATH, <span class="string">'snum'</span>, snum, <span class="string">'enum'</span>, enum, <span class="string">'sta'</span>, sta{i},<span class="string">'chan'</span>,chan{i});
+0046         <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(s.data)
+0047             numrsams = numrsams + 1;
+0048             rsamobjects = [rsamobjects <a href="resample.html" class="code" title="function self = resample(self, varargin)">resample</a>(s.despike(100))];
+0049             <span class="comment">%ah(i)=subplot(numsta,1,i),plot(resample(s.despike(10)));</span>
+0050         <span class="keyword">end</span>
+0051     <span class="keyword">end</span>
+0052 
+0053     <span class="comment">% plot data</span>
+0054     <span class="keyword">if</span> numrsams &gt; 0
+0055         figure
+0056         <span class="keyword">for</span> i=1:numrsams
+0057             ah(i) = subplot(numrsams, 1, i), <a href="plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>(rsamobjects(i))
+0058         <span class="keyword">end</span>
+0059         linkaxes(ah, <span class="string">'x'</span>)
+0060         <span class="comment">%datetick('x','keeplimits')</span>
+0061     <span class="keyword">end</span>
+0062 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

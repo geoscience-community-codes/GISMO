@@ -1,0 +1,270 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of get_antelope_traces</title>
+  <meta name="keywords" content="get_antelope_traces">
+  <meta name="description" content="GET_ANTELOPE_TRACE gets interesting data from database, and returns the tracebuf object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="../index.html">+dataretrieval</a> &gt; <a href="index.html">@antelopesource</a> &gt; get_antelope_traces.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/+dataretrieval/@antelopesource&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>get_antelope_traces
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>GET_ANTELOPE_TRACE gets interesting data from database, and returns the tracebuf object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function [obj, rawDb, filteredDb] =  get_antelope_traces(obj) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> GET_ANTELOPE_TRACE gets interesting data from database, and returns the tracebuf object
+ [tr(1:end)] =  get_antelope_trace(startdates, enddates, criteriaList, database)
+    STARTDATE is a matlab datenum
+    ENDDATE is also in matlab datenum
+    CRITERIALIST is a cell of statements used to filter the antelope
+        database.  example: {'sta==&quot;OKCF&quot;','chan==&quot;BHZ&quot;'}
+    DATABASE can either be a database name, or an open antelope database
+    pointer.
+
+    TR is a tracebuf object containing the data requested.
+
+  In this usage, with a single output argument, TR, the database is opened
+  and then closed before the function returns.
+
+ You can opt to keep the database open, which can make subsequent calls to
+ get_antelope_trace much faster.  To do this, ask for the database pointer
+ as one of the output arguments.  The database will be closed by any
+ function call that uses the database pointer as the 'database' parameter,
+ and does not ask for a database pointer back.
+
+ [tr, mydb] = get_antelope_trace(...)
+    if mydb is asked for, then the database will not be closed, allowing for
+    more efficient reuse.  mydb is the unfiltered (and open) wfdisc table
+
+ [tr, mydb, filteredDB] = get_antelope_trace(...)
+   returns wfdisc table in mydb, and a filtered wfdisc table in filteredDB
+
+ if no records are found, then tr will be set to []
+
+ will generate error message if no records found, so consider using in a
+ TRY-CATCH loop.
+
+
+ Example:
+  % set up the data
+  sDate = datenum('7/12/2008 05:00:00.00');
+  eDate = datenum('7/12/2008 05:10:00.00');
+  stationsToGet = {'OKFG','OKSO','OMG'};
+  channelsToGet = {'BHZ', 'BHE'};
+  mydb = '/mydir/my_antelope_database';
+
+  % get our criteria together
+  for st = 1:numel(stationsToGet)
+    staCriteria(st) = {sprintf('sta==&quot;%s&quot;',stationsToGet(st)};
+  end
+  for ch = 1:numel(channelsToGet)
+    chanCriteria(ch) = {sprintf('chan==&quot;%s&quot;',channelsToGet(ch)};
+  end
+
+  % open the database once, and read in each tracebuf. Then translate into
+  % waveforms.
+  n = 1;
+  for sta = 1:numel(staCriteria)
+    for ch = 1:numel(chanCriteria)
+      critera = [chanCriteria(ch),staCriteria(sta)];
+      [tr, mydb] = get_antelope_trace(sDate,eDate, criteria, mydb)
+      w(n) = traceToWaveform(tr);
+      n = n+1;
+    end
+  end
+  % finally, close up shop.
+  dbclose(mydb)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="../../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../../../GISMO/core/@waveform/private/mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>	convert a matlab date to an epoch date</li><li><a href="../../../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>	TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="../../../../../GISMO/core/@waveform/private/load_antelope_old.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope_old</a>	load a waveform from antelope</li><li><a href="../../../../../GISMO/core/@waveform/private/load_antelope_workaround.html" class="code" title="function outputWaveforms = load_antelope_workaround(datarequest, COMBINE_WAVEFORMS, specificDatabase)">load_antelope_workaround</a>	load a waveform from antelope</li><li><a href="antelopesource.html" class="code" title="">antelopesource</a>	</li><li><a href="load_antelope.html" class="code" title="function outputWaveforms = load_antelope(obj, specificDatabase)">load_antelope</a>	load a waveform from antelope</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function cleanUpFail(varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [obj, rawDb, filteredDb] =  get_antelope_traces(obj)</a>
+0002    <span class="comment">% GET_ANTELOPE_TRACE gets interesting data from database, and returns the tracebuf object</span>
+0003    <span class="comment">% [tr(1:end)] =  get_antelope_trace(startdates, enddates, criteriaList, database)</span>
+0004    <span class="comment">%    STARTDATE is a matlab datenum</span>
+0005    <span class="comment">%    ENDDATE is also in matlab datenum</span>
+0006    <span class="comment">%    CRITERIALIST is a cell of statements used to filter the antelope</span>
+0007    <span class="comment">%        database.  example: {'sta==&quot;OKCF&quot;','chan==&quot;BHZ&quot;'}</span>
+0008    <span class="comment">%    DATABASE can either be a database name, or an open antelope database</span>
+0009    <span class="comment">%    pointer.</span>
+0010    <span class="comment">%</span>
+0011    <span class="comment">%    TR is a tracebuf object containing the data requested.</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">%  In this usage, with a single output argument, TR, the database is opened</span>
+0014    <span class="comment">%  and then closed before the function returns.</span>
+0015    <span class="comment">%</span>
+0016    <span class="comment">% You can opt to keep the database open, which can make subsequent calls to</span>
+0017    <span class="comment">% get_antelope_trace much faster.  To do this, ask for the database pointer</span>
+0018    <span class="comment">% as one of the output arguments.  The database will be closed by any</span>
+0019    <span class="comment">% function call that uses the database pointer as the 'database' parameter,</span>
+0020    <span class="comment">% and does not ask for a database pointer back.</span>
+0021    <span class="comment">%</span>
+0022    <span class="comment">% [tr, mydb] = get_antelope_trace(...)</span>
+0023    <span class="comment">%    if mydb is asked for, then the database will not be closed, allowing for</span>
+0024    <span class="comment">%    more efficient reuse.  mydb is the unfiltered (and open) wfdisc table</span>
+0025    <span class="comment">%</span>
+0026    <span class="comment">% [tr, mydb, filteredDB] = get_antelope_trace(...)</span>
+0027    <span class="comment">%   returns wfdisc table in mydb, and a filtered wfdisc table in filteredDB</span>
+0028    <span class="comment">%</span>
+0029    <span class="comment">% if no records are found, then tr will be set to []</span>
+0030    <span class="comment">%</span>
+0031    <span class="comment">% will generate error message if no records found, so consider using in a</span>
+0032    <span class="comment">% TRY-CATCH loop.</span>
+0033    <span class="comment">%</span>
+0034    <span class="comment">%</span>
+0035    <span class="comment">% Example:</span>
+0036    <span class="comment">%  % set up the data</span>
+0037    <span class="comment">%  sDate = datenum('7/12/2008 05:00:00.00');</span>
+0038    <span class="comment">%  eDate = datenum('7/12/2008 05:10:00.00');</span>
+0039    <span class="comment">%  stationsToGet = {'OKFG','OKSO','OMG'};</span>
+0040    <span class="comment">%  channelsToGet = {'BHZ', 'BHE'};</span>
+0041    <span class="comment">%  mydb = '/mydir/my_antelope_database';</span>
+0042    <span class="comment">%</span>
+0043    <span class="comment">%  % get our criteria together</span>
+0044    <span class="comment">%  for st = 1:numel(stationsToGet)</span>
+0045    <span class="comment">%    staCriteria(st) = {sprintf('sta==&quot;%s&quot;',stationsToGet(st)};</span>
+0046    <span class="comment">%  end</span>
+0047    <span class="comment">%  for ch = 1:numel(channelsToGet)</span>
+0048    <span class="comment">%    chanCriteria(ch) = {sprintf('chan==&quot;%s&quot;',channelsToGet(ch)};</span>
+0049    <span class="comment">%  end</span>
+0050    <span class="comment">%</span>
+0051    <span class="comment">%  % open the database once, and read in each tracebuf. Then translate into</span>
+0052    <span class="comment">%  % waveforms.</span>
+0053    <span class="comment">%  n = 1;</span>
+0054    <span class="comment">%  for sta = 1:numel(staCriteria)</span>
+0055    <span class="comment">%    for ch = 1:numel(chanCriteria)</span>
+0056    <span class="comment">%      critera = [chanCriteria(ch),staCriteria(sta)];</span>
+0057    <span class="comment">%      [tr, mydb] = get_antelope_trace(sDate,eDate, criteria, mydb)</span>
+0058    <span class="comment">%      w(n) = traceToWaveform(tr);</span>
+0059    <span class="comment">%      n = n+1;</span>
+0060    <span class="comment">%    end</span>
+0061    <span class="comment">%  end</span>
+0062    <span class="comment">%  % finally, close up shop.</span>
+0063    <span class="comment">%  dbclose(mydb)</span>
+0064    
+0065    <span class="comment">% Modifications</span>
+0066    <span class="comment">%%% Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data. Added try...catch..end to handle this.</span>
+0067    
+0068    useExistingDatabasePtr =  obj.pointsToAntelopeDatabase;
+0069    
+0070    <span class="keyword">if</span> useExistingDatabasePtr
+0071       <span class="keyword">try</span>
+0072          dbnrecs(obj.dbpointer);
+0073       <span class="keyword">catch</span>
+0074          warning(<span class="string">'Waveform:load_antelope:databaseNotOpen'</span>, <span class="keyword">...</span>
+0075             <span class="string">'a Database Pointer was passed to trace, but the database was not open'</span>);
+0076          <span class="comment">%tr = trnew; %return a new object, forcing the ability to destroy it later</span>
+0077          obj.trpointer = { -1 };
+0078          <span class="keyword">return</span>;
+0079       <span class="keyword">end</span>
+0080    <span class="keyword">end</span>
+0081    
+0082    <span class="comment">% do not close the database if a pointer is asked for in the return arguments</span>
+0083    onFinishCloseDB = nargout &lt; 2;
+0084    
+0085    antelope_starts = <a href="../../../../../GISMO/core/@waveform/private/mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>(obj.startdate);
+0086    antelope_ends = <a href="../../../../../GISMO/core/@waveform/private/mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>(obj.enddates);
+0087    
+0088    <span class="keyword">if</span> ~obj.isopen()
+0089       obj = obj.open();
+0090    <span class="keyword">end</span>
+0091    
+0092    <span class="comment">%if the database isn't already open, then open it for reading</span>
+0093    <span class="keyword">if</span> ~obj.pointsToAntelopeDatabase
+0094       obj = obj.open();
+0095    <span class="keyword">else</span>
+0096       mydb = obj.dbpointer;
+0097    <span class="keyword">end</span>
+0098    <span class="comment">%check to ensure wfdisk table exists and is populated</span>
+0099    
+0100    <span class="keyword">if</span> obj.nrecs == 0,
+0101       <a href="#_sub1" class="code" title="subfunction cleanUpFail(varargin)">cleanUpFail</a>(<span class="string">'Waveform:load_antelope:databaseNotFound'</span>, <span class="keyword">...</span>
+0102          <span class="string">'Database not found: %s'</span>, dbquery(mydb,<span class="string">'dbTABLE_FILENAME'</span>));
+0103       <span class="keyword">return</span>;
+0104    <span class="keyword">end</span>;
+0105    
+0106    rawDb = mydb;   <span class="comment">% keep a copy of the pre-subset (raw) database</span>
+0107    
+0108    <span class="comment">% subset the data based upon the desired criteria</span>
+0109    <span class="comment">%criteriaList = keepCriteriaThatMatchDatabaseFields(criteriaList, mydb);</span>
+0110    <span class="comment">%allExp = getAsExpressions(criteriaList);</span>
+0111    
+0112    <span class="comment">%subset the database based on this particular criterion</span>
+0113    mydb = dbsubset(mydb,allExp);
+0114    <span class="keyword">if</span> safe_dbnrecs(mydb) == 0
+0115       <a href="#_sub1" class="code" title="subfunction cleanUpFail(varargin)">cleanUpFail</a>(<span class="string">'Waveform:load_antelope:dataNotFound'</span>, <span class="string">'No records found for criteria [%s].'</span>, allExp);
+0116       <span class="keyword">return</span>;
+0117    <span class="keyword">end</span>;
+0118    
+0119    filteredDb = mydb;
+0120    
+0121    [st, ed] = dbgetv(mydb,<span class="string">'time'</span>,<span class="string">'endtime'</span>);
+0122    <span class="comment">%% Get the tracebuf object for this starttime, endtime</span>
+0123    <span class="comment">% Loop through all times.  Result is tr(1:numel(starttimes) of all tracebuffers.</span>
+0124    <span class="keyword">for</span> mytimeIDX = 1:numel(antelope_starts)
+0125       someDataExists = any(antelope_starts(mytimeIDX)&lt;= (ed) &amp; antelope_ends(mytimeIDX) &gt;= (st));
+0126       <span class="keyword">if</span> someDataExists
+0127          <span class="comment">%%% Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data.</span>
+0128          <span class="comment">% This error needs to be handled. So adding a try..catch..end around the original instruction.</span>
+0129          trStructs = safe_trload(db, st, et);
+0130          T = trstruct2SeismicTrace(trStructs);
+0131          <span class="keyword">try</span>
+0132             obj.trpointer{mytimeIDX} = trload_css(mydb, antelope_starts(mytimeIDX), antelope_ends(mytimeIDX)); <span class="comment">%#ok&lt;AGROW&gt;</span>
+0133          <span class="keyword">catch</span>
+0134             <a href="#_sub1" class="code" title="subfunction cleanUpFail(varargin)">cleanUpFail</a>(<span class="string">'Waveform:load_antelope:trload_css failed'</span>, <span class="keyword">...</span>
+0135                <span class="string">'Database not found: %s'</span>, dbquery(mydb,<span class="string">'dbTABLE_FILENAME'</span>));
+0136             <a href="../../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(obj.dbname)
+0137             <a href="../../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(allExp)
+0138             starttimes = antelope_starts(mytimeIDX);
+0139             endtimes = antelope_ends(mytimeIDX);
+0140             fprintf(<span class="string">'%.0f %.0f\n '</span>,starttimes,endtimes);
+0141             <a href="../../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'starttimes: '</span>, datestr(<a href="../../../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(starttimes))]);
+0142             <a href="../../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'endtimes: '</span>, datestr(<a href="../../../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(endtimes))]);
+0143             fprintf(<span class="string">'trload_css(mydb, starttimes, endtimes))\n'</span>);
+0144             <span class="keyword">return</span>
+0145          <span class="keyword">end</span>
+0146          trsplice(obj.trpointer{mytimeIDX},20);
+0147       <span class="keyword">else</span>
+0148          obj.trpointer{mytimeIDX} = -1; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0149       <span class="keyword">end</span>
+0150    <span class="keyword">end</span> <span class="comment">%mytimeIDX</span>
+0151    closeIfAppropriate(mydb, onFinishCloseDB);
+0152    
+0153    <a name="_sub1" href="#_subfunctions" class="code">function cleanUpFail(varargin)</a>
+0154       <span class="comment">%cleanUpFail   tidy up database and records and display warning</span>
+0155       closeIfAppropriate(mydb, onFinishCloseDB);
+0156       obj.trpointer = { -1 };
+0157       filteredDb = dbinvalid;
+0158       warning(varargin{:});      
+0159    <span class="keyword">end</span>
+0160 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

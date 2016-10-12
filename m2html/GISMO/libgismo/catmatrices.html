@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of catmatrices</title>
+  <meta name="keywords" content="catmatrices">
+  <meta name="description" content="CATMATRICES - concatenate 2D matrices of arbitrary size">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">libgismo</a> &gt; catmatrices.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/libgismo&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>catmatrices
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>CATMATRICES - concatenate 2D matrices of arbitrary size</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function cmatrix=catmatrices(matrix2,matrix1); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> CATMATRICES - concatenate 2D matrices of arbitrary size
+    Sometimes it is rather tedious when reading in data
+    to work out how to concatenate matrices.
+    catmatrices is different to the inbuilt function cat,
+    in that it works out in what what the dimensions are
+    compatible, whereas cat expects the programmer to know.
+
+    Usage:
+      outmatrix=catmatrices(matrix2,matrix1);
+
+    INPUT:
+      matrix2         - the matrix to be appended
+      matrix1         - the primary matrix, to append matrix2 to
+
+    OUPUT:
+      cmatrix         - the concatenated matrix
+
+    See also cat</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/core/@EventRate/EventRate.html" class="code" title="">EventRate</a>	</li><li><a href="../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>	Purpose:</li><li><a href="../../GISMO/core/@rsam/read_bob_file.html" class="code" title="function self=read_bob_file(varargin)">read_bob_file</a>	READ_BOB_FILE Load RSAM-like data from a BOB file into a SAM object.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function cmatrix=catmatrices(matrix2,matrix1);</a>
+0002 <span class="comment">% CATMATRICES - concatenate 2D matrices of arbitrary size</span>
+0003 <span class="comment">%    Sometimes it is rather tedious when reading in data</span>
+0004 <span class="comment">%    to work out how to concatenate matrices.</span>
+0005 <span class="comment">%    catmatrices is different to the inbuilt function cat,</span>
+0006 <span class="comment">%    in that it works out in what what the dimensions are</span>
+0007 <span class="comment">%    compatible, whereas cat expects the programmer to know.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%    Usage:</span>
+0010 <span class="comment">%      outmatrix=catmatrices(matrix2,matrix1);</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    INPUT:</span>
+0013 <span class="comment">%      matrix2         - the matrix to be appended</span>
+0014 <span class="comment">%      matrix1         - the primary matrix, to append matrix2 to</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    OUPUT:</span>
+0017 <span class="comment">%      cmatrix         - the concatenated matrix</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%    See also cat</span>
+0020 
+0021 <span class="comment">% AUTHOR: Glenn Thompson</span>
+0022 <span class="comment">% $Date$</span>
+0023 <span class="comment">% $Revision$</span>
+0024 
+0025 <span class="keyword">if</span> size(matrix1)~=[0 0]
+0026     s1=size(matrix1);
+0027     s2=size(matrix2);
+0028     <span class="keyword">if</span> s1(1)==s2(1)
+0029         cmatrix=[matrix1 matrix2];
+0030     <span class="keyword">elseif</span> s1(1)==s2(2)
+0031         cmatrix=[matrix1 matrix2'];
+0032     <span class="keyword">elseif</span> s1(2)==s2(1)
+0033         cmatrix=[matrix1;matrix2'];
+0034     <span class="keyword">elseif</span> s1(2)==s2(2)
+0035         cmatrix=[matrix1;matrix2];
+0036     <span class="keyword">else</span>
+0037     size(matrix2)
+0038     size(matrix1)
+0039         error(<span class="string">'matrix dimensions are incompatible'</span>);
+0040 
+0041     <span class="keyword">end</span>
+0042 <span class="keyword">else</span>
+0043     cmatrix=matrix2;
+0044 <span class="keyword">end</span>
+0045</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

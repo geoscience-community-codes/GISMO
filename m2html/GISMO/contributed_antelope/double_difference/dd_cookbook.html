@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dd_cookbook</title>
+  <meta name="keywords" content="dd_cookbook">
+  <meta name="description" content="% HypoDD cross correlation toolbox">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed_antelope</a> &gt; <a href="index.html">double_difference</a> &gt; dd_cookbook.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed_antelope/double_difference&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>dd_cookbook
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>% HypoDD cross correlation toolbox</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% HypoDD cross correlation toolbox 
+ This toolbox of programs carries out waveform cross-correlation on picked
+ P and S phases to generate date suitable for inclusion in the hydoDD
+ program. This is a high level toolbox designed to be fast and
+ user-friendly. To accomplish this, it requires that a number of other
+ toolboxes be in place already. Known dependencies include:
+       Antelope toolbox
+       waveform toolbox
+       correlation toolbox
+       epoch2datenum.m</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="dd_make_scp.html" class="code" title="function dd_make_scp(dbname,varargin)">dd_make_scp</a>	DD_MAKE_SCP Create a draft control file for the correlation process</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 
+0002 
+0003 <span class="comment">%% HypoDD cross correlation toolbox</span>
+0004 <span class="comment">% This toolbox of programs carries out waveform cross-correlation on picked</span>
+0005 <span class="comment">% P and S phases to generate date suitable for inclusion in the hydoDD</span>
+0006 <span class="comment">% program. This is a high level toolbox designed to be fast and</span>
+0007 <span class="comment">% user-friendly. To accomplish this, it requires that a number of other</span>
+0008 <span class="comment">% toolboxes be in place already. Known dependencies include:</span>
+0009 <span class="comment">%       Antelope toolbox</span>
+0010 <span class="comment">%       waveform toolbox</span>
+0011 <span class="comment">%       correlation toolbox</span>
+0012 <span class="comment">%       epoch2datenum.m</span>
+0013 
+0014 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0015 <span class="comment">% $Date$</span>
+0016 <span class="comment">% $Revision$</span>
+0017 <span class="comment">% TODO: This cookbook looks incomplete?</span>
+0018 
+0019 <span class="comment">%% Data sources</span>
+0020 <span class="comment">% This toolbox is hardwired to data from Antelope databases. This includes</span>
+0021 <span class="comment">% origins, phase arrival and waveform data. All tables should be accessible</span>
+0022 <span class="comment">% via a single database. If you are combining databases, use the descriptor</span>
+0023 <span class="comment">% file to bring the relevant tables into a single database. At a minimum</span>
+0024 <span class="comment">% this database muxt include the following tables:</span>
+0025 <span class="comment">%       origin</span>
+0026 <span class="comment">%       event</span>
+0027 <span class="comment">%       assoc</span>
+0028 <span class="comment">%       arrival</span>
+0029 <span class="comment">%       wfdisc</span>
+0030 <span class="comment">% It is expected that this database contain only the events that you wish</span>
+0031 <span class="comment">% to include in the double difference relocation. In other words, all</span>
+0032 <span class="comment">% events in this database are included in the calculations. It is best to</span>
+0033 <span class="comment">% perform any subsets or concatonations in the Antelope environment before</span>
+0034 <span class="comment">% using this toolbox.</span>
+0035 
+0036 
+0037 <span class="comment">%% Creating an 'SCP' file</span>
+0038 <span class="comment">% Cross correlation is carried out on waveforms of common station, channel</span>
+0039 <span class="comment">% and phase pick. Some parameters, such as trace window length and</span>
+0040 <span class="comment">% filtering, may be adjusted differently for different stations. This is</span>
+0041 <span class="comment">% accomplished in what we refer to as the SCP file. This simple file</span>
+0042 <span class="comment">% contains all station/channel/phase combinations that actually appear in</span>
+0043 <span class="comment">% the given database. In is the input file which controls the subsequent</span>
+0044 <span class="comment">% cross correlation process. The function DD_MAKE_SCP creates a nominal</span>
+0045 <span class="comment">% version of this file. So long as the general format is not changed, it is</span>
+0046 <span class="comment">% designed to be hand edited to account for different processing among</span>
+0047 <span class="comment">% channels. In the following examples, we are using a database named</span>
+0048 <span class="comment">% 'dbclust'. Details on DD_MAKE_SCP can be found with HELP DD_MAKE_SCP. One</span>
+0049 <span class="comment">% feature to note however is the ability to specify a preferred horizontal</span>
+0050 <span class="comment">% component. Catalog data might be picked on either 'E' of 'N' components.</span>
+0051 <span class="comment">% DD_MAKE_SCP allows collapses these picks onto a single horizontal channel</span>
+0052 <span class="comment">% for cross correlation, as specified in the function. This only applies to</span>
+0053 <span class="comment">% 'E' and 'N' components. Picks on different types of channel, for example</span>
+0054 <span class="comment">% BNE and HHE are not combined. In most cases concurrent picks on different</span>
+0055 <span class="comment">% types of data channels will not occur. If they however, DD_MAKE_SCP</span>
+0056 <span class="comment">% provides a good way to check of this.</span>
+0057 
+0058 <a href="dd_make_scp.html" class="code" title="function dd_make_scp(dbname,varargin)">dd_make_scp</a>(<span class="string">'dbclust'</span>)
+0059 
+0060</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

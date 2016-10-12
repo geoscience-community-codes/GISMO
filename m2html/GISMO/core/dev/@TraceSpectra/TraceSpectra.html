@@ -1,0 +1,879 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of TraceSpectra</title>
+  <meta name="keywords" content="TraceSpectra">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@TraceSpectra</a> &gt; TraceSpectra.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@TraceSpectra&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>TraceSpectra
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/contributed/iris_dmc_tools/+irisdmc/cookbook.html" class="code" title="function cookbook">cookbook</a>	COOKBOOK example program using the IRIS DMC web services</li><li><a href="../../../../GISMO/contributed/master_correlation/+mastercorr/cookbook.html" class="code" title="">cookbook</a>	COOKBOOK demonstrate the features of the mastercorr package.</li><li><a href="../../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/map.html" class="code" title="function map(dbName)">map</a>	MAP plot a map of ray coverage.</li><li><a href="../../../../GISMO/core/+scnlobject/cookbook.html" class="code" title="">cookbook</a>	% The SCNLOBJECT cookbook</li><li><a href="../../../../GISMO/core/@Catalog/cookbook.html" class="code" title="">cookbook</a>	% Catalog Cookbook</li><li><a href="../../../../GISMO/core/@EventRate/cookbook.html" class="code" title="">cookbook</a>	% EventRate Cookbook</li><li><a href="../../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>	C = COLORMAP(C)</li><li><a href="../../../../GISMO/core/@correlation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>	SIGN removes the mean of each trace.</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@drumplot/cookbook.html" class="code" title="">cookbook</a>	% drumplot cookbook</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../../GISMO/core/@rsam/cookbook.html" class="code" title="">cookbook</a>	% RSAM Cookbook</li><li><a href="../../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>	Purpose:</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../../GISMO/core/@spectralobject/colorbar_axis.html" class="code" title="function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)">colorbar_axis</a>	COLORBAR - Display color bar (color scale).</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@spectralobject/pwelch.html" class="code" title="function varargout = pwelch(s,w, varargin)">pwelch</a>	PWELCH   overloaded pwelch for spectralobjects</li><li><a href="../../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../../GISMO/core/@spectralobject/specgram.html" class="code" title="function h = specgram(s, ws, varargin)">specgram</a>	SPECGRAM - plots spectrogram of waveforms</li><li><a href="../../../../GISMO/core/@spectralobject/specgram2.html" class="code" title="function specgram2(s, ws, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li><li><a href="../../../../GISMO/core/@threecomp/cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../../GISMO/core/@waveform/diff.html" class="code" title="function w = diff (w)">diff</a>	DIFF Differentiate waveform</li><li><a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../../GISMO/core/@waveform/sign.html" class="code" title="function w = sign(w)">sign</a>	SIGN Signum function for waveforms.</li><li><a href="../../../../GISMO/core/@waveform/spectrogram.html" class="code" title="function spectrogram( w, s )">spectrogram</a>	SPECTROGRAM Plot an IceWeb-style spectrogram</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/colormap.html" class="code" title="function c = colormap(c,mapname)">colormap</a>	colormap   apply a colormap to the cross-correlation</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/sign.html" class="code" title="function c = sign(c)">sign</a>	SIGN convert traces to the sign of their data (+1, 0, -1)</li><li><a href="../../../../GISMO/core/dev/@TraceFilter/cookbook.html" class="code" title="function cookbook()">cookbook</a>	cookbook   Cookbook for TraceFilter</li><li><a href="TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li><li><a href="cookbook.html" class="code" title="function cookbook()">cookbook</a>	cookbook   Cookbook for TraceSpectra</li><li><a href="parseSpecgramInputs.html" class="code" title="function p = parseSpecgramInputs(me, cellOfArgs)">parseSpecgramInputs</a>	parseSpecgramInputs   handles inputs for specgram functions</li><li><a href="specgram.html" class="code" title="function h = specgram(s, T, varargin)">specgram</a>	specgram - plots spectrogram of traces</li><li><a href="specgram2.html" class="code" title="function h = specgram2(s, T, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function s = TraceSpectra(varargin)</a></li><li><a href="#_sub2" class="code">function m = get.map(s)</a></li><li><a href="#_sub3" class="code">function s = set.map(s, alternateMap)</a></li><li><a href="#_sub4" class="code">function [varargout] = fft(s, w)</a></li><li><a href="#_sub5" class="code">function [varargout] = ifft(s, w)</a></li><li><a href="#_sub6" class="code">function [varargout] = pwelch(s,w, varargin)</a></li><li><a href="#_sub7" class="code">function [varargout] = spectrogram(s, w, varargin)</a></li><li><a href="#_sub8" class="code">function [varargout] = psd(s, w, estimator, varargin)</a></li><li><a href="#_sub9" class="code">function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)</a></li><li><a href="#_sub10" class="code">function [unitName, secondMultiplier] = parse_xunit(unitName)</a></li><li><a href="#_sub11" class="code">function sub_h = subdivide_axes(h,sizes)</a></li><li><a href="#_sub12" class="code">function specmap = loadmap()</a></li><li><a href="#_sub13" class="code">function [properties] = parseargs(arglist)</a></li><li><a href="#_sub14" class="code">function [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)</a></li><li><a href="#_sub15" class="code">function c = property2varargin(properties)</a></li><li><a href="#_sub16" class="code">function hbar = createcolorbar(s, colorbarpref, clabel, currFontSize)</a></li><li><a href="#_sub17" class="code">function newParams = buildParameterList(paramStruct)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="TraceSpectra.html" class="code" title="">TraceSpectra</a>
+0002    <span class="comment">%TraceSpectra   Simple spectral analysis for SeismicTrace(s)</span>
+0003    <span class="comment">%</span>
+0004    <span class="comment">%   most uses will require the Signal Processing Toolbox</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">%   TraceSpectra properties:</span>
+0007    <span class="comment">%      nfft - length of the fft</span>
+0008    <span class="comment">%      over - amount of overlap (number of samples)</span>
+0009    <span class="comment">%      freqmax - maximum frequency for display</span>
+0010    <span class="comment">%      dBlims - decibel limits  for display [lower upper]</span>
+0011    <span class="comment">%      scaling - scaling factor (one of 's','m','h','d','date','doy')</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">%   TraceSpectra methods:</span>
+0014    <span class="comment">%      fft - Discrete Fourier transform.</span>
+0015    <span class="comment">%      ifft -  Inverse discrete Fourier transform.</span>
+0016    <span class="comment">%      pwelch - Power Spectral Density estimate via Welch's method. (best to instead use psd, below)</span>
+0017    <span class="comment">%</span>
+0018    <span class="comment">%    Newer (more powerful) representations:</span>
+0019    <span class="comment">%      psd  - Power Spectral Density, using newer matlab techniques</span>
+0020    <span class="comment">%      spectrogram - spectrogram Spectrogram using a Short-Time Fourier Transform (STFT).</span>
+0021    <span class="comment">%</span>
+0022    <span class="comment">%    display methods:</span>
+0023    <span class="comment">%      specgram - plot the spectra</span>
+0024    <span class="comment">%      specgram2 - plot the spectra and trace together</span>
+0025    <span class="comment">%</span>
+0026    <span class="comment">%   s.specgram(trace)</span>
+0027    <span class="comment">%</span>
+0028    <span class="comment">%   See also SeismicTrace, fft, ifft, pwelch, specgram</span>
+0029    
+0030    properties
+0031       nfft = 1024; <span class="comment">% length of the fft</span>
+0032       over = 1024 * 0.8; <span class="comment">% amount of overlap (number of samples)</span>
+0033       freqmax = 8; <span class="comment">% maximum frequency for display</span>
+0034       dBlims =  [50 100]; <span class="comment">% decibel limits  for display [lower upper] (affects clim)</span>
+0035       scaling = <span class="string">'s'</span>; <span class="comment">% scaling factor (one of 's','m','h','d','date','doy')</span>
+0036    <span class="keyword">end</span>
+0037    properties(Dependent, Hidden)
+0038       <a href="../../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/map.html" class="code" title="function map(dbName)">map</a> <span class="comment">% colormap</span>
+0039    <span class="keyword">end</span>
+0040    properties(Hidden)
+0041       SPECTRAL_MAP = TraceSpectra.loadmap;
+0042    <span class="keyword">end</span>
+0043    
+0044    methods
+0045       <a name="_sub0" href="#_subfunctions" class="code">function s = TraceSpectra(varargin)</a>
+0046          <span class="comment">% s = TraceSpectra(spectralobject)</span>
+0047          <span class="comment">% s = TraceSpectra(nfft, overlap, freqmax, dBlims)</span>
+0048          <span class="comment">%      manually puts together a TraceSpectra</span>
+0049          <span class="comment">%</span>
+0050          <span class="comment">%      SPECTRALOBJECT - an existing spectral object</span>
+0051          <span class="comment">%      NFFT - Fourier transform window               (default [1024])</span>
+0052          <span class="comment">%      OVERLAP - how much of the window to overlap   (default [NFFT * 0.8])</span>
+0053          <span class="comment">%      FREQMAX - how high a freq to display          (default [8])</span>
+0054          <span class="comment">%      DBLIMS - dB range over which to display data  (default [50 100])</span>
+0055          <span class="comment">%      SCALING - 's', 'm', 'h', 'date': x axis scale (default 's' (second))</span>
+0056          <span class="comment">%      to get default value, use []</span>
+0057          <span class="keyword">switch</span> nargin
+0058             <span class="keyword">case</span> 1  <span class="comment">% convert from spectralobject</span>
+0059                <span class="keyword">if</span> isa(varargin{1}, <span class="string">'spectralobject'</span>)
+0060                   s.nfft = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{1},<span class="string">'nfft'</span>);
+0061                   s.over = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{1},<span class="string">'over'</span>);
+0062                   s.freqmax = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{1},<span class="string">'freqmax'</span>);
+0063                   s.dBlims = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{1},<span class="string">'dBlims'</span>);
+0064                <span class="keyword">else</span>
+0065                   error(<span class="string">'Do not know how to create the TraceSpectra from a %s'</span>, class(varargin{1}));
+0066                <span class="keyword">end</span>
+0067             <span class="keyword">case</span> 4
+0068                s.nfft = varargin{1};
+0069                s.over = varargin{2};
+0070                s.freqmax = varargin{3};
+0071                s.dBlims = varargin{4};
+0072          <span class="keyword">end</span>
+0073       <span class="keyword">end</span>
+0074       <a name="_sub1" href="#_subfunctions" class="code">function m = get.map(s)</a>
+0075          m = s.SPECTRAL_MAP;
+0076       <span class="keyword">end</span>
+0077       <a name="_sub2" href="#_subfunctions" class="code">function s = set.map(s, alternateMap)</a>
+0078          <span class="comment">%SETMAP   sets the default colormap used with spectrograms</span>
+0079          <span class="comment">%   USAGE: tracespec.setmap(alternateMap)</span>
+0080          <span class="comment">%</span>
+0081          <span class="comment">%   EXAMPLE: s.map = bone(64);</span>
+0082          <span class="comment">%     this sets the map to the 'bone' colormap, with 64 shading  values.</span>
+0083          <span class="comment">%     If you don't specify the # of values, MatLab will assign the colormap</span>
+0084          <span class="comment">%     to your current figure.  If no figure exists, MatLab will create one.</span>
+0085          <span class="comment">%</span>
+0086          <span class="comment">%   Please Type HELP GRAPH3D to see a number of useful colormaps.</span>
+0087          
+0088          <span class="keyword">if</span> size(alternateMap,2) ~= 3,
+0089             warning(<span class="string">'Map ignored.  alternateMap has  incorrect # columns; should be 3'</span>);
+0090             <span class="keyword">return</span>
+0091          <span class="keyword">end</span>
+0092          s.SPECTRAL_MAP = alternateMap;
+0093       <span class="keyword">end</span>
+0094       <span class="comment">%% plotting and spectra-taking functions</span>
+0095       
+0096       <span class="comment">%%located in another file:</span>
+0097       h = <a href="specgram.html" class="code" title="function h = specgram(s, T, varargin)">specgram</a>(s, ws, varargin) <span class="comment">% spectral plot</span>
+0098       h = <a href="specgram2.html" class="code" title="function h = specgram2(s, T, varargin)">specgram2</a>(s, ws, varargin) <span class="comment">% spectral plot with wiggle</span>
+0099      
+0100       <a name="_sub3" href="#_subfunctions" class="code">function [varargout] = fft(s, w)</a>
+0101          <span class="comment">%FFT Discrete Fourier transform.  OVERLOADED for waveform &amp; Spectralobject</span>
+0102          <span class="comment">%   USAGE</span>
+0103          <span class="comment">%       v = fft(s, w);      % get the fft only</span>
+0104          <span class="comment">%       [v, f] = fft(s,w);  % get the fft &amp; assoc. frequencies</span>
+0105          <span class="comment">%       [v, f, Pyy] = fft(s,w); % get fft, frequencies, and Power Spectrum</span>
+0106          <span class="comment">%</span>
+0107          <span class="comment">%   See also SPECTRALOBJECT/IFFT, FFT, FFT2, FFTN, FFTSHIFT, FFTW, IFFT2, IFFTN, WAVEFORM/FILLGAPS.</span>
+0108          
+0109          <span class="keyword">if</span> nargin &lt; 2
+0110             error(<span class="string">'Spectralobject:fft:insufficientArguments'</span>, <span class="string">'Not enough input arguments. [out]=fft(spectralobject, waveform)'</span>);
+0111          <span class="keyword">end</span>
+0112          
+0113          <span class="keyword">if</span> ~isscalar(w)
+0114             error(<span class="string">'Spectralobject:fft:nonScalarWaveform'</span>, <span class="string">'waveform must be scalar (1x1)'</span>);
+0115          <span class="keyword">end</span>
+0116          
+0117          <span class="keyword">if</span> ~isa(w,<span class="string">'waveform'</span>)
+0118             error(<span class="string">'Spectralobject:fft:invalidArgument'</span>,<span class="keyword">...</span>
+0119                <span class="string">'second argument expected to be WAVEFORM, but was [%s]'</span>, class(w));
+0120          <span class="keyword">end</span>
+0121          
+0122          <span class="keyword">if</span> any(isnan(<a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w)))
+0123             warning(<span class="string">'Spectralobject:fft:nanValue'</span>,<span class="keyword">...</span>
+0124                [<span class="string">'This waveform has at least one NaN value, which returns NaN '</span>,<span class="keyword">...</span>
+0125                <span class="string">'results. Remove NaN values by either splitting up the '</span>,<span class="keyword">...</span>
+0126                <span class="string">'waveform into non-NaN sections or by using waveform/fillgaps'</span>,<span class="keyword">...</span>
+0127                <span class="string">' to replace the NaN values.'</span>]);
+0128          <span class="keyword">end</span>
+0129          
+0130          varargout{1} = builtin(<span class="string">'fft'</span>, <a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w));
+0131          varargout{2} = w.samplerate * (0:fix(s.nfft ./ 2)) / [s.nfft];
+0132          varargout{3} = varargout{1}.* conj(varargout{1}) / [s.nfft];
+0133          varargout{3} = varargout{3}(1:length(varargout{2}));
+0134       <span class="keyword">end</span>
+0135       <a name="_sub4" href="#_subfunctions" class="code">function [varargout] = ifft(s, w)</a>
+0136          <span class="comment">%IFFT Inverse discrete Fourier transform.  OVERLOADED FOR Spectralobject</span>
+0137          <span class="comment">%   IFFT(spectralobject, X) is the N-point inverse discrete Fourier</span>
+0138          <span class="comment">%   transform of X, using the spectralobject's NFFT value for N.</span>
+0139          <span class="comment">%</span>
+0140          <span class="comment">%   See also TraceSpectra/FFT, FFT, FFT2, FFTN, FFTSHIFT, FFTW, IFFT2, IFFTN.</span>
+0141          
+0142          <span class="keyword">if</span> nargin &lt; 2
+0143             error(<span class="string">'TraceSpectra:ifft:insufficientArguments'</span>,<span class="keyword">...</span>
+0144                <span class="string">'Not enough input arguments. [out]=ifft(spectralobject, waveform)'</span>);
+0145          <span class="keyword">end</span>
+0146          
+0147          <span class="keyword">if</span> numel(w) &gt; 1
+0148             error(<span class="string">'TraceSpectra:ifft:nonScalarWaveform'</span>, <span class="string">'waveform must be scalar (1x1)'</span>);
+0149          <span class="keyword">end</span>
+0150          
+0151          <span class="keyword">if</span> ~isa(w,<span class="string">'TraceData'</span>)
+0152             error(<span class="string">'TraceSpectra:ifft:invalidArgument'</span>,<span class="keyword">...</span>
+0153                <span class="string">'argument expected to be TraceData, but was [%s]'</span>, class(w));
+0154          <span class="keyword">end</span>
+0155          
+0156          <span class="keyword">if</span> nargout == 0
+0157             builtin(<span class="string">'ifft'</span>, <a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w), <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(s,<span class="string">'nfft'</span>));
+0158          <span class="keyword">else</span>
+0159             [varargout{1:nargout}] = builtin(<span class="string">'ifft'</span>, <a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w), <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(s,<span class="string">'nfft'</span>));
+0160          <span class="keyword">end</span>
+0161       <span class="keyword">end</span>
+0162       <a name="_sub5" href="#_subfunctions" class="code">function [varargout] = pwelch(s,w, varargin)</a>
+0163          <span class="comment">%PWELCH   overloaded Power Spectral Density estimate via Welch's method.</span>
+0164          <span class="comment">%   pwelch(TraceSpectra, waveform) - plots the spectral density</span>
+0165          <span class="comment">%       Pxx = pwelch(TraceSpectra, waveform) - returns the Power Spectral</span>
+0166          <span class="comment">%           Density (PSD) estimate, Pxx, of a discrete-time signal</span>
+0167          <span class="comment">%           vector X using Welch's averaged,  modified periodogram method.</span>
+0168          <span class="comment">%       [Pxx, Freqs] = pwelch(TraceSpectra, waveform) - returns spectral</span>
+0169          <span class="comment">%       density and associated frequency bins.</span>
+0170          <span class="comment">%</span>
+0171          <span class="comment">%       Options, pwelch(s,w, 'DEFAULT') - plots the spectral density using</span>
+0172          <span class="comment">%       pwelch's defaults (8 averaged windows, 50% overlap)</span>
+0173          <span class="comment">%   window is length of entire waveform..</span>
+0174          <span class="comment">%</span>
+0175          <span class="comment">%   NOTE: voltage offsets may cause a large spike for lowest Pxx value.</span>
+0176          <span class="comment">%   NOTE: NaN values will result in blank</span>
+0177          <span class="comment">%</span>
+0178          <span class="comment">% See also pwelch, TraceSpectra.fillgaps</span>
+0179          
+0180          <span class="keyword">if</span> nargin &lt; 2
+0181             error(<span class="string">'Spectralobject:pwelch:insufficientArguments'</span>,<span class="keyword">...</span>
+0182                <span class="string">'usage: [out] = pwelch(TraceSpectra, waveform, [''default'']'</span>);
+0183          <span class="keyword">end</span>
+0184          
+0185          <span class="keyword">if</span> ~isscalar(w)
+0186             error(<span class="string">'TraceSpectra:pwelch:nonScalarWaveform'</span>,<span class="keyword">...</span>
+0187                <span class="string">'waveform must be scalar (1x1)'</span>);
+0188          <span class="keyword">end</span>
+0189          
+0190          <span class="keyword">if</span> ~isa(w,<span class="string">'TraceData'</span>)
+0191             error(<span class="string">'TraceSpectra:pwelch:invalidArgument'</span>,<span class="keyword">...</span>
+0192                <span class="string">'second argument expected to be trace, but was [%s]'</span>, class(w));
+0193          <span class="keyword">end</span>
+0194          
+0195          <span class="keyword">if</span> any([w.hasnan])
+0196             warning(<span class="string">'TraceSpectra:pwelch:nanValue'</span>,<span class="keyword">...</span>
+0197                [<span class="string">'This waveform has at least one NaN value. '</span>,<span class="keyword">...</span>
+0198                <span class="string">'Remove NaN values by either splitting up the'</span>,<span class="keyword">...</span>
+0199                <span class="string">' waveform into non-NaN sections or by using '</span>,<span class="keyword">...</span>
+0200                <span class="string">'waveform/fillgaps to replace the NaN values.'</span>]);
+0201          <span class="keyword">end</span>
+0202          <span class="keyword">if</span> nargin == 3
+0203             <span class="keyword">if</span> strcmpi(varargin{1}, <span class="string">'DEFAULT'</span>)
+0204                <span class="comment">%disp('defaulting')</span>
+0205                s.window = [];
+0206                s.over = [];
+0207             <span class="keyword">end</span>
+0208          <span class="keyword">end</span>
+0209          [varargout{1:nargout}] =  <a href="../../../../GISMO/core/@spectralobject/pwelch.html" class="code" title="function varargout = pwelch(s,w, varargin)">pwelch</a>(<a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w),numel(w.data),s.over,s.nfft,w.samplerate);
+0210       <span class="keyword">end</span>
+0211       <a name="_sub6" href="#_subfunctions" class="code">function [varargout] = spectrogram(s, w, varargin)</a>
+0212          <span class="comment">%spectrogram   spectrogram Spectrogram using a Short-Time Fourier Transform (STFT).</span>
+0213          <span class="comment">%   run(s, trace) will attempt to run any matlab spectral function</span>
+0214          <span class="comment">%   of the form  fn(X, window, noverlap, nfft, fs) with a default</span>
+0215          <span class="comment">%   window of length nfft</span>
+0216          <span class="comment">%</span>
+0217          <span class="comment">%   example:</span>
+0218          <span class="comment">%      s = TraceSpectra;</span>
+0219          <span class="comment">%      T = SeismicTrace.synthetic()</span>
+0220          <span class="comment">%      spectrogram(s, T)</span>
+0221          <span class="comment">%</span>
+0222          <span class="comment">%   See also: spectrogram, periodogram</span>
+0223          assert(numel(w) == 1, <span class="string">'This function requires a single SeismicTrace'</span>);
+0224          <span class="keyword">switch</span> nargout
+0225             <span class="keyword">case</span> 0
+0226                <a href="../../../../GISMO/core/@waveform/spectrogram.html" class="code" title="function spectrogram( w, s )">spectrogram</a>(w.data, [], s.nfft, round(s.over), w.samplerate);
+0227             <span class="keyword">case</span> 1
+0228                a = <a href="../../../../GISMO/core/@waveform/spectrogram.html" class="code" title="function spectrogram( w, s )">spectrogram</a>(w.data, [], s.nfft, round(s.over), w.samplerate);
+0229                varargout = {a};
+0230             <span class="keyword">case</span> 2
+0231                [a, b] = <a href="../../../../GISMO/core/@waveform/spectrogram.html" class="code" title="function spectrogram( w, s )">spectrogram</a>(w.data, [], s.nfft, round(s.over), w.samplerate);
+0232                varargout = {a,b};
+0233             <span class="keyword">case</span> 3
+0234                [a, b, c] = <a href="../../../../GISMO/core/@waveform/spectrogram.html" class="code" title="function spectrogram( w, s )">spectrogram</a>(w.data, [], s.nfft, round(s.over), w.samplerate);
+0235                varargout = {a,b,c};
+0236             <span class="keyword">otherwise</span>
+0237                error(<span class="string">'TraceSpectra:run:unexpectedNumberOfOutputs'</span>,<span class="keyword">...</span>
+0238                   <span class="string">'Unanticipated number of outputs. expected between 0 and 3'</span>);
+0239          <span class="keyword">end</span>
+0240       <span class="keyword">end</span>
+0241       <a name="_sub7" href="#_subfunctions" class="code">function [varargout] = psd(s, w, estimator, varargin)</a>
+0242          <span class="comment">%psd   Power Spectral Density, using newer matlab techniques</span>
+0243          <span class="comment">%   psd(s, trace, estimator) will attempt to run the Power Spectral Density function</span>
+0244          <span class="comment">%   of the form  fn(X, window, noverlap, nfft, fs) with a default</span>
+0245          <span class="comment">%   window of length nfft</span>
+0246          <span class="comment">%</span>
+0247          <span class="comment">%   only works on a single trace at a time</span>
+0248          <span class="comment">%</span>
+0249          <span class="comment">%   a list of estimators can be found by looking at the help for spectrum.psd</span>
+0250          <span class="comment">%</span>
+0251          <span class="comment">%      Valid psd estimators (as of 2012b:):</span>
+0252          <span class="comment">%             periodogram    mcov</span>
+0253          <span class="comment">%             welch          mtm</span>
+0254          <span class="comment">%             burg           yulear</span>
+0255          <span class="comment">%             cov</span>
+0256          <span class="comment">%</span>
+0257          <span class="comment">%   example:</span>
+0258          <span class="comment">%      s = TraceSpectra;</span>
+0259          <span class="comment">%      T = SeismicTrace.synthetic()</span>
+0260          <span class="comment">%      estimator = spectrum.pwelch; %choose a valid estimator</span>
+0261          <span class="comment">%      s.psd(T, estimator); % plot</span>
+0262          <span class="comment">%      Hpsd = s.psd(T, estimator); % return values in a psd object</span>
+0263          <span class="comment">%</span>
+0264          <span class="comment">%   See also: spectrum.psd, spectrum.welch, spectrum.burg,</span>
+0265          <span class="comment">%   spectrum.cov, spectrum.mcov, spectrum.mtm, spectrum.yulear,</span>
+0266          <span class="comment">%   spectrum.periodogram</span>
+0267          
+0268          assert(numel(w) == 1, <span class="string">'This function requires a single SeismicTrace'</span>);
+0269          
+0270          <span class="comment">% suppressed the warning about psd being oudated (FDEPR) because I am</span>
+0271          <span class="comment">% using the new one. Because estimator is a variable, mlint can't</span>
+0272          <span class="comment">% tell the difference.</span>
+0273          
+0274          <span class="keyword">switch</span> nargout
+0275             <span class="keyword">case</span> 0
+0276                <a href="#_sub8" class="code" title="subfunction [varargout] = psd(s, w, estimator, varargin)">psd</a>(estimator, w.data, <span class="string">'fs'</span>, w.samplerate,<span class="string">'nfft'</span>,s.nfft); <span class="comment">%#ok&lt;*FDEPR&gt;</span>
+0277             <span class="keyword">case</span> 1
+0278                a = <a href="#_sub8" class="code" title="subfunction [varargout] = psd(s, w, estimator, varargin)">psd</a>(estimator, w.data, <span class="string">'fs'</span>, w.samplerate,<span class="string">'nfft'</span>,s.nfft);
+0279                varargout = {a};
+0280             <span class="keyword">case</span> 2
+0281                [a, b] = <a href="#_sub8" class="code" title="subfunction [varargout] = psd(s, w, estimator, varargin)">psd</a>(estimator, w.data, <span class="string">'fs'</span>, w.samplerate,<span class="string">'nfft'</span>,s.nfft);
+0282                varargout = {a,b};
+0283             <span class="keyword">case</span> 3
+0284                [a, b, c] = <a href="#_sub8" class="code" title="subfunction [varargout] = psd(s, w, estimator, varargin)">psd</a>(estimator, w.data, <span class="string">'fs'</span>, w.samplerate,<span class="string">'nfft'</span>,s.nfft);
+0285                varargout = {a,b,c};
+0286             <span class="keyword">otherwise</span>
+0287                error(<span class="string">'TraceSpectra:run:unexpectedNumberOfOutputs'</span>,<span class="keyword">...</span>
+0288                   <span class="string">'Unanticipated number of outputs. expected between 0 and 3'</span>);
+0289          <span class="keyword">end</span>
+0290       <span class="keyword">end</span>
+0291       
+0292       <a name="_sub8" href="#_subfunctions" class="code">function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)</a>
+0293          <span class="comment">% COLORBAR - Display color bar (color scale).</span>
+0294          <span class="comment">%</span>
+0295          <span class="comment">%   This function differs from colorbar(loc,clabel,rlab1,rlab2) in that</span>
+0296          <span class="comment">%   only a portion of the colorbar defined by the plot axis &quot;paxis&quot; is shown</span>
+0297          <span class="comment">%</span>
+0298          <span class="comment">%       s.dBlims is the [2] vector containing the plotting axis limits</span>
+0299          <span class="comment">%       paxis   is the [2] vector containing the plotting axis limits</span>
+0300          <span class="comment">%               that are used to limit the portion of the colorbar shown</span>
+0301          <span class="comment">%</span>
+0302          <span class="comment">%    COLORBAR('vert') appends a vertical color scale to</span>
+0303          <span class="comment">%    the current axis. COLORBAR('horiz') appends a</span>
+0304          <span class="comment">%    horizontal color scale.</span>
+0305          <span class="comment">%</span>
+0306          <span class="comment">%    COLORBAR(H) places the colorbar in the axes H. The</span>
+0307          <span class="comment">%    colorbar will be horizontal if the axes width &gt; height.</span>
+0308          <span class="comment">%</span>
+0309          <span class="comment">%    COLORBAR without arguments either adds a new vertical</span>
+0310          <span class="comment">%    color scale or updates an existing colorbar.</span>
+0311          <span class="comment">%</span>
+0312          <span class="comment">%    H = COLORBAR(...) returns a handle to the colorbar axis.</span>
+0313          <span class="comment">%</span>
+0314          <span class="comment">%       clabel  is the string containing the colorbar axis label</span>
+0315          <span class="comment">%       rlab1   is the string label for the lower limit plotted</span>
+0316          <span class="comment">%       rlab2   is the string label for the upper limit plotted</span>
+0317          <span class="comment">%</span>
+0318          <span class="comment">%</span>
+0319          
+0320          <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0321          <span class="comment">% $Date$</span>
+0322          <span class="comment">% $Revision$</span>
+0323          
+0324          <span class="comment">%return</span>
+0325          
+0326          <span class="comment">%set (gca, 'FontSize', 8)</span>
+0327          <span class="keyword">if</span> ~exist(<span class="string">'fontsize'</span>,<span class="string">'var'</span>)
+0328             fontsize = 8;
+0329          <span class="keyword">end</span>;
+0330          <span class="keyword">if</span> nargin&lt;1,
+0331             echo <span class="string">' Error:  vector of plot-axis limits required'</span>
+0332             echo <span class="string">'         else,  use: '</span>
+0333             echo <span class="string">'    colorbar_axis(TraceSpectra,loc,clabel,rlab1,rlab2)'</span>
+0334             <span class="keyword">return</span>
+0335          <span class="keyword">end</span>
+0336          
+0337          <span class="keyword">if</span> nargin&gt;1,
+0338             paxis = s.dBlims;
+0339          <span class="keyword">end</span>
+0340          
+0341          <span class="keyword">if</span> nargin&lt;2,
+0342             loc = <span class="string">'vert'</span>;
+0343          <span class="keyword">end</span>
+0344          
+0345          ax = [];
+0346          <span class="keyword">if</span> nargin==2,
+0347             <span class="keyword">if</span> ~ischar(loc),
+0348                ax = loc;
+0349                <span class="keyword">if</span> ~strcmp(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'type'</span>),<span class="string">'axes'</span>),
+0350                   error(<span class="string">'Requires axes handle.'</span>);
+0351                <span class="keyword">end</span>
+0352                rect = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'position'</span>);
+0353                <span class="keyword">if</span> rect(3) &gt; rect(4), loc = <span class="string">'horiz'</span>; <span class="keyword">else</span> loc = <span class="string">'vert'</span>; <span class="keyword">end</span>
+0354             <span class="keyword">end</span>
+0355          <span class="keyword">end</span>
+0356          
+0357          <span class="comment">% Determine color limits by context.  If any axes child is an image</span>
+0358          <span class="comment">% use scale based on size of colormap, otherwise use current CAXIS.</span>
+0359          
+0360          ch = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca,<span class="string">'children'</span>);
+0361          hasimage = 0; t = [];
+0362          <span class="keyword">for</span> i=1:length(ch),
+0363             <span class="keyword">if</span> strcmp(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ch(i),<span class="string">'type'</span>),<span class="string">'image'</span>),
+0364                hasimage = 1;
+0365                t = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ch(i),<span class="string">'UserData'</span>); <span class="comment">% Info stored by imshow or imagesc</span>
+0366             <span class="keyword">elseif</span> strcmp(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ch(i),<span class="string">'Type'</span>),<span class="string">'surface'</span>), <span class="comment">% Texturemapped surf?</span>
+0367                <span class="keyword">if</span> strcmp(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ch(i),<span class="string">'FaceColor'</span>),<span class="string">'texturemap'</span>)
+0368                   hasimage = 2;
+0369                   t = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ch(i),<span class="string">'UserData'</span>); <span class="comment">% Info stored by imshow or imagesc</span>
+0370                <span class="keyword">end</span>
+0371             <span class="keyword">end</span>
+0372          <span class="keyword">end</span>
+0373          <span class="keyword">if</span> hasimage,
+0374             <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(t),
+0375                t = [0.5 size(<a href="../../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>,1)+0.5];
+0376             <span class="keyword">end</span>
+0377          <span class="keyword">else</span>
+0378             t = paxis;
+0379             <span class="comment">% cmin=t(1); %apparently not used</span>
+0380             <span class="comment">% cmax=t(2); %apparently not used</span>
+0381          <span class="keyword">end</span>
+0382          
+0383          h = gca;
+0384          
+0385          <span class="keyword">if</span> nargin==1,
+0386             <span class="comment">% Search for existing colorbar</span>
+0387             ch = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gcf,<span class="string">'children'</span>); ax = [];
+0388             <span class="keyword">for</span> i=1:length(ch),
+0389                d = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ch(i),<span class="string">'userdata'</span>);
+0390                <span class="keyword">if</span> numel(d)==1,
+0391                   <span class="keyword">if</span> d==h,
+0392                      ax = ch(i);
+0393                      pos = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ch(i),<span class="string">'Position'</span>);
+0394                      <span class="keyword">if</span> pos(3)&lt;pos(4), loc = <span class="string">'vert'</span>;
+0395                      <span class="keyword">else</span> loc = <span class="string">'horiz'</span>;
+0396                      <span class="keyword">end</span>
+0397                      <span class="keyword">break</span>;
+0398                   <span class="keyword">end</span>
+0399                <span class="keyword">end</span>
+0400             <span class="keyword">end</span>
+0401          <span class="keyword">end</span>
+0402          
+0403          <span class="keyword">if</span> strcmp(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gcf,<span class="string">'NextPlot'</span>),<span class="string">'replace'</span>),
+0404             <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gcf,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>)
+0405          <span class="keyword">end</span>
+0406          <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca,<span class="string">'FontSize'</span>,fontsize);
+0407          fsize=<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca,<span class="string">'FontSize'</span>);          <span class="comment">%get fontsize and shift if&gt;16</span>
+0408          <span class="comment">%vshift=0;</span>
+0409          <span class="comment">%if fsize&gt;16, vshift=.25; end</span>
+0410          
+0411          <span class="comment">%------------------------------------------------------------------------</span>
+0412          
+0413          <span class="keyword">if</span> loc(1)==<span class="string">'v'</span>,        <span class="comment">% Append VERTICAL scale to right of current plot</span>
+0414             stripe = 0.075; edge = 0.02;
+0415             
+0416             <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(ax),
+0417                pos = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(h,<span class="string">'Position'</span>);
+0418                [az,el] = view;
+0419                <span class="keyword">if</span> all([az,el]==[0 90]), space = 0.05; <span class="keyword">else</span> space = .1; <span class="keyword">end</span>
+0420                <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h,<span class="string">'Position'</span>,[pos(1) pos(2) pos(3)*(1-stripe-edge-space) pos(4)])
+0421                rect = [pos(1)+(1-stripe-edge)*pos(3) pos(2) stripe*pos(3)*.5 pos(4)];
+0422                
+0423                <span class="comment">% Create axes for stripe</span>
+0424                ax = axes(<span class="string">'Position'</span>, rect);
+0425             <span class="keyword">else</span>
+0426                axes(ax);
+0427             <span class="keyword">end</span>
+0428             
+0429             <span class="comment">% Create color stripe</span>
+0430             n = size(<a href="../../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>,1);
+0431             image([0 1],t,(1:n)'); <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax,<span class="string">'Ydir'</span>,<span class="string">'normal'</span>)
+0432             
+0433             <span class="keyword">if</span> nargin&gt;2,
+0434                <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax,<span class="string">'ylabel'</span>,text(0,0,clabel, <span class="string">'FontSize'</span>, fontsize));
+0435             <span class="keyword">end</span>
+0436             
+0437             xpos = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'Xlim'</span>);
+0438             ypos = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'Ylim'</span>);
+0439             <span class="keyword">if</span> nargin&gt;3,
+0440                xshift=.5*(xpos(2)-xpos(1));
+0441                yshift=.05*(ypos(2)-ypos(1));
+0442                <span class="keyword">if</span> nargin==4,        <span class="comment">%put color range  max label on colorbar</span>
+0443                   text(xpos(2)-xshift,ypos(2)+yshift,0.,rlab1);
+0444                <span class="keyword">end</span>
+0445                <span class="keyword">if</span> nargin==5,        <span class="comment">%put color range min, max labels on colorbar</span>
+0446                   text(xpos(1)-xshift,ypos(1)-.75*yshift,0.,rlab1);
+0447                   text(xpos(1)-xshift,ypos(2)+yshift,0.,rlab2);
+0448                <span class="keyword">end</span>
+0449             <span class="keyword">end</span>
+0450             <span class="comment">%d=date;</span>
+0451             
+0452             <span class="comment">% yshift=.12*(ypos(2)-ypos(1));</span>
+0453             <span class="comment">%  text(xpos(1)+2.0,ypos(1)-yshift,0.,d)</span>
+0454             
+0455             <span class="comment">% Create color axis</span>
+0456             ylim = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'ylim'</span>);   <span class="comment">% Note: axis ticlabel range will be truncated</span>
+0457             units = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'Units'</span>); <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax,<span class="string">'Units'</span>,<span class="string">'pixels'</span>);
+0458             pos = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'Position'</span>);
+0459             <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax,<span class="string">'Units'</span>,units);
+0460             yspace = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'FontSize'</span>)*(ylim(2)-ylim(1))/pos(4)/2;
+0461             xspace = .5*<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'FontSize'</span>)/pos(3);
+0462             yticks = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'ytick'</span>);
+0463             ylabels = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'yticklabel'</span>);
+0464             labels = []; width = [];
+0465             
+0466             <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a> (gca, <span class="string">'FontSize'</span>, fontsize)  <span class="comment">%This sets the font size</span>
+0467             <span class="keyword">for</span> i=length(yticks):-1:1
+0468                <span class="comment">% unknown length for each, so cannot preallocat</span>
+0469                labels(i) = text(1+0*xspace,yticks(i),deblank(ylabels(i,:)), <span class="keyword">...</span>
+0470                   <span class="string">'HorizontalAlignment'</span>,<span class="string">'right'</span>, <span class="keyword">...</span>
+0471                   <span class="string">'VerticalAlignment'</span>,<span class="string">'middle'</span>, <span class="keyword">...</span>
+0472                   <span class="string">'FontName'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'FontName'</span>), <span class="keyword">...</span>
+0473                   <span class="string">'FontSize'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'FontSize'</span>), <span class="keyword">...</span>
+0474                   <span class="string">'FontAngle'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'FontAngle'</span>), <span class="keyword">...</span>
+0475                   <span class="string">'FontWeight'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'FontWeight'</span>));
+0476                <span class="comment">%{</span>
+0477                labels(i) = [text(1+0*xspace,yticks(i),deblank(ylabels(i,:)), <span class="keyword">...</span>
+0478                   <span class="string">'HorizontalAlignment'</span>,<span class="string">'right'</span>, <span class="keyword">...</span>
+0479                   <span class="string">'VerticalAlignment'</span>,<span class="string">'middle'</span>, <span class="keyword">...</span>
+0480                   <span class="string">'FontName'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'FontName'</span>), <span class="keyword">...</span>
+0481                   <span class="string">'FontSize'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'FontSize'</span>), <span class="keyword">...</span>
+0482                   <span class="string">'FontAngle'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'FontAngle'</span>), <span class="keyword">...</span>
+0483                   <span class="string">'FontWeight'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'FontWeight'</span>))];
+0484                <span class="comment">%}</span>
+0485                width((i*4 - 3):i*4) = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(labels(i),<span class="string">'Extent'</span>);
+0486             <span class="keyword">end</span>
+0487             
+0488             <span class="comment">% Shift labels over so that they line up</span>
+0489             [~,k] = <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(width(:,3)); width = width(k,3);
+0490             <span class="keyword">for</span> i=1:length(labels),
+0491                pos = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(labels(i),<span class="string">'Position'</span>);
+0492                <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(labels(i),<span class="string">'Position'</span>,[pos(1)+width pos(2:3)])
+0493             <span class="keyword">end</span>
+0494             
+0495             <span class="comment">% If we need an exponent then draw one</span>
+0496             [ymax,k] = <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(yticks));
+0497             <span class="keyword">if</span> <a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(str2num(ylabels(k,:)))-ymax)&gt;sqrt(eps), <span class="comment">%#ok&lt;ST2NM&gt;</span>
+0498                ex = log10(<a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(yticks)));
+0499                ex = <a href="../../../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>(ex)*ceil(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(ex));
+0500                l = text(0,ylim(2)+2*yspace,<span class="string">'x 10'</span>, <span class="keyword">...</span>
+0501                   <span class="string">'FontName'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'FontName'</span>), <span class="keyword">...</span>
+0502                   <span class="string">'FontSize'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'FontSize'</span>), <span class="keyword">...</span>
+0503                   <span class="string">'FontAngle'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'FontAngle'</span>), <span class="keyword">...</span>
+0504                   <span class="string">'FontWeight'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'FontWeight'</span>));
+0505                width = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(l,<span class="string">'Extent'</span>);
+0506                text(width(3)-xspace,ylim(2)+3.2*yspace,num2str(ex), <span class="keyword">...</span>
+0507                   <span class="string">'FontName'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'ExpFontName'</span>), <span class="keyword">...</span>
+0508                   <span class="string">'FontSize'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'ExpFontSize'</span>), <span class="keyword">...</span>
+0509                   <span class="string">'FontAngle'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'ExpFontAngle'</span>), <span class="keyword">...</span>
+0510                   <span class="string">'FontWeight'</span>,<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'ExpFontWeight'</span>));
+0511             <span class="keyword">end</span>
+0512             
+0513             <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax,<span class="string">'yticklabelmode'</span>,<span class="string">'manual'</span>,<span class="string">'yticklabel'</span>,<span class="string">''</span>)
+0514             <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax,<span class="string">'xticklabelmode'</span>,<span class="string">'manual'</span>,<span class="string">'xticklabel'</span>,<span class="string">''</span>)
+0515             
+0516             <span class="comment">%set(gca,'ytick',[])</span>
+0517             <span class="comment">%------------------------------------------------------------------------</span>
+0518             <span class="comment">%------------------------------------------------------------------------</span>
+0519          <span class="keyword">else</span>            <span class="comment">% Append HORIZONTAL scale to bottom of current plot</span>
+0520             
+0521             <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(ax),
+0522                pos = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(h,<span class="string">'Position'</span>);           <span class="comment">%[left,bottom,width,height]</span>
+0523                stripe = 0.05; space = 0.1;       <span class="comment">%stripe = 0.075</span>
+0524                <span class="keyword">if</span> fsize&lt;=16,
+0525                   sfact=1;
+0526                <span class="keyword">else</span>
+0527                   sfact=2;
+0528                <span class="keyword">end</span>
+0529                
+0530                <span class="comment">% ori=get(gcf,'paperorientation');</span>
+0531                <span class="comment">%    if ori=='landscape', stripe = 0.05; end</span>
+0532                <span class="comment">%    if fsize&lt;=26,</span>
+0533                <span class="comment">%      set(h,'Position',...</span>
+0534                <span class="comment">%        [pos(1) pos(2)+(stripe+space)*pos(4) pos(3) (1-stripe-space)*pos(4)])</span>
+0535                <span class="comment">%    else</span>
+0536                <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h,<span class="string">'Position'</span>,<span class="keyword">...</span>
+0537                   [pos(1) pos(2)+(sfact*stripe+space)*pos(4) pos(3) (1-stripe-space)*pos(4)])
+0538                <span class="comment">%    end</span>
+0539                rect = [pos(1) pos(2) pos(3) stripe*pos(4)*.8];
+0540                
+0541                <span class="comment">% Create axes for stripe</span>
+0542                ax = axes(<span class="string">'Position'</span>, rect);
+0543             <span class="keyword">else</span>
+0544                axes(ax);
+0545             <span class="keyword">end</span>
+0546             
+0547             t = paxis;
+0548             cmin=t(1);
+0549             cmax=t(2);
+0550             
+0551             <span class="comment">% Create color stripe</span>
+0552             n = size(<a href="../../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>,1);
+0553             <span class="keyword">if</span> paxis(1)&gt;cmin,
+0554                <a href="../../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>=paxis(1)-cmin;
+0555                cstep=(cmax-cmin)/n;
+0556                n1=round(<a href="../../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>/cstep);
+0557             <span class="keyword">else</span>
+0558                n1=1;
+0559             <span class="keyword">end</span>
+0560             <span class="keyword">if</span> paxis(2)&lt;cmax,
+0561                <a href="../../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>=cmax-paxis(2);
+0562                cstep=(cmax-cmin)/n;
+0563                n2=n-round(<a href="../../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>/cstep);
+0564             <span class="keyword">else</span>
+0565                n2=n;
+0566             <span class="keyword">end</span>
+0567             
+0568             <span class="comment">%  image(t,[0 1],[1:n]); set(ax,'Ydir','normal')</span>
+0569             image(t,[0 1],n1:n2); <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax,<span class="string">'Ydir'</span>,<span class="string">'normal'</span>)
+0570             <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax,<span class="string">'yticklabelmode'</span>,<span class="string">'manual'</span>)
+0571             <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax,<span class="string">'yticklabel'</span>,<span class="string">''</span>)
+0572             
+0573             <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a> (gca, <span class="string">'FontSize'</span>, fontsize)  <span class="comment">%This sets the font size</span>
+0574             <span class="keyword">if</span> nargin&gt;2,
+0575                <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax,<span class="string">'xlabel'</span>,text(0,0,clabel, <span class="string">'FontSize'</span>, fontsize));
+0576             <span class="keyword">end</span>
+0577             
+0578             xpos = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'Xlim'</span>);
+0579             ypos = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax,<span class="string">'Ylim'</span>);
+0580             <span class="keyword">if</span> nargin&gt;3,
+0581                xshift=.025*(xpos(2)-xpos(1));
+0582                <span class="keyword">if</span> nargin==4,        <span class="comment">%put color range  max label on colorbar</span>
+0583                   text(xpos(2)-xshift,ypos(1)-1.0,0.,rlab1);
+0584                <span class="keyword">end</span>
+0585                <span class="keyword">if</span> nargin==5,        <span class="comment">%put color range min, max labels on colorbar</span>
+0586                   text(xpos(1)-xshift,ypos(1)-1.0,0.,rlab1);
+0587                   text(xpos(2)-xshift,ypos(1)-1.0,0.,rlab2);
+0588                <span class="keyword">end</span>
+0589             <span class="keyword">end</span>
+0590             
+0591             <span class="comment">% d=date;</span>
+0592             <span class="comment">% xshift=.15*(xpos(2)-xpos(1));</span>
+0593             <span class="comment">%  text(xpos(1)-xshift,ypos(1)-3.5,0.,d)</span>
+0594             
+0595             <span class="comment">%set(gca,'xtick',[])</span>
+0596          <span class="keyword">end</span>
+0597          <span class="comment">%------------------------------------------------------------------------</span>
+0598          <span class="comment">%------------------------------------------------------------------------</span>
+0599          
+0600          <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax,<span class="string">'userdata'</span>,h)
+0601          <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gcf,<span class="string">'CurrentAxes'</span>,h)
+0602          <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gcf,<span class="string">'Nextplot'</span>,<span class="string">'Replace'</span>)
+0603          
+0604          <span class="keyword">if</span> nargout&gt;0, handle = ax; <span class="keyword">end</span>
+0605       <span class="keyword">end</span>
+0606     
+0607    <span class="keyword">end</span> <span class="comment">%methods</span>
+0608    methods(Access=protected)
+0609       p = <a href="parseSpecgramInputs.html" class="code" title="function p = parseSpecgramInputs(me, cellOfArgs)">parseSpecgramInputs</a>(me, cellOfArgs)
+0610    <span class="keyword">end</span>
+0611    methods(Static, Access=protected)
+0612       <a name="_sub9" href="#_subfunctions" class="code">function [unitName, secondMultiplier] = parse_xunit(unitName)</a>
+0613          <span class="comment">% PARSE_XUNIT returns a labelname and a multiplier for an incoming xunit</span>
+0614          <span class="comment">% value.  This routine was removed to centralize this function</span>
+0615          <span class="comment">% [unitName, secondMultiplier] = parse_xunit(unitName)</span>
+0616          
+0617          <span class="keyword">switch</span> lower(unitName)
+0618             <span class="keyword">case</span> {<span class="string">'m'</span>,<span class="string">'minutes'</span>}
+0619                unitName = <span class="string">'Minutes'</span>;
+0620                secondMultiplier = 60;
+0621             <span class="keyword">case</span> {<span class="string">'h'</span>,<span class="string">'hours'</span>}
+0622                unitName = <span class="string">'Hours'</span>;
+0623                secondMultiplier = 3600;
+0624             <span class="keyword">case</span> {<span class="string">'d'</span>,<span class="string">'days'</span>}
+0625                unitName = <span class="string">'Days'</span>;
+0626                secondMultiplier = 86400;
+0627             <span class="keyword">case</span> {<span class="string">'doy'</span>,<span class="string">'day_of_year'</span>}
+0628                unitName = <span class="string">'Day of Year'</span>;
+0629                secondMultiplier = 86400;
+0630             <span class="keyword">case</span> <span class="string">'date'</span>,
+0631                unitName = <span class="string">'Date'</span>;
+0632                secondMultiplier = nan; <span class="comment">%inconsequential!</span>
+0633             <span class="keyword">case</span> {<span class="string">'s'</span>,<span class="string">'seconds'</span>}
+0634                unitName = <span class="string">'Seconds'</span>;
+0635                secondMultiplier = 1;
+0636             <span class="keyword">otherwise</span>,
+0637                unitName = <span class="string">'Seconds'</span>;
+0638                secondMultiplier = 1;
+0639          <span class="keyword">end</span>
+0640       <span class="keyword">end</span>
+0641       <a name="_sub10" href="#_subfunctions" class="code">function sub_h = subdivide_axes(h,sizes)</a>
+0642          <span class="comment">% returns handles for sub-axes of axis(h).  These axes are createdb y</span>
+0643          <span class="comment">% subdividing h into sections according to SIZES, where sizes is a</span>
+0644          <span class="comment">% 2-component vector corresponding to [nCol, nRow];</span>
+0645          <span class="comment">% example:</span>
+0646          <span class="comment">%   subplot(3,3,5); % break figure into 3x3 grid, and select the center</span>
+0647          <span class="comment">%   % let w be an NxM object array</span>
+0648          <span class="comment">%   h = subdivide_axes(gca, size(w));</span>
+0649          <span class="comment">%   for n=1:numel(h)</span>
+0650          <span class="comment">%     plot(h,somethingToPlot);</span>
+0651          <span class="comment">%   end</span>
+0652          <span class="comment">%</span>
+0653          <span class="comment">% axis h is cleared, then subaxes are created.  This function returns an</span>
+0654          <span class="comment">% NxM array of handles to the subaxes.</span>
+0655          
+0656          rect = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(h,<span class="string">'position'</span>);
+0657          nCol = sizes(2);
+0658          nRow = sizes(1);
+0659          left = rect(1);
+0660          bottom = rect(2);
+0661          width = rect(3);
+0662          height = rect(4);
+0663          <span class="comment">%top = bottom - height;</span>
+0664          
+0665          <span class="keyword">if</span> sizes(1) == 1
+0666             newMaxHeight  = height; <span class="comment">% unchanged # of rows</span>
+0667          <span class="keyword">else</span>
+0668             newMaxHeight = height / nRow .* 0.85;
+0669             bottom = linspace(bottom,  (bottom+height)-newMaxHeight,nRow);
+0670          <span class="keyword">end</span>
+0671          <span class="keyword">if</span> sizes(2) == 1
+0672             
+0673             newMaxWidth = width; <span class="comment">% unchanged # of columns</span>
+0674          <span class="keyword">else</span>
+0675             newMaxWidth = width / nCol .* 0.93;
+0676             left = linspace(left, (left+width) - newMaxWidth, nCol);
+0677          <span class="keyword">end</span>
+0678          delete(h);
+0679          sub_h = zeros(nRow,nCol);
+0680          <span class="keyword">for</span> c = 1:nCol
+0681             <span class="keyword">for</span> r = 1:nRow
+0682                sub_h(r,c) = subplot(<span class="string">'position'</span>, [left(c) bottom(r) newMaxWidth newMaxHeight]);
+0683             <span class="keyword">end</span>
+0684          <span class="keyword">end</span>
+0685          sub_h = flipud(sub_h);
+0686       <span class="keyword">end</span>
+0687       <a name="_sub11" href="#_subfunctions" class="code">function specmap = loadmap()</a>
+0688          
+0689          <span class="keyword">if</span> exist(<span class="string">'spectral.map'</span>,<span class="string">'file'</span>)
+0690             specmap = <a href="../../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>(<span class="string">'spectral.map'</span>,<span class="string">'-ascii'</span>);
+0691          <span class="keyword">else</span>
+0692             specmap =[<span class="keyword">...</span>
+0693                0         0    0.5625
+0694                0         0    0.6250
+0695                0         0    0.6875
+0696                0         0    0.7500
+0697                0         0    0.8125
+0698                0         0    0.8750
+0699                0         0    0.9375
+0700                0         0    1.0000
+0701                0    0.0625    1.0000
+0702                0    0.1250    1.0000
+0703                0    0.1875    1.0000
+0704                0    0.2500    1.0000
+0705                0    0.3125    1.0000
+0706                0    0.3750    1.0000
+0707                0    0.4375    1.0000
+0708                0    0.5000    1.0000
+0709                0    0.5625    1.0000
+0710                0    0.6250    1.0000
+0711                0    0.6875    1.0000
+0712                0    0.7500    1.0000
+0713                0    0.8125    1.0000
+0714                0    0.8750    1.0000
+0715                0    0.9375    1.0000
+0716                0    1.0000    1.0000
+0717                0.0625    1.0000    1.0000
+0718                0.1250    1.0000    0.9375
+0719                0.1875    1.0000    0.8750
+0720                0.2500    1.0000    0.8125
+0721                0.3125    1.0000    0.7500
+0722                0.3750    1.0000    0.6875
+0723                0.4375    1.0000    0.6250
+0724                0.5000    1.0000    0.5625
+0725                0.5625    1.0000    0.5000
+0726                0.6250    1.0000    0.4375
+0727                0.6875    1.0000    0.3750
+0728                0.7500    1.0000    0.3125
+0729                0.8125    1.0000    0.2500
+0730                0.8750    1.0000    0.1875
+0731                0.9375    1.0000    0.1250
+0732                1.0000    1.0000         0
+0733                1.0000    0.9375         0
+0734                1.0000    0.8750         0
+0735                1.0000    0.8125         0
+0736                1.0000    0.7500         0
+0737                1.0000    0.6875         0
+0738                1.0000    0.6250         0
+0739                1.0000    0.5625         0
+0740                1.0000    0.5000         0
+0741                1.0000    0.3750         0
+0742                1.0000    0.2500         0
+0743                1.0000    0.1250         0
+0744                1.0000         0         0
+0745                0.9375         0    0.6375
+0746                0.9375    0.1500    0.9375
+0747                1.0000    0.8000    1.0000];
+0748          <span class="keyword">end</span>
+0749       <span class="keyword">end</span>
+0750       <a name="_sub12" href="#_subfunctions" class="code">function [properties] = parseargs(arglist)</a>
+0751          <span class="comment">% parse the incoming arguments, returning a cell with each parameter name</span>
+0752          <span class="comment">% as well as a cell for each parameter value pair.  parseargs will also</span>
+0753          <span class="comment">% doublecheck to ensure that all pnames are actually strings... otherwise,</span>
+0754          <span class="comment">% we're looking at a mis-parse.</span>
+0755          <span class="comment">%check to make sure these are name-value pairs</span>
+0756          <span class="comment">% from both specgram and specgram2</span>
+0757          argcount = numel(arglist);
+0758          evenArgumentCount = mod(argcount,2) == 0;
+0759          <span class="keyword">if</span> ~evenArgumentCount
+0760             error(<span class="string">'ParseArgs:propertyMismatch'</span>,<span class="keyword">...</span>
+0761                <span class="string">'Odd number of arguments means that these arguments cannot be parameter name-value pairs'</span>);
+0762          <span class="keyword">end</span>
+0763          
+0764          <span class="comment">%assign these to output variables</span>
+0765          properties.name = arglist(1:2:argcount);
+0766          properties.val = arglist(2:2:argcount);
+0767          
+0768          <span class="comment">%</span>
+0769          <span class="keyword">for</span> i=1:numel(properties.name)
+0770             <span class="keyword">if</span> ~ischar(properties.name{i})
+0771                error(<span class="string">'ParseArgs:invalidPropertyName'</span>,<span class="keyword">...</span>
+0772                   <span class="string">'All property names must be strings.'</span>);
+0773             <span class="keyword">end</span>
+0774          <span class="keyword">end</span>
+0775       <span class="keyword">end</span>
+0776       <a name="_sub13" href="#_subfunctions" class="code">function [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)</a>
+0777          <span class="comment">%returns a property value (if found) from a property list, removing that</span>
+0778          <span class="comment">%property pair from the list.  only removes the first encountered property</span>
+0779          <span class="comment">%name.</span>
+0780          <span class="comment">% from both specgram and specgram2</span>
+0781          pmask = strcmpi(desiredproperty,properties.name);
+0782          isfound = any(pmask);
+0783          <span class="keyword">if</span> isfound
+0784             foundlist = <a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(pmask);
+0785             foundidx = foundlist(1);
+0786             foundvalue = properties.val{foundidx};
+0787             properties.name(foundidx) = [];
+0788             properties.val(foundidx) = [];
+0789          <span class="keyword">else</span>
+0790             <span class="keyword">if</span> exist(<span class="string">'defaultvalue'</span>,<span class="string">'var'</span>)
+0791                foundvalue = defaultvalue;
+0792             <span class="keyword">else</span>
+0793                foundvalue = [];
+0794             <span class="keyword">end</span>
+0795             <span class="comment">% do nothing to properties...</span>
+0796          <span class="keyword">end</span>
+0797       <span class="keyword">end</span>
+0798       <a name="_sub14" href="#_subfunctions" class="code">function c = property2varargin(properties)</a>
+0799          <span class="comment">%convert the properties structure into something that can be passed as a</span>
+0800          <span class="comment">%parameter into a function</span>
+0801          <span class="comment">% from both specgram and specgram2</span>
+0802          c = {};
+0803          c(1:2:numel(properties.name)*2) = properties.name;
+0804          c(2:2:numel(properties.name)*2) = properties.val;
+0805       <span class="keyword">end</span>
+0806       <a name="_sub15" href="#_subfunctions" class="code">function hbar = createcolorbar(s, colorbarpref, clabel, currFontSize)</a>
+0807          <span class="comment">% createcolorbar(spec, colorbarpref, clabel, fontsize)</span>
+0808          <span class="comment">% used by specgram and specgram2</span>
+0809          <span class="keyword">if</span> ~strcmpi(colorbarpref,<span class="string">'none'</span>)
+0810             hbar = <a href="../../../../GISMO/core/@spectralobject/colorbar_axis.html" class="code" title="function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)">colorbar_axis</a>(s,colorbarpref,clabel,<span class="string">''</span>,<span class="string">''</span>,currFontSize);
+0811             <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(hbar,<span class="string">'fontsize'</span>,currFontSize)
+0812          <span class="keyword">end</span>
+0813       <span class="keyword">end</span>
+0814    
+0815       <a name="_sub16" href="#_subfunctions" class="code">function newParams = buildParameterList(paramStruct)</a>
+0816          <span class="comment">%newParams   creates argument list from a struct</span>
+0817          fieldList = fieldnames(paramStruct);
+0818          <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(fieldList)
+0819             newParams = {};
+0820          <span class="keyword">else</span>
+0821             v = struct2cell(paramStruct);
+0822             newParams = horzcat(fieldList,v);
+0823          <span class="keyword">end</span>
+0824       <span class="keyword">end</span>   
+0825    <span class="keyword">end</span>
+0826    methods(Static)
+0827       <a href="cookbook.html" class="code" title="function cookbook()">cookbook</a>(); <span class="comment">% cookbook for TraceSpectra</span>
+0828    <span class="keyword">end</span>
+0829 <span class="keyword">end</span>
+0830</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

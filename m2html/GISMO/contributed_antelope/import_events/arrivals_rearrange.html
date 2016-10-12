@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of arrivals_rearrange</title>
+  <meta name="keywords" content="arrivals_rearrange">
+  <meta name="description" content="% Arrange info from earthquake catalogue into a more useful format">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed_antelope</a> &gt; <a href="index.html">import_events</a> &gt; arrivals_rearrange.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed_antelope/import_events&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>arrivals_rearrange
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>% Arrange info from earthquake catalogue into a more useful format</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [sta_index, orid_index, eqtimes, eqindices, nstations, norigins] = arrivals_rearrange(arrivals, stations) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Arrange info from earthquake catalogue into a more useful format</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [sta_index, orid_index, eqtimes, eqindices, nstations, norigins] = arrivals_rearrange(arrivals, stations)</a>
+0002 <span class="comment">%% Arrange info from earthquake catalogue into a more useful format</span>
+0003 
+0004 <span class="comment">% We want a column for each station and a row for each earthquake (origin).</span>
+0005 <span class="comment">% Store arrival times in this format for now, so we can later replace them</span>
+0006 <span class="comment">% with loaded waveforms.</span>
+0007 
+0008 <span class="comment">% Number of stations.  Use user-specified list and order (rather than</span>
+0009 <span class="comment">% unique values from arrivals table) for greater flexibility.</span>
+0010 nstations = length(stations);
+0011 
+0012 <span class="comment">% Number of earthquakes</span>
+0013 norigins = length(arrivals.unique_orids);
+0014 
+0015 <span class="comment">% Allocate an array to store arrival times</span>
+0016 eqtimes = zeros(norigins,nstations);
+0017 
+0018 <span class="comment">% Allocate an additional array to store the indices, so we can retrieve</span>
+0019 <span class="comment">% other data (e.g. event type) later</span>
+0020 eqindices = zeros(norigins,nstations);
+0021 
+0022 <span class="comment">% Now go through each arrival and place it in the array</span>
+0023 <span class="keyword">for</span> n = 1:length(arrivals.orid)
+0024     sta_index = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(strcmp(arrivals.sta{n},stations),1);
+0025     orid_index = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(unique_orids == arrivals.orid(n),1); <span class="comment">% Could do something more efficient here; orid is sorted in ascending order so a find is not really necessary</span>
+0026     eqtimes(orid_index,sta_index) = arrivals.atime(n);
+0027     eqindices(orid_index,sta_index) = n;
+0028 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

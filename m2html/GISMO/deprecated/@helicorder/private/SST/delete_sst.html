@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of delete_sst</title>
+  <meta name="keywords" content="delete_sst">
+  <meta name="description" content="DELETE_SST: Delete event SST (Start/Stop Times) between t1 and t2">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">GISMO</a> &gt; <a href="#">deprecated</a> &gt; <a href="../../index.html">@helicorder</a> &gt; <a href="#">private</a> &gt; <a href="index.html">SST</a> &gt; delete_sst.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/deprecated/@helicorder/private/SST&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>delete_sst
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>DELETE_SST: Delete event SST (Start/Stop Times) between t1 and t2</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function sub_sst = delete_sst(sst,t1,t2,edge_mode) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DELETE_SST: Delete event SST (Start/Stop Times) between t1 and t2
+
+USAGE: sub_sst = delete_sst(sst,t1,t2,edge_mode)
+
+INPUTS: sst - Event Start/Stop Times [Nx2 array of numeric time values]
+        t1  - time value, delete all events in sst between t1 (start) 
+              and t2 (end)
+        t2  - see 't1'
+        edge_mode  - If t1 or t2 falls between an event start time and 
+                stop time in sst, edge_mode determines if the event is 
+                deleted, retained, or partially deleted at time t1 or t2.
+           'delete' - whole event is removed from array sub_sst
+           'keep'   - whole event is retained in array sub_sst
+           'part'   - event in sub_sst is split - i.e. deleted 
+                       before t1 or after t2
+
+OUTPUTS: sub_sst - Subset of origianl sst (Event Start/Stop Times) 
+                   [Nx2 array of numeric time values]
+
+ See also <a href="add_sst.html" class="code" title="function sst_out = add_sst(sst_1,sst_2,varargin)">ADD_SST</a>, <a href="chk_t.html" class="code" title="function varargout = chk_t(type,varargin)">CHK_T</a>, <a href="compare_sst.html" class="code" title="function match = compare_sst(sst_1,sst_2)">COMPARE_SST</a>, <a href="delete_sst.html" class="code" title="function sub_sst = delete_sst(sst,t1,t2,edge_mode)">DELETE_SST</a>, <a href="extract_sst.html" class="code" title="function sub_sst = extract_sst(sst,t1,t2,edge_mode)">EXTRACT_SST</a>, <a href="is_sst.html" class="code" title="function bool = is_sst(sst)">IS_SST</a>,
+          <a href="istequal.html" class="code" title="function bool = istequal(t1,t2)">ISTEQUAL</a>, <a href="merge_sst.html" class="code" title="function sst = merge_sst(sst,varargin)">MERGE_SST</a>, <a href="search_sst.html" class="code" title="function [N P] = search_sst(t,sst)">SEARCH_SST</a>, <a href="sort_sst.html" class="code" title="function sst = sort_sst(sst)">SORT_SST</a>, NAN2SST, SSD2SST,
+          SST2NAN, SST2SSD, SST2VAL, SST2WFA, WFA2SST
+
+ Author: Dane Ketner, Alaska Volcano Observatory
+ $Date$
+ $Revision$</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="is_sst.html" class="code" title="function bool = is_sst(sst)">is_sst</a>	IS_SST: Determine if array 'sst' is in proper SST format (Nx2 numeric)</li><li><a href="search_sst.html" class="code" title="function [N P] = search_sst(t,sst)">search_sst</a>	SEARCH_SST: Function accepts a reference datenum t and a nx2 array of</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function sub_sst = DELETE_SST(sst,t1,t2,edge_mode)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function sub_sst = delete_sst(sst,t1,t2,edge_mode)</a>
+0002 
+0003 <span class="comment">%DELETE_SST: Delete event SST (Start/Stop Times) between t1 and t2</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%USAGE: sub_sst = delete_sst(sst,t1,t2,edge_mode)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%INPUTS: sst - Event Start/Stop Times [Nx2 array of numeric time values]</span>
+0008 <span class="comment">%        t1  - time value, delete all events in sst between t1 (start)</span>
+0009 <span class="comment">%              and t2 (end)</span>
+0010 <span class="comment">%        t2  - see 't1'</span>
+0011 <span class="comment">%        edge_mode  - If t1 or t2 falls between an event start time and</span>
+0012 <span class="comment">%                stop time in sst, edge_mode determines if the event is</span>
+0013 <span class="comment">%                deleted, retained, or partially deleted at time t1 or t2.</span>
+0014 <span class="comment">%           'delete' - whole event is removed from array sub_sst</span>
+0015 <span class="comment">%           'keep'   - whole event is retained in array sub_sst</span>
+0016 <span class="comment">%           'part'   - event in sub_sst is split - i.e. deleted</span>
+0017 <span class="comment">%                       before t1 or after t2</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%OUTPUTS: sub_sst - Subset of origianl sst (Event Start/Stop Times)</span>
+0020 <span class="comment">%                   [Nx2 array of numeric time values]</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% See also ADD_SST, CHK_T, COMPARE_SST, DELETE_SST, EXTRACT_SST, IS_SST,</span>
+0023 <span class="comment">%          ISTEQUAL, MERGE_SST, SEARCH_SST, SORT_SST, NAN2SST, SSD2SST,</span>
+0024 <span class="comment">%          SST2NAN, SST2SSD, SST2VAL, SST2WFA, WFA2SST</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% Author: Dane Ketner, Alaska Volcano Observatory</span>
+0027 <span class="comment">% $Date$</span>
+0028 <span class="comment">% $Revision$</span>
+0029 
+0030 <span class="keyword">if</span> nargin &lt; 4
+0031    error(<span class="string">'DELETE_SST: Too few input arguments'</span>)
+0032 <span class="keyword">elseif</span> nargin &gt; 4
+0033    error(<span class="string">'DELETE_SST: Too many input arguments'</span>)
+0034 <span class="keyword">end</span>
+0035 
+0036 <span class="keyword">if</span> <a href="is_sst.html" class="code" title="function bool = is_sst(sst)">is_sst</a>(sst)
+0037    <span class="keyword">if</span> iscell(sst)
+0038       <span class="keyword">for</span> m = 1:numel(sst)
+0039          sub_sst{m} = <a href="#_sub1" class="code" title="subfunction sub_sst = DELETE_SST(sst,t1,t2,edge_mode)">DELETE_SST</a>(sst{m},t1,t2,edge_mode);
+0040       <span class="keyword">end</span>
+0041    <span class="keyword">else</span>
+0042       sub_sst = <a href="#_sub1" class="code" title="subfunction sub_sst = DELETE_SST(sst,t1,t2,edge_mode)">DELETE_SST</a>(sst,t1,t2,edge_mode);
+0043    <span class="keyword">end</span>
+0044 <span class="keyword">else</span>
+0045    error(<span class="string">'DELETE_SST: Not a valid Start/Stop Time Argument'</span>)
+0046 <span class="keyword">end</span>
+0047 
+0048 <span class="comment">%%</span>
+0049 <a name="_sub1" href="#_subfunctions" class="code">function sub_sst = DELETE_SST(sst,t1,t2,edge_mode) </a>
+0050 
+0051 [N1 P1] = <a href="search_sst.html" class="code" title="function [N P] = search_sst(t,sst)">search_sst</a>(t1,sst);
+0052 [N2 P2] = <a href="search_sst.html" class="code" title="function [N P] = search_sst(t,sst)">search_sst</a>(t2,sst);
+0053 
+0054 <span class="comment">% 'first' and 'last' refer to the first and last events within the time</span>
+0055 <span class="comment">%  span defined by t1 and t2. N1 is the event number within sst</span>
+0056 <span class="comment">%  corresponding to t1, and P1 is the corresponding event position with</span>
+0057 <span class="comment">%  relation to t1. P1 = 1 if t1 falls inside the event time. P1 = 0 if t1</span>
+0058 <span class="comment">%  is before the start of the event.</span>
+0059 
+0060 <span class="keyword">if</span> P1 == 1 
+0061    <span class="keyword">if</span> strcmpi(edge_mode,<span class="string">'part'</span>)
+0062       first = [sst(N1,1) t1];
+0063    <span class="keyword">elseif</span> strcmpi(edge_mode,<span class="string">'delete'</span>)
+0064       first = [];
+0065    <span class="keyword">elseif</span> strcmpi(edge_mode,<span class="string">'keep'</span>)
+0066       first = sst(N1,:);
+0067    <span class="keyword">end</span>    
+0068 <span class="keyword">elseif</span> P1 == 0
+0069    first = [];
+0070 <span class="keyword">end</span>
+0071 
+0072 <span class="keyword">if</span> P2 == 1 
+0073    <span class="keyword">if</span> strcmpi(edge_mode,<span class="string">'part'</span>)
+0074       last = [t2 sst(N2,2)];
+0075    <span class="keyword">elseif</span> strcmpi(edge_mode,<span class="string">'delete'</span>)
+0076       last = [];
+0077    <span class="keyword">elseif</span> strcmpi(edge_mode,<span class="string">'keep'</span>)
+0078       last = sst(N2,:);
+0079    <span class="keyword">end</span>    
+0080 <span class="keyword">elseif</span> P2 == 0
+0081    last = sst(N2,:);
+0082 <span class="keyword">end</span>
+0083 
+0084 sub_sst = [sst(1:N1-1,:); first; last; sst(N2+1:<span class="keyword">end</span>,:)];
+0085 
+0086 
+0087 
+0088</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

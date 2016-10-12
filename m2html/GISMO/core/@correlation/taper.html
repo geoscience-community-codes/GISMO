@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of taper</title>
+  <meta name="keywords" content="taper">
+  <meta name="description" content="TAPER tapers the ends of waveforms in the correlation object.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@correlation</a> &gt; taper.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@correlation&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>taper
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>TAPER tapers the ends of waveforms in the correlation object.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function c = taper(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">TAPER tapers the ends of waveforms in the correlation object.
+
+C = TAPER(C,R) applies a cosine taper to the ends of a trace where r is
+ the ratio of tapered to constant sections and is between 0 and 1. For
+ example, if R = 0.1 then the taper at each end of the trace is 5% of the
+ total trace length. Note that if R is set to 1 the resulting taper is a
+ hanning window. This is a wrapper script to the taper function in the
+ waveform toolbox. If R is a vector of the same size as WAVEFORM. See HELP
+ WAVEFORM/TAPER for specifics.
+
+C = TAPER(C) same as above with a default taper of R = 0.2.
+
+ Note that TAPER will also accept R as a vector of length equal to the
+ number of traces. For the purposes of the correlation toolbox, it is not
+ clear to me when/if this might ever be useful - MEW.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="taper.html" class="code" title="function c = taper(c,varargin)">taper</a>	TAPER tapers the ends of waveforms in the correlation object.</li><li><a href="../../../GISMO/core/@waveform/taper.html" class="code" title="function w = taper(w,R, style)">taper</a>	WAVEFORM = TAPER(WAVEFORM,R) applies a cosine taper to the ends of a</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/taper.html" class="code" title="function c = taper(c,varargin)">taper</a>	TAPER tapers the ends of waveforms in the correlation object.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="taper.html" class="code" title="function c = taper(c,varargin)">taper</a>	TAPER tapers the ends of waveforms in the correlation object.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../GISMO/uaf_internal/AEIC_AVO/+check/crossfeed.html" class="code" title="function crossfeed(varargin)">crossfeed</a>	CROSSFEED Checks for crossfeeding and duplicate data channels</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = taper(c,varargin)</a>
+0002 
+0003 <span class="comment">%TAPER tapers the ends of waveforms in the correlation object.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%C = TAPER(C,R) applies a cosine taper to the ends of a trace where r is</span>
+0006 <span class="comment">% the ratio of tapered to constant sections and is between 0 and 1. For</span>
+0007 <span class="comment">% example, if R = 0.1 then the taper at each end of the trace is 5% of the</span>
+0008 <span class="comment">% total trace length. Note that if R is set to 1 the resulting taper is a</span>
+0009 <span class="comment">% hanning window. This is a wrapper script to the taper function in the</span>
+0010 <span class="comment">% waveform toolbox. If R is a vector of the same size as WAVEFORM. See HELP</span>
+0011 <span class="comment">% WAVEFORM/TAPER for specifics.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%C = TAPER(C) same as above with a default taper of R = 0.2.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Note that TAPER will also accept R as a vector of length equal to the</span>
+0016 <span class="comment">% number of traces. For the purposes of the correlation toolbox, it is not</span>
+0017 <span class="comment">% clear to me when/if this might ever be useful - MEW.</span>
+0018 <span class="comment">%</span>
+0019 
+0020 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0021 <span class="comment">% $Date$</span>
+0022 <span class="comment">% $Revision$</span>
+0023 
+0024 
+0025 <span class="comment">% READ &amp; CHECK ARGUMENTS</span>
+0026 <span class="keyword">if</span> ~isa(c,<span class="string">'correlation'</span>)
+0027     error(<span class="string">'First input must be a correlation object'</span>);
+0028 <span class="keyword">end</span>
+0029 
+0030 
+0031 <span class="comment">% GET TAPER STYLE</span>
+0032 style = <span class="string">'cosine'</span>;
+0033 <span class="keyword">if</span> length(varargin)&gt;0 
+0034     <span class="keyword">if</span> ischar(varargin{end})
+0035         style = varargin{end};
+0036         varargin = varargin(1:end-1);
+0037     <span class="keyword">end</span>
+0038 <span class="keyword">end</span>
+0039 
+0040 
+0041 <span class="comment">% COSINE TAPER</span>
+0042 <span class="keyword">if</span> strcmpi(upper(style),<span class="string">'COSINE'</span>)
+0043     <span class="keyword">if</span> length(varargin)==1
+0044         R = varargin{1};
+0045     <span class="keyword">elseif</span> length(varargin)==0
+0046         R = 0.2;
+0047     <span class="keyword">else</span>
+0048         error(<span class="string">'Wrong number of inputs for cosine taper'</span>);
+0049     <span class="keyword">end</span>
+0050 <span class="keyword">end</span>
+0051 
+0052     
+0053 <span class="comment">% APPLY TAPER</span>
+0054 c.W = <a href="taper.html" class="code" title="function c = taper(c,varargin)">taper</a>(c.W,R,style);
+0055     
+0056 
+0057</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

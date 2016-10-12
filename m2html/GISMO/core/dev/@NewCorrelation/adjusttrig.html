@@ -1,0 +1,272 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of adjusttrig</title>
+  <meta name="keywords" content="adjusttrig">
+  <meta name="description" content="ADJUSTTRIG  adjusts the trigger times of each trace">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; adjusttrig.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>adjusttrig
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>ADJUSTTRIG  adjusts the trigger times of each trace</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = adjusttrig(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> ADJUSTTRIG  adjusts the trigger times of each trace
+   C = ADJUSTTRIG(C) The first use below applies a uniform time shift to
+   the triggers. All other uses adjust the trigger times based on the
+   cross correlation lag times. These uses require the LAG field to be
+   filled and delete it afterward.
+
+   C = ADJUSTTRIG(C,TIMESHIFT) Shifts all of the trigger times by TIMESHIFT
+   seconds. A positive TIMESHIFT moves the zero alignment to the left on a
+   trace plot, and a negative TIMESHIFT to the right. (Does not use or
+   delete the LAG field.)
+
+   C = ADJUSTTRIG(C) Same as ADJUSTTRIG(C,'MIN') below.
+
+   C = ADJUSTTRIG(C,'MIN') Trigger times are adjusted relative to the trace with
+   the minimum mean lag time. This is the default setting.
+
+   C = ADJUSTTRIG(C,'MEDIAN') trigger times are adjusted by their median lag
+   time with all other traces. This can be advantageous when working within
+   a single cluster of similar waveforms.
+
+   C = ADJUSTTRIG(C,'MIN',MAXLAG) removes all traces that are shifted by more
+   than MAXLAG seconds. This approach is useful when you believe the
+   original trigger times are already accurate to within MAXLAG seconds.
+   This function can be duplicated as:
+       lag = GET(C,'LAG');
+       keep = find(abs(mean(lag))&lt;MAXLAG)
+       c = subset(C,keep);
+
+   C = ADJUSTTRIG(C,'INDEX') Trigger times are adjusted relative to the final
+   trace in the waveform list. This position is often occupied by a stack of
+   the other traces or some other master waveform. The INDEX method allows
+   trace times to be adjusted relative to this master waveform.
+
+   C = ADJUSTTRIG(C,'INDEX',TRACENUM) Same as ADJUSTTRIG(c,'INDEX') except that
+   traces are aligned relative to the trace specified by TRACENUM.
+
+   C = ADJUSTTRIG(C,'LSQ') Aligns traces by their least squares best fit delay
+   time stored in the stat field. If GETSTAT has not been run yet, ADUSTTRIG
+   will automatically call it.
+
+   NOTE that the different methods of adjusting the trigger times acheive
+   quite different results because they are solving different problems.
+   While this may seem obvious the results can be counter-intuitive, especially
+   for the LSQ solver.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/subset.html" class="code" title="function catalogObject2 = subset(catalogObject, indices)">subset</a>	CATALOG.SUBSET Create a new catalogObject by subsetting based</li><li><a href="../../../../GISMO/core/@correlation/cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	c = CLUSTER(c,CUTOFF) cuts the "branches" of the linkage tree to create</li><li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/@correlation/linkage.html" class="code" title="function c = linkage(c,varargin);">linkage</a>	c = LINKAGE(c) Creates a hierarchical cluster tree for all waveforms in</li><li><a href="../../../../GISMO/core/@correlation/subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="../../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>	MEDIAN middlemost value of waveform's sorted data.</li><li><a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	cluster   Construct agglomerative clusters from linkage for Seismic Traces</li><li><a href="find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="linkage.html" class="code" title="function c = linkage(c,varargin)">linkage</a>	linkage   Agglomerative hierarchical cluster tree for Seismic Traces</li><li><a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG adjusts the trigger times of each trace</li><li><a href="../../../../GISMO/core/@correlation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../../GISMO/core/@correlation/private/occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function c = alignTriggerTimes(c,alignMethod,index)</a></li><li><a href="#_sub2" class="code">function [c, tshift] = leastSquaresAlign(c)</a></li><li><a href="#_sub3" class="code">function [c, tshift] = alignToMin(c)</a></li><li><a href="#_sub4" class="code">function [c, tshift] = alignToMedian(c)</a></li><li><a href="#_sub5" class="code">function [c, tshift] = alignToTrace(c, traceNumber)</a></li><li><a href="#_sub6" class="code">function [c, tshift] = alignToClusters(c, index)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = adjusttrig(c,varargin)</a>
+0002    
+0003    <span class="comment">% ADJUSTTRIG  adjusts the trigger times of each trace</span>
+0004    <span class="comment">%   C = ADJUSTTRIG(C) The first use below applies a uniform time shift to</span>
+0005    <span class="comment">%   the triggers. All other uses adjust the trigger times based on the</span>
+0006    <span class="comment">%   cross correlation lag times. These uses require the LAG field to be</span>
+0007    <span class="comment">%   filled and delete it afterward.</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">%   C = ADJUSTTRIG(C,TIMESHIFT) Shifts all of the trigger times by TIMESHIFT</span>
+0010    <span class="comment">%   seconds. A positive TIMESHIFT moves the zero alignment to the left on a</span>
+0011    <span class="comment">%   trace plot, and a negative TIMESHIFT to the right. (Does not use or</span>
+0012    <span class="comment">%   delete the LAG field.)</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">%   C = ADJUSTTRIG(C) Same as ADJUSTTRIG(C,'MIN') below.</span>
+0015    <span class="comment">%</span>
+0016    <span class="comment">%   C = ADJUSTTRIG(C,'MIN') Trigger times are adjusted relative to the trace with</span>
+0017    <span class="comment">%   the minimum mean lag time. This is the default setting.</span>
+0018    <span class="comment">%</span>
+0019    <span class="comment">%   C = ADJUSTTRIG(C,'MEDIAN') trigger times are adjusted by their median lag</span>
+0020    <span class="comment">%   time with all other traces. This can be advantageous when working within</span>
+0021    <span class="comment">%   a single cluster of similar waveforms.</span>
+0022    <span class="comment">%</span>
+0023    <span class="comment">%   C = ADJUSTTRIG(C,'MIN',MAXLAG) removes all traces that are shifted by more</span>
+0024    <span class="comment">%   than MAXLAG seconds. This approach is useful when you believe the</span>
+0025    <span class="comment">%   original trigger times are already accurate to within MAXLAG seconds.</span>
+0026    <span class="comment">%   This function can be duplicated as:</span>
+0027    <span class="comment">%       lag = GET(C,'LAG');</span>
+0028    <span class="comment">%       keep = find(abs(mean(lag))&lt;MAXLAG)</span>
+0029    <span class="comment">%       c = subset(C,keep);</span>
+0030    <span class="comment">%</span>
+0031    <span class="comment">%   C = ADJUSTTRIG(C,'INDEX') Trigger times are adjusted relative to the final</span>
+0032    <span class="comment">%   trace in the waveform list. This position is often occupied by a stack of</span>
+0033    <span class="comment">%   the other traces or some other master waveform. The INDEX method allows</span>
+0034    <span class="comment">%   trace times to be adjusted relative to this master waveform.</span>
+0035    <span class="comment">%</span>
+0036    <span class="comment">%   C = ADJUSTTRIG(C,'INDEX',TRACENUM) Same as ADJUSTTRIG(c,'INDEX') except that</span>
+0037    <span class="comment">%   traces are aligned relative to the trace specified by TRACENUM.</span>
+0038    <span class="comment">%</span>
+0039    <span class="comment">%   C = ADJUSTTRIG(C,'LSQ') Aligns traces by their least squares best fit delay</span>
+0040    <span class="comment">%   time stored in the stat field. If GETSTAT has not been run yet, ADUSTTRIG</span>
+0041    <span class="comment">%   will automatically call it.</span>
+0042    <span class="comment">%</span>
+0043    <span class="comment">%   NOTE that the different methods of adjusting the trigger times acheive</span>
+0044    <span class="comment">%   quite different results because they are solving different problems.</span>
+0045    <span class="comment">%   While this may seem obvious the results can be counter-intuitive, especially</span>
+0046    <span class="comment">%   for the LSQ solver.</span>
+0047    
+0048    <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0049    <span class="comment">% $Date$</span>
+0050    <span class="comment">% $Revision$</span>
+0051    
+0052    <span class="comment">% TODO: the current argument handling is done in a poor way that shows the</span>
+0053    <span class="comment">% function's growth. It is currently not possible to use the MAXLAG argument</span>
+0054    <span class="comment">% with the INDEX modifier. To change this, it would be best to rewrite the</span>
+0055    <span class="comment">% argument handling.</span>
+0056    
+0057    narginchk(1,3)  <span class="comment">% min: (c), max: (c, method, value)</span>
+0058    
+0059    <span class="keyword">if</span> nargin == 1; 
+0060       varargin(1) = {<span class="string">'MIN'</span>};
+0061    <span class="keyword">end</span>
+0062    
+0063    adjustByMethod = ischar(varargin{1});
+0064    adjustByTime = isnumeric(varargin{1});
+0065    assert(adjustByMethod || adjustByTime, <span class="keyword">...</span>
+0066       <span class="string">'unknown argument for either timeshift or method'</span>);
+0067    
+0068    <span class="keyword">if</span> adjustByTime
+0069       <span class="comment">% varargin{1} is seconds to shift</span>
+0070       c.trig = c.trig + varargin{1}/86400; <span class="comment">% change ALL triggers uniformly</span>
+0071       <span class="keyword">return</span>
+0072    <span class="keyword">end</span>
+0073    
+0074    <span class="comment">% Adjusting the traces via a specified method</span>
+0075     
+0076    assert(~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(c.lags),<span class="keyword">...</span>
+0077       <span class="string">'LAG field must be filled in input object.\n See correlation/adjusttrig function'</span>);
+0078    
+0079    calctype = upper(varargin{1});
+0080    
+0081    <span class="keyword">if</span> strncmp(calctype,<span class="string">'MIN'</span>,3) &amp;&amp; (length(varargin)==2)
+0082       c = <a href="#_sub1" class="code" title="subfunction c = alignTriggerTimes(c,alignMethod,index)">alignTriggerTimes</a>(c,calctype, varargin{2});
+0083    <span class="keyword">else</span>
+0084       c = <a href="#_sub1" class="code" title="subfunction c = alignTriggerTimes(c,alignMethod,index)">alignTriggerTimes</a>(c, calctype, 0);
+0085    <span class="keyword">end</span>;
+0086 <span class="keyword">end</span>
+0087 
+0088 <a name="_sub1" href="#_subfunctions" class="code">function c = alignTriggerTimes(c,alignMethod,index)</a>
+0089    <span class="keyword">switch</span> alignMethod(1:3)
+0090       <span class="keyword">case</span> <span class="string">'LSQ'</span>
+0091          [c, tshift] = <a href="#_sub2" class="code" title="subfunction [c, tshift] = leastSquaresAlign(c)">leastSquaresAlign</a>(c);
+0092       <span class="keyword">case</span> <span class="string">'MIN'</span>
+0093          [c, tshift] = <a href="#_sub3" class="code" title="subfunction [c, tshift] = alignToMin(c)">alignToMin</a>(c);
+0094       <span class="keyword">case</span> <span class="string">'MED'</span>
+0095          [c, tshift] = <a href="#_sub4" class="code" title="subfunction [c, tshift] = alignToMedian(c)">alignToMedian</a>(c);
+0096       <span class="keyword">case</span> <span class="string">'IND'</span>
+0097          <span class="comment">% index contains the trace number of interest</span>
+0098          [c, tshift] = <a href="#_sub5" class="code" title="subfunction [c, tshift] = alignToTrace(c, traceNumber)">alignToTrace</a>(c, index);
+0099       <span class="keyword">case</span> <span class="string">'CLU'</span>
+0100          <span class="comment">% index contains ???</span>
+0101          error(<span class="string">'CLUSTER OPTION NOT FUNCTIONAL YET'</span>);
+0102          c = <a href="#_sub6" class="code" title="subfunction [c, tshift] = alignToClusters(c, index)">alignToClusters</a>(c, index);
+0103       <span class="keyword">otherwise</span>
+0104          error(<span class="string">'Unknown trigger adjustment method'</span>);
+0105    <span class="keyword">end</span>
+0106    
+0107    <span class="comment">% &quot;index&quot; method is a bit ad hoc. It co-ops the &quot;index&quot; term, originally</span>
+0108    <span class="comment">% created for the 'MIN' method.</span>
+0109       
+0110    <span class="comment">% remove traces shifted beyond MAXLAG</span>
+0111    
+0112    <span class="keyword">if</span> (index~=0)
+0113       f = <a href="find.html" class="code" title="function index = find(c, type, value)">find</a>(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(tshift)&lt;=index);
+0114       c = <a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>(c,f);
+0115    <span class="keyword">end</span>;
+0116 <span class="keyword">end</span>
+0117 
+0118 <a name="_sub2" href="#_subfunctions" class="code">function [c, tshift] = leastSquaresAlign(c)</a>
+0119    <span class="keyword">if</span> size(c.stat,1)==0
+0120       c = c.getstat();
+0121    <span class="keyword">end</span>;
+0122    tshift = c.stat(:,4);
+0123    c.trig = c.trig - tshift/86400;
+0124    c.lags = [];
+0125 <span class="keyword">end</span>
+0126 
+0127 <a name="_sub3" href="#_subfunctions" class="code">function [c, tshift] = alignToMin(c)</a>
+0128    [~,centerevent] = <a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(<a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(c.lags)));
+0129    tshift = <a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(c.lags(centerevent,:)');    <span class="comment">% in seconds</span>
+0130    c.trig = c.trig - tshift/86400;
+0131    c.lags = [];
+0132 <span class="keyword">end</span>
+0133 
+0134 <a name="_sub4" href="#_subfunctions" class="code">function [c, tshift] = alignToMedian(c)</a>
+0135    tshift = <a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>(c.lags)');
+0136    c.trig = c.trig - tshift/86400;
+0137    c.lags = [];
+0138 <span class="keyword">end</span>
+0139 
+0140 <a name="_sub5" href="#_subfunctions" class="code">function [c, tshift] = alignToTrace(c, traceNumber)</a>
+0141    assert(numel(traceNumber)==1 || numel(traceNumber)==0, <span class="keyword">...</span>
+0142       <span class="string">'INDEX method must specify only a single value'</span>);
+0143    <span class="keyword">if</span> traceNumber==0
+0144       traceNumber = c.ntraces;
+0145    <span class="keyword">end</span>
+0146    tshift = <a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(c.lags(traceNumber,:)');    <span class="comment">% in seconds</span>
+0147    c.trig = c.trig - tshift/86400;
+0148    c.lags = [];
+0149 <span class="keyword">end</span>
+0150 
+0151 <a name="_sub6" href="#_subfunctions" class="code">function [c, tshift] = alignToClusters(c, index)</a>
+0152    tshift = nan; <span class="comment">%not included or figured out from code</span>
+0153    <span class="comment">% NOT FUNCTIONAL YET</span>
+0154    DOLINK = size(c.link,1)==0;
+0155    <span class="keyword">if</span> DOLINK
+0156       c = <a href="linkage.html" class="code" title="function c = linkage(c,varargin)">linkage</a>(C);
+0157    <span class="keyword">end</span>
+0158    
+0159    DOCLUSTER = size(c.clust,1)==0;
+0160    <span class="keyword">if</span> DOCLUSTER
+0161       c = <a href="cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>(c,.6);
+0162    <span class="keyword">end</span>
+0163    
+0164    <span class="comment">% *** NEEDS NEW VERSION OF FIND WITH ORDERED CLUSTERS</span>
+0165    <span class="keyword">for</span> n = 1:<a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="find.html" class="code" title="function index = find(c, type, value)">find</a>(c,<span class="string">'big'</span>,2))   <span class="comment">% do all clusters with more than 2 traces</span>
+0166       f = <a href="find.html" class="code" title="function index = find(c, type, value)">find</a>(c.clust==n);
+0167       c1 = <a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>(c,f);
+0168       c1 = c1.adjusttrig(<span class="string">'min'</span>,index);  <span class="comment">% check use of index</span>
+0169       c.trig(f) = c1.trig;
+0170       c.traces(f) = c1.traces;
+0171    <span class="keyword">end</span>
+0172    
+0173    <span class="keyword">if</span> DOLINK
+0174       c.link = [];
+0175    <span class="keyword">end</span>
+0176    
+0177    <span class="keyword">if</span> DOCLUSTER
+0178       c.clust = [];
+0179    <span class="keyword">end</span>
+0180 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

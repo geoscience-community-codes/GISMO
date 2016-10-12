@@ -1,0 +1,287 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of datasource</title>
+  <meta name="keywords" content="datasource">
+  <meta name="description" content="DATASOURCE constructor for a datasource object.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@datasource</a> &gt; datasource.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@datasource&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>datasource
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>DATASOURCE constructor for a datasource object.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function ds = datasource(whichsource, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DATASOURCE constructor for a datasource object.
+ The datasource object is the go-between between the waveform class (or
+ any other class) and whichever sort of database or file scheme is in use.
+
+ ds = datasource(whichsource, filename) is the most basic implementation.
+    Data from file FILENAME will be interpreted to be of type WHICHSOURCE.
+
+    default WHICHSOURCE values are 'antelope','file','sac', and 'seisan'
+
+ ds = datasource(whichsource, fileformatstring[, param1[,...]])
+    The FILEFORMATSTRING may have additional formatting parameters,
+    allowing the datasource to traverse directory trees or make
+    intelligent decisions about which files to access.  These formatting
+    parameters follow the sprintf convetions: each starts   with a '%'
+    followed by the type.
+        %s : string        %f : float      %d : integer
+      these formatters can be further modified. ex.
+        %04d : 4-digit integer, zero padded
+
+      Each use of a formatter must be accompanied by a matching
+      parameter.  See the example section, below.
+        %d is used for  'YEAR','DAY','JDAY','HOUR','MINUTE','SECOND'
+        %s is used for 'STATION','CHANNEL'
+
+        when an object is requested, the scnl, start, and end times are
+        used to determine exactly which file(s) to consult.
+
+ ds = datasource(interpreter_function,fileformatstring [,param1[,...]])
+    the INTERPRETER_FUNCTION is a function handle to a user-created
+    function capable of receiving a single filename and returning
+    an array of objects.
+      Ex. if I have a function declared :
+           function objects = load_foobar(filename)
+        then, INTERPRETER_FUNCTION would be @load_foobar
+
+ ds = datasource('winston',servername, portnumber)
+    this usage associates a datasource object with a winston waveserver.
+
+ to get the default continuous antelope database, use 'uaf_continuous'
+
+ --------------- EXAMPLES --------------------
+ *Example 1: (FILE) I would like to access a specific file of waveforms,
+ saved from matlab.
+
+ ds = datasource('file','C:/DATA/workingfile')
+
+ *Example 2: (ANTELOPE) the continuous waveform archive (antelope based),
+ in Fairbanks, could be set up as follows:
+
+ ds = datasource('antelope', ...
+      /aec/db/waveforms/%04d_%02d/waveforms_%04d_%02d_%02d',...
+        'year','month','year','month','day');
+
+
+ *Example 3: (USER_DEFINED) I have a series of .CGR files stored in files
+ named for each station and Julian day, in a directory (on drive &quot;T&quot;named
+ for the year. I wrote my  own interpreter, a function called &quot;load_cgr&quot;.
+
+ ds = datasource(@load_cgr,'T:/%04d/%s%03d.cgr','year','jday','station');
+
+
+ *Example 4: (WINSTON) All datafiles are accessible through a winston
+ wave server, with server address myserver.uaf.edu, port 12345:
+
+ ds = datasource('winston','myserver.uaf.edu',12345);
+
+
+ -------------------
+ RECOMMENDATION: commonly used datasources may best be saved saved in
+ either a .mat datafile or a .m script, where they can be loaded without
+ constantly needing to be re-entered
+
+ more information about defining filenames and directory trees can be
+ found by typing:
+ help datasource/setfile
+
+
+ see also datasource/setfile</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>	DATASOURCE constructor for a datasource object.</li><li><a href="../../../GISMO/core/@datasource/private/void_interpreter.html" class="code" title="function obj = void_interpreter(filelist)">void_interpreter</a>	</li><li><a href="setfile.html" class="code" title="function ds = setfile(ds, desc_string, varargin)">setfile</a>	SETFILE associates a datasource object with a file (or directory)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li><li><a href="../../../GISMO/applications/+iceweb/testday.html" class="code" title="">testday</a>	</li><li><a href="../../../GISMO/applications/+iceweb/unrest.html" class="code" title="">unrest</a>	</li><li><a href="../../../GISMO/applications/uispecgram.html" class="code" title="function varargout = uispecgram(varargin)">uispecgram</a>	UISPECGRAM M-file for uispecgram.fig</li><li><a href="../../../GISMO/contributed/instrument_response/demo_plutons.html" class="code" title="">demo_plutons</a>	</li><li><a href="../../../GISMO/contributed_antelope/double_difference/dd_process_scp.html" class="code" title="function dd_process_scp(dbname,scpfile,varargin)">dd_process_scp</a>	DD_PROCESS_SCP Process correlations by station and channel</li><li><a href="../../../GISMO/contributed_antelope/import_events/import_events.html" class="code" title="function [ eqtc, varargout ] = import_events(dbname, chanfile, starttime, endtime, phase, delay, enddelay, varargin)">import_events</a>	IMPORT_EVENTS Import waveforms associated with earthquake events.</li><li><a href="../../../GISMO/core/+antelope/arrivals2waveforms.html" class="code" title="function w = arrivals2waveforms(dbpath, arrivals, pretrig, posttrig, taper_seconds, nwaveforms)">arrivals2waveforms</a>	ARRIVALS2WAVEFORMS Load waveform objects corresponding to an arrivals structure</li><li><a href="datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>	DATASOURCE constructor for a datasource object.</li><li><a href="loadobj.html" class="code" title="function b = loadobj(a)">loadobj</a>	LOADOBJ used when loading datasources, and accounts for version changes</li><li><a href="../../../GISMO/core/@drumplot/cookbook.html" class="code" title="">cookbook</a>	% drumplot cookbook</li><li><a href="../../../GISMO/core/@waveform/private/winston_access.html" class="code" title="function w = winston_access(varargin)">winston_access</a>	</li><li><a href="../../../GISMO/deprecated/+waveform_extensions/sacload.html" class="code" title="function w = load(fileList)">sacload</a>	SACLOAD Load SAC files into MATLAB as waveform objects</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../GISMO/tests/test_waveform_constructor.html" class="code" title="">test_waveform_constructor</a>	test waveform creation</li><li><a href="../../../GISMO/tests/trloadcss_test.html" class="code" title="function tests = trloadcss_test()">trloadcss_test</a>	% Main function to generate tests</li><li><a href="../../../GISMO/tests/waveform_antelope_test.html" class="code" title="function tests = waveform_antelope_test()">waveform_antelope_test</a>	% Main function to generate tests</li><li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li><li><a href="../../../GISMO/uaf_internal/AEIC_AVO/+check/crossfeed.html" class="code" title="function crossfeed(varargin)">crossfeed</a>	CROSSFEED Checks for crossfeeding and duplicate data channels</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function ds = datasource(whichsource, varargin)</a>
+0002    <span class="comment">%DATASOURCE constructor for a datasource object.</span>
+0003    <span class="comment">% The datasource object is the go-between between the waveform class (or</span>
+0004    <span class="comment">% any other class) and whichever sort of database or file scheme is in use.</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">% ds = datasource(whichsource, filename) is the most basic implementation.</span>
+0007    <span class="comment">%    Data from file FILENAME will be interpreted to be of type WHICHSOURCE.</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">%    default WHICHSOURCE values are 'antelope','file','sac', and 'seisan'</span>
+0010    <span class="comment">%</span>
+0011    <span class="comment">% ds = datasource(whichsource, fileformatstring[, param1[,...]])</span>
+0012    <span class="comment">%    The FILEFORMATSTRING may have additional formatting parameters,</span>
+0013    <span class="comment">%    allowing the datasource to traverse directory trees or make</span>
+0014    <span class="comment">%    intelligent decisions about which files to access.  These formatting</span>
+0015    <span class="comment">%    parameters follow the sprintf convetions: each starts   with a '%'</span>
+0016    <span class="comment">%    followed by the type.</span>
+0017    <span class="comment">%        %s : string        %f : float      %d : integer</span>
+0018    <span class="comment">%      these formatters can be further modified. ex.</span>
+0019    <span class="comment">%        %04d : 4-digit integer, zero padded</span>
+0020    <span class="comment">%</span>
+0021    <span class="comment">%      Each use of a formatter must be accompanied by a matching</span>
+0022    <span class="comment">%      parameter.  See the example section, below.</span>
+0023    <span class="comment">%        %d is used for  'YEAR','DAY','JDAY','HOUR','MINUTE','SECOND'</span>
+0024    <span class="comment">%        %s is used for 'STATION','CHANNEL'</span>
+0025    <span class="comment">%</span>
+0026    <span class="comment">%        when an object is requested, the scnl, start, and end times are</span>
+0027    <span class="comment">%        used to determine exactly which file(s) to consult.</span>
+0028    <span class="comment">%</span>
+0029    <span class="comment">% ds = datasource(interpreter_function,fileformatstring [,param1[,...]])</span>
+0030    <span class="comment">%    the INTERPRETER_FUNCTION is a function handle to a user-created</span>
+0031    <span class="comment">%    function capable of receiving a single filename and returning</span>
+0032    <span class="comment">%    an array of objects.</span>
+0033    <span class="comment">%      Ex. if I have a function declared :</span>
+0034    <span class="comment">%           function objects = load_foobar(filename)</span>
+0035    <span class="comment">%        then, INTERPRETER_FUNCTION would be @load_foobar</span>
+0036    <span class="comment">%</span>
+0037    <span class="comment">% ds = datasource('winston',servername, portnumber)</span>
+0038    <span class="comment">%    this usage associates a datasource object with a winston waveserver.</span>
+0039    <span class="comment">%</span>
+0040    <span class="comment">% to get the default continuous antelope database, use 'uaf_continuous'</span>
+0041    <span class="comment">%</span>
+0042    <span class="comment">% --------------- EXAMPLES --------------------</span>
+0043    <span class="comment">% *Example 1: (FILE) I would like to access a specific file of waveforms,</span>
+0044    <span class="comment">% saved from matlab.</span>
+0045    <span class="comment">%</span>
+0046    <span class="comment">% ds = datasource('file','C:/DATA/workingfile')</span>
+0047    <span class="comment">%</span>
+0048    <span class="comment">% *Example 2: (ANTELOPE) the continuous waveform archive (antelope based),</span>
+0049    <span class="comment">% in Fairbanks, could be set up as follows:</span>
+0050    <span class="comment">%</span>
+0051    <span class="comment">% ds = datasource('antelope', ...</span>
+0052    <span class="comment">%      /aec/db/waveforms/%04d_%02d/waveforms_%04d_%02d_%02d',...</span>
+0053    <span class="comment">%        'year','month','year','month','day');</span>
+0054    <span class="comment">%</span>
+0055    <span class="comment">%</span>
+0056    <span class="comment">% *Example 3: (USER_DEFINED) I have a series of .CGR files stored in files</span>
+0057    <span class="comment">% named for each station and Julian day, in a directory (on drive &quot;T&quot;named</span>
+0058    <span class="comment">% for the year. I wrote my  own interpreter, a function called &quot;load_cgr&quot;.</span>
+0059    <span class="comment">%</span>
+0060    <span class="comment">% ds = datasource(@load_cgr,'T:/%04d/%s%03d.cgr','year','jday','station');</span>
+0061    <span class="comment">%</span>
+0062    <span class="comment">%</span>
+0063    <span class="comment">% *Example 4: (WINSTON) All datafiles are accessible through a winston</span>
+0064    <span class="comment">% wave server, with server address myserver.uaf.edu, port 12345:</span>
+0065    <span class="comment">%</span>
+0066    <span class="comment">% ds = datasource('winston','myserver.uaf.edu',12345);</span>
+0067    <span class="comment">%</span>
+0068    <span class="comment">%</span>
+0069    <span class="comment">% -------------------</span>
+0070    <span class="comment">% RECOMMENDATION: commonly used datasources may best be saved saved in</span>
+0071    <span class="comment">% either a .mat datafile or a .m script, where they can be loaded without</span>
+0072    <span class="comment">% constantly needing to be re-entered</span>
+0073    <span class="comment">%</span>
+0074    <span class="comment">% more information about defining filenames and directory trees can be</span>
+0075    <span class="comment">% found by typing:</span>
+0076    <span class="comment">% help datasource/setfile</span>
+0077    <span class="comment">%</span>
+0078    <span class="comment">%</span>
+0079    <span class="comment">% see also datasource/setfile</span>
+0080    
+0081    <span class="comment">% VERSION: 1.1</span>
+0082    <span class="comment">% AUTHOR: Celso Reyes (celso@gi.alaska.edu)</span>
+0083    <span class="comment">% LASTUPDATE: 3/26/2009</span>
+0084    
+0085    ds.type=  <span class="string">'none'</span>;
+0086    ds.file_string = <span class="string">''</span>;
+0087    ds.file_args = {};
+0088    ds.server_name = <span class="string">''</span>;
+0089    ds.port_number = [];
+0090    ds.usefile = false;
+0091    ds.interpreter = @<a href="../../../GISMO/core/@datasource/private/void_interpreter.html" class="code" title="function obj = void_interpreter(filelist)">void_interpreter</a>;
+0092    ds = class(ds,<span class="string">'datasource'</span>);
+0093    <span class="keyword">if</span> nargin == 0
+0094       <span class="keyword">return</span>
+0095    <span class="keyword">end</span>
+0096    <span class="keyword">if</span> isa(whichsource,<span class="string">'function_handle'</span>)
+0097       ds.interpreter = whichsource;
+0098       ds.type = <span class="string">'user_defined'</span>;
+0099       <span class="keyword">if</span> numel(varargin) == 0
+0100          error(<span class="string">'when setting the datasource to a user-defined type, the filesource must be declared'</span>);
+0101       <span class="keyword">end</span>
+0102       ds = <a href="setfile.html" class="code" title="function ds = setfile(ds, desc_string, varargin)">setfile</a>(ds,varargin{1:end});
+0103    <span class="keyword">else</span>
+0104       <span class="keyword">switch</span> lower(whichsource)
+0105          <span class="keyword">case</span> <span class="string">'antelope'</span>
+0106             <span class="keyword">switch</span> numel(varargin)
+0107                <span class="keyword">case</span> 0
+0108                   <span class="comment">%do nothing, the default case will be handled by waveform</span>
+0109                <span class="keyword">otherwise</span>
+0110                   ds = <a href="setfile.html" class="code" title="function ds = setfile(ds, desc_string, varargin)">setfile</a>(ds,varargin{:});
+0111                   ds.type = whichsource;
+0112             <span class="keyword">end</span>
+0113             
+0114          <span class="keyword">case</span> {<span class="string">'file'</span>,<span class="string">'sac'</span>, <span class="string">'seisan'</span>, <span class="string">'obspy'</span>, <span class="string">'miniseed'</span>}
+0115             <span class="keyword">if</span> numel(varargin) == 0
+0116                error(<span class="string">'when setting the datasource to %s the filesource must be declared'</span>,upper(whichsource));
+0117             <span class="keyword">end</span>
+0118             ds = <a href="setfile.html" class="code" title="function ds = setfile(ds, desc_string, varargin)">setfile</a>(ds,varargin{:});
+0119             ds.type = whichsource;
+0120             
+0121          <span class="keyword">case</span> <span class="string">'winston'</span> <span class="comment">%expect:type, databasename, port</span>
+0122             <span class="keyword">switch</span> (nargin)
+0123                <span class="keyword">case</span> {1 2}
+0124                   error(<span class="string">'datasource type WINSTON requires both a server and port number'</span>);
+0125                <span class="keyword">case</span> 3
+0126                   <span class="comment">%fine</span>
+0127                <span class="keyword">otherwise</span>
+0128             <span class="keyword">end</span>
+0129             <span class="keyword">if</span> ~ischar(varargin{1}),
+0130                error(<span class="string">'the second parameter for a WINSTON datatype must be a server name'</span>);
+0131             <span class="keyword">end</span>
+0132             <span class="keyword">if</span> ~isnumeric(varargin{2})
+0133                error(<span class="string">'the third parameter for a WINSTON datatype must be a port number'</span>);
+0134             <span class="keyword">end</span>
+0135             ds.server_name = varargin{1};
+0136             ds.port_number = varargin{2};
+0137             ds.type = whichsource;
+0138             
+0139          <span class="keyword">case</span> <span class="string">'irisdmcws'</span>
+0140             ds.type = whichsource;
+0141             
+0142             <span class="comment">% now, the special cases -------------------------------</span>
+0143             
+0144          <span class="keyword">case</span> <span class="string">'uaf_continuous'</span>
+0145             <span class="comment">%default in-house antelope databases</span>
+0146 <span class="comment">%             ds = datasource('antelope', ...</span>
+0147 <span class="comment">%                '/aerun/sum/db/archive/archive_%04d/archive_%04d_%02d_%02d',...</span>
+0148 <span class="comment">%                'year','year','month','day');</span>
+0149             ds = <a href="datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'antelope'</span>, <span class="string">'/aec/db/waveforms/%04d_%02d/waveforms_%04d_%02d_%02d'</span>,<span class="keyword">...</span>
+0150                <span class="string">'year'</span>,<span class="string">'month'</span>,<span class="string">'year'</span>,<span class="string">'month'</span>,<span class="string">'day'</span>);
+0151             
+0152          <span class="keyword">case</span> <span class="string">'uaf_continuous_op'</span>
+0153             <span class="comment">%default in-house antelope databases (prior to July 2011)</span>
+0154             ds = <a href="datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'antelope'</span>, <span class="keyword">...</span>
+0155                <span class="string">'/iwrun/op/db/archive/archive_%04d/archive_%04d_%02d_%02d'</span>,<span class="keyword">...</span>
+0156                <span class="string">'year'</span>,<span class="string">'year'</span>,<span class="string">'month'</span>,<span class="string">'day'</span>);
+0157             <span class="comment">% end special cases ------------------------------------</span>
+0158             
+0159          <span class="keyword">otherwise</span>
+0160             error(<span class="string">'Current valid datasources are: ANTELOPE, SAC, FILE, WINSTON, SEISAN, OBSPY, or a function handle to an interpeter function'</span>);
+0161       <span class="keyword">end</span>
+0162    <span class="keyword">end</span>
+0163 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

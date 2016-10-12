@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of utnow</title>
+  <meta name="keywords" content="utnow">
+  <meta name="description" content="UTNOW">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">libgismo</a> &gt; utnow.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/libgismo&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>utnow
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>UTNOW</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function utdnum=utnow() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> UTNOW
+    ut_datenum = utnow()
+    Return a MATLAB datenum corresponding to the current UT time/date.
+    Uses Unix date command, so should work on Linux, Solaris &amp; MacOS.  
+
+    It is a convenient way to compute UTC regardless of whether summer
+    time applies.
+
+    Caveats: 
+    Currently only configured for 'AKDT' and 'AKST'. If your Unix
+    timezone is anything else, you need to add cases.
+
+    See also datenum, now</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/applications/+iceweb/get_timewindow.html" class="code" title="function timewindow = get_timewindow(utdnum_stop, numMins, utdnum_start)">get_timewindow</a>	GET_TIMEWINDOW</li><li><a href="../../GISMO/applications/+iceweb/iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li><li><a href="../../GISMO/applications/+iceweb/saveImageFile.html" class="code" title="function result = saveImageFile(arg1, arg2, arg3);">saveImageFile</a>	saveImageFile(IMGDIR, fname, res);</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function atomTime = get_atomic_time()</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function utdnum=utnow()</a>
+0002 <span class="comment">% UTNOW</span>
+0003 <span class="comment">%    ut_datenum = utnow()</span>
+0004 <span class="comment">%    Return a MATLAB datenum corresponding to the current UT time/date.</span>
+0005 <span class="comment">%    Uses Unix date command, so should work on Linux, Solaris &amp; MacOS.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    It is a convenient way to compute UTC regardless of whether summer</span>
+0008 <span class="comment">%    time applies.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    Caveats:</span>
+0011 <span class="comment">%    Currently only configured for 'AKDT' and 'AKST'. If your Unix</span>
+0012 <span class="comment">%    timezone is anything else, you need to add cases.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    See also datenum, now</span>
+0015 
+0016 <span class="comment">%    Author: Glenn Thompson</span>
+0017     <span class="keyword">persistent</span> hour_adjust; <span class="comment">% assumes time zone is UTC  i.e. GMT</span>
+0018     <span class="keyword">if</span> <a href="../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(hour_adjust) <span class="comment">% look up first time only</span>
+0019         atomtime = <a href="#_sub1" class="code" title="subfunction atomTime = get_atomic_time()">get_atomic_time</a>();
+0020         [status, unixnowstr] = system(<span class="string">'date +&quot;%Y-%m-%d %H:%M:%S&quot;'</span>);
+0021         unixnow = datenum(unixnowstr);
+0022         hour_adjust = round(24 * (unixnow - atomtime));
+0023     <span class="keyword">end</span>
+0024     
+0025     hour_adjust
+0026 
+0027     <span class="keyword">if</span> isunix
+0028         [status, unixnowstr] = system(<span class="string">'date +&quot;%Y-%m-%d %H:%M:%S&quot;'</span>);
+0029         unixnow = datenum(unixnowstr);
+0030         [status, unixnowTZ] = system(<span class="string">'date +&quot;%Z&quot;'</span>); 
+0031         unixnowTZ = unixnowTZ(1:end-1); <span class="comment">% chomp</span>
+0032         <span class="keyword">switch</span> unixnowTZ
+0033 <span class="comment">%             case 'BST'</span>
+0034 <span class="comment">%                 utdnum = unixnow - 1/24;</span>
+0035             <span class="keyword">case</span> <span class="string">'AKDT'</span>
+0036                 utdnum = unixnow + 8/24;
+0037             <span class="keyword">case</span> <span class="string">'AKST'</span>
+0038                 utdnum = unixnow + 9/24;
+0039             <span class="keyword">otherwise</span>
+0040                 utdnum = unixnow + hour_adjust;
+0041         <span class="keyword">end</span>
+0042     <span class="keyword">else</span>
+0043         <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'utnow: Sorry, your system does not support the Unix date command.'</span>)
+0044     <span class="keyword">end</span>
+0045 
+0046 <span class="keyword">end</span>
+0047 
+0048 
+0049 <a name="_sub1" href="#_subfunctions" class="code">function atomTime = get_atomic_time()</a>
+0050     URL = <span class="string">'http://tycho.usno.navy.mil/cgi-bin/timer.pl'</span>;
+0051     atomTime = datenum(regexp(urlread(URL), <span class="keyword">...</span>
+0052         <span class="string">'&lt;BR&gt;(.*)\sUTC'</span>,<span class="string">'tokens'</span>,<span class="string">'once'</span>),<span class="string">'mmm. dd, HH:MM:SS'</span>);
+0053 <span class="keyword">end</span>
+0054</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

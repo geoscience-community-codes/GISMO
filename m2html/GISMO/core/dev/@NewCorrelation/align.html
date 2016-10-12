@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of align</title>
+  <meta name="keywords" content="align">
+  <meta name="description" content="align   resample traces so that a sample falls exactly on trigger time.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; align.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>align
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>align   resample traces so that a sample falls exactly on trigger time.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = align(c, alignfreq) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">align   resample traces so that a sample falls exactly on trigger time.
+
+ c = ALIGN(c)
+ This function resamples the traces in a correlation object so that one
+ sample falls precisely on the trigger time. By aligning the samples in
+ adjacent traces, traces can be stacked, differenced or otherwise
+ manipulated sample by sample.
+
+ c = ALIGN(c,ALIGNFREQ)
+ Specify a new sampling frequency for the data.
+
+ NOTE: Most applications will not require a direct call to this routine.
+ It is used internally by several correlation routines. Note the slightly
+ different usage than waveform/align. The correlation version is
+ hardwired to align on the trigger time.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/align.html" class="code" title="function c = align(c,varargin)">align</a>	c = ALIGN(c)</li><li><a href="../../../../GISMO/core/@threecomp/align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>	ALIGN Align and trim traces in threecomp object.</li><li><a href="../../../../GISMO/core/@waveform/align.html" class="code" title="function w = align(w,alignTime, newFrequency, method)">align</a>	ALIGN resamples a waveform at over a specified interval</li><li><a href="align.html" class="code" title="function c = align(c, alignfreq)">align</a>	align   resample traces so that a sample falls exactly on trigger time.</li><li><a href="unifytracelengths.html" class="code" title="function c = unifytracelengths(c)">unifytracelengths</a>	unifytracelengths   make all traces the same length (mode length)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/align.html" class="code" title="function c = align(c,varargin)">align</a>	c = ALIGN(c)</li><li><a href="../../../../GISMO/core/@correlation/correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="../../../../GISMO/core/@correlation/minus.html" class="code" title="function c = minus(c,varargin)">minus</a>	C = MINUS(C,I)</li><li><a href="../../../../GISMO/core/@correlation/stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li><li><a href="../../../../GISMO/core/@threecomp/align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>	ALIGN Align and trim traces in threecomp object.</li><li><a href="../../../../GISMO/core/@threecomp/threecomp.html" class="code" title="">threecomp</a>	THREECOMP Object for three component waveform data</li><li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="align.html" class="code" title="function c = align(c, alignfreq)">align</a>	align   resample traces so that a sample falls exactly on trigger time.</li><li><a href="minus.html" class="code" title="function c = minus(c,I)">minus</a>	C = MINUS(C,I)</li><li><a href="stack.html" class="code" title="function c = stack(c,index)">stack</a>	c = STACK(c)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = align(c, alignfreq)</a>
+0002    <span class="comment">%align   resample traces so that a sample falls exactly on trigger time.</span>
+0003    <span class="comment">%</span>
+0004    <span class="comment">% c = ALIGN(c)</span>
+0005    <span class="comment">% This function resamples the traces in a correlation object so that one</span>
+0006    <span class="comment">% sample falls precisely on the trigger time. By aligning the samples in</span>
+0007    <span class="comment">% adjacent traces, traces can be stacked, differenced or otherwise</span>
+0008    <span class="comment">% manipulated sample by sample.</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">% c = ALIGN(c,ALIGNFREQ)</span>
+0011    <span class="comment">% Specify a new sampling frequency for the data.</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">% NOTE: Most applications will not require a direct call to this routine.</span>
+0014    <span class="comment">% It is used internally by several correlation routines. Note the slightly</span>
+0015    <span class="comment">% different usage than waveform/align. The correlation version is</span>
+0016    <span class="comment">% hardwired to align on the trigger time.</span>
+0017    
+0018    <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0019    <span class="comment">% $Date$</span>
+0020    <span class="comment">% $Revision$</span>
+0021    
+0022    narginchk(1,2)
+0023    
+0024    <span class="keyword">if</span> ~exist(<span class="string">'alignfreq'</span>,<span class="string">'var'</span>)
+0025       alignfreq = c.samplerate;
+0026    <span class="keyword">end</span>
+0027    
+0028    <span class="comment">% CALL TRACE/ALIGN</span>
+0029    c.traces = <a href="align.html" class="code" title="function c = align(c, alignfreq)">align</a>(c.traces, c.trig, alignfreq);
+0030    c = <a href="unifytracelengths.html" class="code" title="function c = unifytracelengths(c)">unifytracelengths</a>(c);
+0031 <span class="keyword">end</span>
+0032 
+0033 
+0034 
+0035</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

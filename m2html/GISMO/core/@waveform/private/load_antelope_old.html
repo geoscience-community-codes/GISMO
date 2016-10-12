@@ -1,0 +1,547 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of load_antelope_old</title>
+  <meta name="keywords" content="load_antelope_old">
+  <meta name="description" content="load a waveform from antelope">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; load_antelope_old.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>load_antelope_old
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>load a waveform from antelope</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function outputWaveforms = load_antelope(request, specificDatabase) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> load a waveform from antelope
+  w = load_antelope(request, specificDatabase)
+   CRITERIA is the search criteria, created with buildAntelopeCriteria
+   request.sTime is the startTimes
+   endTimes is the endTimes
+   combineWaves is a logical value:
+     Should segmented waveforms be combined,(within requested timerange)?
+   database is the antelope database</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/combine.html" class="code" title="function catalogObject = combine(catalogObject1, catalogObject2)">combine</a>	CATALOG.COMBINE combine two Catalog objects</li><li><a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>	GETFILENAME returns a filename that is associated with a single SCNL</li><li><a href="../../../../GISMO/core/@datasource/subdivide_files_by_date.html" class="code" title="function allDatesToCheck = subdivide_files_by_date(ds,startt,endt)">subdivide_files_by_date</a>	SUBDIVIDE_FILES_BY_DATE given a datasource and daterange return list of files</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>	ISMEMBER for scnlobjects</li><li><a href="../../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>	ADDFIELD add fields and values to waveform object(s)                V1.1</li><li><a href="../../../../GISMO/core/@waveform/combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and ChannelTag info.</li><li><a href="../../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/ismember.html" class="code" title="function [results, loc] = ismember(mywave,anythingelse)">ismember</a>	ISMEMBER waveform implementation of ismember</li><li><a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>	convert an epoch date to a matlab date</li><li><a href="load_antelope.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>	convert a matlab date to an epoch date</li><li><a href="unpackDataRequest.html" class="code" title="function [dataSource, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request)">unpackDataRequest</a>	</li><li><a href="../../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../../GISMO/core/@waveform/setsamples.html" class="code" title="function w = setsamples(w, index, values)">setsamples</a>	setsamples replaces selected data samples with values.</li><li><a href="../../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../../../GISMO/core/dev/+dataretrieval/@antelopesource/get_antelope_traces.html" class="code" title="function [obj, rawDb, filteredDb] =  get_antelope_traces(obj)">get_antelope_traces</a>	GET_ANTELOPE_TRACE gets interesting data from database, and returns the tracebuf object</li><li><a href="../../../../GISMO/core/dev/+dataretrieval/@antelopesource/load_antelope.html" class="code" title="function outputWaveforms = load_antelope(obj, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="../../../../GISMO/core/dev/+dataretrieval/@antelopesource/segtype2units.html" class="code" title="function [units, data_description] = segtype2units(unitCode)">segtype2units</a>	segtype2units   retrieves unit and description based on the segtype code</li><li><a href="../../../../GISMO/core/dev/+dataretrieval/@antelopesource/traceToWaveform.html" class="code" title="function allw = traceToWaveform(obj)">traceToWaveform</a>	traceToWaveform converts traceobjects to waveforms</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li><li><a href="../../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>	TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function outputWaveforms = RecursivelyLoadFromEachDatabase(request)</a></li><li><a href="#_sub2" class="code">function w = emptyWaveform()</a></li><li><a href="#_sub3" class="code">function database = getDatabase(request, TRY_MULTIDAY)</a></li><li><a href="#_sub4" class="code">function w = cycleThroughTraces(tr, COMBINE_WAVEFORMS)</a></li><li><a href="#_sub5" class="code">function w_scnl = wavesfromtraces(tr, traceidx, COMBINE_WAVEFORMS)</a></li><li><a href="#_sub6" class="code">function [critList, nCrit] = buildAntelopeCriteria(chanTag)</a></li><li><a href="#_sub7" class="code">function A = grabCritList(key, value)</a></li><li><a href="#_sub8" class="code">function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, criteriaList, database)</a></li><li><a href="#_sub9" class="code">function cleanUpFail(varargin)</a></li><li><a href="#_sub10" class="code">function  critList = keepCriteriaThatMatchDatabaseFields(critList, mydb)</a></li><li><a href="#_sub11" class="code">function allExp = getAsExpressions(criteria)</a></li><li><a href="#_sub12" class="code">function cle = crit2expression(cl)</a></li><li><a href="#_sub13" class="code">function n = safe_dbnrecs(mydb)</a></li><li><a href="#_sub14" class="code">function closeIfAppropriate(mydb, closeDatabase)</a></li><li><a href="#_sub15" class="code">function result = isAntelopeDatabasePtr(database)</a></li><li><a href="#_sub16" class="code">function X = makecell(X)</a></li><li><a href="#_sub17" class="code">function allw = traceToWaveform(tr)</a></li><li><a href="#_sub18" class="code">function [units, data_description] = segtype2units(unitCode)</a></li><li><a href="#_sub19" class="code">function SU = createCodeKey()</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function outputWaveforms = load_antelope(request, specificDatabase)</a>
+0002    <span class="comment">% load a waveform from antelope</span>
+0003    <span class="comment">%  w = load_antelope(request, specificDatabase)</span>
+0004    <span class="comment">%   CRITERIA is the search criteria, created with buildAntelopeCriteria</span>
+0005    <span class="comment">%   request.sTime is the startTimes</span>
+0006    <span class="comment">%   endTimes is the endTimes</span>
+0007    <span class="comment">%   combineWaves is a logical value:</span>
+0008    <span class="comment">%     Should segmented waveforms be combined,(within requested timerange)?</span>
+0009    <span class="comment">%   database is the antelope database</span>
+0010    
+0011    <span class="comment">% AUTHOR: Celso Reyes</span>
+0012    <span class="comment">% MODIFICATIONS: Glenn Thompson, Carl Tape</span>
+0013    
+0014    <span class="comment">%TODO: maybe order of operations can be changed to avoid unpacking</span>
+0015    <span class="comment">%request when unnecessary.</span>
+0016    
+0017    [~, chanInfo, startTimes, endTimes, combineWaves] = <a href="unpackDataRequest.html" class="code" title="function [dataSource, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request)">unpackDataRequest</a>(request);
+0018    assert(numel(startTimes) == numel(endTimes),<span class="keyword">...</span>
+0019       <span class="string">'Waveform:load_antelope:startEndMismatch'</span>, <span class="string">'Unequal number of start and end times'</span>);
+0020       
+0021    <span class="comment">%call this routine for each database, then return the waveforms.</span>
+0022    <span class="keyword">if</span> exist(<span class="string">'specificDatabase'</span>,<span class="string">'var'</span>)
+0023       database = specificDatabase;
+0024       outputWaveforms = <a href="#_sub2" class="code" title="subfunction w = emptyWaveform()">emptyWaveform</a>();
+0025       
+0026       [criteria, nCriteria] = <a href="#_sub6" class="code" title="subfunction [critList, nCrit] = buildAntelopeCriteria(chanTag)">buildAntelopeCriteria</a>(chanInfo);
+0027       <span class="keyword">for</span> i = 1:nCriteria
+0028          <span class="comment">%if multiple traces will result, then there may be multiple records for tr</span>
+0029          [tr, database, fdb] = <a href="../../../../GISMO/core/dev/+dataretrieval/@antelopesource/get_antelope_traces.html" class="code" title="function [obj, rawDb, filteredDb] =  get_antelope_traces(obj)">get_antelope_traces</a>(<span class="keyword">...</span>
+0030             startTimes, endTimes, criteria(i).group, database);
+0031          w = <a href="#_sub4" class="code" title="subfunction w = cycleThroughTraces(tr, COMBINE_WAVEFORMS)">cycleThroughTraces</a>(tr, combineWaves);
+0032          outputWaveforms = [outputWaveforms; w]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0033       <span class="keyword">end</span>
+0034       dbclose(fdb);
+0035    <span class="keyword">else</span>
+0036       outputWaveforms = <a href="#_sub1" class="code" title="subfunction outputWaveforms = RecursivelyLoadFromEachDatabase(request)">RecursivelyLoadFromEachDatabase</a>(request);
+0037    <span class="keyword">end</span>
+0038 <span class="keyword">end</span>
+0039 
+0040 <a name="_sub1" href="#_subfunctions" class="code">function outputWaveforms = RecursivelyLoadFromEachDatabase(request)</a>
+0041    TRY_MULTIDAY = false;
+0042    database = <a href="#_sub3" class="code" title="subfunction database = getDatabase(request, TRY_MULTIDAY)">getDatabase</a>(request, TRY_MULTIDAY);
+0043    database = <a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(database, <span class="string">'stable'</span>); <span class="comment">%  avoid changing requested order</span>
+0044    outputWaveforms = <a href="#_sub2" class="code" title="subfunction w = emptyWaveform()">emptyWaveform</a>();
+0045    <span class="keyword">for</span> n = 1 : numel(database)
+0046       w = <a href="load_antelope.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope</a>(request, database(n));
+0047       outputWaveforms = [outputWaveforms; w(:)]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0048    <span class="keyword">end</span>
+0049 <span class="keyword">end</span>
+0050 
+0051 <a name="_sub2" href="#_subfunctions" class="code">function w = emptyWaveform()</a>
+0052    w = <a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0053    w = w([]);
+0054 <span class="keyword">end</span>
+0055 
+0056 <a name="_sub3" href="#_subfunctions" class="code">function database = getDatabase(request, TRY_MULTIDAY)</a>
+0057    [ds, chanInfo, startTimes, endTimes] = <a href="unpackDataRequest.html" class="code" title="function [dataSource, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request)">unpackDataRequest</a>(request);
+0058    <span class="keyword">if</span> TRY_MULTIDAY <span class="comment">%good luck splicing</span>
+0059       dbDatesToCheck = <a href="../../../../GISMO/core/@datasource/subdivide_files_by_date.html" class="code" title="function allDatesToCheck = subdivide_files_by_date(ds,startt,endt)">subdivide_files_by_date</a>(ds,startTimes, endTimes);
+0060       database =  <a href="../../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>(ds,chanInfo, dbDatesToCheck); 
+0061    <span class="keyword">else</span>
+0062       database =  <a href="../../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>(ds,chanInfo, startTimes);
+0063    <span class="keyword">end</span>
+0064 <span class="keyword">end</span>
+0065 
+0066 <a name="_sub4" href="#_subfunctions" class="code">function w = cycleThroughTraces(tr, COMBINE_WAVEFORMS)</a>
+0067    <span class="comment">%cycleThroughTraces  converts each trace into one or more waveforms</span>
+0068    <span class="comment">%   returns a Nx1 waveform</span>
+0069    w(numel(tr)).waves = <a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0070    <span class="keyword">for</span> traceidx = 1:numel(tr)
+0071       w(traceidx) = <a href="#_sub5" class="code" title="subfunction w_scnl = wavesfromtraces(tr, traceidx, COMBINE_WAVEFORMS)">wavesfromtraces</a>(tr, traceidx, COMBINE_WAVEFORMS);
+0072    <span class="keyword">end</span>
+0073    w = [w.waves]; <span class="comment">%horizontal cat</span>
+0074    w = w(:);
+0075 <span class="keyword">end</span>
+0076 
+0077 <a name="_sub5" href="#_subfunctions" class="code">function w_scnl = wavesfromtraces(tr, traceidx, COMBINE_WAVEFORMS)</a>
+0078    <span class="keyword">if</span> ~isstruct(tr{traceidx}) <span class="comment">% marker for no data</span>
+0079       w_scnl.waves = <a href="#_sub2" class="code" title="subfunction w = emptyWaveform()">emptyWaveform</a>();
+0080    <span class="keyword">else</span>
+0081       w_scnl.waves = <a href="../../../../GISMO/core/dev/+dataretrieval/@antelopesource/traceToWaveform.html" class="code" title="function allw = traceToWaveform(obj)">traceToWaveform</a>(tr{traceidx}); <span class="comment">%create waveform list</span>
+0082       trdestroy(tr{traceidx});
+0083    <span class="keyword">end</span>
+0084    <span class="keyword">if</span> COMBINE_WAVEFORMS <span class="comment">%combine all of this trace's records</span>
+0085       w_scnl.waves = <a href="../../../../GISMO/core/@Catalog/combine.html" class="code" title="function catalogObject = combine(catalogObject1, catalogObject2)">combine</a>(w_scnl.waves);
+0086    <span class="keyword">end</span>;
+0087    w_scnl.waves = reshape(w_scnl.waves,  numel(w_scnl.waves), 1);
+0088 <span class="keyword">end</span>
+0089    
+0090 <span class="comment">%% helper functions</span>
+0091 
+0092 <a name="_sub6" href="#_subfunctions" class="code">function [critList, nCrit] = buildAntelopeCriteria(chanTag)</a>
+0093    <span class="comment">% builds a criteria list from SCNL (Station-Channel-Network-Location)</span>
+0094    <span class="comment">% returns a structure array of cells with criteria for use with get_antelope_trace</span>
+0095    <span class="comment">% structure returned as critList(n).group, where group is a cell containing</span>
+0096    <span class="comment">% the criteria, such as {'sta == &quot;OKCF&quot;','chan==&quot;EHZ&quot;'}</span>
+0097    <span class="comment">%</span>
+0098    <span class="comment">% ex. myscnls = scnlobject({'OKCF','OKFG','OKSO'},{'EHZ','BHZ','BHZ'});</span>
+0099    <span class="comment">% ex.  cl =</span>
+0100    <span class="comment">% builtAntelopeCriteria(myscnls)</span>
+0101    <span class="comment">% ... CL will then contain</span>
+0102    <span class="comment">%</span>
+0103    <span class="comment">% CL(1).group(1).field = 'sta'</span>
+0104    <span class="comment">% CL(1).group(1).relation = '=='</span>
+0105    <span class="comment">% CL(1).group(1).data = 'OKCF'</span>
+0106    <span class="comment">% CL(1).group(2).field = 'chan'</span>
+0107    <span class="comment">% CL(1).group(2).relation = '=='</span>
+0108    <span class="comment">% CL(1).group(2).data = 'EHZ'</span>
+0109    <span class="comment">% ...</span>
+0110    <span class="comment">% CL(N).group(4).field = 'loc'</span>
+0111    <span class="comment">% CL(N).group(4).relation = '=='</span>
+0112    <span class="comment">% CL(N).group(4).data = '--'</span>
+0113    <span class="comment">%</span>
+0114    <span class="comment">% so...    getCritListExpression(CL(1).group(1)) --&gt; 'sta == &quot;OKCF&quot;'</span>
+0115    <span class="comment">% It was done this way so that the dabase could be checked to ensure</span>
+0116    <span class="comment">% that the view actually supports each search parameter.</span>
+0117    <span class="comment">%</span>
+0118    <span class="comment">% either multiple stations OR multiple channels may work... not both.</span>
+0119    <span class="comment">% also, if any of the SCNL parameters are left empty, they will not be used</span>
+0120    <span class="comment">% in subsetting the antelope database.</span>
+0121    <span class="comment">%</span>
+0122    
+0123    <span class="keyword">for</span> N = numel(chanTag) : -1: 1
+0124       <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(chanTag(N).station)
+0125          critList(N).group(1) = <a href="#_sub7" class="code" title="subfunction A = grabCritList(key, value)">grabCritList</a>(<span class="string">'sta'</span>, chanTag(N).station);
+0126       <span class="keyword">end</span>
+0127       <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(chanTag(N).network)
+0128          critList(N).group(2) = <a href="#_sub7" class="code" title="subfunction A = grabCritList(key, value)">grabCritList</a>(<span class="string">'net'</span>, chanTag(N).network);
+0129       <span class="keyword">end</span>
+0130       <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(chanTag(N).channel)
+0131          critList(N).group(3) = <a href="#_sub7" class="code" title="subfunction A = grabCritList(key, value)">grabCritList</a>(<span class="string">'chan'</span>, chanTag(N).channel);
+0132       <span class="keyword">end</span>
+0133       <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(chanTag(N).location);
+0134          critList(N).group(4) = <a href="#_sub7" class="code" title="subfunction A = grabCritList(key, value)">grabCritList</a>(<span class="string">'loc'</span>, chanTag(N).location);
+0135       <span class="keyword">end</span>
+0136    <span class="keyword">end</span>
+0137    
+0138    critList = critList(:);
+0139    nCrit = numel(critList);
+0140 <span class="keyword">end</span>
+0141 
+0142 <a name="_sub7" href="#_subfunctions" class="code">function A = grabCritList(key, value)</a>
+0143    <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(value)
+0144       value = regexprep(value,<span class="string">'(?&lt;!\.)\*'</span>,<span class="string">'\.\*'</span>); <span class="comment">%replace * with .*, but leave existing .* alone</span>
+0145       value = <a href="#_sub16" class="code" title="subfunction X = makecell(X)">makecell</a>(value);
+0146       <span class="keyword">for</span> i = numel(value) : -1 : 1
+0147          A(i).field = key;
+0148          A(i).relationship = <span class="string">'=~'</span>;
+0149          A(i).value = value{i};
+0150       <span class="keyword">end</span>
+0151    <span class="keyword">elseif</span> <a href="../../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(key,{<span class="string">'sta'</span>,<span class="string">'cha'</span>})  <span class="comment">%ew. get rid of special treatment</span>
+0152       erid = sprintf(<span class="string">'Waveform:load_antelope:no%sTerm'</span>,key);
+0153       error(erid,<span class="string">'No %s  requested. To retrieve all %ss use ''*'''</span>, key, key);
+0154    <span class="keyword">else</span>
+0155       A.field=<span class="string">''</span>;
+0156       A.relationship = <span class="string">''</span>;
+0157       A.value = <span class="string">''</span>;
+0158    <span class="keyword">end</span>
+0159 <span class="keyword">end</span>
+0160 
+0161 <a name="_sub8" href="#_subfunctions" class="code">function [tr, rawDb, filteredDb] =  get_antelope_traces(startdates, enddates, criteriaList, database)</a>
+0162    <span class="comment">% GET_ANTELOPE_TRACE gets interesting data from database, and returns the tracebuf object</span>
+0163    <span class="comment">% [tr(1:end)] =  get_antelope_trace(startdates, enddates, criteriaList, database)</span>
+0164    <span class="comment">%    STARTDATE is a matlab datenum</span>
+0165    <span class="comment">%    ENDDATE is also in matlab datenum</span>
+0166    <span class="comment">%    CRITERIALIST is a cell of statements used to filter the antelope</span>
+0167    <span class="comment">%        database.  example: {'sta==&quot;OKCF&quot;','chan==&quot;BHZ&quot;'}</span>
+0168    <span class="comment">%    DATABASE can either be a database name, or an open antelope database</span>
+0169    <span class="comment">%    pointer.</span>
+0170    <span class="comment">%</span>
+0171    <span class="comment">%    TR is a tracebuf object containing the data requested.</span>
+0172    <span class="comment">%</span>
+0173    <span class="comment">%  In this usage, with a single output argument, TR, the database is opened</span>
+0174    <span class="comment">%  and then closed before the function returns.</span>
+0175    <span class="comment">%</span>
+0176    <span class="comment">% You can opt to keep the database open, which can make subsequent calls to</span>
+0177    <span class="comment">% get_antelope_trace much faster.  To do this, ask for the database pointer</span>
+0178    <span class="comment">% as one of the output arguments.  The database will be closed by any</span>
+0179    <span class="comment">% function call that uses the database pointer as the 'database' parameter,</span>
+0180    <span class="comment">% and does not ask for a database pointer back.</span>
+0181    <span class="comment">%</span>
+0182    <span class="comment">% [tr, mydb] = get_antelope_trace(...)</span>
+0183    <span class="comment">%    if mydb is asked for, then the database will not be closed, allowing for</span>
+0184    <span class="comment">%    more efficient reuse.  mydb is the unfiltered (and open) wfdisc table</span>
+0185    <span class="comment">%</span>
+0186    <span class="comment">% [tr, mydb, filteredDB] = get_antelope_trace(...)</span>
+0187    <span class="comment">%   returns wfdisc table in mydb, and a filtered wfdisc table in filteredDB</span>
+0188    <span class="comment">%</span>
+0189    <span class="comment">% if no records are found, then tr will be set to []</span>
+0190    <span class="comment">%</span>
+0191    <span class="comment">% will generate error message if no records found, so consider using in a</span>
+0192    <span class="comment">% TRY-CATCH loop.</span>
+0193    <span class="comment">%</span>
+0194    <span class="comment">%</span>
+0195    <span class="comment">% Example:</span>
+0196    <span class="comment">%  % set up the data</span>
+0197    <span class="comment">%  sDate = datenum('7/12/2008 05:00:00.00');</span>
+0198    <span class="comment">%  eDate = datenum('7/12/2008 05:10:00.00');</span>
+0199    <span class="comment">%  stationsToGet = {'OKFG','OKSO','OMG'};</span>
+0200    <span class="comment">%  channelsToGet = {'BHZ', 'BHE'};</span>
+0201    <span class="comment">%  mydb = '/mydir/my_antelope_database';</span>
+0202    <span class="comment">%</span>
+0203    <span class="comment">%  % get our criteria together</span>
+0204    <span class="comment">%  for st = 1:numel(stationsToGet)</span>
+0205    <span class="comment">%    staCriteria(st) = {sprintf('sta==&quot;%s&quot;',stationsToGet(st)};</span>
+0206    <span class="comment">%  end</span>
+0207    <span class="comment">%  for ch = 1:numel(channelsToGet)</span>
+0208    <span class="comment">%    chanCriteria(ch) = {sprintf('chan==&quot;%s&quot;',channelsToGet(ch)};</span>
+0209    <span class="comment">%  end</span>
+0210    <span class="comment">%</span>
+0211    <span class="comment">%  % open the database once, and read in each tracebuf. Then translate into</span>
+0212    <span class="comment">%  % waveforms.</span>
+0213    <span class="comment">%  n = 1;</span>
+0214    <span class="comment">%  for sta = 1:numel(staCriteria)</span>
+0215    <span class="comment">%    for ch = 1:numel(chanCriteria)</span>
+0216    <span class="comment">%      critera = [chanCriteria(ch),staCriteria(sta)];</span>
+0217    <span class="comment">%      [tr, mydb] = get_antelope_trace(sDate,eDate, criteria, mydb)</span>
+0218    <span class="comment">%      w(n) = traceToWaveform(tr);</span>
+0219    <span class="comment">%      n = n+1;</span>
+0220    <span class="comment">%    end</span>
+0221    <span class="comment">%  end</span>
+0222    <span class="comment">%  % finally, close up shop.</span>
+0223    <span class="comment">%  dbclose(mydb)</span>
+0224    
+0225    <span class="comment">% Modifications</span>
+0226    <span class="comment">%%% Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data. Added try...catch..end to handle this.</span>
+0227    
+0228    useExistingDatabasePtr =  <a href="#_sub15" class="code" title="subfunction result = isAntelopeDatabasePtr(database)">isAntelopeDatabasePtr</a>(database);
+0229    
+0230    <span class="keyword">if</span> useExistingDatabasePtr
+0231       <span class="keyword">try</span>
+0232          dbnrecs(database);
+0233       <span class="keyword">catch</span>
+0234          warning(<span class="string">'Waveform:load_antelope:databaseNotOpen'</span>, <span class="keyword">...</span>
+0235             <span class="string">'a Database Pointer was passed to trace, but the database was not open'</span>);
+0236          <span class="comment">%tr = trnew; %return a new object, forcing the ability to destroy it later</span>
+0237          tr = { -1 };
+0238          <span class="keyword">return</span>;
+0239       <span class="keyword">end</span>
+0240    <span class="keyword">end</span>
+0241    
+0242    <span class="comment">% do not close the database if a pointer is asked for in the return arguments</span>
+0243    onFinishCloseDB = nargout &lt; 2;
+0244    
+0245    antelope_starts = <a href="mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>(startdates);
+0246    antelope_ends = <a href="mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>(enddates);
+0247    
+0248    <span class="comment">%if the database isn't already open, then open it for reading</span>
+0249    <span class="keyword">if</span> ~useExistingDatabasePtr
+0250       mydb = dbopen(database,<span class="string">'r'</span>);
+0251       mydb = dblookup_table(mydb,<span class="string">'wfdisc'</span>);
+0252    <span class="keyword">else</span>
+0253       mydb = database;
+0254    <span class="keyword">end</span>
+0255    <span class="comment">%check to ensure wfdisk table exists and is populated</span>
+0256    
+0257    <span class="keyword">if</span> <a href="#_sub13" class="code" title="subfunction n = safe_dbnrecs(mydb)">safe_dbnrecs</a>(mydb) == 0,
+0258       <a href="#_sub9" class="code" title="subfunction cleanUpFail(varargin)">cleanUpFail</a>(<span class="string">'Waveform:load_antelope:databaseNotFound'</span>, <span class="keyword">...</span>
+0259          <span class="string">'Database not found: %s'</span>, dbquery(mydb,<span class="string">'dbTABLE_FILENAME'</span>));
+0260       <span class="keyword">return</span>;
+0261    <span class="keyword">end</span>;
+0262    
+0263    rawDb = mydb;   <span class="comment">% keep a copy of the pre-subset (raw) database</span>
+0264    
+0265    <span class="comment">% subset the data based upon the desired criteria</span>
+0266    criteriaList = <a href="#_sub10" class="code" title="subfunction  critList = keepCriteriaThatMatchDatabaseFields(critList, mydb)">keepCriteriaThatMatchDatabaseFields</a>(criteriaList, mydb);
+0267    allExp = <a href="#_sub11" class="code" title="subfunction allExp = getAsExpressions(criteria)">getAsExpressions</a>(criteriaList);
+0268    
+0269    <span class="comment">%subset the database based on this particular criterion</span>
+0270    mydb = dbsubset(mydb,allExp);
+0271    <span class="keyword">if</span> <a href="#_sub13" class="code" title="subfunction n = safe_dbnrecs(mydb)">safe_dbnrecs</a>(mydb) == 0
+0272       <a href="#_sub9" class="code" title="subfunction cleanUpFail(varargin)">cleanUpFail</a>(<span class="string">'Waveform:load_antelope:dataNotFound'</span>, <span class="string">'No records found for criteria [%s].'</span>, allExp);
+0273       <span class="keyword">return</span>;
+0274    <span class="keyword">end</span>;
+0275    
+0276    filteredDb = mydb;
+0277    
+0278    [st, ed] = dbgetv(mydb,<span class="string">'time'</span>,<span class="string">'endtime'</span>);
+0279    <span class="comment">%% Get the tracebuf object for this starttime, endtime</span>
+0280    <span class="comment">% Loop through all times.  Result is tr(1:numel(starttimes) of all tracebuffers.</span>
+0281    <span class="keyword">for</span> mytimeIDX = 1:numel(antelope_starts)
+0282       someDataExists = any(antelope_starts(mytimeIDX)&lt;= (ed) &amp; antelope_ends(mytimeIDX) &gt;= (st));
+0283       <span class="keyword">if</span> someDataExists
+0284          <span class="comment">%%% Glenn Thompson 2012/02/06: Occasionally the C program trload_css cannot even load the trace data.</span>
+0285          <span class="comment">% This error needs to be handled. So adding a try..catch..end around the original instruction.</span>
+0286          <span class="keyword">try</span>
+0287             tr{mytimeIDX} = trload_css(mydb, antelope_starts(mytimeIDX), antelope_ends(mytimeIDX)); <span class="comment">%#ok&lt;AGROW&gt;</span>
+0288          <span class="keyword">catch</span>
+0289             <a href="#_sub9" class="code" title="subfunction cleanUpFail(varargin)">cleanUpFail</a>(<span class="string">'Waveform:load_antelope:trload_css failed'</span>, <span class="keyword">...</span>
+0290                <span class="string">'Database not found: %s'</span>, dbquery(mydb,<span class="string">'dbTABLE_FILENAME'</span>));
+0291             <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(database)
+0292             <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(allExp)
+0293             starttimes = antelope_starts(mytimeIDX);
+0294             endtimes = antelope_ends(mytimeIDX);
+0295             fprintf(<span class="string">'%.0f %.0f\n '</span>,starttimes,endtimes);
+0296             <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'starttimes: '</span>, datestr(<a href="../../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(starttimes))]);
+0297             <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'endtimes: '</span>, datestr(<a href="../../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(endtimes))]);
+0298             fprintf(<span class="string">'trload_css(mydb, starttimes, endtimes))\n'</span>);
+0299             <span class="keyword">return</span>
+0300          <span class="keyword">end</span>
+0301          trsplice(tr{mytimeIDX},20);
+0302       <span class="keyword">else</span>
+0303          tr{mytimeIDX} = -1; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0304       <span class="keyword">end</span>
+0305    <span class="keyword">end</span> <span class="comment">%mytimeIDX</span>
+0306    <a href="#_sub14" class="code" title="subfunction closeIfAppropriate(mydb, closeDatabase)">closeIfAppropriate</a>(mydb, onFinishCloseDB);
+0307    
+0308    <a name="_sub9" href="#_subfunctions" class="code">function cleanUpFail(varargin)</a>
+0309       <span class="comment">%cleanUpFail   tidy up database and records and display warning</span>
+0310       <a href="#_sub14" class="code" title="subfunction closeIfAppropriate(mydb, closeDatabase)">closeIfAppropriate</a>(mydb, onFinishCloseDB);
+0311       tr = { -1 };
+0312       filteredDb = dbinvalid;
+0313       warning(varargin{:});      
+0314    <span class="keyword">end</span>
+0315 <span class="keyword">end</span>
+0316 
+0317 <a name="_sub10" href="#_subfunctions" class="code">function  critList = keepCriteriaThatMatchDatabaseFields(critList, mydb)</a>
+0318    dbFields = dbquery(mydb, <span class="string">'dbTABLE_FIELDS'</span>);
+0319    critFields = {critList.field};  <span class="comment">% all criteria we've parsed</span>
+0320    validCritIdx = true(size(critFields)); <span class="comment">% preallocation</span>
+0321    <span class="keyword">for</span> n = 1:numel(critFields)
+0322       validCritIdx(n) = <span class="keyword">...</span><span class="comment">                %make sure:</span>
+0323          ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(critFields{n}) &amp;&amp; <span class="keyword">...</span><span class="comment">    % isn't empty and</span>
+0324          <a href="../../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(critFields{n}, dbFields);<span class="comment">%  is a database field</span>
+0325    <span class="keyword">end</span>
+0326    critList = critList(validCritIdx);   <span class="comment">%keep only good ones</span>
+0327 <span class="keyword">end</span>
+0328 <a name="_sub11" href="#_subfunctions" class="code">function allExp = getAsExpressions(criteria)</a>
+0329    <span class="keyword">for</span> n=1:numel(criteria)
+0330       eachExp(n) = <a href="#_sub12" class="code" title="subfunction cle = crit2expression(cl)">crit2expression</a>(criteria(n)); <span class="comment">%#ok&lt;AGROW&gt;</span>
+0331    <span class="keyword">end</span>
+0332    allExp = eachExp{1};
+0333    <span class="keyword">for</span> i= 2 : (numel(eachExp))
+0334       allExp = [allExp,<span class="string">' &amp;&amp; '</span>, eachExp{i}]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0335    <span class="keyword">end</span>
+0336 <span class="keyword">end</span>
+0337 
+0338 <a name="_sub12" href="#_subfunctions" class="code">function cle = crit2expression(cl)</a>
+0339    <span class="keyword">if</span> ischar(cl.value)
+0340       cle = {sprintf(<span class="string">'%s%s/%s/'</span>,cl.field, cl.relationship, cl.value)};
+0341    <span class="keyword">else</span>
+0342       cle =  {sprintf(<span class="string">'%s %s %s'</span>,cl.field,cl.relationship,num2str(cl.value))};
+0343    <span class="keyword">end</span>
+0344 <span class="keyword">end</span>
+0345 
+0346 
+0347 <a name="_sub13" href="#_subfunctions" class="code">function n = safe_dbnrecs(mydb)</a>
+0348    <span class="comment">%safe_dbnrecs   return either the number of records or 0</span>
+0349    <span class="comment">%   n = safe_dbnrecs(mydb)  when accessing dbnrecs fails, this returns 0</span>
+0350    <span class="keyword">try</span>
+0351       n = dbnrecs(mydb);
+0352    <span class="keyword">catch</span>
+0353       n = 0;
+0354    <span class="keyword">end</span>
+0355 <span class="keyword">end</span>
+0356 
+0357 <a name="_sub14" href="#_subfunctions" class="code">function closeIfAppropriate(mydb, closeDatabase)</a>
+0358    <span class="keyword">if</span> closeDatabase
+0359       dbclose(mydb);
+0360    <span class="keyword">end</span>
+0361 <span class="keyword">end</span>
+0362 
+0363 <a name="_sub15" href="#_subfunctions" class="code">function result = isAntelopeDatabasePtr(database)</a>
+0364    result = isa(database,<span class="string">'struct'</span>);
+0365    result = result &amp;&amp; any(strcmpi(fieldnames(database),<span class="string">'database'</span>));
+0366 <span class="keyword">end</span>
+0367 
+0368 <a name="_sub16" href="#_subfunctions" class="code">function X = makecell(X)</a>
+0369    <span class="keyword">if</span> ~iscell(X)
+0370       X = {X};
+0371    <span class="keyword">end</span>
+0372 <span class="keyword">end</span>
+0373 
+0374 <a name="_sub17" href="#_subfunctions" class="code">function allw = traceToWaveform(tr)</a>
+0375    <span class="comment">%traceToWaveform converts traceobjects to waveforms</span>
+0376    <span class="comment">%    w = traceToWaveform(blankwaveform, all_tracobjects)</span>
+0377    <span class="comment">%</span>
+0378    <span class="comment">% Note: this may return multiple waveform objects, depending upon</span>
+0379    <span class="comment">% how many segments and/or scnl's.</span>
+0380    
+0381    <span class="keyword">persistent</span> wBlank           <span class="comment">% cannot test if wBlank is empty because</span>
+0382    <span class="keyword">persistent</span> blankWaveExists  <span class="comment">%   isempty(wBlank) is always true.</span>
+0383    
+0384    <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(blankWaveExists)
+0385       wBlank = <a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0386       wBlank =  <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(wBlank,<span class="string">'calib'</span>, 0);
+0387       wBlank = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(wBlank, <span class="string">'calibration_applied'</span>, <span class="string">'NO'</span>);
+0388       blankWaveExists = true;
+0389    <span class="keyword">end</span>
+0390    
+0391    <span class="keyword">try</span>
+0392       traceCount = dbnrecs(tr);
+0393       assert(traceCount &gt; 0);
+0394    <span class="keyword">catch</span>
+0395       allw = wBlank([]);
+0396       <span class="keyword">return</span>
+0397    <span class="keyword">end</span>
+0398    
+0399    <span class="comment">% preallocations</span>
+0400    spikes(traceCount).mask = false; <span class="comment">%used to track data spikes &amp; inf values</span>
+0401    allw = repmat(wBlank,traceCount,1);
+0402    
+0403    maxAllowableSignal = (realmax(<span class="string">'single'</span>) * 1e-2);
+0404    
+0405    <span class="comment">% LOOP twice through segments represented by this trace object</span>
+0406    <span class="comment">% 1st loop: find signal spikes, and get header info.</span>
+0407    <span class="keyword">for</span> seg = 1:traceCount
+0408       tr.record = seg - 1;
+0409       s = db2struct(tr); <span class="comment">%do once, get one for each segment</span>
+0410       [sunit, ~] = <a href="../../../../GISMO/core/dev/+dataretrieval/@antelopesource/segtype2units.html" class="code" title="function [units, data_description] = segtype2units(unitCode)">segtype2units</a>(s.segtype);
+0411       allw(seg) = <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(wBlank, <span class="keyword">...</span>
+0412          <span class="string">'station'</span>, s.sta, <span class="keyword">...</span>
+0413          <span class="string">'channel'</span>, s.chan, <span class="keyword">...</span>
+0414          <span class="string">'network'</span>, s.net, <span class="keyword">...</span>
+0415          <span class="keyword">...</span><span class="comment"> 'location', s.loc, ... % unknown if 'loc' really is a field</span>
+0416          <span class="string">'start'</span>, <a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(s.time), <span class="keyword">...</span>
+0417          <span class="string">'freq'</span>, s.samprate, <span class="keyword">...</span>
+0418          <span class="string">'units'</span>, sunit, <span class="keyword">...</span>
+0419          <span class="string">'calib'</span>, s.calib);
+0420       
+0421       <span class="comment">% data spikes must be known PRIOR to applying calibration</span>
+0422       data = trextract_data(tr);
+0423       spikes(seg).mask =(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(data) &gt;= maxAllowableSignal) | isinf(data);
+0424    <span class="keyword">end</span>
+0425    
+0426    <span class="comment">% now, apply calibrations to all traces at once</span>
+0427    trapply_calib(tr);
+0428    hasCalibs = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(allw,<span class="string">'calib'</span>) ~= 0;
+0429    allw(hasCalibs) = <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(allw(hasCalibs),<span class="string">'calibration_applied'</span>,<span class="string">'YES'</span>);
+0430    
+0431    <span class="comment">% 2nd loop: assign data to the waveforms.</span>
+0432    replaceWithNan = @(W,BAD) <a href="../../../../GISMO/core/@waveform/setsamples.html" class="code" title="function w = setsamples(w, index, values)">setsamples</a>(W, BAD.mask, nan);
+0433    <span class="keyword">for</span> seg = 1:traceCount
+0434       tr.record = seg - 1;
+0435       allw(seg) = <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(allw(seg), <span class="string">'data'</span>, trextract_data(tr));
+0436       allw(seg) = replaceWithNan(allw(seg), spikes(seg));
+0437    <span class="keyword">end</span>
+0438 <span class="keyword">end</span>
+0439 
+0440 <a name="_sub18" href="#_subfunctions" class="code">function [units, data_description] = segtype2units(unitCode)</a>
+0441    <span class="comment">%segtype2units   retrieves unit and description based on the segtype code</span>
+0442    <span class="comment">%'segtype' in antelope datasets indicate the natural units of the detector</span>
+0443    <span class="keyword">persistent</span> codeKey
+0444    <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(codeKey)
+0445       codeKey = <a href="#_sub19" class="code" title="subfunction SU = createCodeKey()">createCodeKey</a>();
+0446    <span class="keyword">end</span>
+0447    <span class="keyword">if</span> codeKey.isKey(unitCode)
+0448       details = codeKey(unitCode);
+0449       units = details{1};
+0450       data_description = details{2};
+0451    <span class="keyword">else</span>
+0452       [units, data_description] = deal(<span class="string">'null'</span>);
+0453    <span class="keyword">end</span>
+0454    
+0455    <a name="_sub19" href="#_subfunctions" class="code">function SU = createCodeKey()</a>
+0456       <span class="comment">%createSegUnits   creates a map  where SU(char) = {units, data_description}</span>
+0457       SU = containers.Map;
+0458       SU(<span class="string">'A'</span>) = {<span class="string">'nm / sec / sec'</span>,<span class="string">'acceleration'</span>};
+0459       SU(<span class="string">'B'</span>) = {<span class="string">'25 mw / m / m'</span>,<span class="string">'UV (sunburn) index(NOAA)'</span>};
+0460       SU(<span class="string">'D'</span>) = {<span class="string">'nm'</span>, <span class="string">'displacement'</span>};
+0461       SU(<span class="string">'H'</span>) = {<span class="string">'Pa'</span>,<span class="string">'hydroacoustic'</span>};
+0462       SU(<span class="string">'I'</span>) = {<span class="string">'Pa'</span>,<span class="string">'infrasound'</span>};
+0463       SU(<span class="string">'J'</span>) = {<span class="string">'watts'</span>,<span class="string">'power (Joulses/sec) (UCSD)'</span>};
+0464       SU(<span class="string">'K'</span>) = {<span class="string">'kPa'</span>,<span class="string">'generic pressure (UCSB)'</span>};
+0465       SU(<span class="string">'M'</span>) = {<span class="string">'mm'</span>,<span class="string">'Wood-Anderson drum recorder'</span>};
+0466       SU(<span class="string">'P'</span>) = {<span class="string">'mb'</span>,<span class="string">'barometric pressure'</span>};
+0467       SU(<span class="string">'R'</span>) = {<span class="string">'mm'</span>,<span class="string">'rain fall (UCSD)'</span>};
+0468       SU(<span class="string">'S'</span>) = {<span class="string">'nm / m'</span>,<span class="string">'strain'</span>};
+0469       SU(<span class="string">'T'</span>) = {<span class="string">'sec'</span>,<span class="string">'time'</span>};
+0470       SU(<span class="string">'V'</span>) = {<span class="string">'nm / sec'</span>,<span class="string">'velocity'</span>};
+0471       SU(<span class="string">'W'</span>) = {<span class="string">'watts / m / m'</span>, <span class="string">'insolation'</span>};
+0472       SU(<span class="string">'a'</span>) = {<span class="string">'deg'</span>, <span class="string">'azimuth'</span>};
+0473       SU(<span class="string">'b'</span>) = {<span class="string">'bits/ sec'</span>, <span class="string">'bit rate'</span>};
+0474       SU(<span class="string">'c'</span>) = {<span class="string">'counts'</span>, <span class="string">'dimensionless integer'</span>};
+0475       SU(<span class="string">'d'</span>) = {<span class="string">'m'</span>, <span class="string">'depth or height (e.g., water)'</span>};
+0476       SU(<span class="string">'f'</span>) = {<span class="string">'micromoles / sec / m /m'</span>, <span class="string">'photoactive radiation flux'</span>};
+0477       SU(<span class="string">'h'</span>) = {<span class="string">'pH'</span>,<span class="string">'hydrogen ion concentration'</span>};
+0478       SU(<span class="string">'i'</span>) = {<span class="string">'amp'</span>,<span class="string">'electric curent'</span>};
+0479       SU(<span class="string">'m'</span>) = {<span class="string">'bitmap'</span>,<span class="string">'dimensionless bitmap'</span>};
+0480       SU(<span class="string">'n'</span>) = {<span class="string">'nanoradians'</span>,<span class="string">'angle (tilt)'</span>};
+0481       SU(<span class="string">'o'</span>) = {<span class="string">'mg/l'</span>,<span class="string">'diliution of oxygen (Mark VanScoy)'</span>};
+0482       SU(<span class="string">'p'</span>) = {<span class="string">'percent'</span>,<span class="string">'percentage'</span>};
+0483       SU(<span class="string">'r'</span>) = {<span class="string">'in'</span>,<span class="string">'rainfall (UCSD)'</span>};
+0484       SU(<span class="string">'s'</span>) = {<span class="string">'m / sec'</span>, <span class="string">'speed (e.g., wind)'</span>};
+0485       SU(<span class="string">'t'</span>) = {<span class="string">'C'</span>,<span class="string">'temperature'</span>};
+0486       SU(<span class="string">'u'</span>) = {<span class="string">'microsiemens/cm'</span>,<span class="string">'conductivity'</span>};
+0487       SU(<span class="string">'v'</span>) = {<span class="string">'volts'</span>,<span class="string">'electric potential'</span>};
+0488       SU(<span class="string">'w'</span>) = {<span class="string">'rad / sec'</span>, <span class="string">'rotation rate'</span>};
+0489       SU(<span class="string">'-'</span>) = {<span class="string">'null'</span>,<span class="string">'null'</span>};
+0490    <span class="keyword">end</span>
+0491 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

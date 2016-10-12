@@ -1,0 +1,315 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of waveform_wrapper</title>
+  <meta name="keywords" content="waveform_wrapper">
+  <meta name="description" content="WAVEFORM_WRAPPER try multiple datasource objects in">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">applications</a> &gt; <a href="index.html">+iceweb</a> &gt; waveform_wrapper.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/applications/+iceweb&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>waveform_wrapper
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>WAVEFORM_WRAPPER try multiple datasource objects in</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function w=waveform_wrapper(ds, chantag, snum, enum); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> WAVEFORM_WRAPPER try multiple datasource objects in 
+ &quot;all&quot; and &quot;single&quot; extractmodes, until we either have a waveform
+ for each chantag between times given, or have exhausted all
+ options.
+
+ This function is useful if you have multiple source datasources
+ that might contain the data you care about. For each ChannelTag
+ requested, every datasource will be tried, and the one that returns 
+ the most data will be used.  
+
+     W = waveform_wrapper(DATASOURCES, CHANTAG, SNUM, ENUM)
+
+    Inputs:
+        datasources - a vector of datasources to try
+        chantag - a vector of type ChannelTag 
+        snum - start date/time in datenum format
+        enum - end date/time in datenum format
+
+     The main advantage of this wrapper for automation is that
+     if ds is a vector of different datasources, it will try all of them.
+
+     It will also try to create waveform objects with a single call of waveform,
+     but if this fails, it will call waveform for each ChannelTag in turn.
+
+    See also: ChannelTag, waveform, datasource, datenum</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/combine.html" class="code" title="function catalogObject = combine(catalogObject1, catalogObject2)">combine</a>	CATALOG.COMBINE combine two Catalog objects</li><li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>	GETFILENAME returns a filename that is associated with a single SCNL</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>	RSAM/SAVE - save an rsam-like object to an RSAM/BOB binary</li><li><a href="../../../GISMO/core/@scnlobject/ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>	ChannelTag Converter from scnlobject to ChannelTag</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>	ADDFIELD add fields and values to waveform object(s)                V1.1</li><li><a href="../../../GISMO/core/@waveform/combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and ChannelTag info.</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li><li><a href="../../../GISMO/tests/waveform_antelope_test.html" class="code" title="function tests = waveform_antelope_test()">waveform_antelope_test</a>	% Main function to generate tests</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [w,chantaggot] = deal_waveforms(w, w_new, chantaggot, extractmode, datapath)</a></li><li><a href="#_sub2" class="code">function print_waveform_call(snum, enum, chantag, ds)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w=waveform_wrapper(ds, chantag, snum, enum);</a>
+0002 <span class="comment">% WAVEFORM_WRAPPER try multiple datasource objects in</span>
+0003 <span class="comment">% &quot;all&quot; and &quot;single&quot; extractmodes, until we either have a waveform</span>
+0004 <span class="comment">% for each chantag between times given, or have exhausted all</span>
+0005 <span class="comment">% options.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% This function is useful if you have multiple source datasources</span>
+0008 <span class="comment">% that might contain the data you care about. For each ChannelTag</span>
+0009 <span class="comment">% requested, every datasource will be tried, and the one that returns</span>
+0010 <span class="comment">% the most data will be used.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%     W = waveform_wrapper(DATASOURCES, CHANTAG, SNUM, ENUM)</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%    Inputs:</span>
+0015 <span class="comment">%        datasources - a vector of datasources to try</span>
+0016 <span class="comment">%        chantag - a vector of type ChannelTag</span>
+0017 <span class="comment">%        snum - start date/time in datenum format</span>
+0018 <span class="comment">%        enum - end date/time in datenum format</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">%     The main advantage of this wrapper for automation is that</span>
+0021 <span class="comment">%     if ds is a vector of different datasources, it will try all of them.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%     It will also try to create waveform objects with a single call of waveform,</span>
+0024 <span class="comment">%     but if this fails, it will call waveform for each ChannelTag in turn.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%    See also: ChannelTag, waveform, datasource, datenum</span>
+0027 
+0028 
+0029 <span class="comment">% AUTHOR: Glenn Thompson, UAF-GI</span>
+0030 <span class="comment">% $Date: $</span>
+0031 <span class="comment">% $Revision: -1 $</span>
+0032 
+0033     debug.printfunctionstack(<span class="string">'&gt;'</span>);
+0034     
+0035     <span class="comment">% convert scnlobject to channeltag</span>
+0036     <span class="keyword">for</span> c=1:numel(chantag)
+0037         <span class="keyword">if</span> strcmp(class(chantag(c)),<span class="string">'scnlobject'</span>)
+0038             thischantag = <a href="../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(chantag(c),<span class="string">'network'</span>), <span class="keyword">...</span>
+0039                                     <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(chantag(c),<span class="string">'station'</span>), <span class="keyword">...</span>
+0040                                     <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(chantag(c),<span class="string">'location'</span>),<span class="keyword">...</span>
+0041                                     <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(chantag(c),<span class="string">'channel'</span>) );
+0042             chantag(c) = thischantag;
+0043         <span class="keyword">else</span>
+0044             class(chantag(c))
+0045         <span class="keyword">end</span>
+0046     <span class="keyword">end</span>
+0047 
+0048     <span class="comment">% change channel tag if this is MV network because channels in wfdisc table</span>
+0049     <span class="comment">% are like SHZ_--</span>
+0050     <span class="keyword">for</span> c=1:numel(chantag)
+0051         class(chantag(c))
+0052         <span class="keyword">if</span> strcmp(chantag(c).network, <span class="string">'MV'</span>)
+0053             chantag(c).channel = sprintf(<span class="string">'%s_--'</span>,chantag(c).channel);
+0054         <span class="keyword">end</span>
+0055     <span class="keyword">end</span>
+0056 
+0057     <span class="comment">% get datasource</span>
+0058     <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(ds)
+0059         debug.print_debug(1,<span class="string">'No valid datasource. Exiting.'</span>);
+0060         w=[];    
+0061         <span class="keyword">return</span>;
+0062     <span class="keyword">end</span>
+0063 
+0064     numchantags = numel(chantag); 
+0065 
+0066     <span class="comment">% chantaggot will record which chantags we've got data for, and which we haven't</span>
+0067     <span class="comment">% initially set chantaggot for each chantag to 0.</span>
+0068     chantaggot = zeros(numchantags,1);
+0069 
+0070     <span class="comment">% start off with blank waveform objects</span>
+0071     <span class="keyword">for</span> c=1:numchantags
+0072         w(c) = <a href="../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0073     <span class="comment">%    w(c) = set(w(c), 'station', get(scnl(c), 'station') );</span>
+0074     <span class="comment">%    w(c) = set(w(c), 'channel', get(scnl(c), 'channel') );</span>
+0075         w(c) = <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w(c), <span class="string">'station'</span>, chantag(c).station);
+0076         w(c) = <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w(c), <span class="string">'channel'</span>, chantag(c).channel);
+0077         w(c) = <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w(c), <span class="string">'start'</span>, snum);
+0078     <span class="keyword">end</span>
+0079 
+0080 
+0081     <span class="comment">%% loop over all data sources until some data found</span>
+0082     <span class="comment">% - all station extractmode for speed</span>
+0083     debug.print_debug(2,<span class="string">'- ALL STATIONS MODE'</span>);
+0084     finished = false;
+0085     <span class="keyword">for</span> dsi=1:length(ds)
+0086 
+0087         <span class="comment">% for informational purposes only, record where we get data from</span>
+0088         datapath=<span class="string">''</span>;
+0089         <span class="keyword">if</span> strcmp(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ds(dsi), <span class="string">'type'</span>), <span class="string">'antelope'</span>)
+0090             <span class="comment">% if dbopen command not recognised it means Antelope not installed</span>
+0091             <span class="comment">% - skip to next datasource</span>
+0092             dummy = help(<span class="string">'dbopen'</span>);
+0093             <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(dummy)
+0094                 <span class="keyword">continue</span>;
+0095             <span class="keyword">end</span>
+0096             datapath = <a href="../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>(ds(dsi), chantag(1), snum);
+0097         <span class="keyword">else</span>
+0098             datapath = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ds(dsi), <span class="string">'server'</span>);
+0099         <span class="keyword">end</span>
+0100         <span class="keyword">if</span> strcmp(class(datapath), <span class="string">'cell'</span>)
+0101             datapath = datapath{1};
+0102         <span class="keyword">end</span>
+0103 
+0104         chantagtoget = chantag(chantaggot==0);
+0105         <span class="keyword">if</span> (length(chantagtoget)==0)
+0106             debug.print_debug(2,<span class="string">'- Got data for all chantags'</span>);
+0107             finished = true;
+0108             <span class="keyword">break</span>;
+0109         <span class="keyword">else</span>
+0110             debug.print_debug(2, sprintf(<span class="string">'- There are still %d chantags to get waveform objects for'</span>, length(chantagtoget)));
+0111         <span class="keyword">end</span>
+0112         <span class="keyword">try</span>    
+0113             <span class="keyword">if</span> length(chantagtoget)&gt;0
+0114                 debug.print_debug(0, sprintf(<span class="string">'- Attempting to load waveform data for %d remaining stations (of %d total) from %s to %s'</span>,length(chantagtoget),numchantags,datestr(snum,31),datestr(enum,31)));
+0115                 <span class="comment">%print_waveform_call(snum, enum, chantagtoget, ds(dsi))</span>
+0116                 <a href="../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a> lastwaveformcall.mat ds chantag snum enum
+0117                 w_new = <a href="../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds(dsi), chantagtoget, snum, enum); 
+0118         w_new = <a href="../../../GISMO/core/@Catalog/combine.html" class="code" title="function catalogObject = combine(catalogObject1, catalogObject2)">combine</a>(w_new);
+0119             <span class="keyword">else</span>
+0120                 <span class="keyword">continue</span>;
+0121             <span class="keyword">end</span>
+0122         <span class="keyword">catch</span> ME
+0123             <a href="#_sub2" class="code" title="subfunction print_waveform_call(snum, enum, chantag, ds)">print_waveform_call</a>(snum, enum, chantagtoget, ds(dsi))
+0124             debug.print_debug(1,<span class="string">'waveform failed'</span>); 
+0125             w_new = [];
+0126         <span class="keyword">end</span>
+0127         <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(w_new)
+0128             [w, chantaggot] = <a href="#_sub1" class="code" title="subfunction [w,chantaggot] = deal_waveforms(w, w_new, chantaggot, extractmode, datapath)">deal_waveforms</a>(w, w_new, chantaggot, <span class="string">'all'</span>, datapath);
+0129         <span class="keyword">end</span>
+0130     <span class="keyword">end</span>    
+0131 
+0132     <span class="comment">% - individual station extractmode to fill in blanks</span>
+0133     <span class="keyword">if</span> ~finished 
+0134         debug.print_debug(2,<span class="string">'- SINGLE CHANNEL MODE'</span>);
+0135         <span class="keyword">for</span> dsi=1:length(ds)
+0136 
+0137             <span class="comment">% for informational purposes only, record where we get data from</span>
+0138             datapath=<span class="string">''</span>;
+0139             <span class="keyword">if</span> strcmp(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ds(dsi), <span class="string">'type'</span>), <span class="string">'antelope'</span>)
+0140                 datapath = <a href="../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>(ds(dsi), chantag(1), snum);
+0141             <span class="keyword">else</span>
+0142                 datapath = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ds(dsi), <span class="string">'server'</span>);
+0143             <span class="keyword">end</span>
+0144             <span class="keyword">if</span> strcmp(class(datapath), <span class="string">'cell'</span>)
+0145                 datapath = datapath{1};
+0146             <span class="keyword">end</span>
+0147 
+0148             chantagtoget = chantag(chantaggot==0);
+0149             <span class="keyword">if</span> (length(chantagtoget)==0)
+0150                 debug.print_debug(2,<span class="string">'- Got data for all chantags'</span>);
+0151                 finished = true;
+0152                 <span class="keyword">break</span>;
+0153             <span class="keyword">else</span>
+0154                 debug.print_debug(2,sprintf(<span class="string">'- There are still %d chantags to get waveform objects for'</span>, length(chantagtoget)));
+0155             <span class="keyword">end</span>
+0156             
+0157             <span class="keyword">for</span> c=1:numchantags    
+0158                 <span class="keyword">if</span> chantaggot(c)==0
+0159                     <span class="keyword">try</span>    
+0160                         <span class="keyword">if</span> length(chantagtoget)&gt;0
+0161                             <span class="comment">%debug.print_debug(sprintf('- Attempting to load waveform data for %s-%s from %s to %s',get(scnl(c),'station'),get(scnl(c),'channel'),datestr(snum,31),datestr(enum,31)),0);</span>
+0162                             <a href="../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a> lastwaveformcall.mat ds chantag snum enum chantagtoget c
+0163                             w_new = <a href="../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds(dsi), chantag(c), snum, enum); 
+0164                 w_new = <a href="../../../GISMO/core/@Catalog/combine.html" class="code" title="function catalogObject = combine(catalogObject1, catalogObject2)">combine</a>(w_new);
+0165                         <span class="keyword">else</span>
+0166                             <span class="keyword">continue</span>;
+0167                         <span class="keyword">end</span>
+0168                     <span class="keyword">catch</span> ME
+0169                         <a href="#_sub2" class="code" title="subfunction print_waveform_call(snum, enum, chantag, ds)">print_waveform_call</a>(snum, enum, chantag(c), ds(dsi))
+0170                         debug.print_debug(1,<span class="string">'waveform failed'</span>); 
+0171                         w_new = [];
+0172                     <span class="keyword">end</span>
+0173                     <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(w_new)
+0174                         [w, chantaggot] = <a href="#_sub1" class="code" title="subfunction [w,chantaggot] = deal_waveforms(w, w_new, chantaggot, extractmode, datapath)">deal_waveforms</a>(w, w_new, chantaggot, <span class="string">'single'</span>, datapath);
+0175                     <span class="keyword">end</span>
+0176                 <span class="keyword">end</span>    
+0177             <span class="keyword">end</span>
+0178         <span class="keyword">end</span>
+0179     <span class="keyword">end</span>    
+0180     <span class="comment">% now remove any waveforms which are empty</span>
+0181     <span class="comment">%w = w(find(chantaggot==1));</span>
+0182 
+0183     <span class="comment">% report what waveforms we got and where they came from</span>
+0184     <span class="keyword">for</span> i=1:numel(w)
+0185         sta0 = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(i), <span class="string">'station'</span>);
+0186         chan0 = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(i), <span class="string">'channel'</span>);
+0187         <span class="comment">%ds0 = get(w(i), 'ds');</span>
+0188         <span class="comment">%extractmode0 = get(w(i), 'extractmode');</span>
+0189         dl0 = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(i), <span class="string">'data_length'</span>);
+0190         <span class="comment">%debug.print_debug(sprintf('- waveform %d: got %d samples for %s-%s from %s in extractmode %s',i,dl0,sta0,chan0,ds0,extractmode0),2);</span>
+0191         debug.print_debug(2,sprintf(<span class="string">'- waveform %d: got %d samples for %s-%s'</span>,i,dl0,sta0,chan0));
+0192     <span class="keyword">end</span>
+0193     debug.print_debug(1,sprintf(<span class="string">'- Got %d waveform objects\n'</span>, length(w)));
+0194     <span class="comment">%print_debug(sprintf('&lt; %s', mfilename),1)</span>
+0195     debug.printfunctionstack(<span class="string">'&lt;'</span>);
+0196 <span class="keyword">end</span>
+0197 
+0198 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0199 
+0200 <a name="_sub1" href="#_subfunctions" class="code">function [w,chantaggot] = deal_waveforms(w, w_new, chantaggot, extractmode, datapath)</a>
+0201 <span class="comment">% take arrays of waveforms we just got, and waveforms we already have</span>
+0202     <span class="keyword">for</span> i=1:numel(w)
+0203         sta = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(i), <span class="string">'station'</span>);
+0204         chan = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(i), <span class="string">'channel'</span>);
+0205         <span class="keyword">for</span> j = 1:numel(w_new)
+0206             sta_new = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w_new(j), <span class="string">'station'</span>);
+0207             chan_new = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w_new(j), <span class="string">'channel'</span>);
+0208             nsamp = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w_new(j), <span class="string">'data_length'</span>);
+0209             freq = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w_new(j), <span class="string">'freq'</span>);
+0210             nsamp_expected = freq * 600;
+0211             <span class="keyword">if</span> (strcmp(sta_new, sta) &amp; strcmp(chan_new, chan))
+0212                 <span class="comment">% w_new(j) corresponds to chantag(i)</span>
+0213                 nsamp_before = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(i), <span class="string">'data_length'</span>);
+0214                 <span class="keyword">if</span> (nsamp &gt; nsamp_before) 
+0215                     w(i) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w_new(j), <span class="string">'extractmode'</span>, extractmode);
+0216                     w(i) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w(i), <span class="string">'ds'</span>, datapath);
+0217                     <span class="keyword">if</span> (nsamp &gt; 0.99 * nsamp_expected)
+0218                         chantaggot(i)=1;
+0219                     <span class="keyword">end</span>
+0220                 <span class="keyword">end</span>
+0221                 <span class="keyword">break</span>;
+0222             <span class="keyword">end</span>
+0223         <span class="keyword">end</span>
+0224     <span class="keyword">end</span>
+0225 <span class="keyword">end</span>
+0226 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0227 
+0228 <a name="_sub2" href="#_subfunctions" class="code">function print_waveform_call(snum, enum, chantag, ds)</a>
+0229 
+0230     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'Waveform call:'</span>)
+0231     <span class="keyword">for</span> c=1:numel(chantag)
+0232         fprintf(<span class="string">'\tchantag(%d) = ChannelTag(''%s'')\n'</span>, c, string(chantag(c)));
+0233     <span class="keyword">end</span>
+0234     <span class="keyword">if</span> (strcmp(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ds, <span class="string">'type'</span>), <span class="string">'winston'</span>))
+0235         fprintf(<span class="string">'\tds = datasource(''winston'', ''%s'', %d);\n'</span>, <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ds, <span class="string">'server'</span>), <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ds, <span class="string">'port'</span>));
+0236     <span class="keyword">end</span>
+0237     <span class="keyword">if</span> (strcmp(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ds, <span class="string">'type'</span>), <span class="string">'antelope'</span>))
+0238         filenames = <a href="../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>(ds, chantag(1), snum);
+0239         fprintf(<span class="string">'\tds = datasource(''antelope'', ''%s'');\n'</span>, filenames{1});
+0240     <span class="keyword">end</span>
+0241     fprintf(<span class="string">'\tw = waveform(ds, chantag, %f, %f)\n'</span>, snum, enum);
+0242 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

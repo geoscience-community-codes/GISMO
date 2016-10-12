@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of testChanneltag</title>
+  <meta name="keywords" content="testChanneltag">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">tests</a> &gt; testChanneltag.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/tests&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>testChanneltag
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="../../GISMO/core/@ChannelTag/eq.html" class="code" title="function result = eq(A, B)">eq</a>	eq  equal for ChannelTags</li><li><a href="../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>	C = SORT(C,'TIME')</li><li><a href="../../GISMO/core/@scnlobject/ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>	ChannelTag Converter from scnlobject to ChannelTag</li><li><a href="../../GISMO/core/@scnlobject/eq.html" class="code" title="function results = eq(A, B)">eq</a>	when using wildcards, use ismember</li><li><a href="../../GISMO/core/@waveform/eq.html" class="code" title="function [ result ] = eq( w1, w2 )">eq</a>	EQ Check if waveform objects are equal</li><li><a href="../../GISMO/core/dev/@NewCorrelation/sort.html" class="code" title="function c = sort(c)">sort</a>	C = SORT(C) Sorts traces from oldest to youngest.</li><li><a href="testChanneltag.html" class="code" title="">testChanneltag</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="testChanneltag.html" class="code" title="">testChanneltag</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function testSimpleConstructors(self)</a></li><li><a href="#_sub2" class="code">function testWhitespaceConstructors(self)</a></li><li><a href="#_sub3" class="code">function testArrayConstruction(self)</a></li><li><a href="#_sub4" class="code">function testEqNe(self)</a></li><li><a href="#_sub5" class="code">function testSort(self)</a></li><li><a href="#_sub6" class="code">function testStringConversions(self)</a></li><li><a href="#_sub7" class="code">function testIsmember(self)</a></li><li><a href="#_sub8" class="code">function  testMatching(self)</a></li><li><a href="#_sub9" class="code">function obj = createReference(N, S, L, C)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="testChanneltag.html" class="code" title="">testChanneltag</a> &lt; matlab.unittest.TestCase
+0002    <span class="comment">% TESTCHANNELTAG validates the funcionality of ChannelTag</span>
+0003    <span class="comment">%</span>
+0004    <span class="comment">% requires xUnit</span>
+0005    <span class="comment">% see also xUnit, ChannelTag</span>
+0006    
+0007    properties
+0008    <span class="keyword">end</span>
+0009    methods(Test)
+0010       <span class="comment">%---- test methods follow. each starts with &quot;test&quot; ---</span>
+0011       <a name="_sub0" href="#_subfunctions" class="code">function testSimpleConstructors(self)</a>
+0012          <span class="comment">% make sure these throw no error</span>
+0013          reftag = testChanneltag.createReference(<span class="string">'A'</span>,<span class="string">'B'</span>,<span class="string">'C'</span>,<span class="string">'D'</span>);
+0014          self.verifyEqual(reftag, <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(<span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>, <span class="string">'D'</span>));  <span class="comment">% 4 string constructor</span>
+0015          self.verifyEqual(<a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(reftag), reftag);              <span class="comment">% copy constructor</span>
+0016          self.verifyEqual(<a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(<span class="string">'A.B.C.D'</span>), reftag);           <span class="comment">% string constructor</span>
+0017          self.verifyEqual(reftag, <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>({<span class="string">'A.B.C.D'</span>}));         <span class="comment">% cell constructor</span>
+0018       <span class="keyword">end</span>
+0019       
+0020       <a name="_sub1" href="#_subfunctions" class="code">function testWhitespaceConstructors(self)</a>
+0021          reftag = testChanneltag.createReference(<span class="string">'A'</span>,<span class="string">'B'</span>,<span class="string">'C'</span>,<span class="string">'D'</span>);
+0022          ct = <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(<span class="string">'  A .B . C. D '</span>);
+0023          self.verifyEqual(reftag, ct);
+0024          ct = <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(<span class="string">' A '</span>, <span class="string">' B '</span>, <span class="string">' C '</span>, <span class="string">' D '</span>);
+0025          self.verifyEqual(reftag, ct);
+0026       <span class="keyword">end</span>
+0027       
+0028       <a name="_sub2" href="#_subfunctions" class="code">function testArrayConstruction(self)</a>
+0029          reftag = testChanneltag.createReference(<span class="string">'A'</span>,<span class="string">'B'</span>,<span class="string">'C'</span>,<span class="string">'D'</span>);
+0030          ct = ChannelTag.array({<span class="string">'A .B . C. D '</span>,<span class="string">' A. B . C.D '</span>});
+0031          self.verifyEqual(reftag, ct(1));
+0032          self.verifyEqual(ct(1), ct(2));
+0033          ct = ChannelTag.array([<span class="string">'A.B.C.D      '</span>; <span class="string">' A.B  . C . D'</span>]);
+0034          self.verifyEqual(reftag, ct(1));
+0035          self.verifyEqual(ct(1), ct(2));
+0036          ct = ChannelTag.array({<span class="string">'N'</span>,<span class="string">'N'</span>,<span class="string">'N'</span>},{<span class="string">'S'</span>,<span class="string">'S'</span>,<span class="string">'S'</span>},{<span class="string">'L'</span>,<span class="string">'L'</span>,<span class="string">'L'</span>}, {<span class="string">'C'</span>,<span class="string">'C'</span>,<span class="string">'C'</span>});
+0037          self.verifyEqual(ct(1), ct(2))
+0038          self.verifyEqual(ct(2), ct(3));
+0039          ct = ChannelTag.array([<span class="string">'N.S.L.C '</span>;<span class="string">' N.S.L.C'</span>; <span class="string">'N.S .L.C'</span>]);
+0040          self.verifyEqual(ct(1), ct(2))
+0041          self.verifyEqual(ct(2), ct(3));
+0042          ct = ChannelTag.array(<span class="string">'N'</span>,{<span class="string">'S1'</span>,<span class="string">'S2'</span>},<span class="string">'L'</span>,<span class="string">'C'</span>);
+0043          self.verifyEqual(ct(1).station,<span class="string">'S1'</span>);
+0044          self.verifyEqual(ct(2).station, <span class="string">'S2'</span>);
+0045       <span class="keyword">end</span>
+0046       
+0047       <a name="_sub3" href="#_subfunctions" class="code">function testEqNe(self)</a>
+0048          A = testChanneltag.createReference(<span class="string">'NW'</span>,<span class="string">'STA'</span>,<span class="string">'LOC'</span>,<span class="string">'CHA'</span>);
+0049          B = testChanneltag.createReference(<span class="string">'NW'</span>,<span class="string">'STA'</span>,<span class="string">'LOC'</span>,<span class="string">'CHA'</span>);
+0050          C = testChanneltag.createReference(<span class="string">'NW'</span>,<span class="string">'STA'</span>,<span class="string">'LOC'</span>,<span class="string">'CHAN'</span>);
+0051          self.verifyTrue(<a href="../../GISMO/core/@ChannelTag/eq.html" class="code" title="function result = eq(A, B)">eq</a>(A,B));
+0052          self.verifyTrue(<a href="../../GISMO/core/@ChannelTag/eq.html" class="code" title="function result = eq(A, B)">eq</a>(B,A));
+0053          self.verifyTrue(A == B);
+0054          self.verifyFalse(ne(A,B));
+0055          
+0056          self.verifyTrue(ne(A,C));
+0057          self.verifyFalse(<a href="../../GISMO/core/@ChannelTag/eq.html" class="code" title="function result = eq(A, B)">eq</a>(A,C));
+0058          self.verifyTrue(A ~=C);
+0059       <span class="keyword">end</span>
+0060       
+0061       <a name="_sub4" href="#_subfunctions" class="code">function testSort(self)</a>
+0062          ct = ChannelTag.array(<span class="string">'A'</span>,<span class="string">'S'</span>,<span class="string">'L'</span>,{<span class="string">'CCC'</span>,<span class="string">'BBB'</span>,<span class="string">'AAA'</span>});
+0063          s = <a href="../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>(ct);
+0064          self.verifyEqual(s(1).channel,<span class="string">'AAA'</span>);
+0065          self.verifyEqual(s(3).channel, <span class="string">'CCC'</span>);
+0066          ct = ChannelTag.array({<span class="string">'N2'</span>,<span class="string">'N1'</span>},<span class="string">'S'</span>,<span class="string">'L'</span>,{<span class="string">'C1'</span>,<span class="string">'C2'</span>});
+0067          s = <a href="../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>(ct);
+0068          self.verifyEqual(s(1).network,<span class="string">'N1'</span>);
+0069          self.verifyEqual(s(1).channel,<span class="string">'C2'</span>);
+0070          self.verifyEqual(s(2).network,<span class="string">'N2'</span>);
+0071          self.verifyEqual(s(2).channel,<span class="string">'C1'</span>);
+0072       <span class="keyword">end</span>
+0073       
+0074       <a name="_sub5" href="#_subfunctions" class="code">function testStringConversions(self)</a>
+0075          nslc = <span class="string">'IU.ANMO.00.LOG'</span>;
+0076          ct = <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(nslc);
+0077          self.verifyEqual(ct.string(),nslc);               <span class="comment">% test basic string</span>
+0078          self.verifyEqual(ct.string(<span class="string">'_'</span>),<span class="string">'IU_ANMO_00_LOG'</span>); <span class="comment">% test delimeter</span>
+0079          self.verifyEqual(ct.char(),ct.string());          <span class="comment">% test string vs char</span>
+0080       <span class="keyword">end</span>
+0081       
+0082       <a name="_sub6" href="#_subfunctions" class="code">function testIsmember(self)</a>
+0083          <span class="comment">% not implemented</span>
+0084       <span class="keyword">end</span>
+0085       <a name="_sub7" href="#_subfunctions" class="code">function  testMatching(self)</a>
+0086          <span class="comment">% not implemented</span>
+0087       <span class="keyword">end</span>
+0088    <span class="keyword">end</span>
+0089    
+0090    methods(Static)
+0091       <a name="_sub8" href="#_subfunctions" class="code">function obj = createReference(N, S, L, C)</a>
+0092          obj = <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>();
+0093          obj.network = N; 
+0094          obj.station = S; 
+0095          obj.location = L;
+0096          obj.channel = C;
+0097       <span class="keyword">end</span>
+0098    <span class="keyword">end</span>
+0099 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

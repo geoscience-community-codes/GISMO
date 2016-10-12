@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cluster</title>
+  <meta name="keywords" content="cluster">
+  <meta name="description" content="cluster   Construct agglomerative clusters from linkage for Seismic Traces">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; cluster.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>cluster
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>cluster   Construct agglomerative clusters from linkage for Seismic Traces</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c=cluster(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">cluster   Construct agglomerative clusters from linkage for Seismic Traces
+ c = CLUSTER(c,CUTOFF) cuts the &quot;branches&quot; of the linkage tree to create
+ discrete clusters.  CLUSTER reads the LINK field (must be filled) and
+ fills in the CLUST field. The first argument and the returned value are
+ correlation objects. In most cases these will be the same object. CUTOFF
+ is the inter-cluster correlation value from which clusters should be
+ determined. See HELP LINKAGE for a more thorough discription of how the
+ inter-cluster correlation values are computed. A CUTOFF value of 0.8 will
+ create many small clusters of highly similar waveforms. A CUTOFF value of
+ 0.5 will create a few large clusters of moderately similar waveforms.
+ Actual values will depend on the specific dataset. This usage is likely
+ the most common use of the CLUSTER function. It is shorthand for the more
+ elaborate CLUSTER(c,'cutoff',1-CUTOFF,'criterion','distance'). Note the
+ difference in how the CUTOFF value is specified however.
+
+ This function is simply a wrapper program around the built-in CLUSTER
+ function in the Matlab statistics toolbox. More elaborate uses of CLUSTER
+ can be performed by using the following usage:
+
+ c = CLUSTER(c, ...) simply passes the linkage information in c to the
+ CLUSTER function in the stats toolbox. More information can be obtained
+ from HELP CLUSTER.
+
+ ** IMPORTANT NOTES (REALLY) **
+ There is one major difference when using the more elaborate CLUSTER
+ function. The native Matlab CLUSTER function expects CUTOFF values that
+ represent *dissimilarity*. For ease and compatibility in the correlation
+ toolbox the simple two value usage above is overwritten to allow CUTOFF
+ values to be given as a correlation threshold. Before passing to the
+ built-in CLUSTER function, these values are subtracted from 1 to generate
+ a dissimilarity value. When using more elaborate uses of the CLUSTER
+ function, the CUTOFF value should be specified directly as a
+ dissimilarity value. Note that this version of CLUSTER is currently
+ incompatible with the 'MaxClust' option.
+
+ Clusters numbers are in descending frequency order.  That is, the
+ largest cluster is cluster #1, the second is #2, etc.
+
+ The following two examples are identical:
+   c = CLUSTER(c,0.8)
+    c = CLUSTER(c,'CUTOFF',0.2,'Criterion','distance')</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/hist.html" class="code" title="function hist(catalogObject);">hist</a>	HIST plot histograms of magnitude distribution, depth</li><li><a href="../../../../GISMO/core/@correlation/cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	c = CLUSTER(c,CUTOFF) cuts the "branches" of the linkage tree to create</li><li><a href="../../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>	C = SORT(C,'TIME')</li><li><a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	cluster   Construct agglomerative clusters from linkage for Seismic Traces</li><li><a href="sort.html" class="code" title="function c = sort(c)">sort</a>	C = SORT(C) Sorts traces from oldest to youngest.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG adjusts the trigger times of each trace</li><li><a href="../../../../GISMO/core/@correlation/cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	c = CLUSTER(c,CUTOFF) cuts the "branches" of the linkage tree to create</li><li><a href="../../../../GISMO/core/@correlation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG  adjusts the trigger times of each trace</li><li><a href="cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	cluster   Construct agglomerative clusters from linkage for Seismic Traces</li><li><a href="cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../../GISMO/uaf_internal/AEIC_AVO/+check/crossfeed.html" class="code" title="function crossfeed(varargin)">crossfeed</a>	CROSSFEED Checks for crossfeeding and duplicate data channels</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c=cluster(c,varargin)</a>
+0002    <span class="comment">%cluster   Construct agglomerative clusters from linkage for Seismic Traces</span>
+0003    <span class="comment">% c = CLUSTER(c,CUTOFF) cuts the &quot;branches&quot; of the linkage tree to create</span>
+0004    <span class="comment">% discrete clusters.  CLUSTER reads the LINK field (must be filled) and</span>
+0005    <span class="comment">% fills in the CLUST field. The first argument and the returned value are</span>
+0006    <span class="comment">% correlation objects. In most cases these will be the same object. CUTOFF</span>
+0007    <span class="comment">% is the inter-cluster correlation value from which clusters should be</span>
+0008    <span class="comment">% determined. See HELP LINKAGE for a more thorough discription of how the</span>
+0009    <span class="comment">% inter-cluster correlation values are computed. A CUTOFF value of 0.8 will</span>
+0010    <span class="comment">% create many small clusters of highly similar waveforms. A CUTOFF value of</span>
+0011    <span class="comment">% 0.5 will create a few large clusters of moderately similar waveforms.</span>
+0012    <span class="comment">% Actual values will depend on the specific dataset. This usage is likely</span>
+0013    <span class="comment">% the most common use of the CLUSTER function. It is shorthand for the more</span>
+0014    <span class="comment">% elaborate CLUSTER(c,'cutoff',1-CUTOFF,'criterion','distance'). Note the</span>
+0015    <span class="comment">% difference in how the CUTOFF value is specified however.</span>
+0016    <span class="comment">%</span>
+0017    <span class="comment">% This function is simply a wrapper program around the built-in CLUSTER</span>
+0018    <span class="comment">% function in the Matlab statistics toolbox. More elaborate uses of CLUSTER</span>
+0019    <span class="comment">% can be performed by using the following usage:</span>
+0020    <span class="comment">%</span>
+0021    <span class="comment">% c = CLUSTER(c, ...) simply passes the linkage information in c to the</span>
+0022    <span class="comment">% CLUSTER function in the stats toolbox. More information can be obtained</span>
+0023    <span class="comment">% from HELP CLUSTER.</span>
+0024    <span class="comment">%</span>
+0025    <span class="comment">% ** IMPORTANT NOTES (REALLY) **</span>
+0026    <span class="comment">% There is one major difference when using the more elaborate CLUSTER</span>
+0027    <span class="comment">% function. The native Matlab CLUSTER function expects CUTOFF values that</span>
+0028    <span class="comment">% represent *dissimilarity*. For ease and compatibility in the correlation</span>
+0029    <span class="comment">% toolbox the simple two value usage above is overwritten to allow CUTOFF</span>
+0030    <span class="comment">% values to be given as a correlation threshold. Before passing to the</span>
+0031    <span class="comment">% built-in CLUSTER function, these values are subtracted from 1 to generate</span>
+0032    <span class="comment">% a dissimilarity value. When using more elaborate uses of the CLUSTER</span>
+0033    <span class="comment">% function, the CUTOFF value should be specified directly as a</span>
+0034    <span class="comment">% dissimilarity value. Note that this version of CLUSTER is currently</span>
+0035    <span class="comment">% incompatible with the 'MaxClust' option.</span>
+0036    <span class="comment">%</span>
+0037    <span class="comment">% Clusters numbers are in descending frequency order.  That is, the</span>
+0038    <span class="comment">% largest cluster is cluster #1, the second is #2, etc.</span>
+0039    <span class="comment">%</span>
+0040    <span class="comment">% The following two examples are identical:</span>
+0041    <span class="comment">%   c = CLUSTER(c,0.8)</span>
+0042    <span class="comment">%    c = CLUSTER(c,'CUTOFF',0.2,'Criterion','distance')</span>
+0043    
+0044    <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0045    <span class="comment">% $Date$</span>
+0046    <span class="comment">% $Revision$</span>
+0047    
+0048    <span class="comment">% REQUIRES STATISTICS &amp; MACHINE LEARNING TOOLBOX</span>
+0049    
+0050    narginchk(2,inf)
+0051    
+0052    assert(~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(c.link), <span class="string">'LINK field must already have values/nSee correlation/linkage function'</span>);
+0053    
+0054    
+0055    Y = c.link;
+0056    <span class="keyword">if</span> (length(varargin)==1)
+0057       tmpclust = <a href="cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>(Y,<span class="string">'cutoff'</span>,1-varargin{1},<span class="string">'criterion'</span>,<span class="string">'distance'</span>);
+0058    <span class="keyword">else</span>
+0059       tmpclust = <a href="cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>(Y,varargin{:});
+0060    <span class="keyword">end</span>
+0061    
+0062    
+0063    <span class="comment">% RENUMBER CLUSTERS SO THAT LARGEST IS #1, 2ND LARGEST IS #2, ...</span>
+0064    [allnum, allval] = <a href="../../../../GISMO/core/@Catalog/hist.html" class="code" title="function hist(catalogObject);">hist</a>(tmpclust, <a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(tmpclust));
+0065    [~,index] = <a href="sort.html" class="code" title="function c = sort(c)">sort</a>(allnum,<span class="string">'descend'</span>);
+0066    allval = allval(index);
+0067    
+0068    c.clust = zeros(size(tmpclust));
+0069    <span class="keyword">for</span> n = 1:numel(allval)
+0070       c.clust(tmpclust==allval(n)) = n;
+0071    <span class="keyword">end</span>;
+0072 <span class="keyword">end</span>
+0073 
+0074 
+0075</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

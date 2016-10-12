@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of rmgismo</title>
+  <meta name="keywords" content="rmgismo">
+  <meta name="description" content="RMGISMO(SOURCE) removes all existing paths containing the phrase">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">+admin</a> &gt; rmgismo.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+admin&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>rmgismo
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>RMGISMO(SOURCE) removes all existing paths containing the phrase</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function rmgismo() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> RMGISMO(SOURCE) removes all existing paths containing the phrase
+ 'GISMO'.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function rmgismo()</a>
+0002 
+0003 <span class="comment">% RMGISMO(SOURCE) removes all existing paths containing the phrase</span>
+0004 <span class="comment">% 'GISMO'.</span>
+0005 
+0006 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0007 <span class="comment">% $Date$</span>
+0008 <span class="comment">% $Revision$</span>
+0009 
+0010    
+0011 
+0012 admin.deprecated(mfilename,<span class="string">'admin.remove'</span>);
+0013 
+0014 
+0015 <span class="comment">% REMOVE EXISTING GISMO PATHS</span>
+0016 pathList = path;
+0017 n = 1;
+0018 <span class="keyword">while</span> true
+0019     t = strtok(pathList(n:end), pathsep);
+0020     OnePath = sprintf(<span class="string">'%s'</span>, t);
+0021 
+0022     <span class="keyword">if</span> strfind(OnePath,<span class="string">'GISMO'</span>);
+0023         <span class="comment">%disp(['removing: ' OnePath])</span>
+0024         rmpath(OnePath);
+0025     <span class="keyword">end</span>;
+0026     n = n + length(t) + 1;
+0027     <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(strfind(pathList(n:end),<span class="string">':'</span>))
+0028         <span class="keyword">break</span>
+0029     <span class="keyword">end</span>;
+0030 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

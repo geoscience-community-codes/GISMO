@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of waveform2rsam</title>
+  <meta name="keywords" content="waveform2rsam">
+  <meta name="description" content="WAVEFORM2RSAM create an RSAM-like object from a waveform object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; waveform2rsam.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>waveform2rsam
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>WAVEFORM2RSAM create an RSAM-like object from a waveform object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function s = waveform2rsam(w, method, samplingPeriod) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">WAVEFORM2RSAM create an RSAM-like object from a waveform object
+ RSAM data are typically 1 sample per minute, where each sample is the 
+ average amplitude of that minute of data. They are used extensively used
+ in volcano monitoring.
+
+ Usage:
+   s = rsam(waveform, method, samplingPeriod)
+
+   Input Arguments
+       WAVEFORM: waveform object       N-dimensional
+
+       METHOD: which method of sampling to perform within each sample
+                window
+           'max' : maximum value
+           'min' : minimum value
+           'mean': average value (Default)
+           'median' : mean value
+           'rms' : rms value (added 2011/06/01)
+
+       SAMPLINGPERIOD : the number of seconds between samples (Default:
+       60s)
+
+
+   Examples:
+       s = waveform2rsam(w) Each sample in the RSAM object is computed from a 60-s
+       window of data. Successive windows do not overlap. Each window is
+       detrended, NaN's replaced with mean value. Then the mean absolute
+       value - i.e. the mean amplitude - is taken.
+
+       s = waveform2rsam(w, 'rms') As above, but the root-mean-square absolute value
+       is taken.
+
+       s = waveform2rsam(w, 'max', 1.0) As above, but the max absolute value is
+       taken, and the time window is 1s rather than 60s.
+
+ Glenn Thompson 2014/10/28</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>	DETREND removes the slope of each trace.</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@rsam/resample.html" class="code" title="function self = resample(self, varargin)">resample</a>	RESAMPLE resamples a rsam object at over every specified intercrunchfactor</li><li><a href="../../../GISMO/core/@rsam/rsam.html" class="code" title="">rsam</a>	</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="detrend.html" class="code" title="function w = detrend (w, varargin)">detrend</a>	DETREND remove linear trend from a waveform</li><li><a href="fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>	FILLGAPS - fill missing data with values of your choice</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="resample.html" class="code" title="function w = resample(w,method, crunchfactor)">resample</a>	RESAMPLE resamples a waveform at over every specified interval</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/detrend.html" class="code" title="function c = detrend(c)">detrend</a>	DETREND   removes the slope of each trace.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li><li><a href="../../../GISMO/training/separating_tremor_and_events.html" class="code" title="">separating_tremor_and_events</a>	Tremor range is 1-5 Hz</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function s = waveform2rsam(w, method, samplingPeriod)</a>
+0002 <span class="comment">%WAVEFORM2RSAM create an RSAM-like object from a waveform object</span>
+0003 <span class="comment">% RSAM data are typically 1 sample per minute, where each sample is the</span>
+0004 <span class="comment">% average amplitude of that minute of data. They are used extensively used</span>
+0005 <span class="comment">% in volcano monitoring.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Usage:</span>
+0008 <span class="comment">%   s = rsam(waveform, method, samplingPeriod)</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%   Input Arguments</span>
+0011 <span class="comment">%       WAVEFORM: waveform object       N-dimensional</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%       METHOD: which method of sampling to perform within each sample</span>
+0014 <span class="comment">%                window</span>
+0015 <span class="comment">%           'max' : maximum value</span>
+0016 <span class="comment">%           'min' : minimum value</span>
+0017 <span class="comment">%           'mean': average value (Default)</span>
+0018 <span class="comment">%           'median' : mean value</span>
+0019 <span class="comment">%           'rms' : rms value (added 2011/06/01)</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">%       SAMPLINGPERIOD : the number of seconds between samples (Default:</span>
+0022 <span class="comment">%       60s)</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%   Examples:</span>
+0026 <span class="comment">%       s = waveform2rsam(w) Each sample in the RSAM object is computed from a 60-s</span>
+0027 <span class="comment">%       window of data. Successive windows do not overlap. Each window is</span>
+0028 <span class="comment">%       detrended, NaN's replaced with mean value. Then the mean absolute</span>
+0029 <span class="comment">%       value - i.e. the mean amplitude - is taken.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%       s = waveform2rsam(w, 'rms') As above, but the root-mean-square absolute value</span>
+0032 <span class="comment">%       is taken.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%       s = waveform2rsam(w, 'max', 1.0) As above, but the max absolute value is</span>
+0035 <span class="comment">%       taken, and the time window is 1s rather than 60s.</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% Glenn Thompson 2014/10/28</span>
+0038 <span class="keyword">if</span> ~exist(<span class="string">'method'</span>, <span class="string">'var'</span>)
+0039     method = <span class="string">'mean'</span>;
+0040 <span class="keyword">end</span>
+0041 <span class="keyword">if</span> ~exist(<span class="string">'samplingPeriod'</span>, <span class="string">'var'</span>)
+0042     samplingPeriod = 60;
+0043 <span class="keyword">end</span>
+0044 
+0045 <span class="comment">% detrend data after fill gaps to get rid of NaNs marking missing values</span>
+0046 w = <a href="fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>(w, <span class="string">'interp'</span>);
+0047 w = <a href="detrend.html" class="code" title="function w = detrend (w, varargin)">detrend</a>(w);
+0048 
+0049 <span class="keyword">for</span> i = 1:numel(w)
+0050     Wsamplingperiod = 1.0 / <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(i), <span class="string">'freq'</span>);
+0051     <span class="comment">% either set to whatever samplingPeriod seconds of data are, or the</span>
+0052     <span class="comment">% length of data if less</span>
+0053     crunchfactor = <a href="min.html" class="code" title="function [Y, I] = min(w)">min</a>([round(samplingPeriod / Wsamplingperiod) numel(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(i),<span class="string">'data'</span>))]);
+0054     wabs = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(i), <span class="string">'data'</span>, <a href="abs.html" class="code" title="function w = abs(w)">abs</a>(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(i),<span class="string">'data'</span>)) );
+0055     wresamp = <a href="resample.html" class="code" title="function w = resample(w,method, crunchfactor)">resample</a>(wabs, method, crunchfactor);
+0056     s(i) = <a href="../../../GISMO/core/@rsam/rsam.html" class="code" title="">rsam</a>(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(wresamp,<span class="string">'timevector'</span>)', <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(wresamp,<span class="string">'data'</span>)', <span class="string">'sta'</span>, <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(wresamp, <span class="string">'station'</span>), <span class="string">'chan'</span>, <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(wresamp, <span class="string">'channel'</span>), <span class="string">'units'</span>, <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(wresamp, <span class="string">'units'</span>), <span class="string">'snum'</span>, <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(wresamp, <span class="string">'start'</span>), <span class="string">'enum'</span>, <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(wresamp, <span class="string">'end'</span>));
+0057 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

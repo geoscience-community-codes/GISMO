@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of vdap</title>
+  <meta name="keywords" content="vdap">
+  <meta name="description" content="readEvents.vdap read Hypoellipse summary files and PHA pickfiles">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">+Catalog</a> &gt; <a href="index.html">+read_catalog</a> &gt; vdap.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+Catalog/+read_catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>vdap
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>readEvents.vdap read Hypoellipse summary files and PHA pickfiles</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function self=vdap(filename) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">readEvents.vdap read Hypoellipse summary files and PHA pickfiles
+   based on Montserrat analog network
+   cObject = read_vdap(filename) will read the catalog file, and create a
+   Catalog object
+
+   Summary file has lines like:
+
+   PHA phase file has lines like:
+   MGHZEP 1 950814071436.76
+   MSPTIPU0 950814071437.96
+   MGATEPU0 950814071437.92                                              00011
+   MLGT PD0 950814071438.09       39.41 S 2
+   MWHTEPD1 950814071437.61       38.78 S 2                              00009
+   1-4: sta code
+   5:   E or I
+   6:   P (or blank)
+   7:   U or D
+   8:   quality 0-4
+  10-24: YYMMDDhhmmss.ii for P
+  31-35: ss.ii for S
+  37:   S (or blank)
+  39:   quality 0-4
+ Glenn Thompson 2014/11/14</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function self=vdap(filename)</a>
+0002 <span class="comment">%readEvents.vdap read Hypoellipse summary files and PHA pickfiles</span>
+0003 <span class="comment">%   based on Montserrat analog network</span>
+0004 <span class="comment">%   cObject = read_vdap(filename) will read the catalog file, and create a</span>
+0005 <span class="comment">%   Catalog object</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%   Summary file has lines like:</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%   PHA phase file has lines like:</span>
+0010 <span class="comment">%   MGHZEP 1 950814071436.76</span>
+0011 <span class="comment">%   MSPTIPU0 950814071437.96</span>
+0012 <span class="comment">%   MGATEPU0 950814071437.92                                              00011</span>
+0013 <span class="comment">%   MLGT PD0 950814071438.09       39.41 S 2</span>
+0014 <span class="comment">%   MWHTEPD1 950814071437.61       38.78 S 2                              00009</span>
+0015 <span class="comment">%   1-4: sta code</span>
+0016 <span class="comment">%   5:   E or I</span>
+0017 <span class="comment">%   6:   P (or blank)</span>
+0018 <span class="comment">%   7:   U or D</span>
+0019 <span class="comment">%   8:   quality 0-4</span>
+0020 <span class="comment">%  10-24: YYMMDDhhmmss.ii for P</span>
+0021 <span class="comment">%  31-35: ss.ii for S</span>
+0022 <span class="comment">%  37:   S (or blank)</span>
+0023 <span class="comment">%  39:   quality 0-4</span>
+0024 <span class="comment">% Glenn Thompson 2014/11/14</span>
+0025 
+0026     <span class="comment">%% read the headers and data</span>
+0027     fid = fopen(phafilename);
+0028     tline = fgetl(fid);
+0029     <span class="keyword">while</span> ischar(tline)
+0030         tline = fgetl(fid);
+0031         stacode = tline(1:4);
+0032         p_eori = tline(5);
+0033         p = tline(6);
+0034         p_uord = tline(7);
+0035         p_qual = tline(8);
+0036         p_datetime = tline(10:24);
+0037         s_datetime = tline(31:35);
+0038         s = tline(37);
+0039         s_qual = tline(39);
+0040     <span class="keyword">end</span>
+0041     fclose(fid);
+0042 
+0043 
+0044 <span class="keyword">end</span>
+0045</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

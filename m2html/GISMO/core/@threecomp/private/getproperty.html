@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getproperty</title>
+  <meta name="keywords" content="getproperty">
+  <meta name="description" content="GETPROPERTY returns a property value from a property list, or a default">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">@threecomp</a> &gt; <a href="index.html">private</a> &gt; getproperty.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@threecomp/private&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>getproperty
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>GETPROPERTY returns a property value from a property list, or a default</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GETPROPERTY returns a property value from a property list, or a default
+  value if none is available
+[isfound, foundvalue, properties] =
+      getproperty(desiredproperty,properties,defaultvalue) 
+
+ returns a property value (if found) from a property list, removing that
+ property pair from the list.  only removes the first encountered property
+ name.
+
+see also waveform/private/parseargs, waveform/private/property2varargin</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@spectralobject/specgram.html" class="code" title="function h = specgram(s, ws, varargin)">specgram</a>	SPECGRAM - plots spectrogram of waveforms</li><li><a href="../../../../GISMO/core/@spectralobject/specgram2.html" class="code" title="function specgram2(s, ws, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li><li><a href="../../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)</a>
+0002 <span class="comment">%GETPROPERTY returns a property value from a property list, or a default</span>
+0003 <span class="comment">%  value if none is available</span>
+0004 <span class="comment">%[isfound, foundvalue, properties] =</span>
+0005 <span class="comment">%      getproperty(desiredproperty,properties,defaultvalue)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% returns a property value (if found) from a property list, removing that</span>
+0008 <span class="comment">% property pair from the list.  only removes the first encountered property</span>
+0009 <span class="comment">% name.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%see also waveform/private/parseargs, waveform/private/property2varargin</span>
+0012 
+0013 pmask = strcmpi(desiredproperty,properties.name);
+0014 isfound = any(pmask);
+0015 <span class="keyword">if</span> isfound
+0016   foundlist = <a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(pmask);
+0017   foundidx = foundlist(1);
+0018   foundvalue = properties.val{foundidx};
+0019   properties.name(foundidx) = [];
+0020   properties.val(foundidx) = [];
+0021 <span class="keyword">else</span>
+0022   <span class="keyword">if</span> exist(<span class="string">'defaultvalue'</span>,<span class="string">'var'</span>)
+0023     foundvalue = defaultvalue;
+0024   <span class="keyword">else</span>
+0025     foundvalue = [];
+0026   <span class="keyword">end</span>
+0027   <span class="comment">% do nothing to properties...</span>
+0028 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

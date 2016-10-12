@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of write</title>
+  <meta name="keywords" content="write">
+  <meta name="description" content="CATALOG.WRITE Write an Catalog object to disk">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@Catalog</a> &gt; write.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@Catalog&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>write
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>CATALOG.WRITE Write an Catalog object to disk</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function write(catalogObject, outformat, outpath, schema) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CATALOG.WRITE Write an Catalog object to disk
+
+ catalogObject.write('antelope', 'mydb', 'css3.0') writes the
+ catalogObject to a CSS3.0 database called 'mydb' using
+ Antelope. Requires Antelope and Antelope Toolbox. Support for
+ aefsam0.1 schema will be added later.
+ 
+ Support for other output formats, e.g. Seisan, will be added
+ later.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="write.html" class="code" title="function write(catalogObject, outformat, outpath, schema)">write</a>	CATALOG.WRITE Write an Catalog object to disk</li><li><a href="../../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>	EPOCH = DATENUM2EPOCH(TIME) translates Matlab numeric</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="write.html" class="code" title="function write(catalogObject, outformat, outpath, schema)">write</a>	CATALOG.WRITE Write an Catalog object to disk</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function write(catalogObject, outformat, outpath, schema)</a>
+0002     <span class="comment">%CATALOG.WRITE Write an Catalog object to disk</span>
+0003     <span class="comment">%</span>
+0004     <span class="comment">% catalogObject.write('antelope', 'mydb', 'css3.0') writes the</span>
+0005     <span class="comment">% catalogObject to a CSS3.0 database called 'mydb' using</span>
+0006     <span class="comment">% Antelope. Requires Antelope and Antelope Toolbox. Support for</span>
+0007     <span class="comment">% aefsam0.1 schema will be added later.</span>
+0008     <span class="comment">%</span>
+0009     <span class="comment">% Support for other output formats, e.g. Seisan, will be added</span>
+0010     <span class="comment">% later.</span>
+0011 
+0012     <span class="comment">% Glenn Thompson, 4 February 2015</span>
+0013 
+0014     <span class="keyword">switch</span> outformat
+0015         <span class="keyword">case</span> {<span class="string">'text'</span>;<span class="string">'csv'</span>;<span class="string">'xls'</span>} <span class="comment">% help table.write for more info</span>
+0016             <a href="write.html" class="code" title="function write(catalogObject, outformat, outpath, schema)">write</a>(catalogObject.table, outpath);
+0017 
+0018         <span class="keyword">case</span> <span class="string">'antelope'</span>
+0019 
+0020 
+0021             <span class="keyword">if</span> admin.antelope_exists
+0022 
+0023                 dbpath = outpath;
+0024 
+0025                 <span class="comment">% create new db</span>
+0026                 <span class="keyword">if</span> ~exist(<span class="string">'schema'</span>,<span class="string">'var'</span>)
+0027                     schema=<span class="string">'css3.0'</span>;
+0028                 <span class="keyword">end</span>
+0029                 antelope.dbcreate(dbpath, schema);
+0030 
+0031                 system(sprintf(<span class="string">'touch %s.event'</span>,dbpath));
+0032                 system(sprintf(<span class="string">'touch %s.origin'</span>,dbpath));
+0033 
+0034                 <span class="comment">% open db</span>
+0035                 db = dbopen(dbpath, <span class="string">'r+'</span>);
+0036                 dbe = dblookup_table(db,<span class="string">'event'</span>);
+0037                 dbo = dblookup_table(db,<span class="string">'origin'</span>);
+0038                 dbn = dblookup_table(db,<span class="string">'netmag'</span>);
+0039 
+0040                 <span class="comment">% write event to event and origin tables</span>
+0041                 <span class="keyword">if</span> numel(catalogObject.otime)&gt;0
+0042                     <span class="keyword">for</span> eventidx = 1:numel(catalogObject.otime)
+0043                         event.evid = dbnextid(dbe,<span class="string">'evid'</span>);
+0044                         origin.orid = dbnextid(dbo,<span class="string">'orid'</span>);
+0045                         origin.time = <a href="../../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>(catalogObject.otime(eventidx));
+0046                         origin.lon = catalogObject.lon(eventidx);
+0047                         origin.lat = catalogObject.lat(eventidx);
+0048                         origin.depth = catalogObject.depth(eventidx);
+0049                         origin.etype = catalogObject.etype{eventidx};
+0050 
+0051                         <span class="comment">% Antelope etype can only be two characters</span>
+0052                         <span class="comment">% Antelope uses 'eq' where IRIS use</span>
+0053                         <span class="comment">% 'earthquake'</span>
+0054                         <span class="keyword">if</span> strcmp(origin.etype,<span class="string">'earthquake'</span>)
+0055                             origin.etype = <span class="string">'eq'</span>;
+0056                         <span class="keyword">else</span>
+0057                             <span class="keyword">if</span> length(origin.etype)&gt;2
+0058                                 origin.etype=origin.etype(1:2);
+0059                             <span class="keyword">end</span>
+0060                         <span class="keyword">end</span>
+0061 
+0062                         netmag.magid = dbnextid(dbn,<span class="string">'magid'</span>);
+0063                         netmag.magtype = catalogObject.magtype{eventidx};
+0064                         netmag.magnitude = catalogObject.mag(eventidx);
+0065 
+0066                         <span class="comment">% Add new record to event table &amp; write to</span>
+0067                         <span class="comment">% it</span>
+0068                         dbe.record = dbaddnull(dbe);
+0069                         dbputv(dbe, <span class="string">'evid'</span>, event.evid, <span class="keyword">...</span>
+0070                             <span class="string">'prefor'</span>, origin.orid);
+0071 
+0072                         <span class="comment">% Add new record to origin table &amp; write to</span>
+0073                         <span class="comment">% it</span>
+0074                         dbo.record = dbaddnull(dbo);
+0075                         dbputv(dbo, <span class="string">'lat'</span>, origin.lat, <span class="keyword">...</span>
+0076                             <span class="string">'lon'</span>, origin.lon, <span class="keyword">...</span>
+0077                             <span class="string">'depth'</span>, origin.depth, <span class="keyword">...</span>
+0078                             <span class="string">'time'</span>, origin.time, <span class="keyword">...</span>
+0079                             <span class="string">'orid'</span>, origin.orid, <span class="keyword">...</span>
+0080                             <span class="string">'evid'</span>, event.evid, <span class="keyword">...</span>
+0081                             <span class="string">'etype'</span>, origin.etype );
+0082 
+0083                         <span class="comment">% Add new record to netmag table &amp; write to</span>
+0084                         <span class="comment">% it</span>
+0085                         dbn.record = dbaddnull(dbn);
+0086                         dbputv(dbn, <span class="string">'magid'</span>, netmag.magid, <span class="keyword">...</span>
+0087                             <span class="string">'orid'</span>, origin.orid, <span class="keyword">...</span>
+0088                             <span class="string">'evid'</span>, event.evid, <span class="keyword">...</span>
+0089                             <span class="string">'magtype'</span>, netmag.magtype, <span class="keyword">...</span>
+0090                             <span class="string">'magnitude'</span>, netmag.magnitude );                               
+0091 
+0092                     <span class="keyword">end</span>
+0093                 <span class="keyword">end</span>
+0094                 dbclose(db);
+0095             <span class="keyword">end</span>
+0096         <span class="keyword">otherwise</span>,
+0097             warning(<span class="string">'format not supported yet'</span>)
+0098     <span class="keyword">end</span> <span class="comment">% end switch</span>
+0099 <span class="keyword">end</span> <span class="comment">% function</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

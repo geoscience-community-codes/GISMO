@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of webmap</title>
+  <meta name="keywords" content="webmap">
+  <meta name="description" content="CATALOG.WEBMAP Plot hypocenters in map view using webmap">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@Catalog</a> &gt; webmap.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@Catalog&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>webmap
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>CATALOG.WEBMAP Plot hypocenters in map view using webmap</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function webmap(catalogObject) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CATALOG.WEBMAP Plot hypocenters in map view using webmap</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="webmap.html" class="code" title="function webmap(catalogObject)">webmap</a>	CATALOG.WEBMAP Plot hypocenters in map view using webmap</li><li><a href="../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>	Purpose:</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="webmap.html" class="code" title="function webmap(catalogObject)">webmap</a>	CATALOG.WEBMAP Plot hypocenters in map view using webmap</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function webmap(catalogObject)</a>
+0002     <span class="comment">%CATALOG.WEBMAP Plot hypocenters in map view using webmap</span>
+0003 
+0004         <span class="comment">% Borrow heavily from Loren Shure/Mathworks 'plotEarthquake' example</span>
+0005 
+0006     <span class="keyword">if</span> all(isnan(catalogObject.lat))
+0007         warning(<span class="string">'No hypocenter data to plot'</span>);
+0008         <span class="keyword">return</span>
+0009     <span class="keyword">end</span>
+0010 
+0011     minmag = nanmin(catalogObject.mag);
+0012     maxmag = nanmax(catalogObject.mag);
+0013     <span class="keyword">if</span> isnan(minmag)
+0014         minmag=0;
+0015     <span class="keyword">end</span>
+0016     <span class="keyword">if</span> isnan(maxmag)
+0017         maxmag=0;
+0018     <span class="keyword">end</span>
+0019     mag = catalogObject.mag;
+0020     mag(isnan(mag))=0;
+0021     <span class="comment">% scale icon color by magnitude</span>
+0022     cm = parula(10);
+0023     iconColor = cm(ceil(1+9*(mag-minmag)/(maxmag-minmag)),:);
+0024     <span class="comment">% Convert quakeTable to geopint vector to add as info for each quake</span>
+0025     p = geopoint(catalogObject.lat, catalogObject.lon);
+0026     <span class="comment">%h1=webmap('Ocean Basemap')</span>
+0027     h1 = <a href="webmap.html" class="code" title="function webmap(catalogObject)">webmap</a>();
+0028     <span class="keyword">for</span> count=1:length(catalogObject.lat)
+0029         desc{count} = sprintf(<span class="string">'Longitude: %f&lt;br/&gt;Latitude: %f&lt;br/&gt;Depth (km): %f&lt;br/&gt;Magnitude: %.1f'</span>, <span class="keyword">...</span>
+0030             catalogObject.lon(count),<span class="keyword">...</span>
+0031             catalogObject.lat(count),<span class="keyword">...</span>
+0032             catalogObject.depth(count),<span class="keyword">...</span>
+0033             catalogObject.mag(count)  );
+0034 
+0035     <span class="keyword">end</span>
+0036 
+0037     iconDir = fullfile(matlabroot,<span class="string">'toolbox'</span>,<span class="string">'matlab'</span>,<span class="string">'icons'</span>);
+0038     iconFilename = fullfile(iconDir, <span class="string">'greencircleicon.gif'</span>);
+0039     wmmarker(p,<span class="string">'OverlayName'</span>,<span class="string">'Event'</span>,<span class="keyword">...</span>
+0040     <span class="string">'Color'</span>,iconColor,<span class="string">'AutoFit'</span>,false,<span class="string">'Icon'</span>, iconFilename,<span class="string">'Description'</span>,desc);
+0041     <span class="comment">% 'FeatureName',names,'Color',iconColor,'AutoFit',false)</span>
+0042 <span class="comment">%             wmzoom(1)</span>
+0043 
+0044 
+0045     <span class="comment">%% Load in plate boundaries</span>
+0046     <span class="comment">% The data reference for plate</span>
+0047     <span class="comment">% boundaries is</span>
+0048     <span class="comment">% http://geoscience.wisc.edu/~chuck/MORVEL/PltBoundaries.html</span>
+0049     <span class="comment">% Citation: Argus, D. F., Gordon, R. G., and DeMets, C., 2011.</span>
+0050     <span class="comment">% Geologically current motion of 56 plates relative to the</span>
+0051     <span class="comment">% no-net-rotation reference frame,</span>
+0052     <span class="comment">% Geochemistry, Geophysics, Geosystems, accepted for publication,</span>
+0053     <span class="comment">% September, 2011.</span>
+0054     <span class="comment">%[lat, lon] = plotEarthquakes.importPlates('All_boundaries.txt');</span>
+0055     <a href="../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a> <a href="Catalog.html" class="code" title="">Catalog</a>/plotEarthquakes/plates.mat
+0056 
+0057     <span class="comment">%% Make array of geopoints from the plate boundaries</span>
+0058     bounds = geopoint(lat,lon);
+0059 
+0060     <span class="comment">%% Draw plate boundaries on map</span>
+0061     <span class="comment">% Center the map on the longitude of largest quake first.</span>
+0062     wmcenter(h1,nanmean(catalogObject.lat),nanmean(catalogObject.lon));
+0063     <span class="keyword">try</span>
+0064     wmline(bounds,<span class="string">'FeatureName'</span>,<span class="string">'Plate Boundaries'</span>,<span class="string">'Color'</span>,<span class="string">'m'</span>,<span class="string">'AutoFit'</span>,false);
+0065     <span class="keyword">end</span>
+0066     <span class="comment">%wmzoom(1)</span>
+0067     snapnow
+0068 
+0069 
+0070 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of search_sst</title>
+  <meta name="keywords" content="search_sst">
+  <meta name="description" content="SEARCH_SST: Function accepts a reference datenum t and a nx2 array of">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">GISMO</a> &gt; <a href="#">deprecated</a> &gt; <a href="../../index.html">@helicorder</a> &gt; <a href="#">private</a> &gt; <a href="index.html">SST</a> &gt; search_sst.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/deprecated/@helicorder/private/SST&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>search_sst
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>SEARCH_SST: Function accepts a reference datenum t and a nx2 array of</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function [N P] = search_sst(t,sst) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SEARCH_SST: Function accepts a reference datenum t and a nx2 array of
+  datenum Start/Stop Times. The SST element containing time t, or the
+  SST element preceding t will be returned in output N, with output P
+  indicating whether the t is inside of sst(N,:), or between sst(N-1,2)
+  and sst(N,1). This function can be used to find a sst element, or locate
+  a place between elements to place a new sst element.
+
+USAGE: [N P] = search_sst(t,sst)
+
+INPUTS: t --&gt; reference time (datenum) to be located
+        sst --&gt; nx2 Start/Stop Time (datenum) array to search in  
+
+OUTPUTS: N --&gt; if P==1, t is inside sst(N,:)
+               if P==0, t is between sst(N-1,2) and sst(N,1)
+         P --&gt; Indicates whether t is inside of, or before sst(N,:)
+               1 --&gt; inside, 0 --&gt; before
+
+ See also <a href="add_sst.html" class="code" title="function sst_out = add_sst(sst_1,sst_2,varargin)">ADD_SST</a>, <a href="chk_t.html" class="code" title="function varargout = chk_t(type,varargin)">CHK_T</a>, <a href="compare_sst.html" class="code" title="function match = compare_sst(sst_1,sst_2)">COMPARE_SST</a>, <a href="delete_sst.html" class="code" title="function sub_sst = delete_sst(sst,t1,t2,edge_mode)">DELETE_SST</a>, <a href="extract_sst.html" class="code" title="function sub_sst = extract_sst(sst,t1,t2,edge_mode)">EXTRACT_SST</a>, <a href="is_sst.html" class="code" title="function bool = is_sst(sst)">IS_SST</a>,
+          <a href="istequal.html" class="code" title="function bool = istequal(t1,t2)">ISTEQUAL</a>, <a href="merge_sst.html" class="code" title="function sst = merge_sst(sst,varargin)">MERGE_SST</a>, <a href="search_sst.html" class="code" title="function [N P] = search_sst(t,sst)">SEARCH_SST</a>, <a href="sort_sst.html" class="code" title="function sst = sort_sst(sst)">SORT_SST</a>, NAN2SST, SSD2SST,
+          SST2NAN, SST2SSD, SST2VAL, SST2WFA, WFA2SST
+
+ Author: Dane Ketner, Alaska Volcano Observatory
+ $Date$
+ $Revision$</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="add_sst.html" class="code" title="function sst_out = add_sst(sst_1,sst_2,varargin)">add_sst</a>	ADD_SST: Combine 2 sets of SST (Event start/stop times)</li><li><a href="delete_sst.html" class="code" title="function sub_sst = delete_sst(sst,t1,t2,edge_mode)">delete_sst</a>	DELETE_SST: Delete event SST (Start/Stop Times) between t1 and t2</li><li><a href="extract_sst.html" class="code" title="function sub_sst = extract_sst(sst,t1,t2,edge_mode)">extract_sst</a>	EXTRACT_SST: Extract event SST (Start/Stop Times) between t1 and t2</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [N P] = search_sst(t,sst)</a>
+0002 
+0003 <span class="comment">%SEARCH_SST: Function accepts a reference datenum t and a nx2 array of</span>
+0004 <span class="comment">%  datenum Start/Stop Times. The SST element containing time t, or the</span>
+0005 <span class="comment">%  SST element preceding t will be returned in output N, with output P</span>
+0006 <span class="comment">%  indicating whether the t is inside of sst(N,:), or between sst(N-1,2)</span>
+0007 <span class="comment">%  and sst(N,1). This function can be used to find a sst element, or locate</span>
+0008 <span class="comment">%  a place between elements to place a new sst element.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%USAGE: [N P] = search_sst(t,sst)</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%INPUTS: t --&gt; reference time (datenum) to be located</span>
+0013 <span class="comment">%        sst --&gt; nx2 Start/Stop Time (datenum) array to search in</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%OUTPUTS: N --&gt; if P==1, t is inside sst(N,:)</span>
+0016 <span class="comment">%               if P==0, t is between sst(N-1,2) and sst(N,1)</span>
+0017 <span class="comment">%         P --&gt; Indicates whether t is inside of, or before sst(N,:)</span>
+0018 <span class="comment">%               1 --&gt; inside, 0 --&gt; before</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% See also ADD_SST, CHK_T, COMPARE_SST, DELETE_SST, EXTRACT_SST, IS_SST,</span>
+0021 <span class="comment">%          ISTEQUAL, MERGE_SST, SEARCH_SST, SORT_SST, NAN2SST, SSD2SST,</span>
+0022 <span class="comment">%          SST2NAN, SST2SSD, SST2VAL, SST2WFA, WFA2SST</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Author: Dane Ketner, Alaska Volcano Observatory</span>
+0025 <span class="comment">% $Date$</span>
+0026 <span class="comment">% $Revision$</span>
+0027 
+0028 <span class="comment">%%</span>
+0029 max_n = size(sst,1);  <span class="comment">% initialize upper search bound</span>
+0030 min_n = 1;            <span class="comment">% initialize lower search bound</span>
+0031 <span class="keyword">if</span> t &lt; sst(1,1)       <span class="comment">% t is before all sst</span>
+0032    N = 1;             <span class="comment">% First sst element: sst(1,:)</span>
+0033    P = 0;             <span class="comment">% Before sst(1,:)</span>
+0034    <span class="keyword">return</span>
+0035 <span class="keyword">elseif</span> t &gt; sst(<span class="keyword">end</span>,2) <span class="comment">% t is after all sst</span>
+0036    N = max_n+1;       <span class="comment">% Use with caution, N here is out of sst bounds</span>
+0037    P = 0;             <span class="comment">% Before sst(end+1,1) --&gt; does not exist</span>
+0038    <span class="keyword">return</span>
+0039 <span class="keyword">end</span>
+0040 
+0041 <span class="comment">%%</span>
+0042 N = 0;
+0043 <span class="keyword">while</span> N == 0
+0044    mid_n = ceil(min_n+(max_n-min_n)/2); <span class="comment">% Move mid_n to middle of range</span>
+0045    <span class="keyword">if</span> t &gt;= sst(mid_n,1)
+0046       <span class="keyword">if</span> t &lt;= sst(mid_n,2)
+0047          N = mid_n;       <span class="comment">% Found t inside sst(N,:)</span>
+0048          P = 1;           <span class="comment">% Indicates t is inside 1 sst</span>
+0049       <span class="keyword">elseif</span> t &lt; sst(mid_n+1,1)
+0050          N = mid_n+1;     <span class="comment">% Found t between sst(N,2) and sst(N+1,1)</span>
+0051          P = 0;           <span class="comment">% Indicates t is between 2 sst</span>
+0052       <span class="keyword">else</span>
+0053          min_n = mid_n+1; <span class="comment">% Adjust lower search bound</span>
+0054       <span class="keyword">end</span>
+0055    <span class="keyword">else</span>
+0056       max_n = mid_n-1;    <span class="comment">% Adjust upper search bound</span>
+0057    <span class="keyword">end</span>      
+0058 <span class="keyword">end</span>
+0059 
+0060 <span class="comment">%% If there exist multiple overlapping sst elements, find the very first</span>
+0061 <span class="comment">%  sst element that contains time t, and return refernce N for this element</span>
+0062 <span class="keyword">if</span> P == 1
+0063    first = 0;
+0064    <span class="keyword">while</span> first == 0
+0065       <span class="keyword">if</span> N &gt; 1
+0066          <span class="keyword">if</span> t &gt;= sst(N-1,1) &amp;&amp; t &lt;= sst(N-1,2)
+0067             N = N-1;
+0068          <span class="keyword">else</span>
+0069             first = 1;
+0070          <span class="keyword">end</span>
+0071       <span class="keyword">else</span>
+0072          first = 1;
+0073       <span class="keyword">end</span>
+0074    <span class="keyword">end</span>
+0075 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getclusterstat</title>
+  <meta name="keywords" content="getclusterstat">
+  <meta name="description" content="GETCLUSTERSTAT gets detais of individual correlation clusters.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; getclusterstat.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>getclusterstat
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>GETCLUSTERSTAT gets detais of individual correlation clusters.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function family=getclusterstat(c) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">GETCLUSTERSTAT gets detais of individual correlation clusters.
+ family = GETCLUSTERSTAT(C) outputs a structure FAMILY which contains
+ pertinent details of clusters that exist in C. This is a simple routine
+ that assumes all cluster calculation has already been done. Note that in
+ many cases it may be more appropriate to get the direct CLUST field from
+ a correlation object. In some cases however, GETCLUSTERSTAT may be more
+ expedient. The FAMILY structure includes the fields:
+   rank:    size order of the cluster (scalar)
+   numel:   number of events in the cluster (scalar)
+   index:   the index of the cluster events in the correlation object(Nx1)
+   trig:    trigger times of the cluster events (Nx1)
+   begin:   the eariest trigger time in the cluster (scalar)
+   finish:  the last trigger time in the cluster (scalar)
+ The fields index and trig are cell arrays.
+
+ See also correlation/cluster</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/subset.html" class="code" title="function catalogObject2 = subset(catalogObject, indices)">subset</a>	CATALOG.SUBSET Create a new catalogObject by subsetting based</li><li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/@correlation/subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/contributed/correlation_derived/corrderived_plot_swarm_history.html" class="code" title="function corrderived_plot_swarm_history(c,varargin)">corrderived_plot_swarm_history</a>	CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms</li><li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function family=getclusterstat(c)</a>
+0002    
+0003    <span class="comment">%GETCLUSTERSTAT gets detais of individual correlation clusters.</span>
+0004    <span class="comment">% family = GETCLUSTERSTAT(C) outputs a structure FAMILY which contains</span>
+0005    <span class="comment">% pertinent details of clusters that exist in C. This is a simple routine</span>
+0006    <span class="comment">% that assumes all cluster calculation has already been done. Note that in</span>
+0007    <span class="comment">% many cases it may be more appropriate to get the direct CLUST field from</span>
+0008    <span class="comment">% a correlation object. In some cases however, GETCLUSTERSTAT may be more</span>
+0009    <span class="comment">% expedient. The FAMILY structure includes the fields:</span>
+0010    <span class="comment">%   rank:    size order of the cluster (scalar)</span>
+0011    <span class="comment">%   numel:   number of events in the cluster (scalar)</span>
+0012    <span class="comment">%   index:   the index of the cluster events in the correlation object(Nx1)</span>
+0013    <span class="comment">%   trig:    trigger times of the cluster events (Nx1)</span>
+0014    <span class="comment">%   begin:   the eariest trigger time in the cluster (scalar)</span>
+0015    <span class="comment">%   finish:  the last trigger time in the cluster (scalar)</span>
+0016    <span class="comment">% The fields index and trig are cell arrays.</span>
+0017    <span class="comment">%</span>
+0018    <span class="comment">% See also correlation/cluster</span>
+0019    
+0020    <span class="comment">% AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0021    <span class="comment">% $Date$</span>
+0022    <span class="comment">% $Revision$</span>
+0023    
+0024    <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(c.clust)
+0025       error(<span class="string">'CLUSTER field must be filled in input argument. See HELP CLUSTER'</span>);
+0026    <span class="keyword">end</span>
+0027    
+0028    
+0029    <span class="keyword">for</span> n = 1:<a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(c.clust)
+0030       f = <a href="find.html" class="code" title="function index = find(c, type, value)">find</a>(c,<span class="string">'CLUST'</span>,n);
+0031       c1 = <a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>(c,f);
+0032       family.rank(n) = n;
+0033       family.numel(n) = numel(f);
+0034       family.index(n) = {f};
+0035       family.begin(n) = <a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(c1.trig);
+0036       family.finish(n) = <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(c1.trig);
+0037       family.trig(n) = {c1.trig};
+0038    <span class="keyword">end</span>
+0039    
+0040 <span class="keyword">end</span>
+0041 
+0042</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,505 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of oneMinuteData</title>
+  <meta name="keywords" content="oneMinuteData">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@rsam</a> &gt; oneMinuteData.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@rsam&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>oneMinuteData
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="oneMinuteData.html" class="code" title="">oneMinuteData</a>	</li><li><a href="plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="plotyy.html" class="code" title="function plotyy(obj1, obj2, varargin)">plotyy</a>	</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>	ADDFIELD add fields and values to waveform object(s)                V1.1</li><li><a href="../../../GISMO/core/@waveform/diff.html" class="code" title="function w = diff (w)">diff</a>	DIFF Differentiate waveform</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>	MEDIAN middlemost value of waveform's sorted data.</li><li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>	STD Standard deviation of a waveform</li><li><a href="../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="oneMinuteData.html" class="code" title="">oneMinuteData</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self=oneMinuteData(varargin)</a></li><li><a href="#_sub2" class="code">function fs = Fs(self)</a></li><li><a href="#_sub3" class="code">function s=subset(self, snum, enum)</a></li><li><a href="#_sub4" class="code">function toTextFile(self, filepath)</a></li><li><a href="#_sub5" class="code">function scrollplot(s)</a></li><li><a href="#_sub6" class="code">function plotyy(obj1, obj2, varargin)</a></li><li><a href="#_sub7" class="code">function save(self, file)</a></li><li><a href="#_sub8" class="code">function self = resample(self, varargin)</a></li><li><a href="#_sub9" class="code">function self = save2wfmeastable(self, dbname)</a></li><li><a href="#_sub10" class="code">function w=toWaveform(self)</a></li><li><a href="#_sub11" class="code">function self = loadwfmeastable(sta, chan, snum, enum, measure, dbname)</a></li><li><a href="#_sub12" class="code">function makebobfile(outfile, days);</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="oneMinuteData.html" class="code" title="">oneMinuteData</a>
+0002 <span class="comment">% oneMinuteData Class constructor for generic data sampled once per minute.</span>
+0003 <span class="comment">% This might not be amplitude data - it could be energy or frequency too -</span>
+0004 <span class="comment">% or perhaps a metric like cumulative magnitude, or frequency index.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% s = oneMinuteData() creates an empty oneMinuteData object.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Optional name/value pairs:</span>
+0009 <span class="comment">%   DNUM:   a vector of MATLAB datenum's</span>
+0010 <span class="comment">%   DATA:   a vector of data (same size as DNUM)</span>
+0011 <span class="comment">%   STA:    station</span>
+0012 <span class="comment">%   CHAN:   channel</span>
+0013 <span class="comment">%   MEASURE:    a string describing the statistic used to compute the</span>
+0014 <span class="comment">%               data, e.g. &quot;mean&quot;, &quot;max&quot;, &quot;std&quot;, &quot;rms&quot;, &quot;meanf&quot;, &quot;peakf&quot;,</span>
+0015 <span class="comment">%               &quot;energy&quot;, default is 'mean' which indicates</span>
+0016 <span class="comment">%               that each 1 minute sample is the mean of a 60-s seismogram</span>
+0017 <span class="comment">%   SEISMOGRAM_TYPE: a string describing whether the data were computed</span>
+0018 <span class="comment">%                    from &quot;raw&quot; seismogram, &quot;velocity&quot;, &quot;displacement&quot;.</span>
+0019 <span class="comment">%                    default is 'raw'.</span>
+0020 <span class="comment">%   UNITS:  the units of the data, used to label the y-axis, e.g. nm / sec,</span>
+0021 <span class="comment">%                   'nm/s' or 'nm' or 'cm2', default is 'counts'</span>
+0022 <span class="comment">% Examples:</span>
+0023 <span class="comment">%     s = oneMinuteData('dnum', dnum, 'data', data, 'sta', 'MBWH', 'chan', 'SHZ')</span>
+0024 
+0025 <span class="comment">% AUTHOR: Glenn Thompson, Montserrat Volcano Observatory</span>
+0026 <span class="comment">% $Date: $</span>
+0027 <span class="comment">% $Revision: $</span>
+0028 
+0029     properties(Access = public)
+0030         dnum = [];
+0031         data = []; 
+0032         measure = <span class="string">'mean'</span>;
+0033         seismogram_type = <span class="string">'raw'</span>;
+0034         units = <span class="string">'counts'</span>;
+0035         sta = <span class="string">''</span>
+0036         chan = <span class="string">''</span>
+0037         snum = -Inf;
+0038         enum = Inf;
+0039     <span class="keyword">end</span>
+0040     
+0041     methods(Access = public)
+0042 
+0043        <a name="_sub0" href="#_subfunctions" class="code">function self=oneMinuteData(varargin)</a>
+0044           
+0045           p = inputParser;
+0046           p.addParameter(<span class="string">'dnum'</span>,[]);
+0047           p.addParameter(<span class="string">'data'</span>,[]);
+0048           classFields = {<span class="string">'sta'</span>,<span class="string">'chan'</span>,<span class="string">'measure'</span>,<span class="string">'seismogram_type'</span>,<span class="string">'units'</span>};
+0049           <span class="keyword">for</span> n=1:numel(classFields)
+0050              p.addParameter(classFields{n}, self.(classFields{n}));
+0051           <span class="keyword">end</span>
+0052           p.parse(varargin{:});
+0053           
+0054           <span class="comment">% modify class values based on user-provided values</span>
+0055           <span class="keyword">for</span> n = 1:numel(classFields)
+0056              self.(classFields{n}) = p.Results.(classFields{n});
+0057           <span class="keyword">end</span>
+0058           self.dnum = p.Results.dnum;
+0059           self.data = p.Results.data;
+0060           self.snum = <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(self.dnum);
+0061           self.enum = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(self.dnum);
+0062        <span class="keyword">end</span>
+0063 
+0064 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0065         <a name="_sub1" href="#_subfunctions" class="code">function fs = Fs(self) </a><span class="comment">% check the sampling frequency</span>
+0066             l = length(self.dnum);
+0067             s = self.dnum(2:l) - self.dnum(1:l-1);
+0068             fs = 1.0/(<a href="../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>(s)*86400);
+0069         <span class="keyword">end</span>
+0070 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0071         <a name="_sub2" href="#_subfunctions" class="code">function s=subset(self, snum, enum)</a>
+0072             s = self;
+0073             i = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(self.dnum&gt;=snum &amp; self.dnum &lt;= enum);
+0074             s.dnum = self.dnum(i);
+0075             s.data = self.data(i);
+0076         <span class="keyword">end</span>
+0077 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0078         <a name="_sub3" href="#_subfunctions" class="code">function toTextFile(self, filepath)</a>
+0079            <span class="comment">% toTextFile(filepath);</span>
+0080             <span class="comment">%</span>
+0081             fout=fopen(filepath, <span class="string">'w'</span>);
+0082             <span class="keyword">for</span> c=1:length(self.dnum)
+0083                 fprintf(fout, <span class="string">'%15.8f\t%s\t%5.3e\n'</span>,self.dnum(c),datestr(self.dnum(c),<span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>),self.data(c));
+0084             <span class="keyword">end</span>
+0085             fclose(fout);
+0086         <span class="keyword">end</span>
+0087 <span class="comment">%</span>
+0088         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0089         <a name="_sub4" href="#_subfunctions" class="code">function scrollplot(s)</a>
+0090 
+0091             <span class="comment">% Created by Steven Lord, slord@mathworks.com</span>
+0092             <span class="comment">% Uploaded to MATLAB Central</span>
+0093             <span class="comment">% http://www.mathworks.com/matlabcentral</span>
+0094             <span class="comment">% 7 May 2002</span>
+0095             <span class="comment">%</span>
+0096             <span class="comment">% Permission is granted to adapt this code for your own use.</span>
+0097             <span class="comment">% However, if it is reposted this message must be intact.</span>
+0098 
+0099             <span class="comment">% Generate and plot data</span>
+0100             x=s.dnum();
+0101             y=s.data();
+0102             dx=1;
+0103             <span class="comment">%% dx is the width of the axis 'window'</span>
+0104             a=gca;
+0105             p=<a href="plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>(x,y);
+0106 
+0107             <span class="comment">% Set appropriate axis limits and settings</span>
+0108             <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gcf,<span class="string">'doublebuffer'</span>,<span class="string">'on'</span>);
+0109             <span class="comment">%% This avoids flickering when updating the axis</span>
+0110             <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(a,<span class="string">'xlim'</span>,[<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(x) <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(x)+dx]);
+0111             <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(a,<span class="string">'ylim'</span>,[<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(y) <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(y)]);
+0112 
+0113             <span class="comment">% Generate constants for use in uicontrol initialization</span>
+0114             pos=<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(a,<span class="string">'position'</span>);
+0115             Newpos=[pos(1) pos(2)-0.1 pos(3) 0.05];
+0116             <span class="comment">%% This will create a slider which is just underneath the axis</span>
+0117             <span class="comment">%% but still leaves room for the axis labels above the slider</span>
+0118             xmax=<a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(x);
+0119             xmin=<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(x);
+0120             xmin=0;
+0121             <span class="comment">%gs = get(gcbo,'value')+[min(x) min(x)+dx]</span>
+0122             S=sprintf(<span class="string">'set(gca,''xlim'',get(gcbo,''value'')+[%f %f])'</span>,[xmin xmin+dx])
+0123             <span class="comment">%% Setting up callback string to modify XLim of axis (gca)</span>
+0124             <span class="comment">%% based on the position of the slider (gcbo)</span>
+0125             <span class="comment">% Creating Uicontrol</span>
+0126             h=uicontrol(<span class="string">'style'</span>,<span class="string">'slider'</span>,<span class="keyword">...</span>
+0127                 <span class="string">'units'</span>,<span class="string">'normalized'</span>,<span class="string">'position'</span>,Newpos,<span class="keyword">...</span>
+0128                 <span class="string">'callback'</span>,S,<span class="string">'min'</span>,xmin,<span class="string">'max'</span>,xmax-dx);
+0129                 <span class="comment">%'callback',S,'min',0,'max',xmax-dx);</span>
+0130         <span class="keyword">end</span>
+0131 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0132 <a name="_sub5" href="#_subfunctions" class="code">function plotyy(obj1, obj2, varargin)</a>
+0133    <span class="comment">%</span>
+0134    
+0135    <span class="comment">% NOTE: this function is Exactly the same as rsam.plotyy</span>
+0136            p = inputParser;
+0137            p.addParameter(<span class="string">'snum'</span>,<a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>([obj1.dnum(1) obj2.dnum(1)]));
+0138            p.addParameter(<span class="string">'enum'</span>, <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([obj1.dnum(end) obj2.dnum(end)]));
+0139            p.addParameter(<span class="string">'fun1'</span>,<span class="string">'plot'</span>);
+0140            p.addParameter(<span class="string">'fun2'</span>,<span class="string">'plot'</span>);
+0141            p.parse(varargin{:});
+0142            Args = p.Results;
+0143   
+0144             [ax, ~, ~] = <a href="plotyy.html" class="code" title="function plotyy(obj1, obj2, varargin)">plotyy</a>(obj1.dnum, obj1.data, obj2.dnum, obj2.data, Args.fun1, Args.fun2);
+0145             datetick(<span class="string">'x'</span>);
+0146             <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax(2), <span class="string">'XTick'</span>, [], <span class="string">'XTickLabel'</span>, {});
+0147             <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax(1), <span class="string">'XLim'</span>, [Args.snum Args.enum]);
+0148 <span class="keyword">end</span>
+0149 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0150         <a name="_sub6" href="#_subfunctions" class="code">function save(self, file)</a>
+0151             dnum = self.dnum;
+0152             data = self.data;
+0153             
+0154             <span class="comment">% substitute for station</span>
+0155             file = regexprep(file, <span class="string">'SSSS'</span>, self.sta);
+0156             
+0157             <span class="comment">% substitute for channel</span>
+0158             file = regexprep(file, <span class="string">'CCC'</span>, self.chan);
+0159             
+0160             <span class="comment">% substitute for measure</span>
+0161             file = regexprep(file, <span class="string">'MMMM'</span>, self.measure);             
+0162                 
+0163             <span class="comment">% since dnum may not be ordered and contiguous, this function</span>
+0164             <span class="comment">% should write data based on dnum only</span>
+0165             
+0166             <span class="keyword">if</span> length(dnum)~=length(data)
+0167                     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(sprintf(<span class="string">'%s: Cannot save to %s because data and time vectors are different lengths'</span>,mfilename,filename));
+0168                     size(dnum)
+0169                     size(data)
+0170                     <span class="keyword">return</span>;
+0171             <span class="keyword">end</span>
+0172 
+0173             <span class="keyword">if</span> length(data)&lt;1
+0174                     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'No data. Aborting'</span>);
+0175                 <span class="keyword">return</span>;
+0176             <span class="keyword">end</span>
+0177             
+0178             <span class="comment">% filename</span>
+0179 
+0180             <span class="comment">% set start year and month, and end year and month</span>
+0181             [yyyy sm]=datevec(self.snum);
+0182             [eyyy em]=datevec(self.enum);
+0183             
+0184             <span class="keyword">if</span> yyyy~=eyyy
+0185                 error(<span class="string">'can only save RSAM data to BOB file if all data within 1 year'</span>);
+0186             <span class="keyword">end</span> 
+0187             
+0188             <span class="comment">% how many days in this year?</span>
+0189             daysperyear = 365;
+0190             <span class="keyword">if</span> (mod(yyyy,4)==0)
+0191                     daysperyear = 366;
+0192             <span class="keyword">end</span>
+0193             
+0194             <span class="comment">% Substitute for year</span>
+0195             fname = regexprep(file, <span class="string">'YYYY'</span>, sprintf(<span class="string">'%04d'</span>,yyyy) );
+0196             fprintf(<span class="string">'Looking for file: %s\n'</span>,fname);
+0197 
+0198             <span class="keyword">if</span> ~exist(fname,<span class="string">'file'</span>)
+0199                     debug.print_debug([<span class="string">'Creating '</span>,fname],2)
+0200                     oneMinuteData.makebobfile(fname, daysperyear);
+0201             <span class="keyword">end</span>            
+0202 
+0203             datapointsperday = 1440;
+0204 
+0205             <span class="comment">% round times to minute</span>
+0206             dnum = round((dnum-1/86400) * 1440) / 1440;
+0207 
+0208             <span class="comment">% find the next contiguous block of data</span>
+0209             <a href="../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>=dnum(2:end) - dnum(1:end-1);
+0210             i = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(<a href="../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a> &gt; 1.5/1440 | <a href="../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a> &lt; 0.5/1440);        
+0211 
+0212             <span class="keyword">if</span> length(i)&gt;0
+0213                 <span class="comment">% slow mode</span>
+0214 
+0215                 <span class="keyword">for</span> c=1:length(dnum)
+0216 
+0217                     <span class="comment">% write the data</span>
+0218                     startsample = round((dnum(c) - datenum(yyyy,1,1)) * datapointsperday);
+0219                     offset = startsample*4;
+0220                     fid = fopen(fname,<span class="string">'r+'</span>);
+0221                     fseek(fid,offset,<span class="string">'bof'</span>);
+0222                     debug.print_debug(sprintf(<span class="string">'saving to %s, position %d'</span>,fname,startsample),3)
+0223                     fwrite(fid,data(c),<span class="string">'float32'</span>);
+0224                     fclose(fid);
+0225                 <span class="keyword">end</span>
+0226             <span class="keyword">else</span>
+0227                 <span class="comment">% fast mode</span>
+0228 
+0229                 <span class="comment">% write the data</span>
+0230                 startsample = round((dnum(1) - datenum(yyyy,1,1)) * datapointsperday);
+0231                 offset = startsample*4;
+0232                 fid = fopen(fname,<span class="string">'r+'</span>,<span class="string">'l'</span>); <span class="comment">% little-endian. Anything written on a PC is little-endian by default. Sun is big-endian.</span>
+0233                 fseek(fid,offset,<span class="string">'bof'</span>);
+0234                 debug.print_debug(sprintf(<span class="string">'saving to %s, position %d of %d'</span>,fname,startsample,(datapointsperday*daysperyear)),3)
+0235                 fwrite(fid,data,<span class="string">'float32'</span>);
+0236                 fclose(fid);
+0237             <span class="keyword">end</span>
+0238         <span class="keyword">end</span>
+0239 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0240         <a name="_sub7" href="#_subfunctions" class="code">function self = resample(self, varargin)</a>
+0241         <span class="comment">%RESAMPLE resamples a oneMinuteData object at over every specified crunchfactor</span>
+0242         <span class="comment">%   oneMinuteDataobject2 = oneMinuteDataobject.resample('method', method, 'factor', crunchfactor)</span>
+0243         <span class="comment">%  or</span>
+0244         <span class="comment">%   oneMinuteDataobject2 = oneMinuteDataobject.resample(method, 'minutes', minutes)</span>
+0245         <span class="comment">%</span>
+0246         <span class="comment">%   Input Arguments</span>
+0247         <span class="comment">%       oneMinuteDataobject: oneMinuteData object       N-dimensional</span>
+0248         <span class="comment">%</span>
+0249         <span class="comment">%       METHOD: which method of sampling to perform within each sample</span>
+0250         <span class="comment">%                window</span>
+0251         <span class="comment">%           'max' : maximum value</span>
+0252         <span class="comment">%           'min' : minimum value</span>
+0253         <span class="comment">%           'mean': average value</span>
+0254         <span class="comment">%           'median' : mean value</span>
+0255         <span class="comment">%           'rms' : rms value (added 2011/06/01)</span>
+0256         <span class="comment">%           'absmax': absolute maximum value (greatest deviation from zero)</span>
+0257         <span class="comment">%           'absmin': absolute minimum value (smallest deviation from zero)</span>
+0258         <span class="comment">%           'absmean' : mean deviation from zero (added 2011/06/01)</span>
+0259         <span class="comment">%           'absmedian' : median deviation from zero (added 2011/06/01)</span>
+0260         <span class="comment">%           'builtin': Use MATLAB's built in resample routine</span>
+0261         <span class="comment">%</span>
+0262         <span class="comment">%       CRUNCHFACTOR : the number of samples making up the sample window</span>
+0263         <span class="comment">%       MINUTES:       downsample to this sample period</span>
+0264         <span class="comment">%       (CRUNCHFACTOR will be calculated internally)</span>
+0265         <span class="comment">%</span>
+0266         <span class="comment">% Examples:</span>
+0267         <span class="comment">%   oneMinuteDataobject.resample('method', 'mean')</span>
+0268         <span class="comment">%       Downsample the oneMinuteData object with an automatically determined</span>
+0269         <span class="comment">%           sampling period based on timeseries length.</span>
+0270         <span class="comment">%   oneMinuteDataobject.resample('method', 'max', 'factor', 5) grab the max value of every 5</span>
+0271         <span class="comment">%       samples and return that in a waveform of adjusted frequency. The output</span>
+0272         <span class="comment">%       oneMinuteData object will have 1/5th of the samples, e.g. from 1</span>
+0273         <span class="comment">%       minute sampling to 5 minutes.</span>
+0274         <span class="comment">%   oneMinuteDataobject.resample('method', 'max', 'minutes', 10) downsample the data at</span>
+0275         <span class="comment">%       10 minute sample period</span>
+0276         <span class="comment">%</span>
+0277         <span class="comment">%</span>
+0278 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0279             
+0280             <span class="keyword">persistent</span> STATS_INSTALLED;
+0281 
+0282             <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(STATS_INSTALLED)
+0283               STATS_INSTALLED = ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(ver(<span class="string">'stats'</span>));
+0284             <span class="keyword">end</span>
+0285 
+0286             hasIntegerValue = @(x) round(x) == x;  <span class="comment">%can be used to validate parameter</span>
+0287             
+0288             <span class="comment">% NOTE: This parameter combo also exists in rsam/resample</span>
+0289             p = inputParser;
+0290             p.addParameter(<span class="string">'method'</span>,self.measure);
+0291             p.addParameter(<span class="string">'factor'</span>, 0); <span class="comment">% crunchfactor</span>
+0292             p.addParameter(<span class="string">'minutes'</span>, 0);
+0293             
+0294             p.parse(varargin{:});
+0295             
+0296             crunchfactor = p.Results.factor;
+0297             method = p.Results.method;
+0298             minutes = p.Results.minutes;
+0299             
+0300             <span class="keyword">if</span> ~(hasIntegerValue(crunchfactor)) 
+0301                 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a> (<span class="string">'crunchfactor needs to be an integer'</span>);
+0302                 <span class="keyword">return</span>;
+0303             <span class="keyword">end</span>
+0304 
+0305             <span class="keyword">for</span> i=1:numel(self)
+0306                 samplingIntervalMinutes = 1.0 / (60 * self(i).Fs());
+0307                 <span class="keyword">if</span> crunchfactor==0 &amp; minutes==0 <span class="comment">% choose automatically</span>
+0308                     choices = [1 2 5 10 30 60 120 240 360 ];
+0309                     days = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(self(i).dnum) - <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(self(i).dnum);
+0310                     choice=<a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(days &gt; choices));
+0311                     minutes=choices(choice);
+0312                 <span class="keyword">end</span>
+0313 
+0314                 <span class="keyword">if</span> minutes &gt; samplingIntervalMinutes
+0315                     crunchfactor = round(minutes / samplingIntervalMinutes);
+0316                 <span class="keyword">end</span>
+0317 
+0318                 <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(method)
+0319                     method = <span class="string">'mean'</span>;
+0320                 <span class="keyword">end</span>
+0321                 
+0322                 <span class="keyword">if</span> crunchfactor &gt; 1
+0323                     debug.print_debug(sprintf(<span class="string">'Changing sampling interval to %d'</span>, minutes),3)
+0324                 
+0325                     rowcount = ceil(length(self(i).data) / crunchfactor);
+0326                     maxcount = rowcount * crunchfactor;
+0327                     <span class="keyword">if</span> length(self(i).data) &lt; maxcount
+0328                         self(i).dnum(end+1:maxcount) = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(self(i).dnum((rowcount-1)*maxcount : end)); <span class="comment">%pad it with the avg value</span>
+0329                         self(i).data(end+1:maxcount) = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(self(i).data((rowcount-1)*maxcount : end)); <span class="comment">%pad it with the avg value</span>
+0330                     <span class="keyword">end</span>
+0331                     d = reshape(self(i).data,crunchfactor,rowcount); <span class="comment">% produces ( crunchfactor x rowcount) matrix</span>
+0332                     t = reshape(self(i).dnum,crunchfactor,rowcount);
+0333                     self(i).dnum = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(t, 1);
+0334                     <span class="keyword">switch</span> upper(method)
+0335 
+0336                         <span class="keyword">case</span> <span class="string">'MAX'</span>
+0337                             <span class="keyword">if</span> STATS_INSTALLED
+0338                                         self(i).data = nanmax(d, [], 1);
+0339                             <span class="keyword">else</span>
+0340                                         self(i).data = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(d, [], 1);
+0341                             <span class="keyword">end</span>
+0342 
+0343                         <span class="keyword">case</span> <span class="string">'MIN'</span>
+0344                             <span class="keyword">if</span> STATS_INSTALLED
+0345                                         self(i).data = nanmin(d, [], 1);
+0346                             <span class="keyword">else</span>
+0347                                         self(i).data = <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(d, [], 1);
+0348                             <span class="keyword">end</span>
+0349 
+0350                         <span class="keyword">case</span> <span class="string">'MEAN'</span>
+0351                             <span class="keyword">if</span> STATS_INSTALLED
+0352                                         self(i).data = nanmean(d, 1);
+0353                             <span class="keyword">else</span>
+0354                                         self(i).data = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(d, 1);
+0355                             <span class="keyword">end</span>
+0356 
+0357                         <span class="keyword">case</span> <span class="string">'MEDIAN'</span>
+0358                             <span class="keyword">if</span> STATS_INSTALLED
+0359                                         self(i).data = nanmedian(d, 1);
+0360                             <span class="keyword">else</span>
+0361                                         self(i).data = <a href="../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>(d, 1);
+0362                             <span class="keyword">end</span>
+0363 
+0364                         <span class="keyword">case</span> <span class="string">'RMS'</span>
+0365                             <span class="keyword">if</span> STATS_INSTALLED
+0366                                         self(i).data = nanstd(d, [], 1);
+0367                             <span class="keyword">else</span>
+0368                                         self(i).data = <a href="../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>(d, [], 1);
+0369                             <span class="keyword">end</span>
+0370 
+0371                         <span class="keyword">case</span> <span class="string">'ABSMAX'</span>
+0372                             <span class="keyword">if</span> STATS_INSTALLED
+0373                                         self(i).data = nanmax(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d),[],1);
+0374                             <span class="keyword">else</span>
+0375                                         self(i).data = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d),[],1);
+0376                             <span class="keyword">end</span>
+0377 
+0378 
+0379                         <span class="keyword">case</span> <span class="string">'ABSMIN'</span>
+0380                             <span class="keyword">if</span> STATS_INSTALLED
+0381                                         self(i).data = nanmin(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d),[],1);
+0382                             <span class="keyword">else</span>    
+0383                                         self(i).data = <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d),[],1);
+0384                             <span class="keyword">end</span>
+0385 
+0386                         <span class="keyword">case</span> <span class="string">'ABSMEAN'</span>
+0387                             <span class="keyword">if</span> STATS_INSTALLED
+0388                                         self(i).data = nanmean(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d), 1);
+0389                             <span class="keyword">else</span>
+0390                                         self(i).data = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d), 1);
+0391                             <span class="keyword">end</span>
+0392 
+0393                         <span class="keyword">case</span> <span class="string">'ABSMEDIAN'</span>
+0394                             <span class="keyword">if</span> STATS_INSTALLED
+0395                                         self(i).data = nanmedian(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d), 1);
+0396                             <span class="keyword">else</span>
+0397                                         self(i).data = <a href="../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d), 1);
+0398                             <span class="keyword">end</span> 
+0399 
+0400                         <span class="keyword">otherwise</span>
+0401                             error(<span class="string">'oneMinuteData:resample:UnknownResampleMethod'</span>,<span class="keyword">...</span>
+0402                               <span class="string">'Don''t know what you mean by resample via %s'</span>, method);
+0403 
+0404                     <span class="keyword">end</span>
+0405                     self(i).measure = method;
+0406                 <span class="keyword">end</span>
+0407             <span class="keyword">end</span>  
+0408         <span class="keyword">end</span>
+0409 
+0410 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0411         <a name="_sub8" href="#_subfunctions" class="code">function self = save2wfmeastable(self, dbname) </a>
+0412         <span class="comment">% add save2wfmeas here</span>
+0413             datascopegt.save2wfmeas(self.scnl, self.dnum, self.data, self.measure, self.units, dbname);
+0414         <span class="keyword">end</span>
+0415 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0416         <a name="_sub9" href="#_subfunctions" class="code">function w=toWaveform(self) </a>
+0417             <span class="comment">% oneMinuteData.toWaveform() Create a Waveform Object from a</span>
+0418             <span class="comment">% oneMinuteData object. Use with caution!</span>
+0419             w = <a href="../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0420             w = <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w, <span class="string">'station'</span>, self.sta);
+0421             w = <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w, <span class="string">'channel'</span>, self.chan);
+0422             w = <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w, <span class="string">'units'</span>, self.units);
+0423             w = <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w, <span class="string">'data'</span>, self.data);
+0424             w = <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w, <span class="string">'start'</span>, self.snum);
+0425             <span class="comment">%w = set(w, 'end', self.enum);</span>
+0426             w = <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w, <span class="string">'freq'</span>, self.Fs());
+0427             w = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w, <span class="string">'measure'</span>, self.measure);
+0428         <span class="keyword">end</span>        
+0429     <span class="keyword">end</span> <span class="comment">% end of methods</span>
+0430 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0431     <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% FILE LOAD AND SAVE FUNCTIONS %%%%%%%%%%%%%%%%%%%%%%%</span>
+0432     methods(Access = public, Static)
+0433 
+0434        <a name="_sub10" href="#_subfunctions" class="code">function self = loadwfmeastable(sta, chan, snum, enum, measure, dbname)</a>
+0435             self = <a href="oneMinuteData.html" class="code" title="">oneMinuteData</a>();
+0436             [data, dnum, datafound, units] = datascopegt.load_wfmeas(station, snum, enum, measure, dbname);
+0437             self.dnum = dnum;
+0438             self.data = data;
+0439             self.measure = measure;
+0440             self.units = units;
+0441         <span class="keyword">end</span>
+0442 
+0443         <a name="_sub11" href="#_subfunctions" class="code">function makebobfile(outfile, days);</a>
+0444             <span class="comment">% makebobfile(outfile, days);</span>
+0445             datapointsperday = 1440;
+0446             samplesperyear = days*datapointsperday;
+0447             a = zeros(samplesperyear,1);
+0448             fid = fopen(outfile,<span class="string">'w'</span>);
+0449             fwrite(fid,a,<span class="string">'float32'</span>);
+0450             fclose(fid);
+0451         <span class="keyword">end</span> 
+0452 
+0453     <span class="keyword">end</span> <span class="comment">% methods</span>
+0454 
+0455 <span class="keyword">end</span> <span class="comment">% classdef</span>
+0456</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

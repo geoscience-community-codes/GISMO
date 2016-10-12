@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of clip</title>
+  <meta name="keywords" content="clip">
+  <meta name="description" content="CLIP clips a waveform's data at a particular max/min value range">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; clip.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>clip
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>CLIP clips a waveform's data at a particular max/min value range</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function w = clip(w, vals) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CLIP clips a waveform's data at a particular max/min value range
+   waveform = clip(waveform, values)
+
+   Input Arguments
+       WAVEFORM: a waveform object   N-DIMENSIONAL
+       VALUES: a number.  If a scalar, then amplitudes will be
+           clipped at +/- value.  If a pair, eg. [Max, Min] then
+           waveform will be clipped between these two values
+
+   All values beyond maximum ranges will be set to the maximum range
+
+
+ See also  WAVEFORM/DESPIKE</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>	ADDHISTORY function in charge of adding history to a waveform</li><li><a href="disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/DEP_xcorr.html" class="code" title="function c=xcorr(c,varargin)">DEP_xcorr</a>	C = XCORR(C)</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = clip(w, vals)</a>
+0002    <span class="comment">%CLIP clips a waveform's data at a particular max/min value range</span>
+0003    <span class="comment">%   waveform = clip(waveform, values)</span>
+0004    <span class="comment">%</span>
+0005    <span class="comment">%   Input Arguments</span>
+0006    <span class="comment">%       WAVEFORM: a waveform object   N-DIMENSIONAL</span>
+0007    <span class="comment">%       VALUES: a number.  If a scalar, then amplitudes will be</span>
+0008    <span class="comment">%           clipped at +/- value.  If a pair, eg. [Max, Min] then</span>
+0009    <span class="comment">%           waveform will be clipped between these two values</span>
+0010    <span class="comment">%</span>
+0011    <span class="comment">%   All values beyond maximum ranges will be set to the maximum range</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">% See also  WAVEFORM/DESPIKE</span>
+0015    
+0016    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0017    <span class="comment">% $Date$</span>
+0018    <span class="comment">% $Revision$</span>
+0019    
+0020    <span class="keyword">if</span> nargin &lt; 2,
+0021       vals = [];
+0022    <span class="keyword">end</span>
+0023    
+0024    <span class="keyword">switch</span> numel(vals)
+0025       <span class="keyword">case</span> 0
+0026          warning(<span class="string">'Waveform:clip:noClipValue'</span>,<span class="keyword">...</span>
+0027             <span class="string">'No values given, waveform remains unclipped'</span>);
+0028          <span class="keyword">return</span>
+0029          
+0030       <span class="keyword">case</span> 1 <span class="comment">% clip at +/- input value</span>
+0031          <span class="keyword">if</span> ~isnumeric(vals)
+0032             error(<span class="string">'Waveform:clip:invalidClipValue'</span>,<span class="string">'Non-numeric clip value'</span>);
+0033          <span class="keyword">end</span>
+0034          vals = <a href="abs.html" class="code" title="function w = abs(w)">abs</a>(vals);
+0035          <a href="disp.html" class="code" title="function disp(w)">disp</a>([<span class="string">'Clipping at +/- '</span> num2str(vals)]);
+0036          vals = [-vals vals];
+0037          
+0038       <span class="keyword">case</span> 2
+0039          <span class="keyword">if</span> ~isnumeric(vals)
+0040             error(<span class="string">'Waveform:clip:invalidClipValue'</span>,<span class="string">'Non-numeric clip value'</span>);
+0041          <span class="keyword">end</span>
+0042          <span class="keyword">if</span> vals(1) &gt; vals(2)
+0043             warning(<span class="string">'Waveform:clip:reversedValues'</span>,<span class="keyword">...</span>
+0044                <span class="string">'Value1 %f &gt; Value2 %f , Reversing'</span>, vals(1),vals(2));
+0045             vals = vals([2 1]);
+0046          <span class="keyword">end</span>
+0047          <span class="comment">%everything is AOK</span>
+0048       <span class="keyword">otherwise</span>
+0049          warning(<span class="string">'Waveform:clip:invalidClipValue'</span>,<span class="keyword">...</span>
+0050             <span class="string">'Invalid clip values. waveform remains unclipped. specify [min max] values'</span>);
+0051          <span class="keyword">return</span>
+0052    <span class="keyword">end</span>
+0053    
+0054    <span class="keyword">for</span> N = 1: numel(w)
+0055       d = w(N).data;
+0056       d(d &lt; vals(1)) = vals(1);
+0057       d(d &gt; vals(2)) = vals(2);
+0058       w(N).data = d;
+0059    <span class="keyword">end</span>
+0060    
+0061    
+0062    w = <a href="addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>(w,<span class="keyword">...</span>
+0063       [<span class="string">'Clipped between '</span>, num2str(vals(1)), <span class="string">' and '</span>, num2str(vals(2))] );
+0064 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

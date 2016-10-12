@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of savesac</title>
+  <meta name="keywords" content="savesac">
+  <meta name="description" content="SAVESAC  creates a SAC file from a waveform">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; savesac.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>savesac
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>SAVESAC  creates a SAC file from a waveform</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function w = savesac(w, direc, fname) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SAVESAC  creates a SAC file from a waveform
+ savesac(waveform)   saves a waveform to a sac file in the
+ current directory, with a default filename as described below.
+
+ savesac(waveform, directory)  saves the  sac file in the
+ provided directory, but with default filenames as described below.
+
+ savesac(waveform, directory, filename)   saves a sac file
+ based upon the waveform(s).  The number of filenames (given as CELLS)
+ must equal the number of waveform objects to save.
+
+ If filename is left out, a default filename will be generated for each
+ SAC file.  The default name will be
+   YYYYMMDD_HHmmss.STATION.CHANNEL.NETWORK
+   if the network does not exist in the waveform (in User defined field
+   KNETWK, which is the standard SAC field for this), then network as
+   defined in the filename becomes '__';
+   For example:
+    for waveform COLA(BHZ) starting 1/5/2007 04:03:21.32 ,AK network --&gt;
+       20070105_040321.COLA.BHZ.AK
+    for waveform COLA(BHZ) starting 1/5/2007 04:03:21.32 ,no network --&gt;
+       20070105_040321.COLA.BHZ.__
+
+ w = savesac(w...) will add history to the waveform showing into which
+ file the waveform was written.
+
+ The waveform object is parsed out and placed into the sac header, with
+ the following equivalent fields set.  That is, the SAC field is replaced
+ with the waveform based values.
+ _waveform_     _sac_
+ STATION        KSTNM
+ CHANNEL        KCMPNM
+ FREQUENCY        1 / DELTA (ODELTA is not used)
+ START            NZYEAR, NZJDAY, NZHOUR, NZMIN, NZSEC, NZMSEC
+ UNITS            IDEP (but with caveats.  See SAC header info from llanl)
+
+
+ savesac uses routines developed by Mike Thorn and modified by yours
+ truly,  stored in the @waveform/private/ directory.
+
+ For more information about the SAC header, and the interpretation of the
+ fields, check out Lawrence Livermore's web site.  Search for &quot;seismic
+ sac&quot; and you'll find it.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/private/waveform2sacheader.html" class="code" title="function header = waveform2sacheader(w)">waveform2sacheader</a>	WAVEFORM2SACHEADER generates a SAC header from a waveform object</li><li><a href="../../../GISMO/core/@waveform/private/writesac.html" class="code" title="function writesac(outfilename, header, data)">writesac</a>	WRITESAC    Write SAC binary files to disk.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = savesac(w, direc, fname)</a>
+0002    <span class="comment">%SAVESAC  creates a SAC file from a waveform</span>
+0003    <span class="comment">% savesac(waveform)   saves a waveform to a sac file in the</span>
+0004    <span class="comment">% current directory, with a default filename as described below.</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">% savesac(waveform, directory)  saves the  sac file in the</span>
+0007    <span class="comment">% provided directory, but with default filenames as described below.</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">% savesac(waveform, directory, filename)   saves a sac file</span>
+0010    <span class="comment">% based upon the waveform(s).  The number of filenames (given as CELLS)</span>
+0011    <span class="comment">% must equal the number of waveform objects to save.</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">% If filename is left out, a default filename will be generated for each</span>
+0014    <span class="comment">% SAC file.  The default name will be</span>
+0015    <span class="comment">%   YYYYMMDD_HHmmss.STATION.CHANNEL.NETWORK</span>
+0016    <span class="comment">%   if the network does not exist in the waveform (in User defined field</span>
+0017    <span class="comment">%   KNETWK, which is the standard SAC field for this), then network as</span>
+0018    <span class="comment">%   defined in the filename becomes '__';</span>
+0019    <span class="comment">%   For example:</span>
+0020    <span class="comment">%    for waveform COLA(BHZ) starting 1/5/2007 04:03:21.32 ,AK network --&gt;</span>
+0021    <span class="comment">%       20070105_040321.COLA.BHZ.AK</span>
+0022    <span class="comment">%    for waveform COLA(BHZ) starting 1/5/2007 04:03:21.32 ,no network --&gt;</span>
+0023    <span class="comment">%       20070105_040321.COLA.BHZ.__</span>
+0024    <span class="comment">%</span>
+0025    <span class="comment">% w = savesac(w...) will add history to the waveform showing into which</span>
+0026    <span class="comment">% file the waveform was written.</span>
+0027    <span class="comment">%</span>
+0028    <span class="comment">% The waveform object is parsed out and placed into the sac header, with</span>
+0029    <span class="comment">% the following equivalent fields set.  That is, the SAC field is replaced</span>
+0030    <span class="comment">% with the waveform based values.</span>
+0031    <span class="comment">% _waveform_     _sac_</span>
+0032    <span class="comment">% STATION        KSTNM</span>
+0033    <span class="comment">% CHANNEL        KCMPNM</span>
+0034    <span class="comment">% FREQUENCY        1 / DELTA (ODELTA is not used)</span>
+0035    <span class="comment">% START            NZYEAR, NZJDAY, NZHOUR, NZMIN, NZSEC, NZMSEC</span>
+0036    <span class="comment">% UNITS            IDEP (but with caveats.  See SAC header info from llanl)</span>
+0037    <span class="comment">%</span>
+0038    <span class="comment">%</span>
+0039    <span class="comment">% savesac uses routines developed by Mike Thorn and modified by yours</span>
+0040    <span class="comment">% truly,  stored in the @waveform/private/ directory.</span>
+0041    <span class="comment">%</span>
+0042    <span class="comment">% For more information about the SAC header, and the interpretation of the</span>
+0043    <span class="comment">% fields, check out Lawrence Livermore's web site.  Search for &quot;seismic</span>
+0044    <span class="comment">% sac&quot; and you'll find it.</span>
+0045    <span class="comment">%</span>
+0046    
+0047    
+0048    <span class="comment">% VERSION: 1.1 of waveform objects</span>
+0049    <span class="comment">% AUTHOR: Celso Reyes</span>
+0050    <span class="comment">% LASTUPDATE: 9/2/2009</span>
+0051    
+0052    <span class="keyword">if</span> exist(<span class="string">'fname'</span>) &amp;&amp; ~iscell(fname),
+0053       fname = {fname};
+0054    <span class="keyword">end</span>
+0055    
+0056    <span class="keyword">if</span> nargin == 1
+0057       <span class="comment">%place file in current directory</span>
+0058       direc = pwd;
+0059    <span class="keyword">end</span>
+0060    <span class="keyword">if</span> nargin== 3
+0061       <span class="comment">%filename has been specified.</span>
+0062       <span class="keyword">if</span> numel(w) ~= numel(fname) <span class="comment">%but not one file per waveform...</span>
+0063          error(<span class="string">'Waveform:savesac:badFilenameCount'</span>,<span class="keyword">...</span>
+0064             <span class="string">'Incorrect number of filenames (%d) for (%d) waveforms'</span>, <span class="keyword">...</span>
+0065             numel(fname), numel(w));
+0066       <span class="keyword">end</span>
+0067    <span class="keyword">else</span> <span class="comment">% nargin ~= 3</span>
+0068       <span class="comment">%filenames are to be generated automatically.</span>
+0069       <span class="comment">%Format: YYYYMMDD_HHmmss.STATION.CHANNEL.NETWORK</span>
+0070       <span class="keyword">for</span> n=1:numel(w)
+0071          [Y,M,D,h,m,s] = datevec(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(n),<span class="string">'start'</span>));
+0072          Net = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(n),<span class="string">'KNETWK'</span>); <span class="comment">%get network from existing sac info.</span>
+0073          <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(Net)
+0074             Net = <span class="string">'__'</span>;
+0075          <span class="keyword">end</span>
+0076          
+0077          fname(n) = {sprintf(<span class="string">'%04d%02d%02d_%02d%02d%02d.%s.%s.%s'</span>,<span class="keyword">...</span>
+0078             Y,M,D,h,m,fix(s), <span class="keyword">...</span>
+0079             <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(n),<span class="string">'station'</span>),<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(n),<span class="string">'channel'</span>), Net)};
+0080       <span class="keyword">end</span>
+0081    <span class="keyword">end</span>
+0082    
+0083    <span class="comment">%ensure we're working with cells for consistency</span>
+0084    <span class="keyword">if</span> ~iscell(fname)
+0085       fname = {fname};
+0086    <span class="keyword">end</span>
+0087    
+0088    <a href="disp.html" class="code" title="function disp(w)">disp</a>(<span class="string">'Warning: if dates have been changed within the waveform object,'</span>);
+0089    <a href="disp.html" class="code" title="function disp(w)">disp</a>(<span class="string">'these changes will not be reflected within any SAC file picks'</span>);
+0090    <a href="disp.html" class="code" title="function disp(w)">disp</a>(<span class="string">'That is, a change to the waveform starting time-- by subsetting,'</span>);
+0091    <a href="disp.html" class="code" title="function disp(w)">disp</a>(<span class="string">'extracting, or by use of SET-- will only be reflected in NZHOUR,'</span>);
+0092    <a href="disp.html" class="code" title="function disp(w)">disp</a>(<span class="string">'NZJDAY, NZMIN, NZMSEC, NZSEC, and NZYEAR'</span>);
+0093    
+0094    <span class="keyword">for</span> n=1: numel(w) <span class="comment">%fname is a cell array</span>
+0095       <span class="comment">%first column of SAC is times, seocond is data. third will be header</span>
+0096       sacHeader = <a href="../../../GISMO/core/@waveform/private/waveform2sacheader.html" class="code" title="function header = waveform2sacheader(w)">waveform2sacheader</a>(w(n));
+0097       outputFileName = fullfile(direc,fname{n});
+0098       <a href="../../../GISMO/core/@waveform/private/writesac.html" class="code" title="function writesac(outfilename, header, data)">writesac</a>(outputFileName,sacHeader, <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'data'</span>));
+0099    <span class="keyword">end</span>
+0100 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

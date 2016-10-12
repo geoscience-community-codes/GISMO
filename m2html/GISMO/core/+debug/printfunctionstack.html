@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of printfunctionstack</title>
+  <meta name="keywords" content="printfunctionstack">
+  <meta name="description" content="PRINTFUNCTIONSTACK print the list of functions in the stack">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">+debug</a> &gt; printfunctionstack.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+debug&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>printfunctionstack
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>PRINTFUNCTIONSTACK print the list of functions in the stack</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function printfunctionstack(symbol) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> PRINTFUNCTIONSTACK print the list of functions in the stack
+
+    PRINTFUNCTIONSTACK prints a full list of the nested function calls on the stack, so it tells you where in your code you are.
+    
+    EXAMPLE:
+    function myfunc1()
+        debug.printfunctionstack('&gt;')
+        myfunc2()
+        debug.printfunctionstack('&lt;')
+    end
+    function myfunc2()
+        debug.printfunctionstack('&gt;')
+        myfunc3()
+        debug.printfunctionstack('&lt;')
+    end
+    function myfunc3()
+        debug.printfunctionstack('&gt;')
+        disp('hello world')
+        debug.printfunctionstack('&lt;')
+    end
+
+    debug.set_debug(1)
+    myfunc1()
+    
+    would result in:
+    &gt;myfunc1
+    &gt;myfunc1&gt;myfunc2
+    &gt;myfunc1&gt;myfunc2&gt;myfunc3
+    hello world    
+    &lt;myfunc1&lt;myfunc2&lt;myfunc3
+    &lt;myfunc1&lt;myfunc2
+    &lt;myfunc1
+
+    See also debug.<a href="set_debug.html" class="code" title="function set_debug(debuglevel)">set_debug</a>, debug.<a href="get_debug.html" class="code" title="function debuglevel=get_debug()">get_debug</a>, debug.<a href="print_debug.html" class="code" title="function value = print_debug(level, varargin)">print_debug</a>, setpref.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/makespectrogramthumbnails.html" class="code" title="function makespectrogramthumbnails(spectrogramFilename, spectrogramFraction)">makespectrogramthumbnails</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function printfunctionstack(symbol)</a>
+0002 <span class="comment">% PRINTFUNCTIONSTACK print the list of functions in the stack</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    PRINTFUNCTIONSTACK prints a full list of the nested function calls on the stack, so it tells you where in your code you are.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%    EXAMPLE:</span>
+0007 <span class="comment">%    function myfunc1()</span>
+0008 <span class="comment">%        debug.printfunctionstack('&gt;')</span>
+0009 <span class="comment">%        myfunc2()</span>
+0010 <span class="comment">%        debug.printfunctionstack('&lt;')</span>
+0011 <span class="comment">%    end</span>
+0012 <span class="comment">%    function myfunc2()</span>
+0013 <span class="comment">%        debug.printfunctionstack('&gt;')</span>
+0014 <span class="comment">%        myfunc3()</span>
+0015 <span class="comment">%        debug.printfunctionstack('&lt;')</span>
+0016 <span class="comment">%    end</span>
+0017 <span class="comment">%    function myfunc3()</span>
+0018 <span class="comment">%        debug.printfunctionstack('&gt;')</span>
+0019 <span class="comment">%        disp('hello world')</span>
+0020 <span class="comment">%        debug.printfunctionstack('&lt;')</span>
+0021 <span class="comment">%    end</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">%    debug.set_debug(1)</span>
+0024 <span class="comment">%    myfunc1()</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">%    would result in:</span>
+0027 <span class="comment">%    &gt;myfunc1</span>
+0028 <span class="comment">%    &gt;myfunc1&gt;myfunc2</span>
+0029 <span class="comment">%    &gt;myfunc1&gt;myfunc2&gt;myfunc3</span>
+0030 <span class="comment">%    hello world</span>
+0031 <span class="comment">%    &lt;myfunc1&lt;myfunc2&lt;myfunc3</span>
+0032 <span class="comment">%    &lt;myfunc1&lt;myfunc2</span>
+0033 <span class="comment">%    &lt;myfunc1</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">%    See also debug.set_debug, debug.get_debug, debug.print_debug, setpref.</span>
+0036 
+0037 <span class="comment">% AUTHOR: Glenn Thompson, UAF-GI</span>
+0038 <span class="comment">% $Date: $</span>
+0039 <span class="comment">% $Revision: -1 $</span>
+0040 
+0041 st = dbstack;
+0042 outstr=<span class="string">''</span>;
+0043 <span class="keyword">if</span> numel(st)&gt;1
+0044         <span class="keyword">for</span> c=numel(st):-1:2
+0045                 outstr = sprintf(<span class="string">'%s%s%s'</span>,outstr, symbol,st(c).name);
+0046         <span class="keyword">end</span>
+0047 <span class="keyword">end</span>
+0048 debug.print_debug(1, <span class="string">'%s at %s'</span>,outstr,datestr(now));</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

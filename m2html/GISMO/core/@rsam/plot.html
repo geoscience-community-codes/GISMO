@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plot</title>
+  <meta name="keywords" content="plot">
+  <meta name="description" content="RSAM/PLOT plot rsam data">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@rsam</a> &gt; plot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@rsam&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>plot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>RSAM/PLOT plot rsam data</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function handlePlot = plot(rsam_vector, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> RSAM/PLOT plot rsam data
+ handle = plot(rsam_vector, yaxisType, h, addgrid, addlegend, fillbelow, plotspikes, plottransients, plottremor);
+ to change where the legend plots set the global variable legend_ypos
+ a positive value will be within the axes, a negative value will be below
+ default is -0.2. For within the axes, log(20) is a reasonable value.
+ yaxisType is like 'logarithmic' or 'linear'
+ h is an axes handle (or an array of axes handles)
+ use h = generatePanelHandles(numgraphs)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/spectrogram_iceweb.html" class="code" title="function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)">spectrogram_iceweb</a>	SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of</li><li><a href="../../../GISMO/applications/uispecgram.html" class="code" title="function varargout = uispecgram(varargin)">uispecgram</a>	UISPECGRAM M-file for uispecgram.fig</li><li><a href="../../../GISMO/contributed/correlation_derived/corrderived_plot_swarm_history.html" class="code" title="function corrderived_plot_swarm_history(c,varargin)">corrderived_plot_swarm_history</a>	CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms</li><li><a href="../../../GISMO/contributed/instrument_response/demo_plutons.html" class="code" title="">demo_plutons</a>	</li><li><a href="../../../GISMO/contributed/instrument_response/response_cookbook.html" class="code" title="">response_cookbook</a>	% Instrument response cookbook</li><li><a href="../../../GISMO/contributed/instrument_response/response_plot.html" class="code" title="function response_plot(response,xLimits,noLegend)">response_plot</a>	RESPONSE_PLOT plot an instrument response</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/cookbook.html" class="code" title="">cookbook</a>	COOKBOOK demonstrate the features of the mastercorr package.</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/plot_stats.html" class="code" title="function plot_stats(W)">plot_stats</a>	PLOT_STATS plot statistics from master correlation algorithm</li><li><a href="../../../GISMO/contributed/master_correlation/mastercorr_cookbook.html" class="code" title="">mastercorr_cookbook</a>	Demonstration of the major features of the master waveform correlation</li><li><a href="../../../GISMO/contributed/master_correlation/mastercorr_plot_stats.html" class="code" title="function mastercorr_plot_stats(W)">mastercorr_plot_stats</a>	MASTERCORR_PLOT_STATS plot statistics from master correlation algorithm</li><li><a href="../../../GISMO/contributed_antelope/attenuation/hankelq.html" class="code" title="function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)">hankelq</a>	HANKELQ Compute spectral ratio in two frequency bands</li><li><a href="../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/depth_section.html" class="code" title="function depth_section(dbName)">depth_section</a>	DEPTH_SECTION plot depth sections of ray coverage.</li><li><a href="../../../GISMO/core/+Detection/sta_lta.html" class="code" title="function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)">sta_lta</a>	STA_LTA: Short-Time-Average/Long-Time-Average event detector.</li><li><a href="../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="../../../GISMO/core/@Catalog/plotprmm.html" class="code" title="function plotprmm(catalogObject)">plotprmm</a>	CATALOG.PLOTPRMM Plot the peak rate and maximum magnitude of a</li><li><a href="../../../GISMO/core/@EventRate/EventRate.html" class="code" title="">EventRate</a>	</li><li><a href="../../../GISMO/core/@EventRate/cookbook.html" class="code" title="">cookbook</a>	% EventRate Cookbook</li><li><a href="../../../GISMO/core/@correlation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../GISMO/core/@correlation/private/dendrogramplot.html" class="code" title="function dendrogramplot(c);">dendrogramplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/eventplot.html" class="code" title="function eventplot(c,scale,howmany);">eventplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/overlayplot.html" class="code" title="function overlayplot(c,scale,ord)">overlayplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/sampleplot.html" class="code" title="function sampleplot(c,scale,ord)">sampleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/statplot.html" class="code" title="function statplot(c);">statplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@drumplot/cookbook.html" class="code" title="">cookbook</a>	% drumplot cookbook</li><li><a href="../../../GISMO/core/@drumplot/drumplot.html" class="code" title="">drumplot</a>	DRUMPLOT the blueprint for drumplot objects in GISMO</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="detectTremorEvents.html" class="code" title="function rsamobj = detectTremorEvents(stationName, chan, DP, snum, enum, spikeRatio, transientEventRatio, STA_minutes, LTA_minutes, stepsize, ratio_on, ratio_off, plotResults)">detectTremorEvents</a>	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</li><li><a href="duration_amplitude.html" class="code" title="function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)">duration_amplitude</a>	DURATION_AMPLITUDE Use the duration-amplitde</li><li><a href="oneMinuteData.html" class="code" title="">oneMinuteData</a>	</li><li><a href="plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="plotrsam.html" class="code" title="function [rsamobjects, ah]=plotrsam(sta, chan, snum, enum, DATAPATH)">plotrsam</a>	[rsamobjects, ah]=plotrsam_wrapper(sta, chan, snum, enum, DATAPATH)</li><li><a href="rsam.html" class="code" title="">rsam</a>	</li><li><a href="scrollplot.html" class="code" title="function scrollplot(s)">scrollplot</a>	Created by Steven Lord, slord@mathworks.com</li><li><a href="../../../GISMO/core/@spectralobject/specgram2.html" class="code" title="function specgram2(s, ws, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li><li><a href="../../../GISMO/core/@threecomp/cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="../../../GISMO/core/@threecomp/cookbook_map.html" class="code" title="function cookbook_map(TC,W,backAzimuth)">cookbook_map</a>	COOKBOOK_MAP Plots a simple map to accompany cookbook data</li><li><a href="../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../GISMO/core/@threecomp/plot2.html" class="code" title="function fh=plot2(TC,varargin)">plot2</a>	PLOT2 a figure of three component traces (deprecated).</li><li><a href="../../../GISMO/core/@threecomp/plotpm.html" class="code" title="function plotpm(TC);">plotpm</a>	PLOTPM Plot particle motion coefficients.</li><li><a href="../../../GISMO/core/@threecomp/private/create_demo_data.html" class="code" title="">create_demo_data</a>	This script was used once to create the demo dataset</li><li><a href="../../../GISMO/core/@threecomp/spin.html" class="code" title="function [TC,c2, c3] = spin(TCin,varargin)">spin</a>	SPIN rotate and plot horizontal components</li><li><a href="../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../GISMO/core/@waveform/plot_helicorder.html" class="code" title="function [ output_args ] = plot_helicorder( w, varargin )">plot_helicorder</a>	WAVEFORM/PLOT_HELICORDER Plot waveform objects as helicorders</li><li><a href="../../../GISMO/core/@waveform/plot_panels.html" class="code" title="function fh=plot_panels(w, alignWaveforms)">plot_panels</a>	PLOT_PANELS Plot multiple waveform objects as separate linked panels</li><li><a href="../../../GISMO/core/@waveform/plot_spectrum.html" class="code" title="function s = plot_spectrum(w)">plot_spectrum</a>	add_spectral_data Simple method to compute frequency</li><li><a href="../../../GISMO/core/@waveform/scroll.html" class="code" title="function scroll(w, timeStepSeconds)">scroll</a>	SCROLL scroll through the data in a waveform vector</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/dendrogramplot.html" class="code" title="function dendrogramplot(c)">dendrogramplot</a>	dendrogramplot   create a dendrogram plot</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/eventplot.html" class="code" title="function eventplot(c,scale,howmany)">eventplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/overlayplot.html" class="code" title="function overlayplot(c,scale,ord)">overlayplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/sampleplot.html" class="code" title="function sampleplot(c,scale,ord)">sampleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/statplot.html" class="code" title="function statplot(c)">statplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/linkedplot.html" class="code" title="function linkedplot(T, alignTraces)">linkedplot</a>	linkedplot   Plot multiple waveform objects as separate linked panels</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/specgram2.html" class="code" title="function h = specgram2(s, T, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li><li><a href="../../../GISMO/deprecated/@helicorder/build.html" class="code" title="function varargout = build(h)">build</a>	BUILD: Helicorder builder function. A helicorder object (h) contains no</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/freqindex.html" class="code" title="function W = freqindex(W,varargin)">freqindex</a>	WAVEFORM = FREQINDEX(WAVEFORM) calculates the frequency index of a waveform.</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li><li><a href="../../../GISMO/deprecated/fft_tools/wf_fftplot.html" class="code" title="function wf_fftplot(w);">wf_fftplot</a>	WF_FFTPLOT(WAVEFORM) plot fourier transform of the data.</li><li><a href="../../../GISMO/deprecated/fft_tools/wf_fi.html" class="code" title="function W = wf_fi(W,varargin)">wf_fi</a>	WAVEFORM = WF_FI(WAVEFORM) calculates the frequency index of a waveform.</li><li><a href="../../../GISMO/tests/amplitude_spectrum_test.html" class="code" title="function tests = amplitude_spectrum_test()">amplitude_spectrum_test</a>	% Main function to generate tests</li><li><a href="../../../GISMO/tests/obsolete/medfilt1_test.html" class="code" title="">medfilt1_test</a>	</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li><li><a href="../../../GISMO/uaf_internal/AEIC_AVO/+check/crossfeed.html" class="code" title="function crossfeed(varargin)">crossfeed</a>	CROSSFEED Checks for crossfeeding and duplicate data channels</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function handlePlot = plot(rsam_vector, varargin)</a>
+0002     <span class="comment">% RSAM/PLOT plot rsam data</span>
+0003     <span class="comment">% handle = plot(rsam_vector, yaxisType, h, addgrid, addlegend, fillbelow, plotspikes, plottransients, plottremor);</span>
+0004     <span class="comment">% to change where the legend plots set the global variable legend_ypos</span>
+0005     <span class="comment">% a positive value will be within the axes, a negative value will be below</span>
+0006     <span class="comment">% default is -0.2. For within the axes, log(20) is a reasonable value.</span>
+0007     <span class="comment">% yaxisType is like 'logarithmic' or 'linear'</span>
+0008     <span class="comment">% h is an axes handle (or an array of axes handles)</span>
+0009     <span class="comment">% use h = generatePanelHandles(numgraphs)</span>
+0010 
+0011     <span class="comment">% Glenn Thompson 1998-2009</span>
+0012     <span class="comment">%</span>
+0013     <span class="comment">% % GTHO 2009/10/26 Changed marker size from 5.0 to 1.0</span>
+0014     <span class="comment">% % GTHO 2009/10/26 Changed legend position to -0.2</span>
+0015 
+0016     <span class="comment">% parse variable input arguments</span>
+0017     p = inputParser;
+0018     p.addParameter(<span class="string">'addgrid'</span>,false);
+0019     p.addParameter(<span class="string">'addlegend'</span>, false);
+0020     p.addParameter(<span class="string">'fillbelow'</span>, false);
+0021 
+0022     <span class="comment">%apparently unused options</span>
+0023     p.addParameter(<span class="string">'yaxisType'</span>,<span class="string">'logarithmic'</span>); <span class="comment">% or linear</span>
+0024     p.addParameter(<span class="string">'h'</span>, []);
+0025 
+0026     p.parse(varargin{:});
+0027 
+0028     legend_ypos = -0.2;
+0029 
+0030     <span class="comment">% colours to plot each station</span>
+0031     lineColour={[0 0 0]; [0 0 1]; [1 0 0]; [0 1 0]; [.4 .4 0]; [0 .4 0 ]; [.4 0 0]; [0 0 .4]; [0.5 0.5 0.5]; [0.25 .25 .25]};
+0032 
+0033     <span class="comment">% Plot the data graphs</span>
+0034     <span class="keyword">for</span> c = 1:length(rsam_vector)
+0035         self = rsam_vector(c);
+0036         hold on; 
+0037         t = self.dnum;
+0038         y = self.data;
+0039 
+0040         debug.print_debug(10,sprintf(<span class="string">'Data length: %d'</span>,length(y)));
+0041         figure
+0042         <span class="comment">%if strcmp(rsam_vector(c).units, 'Hz')</span>
+0043         <span class="keyword">if</span> 1
+0044             
+0045             <span class="comment">% plot on a linear axis, with station name as a y label</span>
+0046             <span class="comment">% datetick too, add measure as title, fiddle with the YTick's and add max(y) in top left corner</span>
+0047             <span class="keyword">if</span> ~p.Results.fillbelow
+0048                 handlePlot = <a href="plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>(t, y, <span class="string">'-'</span>, <span class="string">'Color'</span>, lineColour{c});
+0049             <span class="keyword">else</span>
+0050                 handlePlot = fill([<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(t) t <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(t)], [<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([y 0]) y <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([y 0])], lineColour{c});
+0051             <span class="keyword">end</span>
+0052 
+0053             <span class="comment">% if c ~= numel(rsam_vector)</span>
+0054             <span class="comment">%     set(gca,'XTickLabel','');</span>
+0055             <span class="comment">% end</span>
+0056 
+0057             <span class="comment">% yt=get(gca,'YTick');</span>
+0058             <span class="comment">% ytinterval = (yt(2)-yt(1))/2;</span>
+0059             <span class="comment">% yt = yt(1) + ytinterval: ytinterval: yt(end);</span>
+0060             <span class="comment">% ytl = yt';</span>
+0061             <span class="comment">% ylim = get(gca, 'YLim');</span>
+0062             <span class="comment">% set(gca, 'YLim', [0 ylim(2)],'YTick',yt);</span>
+0063             <span class="comment">% %ylabelstr = sprintf('%s.%s %s (%s)', self.sta, self.chan, self.measure, self.units);</span>
+0064             ylabelstr = sprintf(<span class="string">'%s'</span>, self.sta);
+0065             ylabel(ylabelstr);
+0066 <span class="comment">%             datetick('x','keeplimits');</span>
+0067             a = axis;
+0068             datetick(<span class="string">'x'</span>)
+0069             <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca,<span class="string">'XLim'</span>,[a(1) a(2)]);
+0070             xlabel(<span class="string">'Date/Time'</span>);
+0071             
+0072         <span class="keyword">else</span>
+0073             
+0074             <span class="comment">% make a logarithmic plot, with a marker size and add the station name below the x-axis like a legend</span>
+0075             y = log10(y);  <span class="comment">% use log plots</span>
+0076 
+0077             handlePlot = <a href="plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>(t, y, <span class="string">'-'</span>, <span class="string">'Color'</span>, lineColour{c},<span class="keyword">...</span>
+0078                <span class="string">'MarkerSize'</span>, 1.0);
+0079 
+0080             <span class="keyword">if</span> strfind(self.measure, <span class="string">'dr'</span>)
+0081                 <span class="comment">%ylabel(sprintf('%s (cm^2)',self(c).measure));</span>
+0082                 <span class="comment">%ylabel(sprintf('D_R (cm^2)',self(c).measure));</span>
+0083                 Yticks = [0.01 0.02 0.05 0.1 0.2 0.5 1 2 5 10 20 50 ];
+0084                 Ytickmarks = log10(Yticks);
+0085                 <span class="keyword">for</span> count = 1:length(Yticks)
+0086                     Yticklabels{count}=num2str(Yticks(count),3);
+0087                 <span class="keyword">end</span>
+0088                 <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'YLim'</span>, [<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(Ytickmarks) <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(Ytickmarks)],<span class="keyword">...</span>
+0089                    <span class="string">'YTick'</span>,Ytickmarks,<span class="string">'YTickLabel'</span>,Yticklabels);
+0090             <span class="keyword">end</span>
+0091             axis tight
+0092             a = axis;
+0093             datetick(<span class="string">'x'</span>)
+0094             <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca,<span class="string">'XLim'</span>,[a(1) a(2)]);
+0095 <span class="comment">%</span>
+0096             xlabel(sprintf(<span class="string">'Date/Time starting at %s'</span>,datestr(self.snum)))
+0097             ylabel(sprintf(<span class="string">'log(%s)'</span>,self.units))
+0098  
+0099         <span class="keyword">end</span>
+0100 
+0101 <span class="comment">%         if p.Results.addgrid</span>
+0102 <span class="comment">%             grid on;</span>
+0103 <span class="comment">%         end</span>
+0104 <span class="comment">%         if p.Results.addlegend &amp;&amp; ~isempty(y)</span>
+0105 <span class="comment">%             xlim = get(gca, 'XLim');</span>
+0106 <span class="comment">%             legend_ypos = 0.9;</span>
+0107 <span class="comment">%             legend_xpos = c/10;</span>
+0108 <span class="comment">%         end</span>
+0109 
+0110     <span class="keyword">end</span>
+0111 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

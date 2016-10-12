@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of antelope2waveform_test</title>
+  <meta name="keywords" content="antelope2waveform_test">
+  <meta name="description" content="dbpath = '/aerun/sum/db/archive/archive_2011/archive_2011_11_16';">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">tests</a> &gt; antelope2waveform_test.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/tests&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>antelope2waveform_test
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>dbpath = '/aerun/sum/db/archive/archive_2011/archive_2011_11_16';</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function w=antelope2waveform_test() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">dbpath = '/aerun/sum/db/archive/archive_2011/archive_2011_11_16';</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/core/+admin/which.html" class="code" title="function which(sourceLocation)">which</a>	WHICH manage and switch between multiple GISMO archives</li><li><a href="../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>	EPOCH = DATENUM2EPOCH(TIME) translates Matlab numeric</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w=antelope2waveform_test()</a>
+0002     <span class="comment">%dbpath = '/aerun/sum/db/archive/archive_2011/archive_2011_11_16';</span>
+0003     gismopath = fileparts(<a href="../../GISMO/core/+admin/which.html" class="code" title="function which(sourceLocation)">which</a>(<span class="string">'startup_GISMO'</span>));
+0004     dbpath = fullfile(gismopath, <span class="string">'tests'</span>, <span class="string">'test_data'</span>, <span class="string">'antelope2waveform_testdb'</span>)
+0005     sta = <span class="string">'.*'</span>;
+0006     sta = <span class="string">'AKT'</span>;
+0007     sta = <span class="string">'.*'</span>;
+0008     <span class="comment">%sta = 'AKT|CRAP|VIB';</span>
+0009     chan = <span class="string">'HHZ.*'</span>;
+0010     <span class="comment">%chan = 'HH.*';</span>
+0011     starttime = <a href="../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>(datenum(<span class="string">'16-Nov-2011 16:29:00'</span>));
+0012     endtime = <a href="../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>(datenum(<span class="string">'16-Nov-2011 16:43:24'</span>));
+0013 <span class="comment">%     dbexample_get_demodb_path;</span>
+0014 <span class="comment">%     dbpath = demodb_path;</span>
+0015 <span class="comment">%     sta = '.*';</span>
+0016 <span class="comment">%     chan = '.*';</span>
+0017 <span class="comment">%     starttime = [];</span>
+0018 <span class="comment">%     endtime = [];</span>
+0019      w=antelope.antelope2waveform(dbpath, sta, chan, starttime, endtime);
+0020 <span class="keyword">end</span>
+0021</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

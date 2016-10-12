@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of extract</title>
+  <meta name="keywords" content="extract">
+  <meta name="description" content="EXTRACT particle motion parameters from a threecomp object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@threecomp</a> &gt; extract.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@threecomp&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>extract
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>EXTRACT particle motion parameters from a threecomp object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function pm = extract(TC,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">EXTRACT particle motion parameters from a threecomp object
+ PM = EXTRACT(TC,[START END]) extracts particle motion parameters from a single
+ threecomp object. START and END are Matlab times which bracket the
+ extraction. The output structure, PM, is the same size as threecomp
+ object TC and has similar fields. However, instead of the particle motion
+ fields being represented by waveforms (as in TC), they are scalar values
+ that represent mean or median measures over the time interval defined by
+ START and END.
+
+ PM = EXTRACT(TC,[START END],[REC_THRESHOLD, PLAN_THRESHOLD]) The azimuth
+ and inclination coefficients only have meaning if the degree of
+ rectilinearity, and sometimes, planarity, is high. The threshold terms
+ allow users to set minimum rectilinearity and planarity values. The time
+ range set by START and END is scanned for sufficiently high
+ rectilinearity and planarity. Only those time steps which meet the
+ threshold values are included in the mean/median calculations. The
+ default values of this term err on the inclusive side [0.5 0].
+
+ see also threecomp/describe</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@rsam/extract.html" class="code" title="function s=extract(self, snum, enum)">extract</a>	</li><li><a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../GISMO/core/@waveform/extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>	MEDIAN middlemost value of waveform's sorted data.</li><li><a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>	TIMES (.*) overloaded Array multiply for WAVEFORM objects.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/cookbook.html" class="code" title="">cookbook</a>	COOKBOOK demonstrate the features of the mastercorr package.</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../../GISMO/contributed/master_correlation/mastercorr_cookbook.html" class="code" title="">mastercorr_cookbook</a>	Demonstration of the major features of the master waveform correlation</li><li><a href="../../../GISMO/contributed/master_correlation/mastercorr_extract.html" class="code" title="function varargout = mastercorr_extract(W,varargin)">mastercorr_extract</a>	MASTERCORR_EXTRACT extract matches to the master waveform</li><li><a href="../../../GISMO/contributed_antelope/reduced_displacement/reducedisp_wfmeas.html" class="code" title="function reducedisp_wfmeas(varargin);">reducedisp_wfmeas</a>	REDUCEDISP_WFMEAS(STARTTIME,ENDTIME,SCNL,DIST,DS,DBOUT,FILT,TIMESTEP,ALGORITHM)</li><li><a href="../../../GISMO/core/@Catalog/addwaveforms.html" class="code" title="function cobj = addwaveforms(cobj, w_continuous)">addwaveforms</a>	Catalog.addwaveforms Add waveform objects corresponding to ontimes and</li><li><a href="../../../GISMO/core/@correlation/verify.html" class="code" title="function c = verify(c)">verify</a>	VERIFY</li><li><a href="../../../GISMO/core/@drumplot/cookbook.html" class="code" title="">cookbook</a>	% drumplot cookbook</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../GISMO/core/@rsam/rsam.html" class="code" title="">rsam</a>	</li><li><a href="align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>	ALIGN Align and trim traces in threecomp object.</li><li><a href="cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="../../../GISMO/core/@waveform/combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and ChannelTag info.</li><li><a href="../../../GISMO/core/@waveform/pad.html" class="code" title="function [ w ] = pad( w, snum, enum, padvalue )">pad</a>	PAD Pad a waveform from snum to enum</li><li><a href="../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../GISMO/core/@waveform/private/filter_by_time.html" class="code" title="function w = filter_by_time(w, myStartTime, myEndTime)">filter_by_time</a>	filter_by_time</li><li><a href="../../../GISMO/core/@waveform/private/load_miniseed.html" class="code" title="function w = load_miniseed(request)">load_miniseed</a>	LOAD_MINISEED loads a waveform from MINISEED files</li><li><a href="../../../GISMO/core/@waveform/private/load_sac.html" class="code" title="function w = load_sac(request)">load_sac</a>	LOAD_SAC loads a waveform from SAC files</li><li><a href="../../../GISMO/core/@waveform/private/load_winston.html" class="code" title="function allWaves = load_winston(request)">load_winston</a>	LOAD_WINSTON handles retrieval of data from a winston waveserver.</li><li><a href="../../../GISMO/core/@waveform/scroll.html" class="code" title="function scroll(w, timeStepSeconds)">scroll</a>	SCROLL scroll through the data in a waveform vector</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="../../../GISMO/deprecated/+waveform_extensions/sta_lta.html" class="code" title="function events = sta_lta(wave,varargin)">sta_lta</a>	STA_LTA: Short-Time-Average/Long-Time-Average event detector.</li><li><a href="../../../GISMO/deprecated/@helicorder/build.html" class="code" title="function varargout = build(h)">build</a>	BUILD: Helicorder builder function. A helicorder object (h) contains no</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/nan2wfa.html" class="code" title="function wfa = nan2wfa(nan)">nan2wfa</a>	</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/sst2nan.html" class="code" title="function nan = sst2nan(sst,w)">sst2nan</a>	</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/sst2val.html" class="code" title="function w = sst2val(sst,w,val)">sst2val</a>	SST2VAL: Set sections of waveform w to single value. Useful for setting</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/sst2wfa.html" class="code" title="function wfa = sst2wfa(sst,w)">sst2wfa</a>	</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/wfa2nan.html" class="code" title="function nan = wfa2nan(wfa, varargin)">wfa2nan</a>	</li><li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li><li><a href="../../../GISMO/uaf_internal/AEIC_AVO/+check/crossfeed.html" class="code" title="function crossfeed(varargin)">crossfeed</a>	CROSSFEED Checks for crossfeeding and duplicate data channels</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function pm = do_one(TC,times,thresholds,num)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function pm = extract(TC,varargin)</a>
+0002 
+0003 <span class="comment">%EXTRACT particle motion parameters from a threecomp object</span>
+0004 <span class="comment">% PM = EXTRACT(TC,[START END]) extracts particle motion parameters from a single</span>
+0005 <span class="comment">% threecomp object. START and END are Matlab times which bracket the</span>
+0006 <span class="comment">% extraction. The output structure, PM, is the same size as threecomp</span>
+0007 <span class="comment">% object TC and has similar fields. However, instead of the particle motion</span>
+0008 <span class="comment">% fields being represented by waveforms (as in TC), they are scalar values</span>
+0009 <span class="comment">% that represent mean or median measures over the time interval defined by</span>
+0010 <span class="comment">% START and END.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% PM = EXTRACT(TC,[START END],[REC_THRESHOLD, PLAN_THRESHOLD]) The azimuth</span>
+0013 <span class="comment">% and inclination coefficients only have meaning if the degree of</span>
+0014 <span class="comment">% rectilinearity, and sometimes, planarity, is high. The threshold terms</span>
+0015 <span class="comment">% allow users to set minimum rectilinearity and planarity values. The time</span>
+0016 <span class="comment">% range set by START and END is scanned for sufficiently high</span>
+0017 <span class="comment">% rectilinearity and planarity. Only those time steps which meet the</span>
+0018 <span class="comment">% threshold values are included in the mean/median calculations. The</span>
+0019 <span class="comment">% default values of this term err on the inclusive side [0.5 0].</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% see also threecomp/describe</span>
+0022 
+0023 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0024 <span class="comment">% $Date$</span>
+0025 <span class="comment">% $Revision$</span>
+0026 
+0027 <span class="comment">% GET TIME WINDOW</span>
+0028 <span class="keyword">if</span> length(varargin)&gt;=1
+0029     <span class="keyword">if</span> isa(varargin{1},<span class="string">'double'</span>) &amp;&amp; numel(varargin{1})==2
+0030         <a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a> = reshape(varargin{1},1,2);
+0031     <span class="keyword">else</span>
+0032             error(<span class="string">'Threecomp:exgtract:badArgument'</span>,<span class="string">'second argument must be a two element timer vector'</span>);
+0033     <span class="keyword">end</span>
+0034 <span class="keyword">else</span>
+0035    error(<span class="string">'Threecomp:exgtract:wrongNumberArguments'</span>,<span class="string">'incorrect number of arguments'</span>); 
+0036 <span class="keyword">end</span>
+0037 
+0038 
+0039 <span class="comment">% GET THRESHOLDS</span>
+0040 <span class="keyword">if</span> length(varargin)&gt;=2
+0041     <span class="keyword">if</span> isa(varargin{2},<span class="string">'double'</span>) &amp;&amp; numel(varargin{2})==2
+0042         thresholds = reshape(varargin{2},1,2);
+0043     <span class="keyword">else</span>
+0044         error(<span class="string">'Threecomp:exgtract:badArgument'</span>,<span class="string">'third argument must be a two element timer vector'</span>);
+0045     <span class="keyword">end</span>
+0046 <span class="keyword">else</span>
+0047     thresholds = [0.5 0];
+0048 <span class="keyword">end</span>
+0049 
+0050 
+0051 
+0052 <span class="comment">% EXTRACT VALUES FOR EACH</span>
+0053 <span class="keyword">for</span> n = 1:length(TC)
+0054     [pm(n)] = <a href="#_sub1" class="code" title="subfunction pm = do_one(TC,times,thresholds,num)">do_one</a>(TC(n),<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>,thresholds,n);
+0055 <span class="keyword">end</span>
+0056 pm = reshape(pm,size(TC));
+0057 
+0058 
+0059 
+0060 
+0061 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0062 <span class="comment">% Extract a single set of particle motions</span>
+0063 <a name="_sub1" href="#_subfunctions" class="code">function pm = do_one(TC,times,thresholds,num)</a>
+0064 
+0065 
+0066 <span class="keyword">if</span> all(<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>&gt;datenum(<span class="string">'01/01/1900'</span>)) &amp;&amp; all(<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>&lt;datenum(<span class="string">'01/01/2100'</span>))
+0067     <a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a> = <a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>;
+0068 <span class="keyword">elseif</span> all(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>)&lt;100000)
+0069     <a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a> = times./86400 + TC.trigger;
+0070 <span class="keyword">else</span>
+0071     error(<span class="string">'Threecomp:exgtract:badTimeFormat'</span>,<span class="string">'time format not recognized'</span>);
+0072 <span class="keyword">end</span>
+0073 
+0074 
+0075 <span class="comment">% EXTRACT MEAN PARTICLE MOTIONS</span>
+0076 pm.rectilinearity = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>(TC.rectilinearity,<span class="string">'TIME'</span>,<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>(1),<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>(2)));
+0077 pm.planarity = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>(TC.planarity,<span class="string">'TIME'</span>,<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>(1),<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>(2)));
+0078 pm.energy = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>(TC.energy,<span class="string">'TIME'</span>,<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>(1),<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>(2)));
+0079 pm.azimuth = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>(TC.azimuth,<span class="string">'TIME'</span>,<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>(1),<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>(2)));
+0080 pm.inclination = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>(TC.inclination,<span class="string">'TIME'</span>,<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>(1),<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>(2)));
+0081 
+0082 
+0083 <span class="comment">% GET MEAN TERMS ABOVE THRESHOLDS</span>
+0084 f = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>( pm.rectilinearity&gt;=thresholds(1) &amp; pm.planarity&gt;=thresholds(2) );
+0085 pm.rectilinearity = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(pm.rectilinearity(f));
+0086 pm.planarity = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(pm.planarity(f));
+0087 pm.energy = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(pm.energy(f));
+0088 pm.azimuth = <a href="../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>(pm.azimuth(f));
+0089 pm.inclination = <a href="../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>(pm.inclination(f));
+0090 pm.time = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>);
+0091 
+0092 <span class="comment">% TODO: include some type pf error estimate for angular parameters</span>
+0093</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sta_lta</title>
+  <meta name="keywords" content="sta_lta">
+  <meta name="description" content="STA_LTA: Short-Time-Average/Long-Time-Average event detector.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">+Detection</a> &gt; sta_lta.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+Detection&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>sta_lta
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>STA_LTA: Short-Time-Average/Long-Time-Average event detector.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">STA_LTA: Short-Time-Average/Long-Time-Average event detector.
+
+USAGE: events = sta_lta(wave,prop_name_1,prop_val_1,...)
+
+DIAGRAM:
+                       /\      /\/\        /\
+              /\  /\/\/  \/\  /    \/\    /  \/\
+                \/          \/        \/\/      \
+                                           |-STA-| --&gt;
+         --&gt; |-----------------LTA---------------| --&gt;
+
+INPUTS: wave     - A waveform object containing events (maybe)
+        varargin - User-defined parameter name/value pairs (below)
+
+VALID PROP_NAME: 
+
+  'edp'      - Event Detection Parameters (Detailed in 'VALID PROP_VAL')
+  'lta_mode' - LTA window behavior following a 'trigger on' flag
+
+VALID PROP_VAL: 
+
+  'edp'(1x6 numeric) ... default: [1 8 2 1.6 0 3]
+     --&gt; [l_sta l_lta th_on th_off min_sep min_dur]
+        --&gt; l_sta    - STA window length (s)
+        --&gt; l_lta    - LTA window length (s)
+        --&gt; th_on    - STA/LTA trigger on threshold
+        --&gt; th_off   - STA/LTA trigger off threshold
+        --&gt; min_dur  - Minimum event duration to be recorded(s)
+
+    'lta_mode' (string) ... default: 'continuous'
+     --&gt; 'frozen' - LTA window fixed in place after trigger is turned on 
+                    while STA window continues forward.
+     --&gt; 'continuous' - LTA window continues w/ STA window after trigger 
+                        is turned on (Same behavior as before trigger)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>	DETREND removes the slope of each trace.</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@rsam/Fs.html" class="code" title="function fs = Fs(self)">Fs</a>	</li><li><a href="../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../GISMO/core/@waveform/detrend.html" class="code" title="function w = detrend (w, varargin)">detrend</a>	DETREND remove linear trend from a waveform</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>	FILLGAPS - fill missing data with values of your choice</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/detrend.html" class="code" title="function c = detrend(c)">detrend</a>	DETREND   removes the slope of each trace.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)</a>
+0002 
+0003 <span class="comment">%STA_LTA: Short-Time-Average/Long-Time-Average event detector.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%USAGE: events = sta_lta(wave,prop_name_1,prop_val_1,...)</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%DIAGRAM:</span>
+0008 <span class="comment">%                       /\      /\/\        /\</span>
+0009 <span class="comment">%              /\  /\/\/  \/\  /    \/\    /  \/\</span>
+0010 <span class="comment">%                \/          \/        \/\/      \</span>
+0011 <span class="comment">%                                           |-STA-| --&gt;</span>
+0012 <span class="comment">%         --&gt; |-----------------LTA---------------| --&gt;</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%INPUTS: wave     - A waveform object containing events (maybe)</span>
+0015 <span class="comment">%        varargin - User-defined parameter name/value pairs (below)</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%VALID PROP_NAME:</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%  'edp'      - Event Detection Parameters (Detailed in 'VALID PROP_VAL')</span>
+0020 <span class="comment">%  'lta_mode' - LTA window behavior following a 'trigger on' flag</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%VALID PROP_VAL:</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%  'edp'(1x6 numeric) ... default: [1 8 2 1.6 0 3]</span>
+0025 <span class="comment">%     --&gt; [l_sta l_lta th_on th_off min_sep min_dur]</span>
+0026 <span class="comment">%        --&gt; l_sta    - STA window length (s)</span>
+0027 <span class="comment">%        --&gt; l_lta    - LTA window length (s)</span>
+0028 <span class="comment">%        --&gt; th_on    - STA/LTA trigger on threshold</span>
+0029 <span class="comment">%        --&gt; th_off   - STA/LTA trigger off threshold</span>
+0030 <span class="comment">%        --&gt; min_dur  - Minimum event duration to be recorded(s)</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%    'lta_mode' (string) ... default: 'continuous'</span>
+0033 <span class="comment">%     --&gt; 'frozen' - LTA window fixed in place after trigger is turned on</span>
+0034 <span class="comment">%                    while STA window continues forward.</span>
+0035 <span class="comment">%     --&gt; 'continuous' - LTA window continues w/ STA window after trigger</span>
+0036 <span class="comment">%                        is turned on (Same behavior as before trigger)</span>
+0037             
+0038 <span class="comment">%OUTPUTS: events - Catalog object</span>
+0039 
+0040 <span class="comment">% Author: Glenn Thompson 2016-04-19 inspired by an earlier program by Dane</span>
+0041 <span class="comment">% Ketner (Alaska Volcano Observatory). The main differences are:</span>
+0042 <span class="comment">%   * algorithm completely rewritten to improve execution speed, clarity</span>
+0043 <span class="comment">%   * visualization of the sta_lta ratio added</span>
+0044 <span class="comment">%   * triggered events are returned as a GISMO Catalog object, for</span>
+0045 <span class="comment">%     consistency across GISMO</span>
+0046 <span class="comment">%</span>
+0047 <span class="comment">% $Date$</span>
+0048 <span class="comment">% $Revision$</span>
+0049 
+0050     <span class="comment">%% Check waveform variable</span>
+0051     <span class="keyword">if</span> isa(wave,<span class="string">'waveform'</span>)
+0052        <a href="../../../GISMO/core/@rsam/Fs.html" class="code" title="function fs = Fs(self)">Fs</a> = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(wave,<span class="string">'freq'</span>);         <span class="comment">% Sampling frequency</span>
+0053        l_v = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(wave,<span class="string">'data_length'</span>); <span class="comment">% Length of time series</span>
+0054        tv = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(wave, <span class="string">'timevector'</span>);  <span class="comment">% Time vector of waveform</span>
+0055        <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(wave)
+0056            <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'Input waveform empty, no events detected'</span>)
+0057            events = [];
+0058            <span class="keyword">return</span>
+0059        <span class="keyword">end</span>
+0060     <span class="keyword">else</span>
+0061        error(<span class="string">'STA_LTA: First Argument must be a waveform object'</span>)
+0062     <span class="keyword">end</span>
+0063 
+0064     <span class="comment">%% Set all default parameters</span>
+0065     l_sta = round(1*<a href="../../../GISMO/core/@rsam/Fs.html" class="code" title="function fs = Fs(self)">Fs</a>);     <span class="comment">% STA window length</span>
+0066     l_lta = round(8*<a href="../../../GISMO/core/@rsam/Fs.html" class="code" title="function fs = Fs(self)">Fs</a>);     <span class="comment">% LTA window length</span>
+0067     th_on = 2.0;        <span class="comment">% Trigger on when sta_to_lta exceeds this theshold</span>
+0068     th_off = 1.6;     <span class="comment">% Trigger off when sta_to_lta drops below threshold</span>
+0069     minimum_duration_days = 3.0/86400;   <span class="comment">% Any triggers shorter than minimum_duration_days are discarded</span>
+0070     lta_mode = <span class="string">'continuous'</span>; <span class="comment">% (Default) Post trigger-on LTA behavior</span>
+0071 
+0072     <span class="comment">%% Check varargin size</span>
+0073     nv = numel(varargin);
+0074     <span class="keyword">if</span> ~rem(nv,2) == 0
+0075        error([<span class="string">'STA_LTA: Arguments after wave must appear in '</span>,<span class="keyword">...</span>
+0076               <span class="string">'property_name/property_value pairs'</span>])
+0077     <span class="keyword">end</span>
+0078 
+0079     <span class="comment">%% User-defined parameters (varargin)</span>
+0080     <span class="keyword">if</span> nv &gt; 0
+0081         <span class="keyword">for</span> p = 1:2:nv-1
+0082             v1 = varargin{p};
+0083             v2 = varargin{p+1};
+0084             <span class="keyword">switch</span> lower(v1)
+0085                 <span class="keyword">case</span> <span class="string">'edp'</span>
+0086                     <span class="keyword">if</span> isnumeric(v2) &amp;&amp; numel(v2) == 5
+0087                         l_sta = round(v2(1)*<a href="../../../GISMO/core/@rsam/Fs.html" class="code" title="function fs = Fs(self)">Fs</a>);    <span class="comment">% STA window length</span>
+0088                         l_lta = round(v2(2)*<a href="../../../GISMO/core/@rsam/Fs.html" class="code" title="function fs = Fs(self)">Fs</a>);    <span class="comment">% LTA window length</span>
+0089                         th_on = v2(3);       <span class="comment">% Trigger on theshold</span>
+0090                         th_off = v2(4);      <span class="comment">% Trigger off threshold</span>
+0091                         minimum_duration_days = v2(5)/86400;  <span class="comment">% Minimum event duration</span>
+0092                     <span class="keyword">else</span>
+0093                         error(<span class="string">'STA_LTA: Wrong format for input ''edp'''</span>)
+0094                     <span class="keyword">end</span>
+0095                 <span class="keyword">case</span> <span class="string">'lta_mode'</span>
+0096                     <span class="keyword">switch</span> lower(v2)
+0097                         <span class="keyword">case</span> {<span class="string">'freeze'</span>,<span class="string">'frozen'</span>}
+0098                             lta_mode = <span class="string">'frozen'</span>;
+0099                         <span class="keyword">case</span> {<span class="string">'continue'</span>,<span class="string">'continuous'</span>}
+0100                             lta_mode = <span class="string">'continuous'</span>;
+0101                         <span class="keyword">case</span> {<span class="string">'grow'</span>,<span class="string">'growing'</span>}
+0102                             lta_mode = <span class="string">'grow'</span>;
+0103                         <span class="keyword">otherwise</span>
+0104                           error(<span class="string">'STA_LTA: Wrong format for input ''lta_mode'''</span>)
+0105                     <span class="keyword">end</span>
+0106                 <span class="keyword">otherwise</span>
+0107                     warning(<span class="string">'property name not recognized'</span>)
+0108                     v2
+0109             <span class="keyword">end</span>
+0110         <span class="keyword">end</span>
+0111     <span class="keyword">end</span>
+0112 
+0113 
+0114     <span class="comment">%% Initialize waveform data</span>
+0115     wave = <a href="../../../GISMO/core/@waveform/fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>(wave,<span class="string">'interp'</span>); <span class="comment">% replace NaN values using splines</span>
+0116     wave = <a href="../../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>(wave); <span class="comment">% critical to work with detrended data</span>
+0117     y = <a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(wave,<span class="string">'data'</span>)); <span class="comment">% Absolute value of time series</span>
+0118     t = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(wave,<span class="string">'timevector'</span>);
+0119 
+0120     eventnum = 0;
+0121     EVENT_ON = false;
+0122     eventstart=0;
+0123     eventend=0;
+0124     trig_array = [];
+0125     sta = ones(size(y));
+0126     lta = sta;
+0127     sta_to_lta = sta;
+0128     
+0129     <span class="comment">% initialize for first l_lta samples</span>
+0130     sta(1:l_sta) = cumsum(y(1:l_sta))/l_sta;
+0131     lta(1:l_lta) = cumsum(y(1:l_lta))/l_lta;
+0132     <span class="keyword">for</span> count = l_sta+1:l_lta
+0133         sta(count) = sta(count-1) + (y(count) - y(count - l_sta)) / l_sta;
+0134     <span class="keyword">end</span>
+0135     sta_to_lta(1:l_lta) = sta(1:l_lta)./lta(1:l_lta);
+0136     
+0137     <span class="keyword">for</span> count=l_lta+1:length(y)
+0138         <span class="comment">% rather than use a moving average, just remove oldest sample and</span>
+0139         <span class="comment">% add newest = faster</span>
+0140         <span class="keyword">if</span> EVENT_ON &amp;&amp; strcmp(lta_mode,<span class="string">'frozen'</span>)
+0141             lta(count) = lta_freeze_level; <span class="comment">% freeze LTA is event is triggering</span>
+0142         <span class="keyword">else</span>
+0143             lta(count) = lta(count-1) + (y(count) - y(count - l_lta))/l_lta ;
+0144         <span class="keyword">end</span>
+0145         sta(count) = sta(count-1) + (y(count) - y(count - l_sta))/l_sta;
+0146         sta_to_lta(count) = sta(count)/lta(count);
+0147         
+0148         <span class="keyword">if</span> ~EVENT_ON &amp; sta_to_lta(count) &gt;= th_on 
+0149             EVENT_ON = true;
+0150             eventstart = t(count);
+0151             lta_freeze_level = lta(count);
+0152         <span class="keyword">end</span>
+0153         
+0154         <span class="keyword">if</span> EVENT_ON &amp; ((sta_to_lta(count) &lt;= th_off) || count == length(y))
+0155             EVENT_ON = false;
+0156             eventend = t(count);
+0157             <span class="keyword">if</span> strcmp(lta_mode,<span class="string">'frozen'</span>) <span class="comment">% unfreeze the lta</span>
+0158                 lta(count) = nanmean(y(count-l_lta+1:count));
+0159             <span class="keyword">end</span>
+0160             <span class="keyword">if</span> (eventend-eventstart)&gt;=minimum_duration_days
+0161                 eventnum = eventnum + 1;
+0162                 <span class="keyword">if</span> eventnum &lt; 11
+0163                     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(sprintf(<span class="string">'Event %d: %s to %s'</span>,eventnum,datestr(eventstart),datestr(eventend)))
+0164                 <span class="keyword">end</span>
+0165                 trig_array(eventnum, 1) = eventstart;
+0166                 trig_array(eventnum, 2) = eventend;
+0167                 eventstart = 0;
+0168                 eventend = 0;
+0169             <span class="keyword">end</span>  
+0170         <span class="keyword">end</span>  
+0171     <span class="keyword">end</span>
+0172     
+0173     figure
+0174     t_secs=(t-t(1))*86400;
+0175     ta_secs = (trig_array-t(1))*86400;
+0176     
+0177     ax(1)=subplot(4,1,1);<a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(t_secs,<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(wave,<span class="string">'data'</span>),<span class="string">'k'</span>),title(<span class="string">'waveform'</span>)
+0178     ax(2)=subplot(4,1,2);<a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(t_secs,sta,<span class="string">'k'</span>),title(<span class="string">'STA'</span>)
+0179     ax(3)=subplot(4,1,3);<a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(t_secs,lta,<span class="string">'k'</span>),title(<span class="string">'LTA'</span>)
+0180     ax(4)=subplot(4,1,4);<a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(t_secs,sta_to_lta,<span class="string">'k'</span>),title(<span class="string">'STA:LTA'</span>)
+0181     linkaxes(ax,<span class="string">'x'</span>)
+0182     hold on
+0183     a=axis();
+0184     xlabel(<span class="string">'Time (s)'</span>)
+0185     <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>([a(1) a(2)],[th_on th_on],<span class="string">'r'</span>);
+0186     <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>([a(1) a(2)],[th_off th_off],<span class="string">'g'</span>);
+0187     <span class="keyword">for</span> count=1:size(ta_secs,1)
+0188         <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(ta_secs(count,:),[0 0],<span class="string">'b'</span>,<span class="string">'LineWidth'</span>,5);
+0189     <span class="keyword">end</span>
+0190     <span class="keyword">if</span> eventnum==0
+0191         cobj = <a href="../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>();
+0192     <span class="keyword">else</span>
+0193         cobj = <a href="../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>([], [], [], [], [], {}, {}, <span class="string">'ontime'</span>, trig_array(:,1), <span class="string">'offtime'</span>, trig_array(:,2));
+0194     <span class="keyword">end</span>
+0195 
+0196 <span class="keyword">end</span>
+0197 
+0198 
+0199 
+0200 
+0201             
+0202                      
+0203</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

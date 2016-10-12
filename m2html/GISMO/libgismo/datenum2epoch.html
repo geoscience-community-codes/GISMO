@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of datenum2epoch</title>
+  <meta name="keywords" content="datenum2epoch">
+  <meta name="description" content="EPOCH = DATENUM2EPOCH(TIME) translates Matlab numeric">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">libgismo</a> &gt; datenum2epoch.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/libgismo&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>datenum2epoch
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>EPOCH = DATENUM2EPOCH(TIME) translates Matlab numeric</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function epoch = datenum2epoch(time) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> EPOCH = DATENUM2EPOCH(TIME) translates Matlab numeric 
+ date format into Unix epoch date format.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/contributed/instrument_response/response_get_from_db.html" class="code" title="function [response] = response_get_from_db(station, channel, time, frequencies, dbName)">response_get_from_db</a>	RESPONSE_GET_FROM_DB Get instrument response from database.</li><li><a href="../../GISMO/core/+Catalog/+read_catalog/antelope.html" class="code" title="function self = antelope(varargin)">antelope</a>	READ_CATALOG.ANTELOPE load events from a CSS3.0 database using Antelope.</li><li><a href="../../GISMO/core/+antelope/listMiniseedFiles.html" class="code" title="function [mseedfiles] = listMiniseedFiles(ds, chantag, snum, enum)">listMiniseedFiles</a>	LISTMINISEEDFILES retrieve a list of the Miniseed files referenced by a datasource, ChannelTag object and start/end times.</li><li><a href="../../GISMO/core/@Catalog/write.html" class="code" title="function write(catalogObject, outformat, outpath, schema)">write</a>	CATALOG.WRITE Write an Catalog object to disk</li><li><a href="../../GISMO/core/@EventRate/EventRate.html" class="code" title="">EventRate</a>	</li><li><a href="../../GISMO/core/@correlation/writedb.html" class="code" title="function writedb(c,dbOut,varargin)">writedb</a>	WRITEDB write antelope database tables</li><li><a href="../../GISMO/core/dev/@NewCorrelation/writedb.html" class="code" title="function writedb(c,dbOut,varargin)">writedb</a>	WRITEDB write antelope database tables</li><li><a href="../../GISMO/tests/antelope2waveform_test.html" class="code" title="function w=antelope2waveform_test()">antelope2waveform_test</a>	dbpath = '/aerun/sum/db/archive/archive_2011/archive_2011_11_16';</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% EPOCH = DATENUM2EPOCH(TIME) translates Matlab numeric</span>
+0002 <span class="comment">% date format into Unix epoch date format.</span>
+0003 
+0004 <span class="comment">% Author: Michael West. Modified Glenn Thompson.</span>
+0005 <span class="comment">% $Date$</span>
+0006 <span class="comment">% $Revision$</span>
+0007 
+0008 <a name="_sub0" href="#_subfunctions" class="code">function epoch = datenum2epoch(time)</a>
+0009 
+0010 
+0011 epoch = zeros(size(time));
+0012 
+0013 <span class="keyword">if</span> admin.antelope_exists()
+0014     <span class="keyword">for</span> n = 1:numel(time)
+0015         epoch(n) = str2epoch(datestr(time(n),<span class="string">'mm/dd/yyyy HH:MM:SS.FFF'</span>));
+0016     <span class="keyword">end</span>
+0017 <span class="keyword">else</span>
+0018     <span class="comment">% Does not account for leap seconds.</span>
+0019     <span class="keyword">for</span> n = 1:numel(time)
+0020         epoch(n) = (time - datenum(1970,1,1,0,0,0))*86400;
+0021     <span class="keyword">end</span>
+0022 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

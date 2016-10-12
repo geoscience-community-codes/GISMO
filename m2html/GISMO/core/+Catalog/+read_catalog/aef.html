@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of aef</title>
+  <meta name="keywords" content="aef">
+  <meta name="description" content="READ_CATALOG.AEF">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">+Catalog</a> &gt; <a href="index.html">+read_catalog</a> &gt; aef.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+Catalog/+read_catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>aef
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>READ_CATALOG.AEF</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function self = aef(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> READ_CATALOG.AEF
+   Wrapper for loading dat files generated from Seisan S-FILES (REA) databases.
+   DAT file name is like YYYYMM.dat
+   DAT file format is like:
+   
+   YYYY MM DD HH MM SS c  MagE
+
+   where YYYY MM DD HH MM SS is time in UTC
+         c is subclass
+              r = rockfall
+              e = lp-rockfall
+              l = long period (lp)
+              h = hybrid
+              t = volcano-tectonic
+              R = regional
+              u = unknown
+         MagE is equivalent magnitude, based on energy
+         produced by the program ampengfft. These values come
+         from magnitude database that formed part of a
+         real-time alarm system, but these deleted were
+         maliciously deleted in June 2003. A magnitude was
+         computed for each event, assuming a location at sea
+         level beneath the dome. Regardless of type. This was
+         particularly helpful for understanding trends in
+         cumulative energy for different types from week to
+         week or month to month, and for real-time alarm
+         messages about pyroclastic flow signals where an
+         indication of event size was very important.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Sfile/Sfile.html" class="code" title="">Sfile</a>	Class that describes data in a Seisan S-file</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = import_aef_file(dirpath, yyyy, mm, snum, enum, RUNMODE)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function self = aef(varargin)     </a>
+0002     <span class="comment">% READ_CATALOG.AEF</span>
+0003     <span class="comment">%   Wrapper for loading dat files generated from Seisan S-FILES (REA) databases.</span>
+0004     <span class="comment">%   DAT file name is like YYYYMM.dat</span>
+0005     <span class="comment">%   DAT file format is like:</span>
+0006     <span class="comment">%</span>
+0007     <span class="comment">%   YYYY MM DD HH MM SS c  MagE</span>
+0008     <span class="comment">%</span>
+0009     <span class="comment">%   where YYYY MM DD HH MM SS is time in UTC</span>
+0010     <span class="comment">%         c is subclass</span>
+0011     <span class="comment">%              r = rockfall</span>
+0012     <span class="comment">%              e = lp-rockfall</span>
+0013     <span class="comment">%              l = long period (lp)</span>
+0014     <span class="comment">%              h = hybrid</span>
+0015     <span class="comment">%              t = volcano-tectonic</span>
+0016     <span class="comment">%              R = regional</span>
+0017     <span class="comment">%              u = unknown</span>
+0018     <span class="comment">%         MagE is equivalent magnitude, based on energy</span>
+0019     <span class="comment">%         produced by the program ampengfft. These values come</span>
+0020     <span class="comment">%         from magnitude database that formed part of a</span>
+0021     <span class="comment">%         real-time alarm system, but these deleted were</span>
+0022     <span class="comment">%         maliciously deleted in June 2003. A magnitude was</span>
+0023     <span class="comment">%         computed for each event, assuming a location at sea</span>
+0024     <span class="comment">%         level beneath the dome. Regardless of type. This was</span>
+0025     <span class="comment">%         particularly helpful for understanding trends in</span>
+0026     <span class="comment">%         cumulative energy for different types from week to</span>
+0027     <span class="comment">%         week or month to month, and for real-time alarm</span>
+0028     <span class="comment">%         messages about pyroclastic flow signals where an</span>
+0029     <span class="comment">%         indication of event size was very important.</span>
+0030     <span class="comment">%</span>
+0031     <span class="comment">%</span>
+0032   
+0033     debug.printfunctionstack(<span class="string">'&gt;'</span>)
+0034 
+0035     <span class="comment">% Process input arguments</span>
+0036     p = inputParser;
+0037     p.addParamValue(<span class="string">'dbpath'</span>, <span class="string">''</span>, @isstr);
+0038     p.addParamValue(<span class="string">'startTime'</span>, 0, @isnumeric);  
+0039     p.addParamValue(<span class="string">'endTime'</span>, now, @isnumeric);
+0040     p.addParamValue(<span class="string">'minimumMagnitude'</span>, [], @isnumeric);
+0041     p.addParamValue(<span class="string">'subclass'</span>, <span class="string">'*'</span>, @ischar);
+0042     p.addParamValue(<span class="string">'minimumDepth'</span>, [], @isnumeric);
+0043     p.addParamValue(<span class="string">'maximumDepth'</span>, [], @isnumeric);
+0044     p.parse(varargin{:});
+0045     
+0046     fields = fieldnames(p.Results);
+0047     <span class="keyword">for</span> i=1:length(fields)
+0048         field=fields{i};
+0049         <span class="comment">% val = eval(sprintf('p.Results.%s;',field));</span>
+0050         val = p.Results.(field);
+0051         eval(sprintf(<span class="string">'%s = val;'</span>,field));
+0052     <span class="keyword">end</span>
+0053     <span class="keyword">if</span> ~exist(dbpath, <span class="string">'dir'</span>)
+0054         fprintf(<span class="string">'Directory %s not found. Perhaps you need to generate from S files?\n'</span>,dbpath);
+0055         <span class="keyword">return</span>;
+0056     <span class="keyword">end</span>
+0057     
+0058     lnum=snum;
+0059 
+0060     <span class="comment">% loop over all years and months selected</span>
+0061     <span class="keyword">while</span> (  lnum &lt;= enum ),
+0062         [yyyy, mm] = datevec(lnum);
+0063 
+0064         <span class="comment">% concatenate catalogs</span>
+0065         Object0 = <a href="#_sub1" class="code" title="subfunction self = import_aef_file(dirpath, yyyy, mm, snum, enum, RUNMODE)">import_aef_file</a>(dbpath,yyyy,mm,snum,enum,p.Results.RUNMODE);
+0066         <span class="keyword">if</span> exist(<span class="string">'self'</span>, <span class="string">'var'</span>)
+0067             self = self + Object0;
+0068         <span class="keyword">else</span>
+0069             self = Object0;
+0070         <span class="keyword">end</span>
+0071         clear Object0;
+0072         
+0073         <span class="comment">% ready for following month</span>
+0074         lnum=datenum(yyyy,mm+1,1);
+0075     <span class="keyword">end</span>
+0076 
+0077     self.mag(self.mag&lt;-3)=NaN;
+0078 
+0079     <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(self.dnum)
+0080 
+0081         <span class="comment">% cut data according to threshold mag</span>
+0082         <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(minimumMagnitude)
+0083             <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'Applying minimum magnitude filter'</span>)
+0084             m = <a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(self.mag &gt; minimumMagnitude);
+0085             fprintf(<span class="string">'Accepting %d events out of %d\n'</span>,length(m),length(self.dnum));
+0086             self.event_list = self.event_list(m);
+0087         <span class="keyword">end</span>    
+0088     <span class="keyword">end</span>
+0089     
+0090     debug.printfunctionstack(<span class="string">'&lt;'</span>)
+0091 <span class="keyword">end</span>
+0092 
+0093 <span class="comment">%% ---------------------------------------------------</span>
+0094       
+0095 <a name="_sub1" href="#_subfunctions" class="code">function self = import_aef_file(dirpath, yyyy, mm, snum, enum, RUNMODE)</a>
+0096 <span class="comment">% readEvents.import_aef_file Read an individual aef_file. Used only by</span>
+0097 <span class="comment">% readEvents.load_aef</span>
+0098     <span class="comment">%   Wrapper for loading dat files generated from Seisan S-FILES (REA) databases.</span>
+0099     <span class="comment">%   DAT file name is like YYYYMM.dat</span>
+0100     <span class="comment">%   DAT file format is like:</span>
+0101     <span class="comment">%</span>
+0102     <span class="comment">%   YYYY MM DD HH MM SS c  MagE</span>
+0103     <span class="comment">%</span>
+0104     <span class="comment">%   where YYYY MM DD HH MM SS is time in UTC</span>
+0105     <span class="comment">%         c is subclass</span>
+0106     <span class="comment">%              r = rockfall</span>
+0107     <span class="comment">%              e = lp-rockfall</span>
+0108     <span class="comment">%              l = long period (lp)</span>
+0109     <span class="comment">%              h = hybrid</span>
+0110     <span class="comment">%              t = volcano-tectonic</span>
+0111     <span class="comment">%              R = regional</span>
+0112     <span class="comment">%              u = unknown</span>
+0113     <span class="comment">%         MagE is equivalent magnitude, based on energy</span>
+0114     <span class="comment">%         produced by the program ampengfft. These values come</span>
+0115     <span class="comment">%         from magnitude database that formed part of a</span>
+0116     <span class="comment">%         real-time alarm system, but these were deleted in June 2003.</span>
+0117     <span class="comment">%</span>
+0118     <span class="comment">%         A magnitude was</span>
+0119     <span class="comment">%         computed for each event, assuming a location at sea</span>
+0120     <span class="comment">%         level beneath the dome. Regardless of type. This was</span>
+0121     <span class="comment">%         particularly helpful for understanding trends in</span>
+0122     <span class="comment">%         cumulative energy for different types from week to</span>
+0123     <span class="comment">%         week or month to month, and for real-time alarm</span>
+0124     <span class="comment">%         messages about pyroclastic flow signals where an</span>
+0125     <span class="comment">%         indication of event size was very important.</span>
+0126 
+0127     debug.printfunctionstack(<span class="string">'&gt;'</span>)
+0128     
+0129     self = [];
+0130     fprintf(<span class="string">'\nAPPEND SEISAN %4d-%02d\n'</span>,yyyy,mm)
+0131     datfile = fullfile(dirpath,sprintf(<span class="string">'%4d%02d.dat'</span>,yyyy,mm));
+0132     <span class="keyword">if</span> exist(datfile,<span class="string">'file'</span>) 
+0133         <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'loading '</span>,datfile]);
+0134         [yr,mn,dd,hh,mi,ss,etype0,mag0] = textread(datfile,<span class="string">'%d %d %d %d %d %d %s %f'</span>);
+0135         dnum = datenum(yr,mn,dd,hh,mi,ss)';
+0136         mag = mag0';
+0137         etype = char(etype0)';
+0138         self = <a href="../../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>(dnum, [], [], [], mag, {}, etype); 
+0139     <span class="keyword">else</span>
+0140         <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([datfile,<span class="string">' not found'</span>]);
+0141     <span class="keyword">end</span>
+0142     
+0143     debug.printfunctionstack(<span class="string">'&lt;'</span>)
+0144 
+0145 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

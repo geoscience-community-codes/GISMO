@@ -1,0 +1,668 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of NewCorrelation</title>
+  <meta name="keywords" content="NewCorrelation">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; NewCorrelation.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>NewCorrelation
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/contributed/iris_dmc_tools/+irisdmc/about.html" class="code" title="function about">about</a>	Tools for interacting with the IRIS DMC web services.</li><li><a href="../../../../GISMO/contributed/iris_dmc_tools/+irisdmc/cookbook.html" class="code" title="function cookbook">cookbook</a>	COOKBOOK example program using the IRIS DMC web services</li><li><a href="../../../../GISMO/contributed/master_correlation/+mastercorr/about.html" class="code" title="function about">about</a>	Tools for master event cross correlation against long time series.</li><li><a href="../../../../GISMO/contributed/master_correlation/+mastercorr/cookbook.html" class="code" title="">cookbook</a>	COOKBOOK demonstrate the features of the mastercorr package.</li><li><a href="../../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/about.html" class="code" title="function about">about</a>	Tools for exploring travel time and ray coverage.</li><li><a href="../../../../GISMO/core/+admin/about.html" class="code" title="function about">about</a>	Tools for maintaining and programming in the GISMO environment.</li><li><a href="../../../../GISMO/core/+scnlobject/cookbook.html" class="code" title="">cookbook</a>	% The SCNLOBJECT cookbook</li><li><a href="../../../../GISMO/core/@Catalog/cookbook.html" class="code" title="">cookbook</a>	% Catalog Cookbook</li><li><a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../../GISMO/core/@Catalog/subset.html" class="code" title="function catalogObject2 = subset(catalogObject, indices)">subset</a>	CATALOG.SUBSET Create a new catalogObject by subsetting based</li><li><a href="../../../../GISMO/core/@EventRate/cookbook.html" class="code" title="">cookbook</a>	% EventRate Cookbook</li><li><a href="../../../../GISMO/core/@correlation/adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG adjusts the trigger times of each trace</li><li><a href="../../../../GISMO/core/@correlation/agc.html" class="code" title="function c = agc(c,varargin)">agc</a>	This function applies automatic gain control (AGC) to each trace. This</li><li><a href="../../../../GISMO/core/@correlation/align.html" class="code" title="function c = align(c,varargin)">align</a>	c = ALIGN(c)</li><li><a href="../../../../GISMO/core/@correlation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>	C = BUTTER(C,[TYPE],CUTOFF,[POLES])</li><li><a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="../../../../GISMO/core/@correlation/check.html" class="code" title="function val = check(c,varargin)">check</a>	Check various features of a correlation object.</li><li><a href="../../../../GISMO/core/@correlation/cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	c = CLUSTER(c,CUTOFF) cuts the "branches" of the linkage tree to create</li><li><a href="../../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>	C = COLORMAP(C)</li><li><a href="../../../../GISMO/core/@correlation/conv.html" class="code" title="function c = conv(c,varargin)">conv</a>	c = CONV(c) convolves all traces with the final trace. By default the new</li><li><a href="../../../../GISMO/core/@correlation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../../GISMO/core/@correlation/crop.html" class="code" title="function c = crop(c,varargin)">crop</a>	c = CROP(c,[PRETRIG POSTTRIG])</li><li><a href="../../../../GISMO/core/@correlation/demean.html" class="code" title="function c = demean(c,varargin);">demean</a>	DEMEAN removes the mean of each trace.</li><li><a href="../../../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>	DETREND removes the slope of each trace.</li><li><a href="../../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@correlation/getclusterstat.html" class="code" title="function family=getclusterstat(c)">getclusterstat</a>	GETCLUSTERSTAT gets detais of individual correlation clusters.</li><li><a href="../../../../GISMO/core/@correlation/getstat.html" class="code" title="function c=getstat(c)">getstat</a>	c = GETSTAT(c)</li><li><a href="../../../../GISMO/core/@correlation/hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li><li><a href="../../../../GISMO/core/@correlation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li><li><a href="../../../../GISMO/core/@correlation/interferogram.html" class="code" title="function [c,t,i,CC,LL] = interferogram(c,varargin)">interferogram</a>	C = INTERFEROGRAM(C)</li><li><a href="../../../../GISMO/core/@correlation/linkage.html" class="code" title="function c = linkage(c,varargin);">linkage</a>	c = LINKAGE(c) Creates a hierarchical cluster tree for all waveforms in</li><li><a href="../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>	Retain matching elements of two correlation objects.</li><li><a href="../../../../GISMO/core/@correlation/minus.html" class="code" title="function c = minus(c,varargin)">minus</a>	C = MINUS(C,I)</li><li><a href="../../../../GISMO/core/@correlation/norm.html" class="code" title="function c = norm(c,varargin)">norm</a>	C = NORM(C)</li><li><a href="../../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../../GISMO/core/@correlation/private/corrplot.html" class="code" title="function corrplot(c)">corrplot</a>	Called internally by correlation/plot to plot correlation matrix.</li><li><a href="../../../../GISMO/core/@correlation/private/dendrogramplot.html" class="code" title="function dendrogramplot(c);">dendrogramplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/eventplot.html" class="code" title="function eventplot(c,scale,howmany);">eventplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/getval.html" class="code" title="function A = getval(OBJ,PROP)">getval</a>	Function to extract a cell array from an</li><li><a href="../../../../GISMO/core/@correlation/private/lagplot.html" class="code" title="function lagplot(c);">lagplot</a>	Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</li><li><a href="../../../../GISMO/core/@correlation/private/makesynthwaves.html" class="code" title="function c = makesynthwaves(n);">makesynthwaves</a>	Add N traces of synthetic data to a correlation object. Alters properties: waves, trig,</li><li><a href="../../../../GISMO/core/@correlation/private/occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/overlayplot.html" class="code" title="function overlayplot(c,scale,ord)">overlayplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/sampleplot.html" class="code" title="function sampleplot(c,scale,ord)">sampleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/shadedplot.html" class="code" title="function shadedplot(c,scale,ord)">shadedplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/statplot.html" class="code" title="function statplot(c);">statplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/xcorr1xr.html" class="code" title="function d = xcorr1xr(d,style)">xcorr1xr</a>	XCORR1XR Cross correlate 1 trace against all other traces at once.</li><li><a href="../../../../GISMO/core/@correlation/private/xcorrrow.html" class="code" title="function d = xcorrrow(d,c,index)">xcorrrow</a>	XCORRROW Cross correlation for one or more traces.</li><li><a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>	SIGN removes the mean of each trace.</li><li><a href="../../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>	C = SORT(C,'TIME')</li><li><a href="../../../../GISMO/core/@correlation/stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li><li><a href="../../../../GISMO/core/@correlation/strip.html" class="code" title="function c = strip(c,varargin)">strip</a>	c = STRIP(c)</li><li><a href="../../../../GISMO/core/@correlation/subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li><li><a href="../../../../GISMO/core/@correlation/taper.html" class="code" title="function c = taper(c,varargin)">taper</a>	TAPER tapers the ends of waveforms in the correlation object.</li><li><a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../GISMO/core/@correlation/writedb.html" class="code" title="function writedb(c,dbOut,varargin)">writedb</a>	WRITEDB write antelope database tables</li><li><a href="../../../../GISMO/core/@correlation/xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	C = XCORR(C)</li><li><a href="../../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@drumplot/cookbook.html" class="code" title="">cookbook</a>	% drumplot cookbook</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../../GISMO/core/@rsam/cookbook.html" class="code" title="">cookbook</a>	% RSAM Cookbook</li><li><a href="../../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>	Purpose:</li><li><a href="../../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>	ALIGN Align and trim traces in threecomp object.</li><li><a href="../../../../GISMO/core/@threecomp/cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="../../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../../../GISMO/core/@waveform/align.html" class="code" title="function w = align(w,alignTime, newFrequency, method)">align</a>	ALIGN resamples a waveform at over a specified interval</li><li><a href="../../../../GISMO/core/@waveform/demean.html" class="code" title="function w = demean (w)">demean</a>	DEMEAN remove offset voltage from signal</li><li><a href="../../../../GISMO/core/@waveform/detrend.html" class="code" title="function w = detrend (w, varargin)">detrend</a>	DETREND remove linear trend from a waveform</li><li><a href="../../../../GISMO/core/@waveform/diff.html" class="code" title="function w = diff (w)">diff</a>	DIFF Differentiate waveform</li><li><a href="../../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../../GISMO/core/@waveform/fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>	FILLGAPS - fill missing data with values of your choice</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../../GISMO/core/@waveform/hilbert.html" class="code" title="function W = hilbert(W, n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li><li><a href="../../../../GISMO/core/@waveform/integrate.html" class="code" title="function w = integrate (w,method)">integrate</a>	INTEGRATE integrates a waveform signal</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>	ISFIELD checks the presence of waveform fields.</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/minus.html" class="code" title="function w = minus(w,q)">minus</a>	MINUS (-) Overloaded waveform subtraction    w - q</li><li><a href="../../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../../GISMO/core/@waveform/sign.html" class="code" title="function w = sign(w)">sign</a>	SIGN Signum function for waveforms.</li><li><a href="../../../../GISMO/core/@waveform/stack.html" class="code" title="function out = stack(w)">stack</a>	STACK stacks data from array of waveforms</li><li><a href="../../../../GISMO/core/@waveform/taper.html" class="code" title="function w = taper(w,R, style)">taper</a>	WAVEFORM = TAPER(WAVEFORM,R) applies a cosine taper to the ends of a</li><li><a href="../../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG  adjusts the trigger times of each trace</li><li><a href="agc.html" class="code" title="function c = agc(c,windowInSeconds)">agc</a>	acg   apply automatic gain control to each trace</li><li><a href="align.html" class="code" title="function c = align(c, alignfreq)">align</a>	align   resample traces so that a sample falls exactly on trigger time.</li><li><a href="butter.html" class="code" title="function c = butter(c,varargin)">butter</a>	butter   create and apply a butterworth filter to the traces</li><li><a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="check.html" class="code" title="function val = check(c, whatToCheck)">check</a>	Check various features of a correlation object.</li><li><a href="cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	cluster   Construct agglomerative clusters from linkage for Seismic Traces</li><li><a href="colormap.html" class="code" title="function c = colormap(c,mapname)">colormap</a>	colormap   apply a colormap to the cross-correlation</li><li><a href="conv.html" class="code" title="function c = conv(c)">conv</a>	conv   convolve all traces with the final trace</li><li><a href="cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="corrplot.html" class="code" title="function corrplot(c)">corrplot</a>	corrplot   plot the correlation matrix</li><li><a href="crop.html" class="code" title="function c = crop(c, pretrig, posttrig)">crop</a>	crop   crop all waveforms to a time window</li><li><a href="demean.html" class="code" title="function c = demean(c)">demean</a>	DEMEAN removes the mean of each trace.</li><li><a href="dendrogramplot.html" class="code" title="function dendrogramplot(c)">dendrogramplot</a>	dendrogramplot   create a dendrogram plot</li><li><a href="detrend.html" class="code" title="function c = detrend(c)">detrend</a>	DETREND   removes the slope of each trace.</li><li><a href="diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="eventplot.html" class="code" title="function eventplot(c,scale,howmany)">eventplot</a>	Private method. See ../plot for details.</li><li><a href="find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="getclusterstat.html" class="code" title="function family=getclusterstat(c)">getclusterstat</a>	GETCLUSTERSTAT gets detais of individual correlation clusters.</li><li><a href="getstat.html" class="code" title="function c=getstat(c)">getstat</a>	c = GETSTAT(c)</li><li><a href="getval.html" class="code" title="function A = getval(OBJ,PROP)">getval</a>	Function to extract a cell array from an</li><li><a href="hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li><li><a href="integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li><li><a href="interferogram.html" class="code" title="function [c,t,i,CC,LL] = interferogram(c, width, timestep, masterIdx)">interferogram</a>	C = INTERFEROGRAM(C)</li><li><a href="lagplot.html" class="code" title="function lagplot(c)">lagplot</a>	lagplot</li><li><a href="linkage.html" class="code" title="function c = linkage(c,varargin)">linkage</a>	linkage   Agglomerative hierarchical cluster tree for Seismic Traces</li><li><a href="makesynthwaves.html" class="code" title="function c = makesynthwaves(n)">makesynthwaves</a>	Add N traces of synthetic data to a correlation object. Alters properties: waves, trig,</li><li><a href="match.html" class="code" title="function [c1,c2] = match(c1,c2,toleranceInSeconds)">match</a>	Retain matching elements of two correlation objects.</li><li><a href="minus.html" class="code" title="function c = minus(c,I)">minus</a>	C = MINUS(C,I)</li><li><a href="norm.html" class="code" title="function c = norm(c,varargin)">norm</a>	C = NORM(C)</li><li><a href="occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="overlayplot.html" class="code" title="function overlayplot(c,scale,ord)">overlayplot</a>	Private method. See ../plot for details.</li><li><a href="plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="sampleplot.html" class="code" title="function sampleplot(c,scale,ord)">sampleplot</a>	Private method. See ../plot for details.</li><li><a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="shadedplot.html" class="code" title="function shadedplot(c,scale,ord)">shadedplot</a>	Private method. See ../plot for details.</li><li><a href="sign.html" class="code" title="function c = sign(c)">sign</a>	SIGN convert traces to the sign of their data (+1, 0, -1)</li><li><a href="sort.html" class="code" title="function c = sort(c)">sort</a>	C = SORT(C) Sorts traces from oldest to youngest.</li><li><a href="stack.html" class="code" title="function c = stack(c,index)">stack</a>	c = STACK(c)</li><li><a href="statplot.html" class="code" title="function statplot(c)">statplot</a>	Private method. See ../plot for details.</li><li><a href="strip.html" class="code" title="function c = strip(c)">strip</a>	c = STRIP(c)</li><li><a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li><li><a href="taper.html" class="code" title="function c = taper(c,varargin)">taper</a>	TAPER tapers the ends of waveforms in the correlation object.</li><li><a href="unifytracelengths.html" class="code" title="function c = unifytracelengths(c)">unifytracelengths</a>	unifytracelengths   make all traces the same length (mode length)</li><li><a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>	Private method. See ../plot for details.</li><li><a href="writedb.html" class="code" title="function writedb(c,dbOut,varargin)">writedb</a>	WRITEDB write antelope database tables</li><li><a href="xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	xcorr   calculate the correlation and lag for traces</li><li><a href="xcorr1xr.html" class="code" title="function d = xcorr1xr(d,style)">xcorr1xr</a>	XCORR1XR Cross correlate 1 trace against all other traces at once.</li><li><a href="xcorrrow.html" class="code" title="function d = xcorrrow(d,c,index)">xcorrrow</a>	XCORRROW Cross correlation for one or more traces.</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../../GISMO/core/dev/@TraceFilter/cookbook.html" class="code" title="function cookbook()">cookbook</a>	cookbook   Cookbook for TraceFilter</li><li><a href="../../../../GISMO/core/dev/@TraceSpectra/cookbook.html" class="code" title="function cookbook()">cookbook</a>	cookbook   Cookbook for TraceSpectra</li><li><a href="../../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li><li><a href="../../../../GISMO/deprecated/fft_tools/+wf_fft/about.html" class="code" title="function about">about</a>	Miscellaneous tools for working with waveforms.</li><li><a href="../../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li><li><a href="../../../../GISMO/uaf_internal/AEIC_AVO/+aeic_catalog/about.html" class="code" title="function about">about</a>	Tools for interfacing with the AEIC earthquake catalog.</li><li><a href="../../../../GISMO/uaf_internal/AEIC_AVO/+check/about.html" class="code" title="function about">about</a>	Tools for checking various types of data integrity.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="eventplot.html" class="code" title="function eventplot(c,scale,howmany)">eventplot</a>	Private method. See ../plot for details.</li><li><a href="minus.html" class="code" title="function c = minus(c,I)">minus</a>	C = MINUS(C,I)</li><li><a href="stack.html" class="code" title="function c = stack(c,index)">stack</a>	c = STACK(c)</li><li><a href="xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	xcorr   calculate the correlation and lag for traces</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function c = NewCorrelation(varargin)</a></li><li><a href="#_sub2" class="code">function c = loadfromdatasource(ds,scnl,trig,pretrig,posttrig)</a></li><li><a href="#_sub3" class="code">function c = loadfromantelope(stat,chan,trig,pretrig,posttrig,archive)</a></li><li><a href="#_sub4" class="code">function c = loadfromwinston(stat,chan,trig,pretrig,posttrig,netwk,loc,server,port)</a></li><li><a href="#_sub5" class="code">function c = convert_coral(coral)</a></li><li><a href="#_sub6" class="code">function waves = get.W(obj)</a></li><li><a href="#_sub7" class="code">function obj = set.W(obj, waves)</a></li><li><a href="#_sub8" class="code">function X = get.C(obj)</a></li><li><a href="#_sub9" class="code">function obj = set.C(obj, C)</a></li><li><a href="#_sub10" class="code">function X = get.L(obj)</a></li><li><a href="#_sub11" class="code">function obj = set.L(obj, lags)</a></li><li><a href="#_sub12" class="code">function c = set.traces(c, T)</a></li><li><a href="#_sub13" class="code">function sta = get.stations(obj)</a></li><li><a href="#_sub14" class="code">function net = get.networks(obj)</a></li><li><a href="#_sub15" class="code">function loc = get.locations(obj)</a></li><li><a href="#_sub16" class="code">function cha = get.channels(obj)</a></li><li><a href="#_sub17" class="code">function n = get.ntraces(obj)</a></li><li><a href="#_sub18" class="code">function sr = get.samplerate(obj)</a></li><li><a href="#_sub19" class="code">function n = get.data_length(obj)</a></li><li><a href="#_sub20" class="code">function n = relativeStartTime(c, i)</a></li><li><a href="#_sub21" class="code">function maybeReplaceYticksWithStationNames(c,ax)</a></li><li><a href="#_sub22" class="code">function c = convertFromOld(c, oldC)</a></li><li><a href="#_sub23" class="code">function c = demo()</a></li><li><a href="#_sub24" class="code">function m = fillLowerTriangleFromUpper(m)</a></li><li><a href="#_sub25" class="code">function tf = mightBeCoral(aStruct)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>
+0002    <span class="comment">%Correlation</span>
+0003    <span class="comment">%  Authored by Mike West, Geophysical Institute, Univ. of Fairbanks</span>
+0004    <span class="comment">%  rewritten into the new MATLAB classes by Celso Reyes</span>
+0005    
+0006    <span class="comment">%TODO: writing traces is inefficient because of set.traces. convert this</span>
+0007    <span class="comment">%to both an internal and external version, where internal TRUSTS always</span>
+0008    <span class="comment">%a column, and external doesn't.</span>
+0009    
+0010    properties
+0011       traces <span class="comment">%  % c.W</span>
+0012       trig <span class="comment">% will be triggers; % c.trig</span>
+0013       corrmatrix <span class="comment">% correlation similarity matrix</span>
+0014       lags <span class="comment">% will be lags; % c.L</span>
+0015       stat <span class="comment">% will be statistics; % c.stat</span>
+0016       link <span class="comment">% might be links;% c.link</span>
+0017       clust <span class="comment">% will be clusters;% c.clust</span>
+0018    <span class="keyword">end</span>
+0019    
+0020    properties(Dependent, Hidden)
+0021       <span class="comment">% properties that existed prior to rewrite</span>
+0022       W <span class="comment">% traces as waveforms</span>
+0023       C <span class="comment">% correlation matrix corrmatrix</span>
+0024       L <span class="comment">% Lags</span>
+0025    <span class="keyword">end</span>
+0026    properties(Dependent)
+0027       <span class="comment">% new properties</span>
+0028       ntraces <span class="comment">% number of traces</span>
+0029       data_length <span class="comment">% length of first trace (should all be same)</span>
+0030       
+0031       <span class="comment">% properties associated with the waveforms / traces</span>
+0032       stations <span class="comment">% station name for each trace</span>
+0033       channels <span class="comment">% channel name for each trace</span>
+0034       networks <span class="comment">% network name for each trace</span>
+0035       locations <span class="comment">% location name for each trace</span>
+0036       
+0037       samplerate <span class="comment">% sample rate (for first trace)</span>
+0038       data <span class="comment">% all the trace's data as a matrix</span>
+0039    <span class="keyword">end</span>
+0040    
+0041    methods
+0042       <a name="_sub0" href="#_subfunctions" class="code">function c = NewCorrelation(varargin)</a>
+0043          <span class="comment">% CORRELATION Correlation class constructor, version 1.5.</span>
+0044          <span class="comment">%</span>
+0045          <span class="comment">% C = CORRELATION creates an empty correlation object. For explanation see the</span>
+0046          <span class="comment">% description below that follows the usage examples.</span>
+0047          <span class="comment">%</span>
+0048          <span class="comment">% C = CORRELATION(SeismicTrace)</span>
+0049          <span class="comment">% Create a correlation object from an existing waveform object. In a pinch</span>
+0050          <span class="comment">% this formulation can be used, however, it lacks one critical element.</span>
+0051          <span class="comment">% Without a trigger time, the correlation object has no information about</span>
+0052          <span class="comment">% how the traces should be aligned. With clean data this may be remedied</span>
+0053          <span class="comment">% with the XCORR routine. If possible however, it is better to use one of</span>
+0054          <span class="comment">% the CORRELATION uses which includes trigger times. In the absence of this</span>
+0055          <span class="comment">% information, trigger times are arbitrarily assigned to be one quarter of</span>
+0056          <span class="comment">% the time between the trace start and end times.</span>
+0057          <span class="comment">%</span>
+0058          <span class="comment">% C = CORRELATION(WAVEFORM,TRIG)</span>
+0059          <span class="comment">% Create a correlation object from an existing waveform object and a column</span>
+0060          <span class="comment">% vector of trigger times. These times can be in the matlab numeric time</span>
+0061          <span class="comment">% format (serial day) or a recognized string format (see HELP DATENUM).</span>
+0062          <span class="comment">% TRIG must be the same length as WAVEFORM or be a scalar value.</span>
+0063          <span class="comment">%</span>
+0064          <span class="comment">% CORRELATION('DEMO') DEPRECATED</span>
+0065          <span class="comment">% use   NewCorrelation.demo()   instead</span>
+0066          <span class="comment">%</span>
+0067          <span class="comment">% C = CORRELATION(datasource,scnlobjects,trig,pretrig,posttrig)</span>
+0068          <span class="comment">% creates a correlation object using the sta/chan/net/loc codes contained</span>
+0069          <span class="comment">% in SCNLOBJECT loaded from the datasource defined by DATASOURCE. For help</span>
+0070          <span class="comment">% in understanding the SCNLOBJECT and DATASOURCE object, see HELP</span>
+0071          <span class="comment">% SCNLOBJECT and HELP DATASOURCE respectively.</span>
+0072          <span class="comment">%</span>
+0073          <span class="comment">% Start and end trace times are based on an input list of trigger times</span>
+0074          <span class="comment">% cropped according to the pre/posttrig terms. All traces in the resulting</span>
+0075          <span class="comment">% correlation object have the same frequency and the same number of</span>
+0076          <span class="comment">% samples. If partial data is returned from the database request,</span>
+0077          <span class="comment">% traces are zero-padded accordingly. If a trace has a lower frequency than</span>
+0078          <span class="comment">% other traces in the object, a warning is issued and the trace is</span>
+0079          <span class="comment">% resampled to the highest frequency in the set of waveforms. For most uses</span>
+0080          <span class="comment">% this should be a rare occurence.</span>
+0081          <span class="comment">%</span>
+0082          <span class="comment">%The inputs are:</span>
+0083          <span class="comment">%       datasource:     station name</span>
+0084          <span class="comment">%       scnlobject:     scnlobject</span>
+0085          <span class="comment">%       trig:           vector of absolute trigger times</span>
+0086          <span class="comment">%                         (in matlab serial time format)</span>
+0087          <span class="comment">%       pre/posttrig:   these times in seconds define the width of the</span>
+0088          <span class="comment">%                       window for each trace, where pretrig and posttrig</span>
+0089          <span class="comment">%                       are times in seconds relative to the trigger</span>
+0090          <span class="comment">%                         time.</span>
+0091          <span class="comment">%</span>
+0092          <span class="comment">% C = CORRELATION(C,W)  DEPRECATED</span>
+0093          <span class="comment">% use: C.traces = W</span>
+0094          <span class="comment">%   This will make sure that things are compatible</span>
+0095          <span class="comment">% ORIGINAL DESCRIPTION BELOW</span>
+0096          <span class="comment">% replaces the waveforms in correlation object C with</span>
+0097          <span class="comment">% the waveform object W. This is useful for manipulating waveforms with</span>
+0098          <span class="comment">% tools outside the correlation toolbox.</span>
+0099          <span class="comment">% Example:</span>
+0100          <span class="comment">%   % square the amplitudes of each trace (sign-sensitive)</span>
+0101          <span class="comment">%   w  = waveform(c);</span>
+0102          <span class="comment">%   w1 = (w.^2)</span>
+0103          <span class="comment">%   w2 = sign(w);</span>
+0104          <span class="comment">%   for n = 1:numel(w)</span>
+0105          <span class="comment">%        w(n) = w1(n) .* w2(n);</span>
+0106          <span class="comment">%   end</span>
+0107          <span class="comment">%   c = correlation(c,w);</span>
+0108          <span class="comment">% This is a very convenient usage since the correlation toolbox will never</span>
+0109          <span class="comment">% incorporate all the possible waveform manipulations one might want.</span>
+0110          <span class="comment">% However it needs to be used with care. It is possible to manipulate the</span>
+0111          <span class="comment">% extracted waveform in ways that make it incompatible with the rest of the</span>
+0112          <span class="comment">% metadata in the correlation object - for example if the times stamps are</span>
+0113          <span class="comment">% altered. When replacing the waveform in a correlation object, all derived</span>
+0114          <span class="comment">% data fields (CORR, LAG, LINK, STAT, CLUST) are removed since this data is</span>
+0115          <span class="comment">% presumed no longer valid.</span>
+0116          <span class="comment">%</span>
+0117          <span class="comment">% C = CORRELATION(N) where N is a single number, creates a correlation</span>
+0118          <span class="comment">% object with N randomly generated simplistic synthetic traces. At times</span>
+0119          <span class="comment">% useful for offline testing.</span>
+0120          <span class="comment">%</span>
+0121          <span class="comment">% C = CORRELATION(CORAL) where CORAL is a data structure from the CORAL</span>
+0122          <span class="comment">% seismic package (K. Creager, Univ. of Washington). CORAL is a fairly</span>
+0123          <span class="comment">% comprehensive seismic data and metadata format. CORRELATION and</span>
+0124          <span class="comment">% the underlying WAVEFORM suite are not. A CORAL to CORRELATION conversion</span>
+0125          <span class="comment">% should usually be easy. The other direction may be more challenging as</span>
+0126          <span class="comment">% most correlation and waveform objects do not contain much of the &quot;header&quot;</span>
+0127          <span class="comment">% info stored by CORAL. If the pPick field exists in the CORAL structure,</span>
+0128          <span class="comment">% then it is used to set the trigger times inside the resulting correlation</span>
+0129          <span class="comment">% object. NOTE that little error checking is performed on the CORAL</span>
+0130          <span class="comment">% structure. If it is improperly constructed, then the conversion to a</span>
+0131          <span class="comment">% correlation object may fail without an intelligible error message.</span>
+0132          <span class="comment">%</span>
+0133          <span class="comment">%</span>
+0134          <span class="comment">%</span>
+0135          <span class="comment">% % ------- DESCRIPTION OF FIELDS IN CORRELATION OBJECT ------------------</span>
+0136          <span class="comment">% All calls to correlation return a &quot;correlation object&quot; containing</span>
+0137          <span class="comment">% the following fields where M is the number of traces:</span>
+0138          <span class="comment">%    TRIG:     trigger times in matlab serial time (Mx1)</span>
+0139          <span class="comment">%    WAVES:    vector of waveforms (Mx1)</span>
+0140          <span class="comment">%    CORR:     max correlation coefficients (MxM, single precision)</span>
+0141          <span class="comment">%    LAG:      lag times in seconds (MxM, single precision)</span>
+0142          <span class="comment">%                (Example: If the lag time in position (A,B) is positive,</span>
+0143          <span class="comment">%                 then similar features on trace A occur later in relative</span>
+0144          <span class="comment">%                 time than on trace B. To align the traces, the lag time</span>
+0145          <span class="comment">%                 in (A,B) must be added to the trigger time of A)</span>
+0146          <span class="comment">%    STAT:     statistics about each trace (Mx? see below)</span>
+0147          <span class="comment">%    LINK:     defines the cluster tree (Mx3)</span>
+0148          <span class="comment">%    CLUST:    defines individual clusters(families) of events (Mx1)</span>
+0149          <span class="comment">%</span>
+0150          <span class="comment">% The first two fields define the data traces. The last five fields are</span>
+0151          <span class="comment">% products derived from these data. (Programming note: Internally, these</span>
+0152          <span class="comment">% fields are referred to as c.trig, c.W, c.corrmatrix, c.lags, c.stat, c.link, and</span>
+0153          <span class="comment">% c.clust, respectively.)</span>
+0154          <span class="comment">%</span>
+0155          <span class="comment">% The STAT field contains columns of statistics that can be assigned one</span>
+0156          <span class="comment">% per trace. The number of columns may be expanded to accomodate</span>
+0157          <span class="comment">% additional parameters. Currently it is 5 columns wide. Column 1 is the</span>
+0158          <span class="comment">% mean maximum correlation. Column 2 is the high side rms error (1 sigma)</span>
+0159          <span class="comment">% of the mean max correlation. Column 3 is the low side rms error (1</span>
+0160          <span class="comment">% sigma) of the mean max correlation. Columns 4 is the unweighted least</span>
+0161          <span class="comment">% squares best fit delay time for each trace. Column 5 is the rms error of</span>
+0162          <span class="comment">% this delay time. See Vandecar and Crosson (BSSA 1990) and HELP GETSTAT</span>
+0163          <span class="comment">% for details of how these statistics are calculated.</span>
+0164          <span class="comment">%</span>
+0165          <span class="comment">%</span>
+0166          <span class="comment">% It is worth first investing time to understand the WAVEFORM, DATASOURCE,</span>
+0167          <span class="comment">% SCNLOBJECT objects on which CORRELATION is built.</span>
+0168          <span class="comment">% See also datasource waveform scnlobject</span>
+0169          
+0170          <span class="comment">% CHECK THAT WAVEFORM IS SET UP</span>
+0171          <span class="keyword">if</span> ~exist(<span class="string">'waveform'</span>,<span class="string">'file'</span>)
+0172             error(<span class="string">'The Waveform Suite must be in the path to use the correlation toolbox.'</span>)
+0173          <span class="keyword">end</span>
+0174          
+0175          <span class="comment">% LOAD DATA VIA WAVEFORM. SEND SPECIAL CASES TO SUBROUTINE</span>
+0176          
+0177          <span class="keyword">for</span> nm=1:numel(varargin)
+0178             <span class="keyword">if</span> isa(varargin{nm},<span class="string">'waveform'</span>)
+0179                varargin{nm} = <a href="../../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>(varargin{nm});
+0180             <span class="keyword">end</span>
+0181          <span class="keyword">end</span>
+0182          
+0183 
+0184          <span class="keyword">switch</span> nargin
+0185             <span class="keyword">case</span> 0
+0186                <span class="keyword">return</span>; <span class="comment">% create a blank (default) NewCorrelation object</span>
+0187             <span class="keyword">case</span> 1
+0188                <span class="keyword">switch</span> class(varargin{1});
+0189                   <span class="keyword">case</span> <span class="string">'SeismicTrace'</span>
+0190                      <span class="comment">% USAGE: NewCorrelation(SeismicTrace) load from waveforms (no specified triggers)</span>
+0191                      c.traces = varargin{1};
+0192                      c.trig = c.traces.firstsampletime() + 0.25*(<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c.W,<span class="string">'END'</span>) - c.traces.firstsampletime());
+0193                      c.trig = reshape(c.trig,numel(c.trig),1);
+0194                      
+0195                   <span class="keyword">case</span> <span class="string">'correlation'</span>
+0196                      <span class="comment">% USAGE: NewCorrelation(correlation), make new from old</span>
+0197                      c = c.convertFromOld(varargin{1});
+0198                      
+0199                   <span class="keyword">case</span> {<span class="string">'double'</span>}
+0200                      <span class="comment">% USAGE: NewCorrelation(N), make synthetic data for N traces</span>
+0201                      co = <a href="makesynthwaves.html" class="code" title="function c = makesynthwaves(n)">makesynthwaves</a>(varargin{1});
+0202                      c.W = co.W;
+0203                      c.trig = co.trig;
+0204                      
+0205                   <span class="keyword">case</span> <span class="string">'struct'</span>
+0206                      <span class="comment">% USAGE: NewCorrelation(coralStruct)</span>
+0207                      <span class="keyword">if</span> NewCorrelation.mightBeCoral(varargin{1})
+0208                         c = <a href="#_sub5" class="code" title="subfunction c = convert_coral(coral)">convert_coral</a>(varargin{1});
+0209                      <span class="keyword">end</span>
+0210                <span class="keyword">end</span>
+0211             <span class="keyword">case</span> 2
+0212                <span class="keyword">if</span> isa(varargin{1},<span class="string">'correlation'</span>)
+0213                   <span class="comment">% TODO: finesse this error</span>
+0214                   error(<span class="string">'set the waveforms in the correlation object instead\n c.traces = w'</span>);
+0215                   <span class="comment">% USAGE: NewCorrelation(NewCorr, W), replace waveforms</span>
+0216                   c = varargin{1};
+0217                   w = varargin{2};
+0218                   <span class="keyword">if</span> c.ntraces ~= numel(w)
+0219                      error(<span class="string">'Correlation and waveform objects must have the same number of elements'</span>);
+0220                   <span class="keyword">end</span>
+0221                   c.traces = w;
+0222                <span class="keyword">elseif</span> isa(varargin{1},<span class="string">'SeismicTrace'</span>)
+0223                   <span class="comment">% USAGE: NewCorrelation(traces, triggers), populate with waveform and triggers</span>
+0224                   assert(isnumeric(c.trig), <span class="string">'Time format for TRIG field not recognized'</span>);
+0225                   c.traces = varargin{1};
+0226                   c.trig = varargin{2};
+0227                   c.trig = reshape(c.trig,numel(c.trig),1);
+0228                   <span class="comment">% adjust length of trigger field input</span>
+0229                   <span class="keyword">if</span> numel(c.trig)==1
+0230                      c.trig = c.trig*ones(size(c.traces));
+0231                   <span class="keyword">elseif</span>  numel(c.trig)~=numel(c.traces)
+0232                      error(<span class="string">'correlation:correlation:wrongTriggerLength'</span>,<span class="keyword">...</span>
+0233                         <span class="string">'Trigger argument must be of length 1 or the same as the number of waveforms'</span>);
+0234                   <span class="keyword">end</span>
+0235                <span class="keyword">end</span>
+0236             <span class="keyword">case</span> 5  <span class="comment">% build from a datasource</span>
+0237                <span class="comment">% USAGE: NewCorrelation(ds, scnl, trig, pretrig, posttrig)</span>
+0238                assert(isa(varargin{1},<span class="string">'datasource'</span>));
+0239                [ds, scnl, trig_, pretrig, posttrig] = deal(varargin{:});
+0240                trig_ = reshape(trig_,length(trig_),1);
+0241                c = <a href="#_sub2" class="code" title="subfunction c = loadfromdatasource(ds,scnl,trig,pretrig,posttrig)">loadfromdatasource</a>(ds, scnl, trig_, pretrig, posttrig);
+0242                c = <a href="unifytracelengths.html" class="code" title="function c = unifytracelengths(c)">unifytracelengths</a>(c);
+0243                c = <a href="crop.html" class="code" title="function c = crop(c, pretrig, posttrig)">crop</a>(c,pretrig,posttrig);
+0244             <span class="keyword">otherwise</span>
+0245             error(<span class="string">'Invalid input values to correlation'</span>);
+0246          <span class="keyword">end</span>
+0247          
+0248          <span class="comment">%% REMOVE TRENDS AND ADJUST DATA LENGTH AND SAMPLE RATE IF NECESSARY</span>
+0249          <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(c.traces)
+0250             c = <a href="demean.html" class="code" title="function c = demean(c)">demean</a>(c);
+0251             c = <a href="detrend.html" class="code" title="function c = detrend(c)">detrend</a>(c);
+0252             <span class="keyword">if</span> ~<a href="check.html" class="code" title="function val = check(c, whatToCheck)">check</a>(c,<span class="string">'FREQ'</span>)
+0253                c = <a href="align.html" class="code" title="function c = align(c, alignfreq)">align</a>(c);
+0254             <span class="keyword">elseif</span> ~<a href="check.html" class="code" title="function val = check(c, whatToCheck)">check</a>(c,<span class="string">'SAMPLES'</span>)
+0255                c = <a href="unifytracelengths.html" class="code" title="function c = unifytracelengths(c)">unifytracelengths</a>(c);
+0256             <span class="keyword">end</span>
+0257          <span class="keyword">end</span>
+0258          
+0259          
+0260          
+0261          
+0262          
+0263          <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0264          <span class="comment">%% FUNCTION: LOAD WAVEFORM DATA FROM A DATASOURCE</span>
+0265          <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0266          <a name="_sub1" href="#_subfunctions" class="code">function c = loadfromdatasource(ds,scnl,trig,pretrig,posttrig)</a>
+0267             
+0268             <span class="comment">% TODO: This function needs to rewritten if/when waveform is able to</span>
+0269             <span class="comment">% identify which traces are empty instead of skipping them. This should</span>
+0270             <span class="comment">% improve the spead considerably. - MEW, May 25, 2009.</span>
+0271             
+0272             <span class="comment">% READ IN WAVEFORM OBJECTS</span>
+0273             good = true(size(trig));
+0274             fprintf(<span class="string">'Reading waveforms into a correlation object ...\n'</span>);
+0275             w = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0276             nMax = length(trig);
+0277             <a href="disp.html" class="code" title="function disp(c)">disp</a>(<span class="string">'     '</span>);
+0278             
+0279             <span class="comment">%all requests for waveforms are the same, and depend upon various triggers.</span>
+0280             wgetter = @(tr) <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds, scnl, tr+pretrig/86400, tr+posttrig/86400);
+0281             
+0282             loaderrmsg = [<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(scnl,<span class="string">'nscl_string'</span>), <span class="string">' at time %s could not be loaded\n     \n'</span>];
+0283             updatemsg.good = @(n) fprintf(<span class="string">'\b\b\b\b\b\b%5.0f%%'</span>,n/nMax*100);
+0284             updatemsg.bad = @(dv) fprintf(loaderrmsg, datestr(dv,<span class="string">'mm/dd/yyyy HH:MM:SS'</span>));
+0285             
+0286             <span class="keyword">for</span> n = 1:nMax
+0287                <span class="keyword">try</span>
+0288                   w(n) = wgetter(trig(n));
+0289                   updatemsg.good(n);
+0290                <span class="keyword">catch</span>
+0291                   updatemsg.bad(trig(n));
+0292                   good(n) = false;    <span class="comment">% mark waveform as empty</span>
+0293                <span class="keyword">end</span>;
+0294             <span class="keyword">end</span>;
+0295             fprintf(<span class="string">'\n'</span>);
+0296             <span class="comment">%</span>
+0297             <span class="comment">% CHECK TO SEE IF ANY DATA WAS READ IN</span>
+0298             <span class="keyword">if</span> numel(w)==0
+0299                error(<span class="string">'This data is not available from the specified database.'</span>);
+0300             <span class="keyword">end</span>
+0301             
+0302             <span class="comment">% FILL DATA GAPS</span>
+0303             w = <a href="../../../../GISMO/core/@waveform/fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>(w,<span class="string">'MeanAll'</span>);
+0304             
+0305             <span class="comment">%</span>
+0306             <span class="comment">% STORE ONLY GOOD TRACES</span>
+0307             w = w(good);
+0308             trig = trig(good);
+0309             <span class="comment">%</span>
+0310             <span class="comment">% FILL CORRELATION STRUCTURE</span>
+0311             c.W = reshape(w,length(w),1);
+0312             c.trig = reshape(trig,length(trig),1);
+0313          <span class="keyword">end</span>
+0314          
+0315          <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0316          <span class="comment">%% FUNCTION: LOAD AN ANTELOPE DATABASE</span>
+0317          <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0318          
+0319          <a name="_sub2" href="#_subfunctions" class="code">function c = loadfromantelope(stat,chan,trig,pretrig,posttrig,archive)</a>
+0320             
+0321             <span class="comment">% READ IN WAVEFORM OBJECTS</span>
+0322             good =true(size(trig));
+0323             fprintf(<span class="string">'Creating matrix of waveforms ...'</span>);
+0324             wf = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0325             
+0326             <span class="keyword">for</span> i = 1:length(trig)
+0327                <span class="keyword">try</span>
+0328                   <span class="keyword">if</span> ~isnan(archive)
+0329                      wf(i) = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(stat,chan,trig(i)+pretrig/86400,trig(i)+posttrig/86400,archive);
+0330                   <span class="keyword">else</span>
+0331                      wf(i) = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(stat,chan,trig(i)+pretrig/86400,trig(i)+posttrig/86400);
+0332                   <span class="keyword">end</span>
+0333                   freq(i) = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(wf(i),<span class="string">'Fs'</span>);
+0334                   fprintf(<span class="string">'.'</span>);
+0335                <span class="keyword">catch</span>
+0336                   <a href="disp.html" class="code" title="function disp(c)">disp</a>(<span class="string">' '</span>);
+0337                   <a href="disp.html" class="code" title="function disp(c)">disp</a>([stat <span class="string">'_'</span> chan <span class="string">' at time '</span> datestr(trig(i),<span class="string">'mm/dd/yyyy HH:MM:SS.FFF'</span>) <span class="string">' could not be loaded.'</span>]);
+0338                   good(i) = false;    <span class="comment">% mark waveform as empty</span>
+0339                <span class="keyword">end</span>;
+0340             <span class="keyword">end</span>;
+0341             <a href="disp.html" class="code" title="function disp(c)">disp</a>(<span class="string">' '</span>);
+0342             <span class="comment">%</span>
+0343             <span class="comment">% CHECK TO SEE IF ANY DATA WAS READ IN</span>
+0344             <span class="keyword">if</span> length(wf)==0
+0345                error(<span class="string">'This data not is available from the specified database.'</span>);
+0346             <span class="keyword">end</span>
+0347             <span class="comment">%</span>
+0348             <span class="comment">% STORE ONLY GOOD TRACES</span>
+0349             wf = wf(good);
+0350             trig = trig(good);
+0351             freq = freq(good);
+0352             <span class="comment">%</span>
+0353             <span class="comment">% FILL CORRELATION STRUCTURE</span>
+0354             c.W = reshape(wf,length(wf),1);
+0355             c.trig = reshape(trig,length(trig),1);
+0356          <span class="keyword">end</span>
+0357          
+0358          
+0359          
+0360          <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0361          <span class="comment">%% FUNCTION: LOAD FROM A WINSTON DATABASE</span>
+0362          <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0363          
+0364          <a name="_sub3" href="#_subfunctions" class="code">function c = loadfromwinston(stat,chan,trig,pretrig,posttrig,netwk,loc,server,port)</a>
+0365             
+0366             <span class="comment">% READ IN WAVEFORM OBJECTS</span>
+0367             good = true(size(trig));
+0368             fprintf(<span class="string">'Creating matrix of waveforms ...'</span>);
+0369             wf = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0370             <span class="keyword">for</span> i = 1:length(trig)
+0371                <span class="keyword">try</span>
+0372                   wf(i) = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(stat,chan,trig(i)+pretrig/86400,trig(i)+posttrig/86400,netwk,loc,server,port);
+0373                   freq(i) = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(wf(i),<span class="string">'Fs'</span>);
+0374                   fprintf(<span class="string">'.'</span>);
+0375                <span class="keyword">catch</span>
+0376                   <a href="disp.html" class="code" title="function disp(c)">disp</a>(<span class="string">' '</span>);
+0377                   <a href="disp.html" class="code" title="function disp(c)">disp</a>([stat <span class="string">'_'</span> chan <span class="string">' at time '</span> datestr(trig(i),<span class="string">'mm/dd/yyyy HH:MM:SS.FFF'</span>) <span class="string">' could not be loaded.'</span>]);
+0378                   good(i) = false;    <span class="comment">% mark waveform as empty</span>
+0379                <span class="keyword">end</span>;
+0380             <span class="keyword">end</span>;
+0381             <a href="disp.html" class="code" title="function disp(c)">disp</a>(<span class="string">' '</span>);
+0382             <span class="comment">%</span>
+0383             <span class="comment">% CHECK TO SEE IF ANY DATA WAS READ IN</span>
+0384             <span class="keyword">if</span> numel(wf)==0
+0385                error(<span class="string">'This data not is available from the specified database.'</span>);
+0386             <span class="keyword">end</span>
+0387             <span class="comment">%</span>
+0388             <span class="comment">% STORE ONLY GOOD TRACES</span>
+0389             wf = wf(good);
+0390             trig = trig(good);
+0391             freq = freq(good);
+0392             <span class="comment">%</span>
+0393             <span class="comment">% RESAMPLE TRACES TO MAXIMUM FREQUENCY</span>
+0394             fmax = round(<a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(freq));
+0395             <span class="keyword">for</span> i = 1:length(trig)
+0396                <span class="keyword">if</span> <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(wf(i),<span class="string">'FREQ'</span>) ~= fmax
+0397                   wf(i) = <a href="align.html" class="code" title="function c = align(c, alignfreq)">align</a>(wf(i),trig(i),fmax);
+0398                   <a href="disp.html" class="code" title="function disp(c)">disp</a>([<span class="string">'Trace no. '</span> num2str(i) <span class="string">' is being resampled to '</span> num2str(fmax) <span class="string">' Hz'</span>]);
+0399                <span class="keyword">end</span>
+0400             <span class="keyword">end</span>
+0401             <span class="comment">%</span>
+0402             <span class="comment">% FILL CORRELATION STRUCTURE</span>
+0403             c.W = reshape(wf,length(wf),1);
+0404             c.trig = reshape(trig,length(trig),1);
+0405          <span class="keyword">end</span>
+0406          
+0407          
+0408          <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0409          <span class="comment">%% FUNCTION: CONVERT FROM CORAL STRUCTURE</span>
+0410          <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0411          
+0412          <a name="_sub4" href="#_subfunctions" class="code">function c = convert_coral(coral)</a>
+0413             
+0414             w = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0415             t = zeros(size(coral));
+0416             <span class="keyword">for</span> i = 1:length(coral)
+0417                w(i) = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0418                w(i) = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( w(i) , <span class="string">'Station'</span> , coral(i).staCode );
+0419                w(i) = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( w(i) , <span class="string">'Channel'</span> , coral(i).staChannel );
+0420                w(i) = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( w(i) , <span class="string">'Data'</span> , coral(i).data );
+0421                w(i) = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( w(i) , <span class="string">'Start'</span> , datenum(coral(i).recStartTime') );
+0422                w(i) = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( w(i) , <span class="string">'FREQ'</span> , 1/coral(i).recSampInt );
+0423                <span class="keyword">if</span> <a href="../../../../GISMO/core/@waveform/isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>(coral(i),<span class="string">'pPick'</span>)
+0424                   t(i) = datenum(coral(i).pPick');
+0425                <span class="keyword">end</span>
+0426             <span class="keyword">end</span>
+0427             
+0428             <span class="keyword">if</span> length(<a href="find.html" class="code" title="function index = find(c, type, value)">find</a>(t))==length(t)
+0429                <a href="disp.html" class="code" title="function disp(c)">disp</a>(<span class="string">'Trigger times are being applied from coral pPick field'</span>);
+0430                c = <a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>(w,t); <span class="comment">%was correlation</span>
+0431             <span class="keyword">else</span>
+0432                c = <a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>(w); <span class="comment">%was correlation</span>
+0433             <span class="keyword">end</span>
+0434             <span class="comment">%c.W = reshape(w,length(w),1);</span>
+0435          <span class="keyword">end</span> <span class="comment">%convert_coral</span>
+0436       <span class="keyword">end</span> <span class="comment">%NewCorrelation</span>
+0437       
+0438       <span class="comment">%{</span>
+0439       Note <a href="../../../../GISMO/contributed/iris_dmc_tools/+irisdmc/about.html" class="code" title="function about">about</a> setting <a href="NewCorrelation.html" class="code" title="">NewCorrelation</a> fields:
+0440       <span class="comment">%}</span>
+0441       <a name="_sub5" href="#_subfunctions" class="code">function waves = get.W(obj)</a>
+0442          warning(<span class="string">'getting waveforms instead of traces'</span>);
+0443          waves = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(obj.traces);
+0444       <span class="keyword">end</span>
+0445       <a name="_sub6" href="#_subfunctions" class="code">function obj = set.W(obj, waves)</a>
+0446          <span class="comment">% warning('setting waveforms instead of trace');</span>
+0447          obj.traces = <a href="../../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>(waves);
+0448       <span class="keyword">end</span>
+0449       <a name="_sub7" href="#_subfunctions" class="code">function X = get.C(obj)</a>
+0450          warning(<span class="string">'use c.corrmatrix instead of c.C'</span>)
+0451          X = obj.corrmatrix;
+0452       <span class="keyword">end</span>
+0453       <a name="_sub8" href="#_subfunctions" class="code">function obj = set.C(obj, C)</a>
+0454          warning(<span class="string">'use c.corrmatrix instead of c.C'</span>)
+0455          obj.corrmatrix = C;
+0456       <span class="keyword">end</span>
+0457       <a name="_sub9" href="#_subfunctions" class="code">function X = get.L(obj)</a>
+0458          warning(<span class="string">'use c.lags instead of c.L'</span>)
+0459          X = obj.lags;
+0460       <span class="keyword">end</span>
+0461       <a name="_sub10" href="#_subfunctions" class="code">function obj = set.L(obj, lags)</a>
+0462          warning(<span class="string">'use c.lags instead of c.L'</span>)
+0463          obj.lags = lags;
+0464       <span class="keyword">end</span>
+0465       
+0466       <a name="_sub11" href="#_subfunctions" class="code">function c = set.traces(c, T)</a>
+0467          <span class="comment">% NOTE: To avoid problems with &quot;subset&quot;, size of T is not checked!</span>
+0468          c.traces = T(:); <span class="comment">% ensure traces are in a column</span>
+0469          <span class="comment">%TODO: Should this also wipe all the calculated values?</span>
+0470       <span class="keyword">end</span>
+0471       
+0472       <a name="_sub12" href="#_subfunctions" class="code">function sta = get.stations(obj)</a>
+0473          sta = {obj.traces.station};
+0474       <span class="keyword">end</span>
+0475       <a name="_sub13" href="#_subfunctions" class="code">function net = get.networks(obj)</a>
+0476          net = {obj.traces.network};
+0477       <span class="keyword">end</span>
+0478       <a name="_sub14" href="#_subfunctions" class="code">function loc = get.locations(obj)</a>
+0479          loc = {obj.traces.location};
+0480       <span class="keyword">end</span>
+0481       <a name="_sub15" href="#_subfunctions" class="code">function cha = get.channels(obj)</a>
+0482          cha = {obj.traces.channel};
+0483       <span class="keyword">end</span>
+0484       
+0485       <a name="_sub16" href="#_subfunctions" class="code">function n = get.ntraces(obj)</a>
+0486          n = numel(obj.traces);
+0487       <span class="keyword">end</span>
+0488       
+0489       <a name="_sub17" href="#_subfunctions" class="code">function sr = get.samplerate(obj)</a>
+0490          sr = obj.traces(1).samplerate;
+0491       <span class="keyword">end</span>
+0492       <a name="_sub18" href="#_subfunctions" class="code">function n = get.data_length(obj)</a>
+0493          n = obj.traces(1).nsamples;
+0494       <span class="keyword">end</span>
+0495       
+0496       <a name="_sub19" href="#_subfunctions" class="code">function n = relativeStartTime(c, i)</a>
+0497          <span class="comment">%relativeStartTime  start time, relative to trigger</span>
+0498          <span class="comment">%  t = c.relativeStartTime(index) will return the relativeStartTime</span>
+0499          <span class="comment">%  of the indexth trace, by subtracting the indexth trigger</span>
+0500          
+0501          n = 86400 * (c.traces(i).firstsampletime() - c.trig(i));
+0502       <span class="keyword">end</span>
+0503       
+0504       
+0505       <a name="_sub20" href="#_subfunctions" class="code">function maybeReplaceYticksWithStationNames(c,ax)</a>
+0506          <span class="comment">% replace dates with station names if stations are different</span>
+0507          <span class="keyword">if</span> ~<a href="check.html" class="code" title="function val = check(c, whatToCheck)">check</a>(c,<span class="string">'STA'</span>)
+0508             labels = strcat(c.stations , <span class="string">'_'</span>, c.channels);
+0509             <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( ax , <span class="string">'YTick'</span> , 1:1:c.ntraces);
+0510             <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( ax , <span class="string">'YTickLabel'</span> , labels );
+0511          <span class="keyword">end</span>
+0512       <span class="keyword">end</span>
+0513       
+0514       <span class="comment">%% functions that exist in other files</span>
+0515       c = <a href="adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>(c,varargin)
+0516       
+0517       c = <a href="agc.html" class="code" title="function c = agc(c,windowInSeconds)">agc</a>(c,windowInSeconds)       <span class="comment">% automatic gain control</span>
+0518       c = <a href="align.html" class="code" title="function c = align(c, alignfreq)">align</a>(c,alignFrequency)      
+0519       c = <a href="butter.html" class="code" title="function c = butter(c,varargin)">butter</a>(c,varargin)      
+0520       c = <a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>(varargin)
+0521       val = <a href="check.html" class="code" title="function val = check(c, whatToCheck)">check</a>(c,whatToCheck)
+0522       c = <a href="cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>(c,varargin)
+0523       c = <a href="colormap.html" class="code" title="function c = colormap(c,mapname)">colormap</a>(c,mapname)
+0524       c = <a href="conv.html" class="code" title="function c = conv(c)">conv</a>(c)
+0525       c = <a href="crop.html" class="code" title="function c = crop(c, pretrig, posttrig)">crop</a>(c, pretrig, posttrig)
+0526       <span class="comment">% c = deconv(c)  remarked out because it isn't working yet.</span>
+0527       c = <a href="demean.html" class="code" title="function c = demean(c)">demean</a>(c)
+0528       c = <a href="detrend.html" class="code" title="function c = detrend(c)">detrend</a>(c)
+0529       c = <a href="diff.html" class="code" title="function c = diff(c)">diff</a>(c)
+0530       <a href="disp.html" class="code" title="function disp(c)">disp</a>(c)
+0531       index = <a href="find.html" class="code" title="function index = find(c, type, value)">find</a>(c,type, value)
+0532       family = <a href="getclusterstat.html" class="code" title="function family=getclusterstat(c)">getclusterstat</a>(c)
+0533       c = <a href="getstat.html" class="code" title="function c=getstat(c)">getstat</a>(c)
+0534       c = <a href="hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>(c,n)
+0535       c = <a href="integrate.html" class="code" title="function c = integrate(c)">integrate</a>(c)
+0536       [c,t,i,CC,LL] = <a href="interferogram.html" class="code" title="function [c,t,i,CC,LL] = interferogram(c, width, timestep, masterIdx)">interferogram</a>(c, width, timestep, masterIdx)
+0537       c = <a href="linkage.html" class="code" title="function c = linkage(c,varargin)">linkage</a>(c,varargin)
+0538       [c1,c2] = <a href="match.html" class="code" title="function [c1,c2] = match(c1,c2,toleranceInSeconds)">match</a>(c1,c2,toleranceInSeconds)
+0539       c = <a href="minus.html" class="code" title="function c = minus(c,I)">minus</a>(c,I)
+0540       c = <a href="norm.html" class="code" title="function c = norm(c,varargin)">norm</a>(c,varargin)
+0541       <a href="plot.html" class="code" title="function plot(c,varargin)">plot</a>(c,varargin)
+0542       c = <a href="sign.html" class="code" title="function c = sign(c)">sign</a>(c)
+0543       c = <a href="sort.html" class="code" title="function c = sort(c)">sort</a>(c)
+0544       c = <a href="stack.html" class="code" title="function c = stack(c,index)">stack</a>(c,index)
+0545       c = <a href="strip.html" class="code" title="function c = strip(c)">strip</a>(c)
+0546       c = <a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>(c,index)
+0547       c = <a href="taper.html" class="code" title="function c = taper(c,varargin)">taper</a>(c,varargin)
+0548       w = <a href="waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(c,varargin)
+0549       <a href="writedb.html" class="code" title="function writedb(c,dbOut,varargin)">writedb</a>(c,dbOut,varargin)
+0550       c = <a href="xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>(c,varargin)
+0551       
+0552    <span class="keyword">end</span> <span class="comment">%methods</span>
+0553    
+0554    methods(Access=private)
+0555       <a href="corrplot.html" class="code" title="function corrplot(c)">corrplot</a>(c)
+0556       <a href="dendrogramplot.html" class="code" title="function dendrogramplot(c)">dendrogramplot</a>(c);
+0557       <a href="eventplot.html" class="code" title="function eventplot(c,scale,howmany)">eventplot</a>(c,scale,howmany)
+0558       A = <a href="getval.html" class="code" title="function A = getval(OBJ,PROP)">getval</a>(OBJ,PROP)
+0559       <a href="lagplot.html" class="code" title="function lagplot(c)">lagplot</a>(c);
+0560       c = <a href="makesynthwaves.html" class="code" title="function c = makesynthwaves(n)">makesynthwaves</a>(n);
+0561       <a href="occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>(c,scale,clusternum)
+0562       <a href="overlayplot.html" class="code" title="function overlayplot(c,scale,ord)">overlayplot</a>(c,scale,ord)
+0563       <a href="sampleplot.html" class="code" title="function sampleplot(c,scale,ord)">sampleplot</a>(c,scale,ord)
+0564       <a href="shadedplot.html" class="code" title="function shadedplot(c,scale,ord)">shadedplot</a>(c,scale,ord)
+0565       <a href="statplot.html" class="code" title="function statplot(c)">statplot</a>(c);
+0566       c = <a href="unifytracelengths.html" class="code" title="function c = unifytracelengths(c)">unifytracelengths</a>(c)
+0567       <a href="wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>(c,scale,type,<a href="norm.html" class="code" title="function c = norm(c,varargin)">norm</a>,range)
+0568       <a href="wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>(c,scale,ord,<a href="norm.html" class="code" title="function c = norm(c,varargin)">norm</a>)
+0569       
+0570       <a name="_sub21" href="#_subfunctions" class="code">function c = convertFromOld(c, oldC)</a>
+0571          c.W = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(oldC,<span class="string">'waves'</span>); <span class="comment">%  % c.W</span>
+0572          c.trig = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(oldC,<span class="string">'trig'</span>); <span class="comment">% will be triggers; % c.trig</span>
+0573          c.corrmatrix = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(oldC,<span class="string">'corr'</span>);
+0574          c.lags = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(oldC,<span class="string">'lag'</span>);<span class="comment">% will be lags; % c.L</span>
+0575          c.stat = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(oldC,<span class="string">'stat'</span>); <span class="comment">% will be statistics; % c.stat</span>
+0576          c.link = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(oldC,<span class="string">'link'</span>); <span class="comment">% might be links;% c.link</span>
+0577          c.clust = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(oldC,<span class="string">'clust'</span>);<span class="comment">% will be clusters;% c.clust</span>
+0578       <span class="keyword">end</span>
+0579    <span class="keyword">end</span>
+0580    
+0581    methods(Hidden)
+0582       <span class="comment">%These methods still work, but aren't being promoted</span>
+0583       c = <a href="set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(c, prop_name, val); <span class="comment">% instead of set, use direct access</span>
+0584       val = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,prop_name) <span class="comment">% instead of get, use direct access</span>
+0585    <span class="keyword">end</span>
+0586    
+0587    methods(Static)
+0588       correlationVariables = <a href="cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>(corr)
+0589       <a name="_sub22" href="#_subfunctions" class="code">function c = demo()</a>
+0590          <span class="comment">% demo   load the demo dataset</span>
+0591          <span class="comment">% Opens the demo dataset for correlation. This dataset contains a single</span>
+0592          <span class="comment">% correlation object of 100 traces. It is the data source for the cookbook</span>
+0593          <span class="comment">% demos.</span>
+0594          
+0595          <span class="comment">% TODO: Resave data file as NewCorrelation</span>
+0596          oldcorrobj = <a href="../../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>(<span class="string">'demo_data_100'</span>); <span class="comment">%stresstest</span>
+0597             c = <a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>(oldcorrobj.c);
+0598       <span class="keyword">end</span>
+0599          
+0600    <span class="keyword">end</span>
+0601    
+0602    methods(Access=private, Static)
+0603       <span class="comment">% d = xcorr1x1(d);</span>
+0604       d = <a href="xcorr1xr.html" class="code" title="function d = xcorr1xr(d,style)">xcorr1xr</a>(d,style)
+0605       <span class="comment">% d = xcorr1xr_orig(d)</span>
+0606       <span class="comment">% d = xcorrdec(d)</span>
+0607       d = <a href="xcorrrow.html" class="code" title="function d = xcorrrow(d,c,index)">xcorrrow</a>(d,c,index)
+0608       <a name="_sub23" href="#_subfunctions" class="code">function m = fillLowerTriangleFromUpper(m)</a>
+0609          <span class="comment">% FILL LOWER TRIANGULAR PART OF MATRICES</span>
+0610          m = m + m' - eye(size(m));
+0611       <span class="keyword">end</span>
+0612       
+0613       <a name="_sub24" href="#_subfunctions" class="code">function tf = mightBeCoral(aStruct)</a>
+0614          tf = <a href="../../../../GISMO/core/@waveform/isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>(aStruct,<span class="string">'data'</span>) &amp;&amp; <a href="../../../../GISMO/core/@waveform/isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>(aStruct,<span class="string">'staCode'</span>) &amp;&amp; <a href="../../../../GISMO/core/@waveform/isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>(aStruct,<span class="string">'staChannel'</span>);
+0615       <span class="keyword">end</span>
+0616    <span class="keyword">end</span>
+0617 <span class="keyword">end</span>
+0618 
+0619</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

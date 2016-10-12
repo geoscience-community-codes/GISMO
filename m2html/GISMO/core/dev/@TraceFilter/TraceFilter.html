@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of TraceFilter</title>
+  <meta name="keywords" content="TraceFilter">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@TraceFilter</a> &gt; TraceFilter.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@TraceFilter&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>TraceFilter
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/contributed/iris_dmc_tools/+irisdmc/cookbook.html" class="code" title="function cookbook">cookbook</a>	COOKBOOK example program using the IRIS DMC web services</li><li><a href="../../../../GISMO/contributed/master_correlation/+mastercorr/cookbook.html" class="code" title="">cookbook</a>	COOKBOOK demonstrate the features of the mastercorr package.</li><li><a href="../../../../GISMO/core/+scnlobject/cookbook.html" class="code" title="">cookbook</a>	% The SCNLOBJECT cookbook</li><li><a href="../../../../GISMO/core/@Catalog/cookbook.html" class="code" title="">cookbook</a>	% Catalog Cookbook</li><li><a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../../GISMO/core/@EventRate/cookbook.html" class="code" title="">cookbook</a>	% EventRate Cookbook</li><li><a href="../../../../GISMO/core/@correlation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>	C = BUTTER(C,[TYPE],CUTOFF,[POLES])</li><li><a href="../../../../GISMO/core/@correlation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@drumplot/cookbook.html" class="code" title="">cookbook</a>	% drumplot cookbook</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@filterobject/filtfilt.html" class="code" title="function w =filtfilt(f, w, NYQ)">filtfilt</a>	FILTFILT - filterobject implementation of FILTFILT, use on waveform Object</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@rsam/cookbook.html" class="code" title="">cookbook</a>	% RSAM Cookbook</li><li><a href="../../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>	ISMEMBER for scnlobjects</li><li><a href="../../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="../../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../../GISMO/core/@waveform/ismember.html" class="code" title="function [results, loc] = ismember(mywave,anythingelse)">ismember</a>	ISMEMBER waveform implementation of ismember</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>	butter   create and apply a butterworth filter to the traces</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="TraceFilter.html" class="code" title="">TraceFilter</a>	</li><li><a href="cookbook.html" class="code" title="function cookbook()">cookbook</a>	cookbook   Cookbook for TraceFilter</li><li><a href="../../../../GISMO/core/dev/@TraceSpectra/cookbook.html" class="code" title="function cookbook()">cookbook</a>	cookbook   Cookbook for TraceSpectra</li><li><a href="../../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/dev/@NewCorrelation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>	butter   create and apply a butterworth filter to the traces</li><li><a href="TraceFilter.html" class="code" title="">TraceFilter</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function f = TraceFilter(filtType, cutoff_, poles_)</a></li><li><a href="#_sub2" class="code">function f = set.type(f, val)</a></li><li><a href="#_sub3" class="code">function f = set.cutoff(f, val)</a></li><li><a href="#_sub4" class="code">function f = set.poles(f, val)</a></li><li><a href="#_sub5" class="code">function assertCutoffCountMatchesType(f)</a></li><li><a href="#_sub6" class="code">function trace = filtfilt(f, trace, NYQ)</a></li><li><a href="#_sub7" class="code">function [b, a] = getButter(f, nyq)</a></li><li><a href="#_sub8" class="code">function disp(f)</a></li><li><a href="#_sub9" class="code">function t = char2type(c)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="TraceFilter.html" class="code" title="">TraceFilter</a>
+0002    <span class="comment">%TraceFilter   Simple butterworth filtering for Traces</span>
+0003    <span class="comment">%</span>
+0004    <span class="comment">%   TraceFilter Properties:</span>
+0005    <span class="comment">%      type - describes the passband type of filter.  ('B', 'L', or 'H')</span>
+0006    <span class="comment">%      cutoff - upper and lower bounds for the filter</span>
+0007    <span class="comment">%      poles - number of poles for the filter</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">%   TraceFilter Methods:</span>
+0010    <span class="comment">%      filtfilt - Zero-phase forward and reverse butterworth filtering.</span>
+0011    <span class="comment">%</span>
+0012    <span class="comment">%   replaces filterobject</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">%   see also: butter, filtfilt</span>
+0015    
+0016    properties
+0017       type = <span class="string">'B'</span>;  <span class="comment">% could be 'B'andpass, 'H'ighpass, or 'L'lowpass</span>
+0018       cutoff = [0.8 5];  <span class="comment">% filter cutoffs [lower bound, upper bound]</span>
+0019       poles = 2;  <span class="comment">% number of poles</span>
+0020    <span class="keyword">end</span>
+0021    
+0022    methods
+0023       <a name="_sub0" href="#_subfunctions" class="code">function f = TraceFilter(filtType, cutoff_, poles_)</a>
+0024          <span class="comment">%TRACEFILTER   construct a TraceFilter</span>
+0025          <span class="comment">%</span>
+0026          <span class="keyword">switch</span> nargin
+0027             <span class="keyword">case</span> 1
+0028                <span class="keyword">if</span> isa(filtType,<span class="string">'filterobject'</span>)
+0029                   <span class="comment">% convert from the old filterobject</span>
+0030                   f.type = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(filtType,<span class="string">'type'</span>);
+0031                   f.cutoff = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(filtType,<span class="string">'cutoff'</span>);
+0032                   f.poles = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(filtType,<span class="string">'poles'</span>);
+0033                <span class="keyword">else</span>
+0034                   error(<span class="string">'unknown TraceFilter usage'</span>);
+0035                <span class="keyword">end</span>
+0036             <span class="keyword">case</span> 3
+0037                f.type = filtType;
+0038                f.cutoff = cutoff_;
+0039                f.poles = poles_;
+0040             <span class="keyword">otherwise</span>
+0041                <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'Invalid arguments in TraceFilter constructor'</span>);
+0042          <span class="keyword">end</span>
+0043       <span class="keyword">end</span>
+0044       <a name="_sub1" href="#_subfunctions" class="code">function f = set.type(f, val)</a>
+0045          <span class="keyword">if</span> ~ischar(val) || numel(val) ~= 1
+0046             error(<span class="string">'filter TYPE must be ''B'', ''H'', or ''L'', not a %s'</span>,class(val));
+0047          <span class="keyword">end</span>
+0048          <span class="keyword">if</span> <a href="../../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(upper(val),<span class="string">'BHL'</span>)
+0049             [f.type] = deal(upper(val));
+0050          <span class="keyword">else</span>
+0051             error(<span class="string">'Unrecognized value for TYPE.  Should be B,H,or L.  :&lt;%s&gt;'</span> , val);
+0052          <span class="keyword">end</span>
+0053       <span class="keyword">end</span>
+0054       
+0055       <a name="_sub2" href="#_subfunctions" class="code">function f = set.cutoff(f, val)</a>
+0056          assert(isnumeric(val), <span class="string">'Cutoff frequency should be numeric, not %s'</span>,class(val));
+0057          assert(numel(val) &lt; 3, <span class="string">'Cutoff frequency should be either [cutoff] or [lower upper]'</span>);
+0058       <span class="keyword">end</span>
+0059       
+0060       <a name="_sub3" href="#_subfunctions" class="code">function f = set.poles(f, val)</a>
+0061          assert(numel(f) == 1, <span class="string">'only can set poles for one TraceFilter at a time'</span>);
+0062          <span class="keyword">if</span> val &gt;=0,
+0063             f.poles = round(val);
+0064          <span class="keyword">else</span>
+0065             warning(<span class="string">'Poles cannot be negative!'</span>);
+0066          <span class="keyword">end</span>
+0067       <span class="keyword">end</span>
+0068       <a name="_sub4" href="#_subfunctions" class="code">function assertCutoffCountMatchesType(f)</a>
+0069          <span class="comment">%assertCutoffCountMatchesType   error if cutoff count doesn't match filter type</span>
+0070          <span class="keyword">switch</span> f.type
+0071             <span class="keyword">case</span> <span class="string">'B'</span>
+0072                assert(numel(f.cutoff) == 2, <span class="string">'for band-pass filter, expected cutoff to be [lower upper]'</span>);
+0073                
+0074             <span class="keyword">case</span> {<span class="string">'H'</span>, <span class="string">'L'</span>}
+0075                assert(numel(f.cutoff) == 1, <span class="string">'for high- or low-pass filter, expected single value for cutoff'</span>);
+0076          <span class="keyword">end</span>
+0077       <span class="keyword">end</span>
+0078          
+0079       <a name="_sub5" href="#_subfunctions" class="code">function trace = filtfilt(f, trace, NYQ)</a>
+0080          <span class="comment">%FILTFILT   TraceFilter implementation of FILTFILT, use on a trace</span>
+0081          <span class="comment">%   filteredTrace = filtfilt(TraceFilter, trace);</span>
+0082          <span class="comment">%   filteredTrace = filtfilt(TraceFilter, data, NYQ);</span>
+0083          <span class="comment">%</span>
+0084          <span class="comment">%      'filtfilt' is a function that filters data at a specified</span>
+0085          <span class="comment">%      cutoff frequency with zero time shift.</span>
+0086          <span class="comment">%</span>
+0087          <span class="comment">%      INPUT values are as follows:</span>
+0088          <span class="comment">%        &quot;TraceFilter&quot; is a filter object</span>
+0089          <span class="comment">%        &quot;trace&quot; is one or more traces</span>
+0090          <span class="comment">%        &quot;data&quot; is any data vector (generally of type DOUBLE).</span>
+0091          <span class="comment">%        &quot;NYQ&quot; is the nyquist frequency</span>
+0092          <span class="comment">%</span>
+0093          <span class="comment">%   See also FILTFILT, BUTTER</span>
+0094          
+0095          <span class="comment">% Check, if w is a number array, just quick &amp; dirty it...</span>
+0096          <span class="keyword">if</span> isa(trace,<span class="string">'waveform'</span>)
+0097             <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'converting waveform(s) to SeismicTrace(s)'</span>);
+0098             trace = <a href="../../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>(trace);
+0099          <span class="keyword">end</span>
+0100          <span class="keyword">if</span> isnumeric(trace)
+0101             WN = f.cutoff / NYQ;
+0102             [b, a] = <a href="#_sub7" class="code" title="subfunction [b, a] = getButter(f, nyq)">getButter</a>(f,WN);
+0103             trace = <a href="../../../../GISMO/core/@filterobject/filtfilt.html" class="code" title="function w =filtfilt(f, w, NYQ)">filtfilt</a>(b, a, trace);
+0104             
+0105          <span class="keyword">elseif</span> isa(trace,<span class="string">'SeismicTrace'</span>)
+0106             assert(numel(f) == 1, <span class="string">'can only filter using a single TraceFilter at a time'</span>);
+0107             <a href="#_sub5" class="code" title="subfunction assertCutoffCountMatchesType(f)">assertCutoffCountMatchesType</a>(f);
+0108             HASGAP = arrayfun(@(x) any(isnan(x.data)), trace);
+0109             <span class="keyword">if</span> any(HASGAP(:))
+0110                warning(<span class="string">'Filterobject:filtfilt:hasNaN'</span>,<span class="keyword">...</span>
+0111                   [<span class="string">'traces(s) contain data gaps (NaN values). This '</span><span class="keyword">...</span>
+0112                   <span class="string">'will cause filtfilt to return an answer of all NaN.  To prevent '</span><span class="keyword">...</span>
+0113                   <span class="string">'this, use trace.fillgaps to replace NaN with an appropriate'</span><span class="keyword">...</span>
+0114                   <span class="string">' value.  \nSee also trace.fillgaps.'</span>]);
+0115             <span class="keyword">end</span>
+0116                         
+0117             <span class="keyword">for</span> n = 1 : numel(trace);
+0118                WN = f.cutoff / trace(n).nyquist();     <span class="comment">%only one filter is assumed!</span>
+0119                [b, a] = <a href="#_sub7" class="code" title="subfunction [b, a] = getButter(f, nyq)">getButter</a>(f,WN);
+0120                trace(n).data = <a href="../../../../GISMO/core/@filterobject/filtfilt.html" class="code" title="function w =filtfilt(f, w, NYQ)">filtfilt</a>(b, a,trace(n).data);
+0121             <span class="keyword">end</span>
+0122             
+0123             histstr = <span class="string">'Filtered: Type:%s    Cutoff: [%s]   Poles: %d'</span>;
+0124             histStatement = sprintf(histstr, f.type, num2str(f.cutoff), f.poles);
+0125             trace = trace.addhistory(histStatement);
+0126          <span class="keyword">end</span>
+0127          <span class="comment">%- - - -  helper function - - - - %</span>
+0128          <a name="_sub6" href="#_subfunctions" class="code">function [b, a] = getButter(f, nyq)</a>
+0129             <span class="comment">%getButter   butterworth filter of requested type</span>
+0130             <span class="comment">%   [b, a] = getButter(f, nyq)</span>
+0131             <span class="comment">%</span>
+0132             <span class="comment">%   See also butter</span>
+0133             <span class="keyword">switch</span> f.type
+0134                <span class="keyword">case</span> <span class="string">'H'</span>;
+0135                   [b,a] = <a href="../../../../GISMO/core/@correlation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>(f.poles, nyq, <span class="string">'high'</span>);
+0136                <span class="keyword">case</span> <span class="string">'B'</span>;
+0137                   [b,a] = <a href="../../../../GISMO/core/@correlation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>(f.poles, nyq);
+0138                <span class="keyword">case</span> <span class="string">'L'</span>;
+0139                   [b,a] = <a href="../../../../GISMO/core/@correlation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>(f.poles, nyq, <span class="string">'low'</span>);
+0140             <span class="keyword">end</span>
+0141          <span class="keyword">end</span> <span class="comment">% getButter</span>
+0142       <span class="keyword">end</span>
+0143       <a name="_sub7" href="#_subfunctions" class="code">function disp(f)</a>
+0144          <span class="comment">%disp   overloaded disp for TraceFilter</span>
+0145          <span class="keyword">if</span> numel(f) &gt; 1
+0146             matSz= num2str(size(f),<span class="string">'%dx'</span>);
+0147             matSz(1:end-1) <span class="comment">% get rid of extra &quot;x&quot; at end.</span>
+0148             fprintf(<span class="string">' [%s] TraceFilters:\n'</span>, matSz(1:end-1));
+0149             <span class="keyword">for</span> n=1:numel(f)
+0150                fprintf(<span class="string">'%d:  %9s %s with cutoff [%s] and %d poles\n'</span>,<span class="keyword">...</span>
+0151                   n, TraceFilter.char2type(f(n).type), class(f(n)),<span class="keyword">...</span>
+0152                   num2str(f(n).cutoff), f(n).poles); 
+0153             <span class="keyword">end</span>
+0154          <span class="keyword">else</span>
+0155             <span class="comment">%display a single TraceFilter</span>
+0156             linkText = sprintf(<span class="string">'&lt;a href=&quot;matlab: help %s&quot;&gt;%s&lt;/a&gt;'</span>, class(f), class(f));
+0157             <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([linkText <span class="string">' with properties:'</span>]);
+0158             fprintf(<span class="string">'%  type: ''%c'' (%s)\n'</span>, f.type, TraceFilter.char2type(f.type));
+0159          <span class="keyword">end</span>
+0160       <span class="keyword">end</span>
+0161    <span class="keyword">end</span> <span class="comment">%method section</span>
+0162    methods(Static, Hidden)
+0163       <a name="_sub8" href="#_subfunctions" class="code">function t = char2type(c)</a>
+0164          <span class="comment">%char2type   returns the long name of the passband type</span>
+0165          <span class="comment">%   t = char2type(c).</span>
+0166          <span class="comment">%   example:</span>
+0167          <span class="comment">%     t = char2type('B'); % returns 'bandpass'</span>
+0168          <span class="keyword">switch</span> c
+0169             <span class="keyword">case</span> <span class="string">'B'</span>
+0170                t = <span class="string">'band-pass'</span>;
+0171             <span class="keyword">case</span> <span class="string">'L'</span>
+0172                t = <span class="string">'low-pass'</span>;
+0173             <span class="keyword">case</span> <span class="string">'H'</span>
+0174                t = <span class="string">'high-pass'</span>;
+0175          <span class="keyword">end</span>
+0176       <span class="keyword">end</span>
+0177    <span class="keyword">end</span>
+0178    methods(Static)
+0179       <a href="cookbook.html" class="code" title="function cookbook()">cookbook</a>() <span class="comment">%run the filter cookbook</span>
+0180    <span class="keyword">end</span>
+0181 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

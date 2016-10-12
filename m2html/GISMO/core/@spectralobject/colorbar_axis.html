@@ -1,0 +1,375 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of colorbar_axis</title>
+  <meta name="keywords" content="colorbar_axis">
+  <meta name="description" content="COLORBAR - Display color bar (color scale).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@spectralobject</a> &gt; colorbar_axis.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@spectralobject&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>colorbar_axis
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>COLORBAR - Display color bar (color scale).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> COLORBAR - Display color bar (color scale).
+
+   This function differs from colorbar(loc,clabel,rlab1,rlab2) in that 
+   only a portion of the colorbar defined by the plot axis &quot;paxis&quot; is shown
+
+       s.dBlims is the [2] vector containing the plotting axis limits
+       paxis   is the [2] vector containing the plotting axis limits
+               that are used to limit the portion of the colorbar shown 
+
+    COLORBAR('vert') appends a vertical color scale to 
+    the current axis. COLORBAR('horiz') appends a 
+    horizontal color scale.
+
+    COLORBAR(H) places the colorbar in the axes H. The
+    colorbar will be horizontal if the axes width &gt; height.
+
+    COLORBAR without arguments either adds a new vertical
+    color scale or updates an existing colorbar.
+
+    H = COLORBAR(...) returns a handle to the colorbar axis.
+
+       clabel  is the string containing the colorbar axis label
+       rlab1   is the string label for the lower limit plotted
+       rlab2   is the string label for the upper limit plotted</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>	C = COLORMAP(C)</li><li><a href="../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>	SIGN removes the mean of each trace.</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../GISMO/core/@waveform/diff.html" class="code" title="function w = diff (w)">diff</a>	DIFF Differentiate waveform</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/@waveform/sign.html" class="code" title="function w = sign(w)">sign</a>	SIGN Signum function for waveforms.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/colormap.html" class="code" title="function c = colormap(c,mapname)">colormap</a>	colormap   apply a colormap to the cross-correlation</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/sign.html" class="code" title="function c = sign(c)">sign</a>	SIGN convert traces to the sign of their data (+1, 0, -1)</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="specgram.html" class="code" title="function h = specgram(s, ws, varargin)">specgram</a>	SPECGRAM - plots spectrogram of waveforms</li><li><a href="specgram2.html" class="code" title="function specgram2(s, ws, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 
+0002 <a name="_sub0" href="#_subfunctions" class="code">function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)</a>
+0003 <span class="comment">% COLORBAR - Display color bar (color scale).</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">%   This function differs from colorbar(loc,clabel,rlab1,rlab2) in that</span>
+0006 <span class="comment">%   only a portion of the colorbar defined by the plot axis &quot;paxis&quot; is shown</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%       s.dBlims is the [2] vector containing the plotting axis limits</span>
+0009 <span class="comment">%       paxis   is the [2] vector containing the plotting axis limits</span>
+0010 <span class="comment">%               that are used to limit the portion of the colorbar shown</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    COLORBAR('vert') appends a vertical color scale to</span>
+0013 <span class="comment">%    the current axis. COLORBAR('horiz') appends a</span>
+0014 <span class="comment">%    horizontal color scale.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    COLORBAR(H) places the colorbar in the axes H. The</span>
+0017 <span class="comment">%    colorbar will be horizontal if the axes width &gt; height.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%    COLORBAR without arguments either adds a new vertical</span>
+0020 <span class="comment">%    color scale or updates an existing colorbar.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%    H = COLORBAR(...) returns a handle to the colorbar axis.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%       clabel  is the string containing the colorbar axis label</span>
+0025 <span class="comment">%       rlab1   is the string label for the lower limit plotted</span>
+0026 <span class="comment">%       rlab2   is the string label for the upper limit plotted</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">%</span>
+0029 
+0030 <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0031 <span class="comment">% $Date$</span>
+0032 <span class="comment">% $Revision$</span>
+0033 
+0034 <span class="comment">%return</span>
+0035 
+0036 <span class="comment">%set (gca, 'FontSize', 8)</span>
+0037 <span class="keyword">if</span> ~exist(<span class="string">'fontsize'</span>,<span class="string">'var'</span>)
+0038     fontsize = 8;
+0039 <span class="keyword">end</span>;
+0040 <span class="keyword">if</span> nargin&lt;1, 
+0041   echo <span class="string">' Error:  vector of plot-axis limits required'</span>
+0042   echo <span class="string">'         else,  use: '</span>
+0043   echo <span class="string">'    colorbar_axis(spectralobject,loc,clabel,rlab1,rlab2)'</span>
+0044   <span class="keyword">return</span>
+0045 <span class="keyword">end</span>
+0046 
+0047 <span class="keyword">if</span> nargin&gt;1,
+0048   lower=s.dBlims(1);
+0049   upper=s.dBlims(2);
+0050   paxis = s.dBlims;
+0051 <span class="keyword">end</span>
+0052 
+0053 <span class="keyword">if</span> nargin&lt;2, 
+0054     loc = <span class="string">'vert'</span>; 
+0055 <span class="keyword">end</span>
+0056 
+0057 ax = [];
+0058 <span class="keyword">if</span> nargin==2,
+0059   <span class="keyword">if</span> ~ischar(loc), 
+0060     ax = loc; 
+0061     <span class="keyword">if</span> ~strcmp(<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'type'</span>),<span class="string">'axes'</span>),
+0062       error(<span class="string">'Requires axes handle.'</span>);
+0063     <span class="keyword">end</span>
+0064     rect = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'position'</span>);
+0065     <span class="keyword">if</span> rect(3) &gt; rect(4), loc = <span class="string">'horiz'</span>; <span class="keyword">else</span> loc = <span class="string">'vert'</span>; <span class="keyword">end</span>
+0066   <span class="keyword">end</span>
+0067 <span class="keyword">end</span>
+0068 
+0069 <span class="comment">% Determine color limits by context.  If any axes child is an image</span>
+0070 <span class="comment">% use scale based on size of colormap, otherwise use current CAXIS.</span>
+0071 
+0072 ch = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(gca,<span class="string">'children'</span>);
+0073 hasimage = 0; t = [];
+0074 <span class="keyword">for</span> i=1:length(ch),
+0075   <span class="keyword">if</span> strcmp(<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ch(i),<span class="string">'type'</span>),<span class="string">'image'</span>),
+0076     hasimage = 1;
+0077     t = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ch(i),<span class="string">'UserData'</span>); <span class="comment">% Info stored by imshow or imagesc</span>
+0078   <span class="keyword">elseif</span> strcmp(<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ch(i),<span class="string">'Type'</span>),<span class="string">'surface'</span>), <span class="comment">% Texturemapped surf?</span>
+0079     <span class="keyword">if</span> strcmp(<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ch(i),<span class="string">'FaceColor'</span>),<span class="string">'texturemap'</span>)
+0080       hasimage = 2;
+0081     t = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ch(i),<span class="string">'UserData'</span>); <span class="comment">% Info stored by imshow or imagesc</span>
+0082     <span class="keyword">end</span>
+0083   <span class="keyword">end</span>
+0084 <span class="keyword">end</span>
+0085 <span class="keyword">if</span> hasimage,
+0086   <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(t), 
+0087     t = [0.5 size(<a href="../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>,1)+0.5];
+0088   <span class="keyword">end</span>
+0089 <span class="keyword">else</span>
+0090   t = paxis;
+0091   cmin=t(1);
+0092   cmax=t(2);
+0093 <span class="keyword">end</span>
+0094 
+0095 h = gca;
+0096 
+0097 <span class="keyword">if</span> nargin==1,
+0098   <span class="comment">% Search for existing colorbar</span>
+0099   ch = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(gcf,<span class="string">'children'</span>); ax = [];
+0100   <span class="keyword">for</span> i=1:length(ch),
+0101     d = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ch(i),<span class="string">'userdata'</span>);
+0102     <span class="keyword">if</span> numel(d)==1, 
+0103         <span class="keyword">if</span> d==h, 
+0104             ax = ch(i); 
+0105             pos = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ch(i),<span class="string">'Position'</span>);
+0106             <span class="keyword">if</span> pos(3)&lt;pos(4), loc = <span class="string">'vert'</span>; 
+0107             <span class="keyword">else</span> loc = <span class="string">'horiz'</span>; 
+0108             <span class="keyword">end</span>
+0109             <span class="keyword">break</span>;
+0110         <span class="keyword">end</span>
+0111     <span class="keyword">end</span>
+0112   <span class="keyword">end</span>
+0113 <span class="keyword">end</span>
+0114 
+0115 <span class="keyword">if</span> strcmp(<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(gcf,<span class="string">'NextPlot'</span>),<span class="string">'replace'</span>),
+0116   <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(gcf,<span class="string">'NextPlot'</span>,<span class="string">'add'</span>)
+0117 <span class="keyword">end</span>
+0118 <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(gca,<span class="string">'FontSize'</span>,fontsize);
+0119 fsize=<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(gca,<span class="string">'FontSize'</span>);          <span class="comment">%get fontsize and shift if&gt;16</span>
+0120 <span class="comment">%vshift=0;</span>
+0121 <span class="comment">%if fsize&gt;16, vshift=.25; end</span>
+0122 
+0123 <span class="comment">%------------------------------------------------------------------------</span>
+0124 
+0125 <span class="keyword">if</span> loc(1)==<span class="string">'v'</span>,        <span class="comment">% Append VERTICAL scale to right of current plot</span>
+0126   stripe = 0.075; edge = 0.02; 
+0127 
+0128   <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(ax),
+0129     pos = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(h,<span class="string">'Position'</span>);
+0130     [az,el] = view;
+0131     <span class="keyword">if</span> all([az,el]==[0 90]), space = 0.05; <span class="keyword">else</span> space = .1; <span class="keyword">end</span>
+0132     <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(h,<span class="string">'Position'</span>,[pos(1) pos(2) pos(3)*(1-stripe-edge-space) pos(4)])
+0133     rect = [pos(1)+(1-stripe-edge)*pos(3) pos(2) stripe*pos(3)*.5 pos(4)];
+0134 
+0135     <span class="comment">% Create axes for stripe</span>
+0136     ax = axes(<span class="string">'Position'</span>, rect);
+0137   <span class="keyword">else</span>
+0138     axes(ax);
+0139   <span class="keyword">end</span>
+0140   
+0141   <span class="comment">% Create color stripe</span>
+0142   n = size(<a href="../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>,1);
+0143   image([0 1],t,[1:n]'); <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(ax,<span class="string">'Ydir'</span>,<span class="string">'normal'</span>)
+0144 
+0145   <span class="keyword">if</span> nargin&gt;2,
+0146     <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(ax,<span class="string">'ylabel'</span>,text(0,0,clabel, <span class="string">'FontSize'</span>, fontsize));
+0147   <span class="keyword">end</span>
+0148 
+0149   xpos = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'Xlim'</span>);
+0150   ypos = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'Ylim'</span>);
+0151   <span class="keyword">if</span> nargin&gt;3,
+0152     xshift=.5*(xpos(2)-xpos(1));
+0153     yshift=.05*(ypos(2)-ypos(1));
+0154     <span class="keyword">if</span> nargin==4,        <span class="comment">%put color range  max label on colorbar</span>
+0155       text(xpos(2)-xshift,ypos(2)+yshift,0.,rlab1);
+0156     <span class="keyword">end</span>
+0157     <span class="keyword">if</span> nargin==5,        <span class="comment">%put color range min, max labels on colorbar</span>
+0158       text(xpos(1)-xshift,ypos(1)-.75*yshift,0.,rlab1);
+0159       text(xpos(1)-xshift,ypos(2)+yshift,0.,rlab2);
+0160     <span class="keyword">end</span>
+0161   <span class="keyword">end</span>
+0162   <span class="comment">%d=date;</span>
+0163   yshift=.12*(ypos(2)-ypos(1));
+0164 <span class="comment">%  text(xpos(1)+2.0,ypos(1)-yshift,0.,d)</span>
+0165 
+0166   <span class="comment">% Create color axis</span>
+0167   ylim = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'ylim'</span>);   <span class="comment">% Note: axis ticlabel range will be truncated</span>
+0168   units = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'Units'</span>); <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(ax,<span class="string">'Units'</span>,<span class="string">'pixels'</span>);
+0169   pos = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'Position'</span>);
+0170   <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(ax,<span class="string">'Units'</span>,units);
+0171   yspace = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'FontSize'</span>)*(ylim(2)-ylim(1))/pos(4)/2;
+0172   xspace = .5*<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'FontSize'</span>)/pos(3);
+0173   yticks = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'ytick'</span>);
+0174   ylabels = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'yticklabel'</span>);
+0175   labels = []; width = [];
+0176   
+0177 <a href="set.html" class="code" title="function s = set(s, varargin)">set</a> (gca, <span class="string">'FontSize'</span>, fontsize)  <span class="comment">%This sets the font size</span>
+0178   <span class="keyword">for</span> i=1:length(yticks),
+0179     labels = [labels;text(1+0*xspace,yticks(i),deblank(ylabels(i,:)), <span class="keyword">...</span>
+0180          <span class="string">'HorizontalAlignment'</span>,<span class="string">'right'</span>, <span class="keyword">...</span>
+0181          <span class="string">'VerticalAlignment'</span>,<span class="string">'middle'</span>, <span class="keyword">...</span>
+0182          <span class="string">'FontName'</span>,<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'FontName'</span>), <span class="keyword">...</span>
+0183          <span class="string">'FontSize'</span>,<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'FontSize'</span>), <span class="keyword">...</span>
+0184          <span class="string">'FontAngle'</span>,<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'FontAngle'</span>), <span class="keyword">...</span>
+0185          <span class="string">'FontWeight'</span>,<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'FontWeight'</span>))];
+0186     width = [width;<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(labels(i),<span class="string">'Extent'</span>)];
+0187   <span class="keyword">end</span>
+0188 
+0189   <span class="comment">% Shift labels over so that they line up</span>
+0190   [dum,k] = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(width(:,3)); width = width(k,3);
+0191   <span class="keyword">for</span> i=1:length(labels),
+0192     pos = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(labels(i),<span class="string">'Position'</span>);
+0193     <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(labels(i),<span class="string">'Position'</span>,[pos(1)+width pos(2:3)])
+0194   <span class="keyword">end</span>
+0195 
+0196   <span class="comment">% If we need an exponent then draw one</span>
+0197   [ymax,k] = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(yticks));
+0198   <span class="keyword">if</span> <a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(str2num(ylabels(k,:)))-ymax)&gt;sqrt(eps),
+0199     ex = log10(<a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(yticks)));
+0200     ex = <a href="../../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>(ex)*ceil(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(ex));
+0201     l = text(0,ylim(2)+2*yspace,<span class="string">'x 10'</span>, <span class="keyword">...</span>
+0202          <span class="string">'FontName'</span>,<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'FontName'</span>), <span class="keyword">...</span>
+0203          <span class="string">'FontSize'</span>,<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'FontSize'</span>), <span class="keyword">...</span>
+0204          <span class="string">'FontAngle'</span>,<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'FontAngle'</span>), <span class="keyword">...</span>
+0205          <span class="string">'FontWeight'</span>,<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'FontWeight'</span>));
+0206     width = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(l,<span class="string">'Extent'</span>);
+0207     text(width(3)-xspace,ylim(2)+3.2*yspace,num2str(ex), <span class="keyword">...</span>
+0208          <span class="string">'FontName'</span>,<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'ExpFontName'</span>), <span class="keyword">...</span>
+0209          <span class="string">'FontSize'</span>,<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'ExpFontSize'</span>), <span class="keyword">...</span>
+0210          <span class="string">'FontAngle'</span>,<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'ExpFontAngle'</span>), <span class="keyword">...</span>
+0211          <span class="string">'FontWeight'</span>,<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'ExpFontWeight'</span>));
+0212   <span class="keyword">end</span>
+0213 
+0214   <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(ax,<span class="string">'yticklabelmode'</span>,<span class="string">'manual'</span>,<span class="string">'yticklabel'</span>,<span class="string">''</span>)
+0215   <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(ax,<span class="string">'xticklabelmode'</span>,<span class="string">'manual'</span>,<span class="string">'xticklabel'</span>,<span class="string">''</span>)
+0216 
+0217 <span class="comment">%set(gca,'ytick',[])</span>
+0218 <span class="comment">%------------------------------------------------------------------------</span>
+0219 <span class="comment">%------------------------------------------------------------------------</span>
+0220 <span class="keyword">else</span>            <span class="comment">% Append HORIZONTAL scale to bottom of current plot</span>
+0221 
+0222   <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(ax),
+0223     pos = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(h,<span class="string">'Position'</span>);           <span class="comment">%[left,bottom,width,height]</span>
+0224     stripe = 0.05; space = 0.1;       <span class="comment">%stripe = 0.075</span>
+0225     ori=<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(gcf,<span class="string">'paperorientation'</span>);
+0226     <span class="keyword">if</span> fsize&lt;=16, 
+0227         sfact=1; 
+0228     <span class="keyword">else</span>
+0229         sfact=2;
+0230     <span class="keyword">end</span>
+0231 <span class="comment">%    if ori=='landscape', stripe = 0.05; end</span>
+0232 <span class="comment">%    if fsize&lt;=26,</span>
+0233 <span class="comment">%      set(h,'Position',...</span>
+0234 <span class="comment">%        [pos(1) pos(2)+(stripe+space)*pos(4) pos(3) (1-stripe-space)*pos(4)])</span>
+0235 <span class="comment">%    else</span>
+0236       <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(h,<span class="string">'Position'</span>,<span class="keyword">...</span>
+0237      [pos(1) pos(2)+(sfact*stripe+space)*pos(4) pos(3) (1-stripe-space)*pos(4)])
+0238 <span class="comment">%    end</span>
+0239     rect = [pos(1) pos(2) pos(3) stripe*pos(4)*.8];
+0240 
+0241     <span class="comment">% Create axes for stripe</span>
+0242     ax = axes(<span class="string">'Position'</span>, rect);
+0243   <span class="keyword">else</span>
+0244     axes(ax);
+0245   <span class="keyword">end</span>
+0246 
+0247   t = paxis;
+0248   cmin=t(1);
+0249   cmax=t(2);
+0250 
+0251   <span class="comment">% Create color stripe</span>
+0252   n = size(<a href="../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>,1);
+0253   <span class="keyword">if</span> paxis(1)&gt;cmin,
+0254     <a href="../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>=paxis(1)-cmin;
+0255     cstep=(cmax-cmin)/n;
+0256     n1=round(<a href="../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>/cstep);
+0257   <span class="keyword">else</span> 
+0258     n1=1;
+0259   <span class="keyword">end</span>
+0260   <span class="keyword">if</span> paxis(2)&lt;cmax,
+0261     <a href="../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>=cmax-paxis(2);
+0262     cstep=(cmax-cmin)/n;
+0263     n2=n-round(<a href="../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>/cstep);
+0264   <span class="keyword">else</span> 
+0265     n2=n;
+0266   <span class="keyword">end</span>
+0267     
+0268 <span class="comment">%  image(t,[0 1],[1:n]); set(ax,'Ydir','normal')</span>
+0269   image(t,[0 1],[n1:n2]); <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(ax,<span class="string">'Ydir'</span>,<span class="string">'normal'</span>)
+0270   <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(ax,<span class="string">'yticklabelmode'</span>,<span class="string">'manual'</span>)
+0271   <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(ax,<span class="string">'yticklabel'</span>,<span class="string">''</span>)
+0272 
+0273 <a href="set.html" class="code" title="function s = set(s, varargin)">set</a> (gca, <span class="string">'FontSize'</span>, fontsize)  <span class="comment">%This sets the font size</span>
+0274   <span class="keyword">if</span> nargin&gt;2,
+0275    <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(ax,<span class="string">'xlabel'</span>,text(0,0,clabel, <span class="string">'FontSize'</span>, fontsize));
+0276   <span class="keyword">end</span>
+0277 
+0278   xpos = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'Xlim'</span>);
+0279   ypos = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(ax,<span class="string">'Ylim'</span>);
+0280   <span class="keyword">if</span> nargin&gt;3,
+0281     xshift=.025*(xpos(2)-xpos(1));
+0282     <span class="keyword">if</span> nargin==4,        <span class="comment">%put color range  max label on colorbar</span>
+0283       text(xpos(2)-xshift,ypos(1)-1.0,0.,rlab1);
+0284     <span class="keyword">end</span>
+0285     <span class="keyword">if</span> nargin==5,        <span class="comment">%put color range min, max labels on colorbar</span>
+0286       text(xpos(1)-xshift,ypos(1)-1.0,0.,rlab1);
+0287       text(xpos(2)-xshift,ypos(1)-1.0,0.,rlab2);
+0288     <span class="keyword">end</span>
+0289   <span class="keyword">end</span>
+0290   d=date;
+0291   xshift=.15*(xpos(2)-xpos(1));
+0292 <span class="comment">%  text(xpos(1)-xshift,ypos(1)-3.5,0.,d)</span>
+0293 
+0294 <span class="comment">%set(gca,'xtick',[])</span>
+0295 <span class="keyword">end</span>
+0296 <span class="comment">%------------------------------------------------------------------------</span>
+0297 <span class="comment">%------------------------------------------------------------------------</span>
+0298 
+0299 <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(ax,<span class="string">'userdata'</span>,h)
+0300 <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(gcf,<span class="string">'CurrentAxes'</span>,h)
+0301 <a href="set.html" class="code" title="function s = set(s, varargin)">set</a>(gcf,<span class="string">'Nextplot'</span>,<span class="string">'Replace'</span>)
+0302 
+0303 <span class="keyword">if</span> nargout&gt;0, handle = ax; <span class="keyword">end</span>
+0304 
+0305</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of amplitude_spectrum</title>
+  <meta name="keywords" content="amplitude_spectrum">
+  <meta name="description" content="amplitude_spectrum   Simple method to compute amplitude">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@TraceData</a> &gt; amplitude_spectrum.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@TraceData&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>amplitude_spectrum
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>amplitude_spectrum   Simple method to compute amplitude</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [A, phi, f] = amplitude_spectrum(td) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">amplitude_spectrum   Simple method to compute amplitude
+   spectrum for a trace. Uses the MATLAB fft function.
+   [A, phi, f] = amplitude_spectrum(td)
+
+   Inputs:
+       td - a single TraceData
+
+   Outputs:
+       A - the amplitude coefficients
+       phi - the phase coefficients
+       f - the frequency values corresponding to elements of A and phi
+
+   Example:
+       [A phi, f] = amplitude_spectrum(td)
+       plot(f,A);
+       xlabel('Frequency (Hz)')
+       ylabel('Amplitude');
+
+   See also fft
+   Glenn Thompson, November 21, 2014</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@spectralobject/fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>	FFT Discrete Fourier transform.  OVERLOADED for waveform & Spectralobject</li><li><a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/contributed_antelope/attenuation/hankelq.html" class="code" title="function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)">hankelq</a>	HANKELQ Compute spectral ratio in two frequency bands</li><li><a href="TraceData.html" class="code" title="">TraceData</a>	</li><li><a href="../../../../GISMO/tests/amplitude_spectrum_test.html" class="code" title="function tests = amplitude_spectrum_test()">amplitude_spectrum_test</a>	% Main function to generate tests</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001       <a name="_sub0" href="#_subfunctions" class="code">function [A, phi, f] = amplitude_spectrum(td)</a>
+0002          <span class="comment">%amplitude_spectrum   Simple method to compute amplitude</span>
+0003          <span class="comment">%   spectrum for a trace. Uses the MATLAB fft function.</span>
+0004          <span class="comment">%   [A, phi, f] = amplitude_spectrum(td)</span>
+0005          <span class="comment">%</span>
+0006          <span class="comment">%   Inputs:</span>
+0007          <span class="comment">%       td - a single TraceData</span>
+0008          <span class="comment">%</span>
+0009          <span class="comment">%   Outputs:</span>
+0010          <span class="comment">%       A - the amplitude coefficients</span>
+0011          <span class="comment">%       phi - the phase coefficients</span>
+0012          <span class="comment">%       f - the frequency values corresponding to elements of A and phi</span>
+0013          <span class="comment">%</span>
+0014          <span class="comment">%   Example:</span>
+0015          <span class="comment">%       [A phi, f] = amplitude_spectrum(td)</span>
+0016          <span class="comment">%       plot(f,A);</span>
+0017          <span class="comment">%       xlabel('Frequency (Hz)')</span>
+0018          <span class="comment">%       ylabel('Amplitude');</span>
+0019          <span class="comment">%</span>
+0020          <span class="comment">%   See also fft</span>
+0021          <span class="comment">%   Glenn Thompson, November 21, 2014</span>
+0022          
+0023          <span class="comment">%TODO: Rename this to amplitudespectrum or move it elsewhere</span>
+0024          
+0025          N = length(td.data);
+0026          NFFT = 2 ^ nextpow2(N); <span class="comment">% Next power of 2 from length of y</span>
+0027          Y = <a href="../../../../GISMO/core/@spectralobject/fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>(td.data, NFFT); <span class="comment">% X will have same length as signal, and will be complex with a magnitude and phase</span>
+0028          A = 2 * <a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(Y(1:NFFT/2+1)) / N;
+0029          phi = angle(Y);
+0030          f = td.samplerate / 2 * linspace(0,1,NFFT/2+1);
+0031       <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

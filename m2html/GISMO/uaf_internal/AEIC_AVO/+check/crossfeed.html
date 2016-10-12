@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of crossfeed</title>
+  <meta name="keywords" content="crossfeed">
+  <meta name="description" content="CROSSFEED Checks for crossfeeding and duplicate data channels">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">uaf_internal</a> &gt; <a href="../index.html">AEIC_AVO</a> &gt; <a href="index.html">+check</a> &gt; crossfeed.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/uaf_internal/AEIC_AVO/+check&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>crossfeed
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>CROSSFEED Checks for crossfeeding and duplicate data channels</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function crossfeed(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CROSSFEED Checks for crossfeeding and duplicate data channels
+ CROSSFEED Reads a short snippet of data from an entire network and cross
+ correlates each trace against all others (without time shifting). Events
+ are then clustered and a directory of png images is written out showing
+ raw and filtered versions of the waveforms in each cluster. These images
+ can be used to check for data problems across the network. The image
+ directory is named FIG_yyyymmdd_HHMMSS according to the start time. 
+
+ CROSSFEED(STARTTIME) specify a start time in Matlab date format
+
+ CROSSFEED(STARTTIME,DURATION) specify a trace duration in seconds.
+
+ CROSSFEED(STARTTIME,DURATION,THRESHOLD) specify a cross correlation
+ threshold for clustering.
+
+ CROSSFEED(STARTTIME,DURATION,THRESHOLD,NETWORK) specify a network to
+ examine.
+
+ Using CROSSFEED with no arguments is equivalent to:
+    CROSSFEED( floor(now)-0.5 , 30 , 0.7 , 'AV' )
+
+ Note that &quot;now&quot; is returned in local time. So the default data examined
+ is 8 to 9 hours old, assuming AKST/AKDT.
+
+ -- CAVEATS --
+ This function is hardwired to run in the UAF Seis Lab assuming one day
+ archive databases that contain waveforms and station-related tables (to
+ get network affiliations)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../../GISMO/core/@Catalog/subset.html" class="code" title="function catalogObject2 = subset(catalogObject, indices)">subset</a>	CATALOG.SUBSET Create a new catalogObject by subsetting based</li><li><a href="../../../../GISMO/core/@correlation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>	C = BUTTER(C,[TYPE],CUTOFF,[POLES])</li><li><a href="../../../../GISMO/core/@correlation/cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	c = CLUSTER(c,CUTOFF) cuts the "branches" of the linkage tree to create</li><li><a href="../../../../GISMO/core/@correlation/correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="../../../../GISMO/core/@correlation/demean.html" class="code" title="function c = demean(c,varargin);">demean</a>	DEMEAN removes the mean of each trace.</li><li><a href="../../../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>	DETREND removes the slope of each trace.</li><li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@correlation/linkage.html" class="code" title="function c = linkage(c,varargin);">linkage</a>	c = LINKAGE(c) Creates a hierarchical cluster tree for all waveforms in</li><li><a href="../../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/@correlation/subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li><li><a href="../../../../GISMO/core/@correlation/taper.html" class="code" title="function c = taper(c,varargin)">taper</a>	TAPER tapers the ends of waveforms in the correlation object.</li><li><a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>	DATASOURCE constructor for a datasource object.</li><li><a href="../../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../../GISMO/core/@rsam/extract.html" class="code" title="function s=extract(self, snum, enum)">extract</a>	</li><li><a href="../../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>	scnl (deprecated) : object that holds the stations, channel, network, and location for</li><li><a href="../../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../../../GISMO/core/@waveform/demean.html" class="code" title="function w = demean (w)">demean</a>	DEMEAN remove offset voltage from signal</li><li><a href="../../../../GISMO/core/@waveform/detrend.html" class="code" title="function w = detrend (w, varargin)">detrend</a>	DETREND remove linear trend from a waveform</li><li><a href="../../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../../GISMO/core/@waveform/extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="../../../../GISMO/core/@waveform/fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>	FILLGAPS - fill missing data with values of your choice</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../../GISMO/core/@waveform/legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>	legend creates a legend for a waveform graph</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>	STD Standard deviation of a waveform</li><li><a href="../../../../GISMO/core/@waveform/taper.html" class="code" title="function w = taper(w,R, style)">taper</a>	WAVEFORM = TAPER(WAVEFORM,R) applies a cosine taper to the ends of a</li><li><a href="../../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>	butter   create and apply a butterworth filter to the traces</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	cluster   Construct agglomerative clusters from linkage for Seismic Traces</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/demean.html" class="code" title="function c = demean(c)">demean</a>	DEMEAN removes the mean of each trace.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/detrend.html" class="code" title="function c = detrend(c)">detrend</a>	DETREND   removes the slope of each trace.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/linkage.html" class="code" title="function c = linkage(c,varargin)">linkage</a>	linkage   Agglomerative hierarchical cluster tree for Seismic Traces</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/taper.html" class="code" title="function c = taper(c,varargin)">taper</a>	TAPER tapers the ends of waveforms in the correlation object.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/legend.html" class="code" title="function varargout = legend(T, varargin)">legend</a>	legend   Create a legend for the graph of a trace.</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li><li><a href="../../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function crossfeed(varargin)</a>
+0002 
+0003 <span class="comment">%CROSSFEED Checks for crossfeeding and duplicate data channels</span>
+0004 <span class="comment">% CROSSFEED Reads a short snippet of data from an entire network and cross</span>
+0005 <span class="comment">% correlates each trace against all others (without time shifting). Events</span>
+0006 <span class="comment">% are then clustered and a directory of png images is written out showing</span>
+0007 <span class="comment">% raw and filtered versions of the waveforms in each cluster. These images</span>
+0008 <span class="comment">% can be used to check for data problems across the network. The image</span>
+0009 <span class="comment">% directory is named FIG_yyyymmdd_HHMMSS according to the start time.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% CROSSFEED(STARTTIME) specify a start time in Matlab date format</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% CROSSFEED(STARTTIME,DURATION) specify a trace duration in seconds.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% CROSSFEED(STARTTIME,DURATION,THRESHOLD) specify a cross correlation</span>
+0016 <span class="comment">% threshold for clustering.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% CROSSFEED(STARTTIME,DURATION,THRESHOLD,NETWORK) specify a network to</span>
+0019 <span class="comment">% examine.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% Using CROSSFEED with no arguments is equivalent to:</span>
+0022 <span class="comment">%    CROSSFEED( floor(now)-0.5 , 30 , 0.7 , 'AV' )</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Note that &quot;now&quot; is returned in local time. So the default data examined</span>
+0025 <span class="comment">% is 8 to 9 hours old, assuming AKST/AKDT.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% -- CAVEATS --</span>
+0028 <span class="comment">% This function is hardwired to run in the UAF Seis Lab assuming one day</span>
+0029 <span class="comment">% archive databases that contain waveforms and station-related tables (to</span>
+0030 <span class="comment">% get network affiliations)</span>
+0031 
+0032 
+0033 
+0034 
+0035 <span class="comment">% READ ARGUMENTS AND SET DEFAULT VALUES</span>
+0036 <span class="keyword">if</span> numel(varargin)&gt;=1
+0037     startTime = varargin{1};
+0038 <span class="keyword">else</span>
+0039      startTime = floor(now)-0.5;
+0040 <span class="keyword">end</span>
+0041 
+0042 <span class="keyword">if</span> numel(varargin)&gt;=2
+0043     duration = varargin{2}/86400;
+0044 <span class="keyword">else</span>
+0045      duration = 30/86400;
+0046 <span class="keyword">end</span>
+0047 
+0048 <span class="keyword">if</span> numel(varargin)&gt;=3
+0049     threshold = varargin{3};
+0050 <span class="keyword">else</span>
+0051      threshold = 0.7;
+0052 <span class="keyword">end</span>
+0053 
+0054 <span class="keyword">if</span> numel(varargin)==4
+0055     networkName = varargin{4};
+0056 <span class="keyword">else</span>
+0057      networkName = <span class="string">'AV'</span>;
+0058 <span class="keyword">end</span>
+0059     
+0060 
+0061 
+0062 <span class="comment">% GET CHANNEL LIST FROM DATABASE</span>
+0063 dbWfdisc = [<span class="string">'/aerun/sum/db/archive/archive_'</span> datestr(startTime,<span class="string">'yyyy'</span>) <span class="string">'/archive_'</span> datestr(startTime,<span class="string">'yyyy'</span>) <span class="string">'_'</span> datestr(startTime,<span class="string">'mm'</span>) <span class="string">'_'</span> datestr(startTime,<span class="string">'dd'</span>)];
+0064 <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'Reading STA_CHANs for network '</span> networkName <span class="string">' from database: '</span>]);
+0065 <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([ <span class="string">'   '</span> dbWfdisc <span class="string">' ...'</span>]);
+0066 
+0067 db = dbopen(dbWfdisc,<span class="string">'r'</span>);
+0068 db = dblookup(db,<span class="string">''</span>,<span class="string">'wfdisc'</span>,<span class="string">''</span>,<span class="string">''</span>);
+0069 db1 = dblookup(db,<span class="string">''</span>,<span class="string">'affiliation'</span>,<span class="string">''</span>,<span class="string">''</span>);
+0070 db = dbjoin(db,db1);
+0071 db = dbsubset(db,[<span class="string">'net==&quot;'</span> networkName <span class="string">'&quot;'</span>]);
+0072 [wfdisc.sta wfdisc.chan wfdisc.net] = dbgetv(db,<span class="string">'sta'</span>,<span class="string">'chan'</span>,<span class="string">'net'</span>);
+0073 dbclose(db);
+0074 
+0075 
+0076 <span class="comment">% GET LIST OF UNIQUE STA CHANs</span>
+0077 staChanNetList = strcat(wfdisc.sta,<span class="string">'#'</span>,wfdisc.chan,<span class="string">'#'</span>,wfdisc.net);
+0078 staChanNetList = <a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(staChanNetList);
+0079 <span class="keyword">for</span> n = 1:numel(staChanNetList)
+0080     tmp = regexp(staChanNetList(n), <span class="string">'#'</span>, <span class="string">'split'</span>);
+0081     scnl(n) = <a href="../../../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(tmp{1}{1},tmp{1}{2},tmp{1}{3},<span class="string">''</span>);
+0082 <span class="keyword">end</span>
+0083 
+0084 
+0085 <span class="comment">% READ IN WAVEFORMS</span>
+0086 <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'Loading '</span> num2str(numel(scnl)) <span class="string">' waveforms for this time period ...'</span>]);
+0087 <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'   start time: '</span> datestr(startTime)]);
+0088 <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'   duration:   '</span> num2str(duration*86400) <span class="string">' seconds'</span>]);
+0089 ds = <a href="../../../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'antelope'</span>,dbWfdisc);
+0090 w = <a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds,scnl,startTime,startTime+duration);
+0091 w = <a href="../../../../GISMO/core/@correlation/demean.html" class="code" title="function c = demean(c,varargin);">demean</a>(w);
+0092 w = <a href="../../../../GISMO/core/@waveform/fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>(w,0);
+0093 w = <a href="../../../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>(w);
+0094 
+0095 
+0096 <span class="comment">% PREP WAVEFORMS AND CROSS CORRELATE</span>
+0097 c = <a href="../../../../GISMO/core/@correlation/correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>(w);
+0098 c = <a href="../../../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>(c);
+0099 c = <a href="../../../../GISMO/core/@correlation/demean.html" class="code" title="function c = demean(c,varargin);">demean</a>(c);
+0100 c = <a href="../../../../GISMO/core/@correlation/taper.html" class="code" title="function c = taper(c,varargin)">taper</a>(c);
+0101 c = <a href="../../../../GISMO/core/@correlation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>(c,[2 12]);
+0102 <span class="comment">%c = xcorr(c);</span>
+0103 
+0104 
+0105 <span class="comment">% DO ZERO LAG XCORR</span>
+0106 D = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'DATA'</span>);
+0107 wcoeff = 1./sqrt(sum(D.*D));
+0108 <span class="comment">%wcoeff(find(wcoeff==Inf)) = 0;</span>
+0109 corr = zeros(size(D,2));
+0110 lag = zeros(size(D,2));
+0111 <span class="keyword">for</span> col = 1:size(D,2)
+0112     <span class="keyword">for</span> row = 1:size(D,2)
+0113         corr(col,row) = sum(D(:,col).*D(:,row)) .* wcoeff(col) .* wcoeff(row);
+0114     <span class="keyword">end</span>
+0115 <span class="keyword">end</span>
+0116 f = <a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(corr&lt;0);
+0117 corr(f) = 0;
+0118 f = <a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(isnan(corr));
+0119 corr(f) = 0;
+0120 c = <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(c,<span class="string">'corr'</span>,corr);
+0121 c = <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(c,<span class="string">'lag'</span>,lag);
+0122 c = <a href="../../../../GISMO/core/@correlation/linkage.html" class="code" title="function c = linkage(c,varargin);">linkage</a>(c);
+0123 c = <a href="../../../../GISMO/core/@correlation/cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>(c,threshold);
+0124 
+0125 
+0126 
+0127 <span class="comment">% MAKE FIGURE DIRECTORY</span>
+0128 dirName = [networkName <span class="string">'_'</span> datestr(startTime,<span class="string">'yyyy'</span>) datestr(startTime,<span class="string">'mm'</span>) datestr(startTime,<span class="string">'dd'</span>) <span class="string">'_'</span> datestr(startTime,<span class="string">'HH'</span>) datestr(startTime,<span class="string">'MM'</span>) datestr(startTime,<span class="string">'SS'</span>)];
+0129 <span class="keyword">if</span> ~exist(dirName,<span class="string">'dir'</span>)
+0130     <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'Creating new directory: '</span> dirName]);
+0131     mkdir(dirName);
+0132 <span class="keyword">end</span>
+0133 
+0134 
+0135 <span class="comment">% PLOT TRACE CLUSTERS</span>
+0136 index = <a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(c,<span class="string">'BIG'</span>,2);
+0137 clust = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'CLUST'</span>);
+0138 <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'--&gt; dbpick selection strings: '</span>);
+0139 <span class="keyword">for</span> n = 1:<a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(clust(index))
+0140     f = <a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(clust==n);
+0141     figure(<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'Position'</span>,[50 50 800 1100]);
+0142     <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gcf,<span class="string">'DefaultAxesFontSize'</span>,14)
+0143     
+0144     <span class="comment">% RAW TRACE FIGURE</span>
+0145 
+0146     wOrig = <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w(f),<span class="string">'UNITS'</span>,<span class="string">'normalized scale'</span>);
+0147     wOrigCrop = <a href="../../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>(wOrig,<span class="string">'TIME'</span>,startTime+5/86400,startTime+25/86400);
+0148     wOrigCrop = <a href="../../../../GISMO/core/@correlation/demean.html" class="code" title="function c = demean(c,varargin);">demean</a>(<a href="../../../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>(wOrigCrop));
+0149     <span class="keyword">for</span> i = 1:numel(wOrigCrop)
+0150        wOrigCrop(i) = 0.25 * wOrigCrop(i) ./ <a href="../../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>(wOrigCrop(i)) + i; 
+0151     <span class="keyword">end</span>
+0152     wOrigCrop = <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(wOrigCrop,<span class="string">'UNITS'</span>,<span class="string">'normalized scale'</span>);
+0153 
+0154     subplot(2,1,1)
+0155     <a href="../../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(wOrigCrop);
+0156     <a href="../../../../GISMO/core/@waveform/legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>(wOrigCrop);
+0157     xlim([0 20]);
+0158     ylim([0 numel(wOrig)+1]);
+0159     text(19.3,0.05 *(numel(wOrig)+1),[<span class="string">'correlation threshold: '</span> num2str(threshold)],<span class="string">'HorizontalAlignment'</span>,<span class="string">'Right'</span>,<span class="string">'FontSize'</span>,12);
+0160     text(19.3,0.10 *(numel(wOrig)+1),[<span class="string">'trace duration: '</span> num2str(duration*86400) <span class="string">'s'</span>],<span class="string">'HorizontalAlignment'</span>,<span class="string">'Right'</span>,<span class="string">'FontSize'</span>,12);
+0161     text(19.3,0.15 *(numel(wOrig)+1),<span class="string">'Raw traces'</span>,<span class="string">'HorizontalAlignment'</span>,<span class="string">'Right'</span>,<span class="string">'FontSize'</span>,12,<span class="string">'FontWeight'</span>,<span class="string">'Bold'</span>);
+0162 
+0163     
+0164     <span class="comment">% PLOT FILTERED CROPPED TRACE</span>
+0165     subplot(2,1,2)
+0166     c2 = <a href="../../../../GISMO/core/@Catalog/subset.html" class="code" title="function catalogObject2 = subset(catalogObject, indices)">subset</a>(c,f);
+0167     wFilt = <a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(c2);
+0168     wFilt = <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(wFilt,<span class="string">'UNITS'</span>,<span class="string">'normalized scale'</span>);
+0169     wFiltCrop = <a href="../../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>(wFilt,<span class="string">'TIME'</span>,startTime+10/86400,startTime+13/86400);
+0170     <span class="keyword">for</span> i = 1:numel(wOrig)
+0171        wFiltCrop(i) = 0.25 * wFiltCrop(i) ./ <a href="../../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>(wFiltCrop(i)); 
+0172     <span class="keyword">end</span>
+0173     <a href="../../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(wFiltCrop,<span class="string">'Linewidth'</span>,1);
+0174     <a href="../../../../GISMO/core/@waveform/legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>(wFiltCrop);
+0175     xlim([0 3]);
+0176     ylim([-0.8 0.8]);
+0177     text(2.9,-0.75,<span class="string">'Filtered on 2-12 Hz'</span>,<span class="string">'HorizontalAlignment'</span>,<span class="string">'Right'</span>,<span class="string">'FontSize'</span>,12,<span class="string">'FontWeight'</span>,<span class="string">'Bold'</span>);
+0178 
+0179     <span class="comment">% WRITE OUT FIGURES</span>
+0180     subSta = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(wFilt,<span class="string">'STATION'</span>);
+0181     subChan = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(wFilt,<span class="string">'CHANNEL'</span>);
+0182     scList = [];
+0183     fileName = [dirName <span class="string">'/overlays_'</span> subSta{1} <span class="string">'_'</span> subChan{1} <span class="string">'-'</span> subSta{2} <span class="string">'_'</span> subChan{2} <span class="string">'.png'</span>];
+0184     <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gcf, <span class="string">'paperorientation'</span>, <span class="string">'portrait'</span>);
+0185     <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gcf, <span class="string">'paperposition'</span>, [.25 .25 8 11] );
+0186     print(<span class="string">'-dpng'</span>,fileName);
+0187     <span class="comment">%</span>
+0188     close all
+0189     
+0190     
+0191     <span class="comment">% WRITE DBPICK TEXT</span>
+0192     scList = [];
+0193     <span class="keyword">for</span> i = 1:numel(subSta)
+0194         scList = [scList subSta{i} <span class="string">':'</span> subChan{i} <span class="string">','</span>];
+0195     <span class="keyword">end</span>
+0196     scList = scList(1:end-1);
+0197     <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'sc '</span> scList]);
+0198 <span class="keyword">end</span>
+0199 <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'ts '</span> datestr(startTime,<span class="string">'yyyy/mm/dd HH:MM:SS'</span>)]);
+0200 
+0201 
+0202 
+0203</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

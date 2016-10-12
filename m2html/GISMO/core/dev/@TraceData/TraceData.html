@@ -1,0 +1,1403 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of TraceData</title>
+  <meta name="keywords" content="TraceData">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@TraceData</a> &gt; TraceData.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@TraceData&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>TraceData
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../../GISMO/core/@ChannelTag/eq.html" class="code" title="function result = eq(A, B)">eq</a>	eq  equal for ChannelTags</li><li><a href="../../../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>	DETREND removes the slope of each trace.</li><li><a href="../../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@correlation/hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li><li><a href="../../../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>	SIGN removes the mean of each trace.</li><li><a href="../../../../GISMO/core/@correlation/stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li><li><a href="../../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@rsam/resample.html" class="code" title="function self = resample(self, varargin)">resample</a>	RESAMPLE resamples a rsam object at over every specified intercrunchfactor</li><li><a href="../../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../../GISMO/core/@scnlobject/eq.html" class="code" title="function results = eq(A, B)">eq</a>	when using wildcards, use ismember</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>	ISMEMBER for scnlobjects</li><li><a href="../../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../../GISMO/core/@waveform/detrend.html" class="code" title="function w = detrend (w, varargin)">detrend</a>	DETREND remove linear trend from a waveform</li><li><a href="../../../../GISMO/core/@waveform/diff.html" class="code" title="function w = diff (w)">diff</a>	DIFF Differentiate waveform</li><li><a href="../../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../../GISMO/core/@waveform/eq.html" class="code" title="function [ result ] = eq( w1, w2 )">eq</a>	EQ Check if waveform objects are equal</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../../GISMO/core/@waveform/hilbert.html" class="code" title="function W = hilbert(W, n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/ismember.html" class="code" title="function [results, loc] = ismember(mywave,anythingelse)">ismember</a>	ISMEMBER waveform implementation of ismember</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="../../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>	MEDIAN middlemost value of waveform's sorted data.</li><li><a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/private/autoscale.html" class="code" title="function newunit = autoscale(axishandle, oldunit)">autoscale</a>	will automatically find the correct y-unites with which to plot something</li><li><a href="../../../../GISMO/core/@waveform/resample.html" class="code" title="function w = resample(w,method, crunchfactor)">resample</a>	RESAMPLE resamples a waveform at over every specified interval</li><li><a href="../../../../GISMO/core/@waveform/sign.html" class="code" title="function w = sign(w)">sign</a>	SIGN Signum function for waveforms.</li><li><a href="../../../../GISMO/core/@waveform/smooth.html" class="code" title="function W = smooth(W, varargin)">smooth</a>	SMOOTH overloaded smooth function for waveform</li><li><a href="../../../../GISMO/core/@waveform/stack.html" class="code" title="function out = stack(w)">stack</a>	STACK stacks data from array of waveforms</li><li><a href="../../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>	STD Standard deviation of a waveform</li><li><a href="../../../../GISMO/core/@waveform/var.html" class="code" title="function Y = var(w,flag)">var</a>	VAR Variance of a waveform's data</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/detrend.html" class="code" title="function c = detrend(c)">detrend</a>	DETREND   removes the slope of each trace.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/sign.html" class="code" title="function c = sign(c)">sign</a>	SIGN convert traces to the sign of their data (+1, 0, -1)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/stack.html" class="code" title="function c = stack(c,index)">stack</a>	c = STACK(c)</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="TraceData.html" class="code" title="">TraceData</a>	</li><li><a href="amplitude_spectrum.html" class="code" title="function [A, phi, f] = amplitude_spectrum(td)">amplitude_spectrum</a>	amplitude_spectrum   Simple method to compute amplitude</li><li><a href="autoscale.html" class="code" title="function newunit = autoscale(axishandle, oldunit)">autoscale</a>	autoscale   automatically determine correct y-units for plotting</li><li><a href="../../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../../GISMO/deprecated/fft_tools/amplitude_spectrum.html" class="code" title="function w = add_spectral_data(w)">amplitude_spectrum</a>	add_spectral_data Simple method to compute frequency</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="TraceData.html" class="code" title="">TraceData</a>	</li><li><a href="../../../../GISMO/tests/test_TraceData.html" class="code" title="">test_TraceData</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = TraceData(varargin)</a></li><li><a href="#_sub2" class="code">function tf = get.hasnan(obj)</a></li><li><a href="#_sub3" class="code">function obj = set.data(obj, values)</a></li><li><a href="#_sub4" class="code">function N = nyquist(T)</a></li><li><a href="#_sub5" class="code">function p = period(T)</a></li><li><a href="#_sub6" class="code">function val = sampletimes(obj)</a></li><li><a href="#_sub7" class="code">function secondsOfData = get.duration(obj)</a></li><li><a href="#_sub8" class="code">function n = nsamples(obj)</a></li><li><a href="#_sub9" class="code">function s = formattedduration(obj, fmt)</a></li><li><a href="#_sub10" class="code">function A = plus(A, B)</a></li><li><a href="#_sub11" class="code">function A = minus(A, B)</a></li><li><a href="#_sub12" class="code">function A = times(A,B)</a></li><li><a href="#_sub13" class="code">function C = mtimes(A, B)</a></li><li><a href="#_sub14" class="code">function A = rdivide(A, B)</a></li><li><a href="#_sub15" class="code">function A = power(A, B)</a></li><li><a href="#_sub16" class="code">function A = uminus(A)</a></li><li><a href="#_sub17" class="code">function trace = abs(trace)</a></li><li><a href="#_sub18" class="code">function trace = sign(trace)</a></li><li><a href="#_sub19" class="code">function T = diff(T, varargin)</a></li><li><a href="#_sub20" class="code">function T = integrate (T,method)</a></li><li><a href="#_sub21" class="code">function A = demean(A)</a></li><li><a href="#_sub22" class="code">function A = detrend(A, varargin)</a></li><li><a href="#_sub23" class="code">function val = bulkCalculate(T, F)</a></li><li><a href="#_sub24" class="code">function T = forEach(T, f, values, varargin)</a></li><li><a href="#_sub25" class="code">function val = max(T)</a></li><li><a href="#_sub26" class="code">function val = min(T)</a></li><li><a href="#_sub27" class="code">function val = mean(T)</a></li><li><a href="#_sub28" class="code">function val = median(T)</a></li><li><a href="#_sub29" class="code">function val = std(T, varargin)</a></li><li><a href="#_sub30" class="code">function val = var(T, varargin)</a></li><li><a href="#_sub31" class="code">function obj = clip(obj, vals)</a></li><li><a href="#_sub32" class="code">function d = double(obj,option)</a></li><li><a href="#_sub33" class="code">function tf = eq(A, B)</a></li><li><a href="#_sub34" class="code">function tf = ne(A,B)</a></li><li><a href="#_sub35" class="code">function outT = extract(Tr, method, startPos, endPos)</a></li><li><a href="#_sub36" class="code">function td = fillgaps(td,value, gapvalue)</a></li><li><a href="#_sub37" class="code">function T = zero2nan(T,mgl)</a></li><li><a href="#_sub38" class="code">function t = setlength(t, maxlen)</a></li><li><a href="#_sub39" class="code">function T = hilbert(T, n)</a></li><li><a href="#_sub40" class="code">function Tr = myHilbert(Tr)</a></li><li><a href="#_sub41" class="code">function Tr = myHilbertN(Tr)</a></li><li><a href="#_sub42" class="code">function T = resample(T, method, crunchFactor)</a></li><li><a href="#_sub43" class="code">function A = smooth(A, varargin)</a></li><li><a href="#_sub44" class="code">function T = taper(T, style, R)</a></li><li><a href="#_sub45" class="code">function [tf, msg] = compatiblewith(A, B)</a></li><li><a href="#_sub46" class="code">function assertCompatiblewith(A, B)</a></li><li><a href="#_sub47" class="code">function out = stack(T)</a></li><li><a href="#_sub48" class="code">function stackedTraces = binStack(T,nBins,binOverlap)</a></li><li><a href="#_sub49" class="code">function info(T)</a></li><li><a href="#_sub50" class="code">function s = size2str(A)</a></li><li><a href="#_sub51" class="code">function setParameter(name, val)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="TraceData.html" class="code" title="">TraceData</a>
+0002    <span class="comment">%TraceData   Handles the data associated with timeseries.</span>
+0003    <span class="comment">%</span>
+0004    <span class="comment">%   TraceData contains the functionality associated with data</span>
+0005    <span class="comment">%   manipulation, including dealing with units.</span>
+0006    <span class="comment">%</span>
+0007    <span class="comment">%   TraceData might be considered a &quot;light&quot; version of MATLAB's timeseries</span>
+0008    <span class="comment">%   class. Whereas the timeseries class has lots of functionality, it</span>
+0009    <span class="comment">%   suffers (at the time of this writing) from much slower execution times.</span>
+0010    <span class="comment">%</span>
+0011    <span class="comment">% About TraceData vs waveform</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">% TraceData Properties:</span>
+0014    <span class="comment">%       data       - column of evenly sampled data</span>
+0015    <span class="comment">%       samplerate - number of samples per second</span>
+0016    <span class="comment">%       units      - units for the data, ex. 'counts', 'm / sec'</span>
+0017    <span class="comment">%       duration   - time between first and last samples</span>
+0018    <span class="comment">%       hasnan     - true if any value is nan</span>
+0019    <span class="comment">%</span>
+0020    <span class="comment">% TraceData Methods:</span>
+0021    <span class="comment">%</span>
+0022    <span class="comment">%    Derived properties:</span>
+0023    <span class="comment">%       nyquist - Nyquist frequency (samplerate / 2)</span>
+0024    <span class="comment">%       period - Period  (1/samplerate)</span>
+0025    <span class="comment">%       formattedduration - retrieve duration as formatted text</span>
+0026    <span class="comment">%</span>
+0027    <span class="comment">%    additional Methods:</span>
+0028    <span class="comment">%       nsamples  - return number of data samples</span>
+0029    <span class="comment">%</span>
+0030    <span class="comment">%    Mathamatical operations:</span>
+0031    <span class="comment">%       plus - (+)addition</span>
+0032    <span class="comment">%       minus - (-)subtraction</span>
+0033    <span class="comment">%       times - (.*) element multiplication</span>
+0034    <span class="comment">%       mtimes - (*) matrix multiplication</span>
+0035    <span class="comment">%       rdivide - (./) element division</span>
+0036    <span class="comment">%</span>
+0037    <span class="comment">%       uminus - (-A) unary minus</span>
+0038    <span class="comment">%       sign - signum of data (returns array of +1, 0, or -1)</span>
+0039    <span class="comment">%       abs - Absolute value</span>
+0040    <span class="comment">%</span>
+0041    <span class="comment">%       forEach - apply a function element-wise Tnew(n) = f(T(n), values(n))</span>
+0042    <span class="comment">%</span>
+0043    <span class="comment">%    Binary Operators:</span>
+0044    <span class="comment">%       eq - (A==B) true if data, samplerate and units match.</span>
+0045    <span class="comment">%       ne - (A~=B) false if data, samplerate and units match.</span>
+0046    <span class="comment">%</span>
+0047    <span class="comment">%    Statistics (returns a single value for each trace):</span>
+0048    <span class="comment">%       min - Minimum value of data</span>
+0049    <span class="comment">%       max - Maximum  value of data</span>
+0050    <span class="comment">%       mean - Average value of data</span>
+0051    <span class="comment">%       median - Median value of data</span>
+0052    <span class="comment">%       var - Variance of data</span>
+0053    <span class="comment">%       std - Standard Deviation of data</span>
+0054    <span class="comment">%</span>
+0055    <span class="comment">%    Advance Mathamatical operations:</span>
+0056    <span class="comment">%       diff - Difference and approximate derivative for traces</span>
+0057    <span class="comment">%       integrate - cumulative sums of data</span>
+0058    <span class="comment">%</span>
+0059    <span class="comment">%       hilbert - Hilbert envelope (real only)</span>
+0060    <span class="comment">%       taper - Apply a taper to the data</span>
+0061    <span class="comment">%       resample - Resample the data</span>
+0062    <span class="comment">%       demean - Remove the mean</span>
+0063    <span class="comment">%       detrend - Remove trend from data</span>
+0064    <span class="comment">%       clip - Clip the data</span>
+0065    <span class="comment">%</span>
+0066    <span class="comment">%       extract - Retrieve a subset of the data</span>
+0067    <span class="comment">%</span>
+0068    <span class="comment">%    Conversion operations:</span>
+0069    <span class="comment">%       double - retrieve data as 1xN array of double</span>
+0070    <span class="comment">%</span>
+0071    <span class="comment">%       stack - stack all waveforms</span>
+0072    <span class="comment">%       binStack - stack N waveforms at a time (with optional overlap)</span>
+0073    <span class="comment">%</span>
+0074    <span class="comment">%       compatibleWith - Compare units, samplerate and datalength</span>
+0075    <span class="comment">%       assertCompatibleWith - Error if units, samplerate and datalength do not match</span>
+0076    <span class="comment">%</span>
+0077    <span class="comment">%       fillgaps - replace nan values (can replace other values)</span>
+0078    <span class="comment">%       zero2nan - Replace values close to zero with nans</span>
+0079    <span class="comment">%       amplitude_spectrum</span>
+0080    <span class="comment">%       setlength - adjust length of data to allow batch processing</span>
+0081    <span class="comment">%</span>
+0082    <span class="comment">% See also Seismictrace, waveform, timeseries</span>
+0083    
+0084    
+0085    <span class="comment">% Error recovery and trapping with traces</span>
+0086    <span class="comment">% trying new tactic. I won't try to anticipate all the various ways</span>
+0087    <span class="comment">% someone can provide incompatible data. Instead, I'm going to provide a</span>
+0088    <span class="comment">% comment with my expectations which will show up automatically in the</span>
+0089    <span class="comment">% displayed error.</span>
+0090    
+0091    <span class="comment">% Waveform functions included in Tracedata:</span>
+0092    <span class="comment">%  - functions that manipulate the data itself</span>
+0093    <span class="comment">%</span>
+0094    <span class="comment">% Waveform functions NOT added to Tracedata:</span>
+0095    <span class="comment">%  - functions that require knowledge of time</span>
+0096    <span class="comment">%  - functions that require knowledge of location</span>
+0097    <span class="comment">%  - function that access user defined fields</span>
+0098    <span class="comment">%  - functions that access history</span>
+0099    <span class="comment">%  - additinal not-so-sure-we-need-these functions</span>
+0100    <span class="comment">%    : getpeaks</span>
+0101    
+0102    properties
+0103       data = []<span class="comment">% time-series data, kept in a column</span>
+0104       samplerate  = NaN <span class="comment">% in samples/sec</span>
+0105       units = <span class="string">'none'</span> <span class="comment">% text description of data units</span>
+0106    <span class="keyword">end</span>
+0107    
+0108    properties(Dependent)
+0109       duration <span class="comment">% duration in seconds. To get matlab duration, divide by 86400</span>
+0110       hasnan;
+0111    <span class="keyword">end</span>
+0112    
+0113    properties(Hidden=true)
+0114       <span class="comment">% when trust_assignments is false, then data</span>
+0115       trust_assignments = false; <span class="comment">% if not trusted, then slows down computations somewhat, but is useful for debugging.</span>
+0116       debug_level
+0117    <span class="keyword">end</span>
+0118    
+0119    methods
+0120       <a name="_sub0" href="#_subfunctions" class="code">function obj = TraceData(varargin)</a>
+0121          <span class="comment">%TraceData construct a TraceData object</span>
+0122          <span class="keyword">switch</span> nargin
+0123             <span class="keyword">case</span> 1
+0124                <span class="keyword">if</span> isa(varargin{1}, <span class="string">'waveform'</span>)
+0125                   obj.samplerate = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{1},<span class="string">'freq'</span>);
+0126                   obj.data = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{1},<span class="string">'data'</span>);
+0127                   obj.units = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{1}, <span class="string">'units'</span>);
+0128                   
+0129                <span class="keyword">elseif</span> isa(varargin{1},<span class="string">'TraceData'</span>) &amp;&amp; ~strcmp(class(varargin{1}),<span class="string">'TraceData'</span>)
+0130                   <span class="keyword">if</span> numel(varargin{1})==1;
+0131                   obj.data = varargin{1}.data;
+0132                   obj.samplerate = varargin{1}.samplerate;
+0133                   obj.units = varargin{1}.units;
+0134                   <span class="keyword">else</span>
+0135                      <span class="keyword">for</span> n=1:numel(varargin{1})
+0136                         obj(n) = <a href="TraceData.html" class="code" title="">TraceData</a>(varargin{1}(n));
+0137                      <span class="keyword">end</span>
+0138                      reshape(obj,size(varargin{1}));
+0139                   <span class="keyword">end</span>
+0140                <span class="keyword">else</span>
+0141                   error(<span class="string">'Unknown conversion'</span>);
+0142                <span class="keyword">end</span>
+0143             <span class="keyword">case</span> 3 <span class="comment">% TraceData(data, samplerate, units);</span>
+0144                obj.data = varargin{1};
+0145                obj.samplerate = varargin{2};
+0146                obj.units = varargin{3};
+0147          <span class="keyword">end</span> <span class="comment">%switch</span>
+0148       <span class="keyword">end</span>
+0149       
+0150       <a name="_sub1" href="#_subfunctions" class="code">function tf = get.hasnan(obj)</a>
+0151          <span class="comment">%get.hasnan   functional hasnan allows for</span>
+0152          <span class="comment">% NOTE: technically, hasnan could be set as data is entered.</span>
+0153          <span class="comment">%   any([T.hasnan])</span>
+0154          tf = any(isnan(obj.data));
+0155       <span class="keyword">end</span>
+0156       <a name="_sub2" href="#_subfunctions" class="code">function obj = set.data(obj, values)</a>
+0157          <span class="comment">%set.data   Assign values to data as a column</span>
+0158          obj.data = values(:);
+0159       <span class="keyword">end</span>
+0160       
+0161       
+0162       <a name="_sub3" href="#_subfunctions" class="code">function N = nyquist(T)</a>
+0163          <span class="comment">%nyquist   the nyquist frequency calculated as (samplerate / 2)</span>
+0164          N=[T.samplerate] ./ 2;
+0165          reshape(N,size(T));
+0166       <span class="keyword">end</span>
+0167       
+0168       <a name="_sub4" href="#_subfunctions" class="code">function p = period(T)</a>
+0169          <span class="comment">%period   Period, calculated as (1 / samplerate)</span>
+0170          p = 1 ./ [T.samplerate];
+0171          <span class="comment">% NOT reshaped</span>
+0172       <span class="keyword">end</span>
+0173       
+0174       <a name="_sub5" href="#_subfunctions" class="code">function val = sampletimes(obj)</a>
+0175          <span class="comment">%sampletimes  MATLAB time offset of each sample.</span>
+0176          <span class="comment">%</span>
+0177          <span class="comment">% equivalent to waveform's get(w,'timevector');</span>
+0178          assert(numel(obj) == 1, <span class="string">'only works on one TraceData at a time'</span>);
+0179          val = (0:(numel(obj.data)-1)) .* obj.period / 86400;
+0180          val = val(:);
+0181       <span class="keyword">end</span>
+0182       
+0183       <a name="_sub6" href="#_subfunctions" class="code">function secondsOfData = get.duration(obj)</a>
+0184          <span class="comment">%secondsOfData   Duration of samples, in seconds</span>
+0185          <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(obj.data) || <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(obj.samplerate)
+0186             secondsOfData = 0;
+0187          <span class="keyword">else</span>
+0188             secondsOfData = numel(obj.data) / obj.samplerate;
+0189          <span class="keyword">end</span>
+0190       <span class="keyword">end</span>
+0191       
+0192       <a name="_sub7" href="#_subfunctions" class="code">function n = nsamples(obj)</a>
+0193          <span class="comment">%nsamples   number of samples in the trace(s)</span>
+0194          <span class="comment">%   n = nsamples(traces) will return the number of samples for</span>
+0195          <span class="comment">%   each trace in an array of the same size as traces</span>
+0196          <span class="comment">%</span>
+0197          <span class="comment">%   See also numel</span>
+0198          n = zeros(size(obj));
+0199          <span class="keyword">for</span> m=1:numel(obj)
+0200             n(m) = numel(obj(m).data);
+0201          <span class="keyword">end</span>
+0202       <span class="keyword">end</span>
+0203             
+0204       
+0205       <a name="_sub8" href="#_subfunctions" class="code">function s = formattedduration(obj, fmt)</a>
+0206          <span class="comment">%formattedduration   Duration as a formatted string</span>
+0207          <span class="comment">%  s = trace.formattedduration() retrieves the duration in the</span>
+0208          <span class="comment">%  default format as 'dd:hh:mm:ss.SSS'</span>
+0209          <span class="comment">%  s = trace.formattedduration(fmt) retrieves duration in format</span>
+0210          <span class="comment">%  specified.</span>
+0211          <span class="comment">%</span>
+0212          <span class="comment">%  depends upon the duration class, introduced in r2014b</span>
+0213          <span class="comment">%</span>
+0214          <span class="comment">%  See also duration</span>
+0215          secsOfData = obj.duration;
+0216          <span class="keyword">if</span> exist(<span class="string">'duration'</span>,<span class="string">'class'</span>) <span class="comment">%available in recent r2014b and later of matlab</span>
+0217             <span class="keyword">if</span> exist(<span class="string">'fmt'</span>,<span class="string">'var'</span>) &amp;&amp; ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(fmt)
+0218                s = char(duration(0,0,secsOfData,<span class="string">'Format'</span>,fmt));
+0219             <span class="keyword">else</span>
+0220                s = char(duration(0,0,secsOfData,<span class="string">'Format'</span>,<span class="string">'dd:hh:mm:ss.SSS'</span>));
+0221             <span class="keyword">end</span>
+0222          <span class="keyword">else</span>
+0223             error(<span class="string">'advanced duration functions supported in r2014b and later'</span>);
+0224          <span class="keyword">end</span>
+0225       <span class="keyword">end</span>
+0226       
+0227       <span class="comment">%% Mathamatical - BASIC OPERATIONS</span>
+0228       <a name="_sub9" href="#_subfunctions" class="code">function A = plus(A, B)</a>
+0229          <span class="comment">%+   Plus.</span>
+0230          <span class="comment">%   C=A+B add something to the TraceData's data.</span>
+0231          <span class="comment">%</span>
+0232          <span class="comment">%   valid combinations</span>
+0233          <span class="comment">%      TraceData + NumericVector; % same length as TraceData.data</span>
+0234          <span class="comment">%      TraceData + Scalar;</span>
+0235          <span class="comment">%</span>
+0236          <span class="comment">%  To avoid ambiguity with the metadata, two traces are added</span>
+0237          <span class="comment">%  together by explicitly adding the data from one to the other:</span>
+0238          <span class="comment">%</span>
+0239          <span class="comment">%      % assertCompatiblewith(TraceData1, TraceData2); % for debug</span>
+0240          <span class="comment">%      TraceData1 + TraceData2.data</span>
+0241          <span class="comment">%</span>
+0242          <span class="comment">% See also minus, arrayApply, compatiblewith, assertCompatiblewith</span>
+0243          
+0244          <span class="keyword">if</span> ~isa(A, <span class="string">'TraceData'</span>)
+0245             [A, B] = deal(B, A); <span class="comment">% swap values</span>
+0246          <span class="keyword">end</span>
+0247          
+0248          <span class="comment">% A is guaranteed to be TraceData</span>
+0249          <span class="keyword">if</span> isnumeric(B)
+0250             <span class="keyword">for</span> n = 1: numel(A)
+0251                A(n).data = A(n).data + B; <span class="comment">% add to either a scalar or a COLUMN of numbers (same length as TraceData's data)</span>
+0252             <span class="keyword">end</span>
+0253          <span class="keyword">elseif</span> isa(B,<span class="string">'TraceData'</span>)
+0254             error(<span class="string">'TraceData:plus:ambiguousOperation'</span>,<span class="keyword">...</span>
+0255                [<span class="string">'Adding two TraceData objects results in ambiguous metadata.'</span><span class="keyword">...</span>
+0256                <span class="string">'\nInstead, add the data explicitly to the Trace whose'</span><span class="keyword">...</span>
+0257                <span class="string">' metadata you wish to keep.\nEx. T = T1 + T2.data'</span>]);
+0258          <span class="keyword">else</span>
+0259             error(<span class="string">'TraceData:plus:unknownClass'</span>,<span class="string">'do not know how to add a %s to a TraceData object'</span>, class(B));
+0260          <span class="keyword">end</span>
+0261       <span class="keyword">end</span>
+0262       
+0263       <a name="_sub10" href="#_subfunctions" class="code">function A = minus(A, B)</a>
+0264          <span class="comment">%-  Subtract something from the Trace's data,</span>
+0265          <span class="comment">%   C=A-B This will return a TraceData object</span>
+0266          <span class="comment">%</span>
+0267          <span class="comment">%   valid combinations</span>
+0268          <span class="comment">%      TraceData - NumericVector; % same length as TraceData.data</span>
+0269          <span class="comment">%      TraceData - Scalar;</span>
+0270          <span class="comment">%</span>
+0271          <span class="comment">%   To avoid ambiguity with the metadata, two traces are subtracted</span>
+0272          <span class="comment">%   by explicitly subtracting the one's data from the other:</span>
+0273          <span class="comment">%</span>
+0274          <span class="comment">%      % assertCompatiblewith(TraceData1, TraceData2); % for debug</span>
+0275          <span class="comment">%      TraceData1 - TraceData2.data</span>
+0276          <span class="comment">%</span>
+0277          <span class="comment">%   See also plus, arrayApply, compatiblewith, assertCompatiblewith</span>
+0278          
+0279          <span class="keyword">if</span> isnumeric(B)
+0280             <span class="comment">% A is guaranteed to be a TraceData</span>
+0281             <span class="keyword">for</span> n = 1:numel(A)
+0282                A(n).data = A(n).data - B; <span class="comment">% subtract either a scalar or a COLUMN of numbers (same length as TraceData's data)</span>
+0283             <span class="keyword">end</span>
+0284          <span class="keyword">elseif</span> isa(B,<span class="string">'TraceData'</span>)
+0285             error(<span class="string">'TraceData:minus:ambiguousOperation'</span>,<span class="keyword">...</span>
+0286                [<span class="string">'Subtracting a Trace from a constant is not supported.\n'</span><span class="keyword">...</span>
+0287                <span class="string">'For equivalent functionality, add the negative.\nEx. ans = 5 + (-T)'</span>]);
+0288          <span class="keyword">else</span>
+0289             error(<span class="string">'TraceData:minus:unknownClass'</span>,<span class="string">'do not know how to subtract a %s from a %s'</span>, class(B), class(A));
+0290          <span class="keyword">end</span>
+0291       <span class="keyword">end</span>
+0292       
+0293       <a name="_sub11" href="#_subfunctions" class="code">function A = times(A,B)</a>
+0294          <span class="comment">%.*   Elementwise Trace data multiplication</span>
+0295          <span class="comment">%   C=A.*B or C=B.*A when A is a TraceData object</span>
+0296          <span class="comment">%   Either A or B can be a scalar, or a vector of same size as the</span>
+0297          <span class="comment">%   data elements of the TraceData object.</span>
+0298          <span class="comment">%</span>
+0299          <span class="comment">%   To avoid ambiguity with the metadata, two traces are multiplied</span>
+0300          <span class="comment">%   by explicitly multiplying one's data with the other:</span>
+0301          <span class="comment">%</span>
+0302          <span class="comment">%      % assertCompatiblewith(TraceData1, TraceData2); % for debug</span>
+0303          <span class="comment">%      TraceData1 .* TraceData2.data</span>
+0304          <span class="comment">%</span>
+0305          <span class="comment">%  See also arrayApply, mtimes, compatiblewith, assertCompatiblewith</span>
+0306          <span class="keyword">if</span> isnumeric(B)
+0307             <span class="keyword">for</span> n=1:numel(A)
+0308                A(n).data = A(n).data .* B; <span class="comment">% B should be either scalar or same size as obj.data</span>
+0309             <span class="keyword">end</span>
+0310          <span class="keyword">elseif</span> isnumeric(A)
+0311             [A, B] = deal(B, A); <span class="comment">% swap values</span>
+0312             <span class="keyword">for</span> n=1:numel(A)
+0313                A(n).data = A(n).data .* B; <span class="comment">% B should be either scalar or same size as obj.data</span>
+0314             <span class="keyword">end</span>
+0315          <span class="keyword">else</span>
+0316             error(<span class="string">'TraceData:times:unknownClass'</span>,<span class="string">'do not know how to multiply a %s with a TraceData object'</span>, class(B));
+0317          <span class="keyword">end</span>
+0318       <span class="keyword">end</span>
+0319       
+0320       <a name="_sub12" href="#_subfunctions" class="code">function C = mtimes(A, B)</a>
+0321          <span class="comment">%*   Matrix multiplication against data within a trace</span>
+0322          <span class="comment">%   C=A*B matrix multiplication against data within a trace</span>
+0323          <span class="comment">%   result is a matrix, vector, or scalar. (NOT a TraceDataObject)</span>
+0324          <span class="comment">%</span>
+0325          <span class="comment">%   See also times, arrayApply</span>
+0326          <span class="keyword">if</span> isa(A,<span class="string">'TraceData'</span>)
+0327             C = A.data * B;
+0328          <span class="keyword">else</span>
+0329             C = A * B.data;
+0330          <span class="keyword">end</span>
+0331       <span class="keyword">end</span>
+0332       
+0333       <a name="_sub13" href="#_subfunctions" class="code">function A = rdivide(A, B)</a>
+0334          <span class="comment">%./  Divide data elements of A by B</span>
+0335          <span class="comment">%   C=A./B performs elementwise division on trace data</span>
+0336          <span class="comment">%   A must be a TraceData object</span>
+0337          <span class="comment">%   B can be either a scalar or vector of numbers the same size as A.data</span>
+0338          <span class="comment">%</span>
+0339          <span class="comment">%   To avoid ambiguity with the metadata, two traces are multiplied</span>
+0340          <span class="comment">%   by explicitly dividing one's data from the other:</span>
+0341          <span class="comment">%</span>
+0342          <span class="comment">%   % assertCompatiblewith(TraceData1, TraceData2); % for debug</span>
+0343          <span class="comment">%   TraceData1 ./ TraceData2.data</span>
+0344          <span class="comment">%</span>
+0345          <span class="comment">%   See also times, mtimes, arrayApply, compatiblewith, assertCompatiblewith</span>
+0346          
+0347          <span class="keyword">if</span> isnumeric(B)
+0348             <span class="comment">% A is guaranteed to be a TraceData</span>
+0349             <span class="keyword">for</span> n=1:numel(A)
+0350                A(n).data = A(n).data ./ B; <span class="comment">% subtract either a scalar or a COLUMN of numbers (same length as TraceData's data)</span>
+0351             <span class="keyword">end</span>
+0352          <span class="keyword">else</span>
+0353             error(<span class="string">'TraceData:rdivide:unknownClass'</span>,<span class="string">'do not know how to divide a %s from a TraceData object'</span>, class(B));
+0354          <span class="keyword">end</span>
+0355       <span class="keyword">end</span>
+0356       
+0357       <a name="_sub14" href="#_subfunctions" class="code">function A = power(A, B)</a>
+0358          <span class="comment">%.^   Array power for TraceData</span>
+0359          <span class="comment">%   C=A.^B raises each data element of A to the power B and then</span>
+0360          <span class="comment">%   returns the resulting trace(s)</span>
+0361          <span class="comment">%</span>
+0362          <span class="comment">%   See also power, arrayApply</span>
+0363          
+0364          assert(isa(A,<span class="string">'TraceData'</span>),<span class="string">'TraceData:power:invalidType'</span>,<span class="keyword">...</span>
+0365             <span class="string">'for A .^ B, B cannot be a TraceData object'</span>);
+0366          assert(isnumeric(B),<span class="string">'TraceData:power:invalidType'</span>,<span class="keyword">...</span>
+0367             <span class="string">'for A .^ B, B must be numeric'</span>);
+0368          <span class="keyword">for</span> n=1:numel(A)
+0369             A(n).data = A(n).data .^ B; <span class="comment">% B should be scalar or same length as A</span>
+0370          <span class="keyword">end</span>
+0371       <span class="keyword">end</span>
+0372       
+0373       <a name="_sub15" href="#_subfunctions" class="code">function A = uminus(A)</a>
+0374          <span class="comment">%-   Unary minus.</span>
+0375          <span class="comment">%   -A negates the data in A and returns the resulting trace(s)</span>
+0376          <span class="comment">%</span>
+0377          <span class="comment">%   see also uminus</span>
+0378          <span class="keyword">for</span> n=1:numel(A)
+0379             A(n).data = -A(n).data;
+0380          <span class="keyword">end</span>
+0381       <span class="keyword">end</span>
+0382       
+0383       <a name="_sub16" href="#_subfunctions" class="code">function trace = abs(trace)</a>
+0384          <span class="comment">%Absolute value of trace data</span>
+0385          <span class="comment">%  T = abs(trace) returns traces containing the absolute values of</span>
+0386          <span class="comment">%  the data.</span>
+0387          <span class="comment">%</span>
+0388          <span class="comment">%See also abs, sign</span>
+0389          <span class="keyword">for</span> n=1:numel(trace)
+0390             trace(n).data = <a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(trace(n).data);
+0391          <span class="keyword">end</span>
+0392       <span class="keyword">end</span>
+0393       
+0394       <a name="_sub17" href="#_subfunctions" class="code">function trace = sign(trace)</a>
+0395          <span class="comment">%sign   Convert each data point to its signum (+1, 0, +1)</span>
+0396          <span class="comment">% T = sign(trace) returns a a trace containing the signs of the</span>
+0397          <span class="comment">% data, instead of the data.</span>
+0398          <span class="comment">%</span>
+0399          <span class="comment">% See also sign</span>
+0400          <span class="keyword">for</span> n=1:numel(trace)
+0401             trace(n).data = <a href="../../../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>(trace(n).data);
+0402             <span class="comment">%trace(n).units = ['sign(', trace(n).units, ')'];</span>
+0403          <span class="keyword">end</span>
+0404       <span class="keyword">end</span>
+0405       
+0406       <span class="comment">%% more complicated</span>
+0407       <a name="_sub18" href="#_subfunctions" class="code">function T = diff(T, varargin)</a>
+0408          <span class="comment">%diff   Difference and approximate derivative for traces</span>
+0409          <span class="comment">%  A = diff(trace)</span>
+0410          <span class="comment">%  A = diff(trace, options) see the builtin diff for details on</span>
+0411          <span class="comment">%  available options.</span>
+0412          <span class="comment">%</span>
+0413          <span class="comment">%  trace must have samplerate and data assigned, otherwise you may</span>
+0414          <span class="comment">%  get &quot;a Matrix dimensions must agree&quot; error</span>
+0415          <span class="comment">%</span>
+0416          <span class="comment">%  units are automatically changed. Assuming the sample rate is</span>
+0417          <span class="comment">%  samples/sec, then the new trace is in currentunits / sec.</span>
+0418          <span class="comment">%</span>
+0419          <span class="comment">%  See also diff</span>
+0420          <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(varargin)
+0421             <span class="keyword">for</span> I=1:numel(T)
+0422                T(I).data = <a href="../../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>(T(I).data) .* T(I).samplerate; <span class="comment">% must have data and sample rate</span>
+0423             <span class="keyword">end</span>
+0424          <span class="keyword">else</span>
+0425             error(<span class="string">'not implemented yet'</span>);
+0426          <span class="keyword">end</span>
+0427          <span class="keyword">for</span> I=1:numel(T)
+0428             tempUnits = T(I).units;
+0429             whereInUnits = strfind(tempUnits,<span class="string">' * sec'</span>);
+0430             <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(whereInUnits)
+0431                T(I).units = [tempUnits, <span class="string">' / sec'</span>];
+0432             <span class="keyword">else</span>
+0433                tempUnits(whereInUnits(1) :whereInUnits(1)+5) = [];
+0434                T(I).units = tempUnits;
+0435             <span class="keyword">end</span>
+0436          <span class="keyword">end</span>
+0437       <span class="keyword">end</span>
+0438       
+0439       <a name="_sub19" href="#_subfunctions" class="code">function T = integrate (T,method)</a>
+0440          <span class="comment">%integrate   Integrate a tracedata signal</span>
+0441          <span class="comment">%   trace = trace.integrate([method])</span>
+0442          <span class="comment">%   goes from Acceleration -&gt; Velocity, and from Velocity -&gt; displacement</span>
+0443          <span class="comment">%</span>
+0444          <span class="comment">%   tr = trace.integrate()</span>
+0445          <span class="comment">%   tr = integrate(trace,'cumsum') performs integration by summing the</span>
+0446          <span class="comment">%   data points with the cumsum function, taking into account time interval</span>
+0447          <span class="comment">%   and updating the units as appropriate.</span>
+0448          <span class="comment">%</span>
+0449          <span class="comment">%   tr = trace.integrate('trapz') as above, but uses matlab's</span>
+0450          <span class="comment">%   cumtrapz function to perform the integration.</span>
+0451          <span class="comment">%</span>
+0452          <span class="comment">%   Input Arguments</span>
+0453          <span class="comment">%       trace: tracedata   N-DIMENSIONAL</span>
+0454          <span class="comment">%       METHOD: either 'cumtrapz' or 'cumsum'  [default is cumsum]</span>
+0455          <span class="comment">%</span>
+0456          <span class="comment">%   Actual implementation  merely does a cumulative sum of the trace's</span>
+0457          <span class="comment">%   samples, and updates the units accordingly. These units may be a</span>
+0458          <span class="comment">%   little kludgey.</span>
+0459          <span class="comment">%</span>
+0460          <span class="comment">%   See also cumsum, cumtrapz, diff</span>
+0461          
+0462          Nmax = numel(T);
+0463          allfreq = [T.samplerate];
+0464          
+0465          <span class="keyword">if</span> ~exist(<span class="string">'method'</span>,<span class="string">'var'</span>)
+0466             method = <span class="string">'cumsum'</span>;
+0467          <span class="keyword">end</span>
+0468          
+0469          <span class="keyword">switch</span> lower(method)
+0470             <span class="keyword">case</span> <span class="string">'cumsum'</span>
+0471                integratefn = str2func(<span class="string">'cumsum'</span>);
+0472             <span class="keyword">case</span> <span class="string">'trapz'</span>
+0473                integratefn = str2func(<span class="string">'cumtrapz'</span>);
+0474             <span class="keyword">otherwise</span>
+0475                error(<span class="string">'TraceData:integrate:unknownMethod'</span>,<span class="keyword">...</span>
+0476                   <span class="string">'Unknown integration method. Valid methods are ''cumsum'' and ''trap'''</span>);
+0477          <span class="keyword">end</span>
+0478          
+0479          <span class="keyword">for</span> I = 1 : Nmax
+0480             T(I).data = integratefn(T(I).data) ./ allfreq(I);
+0481             tempUnits = T(I).units;
+0482             whereInUnits = strfind(tempUnits,<span class="string">' / sec'</span>);
+0483             <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(whereInUnits)
+0484                T(I).units = [tempUnits, <span class="string">' * sec'</span>];
+0485             <span class="keyword">else</span>
+0486                tempUnits(whereInUnits(1) :whereInUnits(1)+5) = [];
+0487                T(I).units = tempUnits;
+0488             <span class="keyword">end</span>
+0489          <span class="keyword">end</span>
+0490       <span class="keyword">end</span>
+0491       
+0492       <a name="_sub20" href="#_subfunctions" class="code">function A = demean(A)</a>
+0493          <span class="comment">%demean   Remove the average from TraceData</span>
+0494          <span class="comment">%   A = demean(A) will subtract the mean of a trace from its data.</span>
+0495          <span class="comment">%</span>
+0496          <span class="comment">%   See also demean</span>
+0497          <span class="keyword">for</span> n=1:numel(A);
+0498             A(n) = A(n) - <a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(A(n).data(~isnan(A(n).data)));
+0499          <span class="keyword">end</span>
+0500       <span class="keyword">end</span>
+0501       
+0502       <a name="_sub21" href="#_subfunctions" class="code">function A = detrend(A, varargin)</a>
+0503          <span class="comment">%detrend   Remove the trend from TraceData</span>
+0504          <span class="comment">%   A = detrend(A) will subtract the trend of a trace from its</span>
+0505          <span class="comment">%   data.</span>
+0506          <span class="comment">%   A = detrand(A, ...) allows for additional options.  For an</span>
+0507          <span class="comment">%   explanation of these, see MATLAB's builtin detrend.</span>
+0508          <span class="comment">%</span>
+0509          <span class="comment">%   See also detrend</span>
+0510          <span class="keyword">for</span> n=1:numel(A);
+0511             A(n).data = <a href="../../../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>(A(n).data,varargin{:});
+0512          <span class="keyword">end</span>
+0513       <span class="keyword">end</span>
+0514       
+0515       <a name="_sub22" href="#_subfunctions" class="code">function val = bulkCalculate(T, F)</a>
+0516          <span class="comment">%bulkCalculate   Run a function against the data</span>
+0517          <span class="comment">%  vals = T.bulkCalculate(funcHandle) will against the data field</span>
+0518          <span class="comment">%  of each element in T shape is preserved, and all empty</span>
+0519          <span class="comment">%  traces return nan FH must return a single value</span>
+0520          <span class="comment">%</span>
+0521          <span class="comment">%  basically, this will run:</span>
+0522          <span class="comment">%    funcHandle(T.data)</span>
+0523          <span class="comment">%</span>
+0524          <span class="comment">%  for each trace in T</span>
+0525          <span class="comment">%</span>
+0526          <span class="comment">%  See also max, min, mean, median</span>
+0527          
+0528          val = nan(size(T));
+0529          <span class="keyword">for</span> n=numel(T) : -1 : 1
+0530             hasdata(n) = ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(T(n).data);
+0531          <span class="keyword">end</span>
+0532          val(hasdata) = arrayfun(F,T(hasdata));
+0533       <span class="keyword">end</span>
+0534       
+0535       <a name="_sub23" href="#_subfunctions" class="code">function T = forEach(T, f, values, varargin)</a>
+0536          <span class="comment">%forEach  applies a function element-wise to an array B(n) = f(T(n), values(n))</span>
+0537          <span class="comment">%   VALUES must be a numeric array of the same size (shape) as T.</span>
+0538          <span class="comment">%   Either T or VALUES could also be individual values.</span>
+0539          <span class="comment">%</span>
+0540          <span class="comment">%   When numel(T)==1:</span>
+0541          <span class="comment">%   the output will be an array of T the same size as VALUES.</span>
+0542          <span class="comment">%</span>
+0543          <span class="comment">%   When numel(V)==1,</span>
+0544          <span class="comment">%   you might as well use the standard operator instead.</span>
+0545          <span class="comment">%       eg.  T = T + VALUE;</span>
+0546          <span class="comment">%</span>
+0547          <span class="comment">%  the function f can either be a function handle, string name of</span>
+0548          <span class="comment">%  a function  (such as 'plus'), or the valid representation of a</span>
+0549          <span class="comment">%  simple mathamatical function, such as: '.*'  './'  '+'  '-'  '.^'</span>
+0550          <span class="comment">%</span>
+0551          <span class="comment">%  This means that</span>
+0552          <span class="comment">%       Tsq = forEach(T, @power, valueArray);</span>
+0553          <span class="comment">%  is equivelent to</span>
+0554          <span class="comment">%       Tsq = T.forEach('power', valueArray);</span>
+0555          <span class="comment">%  which is equivelent to</span>
+0556          <span class="comment">%       Tsq = T.forEach('.^', valueArray);</span>
+0557          <span class="comment">%</span>
+0558          <span class="comment">%</span>
+0559          <span class="comment">%  apply(...,'loose') ignores the size restriction, but</span>
+0560          <span class="comment">%  enforces the number of elements.  Most useful in getting around</span>
+0561          <span class="comment">%  applying something 1xN to something Nx1</span>
+0562          <span class="comment">%</span>
+0563          <span class="comment">%  example:</span>
+0564          <span class="comment">%    % add offset to each trace</span>
+0565          <span class="comment">%    offsets = 1:numel(T);</span>
+0566          <span class="comment">%    Toffset = T.apply('+', offsets, 'loose');</span>
+0567          <span class="comment">%</span>
+0568          <span class="comment">%  example:</span>
+0569          <span class="comment">%    % you can also create your own function of the form f(T,x):</span>
+0570          <span class="comment">%    myfn = @(T, x) T .* x + x;</span>
+0571          <span class="comment">%    newT = T.apply(T, myfn, values)</span>
+0572          <span class="comment">%</span>
+0573          <span class="comment">% See also times, rdivide, plus, minus, power</span>
+0574          TisScalar = numel(T)==1;
+0575          VisScalar = numel(values)==1;
+0576          eitherIsScalar = TisScalar || VisScalar;
+0577          ignoreShape = eitherIsScalar || (~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(varargin) &amp;&amp; strcmpi(varargin{end},<span class="string">'loose'</span>));
+0578          <span class="keyword">if</span> ignoreShape
+0579             assert(eitherIsScalar || numel(values)==numel(T), <span class="keyword">...</span>
+0580                <span class="string">'Both the traces and values must have the same number of elements T:[%d] vs values:[%d'</span>,<span class="keyword">...</span>
+0581                numel(T), numel(values) );
+0582          <span class="keyword">else</span>
+0583             assert(eitherIsScalar || all(size(values)==size(T)),<span class="keyword">...</span>
+0584                [<span class="string">'Both the traces and the values must be the same size.'</span><span class="keyword">...</span>
+0585                <span class="string">'T:[%s] vs values:[%s]\n'</span>,<span class="keyword">...</span>
+0586                <span class="string">'Use arrayApply(...,''loose'') if only the number of elements matters'</span>],<span class="keyword">...</span>
+0587                TraceData.size2str(T), TraceData.size2str(values));
+0588          <span class="keyword">end</span>
+0589          <span class="keyword">if</span> ischar(f)
+0590             f=str2func(f);
+0591          <span class="keyword">end</span>
+0592          
+0593          <span class="keyword">if</span> VisScalar
+0594             T = f(T, values); <span class="comment">% not necessary to use arrayApply when either is a scalar</span>
+0595             <span class="keyword">return</span>
+0596          <span class="keyword">elseif</span> TisScalar
+0597             T = repmat(T,size(values));
+0598             <span class="keyword">for</span> n=1:numel(values)
+0599                T(n) = f(T(n), values(n));
+0600             <span class="keyword">end</span>
+0601             <span class="keyword">return</span>
+0602          <span class="keyword">end</span>
+0603          
+0604          <span class="keyword">for</span> n=1:numel(T)
+0605             T(n) = f(T(n), values(n));
+0606          <span class="keyword">end</span>
+0607       <span class="keyword">end</span>
+0608          
+0609          
+0610       
+0611       <a name="_sub24" href="#_subfunctions" class="code">function val = max(T)</a>
+0612          <span class="comment">%max   Maximum value for trace data</span>
+0613          <span class="comment">%   maxVals = max(traces);</span>
+0614          <span class="comment">%</span>
+0615          <span class="comment">%   See also max</span>
+0616          F = @(X) <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(X.data);
+0617          val = T.bulkCalculate(F);
+0618       <span class="keyword">end</span>
+0619       <a name="_sub25" href="#_subfunctions" class="code">function val = min(T)</a>
+0620          <span class="comment">%min   Minimum value for trace data</span>
+0621          <span class="comment">%   minVals = min(traces);</span>
+0622          <span class="comment">%</span>
+0623          <span class="comment">%   See also min</span>
+0624          F = @(X) <a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(X.data);
+0625          val = T.bulkCalculate(F);
+0626       <span class="keyword">end</span>
+0627       <a name="_sub26" href="#_subfunctions" class="code">function val = mean(T)</a>
+0628          <span class="comment">%mean   Average or mean value for trace data</span>
+0629          <span class="comment">%   meanVals = mean(traces);</span>
+0630          <span class="comment">%</span>
+0631          <span class="comment">%   See also mean</span>
+0632          F = @(X) <a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(X.data(~isnan(X.data)));
+0633          val = T.bulkCalculate(F);
+0634       <span class="keyword">end</span>
+0635       <a name="_sub27" href="#_subfunctions" class="code">function val = median(T)</a>
+0636          <span class="comment">%median   Median value for trace data</span>
+0637          <span class="comment">%   medianVals = median(traces);</span>
+0638          <span class="comment">%</span>
+0639          <span class="comment">%   See also median</span>
+0640          F = @(X) <a href="../../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>(X.data(~isnan(X.data)));
+0641          val = T.bulkCalculate(F);
+0642       <span class="keyword">end</span>
+0643       <a name="_sub28" href="#_subfunctions" class="code">function val = std(T, varargin)</a>
+0644          <span class="comment">%std   standard deviation for traces</span>
+0645          <span class="comment">%  vals = std(traces) retrieves the std from each trace, returning</span>
+0646          <span class="comment">%  a traces array of the same shape as T.</span>
+0647          <span class="comment">%  vals = std(traces, options); lets you declare options as per the</span>
+0648          <span class="comment">%  builtin version of std</span>
+0649          <span class="comment">%  useful option:</span>
+0650          <span class="comment">%</span>
+0651          <span class="comment">%     vals = T.std('omitnan') % or 'includenan'</span>
+0652          <span class="comment">%</span>
+0653          <span class="comment">%  See also std, bulkCalculate</span>
+0654          <span class="keyword">if</span> exist(<span class="string">'varargin'</span>,<span class="string">'var'</span>)
+0655             F = @(X) <a href="../../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>(X.data,varargin{:});
+0656          <span class="keyword">else</span>
+0657             F = @(X) <a href="../../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>(X.data);
+0658          <span class="keyword">end</span>
+0659          val = T.bulkCalculate(F);
+0660       <span class="keyword">end</span>
+0661       <a name="_sub29" href="#_subfunctions" class="code">function val = var(T, varargin)</a>
+0662          <span class="comment">%var   calulate variance for traces</span>
+0663          <span class="comment">%  vals = var(traces);</span>
+0664          <span class="comment">%  vals = var(traces,options); lets you declare options as per the</span>
+0665          <span class="comment">%  builtin version of var.</span>
+0666          <span class="comment">%  useful option:</span>
+0667          <span class="comment">%    vals = traces.var(taces,'omitnan') % or 'includenan'</span>
+0668          <span class="comment">%</span>
+0669          <span class="comment">%  See also var, bulkCalculate</span>
+0670          <span class="keyword">if</span> exist(<span class="string">'varargin'</span>,<span class="string">'var'</span>)
+0671             F = @(X) <a href="../../../../GISMO/core/@waveform/var.html" class="code" title="function Y = var(w,flag)">var</a>(X.data,varargin{:});
+0672          <span class="keyword">else</span>
+0673             F = @(X) <a href="../../../../GISMO/core/@waveform/var.html" class="code" title="function Y = var(w,flag)">var</a>(X.data);
+0674          <span class="keyword">end</span>
+0675          val = T.bulkCalculate(F);
+0676       <span class="keyword">end</span>
+0677       <span class="comment">%% extended functionality</span>
+0678       [A, phi, f] = <a href="amplitude_spectrum.html" class="code" title="function [A, phi, f] = amplitude_spectrum(td)">amplitude_spectrum</a>(td)
+0679       
+0680       <a name="_sub30" href="#_subfunctions" class="code">function obj = clip(obj, vals)</a>
+0681          <span class="comment">%clip   clips a trace's data at a particular max/min value range</span>
+0682          <span class="comment">%   clippedtraces = clip(traces, values)</span>
+0683          <span class="comment">%</span>
+0684          <span class="comment">%   Input Arguments</span>
+0685          <span class="comment">%       TRACES: an N-dimensional TraceData object</span>
+0686          <span class="comment">%       VALUES: a number. If a scalar, then amplitudes will be</span>
+0687          <span class="comment">%           clipped at +/- value. If a pair, eg. [Max, Min] then</span>
+0688          <span class="comment">%           traces will be clipped between these two values</span>
+0689          <span class="comment">%</span>
+0690          <span class="comment">%   All values beyond maximum ranges will be set to the maximum range</span>
+0691          
+0692          <span class="keyword">if</span> nargin &lt; 2,
+0693             vals = [];
+0694          <span class="keyword">end</span>
+0695          
+0696          <span class="keyword">switch</span> numel(vals)
+0697             <span class="keyword">case</span> 0
+0698                warning(<span class="string">'TraceData:clip:noClipValue'</span>,<span class="keyword">...</span>
+0699                   <span class="string">'No values given, TraceData remains unclipped'</span>);
+0700                <span class="keyword">return</span>
+0701                
+0702             <span class="keyword">case</span> 1 <span class="comment">% clip at +/- input value</span>
+0703                <span class="keyword">if</span> ~isnumeric(vals)
+0704                   error(<span class="string">'TraceData:clip:invalidClipValue'</span>,<span class="string">'Non-numeric clip value'</span>);
+0705                <span class="keyword">end</span>
+0706                vals = <a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(vals);
+0707                <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'Clipping at +/- '</span> num2str(vals)]);
+0708                vals = [-vals vals];
+0709                
+0710             <span class="keyword">case</span> 2
+0711                <span class="keyword">if</span> ~isnumeric(vals)
+0712                   error(<span class="string">'TraceData:clip:invalidClipValue'</span>,<span class="string">'Non-numeric clip value'</span>);
+0713                <span class="keyword">end</span>
+0714                <span class="keyword">if</span> vals(1) &gt; vals(2)
+0715                   error(<span class="string">'TraceData:clip:reversedValues'</span>,<span class="keyword">...</span>
+0716                      <span class="string">'Clipping values are  reversed: Value1 %f &gt; Value2 %f'</span>, vals(1),vals(2));
+0717                <span class="keyword">end</span>
+0718                <span class="comment">%everything is AOK</span>
+0719             <span class="keyword">otherwise</span>
+0720                warning(<span class="string">'TraceData:clip:invalidClipValue'</span>,<span class="keyword">...</span>
+0721                   <span class="string">'Invalid clip values. TraceData remains unclipped. specify [min max] values'</span>);
+0722                <span class="keyword">return</span>
+0723          <span class="keyword">end</span>
+0724          
+0725          <span class="keyword">for</span> N = 1: numel(obj)
+0726             d = obj(N).data;
+0727             d(d &lt; vals(1)) = vals(1);
+0728             d(d &gt; vals(2)) = vals(2);
+0729             obj(N).data = d;
+0730          <span class="keyword">end</span>
+0731       <span class="keyword">end</span>
+0732       
+0733       <a name="_sub31" href="#_subfunctions" class="code">function d = double(obj,option)</a>
+0734          <span class="comment">%double   TraceData data as double</span>
+0735          <span class="comment">%   d = double(T) returns the data within T as a column. If T is</span>
+0736          <span class="comment">%   an array with N elements, then data is returned in array with</span>
+0737          <span class="comment">%   size N x maximum_data_length_in_T.</span>
+0738          <span class="comment">%</span>
+0739          <span class="comment">%   d = double(T, fillfunction) allows you to specify how the array</span>
+0740          <span class="comment">%   is filled. FILLFUNCTION is a handle or name of any function</span>
+0741          <span class="comment">%   that can accept (row, col) arguments, and return an array of some</span>
+0742          <span class="comment">%   value. By default, the array is filled with zeros.</span>
+0743          <span class="comment">%</span>
+0744          <span class="comment">%   Example. Retrieve array using nan as filler</span>
+0745          <span class="comment">%   d = double(T, @nan);</span>
+0746          <span class="comment">%</span>
+0747          <span class="comment">%   See also zeros, nan</span>
+0748          
+0749          <span class="keyword">if</span> nargin == 1
+0750             createDefaultArray = @zeros;
+0751          <span class="keyword">else</span>
+0752             <span class="keyword">if</span> ischar(option)
+0753                createDefaultArray = str2func(option);
+0754             <span class="keyword">elseif</span> isa(option,<span class="string">'function_handle'</span>)
+0755                createDefaultArray = option;
+0756             <span class="keyword">else</span>
+0757                error(<span class="string">'TraceData:double:invalidOption'</span>,<span class="keyword">...</span>
+0758                   <span class="string">'''option'' must be either a function handle or function name.'</span>);
+0759             <span class="keyword">end</span>
+0760          <span class="keyword">end</span>
+0761          dlens = obj.nsamples();
+0762          maxlen = <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(dlens(:));
+0763          d = createDefaultArray(maxlen, numel(obj));
+0764          <span class="keyword">for</span> n = 1:numel(obj)
+0765             d(1:dlens(n),n) = <a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(obj(n).data);
+0766          <span class="keyword">end</span>
+0767       <span class="keyword">end</span>
+0768       
+0769       <a name="_sub32" href="#_subfunctions" class="code">function tf = eq(A, B)</a>
+0770          <span class="comment">%== Equal for TraceData</span>
+0771          <span class="comment">%  eq(A,B) is called for A==B when A or B is a TraceData object.</span>
+0772          <span class="comment">%  will return equal if the data , samplerate, and units match.</span>
+0773          <span class="comment">%</span>
+0774          <span class="comment">%  See also ne</span>
+0775          tf = all(A.data == B.data) &amp;&amp; A.samplerate==B.samplerate &amp;&amp; strcmp(A.units, B.units);
+0776       <span class="keyword">end</span>
+0777       
+0778       <a name="_sub33" href="#_subfunctions" class="code">function tf = ne(A,B)</a>
+0779          <span class="comment">%~=   Not equal for TraceData.</span>
+0780          <span class="comment">%  A~=B compares the data, samplerate, and units</span>
+0781          <span class="comment">%</span>
+0782          <span class="comment">%  C = ne(A,B) is called for the syntax 'A ~= B' when A or B is a</span>
+0783          <span class="comment">%  TraceData object.</span>
+0784          <span class="comment">%  See also eq</span>
+0785          tf = ~<a href="../../../../GISMO/core/@ChannelTag/eq.html" class="code" title="function result = eq(A, B)">eq</a>(A,B);
+0786       <span class="keyword">end</span>;
+0787       
+0788       <a name="_sub34" href="#_subfunctions" class="code">function outT = extract(Tr, method, startPos, endPos)</a>
+0789          <span class="comment">%extract   Retrieve subset of TraceData</span>
+0790          <span class="comment">%</span>
+0791          <span class="comment">%    subTraces = extract(traces, 'index', startPos, endPos)</span>
+0792          <span class="comment">%</span>
+0793          <span class="comment">%</span>
+0794          <span class="comment">%   waveform = T.extract('INDEX', startPos, endPos)</span>
+0795          <span class="comment">%       returns traces with the subset of data from startIndex to</span>
+0796          <span class="comment">%       endIndex.  Essentially, this is equivelent to</span>
+0797          <span class="comment">%       T.data = T.data(startPos, endPos)</span>
+0798          <span class="comment">%</span>
+0799          <span class="comment">%       data into an array, as in D = get(W,'data'), then returning a</span>
+0800          <span class="comment">%       waveform with the subset of data,</span>
+0801          <span class="comment">%       ie. waveform = set(waveform,'data', D(startIndex:endIndex));</span>
+0802          <span class="comment">%</span>
+0803          <span class="comment">%    See also SeismicTrace/extract</span>
+0804          <span class="keyword">switch</span> lower(method)
+0805             <span class="keyword">case</span> <span class="string">'index'</span>
+0806                assert(numel(startPos) == numel(endPos), <span class="string">'number of start and end indices must match'</span>);
+0807                outT = repmat(<a href="TraceData.html" class="code" title="">TraceData</a>,numel(Tr),numel(startPos));
+0808                <span class="keyword">for</span> n=1:numel(T);
+0809                   <span class="keyword">for</span> t=1:numel(startPos)
+0810                      outT(n,t) = Tr(n);
+0811                      outT(n,t).data = Tr(n).data(startPos(t), endPos(t));
+0812                   <span class="keyword">end</span>
+0813                <span class="keyword">end</span>
+0814          <span class="keyword">end</span>
+0815       <span class="keyword">end</span>
+0816       
+0817       <a name="_sub35" href="#_subfunctions" class="code">function td = fillgaps(td,value, gapvalue)</a>
+0818          <span class="comment">%fillgaps   fill missing data with values of your choice</span>
+0819          <span class="comment">%  T = T.fillgaps(value) fills data with the number of your choice</span>
+0820          <span class="comment">%  VALUE can also be nan or inf or -inf</span>
+0821          <span class="comment">%</span>
+0822          <span class="comment">%  T = T.fillgaps([]) removes missing data from trace. Warning, the</span>
+0823          <span class="comment">%  resulting timing issues are NOT corrected for!</span>
+0824          <span class="comment">%</span>
+0825          <span class="comment">%  T = T.fillgaps('method') replaces data using an interpolation method of</span>
+0826          <span class="comment">%  your choice. Valid methods are:</span>
+0827          <span class="comment">%</span>
+0828          <span class="comment">%    'meanall' - replace missing values with the mean of the whole</span>
+0829          <span class="comment">%    dataset</span>
+0830          <span class="comment">%</span>
+0831          <span class="comment">%    'number' - replace missing value with a numeric value of your</span>
+0832          <span class="comment">%    choice (can also be Inf, -Inf, NaN)</span>
+0833          <span class="comment">%</span>
+0834          <span class="comment">%    'interp' - assuming missing values are marked by NaN, this will use</span>
+0835          <span class="comment">%    cubic interpolation to estimate the missing values</span>
+0836          <span class="comment">%</span>
+0837          <span class="comment">%  FILLGAPS is designed to replace NaN values. However, if if you</span>
+0838          <span class="comment">%  use T = T.fillgaps(number, gapvalue), then ALL data points with</span>
+0839          <span class="comment">%  the value GAPVALUE will be replaced by NUMBER.</span>
+0840          
+0841          <span class="keyword">if</span> ~(isnumeric(value) &amp;&amp; (isscalar(value) || <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(value)) || ischar(value))
+0842             warning(<span class="string">'TraceData:fillgaps:invalidGapValue'</span>,<span class="keyword">...</span>
+0843                <span class="string">'Value to replace data with must be string or scalar or []'</span>);
+0844          <span class="keyword">end</span>
+0845          
+0846          <span class="keyword">if</span> ~exist(<span class="string">'gapvalue'</span>,<span class="string">'var'</span>) || isnan(gapvalue)
+0847             getgaps = @(x) isnan(x.data);
+0848          <span class="keyword">else</span>
+0849             getgaps = @(x) x.data == gapvalue;
+0850          <span class="keyword">end</span>;
+0851          
+0852          <span class="keyword">if</span> ischar(value)
+0853             fillmethod = lower(value);
+0854          <span class="keyword">else</span>
+0855             fillmethod = <span class="string">'number'</span>;
+0856          <span class="keyword">end</span>
+0857          
+0858          <span class="keyword">switch</span> fillmethod
+0859             <span class="keyword">case</span> <span class="string">'meanall'</span>
+0860                <span class="keyword">for</span> N = 1:numel(td);
+0861                   allgaps = getgaps(td(N));
+0862                   <span class="comment">% do not include the values to be replaced</span>
+0863                   meanVal = <a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(td(N).data(~allgaps));
+0864                   <span class="keyword">if</span> isnan(meanVal)
+0865                      meanVal = 0;
+0866                   <span class="keyword">end</span>
+0867                   td(N).data(allgaps) = meanVal;
+0868                <span class="keyword">end</span>
+0869             <span class="keyword">case</span> <span class="string">'number'</span>
+0870                <span class="keyword">for</span> N = 1:numel(td);
+0871                   td(N).data(getgaps(td(N))) = value;
+0872                <span class="keyword">end</span>
+0873             <span class="keyword">case</span> <span class="string">'interp'</span> <span class="comment">% blame Glenn, inspired by http://www.mathworks.com/matlabcentral/fileexchange/8225-naninterp by E Rodriguez</span>
+0874                <span class="keyword">for</span> N = 1:numel(td);
+0875                   X = td(N).data;
+0876                   X(isnan(X)) = interp1(<a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(~isnan(X)), X(~isnan(X)), <a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(isnan(X)),<span class="string">'cubic'</span>);
+0877                   td(N).data = X;
+0878                <span class="keyword">end</span>
+0879             <span class="keyword">otherwise</span>
+0880                error(<span class="string">'TraceData:fillgaps:unimplementedMethod'</span>,<span class="keyword">...</span>
+0881                   <span class="string">'Unimplemented fillgaps method [%s]'</span>, fillmethod);
+0882          <span class="keyword">end</span>
+0883       <span class="keyword">end</span>
+0884       
+0885       <a name="_sub36" href="#_subfunctions" class="code">function T = zero2nan(T,mgl)</a>
+0886          <span class="comment">%zero2nan   replaces zeros with nan values.</span>
+0887          <span class="comment">% Should be replaced with T.fillgaps(nan, 0)</span>
+0888          <span class="comment">% however, it was designed to have a minimum gap length Perhaps this</span>
+0889          <span class="comment">% should be added to fillgaps</span>
+0890          <span class="comment">%</span>
+0891          <span class="comment">%This function replaces gaps that have been filled with zeros and</span>
+0892          <span class="comment">%converts them to NaN values. This is the inverse of T =</span>
+0893          <span class="comment">%T.fillgaps(0). An input mgl defines the minimum gap length to be</span>
+0894          <span class="comment">%converted to NaN gaps, i.e. if only 5 consecutive zero values</span>
+0895          <span class="comment">%exist in a given small gap, they will be converted to NaN values</span>
+0896          <span class="comment">%if mgl &lt;= 5 and left as zero values if mgl &gt; 5</span>
+0897          <span class="comment">%</span>
+0898          <span class="comment">%USAGE: T = T.zero2nan(mgl)</span>
+0899          <span class="comment">%</span>
+0900          <span class="comment">%REQUIRED INPUTS:</span>
+0901          <span class="comment">%   mgl - minimum gap length (datapoints) to convert to NaN values</span>
+0902          <span class="comment">%</span>
+0903          <span class="comment">%OUTPUTS: w - trace with gaps converted to NaN</span>
+0904          <span class="comment">%</span>
+0905          <span class="comment">%See also nan, fillgaps</span>
+0906          
+0907          <span class="comment">% Author: Dane Ketner, Alaska Volcano Observatory</span>
+0908          <span class="comment">% Modified: Celso Reyes: rewrote algorithm to elimenate looping (2x faster)</span>
+0909          <span class="comment">%                        results differ because old method converted</span>
+0910          <span class="comment">%                        5 zeros only if mgl &lt;5 (not &lt;=5)</span>
+0911          
+0912          <span class="keyword">for</span> nw = 1:numel(T)
+0913             closeToZero = <a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(T(nw).data) &lt; 0.1; <span class="comment">% 0.1 was already chosen -CR</span>
+0914             
+0915             <span class="comment">% --- the logic below should be pulled into a new function, since it is</span>
+0916             <span class="comment">% shared across a couple different areas, such as trace/clean -- %</span>
+0917             firstZeros = <a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(<a href="../../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>([false; closeToZero(:)]) == 1);
+0918             lastZeros = <a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(<a href="../../../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>([closeToZero(:); false]) == -1);
+0919             assert(numel(firstZeros) == numel(lastZeros));
+0920             nContiguousZeros = lastZeros - firstZeros + 1;
+0921             firstZeros(nContiguousZeros &lt; mgl) = [];
+0922             lastZeros(nContiguousZeros &lt; mgl) = [];
+0923             
+0924             <span class="keyword">for</span> c=1:numel(firstZeros)
+0925                T(nw).data(firstZeros(c) : lastZeros(c)) = NaN;
+0926             <span class="keyword">end</span>
+0927          <span class="keyword">end</span>
+0928       <span class="keyword">end</span>
+0929       
+0930       <a name="_sub37" href="#_subfunctions" class="code">function t = setlength(t, maxlen)</a>
+0931          <span class="comment">%setlength   adjust length of trace data to allow batch processing</span>
+0932          <span class="comment">%   trace = traces.setlength()</span>
+0933          <span class="comment">%       adjusts all traces to the length of the largest, while</span>
+0934          <span class="comment">%       zero-padding all shorter traces</span>
+0935          <span class="comment">%</span>
+0936          <span class="comment">%   trace = traces.setlength(maxlength)</span>
+0937          <span class="comment">%       sets all data lengths to maxlength, padding with zero or</span>
+0938          <span class="comment">%       truncating as necessary.</span>
+0939          <span class="comment">%</span>
+0940          <span class="comment">%  examples</span>
+0941          <span class="comment">%       % let traces be a 1x2 TraceData object</span>
+0942          <span class="comment">%       % 3000 samples in traces(1)</span>
+0943          <span class="comment">%       % 10025 samples in traces(2)</span>
+0944          <span class="comment">%</span>
+0945          <span class="comment">%       % set both waves' data to a length of to 10025 while padding the</span>
+0946          <span class="comment">%       % smaller of the two with zeroes.</span>
+0947          <span class="comment">%       outTraces = traces.setlength</span>
+0948          <span class="comment">%</span>
+0949          <span class="comment">%       % set both sample lengths to 500 truncating both of them...</span>
+0950          <span class="comment">%       outTraces = traces.setlength(500)</span>
+0951          datalengths = arrayfun(@(x) numel(x.data), t);
+0952          <span class="keyword">if</span> ~exist(<span class="string">'maxlen'</span>,<span class="string">'var'</span>)
+0953             maxlen = <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(datalengths);
+0954          <span class="keyword">end</span>
+0955          
+0956          <span class="keyword">for</span> n=<a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(datalengths &lt; maxlen)
+0957             t(n).data(maxlen) = 0;
+0958          <span class="keyword">end</span>
+0959          
+0960          <span class="keyword">for</span> n=<a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(datalengths &gt; maxlen);
+0961             t(n).data = t(n).data(1:maxlen);
+0962          <span class="keyword">end</span>
+0963       <span class="keyword">end</span>
+0964       
+0965       <a name="_sub38" href="#_subfunctions" class="code">function T = hilbert(T, n)</a>
+0966          <span class="comment">%hilbert   Discrete-time analytic Hilbert transform for traces.</span>
+0967          <span class="comment">%   trace = trace.hilbert()</span>
+0968          <span class="comment">%   trace = trace.hilbert(N);</span>
+0969          <span class="comment">%</span>
+0970          <span class="comment">% THIS version only returns the abs value in the trace. If you</span>
+0971          <span class="comment">% want to keep the imaginary values, then you should use the</span>
+0972          <span class="comment">% built-in hilbert transform. ie. Don't feed it a trace, feed it</span>
+0973          <span class="comment">% a vector... - CR</span>
+0974          <span class="comment">%</span>
+0975          <span class="comment">% See also FFT, IFFT, HILBERT</span>
+0976          
+0977          <span class="keyword">if</span> nargin==2
+0978             T = arrayfun(@<a href="#_sub41" class="code" title="subfunction Tr = myHilbertN(Tr)">myHilbertN</a>,T);
+0979          <span class="keyword">else</span>
+0980             T = arrayfun(@<a href="#_sub40" class="code" title="subfunction Tr = myHilbert(Tr)">myHilbert</a>,T);
+0981          <span class="keyword">end</span>
+0982          
+0983          <a name="_sub39" href="#_subfunctions" class="code">function Tr = myHilbert(Tr)</a>
+0984             Tr.data = <a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(<a href="../../../../GISMO/core/@correlation/hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>(Tr.data));
+0985             Tr.units = <span class="string">'abs(hilbert)'</span>;
+0986          <span class="keyword">end</span>
+0987          
+0988          <a name="_sub40" href="#_subfunctions" class="code">function Tr = myHilbertN(Tr)</a>
+0989             Tr.data = <a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(<a href="../../../../GISMO/core/@correlation/hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>(Tr.data, n));
+0990             Tr.units = <span class="string">'abs(hilbert)'</span>;
+0991          <span class="keyword">end</span>
+0992       <span class="keyword">end</span>
+0993       
+0994       <a name="_sub41" href="#_subfunctions" class="code">function T = resample(T, method, crunchFactor)</a>
+0995          <span class="comment">%resample   Resample a trace over a specified interval</span>
+0996          <span class="comment">%   T = trace.resample(method, crunchfactor)</span>
+0997          <span class="comment">%</span>
+0998          <span class="comment">%   Input Arguments</span>
+0999          <span class="comment">%       Trace: TraceData or Trace       N-dimensional</span>
+1000          <span class="comment">%</span>
+1001          <span class="comment">%       METHOD: which method of sampling to perform within each sample</span>
+1002          <span class="comment">%                window</span>
+1003          <span class="comment">%           'max' : maximum value</span>
+1004          <span class="comment">%           'min' : minimum value</span>
+1005          <span class="comment">%           'mean': average value</span>
+1006          <span class="comment">%           'median' : median value</span>
+1007          <span class="comment">%           'rms' : rms value (added 2011/06/01)</span>
+1008          <span class="comment">%           'absmax': absolute maximum value (greatest deviation from zero)</span>
+1009          <span class="comment">%           'absmin': absolute minimum value (smallest deviation from zero)</span>
+1010          <span class="comment">%           'absmean' : mean deviation from zero (added 2011/06/01)</span>
+1011          <span class="comment">%           'absmedian' : median deviation from zero (added 2011/06/01)</span>
+1012          <span class="comment">%           'builtin': Use MATLAB's built in resample routine</span>
+1013          <span class="comment">%</span>
+1014          <span class="comment">%       CRUNCHFACTOR : the number of samples making up the sample window</span>
+1015          <span class="comment">%</span>
+1016          <span class="comment">% For example, T.resample('max',5) would grab the max value of every 5</span>
+1017          <span class="comment">% samples and return that in a trace with an adjusted frequency. as a</span>
+1018          <span class="comment">% result, the trace will have 1/5 of the samples</span>
+1019          <span class="comment">%</span>
+1020          <span class="comment">%</span>
+1021          <span class="comment">% To use matlab's built-in RESAMPLE method...</span>
+1022          <span class="comment">%       % assume T is an existing trace</span>
+1023          <span class="comment">%       D = double(T);</span>
+1024          <span class="comment">%       ResampleD = D.resample(P,Q);  % see matlab's RESAMPLE for specifics</span>
+1025          <span class="comment">%</span>
+1026          <span class="comment">%       %put back into trace, but don't forget to update the frequency</span>
+1027          <span class="comment">%       T.data = ResampleD;</span>
+1028          <span class="comment">%       T.samplerate = NewFrequency;</span>
+1029          <span class="comment">%</span>
+1030          <span class="comment">% See also RESAMPLE, MIN, MAX, MEAN, MEDIAN.</span>
+1031          
+1032          <span class="comment">% AUTHOR: Celso Reyes, Glenn Thompson</span>
+1033          
+1034          <span class="keyword">persistent</span> STATS_INSTALLED;
+1035          <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(STATS_INSTALLED)
+1036             STATS_INSTALLED = ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(ver(<span class="string">'stats'</span>));
+1037          <span class="keyword">end</span>
+1038          
+1039          <span class="keyword">if</span> ~(round(crunchFactor) == crunchFactor)
+1040             <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a> (<span class="string">'val needs to be an integer'</span>);
+1041             <span class="keyword">return</span>;
+1042          <span class="keyword">end</span>;
+1043          method = lower(method);
+1044          
+1045          <span class="comment">% determine which function to use on the data. This will</span>
+1046          <span class="comment">% automatically determine whether it can use the NaN-safe version</span>
+1047          <span class="keyword">if</span> ~strcmp(method,<span class="string">'builtin'</span>)
+1048             <span class="keyword">if</span> STATS_INSTALLED
+1049                <span class="keyword">if</span> numel(method) &gt; 3 &amp;&amp; strcmpi(method(1:3),<span class="string">'ABS'</span>)
+1050                   methodfn = str2func([<span class="string">'nan'</span> method(4:end)]);
+1051                <span class="keyword">else</span>
+1052                   methodfn = str2func([<span class="string">'nan'</span>, method]);
+1053                <span class="keyword">end</span>
+1054             <span class="keyword">else</span>
+1055                <span class="keyword">if</span> numel(method) &gt; 3 &amp;&amp; strcmpi(method(1:3),<span class="string">'ABS'</span>)
+1056                   methodfn = str2func(method(4:end));
+1057                <span class="keyword">else</span>
+1058                   methodfn = str2func(method);
+1059                <span class="keyword">end</span>
+1060             <span class="keyword">end</span>
+1061          <span class="keyword">end</span>
+1062          
+1063          <span class="keyword">for</span> i=1:numel(T)
+1064             nRows = ceil(length(T(i).data) / crunchFactor);
+1065             totVals = nRows * crunchFactor; <span class="comment">% total number of values that can be accomodated</span>
+1066             <span class="keyword">if</span> length(T(i).data) &lt; totVals
+1067                T(i).data(end+1:totVals) = <a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(T(i).data((nRows-1)*totVals : end)); <span class="comment">%pad it with the avg value</span>
+1068             <span class="keyword">end</span>;
+1069             
+1070             d = reshape(T(i).data,crunchFactor,nRows); <span class="comment">% produces ( val x rowcount) matrix</span>
+1071             <span class="keyword">switch</span> upper(method)
+1072                <span class="keyword">case</span> {<span class="string">'MAX'</span>, <span class="string">'MIN'</span>, <span class="string">'RMS'</span>}
+1073                   T(i).data = methodfn(d, [], 1);
+1074                <span class="keyword">case</span> {<span class="string">'MEAN'</span>, <span class="string">'MEDIAN'</span>}
+1075                   T(i).data = methodfn(d, 1);
+1076                <span class="keyword">case</span> {<span class="string">'ABSMAX'</span>, <span class="string">'ABSMIN'</span>}
+1077                   T(i).data = methodfn(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d),[],1);
+1078                <span class="keyword">case</span> {<span class="string">'ABSMEAN'</span>, <span class="string">'ABSMEDIAN'</span>}
+1079                   T(i).data = methodfn(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d), 1);
+1080                <span class="keyword">case</span> <span class="string">'BUILTIN'</span>
+1081                   <span class="comment">% assume T is an existing trace</span>
+1082                   ResampleD = <a href="../../../../GISMO/core/@rsam/resample.html" class="code" title="function self = resample(self, varargin)">resample</a>(T(i).data,1,crunchFactor);  <span class="comment">% see matlab's RESAMPLE for specifics</span>
+1083                   T(i).data = ResampleD(:);
+1084                <span class="keyword">otherwise</span>
+1085                   error(<span class="string">'TraceData:resample:UnknownSampleMethod'</span>,<span class="keyword">...</span>
+1086                      <span class="string">'Don''t know what you mean by resample via %s'</span>, method);
+1087             <span class="keyword">end</span>;
+1088             T(i).samplerate = T(i).samplerate ./ crunchFactor;
+1089          <span class="keyword">end</span>
+1090       <span class="keyword">end</span>
+1091       
+1092       <a name="_sub42" href="#_subfunctions" class="code">function A = smooth(A, varargin)</a>
+1093          <span class="comment">%smooth   Smooth response data</span>
+1094          <span class="comment">%  A = smooth(T) smooths the Trace's data using a moving average</span>
+1095          <span class="comment">%  filter.</span>
+1096          <span class="comment">%</span>
+1097          <span class="comment">%  smooth requires the signal fitting toolbox.  For additional</span>
+1098          <span class="comment">%  options, see that smooth</span>
+1099          <span class="comment">% See also smooth</span>
+1100          <span class="keyword">for</span> n = 1:numel(A)
+1101             A(n).data = <a href="../../../../GISMO/core/@waveform/smooth.html" class="code" title="function W = smooth(W, varargin)">smooth</a>(A(n).data,varargin{:});
+1102          <span class="keyword">end</span>
+1103       <span class="keyword">end</span>
+1104       
+1105       <a name="_sub43" href="#_subfunctions" class="code">function T = taper(T, style, R)</a>
+1106          <span class="comment">%taper   apply a taper to a trace</span>
+1107          <span class="comment">% trace = trace.taper() applies a cosine (tukey) taper to the ends</span>
+1108          <span class="comment">% of a trace with a default taper to the first and last 10% of the</span>
+1109          <span class="comment">% trace. This is same as trace.taper('tukey', 0.2)</span>
+1110          <span class="comment">%</span>
+1111          <span class="comment">% trace = trace.taper(style) applies the tapering window function</span>
+1112          <span class="comment">% STYLE to the trace. STYLE can be any valid windowing function</span>
+1113          <span class="comment">% some possible taper styles include hanning, tukey, and gaussian.</span>
+1114          <span class="comment">% see help for WINDOW for a more complete list.</span>
+1115          <span class="comment">%</span>
+1116          <span class="comment">% trace = trace.taper(style, R)</span>
+1117          <span class="comment">% R varies in meaning according to the window style. For the</span>
+1118          <span class="comment">% default cosine (tukey) taper, R is the ratio of tapered to</span>
+1119          <span class="comment">% constant sections and is between 0 and 1. For example, if R =</span>
+1120          <span class="comment">% 0.1 then the taper at each end of the trace is 5% of the total</span>
+1121          <span class="comment">% trace length. R can be either a scalar or the same size as</span>
+1122          <span class="comment">% TRACE. If R is a scalar, it is applied uniformly to each</span>
+1123          <span class="comment">% trace.</span>
+1124          <span class="comment">%</span>
+1125          <span class="comment">% for a tukey taper, setting R ito 1 results in a hanning taper</span>
+1126          <span class="comment">%</span>
+1127          <span class="comment">% All tapers require the signal processing toolbox.</span>
+1128          <span class="comment">%</span>
+1129          <span class="comment">% See also window</span>
+1130          <span class="comment">% AUTHOR: Michael West</span>
+1131          <span class="comment">% Modified: Celso Reyes</span>
+1132          a=ver;
+1133          HAVE_SIGBOX = <a href="../../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(<span class="string">'Signal Processing Toolbox'</span>,{a.Name});
+1134          <span class="keyword">if</span> ~HAVE_SIGBOX
+1135             error(<span class="string">'TraceData:taper:signalToolboxNotInstalled'</span>,<span class="keyword">...</span>
+1136                <span class="string">'Using a taper requires access to the Signal Processing Toolbox'</span>);
+1137          <span class="keyword">end</span>
+1138          <span class="keyword">if</span> ~exist(<span class="string">'style'</span>,<span class="string">'var'</span>) || <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(style) || strcmpi(style,<span class="string">'cosine'</span>)
+1139             style = <span class="string">'tukeywin'</span>;
+1140          <span class="keyword">end</span>
+1141          <span class="keyword">if</span> exist(lower(style))
+1142             taperfun = str2func(lower(style));
+1143          <span class="keyword">else</span>
+1144             error(<span class="string">'TraceData:taper:invalidTaperType'</span>,<span class="keyword">...</span>
+1145                <span class="string">'This style of taper is not recognized.'</span>);
+1146          <span class="keyword">end</span>
+1147          
+1148          <span class="comment">%% massage R into place</span>
+1149          <span class="keyword">if</span> strcmpi(style,<span class="string">'tukeywin'</span>) &amp;&amp; (~exist(<span class="string">'R'</span>,<span class="string">'var'</span>) || <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(R))
+1150             R = 0.2; <span class="comment">%assign default taper</span>
+1151          <span class="keyword">end</span>
+1152          <span class="keyword">if</span> exist(<span class="string">'R'</span>,<span class="string">'var'</span>) &amp;&amp;  ~isnumeric(R)
+1153             error(<span class="string">'TraceData:taper:InvalidRValue'</span>,<span class="keyword">...</span>
+1154                <span class="string">'R, if specified, must be numeric'</span>);
+1155          <span class="keyword">end</span>
+1156          
+1157          <span class="keyword">if</span> isscalar(R)
+1158             R = repmat(R,size(T));
+1159          <span class="keyword">end</span>
+1160          
+1161          <span class="keyword">if</span> (isvector(R) &amp;&amp; isvector(T)) &amp;&amp; numel(R) == numel(T)
+1162             <span class="keyword">if</span> all(size(T)) ~= size(R)
+1163                <span class="comment">% same number of elements, but R is Nx1 and w is 1xN or vice-versa</span>
+1164                warning(<span class="string">'TraceData:taper:columnsVsRows'</span>,<span class="keyword">...</span>
+1165                   [<span class="string">'One input (either R or the wavform) is arranged in '</span><span class="keyword">...</span>
+1166                   <span class="string">'columns while the other is arranged in Rows. While they '</span><span class="keyword">...</span>
+1167                   <span class="string">'should be the same shape, taper is continuing with R'''</span>]);
+1168                R = R';
+1169             <span class="keyword">end</span>
+1170          <span class="keyword">end</span>
+1171          
+1172          <span class="keyword">if</span> ~all(size(T) == size(R))
+1173             error(<span class="string">'TraceData:taper:InvalidRSize'</span>,<span class="keyword">...</span>
+1174                <span class="string">'R must either be a scalar value, or must be the same size as the input traces'</span>);
+1175          <span class="keyword">end</span>
+1176          <a href="#_sub8" class="code" title="subfunction n = nsamples(obj)">nsamples</a> = T.nsamples();
+1177          <span class="comment">%% Do the window processing</span>
+1178          <span class="keyword">if</span> exist(<span class="string">'R'</span>,<span class="string">'var'</span>)
+1179             <span class="keyword">for</span> N=1:numel(T)
+1180                T(N) = T(N) .* window(taperfun, <a href="#_sub8" class="code" title="subfunction n = nsamples(obj)">nsamples</a>(N), R(N));
+1181             <span class="keyword">end</span>
+1182          <span class="keyword">else</span>
+1183             <span class="keyword">for</span> N=1:numel(T)
+1184                T(N) = T(N) .* window(taperfun, <a href="#_sub8" class="code" title="subfunction n = nsamples(obj)">nsamples</a>(N));
+1185             <span class="keyword">end</span>
+1186          <span class="keyword">end</span>
+1187          
+1188       <span class="keyword">end</span>
+1189       
+1190       <a name="_sub44" href="#_subfunctions" class="code">function [tf, msg] = compatiblewith(A, B)</a>
+1191          <span class="comment">%compatiblewith   confirm units, samplerate, and data length match</span>
+1192          <span class="comment">%  tf = A.compatiblewith(B) will make sure that A and B have</span>
+1193          <span class="comment">%  matching units, sample frequencies, and data length.</span>
+1194          <span class="comment">%  If units are empty for either A or B, then units will pass</span>
+1195          <span class="comment">%  If samplerate is empty for either A or B, then samplerate will</span>
+1196          <span class="comment">%  pass. samplerate is compared within a tolerance of 10e-2</span>
+1197          <span class="comment">%</span>
+1198          <span class="comment">%  [tf, msg] = A.compatiblewith(B) will also return a message</span>
+1199          <span class="comment">%  describing how the test failed.</span>
+1200          <span class="comment">%</span>
+1201          <span class="comment">%  sample usage:</span>
+1202          <span class="comment">%    % assume A &amp; B are TraceData</span>
+1203          <span class="comment">%    if A.compatiblewith(B)</span>
+1204          <span class="comment">%       dosomething(A, B)</span>
+1205          <span class="comment">%    end</span>
+1206          <span class="comment">%</span>
+1207          <span class="comment">% See also assertCompatiblewith</span>
+1208          TOL = 10e-2;
+1209          <span class="keyword">if</span> ~(numel(A.data) == numel(B.data))
+1210             tf = false;
+1211             msg = <span class="string">'Data lengths do not match'</span>;
+1212          <span class="keyword">elseif</span> ~(<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(B.units) ||<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(A.units) || strcmp(A.units, B.units))
+1213             tf = false;
+1214             msg = sprintf(<span class="string">'Units do not match [%s] vs [%s]'</span>, A.units, B.units);
+1215          <span class="keyword">elseif</span> ~(<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(A.samplerate) || <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(B.samplerate) || isnan(A.samplerate) || isnan(B.samplerate) || ismembertol(A.samplerate,B.samplerate, TOL))
+1216             tf = false;
+1217             msg = sprintf(<span class="string">'Frequencies do not match [%f] vs [%f]'</span>,A.samplerate, B.samplerate);
+1218          <span class="keyword">else</span>
+1219             tf = true;
+1220             msg = <span class="string">''</span>;
+1221          <span class="keyword">end</span>
+1222       <span class="keyword">end</span>
+1223       
+1224       <a name="_sub45" href="#_subfunctions" class="code">function assertCompatiblewith(A, B)</a>
+1225          <span class="comment">%assertCompatiblewith  asserts units, samplerate, and data length match</span>
+1226          <span class="comment">%  assertCompatiblewith(A, B) will error unless A and B have</span>
+1227          <span class="comment">%  matching units, sample frequencies, and data length. The error</span>
+1228          <span class="comment">%  message will describe what is wrong</span>
+1229          <span class="comment">%</span>
+1230          <span class="comment">%  use this within a try-catch, or when debugging</span>
+1231          <span class="comment">%</span>
+1232          <span class="comment">% sample debugging usage:</span>
+1233          <span class="comment">%   % assume A &amp; B are TraceData</span>
+1234          <span class="comment">%   A.assertCompatiblewith(B)</span>
+1235          <span class="comment">%   C = A + B.data;</span>
+1236          <span class="comment">%</span>
+1237          <span class="comment">% sample prduction usage:</span>
+1238          <span class="comment">%   try</span>
+1239          <span class="comment">%     A.assertCompatiblewith(B)</span>
+1240          <span class="comment">%     C = A + B.data;</span>
+1241          <span class="comment">%   catch er</span>
+1242          <span class="comment">%     % handle this failure somehow</span>
+1243          <span class="comment">%   end</span>
+1244          <span class="comment">%</span>
+1245          <span class="comment">% See also compatiblewith</span>
+1246          [tf, msg] = <a href="#_sub45" class="code" title="subfunction [tf, msg] = compatiblewith(A, B)">compatiblewith</a>(A, B);
+1247          assert(tf, <span class="string">'TraceData:compatabilityCheckFailed'</span>, msg);
+1248       <span class="keyword">end</span>
+1249       
+1250       <span class="comment">%% stacking functions</span>
+1251       <a name="_sub46" href="#_subfunctions" class="code">function out = stack(T)</a>
+1252          <span class="comment">%stack  stacks data from array of traces</span>
+1253          <span class="comment">%   StackedTraces = stack(traces)</span>
+1254          <span class="comment">%   ASSUMES frequencies are the same. data does not need to be the same</span>
+1255          <span class="comment">%   length, but shorter traces will be padded with zeros at the end</span>
+1256          <span class="comment">%   prior to stacking.</span>
+1257          <span class="comment">%</span>
+1258          <span class="comment">%   Stacks all traces, regardless of dimension</span>
+1259          <span class="comment">%</span>
+1260          <span class="comment">%   Data is summed, but the average is not taken, nor is it normalized. You</span>
+1261          <span class="comment">%   may wish to change the station and/or channel names to reflect the</span>
+1262          <span class="comment">%   properties of this trace. Possibly change the units, also, if that</span>
+1263          <span class="comment">%   makes sense.</span>
+1264          <span class="comment">%</span>
+1265          <span class="comment">%   Output retains the same info as the very first trace (minus history)</span>
+1266          <span class="comment">%   the station name becomes the original name with &quot;- stack (N)&quot; tacked onto</span>
+1267          <span class="comment">%   the end.</span>
+1268          <span class="comment">%</span>
+1269          <span class="comment">%   To ensure frequency and time matching, use ALIGN</span>
+1270          <span class="comment">%</span>
+1271          <span class="comment">%   See also trace.align</span>
+1272          
+1273          out = T(1);
+1274          out.station = [out.station <span class="string">' - stack ('</span> num2str(numel(T)) <span class="string">')'</span>];
+1275          out.data = sum(<a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(T),2);
+1276       <span class="keyword">end</span>
+1277       <a name="_sub47" href="#_subfunctions" class="code">function stackedTraces = binStack(T,nBins,binOverlap)</a>
+1278          <span class="comment">%binStack   Stack traces with specified number of traces per stack.</span>
+1279          <span class="comment">%</span>
+1280          <span class="comment">%USAGE: stk = binStack(T,nBins,binOverlap)</span>
+1281          <span class="comment">%    If input T contains 100 traces then:</span>
+1282          <span class="comment">%    stk = binStack(T,20,0) % stk has 5 stacks of 20 traces</span>
+1283          <span class="comment">%    stk = binStack(T,5,0)  % stk has 20 stacks of 5 traces</span>
+1284          <span class="comment">%    stk = binStack(T,20,10)  % stk has 9 stacks of 20 traces</span>
+1285          <span class="comment">%</span>
+1286          <span class="comment">%OUTPUTS: stk - Array of stacked traces</span>
+1287          
+1288          <span class="comment">% Author: Dane Ketner, Alaska Volcano Observatory</span>
+1289          
+1290          nw = numel(T);
+1291          inc = nBins - binOverlap;
+1292          n=1;
+1293          <span class="keyword">while</span> 1
+1294             <span class="keyword">if</span> (n-1)*inc+nBins &gt; nw
+1295                <span class="keyword">return</span>
+1296             <span class="keyword">else</span>
+1297                stackedTraces(n) = <a href="../../../../GISMO/core/@correlation/stack.html" class="code" title="function c = stack(c,varargin)">stack</a>(T((n-1)*inc+1:(n-1)*inc+nBins));
+1298                n=n+1;
+1299             <span class="keyword">end</span>
+1300          <span class="keyword">end</span>
+1301       <span class="keyword">end</span>
+1302       <a name="_sub48" href="#_subfunctions" class="code">function info(T)</a>
+1303             fprintf(<span class="string">'[%s] TraceData array with:\n'</span>, TraceData.size2str(T));
+1304             fprintf(<span class="string">'  nSaples  sampleRate      Units Duration(sec)   min      max   hasnan?\n'</span>);
+1305          <span class="keyword">for</span> n=1:numel(T)
+1306             <span class="keyword">if</span> T(n).hasnan; hnt = <span class="string">'Y'</span>; <span class="keyword">else</span> hnt = <span class="string">'N'</span>;<span class="keyword">end</span>
+1307             fprintf(<span class="string">'%8d    %f %10s   %8.3f  %8.3f  %8.3f     %s \n'</span>,<span class="keyword">...</span>
+1308                T(n).nsamples, T(n).samplerate, T(n).units, T(n).duration, <a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(T(n)), <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(T(n)), hnt);
+1309          <span class="keyword">end</span>
+1310       <span class="keyword">end</span>
+1311        <span class="comment">%}</span>
+1312    <span class="keyword">end</span>
+1313    
+1314    <span class="comment">%% protected methods</span>
+1315    methods(Static, Access=protected)
+1316       <a name="_sub49" href="#_subfunctions" class="code">function s = size2str(A)</a>
+1317          sz = size(A);
+1318          s = num2str(sz(1));
+1319          <span class="keyword">for</span> n=2:numel(sz)
+1320             s = [s, <span class="string">'x'</span>, num2str(sz(n))];
+1321          <span class="keyword">end</span>
+1322       <span class="keyword">end</span>
+1323    <span class="keyword">end</span>
+1324    
+1325    methods(Static)
+1326       <a name="_sub50" href="#_subfunctions" class="code">function setParameter(name, val)</a>
+1327          <span class="comment">%setParameter  controlstate behavior for the TraceData objects</span>
+1328          <span class="comment">%</span>
+1329          <span class="comment">%     TRUST_ASSIGNMENTS</span>
+1330          <span class="comment">%     set_parameter('trust_assignments', true) will verify the</span>
+1331          <span class="comment">%     shapes and types of each calculation before storing the data</span>
+1332          <span class="comment">%     in the object</span>
+1333          <span class="comment">%     set_parameter('trust_assignments', false) will not perform</span>
+1334          <span class="comment">%     size/class checks. Use this only when you are looking for</span>
+1335          <span class="comment">%     extra speed and tightly control the inputs to this class.</span>
+1336          <span class="comment">%</span>
+1337          <span class="comment">%     DEBUG_LEVEL</span>
+1338          <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(val)
+1339          <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'not active yet'</span>);
+1340          <span class="keyword">switch</span> lower(name)
+1341             <span class="keyword">case</span> <span class="string">'trust_assignments'</span>
+1342                <span class="comment">% set the parameter trust_assignments to logical(val);</span>
+1343             <span class="keyword">case</span> <span class="string">'debug_level'</span>
+1344                <span class="comment">% set the parameter debug_level to numerical val</span>
+1345             <span class="keyword">otherwise</span>
+1346          <span class="keyword">end</span>
+1347       <span class="keyword">end</span>
+1348       
+1349       newunit = <a href="autoscale.html" class="code" title="function newunit = autoscale(axishandle, oldunit)">autoscale</a>(axishandle, oldunit);
+1350       
+1351 
+1352    <span class="keyword">end</span>
+1353 <span class="keyword">end</span>
+1354</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of agc</title>
+  <meta name="keywords" content="agc">
+  <meta name="description" content="acg   apply automatic gain control to each trace">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; agc.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>agc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>acg   apply automatic gain control to each trace</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = agc(c,windowInSeconds) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">acg   apply automatic gain control to each trace
+
+ This function applies automatic gain control (AGC) to each trace. This
+ process, commonly used in seismic reflection processing, applies a
+ variable scale to each trace such that the amplitude along the entire
+ trace is roughly uniform. By minimizing amplitude variations along the
+ trace, well-correlated but low-amplitude phases become more visible. A
+ time window may be specified to control how tightly this scaling is
+ applied. Use a longer window for lower frequecy signals. The function
+ returns a correlation object.
+
+ EXAMPLES:
+  c=agc(c)                    apply agc using the default time window (0.5 s)
+  c=agc(c,0.8)                apply agc using a window of 0.8 s</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = agc(c,windowInSeconds)</a>
+0002    <span class="comment">%acg   apply automatic gain control to each trace</span>
+0003    <span class="comment">%</span>
+0004    <span class="comment">% This function applies automatic gain control (AGC) to each trace. This</span>
+0005    <span class="comment">% process, commonly used in seismic reflection processing, applies a</span>
+0006    <span class="comment">% variable scale to each trace such that the amplitude along the entire</span>
+0007    <span class="comment">% trace is roughly uniform. By minimizing amplitude variations along the</span>
+0008    <span class="comment">% trace, well-correlated but low-amplitude phases become more visible. A</span>
+0009    <span class="comment">% time window may be specified to control how tightly this scaling is</span>
+0010    <span class="comment">% applied. Use a longer window for lower frequecy signals. The function</span>
+0011    <span class="comment">% returns a correlation object.</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">% EXAMPLES:</span>
+0014    <span class="comment">%  c=agc(c)                    apply agc using the default time window (0.5 s)</span>
+0015    <span class="comment">%  c=agc(c,0.8)                apply agc using a window of 0.8 s</span>
+0016    
+0017    <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0018    <span class="comment">% $Date$</span>
+0019    <span class="comment">% $Revision$</span>
+0020    
+0021    <span class="keyword">if</span> ~exist(<span class="string">'windowInSeconds'</span>,<span class="string">'var'</span>)
+0022       windowInSeconds = 0.5; 
+0023    <span class="keyword">end</span>
+0024    
+0025    agcsamp = round( windowInSeconds * c.samplerate );
+0026    
+0027    
+0028    <span class="comment">% LOOP THROUGH TRACES APPLYING GAIN</span>
+0029    <span class="keyword">for</span> tracenum = 1:length(c.traces)
+0030       d = c.traces(tracenum).data;
+0031       scale = zeros( length(d)-2*agcsamp , 1 );
+0032       <span class="keyword">for</span> index=-1*agcsamp:agcsamp
+0033          scale=scale + <a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>( d(agcsamp+index+1:agcsamp+index+length(scale)) );
+0034       <span class="keyword">end</span>;
+0035       scale = scale/<a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(scale));
+0036       scale = [ones(agcsamp,1)*scale(1) ; scale ; ones(agcsamp,1)*scale(end)];
+0037       d = d./scale;
+0038       c.traces(tracenum).data =  d;
+0039    <span class="keyword">end</span>;
+0040    
+0041 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

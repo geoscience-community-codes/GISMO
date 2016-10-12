@@ -1,0 +1,556 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of testWaveform</title>
+  <meta name="keywords" content="testWaveform">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">tests</a> &gt; testWaveform.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/tests&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>testWaveform
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/core/+admin/which.html" class="code" title="function which(sourceLocation)">which</a>	WHICH manage and switch between multiple GISMO archives</li><li><a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="../../GISMO/core/@correlation/demean.html" class="code" title="function c = demean(c,varargin);">demean</a>	DEMEAN removes the mean of each trace.</li><li><a href="../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>	DETREND removes the slope of each trace.</li><li><a href="../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../GISMO/core/@correlation/display.html" class="code" title="function display(c)">display</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../GISMO/core/@correlation/hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li><li><a href="../../GISMO/core/@correlation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li><li><a href="../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>	SIGN removes the mean of each trace.</li><li><a href="../../GISMO/core/@correlation/stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li><li><a href="../../GISMO/core/@correlation/taper.html" class="code" title="function c = taper(c,varargin)">taper</a>	TAPER tapers the ends of waveforms in the correlation object.</li><li><a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>	DATASOURCE constructor for a datasource object.</li><li><a href="../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../GISMO/core/@datasource/display.html" class="code" title="function display(ds)">display</a>	DISPLAY - datasource display overloaded operator</li><li><a href="../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../GISMO/core/@filterobject/display.html" class="code" title="function display(f)">display</a>	DISPLAY - Filterobject display overloaded operator</li><li><a href="../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>	Purpose:</li><li><a href="../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>	RSAM/SAVE - save an rsam-like object to an RSAM/BOB binary</li><li><a href="../../GISMO/core/@scnlobject/ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>	ChannelTag Converter from scnlobject to ChannelTag</li><li><a href="../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../GISMO/core/@scnlobject/display.html" class="code" title="function display(scnl)">display</a>	DISPLAY - scnlobject display overloaded operator</li><li><a href="../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>	ISMEMBER for scnlobjects</li><li><a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>	scnl (deprecated) : object that holds the stations, channel, network, and location for</li><li><a href="../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../GISMO/core/@spectralobject/display.html" class="code" title="function display(s)">display</a>	DISPLAY - spectralobject display overloaded operator</li><li><a href="../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>	ADDFIELD add fields and values to waveform object(s)                V1.1</li><li><a href="../../GISMO/core/@waveform/addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>	ADDHISTORY function in charge of adding history to a waveform</li><li><a href="../../GISMO/core/@waveform/clearhistory.html" class="code" title="function w = clearhistory(w)">clearhistory</a>	CLEARHISTORY reset history of a waveform</li><li><a href="../../GISMO/core/@waveform/clip.html" class="code" title="function w = clip(w, vals)">clip</a>	CLIP clips a waveform's data at a particular max/min value range</li><li><a href="../../GISMO/core/@waveform/delfield.html" class="code" title="function w = delfield(w,field_to_delete, ignoredvalue)">delfield</a>	DELFIELD removes fields from waveform object(s)</li><li><a href="../../GISMO/core/@waveform/demean.html" class="code" title="function w = demean (w)">demean</a>	DEMEAN remove offset voltage from signal</li><li><a href="../../GISMO/core/@waveform/detrend.html" class="code" title="function w = detrend (w, varargin)">detrend</a>	DETREND remove linear trend from a waveform</li><li><a href="../../GISMO/core/@waveform/diff.html" class="code" title="function w = diff (w)">diff</a>	DIFF Differentiate waveform</li><li><a href="../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../GISMO/core/@waveform/display.html" class="code" title="function display(w)">display</a>	DISPLAY Waveform Display overloaded operator</li><li><a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../GISMO/core/@waveform/fix_data_length.html" class="code" title="function w = fix_data_length(w, maxlen)">fix_data_length</a>	FIX_DATA_LENGTH adjust length of waveform data to allow batch processing</li><li><a href="../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../GISMO/core/@waveform/hilbert.html" class="code" title="function W = hilbert(W, n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li><li><a href="../../GISMO/core/@waveform/history.html" class="code" title="function [actions dates] = history(w)">history</a>	HISTORY retrieve the history of a waveform object</li><li><a href="../../GISMO/core/@waveform/integrate.html" class="code" title="function w = integrate (w,method)">integrate</a>	INTEGRATE integrates a waveform signal</li><li><a href="../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../GISMO/core/@waveform/ismember.html" class="code" title="function [results, loc] = ismember(mywave,anythingelse)">ismember</a>	ISMEMBER waveform implementation of ismember</li><li><a href="../../GISMO/core/@waveform/legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>	legend creates a legend for a waveform graph</li><li><a href="../../GISMO/core/@waveform/loadsac.html" class="code" title="function w = loadsac(w, filename)">loadsac</a>	LOADSAC  creates a waveform from a SAC file</li><li><a href="../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>	MEDIAN middlemost value of waveform's sorted data.</li><li><a href="../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../GISMO/core/@waveform/private/mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>	convert a matlab date to an epoch date</li><li><a href="../../GISMO/core/@waveform/rms.html" class="code" title="function RMS = rms(W, varargin)">rms</a>	RMS root mean square of a waveform</li><li><a href="../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../GISMO/core/@waveform/sign.html" class="code" title="function w = sign(w)">sign</a>	SIGN Signum function for waveforms.</li><li><a href="../../GISMO/core/@waveform/stack.html" class="code" title="function out = stack(w)">stack</a>	STACK stacks data from array of waveforms</li><li><a href="../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>	STD Standard deviation of a waveform</li><li><a href="../../GISMO/core/@waveform/taper.html" class="code" title="function w = taper(w,R, style)">taper</a>	WAVEFORM = TAPER(WAVEFORM,R) applies a cosine taper to the ends of a</li><li><a href="../../GISMO/core/@waveform/var.html" class="code" title="function Y = var(w,flag)">var</a>	VAR Variance of a waveform's data</li><li><a href="../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../GISMO/core/dev/@NewCorrelation/demean.html" class="code" title="function c = demean(c)">demean</a>	DEMEAN removes the mean of each trace.</li><li><a href="../../GISMO/core/dev/@NewCorrelation/detrend.html" class="code" title="function c = detrend(c)">detrend</a>	DETREND   removes the slope of each trace.</li><li><a href="../../GISMO/core/dev/@NewCorrelation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../GISMO/core/dev/@NewCorrelation/hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li><li><a href="../../GISMO/core/dev/@NewCorrelation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li><li><a href="../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../GISMO/core/dev/@NewCorrelation/sign.html" class="code" title="function c = sign(c)">sign</a>	SIGN convert traces to the sign of their data (+1, 0, -1)</li><li><a href="../../GISMO/core/dev/@NewCorrelation/stack.html" class="code" title="function c = stack(c,index)">stack</a>	c = STACK(c)</li><li><a href="../../GISMO/core/dev/@NewCorrelation/taper.html" class="code" title="function c = taper(c,varargin)">taper</a>	TAPER tapers the ends of waveforms in the correlation object.</li><li><a href="../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../GISMO/core/dev/@SeismicTrace/legend.html" class="code" title="function varargout = legend(T, varargin)">legend</a>	legend   Create a legend for the graph of a trace.</li><li><a href="../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../GISMO/deprecated/@helicorder/display.html" class="code" title="function display(h)">display</a>	DISPLAY: Helicorder display overloaded operator</li><li><a href="../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li><li><a href="../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li><li><a href="testWaveform.html" class="code" title="">testWaveform</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="testWaveform.html" class="code" title="">testWaveform</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function SetUp(testCase)</a></li><li><a href="#_sub2" class="code">function testConstructors(testCase)</a></li><li><a href="#_sub3" class="code">function testWinstonCall(testCase)</a></li><li><a href="#_sub4" class="code">function testWaveformCalls(testCase)</a></li><li><a href="#_sub5" class="code">function testSetGets(testCase)</a></li><li><a href="#_sub6" class="code">function testBasicMath(testCase)</a></li><li><a href="#_sub7" class="code">function testAdvancedMath(testCase)</a></li><li><a href="#_sub8" class="code">function testDiff(testCase)</a></li><li><a href="#_sub9" class="code">function testIntegrate(testCase)</a></li><li><a href="#_sub10" class="code">function testStatisticalMath(testCase)</a></li><li><a href="#_sub11" class="code">function testTransforms(testCase)</a></li><li><a href="#_sub12" class="code">function testSacLoad(testCase)</a></li><li><a href="#_sub13" class="code">function testPlot(testCase)</a></li><li><a href="#_sub14" class="code">function testUserDefinedFields(testCase)</a></li><li><a href="#_sub15" class="code">function testHistory(testCase)</a></li><li><a href="#_sub16" class="code">function testIsEmpty(testCase)</a></li><li><a href="#_sub17" class="code">function testDouble(testCase)</a></li><li><a href="#_sub18" class="code">function testLoadWinston(testCase)</a></li><li><a href="#_sub19" class="code">function testLoadIRIS(testCase)</a></li><li><a href="#_sub20" class="code">function testLoadobj(testCase)</a></li><li><a href="#_sub21" class="code">function load_v0()</a></li><li><a href="#_sub22" class="code">function load_v1_0()</a></li><li><a href="#_sub23" class="code">function load_v1_1()</a></li><li><a href="#_sub24" class="code">function load_v1_2()</a></li><li><a href="#_sub25" class="code">function testSave(testCase)</a></li><li><a href="#_sub26" class="code">function testTaper(testCase)</a></li><li><a href="#_sub27" class="code">function testClip(testCase)</a></li><li><a href="#_sub28" class="code">function testStack(testCase)</a></li><li><a href="#_sub29" class="code">function testDisp(testCase)</a></li><li><a href="#_sub30" class="code">function testCorrelationCookbook(testCase)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="testWaveform.html" class="code" title="">testWaveform</a> &lt; matlab.unittest.TestCase
+0002    <span class="comment">% TESTWAVEFORM validates the funcionality of Waveform</span>
+0003    <span class="comment">%</span>
+0004    <span class="comment">% requires xUnit</span>
+0005    <span class="comment">% see also xUnit, ChannelTag</span>
+0006    
+0007    properties
+0008       Dt<span class="comment">% = rand(1,1001) .* 1000 - 500;</span>
+0009       chanTag<span class="comment">% = ChannelTag('IU.ANMO.00.BHZ');</span>
+0010       dataPath = fileparts(<a href="../../GISMO/core/+admin/which.html" class="code" title="function which(sourceLocation)">which</a>(<span class="string">'test_waveform_class'</span>))
+0011       wf<span class="comment">% = waveform(testWaveform.chanTag, 20, fix(now), D, 'm / sec');</span>
+0012    <span class="keyword">end</span>
+0013    
+0014    methods(TestMethodSetup)
+0015       <a name="_sub0" href="#_subfunctions" class="code">function SetUp(testCase)</a>
+0016          <span class="comment">% not sure this is working in any way.</span>
+0017          testCase.Dt = rand(1,1001) .* 1000 - 500;
+0018          testCase.chanTag = <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(<span class="string">'IU.ANMO.00.BHZ'</span>);
+0019          testCase.wf = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(testCase.chanTag, 20, fix(now), testCase.Dt, <span class="string">'m / sec'</span>);
+0020       <span class="keyword">end</span>
+0021    <span class="keyword">end</span>
+0022    
+0023    methods(Test)      
+0024       
+0025       <a name="_sub1" href="#_subfunctions" class="code">function testConstructors(testCase)</a>
+0026          <span class="comment">%% first, try the different methods of loading up waveforms</span>
+0027          <span class="comment">%default constructor</span>
+0028          w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>; <span class="comment">%create an empty waveform</span>
+0029          assert(isa(w,<span class="string">'waveform'</span>));
+0030          
+0031          rfreq = rand(1) * 200;
+0032          Ad = testCase.Dt;
+0033          stt = now - rand(1) * 1500;
+0034          clear w
+0035          STATIONVALUE = <span class="string">'STAtION'</span>;
+0036          CHANNELVALUE = <span class="string">'CHAnNEL'</span>;
+0037          
+0038          <span class="comment">%manual constructor now gives error</span>
+0039          verifyWarning(testCase, @() <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(STATIONVALUE,CHANNELVALUE,rfreq, stt,Ad),<span class="keyword">...</span>
+0040             <span class="string">'Waveform:waveform:oldUsage'</span>);
+0041          w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(testCase.chanTag, rfreq, stt, testCase.Dt);
+0042          
+0043          <span class="comment">% copy constructor</span>
+0044          w2 = w;
+0045          s1 = struct(w); s2 = struct(w2);
+0046          fn = fieldnames(s1);
+0047          <span class="keyword">for</span> n=1:numel(fn)
+0048             <span class="keyword">switch</span> (class(s1.(fn{n})))
+0049                <span class="keyword">case</span> {<span class="string">'char'</span>, <span class="string">'double'</span>, <span class="string">'logical'</span>}
+0050                   testCase.verifyEqual(s1.(fn{n}), s2.(fn{n}));
+0051                <span class="keyword">otherwise</span>
+0052                   <span class="comment">% fprintf('field &lt;%s&gt; of type &lt;%s&gt; uncompared\n',fn{n},class(s1.(fn{n})));</span>
+0053             <span class="keyword">end</span>
+0054          <span class="keyword">end</span>
+0055       <span class="keyword">end</span>
+0056       
+0057       <a name="_sub2" href="#_subfunctions" class="code">function testWinstonCall(testCase)</a>
+0058          ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'winston'</span>,<span class="string">'pubavo1.wr.usgs.gov'</span>,16022);
+0059          chanInfo = ChannelTag.array(<span class="string">'AV.ACH.--.EHE'</span>);
+0060          w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds,chanInfo,now-1,now-0.995);
+0061          testCase.verifyNumElements(w,1);
+0062          testCase.verifyInstanceOf(w,<span class="string">'waveform'</span>);
+0063       <span class="keyword">end</span>
+0064       
+0065       <a name="_sub3" href="#_subfunctions" class="code">function testWaveformCalls(testCase)</a>
+0066          data = 1:(10*60*60*2.5);
+0067          st_mat = now-1;
+0068          st_txt = <span class="string">'5/5/2014'</span>;
+0069          et_mat = now-0.98;
+0070          et_txt = <span class="string">'5/5/2004 01:00:00'</span>;
+0071          sta = <span class="string">'XXXX'</span>;
+0072          net = <span class="string">'NW'</span>;
+0073          cha = <span class="string">'BHZ'</span>;
+0074          loc = <span class="string">'00'</span>;
+0075          nslctxt = [net, <span class="string">'.'</span>, sta, <span class="string">'.'</span>, loc, <span class="string">'.'</span>, cha];
+0076          hz = 20;
+0077          unit = <span class="string">'CNT'</span>;
+0078          scnl = <a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(sta,cha,net,loc);
+0079          tag = <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(net,sta,loc,cha);
+0080          ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>;
+0081          <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: default'</span>)
+0082          w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>()
+0083          <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: copy'</span>)
+0084          w2 = w
+0085          <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: sta cha hz st data'</span>)
+0086          w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(sta,       cha,  hz,      st_mat,  data);
+0087          <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: scnl hz st data unit'</span>)
+0088          w(2) = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(scnl,      hz,   st_mat,  data,    unit);
+0089          <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: nscltxt hz st data unit'</span>)
+0090          w(3) = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(nslctxt,   hz,   st_mat,  data,    unit);
+0091          <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: tag hz st data unit'</span>)
+0092          w(4) = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(tag,       hz,   st_mat,  data,    unit);
+0093          <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: scnl hz st data'</span>)
+0094          w(5) = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(scnl,      hz,   st_mat,  data);
+0095          <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: nscltxt hz st data'</span>)
+0096          w(6) = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(nslctxt,   hz,   st_mat,  data);
+0097          <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: tag hz st data'</span>)
+0098          w(7) = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(tag,       hz,   st_mat,  data);
+0099          <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: tag hz st data unit nocombine'</span>)
+0100          w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(tag,       hz,   st_mat,  data,    unit, <span class="string">'nocombine'</span>);
+0101       <span class="keyword">end</span>
+0102       <a name="_sub4" href="#_subfunctions" class="code">function testSetGets(testCase)</a>
+0103          <span class="comment">%% test SET routines</span>
+0104          <span class="comment">%TODO: Update to use TestCase syntax</span>
+0105          <a href="../../GISMO/core/@waveform/private/mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a> = inline(<span class="string">'(n - 719529) * 86400'</span>,<span class="string">'n'</span>);
+0106          set_test = {<span class="string">'station'</span>,<span class="string">'freq'</span>,<span class="string">'channel'</span>,<span class="string">'data'</span>,<span class="string">'units'</span>,<span class="keyword">...</span>
+0107             <span class="string">'start'</span>,<span class="string">'start_epoch'</span>,<span class="string">'data_length'</span>};
+0108          
+0109          set_VALID_vals = {<span class="string">'Bob'</span>,293,<span class="string">'JIM'</span>,(1:10000)',<span class="string">'MyUNIT'</span>,now,<a href="../../GISMO/core/@waveform/private/mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>(now),3};
+0110          
+0111          set_INVALID_vals = {5,<span class="string">'a'</span>,5,ones(5,5),3,<span class="string">'a'</span>,<span class="string">'a'</span>,-1};
+0112          
+0113          w =  testCase.wf;
+0114          results.set = true;
+0115          <span class="keyword">for</span> N=1:numel(set_test)
+0116             <span class="comment">%Make sure that INVALID cases don't slip thorugh</span>
+0117             <span class="keyword">try</span>
+0118                <a href="../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a> (w,set_test{N},set_INVALID_vals);
+0119                setresult.(set_test{N}) = false;
+0120             <span class="keyword">catch</span>
+0121                setresult.(set_test{N}) = true;
+0122             <span class="keyword">end</span>
+0123             
+0124             <span class="comment">%Make sure that corresponding VALID cases work</span>
+0125             setresult.(set_test{N}) = setresult.(set_test{N}) &amp;&amp; <span class="keyword">...</span>
+0126                all(<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(<a href="../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w,set_test{N},set_VALID_vals{N}),set_test{N})<span class="keyword">...</span>
+0127                == set_VALID_vals{N});
+0128             testCase.verifyTrue(setresult.(set_test{N}), set_test{N})
+0129          <span class="keyword">end</span>
+0130       <span class="keyword">end</span>
+0131       
+0132       <a name="_sub5" href="#_subfunctions" class="code">function testBasicMath(testCase)</a>
+0133          <span class="comment">% basic math functions</span>
+0134          <span class="comment">%   'uminus','plus','minus'</span>
+0135          <span class="comment">%   'times','mtimes','rdivide','mrdivide','power'</span>
+0136          w = testCase.wf;
+0137          D = testCase.Dt(:);
+0138          <span class="comment">% identities</span>
+0139          testCase.verifyEqual(w + 0, w);
+0140          testCase.verifyEqual(w ./ 1, w);
+0141          testCase.verifyEqual(w - 0, w);
+0142          testCase.verifyEqual(w * 1, w);
+0143          testCase.verifyEqual(w .* 1, w);
+0144          testCase.verifyEqual(w .^ 1, w);
+0145          
+0146          <span class="comment">% comparing operations</span>
+0147          testCase.verifyEqual(w + w, w * 2);    <span class="comment">% plus, times, vector addition</span>
+0148          testCase.verifyEqual(w - w, w .* 0);    <span class="comment">% minus, mtimes, vector subtraction</span>
+0149          testCase.verifyEqual(w ./ 2, w .* 0.5); <span class="comment">% rdivide, times</span>
+0150          testCase.verifyEqual(w .^ 2, w .* w);  <span class="comment">% power, vector multiplication</span>
+0151          testCase.verifyEqual(D .* D, <a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w .* D));
+0152          testCase.verifyEqual(w .* 5, w * 5);   <span class="comment">% mtimes, times</span>
+0153          testCase.verifyEqual(w + -w, w .* 0);  <span class="comment">% uminus</span>
+0154          
+0155          <span class="comment">% communicative</span>
+0156          testCase.verifyEqual(w + 100, 100 + w);
+0157          testCase.verifyEqual(w .* 5, 5 .* w);
+0158          
+0159          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w + 5 .* w), D + 5 .* D);
+0160          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>((7 .* w) + (w ./ 5) - w.^3), (D .* 7)+(D ./ 5) - D.^3);
+0161          
+0162          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w / 2), (D / 2));
+0163       <span class="keyword">end</span>
+0164       
+0165       <a name="_sub6" href="#_subfunctions" class="code">function testAdvancedMath(testCase)</a>
+0166          <span class="comment">% sign, abs, diff, integrate</span>
+0167          D = testCase.Dt(:);
+0168          w = testCase.wf;
+0169          
+0170          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>(w)),  <a href="../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>(D));
+0171          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(w),           <a href="../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>(w) .* w);
+0172          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(w)),   <a href="../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(D));
+0173       <span class="keyword">end</span>
+0174       
+0175       <a name="_sub7" href="#_subfunctions" class="code">function testDiff(testCase)</a>
+0176          dW = <a href="../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>(testCase.wf);
+0177          dd = <a href="../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>(testCase.Dt(:)) * <a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(testCase.wf,<span class="string">'freq'</span>); <span class="comment">%scaled!</span>
+0178          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(dW), dd,  <span class="string">'differentiation values'</span>);
+0179          
+0180          expectedUnits = [<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(testCase.wf,<span class="string">'units'</span>), <span class="string">' / sec'</span>];
+0181          testCase.verifyEqual(<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(dW,<span class="string">'units'</span>), expectedUnits, <span class="string">'unit check'</span>);
+0182       <span class="keyword">end</span>
+0183       
+0184       <a name="_sub8" href="#_subfunctions" class="code">function testIntegrate(testCase)</a>
+0185          d = sin(1:0.01:1000) .* 100;
+0186          d = d(:) + randn(size(d(:)));
+0187          w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(<span class="string">'NW.STA.LO.CHA'</span>,20,fix(now),d,<span class="string">'Counts'</span>);
+0188          testCase.verifyEqual(cumsum(d) ./ <a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'freq'</span>), <a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@correlation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>(w)), <span class="string">'default (CUMSUM) integration'</span>);
+0189          testCase.verifyEqual(<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(<a href="../../GISMO/core/@correlation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>(w),<span class="string">'units'</span>), <span class="string">'Counts * sec'</span>);
+0190          testCase.verifyEqual(cumsum(d) ./ <a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'freq'</span>), <a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@correlation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>(w, <span class="string">'cumsum'</span>)), <span class="string">'CUMSUM integration'</span>);
+0191          testCase.verifyEqual(cumtrapz(d) ./ <a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'freq'</span>), <a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@correlation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>(w,<span class="string">'trapz'</span>)), <span class="string">'TRAPZ integration'</span>);
+0192          <span class="comment">%}</span>
+0193       <span class="keyword">end</span>
+0194       
+0195       <a name="_sub9" href="#_subfunctions" class="code">function testStatisticalMath(testCase)</a>
+0196          <span class="comment">% 'min','max','mean', 'median','std','var'</span>
+0197          D = testCase.Dt(:);
+0198          w = testCase.wf;
+0199          
+0200          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(D), <a href="../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(w));
+0201          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(D), <a href="../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(w));
+0202          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(D), <a href="../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(w));
+0203          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>(D), <a href="../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>(w));
+0204          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>(D), <a href="../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>(w));
+0205          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/var.html" class="code" title="function Y = var(w,flag)">var</a>(D), <a href="../../GISMO/core/@waveform/var.html" class="code" title="function Y = var(w,flag)">var</a>(w));
+0206       <span class="keyword">end</span>
+0207       
+0208       <a name="_sub10" href="#_subfunctions" class="code">function testTransforms(testCase)</a>
+0209          <span class="comment">% transform functions</span>
+0210          <span class="comment">% 'rms','hilbert','detrend','demean','taper','stack','fix_data_length'</span>
+0211          
+0212          <span class="comment">% todo: rms</span>
+0213          <span class="comment">% WAVEFORM/RMS</span>
+0214          w = testCase.wf;
+0215          D = testCase.Dt(:);
+0216          
+0217          <span class="comment">% define tolerance</span>
+0218          tol = 1e-10;
+0219          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/rms.html" class="code" title="function RMS = rms(W, varargin)">rms</a>(w), sqrt((sum(D .^2) / (numel(D)-1))));
+0220          <span class="comment">% WAVEFORM/DETREND</span>
+0221          
+0222          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>(w)), <a href="../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>(D));
+0223          
+0224          <span class="comment">% WAVEFORM/DEMEAN</span>
+0225          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@correlation/demean.html" class="code" title="function c = demean(c,varargin);">demean</a>(w)), (D - <a href="../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(D)));
+0226          
+0227          <span class="comment">% WAVEFORM/HILBERT</span>
+0228          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@correlation/hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>(w)), <a href="../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(<a href="../../GISMO/core/@correlation/hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>(D)));
+0229          
+0230          <span class="comment">% WAVEFORM/STACK</span>
+0231          <span class="comment">%TODO:waveform/stack ***** NOT IMPLEMENTED ****</span>
+0232          
+0233          <span class="comment">% WAVEFORM/FIX_DATA_LENGTH</span>
+0234          <span class="comment">% TOO: doublecheck the replacement values</span>
+0235          testCase.verifyEqual(<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(<a href="../../GISMO/core/@waveform/fix_data_length.html" class="code" title="function w = fix_data_length(w, maxlen)">fix_data_length</a>(w, 5001),<span class="string">'data_length'</span>), 5001);
+0236          testCase.verifyEqual(<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(<a href="../../GISMO/core/@waveform/fix_data_length.html" class="code" title="function w = fix_data_length(w, maxlen)">fix_data_length</a>(w, 301),<span class="string">'data_length'</span>), 301);
+0237          twoWs = <a href="../../GISMO/core/@waveform/fix_data_length.html" class="code" title="function w = fix_data_length(w, maxlen)">fix_data_length</a>([w,<a href="../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w,<span class="string">'data'</span>,2:100)]);
+0238          testCase.verifyEqual(<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(twoWs,<span class="string">'data_length'</span>), <a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>([w w],<span class="string">'data_length'</span>));
+0239       <span class="keyword">end</span>
+0240       
+0241       <a name="_sub11" href="#_subfunctions" class="code">function testSacLoad(testCase)</a>
+0242          <span class="comment">% station: BYR, chan: BHZ_01, 2000/7/14 13:40 ~10 seconds</span>
+0243          fileName = fullfile(testCase.dataPath,<span class="string">'test_data'</span>,<span class="string">'example_sacfile.sac'</span>);
+0244          dsac = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'sac'</span>,fileName);
+0245          chanTag(1) = <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(<span class="string">'...'</span>);
+0246          chanTag(2) = <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(<span class="string">'.BYR..BHZ_01'</span>)
+0247          <span class="comment">%scnlSac(1) = scnlobject('*','*','*','*');</span>
+0248          <span class="comment">%scnlSac(2) = scnlobject('BYR','BHZ_01','*','*');</span>
+0249          
+0250          sacwave = <a href="../../GISMO/core/@waveform/loadsac.html" class="code" title="function w = loadsac(w, filename)">loadsac</a>(<a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>,fileName);
+0251          testCase.verifyEqual(<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(sacwave,<span class="string">'data_length'</span>), 500);
+0252          testCase.verifyEqual(<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(sacwave,<span class="string">'NZYEAR'</span>), 2000);
+0253          testCase.verifyEqual(<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(sacwave,<span class="string">'start'</span>), datenum(<span class="string">'2000-07-14 13:40:00.006'</span>));
+0254          
+0255          <span class="comment">%sacwave = waveform(dsac,scnlSac(1),'7/14/2000','7/15/2000');</span>
+0256          sacwave = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(dsac,chanTag(1),<span class="string">'7/14/2000'</span>,<span class="string">'7/15/2000'</span>);
+0257          testCase.verifyEqual(<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(sacwave,<span class="string">'data_length'</span>), 500);
+0258          testCase.verifyEqual(<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(sacwave,<span class="string">'NZYEAR'</span>), 2000);
+0259          testCase.verifyEqual(<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(sacwave,<span class="string">'start'</span>), datenum(<span class="string">'2000-07-14 13:40:00.006'</span>));
+0260       <span class="keyword">end</span>
+0261       
+0262       <a name="_sub12" href="#_subfunctions" class="code">function testPlot(testCase)</a>
+0263          A = testCase.wf;
+0264          B = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(<span class="string">'SY.SIN..BHZ'</span>,20,fix(now),sin(1:.001:100),<span class="string">'Counts'</span>);
+0265          F = figure;
+0266          <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(A);
+0267          <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>([A B]);
+0268          <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>([A B]',<span class="string">'g.'</span>);
+0269          <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>([A B B.*2 B.*7 <a href="../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(B,<span class="string">'start'</span>,<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(B,<span class="string">'start'</span>)+datenum(0,0,0,0,0,1))],<span class="keyword">...</span>
+0270             <span class="string">'xunit'</span>,<span class="string">'date'</span>,<span class="string">'markersize'</span>,3);
+0271          <a href="../../GISMO/core/@waveform/legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>([A, B]);
+0272          plotdetails = <a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca);
+0273          delete(F)
+0274       <span class="keyword">end</span>
+0275       
+0276       <a name="_sub13" href="#_subfunctions" class="code">function testUserDefinedFields(testCase)</a>
+0277          <span class="comment">% User Defined Fields</span>
+0278          w = testCase.wf;
+0279          w = <a href="../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'ABCD'</span>,<span class="string">'hello'</span>);
+0280          testCase.verifyEqual(<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'abCD'</span>),<span class="string">'hello'</span>);
+0281          w = <a href="../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w,<span class="string">'ABcD'</span>,5);
+0282          testCase.verifyEqual(<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'AbCD'</span>), 5);
+0283          
+0284          <span class="comment">%make sure field was deleted</span>
+0285          w = <a href="../../GISMO/core/@waveform/delfield.html" class="code" title="function w = delfield(w,field_to_delete, ignoredvalue)">delfield</a>(w,<span class="string">'abcd'</span>);
+0286          testCase.verifyFalse(<a href="../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(<span class="string">'ABCD'</span>,<a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'misc_fields'</span>)));
+0287          testCase.verifyError(@() <a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'ABCD'</span>),<span class="string">'Waveform:get:unrecognizedProperty'</span>);
+0288       <span class="keyword">end</span>
+0289       
+0290       <a name="_sub14" href="#_subfunctions" class="code">function testHistory(testCase)</a>
+0291          <span class="comment">%addhistory, clearhistory, clearhistory</span>
+0292          <span class="comment">% test ADDHISTORY</span>
+0293          w = testCase.wf;
+0294          w = <a href="../../GISMO/core/@waveform/addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>(w,<span class="string">'StringTest'</span>);
+0295          w = <a href="../../GISMO/core/@waveform/addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>(w,<span class="string">'[%s]&lt;%02d&gt;'</span>,<span class="string">'ABCDEFG'</span>,3);
+0296          w = <a href="../../GISMO/core/@waveform/addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>(w,{3});
+0297          fullhist = <a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'history'</span>);
+0298          
+0299          testCase.verifyEqual(numel(fullhist(:,1)), 4);
+0300          testCase.verifyEqual(numel(fullhist(1,:)), 2);
+0301          testCase.verifyEqual(fullhist{1,1}, <span class="string">'created'</span>);
+0302          testCase.verifyEqual(fullhist{2,1},<span class="string">'StringTest'</span>);
+0303          testCase.verifyEqual(fullhist{3,1}, <span class="string">'[ABCDEFG]&lt;03&gt;'</span>);
+0304          testCase.verifyEqual(fullhist{4,1}{1}, 3);
+0305          
+0306          [~, dates] = <a href="../../GISMO/core/@waveform/history.html" class="code" title="function [actions dates] = history(w)">history</a>(w);
+0307          
+0308          <span class="comment">%test HISTORY</span>
+0309          testCase.verifyEqual(datenum(datestr([fullhist{:,2}])), datenum(dates));
+0310          
+0311          <span class="comment">%test CLEARHISTORY</span>
+0312          Z = <a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(<a href="../../GISMO/core/@waveform/clearhistory.html" class="code" title="function w = clearhistory(w)">clearhistory</a>(w),<span class="string">'History'</span>);
+0313          n = now;
+0314          onesecond = datenum(0,0,0,0,0,1);
+0315          testCase.verifyTrue(<a href="../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(Z{2} - n) &lt; onesecond, <span class="string">'last event expected within past second'</span>);
+0316          testCase.verifyEqual(size(Z), [1 2])
+0317          testCase.verifyTrue(ischar(Z{1}));
+0318          testCase.verifyTrue(isa(Z{2},<span class="string">'double'</span>));
+0319          testCase.verifyEqual(Z{1},<span class="string">'Cleared History'</span>);
+0320          
+0321          <span class="comment">%results.clearhistory = isempty(Z);</span>
+0322          
+0323       <span class="keyword">end</span>
+0324       
+0325       <a name="_sub15" href="#_subfunctions" class="code">function testIsEmpty(testCase)</a>
+0326          w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0327          testCase.verifyTrue(<a href="../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(w), <span class="string">'generic waveform should be empty'</span>);
+0328          w = <a href="../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w,<span class="string">'data'</span>,1);
+0329          testCase.verifyFalse(<a href="../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(w),<span class="string">'waveform with one byte should not be empty'</span>);
+0330          w = <a href="../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w,<span class="string">'data'</span>,[]);
+0331          testCase.verifyTrue(<a href="../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(w), <span class="string">'data set to [] should be empty'</span>);
+0332       <span class="keyword">end</span>
+0333       
+0334       <a name="_sub16" href="#_subfunctions" class="code">function testDouble(testCase)</a>
+0335          A = testCase.wf;
+0336          Ad = testCase.Dt(:);
+0337          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(A), Ad);
+0338          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>([A A]), [Ad Ad]);
+0339       <span class="keyword">end</span>
+0340       
+0341       <a name="_sub17" href="#_subfunctions" class="code">function testLoadWinston(testCase)</a>
+0342          import matlab.unittest.constraints.HasSize;
+0343          import matlab.unittest.constraints.IsEqualTo;
+0344          import matlab.unittest.constraints.IsGreaterThan;
+0345          
+0346          testCase.assumeThat(<span class="keyword">...</span>
+0347             exist(<span class="string">'gov.usgs.winston.server.WWSClient'</span>, <span class="string">'class'</span>),IsEqualTo(8), <span class="keyword">...</span>
+0348             <span class="string">'Winston does not seem to be installed'</span>);
+0349          ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'winston'</span>,<span class="string">'pubavo1.wr.usgs.gov'</span>,16022);
+0350          ch = <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(<span class="string">'AV.ACH.--.EHZ'</span>);
+0351          st = now -2;
+0352          ed = st - datenum(0,0,0,0,1,0); <span class="comment">% one minute later</span>
+0353          w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds, ch, st, ed);
+0354          testCase.verifyThat(w, HasSize([1 1]));
+0355          testCase.verifyThat(~<a href="../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w)));
+0356          n = <a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(1),<span class="string">'data_length'</span>);
+0357          testCase.verifyThat(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w(1)), HasSize([n, 1])); <span class="comment">%data is in cols</span>
+0358       <span class="keyword">end</span>
+0359       
+0360       <a name="_sub18" href="#_subfunctions" class="code">function testLoadIRIS(testCase)</a>
+0361          chanInfo = <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(<span class="string">'IU.ANMO.00.BHZ'</span>);
+0362          ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'irisdmcws'</span>);
+0363          st = now - [5 1 -3]; <span class="comment">%5 days ago, 1 day ago, 3 days in the future</span>
+0364          et = st + datenum(0,0,0,0,1,0);
+0365          w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds,chanInfo,st,et);
+0366          testCase.verifyThat(w, HasSize([1 2]));
+0367          testCase.verifyThat(~<a href="../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w)));
+0368          n = <a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(1),<span class="string">'data_length'</span>);
+0369          testCase.verifyThat(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w(1)), HasSize([n, 1])); <span class="comment">%data is in cols</span>
+0370       <span class="keyword">end</span>
+0371       
+0372       <a name="_sub19" href="#_subfunctions" class="code">function testLoadobj(testCase)</a>
+0373          <a href="#_sub21" class="code" title="subfunction load_v0()">load_v0</a>()
+0374          <a href="#_sub22" class="code" title="subfunction load_v1_0()">load_v1_0</a>()
+0375          <a href="#_sub23" class="code" title="subfunction load_v1_1()">load_v1_1</a>()
+0376          <a href="#_sub24" class="code" title="subfunction load_v1_2()">load_v1_2</a>()
+0377          
+0378          <a name="_sub20" href="#_subfunctions" class="code">function load_v0()</a>
+0379             fileName = fullfile(testCase.dataPath,<span class="string">'test_data'</span>,<span class="string">'v0_example_waveforms.mat'</span>);
+0380             testCase.verifyEqual(exist(fileName,<span class="string">'file'</span>), 2, <span class="string">'test data for v0 does not exist'</span>);
+0381             dummy = <a href="../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>(fileName);
+0382             testCase.verifyTrue(isa(dummy.w,<span class="string">'waveform'</span>), <span class="string">'converting single v0 waveform failed'</span>);
+0383             testCase.verifyTrue(isa(dummy.ww,<span class="string">'waveform'</span>), <span class="string">'converting multiple v0 waveforms failed'</span>);
+0384             testCase.verifyEqual(numel(dummy.ww),10);
+0385          <span class="keyword">end</span>
+0386          <a name="_sub21" href="#_subfunctions" class="code">function load_v1_0()</a>
+0387             <span class="comment">% test file has two variables w &amp; ww</span>
+0388             fileName = fullfile(testCase.dataPath,<span class="string">'test_data'</span>,<span class="string">'v1.0_example_waveforms.mat'</span>);
+0389             testCase.verifyEqual(exist(fileName,<span class="string">'file'</span>), 2, <span class="string">'test data for v1.0 does not exist'</span>);
+0390             dummy = <a href="../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>(fileName);
+0391             testCase.verifyTrue(isa(dummy.w,<span class="string">'waveform'</span>), <span class="string">'converting single v1.0 waveform failed'</span>);
+0392             testCase.verifyTrue(isa(dummy.ww,<span class="string">'waveform'</span>), <span class="string">'converting multiple v1.0 waveforms failed'</span>);
+0393             testCase.verifyEqual(numel(dummy.ww),10);
+0394          <span class="keyword">end</span>
+0395          <a name="_sub22" href="#_subfunctions" class="code">function load_v1_1()</a>
+0396             fileName = fullfile(testCase.dataPath,<span class="string">'test_data'</span>,<span class="string">'v1.1_example_waveforms.mat'</span>);
+0397             testCase.verifyEqual(exist(fileName,<span class="string">'file'</span>),2,<span class="string">'test data for v1.1 does not exist'</span>);
+0398             dummy = <a href="../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>(fileName);
+0399             testCase.verifyTrue(isa(dummy.w,<span class="string">'waveform'</span>), <span class="string">'converting multiple v1.1 waveform failed'</span>);
+0400             testCase.verifyEqual(numel(dummy.w),100);
+0401          <span class="keyword">end</span>
+0402          <a name="_sub23" href="#_subfunctions" class="code">function load_v1_2()</a>
+0403             fileName = fullfile(testCase.dataPath,<span class="string">'test_data'</span>,<span class="string">'v1.2_example_waveforms.mat'</span>);
+0404             testCase.verifyEqual(exist(fileName,<span class="string">'file'</span>),2,<span class="string">'test data for v1.2 does not exist'</span>);
+0405             dummy = <a href="../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>(fileName);
+0406             testCase.verifyTrue(isa(dummy.w,<span class="string">'waveform'</span>), <span class="string">'converting single v1.2 waveform failed'</span>);
+0407             testCase.verifyTrue(isa(dummy.ww,<span class="string">'waveform'</span>), <span class="string">'converting multiple v1.2 waveforms failed'</span>);
+0408             testCase.verifyEqual(numel(dummy.ww),2);
+0409          <span class="keyword">end</span>
+0410       <span class="keyword">end</span>
+0411       
+0412       <a name="_sub24" href="#_subfunctions" class="code">function testSave(testCase)</a>
+0413          <span class="comment">% try saving and loading current version</span>
+0414          tmp_name = [tempname , <span class="string">'.mat'</span>];
+0415          
+0416          wtesttemp = testCase.wf;
+0417          <a href="../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>(tmp_name,<span class="string">'wtesttemp'</span>)
+0418          
+0419          clear wtesttemp
+0420          dummy = <a href="../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>(tmp_name);
+0421          results.loadobj_current = true;
+0422          delete(tmp_name); <span class="comment">%clean up</span>
+0423       <span class="keyword">end</span>
+0424       
+0425       <a name="_sub25" href="#_subfunctions" class="code">function testTaper(testCase)</a>
+0426          A = testCase.wf;
+0427          <span class="comment">% Test Functions: ensure they don't error &amp; output size is correct</span>
+0428          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@correlation/taper.html" class="code" title="function c = taper(c,varargin)">taper</a>(A)), <a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@correlation/taper.html" class="code" title="function c = taper(c,varargin)">taper</a>(A,.2)));
+0429          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@correlation/taper.html" class="code" title="function c = taper(c,varargin)">taper</a>(A,.2)), <a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@correlation/taper.html" class="code" title="function c = taper(c,varargin)">taper</a>(A,.2,<span class="string">'cosine'</span>)));
+0430          assert(any(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@correlation/taper.html" class="code" title="function c = taper(c,varargin)">taper</a>(A)) ~= <a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@correlation/taper.html" class="code" title="function c = taper(c,varargin)">taper</a>(A,.5))));
+0431       <span class="keyword">end</span>
+0432       
+0433       <a name="_sub26" href="#_subfunctions" class="code">function testClip(testCase)</a>
+0434          A = testCase.wf;
+0435          Ad = testCase.Dt;
+0436          
+0437          clippedAd = Ad(:);
+0438          clippedAd(Ad&gt;.3) = .3;
+0439          clippedAd(Ad&lt;-.2) = -.2;
+0440          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@waveform/clip.html" class="code" title="function w = clip(w, vals)">clip</a>(A,[-.2,.3])), clippedAd);
+0441       <span class="keyword">end</span>
+0442       
+0443       <a name="_sub27" href="#_subfunctions" class="code">function testStack(testCase)</a>
+0444          A = testCase.wf;
+0445          Ad = testCase.Dt;
+0446          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../GISMO/core/@correlation/stack.html" class="code" title="function c = stack(c,varargin)">stack</a>([A, A, A, A])), Ad(:) .* 4);
+0447       <span class="keyword">end</span>
+0448       
+0449       <span class="comment">%{</span>
+0450 <a name="_sub28" href="#_subfunctions" class="code">function testDisp(testCase)</a>
+0451          
+0452          A = testCase.wf;
+0453          <span class="comment">% try display functions</span>
+0454          <span class="keyword">try</span>
+0455             <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(A); <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([A A]); <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([A A; A A; A A]);
+0456             results.disp = true;
+0457          <span class="keyword">catch</span> exception
+0458             results.disp = false;
+0459             <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(exception);
+0460          <span class="keyword">end</span>
+0461          <span class="keyword">try</span>
+0462             <a href="../../GISMO/core/@correlation/display.html" class="code" title="function display(c)">display</a>(A); <a href="../../GISMO/core/@correlation/display.html" class="code" title="function display(c)">display</a>([A A]); <a href="../../GISMO/core/@correlation/display.html" class="code" title="function display(c)">display</a>([A A; A A; A A]);
+0463             results.display = true;
+0464          <span class="keyword">catch</span> exception
+0465             results.display = false;
+0466             <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(exception)
+0467          <span class="keyword">end</span>
+0468       <span class="keyword">end</span>
+0469       <span class="comment">%}</span>
+0470       
+0471       <a name="_sub29" href="#_subfunctions" class="code">function testCorrelationCookbook(testCase)</a>
+0472          <span class="comment">% probably doesn't belong in this class</span>
+0473          <span class="comment">%% try the correlation cookbook</span>
+0474          <span class="comment">% assumes we are in GISMO/contributed/test_scripts/waveform and that</span>
+0475          <span class="comment">% correlation_cookbook is in GISMO/contributed/correlation_cookbook/</span>
+0476          <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'skipping testCorrelationCookbook'</span>)
+0477          <span class="keyword">return</span>
+0478          ppp = pwd;
+0479          [dataPathCorrelation,~,~] = fileparts(<a href="../../GISMO/core/+admin/which.html" class="code" title="function which(sourceLocation)">which</a>(<span class="string">'correlation'</span>));
+0480          cd(dataPathCorrelation)
+0481          <span class="keyword">if</span> exist(<span class="string">'correlation_cookbook.m'</span>,<span class="string">'file'</span>)
+0482             results.correlation_cookbook = true;
+0483             oldchildren = <a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(0,<span class="string">'children'</span>);
+0484             correlation_cookbook;
+0485             newchildren = <a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(0,<span class="string">'children'</span>);
+0486             todelete = newchildren(~<a href="../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(newchildren,oldchildren));
+0487             delete(todelete); <span class="comment">%clean up after it.</span>
+0488          <span class="keyword">end</span>
+0489          cd(ppp);
+0490          
+0491          <span class="comment">% stress test</span>
+0492          w = <a href="../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'waveform'</span>); <span class="comment">%c is from the correlation_cookbook.</span>
+0493          w = repmat(w,20,2);
+0494          dummy = w .* 3;
+0495          todiv = rand(size(w));
+0496          <span class="keyword">try</span>
+0497             w ./ todiv;
+0498          <span class="keyword">catch</span>
+0499             <span class="keyword">for</span> z=1:numel(w);
+0500                dummy(z) = w(z) ./ todiv(z);
+0501             <span class="keyword">end</span>
+0502          <span class="keyword">end</span>
+0503          w + 2;
+0504          <a href="../../GISMO/core/@correlation/hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>(w);
+0505       <span class="keyword">end</span>
+0506    <span class="keyword">end</span>
+0507 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

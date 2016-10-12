@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of bin_irregular</title>
+  <meta name="keywords" content="bin_irregular">
+  <meta name="description" content="BIN_IRREGULAR bin an irregularly-sampled timeseries (like earthquake origin times).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">+Catalog</a> &gt; <a href="index.html">+binning</a> &gt; bin_irregular.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+Catalog/+binning&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>bin_irregular
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>BIN_IRREGULAR bin an irregularly-sampled timeseries (like earthquake origin times).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [dnum_bin, counts_per_bin, sum_per_bin, smallest_per_bin, biggest_per_bin, median_per_bin, std_per_bin, median_time_interval] = bin_irregular(dnum, data, binsize, snum, enum, stepsize) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> BIN_IRREGULAR bin an irregularly-sampled timeseries (like earthquake origin times).
+
+    Usage:
+      [dnum_bin, counts_per_bin, sum_per_bin, smallest_per_bin, biggest_per_bin, median_per_bin, std_per_bin, median_time_interval] = bin_irregular(dnum, data, binsize, snum, enum, [stepsize])
+
+    INPUTS:
+      dnum            - irregular spaced date vector in datenum format
+      data            - data values corresponding to dnum samples
+      binsize         - binsize (in days) to use for output series
+      snum            - start datenum (first centre used for output data)
+      enum            - end datenum (last centre used for output data)
+      stepsize        - (optional) Normally bins do not overlap. But if stepsize is set to a value smaller than binsize, bins will overlap.
+
+    OUTPUTS:
+      dnum_bin            - regular space date vector (centres of bins)
+      counts_per_bin      - number of values per bin
+      sum_per_bin         - sum of all values in each bin
+      smallest_per_bin     - smallest data value in each bin
+      biggest_per_bin     - biggest data value in each bin
+      median_per_bin      - median value in each bin
+      std_per_bin         - standard deviation of all values in each bin
+      median_time_interval - median time interval between values in each bin
+
+    See also:</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>	MEDIAN middlemost value of waveform's sorted data.</li><li><a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>	STD Standard deviation of a waveform</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [dnum_bin, counts_per_bin, sum_per_bin, smallest_per_bin, biggest_per_bin, median_per_bin, std_per_bin, median_time_interval] = bin_irregular(dnum, data, binsize, snum, enum, stepsize)</a>
+0002 <span class="comment">% BIN_IRREGULAR bin an irregularly-sampled timeseries (like earthquake origin times).</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    Usage:</span>
+0005 <span class="comment">%      [dnum_bin, counts_per_bin, sum_per_bin, smallest_per_bin, biggest_per_bin, median_per_bin, std_per_bin, median_time_interval] = bin_irregular(dnum, data, binsize, snum, enum, [stepsize])</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    INPUTS:</span>
+0008 <span class="comment">%      dnum            - irregular spaced date vector in datenum format</span>
+0009 <span class="comment">%      data            - data values corresponding to dnum samples</span>
+0010 <span class="comment">%      binsize         - binsize (in days) to use for output series</span>
+0011 <span class="comment">%      snum            - start datenum (first centre used for output data)</span>
+0012 <span class="comment">%      enum            - end datenum (last centre used for output data)</span>
+0013 <span class="comment">%      stepsize        - (optional) Normally bins do not overlap. But if stepsize is set to a value smaller than binsize, bins will overlap.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%    OUTPUTS:</span>
+0016 <span class="comment">%      dnum_bin            - regular space date vector (centres of bins)</span>
+0017 <span class="comment">%      counts_per_bin      - number of values per bin</span>
+0018 <span class="comment">%      sum_per_bin         - sum of all values in each bin</span>
+0019 <span class="comment">%      smallest_per_bin     - smallest data value in each bin</span>
+0020 <span class="comment">%      biggest_per_bin     - biggest data value in each bin</span>
+0021 <span class="comment">%      median_per_bin      - median value in each bin</span>
+0022 <span class="comment">%      std_per_bin         - standard deviation of all values in each bin</span>
+0023 <span class="comment">%      median_time_interval - median time interval between values in each bin</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%    See also:</span>
+0026 
+0027 <span class="comment">% AUTHOR: Glenn Thompson</span>
+0028 <span class="comment">% $Date$</span>
+0029 <span class="comment">% $Revision$</span>
+0030 l1=length(dnum);
+0031 l2=length(data);
+0032 dnum_bin = [];
+0033 counts_per_bin = [];
+0034 sum_per_bin = [];
+0035 smallest_per_bin = [];
+0036 biggest_per_bin = [];
+0037 median_per_bin = [];
+0038 std_per_bin = [];
+0039 median_time_interval = [];
+0040 
+0041 <span class="keyword">if</span> (l1==l2) 
+0042     dnum_bin = snum+binsize/2 : stepsize : enum-binsize/2; <span class="comment">% centres of the bins</span>
+0043     <span class="keyword">for</span> c=1:length(dnum_bin)
+0044     binstart = dnum_bin(c) - binsize/2; <span class="comment">% start of this bin</span>
+0045     binend = dnum_bin(c) + binsize/2;   <span class="comment">% end of this bin</span>
+0046     i = <a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(dnum &gt;= binstart &amp; dnum &lt; binend);
+0047     <span class="keyword">if</span> length(i)&gt;0
+0048         d = data(i);
+0049         thisdnum = dnum(i);
+0050         counts_per_bin(c) = length(d);
+0051         sum_per_bin(c)=nansum(d);
+0052         median_per_bin(c)=nanmedian(d);
+0053         std_per_bin(c) = <a href="../../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>(d);
+0054             smallest_per_bin(c)=<a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(d);
+0055             biggest_per_bin(c)=<a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(d);
+0056         median_time_interval(c)=<a href="../../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>(thisdnum(2:end)-thisdnum(1:end-1));
+0057     <span class="keyword">else</span>
+0058         counts_per_bin(c) = 0;
+0059         sum_per_bin(c) = 0;
+0060         std_per_bin(c) = 0;
+0061         median_per_bin(c) = NaN;
+0062         smallest_per_bin(c)=NaN;
+0063         biggest_per_bin(c)=NaN;
+0064     <span class="keyword">end</span>
+0065     <span class="keyword">end</span>
+0066 <span class="keyword">else</span>
+0067     <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'Could not bin - vector lengths dont match'</span>);
+0068 <span class="keyword">end</span>
+0069</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of align</title>
+  <meta name="keywords" content="align">
+  <meta name="description" content="ALIGN resamples a waveform at over a specified interval">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; align.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>align
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>ALIGN resamples a waveform at over a specified interval</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function w = align(w,alignTime, newFrequency, method) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">ALIGN resamples a waveform at over a specified interval
+   w = align(waveform, alignTime, newFrequency)
+   w = align(waveform, alignTime, newFrequency, method)
+
+   Input Arguments
+       WAVEFORM: waveform object       N-dimensional
+       ALIGNTIME: either a single matlab time or a series of times the
+       same shape as the input WAVEFORM matrix.
+       NEWFREQUENCY: the frequency (Samples per Second) of the newly aligned
+          waveforms
+       METHOD: Any of the methods from function INTERP
+          If omitted, then the DEFAULT IS 'pchip'
+
+   Output
+       The output waveform has the new frequency newFrequency and a
+       starttime calculated by the specified method, using matlab's
+       INTERP1 function.
+
+
+   METHODOLOGY
+     The alignTime is projected forward or backward in time at the
+     specified sample interval until it approaches the original waveform's
+     start time.  The rest of the waveform is then interpolated at the
+     sample frequency.
+
+     Methodology Example.
+         A waveform starts on 1/1/2008 12:00, with sample freq of 10
+         samples/sec, and has data covering 10 minutes  (6000 samples).
+         The resampled data is requested for time 1/1/2008 12:05:00.03,
+         also at 10 samples/sec.
+         The resulting data will start at 1/1/2008 12:00:00.3, and have
+         5999 samples, with the last sample occurring at 12:09:59.830.
+
+   Examples of usefulness?  Particle motions, coordinate transformations.
+   If used for particle motions, consider MatLab's plotmatrix command.
+
+   example:
+       scnl = sclnobject('KDAK',{'BHZ','BHN','BHE'}); %grab all 3 channels
+       % for each component, grab winston data on Kurile Earthquake
+       w = waveform(mydatasource,scnl,'1/13/2007 04:20:00',...
+         '1/13/2007 04:30:00');
+       w = align(w,'1/37/2007 4:22:00', get(w(1),'freq'));
+
+
+ See also INTERP1, PLOTMATRIX</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>	ADDHISTORY function in charge of adding history to a waveform</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/align.html" class="code" title="function c = align(c,varargin)">align</a>	c = ALIGN(c)</li><li><a href="../../../GISMO/core/@correlation/correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="../../../GISMO/core/@correlation/minus.html" class="code" title="function c = minus(c,varargin)">minus</a>	C = MINUS(C,I)</li><li><a href="../../../GISMO/core/@correlation/stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li><li><a href="../../../GISMO/core/@threecomp/align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>	ALIGN Align and trim traces in threecomp object.</li><li><a href="../../../GISMO/core/@threecomp/threecomp.html" class="code" title="">threecomp</a>	THREECOMP Object for three component waveform data</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/align.html" class="code" title="function c = align(c, alignfreq)">align</a>	align   resample traces so that a sample falls exactly on trigger time.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/minus.html" class="code" title="function c = minus(c,I)">minus</a>	C = MINUS(C,I)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/stack.html" class="code" title="function c = stack(c,index)">stack</a>	c = STACK(c)</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function w = noteRealignment(w, startt, freq)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = align(w,alignTime, newFrequency, method)</a>
+0002    <span class="comment">%ALIGN resamples a waveform at over a specified interval</span>
+0003    <span class="comment">%   w = align(waveform, alignTime, newFrequency)</span>
+0004    <span class="comment">%   w = align(waveform, alignTime, newFrequency, method)</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">%   Input Arguments</span>
+0007    <span class="comment">%       WAVEFORM: waveform object       N-dimensional</span>
+0008    <span class="comment">%       ALIGNTIME: either a single matlab time or a series of times the</span>
+0009    <span class="comment">%       same shape as the input WAVEFORM matrix.</span>
+0010    <span class="comment">%       NEWFREQUENCY: the frequency (Samples per Second) of the newly aligned</span>
+0011    <span class="comment">%          waveforms</span>
+0012    <span class="comment">%       METHOD: Any of the methods from function INTERP</span>
+0013    <span class="comment">%          If omitted, then the DEFAULT IS 'pchip'</span>
+0014    <span class="comment">%</span>
+0015    <span class="comment">%   Output</span>
+0016    <span class="comment">%       The output waveform has the new frequency newFrequency and a</span>
+0017    <span class="comment">%       starttime calculated by the specified method, using matlab's</span>
+0018    <span class="comment">%       INTERP1 function.</span>
+0019    <span class="comment">%</span>
+0020    <span class="comment">%</span>
+0021    <span class="comment">%   METHODOLOGY</span>
+0022    <span class="comment">%     The alignTime is projected forward or backward in time at the</span>
+0023    <span class="comment">%     specified sample interval until it approaches the original waveform's</span>
+0024    <span class="comment">%     start time.  The rest of the waveform is then interpolated at the</span>
+0025    <span class="comment">%     sample frequency.</span>
+0026    <span class="comment">%</span>
+0027    <span class="comment">%     Methodology Example.</span>
+0028    <span class="comment">%         A waveform starts on 1/1/2008 12:00, with sample freq of 10</span>
+0029    <span class="comment">%         samples/sec, and has data covering 10 minutes  (6000 samples).</span>
+0030    <span class="comment">%         The resampled data is requested for time 1/1/2008 12:05:00.03,</span>
+0031    <span class="comment">%         also at 10 samples/sec.</span>
+0032    <span class="comment">%         The resulting data will start at 1/1/2008 12:00:00.3, and have</span>
+0033    <span class="comment">%         5999 samples, with the last sample occurring at 12:09:59.830.</span>
+0034    <span class="comment">%</span>
+0035    <span class="comment">%   Examples of usefulness?  Particle motions, coordinate transformations.</span>
+0036    <span class="comment">%   If used for particle motions, consider MatLab's plotmatrix command.</span>
+0037    <span class="comment">%</span>
+0038    <span class="comment">%   example:</span>
+0039    <span class="comment">%       scnl = sclnobject('KDAK',{'BHZ','BHN','BHE'}); %grab all 3 channels</span>
+0040    <span class="comment">%       % for each component, grab winston data on Kurile Earthquake</span>
+0041    <span class="comment">%       w = waveform(mydatasource,scnl,'1/13/2007 04:20:00',...</span>
+0042    <span class="comment">%         '1/13/2007 04:30:00');</span>
+0043    <span class="comment">%       w = align(w,'1/37/2007 4:22:00', get(w(1),'freq'));</span>
+0044    <span class="comment">%</span>
+0045    <span class="comment">%</span>
+0046    <span class="comment">% See also INTERP1, PLOTMATRIX</span>
+0047    
+0048    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0049    <span class="comment">% $Date$</span>
+0050    <span class="comment">% $Revision$</span>
+0051    
+0052    <span class="keyword">persistent</span> oneSecond
+0053    <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(oneSecond)
+0054       oneSecond = datenum([0 0 0 0 0 1]);
+0055    <span class="keyword">end</span>
+0056    
+0057    <span class="keyword">if</span> ~exist(<span class="string">'method'</span>,<span class="string">'var'</span>)
+0058       method = <span class="string">'pchip'</span>;
+0059    <span class="keyword">end</span>
+0060    
+0061    <span class="keyword">if</span> ischar(alignTime),
+0062       alignTime =  datenum(alignTime);
+0063    <span class="keyword">end</span>
+0064    
+0065    hasSingleAlignTime = numel(alignTime) == 1;
+0066    
+0067    <span class="keyword">if</span> hasSingleAlignTime <span class="comment">%use same align time for all waveforms</span>
+0068       alignTime = repmat(alignTime,size(w));
+0069    <span class="keyword">elseif</span> isvector(alignTime) &amp;&amp; isvector(w)
+0070       <span class="keyword">if</span> numel(alignTime) ~= numel(w)
+0071          error(<span class="string">'Waveform:align:invalidAlignSize'</span>,<span class="keyword">...</span>
+0072             <span class="string">'The number of Align Times does not match the number of waveforms'</span>);
+0073       <span class="keyword">else</span>
+0074          <span class="comment">% this situation OK.</span>
+0075          <span class="comment">% ignore possibility that we're comparing a 1xN vs Nx1.</span>
+0076       <span class="keyword">end</span>
+0077    <span class="keyword">elseif</span> ~all(size(alignTime) == size(w)) <span class="comment">%make sure 1:1 ratio for alignTime &amp; waveform</span>
+0078       <span class="keyword">if</span> numel(alignTime) == numel(w)
+0079          error(<span class="string">'Waveform:align:invalidAlignSize'</span>,<span class="keyword">...</span>
+0080             [<span class="string">'The alignTime matrix is of a different size than the '</span><span class="keyword">...</span>
+0081             <span class="string">'waveform Matrix.  '</span>]);
+0082       <span class="keyword">end</span>
+0083    <span class="keyword">end</span>
+0084    
+0085    
+0086    newSamplesPerSec = 1 / newFrequency ;  <span class="comment">%# samplesPerSecond</span>
+0087    timeStep = newSamplesPerSec * oneSecond;
+0088    existingStarts = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'start'</span>);
+0089    existingEnds = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'end'</span>);
+0090    
+0091    <span class="comment">% calculate the offset of the closest &quot;aligned&quot; time, by projecting the</span>
+0092    <span class="comment">% desired frequency rate and time forward or backward onto these waveforms'</span>
+0093    <span class="comment">% start time.</span>
+0094    deltaTime = existingStarts - alignTime;  <span class="comment">% time in between</span>
+0095    <span class="comment">% if deltatime (-):alignTime AFTER existingStarts,</span>
+0096    <span class="comment">% if deltatime (+):alignTime BEFORE existingStarts</span>
+0097    closestStartTime = existingStarts - rem(deltaTime,timeStep);
+0098    
+0099    <span class="keyword">for</span> n=1:numel(w)
+0100       origTimes = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(n),<span class="string">'timevector'</span>);
+0101       <span class="comment">% newTimes MUST be in one column, else DATA field gets corrupted</span>
+0102       newTimes = ( closestStartTime(n):timeStep:existingEnds(n) )';
+0103       
+0104       <span class="comment">%get rid of samples that lay entirely outside the existing waveform's</span>
+0105       <span class="comment">%range (ie, only interpolate values BETWEEN points)</span>
+0106       newTimes(newTimes &lt; origTimes(1) | newTimes &gt; origTimes(end)) = [];
+0107       
+0108       w(n).data = interp1(<span class="keyword">...</span>
+0109          origTimes,<span class="keyword">...</span><span class="comment">     original times (x)</span>
+0110          w(n).data,<span class="keyword">...</span><span class="comment">         original data (y)</span>
+0111          newTimes,<span class="keyword">...</span><span class="comment">    new times (x1)</span>
+0112          method);           <span class="comment">%  method</span>
+0113       w(n).start = newTimes(1); <span class="comment">% must be a datenum</span>
+0114    <span class="keyword">end</span>
+0115    w = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w,<span class="string">'freq'</span>,newFrequency);
+0116    
+0117    <span class="comment">%% update histories</span>
+0118    <span class="comment">% if all waves were aligned to the same time, then handle all history here</span>
+0119    <span class="keyword">if</span> hasSingleAlignTime
+0120       <a href="#_sub1" class="code" title="subfunction w = noteRealignment(w, startt, freq)">noteRealignment</a>(w, alignTime(1), newFrequency);
+0121    <span class="keyword">else</span>
+0122       <span class="keyword">for</span> n=1:numel(w)
+0123          w(n) = <a href="#_sub1" class="code" title="subfunction w = noteRealignment(w, startt, freq)">noteRealignment</a>(w(n), alignTime(n), newFrequency);
+0124       <span class="keyword">end</span>
+0125    <span class="keyword">end</span>
+0126 <span class="keyword">end</span>
+0127 
+0128 <a name="_sub1" href="#_subfunctions" class="code">function w = noteRealignment(w, startt, freq)</a>
+0129    timeStr = datestr(startt,<span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>);
+0130    myHistory = sprintf(<span class="string">'aligned data to %s at %f samples/sec'</span>, timeStr, freq);
+0131    w = <a href="addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>(w,myHistory);
+0132 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

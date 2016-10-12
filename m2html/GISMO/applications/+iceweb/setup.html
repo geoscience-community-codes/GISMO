@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of setup</title>
+  <meta name="keywords" content="setup">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">applications</a> &gt; <a href="index.html">+iceweb</a> &gt; setup.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/applications/+iceweb&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>setup
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function setup(subnet, snum, enum, setupfile, chanmatch) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="show_sites.html" class="code" title="function show_sites(sites)">show_sites</a>	</li><li><a href="../../../GISMO/core/@filterobject/filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>	FILTEROBJECT constructor for a filter object</li><li><a href="../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>	RSAM/SAVE - save an rsam-like object to an RSAM/BOB binary</li><li><a href="../../../GISMO/core/@spectralobject/spectralobject.html" class="code" title="function s = spectralobject(anyV,overlap,freqmax,dBlims, scaling)">spectralobject</a>	SPECTRALOBJECT - spectralobject class constructor</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="testday.html" class="code" title="">testday</a>	</li><li><a href="unrest.html" class="code" title="">unrest</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [paths,PARAMS,subnets]=pf2PARAMS(setupfile)</a></li><li><a href="#_sub2" class="code">function save2mat(RUNTIMEMATFILE, subnets, paths, PARAMS)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function setup(subnet, snum, enum, setupfile, chanmatch)</a>
+0002 debug.printfunctionstack(<span class="string">'&gt;'</span>);
+0003     [paths,PARAMS,subnets]=<a href="#_sub1" class="code" title="subfunction [paths,PARAMS,subnets]=pf2PARAMS(setupfile)">pf2PARAMS</a>(setupfile);
+0004     <span class="keyword">if</span> ~exist(<span class="string">'enum'</span>,<span class="string">'var'</span>)
+0005         enum = snum;
+0006     <span class="keyword">end</span>
+0007     subnets(1).sites = get_closest_sites(subnets(1).source.longitude, subnets(1).source.latitude, subnets(1).radius, paths.DBMASTER, Inf, snum, enum+1, chanmatch);
+0008     sites = subnets(1).sites;
+0009     <a href="show_sites.html" class="code" title="function show_sites(sites)">show_sites</a>(sites);
+0010     <a href="../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a> sites.mat sites
+0011     
+0012 <span class="comment">%     %gismo_datasource = datasource('antelope', dbwfdata);</span>
+0013 <span class="comment">%     % Add response data (calib only?) for each scnl</span>
+0014 <span class="comment">%     for k=1:numel(subnets(1).sites)</span>
+0015 <span class="comment">%         %try</span>
+0016 <span class="comment">%                 subnets(1).sites(k).response = response_get_from_db(subnets(1).sites(k).channeltag.station, subnets(1).sites(k).channeltag.channel, snum, PARAMS.f, paths.DBMASTER);</span>
+0017 <span class="comment">%                 % for Sakurajima I get:</span>
+0018 <span class="comment">%                     % Error using response_get_from_db (line 59)</span>
+0019 <span class="comment">%                     % Database does not contain a sensor table.</span>
+0020 <span class="comment">%         %catch</span>
+0021 <span class="comment">%         %        subnets(1).sites(k).response.calib = NaN;</span>
+0022 <span class="comment">%         %end</span>
+0023 <span class="comment">%     end</span>
+0024     <span class="comment">%save2mat(sprintf('pf/%s_%s.mat',subnet,datestr(snum,'yyyymmdd')), subnets, paths, PARAMS)</span>
+0025     
+0026     <span class="comment">% Replace this whole complicated response thing above with a simple</span>
+0027     <span class="comment">% grab for calib value. Not much good for short periods, but who cares?</span>
+0028     <span class="comment">% - implemented in closest stations</span>
+0029     
+0030     
+0031     <a href="#_sub2" class="code" title="subfunction save2mat(RUNTIMEMATFILE, subnets, paths, PARAMS)">save2mat</a>(sprintf(<span class="string">'pf/%s.mat'</span>,subnet), subnets, paths, PARAMS)
+0032 debug.printfunctionstack(<span class="string">'&lt;'</span>);
+0033 <span class="keyword">end</span>
+0034 
+0035 <a name="_sub1" href="#_subfunctions" class="code">function [paths,PARAMS,subnets]=pf2PARAMS(setupfile)</a>
+0036     debug.printfunctionstack(<span class="string">'&gt;'</span>)
+0037     
+0038     <span class="comment">% create pointer to main parameter file</span>
+0039     [dirname, filename, ext] = fileparts(setupfile);
+0040     <span class="keyword">if</span> exist(setupfile, <span class="string">'file'</span>)
+0041         setuppf = dbpf(sprintf(<span class="string">'%s/%s'</span>,dirname,filename));
+0042 
+0043         <span class="comment">% subnets</span>
+0044         subnet_tbl = pfget_tbl(setuppf, <span class="string">'subnets'</span>);
+0045         <span class="keyword">for</span> c=1:numel(subnet_tbl)
+0046             fields = regexp(subnet_tbl{c}, <span class="string">'\s+'</span>, <span class="string">'split'</span>);
+0047             subnets(c).name = fields{1};
+0048             subnets(c).source.latitude = str2double(fields{2});
+0049             subnets(c).source.longitude = str2double(fields{3});
+0050             subnets(c).radius = str2double(fields{4});
+0051             subnets(c).use = str2double(fields{5});
+0052         <span class="keyword">end</span>
+0053 
+0054 
+0055         <span class="comment">% Maximum number of scnls to display in a spectrogram</span>
+0056         PARAMS.max_number_scnls = pfget_num(setuppf, <span class="string">'max_number_scnls'</span>);
+0057 
+0058         <span class="comment">% Select channels to use according to this channel mask</span>
+0059         PARAMS.channel_mask = pfget(setuppf, <span class="string">'channel_mask'</span>);
+0060 
+0061         <span class="comment">% paths (removed from setup.pf file 2013/04/22)</span>
+0062         paths.DBMASTER = pfget(setuppf, <span class="string">'dbmaster'</span>);
+0063         paths.PFS = <span class="string">'pf'</span>;
+0064         paths.spectrogram_plots = <span class="string">'spectrograms'</span>; 
+0065 
+0066         <span class="comment">% datasource</span>
+0067         <span class="keyword">try</span>
+0068             datasources = pfget_tbl(setuppf, <span class="string">'datasources'</span>);
+0069             <span class="keyword">for</span> c=1:numel(datasources)
+0070                 fields = regexp(datasources{c}, <span class="string">'\s+'</span>, <span class="string">'split'</span>);
+0071                 PARAMS.datasource(c).type = fields{1};
+0072                 PARAMS.datasource(c).path = fields{2};
+0073                 <span class="keyword">if</span> numel(fields)&gt;2
+0074                     PARAMS.datasource(c).port = fields{3};
+0075                 <span class="keyword">end</span>
+0076             <span class="keyword">end</span>
+0077         <span class="keyword">end</span>
+0078 
+0079         <span class="comment">% archive_datasource</span>
+0080         PARAMS.switch_to_archive_after_days = pfget(setuppf, <span class="string">'switch_to_archive_after_days'</span>); 
+0081         <span class="keyword">try</span>
+0082             archive_datasources = pfget_tbl(setuppf, <span class="string">'archive_datasources'</span>);
+0083             <span class="keyword">for</span> c=1:numel(archive_datasources)
+0084                 fields = regexp(archive_datasources{c}, <span class="string">'\s+'</span>, <span class="string">'split'</span>);
+0085                 PARAMS.archive_datasource(c).type = fields{1};
+0086                 PARAMS.archive_datasource(c).path = fields{2};
+0087                 <span class="keyword">if</span> numel(fields)&gt;2
+0088                     PARAMS.archive_datasource(c).port = fields{3};
+0089                 <span class="keyword">end</span>
+0090             <span class="keyword">end</span>
+0091         <span class="keyword">end</span>
+0092         
+0093         <span class="comment">% waveform processing</span>
+0094         lowcut     = pfget_num(setuppf,<span class="string">'lowcut'</span>);
+0095         highcut     = pfget_num(setuppf,<span class="string">'highcut'</span>);
+0096         npoles     = pfget_num(setuppf,<span class="string">'npoles'</span>);
+0097         PARAMS.filterObj = <a href="../../../GISMO/core/@filterobject/filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>(<span class="string">'b'</span>,[lowcut highcut],npoles);
+0098 
+0099         <span class="comment">% Spectrograms</span>
+0100         PARAMS.spectralobject = <a href="../../../GISMO/core/@spectralobject/spectralobject.html" class="code" title="function s = spectralobject(anyV,overlap,freqmax,dBlims, scaling)">spectralobject</a>( <span class="keyword">...</span>
+0101             pfget_num(setuppf,<span class="string">'nfft'</span>), <span class="keyword">...</span>
+0102             pfget_num(setuppf,<span class="string">'overlap'</span>), <span class="keyword">...</span>
+0103             pfget_num(setuppf,<span class="string">'max_freq'</span>), <span class="keyword">...</span>
+0104             [ pfget_num(setuppf,<span class="string">'blue'</span>) pfget_num(setuppf,<span class="string">'red'</span>)] <span class="keyword">...</span>
+0105         );
+0106 
+0107         <span class="comment">% Derived data</span>
+0108         PARAMS.surfaceWaveSpeed = pfget_num(setuppf,<span class="string">'surfaceWaveSpeed'</span>);
+0109         PARAMS.df = pfget_num(setuppf, <span class="string">'df'</span>);
+0110         PARAMS.f = 0:PARAMS.df:50;
+0111 
+0112         <span class="comment">% Alarm system</span>
+0113         PARAMS.triggersForAlarmFraction = pfget_num(setuppf,<span class="string">'triggersForAlarmFraction'</span>);
+0114 
+0115         debug.print_debug(1, <span class="string">'PARAMS setup OK'</span>)
+0116     <span class="keyword">else</span>
+0117         error(sprintf(<span class="string">'%s: parameter file %s.pf does not exist'</span>,mfilename, setupfile));
+0118     <span class="keyword">end</span>
+0119     debug.printfunctionstack(<span class="string">'&lt;'</span>)
+0120 <span class="keyword">end</span>
+0121 
+0122 <a name="_sub2" href="#_subfunctions" class="code">function save2mat(RUNTIMEMATFILE, subnets, paths, PARAMS)</a>
+0123     <span class="comment">% write pf/tremor_runtime.mat, preserve current version if it already exists</span>
+0124     <span class="keyword">if</span> exist(RUNTIMEMATFILE, <span class="string">'file'</span>)
+0125         system(sprintf(<span class="string">'mv %s %s.%s'</span>,RUNTIMEMATFILE,RUNTIMEMATFILE,datestr(now,30)));
+0126     <span class="keyword">end</span>
+0127 
+0128     <a href="../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>(RUNTIMEMATFILE, <span class="string">'subnets'</span>, <span class="string">'paths'</span>, <span class="string">'PARAMS'</span>);
+0129 <span class="keyword">end</span>
+0130</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of antelopesource</title>
+  <meta name="keywords" content="antelopesource">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="../index.html">+dataretrieval</a> &gt; <a href="index.html">@antelopesource</a> &gt; antelopesource.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/+dataretrieval/@antelopesource&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>antelopesource
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="../../../../../GISMO/core/@Catalog/combine.html" class="code" title="function catalogObject = combine(catalogObject1, catalogObject2)">combine</a>	CATALOG.COMBINE combine two Catalog objects</li><li><a href="../../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>	GETFILENAME returns a filename that is associated with a single SCNL</li><li><a href="../../../../../GISMO/core/@datasource/subdivide_files_by_date.html" class="code" title="function allDatesToCheck = subdivide_files_by_date(ds,startt,endt)">subdivide_files_by_date</a>	SUBDIVIDE_FILES_BY_DATE given a datasource and daterange return list of files</li><li><a href="../../../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>	ISMEMBER for scnlobjects</li><li><a href="../../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>	ADDFIELD add fields and values to waveform object(s)                V1.1</li><li><a href="../../../../../GISMO/core/@waveform/combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and ChannelTag info.</li><li><a href="../../../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../../GISMO/core/@waveform/ismember.html" class="code" title="function [results, loc] = ismember(mywave,anythingelse)">ismember</a>	ISMEMBER waveform implementation of ismember</li><li><a href="../../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../../../GISMO/core/@waveform/private/load_antelope.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="../../../../../GISMO/core/@waveform/private/unpackDataRequest.html" class="code" title="function [dataSource, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request)">unpackDataRequest</a>	</li><li><a href="../../../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="antelopesource.html" class="code" title="">antelopesource</a>	</li><li><a href="get_antelope_traces.html" class="code" title="function [obj, rawDb, filteredDb] =  get_antelope_traces(obj)">get_antelope_traces</a>	GET_ANTELOPE_TRACE gets interesting data from database, and returns the tracebuf object</li><li><a href="load_antelope.html" class="code" title="function outputWaveforms = load_antelope(obj, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="segtype2units.html" class="code" title="function [units, data_description] = segtype2units(unitCode)">segtype2units</a>	segtype2units   retrieves unit and description based on the segtype code</li><li><a href="traceToWaveform.html" class="code" title="function allw = traceToWaveform(obj)">traceToWaveform</a>	traceToWaveform converts traceobjects to waveforms</li><li><a href="../../../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="../../../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="antelopesource.html" class="code" title="">antelopesource</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function val = get.epochstart(obj)</a></li><li><a href="#_sub2" class="code">function val = get.epochend(obj)</a></li><li><a href="#_sub3" class="code">function obj = set.epochstart(obj, val)</a></li><li><a href="#_sub4" class="code">function obj = set.epochend(obj, val)</a></li><li><a href="#_sub5" class="code">function obj = set.matlabstart(obj, val)</a></li><li><a href="#_sub6" class="code">function obj = set.matlabend(obj, val)</a></li><li><a href="#_sub7" class="code">function data = retrieve(obj, where_, from_ , until_)</a></li><li><a href="#_sub8" class="code">function p = get.dbfields(obj)</a></li><li><a href="#_sub9" class="code">function tf = isdbfield(obj, candidate)</a></li><li><a href="#_sub10" class="code">function n = get.nrecs(obj)</a></li><li><a href="#_sub11" class="code">function obj = open(obj, attrib)</a></li><li><a href="#_sub12" class="code">function obj = close(obj)</a></li><li><a href="#_sub13" class="code">function tf = pointsToAntelopeDatabase(obj)</a></li><li><a href="#_sub14" class="code">function obj = subsetbyLocation(obj, n)</a></li><li><a href="#_sub15" class="code">function obj = subsetbyTime(obj, n)</a></li><li><a href="#_sub16" class="code">function outputWaveforms = RecursivelyLoadFromEachDatabase(request)</a></li><li><a href="#_sub17" class="code">function database = getDatabase(request, TRY_MULTIDAY)</a></li><li><a href="#_sub18" class="code">function w = cycleThroughTraces(tr, COMBINE_WAVEFORMS)</a></li><li><a href="#_sub19" class="code">function w_scnl = wavesfromtraces(tr, traceidx, COMBINE_WAVEFORMS)</a></li><li><a href="#_sub20" class="code">function obj = buildSearchCriteria(obj)</a></li><li><a href="#_sub21" class="code">function x = addto(x, fieldname, value)</a></li><li><a href="#_sub22" class="code">function value = replaceStars(value)</a></li><li><a href="#_sub23" class="code">function sc = buildSearchCriterion(chaninfo)</a></li><li><a href="#_sub24" class="code">function w = emptyWaveform()</a></li><li><a href="#_sub25" class="code">function w = blankWaveformWithCalib()</a></li><li><a href="#_sub26" class="code">function X = makecell(X)</a></li><li><a href="#_sub27" class="code">function Ep = mat2epoch(M)</a></li><li><a href="#_sub28" class="code">function M = epoch2mat(Ep)</a></li><li><a href="#_sub29" class="code">function trs = trsTrimStarts(trs, desiredStartEpoch)</a></li><li><a href="#_sub30" class="code">function trStructs = safe_trload(db, st, et)</a></li><li><a href="#_sub31" class="code">function T = trstruct2SeismicTrace(trs)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="antelopesource.html" class="code" title="">antelopesource</a> &lt; dataretrieval.spatiotemporal_database
+0002    <span class="comment">%antelopesource Summary of this class goes here</span>
+0003    <span class="comment">%   Detailed explanation goes here</span>
+0004    
+0005    properties
+0006       dbname = <span class="string">''</span>; <span class="comment">%name of antelope database</span>
+0007       isopen = false; <span class="comment">% status of antelope database</span>
+0008       searchcriteria <span class="comment">% collection of search parameter strings to send to antelope</span>
+0009       chaninfo <span class="comment">% array of channelTags</span>
+0010       matlabstart <span class="comment">% one or more startdates (in matlab format)</span>
+0011       matlabend   <span class="comment">% one or more enddates in matlab format (matching # of startdate)</span>
+0012       dbpointer = []; <span class="comment">% antelope database pointer</span>
+0013       filtereddb = []; <span class="comment">% antelope database pointer (filtered)</span>
+0014       trpointer = { -1 }; <span class="comment">% pointer to antelope trace</span>
+0015       applycalibrations = true; <span class="comment">% apply calibration to tr before converting</span>
+0016       combinetraces = true;
+0017       
+0018    <span class="keyword">end</span>
+0019    
+0020    properties(Dependent)
+0021       nrecs  <span class="comment">% number or records for current database ptr</span>
+0022       dbfields <span class="comment">% field names for current database ptr</span>
+0023       epochstart <span class="comment">% start time(s) as epoch number</span>
+0024       epochend <span class="comment">% end time(s) as  epoch number</span>
+0025    <span class="keyword">end</span>
+0026    
+0027    methods
+0028       <span class="comment">% DATE get/set</span>
+0029       <a name="_sub0" href="#_subfunctions" class="code">function val = get.epochstart(obj)</a>
+0030          val = antelopsource.mat2epoch(obj.matlabstart);
+0031       <span class="keyword">end</span>
+0032       <a name="_sub1" href="#_subfunctions" class="code">function val = get.epochend(obj)</a>
+0033          val = antelopesource.mat2epoch(obj.matlabend);
+0034       <span class="keyword">end</span>
+0035       <a name="_sub2" href="#_subfunctions" class="code">function obj = set.epochstart(obj, val)</a>
+0036          obj.matlabstart = antelopesource.epoch2mat(val);
+0037       <span class="keyword">end</span>
+0038       <a name="_sub3" href="#_subfunctions" class="code">function obj = set.epochend(obj, val)</a>
+0039          obj.matlabend = antelopesource.epoch2mat(val);
+0040       <span class="keyword">end</span>
+0041       <a name="_sub4" href="#_subfunctions" class="code">function obj = set.matlabstart(obj, val)</a>
+0042          <span class="keyword">if</span> ischar(val) || iscell(val)
+0043             val = datnum(val);
+0044          <span class="keyword">end</span>
+0045          obj.matlabstart = val;
+0046       <span class="keyword">end</span>
+0047       <a name="_sub5" href="#_subfunctions" class="code">function obj = set.matlabend(obj, val)</a>
+0048          <span class="keyword">if</span> ischar(val) || iscell(val)
+0049             val = datnum(val);
+0050          <span class="keyword">end</span>
+0051          obj.matlabend = val;
+0052       <span class="keyword">end</span>
+0053          
+0054       <a name="_sub6" href="#_subfunctions" class="code">function data = retrieve(obj, where_, from_ , until_)</a>
+0055          assert(numel(datenum(from_)) == numel(datenum(until_)),<span class="keyword">...</span>
+0056             <span class="string">'Waveform:load_antelope:startEndMismatch'</span>, <span class="string">'Unequal number of start and end times'</span>);
+0057          <span class="comment">% fill antelope source with proper search criteria</span>
+0058          obj.matlabstart = from_;
+0059          obj.matlabend = until_;
+0060          obj.chaninfo = where_;
+0061          <span class="comment">% database to open needs to be determined from all the above</span>
+0062          <span class="comment">% do once for each date? each channel?</span>
+0063          obj = obj.open(<span class="string">'r'</span>);
+0064          <span class="comment">% the following needs to be repeated for each where_</span>
+0065          obj = obj.subsetbyLocation(1);
+0066          obj = obj.subsetbyTime(1);
+0067          <span class="keyword">try</span>
+0068             w = obj.getAllTraces();
+0069          <span class="keyword">catch</span>
+0070             w = obj.getTracesOneAtATime();
+0071          <span class="keyword">end</span>
+0072          
+0073                   
+0074          <span class="comment">% return if no rows</span>
+0075          <span class="keyword">if</span> dbnrecs(obj.dbpointer)==0
+0076             <span class="comment">%no data returned</span>
+0077             <span class="keyword">return</span>
+0078          <span class="keyword">end</span>
+0079          fprintf(<span class="string">'Got %d matching records\n'</span>,dbnrecs(db));
+0080          [wfid,sta,chan,st,et]=dbgetv(db, <span class="string">'wfid'</span>,<span class="string">'sta'</span>,<span class="string">'chan'</span>,<span class="string">'time'</span>, <span class="string">'endtime'</span>);
+0081          sta = cellstr(sta);
+0082          chan = cellstr(chan);
+0083          <span class="keyword">for</span> c=1:numel(sta)
+0084             fprintf(<span class="string">'%12d %s %s %f %f\n'</span>,wfid(c), sta{c}, chan{c}, st(c), et(c));
+0085          <span class="keyword">end</span>
+0086          
+0087          <span class="comment">% if starttime and endtime blank, get from min/max times in wfdisc table</span>
+0088          <span class="keyword">if</span> <a href="../../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(starttime) &amp; <a href="../../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(endtime)
+0089             starttime = <a href="../../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(st);
+0090             endtime = <a href="../../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(et);
+0091          <span class="keyword">end</span>
+0092       <span class="keyword">end</span>
+0093       
+0094       <a name="_sub7" href="#_subfunctions" class="code">function p = get.dbfields(obj)</a>
+0095          <span class="keyword">try</span>
+0096             p = dbquery(obj.dbpointer,<span class="string">'dbTABLE_FIELDS'</span>);
+0097          <span class="keyword">catch</span>
+0098             <a href="../../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'unable to get fields'</span>);
+0099             p = {};
+0100          <span class="keyword">end</span>
+0101       <span class="keyword">end</span>
+0102       
+0103       <a name="_sub8" href="#_subfunctions" class="code">function tf = isdbfield(obj, candidate)</a>
+0104          <span class="comment">%isdbfield   returns true if a string matches a current dbfieldname</span>
+0105          tf = ~<a href="../../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(candidate) &amp;&amp; <a href="../../../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(candidate, obj.fields );
+0106       <span class="keyword">end</span>
+0107       
+0108       <a name="_sub9" href="#_subfunctions" class="code">function n = get.nrecs(obj)</a>
+0109          <span class="comment">%nrecs   return either the number of records or 0</span>
+0110          <span class="keyword">try</span>
+0111             n = dbnrecs(obj.dbpointer);
+0112          <span class="keyword">catch</span>
+0113             <a href="../../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'unable to get nrecs'</span>);
+0114             n = 0;
+0115          <span class="keyword">end</span>
+0116       <span class="keyword">end</span>
+0117       
+0118       <a name="_sub10" href="#_subfunctions" class="code">function obj = open(obj, attrib)</a>
+0119          <span class="comment">%open   open an antelope database to the wfdisc</span>
+0120          <span class="comment">%   obj = open(obj, 'r') open antelope database for reading and</span>
+0121          <span class="comment">%   sets the talbe to wfdisc</span>
+0122          <span class="keyword">if</span> obj.isopen()
+0123             error(<span class="string">'the database might already be open'</span>);
+0124          <span class="keyword">end</span>
+0125          <span class="keyword">try</span>
+0126             obj.dbptr = dbopen(obj.dbname, attrib);
+0127             obj.isopen = true;
+0128          <span class="keyword">catch</span> er
+0129             <a href="../../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(er)
+0130             error(<span class="string">'Unable to open database'</span>);
+0131          <span class="keyword">end</span>
+0132          <span class="keyword">try</span>
+0133             mydb = dblookup_table(mydb,<span class="string">'wfdisc'</span>);
+0134          <span class="keyword">catch</span> er
+0135             <a href="../../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(er)
+0136             error(<span class="string">'Able to open database, but not to open the wfdisc table'</span>);
+0137          <span class="keyword">end</span>
+0138       <span class="keyword">end</span>
+0139       
+0140       <a name="_sub11" href="#_subfunctions" class="code">function obj = close(obj)</a>
+0141          <span class="comment">%close   close an antelope database</span>
+0142          <span class="keyword">if</span> obj.isopen()
+0143             dbclose(obj.dbptr);
+0144          <span class="keyword">else</span>
+0145             error(<span class="string">'the database might already be closed'</span>);
+0146          <span class="keyword">end</span>
+0147          obj.isopen = false;
+0148       <span class="keyword">end</span>
+0149       
+0150       <a name="_sub12" href="#_subfunctions" class="code">function tf = pointsToAntelopeDatabase(obj)</a>
+0151          <span class="comment">%pointsToAntelopeDatabase makes sure pointer points to valid db</span>
+0152          tf = ~<a href="../../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(obj.dbpointer) &amp;&amp; <span class="keyword">...</span>
+0153             isa(obj.dbpointer,<span class="string">'struct'</span>) &amp;&amp; <span class="keyword">...</span>
+0154             any(strcmpi(fieldnames(obj.dbpointer),<span class="string">'database'</span>));
+0155       <span class="keyword">end</span>
+0156       
+0157       <a name="_sub13" href="#_subfunctions" class="code">function obj = subsetbyLocation(obj, n)</a>
+0158          searchstr = antelopesource.buildSearchCriterion(obj.chaninfo(n));
+0159          obj.dbpointer = dbsubset(obj.dbpointer, searchstr);
+0160       <span class="keyword">end</span>
+0161       <a name="_sub14" href="#_subfunctions" class="code">function obj = subsetbyTime(obj, n)</a>
+0162          searchstr = sprintf(<span class="string">'time &lt;= %f &amp;&amp; endtime &gt;= %f'</span>,obj.epochend(n), obj.epochstart(n))
+0163          obj.dbpointer = dbsubset(obj.dbpointer, searchstr);
+0164       <span class="keyword">end</span>
+0165             
+0166       outputWaveforms = <a href="load_antelope.html" class="code" title="function outputWaveforms = load_antelope(obj, specificDatabase)">load_antelope</a>(request, specificDatabase)
+0167       
+0168       <a name="_sub15" href="#_subfunctions" class="code">function outputWaveforms = RecursivelyLoadFromEachDatabase(request)</a>
+0169          TRY_MULTIDAY = false;
+0170          database = <a href="#_sub17" class="code" title="subfunction database = getDatabase(request, TRY_MULTIDAY)">getDatabase</a>(request, TRY_MULTIDAY);
+0171          database = <a href="../../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(database, <span class="string">'stable'</span>); <span class="comment">%  avoid changing requested order</span>
+0172          outputWaveforms = <a href="#_sub24" class="code" title="subfunction w = emptyWaveform()">emptyWaveform</a>();
+0173          <span class="keyword">for</span> n = 1 : numel(database)
+0174             w = <a href="load_antelope.html" class="code" title="function outputWaveforms = load_antelope(obj, specificDatabase)">load_antelope</a>(request, database(n));
+0175             outputWaveforms = [outputWaveforms; w(:)]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0176          <span class="keyword">end</span>
+0177       <span class="keyword">end</span>
+0178       
+0179       <a name="_sub16" href="#_subfunctions" class="code">function database = getDatabase(request, TRY_MULTIDAY)</a>
+0180          [ds, chanInfo, startTimes, endTimes] = <a href="../../../../../GISMO/core/@waveform/private/unpackDataRequest.html" class="code" title="function [dataSource, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request)">unpackDataRequest</a>(request);
+0181          <span class="keyword">if</span> TRY_MULTIDAY <span class="comment">%good luck splicing</span>
+0182             dbDatesToCheck = <a href="../../../../../GISMO/core/@datasource/subdivide_files_by_date.html" class="code" title="function allDatesToCheck = subdivide_files_by_date(ds,startt,endt)">subdivide_files_by_date</a>(ds,startTimes, endTimes);
+0183             database =  <a href="../../../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>(ds,chanInfo, dbDatesToCheck);
+0184          <span class="keyword">else</span>
+0185             database =  <a href="../../../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>(ds,chanInfo, startTimes);
+0186          <span class="keyword">end</span>
+0187       <span class="keyword">end</span>
+0188       
+0189       <a name="_sub17" href="#_subfunctions" class="code">function w = cycleThroughTraces(tr, COMBINE_WAVEFORMS)</a>
+0190          <span class="comment">%cycleThroughTraces  converts each trace into one or more waveforms</span>
+0191          <span class="comment">%   returns a Nx1 waveform</span>
+0192          w(numel(tr)).waves = <a href="../../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0193          <span class="keyword">for</span> traceidx = 1:numel(tr)
+0194             w(traceidx) = <a href="#_sub19" class="code" title="subfunction w_scnl = wavesfromtraces(tr, traceidx, COMBINE_WAVEFORMS)">wavesfromtraces</a>(tr, traceidx, COMBINE_WAVEFORMS);
+0195          <span class="keyword">end</span>
+0196          w = [w.waves]; <span class="comment">%horizontal cat</span>
+0197          w = w(:);
+0198       <span class="keyword">end</span>
+0199       
+0200       <a name="_sub18" href="#_subfunctions" class="code">function w_scnl = wavesfromtraces(tr, traceidx, COMBINE_WAVEFORMS)</a>
+0201          <span class="keyword">if</span> ~isstruct(tr{traceidx}) <span class="comment">% marker for no data</span>
+0202             w_scnl.waves = <a href="#_sub24" class="code" title="subfunction w = emptyWaveform()">emptyWaveform</a>();
+0203          <span class="keyword">else</span>
+0204             w_scnl.waves = <a href="traceToWaveform.html" class="code" title="function allw = traceToWaveform(obj)">traceToWaveform</a>(tr{traceidx}); <span class="comment">%create waveform list</span>
+0205             trdestroy(tr{traceidx});
+0206          <span class="keyword">end</span>
+0207          <span class="keyword">if</span> COMBINE_WAVEFORMS <span class="comment">%combine all of this trace's records</span>
+0208             w_scnl.waves = <a href="../../../../../GISMO/core/@Catalog/combine.html" class="code" title="function catalogObject = combine(catalogObject1, catalogObject2)">combine</a>(w_scnl.waves);
+0209          <span class="keyword">end</span>;
+0210          w_scnl.waves = reshape(w_scnl.waves,  numel(w_scnl.waves), 1);
+0211       <span class="keyword">end</span>
+0212       
+0213       <a name="_sub19" href="#_subfunctions" class="code">function obj = buildSearchCriteria(obj)</a>
+0214          <span class="comment">%buildSearchCriteria creates searchstrings from chaninfo</span>
+0215          <span class="comment">%</span>
+0216          <span class="comment">% sample output for *.OKTU..EHZ :</span>
+0217          <span class="comment">%         {'sta=~/OKTU/ &amp;&amp; cha=~/EHZ/ &amp;&amp; net=~/.*/'}</span>
+0218          
+0219          <span class="keyword">for</span> n=1:numel(obj.chaninfo)
+0220             sc(n) = {<a href="#_sub23" class="code" title="subfunction sc = buildSearchCriterion(chaninfo)">buildSearchCriterion</a>(obj.chaninfo(n))};
+0221          <span class="keyword">end</span>
+0222          sc(cellfun(@<a href="../../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>,sc))=[]; <span class="comment">%remove empty values</span>
+0223          obj.searchcriteria = sc;
+0224          
+0225 
+0226          
+0227          <a name="_sub20" href="#_subfunctions" class="code">function x = addto(x, fieldname, value)</a>
+0228             <span class="comment">%addto   appends ' &amp;&amp; fieldname=/value/' to x</span>
+0229             <span class="keyword">if</span> ~<a href="../../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(value)
+0230                <span class="keyword">if</span> ~<a href="../../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(x); x = [x <span class="string">' &amp;&amp; '</span>]; <span class="keyword">end</span>
+0231                value = <a href="#_sub22" class="code" title="subfunction value = replaceStars(value)">replaceStars</a>(value);
+0232                x = [x, fieldname, <span class="string">'=~/'</span>, value,<span class="string">'/'</span>];
+0233             <span class="keyword">end</span>
+0234          <span class="keyword">end</span>
+0235          
+0236          <a name="_sub21" href="#_subfunctions" class="code">function value = replaceStars(value)</a>
+0237             <span class="comment">%replaceStars   replace * with .*, but leave existing .* alone</span>
+0238             value = regexprep(value,<span class="string">'(?&lt;!\.)\*'</span>,<span class="string">'\.\*'</span>);
+0239          <span class="keyword">end</span>
+0240       <span class="keyword">end</span>
+0241       
+0242       [tr, rawDb, filteredDb] =  <a href="get_antelope_traces.html" class="code" title="function [obj, rawDb, filteredDb] =  get_antelope_traces(obj)">get_antelope_traces</a>(obj, startdates, enddates, criteriaList, database)
+0243       
+0244    <span class="keyword">end</span>
+0245    methods(Static, Access=protected)
+0246       [units, data_description] = <a href="segtype2units.html" class="code" title="function [units, data_description] = segtype2units(unitCode)">segtype2units</a>(unitCode)
+0247       
+0248       <a name="_sub22" href="#_subfunctions" class="code">function sc = buildSearchCriterion(chaninfo)</a>
+0249          sc = <a href="#_sub21" class="code" title="subfunction x = addto(x, fieldname, value)">addto</a>(<span class="string">''</span>,<span class="string">'sta'</span>,chaninfo.station);
+0250          sc = <a href="#_sub21" class="code" title="subfunction x = addto(x, fieldname, value)">addto</a>(sc,<span class="string">'chan'</span>,chaninfo.channel);
+0251          <span class="comment">% the following aren't understood, and therefore aren't used</span>
+0252          <span class="comment">%sc = addto(sc,'net',chaninfo.network);</span>
+0253          <span class="comment">%sc = addto(sc,'loc',chaninfo.location);</span>
+0254       <span class="keyword">end</span>
+0255       <a name="_sub23" href="#_subfunctions" class="code">function w = emptyWaveform()</a>
+0256          <span class="comment">%emptyWaveform   create an empty waveform</span>
+0257          w = <a href="../../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0258          w = w([]);
+0259       <span class="keyword">end</span>
+0260       
+0261       <a name="_sub24" href="#_subfunctions" class="code">function w = blankWaveformWithCalib()</a>
+0262          <span class="comment">%blankWaveformWithCalib   get blank waveform with default calib</span>
+0263          <span class="keyword">persistent</span> wBlank
+0264          <span class="keyword">if</span> numel(wBlank) == 0  <span class="comment">% cannot simply test if wBlank is empty</span>
+0265             wBlank = <a href="../../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0266             wBlank =  <a href="../../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(wBlank,<span class="string">'calib'</span>, 0);
+0267             wBlank = <a href="../../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(wBlank, <span class="string">'calibration_applied'</span>, <span class="string">'NO'</span>);
+0268          <span class="keyword">end</span>
+0269          w = wBlank;
+0270       <span class="keyword">end</span>
+0271       
+0272       <a name="_sub25" href="#_subfunctions" class="code">function X = makecell(X)</a>
+0273          <span class="comment">%makecell   ensure value is a cell, if not make it</span>
+0274          <span class="keyword">if</span> ~iscell(X)
+0275             X = {X};
+0276          <span class="keyword">end</span>
+0277       <span class="keyword">end</span>
+0278       
+0279       <a name="_sub26" href="#_subfunctions" class="code">function Ep = mat2epoch(M)</a>
+0280          <span class="comment">%mat2epoch   convert matlab time to epoch time (millisecond precision)</span>
+0281          <span class="comment">%   uses Antelope's conversion</span>
+0282          <span class="comment">%</span>
+0283          <span class="comment">%   if string is converted, then expected format is: 'yyyy-mm-dd HH:MM:SS.FFF'</span>
+0284          <span class="comment">%</span>
+0285          <span class="comment">%   See also str2epoch, datestr</span>
+0286          <span class="keyword">if</span> isnumeric(M)
+0287             M = datestr(M,<span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>);
+0288          <span class="keyword">end</span>
+0289          Ep = str2epoch(M);  
+0290       <span class="keyword">end</span>
+0291       <a name="_sub27" href="#_subfunctions" class="code">function M = epoch2mat(Ep)</a>
+0292          <span class="comment">%epoch2mat   convert epoch time to matlab time (millisecond precision)</span>
+0293          <span class="comment">%   Uses Antelope's conversion</span>
+0294          <span class="comment">%</span>
+0295          <span class="comment">%  See also epoch2str, datenum</span>
+0296          M = datenum(epoch2str(Ep,<span class="string">'%G %T'</span>));
+0297       <span class="keyword">end</span>
+0298       
+0299       <a name="_sub28" href="#_subfunctions" class="code">function trs = trsTrimStarts(trs, desiredStartEpoch)</a>
+0300          <span class="comment">%trsTrimStarts   trims data and adjusts starttime of trStructs</span>
+0301          <span class="comment">%   trs = trsTrimStarts(trs, desiredStartEpoch)</span>
+0302          <span class="comment">%   adjusts the trs.time, trs.strtime, and trs.data fields</span>
+0303          <span class="comment">%</span>
+0304          <span class="comment">%   if desiredStartEpoch &lt; trs.time, this does nothing.</span>
+0305          <span class="comment">%</span>
+0306          <span class="comment">%   See also tr2struct</span>
+0307          <span class="keyword">for</span> n=1:numel(trs)
+0308             actualStartEpoch = trs(n).time;
+0309             secondsToTrim = desiredStartEpoch - actualStartEpoch;
+0310             <span class="keyword">if</span> secondsToTrim &lt; 0, <span class="keyword">continue</span>; <span class="keyword">end</span>
+0311             samplesToTrim = fix(secondsToTrim * trs(n).samplerate);
+0312             secondsActuallyTrimmed =  samplesToTrim / trs(n).samplerate;
+0313             trs(n).time = actualStartEpoch - secondsActuallyTrimmed;
+0314             trs(n).data(1:samplesToTrim) = []; <span class="comment">% remove leading samples</span>
+0315             startString = trs(n).strtime;
+0316             startMat = datenum(startString);
+0317             matSecondsTrimmed = datenum([0,0,0,0,0,secondsActuallyTrimmed]);
+0318             trs(n).strtime = datestr(startMat - matSecondsTrimmed,<span class="keyword">...</span>
+0319                <span class="string">'mm/dd/yyyy HH:MM:SS.FFF'</span>); <span class="comment">%notice date format!</span>
+0320          <span class="keyword">end</span>
+0321          
+0322       <span class="keyword">end</span>
+0323       
+0324       <a name="_sub29" href="#_subfunctions" class="code">function trStructs = safe_trload(db, st, et)</a>
+0325          <span class="comment">%safe_trload   load a trace (get the struct) and expand time range on failure</span>
+0326          <span class="comment">%  trStructs = safe_trload(db, startEpoch, endEpoch)</span>
+0327          <span class="comment">%  assumes that db is already subset</span>
+0328          <span class="comment">%  returned trace structure may have more data than expected</span>
+0329          earliestStart = <a href="../../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([db.start]);
+0330          tr = [];
+0331          <span class="keyword">while</span> st &gt;= <a href="../../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([db.start])
+0332             <span class="keyword">try</span>
+0333                tr = trload_css(mydb, st, et);
+0334             <span class="keyword">catch</span>
+0335                st = <a href="../../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(st - 60, earliestStart); <span class="comment">% back up 60 seconds &amp; try again</span>
+0336             <span class="keyword">end</span>
+0337          <span class="keyword">end</span>
+0338          <span class="keyword">if</span> <a href="../../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(tr)
+0339             error(<span class="string">'Unable to acess data by merely backing up in time'</span>);
+0340          <span class="keyword">end</span>
+0341          trsplice(tr, 20)
+0342          trStructs = tr2struct(tr);
+0343          trfree(tr);
+0344          trStructs = antelopesource.trsTrimStarts(trStructs, st);
+0345       <span class="keyword">end</span>
+0346       
+0347       <a name="_sub30" href="#_subfunctions" class="code">function T = trstruct2SeismicTrace(trs)</a>
+0348          <span class="comment">%trstruct2SeismicTrace  convert all trstructs to SeismicTraces</span>
+0349          <span class="comment">%  trstruct2SeismicTrace(trs) where trs is the result of tr2struct,</span>
+0350          <span class="comment">%  performed on a tr pointer.</span>
+0351          T = <a href="../../../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>();
+0352          T = repmat(T,size(trs));
+0353          <span class="keyword">for</span> n=1:numel(trs)
+0354             T(n).start = trs(n).strtime;
+0355             T(n).data = trs(n).data;
+0356             T(n).station = trs(n).sta;
+0357             T(n).channel = trs(n).chan;
+0358             T(n).network = trs(n).net;
+0359             T(n).samplerate = trs(n).samprate;
+0360             T(n).units = <a href="segtype2units.html" class="code" title="function [units, data_description] = segtype2units(unitCode)">segtype2units</a>(trs(n).segtype);
+0361             T(n).calib.applied = false;
+0362             T(n).calib.value = trs(n).calib;
+0363          <span class="keyword">end</span>
+0364       <span class="keyword">end</span>
+0365    <span class="keyword">end</span>
+0366    
+0367    <span class="keyword">end</span>
+0368 
+0369    <span class="comment">%{</span>
+0370    example of a trStuct
+0371    ans = 
+0372           evid: -1
+0373           arid: -1
+0374            net: <span class="string">'-'</span>
+0375            sta: <span class="string">'AKT'</span>
+0376           chan: <span class="string">'HHZ'</span>
+0377           time: 1.3215e+09
+0378        endtime: 1.3215e+09
+0379      processid: -1
+0380          nsamp: 93399
+0381       samprate: 99.9985
+0382        instype: <span class="string">'-'</span>
+0383          calib: 1.3962
+0384         calper: -1
+0385       response: 0
+0386       datatype: <span class="string">'sd'</span>
+0387        segtype: <span class="string">'V'</span>
+0388       procflag: 0
+0389           data: [93399x1 <a href="../../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>]
+0390            lat: -999
+0391            lon: -999
+0392           elev: -999
+0393         refsta: <span class="string">'-'</span>
+0394         dnorth: 0
+0395          deast: 0
+0396         edepth: 0
+0397           hang: 0
+0398           vang: 0
+0399        comment: 0
+0400             m0: 0
+0401             m1: 0
+0402            mt0: -1.0000e+10
+0403            mt1: -1.0000e+10
+0404     bundletype: 0
+0405          dbptr: [1x1 struct]
+0406        strtime: <span class="string">'11/16/2011  16:27:50.006'</span>
+0407     strendtime: <span class="string">'11/16/2011  16:43:23.999'</span>
+0408 
+0409    <span class="comment">%}</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

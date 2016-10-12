@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of hist</title>
+  <meta name="keywords" content="hist">
+  <meta name="description" content="HIST plot histograms of magnitude distribution, depth">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@Catalog</a> &gt; hist.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@Catalog&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>hist
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>HIST plot histograms of magnitude distribution, depth</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function hist(catalogObject); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">HIST plot histograms of magnitude distribution, depth
+distribution etc
+   catalog_object.hist()</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="hist.html" class="code" title="function hist(catalogObject);">hist</a>	HIST plot histograms of magnitude distribution, depth</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/plot_stats.html" class="code" title="function plot_stats(W)">plot_stats</a>	PLOT_STATS plot statistics from master correlation algorithm</li><li><a href="../../../GISMO/contributed/master_correlation/mastercorr_plot_stats.html" class="code" title="function mastercorr_plot_stats(W)">mastercorr_plot_stats</a>	MASTERCORR_PLOT_STATS plot statistics from master correlation algorithm</li><li><a href="../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/arrival_histogram.html" class="code" title="function arrival_histogram(dbName)">arrival_histogram</a>	ARRIVAL_HISTOGRAM compare the number of arrivals to each station.</li><li><a href="../../../GISMO/core/+Catalog/+bvalue_lib/calc_McBest.html" class="code" title="function [fMc, fMc95, fMc90] = calc_McBest(mag, fBinning);">calc_McBest</a>	CALC_MCBEST Calculate best Mc from combining methods</li><li><a href="../../../GISMO/core/+Catalog/+bvalue_lib/calc_McMaxCurvature.html" class="code" title="function [fMc] = calc_McMaxCurvature(mag);">calc_McMaxCurvature</a>	CALC_MCMAXCURVATURE</li><li><a href="../../../GISMO/core/+Catalog/+bvalue_lib/synthb_aut.html" class="code" title="">synthb_aut</a>	This is synthetic219</li><li><a href="Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="bvalue.html" class="code" title="function bvalue(catalogObject, mcType)">bvalue</a>	BVALUE evaluate b-value, a-value and magnitude of completeness</li><li><a href="hist.html" class="code" title="function hist(catalogObject);">hist</a>	HIST plot histograms of magnitude distribution, depth</li><li><a href="../../../GISMO/core/@rsam/bvalue.html" class="code" title="function [aw,tt1, tt2, tmc, mag_zone]=bvalue(this, mcType, method)">bvalue</a>	BVALUE evaluate b-value, a-value and magnitude of completeness</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	cluster   Construct agglomerative clusters from linkage for Seismic Traces</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function hist(catalogObject); </a>
+0002     <span class="comment">%HIST plot histograms of magnitude distribution, depth</span>
+0003     <span class="comment">%distribution etc</span>
+0004     <span class="comment">%   catalog_object.hist()</span>
+0005 
+0006     mmin = <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(catalogObject.mag);
+0007     mmax = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(catalogObject.mag);
+0008     bincenters = floor(mmin*10)/10 + 0.05 : 0.1 : floor(mmax*10)/10 + 0.05;
+0009     <a href="hist.html" class="code" title="function hist(catalogObject);">hist</a>(catalogObject.mag, bincenters);
+0010 
+0011 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

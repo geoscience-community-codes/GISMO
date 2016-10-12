@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of get_load_routine</title>
+  <meta name="keywords" content="get_load_routine">
+  <meta name="description" content="determine the load function based upon the datasource's type">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; get_load_routine.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>get_load_routine
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>determine the load function based upon the datasource's type</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function myLoadRoutine = get_load_routine(ds, use_wkaround) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> determine the load function based upon the datasource's type</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="load_antelope.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="load_antelope_workaround.html" class="code" title="function outputWaveforms = load_antelope_workaround(datarequest, COMBINE_WAVEFORMS, specificDatabase)">load_antelope_workaround</a>	load a waveform from antelope</li><li><a href="load_irisdmcws.html" class="code" title="function wavef = load_irisdmcws(request)">load_irisdmcws</a>	LOAD_IRISDMCWS loads waveforms using the IRIS Web Services Java Library</li><li><a href="load_matfile.html" class="code" title="function w = load_matfile(request)">load_matfile</a>	LOAD_FILE</li><li><a href="load_miniseed.html" class="code" title="function w = load_miniseed(request)">load_miniseed</a>	LOAD_MINISEED loads a waveform from MINISEED files</li><li><a href="load_obspy.html" class="code" title="function w = load_obspy(request)">load_obspy</a>	LOAD_OBSPY loads matlab files that were saved by ObsPy as per the ObsPy tutorial</li><li><a href="load_sac.html" class="code" title="function w = load_sac(request)">load_sac</a>	LOAD_SAC loads a waveform from SAC files</li><li><a href="load_seisan.html" class="code" title="function w = load_seisan(request)">load_seisan</a>	LOAD_SEISAN loads a waveform from SEISAN files</li><li><a href="load_winston.html" class="code" title="function allWaves = load_winston(request)">load_winston</a>	LOAD_WINSTON handles retrieval of data from a winston waveserver.</li><li><a href="../../../../GISMO/core/dev/+dataretrieval/@antelopesource/load_antelope.html" class="code" title="function outputWaveforms = load_antelope(obj, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="load_from_datasource.html" class="code" title="function w = load_from_datasource(ds, chans, startt, endt, combine_waves, usewkaround)">load_from_datasource</a>	load_from_datasource</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function myLoadRoutine = get_load_routine(ds, use_wkaround)</a>
+0002       <span class="comment">% determine the load function based upon the datasource's type</span>
+0003    <span class="keyword">switch</span> lower(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ds,<span class="string">'type'</span>))
+0004       <span class="keyword">case</span> <span class="string">'sac'</span>
+0005          myLoadRoutine = @<a href="load_sac.html" class="code" title="function w = load_sac(request)">load_sac</a>;
+0006       <span class="keyword">case</span> <span class="string">'matfile'</span>
+0007          myLoadRoutine = @<a href="load_matfile.html" class="code" title="function w = load_matfile(request)">load_matfile</a>;
+0008       <span class="keyword">case</span> <span class="string">'obspy'</span>
+0009          myLoadRoutine = @<a href="load_obspy.html" class="code" title="function w = load_obspy(request)">load_obspy</a>;
+0010       <span class="keyword">case</span> <span class="string">'file'</span>
+0011          myLoadRoutine = @<a href="load_matfile.html" class="code" title="function w = load_matfile(request)">load_matfile</a>; <span class="comment">%same as type 'matfile'</span>
+0012       <span class="keyword">case</span> <span class="string">'antelope'</span> 
+0013          <span class="keyword">if</span> use_wkaround
+0014             myLoadRoutine = @<a href="load_antelope_workaround.html" class="code" title="function outputWaveforms = load_antelope_workaround(datarequest, COMBINE_WAVEFORMS, specificDatabase)">load_antelope_workaround</a>;
+0015          <span class="keyword">else</span>
+0016             myLoadRoutine = @<a href="load_antelope.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope</a>;
+0017          <span class="keyword">end</span>
+0018       <span class="keyword">case</span> <span class="string">'irisdmcws'</span>
+0019          myLoadRoutine = @<a href="load_irisdmcws.html" class="code" title="function wavef = load_irisdmcws(request)">load_irisdmcws</a>;
+0020       <span class="keyword">case</span> <span class="string">'winston'</span>
+0021          myLoadRoutine = @<a href="load_winston.html" class="code" title="function allWaves = load_winston(request)">load_winston</a>;
+0022       <span class="keyword">case</span> <span class="string">'seisan'</span>
+0023          myLoadRoutine = @<a href="load_seisan.html" class="code" title="function w = load_seisan(request)">load_seisan</a>;
+0024       <span class="keyword">case</span> <span class="string">'ah'</span>
+0025          myLoadRoutine = @load_ah;
+0026        <span class="keyword">case</span> <span class="string">'miniseed'</span> <span class="comment">% added by Glenn 2016/05/25</span>
+0027            myLoadRoutine = @<a href="load_miniseed.html" class="code" title="function w = load_miniseed(request)">load_miniseed</a>;
+0028       <span class="keyword">otherwise</span>
+0029             error(<span class="string">'Waveform:waveform:noDatasourceInterpreter'</span>,<span class="keyword">...</span>
+0030                <span class="string">'user defined datasources should be associated with an interpreter'</span>);
+0031    <span class="keyword">end</span>
+0032 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

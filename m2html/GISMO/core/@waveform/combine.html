@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of combine</title>
+  <meta name="keywords" content="combine">
+  <meta name="description" content="COMBINE merges waveforms based on start/end times and ChannelTag info.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; combine.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>combine
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>COMBINE merges waveforms based on start/end times and ChannelTag info.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function combined_waveforms = combine (waveformlist) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">COMBINE merges waveforms based on start/end times and ChannelTag info.
+ combined_waveforms = combine (waveformlist) takes a vector of waveforms
+ and combines them based on SCNL information and start/endtimes.
+ DOES NO OTHER CHECKS</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>	C = SORT(C,'TIME')</li><li><a href="../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@rsam/extract.html" class="code" title="function s=extract(self, snum, enum)">extract</a>	</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>	ADDHISTORY function in charge of adding history to a waveform</li><li><a href="double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/sort.html" class="code" title="function c = sort(c)">sort</a>	C = SORT(C) Sorts traces from oldest to youngest.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/waveform_wrapper.html" class="code" title="function w=waveform_wrapper(ds, chantag, snum, enum);">waveform_wrapper</a>	WAVEFORM_WRAPPER try multiple datasource objects in</li><li><a href="../../../GISMO/core/+antelope/antelope2waveform.html" class="code" title="function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)">antelope2waveform</a>	ANTELOPE2WAVEFORM Load waveform objects from Antelope database</li><li><a href="../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope_old.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope_old</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope_workaround.html" class="code" title="function outputWaveforms = load_antelope_workaround(datarequest, COMBINE_WAVEFORMS, specificDatabase)">load_antelope_workaround</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_from_datasource.html" class="code" title="function w = load_from_datasource(ds, chans, startt, endt, combine_waves, usewkaround)">load_from_datasource</a>	load_from_datasource</li><li><a href="../../../GISMO/core/dev/+dataretrieval/@antelopesource/antelopesource.html" class="code" title="">antelopesource</a>	</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/sst2nan.html" class="code" title="function nan = sst2nan(sst,w)">sst2nan</a>	</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/sst2val.html" class="code" title="function w = sst2val(sst,w,val)">sst2val</a>	SST2VAL: Set sections of waveform w to single value. Useful for setting</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/wfa2nan.html" class="code" title="function nan = wfa2nan(wfa, varargin)">wfa2nan</a>	</li><li><a href="../../../GISMO/tests/waveform_antelope_test.html" class="code" title="function tests = waveform_antelope_test()">waveform_antelope_test</a>	% Main function to generate tests</li><li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function w = piece_together(w)</a></li><li><a href="#_sub2" class="code">function w = spliceAndPad(w1, w2, paddingAmount)</a></li><li><a href="#_sub3" class="code">function w = spliceWaveform(w1, w2)</a></li><li><a href="#_sub4" class="code">function result = overlaps(dt, sampleInterval)</a></li><li><a href="#_sub5" class="code">function t = dt_seconds(w1,w2)</a></li><li><a href="#_sub6" class="code">function w = timesort(w)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function combined_waveforms = combine (waveformlist)</a>
+0002    <span class="comment">%COMBINE merges waveforms based on start/end times and ChannelTag info.</span>
+0003    <span class="comment">% combined_waveforms = combine (waveformlist) takes a vector of waveforms</span>
+0004    <span class="comment">% and combines them based on SCNL information and start/endtimes.</span>
+0005    <span class="comment">% DOES NO OTHER CHECKS</span>
+0006    
+0007    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0008    <span class="comment">% $Date$</span>
+0009    <span class="comment">% $Revision$</span>
+0010    
+0011    <span class="keyword">if</span> numel(waveformlist) &lt; 2  <span class="comment">%nothing to do</span>
+0012       combined_waveforms = waveformlist;
+0013       <span class="keyword">return</span>
+0014    <span class="keyword">end</span>
+0015    
+0016    channelinfo = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(waveformlist,<span class="string">'channeltag'</span>);
+0017    [uniquescnls, idx, scnlmembers] = <a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(channelinfo);
+0018    
+0019    <span class="comment">%preallocate</span>
+0020    combined_waveforms = repmat(<a href="waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>,size(uniquescnls));
+0021    
+0022    <span class="keyword">for</span> i=1:numel(uniquescnls)
+0023       w = waveformlist(scnlmembers == i);
+0024       w = <a href="#_sub6" class="code" title="subfunction w = timesort(w)">timesort</a>(w);
+0025       <span class="keyword">for</span> j=(numel(w)-1):-1:1
+0026          w(j) = <a href="#_sub1" class="code" title="subfunction w = piece_together(w)">piece_together</a>(w(j:j+1));
+0027          w(j+1) = <a href="waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>;
+0028       <span class="keyword">end</span>
+0029       combined_waveforms(i) = w(1);
+0030    <span class="keyword">end</span>
+0031 <span class="keyword">end</span>
+0032 
+0033 <a name="_sub1" href="#_subfunctions" class="code">function w = piece_together(w)</a>
+0034    <span class="keyword">if</span> numel(w) &gt; 2
+0035       <span class="keyword">for</span> i = numel(w)-1: -1 : 1
+0036          w(i) = <a href="#_sub1" class="code" title="subfunction w = piece_together(w)">piece_together</a>(w(i:i+1));
+0037       <span class="keyword">end</span>
+0038       w = w(1);
+0039       <span class="keyword">return</span>;
+0040    <span class="keyword">elseif</span> numel(w) == 1
+0041       <span class="keyword">return</span>
+0042    <span class="keyword">end</span>
+0043    <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(w(1))
+0044       w = w(2);
+0045       <span class="keyword">return</span>;
+0046    <span class="keyword">end</span>;
+0047    dt = <a href="#_sub5" class="code" title="subfunction t = dt_seconds(w1,w2)">dt_seconds</a>(w(1),w(2));  <span class="comment">%time overlap in seconds.</span>
+0048    sampleRates = round(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'freq'</span>));
+0049    sampleInterval = 1 ./ sampleRates(1);
+0050    
+0051    <span class="keyword">if</span> <a href="#_sub4" class="code" title="subfunction result = overlaps(dt, sampleInterval)">overlaps</a>(dt, sampleInterval)
+0052       w = <a href="#_sub3" class="code" title="subfunction w = spliceWaveform(w1, w2)">spliceWaveform</a>(w(1), w(2));
+0053    <span class="keyword">else</span>
+0054       paddingAmount = round((dt * sampleRates(1))-1);
+0055       w = <a href="#_sub2" class="code" title="subfunction w = spliceAndPad(w1, w2, paddingAmount)">spliceAndPad</a>(w(1),w(2), paddingAmount);
+0056    <span class="keyword">end</span>
+0057    w = w(1);
+0058 <span class="keyword">end</span>
+0059 
+0060 <a name="_sub2" href="#_subfunctions" class="code">function w = spliceAndPad(w1, w2, paddingAmount)</a>
+0061    <span class="keyword">if</span> paddingAmount &gt; 0 &amp;&amp; ~isinf(paddingAmount)
+0062       toAdd = nan(paddingAmount,1);
+0063    <span class="keyword">else</span>
+0064       toAdd = [];
+0065    <span class="keyword">end</span>
+0066    
+0067    w = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w1,<span class="string">'data'</span>,[w1.data; toAdd; w2.data]);
+0068 <span class="keyword">end</span>
+0069 
+0070 <a name="_sub3" href="#_subfunctions" class="code">function w = spliceWaveform(w1, w2)</a>
+0071    <span class="comment">% NOTE * Function uses direct field access</span>
+0072    timesToGrab = sum(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w1,<span class="string">'timevector'</span>) &lt; <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w2,<span class="string">'start'</span>));
+0073    
+0074    samplesRemoved = numel(w1.data) - timesToGrab;
+0075    
+0076    w = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w1,<span class="string">'data'</span>,[<a href="double.html" class="code" title="function n = double(W, option)">double</a>(<a href="extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>(w1,<span class="string">'index'</span>,1,timesToGrab)); w2.data]);
+0077    
+0078    w= <a href="addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>(w,<span class="string">'SPLICEPOINT: %s, removed %d points (overlap)'</span>,<span class="keyword">...</span>
+0079       datestr(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w2,<span class="string">'start'</span>)),samplesRemoved);
+0080 <span class="keyword">end</span>
+0081 
+0082 <a name="_sub4" href="#_subfunctions" class="code">function result = overlaps(dt, sampleInterval)</a>
+0083    result = (dt- sampleInterval .* 1.25) &lt; 0;
+0084 <span class="keyword">end</span>
+0085 
+0086 <a name="_sub5" href="#_subfunctions" class="code">function t = dt_seconds(w1,w2)</a>
+0087    <span class="comment">%  w1----] t [----w2</span>
+0088    firstsampleT = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w2,<span class="string">'start'</span>);
+0089    lastsampleT = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w1,<span class="string">'timevector'</span>); lastsampleT = lastsampleT(end);
+0090    t = firstsampleT*86400 - lastsampleT * 86400;
+0091 <span class="keyword">end</span>
+0092 
+0093 <a name="_sub6" href="#_subfunctions" class="code">function w = timesort(w)</a>
+0094    [~, I] = <a href="../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'start'</span>));
+0095    w = w(I);
+0096 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

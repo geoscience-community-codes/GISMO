@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of get_timewindow</title>
+  <meta name="keywords" content="get_timewindow">
+  <meta name="description" content="GET_TIMEWINDOW">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">applications</a> &gt; <a href="index.html">+iceweb</a> &gt; get_timewindow.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/applications/+iceweb&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>get_timewindow
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>GET_TIMEWINDOW</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function timewindow = get_timewindow(utdnum_stop, numMins, utdnum_start) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> GET_TIMEWINDOW
+
+ Usage:  timewindow = get_timewindow([utdnum, [numMins, [utdnum_start]]])
+
+ get_timewindow returns the Matlab datenumbers corresponding to the start and end of a time window
+ This time window is aligned such that if the numMins of data requested is 10, the start and end times
+ are aligned at 0, 10, 20, 30, 40 or 50 minutes past the hour, in such a way that the end time is the
+ most recent value that does not exceed dnum.
+
+ If numMins is not given, it is set to 10.
+
+ Example 1:
+     [timewindow.start,timewindow.stop]=gettartAndEndTimes(datenum(2007,04,23,17,13,13), 15)
+    
+    In this case timewindow.start would be datenum(2007,04,23,16,45,00)
+    and timewindow.stop would be datenum(2007,04,23,17,00,00)
+
+ Example 2:
+     [timewindow.start,timewindow.stop]=getStartAndEndTimes(datenum(2007,04,23,17,13,13), 10)
+    
+    In this case timewindow.start would be datenum(2007,04,23,17,00,00)
+    and timewindow.stop would be datenum(2007,04,23,17,10,00)
+
+ Glenn Thompson, 2007</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/libgismo/utnow.html" class="code" title="function utdnum=utnow()">utnow</a>	UTNOW</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function dnum1=boundaryBeforeDnum(dnum, numMins)</a></li><li><a href="#_sub2" class="code">function dnum1=boundaryAfterDnum(dnum, numMins)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function timewindow = get_timewindow(utdnum_stop, numMins, utdnum_start) </a>
+0002 <span class="comment">% GET_TIMEWINDOW</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% Usage:  timewindow = get_timewindow([utdnum, [numMins, [utdnum_start]]])</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% get_timewindow returns the Matlab datenumbers corresponding to the start and end of a time window</span>
+0007 <span class="comment">% This time window is aligned such that if the numMins of data requested is 10, the start and end times</span>
+0008 <span class="comment">% are aligned at 0, 10, 20, 30, 40 or 50 minutes past the hour, in such a way that the end time is the</span>
+0009 <span class="comment">% most recent value that does not exceed dnum.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% If numMins is not given, it is set to 10.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% Example 1:</span>
+0014 <span class="comment">%     [timewindow.start,timewindow.stop]=gettartAndEndTimes(datenum(2007,04,23,17,13,13), 15)</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    In this case timewindow.start would be datenum(2007,04,23,16,45,00)</span>
+0017 <span class="comment">%    and timewindow.stop would be datenum(2007,04,23,17,00,00)</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% Example 2:</span>
+0020 <span class="comment">%     [timewindow.start,timewindow.stop]=getStartAndEndTimes(datenum(2007,04,23,17,13,13), 10)</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%    In this case timewindow.start would be datenum(2007,04,23,17,00,00)</span>
+0023 <span class="comment">%    and timewindow.stop would be datenum(2007,04,23,17,10,00)</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% Glenn Thompson, 2007</span>
+0026 
+0027 <span class="keyword">global</span> PARAMS
+0028 
+0029 
+0030 <span class="keyword">if</span> nargin == 0
+0031     utdnum_stop = <a href="../../../GISMO/libgismo/utnow.html" class="code" title="function utdnum=utnow()">utnow</a>();
+0032 <span class="keyword">end</span>
+0033 
+0034 <span class="keyword">if</span> nargin &lt; 2
+0035     numMins = 10;
+0036 <span class="keyword">end</span>
+0037 
+0038 
+0039 <span class="keyword">if</span> nargin &gt; 3
+0040     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'get_timewindow([utdnum_stop [, numMins, [utdnum_start]]]'</span>)
+0041     <span class="keyword">return</span>;
+0042 <span class="keyword">end</span>
+0043 
+0044 timewindow.stop  = <a href="#_sub1" class="code" title="subfunction dnum1=boundaryBeforeDnum(dnum, numMins)">boundaryBeforeDnum</a>(utdnum_stop, numMins);
+0045 timewindow.start = timewindow.stop - numMins/1440;
+0046 
+0047 <span class="keyword">if</span> (nargin == 3)
+0048     snum = <a href="#_sub1" class="code" title="subfunction dnum1=boundaryBeforeDnum(dnum, numMins)">boundaryBeforeDnum</a>(utdnum_start, numMins);
+0049     snum_array = snum: numMins/1440: timewindow.start;
+0050     enum_array = snum_array + numMins/1440;
+0051     timewindow.start = snum_array;
+0052     timewindow.stop = enum_array;
+0053 <span class="keyword">end</span>    
+0054     
+0055 
+0056 <span class="comment">%%%%%%%%%%%%%%%%%%%</span>
+0057 <a name="_sub1" href="#_subfunctions" class="code">function dnum1=boundaryBeforeDnum(dnum, numMins)</a>
+0058 dayFraction        =    rem(dnum,1); 
+0059 minutesIntoThisDay    =    dayFraction*1440;
+0060 dnum1             =     dnum - rem(minutesIntoThisDay, numMins)/1440;
+0061 
+0062 <a name="_sub2" href="#_subfunctions" class="code">function dnum1=boundaryAfterDnum(dnum, numMins)</a>
+0063 dnum1 = <a href="#_sub1" class="code" title="subfunction dnum1=boundaryBeforeDnum(dnum, numMins)">boundaryBeforeDnum</a>(dnum, numMins) + numMins/1440; 
+0064 
+0065</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

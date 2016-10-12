@@ -1,0 +1,745 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ReadMSEEDFast</title>
+  <meta name="keywords" content="ReadMSEEDFast">
+  <meta name="description" content="ReadMSEEDFast( fileName )">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">ReadMSEEDFast</a> &gt; ReadMSEEDFast.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed/ReadMSEEDFast&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>ReadMSEEDFast
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>ReadMSEEDFast( fileName )</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [signalStruct] = ReadMSEEDFast(fileName) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> ReadMSEEDFast( fileName )
+ reads MSEED file and returns record structure.
+ Whole MSEED file is loaded to memory and
+ the file is processed in memory. 
+ Loops were vectorised as much as possible.
+
+ This version is optimalized for speed and supports
+ only subset of MSEED format:
+
+ Chunks in traces are assumed to be chronologicaly
+ saved. Interlaced traces are not supported.
+
+ The file is assumed to have just one encoding type.
+ Usage of more than one encoding format in the file
+ is not supported yet.
+
+ Just DATAONLY blockett is supported yet.
+ Other blocketts will be add in the future.
+
+ Supported data encoding formats:
+
+ ANSI CHAR                    (format code  0 )
+ big endian, little endian  
+ INT16                        (format code  1 )
+ INT32                        (format code  3 )
+ FLOAT32                      (format code  4 )
+ DOUBLE                       (format code  5 )
+ STEIM1                       (format code 10 )
+ STEIM2                       (format code 11 )
+
+
+
+ input : fileName
+ output: record structure matrix
+
+  Record structure fields:
+
+  network          - string
+  station          - string
+  location         - string
+  channel          - string
+  dataquality      - string
+  type             - string
+  startTime        - double
+  endTime          - double
+  sampleRate       - double
+  sampleCount      - long int
+  numberOfSamples  - long int
+  sampleType       - string ( i for integer)
+  data             - vector of doubles
+  dateTime         - struct (all doubles)
+                     year
+                     month
+                     day
+                     hour
+                     minute
+                     second
+  dateTimeString   - string
+
+
+ Code is partially based on rdmmseed.m by
+ Franois Beauducel &lt;beauducel@ipgp.fr&gt;
+ Institut de Physique du Globe de Paris
+
+ credit  : Martin Mityska (2014)
+           Faculty of Science
+           Charles University in Prague
+ version : 1.3 - 06 / 2015
+           added bitcmpOld function to mimic old funcionality of bitcmp
+        important for new MATLABs like version R2014.
+ version : 1.4 - 06 / 2015
+        Division changed to element-wise, change of line 479.
+           Old code: sampleRate = 1/(sampleRateFactor.*sampleRateMultiplier);
+           New code: sampleRate = 1./(sampleRateFactor.*sampleRateMultiplier);</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>	SIGN removes the mean of each trace.</li><li><a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/sign.html" class="code" title="function w = sign(w)">sign</a>	SIGN Signum function for waveforms.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/sign.html" class="code" title="function c = sign(c)">sign</a>	SIGN convert traces to the sign of their data (+1, 0, -1)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@waveform/private/load_miniseed.html" class="code" title="function w = load_miniseed(request)">load_miniseed</a>	LOAD_MINISEED loads a waveform from MINISEED files</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function output = bitcmpOld(x,N)</a></li><li><a href="#_sub2" class="code">function [trace] = DecodeSignal(encodedSignalMatrix, encodingFormat,isLittleEndian,BLOCK_RECORD_SIZE)</a></li><li><a href="#_sub3" class="code">function [encoding,wordOrder,dataRecordLength] = ReadBlockets(raw,nFolowingBlocketts,blockettBeginOffset,isLittleEndian)</a></li><li><a href="#_sub4" class="code">function [headerInfo] = ReadHeaders(raw,isLittleEndian)</a></li><li><a href="#_sub5" class="code">function NewArray = TypeCastArray(theArray, newType)</a></li><li><a href="#_sub6" class="code">function d = ReadBTime(bTime,isLittleEndian)</a></li><li><a href="#_sub7" class="code">function [dateTimeStruct, dateTimeString, unixTimeStamp]= ConstructDateTime(dateTimeMatrix)</a></li><li><a href="#_sub8" class="code">function [day] = daysInMonth(month, year)</a></li><li><a href="#_sub9" class="code">function d = bitsign(x,n)</a></li><li><a href="#_sub10" class="code">function d = bitsplit(x,b,n)</a></li><li><a href="#_sub11" class="code">function [unixTime] = FromMatlabTimeToUnixTime(dateTime)</a></li><li><a href="#_sub12" class="code">function [matlabTime] = FromUnixTimeToMatlabTime(unixTime)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [signalStruct] = ReadMSEEDFast(fileName)</a>
+0002 <span class="comment">% ReadMSEEDFast( fileName )</span>
+0003 <span class="comment">% reads MSEED file and returns record structure.</span>
+0004 <span class="comment">% Whole MSEED file is loaded to memory and</span>
+0005 <span class="comment">% the file is processed in memory.</span>
+0006 <span class="comment">% Loops were vectorised as much as possible.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% This version is optimalized for speed and supports</span>
+0009 <span class="comment">% only subset of MSEED format:</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% Chunks in traces are assumed to be chronologicaly</span>
+0012 <span class="comment">% saved. Interlaced traces are not supported.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% The file is assumed to have just one encoding type.</span>
+0015 <span class="comment">% Usage of more than one encoding format in the file</span>
+0016 <span class="comment">% is not supported yet.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% Just DATAONLY blockett is supported yet.</span>
+0019 <span class="comment">% Other blocketts will be add in the future.</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% Supported data encoding formats:</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% ANSI CHAR                    (format code  0 )</span>
+0024 <span class="comment">% big endian, little endian</span>
+0025 <span class="comment">% INT16                        (format code  1 )</span>
+0026 <span class="comment">% INT32                        (format code  3 )</span>
+0027 <span class="comment">% FLOAT32                      (format code  4 )</span>
+0028 <span class="comment">% DOUBLE                       (format code  5 )</span>
+0029 <span class="comment">% STEIM1                       (format code 10 )</span>
+0030 <span class="comment">% STEIM2                       (format code 11 )</span>
+0031 <span class="comment">%</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">% input : fileName</span>
+0035 <span class="comment">% output: record structure matrix</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%  Record structure fields:</span>
+0038 <span class="comment">%</span>
+0039 <span class="comment">%  network          - string</span>
+0040 <span class="comment">%  station          - string</span>
+0041 <span class="comment">%  location         - string</span>
+0042 <span class="comment">%  channel          - string</span>
+0043 <span class="comment">%  dataquality      - string</span>
+0044 <span class="comment">%  type             - string</span>
+0045 <span class="comment">%  startTime        - double</span>
+0046 <span class="comment">%  endTime          - double</span>
+0047 <span class="comment">%  sampleRate       - double</span>
+0048 <span class="comment">%  sampleCount      - long int</span>
+0049 <span class="comment">%  numberOfSamples  - long int</span>
+0050 <span class="comment">%  sampleType       - string ( i for integer)</span>
+0051 <span class="comment">%  data             - vector of doubles</span>
+0052 <span class="comment">%  dateTime         - struct (all doubles)</span>
+0053 <span class="comment">%                     year</span>
+0054 <span class="comment">%                     month</span>
+0055 <span class="comment">%                     day</span>
+0056 <span class="comment">%                     hour</span>
+0057 <span class="comment">%                     minute</span>
+0058 <span class="comment">%                     second</span>
+0059 <span class="comment">%  dateTimeString   - string</span>
+0060 <span class="comment">%</span>
+0061 <span class="comment">%</span>
+0062 <span class="comment">% Code is partially based on rdmmseed.m by</span>
+0063 <span class="comment">% Franois Beauducel &lt;beauducel@ipgp.fr&gt;</span>
+0064 <span class="comment">% Institut de Physique du Globe de Paris</span>
+0065 <span class="comment">%</span>
+0066 <span class="comment">% credit  : Martin Mityska (2014)</span>
+0067 <span class="comment">%           Faculty of Science</span>
+0068 <span class="comment">%           Charles University in Prague</span>
+0069 <span class="comment">% version : 1.3 - 06 / 2015</span>
+0070 <span class="comment">%           added bitcmpOld function to mimic old funcionality of bitcmp</span>
+0071 <span class="comment">%        important for new MATLABs like version R2014.</span>
+0072 <span class="comment">% version : 1.4 - 06 / 2015</span>
+0073 <span class="comment">%        Division changed to element-wise, change of line 479.</span>
+0074 <span class="comment">%           Old code: sampleRate = 1/(sampleRateFactor.*sampleRateMultiplier);</span>
+0075 <span class="comment">%           New code: sampleRate = 1./(sampleRateFactor.*sampleRateMultiplier);</span>
+0076 
+0077     <span class="comment">% Endian flag - big endian as default</span>
+0078     isLittleEndian = 0;
+0079 
+0080     <span class="comment">% Encoding flag - STEIM 2 as default</span>
+0081     ENCODING = 11;
+0082 
+0083     <span class="comment">% This structure will be filled with data and returned</span>
+0084     signalStruct = [];
+0085 
+0086     <span class="comment">% Opening file and loading raw data</span>
+0087     <span class="keyword">try</span>
+0088         fp = fopen(fileName,<span class="string">'r'</span>);
+0089         raw = fread(fp)';
+0090     <span class="keyword">catch</span> err
+0091         signalStruct = -1;
+0092         error(sprintf(<span class="string">'Error occured during opening file:\n%s\nDetails:\n %s\n'</span>,fileName,err.identifier));
+0093         <span class="keyword">return</span> 
+0094     <span class="keyword">end</span>
+0095 
+0096     <span class="comment">% Let's announce what we are reading</span>
+0097     fprintf(<span class="string">'ReadMSEEDFast:\t%s\n'</span>,fileName);
+0098     
+0099     <span class="comment">% Big / Little endian test</span>
+0100     Year = typecast(uint8(raw(20:21)),<span class="string">'uint16'</span>);
+0101     <span class="keyword">if</span> Year &gt;= 2056
+0102         isLittleEndian = 1;
+0103     <span class="keyword">end</span>
+0104     
+0105     <span class="comment">%Let's read first header and estimate block record size (4096 bytes is</span>
+0106     <span class="comment">%recommended length according to IRIS specification.</span>
+0107     firstHeader = <a href="#_sub4" class="code" title="subfunction [headerInfo] = ReadHeaders(raw,isLittleEndian)">ReadHeaders</a>(typecast(uint8(raw),<span class="string">'uint8'</span>),isLittleEndian);
+0108     
+0109     BLOCK_RECORD_SIZE=firstHeader.dataRecordLength;
+0110     
+0111     <span class="comment">% Reshaping linear data to matrix form</span>
+0112     rawPacketMatrix = reshape(typecast(uint8(raw),<span class="string">'uint8'</span>),BLOCK_RECORD_SIZE,[])';
+0113     rawPacketMatrixSize = size(rawPacketMatrix);
+0114 
+0115     <span class="comment">% Reading all headers of the file at once</span>
+0116     [headerInfo] = <a href="#_sub4" class="code" title="subfunction [headerInfo] = ReadHeaders(raw,isLittleEndian)">ReadHeaders</a>(rawPacketMatrix,isLittleEndian);
+0117 
+0118     ENCODING=headerInfo.encoding(1);
+0119     
+0120     <span class="comment">% Decoding data for every unique station and channel on the record</span>
+0121     [stations uniqueStationsIndex]=<a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(headerInfo.stationCode{1});
+0122     [channels uniqueChannelsIndex]=<a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(headerInfo.channelId{1});
+0123     channels=flipud(channels);
+0124     stations=flipud(stations);
+0125     uniqueChannelsIndex=flipud(uniqueChannelsIndex);
+0126     uniqueStationsIndex=flipud(uniqueStationsIndex);
+0127     
+0128     <span class="keyword">for</span> h=1:numel(stations)
+0129         <span class="keyword">for</span> k=1:numel(channels)
+0130 
+0131                 sameChannelRows=<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>((strcmp(headerInfo.channelId{1},channels(k)) &amp; strcmp(headerInfo.stationCode{1},stations(h))));
+0132                 encodedSignalMatrix = rawPacketMatrix(sameChannelRows,headerInfo.dataBeginOffset(1)+1:rawPacketMatrixSize(2));
+0133                 signalMatrix=<a href="#_sub2" class="code" title="subfunction [trace] = DecodeSignal(encodedSignalMatrix, encodingFormat,isLittleEndian,BLOCK_RECORD_SIZE)">DecodeSignal</a>(encodedSignalMatrix,ENCODING,isLittleEndian,BLOCK_RECORD_SIZE);
+0134 
+0135                 <span class="comment">%uci - unique channel index</span>
+0136                 uci = 1;
+0137                 <span class="keyword">switch</span> k
+0138                     <span class="keyword">case</span> 1
+0139                     uci = 1;
+0140                     <span class="keyword">otherwise</span>
+0141                     uci = uniqueChannelsIndex(k-1)+1;
+0142                 <span class="keyword">end</span>
+0143 
+0144                 [dtStruct, dtString, unixTimeStamp]=<a href="#_sub7" class="code" title="subfunction [dateTimeStruct, dateTimeString, unixTimeStamp]= ConstructDateTime(dateTimeMatrix)">ConstructDateTime</a>(headerInfo.startTime(uci,:));
+0145                 
+0146                 <span class="comment">%Data type of the file</span>
+0147                 sampleType = <span class="string">'i'</span>;
+0148                 
+0149                 <span class="keyword">switch</span>(ENCODING)
+0150                     <span class="keyword">case</span> 4
+0151                         <span class="comment">%Float sample type</span>
+0152                         sampleType = <span class="string">'f'</span>;
+0153                     <span class="keyword">case</span> 5
+0154                         <span class="comment">%Double sample type</span>
+0155                         sampleType = <span class="string">'d'</span>;
+0156                     <span class="keyword">otherwise</span>
+0157                         <span class="comment">%Integer sample type</span>
+0158                         sampleType = <span class="string">'i'</span>;
+0159                 <span class="keyword">end</span>
+0160                 
+0161                 <span class="comment">% Prepare result struct</span>
+0162                 signalStruct=[signalStruct;struct(<span class="string">'network'</span>,headerInfo.networkCode{1}(sameChannelRows(1)),<span class="string">'station'</span>,headerInfo.stationCode{1}(sameChannelRows(1)),<span class="string">'location'</span>,headerInfo.locationCode{1}(sameChannelRows(1)),<span class="string">'channel'</span>,headerInfo.channelId{1}(sameChannelRows(1)),<span class="string">'dataquality'</span>,<span class="string">''</span>,<span class="string">'type'</span>,<span class="string">''</span>,<span class="string">'startTime'</span>,unixTimeStamp,<span class="string">'endTime'</span>,0,<span class="string">'sampleRate'</span>,<a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(headerInfo.sampleRate(sameChannelRows(1))),<span class="string">'sampleCount'</span>,size(signalMatrix,1),<span class="string">'numberOfSamples'</span>,size(signalMatrix,1),<span class="string">'sampleType'</span>,sampleType,<span class="string">'data'</span>,signalMatrix(:),<span class="string">'dateTime'</span>,dtStruct,<span class="string">'dateTimeString'</span>,dtString)];
+0163 
+0164         <span class="keyword">end</span>
+0165     <span class="keyword">end</span>
+0166     fclose(fp);
+0167 
+0168 <span class="keyword">end</span>
+0169 
+0170 <a name="_sub1" href="#_subfunctions" class="code">function output = bitcmpOld(x,N)</a>
+0171 
+0172       <span class="keyword">if</span> nargin &lt; 2
+0173 
+0174           output = bitcmp(x);
+0175 
+0176       <span class="keyword">else</span>
+0177 
+0178           maxN = 2^N-1;    <span class="comment">% This is the max number you can represent in 4 bits</span>
+0179 
+0180           fmt  = <span class="string">'uint32'</span>;  <span class="comment">% You can change uint8 to uint16 or 32</span>
+0181 
+0182           out1 = eval([<span class="string">'bitcmp('</span>,fmt,<span class="string">'(x)'</span>,<span class="string">','''</span>,fmt,<span class="string">''')'</span>]);
+0183 
+0184           out2 = eval([<span class="string">'bitcmp('</span>,fmt,<span class="string">'(maxN)'</span>,<span class="string">','''</span>,fmt,<span class="string">''')'</span>]);
+0185 
+0186           output = out1 - out2;
+0187 
+0188       <span class="keyword">end</span>
+0189 
+0190 <span class="keyword">end</span>
+0191 
+0192 <a name="_sub2" href="#_subfunctions" class="code">function [trace] = DecodeSignal(encodedSignalMatrix, encodingFormat,isLittleEndian,BLOCK_RECORD_SIZE)</a>
+0193    
+0194     <span class="comment">% Decoding routine for STEIM2 only</span>
+0195     <span class="keyword">switch</span> encodingFormat
+0196         
+0197 <span class="comment">%         Todo add support for next encoding formats</span>
+0198          <span class="keyword">case</span> 0
+0199 <span class="comment">%             % --- decoding format: ASCII text</span>
+0200              signalMatrix=<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>((reshape(encodedSignalMatrix',1,[])')',<span class="string">'int8'</span>);
+0201             
+0202              trace = signalMatrix;
+0203 
+0204 <span class="comment">%</span>
+0205          <span class="keyword">case</span> 1
+0206 <span class="comment">%             % --- decoding format: 16-bit integers</span>
+0207              signalMatrix=<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>((reshape(encodedSignalMatrix',2,[])')',<span class="string">'int16'</span>);
+0208             
+0209              <span class="keyword">if</span> ~isLittleEndian
+0210                  signalMatrix=swapbytes(signalMatrix(:));
+0211              <span class="keyword">end</span>
+0212             
+0213              trace = signalMatrix;
+0214          
+0215 <span class="comment">%         case 2</span>
+0216 <span class="comment">%             % --- decoding format: 24-bit integers</span>
+0217               <span class="comment">% unsupported</span>
+0218 
+0219          <span class="keyword">case</span> 3
+0220             <span class="comment">% --- decoding format: 32-bit integers</span>
+0221             signalMatrix=<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>((reshape(encodedSignalMatrix',4,[])')',<span class="string">'int32'</span>);
+0222             
+0223             <span class="keyword">if</span> ~isLittleEndian
+0224                 signalMatrix=swapbytes(signalMatrix(:));
+0225             <span class="keyword">end</span>
+0226             
+0227             trace = signalMatrix;
+0228 
+0229 
+0230          <span class="keyword">case</span> 4
+0231             <span class="comment">% --- decoding format: IEEE floating point</span>
+0232             <span class="comment">%D.EncodingFormatName = 'FLOAT32';</span>
+0233             
+0234             <span class="comment">%retype file to float32</span>
+0235             signalMatrix=<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>((reshape(encodedSignalMatrix',4,[])')',<span class="string">'single'</span>);
+0236             
+0237             <span class="keyword">if</span> ~isLittleEndian
+0238                 signalMatrix=swapbytes(signalMatrix(:));
+0239             <span class="keyword">end</span>
+0240             
+0241             trace = signalMatrix;
+0242  
+0243          <span class="keyword">case</span> 5
+0244 <span class="comment">%             % --- decoding format: IEEE double precision floating point</span>
+0245             signalMatrix=<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>((reshape(encodedSignalMatrix',8,[])')',<span class="string">'double'</span>);
+0246             
+0247             <span class="keyword">if</span> ~isLittleEndian
+0248                 signalMatrix=swapbytes(signalMatrix(:));
+0249             <span class="keyword">end</span>
+0250             
+0251             trace = signalMatrix;
+0252 
+0253 
+0254         <span class="keyword">case</span> {10,11,19}
+0255             steim = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(encodingFormat==[10,11,19]);
+0256             
+0257             signalMatrix=<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>((reshape(encodedSignalMatrix',4,[])')',<span class="string">'uint32'</span>);
+0258             
+0259             <span class="keyword">if</span> ~isLittleEndian
+0260                 signalMatrix=swapbytes(signalMatrix(:));
+0261             <span class="keyword">end</span>
+0262             
+0263             signalMatrix=reshape(signalMatrix,numel(encodedSignalMatrix(1,:))/4,[]);
+0264 
+0265             <span class="comment">% read first int from every 64 int chunk (contains encoded nibbles)</span>
+0266             Q=signalMatrix(1:16:size(signalMatrix(:,1)),:);
+0267             <span class="comment">% reshape to one long column</span>
+0268             Q=reshape(Q,size(Q,1)*size(Q,2),1)';
+0269             <span class="comment">% prepare matrix Q for bitshift</span>
+0270             Q=repmat(Q,16,1);
+0271             <span class="comment">% prepare bit mask for bitshift</span>
+0272             bshiftMask=repmat(-30:2:0,size(Q,2),1)';
+0273             bQ=bitshift(Q,bshiftMask);
+0274             <span class="comment">% decode nibbles</span>
+0275             nibbles = bitand(bQ,<a href="#_sub1" class="code" title="subfunction output = bitcmpOld(x,N)">bitcmpOld</a>(0,2));
+0276             <span class="comment">% forward integration constant</span>
+0277             x0 = <a href="#_sub9" class="code" title="subfunction d = bitsign(x,n)">bitsign</a>(signalMatrix(2,:),32);    
+0278             <span class="comment">%x0(1)</span>
+0279             <span class="comment">% reverse integration constant</span>
+0280             xn = <a href="#_sub9" class="code" title="subfunction d = bitsign(x,n)">bitsign</a>(signalMatrix(3,:),32);    
+0281             
+0282             <span class="comment">% How many values can be stored in one chunk - depends on encoding</span>
+0283             maxValuesInChunk = 0;
+0284 
+0285             <span class="keyword">switch</span> steim
+0286                 
+0287                 <span class="keyword">case</span> 1
+0288                     <span class="comment">% STEIM-1: 3 cases following the nibbles</span>
+0289                     
+0290                     maxValuesInChunk = 4;
+0291                                         
+0292                     ddd = NaN*ones(4,numel(signalMatrix));    <span class="comment">% initiates array with NaN</span>
+0293                     k = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(nibbles == 1);            <span class="comment">% nibble = 1 : four 8-bit differences</span>
+0294                     <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(k)
+0295                         ddd(1:4,k) = <a href="#_sub10" class="code" title="subfunction d = bitsplit(x,b,n)">bitsplit</a>(signalMatrix(k),32,8);
+0296                         
+0297                         <span class="keyword">if</span> isLittleEndian
+0298                             ddd(1:4,k)=flipud(ddd(1:4,k));
+0299                         <span class="keyword">end</span>
+0300                         
+0301                     <span class="keyword">end</span>
+0302                     k = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(nibbles == 2);            <span class="comment">% nibble = 2 : two 16-bit differences</span>
+0303                     <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(k)
+0304                         ddd(1:2,k) = <a href="#_sub10" class="code" title="subfunction d = bitsplit(x,b,n)">bitsplit</a>(signalMatrix(k),32,16);
+0305                         
+0306                         <span class="keyword">if</span> isLittleEndian
+0307                             ddd(1:4,k)=flipud(ddd(1:4,k));
+0308                         <span class="keyword">end</span>
+0309                         
+0310                     <span class="keyword">end</span>
+0311                     k = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(nibbles == 3);            <span class="comment">% nibble = 3 : one 32-bit difference</span>
+0312                     <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(k)
+0313                         ddd(1,k) = <a href="#_sub9" class="code" title="subfunction d = bitsign(x,n)">bitsign</a>(signalMatrix(k),32);
+0314                     <span class="keyword">end</span>
+0315                     
+0316                 
+0317                 <span class="keyword">case</span> 2    
+0318                 <span class="comment">% STEIM-2: 7 cases following the nibbles and dnib</span>
+0319                 
+0320                     maxValuesInChunk = 7;
+0321                 
+0322                     ddd = NaN*ones(7,numel(signalMatrix));    <span class="comment">% initiates array with NaN</span>
+0323                     k = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(nibbles == 1);            <span class="comment">% nibble = 1 : four 8-bit differences</span>
+0324                     <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(k)
+0325                         ddd(1:4,k) = <a href="#_sub10" class="code" title="subfunction d = bitsplit(x,b,n)">bitsplit</a>(signalMatrix(k),32,8);
+0326                         
+0327                         <span class="keyword">if</span> isLittleEndian
+0328                             ddd(1:4,k)=flipud(ddd(1:4,k));
+0329                         <span class="keyword">end</span>
+0330                         
+0331                     <span class="keyword">end</span>
+0332                     k = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(nibbles == 2);            <span class="comment">% nibble = 2 : must look in dnib</span>
+0333                     <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(k)
+0334                         dnib = bitshift(signalMatrix(k),-30);
+0335                         kk = k(dnib == 1);        <span class="comment">% dnib = 1 : one 30-bit difference</span>
+0336                         <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(kk)
+0337                             ddd(1,kk) = <a href="#_sub9" class="code" title="subfunction d = bitsign(x,n)">bitsign</a>(signalMatrix(kk),30);
+0338                         <span class="keyword">end</span>
+0339                         kk = k(dnib == 2);        <span class="comment">% dnib = 2 : two 15-bit differences</span>
+0340                         <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(kk)
+0341                             ddd(1:2,kk) = <a href="#_sub10" class="code" title="subfunction d = bitsplit(x,b,n)">bitsplit</a>(signalMatrix(kk),30,15);
+0342                         <span class="keyword">end</span>
+0343                         kk = k(dnib == 3);        <span class="comment">% dnib = 3 : three 10-bit differences</span>
+0344                         <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(kk)
+0345                             ddd(1:3,kk) = <a href="#_sub10" class="code" title="subfunction d = bitsplit(x,b,n)">bitsplit</a>(signalMatrix(kk),30,10);
+0346                         <span class="keyword">end</span>
+0347                     <span class="keyword">end</span>
+0348                     k = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(nibbles == 3);                <span class="comment">% nibble = 3 : must look in dnib</span>
+0349                     <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(k)
+0350                         dnib = bitshift(signalMatrix(k),-30);
+0351                         kk = k(dnib == 0);        <span class="comment">% dnib = 0 : five 6-bit difference</span>
+0352                         <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(kk)
+0353                             ddd(1:5,kk) = <a href="#_sub10" class="code" title="subfunction d = bitsplit(x,b,n)">bitsplit</a>(signalMatrix(kk),30,6);
+0354                         <span class="keyword">end</span>
+0355                         kk = k(dnib == 1);        <span class="comment">% dnib = 1 : six 5-bit differences</span>
+0356                         <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(kk)
+0357                             ddd(1:6,kk) = <a href="#_sub10" class="code" title="subfunction d = bitsplit(x,b,n)">bitsplit</a>(signalMatrix(kk),30,5);
+0358                         <span class="keyword">end</span>
+0359                         kk = k(dnib == 2);        <span class="comment">% dnib = 2 : seven 4-bit differences (28 bits!)</span>
+0360                         <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(kk)
+0361                             ddd(1:7,kk) = <a href="#_sub10" class="code" title="subfunction d = bitsplit(x,b,n)">bitsplit</a>(signalMatrix(kk),28,4);
+0362                         <span class="keyword">end</span>
+0363                     <span class="keyword">end</span>
+0364                     
+0365                <span class="keyword">end</span>
+0366                    
+0367                <span class="comment">% Building matrix of column vectors of signal from</span>
+0368                <span class="comment">% data blocks</span>
+0369                ddd=reshape(ddd,[],1);
+0370                              
+0371                <span class="keyword">if</span> mod(size(ddd,1),((BLOCK_RECORD_SIZE-64)/4)*maxValuesInChunk) ~= 0
+0372                    ddd = [ddd; nan*zeros(((BLOCK_RECORD_SIZE-64)/4)*maxValuesInChunk-mod(size(ddd,1),((BLOCK_RECORD_SIZE-64)/4)*maxValuesInChunk),1)];
+0373                <span class="keyword">end</span>
+0374 
+0375                blockMatrix=reshape(ddd,((BLOCK_RECORD_SIZE-64)/4)*maxValuesInChunk,[]);
+0376                               
+0377                <span class="comment">% Removing NaNs and adding integration constant to every</span>
+0378                <span class="comment">% vector in block matrix, than building to trace vector</span>
+0379                trace = [];
+0380                <span class="keyword">for</span> i=1:size(blockMatrix,2)
+0381                    column = blockMatrix(~isnan(blockMatrix(:,i)),i);
+0382                    column = cumsum([x0(i);column(2:numel(column))]);
+0383                    trace = [trace;column];
+0384                <span class="keyword">end</span>
+0385 
+0386                trace;
+0387 
+0388         <span class="keyword">otherwise</span>
+0389             trace = [0];
+0390             errorMsg = sprintf(<span class="string">'Error: unknown data encoding.\n Supported formats are STEIM1, STEIM2.\n'</span>);
+0391             fprintf(2,errorMsg);
+0392             <span class="keyword">return</span>
+0393             
+0394     <span class="keyword">end</span>
+0395   
+0396 <span class="keyword">end</span>
+0397 
+0398 <a name="_sub3" href="#_subfunctions" class="code">function [encoding,wordOrder,dataRecordLength] = ReadBlockets(raw,nFolowingBlocketts,blockettBeginOffset,isLittleEndian)</a>
+0399 
+0400     <span class="comment">% We read only first blockette in stream to get encoding format</span>
+0401     <span class="comment">% We assume that there is only one encoding format used for the whole file</span>
+0402     
+0403     <span class="keyword">if</span> isLittleEndian
+0404         BlocketType = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,(blockettBeginOffset(1)+1:blockettBeginOffset(1)+2))',<span class="string">'int16'</span>);
+0405         nextBlocketOffset = 0;
+0406         <span class="keyword">switch</span>(BlocketType(1))
+0407             <span class="keyword">case</span> 1000 <span class="comment">% Data only blockette</span>
+0408                 nextBlocketOffset = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,(blockettBeginOffset(1)+3:blockettBeginOffset(1)+4))',<span class="string">'int16'</span>);
+0409 
+0410                 EncodingFormat = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,blockettBeginOffset(1)+5)',<span class="string">'uint8'</span>);
+0411                 WordOrder = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,blockettBeginOffset(1)+6)',<span class="string">'uint8'</span>);
+0412                 DataRecordLength = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,blockettBeginOffset(1)+7)',<span class="string">'uint8'</span>);
+0413         <span class="keyword">end</span>
+0414     <span class="keyword">else</span>
+0415         
+0416         BlocketType = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,(blockettBeginOffset(1)+1:blockettBeginOffset(1)+2))',<span class="string">'int16'</span>));
+0417         nextBlocketOffset = 0;
+0418         <span class="keyword">switch</span>(BlocketType(1))
+0419             <span class="keyword">case</span> 1000 <span class="comment">% Data only blockette</span>
+0420                 nextBlocketOffset = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,(blockettBeginOffset(1)+3:blockettBeginOffset(1)+4))',<span class="string">'int16'</span>));
+0421 
+0422                 EncodingFormat = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,blockettBeginOffset(1)+5)',<span class="string">'uint8'</span>);
+0423                 WordOrder = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,blockettBeginOffset(1)+6)',<span class="string">'uint8'</span>);
+0424                 DataRecordLength = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,blockettBeginOffset(1)+7)',<span class="string">'uint8'</span>);
+0425         <span class="keyword">end</span>
+0426         
+0427     <span class="keyword">end</span>
+0428     
+0429     encoding=EncodingFormat;
+0430     wordOrder=WordOrder;
+0431     dataRecordLength=DataRecordLength;
+0432 
+0433 <span class="keyword">end</span>
+0434 
+0435 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0436 <a name="_sub4" href="#_subfunctions" class="code">function [headerInfo] = ReadHeaders(raw,isLittleEndian)</a>
+0437 
+0438 <span class="comment">% Reading values from all headers at once</span>
+0439 <span class="comment">% swapbytes swaps values to little endian</span>
+0440 
+0441     stationCode = char(raw(:,9:13));
+0442     locationCode = char(raw(:,14:15));
+0443     channelId = char(raw(:,16:18));
+0444     networkCode = char(raw(:,19:20));
+0445     startTime = <a href="#_sub6" class="code" title="subfunction d = ReadBTime(bTime,isLittleEndian)">ReadBTime</a>(raw(:,21:30),isLittleEndian);
+0446 
+0447     <span class="keyword">if</span> ~isLittleEndian
+0448         nSamples = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,31:32)',<span class="string">'uint16'</span>));
+0449         sampleRateFactor = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,33:34)',<span class="string">'int16'</span>));
+0450         sampleRateMultiplier = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,35:36)',<span class="string">'int16'</span>));
+0451 
+0452         nFolowingBlocketts = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,40)',<span class="string">'uint8'</span>));
+0453         timeCorrection = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,41:44)',<span class="string">'uint32'</span>));
+0454         dataBeginOffset = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,45:46)',<span class="string">'uint16'</span>));
+0455         blockettBeginOffset = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,47:48)',<span class="string">'uint16'</span>));
+0456     <span class="keyword">else</span>
+0457         nSamples = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,31:32)',<span class="string">'uint16'</span>);
+0458         sampleRateFactor = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,33:34)',<span class="string">'int16'</span>);
+0459         sampleRateMultiplier = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,35:36)',<span class="string">'int16'</span>);
+0460 
+0461         nFolowingBlocketts = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,40)',<span class="string">'uint8'</span>);
+0462         timeCorrection = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,41:44)',<span class="string">'uint32'</span>);
+0463         dataBeginOffset = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,45:46)',<span class="string">'uint16'</span>);
+0464         blockettBeginOffset = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(raw(:,47:48)',<span class="string">'uint16'</span>);
+0465     <span class="keyword">end</span>
+0466     
+0467     <span class="comment">% vector of sample rate values for every block</span>
+0468     sampleRate = zeros(size(sampleRateFactor));
+0469 
+0470     <span class="keyword">if</span> sampleRateFactor &gt; 0
+0471         <span class="keyword">if</span> sampleRateMultiplier &gt;= 0
+0472             sampleRate = sampleRateFactor.*sampleRateMultiplier;
+0473         <span class="keyword">else</span>
+0474             sampleRate = -1*sampleRateFactor./sampleRateMultiplier;
+0475         <span class="keyword">end</span>
+0476     <span class="keyword">else</span>
+0477         <span class="keyword">if</span> sampleRateMultiplier &gt;= 0
+0478             sampleRate = -1*sampleRateMultiplier./sampleRateFactor;
+0479         <span class="keyword">else</span>
+0480             sampleRate = 1./(sampleRateFactor.*sampleRateMultiplier);
+0481         <span class="keyword">end</span>
+0482     <span class="keyword">end</span>
+0483     
+0484     <span class="keyword">try</span>
+0485         [encoding,wordOrder,dataRecordLength]=<a href="#_sub3" class="code" title="subfunction [encoding,wordOrder,dataRecordLength] = ReadBlockets(raw,nFolowingBlocketts,blockettBeginOffset,isLittleEndian)">ReadBlockets</a>(raw,nFolowingBlocketts,blockettBeginOffset,isLittleEndian);
+0486         dataRecordLength=2.^double(dataRecordLength);
+0487     <span class="keyword">catch</span>
+0488         warning(<span class="string">'Cannot read blockette 1000 - data only blockette\nTrying STEIM2 encoding'</span>);
+0489         encoding = 11; <span class="comment">% 11 is Steim2 code</span>
+0490         dataRecordLength=4096; <span class="comment">%defaults</span>
+0491         wordOrder=1; <span class="comment">%big endian as default</span>
+0492     <span class="keyword">end</span>
+0493         
+0494     headerInfo = struct(<span class="string">'stationCode'</span>,{{cellstr(stationCode)}},<span class="string">'locationCode'</span>,{{cellstr(locationCode)}},<span class="string">'channelId'</span>,{{cellstr(channelId)}},<span class="string">'networkCode'</span>,{{cellstr(networkCode)}},<span class="string">'nSamples'</span>,nSamples,<span class="string">'sampleRate'</span>,sampleRate,<span class="string">'nFolowingBlocketts'</span>,nFolowingBlocketts,<span class="string">'timeCorrection'</span>,timeCorrection,<span class="string">'dataBeginOffset'</span>,dataBeginOffset,<span class="string">'blockettBeginOffset'</span>,blockettBeginOffset,<span class="string">'startTime'</span>,startTime,<span class="string">'encoding'</span>,encoding,<span class="string">'wordOrder'</span>,wordOrder,<span class="string">'dataRecordLength'</span>,dataRecordLength);
+0495 
+0496 <span class="keyword">end</span>
+0497 
+0498 <a name="_sub5" href="#_subfunctions" class="code">function NewArray = TypeCastArray(theArray, newType)</a>
+0499   NewArray = typecast(theArray(:),newType);
+0500 <span class="keyword">end</span>
+0501 
+0502 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0503 <a name="_sub6" href="#_subfunctions" class="code">function d = ReadBTime(bTime,isLittleEndian)</a>
+0504 <span class="comment">% readbtime(FID) reads BTIME structure from current file and returns</span>
+0505 <span class="comment">%    D = [YEAR,DAY,HOUR,MINUTE,SECONDS]</span>
+0506     <span class="keyword">if</span> ~isLittleEndian
+0507         Year                    = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(bTime(:,1:2)',<span class="string">'uint16'</span>));
+0508         DayOfYear                = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(bTime(:,3:4)',<span class="string">'uint16'</span>));
+0509         Hours                    = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(bTime(:,5)',<span class="string">'uint8'</span>));
+0510         Minutes                    = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(bTime(:,6)',<span class="string">'uint8'</span>));
+0511         Seconds                    = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(bTime(:,7)',<span class="string">'uint8'</span>));
+0512         unused                    = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(bTime(:,8)',<span class="string">'uint8'</span>));
+0513         Seconds0001                = swapbytes(<a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(bTime(:,9:10)',<span class="string">'uint16'</span>));
+0514     <span class="keyword">else</span>
+0515         Year                    = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(bTime(:,1:2)',<span class="string">'uint16'</span>);
+0516         DayOfYear                = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(bTime(:,3:4)',<span class="string">'uint16'</span>);
+0517         Hours                    = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(bTime(:,5)',<span class="string">'uint8'</span>);
+0518         Minutes                    = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(bTime(:,6)',<span class="string">'uint8'</span>);
+0519         Seconds                    = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(bTime(:,7)',<span class="string">'uint8'</span>);
+0520         unused                    = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(bTime(:,8)',<span class="string">'uint8'</span>);
+0521         Seconds0001                = <a href="#_sub5" class="code" title="subfunction NewArray = TypeCastArray(theArray, newType)">TypeCastArray</a>(bTime(:,9:10)',<span class="string">'uint16'</span>);
+0522     <span class="keyword">end</span>
+0523 
+0524     d = [Year,DayOfYear,Hours,Minutes,uint16(Seconds) + Seconds0001/1e4];
+0525 
+0526 <span class="keyword">end</span>
+0527 
+0528 <a name="_sub7" href="#_subfunctions" class="code">function [dateTimeStruct, dateTimeString, unixTimeStamp]= ConstructDateTime(dateTimeMatrix)</a>
+0529 
+0530     days = [31,28,31,30,31,30,31,31,30,31,30,31];
+0531     month = 1;
+0532     day = 1;
+0533     dayInYear = dateTimeMatrix(2);
+0534 
+0535      <span class="keyword">if</span> mod(dateTimeMatrix(1)-2000,4) == 0
+0536            days(2) = 29;
+0537      <span class="keyword">end</span>
+0538 
+0539     monthsDaysCumsum=cumsum(days);
+0540     <span class="keyword">for</span> k = 1:numel(monthsDaysCumsum)
+0541         <span class="keyword">if</span> dayInYear &lt;= monthsDaysCumsum(k)
+0542             month = k;
+0543             <span class="keyword">if</span> k == 1
+0544                 day = dayInYear;    
+0545                 <span class="keyword">break</span>;
+0546             <span class="keyword">end</span>
+0547             day = dayInYear - monthsDaysCumsum(k-1);
+0548             <span class="keyword">break</span>;
+0549         <span class="keyword">end</span>
+0550     <span class="keyword">end</span>
+0551 
+0552     dvec=datevec(datenum([<a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(dateTimeMatrix(1)),<a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(month),<a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(day),<a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(dateTimeMatrix(3)),<a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(dateTimeMatrix(4)),<a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(dateTimeMatrix(5))]));
+0553 
+0554     year=dvec(1);
+0555     month=dvec(2);
+0556     day=dvec(3);
+0557     hour=dvec(4);
+0558     minute=dvec(5);
+0559     second=dvec(6);
+0560 
+0561     dateTimeStruct = struct(<span class="string">'year'</span>,year,<span class="string">'month'</span>,month,<span class="string">'day'</span>,day,<span class="string">'hour'</span>,hour,<span class="string">'minute'</span>,minute,<span class="string">'second'</span>,second);
+0562     dateTimeString=sprintf(<span class="string">'%04d/%02d/%02d %02d:%02d:%02f'</span>,dateTimeStruct.year,dateTimeStruct.month,dateTimeStruct.day,dateTimeStruct.hour,dateTimeStruct.minute,dateTimeStruct.second);
+0563     unixTimeStamp=<a href="#_sub11" class="code" title="subfunction [unixTime] = FromMatlabTimeToUnixTime(dateTime)">FromMatlabTimeToUnixTime</a>(datenum([dateTimeStruct.year,dateTimeStruct.month,dateTimeStruct.day,dateTimeStruct.hour,dateTimeStruct.minute,dateTimeStruct.second]));
+0564 <span class="keyword">end</span>
+0565 
+0566 <a name="_sub8" href="#_subfunctions" class="code">function [day] = daysInMonth(month, year)</a>
+0567 
+0568     days = [31,28,31,30,31,30,31,31,30,31,30,31];
+0569 
+0570     day = days(month);
+0571 
+0572     <span class="keyword">if</span> month == 2
+0573        <span class="keyword">if</span> mod(year-2000,4) == 0
+0574            day = 29;
+0575        <span class="keyword">end</span>
+0576     <span class="keyword">end</span>
+0577 
+0578 <span class="keyword">end</span>
+0579 
+0580 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0581 <a name="_sub9" href="#_subfunctions" class="code">function d = bitsign(x,n)</a>
+0582 <span class="comment">% bitsign(X,N) returns signed double value from unsigned N-bit number X.</span>
+0583 <span class="comment">% This is equivalent to bitsplit(X,N,N), but the formula is simplified so</span>
+0584 <span class="comment">% it is much more efficient</span>
+0585 
+0586     d = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(bitand(x,<a href="#_sub1" class="code" title="subfunction output = bitcmpOld(x,N)">bitcmpOld</a>(0,n))) - <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(bitget(x,n)).*2^n;
+0587 <span class="keyword">end</span>
+0588 
+0589 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0590 <a name="_sub10" href="#_subfunctions" class="code">function d = bitsplit(x,b,n)</a>
+0591 <span class="comment">% bitsplit(X,B,N) splits the B-bit number X into signed N-bit array</span>
+0592 <span class="comment">%    X must be unsigned integer class</span>
+0593 <span class="comment">%    N ranges from 1 to B</span>
+0594 <span class="comment">%    B is a multiple of N</span>
+0595 
+0596     <a href="../../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a> = repmat((b:-n:n)',1,size(x,1));
+0597     x = repmat(x',b/n,1);
+0598     d = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(bitand(bitshift(x,flipud(<a href="../../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>-b)),<a href="#_sub1" class="code" title="subfunction output = bitcmpOld(x,N)">bitcmpOld</a>(0,n))) <span class="keyword">...</span>
+0599         - <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(bitget(x,<a href="../../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>))*2^n;
+0600 <span class="keyword">end</span>
+0601 
+0602 <a name="_sub11" href="#_subfunctions" class="code">function [unixTime] = FromMatlabTimeToUnixTime(dateTime)</a>
+0603     <span class="comment">% 12*24*60*60 = 86400 - Conversion from Unix Posix Time to Matlab Time</span>
+0604     pivotYear1970 = datenum(<span class="string">'1970'</span>, <span class="string">'yyyy'</span>);
+0605     <span class="keyword">if</span> isstruct(dateTime)
+0606         dateTimeVec = [dateTime.year,dateTime.month,dateTime.day,dateTime.hour,dateTime.minute,dateTime.second];
+0607     <span class="keyword">elseif</span> isvector(dateTime)
+0608         dateTimeVec = dateTime;
+0609     <span class="keyword">elseif</span> isscalar(dateTime)
+0610         unixTime=dateTime-pivotYear1970;
+0611         unixTime=unixTime*86400;
+0612         <span class="keyword">return</span>;
+0613     <span class="keyword">end</span>
+0614 
+0615     unixTime=datenum(dateTimeVec)-pivotYear1970;
+0616     unixTime=unixTime*86400;
+0617 
+0618 <span class="keyword">end</span>
+0619 
+0620 <a name="_sub12" href="#_subfunctions" class="code">function [matlabTime] = FromUnixTimeToMatlabTime(unixTime)</a>
+0621     <span class="comment">% 12*24*60*60 = 86400 - Conversion from Unix Posix Time to Matlab Time</span>
+0622     matlabTime=datenum(unixTime/(86400)+datenum(<span class="string">'1970'</span>, <span class="string">'yyyy'</span>));
+0623 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

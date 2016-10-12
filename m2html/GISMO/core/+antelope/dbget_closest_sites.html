@@ -1,0 +1,270 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dbget_closest_sites</title>
+  <meta name="keywords" content="dbget_closest_sites">
+  <meta name="description" content="DBGET_CLOSEST_SITES Get closest sites from an Antelop database to a given [lon, lat]">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">+antelope</a> &gt; dbget_closest_sites.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+antelope&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>dbget_closest_sites
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>DBGET_CLOSEST_SITES Get closest sites from an Antelop database to a given [lon, lat]</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function sites = dbget_closest_sites(lon, lat, distkm, sitesdb, maxsta, snum, enum, chanmatch) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DBGET_CLOSEST_SITES Get closest sites from an Antelop database to a given [lon, lat]
+ sites = DBGET_CLOSEST_SITES(lon, lat, distkm, sitesdb, maxsta, snum, enum, chanmatch)
+ load sites within distkm km of a given (LON, LAT) 
+ from site database sitesdb
+
+ The sites structure returned has the followed fields:
+    channeltag - net.sta.loc.chan a ChannelTag object
+    longitude    - sites longitude
+    latitude    - sites latitude
+    elev    - sites elevation
+    distance    - distance (in km) from input (LON, LAT)
+
+ Example: Get sites within 100km of (-150.0, 60.5) that were
+ operational in 1990:
+ sites = DBGET_CLOSEST_SITES(-150.0, 60.5, 100.0, '/avort/oprun/dbmaster/master_stations', 10, datenum(1990,1,1), datenum(1991,1,1));</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/datenum2julday.html" class="code" title="function juldaystr = datenum2julday(dnum)">datenum2julday</a>	</li><li><a href="../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>	C = SORT(C,'TIME')</li><li><a href="../../../GISMO/core/@scnlobject/ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>	ChannelTag Converter from scnlobject to ChannelTag</li><li><a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/sort.html" class="code" title="function c = sort(c)">sort</a>	C = SORT(C) Sorts traces from oldest to youngest.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function sites = dbget_closest_sites(lon, lat, distkm, sitesdb, maxsta, snum, enum, chanmatch)</a>
+0002 <span class="comment">%DBGET_CLOSEST_SITES Get closest sites from an Antelop database to a given [lon, lat]</span>
+0003 <span class="comment">% sites = DBGET_CLOSEST_SITES(lon, lat, distkm, sitesdb, maxsta, snum, enum, chanmatch)</span>
+0004 <span class="comment">% load sites within distkm km of a given (LON, LAT)</span>
+0005 <span class="comment">% from site database sitesdb</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% The sites structure returned has the followed fields:</span>
+0008 <span class="comment">%    channeltag - net.sta.loc.chan a ChannelTag object</span>
+0009 <span class="comment">%    longitude    - sites longitude</span>
+0010 <span class="comment">%    latitude    - sites latitude</span>
+0011 <span class="comment">%    elev    - sites elevation</span>
+0012 <span class="comment">%    distance    - distance (in km) from input (LON, LAT)</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% Example: Get sites within 100km of (-150.0, 60.5) that were</span>
+0015 <span class="comment">% operational in 1990:</span>
+0016 <span class="comment">% sites = DBGET_CLOSEST_SITES(-150.0, 60.5, 100.0, '/avort/oprun/dbmaster/master_stations', 10, datenum(1990,1,1), datenum(1991,1,1));</span>
+0017 
+0018 <span class="comment">% AUTHOR: Glenn Thompson, UAF-GI</span>
+0019 <span class="comment">% $Date: $</span>
+0020 <span class="comment">% $Revision: -1 $</span>
+0021 debug.printfunctionstack(<span class="string">'&gt;'</span>)
+0022 warning(sprintf(<span class="string">'%s assumes every station has a calibration - those without are missed'</span>,mfilename))
+0023 <span class="keyword">if</span> ~exist(<span class="string">'maxsta'</span>, <span class="string">'var'</span>)
+0024     maxsta = 999;
+0025 <span class="keyword">end</span>
+0026 <span class="comment">% if ~exist(sprintf('%s.site',sitesdb))</span>
+0027 <span class="comment">%     sitesdb = input('Please enter sites database path', 's')</span>
+0028 <span class="comment">% end</span>
+0029 debug.print_debug(1,sprintf(<span class="string">'sites db is %s'</span>,sitesdb))
+0030 dbptr = dbopen(sitesdb, <span class="string">'r'</span>);
+0031 
+0032 <span class="comment">% Filter the site table</span>
+0033 dbptr_site = dblookup_table(dbptr, <span class="string">'site'</span>);
+0034 nrecs = dbquery(dbptr_site, <span class="string">'dbRECORD_COUNT'</span>);
+0035 debug.print_debug(2,sprintf(<span class="string">'Site table has %d records'</span>, nrecs));
+0036 dbptr_site = dbsubset(dbptr_site, sprintf(<span class="string">'distance(lon, lat, %.4f, %.4f)&lt;%.4f'</span>,lon,lat,km2deg(distkm)));
+0037 nrecs = dbquery(dbptr_site, <span class="string">'dbRECORD_COUNT'</span>);
+0038 debug.print_debug(2,sprintf(<span class="string">'After distance subset to lat %f and lon %f: %d records'</span>, lat, lon, nrecs));
+0039 
+0040 <span class="keyword">if</span> ~exist(<span class="string">'snum'</span>, <span class="string">'var'</span>)
+0041     <span class="comment">% No start time given, so assume we just want sites that exist today.</span>
+0042     <span class="comment">% Remove any sites that have been decommissioned</span>
+0043     dbptr_site = dbsubset(dbptr_site, sprintf(<span class="string">'offdate == NULL'</span>));
+0044 <span class="keyword">else</span>
+0045     <span class="comment">% Remove any sites that were decommissioned before the start time</span>
+0046     debug.print_debug(2,sprintf(<span class="string">'offdate == NULL || offdate &gt; %s'</span>,<a href="../../../GISMO/applications/+iceweb/datenum2julday.html" class="code" title="function juldaystr = datenum2julday(dnum)">datenum2julday</a>(snum)));
+0047     dbptr_site = dbsubset(dbptr_site, sprintf(<span class="string">'offdate == NULL || offdate &gt; %s'</span>,<a href="../../../GISMO/applications/+iceweb/datenum2julday.html" class="code" title="function juldaystr = datenum2julday(dnum)">datenum2julday</a>(snum)));
+0048 <span class="keyword">end</span>
+0049 <span class="comment">% Remove any sites that were installed after the end time (this may remove</span>
+0050 <span class="comment">% some sites that exist today)</span>
+0051 <span class="keyword">if</span> exist(<span class="string">'enum'</span>, <span class="string">'var'</span>)
+0052     debug.print_debug(2, sprintf(<span class="string">'ondate  &lt; %s'</span>,<a href="../../../GISMO/applications/+iceweb/datenum2julday.html" class="code" title="function juldaystr = datenum2julday(dnum)">datenum2julday</a>(enum)));
+0053     dbptr_site = dbsubset(dbptr_site, sprintf(<span class="string">'ondate  &lt; %s'</span>,<a href="../../../GISMO/applications/+iceweb/datenum2julday.html" class="code" title="function juldaystr = datenum2julday(dnum)">datenum2julday</a>(enum)));
+0054 <span class="keyword">end</span>
+0055 nrecs = dbquery(dbptr_site, <span class="string">'dbRECORD_COUNT'</span>);
+0056 debug.print_debug(2,sprintf(<span class="string">'After time subset: %d records'</span>, nrecs));
+0057 dbgetv(dbptr_site, <span class="string">'sta'</span>)
+0058 
+0059 <span class="comment">% Filter the sitechan table</span>
+0060 dbptr_sitechan = dblookup_table(dbptr, <span class="string">'sitechan'</span>);
+0061 nrecs = dbquery(dbptr_sitechan, <span class="string">'dbRECORD_COUNT'</span>);
+0062 debug.print_debug(2,sprintf(<span class="string">'sitechan has %d records'</span>, nrecs));
+0063 
+0064 <span class="keyword">if</span> exist(<span class="string">'chanmatch'</span>,<span class="string">'var'</span>)
+0065     dbptr_sitechan = dbsubset(dbptr_sitechan, chanmatch);
+0066     nrecs = dbquery(dbptr_sitechan, <span class="string">'dbRECORD_COUNT'</span>);
+0067     debug.print_debug(2,sprintf(<span class="string">'After chan subset: %d records'</span>, nrecs));
+0068 <span class="keyword">end</span>
+0069 
+0070 <span class="keyword">if</span> ~exist(<span class="string">'snum'</span>, <span class="string">'var'</span>)
+0071     <span class="comment">% No start time given, so assume we just want sites that exist today.</span>
+0072     <span class="comment">% Remove any sites that have been decommissioned</span>
+0073     dbptr_sitechan = dbsubset(dbptr_sitechan, sprintf(<span class="string">'offdate == NULL'</span>));
+0074 <span class="keyword">else</span>
+0075     <span class="comment">% Remove any sites that were decommissioned before the start time</span>
+0076     debug.print_debug(2,sprintf(<span class="string">'offdate == NULL || offdate &gt; %s'</span>,<a href="../../../GISMO/applications/+iceweb/datenum2julday.html" class="code" title="function juldaystr = datenum2julday(dnum)">datenum2julday</a>(snum)));
+0077     dbptr_sitechan = dbsubset(dbptr_sitechan, sprintf(<span class="string">'offdate == NULL || offdate &gt; %s'</span>,<a href="../../../GISMO/applications/+iceweb/datenum2julday.html" class="code" title="function juldaystr = datenum2julday(dnum)">datenum2julday</a>(snum)));
+0078 <span class="keyword">end</span>
+0079 <span class="comment">% Remove any sites that were installed after the end time (this may remove</span>
+0080 <span class="comment">% some sites that exist today)</span>
+0081 <span class="keyword">if</span> exist(<span class="string">'enum'</span>, <span class="string">'var'</span>)
+0082     debug.print_debug(2,sprintf(<span class="string">'ondate  &lt; %s'</span>,<a href="../../../GISMO/applications/+iceweb/datenum2julday.html" class="code" title="function juldaystr = datenum2julday(dnum)">datenum2julday</a>(enum)));
+0083     dbptr_sitechan = dbsubset(dbptr_sitechan, sprintf(<span class="string">'ondate  &lt; %s'</span>,<a href="../../../GISMO/applications/+iceweb/datenum2julday.html" class="code" title="function juldaystr = datenum2julday(dnum)">datenum2julday</a>(enum)));
+0084 <span class="keyword">end</span>
+0085 nrecs = dbquery(dbptr_sitechan, <span class="string">'dbRECORD_COUNT'</span>);
+0086 debug.print_debug(2,sprintf(<span class="string">'After time subset: %d records'</span>, nrecs));
+0087 dbgetv(dbptr_sitechan, <span class="string">'sta'</span>)
+0088 
+0089 <span class="comment">% Join site and sitechan</span>
+0090 dbptr_sitechan = dbjoin(dbptr_site, dbptr_sitechan);
+0091 nrecs = dbquery(dbptr_sitechan, <span class="string">'dbRECORD_COUNT'</span>);
+0092 debug.print_debug(2,sprintf(<span class="string">'After join site-sitechan %d records'</span>, nrecs));
+0093 dbgetv(dbptr_sitechan, <span class="string">'sta'</span>)
+0094 
+0095 <span class="comment">% Read snetsta to get network code</span>
+0096 dbptr_snetsta = dblookup_table(dbptr, <span class="string">'snetsta'</span>);
+0097 nrecs = dbquery(dbptr_snetsta, <span class="string">'dbRECORD_COUNT'</span>);
+0098 debug.print_debug(2,sprintf(<span class="string">'snetsta has %d records'</span>, nrecs));
+0099 dbptr_snetsta = dbjoin(dbptr_sitechan, dbptr_snetsta);
+0100 nrecs = dbquery(dbptr_snetsta, <span class="string">'dbRECORD_COUNT'</span>);
+0101 debug.print_debug(2,sprintf(<span class="string">'After join site-sitechan-snetsta: %d records'</span>, nrecs));
+0102 snet = dbgetv(dbptr_snetsta, <span class="string">'snet'</span>);
+0103 sta = dbgetv(dbptr_snetsta, <span class="string">'sta'</span>);
+0104 stanetmap = containers.Map();
+0105 <span class="keyword">for</span> c=1:numel(sta)
+0106     stanetmap(sta{c}) = snet{c};
+0107 <span class="keyword">end</span>
+0108     
+0109 <span class="comment">% If there is a calibration table, get the calib value and units</span>
+0110 dbptr_calibration = dblookup_table(dbptr, <span class="string">'calibration'</span>);
+0111 nrecs = dbquery(dbptr_calibration, <span class="string">'dbRECORD_COUNT'</span>);
+0112 debug.print_debug(2,sprintf(<span class="string">'calibration has %d records'</span>, nrecs));
+0113 <span class="comment">%dbptr_calibration = dbjoin(dbptr_sitechan, dbptr_calibration,</span>
+0114 <span class="comment">%{'sta';'chan'}, {'sta';'chan'}); % danger with this is no subset on ondate/offdate</span>
+0115 dbptr_calibration = dbjoin(dbptr_sitechan, dbptr_calibration);
+0116 dbptr_calibration = dbsubset(dbptr_calibration, <span class="string">'sitechan.sta == calibration.sta &amp;&amp; sitechan.chan == calibration.chan'</span>);
+0117 nrecs = dbquery(dbptr_calibration, <span class="string">'dbRECORD_COUNT'</span>);
+0118 debug.print_debug(2,sprintf(<span class="string">'After join site-sitechan-calibration: %d records'</span>, nrecs));
+0119 
+0120 
+0121 <span class="comment">% Read data from final view</span>
+0122 <span class="keyword">if</span> nrecs == 0
+0123     sites = [];
+0124     <span class="keyword">return</span>
+0125 <span class="keyword">end</span>
+0126 <span class="comment">% net = dbgetv(db4, 'snet');</span>
+0127 <span class="comment">% if ~iscell(net)</span>
+0128 <span class="comment">%     net = {net};</span>
+0129 <span class="comment">% end</span>
+0130 
+0131 latitude = dbgetv(dbptr_calibration, <span class="string">'lat'</span>);
+0132 longitude = dbgetv(dbptr_calibration, <span class="string">'lon'</span>);
+0133 elev = dbgetv(dbptr_calibration, <span class="string">'elev'</span>);
+0134 staname = dbgetv(dbptr_calibration, <span class="string">'sta'</span>);
+0135 <span class="keyword">if</span> ~iscell(staname)
+0136     staname = {staname};
+0137 <span class="keyword">end</span>
+0138 channame = dbgetv(dbptr_calibration, <span class="string">'chan'</span>);
+0139 <span class="keyword">if</span> ~iscell(channame)
+0140     channame = {channame};
+0141 <span class="keyword">end</span>
+0142 ondate = dbgetv(dbptr_calibration, <span class="string">'sitechan.ondate'</span>);
+0143 offdate = dbgetv(dbptr_calibration, <span class="string">'sitechan.offdate'</span>);
+0144 calib = dbgetv(dbptr_calibration, <span class="string">'calibration.calib'</span>);
+0145 units = dbgetv(dbptr_calibration, <span class="string">'calibration.units'</span>);
+0146 dbclose(dbptr);
+0147 
+0148 
+0149 <span class="comment">% Reformat data into sites return structure</span>
+0150 numsites = numel(latitude);
+0151 <span class="keyword">for</span> c=1:numsites
+0152     yyyy = floor(ondate(c)/1000);
+0153     <span class="keyword">if</span> yyyy&gt;1900
+0154         jjj = ondate(c)-yyyy*1000;
+0155         ondnum(c) = datenum(yyyy,1,jjj);
+0156     <span class="keyword">else</span>
+0157         ondnum(c)=-Inf;
+0158     <span class="keyword">end</span>
+0159 <span class="keyword">end</span>
+0160 
+0161 <span class="keyword">for</span> c=1:numsites
+0162     yyyy = floor(offdate(c)/1000);
+0163     <span class="keyword">if</span> yyyy&gt;1900
+0164         jjj = offdate(c)-yyyy*1000;
+0165         offdnum(c) = datenum(yyyy,1,jjj);
+0166     <span class="keyword">else</span>
+0167        offdnum(c) = Inf; 
+0168     <span class="keyword">end</span>
+0169 <span class="keyword">end</span>
+0170 
+0171 <span class="keyword">for</span> c=1:numsites
+0172     stadist(c) = deg2km(distance(lat, lon, latitude(c), longitude(c)));
+0173 <span class="keyword">end</span>
+0174 
+0175 <span class="comment">% order the sites by distance</span>
+0176 [y,i]=<a href="../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>(stadist);
+0177 c=1;
+0178 <span class="keyword">while</span> ((c&lt;=numsites) &amp;&amp; (stadist(i(c)) &lt; distkm))
+0179     <span class="comment">%sites(c).name = staname{i(c)};</span>
+0180     <span class="comment">%sites(c).channel = channame{i(c)};</span>
+0181     <span class="comment">%sites(c).scnl = scnlobject(sites(c).name, sites(c).channel, net{i(c)});</span>
+0182     sta = staname{i(c)};
+0183     chan = channame{i(c)};
+0184     net = stanetmap(sta);
+0185     sites(c).channeltag = <a href="../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(net, sta, <span class="string">''</span>, chan);
+0186     sites(c).string = string(sites(c).channeltag);
+0187     sites(c).longitude = longitude(i(c));
+0188     sites(c).latitude = latitude(i(c));
+0189     sites(c).elev = elev(i(c));
+0190     sites(c).distance = stadist(i(c));
+0191     sites(c).ondnum = ondnum(i(c));
+0192     sites(c).offdnum = offdnum(i(c));
+0193     sites(c).calib = calib(i(c));
+0194     sites(c).units = units(i(c));
+0195     c = c + 1;
+0196 <span class="keyword">end</span>
+0197 
+0198 <span class="comment">% remove any duplicate sites</span>
+0199 [~,j]=<a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>({sites.string});
+0200 sites = sites(j);
+0201 
+0202 <span class="comment">% limit the number of sites</span>
+0203 numsites = <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([maxsta numel(sites)]);
+0204 sites = sites(1:numsites);
+0205 
+0206 
+0207 
+0208 
+0209 debug.printfunctionstack(<span class="string">'&lt;'</span>)</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

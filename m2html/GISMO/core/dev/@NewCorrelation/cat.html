@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cat</title>
+  <meta name="keywords" content="cat">
+  <meta name="description" content="c = cat(c1,c2,c3,...)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; cat.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>cat
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>c = cat(c1,c2,c3,...)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = cat(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> c = cat(c1,c2,c3,...)
+ Concatenate the traces in two or more correlation objects. c1,c2,c3,...
+ will be combined in the order listed. Only the four data descriptor
+ fields (TRIG,START,WAVES,FS) will be filled in the output object. There
+ is not enough information to fill in the CORRELATION, LAG, STAT, LINK, or
+ CLUSTER fields. These fields will be empty. Data in c1,c2,c3,... must
+ have the same number of samples and sampling frequency.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/contributed_antelope/double_difference/dd_collate.html" class="code" title="function dd_collate(eventdat,varargin)">dd_collate</a>	dd_collate('event.dat')</li><li><a href="../../../../GISMO/contributed_antelope/double_difference/dd_make_scp.html" class="code" title="function dd_make_scp(dbname,varargin)">dd_make_scp</a>	DD_MAKE_SCP Create a draft control file for the correlation process</li><li><a href="../../../../GISMO/contributed_antelope/double_difference/dd_process_scp.html" class="code" title="function dd_process_scp(dbname,scpfile,varargin)">dd_process_scp</a>	DD_PROCESS_SCP Process correlations by station and channel</li><li><a href="../../../../GISMO/contributed_antelope/import_events/ie_readchans.html" class="code" title="function chanlist = ie_readchans(chanfile)">ie_readchans</a>	IE_READCHANS Read and parse station/channel list from file</li><li><a href="../../../../GISMO/core/+Catalog/+read_catalog/antelope.html" class="code" title="function self = antelope(varargin)">antelope</a>	READ_CATALOG.ANTELOPE load events from a CSS3.0 database using Antelope.</li><li><a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/@correlation/interferogram.html" class="code" title="function [c,t,i,CC,LL] = interferogram(c,varargin)">interferogram</a>	C = INTERFEROGRAM(C)</li><li><a href="../../../../GISMO/core/@correlation/private/getval.html" class="code" title="function A = getval(OBJ,PROP)">getval</a>	Function to extract a cell array from an</li><li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="getval.html" class="code" title="function A = getval(OBJ,PROP)">getval</a>	Function to extract a cell array from an</li><li><a href="interferogram.html" class="code" title="function [c,t,i,CC,LL] = interferogram(c, width, timestep, masterIdx)">interferogram</a>	C = INTERFEROGRAM(C)</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function c = ensureType(c)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = cat(varargin)</a>
+0002    
+0003    <span class="comment">% c = cat(c1,c2,c3,...)</span>
+0004    <span class="comment">% Concatenate the traces in two or more correlation objects. c1,c2,c3,...</span>
+0005    <span class="comment">% will be combined in the order listed. Only the four data descriptor</span>
+0006    <span class="comment">% fields (TRIG,START,WAVES,FS) will be filled in the output object. There</span>
+0007    <span class="comment">% is not enough information to fill in the CORRELATION, LAG, STAT, LINK, or</span>
+0008    <span class="comment">% CLUSTER fields. These fields will be empty. Data in c1,c2,c3,... must</span>
+0009    <span class="comment">% have the same number of samples and sampling frequency.</span>
+0010    
+0011    <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0012    <span class="comment">% $Date$</span>
+0013    <span class="comment">% $Revision$</span>
+0014    
+0015    narginchk(2,inf);
+0016    
+0017    varargin{1} = <a href="#_sub1" class="code" title="subfunction c = ensureType(c)">ensureType</a>(varargin{1});
+0018    expectedSamplerate = varargin{1}.samplerate;
+0019    expectedDatalength = varargin{1}.data_length;
+0020    
+0021    <span class="comment">% make sure that the inputs are compatible</span>
+0022    <span class="keyword">for</span> i = 2:nargin
+0023       varargin{i} = <a href="#_sub1" class="code" title="subfunction c = ensureType(c)">ensureType</a>(varargin{i});
+0024       assert(varargin{i}.samplerate == expectedSamplerate,<span class="keyword">...</span>
+0025          <span class="string">'All inputs must have the same sampling frequency'</span>);
+0026       assert(varargin{i}.data_length == expectedDatalength,<span class="keyword">...</span>
+0027          <span class="string">'All inputs must have the same trace length'</span>);
+0028    <span class="keyword">end</span>
+0029    
+0030    c = varargin{1};
+0031    c.corrmatrix = [];
+0032    c.lags = [];
+0033    c.stat = [];
+0034    c.link = [];
+0035    c.clust = [];
+0036    
+0037    <span class="keyword">for</span> i = 2:nargin
+0038       cin = varargin{i};
+0039       c.traces = <a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>(1,c.traces,cin.traces);
+0040       c.trig = <a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>(1,c.trig,cin.trig);
+0041    <span class="keyword">end</span>
+0042 <span class="keyword">end</span>
+0043 
+0044 <a name="_sub1" href="#_subfunctions" class="code">function c = ensureType(c)</a>
+0045    <span class="keyword">if</span> ~isa(c,<span class="string">'NewCorrelation'</span>)
+0046       c = <a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>(c); <span class="comment">% c must be a correlation or be convertable into one.</span>
+0047    <span class="keyword">end</span>
+0048 <span class="keyword">end</span>
+0049 
+0050 
+0051</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

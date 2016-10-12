@@ -1,0 +1,275 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of bvalue</title>
+  <meta name="keywords" content="bvalue">
+  <meta name="description" content="BVALUE evaluate b-value, a-value and magnitude of completeness">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@Catalog</a> &gt; bvalue.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@Catalog&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>bvalue
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>BVALUE evaluate b-value, a-value and magnitude of completeness</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function bvalue(catalogObject, mcType) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">BVALUE evaluate b-value, a-value and magnitude of completeness
+ of an earthquake catalog stored in a Catalog object.
+
+ BVALUE(catalogObject, MCTYPE) produces a Gutenberg-Richter type plot 
+    with the best fit line and display of b-,a-values and Mc 
+    for catalogObject. MCTYPE is a number from 1-5 
+    to select the algorithm used for calculation of the 
+    magnitude of completeness. Options are:
+
+    1: Maximum curvature
+    2: Fixed Mc = minimum magnitude (Mmin)
+    3: Mc90 (90% probability)
+    4: Mc95 (95% probability)
+    5: Best combination (Mc95 - Mc90 - maximum curvature)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="hist.html" class="code" title="function hist(catalogObject);">hist</a>	HIST plot histograms of magnitude distribution, depth</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="../../../GISMO/core/@rsam/rsam.html" class="code" title="">rsam</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function bvalue(catalogObject, mcType)</a>
+0002     <span class="comment">%BVALUE evaluate b-value, a-value and magnitude of completeness</span>
+0003     <span class="comment">% of an earthquake catalog stored in a Catalog object.</span>
+0004     <span class="comment">%</span>
+0005     <span class="comment">% BVALUE(catalogObject, MCTYPE) produces a Gutenberg-Richter type plot</span>
+0006     <span class="comment">%    with the best fit line and display of b-,a-values and Mc</span>
+0007     <span class="comment">%    for catalogObject. MCTYPE is a number from 1-5</span>
+0008     <span class="comment">%    to select the algorithm used for calculation of the</span>
+0009     <span class="comment">%    magnitude of completeness. Options are:</span>
+0010     <span class="comment">%</span>
+0011     <span class="comment">%    1: Maximum curvature</span>
+0012     <span class="comment">%    2: Fixed Mc = minimum magnitude (Mmin)</span>
+0013     <span class="comment">%    3: Mc90 (90% probability)</span>
+0014     <span class="comment">%    4: Mc95 (95% probability)</span>
+0015     <span class="comment">%    5: Best combination (Mc95 - Mc90 - maximum curvature)</span>
+0016 
+0017     <span class="comment">% Liberally adapted from original code in ZMAP.</span>
+0018     <span class="comment">% Author: Silvio De Angelis, 27/07/2012 00:00:00</span>
+0019     <span class="comment">% Modified and included in Catalog by Glenn Thompson,</span>
+0020     <span class="comment">% 14/06/2014</span>
+0021 
+0022     <span class="comment">% This program is free software; you can redistribute it and/or modify</span>
+0023     <span class="comment">% it under the terms of the GNU General Public License as published by</span>
+0024     <span class="comment">% the Free Software Foundation; either version 2 of the License, or</span>
+0025     <span class="comment">% (at your option) any later version.</span>
+0026     <span class="comment">%</span>
+0027     <span class="comment">% This program is distributed in the hope that it will be useful,</span>
+0028     <span class="comment">% but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+0029     <span class="comment">% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the</span>
+0030     <span class="comment">% GNU General Public License for more details.</span>
+0031     <span class="comment">%</span>
+0032     <span class="comment">% You should have received a copy of the GNU General Public License</span>
+0033     <span class="comment">% along with this program; if not, write to the</span>
+0034     <span class="comment">% Free Software Foundation, Inc.,</span>
+0035     <span class="comment">% 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.</span>
+0036 
+0037     <span class="keyword">if</span> nargin &lt; 2
+0038         <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'--------------------------------------------------------'</span>)
+0039         <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'Usage is: catalogObject.bvalue(mcType)'</span>)
+0040         <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'--------------------------------------------------------'</span>)
+0041         <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'mcType can be:'</span>)
+0042         <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'1: Maximum curvature'</span>)
+0043         <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'2: Fixed Mc = minimum magnitude (Mmin)'</span>)
+0044         <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'3: Mc90 (90% probability)'</span>)
+0045         <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'4: Mc95 (95% probability)'</span>)
+0046         <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'5: Best combination (Mc95 - Mc90 - maximum curvature)'</span>)
+0047         <span class="keyword">return</span>
+0048     <span class="keyword">end</span>
+0049 
+0050     <span class="comment">% form magnitude vector - removing any NaN values with find</span>
+0051     good_magnitude_indices = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(catalogObject.mag &gt; -3.0);
+0052     mag = catalogObject.mag(good_magnitude_indices);
+0053     <span class="comment">%MIN AND MAX MAGNITUDE IN catalogObject</span>
+0054     minimum_mag = <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(mag);
+0055     maximum_mag = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(mag);
+0056 
+0057     <span class="comment">%COUNT EVENTS IN EACH MAGNITUDE BIN</span>
+0058     [bval, xt2] = <a href="hist.html" class="code" title="function hist(catalogObject);">hist</a>(mag, (minimum_mag:0.1:maximum_mag));
+0059 
+0060     <span class="comment">%CUMULATIVE NUMBER OF EVENTS IN EACH MAGNITUDE BIN</span>
+0061     bvalsum = cumsum(bval);
+0062 
+0063     <span class="comment">%NUMBER OF EVENTS IN EACH BIN IN REVERSE ORDER</span>
+0064     bval2 = bval(length(bval):-1:1);
+0065 
+0066     <span class="comment">%NUMBER OF EVENTS IN EACH MAGNITUDE BIN IN REVERSE ORDER</span>
+0067     bvalsum3 = cumsum(bval(length(bval):-1:1));
+0068 
+0069     <span class="comment">%BINS IN REVERSE ORDER</span>
+0070     xt3 = (maximum_mag:-0.1:minimum_mag);
+0071     backg_ab = log10(bvalsum3);
+0072 
+0073     <span class="comment">%CREATE FIGURE WINDOW AND MAKE FREQUENCY-MAGNITUDE PLOT</span>
+0074     figure(<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'Position'</span>,[0 0 600 600])
+0075 
+0076     pl = semilogy(xt3,bvalsum3,<span class="string">'sb'</span>); <span class="comment">% semilogy is same as plot, except a log (base10) scale is used for Y-axis</span>
+0077     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(pl, <span class="string">'LineWidth'</span>, [1.0],<span class="string">'MarkerSize'</span>, [10],<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);
+0078     axis square
+0079     hold on
+0080 
+0081     pl1 = semilogy(xt3,bval2,<span class="string">'^b'</span>);
+0082     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(pl1, <span class="string">'LineWidth'</span>,[1.0],<span class="string">'MarkerSize'</span>,[10],<span class="string">'MarkerFaceColor'</span>,<span class="string">'w'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);
+0083     xlabel(<span class="string">'Magnitude'</span>,<span class="string">'Fontsize'</span>, 12)
+0084     ylabel(<span class="string">'Cumulative Number'</span>,<span class="string">'Fontsize'</span>,12)
+0085     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca,<span class="string">'visible'</span>,<span class="string">'on'</span>,<span class="string">'FontSize'</span>,12,<span class="string">'FontWeight'</span>,<span class="string">'normal'</span>,<span class="keyword">...</span>
+0086         <span class="string">'FontWeight'</span>,<span class="string">'bold'</span>,<span class="string">'LineWidth'</span>,[1.0],<span class="string">'TickDir'</span>,<span class="string">'in'</span>,<span class="string">'Ticklength'</span>,[0.01 0.01],<span class="keyword">...</span>
+0087         <span class="string">'Box'</span>,<span class="string">'on'</span>,<span class="string">'Tag'</span>,<span class="string">'cufi'</span>,<span class="string">'color'</span>,<span class="string">'w'</span>)
+0088 
+0089     <span class="comment">%ESTIMATE B-VALUE (MAX LIKELIHOOD ESTIMATE)</span>
+0090     Nmin = 10;
+0091     fMccorr = 0;
+0092     fBinning = 0.1;
+0093 
+0094     <span class="keyword">if</span> length(mag) &gt;= Nmin
+0095 
+0096         <span class="comment">%GOODNESS-OF-FIT TO POWER LAW</span>
+0097         <span class="comment">%%%%%%%%%%%%%%%%%% mcperc_ca3.m start %%%%%%%%%%%%%%%%%%%%</span>
+0098         <span class="comment">% This is a completeness determination test</span>
+0099 
+0100         [bval,xt2] = <a href="hist.html" class="code" title="function hist(catalogObject);">hist</a>(mag,-2:0.1:6);
+0101         l = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(bval == <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(bval)));
+0102         magco0 =  xt2(l);
+0103 
+0104         dat = [];
+0105 
+0106         <span class="comment">%for i = magco0-0.6:0.1:magco0+0.2</span>
+0107         <span class="keyword">for</span> i = magco0-0.5:0.1:magco0+0.7
+0108             l = mag &gt;= i - 0.0499;
+0109             nu = length(mag(l));
+0110             <span class="keyword">if</span> length(mag(l)) &gt;= 25;
+0111                 <span class="comment">%[bv magco stan av] =  bvalca3(catZmap(l,:),2,2);</span>
+0112                 [mw bv2 stan2 av] =  Catalog.bvalue_lib.bmemag(mag(l));
+0113                 Catalog.bvalue_lib.synthb_aut;
+0114                 dat = [ dat ; i res2];
+0115             <span class="keyword">else</span>
+0116                 dat = [ dat ; i nan];
+0117             <span class="keyword">end</span>
+0118 
+0119         <span class="keyword">end</span>
+0120 
+0121         j =  <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(dat(:,2) &lt; 10 ));
+0122         <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(j) == 1; Mc90 = nan ;
+0123         <span class="keyword">else</span>;
+0124             Mc90 = dat(j,1);
+0125         <span class="keyword">end</span>
+0126 
+0127         j =  <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(dat(:,2) &lt; 5 ));
+0128         <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(j) == 1; Mc95 = nan ;
+0129         <span class="keyword">else</span>;
+0130             Mc95 = dat(j,1);
+0131         <span class="keyword">end</span>
+0132 
+0133         j =  <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(dat(:,2) &lt; 10 ));
+0134         <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(j) == 1; j =  <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(dat(:,2) &lt; 15 )); <span class="keyword">end</span>
+0135         <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(j) == 1; j =  <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(dat(:,2) &lt; 20 )); <span class="keyword">end</span>
+0136         <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(j) == 1; j =  <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(dat(:,2) &lt; 25 )); <span class="keyword">end</span>
+0137         j2 =  <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(dat(:,2) == <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(dat(:,2)) ));
+0138         <span class="comment">%j = min([j j2]);</span>
+0139 
+0140         Mc = dat(j,1);
+0141         magco = Mc;
+0142         prf = 100 - dat(j2,2);
+0143         <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(magco) == 1; magco = nan; prf = 100 -<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(dat(:,2)); <span class="keyword">end</span>
+0144         <span class="comment">%display(['Completeness Mc: ' num2str(Mc) ]);</span>
+0145         <span class="comment">%%%%%%%%%%%%%%%%%% mcperc_ca3.m end %%%%%%%%%%%%%%%%%%%%%%</span>
+0146 
+0147         <span class="comment">%CALCULATE MC</span>
+0148         [fMc] = Catalog.bvalue_lib.calc_Mc(mag, mcType, fBinning, fMccorr);
+0149         l = mag &gt;= fMc-(fBinning/2);
+0150         <span class="keyword">if</span> length(mag(l)) &gt;= Nmin
+0151             [fMeanMag, fBValue, fStd_B, fAValue] =  Catalog.bvalue_lib.calc_bmemag(mag(l), fBinning);
+0152         <span class="keyword">else</span>
+0153             [fMc, fBValue, fStd_B, fAValue] = deal(NaN);
+0154         <span class="keyword">end</span>
+0155 
+0156         <span class="comment">%STANDARD DEV OF a-value SET TO NAN;</span>
+0157         [fStd_A, fStd_Mc] = deal(NaN);
+0158 
+0159     <span class="keyword">else</span>
+0160         [fMc, fStd_Mc, fBValue, fStd_B, fAValue, fStd_A, <span class="keyword">...</span>
+0161             fStdDevB, fStdDevMc] = deal(NaN);
+0162     <span class="keyword">end</span>
+0163 
+0164     magco = fMc;
+0165     index_low=<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(xt3 &lt; magco+.05 &amp; xt3 &gt; magco-.05);
+0166     mag_hi = xt3(1);
+0167     index_hi = 1;
+0168     mz = xt3 &lt;= mag_hi &amp; xt3 &gt;= magco-.0001;
+0169     mag_zone=xt3(mz);
+0170     y = backg_ab(mz);
+0171 
+0172     <span class="comment">%PLOT MC IN FIGURE</span>
+0173     Mc = semilogy(xt3(index_low),bvalsum3(index_low)*1.5,<span class="string">'vk'</span>);
+0174     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(Mc,<span class="string">'LineWidth'</span>,[1.0],<span class="string">'MarkerSize'</span>,7)
+0175     Mc = text(xt3(index_low)+0.2,bvalsum3(index_low)*1.5,<span class="string">'Mc'</span>);
+0176     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(Mc,<span class="string">'FontWeight'</span>,<span class="string">'normal'</span>,<span class="string">'FontSize'</span>,12,<span class="string">'Color'</span>,<span class="string">'k'</span>)
+0177 
+0178     <span class="comment">%CREATE AND PLOT FIT LINE</span>
+0179     sol_type = <span class="string">'Maximum Likelihood Solution'</span>;
+0180     bw=fBValue;
+0181     aw=fAValue;
+0182     ew=fStd_B;
+0183     p = [ -1*bw aw];
+0184     f = polyval(p,mag_zone);
+0185     f = 10.^f;
+0186     hold on
+0187     ttm= semilogy(mag_zone,f,<span class="string">'k'</span>);
+0188     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ttm,<span class="string">'LineWidth'</span>,[2.0])
+0189     std_backg = ew;
+0190 
+0191     <span class="comment">%ERROR CALCULATIONS</span>
+0192     <span class="comment">%b = mag;</span>
+0193     bv = [];
+0194     si = [];
+0195 
+0196     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca,<span class="string">'XLim'</span>,[<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(mag)-0.5  <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(mag+0.5)])
+0197     <span class="comment">%set(gca,'YLim',[0.9 length(mag+30)*2.5]);</span>
+0198 
+0199     p=-p(1,1);
+0200     p=fix(100*p)/100;
+0201     tt1=num2str(bw,3);
+0202     tt2=num2str(std_backg,1);
+0203     tt4=num2str(bv,3);
+0204     tt5=num2str(si,2);
+0205     tmc=num2str(magco,2);
+0206     rect=[0 0 1 1];
+0207     h2=axes(<span class="string">'position'</span>,rect);
+0208     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h2,<span class="string">'visible'</span>,<span class="string">'off'</span>);
+0209     t=catalogObject.gettimerange();
+0210     a0 = aw-log10((t(2)-t(1))/365);
+0211 
+0212     text(.53,.88, [<span class="string">'b-value = '</span>,tt1,<span class="string">' +/- '</span>,tt2,<span class="string">',  a value = '</span>,num2str(aw,3)],<span class="string">'FontSize'</span>,12);
+0213     text(.53,.85,sol_type,<span class="string">'FontSize'</span>,12 );
+0214     text(.53,.82,[<span class="string">'Magnitude of Completeness = '</span>,tmc],<span class="string">'FontSize'</span>,12);
+0215 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of times</title>
+  <meta name="keywords" content="times">
+  <meta name="description" content="TIMES (.*) overloaded Array multiply for WAVEFORM objects.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; times.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>times
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>TIMES (.*) overloaded Array multiply for WAVEFORM objects.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function A = times(A,B) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">TIMES (.*) overloaded Array multiply for WAVEFORM objects.
+     X.*Y denotes element-by-element multiplication.  X and Y
+     must have the same dimensions unless one is a scalar.
+     A scalar can be multiplied into anything.
+
+     C = TIMES(X,Y) is called for the syntax 'X .* Y' when either X or Y
+     is a waveform object.
+
+     if BOTH X and Y are waveforms, then the resulting waveform has the
+     properties of X.  Only individual waveforms can be multiplied
+     together.
+
+     examples.
+       Let W be an N-dimensional Waveform
+       C = W .* 10 % scale all W's data values by multiplying them by 10
+
+       Let Z be a waveform with the same # of data points as each W.
+       C = W .* Z; % scale each data point within each W by the
+                   % corresponding data point within Z
+                   % The resulting waveforms (C) will have same properties
+                   % as original W, only scaled.
+
+       C = Z .* W; % Will error if numel(W) &gt; 1  This is because of the
+                   % need to copy properties from Z.
+                   %  1:1, many:1 - OK.
+                   %  1:many - NOT OK
+
+       Let W be a 1x3 waveform, let
+       C = W .* [1 2 3] % does nothing to first waveform, but scales the
+                        % data within the second waveform by 2 and the
+                        % third waveform by 3
+ See also <a href="mtimes.html" class="code" title="function A = mtimes(A, B)">MTIMES</a>.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed_antelope/attenuation/hankelq.html" class="code" title="function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)">hankelq</a>	HANKELQ Compute spectral ratio in two frequency bands</li><li><a href="../../../GISMO/core/@correlation/interferogram.html" class="code" title="function [c,t,i,CC,LL] = interferogram(c,varargin)">interferogram</a>	C = INTERFEROGRAM(C)</li><li><a href="../../../GISMO/core/@threecomp/extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/interferogram.html" class="code" title="function [c,t,i,CC,LL] = interferogram(c, width, timestep, masterIdx)">interferogram</a>	C = INTERFEROGRAM(C)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>	Private method. See ../plot for details.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [a, b] = swap(b, a)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function A = times(A,B)</a>
+0002    <span class="comment">%TIMES (.*) overloaded Array multiply for WAVEFORM objects.</span>
+0003    <span class="comment">%     X.*Y denotes element-by-element multiplication.  X and Y</span>
+0004    <span class="comment">%     must have the same dimensions unless one is a scalar.</span>
+0005    <span class="comment">%     A scalar can be multiplied into anything.</span>
+0006    <span class="comment">%</span>
+0007    <span class="comment">%     C = TIMES(X,Y) is called for the syntax 'X .* Y' when either X or Y</span>
+0008    <span class="comment">%     is a waveform object.</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">%     if BOTH X and Y are waveforms, then the resulting waveform has the</span>
+0011    <span class="comment">%     properties of X.  Only individual waveforms can be multiplied</span>
+0012    <span class="comment">%     together.</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">%     examples.</span>
+0015    <span class="comment">%       Let W be an N-dimensional Waveform</span>
+0016    <span class="comment">%       C = W .* 10 % scale all W's data values by multiplying them by 10</span>
+0017    <span class="comment">%</span>
+0018    <span class="comment">%       Let Z be a waveform with the same # of data points as each W.</span>
+0019    <span class="comment">%       C = W .* Z; % scale each data point within each W by the</span>
+0020    <span class="comment">%                   % corresponding data point within Z</span>
+0021    <span class="comment">%                   % The resulting waveforms (C) will have same properties</span>
+0022    <span class="comment">%                   % as original W, only scaled.</span>
+0023    <span class="comment">%</span>
+0024    <span class="comment">%       C = Z .* W; % Will error if numel(W) &gt; 1  This is because of the</span>
+0025    <span class="comment">%                   % need to copy properties from Z.</span>
+0026    <span class="comment">%                   %  1:1, many:1 - OK.</span>
+0027    <span class="comment">%                   %  1:many - NOT OK</span>
+0028    <span class="comment">%</span>
+0029    <span class="comment">%       Let W be a 1x3 waveform, let</span>
+0030    <span class="comment">%       C = W .* [1 2 3] % does nothing to first waveform, but scales the</span>
+0031    <span class="comment">%                        % data within the second waveform by 2 and the</span>
+0032    <span class="comment">%                        % third waveform by 3</span>
+0033    <span class="comment">% See also MTIMES.</span>
+0034    
+0035    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0036    <span class="comment">% $Date$</span>
+0037    <span class="comment">% $Revision$</span>
+0038    
+0039    
+0040    <span class="keyword">if</span> ~isa(A,<span class="string">'waveform'</span>) <span class="comment">% either A or B is assured to be a waveform</span>
+0041       [A, B] = <a href="#_sub1" class="code" title="subfunction [a, b] = swap(b, a)">swap</a>(A, B);
+0042    <span class="keyword">end</span>
+0043    
+0044    <span class="comment">% at this point A is guarenteed to be a waveform, while B may be anything</span>
+0045    hasSameArrayShape = all(size(A) == size(B));
+0046    elements_haveMatchingSize = <span class="keyword">...</span>
+0047       all(<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(A,<span class="string">'data_length'</span>) == numel(<a href="double.html" class="code" title="function n = double(W, option)">double</a>(B)));
+0048    
+0049    
+0050    <span class="comment">%%</span>
+0051    <span class="comment">% ----------------------------------------------------------------------- %</span>
+0052    <span class="comment">% Validation tests</span>
+0053    <span class="comment">% --------------------------</span>
+0054    <span class="comment">%</span>
+0055    <span class="comment">% factor checks</span>
+0056    <span class="comment">%   for a WAVEFORM factorB</span>
+0057    <span class="comment">%     must be scalar (1x1)</span>
+0058    <span class="comment">%     must have same data length as all factorA</span>
+0059    <span class="comment">%   for a NUMERIC factorB</span>
+0060    <span class="comment">%     must be scalar OR</span>
+0061    <span class="comment">%     must be same size (shape) as factorA OR</span>
+0062    <span class="comment">%     must have same data length as all factorA</span>
+0063    <span class="comment">%</span>
+0064    <span class="comment">% ----------------------------------------------------------------------- %</span>
+0065    
+0066    
+0067    <span class="keyword">if</span> isa(B,<span class="string">'waveform'</span>)
+0068       <span class="keyword">if</span> ~isscalar(B)
+0069          error(<span class="string">'Waveform:times:invalidFactorBSize'</span>,<span class="keyword">...</span>
+0070             [<span class="string">'The factor has too many elements.  '</span><span class="keyword">...</span>
+0071             <span class="string">'It must be single (1x1) waveform object'</span>])
+0072       <span class="keyword">else</span>
+0073          task = <span class="string">'waveform_by_waveform'</span>;
+0074       <span class="keyword">end</span>
+0075    <span class="keyword">elseif</span> isnumeric(B)
+0076       <span class="keyword">if</span> isscalar(B)
+0077          task = <span class="string">'waveform_by_scalar'</span>;
+0078       <span class="keyword">elseif</span> hasSameArrayShape
+0079          task = <span class="string">'waveforms_by_element'</span>;
+0080       <span class="keyword">elseif</span> elements_haveMatchingSize
+0081          task = <span class="string">'sample_by_sample'</span>;
+0082       <span class="keyword">else</span>
+0083          <span class="keyword">if</span> numel(A) == numel(B)
+0084             error(<span class="string">'Waveform:times:shapeMismatch'</span>,<span class="keyword">...</span>
+0085                <span class="string">'Factor dimensions do not match waveform dimensions'</span>);
+0086          <span class="keyword">else</span>
+0087             error(<span class="string">'Waveform:times:sizeMismatch'</span>,<span class="keyword">...</span>
+0088                <span class="string">'Number of factors (%d) are incompatable with the number of waveforms (%d)'</span>,<span class="keyword">...</span>
+0089                numel(B),numel(A));
+0090          <span class="keyword">end</span>
+0091       <span class="keyword">end</span>
+0092    <span class="keyword">else</span> <span class="comment">% divisor is of an unknown type</span>
+0093       error(<span class="string">'Waveform:times:invalidDivisorClass'</span>,<span class="keyword">...</span>
+0094          <span class="string">'The factorB must be either numeric or a single waveform object'</span>);
+0095    <span class="keyword">end</span>
+0096    
+0097    <span class="comment">% ----------------------------------------------------------------------- %</span>
+0098    <span class="keyword">switch</span> task
+0099       <span class="keyword">case</span> {<span class="string">'waveform_by_waveform'</span>, <span class="string">'sample_by_sample'</span>}
+0100          <span class="keyword">for</span> n = 1 : numel(A);
+0101             A(n).data = A(n).data .* <a href="double.html" class="code" title="function n = double(W, option)">double</a>(B(:)); <span class="comment">%set(A(n), 'data', double(A(n)) .* double(B(:)));</span>
+0102          <span class="keyword">end</span>
+0103       <span class="keyword">case</span> <span class="string">'waveforms_by_element'</span>
+0104          <span class="comment">% each waveform has its own number to be multiplied by</span>
+0105          <span class="keyword">for</span> n=1:numel(A)
+0106             thisFactor = <a href="double.html" class="code" title="function n = double(W, option)">double</a>(B(n));
+0107             A(n).data = A(n).data .* thisFactor; <span class="comment">% set(A(n),'data',double(A(n)) .* thisFactor );</span>
+0108          <span class="keyword">end</span>
+0109       <span class="keyword">case</span> <span class="string">'waveform_by_scalar'</span>
+0110          <span class="keyword">for</span> n=1:numel(A)
+0111             A(n).data = A(n).data .* B; <span class="comment">% = set(A(n),'data',double(A(n)) .* B );</span>
+0112          <span class="keyword">end</span>
+0113       <span class="keyword">otherwise</span>
+0114          error(<span class="string">'Waveform:times:unknownoperation'</span>,<span class="keyword">...</span>
+0115             <span class="string">'A times operation was attempted that had no recognized task.'</span>);
+0116    <span class="keyword">end</span>
+0117 <span class="keyword">end</span>
+0118 
+0119 <a name="_sub1" href="#_subfunctions" class="code">function [a, b] = swap(b, a)</a>
+0120    <span class="comment">% do nothing, it swaps a and b!</span>
+0121 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

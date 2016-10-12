@@ -1,0 +1,225 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of load_seisan</title>
+  <meta name="keywords" content="load_seisan">
+  <meta name="description" content="LOAD_SEISAN loads a waveform from SEISAN files">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; load_seisan.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>load_seisan
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>LOAD_SEISAN loads a waveform from SEISAN files</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = load_seisan(request) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">LOAD_SEISAN loads a waveform from SEISAN files
+ combineWaves isn't currently used!</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>	GETFILENAME returns a filename that is associated with a single SCNL</li><li><a href="../../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="unpackDataRequest.html" class="code" title="function [dataSource, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request)">unpackDataRequest</a>	</li><li><a href="../../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get_load_routine.html" class="code" title="function myLoadRoutine = get_load_routine(ds, use_wkaround)">get_load_routine</a>	determine the load function based upon the datasource's type</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function w = load_seisan_file(fn)</a></li><li><a href="#_sub2" class="code">function h = parseSeisanHeader(headerBlock)</a></li><li><a href="#_sub3" class="code">function ch = parseSeisamChannelHeader(channelBlock)</a></li><li><a href="#_sub4" class="code">function d = parseSeisamData(dataBlock)</a></li><li><a href="#_sub5" class="code">function st = getStartTime(myData)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = load_seisan(request)</a>
+0002    <span class="comment">%LOAD_SEISAN loads a waveform from SEISAN files</span>
+0003    <span class="comment">% combineWaves isn't currently used!</span>
+0004    
+0005    <span class="comment">% Glenn Thompson 2016/05/25 based on load_miniseed</span>
+0006    <span class="comment">% request.combineWaves is ignored</span>
+0007    w=[];
+0008    <span class="keyword">if</span> isstruct(request)
+0009       [thisSource, chanInfo, startTimes, endTimes, ~] = <a href="unpackDataRequest.html" class="code" title="function [dataSource, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request)">unpackDataRequest</a>(request);
+0010       <span class="keyword">for</span> i=1:numel(chanInfo)
+0011          <span class="keyword">for</span> j=1:numel(startTimes)
+0012             thisfilename = <a href="../../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>(thisSource,chanInfo(i),startTimes(j))
+0013             thisw = <a href="#_sub1" class="code" title="subfunction w = load_seisan_file(fn)">load_seisan_file</a>(thisfilename{1}); <span class="comment">%, startTimes(j), endTimes(j));</span>
+0014             w = [w thisw];
+0015          <span class="keyword">end</span>
+0016       <span class="keyword">end</span>
+0017       w = w(:);
+0018       
+0019    <span class="keyword">else</span>
+0020       <span class="comment">%request should be a filename</span>
+0021       thisFilename = request;
+0022       <span class="keyword">if</span> exist(thisFilename, <span class="string">'file'</span>)
+0023         w = <a href="#_sub1" class="code" title="subfunction w = load_seisan_file(fn)">load_seisan_file</a>(thisFilename);
+0024       <span class="keyword">else</span>
+0025           w = <a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>();
+0026           warning(sprintf(<span class="string">'File %s does not exist'</span>,thisFilename));
+0027       <span class="keyword">end</span>
+0028    <span class="keyword">end</span>
+0029 <span class="keyword">end</span>
+0030 
+0031 
+0032 <a name="_sub1" href="#_subfunctions" class="code">function w = load_seisan_file(fn)</a><span class="comment">%dataRequest)</span>
+0033    <span class="comment">% Read a v7.0 or later SEISAN file</span>
+0034    w  = <a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>; <span class="comment">%initialize, in case nothing works</span>
+0035    MACHINEFORMAT = <span class="string">'l'</span>;
+0036    <span class="comment">%disp('Little Endian');</span>
+0037    fid = fopen(fn,<span class="string">'r'</span>,MACHINEFORMAT);
+0038    bytesToRead = fread(fid,1,<span class="string">'uint32'</span>);
+0039    <span class="keyword">if</span> bytesToRead ~= 80
+0040       fclose(fid);
+0041       MACHINEFORMAT = <span class="string">'b'</span>;
+0042       <span class="comment">%disp('Switching to Big Endian');</span>
+0043       fid = fopen(fn,<span class="string">'r'</span>,MACHINEFORMAT);
+0044       bytesToRead = fread(fid,1,<span class="string">'uint32'</span>);
+0045       <span class="keyword">if</span> bytesToRead ~= 80
+0046          
+0047          warning(<span class="string">'Waveform:load_seisan:invalidFileFormat'</span>,[<span class="string">'File does not appear to be a SEISAN file,]'</span><span class="keyword">...</span>
+0048             <span class="string">'[ or is an old PC version.\n This program is currently]'</span>,<span class="keyword">...</span>
+0049             <span class="string">'[ incapable of opening PC SEISAN files older than V7.0'</span>]);
+0050          fclose(fid);
+0051          <span class="keyword">return</span>
+0052       <span class="keyword">end</span>
+0053    <span class="keyword">end</span>
+0054    
+0055    
+0056    fseek(fid,0,-1);
+0057    
+0058    nsta = 0;
+0059    <span class="keyword">for</span> i=1:333;
+0060       bytesToRead = fread(fid,1,<span class="string">'uint32'</span>);
+0061       <span class="keyword">if</span> bytesToRead == 80
+0062          st(1:80) = fread(fid,80,<span class="string">'char'</span>);
+0063          <span class="keyword">if</span> i== 1
+0064             h = <a href="#_sub2" class="code" title="subfunction h = parseSeisanHeader(headerBlock)">parseSeisanHeader</a>(st);
+0065             nsta = h.stationCount;
+0066          <span class="keyword">end</span>
+0067          
+0068          <span class="keyword">if</span> i &gt;= 3
+0069             <span class="keyword">for</span> j=1:3
+0070                thisbit = st(((j-1) * 26 + 1):(j*26));
+0071                ch = <a href="#_sub3" class="code" title="subfunction ch = parseSeisamChannelHeader(channelBlock)">parseSeisamChannelHeader</a>(thisbit);
+0072             <span class="keyword">end</span>
+0073          <span class="keyword">end</span>
+0074          bytesRead = fread(fid,1,<span class="string">'uint32'</span>);
+0075          
+0076       <span class="keyword">else</span>
+0077          <span class="keyword">break</span>
+0078       <span class="keyword">end</span>
+0079    <span class="keyword">end</span>
+0080    
+0081    <span class="keyword">for</span> j = 1: nsta
+0082       dt = fread(fid,1040,<span class="string">'char'</span>);
+0083       mydata = <a href="#_sub4" class="code" title="subfunction d = parseSeisamData(dataBlock)">parseSeisamData</a>(dt);
+0084       w(j) = <a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0085       w(j) = <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w(j),<span class="string">'station'</span>,mydata.station,<span class="string">'channel'</span>,mydata.channel,<span class="keyword">...</span>
+0086          <span class="string">'start'</span>,<a href="#_sub5" class="code" title="subfunction st = getStartTime(myData)">getStartTime</a>(mydata),<span class="string">'freq'</span>,mydata.sampleRate);
+0087       
+0088       nbytesread = fread(fid,1,<span class="string">'uint32'</span>); <span class="comment">%bytecount</span>
+0089       bytestoread = fread(fid,1,<span class="string">'uint32'</span>); <span class="comment">%bytecount</span>
+0090       
+0091       rawdata = fread(fid,bytestoread / 4,<span class="string">'int32'</span>);
+0092       w(j) = <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w(j),<span class="string">'data'</span>,rawdata);
+0093       
+0094       nbytesread = fread(fid,1,<span class="string">'uint32'</span>); <span class="comment">%bytecount</span>
+0095       nbytesToread2 = fread(fid,1,<span class="string">'uint32'</span>); <span class="comment">%bytecount</span>
+0096    <span class="keyword">end</span>
+0097    fclose(fid);
+0098 <span class="keyword">end</span>
+0099 
+0100 <a name="_sub2" href="#_subfunctions" class="code">function h = parseSeisanHeader(headerBlock)</a>
+0101    
+0102    hFieldName = {<span class="string">'network'</span>,<span class="string">'stationCount'</span>,<span class="string">'centuryCode'</span>,<span class="string">'year'</span>,<span class="string">'doy'</span>,<span class="string">'month'</span>,<span class="string">'day'</span>,<span class="string">'hr'</span>,<span class="string">'min'</span>,<span class="string">'sec'</span>,<span class="string">'totalTime'</span>};
+0103    hFieldpos = {2:30,31:33,34,35:36,38:40,42:43,45:46,48:49,51:52,54:59,61:69};
+0104    hFieldType = [<span class="string">'sddddddddff'</span>]; <span class="comment">%s=string, d=integer, f=float</span>
+0105    
+0106    <span class="keyword">for</span> n=1:numel(hFieldName)
+0107       <span class="keyword">switch</span> hFieldType(n)
+0108          <span class="keyword">case</span> <span class="string">'s'</span>
+0109             h.(hFieldName{n}) = deblank(char(headerBlock([hFieldpos{n}])));
+0110          <span class="keyword">case</span> <span class="string">'d'</span>
+0111             h.(hFieldName{n}) = str2double(char(headerBlock([hFieldpos{n}]')));
+0112          <span class="keyword">case</span> <span class="string">'f'</span>
+0113             h.(hFieldName{n}) = str2double(char(headerBlock([hFieldpos{n}]')));
+0114       <span class="keyword">end</span>
+0115    <span class="keyword">end</span>
+0116 <span class="keyword">end</span>
+0117 <a name="_sub3" href="#_subfunctions" class="code">function ch = parseSeisamChannelHeader(channelBlock)</a>
+0118    
+0119    chFieldName= {<span class="string">'station'</span>,<span class="string">'comp'</span>,<span class="string">'lastStaLetter'</span>,<span class="string">'startRelToEvent'</span>,<span class="string">'staDataInterval'</span>};
+0120    chFieldpos = {2:5,6:9,10,11:17,19:26};
+0121    chFieldType = [<span class="string">'sssff'</span>]; <span class="comment">%s=string, d=integer, f=float</span>
+0122    
+0123    <span class="keyword">for</span> n=1:numel(chFieldName)
+0124       <span class="keyword">switch</span> chFieldType(n)
+0125          <span class="keyword">case</span> <span class="string">'s'</span>
+0126             ch.(chFieldName{n}) = deblank(char(channelBlock([chFieldpos{n}])));
+0127          <span class="keyword">case</span> <span class="string">'d'</span>
+0128             ch.(chFieldName{n}) = str2double(char(channelBlock([chFieldpos{n}]')));
+0129          <span class="keyword">case</span> <span class="string">'f'</span>
+0130             ch.(chFieldName{n}) = str2double(char(channelBlock([chFieldpos{n}]')));
+0131       <span class="keyword">end</span>
+0132    <span class="keyword">end</span>
+0133 <span class="keyword">end</span>
+0134 <a name="_sub4" href="#_subfunctions" class="code">function d = parseSeisamData(dataBlock)</a>
+0135    
+0136    dFieldName= {<span class="string">'station'</span>,<span class="string">'channel'</span>,<span class="string">'centuryCode'</span>,<span class="string">'year'</span>,<span class="string">'doy'</span>,<span class="keyword">...</span>
+0137       <span class="string">'month'</span>,<span class="string">'day'</span>,<span class="string">'hr'</span>,<span class="string">'min'</span>,<span class="string">'timingIndicator'</span>,<span class="string">'second'</span>,<span class="string">'sampleRate'</span>,<span class="keyword">...</span>
+0138       <span class="string">'nsamp'</span>,<span class="string">'lat'</span>,<span class="string">'lon'</span>,<span class="string">'elev'</span>,<span class="string">'gainFactor'</span>,<span class="string">'howManyBits'</span>};
+0139    dFieldpos = {1:5,6:9,10,11:12,14:16,<span class="keyword">...</span>
+0140       18:19,21:22,24:25,27:28,29,30:35,37:43,<span class="keyword">...</span>
+0141       45:50,52:59,61:69,71:75,76,77};
+0142    dFieldType = [<span class="string">'ssdddddddsffdffdsd'</span>]; <span class="comment">%s=string, d=integer, f=float</span>
+0143    
+0144    <span class="keyword">for</span> n=1:numel(dFieldName)
+0145       <span class="keyword">switch</span> dFieldType(n)
+0146          <span class="keyword">case</span> <span class="string">'s'</span>
+0147             temp = char(dataBlock([dFieldpos{n}]));
+0148             d.(dFieldName{n}) = deblank(temp(:)');
+0149          <span class="keyword">case</span> <span class="string">'d'</span>
+0150             d.(dFieldName{n}) = str2double(char(dataBlock([dFieldpos{n}]')));
+0151          <span class="keyword">case</span> <span class="string">'f'</span>
+0152             d.(dFieldName{n}) = str2double(char(dataBlock([dFieldpos{n}]')));
+0153       <span class="keyword">end</span>
+0154    <span class="keyword">end</span>
+0155 <span class="keyword">end</span>
+0156 
+0157 <a name="_sub5" href="#_subfunctions" class="code">function st = getStartTime(myData)</a>
+0158    
+0159    <span class="keyword">switch</span> myData.centuryCode
+0160       <span class="keyword">case</span> 0
+0161          baseyear = 1900;
+0162       <span class="keyword">case</span> 1
+0163          baseyear = 2000;
+0164       <span class="keyword">otherwise</span>
+0165          baseyear = 0;
+0166    <span class="keyword">end</span>
+0167    st = datenum(myData.year + baseyear,<span class="keyword">...</span>
+0168       myData.month,<span class="keyword">...</span>
+0169       myData.day,<span class="keyword">...</span>
+0170       myData.hr,<span class="keyword">...</span>
+0171       myData.min,<span class="keyword">...</span>
+0172       myData.second);
+0173    
+0174    <span class="keyword">return</span>
+0175 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

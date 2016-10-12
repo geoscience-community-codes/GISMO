@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of detrend</title>
+  <meta name="keywords" content="detrend">
+  <meta name="description" content="DETREND remove linear trend from a waveform">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; detrend.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>detrend
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>DETREND remove linear trend from a waveform</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function w = detrend (w, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DETREND remove linear trend from a waveform
+   waveform = detrend(waveform, [options])
+   removes the linear trend from the waveform object(s).
+
+   Input Arguments
+       WAVEFORM: a waveform object   N-DIMENSIONAL
+       OPTIONS: optional parameters as described in matlab's DETREND
+
+  WARNING: Detrending a waveform with NAN values will return a waveform
+  with nothing but NAN values.   Replace NaN values before detrending.
+  &quot;demean&quot;, however, works fine but only removes constant offsets.
+
+ See also <a href="detrend.html" class="code" title="function w = detrend (w, varargin)">DETREND</a> for list of options</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>	DETREND removes the slope of each trace.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="detrend.html" class="code" title="function w = detrend (w, varargin)">detrend</a>	DETREND remove linear trend from a waveform</li><li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/detrend.html" class="code" title="function c = detrend(c)">detrend</a>	DETREND   removes the slope of each trace.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li><li><a href="../../../GISMO/contributed_antelope/reduced_displacement/reducedisp_wfmeas.html" class="code" title="function reducedisp_wfmeas(varargin);">reducedisp_wfmeas</a>	REDUCEDISP_WFMEAS(STARTTIME,ENDTIME,SCNL,DIST,DS,DBOUT,FILT,TIMESTEP,ALGORITHM)</li><li><a href="../../../GISMO/core/+Detection/sta_lta.html" class="code" title="function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)">sta_lta</a>	STA_LTA: Short-Time-Average/Long-Time-Average event detector.</li><li><a href="../../../GISMO/core/@correlation/correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="../../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>	DETREND removes the slope of each trace.</li><li><a href="../../../GISMO/core/@correlation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li><li><a href="../../../GISMO/core/@drumplot/cookbook.html" class="code" title="">cookbook</a>	% drumplot cookbook</li><li><a href="../../../GISMO/core/@threecomp/threecomp.html" class="code" title="">threecomp</a>	THREECOMP Object for three component waveform data</li><li><a href="detrend.html" class="code" title="function w = detrend (w, varargin)">detrend</a>	DETREND remove linear trend from a waveform</li><li><a href="waveform2rsam.html" class="code" title="function s = waveform2rsam(w, method, samplingPeriod)">waveform2rsam</a>	WAVEFORM2RSAM create an RSAM-like object from a waveform object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/detrend.html" class="code" title="function c = detrend(c)">detrend</a>	DETREND   removes the slope of each trace.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li><li><a href="../../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>	</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li><li><a href="../../../GISMO/uaf_internal/AEIC_AVO/+check/crossfeed.html" class="code" title="function crossfeed(varargin)">crossfeed</a>	CROSSFEED Checks for crossfeeding and duplicate data channels</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = detrend (w, varargin)</a>
+0002    <span class="comment">%DETREND remove linear trend from a waveform</span>
+0003    <span class="comment">%   waveform = detrend(waveform, [options])</span>
+0004    <span class="comment">%   removes the linear trend from the waveform object(s).</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">%   Input Arguments</span>
+0007    <span class="comment">%       WAVEFORM: a waveform object   N-DIMENSIONAL</span>
+0008    <span class="comment">%       OPTIONS: optional parameters as described in matlab's DETREND</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">%  WARNING: Detrending a waveform with NAN values will return a waveform</span>
+0011    <span class="comment">%  with nothing but NAN values.   Replace NaN values before detrending.</span>
+0012    <span class="comment">%  &quot;demean&quot;, however, works fine but only removes constant offsets.</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">% See also DETREND for list of options</span>
+0015    
+0016    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0017    <span class="comment">% $Date$</span>
+0018    <span class="comment">% $Revision$</span>
+0019    
+0020    Nmax = numel(w);
+0021    warnedAboutNAN = false;
+0022    <span class="keyword">for</span> I = 1 : Nmax
+0023       
+0024       <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(w(I)), <span class="keyword">continue</span>, <span class="keyword">end</span>
+0025       
+0026       d = w(I).data;
+0027       <span class="keyword">if</span> ~warnedAboutNAN &amp;&amp; any(isnan(d))
+0028          warnedAboutNAN = true;
+0029          warning(<span class="string">'Waveform:detrend:NaNwarning'</span>,<span class="keyword">...</span>
+0030             [<span class="string">'NAN values exist in one or more waveforms.'</span>,<span class="keyword">...</span>
+0031             <span class="string">'  Detrend will return values of NAN\n'</span>,<span class="keyword">...</span>
+0032             <span class="string">'One possible way to correct this problem is to use FILLGAPS '</span>,<span class="keyword">...</span>
+0033             <span class="string">'to replace NAN values prior to detrending\n'</span>,<span class="keyword">...</span>
+0034             <span class="string">'  &quot;demean&quot;, however, should work fine.'</span>]);
+0035       <span class="keyword">end</span>
+0036       
+0037       w(I).data = <a href="detrend.html" class="code" title="function w = detrend (w, varargin)">detrend</a>(d,varargin{:});
+0038    <span class="keyword">end</span>
+0039 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

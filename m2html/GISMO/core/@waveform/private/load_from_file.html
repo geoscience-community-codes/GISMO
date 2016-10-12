@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of load_from_file</title>
+  <meta name="keywords" content="load_from_file">
+  <meta name="description" content="load waveforms from a file using myLoadfunc">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; load_from_file.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>load_from_file
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>load waveforms from a file using myLoadfunc</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = load_from_file(myLoadFunc, fname, allowMultiple, ErrorOnEmpty) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> load waveforms from a file using myLoadfunc
+ w = load_from_file(myLoadFunc, singleFileName);
+     singleFileName may have wildcards.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="load_from_datasource.html" class="code" title="function w = load_from_datasource(ds, chans, startt, endt, combine_waves, usewkaround)">load_from_datasource</a>	load_from_datasource</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [v, cell_array] = peel(cell_array)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = load_from_file(myLoadFunc, fname, allowMultiple, ErrorOnEmpty)</a>
+0002    <span class="comment">% load waveforms from a file using myLoadfunc</span>
+0003    <span class="comment">% w = load_from_file(myLoadFunc, singleFileName);</span>
+0004    <span class="comment">%     singleFileName may have wildcards.</span>
+0005    
+0006    
+0007    possiblefiles = dir(fname); <span class="comment">% this handles wildcards</span>
+0008    
+0009    <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(possiblefiles)
+0010       error(<span class="string">'Waveform:waveform:FileNotFound'</span>,<span class="string">'No file matches: %s'</span>, fname);
+0011    <span class="keyword">end</span>
+0012    
+0013    mydir = fileparts(fname); <span class="comment">%fileparts returns [path, name, ext]</span>
+0014    myfiles = fullfile(mydir, {possiblefiles(:).name});
+0015    w(numel(myfiles)) = <a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>; <span class="comment">%best-guess preinitialization (candidate for trouble!)</span>
+0016    startindex = 0;
+0017    <span class="keyword">while</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(myfiles)
+0018       [f, myfiles] = <a href="#_sub1" class="code" title="subfunction [v, cell_array] = peel(cell_array)">peel</a>(myfiles);
+0019       tmp = myLoadFunc(f);
+0020       nFound = numel(tmp);
+0021       <span class="keyword">switch</span> nFound
+0022          <span class="keyword">case</span> 0
+0023             <span class="keyword">if</span> ErrorOnEmpty
+0024                error(<span class="string">'Waveform:waveform:noData'</span>,<span class="string">'no data retrieved: %s'</span>, f);
+0025             <span class="keyword">end</span>
+0026          <span class="keyword">case</span> 1
+0027             w(startindex+1) = tmp;
+0028          <span class="keyword">otherwise</span>
+0029             <span class="keyword">if</span> allowMultiple
+0030                w(startindex+1:startindex+nFound) = tmp(:);
+0031             <span class="keyword">else</span>
+0032                error(<span class="string">'Waveform:waveform:MultipleWaveformsInFile'</span>,<span class="keyword">...</span>
+0033                   <span class="string">'Expected a single waveform, but several exist: %s'</span>, f)
+0034             <span class="keyword">end</span>
+0035       <span class="keyword">end</span> <span class="comment">%switch</span>
+0036       startindex = startindex + nFound;
+0037    <span class="keyword">end</span> <span class="comment">%while</span>
+0038 <span class="keyword">end</span> <span class="comment">%load_from_file</span>
+0039 
+0040 <a name="_sub1" href="#_subfunctions" class="code">function [v, cell_array] = peel(cell_array)</a>
+0041    <span class="comment">% remove first item from a cell array, return remaining items</span>
+0042    v = cell_array{1};
+0043    cell_array(1) = [];
+0044 <span class="keyword">end</span> <span class="comment">%peel</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

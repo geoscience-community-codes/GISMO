@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of rms</title>
+  <meta name="keywords" content="rms">
+  <meta name="description" content="RMS root mean square of a waveform">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; rms.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>rms
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>RMS root mean square of a waveform</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function RMS = rms(W, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">RMS root mean square of a waveform
+   RMS = sqrt((sum(signal .^2) / (N-1))
+
+  Values of NaN are removed before RMS calculation.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed_antelope/reduced_displacement/reducedisp_calc.html" class="code" title="function w = reducedisp_calc(w,dist,varargin)">reducedisp_calc</a>	WAVEFORM = REDUCEDISP(WAVEFORM,DISTANCE) This function calculates the</li><li><a href="../../../GISMO/core/+Catalog/+read_catalog/sru.html" class="code" title="function self=sru(filename)">sru</a>	readEvents.sru read a catalog sent by Seismic Research Unit, University of West</li><li><a href="../../../GISMO/core/@Sfile/Sfile.html" class="code" title="">Sfile</a>	Class that describes data in a Seisan S-file</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function RMS = rms(W, varargin)</a>
+0002    <span class="comment">%RMS root mean square of a waveform</span>
+0003    <span class="comment">%   RMS = sqrt((sum(signal .^2) / (N-1))</span>
+0004    <span class="comment">%</span>
+0005    <span class="comment">%  Values of NaN are removed before RMS calculation.</span>
+0006    
+0007    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0008    <span class="comment">% $Date$</span>
+0009    <span class="comment">% $Revision$</span>
+0010    
+0011    RMS = zeros(size(W));
+0012    
+0013    <span class="keyword">for</span> i = 1 : numel(W) <span class="comment">%loop through an array of Waveforms</span>
+0014       Signal = W(i).data; <span class="comment">%grab signal</span>
+0015       invalidMask = isnan(Signal);
+0016       nInvalid = sum(invalidMask);
+0017       N = length(Signal) - nInvalid; <span class="comment">%</span>
+0018       RMS(i) = sqrt( sum(Signal(~invalidMask) .^ 2) / (N - 1) );
+0019    <span class="keyword">end</span>
+0020 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

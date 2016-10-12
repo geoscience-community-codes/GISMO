@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of synthb_aut</title>
+  <meta name="keywords" content="synthb_aut">
+  <meta name="description" content="This is synthetic219">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">+Catalog</a> &gt; <a href="index.html">+bvalue_lib</a> &gt; synthb_aut.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+Catalog/+bvalue_lib&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>synthb_aut
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is synthetic219</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">This is synthetic219
+This program generates a synthetic catalog of given total number of events, b-value, minimum magnitude,
+and magnitude increment.
+The synthetic catalog will be sotred in a file &quot;synt.mat&quot;
+ Yuzo Toya 2/1999</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/hist.html" class="code" title="function hist(catalogObject);">hist</a>	HIST plot histograms of magnitude distribution, depth</li><li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>	legend creates a legend for a waveform graph</li><li><a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/legend.html" class="code" title="function varargout = legend(T, varargin)">legend</a>	legend   Create a legend for the graph of a trace.</li><li><a href="../../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%This is synthetic219</span>
+0002 <span class="comment">%This program generates a synthetic catalog of given total number of events, b-value, minimum magnitude,</span>
+0003 <span class="comment">%and magnitude increment.</span>
+0004 <span class="comment">%The synthetic catalog will be sotred in a file &quot;synt.mat&quot;</span>
+0005 <span class="comment">% Yuzo Toya 2/1999</span>
+0006 
+0007 TN = length(mag(1));  <span class="comment">%total number of events</span>
+0008 B = bv2 ;<span class="comment">%b-value</span>
+0009 IM= i;<span class="comment">%starting magnitude (hypothetical Mc)</span>
+0010 inc = 0.1 ;<span class="comment">%magnitude increment</span>
+0011 
+0012 <span class="comment">% log10(N)=A-B*M</span>
+0013 M=[IM:inc:15];
+0014 N=10.^(log10(TN)-B*(M-IM));
+0015 aval=(log10(TN)-B*(0-IM));
+0016 N=round(N);
+0017 <span class="comment">%N=floor(N);</span>
+0018 <span class="comment">%N=ceil(N);</span>
+0019 
+0020 syn = ones(TN,9)*nan;
+0021 new = ones(TN,1)*nan;
+0022 
+0023 <span class="comment">%[ttt,indt]=sortrows(new,[3]);</span>
+0024 <span class="comment">%new=ttt;</span>
+0025 <span class="comment">%new=a</span>
+0026 ct1=1;
+0027 
+0028 
+0029 ct1  = <a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(<a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(N == 0)) - 1;
+0030 <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(ct1) == 1 ; ct1 = length(N); <span class="keyword">end</span>
+0031 
+0032 ctM=M(ct1);
+0033 count=0;
+0034 ct=0;
+0035 swt=0;
+0036 sc=0;
+0037 <span class="keyword">for</span> I=IM:inc:ctM;
+0038     ct=ct+1;
+0039     <span class="keyword">if</span> I~=ctM;
+0040         <span class="keyword">for</span> sc=1:(N(ct)-N(ct+1));
+0041             count=count+1;
+0042             new(count)=I;
+0043         <span class="keyword">end</span>
+0044     <span class="keyword">else</span>
+0045         count=count+1;
+0046         new(count)=I;
+0047     <span class="keyword">end</span>
+0048 <span class="keyword">end</span>;
+0049 
+0050 
+0051 PM=M(1:ct);
+0052 PN=log10(N(1:ct));
+0053 <span class="comment">%bdiff(catZmap)</span>
+0054 <span class="comment">%ga = findobj('Tag','cufi');</span>
+0055 <span class="comment">%axes(ga); hold on;</span>
+0056 <span class="comment">%plot(PM,N(1:ct));</span>
+0057 <span class="comment">%pause</span>
+0058 N = N(1:ct);
+0059 le = length(mag(l));
+0060 [bval,xt2] = <a href="../../../../GISMO/core/@Catalog/hist.html" class="code" title="function hist(catalogObject);">hist</a>(mag(l),PM);
+0061 b3 = fliplr(cumsum(fliplr(bval)));    <span class="comment">% N for M &gt;= (counted backwards)</span>
+0062 res2 = sum(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(b3 - N))/sum(b3)*100;
+0063 res = res2;
+0064 
+0065 <span class="keyword">return</span>
+0066 
+0067 fi = findobj(<span class="string">'tag'</span>,<span class="string">'mcfig2'</span>);
+0068 <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(fi) == 1
+0069     figure(<span class="string">'pos'</span>,[300 300 300 300],<span class="keyword">...</span>
+0070         <span class="string">'tag'</span>,<span class="string">'mcfig2'</span>);
+0071 <span class="keyword">else</span>
+0072     figure(fi); delete(gca);delete(gca);
+0073 <span class="keyword">end</span>
+0074 
+0075 
+0076 axes(<span class="string">'pos'</span>,[0.15 0.2 0.7 0.7])
+0077 
+0078 pl = semilogy(PM,b3,<span class="string">'bo'</span>)
+0079 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(pl,<span class="string">'LineWidth'</span>,[1.5],<span class="string">'MarkerSize'</span>,[5],<span class="keyword">...</span>
+0080     <span class="string">'MarkerFaceColor'</span>,[0 0 0 ],<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);
+0081 
+0082 hold on
+0083 pl = semilogy(PM,N(1:ct),<span class="string">'rs'</span>)
+0084 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(pl,<span class="string">'LineWidth'</span>,[1.5],<span class="string">'MarkerSize'</span>,[5],<span class="keyword">...</span>
+0085     <span class="string">'MarkerFaceColor'</span>,[0.9 0.9 0.9],<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);
+0086 
+0087 <span class="comment">%re = (abs(b3 - N));</span>
+0088 <span class="comment">%pl = semilogy(PM,re,'rv')</span>
+0089 <span class="comment">%set(pl,'LineWidth',[1.0],'MarkerSize',[5],...</span>
+0090 <span class="comment">%  'MarkerFaceColor','w','MarkerEdgeColor','k');</span>
+0091 
+0092 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca,<span class="string">'visible'</span>,<span class="string">'on'</span>,<span class="string">'FontSize'</span>,fs12,<span class="string">'FontWeight'</span>,<span class="string">'bold'</span>,<span class="keyword">...</span>
+0093     <span class="string">'TickDir'</span>,<span class="string">'out'</span>,<span class="string">'LineWidth'</span>,[1.0],<span class="keyword">...</span>
+0094     <span class="string">'Box'</span>,<span class="string">'on'</span>)
+0095 <a href="../../../../GISMO/core/@waveform/legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>(<span class="string">'Observed'</span>,<span class="string">'Synthetic'</span>)
+0096 xlabel(<span class="string">'Magnitude'</span>)
+0097 ylabel(<span class="string">'Cumulative Number'</span>)
+0098 title(<span class="string">'Goodness of FMD fit to GR'</span>)
+0099 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca,<span class="string">'Ylim'</span>,[1 1300])</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

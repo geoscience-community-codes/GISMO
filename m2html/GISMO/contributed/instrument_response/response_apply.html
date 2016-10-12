@@ -1,0 +1,238 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of response_apply</title>
+  <meta name="keywords" content="response_apply">
+  <meta name="description" content="RESPONSE_APPLY Deconvolve an instrument response from a waveform object.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">instrument_response</a> &gt; response_apply.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed/instrument_response&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>response_apply
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>RESPONSE_APPLY Deconvolve an instrument response from a waveform object.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function wNew = response_apply(w,filterObj,sourceType,source) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">RESPONSE_APPLY Deconvolve an instrument response from a waveform object.
+ W = RESPONSE_APPLY(W,FILTEROBJ,SOURCETYPE,SOURCE) applies an instrument 
+ response to waveform W, filtered on the filter range specified by
+ filterobject FILTEROBJ. The response is read from SOURCE which is of type
+ SOURCETYPE. SOURCETYPE can be:
+   polezero:  A polezero structure. See HELP RESPONSE_GET_FROM_POLEZERO
+   antelope:  An Antelope database. See HELP RESPONSE_GET_FROM_DB
+  structure:  A response structure. See HELP RESPONSE_GET_FROM_DB
+
+  Example uses
+     w = response_apply(w,filterObj,'polezero',polezero)
+     w = response_apply(w,filterObj,'antelope',dbName)
+     w = response_apply(w,filterObj,'structure',response)
+
+
+ see also <a href="response_get_from_db.html" class="code" title="function [response] = response_get_from_db(station, channel, time, frequencies, dbName)">response_get_from_db</a>, <a href="response_get_from_polezero.html" class="code" title="function response = response_get_from_polezero(frequencies,polezero)">response_get_from_polezero</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="response_get_from_db.html" class="code" title="function [response] = response_get_from_db(station, channel, time, frequencies, dbName)">response_get_from_db</a>	RESPONSE_GET_FROM_DB Get instrument response from database.</li><li><a href="response_get_from_polezero.html" class="code" title="function response = response_get_from_polezero(frequencies,polezero)">response_get_from_polezero</a>	RESPONSE_GET_FROM_POLEZERO Create response structure from poles/zeros</li><li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@correlation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>	C = BUTTER(C,[TYPE],CUTOFF,[POLES])</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>	FFT Discrete Fourier transform.  OVERLOADED for waveform & Spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/ifft.html" class="code" title="function [varargout] = ifft(s, w)">ifft</a>	IFFT Inverse discrete Fourier transform.  OVERLOADED FOR Spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>	ADDFIELD add fields and values to waveform object(s)                V1.1</li><li><a href="../../../GISMO/core/@waveform/addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>	ADDHISTORY function in charge of adding history to a waveform</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>	butter   create and apply a butterworth filter to the traces</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="demo_plutons.html" class="code" title="">demo_plutons</a>	</li><li><a href="response_cookbook.html" class="code" title="">response_cookbook</a>	% Instrument response cookbook</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function w = response_apply_one(w,filterObj,sourceType,source)</a></li><li><a href="#_sub2" class="code">function [respInv,response] = prep_inverse_response(w,ws,sourceType,source)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function wNew = response_apply(w,filterObj,sourceType,source)</a>
+0002 
+0003 <span class="comment">%RESPONSE_APPLY Deconvolve an instrument response from a waveform object.</span>
+0004 <span class="comment">% W = RESPONSE_APPLY(W,FILTEROBJ,SOURCETYPE,SOURCE) applies an instrument</span>
+0005 <span class="comment">% response to waveform W, filtered on the filter range specified by</span>
+0006 <span class="comment">% filterobject FILTEROBJ. The response is read from SOURCE which is of type</span>
+0007 <span class="comment">% SOURCETYPE. SOURCETYPE can be:</span>
+0008 <span class="comment">%   polezero:  A polezero structure. See HELP RESPONSE_GET_FROM_POLEZERO</span>
+0009 <span class="comment">%   antelope:  An Antelope database. See HELP RESPONSE_GET_FROM_DB</span>
+0010 <span class="comment">%  structure:  A response structure. See HELP RESPONSE_GET_FROM_DB</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%  Example uses</span>
+0013 <span class="comment">%     w = response_apply(w,filterObj,'polezero',polezero)</span>
+0014 <span class="comment">%     w = response_apply(w,filterObj,'antelope',dbName)</span>
+0015 <span class="comment">%     w = response_apply(w,filterObj,'structure',response)</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% see also response_get_from_db, response_get_from_polezero</span>
+0019 
+0020 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0021 <span class="comment">%         (borrowing liberally from codes written by M. Haney)</span>
+0022 <span class="comment">% $Date$</span>
+0023 <span class="comment">% $Revision$</span>
+0024 
+0025 
+0026 <span class="comment">% CHECK INPUTS</span>
+0027 <span class="keyword">if</span> ~ischar(sourceType) || size(sourceType,1)~=1
+0028     error(<span class="string">'SOURCETYPE must be the same for all waveforms'</span>);
+0029 <span class="keyword">end</span>
+0030 <span class="keyword">if</span> strncmpi(sourceType,<span class="string">'antelope'</span>,3) &amp;&amp; size(sourceType,1)~=1
+0031     error(<span class="string">'All responses must be sourced from a single database'</span>);
+0032 <span class="keyword">end</span>
+0033 
+0034 
+0035 <span class="comment">% PREPARE INDIVIDUAL WAVEFORMS</span>
+0036 
+0037 filterObj = repmat(filterObj,size(w));
+0038 source = repmat({source},size(w));
+0039 <span class="keyword">for</span> n = 1:numel(w)
+0040     wNew(n) = <a href="#_sub1" class="code" title="subfunction w = response_apply_one(w,filterObj,sourceType,source)">response_apply_one</a>(w(n),filterObj(n),sourceType,source(n));
+0041 <span class="keyword">end</span>
+0042 
+0043 wNew = reshape(wNew,size(w));
+0044 
+0045 
+0046 
+0047 
+0048 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0049 <span class="comment">% PROCESS INDIVIDUAL WAVEFORMS</span>
+0050 
+0051 <a name="_sub1" href="#_subfunctions" class="code">function w = response_apply_one(w,filterObj,sourceType,source)</a>
+0052 
+0053 
+0054 <span class="keyword">if</span> numel(w)~=1
+0055     error(<span class="string">'Only one waveform should be passed to this subroutine.'</span>);
+0056 <span class="keyword">end</span>
+0057 
+0058 
+0059 <span class="comment">% % CHECK THE SOURCE OF THE RESPONSE</span>
+0060 <span class="comment">% if isa(source,'char')                 % antelope db</span>
+0061 <span class="comment">%     disp(['Attempting to retreive response information from database: ' source ' ...']);</span>
+0062 <span class="comment">% elseif  isa(source,'struct')          % polezero structure</span>
+0063 <span class="comment">%     disp('Using explicit poles/zeros ...');</span>
+0064 <span class="comment">% else</span>
+0065 <span class="comment">%     error('response source argument not recognized');</span>
+0066 <span class="comment">% end</span>
+0067 
+0068 
+0069 <span class="comment">% PREPARE VARIABLE SPACE</span>
+0070 filterBand = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(filterObj,<span class="string">'CUTOFF'</span>);
+0071 period = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'PERIOD'</span>);
+0072 nyquist = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'NYQ'</span>);
+0073 rawData = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w);
+0074 dataLength = numel(rawData);
+0075 rawData = reshape(rawData,1,dataLength);
+0076 
+0077 
+0078 <span class="comment">% PREPARE TRACE DATA</span>
+0079 <span class="comment">% Create a zero padded Tukey taper</span>
+0080 <span class="comment">%    Taper size is determined by the high pass filter frequency</span>
+0081 <span class="comment">%    Tapered waveform is zeros padded on either end to triple the trace length</span>
+0082 <span class="comment">% Glenn 20160519: could the follow commands be simplified using tukeywin?</span>
+0083 taperFullWidth = round(0.5/(filterBand(1)*period))*2; <span class="comment">% guarantees an even number</span>
+0084 taperAmp = hanning(taperFullWidth)';
+0085 taperAmp = [taperAmp(1:(taperFullWidth/2)) ones(1,(dataLength-taperFullWidth)) taperAmp(((taperFullWidth/2)+1):taperFullWidth)];
+0086 taperAmp = [ zeros(1,dataLength) taperAmp zeros(1,dataLength) ];
+0087 rawData = [ zeros(1,dataLength) rawData zeros(1,dataLength) ].*taperAmp;
+0088 dataLength = numel(rawData);
+0089 
+0090 
+0091 <span class="comment">% CREATE FULL INVERSE RESPONSE VECTORS</span>
+0092 <span class="comment">% Seperate routines for even and odd trace length</span>
+0093 <span class="comment">% Full responses are reconstituted from positive only side</span>
+0094 <span class="comment">% ws and respInv are positive frequencies only</span>
+0095 <span class="comment">% wsFull and respInvFull have negative frequencies as well</span>
+0096 <span class="keyword">if</span> floor(dataLength/2) == ceil(dataLength/2)
+0097     halfDataLength=dataLength/2;
+0098     ws = 2*pi*[0:(halfDataLength)]*(1/(halfDataLength))*nyquist;
+0099     [respInv,response] = <a href="#_sub2" class="code" title="subfunction [respInv,response] = prep_inverse_response(w,ws,sourceType,source)">prep_inverse_response</a>(w,ws,sourceType,source);
+0100     wsFull = [ -ws(halfDataLength+1:-1:2) ws(1:halfDataLength) ];
+0101     respInvFull = ([ real(respInv(end:-1:2)) real(respInv(1:end-1)) ] + 1i*[ -imag(respInv(end:-1:2)) imag(respInv(1:end-1)) ]);
+0102 <span class="keyword">else</span>
+0103     halfDataLength = (dataLength+1)/2;
+0104     ws = 2*pi * [0:(halfDataLength-1)] * (2/dataLength) * nyquist;
+0105     [respInv,response] = <a href="#_sub2" class="code" title="subfunction [respInv,response] = prep_inverse_response(w,ws,sourceType,source)">prep_inverse_response</a>(w,ws,sourceType,source);
+0106     wsFull = [ -ws(end:-1:2) ws(1:end) ];
+0107     respInvFull = ([ real(respInv(end:-1:2)) real(respInv(1:end)) ] + 1i*[ -imag(respInv(end:-1:2)) imag(respInv(1:end)) ]);
+0108 <span class="keyword">end</span>
+0109 
+0110 <span class="comment">% APPLY THE RESPONSE</span>
+0111 newData = real(<a href="../../../GISMO/core/@spectralobject/ifft.html" class="code" title="function [varargout] = ifft(s, w)">ifft</a>(ifftshift(fftshift(<a href="../../../GISMO/core/@spectralobject/fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>(rawData)).*(respInvFull))));
+0112 
+0113 
+0114 <span class="comment">% BANDPASS FILTER THE DATA</span>
+0115 [z q] = <a href="../../../GISMO/core/@correlation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(filterObj,<span class="string">'POLES'</span>),[(filterBand(1)/nyquist) (filterBand(2)/nyquist)]);
+0116 <span class="comment">% Glenn 20160519 could the follow 3 lines be replaced using filtfilt?</span>
+0117 newData = filter(z,q,newData);
+0118 newData = filter(z,q,fliplr(newData));
+0119 newData = fliplr(newData);
+0120 
+0121 
+0122 <span class="comment">% REMOVE TRACE PADDING</span>
+0123 newData = newData( (dataLength/3)+1 : 2*(dataLength/3) );
+0124 
+0125 
+0126 <span class="comment">% RETURN INSTURMENT CORRECTED WAVEFORM</span>
+0127 w = <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w,<span class="string">'DATA'</span>,newData);
+0128 w = <a href="../../../GISMO/core/@waveform/addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>(w,<span class="string">'A frequency response was deconvolved using RESPONSE_APPLY. See RESPONSE field.'</span>);
+0129 w = <a href="../../../GISMO/core/@waveform/addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>(w,<span class="string">'Butterworth filter was doubly applied (FILTFILT). See FILTER field.'</span>);
+0130 w = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'RESPONSE'</span>,response);
+0131 w = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w,<span class="string">'FILTER'</span>,filterObj);
+0132 
+0133 
+0134 
+0135 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0136 <span class="comment">% SET UP THE INVERSE RESPONSE FUNCTIONS</span>
+0137 <span class="comment">% could facilitate calls to a different response loader</span>
+0138 
+0139 <a name="_sub2" href="#_subfunctions" class="code">function [respInv,response] = prep_inverse_response(w,ws,sourceType,source)</a>
+0140 
+0141 <span class="keyword">switch</span> lower(sourceType)
+0142     
+0143     <span class="keyword">case</span> {<span class="string">'antelope'</span>}
+0144         sta = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'STATION'</span>);
+0145         chan = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'CHANNEL'</span>);
+0146         time = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'START_MATLAB'</span>);
+0147         response = <a href="response_get_from_db.html" class="code" title="function [response] = response_get_from_db(station, channel, time, frequencies, dbName)">response_get_from_db</a>(sta,chan,time,(ws/(2*pi)),source);
+0148         respInv = 1./response.values;
+0149         respInv(1) = 0;
+0150         respInv = reshape(respInv,1,numel(respInv));
+0151         
+0152     <span class="keyword">case</span> {<span class="string">'polezero'</span>}
+0153         response = <a href="response_get_from_polezero.html" class="code" title="function response = response_get_from_polezero(frequencies,polezero)">response_get_from_polezero</a>(ws,source);
+0154         respInv = 1./response.values;
+0155         respInv(1) = 0;
+0156         respInv = reshape(respInv,1,numel(respInv));
+0157         
+0158     <span class="keyword">case</span> {<span class="string">'structure'</span>}
+0159         <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'Structure is not yet implemented'</span>)
+0160     <span class="keyword">otherwise</span>
+0161         error(<span class="string">'response source argument not recognized'</span>);
+0162         
+0163 <span class="keyword">end</span>
+0164 
+0165 
+0166 
+0167 
+0168 
+0169 
+0170 
+0171 
+0172 
+0173 
+0174</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

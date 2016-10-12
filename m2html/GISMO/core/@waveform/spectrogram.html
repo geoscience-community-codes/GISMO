@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of spectrogram</title>
+  <meta name="keywords" content="spectrogram">
+  <meta name="description" content="SPECTROGRAM Plot an IceWeb-style spectrogram">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; spectrogram.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>spectrogram
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>SPECTROGRAM Plot an IceWeb-style spectrogram</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function spectrogram( w, s ) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SPECTROGRAM Plot an IceWeb-style spectrogram
+   spectrogram(w, s) Creates an IceWeb style spectrogram by wrapping the
+   function iceweb.spectrogram_iceweb(). If s is omitted it defaults to:
+       spectralobject(1024, 924, 10, [60 120]);
+
+ For greater control, call that
+   iceweb.spectrogram_iceweb() directly, or use spectralobject/specgram or
+   spectralobject/specgram2 (not clear how these differ). Note that
+   spectrogram_iceweb() is significantly faster.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@spectralobject/spectralobject.html" class="code" title="function s = spectralobject(anyV,overlap,freqmax,dBlims, scaling)">spectralobject</a>	SPECTRALOBJECT - spectralobject class constructor</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/spectrogram_iceweb.html" class="code" title="function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)">spectrogram_iceweb</a>	SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li><li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function spectrogram( w, s )</a>
+0002 <span class="comment">%SPECTROGRAM Plot an IceWeb-style spectrogram</span>
+0003 <span class="comment">%   spectrogram(w, s) Creates an IceWeb style spectrogram by wrapping the</span>
+0004 <span class="comment">%   function iceweb.spectrogram_iceweb(). If s is omitted it defaults to:</span>
+0005 <span class="comment">%       spectralobject(1024, 924, 10, [60 120]);</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% For greater control, call that</span>
+0008 <span class="comment">%   iceweb.spectrogram_iceweb() directly, or use spectralobject/specgram or</span>
+0009 <span class="comment">%   spectralobject/specgram2 (not clear how these differ). Note that</span>
+0010 <span class="comment">%   spectrogram_iceweb() is significantly faster.</span>
+0011 
+0012 <span class="comment">% Glenn Thompson 2016/05/19 to provide a simple, fast way to geenrate nice</span>
+0013 <span class="comment">% spectrograms without having to delve into specgram and specgram2</span>
+0014 <span class="keyword">if</span> numel(w)&gt;1
+0015     w = reshape(w, numel(w), 1);
+0016 <span class="keyword">end</span>
+0017 <span class="keyword">if</span> ~exist(<span class="string">'s'</span>,<span class="string">'var'</span>)
+0018     s = <a href="../../../GISMO/core/@spectralobject/spectralobject.html" class="code" title="function s = spectralobject(anyV,overlap,freqmax,dBlims, scaling)">spectralobject</a>(1024, 924, 10, [60 120]);
+0019 <span class="keyword">end</span>
+0020 iceweb.spectrogram_iceweb(s, w, 0.75);
+0021 
+0022</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

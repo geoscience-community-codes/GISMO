@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of calc_McMaxCurvature</title>
+  <meta name="keywords" content="calc_McMaxCurvature">
+  <meta name="description" content="CALC_MCMAXCURVATURE">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">+Catalog</a> &gt; <a href="index.html">+bvalue_lib</a> &gt; calc_McMaxCurvature.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+Catalog/+bvalue_lib&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>calc_McMaxCurvature
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>CALC_MCMAXCURVATURE</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [fMc] = calc_McMaxCurvature(mag); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CALC_MCMAXCURVATURE
+ [fMc] = calc_McMaxCurvature(mag);
+ Determine the magnitude of completeness at the point of 
+   maximum curvature of the frequency magnitude distribution
+
+ Input parameter:
+   mag             Earthquake catalog
+
+ Output parameter:
+   fMc             Magnitude of completeness, NaN if not computable
+
+ Danijel Schorlemmer
+ November 7, 2001
+ Modified by Glenn Thompson 2014/06/14</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/hist.html" class="code" title="function hist(catalogObject);">hist</a>	HIST plot histograms of magnitude distribution, depth</li><li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [fMc] = calc_McMaxCurvature(mag);</a>
+0002     <span class="comment">%CALC_MCMAXCURVATURE</span>
+0003     <span class="comment">% [fMc] = calc_McMaxCurvature(mag);</span>
+0004     <span class="comment">% Determine the magnitude of completeness at the point of</span>
+0005     <span class="comment">%   maximum curvature of the frequency magnitude distribution</span>
+0006     <span class="comment">%</span>
+0007     <span class="comment">% Input parameter:</span>
+0008     <span class="comment">%   mag             Earthquake catalog</span>
+0009     <span class="comment">%</span>
+0010     <span class="comment">% Output parameter:</span>
+0011     <span class="comment">%   fMc             Magnitude of completeness, NaN if not computable</span>
+0012     <span class="comment">%</span>
+0013     <span class="comment">% Danijel Schorlemmer</span>
+0014     <span class="comment">% November 7, 2001</span>
+0015     <span class="comment">% Modified by Glenn Thompson 2014/06/14</span>
+0016 
+0017     <span class="keyword">try</span>
+0018         <span class="comment">% Get maximum and minimum magnitudes of the catalog</span>
+0019         fMaxMagnitude = <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(mag);
+0020         fMinMagnitude = <a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(mag);
+0021         <span class="keyword">if</span> fMinMagnitude &gt; 0
+0022             fMinMagnitude = 0;
+0023         <span class="keyword">end</span>;
+0024 
+0025         <span class="comment">% Number of magnitudes units</span>
+0026         <span class="comment">% Glenn Thompson added ceil() 2014-06-25 due to Matlab warning</span>
+0027         nNumberMagnitudes = ceil(fMaxMagnitude*10) + 1;
+0028 
+0029         <span class="comment">% Create a histogram over magnitudes</span>
+0030         vHist = zeros(1, nNumberMagnitudes);
+0031         [vHist, vMagBins] = <a href="../../../../GISMO/core/@Catalog/hist.html" class="code" title="function hist(catalogObject);">hist</a>(mag, (fMinMagnitude:0.1:fMaxMagnitude));
+0032 
+0033         <span class="comment">% Get the points with highest number of events -&gt; maximum curvature</span>
+0034         fMc = vMagBins(<a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(vHist == <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(vHist))));
+0035         <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(fMc)
+0036             fMc = NaN;
+0037         <span class="keyword">end</span>;
+0038     <span class="keyword">catch</span>
+0039         fMc = NaN;
+0040     <span class="keyword">end</span>
+0041 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

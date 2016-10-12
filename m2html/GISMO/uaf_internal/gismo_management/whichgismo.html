@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of whichgismo</title>
+  <meta name="keywords" content="whichgismo">
+  <meta name="description" content="WHICHGISMO   Select from multiple GISMO archives.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">uaf_internal</a> &gt; <a href="index.html">gismo_management</a> &gt; whichgismo.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/uaf_internal/gismo_management&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>whichgismo
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>WHICHGISMO   Select from multiple GISMO archives.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function whichgismo(sourceLocation) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">WHICHGISMO   Select from multiple GISMO archives.
+ 
+ WHICHGISMO displays the path to the current GISMO archive and lists all
+ the other optional paths that currently defined paths.
+ 
+ WHICHGISMO(NAME) removes all existing paths containing the phrase
+ 'GISMO'. New GISMO paths are then added based on predefined locations specified by NAME.
+ Example names and paths are listed below. 
+
+    name          path
+   LinuxNet     /home/admin/share/matlab/PACKAGES/GISMO_OP/GISMO
+   LinuxNetWest /home/west/mlcode/GISMO
+   WestPC       C:\Users\Michael West\Documents\mlcode\GISMO_OP\GISMO
+
+ A suitable WHICHGISMO_PATH script should look like this: 
+
+ paths = {
+     'LinuxNet'       '/home/admin/share/matlab/PACKAGES/GISMO_OP/GISMO'
+     'LinuxNetWest'    '/home/west/mlcode/GISMO'
+     'WestPC'         'C:\Users\Michael West\Documents\mlcode\GISMO_OP\GISMO'
+ };
+
+ See also <a href="whichgismo_paths.html" class="code" title="">WHICHGISMO_PATHS</a>, RMGISMO</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/+admin/which.html" class="code" title="function which(sourceLocation)">which</a>	WHICH manage and switch between multiple GISMO archives</li><li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/startup_GISMO.html" class="code" title="function startup_GISMO(gismopath)">startup_GISMO</a>	STARTUP_GISMO recursively adds paths for contributed codes that build on</li><li><a href="whichgismo_paths.html" class="code" title="">whichgismo_paths</a>	Configuration file containing preset paths for whichgismo. See</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function displaypaths(paths)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function whichgismo(sourceLocation)</a>
+0002 
+0003 <span class="comment">%WHICHGISMO   Select from multiple GISMO archives.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% WHICHGISMO displays the path to the current GISMO archive and lists all</span>
+0006 <span class="comment">% the other optional paths that currently defined paths.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% WHICHGISMO(NAME) removes all existing paths containing the phrase</span>
+0009 <span class="comment">% 'GISMO'. New GISMO paths are then added based on predefined locations specified by NAME.</span>
+0010 <span class="comment">% Example names and paths are listed below.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">%    name          path</span>
+0013 <span class="comment">%   LinuxNet     /home/admin/share/matlab/PACKAGES/GISMO_OP/GISMO</span>
+0014 <span class="comment">%   LinuxNetWest /home/west/mlcode/GISMO</span>
+0015 <span class="comment">%   WestPC       C:\Users\Michael West\Documents\mlcode\GISMO_OP\GISMO</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% A suitable WHICHGISMO_PATH script should look like this:</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% paths = {</span>
+0020 <span class="comment">%     'LinuxNet'       '/home/admin/share/matlab/PACKAGES/GISMO_OP/GISMO'</span>
+0021 <span class="comment">%     'LinuxNetWest'    '/home/west/mlcode/GISMO'</span>
+0022 <span class="comment">%     'WestPC'         'C:\Users\Michael West\Documents\mlcode\GISMO_OP\GISMO'</span>
+0023 <span class="comment">% };</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% See also WHICHGISMO_PATHS, RMGISMO</span>
+0026 
+0027 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0028 <span class="comment">% $Date$</span>
+0029 <span class="comment">% $Revision$</span>
+0030 
+0031 
+0032 
+0033 
+0034 admin.deprecated(mfilename,<span class="string">'admin.which'</span>);
+0035 
+0036 
+0037 
+0038 <span class="comment">% LOAD PATH LIST</span>
+0039 <a href="whichgismo_paths.html" class="code" title="">whichgismo_paths</a>;
+0040 
+0041 
+0042 <span class="comment">% LIST OPTIONS, IF NONE USED</span>
+0043 <span class="keyword">if</span> ~exist(<span class="string">'sourceLocation'</span>)
+0044     <a href="#_sub1" class="code" title="subfunction displaypaths(paths)">displaypaths</a>(paths);
+0045     <span class="keyword">return</span>;
+0046 <span class="keyword">end</span>
+0047 
+0048 
+0049 <span class="comment">% FIND DESIRED GISMO PATH</span>
+0050 f = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(strcmpi(sourceLocation,paths(:,1)));
+0051 <span class="keyword">if</span> numel(f)&gt;1
+0052     warning(<span class="string">'Argument matches more than one path.'</span>);
+0053     <a href="#_sub1" class="code" title="subfunction displaypaths(paths)">displaypaths</a>(paths);
+0054     <span class="keyword">return</span>;
+0055 <span class="keyword">end</span>
+0056 
+0057 <span class="keyword">if</span> numel(f)==0
+0058     warning(<span class="string">'GISMO Source not recognized'</span>);
+0059     <a href="#_sub1" class="code" title="subfunction displaypaths(paths)">displaypaths</a>(paths);
+0060     <span class="keyword">return</span>;
+0061 <span class="keyword">end</span>
+0062 
+0063 NewSource = paths{f,2};
+0064 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'Adding GISMO components from '</span> NewSource <span class="string">' ...'</span>]);
+0065 <span class="keyword">if</span> exist(<span class="string">'admin.rmgismo'</span>)==2
+0066    admin.rmgismo;
+0067 <span class="keyword">else</span>
+0068     error(<span class="string">'Program not found: RMGISMO. Path not changed.'</span>);
+0069 <span class="keyword">end</span>
+0070 addpath(NewSource);
+0071 <a href="../../../GISMO/startup_GISMO.html" class="code" title="function startup_GISMO(gismopath)">startup_GISMO</a>;
+0072 
+0073 
+0074 
+0075 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0076 <span class="comment">%% PRINT PATH OPTIONS TO SCREEN</span>
+0077 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0078 
+0079 <a name="_sub1" href="#_subfunctions" class="code">function displaypaths(paths)</a>
+0080 
+0081 <span class="comment">% DISPLAY CURRENT GISMO</span>
+0082 gismoPath = <a href="../../../GISMO/core/+admin/which.html" class="code" title="function which(sourceLocation)">which</a>(<span class="string">'startup_GISMO'</span>);
+0083 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">' '</span>);
+0084 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CURRENT GISMO PATH: '</span>);
+0085 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(gismoPath(1:end-16));
+0086 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">' '</span>);
+0087 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'OTHER GISMO PATHS: '</span>);
+0088 
+0089 <span class="comment">% SHOW PATH OPTIONS</span>
+0090 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">' name          path'</span>);
+0091 <span class="keyword">for</span> n = 1:size(paths,1)
+0092     txt = sprintf(<span class="string">'%-12s %s'</span>, paths{n,1} , paths{n,2} );
+0093     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(txt);
+0094 <span class="keyword">end</span>
+0095 
+0096</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

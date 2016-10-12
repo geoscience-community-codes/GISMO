@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of db_get_arrival_info</title>
+  <meta name="keywords" content="db_get_arrival_info">
+  <meta name="description" content="[ARRIVAL, ASSOC, ORIGIN, W] = DB_GET_ARRIVAL_INFO(ARID_LIST, DATABASE_NAME) Returns pertinent">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed_antelope</a> &gt; <a href="index.html">db_get</a> &gt; db_get_arrival_info.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed_antelope/db_get&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>db_get_arrival_info
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>[ARRIVAL, ASSOC, ORIGIN, W] = DB_GET_ARRIVAL_INFO(ARID_LIST, DATABASE_NAME) Returns pertinent</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [arrival,assoc,origin,W] = db_get_arrival_info(arid,dbname,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> [ARRIVAL, ASSOC, ORIGIN, W] = DB_GET_ARRIVAL_INFO(ARID_LIST, DATABASE_NAME) Returns pertinent 
+ fields from the arrival, assoc and origin tables based on input arrival id numbers (arid);
+ ARRIVAL_LIST must be a vector of arrival id numbers (arid). The returned structures ARRIVAL contains
+ fields pulled from each of the corresponding tables.
+
+ Unlike db_get_origin_info, there is currently no method for entering arrivals by time. 
+ arid's must be used.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>	ADDFIELD add fields and values to waveform object(s)                V1.1</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [arrival,assoc,origin,W] = db_get_arrival_info(arid,dbname,varargin)</a>
+0002 <span class="comment">% [ARRIVAL, ASSOC, ORIGIN, W] = DB_GET_ARRIVAL_INFO(ARID_LIST, DATABASE_NAME) Returns pertinent</span>
+0003 <span class="comment">% fields from the arrival, assoc and origin tables based on input arrival id numbers (arid);</span>
+0004 <span class="comment">% ARRIVAL_LIST must be a vector of arrival id numbers (arid). The returned structures ARRIVAL contains</span>
+0005 <span class="comment">% fields pulled from each of the corresponding tables.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% Unlike db_get_origin_info, there is currently no method for entering arrivals by time.</span>
+0008 <span class="comment">% arid's must be used.</span>
+0009 
+0010 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0011 <span class="comment">% $Date$</span>
+0012 <span class="comment">% $Revision$</span>
+0013 
+0014 <span class="keyword">if</span> isnumeric(arid)
+0015     arrival.arid = reshape( arid , numel(arid), 1 );
+0016 <span class="keyword">else</span>
+0017     error(<span class="string">'First input must be either arrival ids (arid)'</span>);
+0018 <span class="keyword">end</span>
+0019 
+0020 
+0021 <span class="comment">% Check for waveform</span>
+0022 <span class="keyword">if</span> numel(varargin) == 1
+0023     W = varargin{1};
+0024     <span class="keyword">if</span> ~isa(W,<span class="string">'waveform'</span>)
+0025         error(<span class="string">'Third argument must be a WAVEFORM object'</span>);
+0026     <span class="keyword">end</span>
+0027 <span class="keyword">elseif</span> numel(varargin) &gt; 1
+0028     error(<span class="string">'Too many arguments'</span>);
+0029 <span class="keyword">end</span>
+0030 
+0031 
+0032 <span class="comment">% GET ORIGIN TIME</span>
+0033 db = dbopen(dbname,<span class="string">'r'</span>);
+0034 db = dblookup_table(db,<span class="string">'arrival'</span>);
+0035 nlist = [];
+0036 <span class="keyword">for</span> n = 1:length(arrival.arid);
+0037     db1 = dbsubset(db,[<span class="string">'arid=='</span> num2str(arrival.arid(n))]);
+0038     db2 = dblookup_table(db,<span class="string">'assoc'</span>);
+0039     db1 = dbjoin(db1,db2);
+0040     db2 = dblookup_table(db,<span class="string">'origin'</span>);
+0041     db1 = dbjoin(db1,db2);
+0042     [ origin.lat(n),origin.lon(n),origin.depth(n),origin.time_epoch(n),origin.ml(n),origin.orid(n)] = dbgetv(db1,<span class="string">'origin.lat'</span>,<span class="string">'origin.lon'</span>,<span class="string">'origin.depth'</span>,<span class="string">'origin.time'</span>,<span class="string">'origin.ml'</span>,<span class="string">'origin.orid'</span>);
+0043     [ arrival.sta{n},arrival.chan{n}] = dbgetv(db1,<span class="string">'arrival.sta'</span>,<span class="string">'arrival.chan'</span>);
+0044     [ arrival.time(n),arrival.iphase(n),arrival.deltim(n)] = dbgetv(db1,<span class="string">'arrival.time'</span>,<span class="string">'arrival.iphase'</span>,<span class="string">'arrival.deltim'</span>);
+0045     [ assoc.delta(n),assoc.seaz(n),assoc.esaz(n),assoc.timeres(n) ] = dbgetv(db1,<span class="string">'assoc.delta'</span>,<span class="string">'assoc.seaz'</span>,<span class="string">'assoc.esaz'</span>,<span class="string">'assoc.timeres'</span>);
+0046 <span class="keyword">end</span>
+0047 dbclose(db);
+0048 origin.lat = reshape( origin.lat , numel(origin.lat), 1 );
+0049 origin.lon = reshape( origin.lon , numel(origin.lon), 1 );
+0050 origin.depth = reshape( origin.depth , numel(origin.depth), 1 );
+0051 origin.time_epoch = reshape( origin.time_epoch , numel(origin.time_epoch), 1 );
+0052 origin.time_matlab = datenum(strtime(origin.time_epoch));
+0053 origin.ml = reshape( origin.ml , numel(origin.ml), 1 );
+0054 origin.orid = reshape( origin.orid , numel(origin.orid), 1 );
+0055 <span class="comment">%</span>
+0056 arrival.time_epoch = reshape( arrival.time , numel(arrival.time), 1 );
+0057 arrival.time_matlab =  datenum(strtime(arrival.time_epoch));
+0058 arrival.iphase = reshape( arrival.iphase , numel(arrival.iphase), 1 );
+0059 arrival.deltim = reshape( arrival.deltim , numel(arrival.deltim), 1 );
+0060 arrival.sta = reshape( arrival.sta , numel(arrival.sta), 1 );
+0061 arrival.chan = reshape( arrival.chan , numel(arrival.chan), 1 );
+0062 
+0063 <span class="comment">%</span>
+0064 assoc.delta = reshape( assoc.delta , numel(assoc.delta), 1 );
+0065 assoc.seaz = reshape( assoc.seaz , numel(assoc.seaz), 1 );
+0066 assoc.esaz = reshape( assoc.esaz , numel(assoc.esaz), 1 );
+0067 assoc.timeres = reshape( assoc.timeres , numel(assoc.timeres), 1 );
+0068 assoc.traveltime = arrival.time_matlab - origin.time_matlab;
+0069 
+0070 
+0071 <span class="keyword">if</span> exist(<span class="string">'W'</span>)
+0072     <span class="keyword">for</span> n = 1:numel(W)
+0073         <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([ <span class="string">'Retreiving origin, arrival and assoc info for orid: '</span> num2str(origin.orid(n)) <span class="string">' ... '</span>])
+0074         W(n) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n),<span class="string">'ORIGIN_LAT'</span>,origin.lat(n));
+0075         W(n) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n),<span class="string">'ORIGIN_LON'</span>,origin.lon(n));
+0076         W(n) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n),<span class="string">'ORIGIN_DEPTH'</span>,origin.depth(n));
+0077         W(n) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n),<span class="string">'ORIGIN_TIME_EPOCH'</span>,origin.time_epoch(n));
+0078         W(n) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n),<span class="string">'ORIGIN_ML'</span>,origin.ml(n));
+0079         W(n) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n),<span class="string">'ORIGIN_TIME_MATLAB'</span>,origin.time_matlab(n));
+0080         W(n) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n),<span class="string">'ORIGIN_ORID'</span>,origin.orid(n));
+0081         <span class="comment">%</span>
+0082         W(n) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n),<span class="string">'ARRIVAL_TIME_EPOCH'</span>,arrival.time_epoch(n));
+0083         W(n) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n),<span class="string">'ARRIVAL_TIME_MATLAB'</span>,arrival.time_matlab(n));
+0084         W(n) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n),<span class="string">'ARRIVAL_IPHASE'</span>,arrival.iphase(n));
+0085         W(n) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n),<span class="string">'ARRIVAL_DELTIME'</span>,arrival.deltime(n));
+0086         <span class="comment">%</span>
+0087         W(n) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n),<span class="string">'ASSOC_DELTA'</span>,assoc.delta(n));
+0088         W(n) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n),<span class="string">'ASSOC_SEAZ'</span>,assoc.seaz(n));
+0089         W(n) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n),<span class="string">'ASSOC_ESAZ'</span>,assoc.esaz(n));
+0090         W(n) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n),<span class="string">'ASSOC_TIMERES'</span>,assoc.timeres(n));
+0091     <span class="keyword">end</span>
+0092 <span class="keyword">end</span>
+0093 
+0094 
+0095 
+0096 
+0097</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
