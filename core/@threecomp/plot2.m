@@ -1,4 +1,4 @@
-function plot2(TC,varargin)
+function fh=plot2(TC,varargin)
 
 %PLOT2 a figure of three component traces (deprecated).
 %  PLOT2(TC) Plots the three components of a threecomp object. Time axis is
@@ -25,7 +25,7 @@ if numel(TC)>1
 end
 
 
-figure('Color','w','Position',[50 50 1200 400])
+fh=figure('Color','w','Position',[50 50 1200 400])
 set(gcf,'DefaultAxesFontSize',14);
 hold on; box on;
 
@@ -41,9 +41,9 @@ end
 w = TC.traces;
 normval = max(max(abs(w)));
 w = scale * w./normval;			% do not normalize trace amplitudes
-plot(w(1)+1,'Color',[0 0 0.3]);
-plot(w(2)+0,'Color',[0.3 0 0]);
-plot(w(3)-1,'Color',[0 0.3 0]);
+plot(w(1)+1,'Color',[0 0 0.3],'axeshandle',gca);
+plot(w(2)+0,'Color',[0.3 0 0],'axeshandle',gca);
+plot(w(3)-1,'Color',[0 0.3 0],'axeshandle',gca);
 
 
 

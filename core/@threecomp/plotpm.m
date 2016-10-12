@@ -28,12 +28,12 @@ D = scale * D./normval;			% do not normalize trace amplitudes
 t = get(TC.traces(1),'timevector'); 
 t = (t-t(1))*86400;
 hold on; box on;
-plot(t,D(:,1)+1,'-','Color',[0 0 0.3]);
-plot(t,D(:,2)+0,'-','Color',[0 0.3 0]);
-plot(t,D(:,3)-1,'-','Color',[0.3 0 0]);
-ylim([-1-scale 1+scale]);
-xlabel('');
-title(['Station: ' get(TC.traces(1),'station') '   Starting at ' datestr(get(TC.traces(1),'start'),'yyyy/mm/dd HH:MM:SS.FFF') ]);
+plot(gca,t,D(:,1)+1,'-','Color',[0 0 0.3]);
+plot(gca,t,D(:,2)+0,'-','Color',[0 0.3 0]);
+plot(gca,t,D(:,3)-1,'-','Color',[0.3 0 0]);
+ylim(gca,[-1-scale 1+scale]);
+xlabel(gca,'');
+title(gca,['Station: ' get(TC.traces(1),'station') '   Starting at ' datestr(get(TC.traces(1),'start'),'yyyy/mm/dd HH:MM:SS.FFF') ]);
 set(gca,'YGrid','on'); set(gca,'XGrid','on');
 set( gca , 'YTick' , [-1:1] );
 set( gca , 'YTickLabel' , fliplr(get(TC.traces,'CHANNEL')) );
@@ -44,54 +44,54 @@ titlestr = (['Station: ' get(TC.traces(1),'station') '      Starting at ' datest
 % if ~isempty(orid)
 %     titlestr = [titlestr '      orid: ' orid];
 % end
-title(titlestr,'FontSize',14);
+title(gca,titlestr,'FontSize',14);
 
 
 % plot energy
 subplot(6,1,3);
-plot(TC.energy,'k-');
+plot(TC.energy,'k-','axeshandle',gca);
 set(gca,'YScale','linear');
 d = get(TC.energy,'Data');
-ylim([0 1.1*max(d)]);
-legend('Energy',1);
-title('');
+ylim(gca,[0 1.1*max(d)]);
+legend(gca,'Energy',1);
+title(gca,'');
 set(gca,'XTickLabel',[]);
 set(gca,'XGrid','on')
 
 
 % plot rectilinearity and planarity
 subplot(6,1,4);
-plot(TC.rectilinearity,'ko','MarkerFaceColor','r');
+plot(TC.rectilinearity,'ko','MarkerFaceColor','r','axeshandle',gca);
 hold on;
-plot(TC.planarity,'ko','MarkerFaceColor','y');
-xlabel('')
-ylim([0 1]);
-legend('Rectilinearity','Planarity',1);
-title('');
+plot(TC.planarity,'ko','MarkerFaceColor','y','axeshandle',gca);
+xlabel(gca,'')
+ylim(gca,[0 1]);
+legend(gca,'Rectilinearity','Planarity',1);
+title(gca,'');
 set(gca,'XTickLabel',[]);
 set(gca,'XGrid','on')
 
 
 % plot azimuth
 subplot(6,1,5);
-plot(TC.azimuth,'ko','MarkerFaceColor',[1 .7 0]);
+plot(TC.azimuth,'ko','MarkerFaceColor',[1 .7 0],'axeshandle',gca);
 set(gca,'YTick',[-360:90:360]);
-ylim([-1 361]);
-xlabel('')
+ylim(gca,[-1 361]);
+xlabel(gca,'')
 legend('Azimuth',1);
-title('');
+title(gca,'');
 set(gca,'XTickLabel',[]);
 set(gca,'XGrid','on')
 
 
 % plot inclination
 subplot(6,1,6);
-plot(TC.inclination,'ko','MarkerFaceColor',[1 .7 0]);
+plot(TC.inclination,'ko','MarkerFaceColor',[1 .7 0],'axeshandle',gca);
 set(gca,'YTick',[-90:30:90]);
-ylim([-1 91]);
-xlabel('')
-legend('Inclination',1);
-title('');
+ylim(gca,[-1 91]);
+xlabel(gca,'')
+legend(gca,'Inclination',1);
+title(gca,'');
 set(gca,'XGrid','on')
 
 

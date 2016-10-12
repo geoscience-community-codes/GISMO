@@ -35,7 +35,7 @@ function fh=plot_panels(w, alignWaveforms)
     SECSPERDAY = 60 * 60 * 24;
     
     nwaveforms = numel(w);
-    fh=figure
+    fh=figure;
     trace_height=0.9/nwaveforms;
     left=0.1;
     width=0.8;
@@ -94,24 +94,6 @@ function fh=plot_panels(w, alignWaveforms)
     uimenu(f,'Label','quit','Callback','disp(''exit'')',... 
            'Separator','on','Accelerator','Q');
 end
-
-% function myzoomcallback(obj,evd,AX)
-%     %datetick(AX,'x',20,'keeplimits');
-%     xlim = get(AX(1),'XLim');
-%     xticks = linspace(xlim(1), xlim(2), 11);
-%     set(AX(end),'XTick', xticks, 'XTickLabels', xticks);    
-% end
-
-% function secondssince(obj, evt, originalXticks)
-%     set(gca, 'xtickLabels', originalXticks);
-% end
-% 
-% 
-% function datetickplot(obj, evt, snum, SECSPERDAY)
-%     xticks = get(gca, 'xtick');
-%     ticklabels = datestr(snum + xticks/SECSPERDAY, 15);
-%     set(gca, 'xtickLabels', ticklabels);
-% end
 
 function daterange(obj, evt, snum, SECSPERDAY)
     xlim = get(gca, 'xlim');

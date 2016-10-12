@@ -97,6 +97,36 @@ function varargout = plot(w, varargin)
    [isfound,xunit,proplist] = getproperty('xunit',proplist,'s');
    [isfound,currFontSize,proplist] = getproperty('fontsize',proplist,8);
    
+   % new properties added by Glenn 2016/10/12
+   [isfound,axeshandle,proplist] = getproperty('axeshandle',proplist,0);
+   [isfound,startTime,proplist] = getproperty('startTime',proplist,0);
+   [isfound,endTime,proplist] = getproperty('endTime',proplist,0);
+   if axeshandle == 0
+       fh = figure;
+       axeshandle = axes();
+   end
+   %%%%%%%%% Glenn 2016/10/12 new autoscale method
+   if useAutoscale
+       w = normalize(w); % a new method
+       for c=1:numel(w)
+            w(c) = w(c) + numel(c)+1-c;
+       end
+   end
+   %%%%%%%%%%%%% see old method bwlow (after plot) %%%%%
+   
+   if startTime~=0 || endTime~=0
+       % extract
+       [snum enum] = gettimerange(w);
+       snum=min(snum);
+       enum=max(enum);
+       if startTime == 0
+           startTime = snum;
+       end
+       if endTime == 0
+           endTime = enum;
+       end
+       w = extract(w, 'time', snum, enum);
+   end
    
    [xunit, xfactor] = parse_xunit(xunit);
    
@@ -161,31 +191,44 @@ function varargout = plot(w, varargin)
    end
    % %
    
-   h = plot(Xvalues, double(w,'nan') , varargin{:} );
-   
-   if useAutoscale
-      yunit = autoscale(h, yunit);
+   if axeshandle == 0
+       h = plot(Xvalues, double(w,'nan') , varargin{:} );
+   else
+       h = plot(axeshandle, Xvalues, double(w,'nan') , varargin{:} ); 
    end
    
-   yh = ylabel(yunit,'fontsize',currFontSize);
+   %%%%%%%%% Glenn 2016/10/12 override this with clean simple method above
+%    if useAutoscale
+%       yunit = autoscale(h, yunit);
+%    end
+   % new method
+   if useAutoscale
+       w = normalize(w); % a new method
+       for c=1:numel(w)
+            w(c) = w(c) + numel(c)+1-c;
+       end
+   end
+   %%%%%%%%%%%%%
    
-   xh = xlabel(xunit,'fontsize',currFontSize);
+   yh = ylabel(axeshandle,yunit,'fontsize',currFontSize);
+   
+   xh = xlabel(axeshandle,xunit,'fontsize',currFontSize);
    switch lower(xunit)
       case 'date'
          datetick('keepticks','keeplimits');
    end
    if isscalar(w)
-      th = title(sprintf('%s (%s) - starting %s',...
+      th = title(axeshandle,sprintf('%s (%s) - starting %s',...
          get(w,'station'),get(w,'channel'),get(w,'start_str')),'interpreter','none');
    else
-      th = title(sprintf('Multiple waves.  wave(1) = %s (%s) - starting %s',...
+      th = title(axeshandle,sprintf('Multiple waves.  wave(1) = %s (%s) - starting %s',...
          get(w(1),'station'),get(w(1),'channel'),get(w(1),'start_str')),'interpreter','none');
    end;
    
    
    
-   set(th,'fontsize',currFontSize);
-   set(gca,'fontsize',currFontSize);
+   %set(th,'fontsize',currFontSize);
+   set(axeshandle,'fontsize',currFontSize);
    %% return the graphics handles if desired
    if nargout >= 1,
       varargout(1) = {h};
