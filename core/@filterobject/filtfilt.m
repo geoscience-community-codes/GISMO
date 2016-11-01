@@ -55,6 +55,8 @@ w = addhistory(w,['Filtered: Type:', get(f,'type'), ' Cutoff: [',...
 
 %- - - -  helper function - - - - %
 function [b, a] = getButter(f, WN)
+f
+WN
 switch f.type
     case 'H';
         [b,a] = butter(f.poles, WN, 'high');

@@ -61,7 +61,7 @@ set(gca,'XGrid','on')
 
 % plot rectilinearity and planarity
 subplot(6,1,4);
-plot(TC.rectilinearity,'ko','MarkerFaceColor','r','axeshandle',gca);
+plot(TC.rectilinearity,'kx','axeshandle',gca);
 hold on;
 plot(TC.planarity,'ko','MarkerFaceColor','y','axeshandle',gca);
 xlabel(gca,'')

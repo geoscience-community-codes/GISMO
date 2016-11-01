@@ -44,7 +44,6 @@ function varargout = plot(h)
 % B.line_waveform_continuous --> 1 waveform object per line
 % B.line_waveform_events --> 1 waveform object per line set to NaN between
 %  events from Catalog
-
     %% INITIALIZE DRUMPLOT FIGURE
     B.fh = figure('Name','Drumplot');        % New drumplot figure handle
     B.ax = axes('position',[.10 .07 .83 .86]); % New drumplot axes handle
@@ -92,11 +91,11 @@ function varargout = plot(h)
     for n = 1:B.number_of_lines % Glenn 20160513: For cookbook examples I had to add 1 here. Not sure why. Doesn't work in other cases
       B.line_offset(n) = (B.number_of_lines-n+0.5)/B.number_of_lines; % Trace offset from bottom
       B.line_waveform_continuous(n) = B.line_waveform_continuous(n) * B.scale + B.line_offset(n);
-      plot(B.line_waveform_continuous(n), 'color', h.trace_color, 'xunit', 'minutes');
+      plot(B.line_waveform_continuous(n), 'color', h.trace_color, 'xunit', 'minutes', 'axeshandle', B.ax);
       hold on;
       if ~isempty(B.line_waveform_events)
           B.line_waveform_events(n) = B.line_waveform_events(n) * B.scale + B.line_offset(n);
-          plot(B.line_waveform_events(n), 'color', h.event_color, 'xunit', 'minutes');
+          plot(B.line_waveform_events(n), 'color', h.event_color, 'xunit', 'minutes', 'axeshandle', B.ax);
       end
     end % Finished plotting all drumplot trace data
 

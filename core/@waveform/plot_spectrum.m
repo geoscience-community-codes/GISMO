@@ -37,8 +37,10 @@ function s = plot_spectrum(w)
 		return
     end
     
+    colours = 'rgbmcyk';
     figure
     for count = 1:numel(w)
+        colour = colours(mod(count, 7) + 1);
         Fsamp= get(w(count), 'freq');
         signal=get(w(count), 'data');
         Nsignal=length(signal);
@@ -48,10 +50,11 @@ function s = plot_spectrum(w)
         A=2*abs(Y(1:NumUniquePts))/Nsignal;
         phi = angle(Y(1:NumUniquePts));
         f = Fsamp/2*linspace(0,1,NumUniquePts);
-        ax(count)=subplot(numel(w), 1, count);
-        plot(f, A); 
+        %ax(count)=subplot(numel(w), 1, count);
+        loglog(f, A, colour); hold on;
+        axis tight;
         ctag = get(w(count),'ChannelTag');
-        title(ctag.string());
+        %title(ctag.string());
         xlabel('f (Hz)')
         ylabel('Amp')
         
@@ -77,5 +80,7 @@ function s = plot_spectrum(w)
         s(count).freqratio= log2(Ah/Al);
        
     end
+    ctags = get(w,'ChannelTag');
+    legend(ctags.string(),'location', 'south')
     linkaxes(ax,'x');
 end

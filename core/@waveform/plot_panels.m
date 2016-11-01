@@ -70,7 +70,7 @@ function fh=plot_panels(w, alignWaveforms)
         % display mean on left, max on right
         
         text(0.02,0.85, sprintf('%5.0f',offset),'FontSize',10,'Color','b','units','normalized');
-        text(0.4,0.85,sprintf(' %s',datestr(starttimes(wavnum),30)),'FontSize',10,'Color','g','units','normalized');
+        text(0.4,0.85,sprintf(' %s',datestr(starttimes(wavnum),'yyyy-mm-dd HH:MM:SS.FFF')),'FontSize',10,'Color','g','units','normalized');
         text(0.9,0.85,sprintf('%5.0f',nanmax(abs(y))),'FontSize',10,'Color','r','units','normalized');
     end
     xlabel('Time (s)');
