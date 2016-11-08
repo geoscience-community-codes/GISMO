@@ -1,6 +1,8 @@
 function handlePlot = plot(rsam_vector, varargin)
     % RSAM/PLOT plot rsam data
-    % handle = plot(rsam_vector, yaxisType, h, addgrid, addlegend, fillbelow, plotspikes, plottransients, plottremor);
+    % handle = plot(rsam_vector, varargin)
+    % Properties include:
+    %   yaxisType, h, addgrid, addlegend, fillbelow, plotspikes, plottransients, plottremor
     % to change where the legend plots set the global variable legend_ypos
     % a positive value will be within the axes, a negative value will be below
     % default is -0.2. For within the axes, log(20) is a reasonable value.
@@ -31,6 +33,7 @@ function handlePlot = plot(rsam_vector, varargin)
     lineColour={[0 0 0]; [0 0 1]; [1 0 0]; [0 1 0]; [.4 .4 0]; [0 .4 0 ]; [.4 0 0]; [0 0 .4]; [0.5 0.5 0.5]; [0.25 .25 .25]};
 
     % Plot the data graphs
+    figure
     for c = 1:length(rsam_vector)
         self = rsam_vector(c);
         hold on; 
@@ -38,9 +41,9 @@ function handlePlot = plot(rsam_vector, varargin)
         y = self.data;
 
         debug.print_debug(10,sprintf('Data length: %d',length(y)));
-        figure
+        %figure
         %if strcmp(rsam_vector(c).units, 'Hz')
-        if 1
+        if strcmp('yaxisType','linear')
             
             % plot on a linear axis, with station name as a y label
             % datetick too, add measure as title, fiddle with the YTick's and add max(y) in top left corner
