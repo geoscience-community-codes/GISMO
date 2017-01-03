@@ -156,12 +156,27 @@ function w = waveform(varargin)
    switch argCount
       case 0
          w = genericWaveform();
-      %{
-      case 1   %"copy" a waveform object. Matlab naturally bypasses this.
-         if isa(varargin{1}, 'waveform')
-            w = varargin{1};
-         end;
-      %}
+      case 2 
+         if isa(varargin{1}, 'char')
+            filename = varargin{1};
+            if exist(filename,'file')            
+                filetype = varargin{2};
+                switch lower(filetype)
+                    case 'sac',
+                        w = load_sac(filename);
+                    case {'seed','miniseed'},
+                        w = load_miniseed(filename);
+                    case 'seisan',
+                        w = load_seisan(filename);
+                    otherwise
+                        warning(sprintf('filetype %s unknown',filetype));
+                end
+            else
+                warning(sprintf('file %s not found',filename));
+            end
+         else
+             warning('filename must be a string');
+         end
          
       case 4
          [arg1, arg2, arg3, arg4] = deal(varargin{:});

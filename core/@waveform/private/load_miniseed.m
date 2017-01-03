@@ -6,14 +6,40 @@ function w = load_miniseed(request)
    % request.combineWaves is ignored
    
    if isstruct(request)
-      [thisSource, chanInfo, startTimes, endTimes, ~] = unpackDataRequest(request);
+      [thisSource, chanInfo, startTime, endTime, ~] = unpackDataRequest(request);
+      filenamelist={};
+      
+      % Work out which files we need
       for i=1:numel(chanInfo)
-         for j=1:numel(startTimes)
-            thisfilename = getfilename(thisSource,chanInfo(i),startTimes(j));
-            w(i,j) = mseedfilename2waveform(thisfilename{1}, startTimes(j), endTimes(j));
-         end
+            thisfilename = getfilename(thisSource,chanInfo(i),startTime);
+            found=false;
+            listlength = numel(filenamelist);
+            for c=1:listlength
+                if strcmp(thisfilename,filenamelist{c})
+                    found=true;
+                end
+            end
+            if ~found
+                filenamelist{listlength+1} = thisfilename;
+                listlength=listlength+1;
+            end
       end
-      w = w(:);
+      wfiles = [];
+      
+      % Load waveforms from all these files
+      for c=1:numel(filenamelist)
+         wtmp = []; 
+         wtmp = mseedfilename2waveform(thisfilename{1}, startTime, endTime);
+         wtmp = reshape(wtmp, [1 numel(wtmp)]);
+         wfiles = [wfiles wtmp];
+      end
+      w = combine(wfiles);
+      
+      % Extract based on time
+      w = extract(w, 'time', startTime, endTime);
+      
+      % Extract based on ChannelTag
+      %w = matchChannelTag(w);
       
    else
       %request should be a filename
@@ -29,10 +55,8 @@ end
 
 function w = mseedfilename2waveform(thisfilename, snum, enum)
     s = ReadMSEEDFast(thisfilename); % written by Martin Mityska
-    w = waveform();
-    w.data = s.data;
-    w.start = epoch2datenum(s.startTime);
-    w.Fs = s.sampleRate;
-    w.cha_tag = ChannelTag(s.network, s.station, s.location, s.channel);
-    w = extract(w, 'time', snum, enum);
+     for c=1:numel(s)
+        w(c) = waveform(ChannelTag(s(c).network, s(c).station, s(c).location, s(c).channel), ...
+            s(c).sampleRate, epoch2datenum(s(c).startTime), s(c).data);
+     end
 end
