@@ -10,6 +10,13 @@ function wavef = load_irisdmcws(request)
    % request.combineWaves is ignored
    
    % Based on work by: Rich Karstens & Celso Reyes IRIS DMC, December 2011
+   % 20170105 Glenn Thompson - now returns a blank waveform object if no data found
+   % 20170105 Glenn Thompson - unrecognized errors from irisfetch are
+   % recast as warnings
+   
+   a = warning;
+   warning_status = a.state;
+   warning on;
    
    [~, allChanInfo, sTime, eTime, ~] = unpackDataRequest(request);
    disp('Requesting Data from the DMC...');
@@ -27,7 +34,12 @@ function wavef = load_irisdmcws(request)
           end;
        end
    end
-   wavef = addhistory(clearhistory(wavef),'Imported from IRIS DMC');
+   if exist('wavef','var')
+       wavef = addhistory(clearhistory(wavef),'Imported from IRIS DMC');
+   else
+       wavef = waveform();
+   end
+   warning(warning_status);
 end
 
 function ts = irisFetchTraces( network, station, location, channel, startDateStr, endDateStr, quality, verbosity )
@@ -45,11 +57,13 @@ function ts = irisFetchTraces( network, station, location, channel, startDateStr
       quality = 'B';
    end
    
+   ts = waveform();
    try
       % traces = edu.iris.WsHelper.Fetch.TraceData.fetchTraces(network, station, location, channel, startDateStr, endDateStr, quality, verbosity);
       fetcher = edu.iris.dmc.extensions.fetch.TraceData();
       appName           = ['MATLAB:waveformsuite/2.0']; %used as useragent of queries'
       fetcher.setAppName(appName);
+      
       traces = fetcher.fetchTraces(network, station, location, channel, startDateStr, endDateStr, quality, false);
       ts = convertTraces(traces);
       clear traces;
@@ -68,13 +82,18 @@ function ts = irisFetchTraces( network, station, location, channel, startDateStr
             if isa(je.ExceptionObject,'edu.iris.dmc.service.NoDataFoundException')
                fprintf('no data found for:\n%s.%s.%s.%s %s %s\n',network, station,...
                   location, channel, startDateStr, endDateStr);
-               ts = [];
+               %ts = [];
             else
-               rethrow(je);
+               disp(je.identifier)
+               msgText = getReport(je);
+               warning(msgText)
+               %rethrow(je);
             end
          otherwise
             disp(je.identifier)
-            rethrow(je);
+            msgText = getReport(je);
+            warning(msgText)
+            %rethrow(je);
       end
    end
 end

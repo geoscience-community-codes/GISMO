@@ -15,7 +15,7 @@ function fh=plot_panels(w, alignWaveforms)
 % Glenn Thompson 2014/11/05, generalized after a function written in 2000
 % to operate on Seisan files only
 
-    if numel(w)==0
+    if numel(w)==0 || isempty(w)
         warning('no waveforms to plot')
         return
     end
