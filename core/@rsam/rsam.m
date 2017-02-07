@@ -139,9 +139,9 @@ classdef rsam
 % % %         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Prototypes
-        self = findfiles(self, file)
-        self = load(self)
-        handlePlot = plot(rsam_vector, varargin)
+        self = findfiles(self, file);
+        self = load(self);
+        handlePlot = plot(rsam_vector, varargin);
         save(self, filepattern)
         toTextFile(self, filepath)
         [aw,tt1, tt2, tmc, mag_zone]=bvalue(this, mcType, method)
