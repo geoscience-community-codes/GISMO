@@ -68,10 +68,13 @@ function fh=plot_panels(w, alignWaveforms)
         end
         
         % display mean on left, max on right
-        
-        text(0.02,0.85, sprintf('%5.0f',offset),'FontSize',10,'Color','b','units','normalized');
+        ustr = get(w(wavnum),'units');
+        if strcmp(ustr,'null')
+            ustr = '';
+        end
+        text(0.02,0.85, sprintf('%5.0f %s',offset,ustr),'FontSize',10,'Color','b','units','normalized');
         text(0.4,0.85,sprintf(' %s',datestr(starttimes(wavnum),'yyyy-mm-dd HH:MM:SS.FFF')),'FontSize',10,'Color','g','units','normalized');
-        text(0.9,0.85,sprintf('%5.0f',nanmax(abs(y))),'FontSize',10,'Color','r','units','normalized');
+        text(0.9,0.85,sprintf('%5.0f%s',nanmax(abs(y)),ustr),'FontSize',10,'Color','r','units','normalized');
     end
     xlabel('Time (s)');
     if exist('ax','var')

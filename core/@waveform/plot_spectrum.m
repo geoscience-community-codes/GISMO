@@ -56,7 +56,7 @@ function s = plot_spectrum(w)
         ctag = get(w(count),'ChannelTag');
         %title(ctag.string());
         xlabel('f (Hz)')
-        ylabel('Amp')
+        ylabel('Amplitude')
         
         % add spectrum vectors to a structure
         s(count).f = f; % frequencies
@@ -82,5 +82,4 @@ function s = plot_spectrum(w)
     end
     ctags = get(w,'ChannelTag');
     legend(ctags.string(),'location', 'south')
-    linkaxes(ax,'x');
 end
