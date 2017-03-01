@@ -76,8 +76,7 @@ classdef Arrival
         function val = get.signal2noise(obj)
             val = obj.table.signal2noise;
         end        
-        
-        
+     
         
         function summary(obj, showall)
         % ARRIVAL.SUMMARY Summarise Arrival object
@@ -122,7 +121,10 @@ classdef Arrival
                 end
             end
             self.table = self.table(indexes,:);
-        end    
+        end 
+        
+        % prototypes
+        catalogobj = associate(self, maxTimeDiff)
     end
     methods(Static)
         function self = retrieve(dataformat, varargin)
@@ -153,23 +155,23 @@ classdef Arrival
         % Add in support for 'get_arrivals'
             
             debug.printfunctionstack('>')
-
+            self = [];
             switch lower(dataformat)
                 case {'css3.0','antelope', 'datascope'}
                     if admin.antelope_exists()
-                        self = Arrival.read_arrivals.antelope(varargin{:});
+                        try
+                            self = Arrival.read_arrivals.antelope(varargin{:});
+                        catch
+                            % no arrivals
+                        end
                     else
-                        warning('Sorry, cannot read event Catalog from Antelope database as Antelope toolbox for MATLAB not found')
-                        self = Catalog();
+                        warning('Antelope toolbox for MATLAB not found')
                     end
                 case 'hypoellipse'
                     self = read_hypoellipse(varargin{:});
                 otherwise
                     self = NaN;
                     fprintf('format %s unknown\n\n',dataformat);
-            end
-            if isempty(self)
-                self=Catalog();
             end
 
             debug.printfunctionstack('<')

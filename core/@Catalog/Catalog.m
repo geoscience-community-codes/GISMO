@@ -214,7 +214,7 @@ classdef Catalog
         eev(obj, eventnum)
         write(catalogObject, outformat, outpath, schema)
         catalogObject2 = subset(catalogObject, indices)
-        catalogObject = addwaveforms(catalogObject, w);
+        catalogObject = addwaveforms(catalogObject, varargin);
     end
 %% ---------------------------------------------------
     methods (Access=protected, Hidden=true)

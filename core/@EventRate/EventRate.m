@@ -149,6 +149,9 @@ classdef EventRate
             self.enum = enum;
             self.binsize = binsize;
             self.stepsize = stepsize;
+            if (enum-snum) < binsize
+                error('binsize cannot be bigger than data time range');
+            end
         end
         
         %% ----------------------------------------------
@@ -495,11 +498,11 @@ classdef EventRate
                     binsize_str = Catalog.binning.binsizelabel(obj(c).binsize);
                     numsubplots = length(metric);
                     fh(c) = figure;
-                    unique_subclasses = unique(char([obj(c).etype{:}])')
+                    unique_subclasses = unique(char([obj(c).etype{:}])');
                     if length(unique_subclasses)==1
-                        longname = Catalog.subclass2longname(unique_subclasses)
+                        longname = Catalog.subclass2longname(unique_subclasses);
                     else
-                        longname = Catalog.subclass2longname('*')
+                        longname = Catalog.subclass2longname('*');
                     end
                     set(fh(c),'Color', [1 1 1], 'Name', sprintf('%s activity beginning %s',longname, datestr(obj(c).time(1),29) ) );
                     for cc = 1: numsubplots % number of metrics to plot
@@ -529,7 +532,7 @@ classdef EventRate
                                         set(h2, 'LineWidth', 3, 'Color', colors{2});
                                         datetick(ax(2), 'x','keeplimits');
                                         ylabel(ax(2),labels{2}, 'Color', colors{2}, 'FontSize',12)
-                                        ylims = get(ax(2), 'YLim')
+                                        ylims = get(ax(2), 'YLim');
                                         set(ax(2), 'YColor', colors{2}, 'YLim', [0 max([ylims(2) 1])], 'XLim', [t(1) t(end)]);
                                     else
                                         
