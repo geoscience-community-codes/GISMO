@@ -40,7 +40,7 @@ function s = plot_spectrum(w)
     colours = 'rgbmcyk';
     figure
     for count = 1:numel(w)
-        colour = colours(mod(count, 7) + 1);
+        colour = colours(mod(count-1, 7) + 1);
         Fsamp= get(w(count), 'freq');
         signal=get(w(count), 'data');
         Nsignal=length(signal);
@@ -48,10 +48,11 @@ function s = plot_spectrum(w)
         Y=fft(signal,NFFT); % X will have same length as signal, and will be complex with a magnitude and phase
         NumUniquePts = NFFT/2 + 1; % Mike uses ceil((N+1)/2) in wf_fft
         A=2*abs(Y(1:NumUniquePts))/Nsignal;
+A=smooth(A,100);
         phi = angle(Y(1:NumUniquePts));
         f = Fsamp/2*linspace(0,1,NumUniquePts);
         %ax(count)=subplot(numel(w), 1, count);
-        loglog(f, A, colour); hold on;
+        plot(f, A, colour); hold on;
         axis tight;
         ctag = get(w(count),'ChannelTag');
         %title(ctag.string());

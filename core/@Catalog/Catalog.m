@@ -199,152 +199,32 @@ classdef Catalog
         end
           
         % Prototypes
-        summary(obj)
-        disp(catalogObject)
+        bvalue(catalogObject, mcType)     
+        catalogObject = addwaveforms(catalogObject, varargin);
         catalogObject = combine(catalogObject1, catalogObject2)
-        webmap(catalogObject)
+        catalogObject2 = subset(catalogObject, indices)
+        catalogObjects=subclassify(catalogObject, subclasses)         
+        disp(catalogObject)
+        eev(obj, eventnum)
+        erobj=eventrate(catalogObject, varargin)
+        hist(catalogObject)
+        list_waveform_metrics(catalogObject);
         plot(catalogObject, varargin)
         plot3(catalogObject, varargin)
         plot_time(catalogObject)
-        hist(catalogObject)
-        bvalue(catalogObject, mcType)     
-        catalogObjects=subclassify(catalogObject, subclasses)         
-        erobj=eventrate(catalogObject, varargin)
+        plot_waveform_metrics(catalogObject);
         plotprmm(catalogObject)
-        eev(obj, eventnum)
-        write(catalogObject, outformat, outpath, schema)
-        catalogObject2 = subset(catalogObject, indices)
-        catalogObject = addwaveforms(catalogObject, varargin);
+        summary(catalogObject)
+        webmap(catalogObject)
+        write(catalogObject, outformat, outpath, schema)        
     end
 %% ---------------------------------------------------
     methods (Access=protected, Hidden=true)
-        
-        %% AUTOBINSIZE        
-        function binsize = autobinsize(catalogObject)
-        %autobinsize Compute the best bin size based on start and end times
-            binsize = binning.autobinsize(catalogObject.enum - catalogObject.snum);
-        end
-%% ---------------------------------------------------        
-        function region = get_region(catalogObject, nsigma)
-        % region Compute the region to plot based on spread of lon,lat data
-			medianlat = nanmedian(catalogObject.lat);
-			medianlon = nanmedian(catalogObject.lon);
-			cosine = cos(medianlat);
-			stdevlat = nanstd(catalogObject.lat);
-			stdevlon = nanstd(catalogObject.lon);
-			rangeindeg = max([stdevlat stdevlon*cosine]) * nsigma;
-			region = [(medianlon - rangeindeg/2) (medianlon + rangeindeg/2) (medianlat - rangeindeg/2) (medianlat + rangeindeg/2)];
-        end
-        
-%% ---------------------------------------------------
-        function symsize = get_symsize(catalogObject)
-            %get_symsize Get symbol marker size based on magnitude of event
-            % Compute Marker Size
-            minsymsize = 3;
-            maxsymsize = 50;
-            symsize = (catalogObject.mag + 2) * 10; % -2- -> 1, 1 -> 10, 0 -> 20, 1 -> 30, 2-> 40, 3+ -> 50 etc.
-            symsize(symsize<minsymsize)=minsymsize;
-            symsize(symsize>maxsymsize)=maxsymsize;
-            % deal with NULL (NaN) values
-            symsize(isnan(symsize))=minsymsize;
-        end
-%% ---------------------------------------------------                      
-                
+        region = get_region(catalogObject, nsigma)
+        symsize = get_symsize(catalogObject)
     end
 
     methods(Static)
-        function self = retrieve(dataformat, varargin)
-        %CATALOG.RETRIEVE Read seismic events from common file formats & data sources.
-        % retrieve can read events from many different earthquake catalog file 
-        % formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) into a 
-        % GISMO Catalog object.
-        %
-        % Usage:
-        %       catalogObject = CATALOG.RETRIEVE(dataformat, 'param1', _value1_, ...
-        %                                                   'paramN', _valueN_)
-        % 
-        % dataformat may be:
-        %
-        %   * 'iris' (for IRIS DMC, using irisFetch.m), 
-        %   * 'antelope' (for a CSS3.0 Antelope/Datascope database)
-        %   * 'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)
-        %   * 'zmap' (converts a Zmap data strcture to a Catalog object)
-        %
-        % The name-value parameter pairs supported are the same as those supported
-        % by irisFetch.Events(). Currently these are:
-        %
-        %     startTime
-        %     endTime
-        %     eventId
-        %     fetchLimit
-        %     magnitudeType
-        %     minimumLongitude
-        %     maximumLongitude
-        %     minimumLatitude
-        %     maximumLatitude
-        %     minimumMagnitude
-        %     maximumMagnitude
-        %     minimumDepth
-        %     maximumDepth
-        % 
-        % And the two convenience parameters:
-        %
-        % radialcoordinates = [ centerLatitude, centerLongitude, maximumRadius ]
-        %
-        % boxcoordinates = [ minimumLatitude maximumLatitude minimumLongitude maximumLongitude ]
-        % 
-        % For examples, see Catalog_cookbook. Also available at:
-        % https://geoscience-community-codes.github.io/GISMO/tutorials/html/Catalog_cookbook.html
-        %
-        %
-        % See also CATALOG, IRISFETCH, CATALOG_COOKBOOK
-
-        % Author: Glenn Thompson (glennthompson1971@gmail.com)
-
-        %% To do:
-        % Implement name-value parameter pairs for all methods
-        % Test the Antelope method still works after factoring out db_load_origins
-        % Test the Seisan method more
-        % Add in support for 'get_arrivals'
-            
-            debug.printfunctionstack('>')
-
-            switch lower(dataformat)
-                case 'iris'
-                    if exist('irisFetch.m','file')
-                            ev = irisFetch.Events(varargin{:});
-                            self = Catalog.read_catalog.iris(ev);
-                    else
-                        warning('Cannot find irisFetch.m')
-                    end
-                case {'css3.0','antelope', 'datascope'}
-                    if admin.antelope_exists()
-                        self = Catalog.read_catalog.antelope(varargin{:});
-                    else
-                        warning('Sorry, cannot read event Catalog from Antelope database as Antelope toolbox for MATLAB not found')
-                        self = Catalog();
-                    end
-                case 'seisan'
-                    self = Catalog.read_catalog.seisan(varargin{:});
-                case 'aef'
-                    self = Catalog.read_catalog.aef(varargin{:});
-                case 'sru'
-                    self = Catalog.read_catalog.sru(varargin{:});
-                case 'vdap'
-                    self = Catalog.read_catalog.vdap(varargin{:});
-                case 'zmap'
-                    self = Catalog.read_catalog.zmap(varargin{:});
-                otherwise
-                    self = NaN;
-                    fprintf('format %s unknown\n\n',data_source);
-            end
-            if isempty(self)
-                self=Catalog();
-            end
-
-            debug.printfunctionstack('<')
-        end
-        
-        cookbook()
+        self = retrieve(dataformat, varargin)
     end
 end

@@ -18,6 +18,20 @@ function wavef = load_irisdmcws(request)
    idx = 0;
    for d = 1 : numel(sTime);
        for tag = allChanInfo
+          % GT 2017/03/21 - start
+          if isempty(tag.network)
+              tag.network='*'; % IRIS DMC doesn't understand '' or '--' network
+          end 
+          if isempty(tag.station)
+              tag.station='*'; % IRIS DMC doesn't understand '' or '--' station
+          end           
+          if isempty(tag.location)
+              tag.location='--'; % IRIS DMC doesn't understand '' location
+          end
+          if isempty(tag.channel)
+              tag.channel='*'; % IRIS DMC doesn't understand '' channel
+          end    
+          % GT 2017/03/21 - end
           thisWave = irisFetchTraces(...
              tag.network, tag.station, tag.location, tag.channel, datefmt(sTime(d)), datefmt(eTime(d)));
           nWaves = numel(thisWave);
@@ -27,6 +41,7 @@ function wavef = load_irisdmcws(request)
           end;
        end
    end
+   wavef = combine(wavef);
    wavef = addhistory(clearhistory(wavef),'Imported from IRIS DMC');
 end
 

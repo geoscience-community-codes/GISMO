@@ -9,11 +9,14 @@ function arrivalObj = read_antelope(dbname, subset_expr)
 
             % Open database
             db = dbopen(dbname,'r');
+            disp('- database opened');
 
             % Apply subset expression
             db = dblookup_table(db,'arrival');
+            disp('- arrival table opened');
             if exist('subset_expr','var')
                 db = dbsubset(db,subset_expr);
+                disp('- subsetted database')
             end
             
             nrows = dbnrecs(db);
@@ -21,14 +24,21 @@ function arrivalObj = read_antelope(dbname, subset_expr)
 
                 % Sort by arrival time
                 db = dbsort(db,'time');
+                disp('- sorted arrival table')
 
                 % Get the values
+                fprintf('- reading %d rows\n',nrows);
                 [sta,chan,time,amp,signal2noise,iphase] = dbgetv(db,'sta','chan','time','amp','snr','iphase');
 
                 % Close database link
                 dbclose(db);
+                disp('- database closed')
 
+                % Create arrival object
+                disp('- creating arrival object')
                 arrivalObj = Arrival(cellstr(sta), cellstr(chan), epoch2datenum(time), cellstr(iphase), 'amp', amp, 'signal2noise', signal2noise);
+                
+                disp('- complete!')
             else
                 fprintf('No arrivals found matching request\n');
             end

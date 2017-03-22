@@ -2,7 +2,8 @@
 % An Arrival object is a container for phase arrival metadata
 % See also Catalog
 classdef Arrival
-    properties
+    properties(Dependent)
+    %properties
         channelinfo
         time
         %arid
@@ -22,7 +23,12 @@ classdef Arrival
         signal2noise
         %qual
         %auth
+    end
+    properties
         waveforms
+    end
+    properties(Hidden)
+        table
     end
     methods
         function obj = Arrival(sta, chan, time, iphase, varargin)
@@ -34,83 +40,74 @@ classdef Arrival
             %p.addRequired('time', @(t) t>0 & t<now+1);
             p.addRequired('time', @isnumeric);
             p.addRequired('iphase', @iscell);
-            p.addParameter('amp', [], @isnumeric);
-            p.addParameter('per', [], @isnumeric);
-            p.addParameter('signal2noise', [], @isnumeric);
+            p.addParameter('amp', NaN, @isnumeric);
+            p.addParameter('per', NaN, @isnumeric);
+            p.addParameter('signal2noise', NaN, @isnumeric);
             
             % Missed several properties out here just because of laziness.
             % Add them as needed.
             p.parse(sta, chan, time, iphase, varargin{:});
-            ctag = ChannelTag.array('',p.Results.sta,'',p.Results.chan)';            
-            obj.channelinfo = ctag.string();
-            obj.time = p.Results.time;
-            obj.iphase = p.Results.iphase;  
-            obj.amp = p.Results.amp; 
-            obj.per = p.Results.per; 
-            obj.signal2noise = p.Results.signal2noise; 
-            fprintf('\nGot %d arrivals\n',numel(obj.time));
+            fields = fieldnames(p.Results);
+            for i=1:length(fields)
+                field=fields{i};
+                val = p.Results.(field);
+                eval(sprintf('%s = val;',field));
+            end
+            ctag = ChannelTag.array('',sta,'',chan)';
+            obj.table = table(time, datestr(time,26), datestr(time,'HH:MM'), datestr(time,'SS.FFF'), ctag.string(), iphase, amp, per, signal2noise, ...
+                'VariableNames', {'time' 'date' 'hour_minute' 'second' 'channelinfo' 'iphase' 'amp' 'per' 'signal2noise'})
+            obj.table = sortrows(obj.table, 'time', 'ascend'); 
+            fprintf('\nGot %d arrivals\n',height(obj.table));edit 
+            misc_fields = struct;
                 
         end
         
         function val = get.time(obj)
-            val = obj.time;
+            val = obj.table.time;
         end 
         
-%         function val = get.channelinfo(obj)
-%             val = obj.channelinfo;
-%         end        
-%         
-%         function val = get.iphase(obj)
-%             val = obj.iphase;
-%         end
-%  
-%         function val = get.amp(obj)
-%             val = obj.amp;
-%         end            
-%         
-%         function val = get.signal2noise(obj)
-%             val = obj.signal2noise;
-%         end
-%         
-%         function obj = set.amp(obj, amp)
-%             obj.amp = amp;
-%         end       
+        function val = get.channelinfo(obj)
+            val = obj.table.channelinfo;
+        end        
+        
+        function val = get.iphase(obj)
+            val = obj.table.iphase;
+        end
+ 
+        function val = get.amp(obj)
+            val = obj.table.amp;
+        end            
+        
+        function val = get.signal2noise(obj)
+            val = obj.table.signal2noise;
+        end
+        
+        function obj = set.amp(obj, amp)
+            obj.table.amp = amp;
+        end       
         
         function summary(obj, showall)
         % ARRIVAL.SUMMARY Summarise Arrival object
             for c=1:numel(obj)
                 obj(c)
-                numrows = numel(obj(c).time);
+                numarrs = height(obj(c).table)
                 fprintf('Number of arrivals: %d\n',numarrs);
-                if numrows > 0
+                if numarrs > 0
                     if ~exist('showall','var')
                             showall = false;
                     end
                     if numel(obj) == 1
-                        if numrows <= 50 || showall
-                            for rownum=1:numrows
-                                summarize_row(obj, rownum);
-                            end
+                        if height(obj.table) <= 50 || showall
+                            disp(obj.table)
                         else
-                            for rownum=1:50
-                                summarize_row(obj, rownum);
-                            end
+                            disp(obj.table([1:50],:))
+
                             disp('* Only showing first 50 rows/arrivals - to see all rows/arrivals use:')
                             disp('*      arrivalObject.disp(true)')
                         end
                     end
                 end
             end
-        end
-        
-        function summarize_row(self, rownum)
-            fprintf('%s\t%s\t%s\t%e\t%e\t%e\n', ...
-                self.channelinfo(rownum), ...
-                datestr(self.time(rownum)), ...
-                self.iphase(rownum), ...
-                self.amp(rownnum), ...
-                self.per(rownum), ...
-                self.signal2noise(rownum)); 
         end
         
         function self2 = subset(self, columnname, findval)
@@ -138,18 +135,8 @@ classdef Arrival
                     end
                 end
             end
-            self2.channelinfo = self.channelinfo(indexes);
-            self2.time = self.time(indexes);
-            self2.iphase = self.iphase(indexes);
-            if numel(self.amp)==N
-                self2.amp = self.amp(indexes);
-            end
-            if numel(self.per)==N
-                self2.per = self.per(indexes);
-            end
-            if numel(self.signal2noise)==N
-                self2.signal2noise = self.signal2noise(indexes);
-            end
+            self2.table = self.table(indexes,:);
+            
 %             % now go into misc_fields and apply same index subset to
 %             % anything with N elements
 %             fields = fieldnames(self.misc_fields);
@@ -159,9 +146,8 @@ classdef Arrival
 %                     self2.misc_fields = setfield(self2.misc_fields, fields{fieldnum}, fieldval(indexes));
 %                 end
 %             end
-            if numel(self.waveforms)==N
-                self2.waveforms = self.waveforms(indexes);
-            end
+
+            self2.waveforms = self.waveforms(indexes);
             
         end 
         

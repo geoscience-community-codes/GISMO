@@ -59,3 +59,9 @@ function erobj=eventrate(catalogObject, varargin)
         end
     end
 end
+
+%% AUTOBINSIZE        
+function binsize = autobinsize(catalogObject)
+%autobinsize Compute the best bin size based on start and end times
+    binsize = binning.autobinsize(catalogObject.enum - catalogObject.snum);
+end

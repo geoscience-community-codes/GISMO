@@ -83,7 +83,7 @@ function self = seisan(varargin)
         return;
     end
     
-    % get dir list of matching sfiles
+    % get dir list of matching sfilesSfile.list_sfiles
     sfiles = Sfile.list_sfiles(dbpath, snum, enum);
     
     % loop over sfiles

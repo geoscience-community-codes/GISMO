@@ -53,6 +53,9 @@ addpath(fullfile(gismopath, 'libgismo'));
 % ADD PATH TO TESTS
 addpath(fullfile(gismopath, 'tests'));
 
+% ADD PATH TO COOKBOOKS
+addpath(fullfile(gismopath, 'cookbooks'));
+
 %%
 function addContributed(gismopath, contribDir)
 % add each subdirectory within gismopath/contribDir/ to the matlab path

@@ -1,4 +1,4 @@
-function s = waveform2rsam(w, method, samplingPeriod)
+function s = waveform2rsam(w, measure, samplingPeriod)
 %WAVEFORM2RSAM create an RSAM-like object from a waveform object
 % RSAM data are typically 1 sample per minute, where each sample is the 
 % average amplitude of that minute of data. They are used extensively used
@@ -10,7 +10,7 @@ function s = waveform2rsam(w, method, samplingPeriod)
 %   Input Arguments
 %       WAVEFORM: waveform object       N-dimensional
 %
-%       METHOD: which method of sampling to perform within each sample
+%       MEASURE: which method of sampling to perform within each sample
 %                window
 %           'max' : maximum value
 %           'min' : minimum value
@@ -35,8 +35,8 @@ function s = waveform2rsam(w, method, samplingPeriod)
 %       taken, and the time window is 1s rather than 60s.
 %
 % Glenn Thompson 2014/10/28
-if ~exist('method', 'var')
-    method = 'mean';
+if ~exist('measure', 'var')
+    measure = 'mean';
 end
 if ~exist('samplingPeriod', 'var')
     samplingPeriod = 60;
@@ -52,6 +52,9 @@ for i = 1:numel(w)
     % length of data if less
     crunchfactor = min([round(samplingPeriod / Wsamplingperiod) numel(get(w(i),'data'))]);
     wabs = set(w(i), 'data', abs(get(w(i),'data')) );
-    wresamp = resample(wabs, method, crunchfactor);
-    s(i) = rsam(get(wresamp,'timevector')', get(wresamp,'data')', 'sta', get(wresamp, 'station'), 'chan', get(wresamp, 'channel'), 'units', get(wresamp, 'units'), 'snum', get(wresamp, 'start'), 'enum', get(wresamp, 'end'));
+    wresamp = resample(wabs, measure, crunchfactor);
+    s(i) = rsam(get(wresamp,'timevector')', get(wresamp,'data')', ...
+        'ChannelTag', get(wresamp, 'ChannelTag'), ...
+        'measure', measure, ...
+        'units', get(wresamp, 'units'));
 end
