@@ -1,4 +1,4 @@
-function fh=plot_panels(w, alignWaveforms)
+function fh=plot_panels(w, alignWaveforms, arrivalobj)
 %PLOT_PANELS Plot multiple waveform objects as separate linked panels
 %   PLOT_PANELS(w, alignWaveforms) 
 %   where:
@@ -35,10 +35,11 @@ function fh=plot_panels(w, alignWaveforms)
     SECSPERDAY = 60 * 60 * 24;
     
     nwaveforms = numel(w);
-    fh=figure;
-    trace_height=0.9/nwaveforms;
-    left=0.1;
-    width=0.8;
+    previousfignum = get_highest_figure_number();
+    fh=figure(previousfignum+1);
+    trace_height=0.87/nwaveforms;
+    left=0.12;
+    width=0.78;
     for wavnum = 1:nwaveforms
         data=get(w(wavnum),'data');
         dnum=get(w(wavnum),'timevector'); 
@@ -49,9 +50,52 @@ function fh=plot_panels(w, alignWaveforms)
             sta='';
             chan='';
         end
-        offset = nanmean(data);
+        % if sampling rate > 1 Hz, assume this is raw data, if < 1 Hz
+        % assume RSAM data
+        if get(w(wavnum),'freq')>1
+            offset = nanmean(data); % raw waveform data, 2 sided
+        else
+            offset = 0; % RSAM data, absolute, 1 sided
+        end
         y=data-offset;
-        ax(wavnum)=axes('Position',[left 0.98-wavnum*trace_height width trace_height]);   
+        y(isnan(y))=0;
+        ax(wavnum)=axes('Position',[left 0.98-wavnum*trace_height width trace_height]); 
+        
+        
+        % arrivals
+        if exist('arrivalobj','var')
+            %disp('- adding arrivals to panel plot')
+            hold on
+            thisctag = strrep(string(get(w(wavnum),'ChannelTag')),'-','');
+            Index = find(ismember(arrivalobj.channelinfo, thisctag));
+            for arrnum=1:numel(Index)
+                arrtime = arrivalobj.time(Index(arrnum));
+                if alignWaveforms
+                    relarrtime = (arrtime-min(dnum))*SECSPERDAY;
+                else
+                    relarrtime = (arrtime-snum)*SECSPERDAY;
+                end
+                plot([relarrtime relarrtime], [min(y) max(y)],'r', 'LineWidth',3);
+            end
+            %hold off
+        end
+        
+        % metrics
+        try 
+            m = get(w(wavnum),'metrics');
+            hold on
+            if alignWaveforms
+                relmintime = (m.minTime-min(dnum))*SECSPERDAY;
+                relmaxtime = (m.maxTime-min(dnum))*SECSPERDAY;
+            else
+                relmintime = (m.minTime-snum)*SECSPERDAY;
+                relmaxtime = (m.maxTime-snum)*SECSPERDAY;
+            end
+            plot([relmintime relmaxtime], [m.minAmp m.maxAmp],'g','LineWidth',3);
+            %hold off
+        end
+        
+        % waveform data
         if alignWaveforms
             plot((dnum-min(dnum))*SECSPERDAY, y,'-k');
             set(gca, 'XLim', [0 maxduration*SECSPERDAY]);
@@ -61,6 +105,13 @@ function fh=plot_panels(w, alignWaveforms)
         end
 %         xlim = get(gca, 'XLim');
 %         set(gca,'XTick', linspace(xlim(1), xlim(2), 11));
+        if max(w(wavnum)) >= 0 % added for RSAM data
+            ylims = get(gca, 'YLim');
+            set(gca, 'YLim', [0 ylims(2)]);
+        end
+        if length(chan)>3
+            chan = chan(1:3);
+        end
         ylabel(sprintf('%s\n%s ',sta,chan),'FontSize',10,'Rotation',90);
         set(gca,'YTick',[],'YTickLabel',['']);
         if wavnum<nwaveforms;
@@ -68,10 +119,34 @@ function fh=plot_panels(w, alignWaveforms)
         end
         
         % display mean on left, max on right
+        tracemax = nanmax(abs(detrend(y)));
+        ustr = get(w(wavnum),'units');
+        if strcmp(ustr,'null')
+            ustr = '';
+        end
+        text(0.5,0.85, sprintf('%4.2e %s',offset,ustr),'FontSize',6,'Color','b','units','normalized');
+        text(0.02,0.85,sprintf('%s',datestr(starttimes(wavnum),'yyyy-mm-dd HH:MM:SS.FFF')),'FontSize',8,'Color','g','units','normalized');
+        text(0.85,0.85,sprintf('%4.2e %s',tracemax,ustr),'FontSize',8,'Color','r','units','normalized');
         
-        text(0.02,0.85, sprintf('%5.0f',offset),'FontSize',10,'Color','b','units','normalized');
-        text(0.4,0.85,sprintf(' %s',datestr(starttimes(wavnum),'yyyy-mm-dd HH:MM:SS.FFF')),'FontSize',10,'Color','g','units','normalized');
-        text(0.9,0.85,sprintf('%5.0f',nanmax(abs(y))),'FontSize',10,'Color','r','units','normalized');
+
+%         if exist('arrivalobj','var')
+%             %disp('- adding arrivals to panel plot')
+%             hold on
+%             thisctag = strrep(string(get(w(wavnum),'ChannelTag')),'-','');
+%             Index = find(ismember(arrivalobj.channelinfo, thisctag));
+%             for arrnum=1:numel(Index)
+%                 arrtime = arrivalobj.time(Index(arrnum));
+%                 if alignWaveforms
+%                     relarrtime = (arrtime-min(dnum))*SECSPERDAY;
+%                 else
+%                     relarrtime = (arrtime-snum)*SECSPERDAY;
+%                 end
+%                 plot([relarrtime relarrtime], [min(y) max(y)],':r');
+%             end
+%             hold off
+%         end        
+            
+        hold off
     end
     xlabel('Time (s)');
     if exist('ax','var')

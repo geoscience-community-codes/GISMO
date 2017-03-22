@@ -22,8 +22,7 @@ classdef rsam
 %     dnum        % the dates/times (as datenum) corresponding to the start
 %                   of each time window
 %     data        % the value at each dnum
-%     sta         % station
-%     chan        % channel
+%     ctag        % ChannelTag
 %     measure     % statistical measure, default is 'mean'
 %     seismogram_type % e.g. 'velocity' or 'displacement', default is 'raw'
 %     units       % units to label y-axis, e.g. 'nm/s' or 'nm' or 'cm2', default is 'counts'
@@ -83,15 +82,12 @@ classdef rsam
         dnum = [];
         data = []; % 
         measure = 'mean';
-        seismogram_type = 'raw';
+        seismogram_type = '';
         %reduced = struct('Q', Inf, 'sourcelat', NaN, 'sourcelon', NaN, 'distance', NaN, 'waveType', '', 'isReduced', false, 'f', NaN, 'waveSpeed', NaN, 'stationlat', NaN, 'stationlon', NaN); 
         units = 'counts';
         %use = true;
         files = '';
-        sta = '';
-        chan = '';
-        snum = -Inf;
-        enum = Inf;
+        ChannelTag = ChannelTag();
         %spikes = []; % a vector of rsam objects that describe large spikes
         % in the data. Populated after running 'despike' method. These are
         % removed simultaneously from the data vector.
@@ -102,11 +98,21 @@ classdef rsam
         % vector, but are instead returned in the continuousData vector.
         %continuousData = []; % 
         %continuousEvents = []; % a vector of rsam objects that describe tremor
-
+        request = struct();
     end
+    
+    properties(Dependent)
+        snum
+        enum
+        sta
+        chan
+        sampling_interval
+        stats
+    end
+        
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    methods(Access = public)
-
+    %methods(Access = public)
+    methods
         function self=rsam(dnum, data, varargin)
             if nargin==0
                 return;
@@ -116,7 +122,7 @@ classdef rsam
                 self.dnum = dnum;
                 self.data = data;
                 if nargin>2
-                   classFields = {'sta','chan','measure','seismogram_type','units','snum','enum'};
+                   classFields = {'ChannelTag','measure','seismogram_type','units'};
                    p = inputParser;
                    for n=1:numel(classFields)
                       p.addParameter(classFields{n}, self.(classFields{n}));
@@ -138,18 +144,70 @@ classdef rsam
 % % %             result = nanmax(self.dnum);
 % % %         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+        function r = get.snum(self)
+            r = [];
+            for c=1:numel(self)
+                r(c) = nanmin(self(c).dnum);
+            end
+        end
+        
+        function r = get.enum(self)
+            r = [];
+            for c=1:numel(self)
+                r(c) = nanmax(self(c).dnum);
+            end
+        end   
+        
+        function r = get.sta(self)
+            r = {};
+            for c=1:numel(self)
+                r{c} = self(c).ChannelTag.station;
+            end     
+        end        
+
+        function r = get.chan(self)
+            r = {};
+            for c=1:numel(self)
+                r{c} = self(c).ChannelTag.channel;
+            end     
+        end       
+        
+        function r = get.sampling_interval(self)
+            r = [];
+            for c = 1:length(self)
+                l = numel(self(c).dnum);
+                s = self(c).dnum(2:l) - self(c).dnum(1:l-1);
+                r(c) = (median(s)*86400);
+            end
+        end     
+        
+        function stats = get.stats(self)
+            for c=1:numel(self)
+                stats(c) = struct;
+                stats(c).min = nanmin(self(c).data);
+                stats(c).max = nanmax(self(c).data);
+                stats(c).mean = nanmean(self(c).data);
+                stats(c).median = nanmedian(self(c).data);
+                stats(c).rms = rms(self(c).data);
+                stats(c).std = nanstd(self(c).data);
+            end
+        end
+               
+        
         % Prototypes
-        self = findfiles(self, file);
-        self = load(self);
-        handlePlot = plot(rsam_vector, varargin);
-        save(self, filepattern)
-        toTextFile(self, filepath)
-        [aw,tt1, tt2, tmc, mag_zone]=bvalue(this, mcType, method)
-        [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)
+        self = findfiles(self, filepattern)
+        self = load(self, file)
+        handlePlot = plot(rsam_vector, varargin)
+        save_to_bob_file(self, filepattern)
+        save_to_text_file(self, filepath)
+        %[aw,tt1, tt2, tmc, mag_zone]=bvalue(this, mcType, method)
+        %[lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)
         s=extract(self, snum, enum)
-        fs = Fs(self)
         self = medfilt1(self, nsamples_to_average_over)
-        w=getwaveform(self, datapath)
+        %w = getwaveform(self, datapath)
+        w = rsam2waveform(self);
+        plot_panels(self);
         %scrollplot(s)
         %plotyy(obj1, obj2, varargin)
         %self = reduce(self, waveType, sourcelat, sourcelon, stationlat, stationlon, varargin)
@@ -209,8 +267,9 @@ classdef rsam
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
     methods(Access = public, Static)
         self = read_bob_file(varargin)
-        makebobfile(outfile, days)
-        self = loadbobfile(infile, snum, enum)
+        make_bob_file(outfile, days)
+        cookbook()
+        %self = loadbobfile(infile, snum, enum)
         %self = loadwfmeastable(sta, chan, snum, enum, measure, dbname)
         %[data]=remove_calibration_pulses(dnum, data)
         %[rsamobjects, ah]=plotrsam(sta, chan, snum, enum, DATAPATH)

@@ -2,10 +2,9 @@
 % An Arrival object is a container for phase arrival metadata
 % See also Catalog
 classdef Arrival
-    properties(Dependent)
-    %properties
+    properties
         channelinfo
-        daynumber
+        time
         %arid
         %jdate
         iphase
@@ -17,84 +16,85 @@ classdef Arrival
         %ema
         %rect
         amp
-        %per
+        per
         %clip
         %fm
         signal2noise
         %qual
         %auth
-    end
-    properties(Hidden)
-        table
+        waveforms
     end
     methods
-        function obj = Arrival(sta, chan, daynumber, iphase, varargin)
+        function obj = Arrival(sta, chan, time, iphase, varargin)
             % Parse required, optional and param-value pair arguments,
             % set default values, and add validation conditions          
             p = inputParser;
             p.addRequired('sta', @iscell);
             p.addRequired('chan', @iscell);
             %p.addRequired('time', @(t) t>0 & t<now+1);
-            p.addRequired('daynumber', @isnumeric);
+            p.addRequired('time', @isnumeric);
             p.addRequired('iphase', @iscell);
-            p.addParameter('amp', NaN, @isnumeric);
-            p.addParameter('signal2noise', NaN, @isnumeric);
+            p.addParameter('amp', [], @isnumeric);
+            p.addParameter('per', [], @isnumeric);
+            p.addParameter('signal2noise', [], @isnumeric);
             
             % Missed several properties out here just because of laziness.
             % Add them as needed.
-            p.parse(sta, chan, daynumber, iphase, varargin{:});
-            fields = fieldnames(p.Results);
-            for i=1:length(fields)
-                field=fields{i};
-                val = p.Results.(field);
-                eval(sprintf('%s = val;',field));
-            end
-            ctag = ChannelTag.array('',sta,'',chan)';
-            obj.table = table(daynumber, datestr(daynumber,26), datestr(daynumber,'HH:MM'), datestr(daynumber,'SS.FFF'), ctag.string(), iphase, amp, signal2noise, ...
-                'VariableNames', {'daynumber' 'date' 'hour_minute' 'second' 'channelinfo' 'iphase' 'amp' 'signal2noise'});
-            obj.table = sortrows(obj.table, 'daynumber', 'ascend'); 
-            fprintf('\nGot %d arrivals\n',height(obj.table));
+            p.parse(sta, chan, time, iphase, varargin{:});
+            ctag = ChannelTag.array('',p.Results.sta,'',p.Results.chan)';            
+            obj.channelinfo = ctag.string();
+            obj.time = p.Results.time;
+            obj.iphase = p.Results.iphase;  
+            obj.amp = p.Results.amp; 
+            obj.per = p.Results.per; 
+            obj.signal2noise = p.Results.signal2noise; 
+            fprintf('\nGot %d arrivals\n',numel(obj.time));
                 
         end
         
-        function val = get.daynumber(obj)
-            val = obj.table.daynumber;
+        function val = get.time(obj)
+            val = obj.time;
         end 
         
-        function val = get.channelinfo(obj)
-            val = obj.table.channelinfo;
-        end        
-        
-        function val = get.iphase(obj)
-            val = obj.table.iphase;
-        end
- 
-        function val = get.amp(obj)
-            val = obj.table.amp;
-        end            
-        
-        function val = get.signal2noise(obj)
-            val = obj.table.signal2noise;
-        end        
-        
-        
+%         function val = get.channelinfo(obj)
+%             val = obj.channelinfo;
+%         end        
+%         
+%         function val = get.iphase(obj)
+%             val = obj.iphase;
+%         end
+%  
+%         function val = get.amp(obj)
+%             val = obj.amp;
+%         end            
+%         
+%         function val = get.signal2noise(obj)
+%             val = obj.signal2noise;
+%         end
+%         
+%         function obj = set.amp(obj, amp)
+%             obj.amp = amp;
+%         end       
         
         function summary(obj, showall)
         % ARRIVAL.SUMMARY Summarise Arrival object
             for c=1:numel(obj)
                 obj(c)
-                numarrs = height(obj(c).table)
+                numrows = numel(obj(c).time);
                 fprintf('Number of arrivals: %d\n',numarrs);
-                if numarrs > 0
+                if numrows > 0
                     if ~exist('showall','var')
                             showall = false;
                     end
                     if numel(obj) == 1
-                        if height(obj.table) <= 50 || showall
-                            disp(obj.table)
+                        if numrows <= 50 || showall
+                            for rownum=1:numrows
+                                summarize_row(obj, rownum);
+                            end
                         else
-                            disp(obj.table([1:50],:))
-
+                            for rownum=1:50
+                                summarize_row(obj, rownum);
+                            end
                             disp('* Only showing first 50 rows/arrivals - to see all rows/arrivals use:')
                             disp('*      arrivalObject.disp(true)')
                         end
@@ -103,26 +103,73 @@ classdef Arrival
             end
         end
         
-        function self = subset(self, columnname, findval)
-            N = numel(self.daynumber);
+        function summarize_row(self, rownum)
+            fprintf('%s\t%s\t%s\t%e\t%e\t%e\n', ...
+                self.channelinfo(rownum), ...
+                datestr(self.time(rownum)), ...
+                self.iphase(rownum), ...
+                self.amp(rownnum), ...
+                self.per(rownum), ...
+                self.signal2noise(rownum)); 
+        end
+        
+        function self2 = subset(self, columnname, findval)
+            self2 = self;
+            N = numel(self.time);
             indexes = [];
-            for c=1:N
-                gotval = eval(sprintf('self.%s(c);',columnname));
-                if isa(gotval,'cell')
-                    gotval = cell2mat(gotval);
-                end
-                if isnumeric(gotval)
-                    if gotval==findval
-                        indexes = [indexes c];
+            if ~exist('findval','var')
+                % assume columnname is actually row numbers
+                indexes = columnname;
+            else
+
+                for c=1:N
+                    gotval = eval(sprintf('self.%s(c);',columnname));
+                    if isa(gotval,'cell')
+                        gotval = cell2mat(gotval);
                     end
-                else
-                    if strcmp(gotval,findval)
-                        indexes = [indexes c];
+                    if isnumeric(gotval)
+                        if gotval==findval
+                            indexes = [indexes c];
+                        end
+                    else
+                        if strcmp(gotval,findval)
+                            indexes = [indexes c];
+                        end
                     end
                 end
             end
-            self.table = self.table(indexes,:);
-        end    
+            self2.channelinfo = self.channelinfo(indexes);
+            self2.time = self.time(indexes);
+            self2.iphase = self.iphase(indexes);
+            if numel(self.amp)==N
+                self2.amp = self.amp(indexes);
+            end
+            if numel(self.per)==N
+                self2.per = self.per(indexes);
+            end
+            if numel(self.signal2noise)==N
+                self2.signal2noise = self.signal2noise(indexes);
+            end
+%             % now go into misc_fields and apply same index subset to
+%             % anything with N elements
+%             fields = fieldnames(self.misc_fields);
+%             for fieldnum=1:numel(fields)
+%                 fieldval = getfield(self.misc_fields, fields{fieldnum});
+%                 if numel(fieldval)==N
+%                     self2.misc_fields = setfield(self2.misc_fields, fields{fieldnum}, fieldval(indexes));
+%                 end
+%             end
+            if numel(self.waveforms)==N
+                self2.waveforms = self.waveforms(indexes);
+            end
+            
+        end 
+        
+        % prototypes
+        catalogobj = associate(self, maxTimeDiff)
+        %arrivalobj = setminman(self, w, pretrig, posttrig, maxtimediff)
+        arrivalobj = addmetrics(self, maxtimediff)
+        arrivalobj = addwaveforms(self, datasourceobj, pretrigsecs, posttrigsecs);
     end
     methods(Static)
         function self = retrieve(dataformat, varargin)
@@ -153,23 +200,23 @@ classdef Arrival
         % Add in support for 'get_arrivals'
             
             debug.printfunctionstack('>')
-
+            self = [];
             switch lower(dataformat)
                 case {'css3.0','antelope', 'datascope'}
                     if admin.antelope_exists()
-                        self = Arrival.read_arrivals.antelope(varargin{:});
+                        try
+                            self = Arrival.read_arrivals.antelope(varargin{:});
+                        catch
+                            % no arrivals
+                        end
                     else
-                        warning('Sorry, cannot read event Catalog from Antelope database as Antelope toolbox for MATLAB not found')
-                        self = Catalog();
+                        warning('Antelope toolbox for MATLAB not found')
                     end
                 case 'hypoellipse'
                     self = read_hypoellipse(varargin{:});
                 otherwise
                     self = NaN;
                     fprintf('format %s unknown\n\n',dataformat);
-            end
-            if isempty(self)
-                self=Catalog();
             end
 
             debug.printfunctionstack('<')

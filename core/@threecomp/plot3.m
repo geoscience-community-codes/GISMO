@@ -1,6 +1,6 @@
 function plot3(TC)
 %PLOT3 Interactively make 3D plot of particle motion vector evolution
-
+disp('got here')
     %% Extract data for whole threecomp object
     w = get(TC,'waveform');
     fs = get(w(1), 'freq');

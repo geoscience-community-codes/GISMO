@@ -63,7 +63,7 @@ end
 
 nfft = round(get(s,'nfft'));
 overlap = floor(get(s, 'over'));
-dBlims = get(s, 'dBlims')
+dBlims = get(s, 'dBlims');
 fmax = get(s, 'freqmax');
 
 % Set appropriate date ticks
@@ -81,14 +81,12 @@ for c=1:numw
         [S,F,T] = spectrogram(data, nfft, nfft/2, nfft, fsamp);
 
         Y = 20*log10(abs(S)+eps);
-        fmax
-        max(F)
-        index = find(F <= fmax)
+        index = find(F <= fmax);
         if F(1)==0,
             F(1)=0.001;
         end
 
-        [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numw, c, spectrogramFraction, 0.08, 0.05, 0.88, 0.95);
+        [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numw, c, spectrogramFraction, 0.12, 0.05, 0.80, 0.9);
         axes('position', spectrogramPosition);
         T = wt.start + T/86400;
         F = F(1:max(index));
@@ -103,9 +101,7 @@ for c=1:numw
             hold on; plot(T,meanF,'k','LineWidth',3);
             % peak frequency
             [maxvalue,maxindex] = max(abs(S));
-            size(maxindex)
             fmax = F(maxindex);
-            size(fmax)
             hold on; plot(T,fmax,'r','LineWidth',3);
             
         else
@@ -115,19 +111,19 @@ for c=1:numw
         colormap(mycolormap);
 
         % Change Y-Labels to 'sta.chan'
-        ylabel( sprintf('%s\n%s',get(w(c), 'station'), get(w(c), 'channel')), 'FontSize', 10);
+        thissta = get(w(c), 'station');
+        thischan = get(w(c), 'channel');
+        ylabel( sprintf('%s\n%s',thissta, thischan(1:3) ), 'FontSize', 8);
         xlabel('')
         title('')
         set(gca,'XLim', [wt.start wt.stop]);
         if c==numw
-            set(gca, 'XTick', Xtickmarks, 'XTickLabel', XTickLabel,  'FontSize', 10); % time labels only on bottom spectrogram
+            set(gca, 'XTick', Xtickmarks, 'XTickLabel', XTickLabel,  'FontSize', 8); % time labels only on bottom spectrogram
         else
             set(gca, 'XTick', Xtickmarks, 'XTickLabel', {});
         end
 
         if spectrogramFraction < 1
-            thissta = get(w(c), 'station');
-            thischan = get(w(c), 'channel');
             plotTrace(tracePosition, get(w(c),'data'), get(w(c),'freq'), Xtickmarks, wt, mycolormap, s, thissta, thischan);
             set(gca,'XLim', [wt.start wt.stop]); % added 20111214 to align trace with spectrogram when data missing (prevent trace being stretched out)
 
@@ -181,7 +177,7 @@ set(gca, 'XTick', Xtickmarks, 'XTickLabel', '', 'XLim', [timewindow.start timewi
 if ~isnan(maxAmpl) % make sure it is not NaN else will crash
 	traceRange = [dnum(1) dnum(end) -maxAmpl*1.1 maxAmpl*1.1];
 	decibels = 20 * log10(maxAmpl) + eps;
-	fprintf('%s: %s.%s: Max amplitude %.1e nm/s (%d dB)\n',mfilename, thissta, thischan, maxAmpl,round(decibels)); 
+	%fprintf('%s: %s.%s: Max amplitude %.1e (%d dB)\n',mfilename, thissta, thischan, maxAmpl,round(decibels)); 
 	axis(traceRange);
 end
 debug.printfunctionstack('<');

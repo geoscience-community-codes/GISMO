@@ -1,8 +1,8 @@
 function s=extract(self, snum, enum)
     s = self;
-    i = find(self.dnum>=snum & self.dnum <= enum);
-    s.dnum = self.dnum(i);
-    s.data = self.data(i);
-    s.snum = snum;
-    s.enum = enum;
+    for c=1:numel(self)
+        i = find(self(c).dnum>=snum & self(c).dnum <= enum);
+        s(c).dnum = self(c).dnum(i);
+        s(c).data = self(c).data(i);
+    end
 end

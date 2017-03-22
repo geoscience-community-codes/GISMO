@@ -25,12 +25,12 @@ function TC = particlemotion(TC, varargin)
 % For an overview of this methodology see:
 %    Montalbetti, J. F. and Kanasewich, E. R. (1970), Enhancement 
 %    of Teleseismic Body Phases with a Polarization Filter. Geophys. 
-%    J. Royal Astro. Soc., 21, 119–129. 
+%    J. Royal Astro. Soc., 21, 119???129. 
 %    doi: 10.1111/j.1365-246X.1970.tb01771.x
 %
 %    Ereditato, D. and G. Luongo (1994) Volcanic tremor wave field 
 %    during quiescent and eruptive activity at Mt. Etna (Sicily), 
-%    J. Volcanol. Geotherm. Res., 61, 239–25.
+%    J. Volcanol. Geotherm. Res., 61, 239???25.
 %
 % see also threecomp/describe
 
@@ -51,13 +51,13 @@ end
 if length(varargin) >= 1
     dt = varargin{1};
 else
-    dt = 86400 * get(TC(1).traces(1),'DURATION' ) / 100;
+    dt = 86400 * get(TC(1).traces(1),'DURATION' ) / 200; %100
 end
 
 if length(varargin) >= 2
     width = varargin{2};
 else
-    width = 86400 * get(TC(1).traces(1),'DURATION' ) / 10;
+    width = 86400 * get(TC(1).traces(1),'DURATION' ) / 10; % 10
 end
 
 disp(['Time step: ' num2str(dt,'%4.3f') '    Window width: ' num2str(width,'%4.3f') ]);

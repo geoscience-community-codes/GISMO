@@ -41,7 +41,7 @@ function s = plot_spectrum(w)
     figure
     ax= []; % axis array
     for count = 1:numel(w)
-        colour = colours(mod(count, 7) + 1);
+        colour = colours(mod(count-1, 7) + 1);
         Fsamp= get(w(count), 'freq');
         signal=get(w(count), 'data');
         Nsignal=length(signal);
@@ -49,15 +49,17 @@ function s = plot_spectrum(w)
         Y=fft(signal,NFFT); % X will have same length as signal, and will be complex with a magnitude and phase
         NumUniquePts = NFFT/2 + 1; % Mike uses ceil((N+1)/2) in wf_fft
         A=2*abs(Y(1:NumUniquePts))/Nsignal;
+A=smooth(A,100);
         phi = angle(Y(1:NumUniquePts));
         f = Fsamp/2*linspace(0,1,NumUniquePts);
         %ax(count)=subplot(numel(w), 1, count);
-        ax(count) = loglog(f, A, colour); hold on;
+        %ax(count) = loglog(f, A, colour); hold on;
+        ax(count) = plot(f, A, colour); hold on;
         axis tight;
         ctag = get(w(count),'ChannelTag');
         %title(ctag.string());
         xlabel('f (Hz)')
-        ylabel('Amp')
+        ylabel('Amplitude')
         
         % add spectrum vectors to a structure
         s(count).f = f; % frequencies
@@ -84,6 +86,6 @@ function s = plot_spectrum(w)
     ctags = get(w,'ChannelTag');
     legend(ctags.string(),'location', 'south')
     try
-    linkaxes(ax,'x');
+    	linkaxes(ax,'x');
     end
 end

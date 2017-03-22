@@ -1,4 +1,4 @@
-function self = load(self)
+function self = load(self, f)
 % Purpose:
 %    Loads derived data from a binary file in the BOB RSAM format
 %    The pointer position at which to reading from the binary file is determined from f.snum 
@@ -10,10 +10,7 @@ function self = load(self)
 % Author:
 %   Glenn Thompson, MVO, 2000
 
-    % initialise return variables
-
-    f = self.files;
-    
+    % initialise return variables    
     [yyyy, ~]=datevec(f.snum);
     days=365;
     if mod(yyyy,4)==0

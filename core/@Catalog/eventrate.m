@@ -19,11 +19,16 @@ function erobj=eventrate(catalogObject, varargin)
 
     for i=1:numel(catalogObject)
         if catalogObject(i).numberOfEvents > 0
-%             timerange = catalogObject(i).gettimerange();
-%             snum=timerange(1);
-%             enum=timerange(2);
-            snum = catalogObject(i).request.startTime;
-            enum = catalogObject(i).request.endTime;
+
+            try
+                snum = catalogObject(i).request.startTime;
+                enum = catalogObject(i).request.endTime;
+            catch
+               timerange = catalogObject(i).gettimerange();
+               snum=timerange(1);
+               enum=timerange(2);                
+            end
+           
             if ~(binsize>0)
                 binsize = Catalog.binning.autobinsize(enum-snum);
             end
@@ -53,4 +58,10 @@ function erobj=eventrate(catalogObject, varargin)
                 snum, enum, etypes, binsize, stepsize, numbins);
         end
     end
+end
+
+%% AUTOBINSIZE        
+function binsize = autobinsize(catalogObject)
+%autobinsize Compute the best bin size based on start and end times
+    binsize = binning.autobinsize(catalogObject.enum - catalogObject.snum);
 end

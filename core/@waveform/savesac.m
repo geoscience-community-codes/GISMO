@@ -69,7 +69,11 @@ function w = savesac(w, direc, fname)
       %Format: YYYYMMDD_HHmmss.STATION.CHANNEL.NETWORK
       for n=1:numel(w)
          [Y,M,D,h,m,s] = datevec(get(w(n),'start'));
-         Net = get(w(n),'KNETWK'); %get network from existing sac info.
+         try
+            Net = get(w(n),'KNETWK'); %get network from existing sac info.
+         catch
+             Net = '__';
+         end
          if isempty(Net)
             Net = '__';
          end
