@@ -1,0 +1,417 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>waveform</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-21"><meta name="DC.source" content="waveform_cookbook.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>waveform</h1><!--introduction--><p>A waveform object is the GISMO data type for holding seismic waveform data. The basic idea is that in GISMO we don't care whether our waveform data come from a SAC, Seisan or Miniseed file, or from an Earthworm or Winston waveserver, or from an Antelope database - we just want to work with waveform objects. So GISMO contains routines to read these different data formats into waveform objects, and then methods for processing waveform objects.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Reading data files into GISMO</a></li><li><a href="#5">Reading from data sources</a></li><li><a href="#9">Processing / Analyzing waveform data</a></li></ul></div><h2>Reading data files into GISMO<a name="1"></a></h2><p>To read in a single data file, we just need the path and the file format:</p><p><b>Reading a MiniSEED (or SEED file) into MATLAB</b></p><pre class="codeinput">filepath = fullfile(TESTDATA, <span class="string">'waveform_data'</span>, <span class="string">'REF.EHZ.2009.081'</span>)
+w = waveform(filepath, <span class="string">'seed'</span>)
+</pre><pre class="codeoutput">
+filepath =
+
+/home/t/thompsong/src/GISMO.website/testdata/waveform_data/REF.EHZ.2009.081
+
+ReadMSEEDFast:	/home/t/thompsong/src/GISMO.website/testdata/waveform_data/REF.EHZ.2009.081
+ 
+w =
+ 
+ ChannelTag: AV.REF..EHZ       [network.station.location.channel]
+      start: 2009-03-22 00:00:00.000
+             duration(   1 days 00:00:00.010)
+       data: 8640001 samples
+       freq: 100.0000   Hz
+      units: Counts
+    history: [1 items], last modification: 
+</pre><p><b>Reading a SAC file into MATLAB</b></p><pre class="codeinput">filepath = fullfile(TESTDATA, <span class="string">'waveform_data'</span>, <span class="string">'REF.EHZ.2009-03-22.sac'</span>)
+w = waveform(filepath, <span class="string">'sac'</span>)
+</pre><pre class="codeoutput">
+filepath =
+
+/home/t/thompsong/src/GISMO.website/testdata/waveform_data/REF.EHZ.2009-03-22.sac
+
+ 
+w =
+ 
+ ChannelTag: AV.REF..EHZ       [network.station.location.channel]
+      start: 2009-03-22 00:00:00.000
+             duration(23:59:59.998)
+       data: 8640000 samples
+       freq: 100.0000   Hz
+      units: Counts
+    history: [2 items], last modification: 21-Mar-2017 20:12:07
+    With misc fields...
+    * SCALE: 1
+    * NZYEAR: 2009
+    * NZJDAY: 81
+    * NZHOUR: 0
+    * NZMIN: 0
+    * NZSEC: 0
+    * NZMSEC: 0
+    * IFTYPE: 1
+    * IZTYPE: 9
+    * LPSPOL: 0
+    * LOVROK: 1
+    * LCALDA: 1
+    * KEVNM: -12345  -12345
+</pre><p><b>Reading a Seisan file into MATLAB</b></p><pre class="codeinput">filepath = fullfile(TESTDATA, <span class="string">'waveform_data'</span>, <span class="string">'2001-02-02-0303-55S.MVO___019'</span>)
+w = waveform(filepath, <span class="string">'seisan'</span>)
+</pre><pre class="codeoutput">
+filepath =
+
+/home/t/thompsong/src/GISMO.website/testdata/waveform_data/2001-02-02-0303-55S.MVO___019
+
+ 
+w =
+ 
+ 
+[1x19] waveform object with fields:
+     ChannelTag
+     start
+     freq
+     data
+     units
+     history
+    With dissimilar fields
+</pre><h2>Reading from data sources<a name="5"></a></h2><p><b>Reading waveform data from IRIS DMC webservices</b> When reading from IRIS DMC webservices, you must tell GISMO which datasource to use ('irisdmcws'), which network/station/location/channel combinations to search for (using scnlobject or ChannelTag), and the start and end times of the data window you want to load. All these parameters must be passed to the waveform function call.</p><pre class="codeinput">ds = datasource(<span class="string">'irisdmcws'</span>);
+ctag = ChannelTag(<span class="string">'AV'</span>, <span class="string">'RSO'</span>, <span class="string">'--'</span>, <span class="string">'EHZ'</span>);
+startTime = <span class="string">'2009/03/22 06:00:00'</span>;
+endTime = <span class="string">'2009/03/22 07:00:00'</span>;
+w = waveform(ds, ctag, startTime, endTime)
+</pre><pre class="codeoutput">Requesting Data from the DMC...
+ 
+w =
+ 
+ ChannelTag: AV.RSO..EHZ       [network.station.location.channel]
+      start: 2009-03-22 06:00:00.001
+             duration(01:00:00.000)
+       data: 360000 samples
+       freq: 100.0000   Hz
+      units: M/S
+    history: [2 items], last modification: 21-Mar-2017 20:12:10
+    With misc fields...
+    * LATITUDE: 60.4616
+    * LONGITUDE: -152.756
+    * ELEVATION: 1921
+    * DEPTH: 0
+    * AZIMUTH: 0
+    * DIP: -90
+    * SENSITIVITY: 808410000
+    * SENSITIVITYFREQUENCY: 5
+    * INSTRUMENT: 
+    * CALIB: 1.237e-09
+    * CALIB_APPLIED: NO
+</pre><p><b>Reading waveform data from an Earthworm or Winston waveserver</b> Reading from an Earthworm or Winston waveserver is exactly the same as reading from IRIS DMC webservices, except that the datasource should be 'earthworm' or 'winston', and the two arguments are the host-ip-address and the port number:</p><pre class="codeinput">ds = datasource(<span class="string">'winston'</span>, <span class="string">'pubavo1.wr.usgs.gov'</span>, 16022);
+ctag = ChannelTag(<span class="string">'AV'</span>, <span class="string">'RSO'</span>, <span class="string">'--'</span>, <span class="string">'EHZ'</span>);
+startTime = now-1/24;
+endTime = now;
+w = waveform(ds, ctag, startTime, endTime)
+</pre><pre class="codeoutput"> 
+w =
+ 
+ ChannelTag: AV.RSO.--.EHZ     [network.station.location.channel]
+      start: 2017-03-21 19:12:10.180
+             duration(01:00:00.000)
+       data: 360000 samples
+       freq: 100.0000   Hz
+      units: Counts
+    history: [3 items], last modification: 21-Mar-2017 20:12:19
+</pre><p><b>Reading waveform data from an CSS3.0 flat-file database (the format used by Antelope)</b> Reading from an CSS3.0 flat-flat database is exactly the same as reading from IRIS DMC webservices, except that the datasource should be 'css3.0' (or 'antelope')</p><pre class="codeinput">dbpath = fullfile(TESTDATA, <span class="string">'css3.0'</span>, <span class="string">'demodb'</span>)
+ds = datasource(<span class="string">'antelope'</span>, dbpath);
+ctag = ChannelTag(<span class="string">'AV'</span>, <span class="string">'REF'</span>, <span class="string">'--'</span>, <span class="string">'EHZ'</span>);
+startTime = <span class="string">'2009/03/23 06:00:00'</span>;
+endTime = <span class="string">'2009/03/23 07:00:00'</span>;
+w = waveform(ds, ctag, startTime, endTime)
+</pre><pre class="codeoutput">
+dbpath =
+
+/home/t/thompsong/src/GISMO.website/testdata/css3.0/demodb
+
+ 
+w =
+ 
+ ChannelTag: -.REF..EHZ        [network.station.location.channel]
+      start: 2009-03-23 06:00:00.000
+             duration(01:00:00.000)
+       data: 360000 samples
+       freq: 100.0000   Hz
+      units: null
+    history: [1 items], last modification: 21-Mar-2017 20:12:19
+    With misc fields...
+    * CALIBRATION_APPLIED: NO
+</pre><h2>Processing / Analyzing waveform data<a name="9"></a></h2><p>Once you have loaded your data into a waveform object (or into an array of waveform objects), you can do common tasks like make a time series plot, detrend or filter, plot an amplitude spectrum, a spectrogram or a helicorder. Here are some simple examples:</p><p><b>Plotting</b> Typically the first analysis step is to look at the time series data.</p><pre class="codeinput">plot(w)
+</pre><img vspace="5" hspace="5" src="waveform_cookbook_01.png" alt=""> <p><b>Interpolate missing values</b> Typically the data will have some missing samples, marked by NaN values. Some processing will break down with NaN values. So it may be a good idea to remove them with interpolation:</p><pre class="codeinput">w = fillgaps(w,<span class="string">'interp'</span>)
+</pre><pre class="codeoutput"> 
+w =
+ 
+ ChannelTag: -.REF..EHZ        [network.station.location.channel]
+      start: 2009-03-23 06:00:00.000
+             duration(01:00:00.000)
+       data: 360000 samples
+       freq: 100.0000   Hz
+      units: null
+    history: [1 items], last modification: 21-Mar-2017 20:12:19
+    With misc fields...
+    * CALIBRATION_APPLIED: NO
+</pre><p><b>Detrending</b> Seismic data usually have an offset (DC) due to the seismometer not being completely level, and there is also often a drift because of temperature vairations or air currents. Detrending gets rid of this. Note that detrending will fail if NaN values are present. So use the 'fillgaps' method first, presented in the previous step.</p><pre class="codeinput">w = detrend(w)
+plot(w)
+</pre><pre class="codeoutput"> 
+w =
+ 
+ ChannelTag: -.REF..EHZ        [network.station.location.channel]
+      start: 2009-03-23 06:00:00.000
+             duration(01:00:00.000)
+       data: 360000 samples
+       freq: 100.0000   Hz
+      units: null
+    history: [1 items], last modification: 21-Mar-2017 20:12:19
+    With misc fields...
+    * CALIBRATION_APPLIED: NO
+</pre><img vspace="5" hspace="5" src="waveform_cookbook_02.png" alt=""> <p><b>Filtering</b> To remove non-linear trends in data, a high-pass filter is helpful. For example, to apply a 0.5-Hz high pass filter, 2 poles, in both directions (acausal):</p><pre class="codeinput">f = filterobject(<span class="string">'h'</span>, 0.5, 2)
+w = filtfilt(f,w)
+plot(w)
+</pre><pre class="codeoutput"> 
+f =
+ 
+      type: H (High-pass)
+    cutoff: 0.5 Hz
+     poles: 2
+ 
+f =
+ 
+      type: H (High-pass)
+    cutoff: 0.5 Hz
+     poles: 2
+
+WN =
+
+    0.0100
+
+ 
+w =
+ 
+ ChannelTag: -.REF..EHZ        [network.station.location.channel]
+      start: 2009-03-23 06:00:00.000
+             duration(01:00:00.000)
+       data: 360000 samples
+       freq: 100.0000   Hz
+      units: null
+    history: [2 items], last modification: 21-Mar-2017 20:12:21
+    With misc fields...
+    * CALIBRATION_APPLIED: NO
+</pre><img vspace="5" hspace="5" src="waveform_cookbook_03.png" alt=""> <p>Here are examples of band-pass filters and low-pass filters:</p><div><ul><li>Band-pass 0.5-10 Hz, 3 poles</li></ul></div><pre>    f = filterobject('b', [0.5 10], 3)</pre><div><ul><li>Low-pass 25 Hz, 4 poles</li></ul></div><pre>    f = filterobject('l', 25, 4)</pre><p>If only one-way (causal) filtering is wanted, use 'filter' instead of 'filtfilt'.</p><p><b>Spectrum</b> An amplitude spectrum can be generated with:</p><pre class="codeinput">plot_spectrum(w)
+</pre><pre class="codeoutput">
+ans = 
+
+            f: [1x262145 double]
+          amp: [1x262145 double]
+          phi: [1x262145 double]
+        peakf: 1.5484
+        meanf: 6.3611
+    freqindex: -1.0293
+    freqratio: -1.7880
+
+</pre><img vspace="5" hspace="5" src="waveform_cookbook_04.png" alt=""> <p><b>Spectrogram</b> A spectrogram can be generated with:</p><pre class="codeinput">figure
+spectrogram(w)
+</pre><img vspace="5" hspace="5" src="waveform_cookbook_05.png" alt=""> <p><b>Helical drum recorder plot</b> A helicorder plot can be generated with:</p><pre class="codeinput">plot_helicorder(w)
+</pre><img vspace="5" hspace="5" src="waveform_cookbook_06.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% waveform
+% A waveform object is the GISMO data type for holding seismic waveform
+% data. The basic idea is that in GISMO we don't care whether our waveform
+% data come from a SAC, Seisan or Miniseed file, or from an Earthworm or
+% Winston waveserver, or from an Antelope database - we just want to work
+% with waveform objects. So GISMO contains routines to read these different
+% data formats into waveform objects, and then methods for processing
+% waveform objects.
+
+%% Reading data files into GISMO
+% To read in a single data file, we just need the path and the file format:
+
+%%
+% *Reading a MiniSEED (or SEED file) into MATLAB*
+filepath = fullfile(TESTDATA, 'waveform_data', 'REF.EHZ.2009.081')
+w = waveform(filepath, 'seed')
+
+%%
+% *Reading a SAC file into MATLAB*
+filepath = fullfile(TESTDATA, 'waveform_data', 'REF.EHZ.2009-03-22.sac')
+w = waveform(filepath, 'sac')
+
+%%
+% *Reading a Seisan file into MATLAB*
+filepath = fullfile(TESTDATA, 'waveform_data', '2001-02-02-0303-55S.MVO___019')
+w = waveform(filepath, 'seisan')
+
+%% Reading from data sources
+
+%%
+% *Reading waveform data from IRIS DMC webservices*
+% When reading from IRIS DMC webservices, you must tell GISMO which 
+% datasource to use ('irisdmcws'), which network/station/location/channel 
+% combinations to search for (using scnlobject or ChannelTag), and the 
+% start and end times of the data window you want to load. All these 
+% parameters must be passed to the waveform function call.
+ds = datasource('irisdmcws');
+ctag = ChannelTag('AV', 'RSO', 'REPLACE_WITH_DASH_DASH', 'EHZ');
+startTime = '2009/03/22 06:00:00';
+endTime = '2009/03/22 07:00:00';
+w = waveform(ds, ctag, startTime, endTime)
+
+%%
+% *Reading waveform data from an Earthworm or Winston waveserver*
+% Reading from an Earthworm or Winston waveserver is exactly the same as 
+% reading from IRIS DMC webservices, except that the datasource should be 
+% 'earthworm' or 'winston', and the two arguments are the host-ip-address
+% and the port number:
+ds = datasource('winston', 'pubavo1.wr.usgs.gov', 16022);
+ctag = ChannelTag('AV', 'RSO', 'REPLACE_WITH_DASH_DASH', 'EHZ');
+startTime = now-1/24;
+endTime = now;
+w = waveform(ds, ctag, startTime, endTime)
+
+%%
+% *Reading waveform data from an CSS3.0 flat-file database (the format used
+% by Antelope)*
+% Reading from an CSS3.0 flat-flat database is exactly the same as reading from IRIS DMC webservices, except that the datasource should be 'css3.0' (or 'antelope')
+dbpath = fullfile(TESTDATA, 'css3.0', 'demodb')
+ds = datasource('antelope', dbpath);
+ctag = ChannelTag('AV', 'REF', 'REPLACE_WITH_DASH_DASH', 'EHZ');
+startTime = '2009/03/23 06:00:00';
+endTime = '2009/03/23 07:00:00';
+w = waveform(ds, ctag, startTime, endTime)
+
+%% Processing / Analyzing waveform data
+% Once you have loaded your data into a waveform object (or into an array 
+% of waveform objects), you can do common tasks like make a time series 
+% plot, detrend or filter, plot an amplitude spectrum, a spectrogram or a 
+% helicorder. Here are some simple examples:
+
+%%
+% *Plotting*
+% Typically the first analysis step is to look at the time series data.
+plot(w)
+
+%%
+% *Interpolate missing values*
+% Typically the data will have some missing samples, marked by NaN values.
+% Some processing will break down with NaN values. So it may be a good idea
+% to remove them with interpolation:
+w = fillgaps(w,'interp')
+
+%%
+% *Detrending*
+% Seismic data usually have an offset (DC) due to the seismometer not being
+% completely level, and there is also often a drift because of temperature
+% vairations or air currents. Detrending gets rid of this. Note that
+% detrending will fail if NaN values are present. So use the 'fillgaps'
+% method first, presented in the previous step.
+w = detrend(w)
+plot(w)
+
+%%
+% *Filtering*
+% To remove non-linear trends in data, a high-pass filter is helpful. For
+% example, to apply a 0.5-Hz high pass filter, 2 poles, in both directions
+% (acausal):
+f = filterobject('h', 0.5, 2)
+w = filtfilt(f,w)
+plot(w)
+
+%%
+% Here are examples of band-pass filters and low-pass filters: 
+%%
+% * Band-pass 0.5-10 Hz, 3 poles
+%%
+% 
+%      f = filterobject('b', [0.5 10], 3)
+%%
+%
+% * Low-pass 25 Hz, 4 poles
+%%
+% 
+%      f = filterobject('l', 25, 4)
+%
+% If only one-way (causal) filtering is wanted, use 'filter' instead of
+% 'filtfilt'.
+
+%%
+% *Spectrum*
+% An amplitude spectrum can be generated with:
+plot_spectrum(w)
+
+%%
+% *Spectrogram*
+% A spectrogram can be generated with:
+figure
+spectrogram(w)
+
+%%
+% *Helical drum recorder plot*
+% A helicorder plot can be generated with:
+plot_helicorder(w)
+
+
+##### SOURCE END #####
+--></body></html>
