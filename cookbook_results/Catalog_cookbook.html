@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Catalog Cookbook</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-21"><meta name="DC.source" content="Catalog_cookbook.m"><style type="text/css">
+      --><title>Catalog Cookbook</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-22"><meta name="DC.source" content="Catalog_cookbook.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -135,10 +135,11 @@ ans =
 </pre><pre class="codeoutput">
 Methods for class Catalog:
 
-Catalog                             plot_counts                         
-addwaveforms                        plot_time                           
-bvalue                              plot_waveform_metrics               
-combine                             plotprmm                            
+Catalog                             plot3                               
+addwaveforms                        plot_counts                         
+bvalue                              plot_time                           
+combine                             plot_waveform_metrics               
+cookbook                            plotprmm                            
 disp                                subclassify                         
 eev                                 subset                              
 eventrate                           summary                             
@@ -146,11 +147,9 @@ gettimerange                        webmap
 hist                                write                               
 list_waveform_metrics               write_waveform_metrics_to_antelope  
 plot                                
-plot3                               
 
 Static methods:
 
-cookbook                            
 retrieve                            
 
 </pre><p>Save this dataset so you can use it again later:</p><pre class="codeinput">save(<span class="string">'great_earthquakes.mat'</span>, <span class="string">'greatquakes'</span>)
@@ -500,6 +499,11 @@ eventrateObject =
      misc_values: {}
 
 </pre><p>Now plot the EventRate object:</p><pre class="codeinput">eventrateObject.plot()
+</pre><pre class="codeoutput">
+metric = 
+
+    'counts'
+
 </pre><img vspace="5" hspace="5" src="Catalog_cookbook_06.png" alt=""> <p>We can do the same thing for another dataset, e.g. redoubt_events</p><pre class="codeinput">redoubt_events.plot_time()
 erobj_red = redoubt_events.eventrate(<span class="string">'binsize'</span>, 1/24)
 erobj_red.plot()
@@ -528,6 +532,11 @@ erobj_red =
         stepsize: 0.0417
      misc_fields: {}
      misc_values: {}
+
+
+metric = 
+
+    'counts'
 
 </pre><img vspace="5" hspace="5" src="Catalog_cookbook_07.png" alt=""> <img vspace="5" hspace="5" src="Catalog_cookbook_08.png" alt=""> <p>To see more of the things we can do with EventRate objects see the EventRate cookbook <a href="EventRate.html">EventRate.html</a></p><h2>Analysis<a name="33"></a></h2><p><b>Peak event rate (PR) and maximum magnitude</b> A common type of analysis is to identify the peak rate in an earthquake sequence such as this preshock-mainshock-aftershock sequence or an earthquake swarm. This can be done with:</p><pre class="codeinput">tohoku_events.plotprmm()
 </pre><pre class="codeoutput">MM=9.1 occurs at 50.0% of time series

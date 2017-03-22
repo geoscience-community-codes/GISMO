@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>EventRate Cookbook</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-21"><meta name="DC.source" content="EventRate_cookbook.m"><style type="text/css">
+      --><title>EventRate Cookbook</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-22"><meta name="DC.source" content="EventRate_cookbook.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -76,21 +76,70 @@ catalogObject = Catalog.retrieve(<span class="string">'antelope'</span>, <span c
 Got 1397 events
 </pre><p>For a quick plot of earthquakes per hour, we create an EventRate object and then plot it. Here our binsize is 1/24 days, i.e. 1 hour.</p><pre class="codeinput">eventrateObject = catalogObject.eventrate(<span class="string">'binsize'</span>, 1/24);
 eventrateObject.plot()
+</pre><pre class="codeoutput">
+metric = 
+
+    'counts'
+
 </pre><img vspace="5" hspace="5" src="EventRate_cookbook_01.png" alt=""> <p>Change to a smaller bin size of 20 minutes:</p><pre class="codeinput">eventrateObject = catalogObject.eventrate(<span class="string">'binsize'</span>, 20/1440);
 plot(eventrateObject);
+</pre><pre class="codeoutput">
+metric = 
+
+    'counts'
+
 </pre><img vspace="5" hspace="5" src="EventRate_cookbook_02.png" alt=""> <p>Note that</p><pre class="language-matlab">eventrateObject.plot()
 </pre><p>and</p><pre class="language-matlab">plot(eventrateObject)
 </pre><p>do exactly the same thing. The first is the object-oriented style OBJECT.METHOD(INPUT PARAMETERS), the second is the functional style FUNCTION(OBJECT, INPUT PARAMETERS). The object oriented style is preferable.</p><h2>Event rates for overlapping time windows<a name="9"></a></h2><p>Sometimes it is desirable to compute event rate metrics for sliding - i.e. overlapping - time windows. This is easily done with the 'stepsize' parameter. If omitted, stepsize defaults to the binsize - which is the length of the time window. So in the previous example, both binsize and stepsize were 1.0 hours. But we can just as easily compute an EventRate object for the same EventRate object with a binsize of 1 hour, and stepsize of 1 minute. This effectively converts a Catalog into a set of continuous metrics, measured every minute, directly comparable to 1-minute RSAM.</p><pre class="codeinput">eventrateObject = catalogObject.eventrate(<span class="string">'binsize'</span>, 1/24,  <span class="string">'stepsize'</span>, 1/1440);
 eventrateObject.plot()
+</pre><pre class="codeoutput">
+metric = 
+
+    'counts'
+
 </pre><img vspace="5" hspace="5" src="EventRate_cookbook_03.png" alt=""> <h2>Plots of other event rate metrics<a name="10"></a></h2><pre class="language-matlab">eventrateObject.plot()
 </pre><p>is equivalent to typing:</p><pre class="language-matlab">eventrateObject.plot(<span class="string">'metric'</span>, <span class="string">'counts'</span>);
 </pre><p>The full list of metrics that can be plotted are:</p><div><ul><li>counts</li><li>mean_rate</li><li>median_rate</li><li>cum_mag</li><li>mean_mag</li><li>median_mag</li><li>energy</li></ul></div><p>All of these are properties of an EventRate object except for energy, which is computed from <i>cum_mag</i> on-the-fly. Several can be plotted at once in subplots of the same figure using a cell array:</p><pre class="codeinput">eventrateObject.plot(<span class="string">'metric'</span>, {<span class="string">'mean_rate'</span>; <span class="string">'median_rate'</span>; <span class="string">'mean_mag'</span>; <span class="string">'cum_mag'</span>});
+</pre><pre class="codeoutput">
+metric = 
+
+    'mean_rate'
+    'median_rate'
+    'mean_mag'
+    'cum_mag'
+
 </pre><img vspace="5" hspace="5" src="EventRate_cookbook_04.png" alt=""> <p>They can of course be plotted in separate figure windows:</p><pre class="codeinput">eventrateObject.plot(<span class="string">'metric'</span>, <span class="string">'mean_rate'</span>)
 eventrateObject.plot(<span class="string">'metric'</span>, <span class="string">'median_rate'</span>)
 eventrateObject.plot(<span class="string">'metric'</span>, <span class="string">'mean_mag'</span>)
 eventrateObject.plot(<span class="string">'metric'</span>, <span class="string">'cum_mag'</span>)
+</pre><pre class="codeoutput">
+metric =
+
+mean_rate
+
+
+metric =
+
+median_rate
+
+
+metric =
+
+mean_mag
+
+
+metric =
+
+cum_mag
+
 </pre><img vspace="5" hspace="5" src="EventRate_cookbook_05.png" alt=""> <img vspace="5" hspace="5" src="EventRate_cookbook_06.png" alt=""> <img vspace="5" hspace="5" src="EventRate_cookbook_07.png" alt=""> <img vspace="5" hspace="5" src="EventRate_cookbook_08.png" alt=""> <p>These are the same metrics, binsize and stepsize used by the [AVO swarm tracking system] (<a href="http://www.aeic.alaska.edu/input/west/papers/2009_srl_thompson_redoubtSwarms.pdf">http://www.aeic.alaska.edu/input/west/papers/2009_srl_thompson_redoubtSwarms.pdf</a>).</p><h2>Other plot types<a name="19"></a></h2><p>Two more simple plot types are:</p><pre class="codeinput">eventrateObject.helenaplot()
 </pre><img vspace="5" hspace="5" src="EventRate_cookbook_09.png" alt=""> <p>and:</p><pre class="codeinput">eventrateObject.pythonplot()
+</pre><pre class="codeoutput">
+metric = 
+
+    'counts'
+    'cum_mag'
+
 </pre><img vspace="5" hspace="5" src="EventRate_cookbook_10.png" alt=""> <p>End of tutorial</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% EventRate Cookbook
