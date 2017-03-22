@@ -1,47 +1,59 @@
 function publish_cookbooks()
+    global gismopath
 
     %% Catalog_cookbook
-    cleanup()
+    close all
     mfile = 'Catalog_cookbook';
-    outdir = fullfile(GISMO, '..', 'GISMO.website', 'cookbook_results');
+    outdir = fullfile(gismopath, '..', 'GISMO.website', 'cookbook_results');
     mkdir(outdir);
-    htmlfile = publish(mfile, 'format', 'html', 'outputDir', outdir, 'createThumbnail', true);
+    try
+        htmlfile = publish(mfile, 'format', 'html', 'outputDir', outdir, 'createThumbnail', true)
+    end
 
     %% correlation_cookbook
-    cleanup()
+    close all
     mfile = 'correlation_cookbook';
-    outdir = fullfile(GISMO, '..', 'GISMO.website', 'cookbook_results');
+    outdir = fullfile(gismopath, '..', 'GISMO.website', 'cookbook_results');
     mkdir(outdir);
-    htmlfile = publish(mfile, 'format', 'html', 'outputDir', outdir, 'createThumbnail', true);
+    try
+        htmlfile = publish(mfile, 'format', 'html', 'outputDir', outdir, 'createThumbnail', true)
+    end
 
     %% drumplot_cookbook
-    cleanup()
+    close all
     mfile = 'drumplot_cookbook';
-    outdir = fullfile(GISMO, '..', 'GISMO.website', 'cookbook_results');
+    outdir = fullfile(gismopath, '..', 'GISMO.website', 'cookbook_results');
     mkdir(outdir);
-    htmlfile = publish(mfile, 'format', 'html', 'outputDir', outdir, 'createThumbnail', true);  
+    try
+        htmlfile = publish(mfile, 'format', 'html', 'outputDir', outdir, 'createThumbnail', true)
+    end 
     
     %% EventRate_cookbook
-    cleanup()
+    close all
     mfile = 'EventRate_cookbook';
-    outdir = fullfile(GISMO, '..', 'GISMO.website', 'cookbook_results');
+    outdir = fullfile(gismopath, '..', 'GISMO.website', 'cookbook_results');
     mkdir(outdir);
-    htmlfile = publish(mfile, 'format', 'html', 'outputDir', outdir, 'createThumbnail', true);
-    cleanup()
+    try
+        htmlfile = publish(mfile, 'format', 'html', 'outputDir', outdir, 'createThumbnail', true)
+    end 
 
     %% rsam_cookbook
-    cleanup()
+    close all
     mfile = 'rsam_cookbook';
-    outdir = fullfile(GISMO, '..', 'GISMO.website', 'cookbook_results');
+    outdir = fullfile(gismopath, '..', 'GISMO.website', 'cookbook_results');
     mkdir(outdir);
-    htmlfile = publish(mfile, 'format', 'html', 'outputDir', outdir, 'createThumbnail', true)
+    try
+        htmlfile = publish(mfile, 'format', 'html', 'outputDir', outdir, 'createThumbnail', true)
+    end 
 
     %% waveform_cookbook
-    cleanup()
+    close all
     mfile = 'waveform_cookbook';
-    outdir = fullfile(GISMO, '..', 'GISMO.website', 'cookbook_results');
+    outdir = fullfile(gismopath, '..', 'GISMO.website', 'cookbook_results');
     mkdir(outdir);
-    htmlfile = publish(mfile, 'format', 'html', 'outputDir', outdir, 'createThumbnail', true)
+    try
+        htmlfile = publish(mfile, 'format', 'html', 'outputDir', outdir, 'createThumbnail', true)
+    end 
 
 end
 %%
