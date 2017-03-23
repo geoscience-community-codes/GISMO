@@ -54,24 +54,7 @@ classdef rsam
 %               "energy"
 %   SEISMOGRAM_TYPE: a string describing whether the RSAM data were computed
 %                    from "raw" seismogram, "velocity", "displacement"
-%   REDUCED:    a structure that is set is data are "reduced", i.e. corrected
-%               for geometric spreading (and possibly attenuation)
-%               Has 4 fields:
-%                   REDUCED.Q = the value of Q used to reduce the data
-%                   (Inf by default, which indicates no attenuation)
-%                   REDUCED.SOURCELAT = the latitude used for reducing the data
-%                   REDUCED.SOURCELON = the longitude used for reducing the data
-%                   REDUCED.STATIONLAT = the station latitude
-%                   REDUCED.STATIONLON = the station longitude
-%                   REDUCED.DISTANCE = the distance between source and
-%                   station in km
-%                   REDUCED.WAVETYPE = the wave type (body or surface)
-%                   assumed
-%                   REDUCED.F = the frequency used for surface waves
-%                   REDUCED.WAVESPEED = the S wave speed
-%                   REDUCED.ISREDUCED = True if the data are reduced
 %   UNITS:  the units of the data, e.g. nm / sec.
-%   USE: use this rsam object in plots?
 %   FILES: structure of files data is loaded from
 
 % AUTHOR: Glenn Thompson, Montserrat Volcano Observatory
@@ -80,24 +63,12 @@ classdef rsam
 
     properties(Access = public)
         dnum = [];
-        data = []; % 
+        data = []; 
         measure = 'mean';
         seismogram_type = '';
-        %reduced = struct('Q', Inf, 'sourcelat', NaN, 'sourcelon', NaN, 'distance', NaN, 'waveType', '', 'isReduced', false, 'f', NaN, 'waveSpeed', NaN, 'stationlat', NaN, 'stationlon', NaN); 
         units = 'counts';
-        %use = true;
         files = '';
         ChannelTag = ChannelTag();
-        %spikes = []; % a vector of rsam objects that describe large spikes
-        % in the data. Populated after running 'despike' method. These are
-        % removed simultaneously from the data vector.
-        %transientEvents = []; % a vector of rsam objects that describe
-        % transient events in the data that might correspond to vt, rf, lp
-        % etc. Populated after running 'despike' method with the
-        % 'transientEvents' argument. These are not removed from the data
-        % vector, but are instead returned in the continuousData vector.
-        %continuousData = []; % 
-        %continuousEvents = []; % a vector of rsam objects that describe tremor
         request = struct();
     end
     
@@ -137,12 +108,7 @@ classdef rsam
             end
             
         end
-% % %         function result=snum(self)
-% % %             result = nanmin(self.dnum);
-% % %         end
-% % %         function result=enum(self)
-% % %             result = nanmax(self.dnum);
-% % %         end
+
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         function r = get.snum(self)
@@ -198,84 +164,19 @@ classdef rsam
         % Prototypes
         self = findfiles(self, filepattern)
         self = load(self, file)
-        handlePlot = plot(rsam_vector, varargin)
-        save_to_bob_file(self, filepattern)
-        save_to_text_file(self, filepath)
-        %[aw,tt1, tt2, tmc, mag_zone]=bvalue(this, mcType, method)
-        %[lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)
         s=extract(self, snum, enum)
         self = medfilt1(self, nsamples_to_average_over)
-        %w = getwaveform(self, datapath)
-        w = rsam2waveform(self);
+        handlePlot = plot(rsam_vector, varargin)
         plot_panels(self);
-        %scrollplot(s)
-        %plotyy(obj1, obj2, varargin)
-        %self = reduce(self, waveType, sourcelat, sourcelon, stationlat, stationlon, varargin)
-        %[self, timeWindow] = tremorstalta(self, varargin)
-        %self = resample(self, varargin)
-        
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-%         function save2wfmeastable(self, dbname)
-%             datascopegt.save2wfmeas(self.scnl, self.dnum, self.data, self.measure, self.units, dbname);
-%         end    
-%         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%         function self = remove_calibs(self)    
-%              for c=1:numel(self)
-%             % run twice since there may be two pulses per day
-%                     self(c).data = remove_calibration_pulses(self(c).dnum, self(c).data);
-%                     self(c).data = remove_calibration_pulses(self(c).dnum, self(c).data);
-%              end
-%         end
-%         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%         function self = correct(self)    
-%              ref = 0.707; % note that median, rms and std all give same value on x=sin(0:pi/1000:2*pi)
-%              for c=1:numel(self)
-%                 if strcmp(self(c).measure, 'max')
-%                     self(c).data = self(c).data * ref;
-%                 end
-%                 if strcmp(self(c).measure, '68')
-%                     self(c).data = self(c).data/0.8761 * ref;
-%                 end
-%                 if strcmp(self(c).measure, 'mean')
-%                     self(c).data = self(c).data/0.6363 * ref;
-%                 end 
-%              end
-%         end
-%         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-%         function self=rsam2energy(self, r)
-%             % should i detrend first?
-%             e = energy(self.data, r, get(self.scnl, 'channel'), self.Fs(), self.units);
-%                 self = set(self, 'energy', e);
-%         end
-%         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
-%         function w=rsam2waveform(self)
-%             w = waveform;
-%             w = set(w, 'station', self.sta);
-%             w = set(w, 'channel', self.chan);
-%             w = set(w, 'units', self.units);
-%             w = set(w, 'data', self.data);
-%             w = set(w, 'start', self.snum);
-%             %w = set(w, 'end', self.enum);
-%             w = set(w, 'freq', 1/ (86400 * (self.dnum(2) - self.dnum(1))));
-%             w = addfield(w, 'reduced', self.reduced);
-%             w = addfield(w, 'measure', self.measure);
-%         end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- 
+        w = rsam2waveform(self);
+        save_to_bob_file(self, filepattern)
+        save_to_text_file(self, filepath)       
 
     end % end of dynamic methods
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
     methods(Access = public, Static)
         self = read_bob_file(varargin)
         make_bob_file(outfile, days)
-        cookbook()
-        %self = loadbobfile(infile, snum, enum)
-        %self = loadwfmeastable(sta, chan, snum, enum, measure, dbname)
-        %[data]=remove_calibration_pulses(dnum, data)
-        %[rsamobjects, ah]=plotrsam(sta, chan, snum, enum, DATAPATH)
-        %rsamobj = detectTremorEvents(stationName, chan, DP, snum, enum, ...
-        % spikeRatio, transientEventRatio, STA_minutes, LTA_minutes, ...
-        % stepsize, ratio_on, ratio_off, plotResults)
     end
 
 end % classdef

@@ -18,6 +18,17 @@ function self = despike(self, spiketype, maxRatio)
     %   Outputs:
     %       s = rsam object with spikes removed
 
+    % NOTE: THIS METHOD REQUIRES EXTRA PROPERTIES FOR rsam CLASS
+        %spikes = []; % a vector of rsam objects that describe large spikes
+        % in the data. Populated after running 'despike' method. These are
+        % removed simultaneously from the data vector.
+        %transientEvents = []; % a vector of rsam objects that describe
+        % transient events in the data that might correspond to vt, rf, lp
+        % etc. Populated after running 'despike' method with the
+        % 'transientEvents' argument. These are not removed from the data
+        % vector, but are instead returned in the continuousData vector.
+
+    
     % find spikes lasting 1 sample only
     y= self.data;
     spikeNumber = 0;

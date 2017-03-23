@@ -32,6 +32,9 @@ function [self, timeWindow] = tremorstalta(self, varargin)
     %           ratio - sta:lta ratio of each timeWindow
     %       rsamobject - the input rsamobject but with the 
     %                   continuousEvents property populated
+    % NOTE: REQUIRES EXTRA PROPERTIES FOR RSAM OBJECTS
+        %continuousData = []; % 
+        %continuousEvents = []; % a vector of rsam objects that describe tremor
 
     % Process input variables
     p = inputParser;
