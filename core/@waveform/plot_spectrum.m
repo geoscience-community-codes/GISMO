@@ -39,6 +39,7 @@ function s = plot_spectrum(w)
     
     colours = 'rgbmcyk';
     figure
+    ax= []; % axis array
     for count = 1:numel(w)
         colour = colours(mod(count-1, 7) + 1);
         Fsamp= get(w(count), 'freq');
@@ -52,7 +53,8 @@ A=smooth(A,100);
         phi = angle(Y(1:NumUniquePts));
         f = Fsamp/2*linspace(0,1,NumUniquePts);
         %ax(count)=subplot(numel(w), 1, count);
-        plot(f, A, colour); hold on;
+        %ax(count) = loglog(f, A, colour); hold on;
+        ax(count) = plot(f, A, colour); hold on;
         axis tight;
         ctag = get(w(count),'ChannelTag');
         %title(ctag.string());
@@ -83,4 +85,7 @@ A=smooth(A,100);
     end
     ctags = get(w,'ChannelTag');
     legend(ctags.string(),'location', 'south')
+    try
+    	linkaxes(ax,'x');
+    end
 end

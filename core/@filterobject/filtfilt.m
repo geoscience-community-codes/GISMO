@@ -62,4 +62,4 @@ switch f.type
         [b,a] = butter(f.poles, WN);
     case 'L';
         [b,a] = butter(f.poles, WN);
-end;
+end
