@@ -1,58 +1,11 @@
-function iceweb(ds, varargin)
+function iceweb2017(thissubnet, ds, ChannelTagList, ...
+    snum, enum, nummins, products, PARAMS, paths)
     debug.printfunctionstack('>');
-    % Process arguments
-    p = inputParser;
-    
-       p.addParameter('runmode', 'archive');
-       p.addParameter('snum', 0);
-       p.addParameter('enum', 0);
-       p.addParameter('nummins', 10);
-       p.addParameter('delaymins', 0);
-       p.addParameter('thissubnet', '');
-       p.addParameter('matfile', 'pf/tremor_runtime.mat');
-       p.parse(varargin{:});
-       
-       thisrunmode = p.Results.runmode;
-       snum = p.Results.snum;
-       enum = p.Results.enum;
-       nummins = p.Results.nummins;
-       delaymins = p.Results.delaymins;
-       thissubnet = p.Results.thissubnet;
-       matfile = p.Results.matfile;
-       
-    if exist(matfile, 'file')
-        load(matfile);
-        PARAMS.runmode = thisrunmode;
-        clear thisrunmode;
-    else
-        warning(sprintf('matfile %s not found',matfile))
-        return
-    end
 
     % load state
     statefile = sprintf('iceweb_%s_state.mat',thissubnet);
     if exist(statefile, 'file') && ~strcmp(PARAMS.runmode, 'test')
         load(statefile)
-        if strcmp(thissubnet, subnet0)
-		%snum = snum0;
-	end
-    end
-
-    % subset on thissubnet
-    if ~strcmp(thissubnet, '') 
-        index = 0;
-        for c=1:length(subnets)
-            if strcmp(subnets(c).name, thissubnet)
-                index = c;
-            end
-        end
-        if index > 0
-            subnets = subnets(index);
-            debug.print_debug(1, 'subnet found')
-        else
-            warning('subnet not found')
-            return;
-        end
     end
 
     % end time
@@ -60,87 +13,31 @@ function iceweb(ds, varargin)
         enum = utnow - delaymins/1440;
     end
     
-    % since the standard way is to create Antelope databases from day-long
-    % miniseed files for each ChannelTag, and reference these from
-    % day-long databases, I could add a check here using
-    % listMiniSEEDfiles to see if there are any data files for each day
-    % before I look for each 10 minute window for that day with
-    % waveform_wrapper
-    %   steps:
-        % check if datasource is Antelope
-        % loop over each day from snum to enum
-        % call listMiniSEEDfiles
-        % see for which ChannelTag I get exists=2, and then only use that
-        % list of successful channeltags for that day
-        % create timewindows for that day
-        % call iceweb_helper for each time window
+      
+    % loop one day at a time
+    for dnum = floor(snum):ceil(enum)
+        disp(datestr(dnum))
         
-    % NEW STUFF TO IMPLEMENT ABOVE SUGGESTION - MIGHT NOT WORK   %%% NOTE THIS ASSUMES MINISEED FILES THROUGH ANTELOPE %%%%%%%%%% 
-    if exist('ds','var') & strcmp(get(ds,'type'),'antelope')
+%         % figure out which channeltags are active for this day?            
+%         ctags_thisday = get_channeltags_thisday(ds, ctags, dnum); % subset to channeltags valid
+%         if isempty(todaysites)
+%             continue;
+%         end
+        
+%         % subset to sites for which the files pointed to by the
+%         % wfdisc table, actually exist
+%         m = listMiniseedFiles(ds, chantag, dnum, dnum+1);
+%         ctags_thisday = ctags_thisday([m.exists]==2);
+        
+        % get timewindow for this day
+        timewindows = get_timewindow(min([enum dnum+1]), nummins, max([dnum snum]));
 
-        for c=1:numel(subnets)
-		debug.print_debug(1,'Sites from MAT file - should be all in range')
-            sites = subnets(c).sites;
-	    show_sites(sites)
-            for dnum = floor(snum):ceil(enum)
-                disp(datestr(dnum))
-                   
-                % subset to channels active for today according to
-                % site/sitechan db
-                todaysites = get_channeltags_active(sites, dnum); % subset to channeltags valid
-                if isempty(todaysites)
-                    continue;
-                end
-		debug.print_debug(1,'Subsetting to sites active today')
-		show_sites(todaysites)
-
-                % change channel tag if this is MV network because channels in wfdisc table
-                % are like SHZ_--
-                chantag = [todaysites.channeltag];
-                for cc=1:numel(chantag)
-                    if strcmp(chantag(cc).network, 'MV')
-                        chantag(cc).channel = sprintf('%s_--',chantag(cc).channel);
-                    end
-                end
-
-                % subset to sites for which the files pointed to by the
-                % wfdisc table, actually exist
-                m = listMiniseedFiles(ds, chantag, dnum, dnum+1);
-                todaysites = todaysites([m.exists]==2);
-                tw = get_timewindow(min([enum dnum+1]), nummins, max([dnum snum]));
-		debug.print_debug(1,'Subsetting to sites with miniseed files')
-		show_sites(todaysites)
-
-                newsubnets = subnets(c);
-                newsubnets.sites = todaysites;
-
-
-            	if ~strcmp(PARAMS.runmode,'test')
-            	    % loop over timewindows
-            	    for count = 1:length(tw.start)
-            	        thistw.start = tw.start(count);	
-            	        thistw.stop = tw.stop(count);	
-            	        iceweb_helper(paths, PARAMS, newsubnets, thistw, ds);
-            	    end
-            	end
-	    end	
-        end
-    else
-        % THE WAY WE USED TO DO IT
-        % timewindows
-        if snum==0
-            tw = get_timewindow(enum, nummins);
-        else
-            tw = get_timewindow(enum, nummins, snum);
-        end
-        snum = enum - nummins/1440;
-
-        % loop over timewindows backwards, thereby prioritizing most recent data
-        for count = length(tw.start) : -1 : 1
-            thistw.start = tw.start(count);	
-            thistw.stop = tw.stop(count);	
-            if ~strcmp(runmode,'test')
-            	iceweb_helper(paths, PARAMS, subnets, thistw);
+        if ~strcmp(PARAMS.runmode,'test')
+            % loop over timewindows
+            for count = 1:length(timewindows.start)
+                this_timewindow.start = timewindows.start(count);	
+                this_timewindow.stop = timewindows.stop(count);	
+                iceweb_helper(paths, PARAMS, newsubnets, this_timewindow, ds, products);
             end
         end
     end
@@ -148,7 +45,7 @@ function iceweb(ds, varargin)
 end
 
 
-function iceweb_helper(paths, PARAMS, subnets, tw, ds)
+function iceweb_helper(paths, PARAMS, subnets, tw, ds, products)
     debug.printfunctionstack('>');
 
     MILLISECOND_IN_DAYS = (1 / 86400000);
@@ -156,59 +53,30 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
     makeSamFiles = false;
     makeSoundFiles = true; 
 
-    if ~exist('ds','var')
-        for c=1:numel(PARAMS.datasource)
-            if strcmp(PARAMS.datasource(c).type, 'antelope')
-                ds(c) = datasource(PARAMS.datasource(c).type, PARAMS.datasource(c).path);
-%                 ds(c) = datasource('antelope', ...
-%                '/raid/data/MONTSERRAT/antelope/db/db%04d%02d%02d',...
-%                'year','month','day');
-            else
-                ds(c) = datasource(PARAMS.datasource(c).type, PARAMS.datasource(c).path, str2num(PARAMS.datasource(c).port));
-            end
+
+    snum = tw.start;
+    enum = tw.stop - MILLISECOND_IN_DAYS; % try to skip last sample
+
+    % load state
+    statefile = sprintf('iceweb_%s_state.mat',subnet);
+    if exist(statefile, 'file')
+        load(statefile)
+        if snum < snum0 
+            continue
         end
     end
-    %gismo_datasource = gismo_datasource(1);
-
-    %% LOOP OVER SUBNETS / SITES
-    for subnet_num=1:length(subnets)
-        % which subnet?
-        subnet = subnets(subnet_num).name;
-
-        % get IceWeb sites
-        sites = subnets(subnet_num).sites;
-        if isempty(sites)
-            continue;
-        end
-
-        % loop over all elements of tw
-        for twcount = 1:length(tw.start)
-
-            snum = tw.start(twcount);
-            enum = tw.stop(twcount) - MILLISECOND_IN_DAYS; % try to skip last sample
-
-	    % load state
-	    statefile = sprintf('iceweb_%s_state.mat',subnet);
-	    if exist(statefile, 'file')
-            load(statefile)
-            if strcmp(subnet, subnet0)
-                if snum < snum0 % skip
-                    %continue
-                end
-            end
-	    end
 		
-	    % save state
-	    ds0=ds; sites0=sites; snum0=snum; enum0=enum; subnet0 = subnet;
-	    save(statefile, 'ds0', 'sites0', 'snum0', 'enum0', 'subnet0');
-	    clear ds0 sites0 snum0 enum0 subnet0
+    % save state
+    ds0=ds; sites0=sites; snum0=snum; enum0=enum; subnet0 = subnet;
+    save(statefile, 'ds0', 'sites0', 'snum0', 'enum0', 'subnet0');
+    clear ds0 sites0 snum0 enum0 subnet0
 
-            % Have we already process this timewindow?
-            spectrogramFilename = get_spectrogram_filename(paths,subnet,snum);
-             if exist(spectrogramFilename, 'file')
-                 %fprintf('%s already exists - skipping\n',spectrogramFilename);
-                 %continue
-             end
+    % Have we already process this timewindow?
+    spectrogramFilename = get_spectrogram_filename(paths,subnet,snum);
+     if exist(spectrogramFilename, 'file')
+         %fprintf('%s already exists - skipping\n',spectrogramFilename);
+         %continue
+     end
             
             %% Get waveform data
             debug.print_debug(0, sprintf('%s %s: Getting waveforms for %s from %s to %s at %s',mfilename, datestr(utnow), subnet , datestr(snum), datestr(enum)));

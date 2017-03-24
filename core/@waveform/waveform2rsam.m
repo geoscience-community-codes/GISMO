@@ -1,11 +1,11 @@
-function s = waveform2rsam(w, measure, samplingPeriod)
+function s = waveform2rsam(w, measure, samplingIntervalSeconds)
 %WAVEFORM2RSAM create an RSAM-like object from a waveform object
 % RSAM data are typically 1 sample per minute, where each sample is the 
 % average amplitude of that minute of data. They are used extensively used
 % in volcano monitoring.
 %
 % Usage:
-%   s = rsam(waveform, method, samplingPeriod)
+%   s = rsam(waveform, method, samplingIntervalSeconds)
 %
 %   Input Arguments
 %       WAVEFORM: waveform object       N-dimensional
@@ -18,7 +18,7 @@ function s = waveform2rsam(w, measure, samplingPeriod)
 %           'median' : mean value
 %           'rms' : rms value (added 2011/06/01)
 %
-%       SAMPLINGPERIOD : the number of seconds between samples (Default:
+%       samplingIntervalSeconds : the number of seconds between samples (Default:
 %       60s)
 %
 %
@@ -38,8 +38,8 @@ function s = waveform2rsam(w, measure, samplingPeriod)
 if ~exist('measure', 'var')
     measure = 'mean';
 end
-if ~exist('samplingPeriod', 'var')
-    samplingPeriod = 60;
+if ~exist('samplingIntervalSeconds', 'var')
+    samplingIntervalSeconds = 60;
 end
 
 % detrend data after fill gaps to get rid of NaNs marking missing values
@@ -47,10 +47,10 @@ w = fillgaps(w, 'interp');
 w = detrend(w);
 
 for i = 1:numel(w)
-    Wsamplingperiod = 1.0 / get(w(i), 'freq');
-    % either set to whatever samplingPeriod seconds of data are, or the
+    WsamplingIntervalSeconds = 1.0 / get(w(i), 'freq');
+    % either set to whatever samplingIntervalSeconds seconds of data are, or the
     % length of data if less
-    crunchfactor = min([round(samplingPeriod / Wsamplingperiod) numel(get(w(i),'data'))]);
+    crunchfactor = min([round(samplingIntervalSeconds / WsamplingIntervalSeconds) numel(get(w(i),'data'))]);
     wabs = set(w(i), 'data', abs(get(w(i),'data')) );
     wresamp = resample(wabs, measure, crunchfactor);
     s(i) = rsam(get(wresamp,'timevector')', get(wresamp,'data')', ...
