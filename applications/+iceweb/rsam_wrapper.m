@@ -45,17 +45,25 @@ function rsam_wrapper(subnetName, datasourceObject, ChannelTagList, ...
 %                  better. So measures could be {'max';'median'}.
 %
 % Example:
-%     datasourceObject = datasource('antelope', '/raid/data/sakurajima/db')
-%     startTime = datenum(2009,
-%        rsam_wrapper('Sakurajima', datasourceObject, ChannelTagList, ...
+%       datasourceObject = datasource('antelope', '/raid/data/sakurajima/db')
+%       ChannelTagList(1) = ChannelTag('JP.SAKA.--.BHZ');
+%       ChannelTagList(2) = ChannelTag('JP.SAKB.--.BHZ');
+%       startTime = datenum(2015,5,28);
+%       endTime = datenum(2015,6,2);
+%       gulpMinutes = 10;
+%       samplingIntervalSeconds = 60;
+%       measures = {'mean'};
+%       rsam_wrapper('Sakurajima', datasourceObject, ChannelTagList, ...
 %                     startTime, endTime, gulpMinutes, ...
 %                     samplingIntervalSeconds, measures) 
 
 % set up products structure for iceweb
+products.waveform_plot.doit = true;
 products.rsam.doit = true;
 products.rsam.samplingIntervalSeconds = samplingIntervalSeconds;
 products.rsam.measures = measures;
 products.spectrograms.doit = false;
+
 products.spectrograms.timeWindowMinutes = [10 120];
 products.spectral_data.doit = false;
 products.spectral_data.samplingIntervalSeconds = samplingIntervalSeconds;
@@ -66,4 +74,4 @@ products.helicorders.timeWindowMinutes = [];
 products.soundfiles.doit = false;
 
 % call iceweb_wrapper
-iceweb.iceweb_wrapper(subnetName, datasourceObject, ChannelTagList, startTime, endTime, gulpMinutes, products)
+iceweb.iceweb2017(subnetName, datasourceObject, ChannelTagList, startTime, endTime, gulpMinutes, products)

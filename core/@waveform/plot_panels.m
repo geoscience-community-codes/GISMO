@@ -59,8 +59,7 @@ function fh=plot_panels(w, alignWaveforms, arrivalobj)
         end
         y=data-offset;
         y(isnan(y))=0;
-        ax(wavnum)=axes('Position',[left 0.98-wavnum*trace_height width trace_height]); 
-        
+        ax(wavnum)=axes('Position',[left 0.98-wavnum*trace_height width trace_height]);   
         
         % arrivals
         if exist('arrivalobj','var')
@@ -105,7 +104,8 @@ function fh=plot_panels(w, alignWaveforms, arrivalobj)
         end
 %         xlim = get(gca, 'XLim');
 %         set(gca,'XTick', linspace(xlim(1), xlim(2), 11));
-        if max(w(wavnum)) >= 0 % added for RSAM data
+
+        if all((get(w(wavnum),'data'))>=0) % added for RSAM data
             ylims = get(gca, 'YLim');
             set(gca, 'YLim', [0 ylims(2)]);
         end
