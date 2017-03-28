@@ -44,8 +44,13 @@ function plot(rsam_vector, varargin)
     % Plot the data graphs
     for c = 1:length(rsam_vector)
         self = rsam_vector(c);
-        thisfignum = find(ismember(unique_units, self.units)) + previousfignum;
-        figure(thisfignum);
+%         thisfignum = find(ismember(unique_units, self.units)) + previousfignum;
+%         figure(thisfignum);
+        try
+            figure(previousfignum + c);
+        catch
+            figure;
+        end
         
         hold on; 
         t = self.dnum;
@@ -64,9 +69,11 @@ function plot(rsam_vector, varargin)
                 % plot on a linear axis, with station name as a y label
                 % datetick too, add measure as title, fiddle with the YTick's and add max(y) in top left corner
                 if ~p.Results.fillbelow
-                    handlePlot = plot(t, y, symbol, 'Color', lineColour{c});
+                    %handlePlot = plot(t, y, symbol, 'Color', lineColour{c});
+                    handlePlot = plot(t, y, symbol, 'Color', lineColour{1});
                 else
-                    handlePlot = fill([min(t) t max(t)], [min([y 0]) y min([y 0])], lineColour{c});
+                    %handlePlot = fill([min(t) t max(t)], [min([y 0]) y min([y 0])], lineColour{c});
+                    handlePlot = fill([min(t) t max(t)], [min([y 0]) y min([y 0])], lineColour{1});
                 end
 
                 % if c ~= numel(rsam_vector)
@@ -97,9 +104,10 @@ function plot(rsam_vector, varargin)
                 % make a logarithmic plot, with a marker size and add the station name below the x-axis like a legend
                 y = log10(y);  % use log plots
 
-                handlePlot = plot(t, y, symbol, 'Color', lineColour{c},...
+                %                 handlePlot = plot(t, y, symbol, 'Color', lineColour{c},...
+                %                    'MarkerSize', 1.0);
+                handlePlot = plot(t, y, symbol, 'Color', lineColour{1},...
                    'MarkerSize', 1.0);
-
                 if strfind(self.measure, 'dr')
                     %ylabel(sprintf('%s (cm^2)',self(c).measure));
                     %ylabel(sprintf('D_R (cm^2)',self(c).measure));

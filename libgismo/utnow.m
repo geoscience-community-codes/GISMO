@@ -21,8 +21,6 @@ function utdnum=utnow()
         unixnow = datenum(unixnowstr);
         hour_adjust = round(24 * (unixnow - atomtime));
     end
-    
-    hour_adjust
 
     if isunix
         [status, unixnowstr] = system('date +"%Y-%m-%d %H:%M:%S"');

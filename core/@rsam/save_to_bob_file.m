@@ -54,7 +54,7 @@ function save_to_bob_file(self, filepattern)
         
         SECONDS_PER_DAY = 60 * 60 * 24;
         for yyyy=syyy:eyyy
-            self(c).sampling_interval
+
             SAMPLES_PER_DAY = SECONDS_PER_DAY / self(c).sampling_interval;
 
             % how many days in this year?

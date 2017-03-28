@@ -9,7 +9,7 @@ function rsam_wrapper(subnetName, datasourceObject, ChannelTagList, ...
 %   compute RSAM objects from those waveform objects (using waveform2rsam)
 %   and then save data from those RSAM objects into binary "BOB" files.
 %
-%   rsam_wrapper is actually a driver for iceweb_wrapper. iceweb_wrapper
+%   rsam_wrapper is actually a driver for iceweb2017. iceweb2017
 %   will drive other products such as spectrograms and helicorders if
 %   asked. But rsam_wrapper asks it only to compute RSAM data.
 %
@@ -37,12 +37,20 @@ function rsam_wrapper(subnetName, datasourceObject, ChannelTagList, ...
 %
 %       samplingIntervalSeconds - compute RSAM with 1 sample from this many
 %                             seconds of waveform data. Usually 60 seconds.
-%                             See also WAVEFORM2RSAM.
+%                             See also WAVEFORM2RSAM. If multiple measures
+%                             are used (see below) you can give multiple
+%                             sampling intervals, e.g.
+%                                   measures = {'mean';'max';'median'}
+%                                   samplingIntervalSeconds = [60, 10, 600]
+%                             But if you want them all to be the same,
+%                             you only need pass a scalar.
 %
 %       measures - each RSAM sample is usually the 'mean' of each 60 second
 %                  timewindow. But other stats are probably better. For
 %                  events, 'max' works better. For tremor, 'median' works
-%                  better. So measures could be {'max';'median'}.
+%                  better. To compute multiple versions of RSAM using
+%                  different stats, use a cell array, 
+%                                         e.g. measures = {'max';'median'}.
 %
 % Example:
 %       datasourceObject = datasource('antelope', '/raid/data/sakurajima/db')
@@ -56,6 +64,12 @@ function rsam_wrapper(subnetName, datasourceObject, ChannelTagList, ...
 %       rsam_wrapper('Sakurajima', datasourceObject, ChannelTagList, ...
 %                     startTime, endTime, gulpMinutes, ...
 %                     samplingIntervalSeconds, measures) 
+%
+% See also: iceweb.iceweb2017
+return
+if ~isa(measures,'cell')
+    measures = {measures};
+end
 
 % set up products structure for iceweb
 products.waveform_plot.doit = true;

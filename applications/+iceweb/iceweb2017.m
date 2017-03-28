@@ -112,7 +112,12 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
     if products.rsam.doit
         for measureNum = 1:numel(products.rsam.measures)
             measure = products.rsam.measures{measureNum};
-            rsamobj = waveform2rsam(w, measure, products.rsam.samplingIntervalSeconds);
+            if numel(products.rsam.samplingIntervalSeconds)>1
+                samplingInterval = products.rsam.samplingIntervalSeconds[measureNum];
+            else
+                samplingInterval = products.rsam.samplingIntervalSeconds;
+            end
+            rsamobj = waveform2rsam(w, measure, products.rsam.samplingInterval);
             %rsamobj.plot_panels()
             rsamobj.save_to_bob_file(fullfile('iceweb', 'rsam_data', 'SSSS.CCC.YYYY.MMMM.bob'));
         end
