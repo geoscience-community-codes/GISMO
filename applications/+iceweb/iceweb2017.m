@@ -50,7 +50,8 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
     if ~exist(wavrawmat,'file')
         %% Get waveform data
         debug.print_debug(0, sprintf('%s %s: Getting waveforms for %s from %s to %s at %s',mfilename, datestr(utnow), subnetName , datestr(snum), datestr(enum)));
-        w = waveform(ds, ChannelTagList, snum, enum);
+        %w = waveform(ds, ChannelTagList, snum, enum);
+        w = iceweb.waveform_wrapper(ds, ChannelTagList, snum, enum); % returns 1 waveform per channeltag, in same order
         if isempty(w)
             ds
             ChannelTagList
@@ -103,19 +104,47 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
     if products.waveform_plot.doit
         close all
         plot_panels(w)
-        input('continue any key','s');
         fname = fullfile('iceweb', 'plots', 'waveforms', subnetName, sprintf('%s.png',datestr(snum,30)) );
         orient tall;
         iceweb.saveImageFile(fname, 72); % this should make directory tree too
     end
     
-%     % RSAM
-%     if products.rsam.doit
-%         for measure = products.rsam.measures
-%             rsamobj = waveform2rsam(w);
-%             rsamobj.save_to_bob_file(fullfile('data', 'rsam', subnetName, 'SSSS.CCC.YYYY.MMMM.bob'));
-%         end
-%     end
+    % RSAM
+    if products.rsam.doit
+        for measureNum = 1:numel(products.rsam.measures)
+            measure = products.rsam.measures{measureNum};
+            rsamobj = waveform2rsam(w, measure, products.rsam.samplingIntervalSeconds);
+            %rsamobj.plot_panels()
+            rsamobj.save_to_bob_file(fullfile('iceweb', 'rsam_data', 'SSSS.CCC.YYYY.MMMM.bob'));
+        end
+    end
+
+    
+    % PLOT SPECTROGRAMS
+    if products.spectrograms.doit
+        spectrogramFilename = fullfile('iceweb', 'plots', 'spectrograms', subnetName, sprintf('%s.png',datestr(snum,30)) );
+        debug.print_debug(1, sprintf('Creating %s',spectrogramFilename))
+        close all
+        spectrogramFraction = 0.75;
+        specObj = spectralobject(1024, 924, 10, [60 120]);
+        [sgresult, Tcell, Fcell, Ycell] = iceweb.spectrogram_iceweb(specObj, w, spectrogramFraction, iceweb.extended_spectralobject_colormap);
+
+            
+        if sgresult > 0 % sgresult = number of waveforms for which a spectrogram was successfully plotted
+            % SAVE SPECTROGRAM PLOT TO IMAGE FILE AND CREATE THUMBNAIL
+            orient tall;
+
+            if iceweb.saveImageFile(spectrogramFilename, 72)
+
+                fileinfo = dir(spectrogramFilename); % getting a weird Index exceeds matrix dimensions error here.
+                debug.print_debug(0, sprintf('%s %s: spectrogram PNG size is %d',mfilename, datestr(utnow), fileinfo.bytes));	
+
+%                 % make thumbnails
+%                 makespectrogramthumbnails(spectrogramFilename, spectrogramFraction);
+
+            end
+        end
+    end
     
   
     debug.printfunctionstack('<');

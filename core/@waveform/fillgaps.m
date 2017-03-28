@@ -1,7 +1,8 @@
 function w = fillgaps(w,value, gapvalue)
    % FILLGAPS - fill missing data with values of your choice
    % W = fillgaps(W,number) fills data with the number of your choice
-   %   "number" can also be nan or inf or -inf
+   %   "number" can also be NaN or Inf or -Inf (GISMO is designed to mark
+   %   missing values with NaN).
    %
    % W = fillgaps(W,[]) removes missing data from waveform.  Warning, the
    %   resulting timing issues are NOT corrected for!
@@ -16,7 +17,8 @@ function w = fillgaps(w,value, gapvalue)
    %    choice (can also be Inf, -Inf, NaN)
    %
    %    'interp' - assuming missing values are marked by NaN, this will use
-   %    cubic interpolation to estimate the missing values
+   %    linear interpolation to estimate the missing values. No values are
+   %    extrapolated.
    %
    % FILLGAPS is designed to replace NaN values.  However, if if you use
    % W = fillgaps(W,number, gapvalue), then ALL data points with the value
@@ -55,9 +57,14 @@ function w = fillgaps(w,value, gapvalue)
             w(N).data(getgaps(w(N))) = value;
          end
        case 'interp' % blame Glenn, inspired by http://www.mathworks.com/matlabcentral/fileexchange/8225-naninterp by E Rodriguez
+           % 20170328: changed spline interpolation - which blows up because it will extrapolate too - into
+           % linear interpolation. But with linear interpolation, since it
+           % does not extrapolate, if there are NaNs from beginning to some
+           % sample, these will not be replaced. So replace these by zeros.
            for N = 1:numel(w);
                X = get(w(N),'data');
-               X(isnan(X)) = interp1(find(~isnan(X)), X(~isnan(X)), find(isnan(X)),'spline');
+               X(isnan(X)) = interp1(find(~isnan(X)), X(~isnan(X)), find(isnan(X)),'linear');
+               X(isnan(X)) = 0;
                w(N) = set(w(N),'data',X);
            end
       otherwise

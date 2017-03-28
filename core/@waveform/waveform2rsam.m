@@ -42,19 +42,25 @@ if ~exist('samplingIntervalSeconds', 'var')
     samplingIntervalSeconds = 60;
 end
 
-% detrend data after fill gaps to get rid of NaNs marking missing values
-w = fillgaps(w, 'interp');
-w = detrend(w);
+% clean waveform objects - to remove linear and non-linear trends
+w = clean(w);
 
 for i = 1:numel(w)
-    WsamplingIntervalSeconds = 1.0 / get(w(i), 'freq');
-    % either set to whatever samplingIntervalSeconds seconds of data are, or the
-    % length of data if less
-    crunchfactor = min([round(samplingIntervalSeconds / WsamplingIntervalSeconds) numel(get(w(i),'data'))]);
-    wabs = set(w(i), 'data', abs(get(w(i),'data')) );
-    wresamp = resample(wabs, measure, crunchfactor);
-    s(i) = rsam(get(wresamp,'timevector')', get(wresamp,'data')', ...
-        'ChannelTag', get(wresamp, 'ChannelTag'), ...
-        'measure', measure, ...
-        'units', get(wresamp, 'units'));
+    if ~isempty(w(i))
+        WsamplingIntervalSeconds = 1.0 / get(w(i), 'freq');
+        % either set to whatever samplingIntervalSeconds seconds of data are, or the
+        % length of data if less
+        crunchfactor = min([round(samplingIntervalSeconds / WsamplingIntervalSeconds) numel(get(w(i),'data'))]);
+        wabs = set(w(i), 'data', abs(get(w(i),'data')) );
+        wresamp = resample(wabs, measure, crunchfactor);
+        s(i) = rsam(get(wresamp,'timevector')', get(wresamp,'data')', ...
+            'ChannelTag', get(wresamp, 'ChannelTag'), ...
+            'measure', measure, ...
+            'units', get(wresamp, 'units'));
+    else
+        s(i) = rsam([], [], ...
+            'ChannelTag', get(w(i), 'ChannelTag'), ...
+            'measure', measure, ...
+            'units', get(w(i), 'units'));        
+    end
 end

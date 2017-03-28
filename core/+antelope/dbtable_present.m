@@ -1,14 +1,21 @@
-function present=dbtable_present(dbpath, table)
+function present=dbtable_present(dbpath, tablename)
 % DBTABLE_PRESENT Check if a Datascope database table exists and has more than 0 rows. 
 %
-%    PRESENT = DBTABLE_PRESENT(DBPATH, TABLE)
+%    PRESENT = DBTABLE_PRESENT(DBPATH, TABLENAME)
 
 % AUTHOR: Glenn Thompson, UAF-GI
 % $Date$
 % $Revision$
 present = 0;
+if isa(dbpath,'cell')
+    dbpath = dbpath{1};
+end
+if isa(tablename,'cell')
+    tablename = tablename{1};
+end
+tablepath = sprintf('%s.%s',dbpath,tablename);
+if exist(dbpath, 'file') || exist(tablepath, 'file')
 
-if exist(dbpath, 'file') || exist(sprintf('%s.%s',dbpath,table), 'file')
    try
      db = dbopen(dbpath, 'r');
    catch
@@ -16,7 +23,7 @@ if exist(dbpath, 'file') || exist(sprintf('%s.%s',dbpath,table), 'file')
      return;
    end
    try
-       db = dblookup_table(db, table);
+       db = dblookup_table(db, tablename);
        numrows = dbquery(db, 'dbRECORD_COUNT');
        if numrows > 0
           present = numrows;
@@ -35,8 +42,8 @@ if exist(dbpath, 'file') || exist(sprintf('%s.%s',dbpath,table), 'file')
           
        end
     catch
-         debug.print_debug(0, 'Failure: dblookup_table fails for %s.%s',dbpath,table);
+         debug.print_debug(0, 'Failure: dblookup_table fails for %s',tablepath);
     end
 else
-	debug.print_debug(0,'Failure: cannot find %s or %s.%s on this computer.',dbpath,dbpath,table);
+	debug.print_debug(0,'Failure: cannot find %s or %s.%s on this computer.',dbpath,tablepath);
 end

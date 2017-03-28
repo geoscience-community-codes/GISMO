@@ -51,7 +51,11 @@ function save_to_bob_file(self, filepattern)
             end
         end 
 
+        
+        SECONDS_PER_DAY = 60 * 60 * 24;
         for yyyy=syyy:eyyy
+            self(c).sampling_interval
+            SAMPLES_PER_DAY = SECONDS_PER_DAY / self(c).sampling_interval;
 
             % how many days in this year?
             daysperyear = 365;
@@ -65,13 +69,13 @@ function save_to_bob_file(self, filepattern)
 
             if ~exist(fname,'file')
                     debug.print_debug(2, ['Creating ',fname])
-                    rsam.make_bob_file(fname, daysperyear);
+                    rsam.make_bob_file(fname, daysperyear, SAMPLES_PER_DAY);
             end            
 
-            datapointsperday = 1440;
+            SAMPLES_PER_DAY = SECONDS_PER_DAY / self(c).sampling_interval;
 
             % round times to minute
-            dnum = round((dnum-1/86400) * 1440) / 1440;
+            dnum = round((dnum-1/SECONDS_PER_DAY) * SAMPLES_PER_DAY) / SAMPLES_PER_DAY;
 
             % subset for current year
             dnumy = dnum(dnum < datenum(yyyy + 1, 1, 1));
@@ -79,7 +83,7 @@ function save_to_bob_file(self, filepattern)
 
             % find the next contiguous block of data
             diff=dnumy(2:end) - dnumy(1:end-1);
-            i = find(diff > 1.5/1440 | diff < 0.5/1440);        
+            i = find(diff > 1.5/SAMPLES_PER_DAY | diff < 0.5/SAMPLES_PER_DAY);        
 
             disp(sprintf('Saving to %s',fname));
           
@@ -89,7 +93,7 @@ function save_to_bob_file(self, filepattern)
                 for c=1:length(dnumy)
 
                     % write the data
-                    startsample = round((dnumy(c) - datenum(yyyy,1,1)) * datapointsperday);
+                    startsample = round((dnumy(c) - datenum(yyyy,1,1)) * SAMPLES_PER_DAY);
                     offset = startsample*4;
                     fid = fopen(fname,'r+');
                     fseek(fid,offset,'bof');
@@ -101,11 +105,11 @@ function save_to_bob_file(self, filepattern)
                 % fast mode
 
                 % write the data
-                startsample = round((dnumy(1) - datenum(yyyy,1,1)) * datapointsperday);
+                startsample = round((dnumy(1) - datenum(yyyy,1,1)) * SAMPLES_PER_DAY);
                 offset = startsample*4;
                 fid = fopen(fname,'r+','l'); % little-endian. Anything written on a PC is little-endian by default. Sun is big-endian.
                 fseek(fid,offset,'bof');
-                debug.print_debug(2, sprintf('saving data with mean of %e from to file %s, starting at position %d/%d',nanmean(datay),fname,startsample,(datapointsperday*daysperyear)))
+                debug.print_debug(2, sprintf('saving data with mean of %e from to file %s, starting at position %d/%d',nanmean(datay),fname,startsample,(SAMPLES_PER_DAY*daysperyear)));
                 fwrite(fid,datay,'float32');
                 fclose(fid);
             end

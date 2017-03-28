@@ -40,9 +40,16 @@ function outputWaveforms = load_antelope(request, specificDatabase)
    if exist('specificDatabase','var') % called with a specific database, not a datasource
        % but may be a nested call from a datasource using RecursivelyLoadFromEachDatabase()
       database = specificDatabase;
+      if isa(database,'cell')
+          database = database{1};
+      end
       outputWaveforms = emptyWaveform();
       
       % Glenn 2016/05/12 Check if wfdisc table exists
+      if ~antelope.dbtable_present(database, 'wfdisc')
+          disp(sprintf('database %s contains no wfdisc table',database));
+          return
+      end
       
       % Glenn 2016/05/12 Build expressions here for subsetting database
       % station or channel may have a wildcard, but not both
@@ -492,12 +499,20 @@ function w = trace2waveform(tr)
         end
         [trunits, ~] = segtype2units(st(cc).segtype);
         wt(cc) = waveform(ChannelTag(st(cc).net, st(cc).sta, '',st(cc).chan), st(cc).samprate, epoch2datenum(st(cc).time), y, trunits);
-        
         if calib~=0
             wt(cc) = addfield(wt(cc),'calib', st(cc).calib);
-            wt(cc) = set(wt(cc), 'units', trunits);
+            if ~strcmp(trunits,'null')
+                wt(cc) = set(wt(cc), 'units', trunits);
+            else
+                if st(cc).chan(2) == 'D'
+                    wt(cc) = set(wt(cc), 'units', 'Pa?');
+                elseif st(cc).chan(2) == 'H'
+                    wt(cc) = set(wt(cc), 'units', 'nm/sec?');
+                end
+            end
             wt(cc) = addfield(wt(cc), 'calibration_applied', 'YES');
         else
+            wt(cc) = set(wt(cc), 'units', 'Counts?');
             wt(cc) = addfield(wt(cc), 'calibration_applied', 'NO');
         end
     end

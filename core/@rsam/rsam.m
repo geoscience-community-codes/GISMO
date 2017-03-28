@@ -170,13 +170,14 @@ classdef rsam
         plot_panels(self);
         w = rsam2waveform(self);
         save_to_bob_file(self, filepattern)
-        save_to_text_file(self, filepath)       
+        save_to_text_file(self, filepath)  
+        result = isempty(self);
 
     end % end of dynamic methods
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
     methods(Access = public, Static)
         self = read_bob_file(varargin)
-        make_bob_file(outfile, days)
+        make_bob_file(outfile, days, samples_per_day)
     end
 
 end % classdef

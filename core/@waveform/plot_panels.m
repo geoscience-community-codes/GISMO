@@ -1,4 +1,4 @@
-function fh=plot_panels(w, alignWaveforms, arrivalobj)
+function plot_panels(w, alignWaveforms, arrivalobj)
 %PLOT_PANELS Plot multiple waveform objects as separate linked panels
 %   PLOT_PANELS(w, alignWaveforms) 
 %   where:
@@ -14,6 +14,8 @@ function fh=plot_panels(w, alignWaveforms, arrivalobj)
 
 % Glenn Thompson 2014/11/05, generalized after a function written in 2000
 % to operate on Seisan files only
+
+    w = iceweb.waveform_remove_empty(w);
 
     if numel(w)==0 || isempty(w)
         warning('no waveforms to plot')

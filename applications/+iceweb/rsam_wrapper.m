@@ -63,8 +63,7 @@ products.rsam.doit = true;
 products.rsam.samplingIntervalSeconds = samplingIntervalSeconds;
 products.rsam.measures = measures;
 products.spectrograms.doit = false;
-
-products.spectrograms.timeWindowMinutes = [10 120];
+products.spectrograms.timeWindowMinutes = 10;
 products.spectral_data.doit = false;
 products.spectral_data.samplingIntervalSeconds = samplingIntervalSeconds;
 products.reduced_displacement.doit = false;
