@@ -1,11 +1,15 @@
-function plot_panels(w, alignWaveforms, arrivalobj)
+function plot_panels(w, varargin)
 %PLOT_PANELS Plot multiple waveform objects as separate linked panels
 %   PLOT_PANELS(w, alignWaveforms) 
 %   where:
 %       w = a vector of waveform objects
 %       alignWaveforms is either true or false (default)
 %   PLOT_PANELS(w) will plot each waveform is plotted against absolute time.
-%   PLOT_PANELS(w, true) will align the waveforms on their start times.
+%   PLOT_PANELS(w, 'alignWaveforms', true) will align the waveforms on their start times.
+%   PLOT_PANELS(w, 'arrivals', ArrivalObject) will superimpose arrival
+%                                             times on the waveforms.
+%   PLOT_PANELS(w, 'visible', 'off') will prevent the plot showing on the
+%                                    screen.
 %
 % Along the top of each trace are displayed 3 numbers in different colors:
 %   blue - the mean offset of the trace
@@ -22,8 +26,15 @@ function plot_panels(w, alignWaveforms, arrivalobj)
         return
     end
     
-    if ~exist('alignWaveforms', 'var')
-            alignWaveforms = false;
+    p = inputParser;
+    p.addParameter('alignWaveforms', false, @isnumeric); % optional name-param pairs
+    p.addParameter('visible', 'on', @isstr)
+    p.addParameter('arrivals', [])
+    p.parse(varargin{:});
+    alignWaveforms = p.Results.alignWaveforms;
+    visibility = p.Results.visible;
+    if isa(p.Results.arrivals, 'Arrival')
+        arrivalobj = p.Results.arrivals;
     end
     
     % get the first start time and last end time
@@ -39,6 +50,7 @@ function plot_panels(w, alignWaveforms, arrivalobj)
     nwaveforms = numel(w);
     previousfignum = get_highest_figure_number();
     fh=figure(previousfignum+1);
+    set(fh,'visible',visibility);
     trace_height=0.87/nwaveforms;
     left=0.12;
     width=0.78;

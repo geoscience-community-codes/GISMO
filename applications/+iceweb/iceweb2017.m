@@ -62,7 +62,7 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
         end
         mkdir(fileparts(wavrawmat));
         disp(sprintf('Saving waveform data to %s',wavrawmat));
-        save(wavrawmat);   
+        save(wavrawmat,'w');   
     end
     debug.printfunctionstack('<');
 
@@ -78,8 +78,7 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
         end
 
         % Clean the waveforms
-        w = fillgaps(w, 'interp');
-        w = detrend(w);
+        w = clean(w);
 
 %         % Apply calibs which should be stored within sites structure to
 %         % waveform objects to convert from counts to real physical
@@ -91,11 +90,11 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
         w = pad(w, min([snum wsnum]), max([enum wenum]), 0);
 
         % Apply filter to all signals
-        w = iceweb.apply_filter(w); %%%%%%%%%%%%%%%% PARAMS dropped
+%         w = iceweb.apply_filter(w); %%%%%%%%%%%%%%%% PARAMS dropped
 
         mkdir(fileparts(wavcleanmat));
         disp(sprintf('Saving waveform data to %s',wavcleanmat));
-        save(wavcleanmat);   
+        save(wavcleanmat,'w');   
     end
     
     %% ICEWEB PRODUCTS
@@ -103,7 +102,7 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
     % WAVEFORM PLOT
     if products.waveform_plot.doit
         close all
-        plot_panels(w)
+        plot_panels(w, 'visible', 'off')
         fname = fullfile('iceweb', 'plots', 'waveforms', subnetName, sprintf('%s.png',datestr(snum,30)) );
         orient tall;
         iceweb.saveImageFile(fname, 72); % this should make directory tree too

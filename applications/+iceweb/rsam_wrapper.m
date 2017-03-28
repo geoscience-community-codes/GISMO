@@ -74,3 +74,5 @@ products.soundfiles.doit = false;
 
 % call iceweb_wrapper
 iceweb.iceweb2017(subnetName, datasourceObject, ChannelTagList, startTime, endTime, gulpMinutes, products)
+
+disp('COMPLETED')
