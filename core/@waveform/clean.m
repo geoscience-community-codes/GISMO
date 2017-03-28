@@ -12,6 +12,9 @@ function w = clean(w)
     for c=1:numel(w)
         
         if ~isempty(w(c))
+            
+            % remove spikes of length 1
+            w(c) = medfilt1(w(c), 3); 
 
             % smart detrend
             w(c) = detrend(w(c));

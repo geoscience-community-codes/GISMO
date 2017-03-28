@@ -30,19 +30,19 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
     MILLISECOND_IN_DAYS = (1 / 86400000);
     enum = enum - MILLISECOND_IN_DAYS; % try to skip last sample
 
-%     % load state
-%     statefile = sprintf('iceweb_%s_state.mat',subnetName);
-%     if exist(statefile, 'file')
-%         load(statefile)
-%         if snum < snum0 
-%             return
-%         end
-%     end
-% 		
-%     % save state
-%     ds0=ds; ChannelTagList0=ChannelTagList; snum0=snum; enum0=enum; subnetName0 = subnetName;
-%     save(statefile, 'ds0', 'ChannelTagList0', 'snum0', 'enum0', 'subnetName0');
-%     clear ds0 ChannelTagList0 snum0 enum0 subnetName0
+    % load state
+    statefile = sprintf('iceweb_%s_state.mat',subnetName);
+    if exist(statefile, 'file')
+        load(statefile)
+        if snum < snum0 
+            return
+        end
+    end
+		
+    % save state
+    ds0=ds; ChannelTagList0=ChannelTagList; snum0=snum; enum0=enum; subnetName0 = subnetName;
+    save(statefile, 'ds0', 'ChannelTagList0', 'snum0', 'enum0', 'subnetName0');
+    clear ds0 ChannelTagList0 snum0 enum0 subnetName0
            
     %% Save raw waveform data to MAT file
     jjj = datenum2julday(snum);
@@ -80,17 +80,9 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
         % Clean the waveforms
         w = clean(w);
 
-%         % Apply calibs which should be stored within sites structure to
-%         % waveform objects to convert from counts to real physical
-%         % units
-%         w = iceweb.apply_calib(w, sites);
-
         % Pad all waveforms to same start/end
         [wsnum wenum] = gettimerange(w); % assume gaps already filled, signal
         w = pad(w, min([snum wsnum]), max([enum wenum]), 0);
-
-        % Apply filter to all signals
-%         w = iceweb.apply_filter(w); %%%%%%%%%%%%%%%% PARAMS dropped
 
         mkdir(fileparts(wavcleanmat));
         disp(sprintf('Saving waveform data to %s',wavcleanmat));
@@ -101,11 +93,13 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
     
     % WAVEFORM PLOT
     if products.waveform_plot.doit
-        close all
-        plot_panels(w, 'visible', 'off')
         fname = fullfile('iceweb', 'plots', 'waveforms', subnetName, sprintf('%s.png',datestr(snum,30)) );
-        orient tall;
-        iceweb.saveImageFile(fname, 72); % this should make directory tree too
+        if ~exist(fname,'file')
+            close all
+            plot_panels(w, 'visible', 'off')
+            orient tall;
+            iceweb.saveImageFile(fname, 72); % this should make directory tree too
+        end
     end
     
     % RSAM
@@ -117,7 +111,7 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
             else
                 samplingInterval = products.rsam.samplingIntervalSeconds;
             end
-            rsamobj = waveform2rsam(w, measure, products.rsam.samplingInterval);
+            rsamobj = waveform2rsam(w, measure, samplingInterval);
             %rsamobj.plot_panels()
             rsamobj.save_to_bob_file(fullfile('iceweb', 'rsam_data', 'SSSS.CCC.YYYY.MMMM.bob'));
         end

@@ -66,7 +66,7 @@ function rsam_wrapper(subnetName, datasourceObject, ChannelTagList, ...
 %                     samplingIntervalSeconds, measures) 
 %
 % See also: iceweb.iceweb2017
-return
+
 if ~isa(measures,'cell')
     measures = {measures};
 end
