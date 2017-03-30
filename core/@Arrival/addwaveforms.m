@@ -15,10 +15,12 @@ function arrivalobj = addwaveforms(arrivalobj, datasourceobj, pretrigsecs, postt
 %       posttrigsecs = 5;
 %       arrivalobj = arrivalobj.addwaveforms(ds, pretrigsecs, posttrigsecs)
 %
-    disp('Adding waveforms to arrival object');
+    Na = numel(arrivalobj.time);
+    disp(sprintf('Adding waveforms to all %d arrivals in Arrival object',Na));
     w = [];
     numsuccess=0;
-    for c=1:numel(arrivalobj.time)
+
+    for c=1:Na
         ctag = ChannelTag(arrivalobj.channelinfo(c));
         snum = arrivalobj.time(c) - pretrigsecs/86400;
         enum = arrivalobj.time(c) + posttrigsecs/86400;
@@ -29,6 +31,9 @@ function arrivalobj = addwaveforms(arrivalobj, datasourceobj, pretrigsecs, postt
         catch
             w = [w waveform()];
             fprintf('x');
+        end
+        if mod(c,30) == 0
+            fprintf('\nDone %d out of %d\n',c, Na);
         end
     end
     arrivalobj.waveforms = w';

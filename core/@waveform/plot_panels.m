@@ -1,6 +1,6 @@
 function plot_panels(w, varargin)
 %PLOT_PANELS Plot multiple waveform objects as separate linked panels
-%   PLOT_PANELS(w, alignWaveforms) 
+%   PLOT_PANELS(w, varargin) 
 %   where:
 %       w = a vector of waveform objects
 %       alignWaveforms is either true or false (default)

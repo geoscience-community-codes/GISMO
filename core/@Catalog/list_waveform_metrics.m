@@ -43,7 +43,7 @@ function list_waveform_metrics(cobj)
     % now go through different metrics of interest, and list for each
     % event for each channel
     for eventnum=1:numevents
-        fprintf('%2d:', eventnum);
+        fprintf('%5d:', eventnum);
         w = wcell{eventnum};
         wctags = get(w,'ChannelTag');
         a = [];

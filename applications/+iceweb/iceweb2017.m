@@ -107,7 +107,7 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
         for measureNum = 1:numel(products.rsam.measures)
             measure = products.rsam.measures{measureNum};
             if numel(products.rsam.samplingIntervalSeconds)>1
-                samplingInterval = products.rsam.samplingIntervalSeconds[measureNum];
+                samplingInterval = products.rsam.samplingIntervalSeconds(measureNum);
             else
                 samplingInterval = products.rsam.samplingIntervalSeconds;
             end

@@ -84,9 +84,13 @@ function w = addmetrics(w, maxTimeDiff)
         metrics.units = u;
         thisW = addfield(thisW, 'metrics', metrics);
         w(wavnum) = thisW;
+        
+        if mod(wavnum,30) == 0
+            fprintf('\nDone %d out of %d\n',wavnum, Nw);
+        end
 
     end
-    fprintf('\n(Complete)\n');
+    %fprintf('\n(Complete)\n');
 end
 
 

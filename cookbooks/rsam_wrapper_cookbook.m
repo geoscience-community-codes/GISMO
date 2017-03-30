@@ -107,7 +107,7 @@ for c=1:numel(ChannelTagList)
     chan = ChannelTagList(c).channel();
     filepattern = fullfile('iceweb', 'rsam_data', 'SSSS.CCC.YYYY.MMMM.bob');
     r = rsam.read_bob_file(filepattern, 'sta', sta, 'chan', chan, ...
-        'snum', datenum(2015,5,10), 'enum', datenum(2015,6,8), 'measure', 'median');
+        'snum', datenum(2015,5,28), 'enum', datenum(2015,6,8), 'measure', 'median');
     s = [s r];
 end
 
