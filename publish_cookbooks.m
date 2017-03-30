@@ -46,6 +46,15 @@ try
     htmlfile = publish(mfile, 'format', 'html', 'outputDir', outdir, 'createThumbnail', true)
 end 
 
+%% rsam_wrapper_cookbook
+close all
+mfile = 'rsam_wrapper_cookbook';
+outdir = fullfile(gismopath, '..', 'GISMO.website', 'cookbook_results');
+mkdir(outdir);
+try
+    htmlfile = publish(mfile, 'format', 'html', 'outputDir', outdir, 'createThumbnail', true)
+end 
+
 %% waveform_cookbook
 close all
 mfile = 'waveform_cookbook';

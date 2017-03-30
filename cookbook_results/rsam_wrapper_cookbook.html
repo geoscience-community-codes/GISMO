@@ -1,0 +1,235 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>How to compute RSAM data</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-30"><meta name="DC.source" content="rsam_wrapper_cookbook.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>How to compute RSAM data</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">1. Introduction</a></li><li><a href="#4">2. Setup for the Redoubt 2009 example</a></li><li><a href="#10">3. Call the rsam_wrapper</a></li><li><a href="#12">4. Load RSAM data</a></li><li><a href="#13">5. Plotting RSAM data</a></li></ul></div><h2>1. Introduction<a name="1"></a></h2><p>Computing rsam data from waveform objects is easy to do with the waveform2rsam method. But waveform objects are generally no more than 1 hour long. So what if you want to compute RSAM data for days, weeks or months of waveform data? How do we set this up?</p><p>This is where we use "IceWeb", an application originally written in 1998 to process continuous waveform data into a variety of products for volcano observatory web pages, to aid rapid recognition of anomalous activity. Since we only want RSAM data in this case, we will drive this using iceweb.rsam_wrapper. To get help on this, use:</p><pre>help iceweb.rsam_wrapper</pre><p>RSAM data will be saved to binary "BOB" files in a directory "iceweb/rsam_data". So the final step in the tutorial will show how to load and plot these data.</p><p>The following is a fully worked example using the Sakurajima dataset for illustration.</p><h2>2. Setup for the Redoubt 2009 example<a name="4"></a></h2><p>Define datasource - where to get waveform data from</p><pre class="codeinput">dbpath = fullfile(TESTDATA, <span class="string">'css3.0'</span>, <span class="string">'demodb'</span>)
+datasourceObject = datasource(<span class="string">'antelope'</span>, dbpath)
+</pre><pre class="codeoutput">
+dbpath =
+
+/home/t/thompsong/src/GISMO.website/testdata/css3.0/demodb
+
+ 
+datasourceObject =
+ 
+      type: ANTELOPE
+  location: /home/t/thompsong/src/GISMO.website/testdata/css3.0/demodb
+</pre><p>Define the list of channels to get waveform data for</p><pre class="codeinput">ChannelTagList = ChannelTag.array(<span class="string">'AV'</span>,{<span class="string">'REF'</span>;<span class="string">'RSO'</span>},<span class="string">''</span>,<span class="string">'EHZ'</span>)
+</pre><pre class="codeoutput">
+ChannelTagList = 
+
+&lt;a href="matlab:help ChannelTag"&gt;ChannelTag&lt;/a&gt; array (network.station.location.channel):
+  AV.REF..EHZ
+  AV.RSO..EHZ
+</pre><p>Set the start and end times</p><pre class="codeinput">startTime = datenum(2009,3,20,2,0,0)
+endTime = datenum(2009,3,23,12,0,0)
+</pre><pre class="codeoutput">
+startTime =
+
+   7.3385e+05
+
+
+endTime =
+
+   7.3386e+05
+
+</pre><p>We can't process more than 1 day of waveform data at a time, so we have to 'gulp it down' in non-overlapping timewindows of size 'gulpMinutes'. Experiments suggest 60 minutes is ideal, minimum 10 minutes, maximum 120 minutes.</p><pre class="codeinput">gulpMinutes = 60;
+</pre><p>RSAM data is traditionally computed with a sampling interval of 60 sec, with each RSAM value being the mean absolute value of the waveform data in a 60 sec window starting at that time. But with GISMO's implementation of RSAM, we can compute multiple RSAM datasets from the same waveform data, using different statistical measures and sampling intervals. We will compute: 1. traditional rsam: mean absolute value of 60-sec time windows 2. max absolute values of 10-sec time windows - great for highlighting events 3. median absolute values of 600-sec time windows - great for highlighting tremor</p><pre class="codeinput">measures = {<span class="string">'mean'</span>;<span class="string">'max'</span>;<span class="string">'median'</span>};
+samplingIntervalSeconds = [60 10 600];
+</pre><h2>3. Call the rsam_wrapper<a name="10"></a></h2><pre class="codeinput">iceweb.rsam_wrapper(<span class="string">'Redoubt'</span>, datasourceObject, ChannelTagList, <span class="keyword">...</span>
+            startTime, endTime, gulpMinutes, <span class="keyword">...</span>
+            samplingIntervalSeconds, measures);
+</pre><pre class="codeoutput">
+2009/03/20 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 
+2009/03/21 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 
+2009/03/22 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 
+2009/03/23 00 01 02 03 04 05 06 07 08 09 10 11 COMPLETED
+</pre><p>Note: this may take a long time to run, e.g. 1 week of data for 1 channel might take about 10 minutes on a desktop computer, reading data from a network-mounted drive.</p><h2>4. Load RSAM data<a name="12"></a></h2><p>The RSAM data computed have been stored in binary BOB files. To load these we use can loop through our channels, loading one file per channel, creating an array of RSAM objects.</p><pre class="codeinput">s = [];
+<span class="keyword">for</span> c=1:numel(ChannelTagList)
+    sta = ChannelTagList(c).station();
+    chan = ChannelTagList(c).channel();
+    filepattern = fullfile(<span class="string">'iceweb'</span>, <span class="string">'rsam_data'</span>, <span class="string">'SSSS.CCC.YYYY.MMMM.bob'</span>);
+    r = rsam.read_bob_file(filepattern, <span class="string">'sta'</span>, sta, <span class="string">'chan'</span>, chan, <span class="keyword">...</span>
+        <span class="string">'snum'</span>, startTime, <span class="string">'enum'</span>, endTime, <span class="string">'measure'</span>, <span class="string">'mean'</span>);
+    s = [s r];
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Looking for file: iceweb/rsam_data/REF.EHZ.2009.mean.bob - found
+Loading data from iceweb/rsam_data/REF.EHZ.2009.mean.bob, position 112441 to 117360 of 525600
+mean of data loaded is 2.451454e+02
+Looking for file: iceweb/rsam_data/RSO.EHZ.2009.mean.bob - found
+Loading data from iceweb/rsam_data/RSO.EHZ.2009.mean.bob, position 112441 to 117360 of 525600
+mean of data loaded is 2.160985e+02
+</pre><h2>5. Plotting RSAM data<a name="13"></a></h2><p>There are two ways to plot RSAM data. The first is to use the plot method, which generates one figure per channel:</p><pre class="codeinput">plot(s);
+</pre><img vspace="5" hspace="5" src="rsam_wrapper_cookbook_01.png" alt=""> <img vspace="5" hspace="5" src="rsam_wrapper_cookbook_02.png" alt=""> <p>The second is plot_panels, which generates one subplot per channel:</p><pre class="codeinput">plot_panels(s)
+</pre><img vspace="5" hspace="5" src="rsam_wrapper_cookbook_03.png" alt=""> <p>This is the end of this tutorial.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% How to compute RSAM data
+
+%% 1. Introduction
+%
+% Computing rsam data from waveform objects is easy to do with the
+% waveform2rsam method. But waveform objects are generally no more than 1
+% hour long. So what if you want to compute RSAM data for days, weeks or
+% months of waveform data? How do we set this up?
+%
+% This is where we use "IceWeb", an application originally written in 1998
+% to process continuous waveform data into a variety of products for
+% volcano observatory web pages, to aid rapid recognition of anomalous
+% activity. Since we only want RSAM data in this case, we will drive this
+% using iceweb.rsam_wrapper. To get help on this, use:
+%%
+% 
+%  help iceweb.rsam_wrapper
+% 
+
+%%
+% RSAM data will be saved to binary "BOB" files in a directory
+% "iceweb/rsam_data". So the final step in the tutorial will show how to
+% load and plot these data.
+%
+% The following is a fully worked example using the Sakurajima
+% dataset for illustration.
+
+
+%% 2. Setup for the Redoubt 2009 example
+
+%%
+% Define datasource - where to get waveform data from
+dbpath = fullfile(TESTDATA, 'css3.0', 'demodb')
+datasourceObject = datasource('antelope', dbpath)
+
+%% 
+% Define the list of channels to get waveform data for
+ChannelTagList = ChannelTag.array('AV',{'REF';'RSO'},'','EHZ')
+
+%%
+% Set the start and end times
+startTime = datenum(2009,3,20,2,0,0)
+endTime = datenum(2009,3,23,12,0,0)
+
+%%
+% We can't process more than 1 day of waveform data at a time, so we have
+% to 'gulp it down' in non-overlapping timewindows of size 'gulpMinutes'.
+% Experiments suggest 60 minutes is ideal, minimum 10 minutes, maximum 120
+% minutes.
+gulpMinutes = 60;
+
+%%
+% RSAM data is traditionally computed with a sampling interval of 60 sec,
+% with each RSAM value being the mean absolute value of the waveform data
+% in a 60 sec window starting at that time.
+% But with GISMO's implementation of RSAM, we can compute multiple RSAM 
+% datasets from the same waveform data, using different statistical 
+% measures and sampling intervals. We will compute:
+% 1. traditional rsam: mean absolute value of 60-sec time windows
+% 2. max absolute values of 10-sec time windows - great for highlighting
+% events
+% 3. median absolute values of 600-sec time windows - great for
+% highlighting tremor
+measures = {'mean';'max';'median'};
+samplingIntervalSeconds = [60 10 600];
+
+
+%% 3. Call the rsam_wrapper
+iceweb.rsam_wrapper('Redoubt', datasourceObject, ChannelTagList, ...
+            startTime, endTime, gulpMinutes, ...
+            samplingIntervalSeconds, measures);
+             
+%%        
+% Note: this may take a long time to run, e.g. 1 week of data for 1
+% channel might take about 10 minutes on a desktop computer, reading data
+% from a network-mounted drive.
+
+%% 4. Load RSAM data
+% The RSAM data computed have been stored in binary BOB files. To load
+% these we use can loop through our channels, loading one file per channel,
+% creating an array of RSAM objects.
+s = [];
+for c=1:numel(ChannelTagList)
+    sta = ChannelTagList(c).station();
+    chan = ChannelTagList(c).channel();
+    filepattern = fullfile('iceweb', 'rsam_data', 'SSSS.CCC.YYYY.MMMM.bob');
+    r = rsam.read_bob_file(filepattern, 'sta', sta, 'chan', chan, ...
+        'snum', startTime, 'enum', endTime, 'measure', 'mean');
+    s = [s r];
+end
+
+%% 5. Plotting RSAM data
+% There are two ways to plot RSAM data. The first is to use the plot
+% method, which generates one figure per channel:
+plot(s);
+
+%%
+% The second is plot_panels, which generates one subplot per channel:
+plot_panels(s)
+
+%%
+% This is the end of this tutorial.
+
+    
+##### SOURCE END #####
+--></body></html>
