@@ -26,21 +26,11 @@
 % dataset for illustration.
 
 
-%% 2. Setup for the Redoubt 2009 example
+%% 2. Setup for the Sakurajima example
 
 %%
 % Define datasource - where to get waveform data from
-dbpath = fullfile(TESTDATA, 'css3.0', 'demodb')
-datasourceObject = datasource('antelope', dbpath)
-
-%% 
-% Define the list of channels to get waveform data for
-ChannelTagList = ChannelTag.array('AV',{'REF';'RSO'},'','EHZ')
-
-%%
-% Set the start and end times
-startTime = datenum(2009,3,20,2,0,0)
-endTime = datenum(2009,3,23,12,0,0)
+datasourceObject = datasource('antelope', '/raid/data/sakurajima/db');
 
 %%
 % We can't process more than 1 day of waveform data at a time, so we have
@@ -64,51 +54,64 @@ gulpMinutes = 60;
 measures = {'mean';'max';'median'};
 samplingIntervalSeconds = [60 10 600];
 
+%% 3. Days with data from SAKA only: 21-23 May 2015
 
-%% 3. Call the rsam_wrapper
-iceweb.rsam_wrapper('Redoubt', datasourceObject, ChannelTagList, ...
+%%
+% Set up the list of network/station/location/channel combinations
+%
+% SAKA was installed on May 20, 2015, but there are lots bad data that day
+% from people walking around and moving the seismometer. So we will start
+% to process SAKA from May 21.
+ChannelTagList = ChannelTag.array('JP','SAKA','',{'BD1';'BD2';'BD3';'HHE';'HHN';'HHZ'});
+
+%%
+% Set the start and end times
+startTime = datenum(2015,5,21);
+endTime = datenum(2015,5,24);
+
+%%
+% Call the rsam_wrapper
+iceweb.rsam_wrapper('Sakurajima', datasourceObject, ChannelTagList, ...
             startTime, endTime, gulpMinutes, ...
             samplingIntervalSeconds, measures);
-             
+        
+%%
+% Note: this may take a long time to run, e.g. 3 days of data for 6
+% channels might take about 15 minutes, depending on the speed of your
+% computer and whether the data is being read across a network.
+        
+%% 4. Days with data from SAKA and SAKB: 24 May - 7 Jun 2015       
+% SAKB was installed on May 23, 2015, but there are lots bad data that day
+% from people walking around and moving the seismometer. So we will add
+% SAKB from May 24.
+ChannelTagList = [ChannelTagList ChannelTag.array('JP','SAKB','',{'BD1';'BD2';'BD3';'HHE';'HHN';'HHZ'}) ];   
+startTime = datenum(2015,5,24);
+endTime = datenum(2015,6,8);
+iceweb.rsam_wrapper('Sakurajima', datasourceObject, ChannelTagList, ...
+            startTime, endTime, gulpMinutes, ...
+            samplingIntervalSeconds, measures);
+        
 %%        
-% Note: this may take a long time to run, e.g. 1 week of data for 1
-% channel might take about 10 minutes on a desktop computer, reading data
-% from a network-mounted drive.
+% Note: this may take a long time to run, e.g. 2 weeks of data for 12
+% channels might take about an hour, depending on the speed of your
+% computer and whether the data is being read across a network.   
 
-%% 4. Load RSAM data
+%% 5. Load RSAM data
 % The RSAM data computed have been stored in binary BOB files. To load
 % these we use can loop through our channels, loading one file per channel,
 % creating an array of RSAM objects.
-%
-% Loading a single RSAM file is trivial. Here is the path to one of our
-% files that iceweb.rsam_wrapper just created:
-rsamfile = fullfile('iceweb', 'rsam_data', 'REF.EHZ.2009.mean.bob')
-
-%%
-% To load this we use the 'read_bob_file' method:
-s = rsam.read_bob_file(rsamfile)
-
-%%
-% But in a more general way, we can load multiple RSAM files using a
-% filepattern. In a filepattern SSSS is a placeholder for station, CCC is a
-% placeholder for channel, YYYY for year, and MMMM for measure. IceWeb
-% creates RSAM files using the 'SSSS.CCC.YYYY.MMMM.bob' filepattern.
-%
-% If you don't want to load all data from all the files matching that
-% pattern, you can also specify an optional start time (snum) and end time 
-% (enum).
 s = [];
+year = 2015;
 for c=1:numel(ChannelTagList)
     sta = ChannelTagList(c).station();
     chan = ChannelTagList(c).channel();
-    filepattern = fullfile('iceweb', 'rsam_data', 'SSSS.CCC.YYYY.MMMM.bob')
+    filepattern = fullfile('iceweb', 'rsam_data', 'SSSS.CCC.YYYY.MMMM.bob');
     r = rsam.read_bob_file(filepattern, 'sta', sta, 'chan', chan, ...
-        'snum', startTime, 'enum', endTime, 'measure', 'mean');
+        'snum', datenum(2015,5,28), 'enum', datenum(2015,6,8), 'measure', 'median');
     s = [s r];
 end
-s
 
-%% 5. Plotting RSAM data
+%% 6. Plotting RSAM data
 % There are two ways to plot RSAM data. The first is to use the plot
 % method, which generates one figure per channel:
 plot(s);

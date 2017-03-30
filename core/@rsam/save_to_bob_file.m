@@ -29,12 +29,12 @@ function save_to_bob_file(self, filepattern)
         % should write data based on dnum only
 
         if length(dnum)~=length(data)
-                debug.print_debug(0,sprintf('%s: Cannot save to %s because data and time vectors are different lengths',mfilename,filename));
+                debug.print_debug(1,sprintf('%s: Cannot save to %s because data and time vectors are different lengths',mfilename,filename));
                 return;
         end
 
         if length(data)<1
-                debug.print_debug(0,'No data. Aborting');
+                debug.print_debug(1,'No data. Aborting');
             return;
         end
 
@@ -85,7 +85,7 @@ function save_to_bob_file(self, filepattern)
             diff=dnumy(2:end) - dnumy(1:end-1);
             i = find(diff > 1.5/SAMPLES_PER_DAY | diff < 0.5/SAMPLES_PER_DAY);        
 
-            disp(sprintf('Saving to %s',fname));
+            debug.print_debug(1,sprintf('Saving to %s',fname)));
           
             if length(i)>0
                 % slow mode

@@ -18,6 +18,11 @@ function iceweb2017(subnetName, ds, ChannelTagList, ...
     
     % loop over timewindows
     for count = 1:length(timewindows.start)
+        hh = datestr(timewindows.start(count),'HH');
+        if strcmp(hh,'00') || count==1
+            fprintf('\n%s ',datestr(timewindows.start(count),26));
+        end
+        fprintf('%s ',hh);
         process_timewindow(subnetName, ChannelTagList, timewindows.start(count), timewindows.stop(count), ds, products);
     end
     debug.printfunctionstack('<');
@@ -49,15 +54,17 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
     wavrawmat = fullfile('iceweb', 'waveforms_raw', subnetName, datestr(snum,'yyyy-mm-dd'), datestr(snum,30));
     if ~exist(wavrawmat,'file')
         %% Get waveform data
-        debug.print_debug(0, sprintf('%s %s: Getting waveforms for %s from %s to %s at %s',mfilename, datestr(utnow), subnetName , datestr(snum), datestr(enum)));
-        %w = waveform(ds, ChannelTagList, snum, enum);
-        w = iceweb.waveform_wrapper(ds, ChannelTagList, snum, enum); % returns 1 waveform per channeltag, in same order
+        debug.print_debug(1, sprintf('%s %s: Getting waveforms for %s from %s to %s at %s',mfilename, datestr(utnow), subnetName , datestr(snum), datestr(enum)));
+        w = waveform(ds, ChannelTagList, snum, enum);
+        %w = iceweb.waveform_wrapper(ds, ChannelTagList, snum, enum); % returns 1 waveform per channeltag, in same order
         if isempty(w)
-            ds
-            ChannelTagList
-            datestr(snum)
-            datestr(enum)
-                debug.printfunctionstack('<');
+            if debug.get_debug() > 0
+                ds
+                ChannelTagList
+                datestr(snum)
+                datestr(enum)
+            end
+            debug.printfunctionstack('<');
             return
         end
         mkdir(fileparts(wavrawmat));
@@ -73,7 +80,7 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
         % Eliminate empty waveform objects
         w = iceweb.waveform_remove_empty(w);
         if numel(w)==0
-            debug.print_debug(0, 'No waveform data returned - skipping');
+            debug.print_debug(1, 'No waveform data returned - skipping');
             return
         end
 
@@ -85,7 +92,7 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
         w = pad(w, min([snum wsnum]), max([enum wenum]), 0);
 
         mkdir(fileparts(wavcleanmat));
-        disp(sprintf('Saving waveform data to %s',wavcleanmat));
+        debug.print_debug(1,sprintf('Saving waveform data to %s',wavcleanmat));
         save(wavcleanmat,'w');   
     end
     
@@ -135,7 +142,7 @@ function process_timewindow(subnetName, ChannelTagList, snum, enum, ds, products
             if iceweb.saveImageFile(spectrogramFilename, 72)
 
                 fileinfo = dir(spectrogramFilename); % getting a weird Index exceeds matrix dimensions error here.
-                debug.print_debug(0, sprintf('%s %s: spectrogram PNG size is %d',mfilename, datestr(utnow), fileinfo.bytes));	
+                debug.print_debug(1, sprintf('%s %s: spectrogram PNG size is %d',mfilename, datestr(utnow), fileinfo.bytes));	
 
 %                 % make thumbnails
 %                 makespectrogramthumbnails(spectrogramFilename, spectrogramFraction);

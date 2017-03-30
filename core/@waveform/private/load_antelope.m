@@ -454,7 +454,7 @@ function [w, rawDb, filteredDb] =  get_traces(startDatenum, endDatenum, expr, da
                 end             
          end
     else
-        debug.print_debug(0, 'Time subset failed to find any matching records in wfdisc table')
+        debug.print_debug(1, 'Time subset failed to find any matching records in wfdisc table')
         w0=waveform(); 
     end
     w = combine(w0);
