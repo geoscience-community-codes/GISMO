@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>How to compute RSAM data</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">1. Introduction</a></li><li><a href="#4">2. Setup for the Redoubt 2009 example</a></li><li><a href="#10">3. Call the rsam_wrapper</a></li><li><a href="#12">4. Load RSAM data</a></li><li><a href="#13">5. Plotting RSAM data</a></li></ul></div><h2>1. Introduction<a name="1"></a></h2><p>Computing rsam data from waveform objects is easy to do with the waveform2rsam method. But waveform objects are generally no more than 1 hour long. So what if you want to compute RSAM data for days, weeks or months of waveform data? How do we set this up?</p><p>This is where we use "IceWeb", an application originally written in 1998 to process continuous waveform data into a variety of products for volcano observatory web pages, to aid rapid recognition of anomalous activity. Since we only want RSAM data in this case, we will drive this using iceweb.rsam_wrapper. To get help on this, use:</p><pre>help iceweb.rsam_wrapper</pre><p>RSAM data will be saved to binary "BOB" files in a directory "iceweb/rsam_data". So the final step in the tutorial will show how to load and plot these data.</p><p>The following is a fully worked example using the Sakurajima dataset for illustration.</p><h2>2. Setup for the Redoubt 2009 example<a name="4"></a></h2><p>Define datasource - where to get waveform data from</p><pre class="codeinput">dbpath = fullfile(TESTDATA, <span class="string">'css3.0'</span>, <span class="string">'demodb'</span>)
+  </style></head><body><div class="content"><h1>How to compute RSAM data</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">1. Introduction</a></li><li><a href="#4">2. Setup for the Redoubt 2009 example</a></li><li><a href="#10">3. Call the rsam_wrapper</a></li><li><a href="#12">4. Load RSAM data</a></li><li><a href="#15">5. Plotting RSAM data</a></li></ul></div><h2>1. Introduction<a name="1"></a></h2><p>Computing rsam data from waveform objects is easy to do with the waveform2rsam method. But waveform objects are generally no more than 1 hour long. So what if you want to compute RSAM data for days, weeks or months of waveform data? How do we set this up?</p><p>This is where we use "IceWeb", an application originally written in 1998 to process continuous waveform data into a variety of products for volcano observatory web pages, to aid rapid recognition of anomalous activity. Since we only want RSAM data in this case, we will drive this using iceweb.rsam_wrapper. To get help on this, use:</p><pre>help iceweb.rsam_wrapper</pre><p>RSAM data will be saved to binary "BOB" files in a directory "iceweb/rsam_data". So the final step in the tutorial will show how to load and plot these data.</p><p>The following is a fully worked example using the Sakurajima dataset for illustration.</p><h2>2. Setup for the Redoubt 2009 example<a name="4"></a></h2><p>Define datasource - where to get waveform data from</p><pre class="codeinput">dbpath = fullfile(TESTDATA, <span class="string">'css3.0'</span>, <span class="string">'demodb'</span>)
 datasourceObject = datasource(<span class="string">'antelope'</span>, dbpath)
 </pre><pre class="codeoutput">
 dbpath =
@@ -108,22 +108,83 @@ samplingIntervalSeconds = [60 10 600];
 2009/03/21 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 
 2009/03/22 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 
 2009/03/23 00 01 02 03 04 05 06 07 08 09 10 11 COMPLETED
-</pre><p>Note: this may take a long time to run, e.g. 1 week of data for 1 channel might take about 10 minutes on a desktop computer, reading data from a network-mounted drive.</p><h2>4. Load RSAM data<a name="12"></a></h2><p>The RSAM data computed have been stored in binary BOB files. To load these we use can loop through our channels, loading one file per channel, creating an array of RSAM objects.</p><pre class="codeinput">s = [];
+</pre><p>Note: this may take a long time to run, e.g. 1 week of data for 1 channel might take about 10 minutes on a desktop computer, reading data from a network-mounted drive.</p><h2>4. Load RSAM data<a name="12"></a></h2><p>The RSAM data computed have been stored in binary BOB files. To load these we use can loop through our channels, loading one file per channel, creating an array of RSAM objects.</p><p>Loading a single RSAM file is trivial. Here is the path to one of our files that iceweb.rsam_wrapper just created:</p><pre class="codeinput">rsamfile = fullfile(<span class="string">'iceweb'</span>, <span class="string">'rsam_data'</span>, <span class="string">'REF.EHZ.2009.mean.bob'</span>)
+</pre><pre class="codeoutput">
+rsamfile =
+
+iceweb/rsam_data/REF.EHZ.2009.mean.bob
+
+</pre><p>To load this we use the 'read_bob_file' method:</p><pre class="codeinput">s = rsam.read_bob_file(rsamfile)
+</pre><pre class="codeoutput">Looking for file: iceweb/rsam_data/REF.EHZ.2009.mean.bob - found
+Loading data from iceweb/rsam_data/REF.EHZ.2009.mean.bob, position 0 to 5.256000e+05 of 525600
+mean of data loaded is 1.030975e+33
+
+s = 
+
+  rsam with properties:
+
+                 dnum: [1x525600 double]
+                 data: [1x525600 double]
+              measure: ''
+      seismogram_type: ''
+                units: ''
+                files: [1x1 struct]
+           ChannelTag: [1x1 ChannelTag]
+              request: [1x1 struct]
+                 snum: 733774
+                 enum: 7.3414e+05
+                  sta: {''}
+                 chan: {''}
+    sampling_interval: 60.0000
+                stats: [1x1 struct]
+
+</pre><p>But in a more general way, we can load multiple RSAM files using a filepattern. In a filepattern SSSS is a placeholder for station, CCC is a placeholder for channel, YYYY for year, and MMMM for measure. IceWeb creates RSAM files using the 'SSSS.CCC.YYYY.MMMM.bob' filepattern.</p><p>If you don't want to load all data from all the files matching that pattern, you can also specify an optional start time (snum) and end time (enum).</p><pre class="codeinput">s = [];
 <span class="keyword">for</span> c=1:numel(ChannelTagList)
     sta = ChannelTagList(c).station();
     chan = ChannelTagList(c).channel();
-    filepattern = fullfile(<span class="string">'iceweb'</span>, <span class="string">'rsam_data'</span>, <span class="string">'SSSS.CCC.YYYY.MMMM.bob'</span>);
+    filepattern = fullfile(<span class="string">'iceweb'</span>, <span class="string">'rsam_data'</span>, <span class="string">'SSSS.CCC.YYYY.MMMM.bob'</span>)
     r = rsam.read_bob_file(filepattern, <span class="string">'sta'</span>, sta, <span class="string">'chan'</span>, chan, <span class="keyword">...</span>
         <span class="string">'snum'</span>, startTime, <span class="string">'enum'</span>, endTime, <span class="string">'measure'</span>, <span class="string">'mean'</span>);
     s = [s r];
 <span class="keyword">end</span>
-</pre><pre class="codeoutput">Looking for file: iceweb/rsam_data/REF.EHZ.2009.mean.bob - found
+s
+</pre><pre class="codeoutput">
+filepattern =
+
+iceweb/rsam_data/SSSS.CCC.YYYY.MMMM.bob
+
+Looking for file: iceweb/rsam_data/REF.EHZ.2009.mean.bob - found
 Loading data from iceweb/rsam_data/REF.EHZ.2009.mean.bob, position 112441 to 117360 of 525600
 mean of data loaded is 2.451454e+02
+
+filepattern =
+
+iceweb/rsam_data/SSSS.CCC.YYYY.MMMM.bob
+
 Looking for file: iceweb/rsam_data/RSO.EHZ.2009.mean.bob - found
 Loading data from iceweb/rsam_data/RSO.EHZ.2009.mean.bob, position 112441 to 117360 of 525600
 mean of data loaded is 2.160985e+02
-</pre><h2>5. Plotting RSAM data<a name="13"></a></h2><p>There are two ways to plot RSAM data. The first is to use the plot method, which generates one figure per channel:</p><pre class="codeinput">plot(s);
+
+s = 
+
+  1x2 rsam array with properties:
+
+    dnum
+    data
+    measure
+    seismogram_type
+    units
+    files
+    ChannelTag
+    request
+    snum
+    enum
+    sta
+    chan
+    sampling_interval
+    stats
+
+</pre><h2>5. Plotting RSAM data<a name="15"></a></h2><p>There are two ways to plot RSAM data. The first is to use the plot method, which generates one figure per channel:</p><pre class="codeinput">plot(s);
 </pre><img vspace="5" hspace="5" src="rsam_wrapper_cookbook_01.png" alt=""> <img vspace="5" hspace="5" src="rsam_wrapper_cookbook_02.png" alt=""> <p>The second is plot_panels, which generates one subplot per channel:</p><pre class="codeinput">plot_panels(s)
 </pre><img vspace="5" hspace="5" src="rsam_wrapper_cookbook_03.png" alt=""> <p>This is the end of this tutorial.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
@@ -208,15 +269,34 @@ iceweb.rsam_wrapper('Redoubt', datasourceObject, ChannelTagList, ...
 % The RSAM data computed have been stored in binary BOB files. To load
 % these we use can loop through our channels, loading one file per channel,
 % creating an array of RSAM objects.
+%
+% Loading a single RSAM file is trivial. Here is the path to one of our
+% files that iceweb.rsam_wrapper just created:
+rsamfile = fullfile('iceweb', 'rsam_data', 'REF.EHZ.2009.mean.bob')
+
+%%
+% To load this we use the 'read_bob_file' method:
+s = rsam.read_bob_file(rsamfile)
+
+%%
+% But in a more general way, we can load multiple RSAM files using a
+% filepattern. In a filepattern SSSS is a placeholder for station, CCC is a
+% placeholder for channel, YYYY for year, and MMMM for measure. IceWeb
+% creates RSAM files using the 'SSSS.CCC.YYYY.MMMM.bob' filepattern.
+%
+% If you don't want to load all data from all the files matching that
+% pattern, you can also specify an optional start time (snum) and end time 
+% (enum).
 s = [];
 for c=1:numel(ChannelTagList)
     sta = ChannelTagList(c).station();
     chan = ChannelTagList(c).channel();
-    filepattern = fullfile('iceweb', 'rsam_data', 'SSSS.CCC.YYYY.MMMM.bob');
+    filepattern = fullfile('iceweb', 'rsam_data', 'SSSS.CCC.YYYY.MMMM.bob')
     r = rsam.read_bob_file(filepattern, 'sta', sta, 'chan', chan, ...
         'snum', startTime, 'enum', endTime, 'measure', 'mean');
     s = [s r];
 end
+s
 
 %% 5. Plotting RSAM data
 % There are two ways to plot RSAM data. The first is to use the plot
