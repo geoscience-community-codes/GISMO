@@ -1,7 +1,5 @@
 function makespectrogramthumbnails(spectrogramFilename, spectrogramFraction)
-import debug.*
-printfunctionstack('>');
-%print_debug('> makespectrogramthumbnails', 2);
+debug.printfunctionstack('>');
 
 % figure 1 should be a large spectrogram with traces, cropped nicely. Now remove labels and maximise panels.
 
@@ -23,7 +21,7 @@ end
 
 % Move panels
 for channelNum = 1:numchannels
-    [spectrogramPosition, tracePosition] = calculatePanelPositions(numchannels, numchannels - channelNum + 1, spectrogramFraction, 0.0, 0.0, 1, 1);
+    [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numchannels, numchannels - channelNum + 1, spectrogramFraction, 0.0, 0.0, 1, 1);
     set(ax(channelNum*2 - 1), 'position', tracePosition);
     set(ax(channelNum*2), 'position', spectrogramPosition);
 end
@@ -33,7 +31,7 @@ end
 tmpfile = sprintf('%s/%s_labelless%s',tmppath,tmpbase,tmpext);
 
 % print large labelless PNG
-saveImageFile(tmpfile, 72);
+iceweb.saveImageFile(tmpfile, 72);
 
 % load then delete temporary file 
 I = imread(tmpfile);
@@ -52,4 +50,4 @@ thumbnailfile = sprintf('%s/small_%s%s',tmppath, tmpbase, tmpext);
 imwrite(X,map,thumbnailfile,'PNG'); 
 close;
 
-printfunctionstack('<');
+debug.printfunctionstack('<');

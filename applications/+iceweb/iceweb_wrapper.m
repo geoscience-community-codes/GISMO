@@ -1,8 +1,8 @@
 function iceweb_wrapper(subnetName, datasourceObject, ChannelTagList, ...
-    startTime, endTime, gulpMinutes, products)
+    startTime, endTime)
 %ICEWEB_WRAPPER Run IceWeb for long time intervals
 %   iceweb_wrapper(subnetName, datasourceObject, ChannelTagList, ...
-%       startTime, endTime, gulpMinutes, products)
+%       startTime, endTime)
 %
 %   iceweb_wrapper(...) is a wrapper designed to move sequentially through
 %   days/weeks/months of data, load waveform data into waveform objects,
@@ -27,30 +27,26 @@ function iceweb_wrapper(subnetName, datasourceObject, ChannelTagList, ...
 %       endTime - the date/time to end at in datenum format. See
 %                   DATENUM.
 %
-%       gulpMinutes - swallow data in chunks of this size. Minimum is 10
-%                     minutes, maximum is 2 hours. Other good choices are
-%                     30 minutes and 1 hour.
-%
-%       products - a structure telling IceWeb which products to generate.
-%                  If not explicitly given, it will look like:
-%                 products.rsam.doit = true;
-%                 products.rsam.samplingIntervalSeconds = samplingIntervalSeconds;
-%                 products.rsam.measures = measures;
-%                 products.spectrograms.doit = true;
-%                 products.spectrograms.timeWindowMinutes = [10 120];
-%                 products.spectral_data.doit = true;
-%                 products.spectral_data.samplingIntervalSeconds = samplingIntervalSeconds;
-%                 products.reduced_displacement.doit = true;
-%                 products.reduced_displacement.samplingIntervalSeconds = samplingIntervalSeconds;
-%                 products.helicorders.doit = true;
-%                 products.helicorders.timeWindowMinutes = [120];
-%                 products.soundfiles.doit = true;
+% See also: iceweb.iceweb2017
 
-%startup_iceweb
-matfile = sprintf('%s.mat',subnetName);
-PARAMS = struct('max_number_scnls', 8, ...
-    '
+% set up products structure for iceweb
+products.waveform_plot.doit = true;
+products.rsam.doit = true;
+products.rsam.samplingIntervalSeconds = [60];
+products.rsam.measures = {'mean'};
+products.spectrograms.doit = true;
+products.spectrograms.timeWindowMinutes = 10;
+products.spectral_data.doit = true;
+products.spectral_data.samplingIntervalSeconds = 60;
+products.reduced_displacement.doit = false;
+products.reduced_displacement.samplingIntervalSeconds = 60;
+products.helicorders.doit = true;
+products.helicorders.timeWindowMinutes = 10;
+products.soundfiles.doit = true;
 
-paths = struct(
-iceweb.iceweb_2017(subnetName, datasourceObject, ChannelTagList, ...
-    startTime, endTime, gulpMinutes, products, PARAMS, paths);
+gulpMinutes = products.spectrograms.timeWindowMinutes;
+
+% call iceweb_wrapper
+iceweb.iceweb2017(subnetName, datasourceObject, ChannelTagList, startTime, endTime, gulpMinutes, products)
+
+disp('COMPLETED')

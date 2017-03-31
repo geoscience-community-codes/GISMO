@@ -54,10 +54,10 @@ function rsam_wrapper(subnetName, datasourceObject, ChannelTagList, ...
 %
 % Example:
 %       datasourceObject = datasource('antelope', '/raid/data/sakurajima/db')
-%       ChannelTagList(1) = ChannelTag('JP.SAKA.--.BHZ');
-%       ChannelTagList(2) = ChannelTag('JP.SAKB.--.BHZ');
+%       ChannelTagList(1) = ChannelTag('JP.SAKA.--.HHZ');
+%       ChannelTagList(2) = ChannelTag('JP.SAKB.--.HHZ');
 %       startTime = datenum(2015,5,28);
-%       endTime = datenum(2015,6,2);
+%       endTime = datenum(2015,6,8);
 %       gulpMinutes = 10;
 %       samplingIntervalSeconds = 60;
 %       measures = {'mean'};

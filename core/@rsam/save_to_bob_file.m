@@ -85,7 +85,7 @@ function save_to_bob_file(self, filepattern)
             diff=dnumy(2:end) - dnumy(1:end-1);
             i = find(diff > 1.5/SAMPLES_PER_DAY | diff < 0.5/SAMPLES_PER_DAY);        
 
-            debug.print_debug(1,sprintf('Saving to %s',fname)));
+            debug.print_debug(1,sprintf('Saving to %s',fname));
           
             if length(i)>0
                 % slow mode
