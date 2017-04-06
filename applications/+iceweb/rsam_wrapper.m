@@ -1,4 +1,4 @@
-function rsam_wrapper(subnetName, datasourceObject, ChannelTagList, ...
+function rsam_wrapper(TOP_DIR, subnetName, datasourceObject, ChannelTagList, ...
     startTime, endTime, gulpMinutes, samplingIntervalSeconds, measures)
 %RSAM_WRAPPER Compute RSAM data for long time intervals
 %   rsam_wrapper(subnetName, datasourceObject, ChannelTagList, ...
@@ -87,6 +87,6 @@ products.helicorders.timeWindowMinutes = [];
 products.soundfiles.doit = false;
 
 % call iceweb_wrapper
-iceweb.iceweb2017(subnetName, datasourceObject, ChannelTagList, startTime, endTime, gulpMinutes, products)
+iceweb.iceweb2017(TOP_DIR, subnetName, datasourceObject, ChannelTagList, startTime, endTime, gulpMinutes, products)
 
 disp('COMPLETED')

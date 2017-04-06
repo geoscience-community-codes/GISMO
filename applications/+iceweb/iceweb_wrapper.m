@@ -1,4 +1,4 @@
-function iceweb_wrapper(subnetName, datasourceObject, ChannelTagList, ...
+function iceweb_wrapper(PRODUCTS_TOP_DIR, subnetName, datasourceObject, ChannelTagList, ...
     startTime, endTime)
 %ICEWEB_WRAPPER Run IceWeb for long time intervals
 %   iceweb_wrapper(subnetName, datasourceObject, ChannelTagList, ...
@@ -47,6 +47,18 @@ products.soundfiles.doit = true;
 gulpMinutes = products.spectrograms.timeWindowMinutes;
 
 % call iceweb_wrapper
-iceweb.iceweb2017(subnetName, datasourceObject, ChannelTagList, startTime, endTime, gulpMinutes, products)
+tic;
+iceweb.iceweb2017(PRODUCTS_TOP_DIR, subnetName, datasourceObject, ChannelTagList, startTime, endTime, gulpMinutes, products)
+toc
+
+% % create 24h spectrograms
+% if products.spectral_data.doit
+%     iceweb.make_24h_spectrograms(subnetName, ChannelTagList, startTime, endTime);
+% end
+% 
+% % create 24h helicorders
+% if products.helicorders.doit
+%     iceweb.make_24h_helicorders(subnetName, ChannelTagList, startTime, endTime);
+% end
 
 disp('COMPLETED')

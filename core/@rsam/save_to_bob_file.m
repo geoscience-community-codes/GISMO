@@ -68,7 +68,7 @@ function save_to_bob_file(self, filepattern)
             debug.print_debug(2,sprintf('Looking for file: %s\n',fname));
 
             if ~exist(fname,'file')
-                    debug.print_debug(2, ['Creating ',fname])
+                    debug.print_debug(2, ['Creating ',fname]);
                     rsam.make_bob_file(fname, daysperyear, SAMPLES_PER_DAY);
             end            
 

@@ -46,7 +46,7 @@ delete(tmpfile)
 %thumbnailfile = sprintf('%s/smaller_%s%s',tmppath, tmpbase, tmpext);
 %imwrite(X,map,thumbnailfile,'PNG'); 
 [X,map] = rgb2ind(imresize(I, [198 151]), 256);
-thumbnailfile = sprintf('%s/small_%s%s',tmppath, tmpbase, tmpext);
+thumbnailfile = sprintf('%s/%s_thumb%s',tmppath, tmpbase, tmpext);
 imwrite(X,map,thumbnailfile,'PNG'); 
 close;
 

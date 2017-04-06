@@ -29,6 +29,10 @@
 %% 2. Setup for the Redoubt 2009 example
 
 %%
+% Set the directory name under which RSAM files will be stored
+TOP_DIR = 'rsam';
+
+%%
 % Define datasource - where to get waveform data from
 dbpath = fullfile(TESTDATA, 'css3.0', 'demodb')
 datasourceObject = datasource('antelope', dbpath)
@@ -66,7 +70,7 @@ samplingIntervalSeconds = [60 10 600];
 
 
 %% 3. Call the rsam_wrapper
-iceweb.rsam_wrapper('Redoubt', datasourceObject, ChannelTagList, ...
+iceweb.rsam_wrapper(TOP_DIR, 'Redoubt', datasourceObject, ChannelTagList, ...
             startTime, endTime, gulpMinutes, ...
             samplingIntervalSeconds, measures);
              

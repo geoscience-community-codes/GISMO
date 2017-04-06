@@ -32,8 +32,8 @@ function value = print_debug(level, varargin)
 % to read function.
 % Glenn Thompson 2015: restored order of verboseness (increasing numbers =
 % more verbose). Implemented workarounds for set_debug and get_debug.
-value = [];
-persistent Lev
+    value = [];
+    persistent Lev
 
     if isempty(Lev) % if Lev not already set
         Lev = 0;
@@ -54,4 +54,5 @@ persistent Lev
          fprintf('\n');
         end
     end
+
 end
