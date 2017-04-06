@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cookbook</title>
+  <meta name="keywords" content="cookbook">
+  <meta name="description" content="COOKBOOK demonstrate the features of the mastercorr package.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="../index.html">master_correlation</a> &gt; <a href="index.html">+mastercorr</a> &gt; cookbook.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed/master_correlation/+mastercorr&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>cookbook
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>COOKBOOK demonstrate the features of the mastercorr package.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">COOKBOOK demonstrate the features of the mastercorr package.
+ W = COOKBOOK provides a demonstration of the major features of the master
+ waveform correlation toolbox. This example uses a small set of included
+ data. This data contains six 10-minute segments of data (1 hour total).
+
+ See also mastercorr.<a href="plot_stats.html" class="code" title="function plot_stats(W)">plot_stats</a>, mastercorr.<a href="cookbook.html" class="code" title="">cookbook</a>, mastercorr.<a href="extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../../GISMO/core/@correlation/demean.html" class="code" title="function c = demean(c,varargin);">demean</a>	DEMEAN removes the mean of each trace.</li><li><a href="../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>	Retain matching elements of two correlation objects.</li><li><a href="../../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../../GISMO/core/@filterobject/filt.html" class="code" title="function wave = filt(wave,f_type,f_rng)">filt</a>	FILT: Quick function for 2-pole filtering waveforms and avoiding the</li><li><a href="../../../../GISMO/core/@filterobject/filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>	FILTEROBJECT constructor for a filter object</li><li><a href="../../../../GISMO/core/@filterobject/filtfilt.html" class="code" title="function w =filtfilt(f, w, NYQ)">filtfilt</a>	FILTFILT - filterobject implementation of FILTFILT, use on waveform Object</li><li><a href="../../../../GISMO/core/@rsam/extract.html" class="code" title="function s=extract(self, snum, enum)">extract</a>	</li><li><a href="../../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../../GISMO/core/@threecomp/extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>	ADDFIELD add fields and values to waveform object(s)                V1.1</li><li><a href="../../../../GISMO/core/@waveform/demean.html" class="code" title="function w = demean (w)">demean</a>	DEMEAN remove offset voltage from signal</li><li><a href="../../../../GISMO/core/@waveform/extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="../../../../GISMO/core/@waveform/fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>	FILLGAPS - fill missing data with values of your choice</li><li><a href="../../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/demean.html" class="code" title="function c = demean(c)">demean</a>	DEMEAN removes the mean of each trace.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/match.html" class="code" title="function [c1,c2] = match(c1,c2,toleranceInSeconds)">match</a>	Retain matching elements of two correlation objects.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="../../../../GISMO/core/@EventRate/EventRate.html" class="code" title="">EventRate</a>	</li><li><a href="../../../../GISMO/core/@correlation/correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="../../../../GISMO/core/@drumplot/drumplot.html" class="code" title="">drumplot</a>	DRUMPLOT the blueprint for drumplot objects in GISMO</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../../GISMO/core/dev/@TraceFilter/TraceFilter.html" class="code" title="">TraceFilter</a>	</li><li><a href="../../../../GISMO/core/dev/@TraceSpectra/TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%COOKBOOK demonstrate the features of the mastercorr package.</span>
+0002 <span class="comment">% W = COOKBOOK provides a demonstration of the major features of the master</span>
+0003 <span class="comment">% waveform correlation toolbox. This example uses a small set of included</span>
+0004 <span class="comment">% data. This data contains six 10-minute segments of data (1 hour total).</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% See also mastercorr.plot_stats, mastercorr.cookbook, mastercorr.extract</span>
+0007 
+0008 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0009 <span class="comment">% $Date$</span>
+0010 <span class="comment">% $Revision$</span>
+0011 
+0012 
+0013 
+0014 <span class="comment">%% LOAD COOKBOOK DATA</span>
+0015 <span class="comment">% In general use this is an exercise left to the user. Since you are using</span>
+0016 <span class="comment">% GISMO however, I assume you have data loading figured out!</span>
+0017 W = mastercorr.load_cookbook_data
+0018 
+0019 
+0020 <span class="comment">%% PREPARE DATA FOR CROSS CORRELATION</span>
+0021 <span class="comment">% Typically users will want to fill gaps and filter the data to a band of</span>
+0022 <span class="comment">% interest. Cross correlation almost always performs better when a gentle</span>
+0023 <span class="comment">% high pass filter is applied to remove the &quot;roll&quot; from the data.</span>
+0024 W = <a href="../../../../GISMO/core/@waveform/fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>(W,0);
+0025 W = <a href="../../../../GISMO/core/@correlation/demean.html" class="code" title="function c = demean(c,varargin);">demean</a>(W);
+0026 <a href="../../../../GISMO/core/@filterobject/filt.html" class="code" title="function wave = filt(wave,f_type,f_rng)">filt</a> = <a href="../../../../GISMO/core/@filterobject/filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>(<span class="string">'B'</span>,[0.8 12],2);
+0027 W = <a href="../../../../GISMO/core/@filterobject/filtfilt.html" class="code" title="function w =filtfilt(f, w, NYQ)">filtfilt</a>(<a href="../../../../GISMO/core/@filterobject/filt.html" class="code" title="function wave = filt(wave,f_type,f_rng)">filt</a>,W);
+0028 <a href="../../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(W,<span class="string">'xunit'</span>,<span class="string">'date'</span>)
+0029 
+0030 
+0031 <span class="comment">%% CREATE MASTER WAVEFORM &quot;SNIPPET&quot;</span>
+0032 <span class="comment">% The snippet is a short template waveform that is used to scan the</span>
+0033 <span class="comment">% continuous data for matches. Note that the snippet can be a vector of</span>
+0034 <span class="comment">% different snippets.</span>
+0035 Wsnippet = <a href="extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>(W(4),<span class="string">'TIME'</span>,<span class="string">'4/2/2009 20:32:36'</span>,<span class="string">'4/2/2009 20:32:40'</span>);
+0036 
+0037 
+0038 <span class="comment">%% ADD A REFERENCE &quot;TRIGGER&quot; TIME ON TRACE (OPTIONAL)</span>
+0039 <span class="comment">% Adding a trigger time is optional, but is a good thing to do. See</span>
+0040 <span class="comment">% MASTERCORR.SCAN for full explanation.</span>
+0041 Wsnippet = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(Wsnippet,<span class="string">'TRIGGER'</span>,datenum(<span class="string">'4/2/2009 20:32:37.73'</span>));
+0042 
+0043 
+0044 <span class="comment">%% SCAN CONTINUOUS DATA FOR SNIPPET</span>
+0045 [W,Wxc] = mastercorr.scan(W,Wsnippet,0.8);
+0046 
+0047 
+0048 <span class="comment">%% PLOT SOME BASIC STATISTICS TO ASSESS THE CORRELATION RESULTS</span>
+0049 mastercorr.plot_stats(W);
+0050 
+0051 
+0052 <span class="comment">%% EXTRACT INFORMATION ABOUT THE SUCCESSFUL WAVEFORM MATCHES</span>
+0053 <a href="../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a> = mastercorr.extract(W)
+0054 
+0055 
+0056 <span class="comment">%% EXTRACT MATCH INFORMATION AND A CORRELATION OBJECT OF MATCHED WAVEFORMS</span>
+0057 <span class="comment">% See &quot;help correlation&quot; for details and subsequent options using the</span>
+0058 <span class="comment">% correlation object</span>
+0059 [<a href="../../../../GISMO/core/@correlation/match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>,C] = mastercorr.extract(W,-2,6);
+0060 <a href="../../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(C);
+0061</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

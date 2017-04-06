@@ -1,0 +1,500 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ChannelTag</title>
+  <meta name="keywords" content="ChannelTag">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@ChannelTag</a> &gt; ChannelTag.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@ChannelTag&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>ChannelTag
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="eq.html" class="code" title="function result = eq(A, B)">eq</a>	eq  equal for ChannelTags</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>	C = SORT(C,'TIME')</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>	ChannelTag Converter from scnlobject to ChannelTag</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/eq.html" class="code" title="function results = eq(A, B)">eq</a>	when using wildcards, use ismember</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/eq.html" class="code" title="function [ result ] = eq( w1, w2 )">eq</a>	EQ Check if waveform objects are equal</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/sort.html" class="code" title="function c = sort(c)">sort</a>	C = SORT(C) Sorts traces from oldest to youngest.</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/waveform_wrapper.html" class="code" title="function w=waveform_wrapper(ds, chantag, snum, enum);">waveform_wrapper</a>	WAVEFORM_WRAPPER try multiple datasource objects in</li><li><a href="../../../GISMO/core/+antelope/antelope2waveform.html" class="code" title="function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)">antelope2waveform</a>	ANTELOPE2WAVEFORM Load waveform objects from Antelope database</li><li><a href="../../../GISMO/core/+antelope/dbget_closest_sites.html" class="code" title="function sites = dbget_closest_sites(lon, lat, distkm, sitesdb, maxsta, snum, enum, chanmatch)">dbget_closest_sites</a>	DBGET_CLOSEST_SITES Get closest sites from an Antelop database to a given [lon, lat]</li><li><a href="ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="../../../GISMO/core/@Sfile/Sfile.html" class="code" title="">Sfile</a>	Class that describes data in a Seisan S-file</li><li><a href="../../../GISMO/core/@drumplot/cookbook.html" class="code" title="">cookbook</a>	% drumplot cookbook</li><li><a href="../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>	ISMEMBER for scnlobjects</li><li><a href="../../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>	scnl (deprecated) : object that holds the stations, channel, network, and location for</li><li><a href="../../../GISMO/core/@waveform/loadobj.html" class="code" title="function b = loadobj(a)">loadobj</a>	LOADOBJ updates older versions of waveform class upon loading</li><li><a href="../../../GISMO/core/@waveform/private/as_channeltag.html" class="code" title="function obj = as_channeltag(obj)">as_channeltag</a>	</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_irisdmcws.html" class="code" title="function wavef = load_irisdmcws(request)">load_irisdmcws</a>	LOAD_IRISDMCWS loads waveforms using the IRIS Web Services Java Library</li><li><a href="../../../GISMO/core/@waveform/private/load_miniseed.html" class="code" title="function w = load_miniseed(request)">load_miniseed</a>	LOAD_MINISEED loads a waveform from MINISEED files</li><li><a href="../../../GISMO/core/@waveform/private/load_obspy.html" class="code" title="function w = load_obspy(request)">load_obspy</a>	LOAD_OBSPY loads matlab files that were saved by ObsPy as per the ObsPy tutorial</li><li><a href="../../../GISMO/core/@waveform/private/sac2waveform.html" class="code" title="function allWaveforms = sac2waveform(sacStructure)">sac2waveform</a>	SAC2WAVEFORM fill a waveform object from a sac header</li><li><a href="../../../GISMO/core/@waveform/private/winston_access.html" class="code" title="function w = winston_access(varargin)">winston_access</a>	</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../../GISMO/core/dev/+dataretrieval/iriswebservicesource.html" class="code" title="">iriswebservicesource</a>	</li><li><a href="../../../GISMO/core/dev/@ChannelDetails/ChannelDetails.html" class="code" title="">ChannelDetails</a>	</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="../../../GISMO/tests/testChanneltag.html" class="code" title="">testChanneltag</a>	</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../GISMO/tests/test_ChanDetails.html" class="code" title="">test_ChanDetails</a>	</li><li><a href="../../../GISMO/tests/test_waveform_constructor.html" class="code" title="">test_waveform_constructor</a>	test waveform creation</li><li><a href="../../../GISMO/tests/trloadcss_test.html" class="code" title="function tests = trloadcss_test()">trloadcss_test</a>	% Main function to generate tests</li><li><a href="../../../GISMO/tests/waveform_antelope_test.html" class="code" title="function tests = waveform_antelope_test()">waveform_antelope_test</a>	% Main function to generate tests</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = ChannelTag(varargin)</a></li><li><a href="#_sub2" class="code">function [IDX, objs] = matching(objs, N, S, L, C)</a></li><li><a href="#_sub3" class="code">function [Y, I] = sort(cha_tags)</a></li><li><a href="#_sub4" class="code">function result = ne(A, B)</a></li><li><a href="#_sub5" class="code">function val = get(obj, prop)</a></li><li><a href="#_sub6" class="code">function obj = set(obj, varargin)</a></li><li><a href="#_sub7" class="code">function s = fixedlengthstrings(objs, netLen, staLen, locLen, chaLen)</a></li><li><a href="#_sub8" class="code">function disp(obj)</a></li><li><a href="#_sub9" class="code">function c = char(obj)</a></li><li><a href="#_sub10" class="code">function s = string(obj, delim, option)</a></li><li><a href="#_sub11" class="code">function s = getDelimitedString(obj, delim)</a></li><li><a href="#_sub12" class="code">function  [N, S, L, C] = parse(val)</a></li><li><a href="#_sub13" class="code">function  C = strsplit(s, delim)</a></li><li><a href="#_sub14" class="code">function cha_tags = array(varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="ChannelTag.html" class="code" title="">ChannelTag</a>
+0002    <span class="comment">%ChannelTag Summary of this class goes here</span>
+0003    <span class="comment">% ChannelTag Contains network, station, location and channel information</span>
+0004    <span class="comment">%</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">% ChannelTag Properties:</span>
+0007    <span class="comment">%   network  - network tag   (Generally 2 characters)</span>
+0008    <span class="comment">%   station  - station tag   (Up to 5 alphanumeric characters)</span>
+0009    <span class="comment">%   location - location tag  (2 characters)</span>
+0010    <span class="comment">%   channel  - channel tag   (3 character channel tag)</span>
+0011    <span class="comment">%</span>
+0012    <span class="comment">% ChannelTag Methods:</span>
+0013    <span class="comment">%   char - Retrieve properties as 'network.station.location.channel'</span>
+0014    <span class="comment">%   string - Retrieve properties as 'network.station.location.channel'</span>
+0015    <span class="comment">%   fixedlengthstrings -  return strings of a fixed length</span>
+0016    <span class="comment">%   eq - == for channeltags, with simple '*' wildcard support</span>
+0017    <span class="comment">%   ne - ~= for channeltag (no wilcard support)</span>
+0018    <span class="comment">%</span>
+0019    <span class="comment">%   sort - Sort in assending order by net.cha.loc.sta</span>
+0020    <span class="comment">%   matching - Field-by-field comparison</span>
+0021    <span class="comment">%</span>
+0022    <span class="comment">% Examples of ChannelTag construction:</span>
+0023    <span class="comment">%  chaTag = ChannelTag('NW.STA.LO.CHA'); % create from text</span>
+0024    <span class="comment">%  chaTag = ChannelTag(network, station, location, channel);</span>
+0025    <span class="comment">%  chaTag = ChannelTag(); %default, blank nscl</span>
+0026    <span class="comment">%</span>
+0027    <span class="comment">%  Example using cells of stationID strings</span>
+0028    <span class="comment">%    x = ChannelTag.array({'NW.STA.LO.CHA','NW.STA.LO.CHA'[,...]});</span>
+0029    <span class="comment">%</span>
+0030    <span class="comment">%  Example using individual parts</span>
+0031    <span class="comment">%    cha_tags = ChannelTag.array({'IU','ANMO','00',{'BHZ','BH1','BH2'});</span>
+0032    <span class="comment">%</span>
+0033    <span class="comment">%  note, an array of cha_tags may be created by including cell arrays of</span>
+0034    <span class="comment">%  choices. However, all cells that contain multiple strings must be the</span>
+0035    <span class="comment">%  same size and shape.</span>
+0036    <span class="comment">%</span>
+0037    <span class="comment">%  OK: x = ChannelTag.array('IU',{'ANMO','ANTO},'00',{'BHE','BH1'}</span>
+0038    <span class="comment">%        results in IU.ANMO.00.BHE &amp; IU.ANTO.00.BH1</span>
+0039    <span class="comment">%</span>
+0040    <span class="comment">%  NOTOK: x = ChannelTag.array('IU',{'ANMO','ANTO},'00',{'BHE';'BH1'}</span>
+0041    <span class="comment">%        error because stations (1x2) not same size as channels (2x1)</span>
+0042    <span class="comment">%</span>
+0043    
+0044    <span class="comment">%{</span>
+0045    <span class="comment">%  ----------- WILDCARDS ---------------------</span>
+0046    <span class="comment">%  ChannelTag is merely a storage unit for net-sta-chan-loc information. It</span>
+0047    <span class="comment">%  is blind to wildcards. However, when used as an argument in WAVEFORM,</span>
+0048    <span class="comment">%  wildcards in the ChannelTag take on meaning that depends somewhat on the</span>
+0049    <span class="comment">%  DATASOURCE type. In most cases, * wildcards are understood without</span>
+0050    <span class="comment">%  issue. Note that '*' differs from ''. The latter excludes this term from</span>
+0051    <span class="comment">%  the search altogether. Station and channel cannot be excluded from the</span>
+0052    <span class="comment">%  search.</span>
+0053    <span class="comment">%</span>
+0054    <span class="comment">%  ChannelTag('R*','BHZ','XE','') match all stations begining with R</span>
+0055    <span class="comment">%  ChannelTag('MCK','*','XE','')  match all channels for MCK</span>
+0056    <span class="comment">%  ChannelTag('R*','*','XE','')   all R* stations. All channels</span>
+0057    <span class="comment">%</span>
+0058    <span class="comment">%  The uses above have been tested against Antelope data sources. Note that</span>
+0059    <span class="comment">%  in Antelope it would be more common to use the literal wildcards 'R.*'</span>
+0060    <span class="comment">%  or '.*'. When waveform interprets ChannelTags, it considers these use</span>
+0061    <span class="comment">%  the same.</span>
+0062    <span class="comment">%</span>
+0063    <span class="comment">% EXAMPLE:</span>
+0064    <span class="comment">%   s={'ANMO','ANTO'} , n='IU' , L='00' , c={'BHZ,BHE'}</span>
+0065    <span class="comment">%   chaTag=ChannelTag(s,c,n,L); %  returns a 1x2 ChannelTag:</span>
+0066    <span class="comment">%    chaTag(1) contains ANMO, IU, 00, BHZ</span>
+0067    <span class="comment">%    chaTag(2) contains ANTO, IU, 00, BHE</span>
+0068    <span class="comment">%}</span>
+0069    
+0070    properties
+0071       network  = <span class="string">''</span>;
+0072       station  = <span class="string">''</span>;
+0073       location = <span class="string">''</span>;
+0074       channel  = <span class="string">''</span>;
+0075    <span class="keyword">end</span>
+0076    
+0077    methods
+0078       <a name="_sub0" href="#_subfunctions" class="code">function obj = ChannelTag(varargin)</a>
+0079          <span class="comment">%ChannelTag    Construct a ChannelTag from a string or 4 strings.</span>
+0080          <span class="comment">%  chaTag = ChannelTag('IU', 'ANMO', '00', 'BHZ'); % net, sta, loc, cha</span>
+0081          <span class="comment">%  chaTag = ChannelTag('IU.ANMO.00.BHZ');</span>
+0082          <span class="comment">%</span>
+0083          <span class="comment">%  any of these may be empty ([] or '').</span>
+0084          <span class="comment">%  to create multiple ChannelTags at once, use ChannelTag.array()</span>
+0085          <span class="comment">%</span>
+0086          <span class="comment">%  See also: array</span>
+0087          <span class="comment">% TODO: Update the details. ChannelTag.array is not necessary anymore</span>
+0088          
+0089          <span class="keyword">switch</span> nargin
+0090             <span class="keyword">case</span> 4
+0091                <span class="comment">% inputsThatAreCells = cellfun(@iscell,{N,S,L,C});</span>
+0092                <span class="comment">% if any(cellfun(@iscell,{N,S,L,C}))</span>
+0093                <span class="keyword">if</span> any(cellfun(@iscell,varargin))
+0094                   error(<span class="string">'ChannelTag:InvalidConversion'</span>,<span class="keyword">...</span>
+0095                      [<span class="string">'expected strings but received cells.\n'</span>, <span class="keyword">...</span>
+0096                      <span class="string">'To create multiple ChannelTags, use ChannelTag.array()'</span>]);
+0097                <span class="keyword">end</span>
+0098                varargin = strtrim(varargin);
+0099                [obj.network, obj.station, obj.location, obj.channel] = deal(varargin{:});
+0100             <span class="keyword">case</span> 1
+0101                inObj = varargin{1};
+0102                <span class="keyword">switch</span> class(inObj)
+0103                   <span class="keyword">case</span> <span class="string">'ChannelTag'</span>
+0104                      obj = inObj;
+0105                   <span class="keyword">case</span> {<span class="string">'char'</span>,<span class="string">'struct'</span>}
+0106                      <span class="keyword">if</span> size(inObj,1) == 1
+0107                      [obj.network, obj.station, obj.location, obj.channel] = <span class="keyword">...</span>
+0108                         ChannelTag.parse(inObj);
+0109                      <span class="keyword">else</span>
+0110                         obj = ChannelTag.array(varargin{1});
+0111                         <span class="comment">%error('ChannelTag:InvalidConversion',...</span>
+0112                         <span class="comment">%   'To create multiple ChannelTags, use ChannelTag.array()');</span>
+0113                      <span class="keyword">end</span>
+0114                         
+0115                   <span class="keyword">case</span> <span class="string">'cell'</span>
+0116                      <span class="keyword">if</span> numel(inObj) == 1
+0117                         [obj.network, obj.station, obj.location, obj.channel] = <span class="keyword">...</span>
+0118                            ChannelTag.parse(inObj{1});
+0119                      <span class="keyword">else</span>
+0120                         obj = ChannelTag.array(varargin{1});
+0121                         <span class="comment">%error('ChannelTag:InvalidConversion',...</span>
+0122                         <span class="comment">%   'To create multiple ChannelTags, use ChannelTag.array()');</span>
+0123                      <span class="keyword">end</span>
+0124                   <span class="keyword">otherwise</span>
+0125                      error (<span class="string">'ChannelTag:InvalidConversion'</span>,<span class="string">'Invalid number of arguments'</span>);
+0126                <span class="keyword">end</span>
+0127                
+0128             <span class="keyword">case</span> 0
+0129                <span class="keyword">return</span>
+0130             <span class="keyword">otherwise</span>
+0131                error (<span class="string">'ChannelTag:InvalidConversion'</span>,<span class="string">'Invalid number of arguments'</span>);
+0132          <span class="keyword">end</span>
+0133       <span class="keyword">end</span>
+0134       
+0135       <a name="_sub1" href="#_subfunctions" class="code">function [IDX, objs] = matching(objs, N, S, L, C)</a>
+0136          <span class="comment">%matching   Field-by-field comparison</span>
+0137          <span class="comment">%</span>
+0138          <span class="comment">% idx = cha_tags.matching(Net, Sta, Loc, Cha);</span>
+0139          <span class="comment">% idx = cha_tags.matching('net.sta.loc.cha');</span>
+0140          <span class="comment">% returns an index vector the same size as cha_tags</span>
+0141          <span class="comment">% [idx, matched] = cha_tags.matching(...)</span>
+0142          <span class="comment">%   additionally returns the actual matching cha_tags</span>
+0143          <span class="comment">%</span>
+0144          <span class="comment">% so, cha_tags(matches) will return the actual values</span>
+0145          <span class="comment">% use [] or '' as wildcard</span>
+0146          <span class="comment">%  either:</span>
+0147          <span class="comment">%    cha_tags.matching('IU','ANMO',[],'BHZ')   or</span>
+0148          <span class="comment">%    cha_tags.matching('IU.ANMO..BHZ')</span>
+0149          <span class="comment">% will match BOTH</span>
+0150          <span class="comment">%   'IU.ANMO.00.BHZ' and 'IU.ANMO.01.BHZ'</span>
+0151          <span class="keyword">if</span> nargin == 2
+0152             <span class="keyword">if</span> (ischar(N) &amp;&amp; any(N == <span class="string">'.'</span>)) || isa(N,<span class="string">'ChannelTag'</span>)
+0153                <span class="comment">% query used single string : 'net.sta.loc.cha'</span>
+0154                [N, S, L, C] = ChannelTag.parse(N);
+0155             <span class="keyword">else</span>
+0156                error(<span class="string">'CHANNELTAG:matching:UnknownMatchType'</span>,<span class="string">'don''t know how to match it'</span>);
+0157             <span class="keyword">end</span>
+0158          <span class="keyword">end</span>
+0159          IDX = true(size(objs));
+0160          <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(N) &amp;&amp; all(N ~= <span class="string">'*'</span>)
+0161             IDX = strcmp({objs.network}, N);
+0162          <span class="keyword">end</span>
+0163          <span class="keyword">if</span> exist(<span class="string">'S'</span>, <span class="string">'var'</span>) &amp;&amp; ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(S) &amp;&amp; all(S ~= <span class="string">'*'</span>)
+0164             IDX = IDX &amp; strcmp({objs.station}, S);
+0165          <span class="keyword">end</span>
+0166          <span class="keyword">if</span> exist(<span class="string">'L'</span>, <span class="string">'var'</span>)  &amp;&amp; ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(L) &amp;&amp; all(L ~= <span class="string">'*'</span>)
+0167             IDX = IDX &amp; strcmp({objs.location}, L);
+0168          <span class="keyword">end</span>
+0169          <span class="keyword">if</span> exist(<span class="string">'C'</span>, <span class="string">'var'</span>) &amp;&amp; ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(C) &amp;&amp; all(C ~= <span class="string">'*'</span>)
+0170             IDX = IDX &amp; strcmp({objs.channel}, C);
+0171          <span class="keyword">end</span>
+0172          <span class="keyword">if</span> nargout == 2
+0173             objs = objs(IDX);
+0174          <span class="keyword">end</span>
+0175       <span class="keyword">end</span>
+0176       
+0177       <a name="_sub2" href="#_subfunctions" class="code">function [Y, I] = sort(cha_tags)</a>
+0178          <span class="comment">%sort   Sort channels assending name order</span>
+0179          <span class="comment">%   sorted = sort(channeltags) will sort channels in assending</span>
+0180          <span class="comment">%   order using the precidence: Network, Station, Location,</span>
+0181          <span class="comment">%   Channel. The result will be an array of sorted ChannelTags.</span>
+0182          <span class="comment">%</span>
+0183          <span class="comment">%   [sorted, I] = sort(chantags) will additionally return the</span>
+0184          <span class="comment">%   index, so that chantags(I) = sorted</span>
+0185          <span class="comment">%</span>
+0186          <span class="comment">%   sort is designed to handle SEED-like names, so it will pad each</span>
+0187          <span class="comment">%   value to 5 places before comparing.</span>
+0188          <span class="comment">%      Example:</span>
+0189          <span class="comment">%        c = ChannelTag({'IU.ANMO.00.BHZ','AV.OKTU..EHZ'})</span>
+0190          <span class="comment">%        sortedC = c.sort()  % or sort(c)</span>
+0191          <span class="comment">%</span>
+0192          <span class="comment">%  The above example would compare:</span>
+0193          <span class="comment">%    'IU    .ANMO  .00    .BHZ   ' vs</span>
+0194          <span class="comment">%    'AV    .OKTU  .      .EHZ   '</span>
+0195          <span class="comment">%</span>
+0196          [~,I] = <a href="../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>(cha_tags.fixedlengthstrings(5,5,5,5));
+0197          Y = cha_tags(I);
+0198       <span class="keyword">end</span>
+0199       result = <a href="eq.html" class="code" title="function result = eq(A, B)">eq</a>(A, B)
+0200       
+0201       <a name="_sub3" href="#_subfunctions" class="code">function result = ne(A, B)</a>
+0202          <span class="comment">%~=   for ChannelTag.</span>
+0203          <span class="comment">%   wilcards aren't considered</span>
+0204          result = ~strcmp(A.string,B.string);
+0205       <span class="keyword">end</span>
+0206       
+0207       <a name="_sub4" href="#_subfunctions" class="code">function val = get(obj, prop)</a>
+0208          <span class="comment">%GET for the chaTag object</span>
+0209          <span class="comment">%  result = get(ChannelTag, property), where PROPERTY is one of the</span>
+0210          <span class="comment">%  following:</span>
+0211          <span class="comment">%    STATION, CHANNEL, LOCATION, NETWORK, chaTag_STRING</span>
+0212          <span class="comment">%</span>
+0213          <span class="comment">%  *Deprecated*</span>
+0214          <span class="comment">%</span>
+0215          <span class="comment">% If the results of a single chaTag are requested, then a string is returned.</span>
+0216          <span class="comment">% Otherwise, a cell of values will be returned.</span>
+0217          
+0218          <span class="comment">%warning('Old Usage. instead of &quot;get&quot;, ,use the field name directly.  eg. x = ch.station');</span>
+0219          
+0220          prop = lower(prop);
+0221          
+0222          <span class="keyword">switch</span> prop
+0223             <span class="keyword">case</span>{<span class="string">'station'</span>,<span class="string">'channel'</span>,<span class="string">'network'</span>,<span class="string">'location'</span>}
+0224                val = {obj.(prop)};
+0225             <span class="keyword">case</span> {<span class="string">'nscl_string'</span>}
+0226                <span class="comment">%stuff = chaTag.string;</span>
+0227                warning(<span class="string">'CHANNELTAG:get:obsoleteUsage'</span>,<span class="keyword">...</span>
+0228                   [<span class="string">'get(''nsclstring'') obsolete. Use chaTag.string().\n'</span><span class="keyword">...</span>
+0229                   <span class="string">'  notice it will return N.S.L.C instead of N_S_C_L'</span>]);
+0230                val=strcat({obj.network},<span class="string">'_'</span>,{obj.station},<span class="string">'_'</span>,{obj.channel},<span class="string">'_'</span>,{obj.location});
+0231             <span class="keyword">otherwise</span>
+0232                error(<span class="string">'CHANNELTAG:get:UnrecognizedProperty'</span>,<span class="keyword">...</span>
+0233                   <span class="string">'Unrecognized property name : %s'</span>,  upper(prop));
+0234          <span class="keyword">end</span>
+0235          
+0236          <span class="comment">%if a single chaTag, then return the string representation, else return a</span>
+0237          <span class="comment">%cell of strings.</span>
+0238          <span class="keyword">if</span> numel(val) == 1
+0239             val = val{1};
+0240          <span class="keyword">else</span>
+0241             val = reshape(val,size(obj));
+0242          <span class="keyword">end</span>
+0243       <span class="keyword">end</span><span class="comment">%get</span>
+0244       
+0245       <a name="_sub5" href="#_subfunctions" class="code">function obj = set(obj, varargin)</a>
+0246          <span class="comment">%SET  Set properties for ChannelTag</span>
+0247          <span class="comment">%    s = Set(s,prop_name, val, ...)</span>
+0248          <span class="comment">%    Valid property names:</span>
+0249          <span class="comment">%    STATION, LOCATION, NETWORK, CHANNEL</span>
+0250          <span class="comment">%</span>
+0251          <span class="comment">%    * Deprecated*</span>
+0252          <span class="comment">%    See also: get.channel, get.location, get.network, get.station</span>
+0253          
+0254          <span class="comment">%warning('Old usage: using set for a ChannelTag. use field notation instead. eg. ch.station = X');</span>
+0255          idx = [1 2];
+0256          <span class="keyword">while</span> numel(varargin) &gt; 1 <span class="comment">% for each property</span>
+0257             [prop, val] = deal(varargin{idx});
+0258             varargin(idx) = []; <span class="comment">% remove the prop and val</span>
+0259             <span class="keyword">switch</span> upper(prop)
+0260                <span class="keyword">case</span> {<span class="string">'STATION'</span>,<span class="string">'LOCATION'</span>,<span class="string">'NETWORK'</span>,<span class="string">'CHANNEL'</span>}
+0261                   <span class="keyword">if</span> iscell(val) &amp;&amp; numel(val) &gt; 1
+0262                      val = val{1};
+0263                      warning(<span class="string">'ChannelTag:set:TooManyValues'</span>,<span class="keyword">...</span>
+0264                         <span class="string">'Too many property values, only the first will be used'</span>);
+0265                   <span class="keyword">end</span>
+0266                   [obj.(lower(prop))] = deal(val);
+0267                <span class="keyword">otherwise</span>
+0268                   error(<span class="string">'ChannelTag:set:UnrecognizedProperty'</span>,<span class="keyword">...</span>
+0269                      <span class="string">'Unrecognized property name : %s'</span>,  upper(prop));
+0270             <span class="keyword">end</span>; <span class="comment">%switch</span>
+0271          <span class="keyword">end</span>; <span class="comment">%each property</span>
+0272          <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(varargin)
+0273             error(<span class="string">'ChannelTag:set:PropertyValueMismatch'</span>,<span class="keyword">...</span>
+0274                <span class="string">'Each property should have a value. [%s] has no matching value'</span>, varargin{1});
+0275          <span class="keyword">end</span>
+0276       <span class="keyword">end</span>
+0277       
+0278       <a name="_sub6" href="#_subfunctions" class="code">function s = fixedlengthstrings(objs, netLen, staLen, locLen, chaLen)</a>
+0279          <span class="comment">%fixedlengthstrings   return strings of a fixed length</span>
+0280          <span class="comment">%    s = fixedlengthstrings(objs, netLen, staLen, locLen, chaLen)</span>
+0281          
+0282          strformat = sprintf(<span class="string">'%%-%ds.%%-%ds.%%-%ds.%%-%ds'</span>,netLen,staLen,locLen,chaLen);
+0283          <span class="keyword">for</span> n = numel(objs) : -1 : 1
+0284             chaTag = objs(n);
+0285             s(n) = {sprintf(strformat,chaTag.network,chaTag.station,chaTag.location,chaTag.channel)};
+0286          <span class="keyword">end</span>
+0287       <span class="keyword">end</span>
+0288       
+0289       <a name="_sub7" href="#_subfunctions" class="code">function disp(obj)</a>
+0290          <span class="comment">%disp   display the ChannelTag details</span>
+0291          <span class="keyword">if</span> numel(obj) == 1
+0292             <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'&lt;a href=&quot;matlab:help ChannelTag&quot;&gt;ChannelTag&lt;/a&gt; with network.station.location.channel:'</span>)
+0293             fprintf(<span class="string">'   network: ''%s''\n   station: ''%s''\n  location: ''%s''\n   channel: ''%s''\n'</span>,<span class="keyword">...</span>
+0294                obj.network,obj.station,obj.location, obj.channel);
+0295          <span class="keyword">else</span>
+0296             <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'&lt;a href=&quot;matlab:help ChannelTag&quot;&gt;ChannelTag&lt;/a&gt; array (network.station.location.channel):'</span>)
+0297             <span class="keyword">for</span> n=1:numel(obj)
+0298                <span class="keyword">if</span> strcmp(obj(n).string,<span class="string">'...'</span>)
+0299                   <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'  ... (empty ChannelTag)'</span>);
+0300                <span class="keyword">else</span>
+0301                   <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'  '</span>, obj(n).string]);
+0302                <span class="keyword">end</span>
+0303             <span class="keyword">end</span>
+0304          <span class="keyword">end</span>
+0305       <span class="keyword">end</span>
+0306             
+0307       
+0308       <a name="_sub8" href="#_subfunctions" class="code">function c = char(obj)</a>
+0309          <span class="comment">%char   convert a ChannelTag to its string representation</span>
+0310          c = obj.string([],<span class="string">'nocell'</span>);
+0311       <span class="keyword">end</span>
+0312          
+0313       <a name="_sub9" href="#_subfunctions" class="code">function s = string(obj, delim, option)</a>
+0314          <span class="comment">%string returns string representation of the channelTag(s)</span>
+0315          <span class="comment">% s = chaTag.string()  will return the string representation</span>
+0316          <span class="comment">%      (1xn char) in the format NET.STA.LOC.CHA</span>
+0317          <span class="comment">%</span>
+0318          <span class="comment">% s = chaTag.string(DELIM) will use DELIM to separate</span>
+0319          <span class="comment">%     fields.</span>
+0320          <span class="comment">%     ex.  chaTag.string('-'); will return NET-STA-LOC-CHA</span>
+0321          <span class="comment">%</span>
+0322          <span class="comment">% If chaTag is an array, then results are returned as a</span>
+0323          <span class="comment">% a cell of strings of same shape as chaTag will be returned.</span>
+0324          <span class="comment">%</span>
+0325          <span class="comment">% s = chaTag.string(DELIM,'nocell') to overrides functionality</span>
+0326          <span class="comment">% to return a padded NxM char array</span>
+0327          <span class="comment">% if DELIM is empty, then '.' will be used.</span>
+0328          <span class="keyword">if</span> ~exist(<span class="string">'delim'</span>,<span class="string">'var'</span>) || <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(delim)
+0329             delim = <span class="string">'.'</span>;
+0330          <span class="keyword">end</span>
+0331          <span class="keyword">if</span> numel(obj) == 1
+0332             s = <a href="#_sub11" class="code" title="subfunction s = getDelimitedString(obj, delim)">getDelimitedString</a>(obj, delim);
+0333          <span class="keyword">else</span>
+0334             <span class="keyword">if</span> exist(<span class="string">'option'</span>,<span class="string">'var'</span>) &amp;&amp; strcmpi(option,<span class="string">'nocell'</span>)
+0335                s = <span class="string">''</span>;
+0336                <span class="keyword">for</span> n=1 : numel(obj)
+0337                   tmp = <a href="#_sub11" class="code" title="subfunction s = getDelimitedString(obj, delim)">getDelimitedString</a>(obj(n), delim);
+0338                   s(n,1:numel(tmp)) = tmp;
+0339                <span class="keyword">end</span>
+0340             <span class="keyword">else</span>
+0341                s = cell(size(obj));
+0342                <span class="keyword">for</span> n=1 : numel(obj)
+0343                   s(n) = {<a href="#_sub11" class="code" title="subfunction s = getDelimitedString(obj, delim)">getDelimitedString</a>(obj(n), delim)};
+0344                <span class="keyword">end</span>
+0345             <span class="keyword">end</span>
+0346          <span class="keyword">end</span>
+0347          
+0348          <a name="_sub10" href="#_subfunctions" class="code">function s = getDelimitedString(obj, delim)</a>
+0349             <span class="comment">%getDelimitedString   return a string with delimited fields</span>
+0350             <span class="comment">%   getDelimitedString(chtag, delim) returns the fields in</span>
+0351             <span class="comment">%   network,station, location, channel order, with the</span>
+0352             <span class="comment">%   specified delimiter in between.</span>
+0353             <span class="comment">%</span>
+0354             <span class="comment">%   example:</span>
+0355             <span class="comment">%     &gt;&gt; ch = ChannelTag('NT.STA.00.BHZ');</span>
+0356             <span class="comment">%     &gt;&gt; s = getDelimitedString(ch, ':');</span>
+0357             <span class="comment">%     s =</span>
+0358             <span class="comment">%        'NT:STA:00:BHZ'</span>
+0359             <span class="comment">%</span>
+0360             s = [obj.network, delim, obj.station, delim,<span class="keyword">...</span>
+0361                      obj.location, delim, obj.channel];
+0362          <span class="keyword">end</span>
+0363       <span class="keyword">end</span>
+0364             
+0365    <span class="keyword">end</span><span class="comment">%methods</span>
+0366    
+0367    methods(Static)
+0368       <a name="_sub11" href="#_subfunctions" class="code">function  [N, S, L, C] = parse(val)</a>
+0369          <span class="comment">%parse   parse a period-delimeted string into NET,STA,LOC,CHA</span>
+0370          <span class="comment">%     [N, S, L, C] = ChannelTag.parse('net.sta.loc.cha')</span>
+0371          
+0372          <span class="keyword">if</span> isstruct(val) || isa(val,<span class="string">'ChannelTag'</span>)
+0373             N = val.network;
+0374             S = val.station;
+0375             L = val.location;
+0376             C = val.channel;
+0377          <span class="keyword">elseif</span> ischar(val)
+0378             <span class="comment">% test validity, then split.  in R2015a+ strsplit() could do</span>
+0379             <span class="comment">% this. But, this is being designed on R2012a.</span>
+0380             parts =  <a href="#_sub13" class="code" title="subfunction  C = strsplit(s, delim)">strsplit</a>(val, <span class="string">'.'</span>);
+0381             <span class="keyword">if</span> numel(parts) ~= 4
+0382                error(<span class="string">'ChannelTag:parse:InvalidFieldCount'</span>,<span class="keyword">...</span>
+0383                   <span class="string">'Expected ''A.B.C.D'' (4 fields), but received %d.'</span>, numel(parts));
+0384             <span class="keyword">end</span>
+0385             <span class="keyword">if</span> any(val == <span class="string">' '</span>), 
+0386                parts = strtrim(parts); 
+0387             <span class="keyword">end</span>
+0388             [N, S, L, C] = deal(parts{:});
+0389          <span class="keyword">else</span>
+0390             error(<span class="string">'ChannelTag:parse:UnknownClass'</span>,<span class="keyword">...</span>
+0391                <span class="string">'unknown how to parse: %s'</span>, class(val));
+0392          <span class="keyword">end</span>
+0393          
+0394          <a name="_sub12" href="#_subfunctions" class="code">function  C = strsplit(s, delim)</a>
+0395             <span class="comment">%strsplit   return a cell created from a string.</span>
+0396             <span class="comment">% C = strsplit(str, delim) returns cell created from string</span>
+0397             <span class="comment">%  ex. C = strsplit('A.B..D','.') -&gt; {'A', 'B', '', 'D'}</span>
+0398             <span class="comment">% can (probably) be commented out or removed in r2015a+</span>
+0399             splitpts = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(s == delim);
+0400             starts = [1, splitpts+1];
+0401             ends = [splitpts-1, numel(s)];
+0402             C = cell(1,numel(starts));
+0403             <span class="keyword">for</span> n = 1:numel(starts)
+0404                C(n) = {s(starts(n):ends(n))};
+0405             <span class="keyword">end</span>
+0406          <span class="keyword">end</span>
+0407       <span class="keyword">end</span>
+0408       
+0409       <a name="_sub13" href="#_subfunctions" class="code">function cha_tags = array(varargin)</a>
+0410          <span class="comment">% chaTag.array creates multiple ChannelTags from the input.</span>
+0411          <span class="comment">% cha_tags = chaTag.array({'NET.STA.LOC.CHA','NET2.STA2..CH2'[,...]})</span>
+0412          <span class="comment">% cha_tags = chaTag.array(Net/list, Sta/list, Loc/list, Cha/list)</span>
+0413          <span class="keyword">switch</span> nargin
+0414             <span class="keyword">case</span> 0
+0415                <span class="comment">% return an empty nscltag array</span>
+0416                cha_tags = <a href="ChannelTag.html" class="code" title="">ChannelTag</a>(<span class="string">'...'</span>);
+0417                cha_tags(:)=[];
+0418             <span class="keyword">case</span> 1
+0419                <span class="comment">% parse a cell array of stations. OR parse an NxM char, where</span>
+0420                <span class="comment">% each row is NET.STA.LOC.CHA</span>
+0421                <span class="keyword">if</span> iscell(varargin{1})
+0422                   <span class="keyword">for</span> n = numel(varargin{1}) : -1 : 1
+0423                      cha_tags(n) = <a href="ChannelTag.html" class="code" title="">ChannelTag</a>(varargin{1}{n});
+0424                   <span class="keyword">end</span>
+0425                   cha_tags = reshape(cha_tags,size(varargin{1}));
+0426                <span class="keyword">elseif</span> ischar(varargin{1})
+0427                   char_array = varargin{1};
+0428                   nRows = size(char_array,1);
+0429                   <span class="keyword">for</span> n = nRows : -1 : 1
+0430                      cha_tags(1,n) = <a href="ChannelTag.html" class="code" title="">ChannelTag</a>(strtrim(char_array(n,:)));
+0431                   <span class="keyword">end</span>
+0432                <span class="keyword">else</span>
+0433                   error(<span class="string">'ChannelTag:array:UnknownInput'</span>,<span class="string">'expected cell of strings or a char array'</span>);
+0434                <span class="keyword">end</span>
+0435             <span class="keyword">case</span> 4
+0436                <span class="comment">% expect 1xN char OR arbitrary-sized CELL of 1xN char</span>
+0437                <span class="comment">% if multiple cells, then they should all be same size</span>
+0438                inputsThatAreCells = cellfun(@iscell,varargin);
+0439                <span class="keyword">if</span> any(inputsThatAreCells)
+0440                   <span class="comment">%make a cell array of N.S.L.C</span>
+0441                   A = strcat(varargin{1},<span class="string">'.'</span>,varargin{2},<span class="string">'.'</span>,varargin{3},<span class="string">'.'</span>,varargin{4});
+0442                <span class="keyword">end</span>
+0443                <span class="keyword">for</span> n = numel(A): -1 : 1
+0444                   cha_tags(n) = <a href="ChannelTag.html" class="code" title="">ChannelTag</a>(A{n});
+0445                <span class="keyword">end</span>
+0446          <span class="keyword">end</span>
+0447       <span class="keyword">end</span>
+0448          
+0449    <span class="keyword">end</span> <span class="comment">%static methods</span>
+0450 <span class="keyword">end</span> <span class="comment">%classdef</span>
+0451</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

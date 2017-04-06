@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of despike</title>
+  <meta name="keywords" content="despike">
+  <meta name="description" content="%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@rsam</a> &gt; despike.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@rsam&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>despike
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function self = despike(self, spiketype, maxRatio) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ rsam.despike Despike a rsam object by comparing ratios of
+ concurrent samples. Checks for spikes lasting 1 or 2 samples.
+   rsamdespiked = rsamobject.despike(spiketype, maxRatio)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="rsam.html" class="code" title="">rsam</a>	</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0002 <a name="_sub0" href="#_subfunctions" class="code">function self = despike(self, spiketype, maxRatio)</a>
+0003     <span class="comment">% rsam.despike Despike a rsam object by comparing ratios of</span>
+0004     <span class="comment">% concurrent samples. Checks for spikes lasting 1 or 2 samples.</span>
+0005     <span class="comment">%   rsamdespiked = rsamobject.despike(spiketype, maxRatio)</span>
+0006 
+0007     <span class="comment">%   Example 1: Remove spikes which are at least 10 times</span>
+0008     <span class="comment">%   adjacent samples. Store these in s.spikes.</span>
+0009     <span class="comment">%        s = s.despike('spikes', 10)</span>
+0010     <span class="comment">%</span>
+0011     <span class="comment">%   Example 2: Remove spikes which are at least 3 times</span>
+0012     <span class="comment">%   adjacent samples. Store these in s.events.</span>
+0013     <span class="comment">%        s = s.despike('events', 3)</span>
+0014     <span class="comment">%</span>
+0015     <span class="comment">%   Inputs:</span>
+0016     <span class="comment">%       maxRatio - Maximum ratio that defines &quot;normal&quot; data</span>
+0017     <span class="comment">%                       compared to surrounding samples</span>
+0018     <span class="comment">%   Outputs:</span>
+0019     <span class="comment">%       s = rsam object with spikes removed</span>
+0020 
+0021     <span class="comment">% find spikes lasting 1 sample only</span>
+0022     y= self.data;
+0023     spikeNumber = 0;
+0024     <span class="keyword">for</span> i=2:length(self.data)-1
+0025         <span class="keyword">if</span> self.data(i)&gt;maxRatio*self.data(i-1)
+0026             <span class="keyword">if</span> self.data(i)&gt;maxRatio*self.data(i+1)
+0027                 <span class="comment">%sample i is an outlier</span>
+0028                 y(i) = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>([self.data(i-1) self.data(i+1)]);
+0029                 spikeNumber = spikeNumber + 1;
+0030                 <span class="comment">%spikes(spikeNumber) = spike(self.dnum(i), self.data(i) - y(i), y(i), '');</span>
+0031                 spikes(spikeNumber) = <a href="rsam.html" class="code" title="">rsam</a>(<span class="string">'dnum'</span>, self.dnum(i), <span class="string">'data'</span>, self.data(i) - y(i),  <span class="string">'sta'</span>, self.sta, <span class="string">'chan'</span>, self.chan, <span class="string">'seismogram_type'</span>, self.seismogram_type, <span class="string">'units'</span>, self.units, <span class="string">'measure'</span>, self.measure);
+0032                 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(sprintf(<span class="string">'%s: sample %d, time %s, before %f, this %f, after %f. Replacing with %f'</span>,upper(spiketype),i, datestr(self.dnum(i)), self.data(i-1), self.data(i), self.data(i+1), y(i)));
+0033             <span class="keyword">end</span>
+0034         <span class="keyword">end</span>
+0035     <span class="keyword">end</span>
+0036 
+0037     <span class="comment">% find spikes lasting 2 samples</span>
+0038     <span class="keyword">for</span> i=2:length(self.data)-2
+0039         <span class="keyword">if</span> self.data(i)&gt;maxRatio*self.data(i-1) &amp; self.data(i+1)&gt;maxRatio*self.data(i-1)
+0040             <span class="keyword">if</span> self.data(i)&gt;maxRatio*self.data(i+2) &amp; self.data(i+1)&gt;maxRatio*self.data(i+2) 
+0041                 <span class="comment">%samples i &amp; i+1 are outliers</span>
+0042                 y(i:i+1) = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>([self.data(i-1) self.data(i+2)]);
+0043                 spikeNumber = spikeNumber + 1;
+0044                 <span class="comment">% spikes(spikeNumber) = spike( ...</span>
+0045                 <span class="comment">%     self.dnum(i:i+1), ...</span>
+0046                 <span class="comment">%     self.data(i:i+1) - y(i:i+1), ...</span>
+0047                 <span class="comment">%     y(i:i+1), '' );</span>
+0048                 spikes(spikeNumber) = <a href="rsam.html" class="code" title="">rsam</a>(<span class="string">'dnum'</span>, self.dnum(i:i+1), <span class="string">'data'</span>, self.data(i:i+1) - y(i:i+1),  <span class="string">'sta'</span>, self.sta, <span class="string">'chan'</span>, self.chan, <span class="string">'seismogram_type'</span>, self.seismogram_type, <span class="string">'units'</span>, self.units, <span class="string">'measure'</span>, self.measure);
+0049                 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(sprintf(<span class="string">'%s: sample %d, time %s, before %f, these %f %f, after %f. Replacing with %f'</span>,upper(spiketype), i, datestr(self.dnum(i)), self.data(i-1), self.data(i), self.data(i+1), self.data(i+2), y(i)));
+0050             <span class="keyword">end</span>
+0051         <span class="keyword">end</span>
+0052     <span class="keyword">end</span>
+0053 
+0054     <span class="comment">% find spikes lasting 3 samples - could be a short as 62</span>
+0055     <span class="comment">% seconds</span>
+0056     <span class="keyword">if</span> exist(<span class="string">'spikes'</span>, <span class="string">'var'</span>)
+0057         <span class="keyword">if</span> ~strcmp(spiketype, <span class="string">'spikes'</span>) <span class="comment">% only makes sense for events - an actual telemetry spike will be 1 or 2 samples long only (a few seconds)</span>
+0058             <span class="keyword">for</span> i=2:length(self.data)-3
+0059                 <span class="keyword">if</span> self.data(i)&gt;maxRatio*self.data(i-1) &amp; self.data(i+1)&gt;maxRatio*self.data(i-1) &amp; self.data(i+2)&gt;maxRatio*self.data(i-1) 
+0060                     <span class="keyword">if</span> self.data(i)&gt;maxRatio*self.data(i+3) &amp; self.data(i+1)&gt;maxRatio*self.data(i+3) &amp; self.data(i+2)&gt;maxRatio*self.data(i+3)
+0061                         <span class="comment">%samples i &amp; i+1 are outliers</span>
+0062                         y(i:i+2) = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>([self.data(i-1) self.data(i+3)]);
+0063                         spikeNumber = spikeNumber + 1;
+0064                         <span class="comment">% spikes(spikeNumber) = spike( ...</span>
+0065                         <span class="comment">%     self.dnum(i:i+1), ...</span>
+0066                         <span class="comment">%     self.data(i:i+1) - y(i:i+1), ...</span>
+0067                         <span class="comment">%     y(i:i+1), '' );</span>
+0068                         spikes(spikeNumber) = <a href="rsam.html" class="code" title="">rsam</a>(<span class="string">'dnum'</span>, self.dnum(i:i+2), <span class="string">'data'</span>, self.data(i:i+2) - y(i:i+2), <span class="string">'sta'</span>, self.sta, <span class="string">'chan'</span>, self.chan, <span class="string">'seismogram_type'</span>, self.seismogram_type, <span class="string">'units'</span>, self.units, <span class="string">'measure'</span>, self.measure);
+0069                         <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(sprintf(<span class="string">'%s: sample %d, time %s, before %f, these %f %f %f, after %f. Replacing with %f'</span>,upper(spiketype), i, datestr(self.dnum(i)), self.data(i-1), self.data(i), self.data(i+1), self.data(i+2), self.data(i+3), y(i)));
+0070                     <span class="keyword">end</span>
+0071                 <span class="keyword">end</span>
+0072             <span class="keyword">end</span>            
+0073         <span class="keyword">end</span>
+0074     <span class="keyword">end</span>
+0075 
+0076     self.data = y; 
+0077     <span class="keyword">if</span> exist(<span class="string">'spikes'</span>, <span class="string">'var'</span>)
+0078         <span class="keyword">if</span> strcmp(spiketype, <span class="string">'spikes'</span>)
+0079             self.spikes = spikes;
+0080         <span class="keyword">else</span>
+0081             self.transientEvents = spikes;
+0082         <span class="keyword">end</span>
+0083     <span class="keyword">end</span>
+0084 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

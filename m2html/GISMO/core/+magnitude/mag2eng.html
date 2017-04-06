@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mag2eng</title>
+  <meta name="keywords" content="mag2eng">
+  <meta name="description" content="MAG2ENG Convert (a vector of) magnitude into (a vector of) equivalent energy(ies).">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">+magnitude</a> &gt; mag2eng.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+magnitude&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>mag2eng
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>MAG2ENG Convert (a vector of) magnitude into (a vector of) equivalent energy(ies).</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function eng=mag2eng(mag); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> MAG2ENG Convert (a vector of) magnitude into (a vector of) equivalent energy(ies).
+   
+   Conversion is based on the the following formula from Hanks and Kanamori (1979):
+
+      mag = log10(energy)/1.5 - 4.7
+
+   That is, energy (Joules) is roughly proportional to the peak amplitude to the power of 1.5.
+   This obviously is based on earthquake waveforms following a characteristic shape.
+   For a waveform of constant amplitude, energy would be proportional to peak amplitude
+   to the power of 2.
+
+   For Montserrat data, when calibrating against events in the SRU catalog, a factor of
+   3.7 was preferred to 4.7.
+
+   See also <a href="eng2mag.html" class="code" title="function mag=eng2mag(eng);">eng2mag</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@waveform/power.html" class="code" title="function a = power(a, b)">power</a>	POWER (.^) waveform implementation of element-by-element power (.^)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function eng=mag2eng(mag);</a>
+0002 <span class="comment">% MAG2ENG Convert (a vector of) magnitude into (a vector of) equivalent energy(ies).</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%   Conversion is based on the the following formula from Hanks and Kanamori (1979):</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">%      mag = log10(energy)/1.5 - 4.7</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   That is, energy (Joules) is roughly proportional to the peak amplitude to the power of 1.5.</span>
+0009 <span class="comment">%   This obviously is based on earthquake waveforms following a characteristic shape.</span>
+0010 <span class="comment">%   For a waveform of constant amplitude, energy would be proportional to peak amplitude</span>
+0011 <span class="comment">%   to the power of 2.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%   For Montserrat data, when calibrating against events in the SRU catalog, a factor of</span>
+0014 <span class="comment">%   3.7 was preferred to 4.7.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%   See also eng2mag</span>
+0017 
+0018 <span class="comment">% AUTHOR: Glenn Thompson</span>
+0019 <span class="comment">% $Date$</span>
+0020 <span class="comment">% $Revision$</span>
+0021 
+0022 <span class="comment">% for events without a magnitude, change it to -0.5 for energy calculation purposes</span>
+0023 
+0024     mag(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(isnan(mag))) = -Inf;
+0025     eng = <a href="../../../GISMO/core/@waveform/power.html" class="code" title="function a = power(a, b)">power</a>(10, (1.5 * mag + 4.7));
+0026 
+0027</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

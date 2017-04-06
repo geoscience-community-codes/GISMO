@@ -1,0 +1,381 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Sfile</title>
+  <meta name="keywords" content="Sfile">
+  <meta name="description" content="Class that describes data in a Seisan S-file">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@Sfile</a> &gt; Sfile.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@Sfile&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>Sfile
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Class that describes data in a Seisan S-file</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Class that describes data in a Seisan S-file</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/+Catalog/+read_catalog/aef.html" class="code" title="function self = aef(varargin)">aef</a>	READ_CATALOG.AEF</li><li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="Sfile.html" class="code" title="">Sfile</a>	Class that describes data in a Seisan S-file</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>	ChannelTag Converter from scnlobject to ChannelTag</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/rms.html" class="code" title="function RMS = rms(W, varargin)">rms</a>	RMS root mean square of a waveform</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/+Catalog/+read_catalog/seisan.html" class="code" title="function self = seisan(varargin)">seisan</a>	READ_CATALOG.SEISAN Read a Seisan event database - consisting of</li><li><a href="Sfile.html" class="code" title="">Sfile</a>	Class that describes data in a Seisan S-file</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function s = Sfile(fileContents)</a></li><li><a href="#_sub2" class="code">function dnum=filename2datenum(sfilebasename)</a></li><li><a href="#_sub3" class="code">function files = list_sfiles(dbpath, snum, enum)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Class that describes data in a Seisan S-file</span>
+0002 classdef <a href="Sfile.html" class="code" title="">Sfile</a>
+0003     properties
+0004         etime = NaN
+0005         mainclass = <span class="string">'U'</span>
+0006         subclass = <span class="string">'u'</span>
+0007         wavfiles = {}
+0008         year = NaN
+0009         month = NaN
+0010         otime = NaN
+0011         magnitude = NaN
+0012         longitude = NaN
+0013         latitude = NaN
+0014         depth = NaN
+0015         z_indicator = <span class="string">''</span>
+0016         no_sta = NaN
+0017         gap = NaN
+0018         error = struct()
+0019         <a href="../../../GISMO/core/@waveform/rms.html" class="code" title="function RMS = rms(W, varargin)">rms</a> = NaN
+0020         focmec = struct()
+0021         maximum_intensity = <span class="string">''</span>
+0022         url = <span class="string">''</span>
+0023         last_action = <span class="string">''</span>
+0024         action_time = <span class="string">''</span>
+0025         analyst = <span class="string">''</span>
+0026         agency = <span class="string">''</span>
+0027         id = <span class="string">''</span>
+0028         bbdur = NaN
+0029         spdur = NaN
+0030         <a href="../../../GISMO/core/+Catalog/+read_catalog/aef.html" class="code" title="function self = aef(varargin)">aef</a> = struct()
+0031     <span class="keyword">end</span>
+0032     
+0033     methods
+0034         <a name="_sub0" href="#_subfunctions" class="code">function s = Sfile(fileContents)</a>
+0035         <span class="comment">%Sfile Constructor for Sfile</span>
+0036         <span class="comment">% s = SFILE(fileContents)</span>
+0037         <span class="comment">% Example: Read a Seisan S-file from a local file:</span>
+0038         <span class="comment">%     sfileObject = SFILE(fullfile('/raid/data/MONTSERRAT/seisan/REA/MVOE_/2002/02', '27-2109-46L.S200202SACPZ.IU.COLA.BHZ'))</span>
+0039         <span class="comment">%</span>
+0040         <span class="comment">% OUTPUT VARIABLES:</span>
+0041         <span class="comment">%   s = a structure containing</span>
+0042         <span class="comment">%       aef = a structure with vector fields</span>
+0043         <span class="comment">%           amp = MAX AVERAGE AMPLITUDE OF SIGNAL</span>
+0044         <span class="comment">%           eng = SEISMIC ENERGY</span>
+0045         <span class="comment">%           ssam = percentage of energy in 11 different frequency bins</span>
+0046         <span class="comment">%           pkf = PEAK FREQUENCY</span>
+0047         <span class="comment">%           ctag = CHANNELTAG</span>
+0048         <span class="comment">%       stime = EVENT TIME</span>
+0049         <span class="comment">%       ...and many more variables...</span>
+0050     
+0051             debug.printfunctionstack(<span class="string">'&gt;'</span>)
+0052 
+0053             <span class="comment">% Validate</span>
+0054             <span class="keyword">if</span> ~exist(<span class="string">'fileContents'</span>,<span class="string">'var'</span>)
+0055                 help(mfilename);
+0056                 <span class="keyword">return</span>
+0057             <span class="keyword">end</span>
+0058 
+0059             <span class="comment">% Initialize</span>
+0060             <a href="../../../GISMO/core/+Catalog/+read_catalog/aef.html" class="code" title="function self = aef(varargin)">aef</a> = struct();
+0061             aeflinenum = 0;
+0062             magnum = 0;
+0063 
+0064             <span class="comment">% Read lines into cell array</span>
+0065             lines = strread(fileContents, <span class="string">'%s'</span>, <span class="string">'delimiter'</span>, sprintf(<span class="string">'\n'</span>));
+0066             linenum = 1;
+0067 
+0068             <span class="keyword">while</span> linenum &lt;= numel(lines),
+0069                 tline = fileContents(1+(linenum-1)*82:<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([length(fileContents) 80+(linenum-1)*82]));
+0070                 linenum = linenum + 1;
+0071                 <span class="comment">%disp(sprintf('*%s*',tline));</span>
+0072                 linelength=length(tline); 
+0073                 <span class="keyword">if</span> ischar(tline) &amp; linelength == 80
+0074                     lineend = tline(80);
+0075                 <span class="keyword">else</span>
+0076                     <span class="keyword">continue</span>
+0077                 <span class="keyword">end</span>
+0078                 
+0079                 <span class="keyword">if</span> lineend == <span class="string">'1'</span>
+0080                     <span class="keyword">if</span> length(strtrim(tline(2:20)))  &gt;= 14
+0081                         s.year = str2num(tline(2:5));
+0082                         s.month = str2num(tline(7:8));
+0083                         day = str2num(tline(9:10));
+0084                         hour = str2num(tline(12:13));
+0085                         minute = str2num(tline(14:15));
+0086                         second = str2num(tline(17:20));
+0087                         <span class="keyword">if</span> floor(second) == 60
+0088                             minute = minute + 1;
+0089                             second = second - 60.0;
+0090                         <span class="keyword">end</span>
+0091                         s.otime = datenum(s.year, s.month, day, hour, minute, floor(second));
+0092                     <span class="keyword">end</span>
+0093                     s.mainclass = strtrim(tline(22:23));
+0094                     lat = str2num(tline(24:30));
+0095                     lon = str2num(tline(31:38));
+0096                     depth = str2num(tline(39:43));
+0097                     <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(lat)
+0098                         s.latitude = lat;
+0099                     <span class="keyword">end</span>
+0100                     <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(lon)
+0101                         s.longitude = lon;
+0102                     <span class="keyword">end</span>     
+0103                     <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(depth)
+0104                         s.depth = depth;
+0105                     <span class="keyword">end</span>                    
+0106                     s.z_indicator = strtrim(tline(44));
+0107                     s.agency = strtrim(tline(46:48));
+0108                     s.no_sta=str2num(tline(49:51));
+0109                     <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(s.no_sta)
+0110                         s.no_sta=0;
+0111                     <span class="keyword">end</span>
+0112                     s.rms=str2num(tline(52:55));
+0113                     <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(strtrim(tline(56:59)));
+0114                         magnum = magnum + 1;
+0115                         s.magnitude(magnum).value = str2num(tline(56:59));
+0116                         s.magnitude(magnum).type = tline(60);
+0117                         s.magnitude(magnum).agency = strtrim(tline(61:63));
+0118                     <span class="keyword">end</span>
+0119                     <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(strtrim(tline(64:67)))
+0120                         magnum = magnum + 1;
+0121                         s.magnitude(magnum).value = str2num(tline(64:67));
+0122                         s.magnitude(magnum).type = tline(68);
+0123                         s.magnitude(magnum).agency = strtrim(tline(69:71));
+0124                     <span class="keyword">end</span>
+0125                     <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(strtrim(tline(72:75)))
+0126                         magnum = magnum + 1;
+0127                         s.magnitude(magnum).value = str2num(tline(72:75));
+0128                         s.magnitude(magnum).type = tline(76);
+0129                         s.magnitude(magnum).agency = strtrim(tline(77:79));
+0130                     <span class="keyword">end</span>                
+0131                 <span class="keyword">end</span>
+0132 
+0133                 <span class="comment">% Process Type 2 line, Macroseismic Intensity Information</span>
+0134                 <span class="keyword">if</span> lineend == <span class="string">'2'</span>
+0135                    s.maximum_intensity=str2num(tline(28:29));
+0136                 <span class="keyword">end</span>
+0137 
+0138                 <span class="keyword">if</span> lineend == <span class="string">'3'</span>   <span class="comment">% This is SEISAN identifier for summary lines in the Sfile</span>
+0139                     <span class="keyword">if</span> strfind(tline,<span class="string">'VOLC'</span>)                   
+0140                         <span class="keyword">if</span> strfind(tline,<span class="string">'MAIN'</span>)  <span class="comment">% This identifies the volcanic type</span>
+0141                             s.subclass=tline(12);
+0142                         <span class="keyword">else</span> <span class="comment">% A TYPE 3 LINE LIKE &quot;VOLC STA&quot;</span>
+0143                             <span class="keyword">if</span> strcmp(sta,<span class="string">'*'</span>) || strfind(tline,sta)
+0144                                 <span class="keyword">if</span> strcmp(chan,<span class="string">'*'</span>) ||  strfind(tline(14:15),chan(end))
+0145                                     aeflinenum = aeflinenum + 1;
+0146                                     thissta = strtrim(tline(7:10));
+0147                                     thischan = strtrim(tline(12:15));
+0148                                     aef.ctag(aeflinenum) = <a href="../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(<span class="string">''</span>, thissta, <span class="string">''</span>, thischan);
+0149                                     <span class="keyword">try</span>
+0150                                         <span class="comment">%aef.amp(aeflinenum)=str2num(tline(20:27));</span>
+0151                                         aef.amp(aeflinenum)=str2num(tline(18:25));
+0152                                     <span class="keyword">catch</span>
+0153                                         tline
+0154                                         tline(20:27)
+0155                                         aeflinenum
+0156                                         aef.amp
+0157                                         error(<span class="string">'aef.amp'</span>)
+0158                                     <span class="keyword">end</span>
+0159                                     <span class="comment">%aef.eng(aeflinenum)=str2num(tline(30:37));</span>
+0160                                     aef.eng(aeflinenum)=str2num(tline(28:35));
+0161                                     <span class="keyword">for</span> i = 1:11
+0162                                         <span class="comment">%startindex = (i-1)*3 + 40;</span>
+0163                                         startindex = (i-1)*3 + 38;
+0164                                         ssam(i) = str2num(tline(startindex:startindex+1));
+0165                                     <span class="keyword">end</span>
+0166                                     aef.ssam{aeflinenum} = ssam;
+0167                                     aef.pkf(aeflinenum)=str2num(tline(73:77));   <span class="comment">% Peak frequency (Frequency of the largest peak</span>
+0168                                 <span class="keyword">end</span>
+0169                             <span class="keyword">end</span>
+0170                         <span class="keyword">end</span>
+0171                     <span class="keyword">elseif</span> strcmp(tline(2:7), <span class="string">'ExtMag'</span>)
+0172                         magnum = magnum + 1;
+0173                         s.magnitude(magnum).value = str2num(tline(9:12));
+0174                         s.magnitude(magnum).type = tline(13);
+0175                         s.magnitude(magnum).agency = strtrim(tline(14:16));   
+0176                     <span class="keyword">elseif</span> strcmp(tline(1:4), <span class="string">'URL'</span>)
+0177                         s.url = strtrim(tline(6:78));
+0178                     <span class="keyword">end</span>
+0179 
+0180                 <span class="keyword">end</span>
+0181 
+0182                 <span class="keyword">if</span> lineend == <span class="string">'6'</span>
+0183                     s.wavfiles = strread(strtrim(tline(2:79)), <span class="string">'%s'</span>);
+0184                     <span class="comment">%wavfile{1} = tline(2:36);</span>
+0185                 <span class="keyword">end</span>
+0186 
+0187                 <span class="comment">% Process Type E line, Hyp error estimates</span>
+0188                 <span class="keyword">if</span> lineend == <span class="string">'E'</span>
+0189                     s.gap=str2num(tline(6:8));
+0190                     s.error.origintime=str2num(tline(15:20));
+0191                     s.error.latitude=str2num(tline(25:30));
+0192                     s.error.longitude=str2num(tline(33:38));
+0193                     s.error.depth=str2num(tline(39:43));
+0194                     s.error.covxy=str2num(tline(44:55));
+0195                     s.error.covxz=str2num(tline(56:67));
+0196                     s.error.covyz=str2num(tline(68:79));
+0197                 <span class="keyword">end</span>
+0198 
+0199                 <span class="comment">% Process Type F line, Fault plane solution</span>
+0200                 <span class="comment">% Format has changed need to fix AAH - 2011-06-23</span>
+0201                 <span class="keyword">if</span> lineend == <span class="string">'F'</span> <span class="comment">%and not s.focmec.has_key('dip'):</span>
+0202                     s.focmec.strike=str2num(tline(1:10));
+0203                     s.focmec.dip=str2num(tline(11:20));
+0204                     s.focmec.rake=str2num(tline(21:30));
+0205                     <span class="comment">%s.focmec.bad_pols=str2num(tline(61:66));</span>
+0206                     s.focmec.agency=tline(67:69);
+0207                     s.focmec.source=tline(71:77);
+0208                     s.focmec.quality=tline(78);
+0209                 <span class="keyword">end</span>
+0210 
+0211                 <span class="comment">% Process Type H line, High accuracy line</span>
+0212                 <span class="comment">% This replaces some origin parameters with more accurate ones</span>
+0213                 <span class="keyword">if</span> lineend == <span class="string">'H'</span>
+0214                     osec0=str2num(tline(17:22));
+0215                     yyyy0=str2num(tline(2:5));
+0216                     mm0=str2num(tline(7:8));
+0217                     dd0=str2num(tline(9:10));
+0218                     hh0=str2num(tline(12:13));
+0219                     mi0=str2num(tline(14:15));
+0220                     s.otime=datenum(yyyy0, mm0, dd0, hh0, mi0, osec0);
+0221                     s.latitude=str2num(tline(24:32));
+0222                     s.longitude=str2num(tline(34:43));
+0223                     s.depth=str2num(tline(45:52));
+0224                     s.rms=str2num(tline(54:59));   
+0225                 <span class="keyword">end</span>
+0226 
+0227                 <span class="keyword">if</span> lineend == <span class="string">'I'</span>
+0228                     s.last_action=strtrim(tline(9:11));
+0229                     s.action_time=strtrim(tline(13:26));
+0230                     s.analyst = strtrim(tline(31:33));
+0231                     s.id = str2num(tline(61:74));
+0232                 <span class="keyword">end</span>  
+0233 
+0234                 <span class="keyword">if</span> tline(2:8)==<span class="string">'trigger'</span> 
+0235                     s.bbdur=str2num(tline(18:19)); <span class="comment">% EARTHWORM TRIGGER DURATION (including pre &amp; posttrigger times?)</span>
+0236                     s.bbdur=str2num(tline(19:23));
+0237                 <span class="keyword">elseif</span> tline(2:7)==<span class="string">'sptrig'</span>
+0238                     s.spdur=str2num(tline(19:23));
+0239                 <span class="keyword">end</span>
+0240 
+0241                 <span class="keyword">if</span> tline(22:24) == <span class="string">'MVO'</span> &amp;  (lineend == <span class="string">'6'</span>) <span class="comment">% DATE AND TIME OF THE EVENT</span>
+0242                     s.etime = datenum(sprintf(<span class="string">'%s %s:%s:%s'</span>,tline(2:11),tline(13:14), tline(15:16), tline(18:19)));
+0243                 <span class="keyword">end</span>
+0244             <span class="keyword">end</span>
+0245             
+0246             s.aef = <a href="../../../GISMO/core/+Catalog/+read_catalog/aef.html" class="code" title="function self = aef(varargin)">aef</a>;
+0247             debug.printfunctionstack(<span class="string">'&lt;'</span>)
+0248         <span class="keyword">end</span>
+0249     <span class="keyword">end</span>
+0250     
+0251     methods(Static)
+0252         <a name="_sub1" href="#_subfunctions" class="code">function dnum=filename2datenum(sfilebasename)</a>
+0253         <span class="comment">% SFILE.FILENAME2DATENUM convert the name of a Seisan S-file into a</span>
+0254         <span class="comment">% MATLAB datenum</span>
+0255             ddstr=sfilebasename(1:2);
+0256             hhstr=sfilebasename(4:5);
+0257             mistr=sfilebasename(6:7);
+0258             ssstr=sfilebasename(9:10);
+0259             yystr=sfilebasename(14:17);
+0260             mm=str2num(sfilebasename(18:19));
+0261             months=[<span class="string">'Jan'</span>;<span class="string">'Feb'</span>;<span class="string">'Mar'</span>;<span class="string">'Apr'</span>;<span class="string">'May'</span>;<span class="string">'Jun'</span>;<span class="string">'Jul'</span>;<span class="string">'Aug'</span>;<span class="string">'Sep'</span>;<span class="string">'Oct'</span>;<span class="string">'Nov'</span>;<span class="string">'Dec'</span>];
+0262             mmstr=months(mm,:);
+0263             datestring=[ddstr,<span class="string">'-'</span>,mmstr,<span class="string">'-'</span>,yystr,<span class="string">' '</span>,hhstr,<span class="string">':'</span>,mistr,<span class="string">':'</span>,ssstr];
+0264             <span class="keyword">try</span>
+0265                 dnum=datenum(datestring);
+0266             <span class="keyword">catch</span>
+0267                 warning(sprintf(<span class="string">'Could not convert %s to a datenum for sfile=%s. Returning NaN'</span>, datestring, sfilebasename));
+0268                 dnum = NaN;
+0269             <span class="keyword">end</span>
+0270         <span class="keyword">end</span>
+0271         
+0272         
+0273         <a name="_sub2" href="#_subfunctions" class="code">function files = list_sfiles(dbpath, snum, enum)</a>
+0274             <span class="comment">% SFILE.LIST_SFILES Load waveform files from a Seisan database</span>
+0275             <span class="comment">%   s = SFILE.LIST_SFILES(dbpath, snum, enum) search a Seisan</span>
+0276             <span class="comment">%   database for Sfiles matching the time range given by snum</span>
+0277             <span class="comment">%   and enum.</span>
+0278             <span class="comment">%</span>
+0279             <span class="comment">%   Notes:</span>
+0280             <span class="comment">%     Seisan Sfiles are typically stored in a Seisan</span>
+0281             <span class="comment">%     Seisan database, which is a tree of 4-digit-year/2-digit-month</span>
+0282             <span class="comment">%     directories. They have a name matching DD-HHMM-SSc.SYYYYMM</span>
+0283             <span class="comment">%</span>
+0284             <span class="comment">%   Example:</span>
+0285             <span class="comment">%       Load all data for all stations &amp; channels between 1000 and 1100</span>
+0286             <span class="comment">%       UTC on March 1st, 2001.</span>
+0287             <span class="comment">%</span>
+0288             <span class="comment">%           dbpath = '/raid/data/seisan/REA/DSNC_';</span>
+0289             <span class="comment">%           snum = datenum(2001,3,1,10,0,0);</span>
+0290             <span class="comment">%           enum = datenum(2001,3,1,11,0,0);</span>
+0291             <span class="comment">%           s = SFILE.LIST_SFILES(dbpath, snum, enum)</span>
+0292             <span class="comment">%</span>
+0293 
+0294             debug.printfunctionstack(<span class="string">'&gt;'</span>)
+0295 
+0296             files = [];
+0297 
+0298             <span class="comment">% Test dbpath</span>
+0299             <span class="keyword">if</span> ~exist(dbpath,<span class="string">'dir'</span>)
+0300                 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(sprintf(<span class="string">'dbpath %s not found'</span>,dbpath))
+0301                 <span class="keyword">return</span>
+0302             <span class="keyword">end</span>
+0303 
+0304             <span class="comment">%% Compile a list from all directories from snum to enum</span>
+0305             sdv = datevec(snum);
+0306             edv = datevec(enum);
+0307             fileindex = 0;
+0308             <span class="keyword">for</span> yyyy=sdv(1):edv(1)
+0309                <span class="keyword">for</span> mm=sdv(2):edv(2)
+0310                    seisandir = fullfile(dbpath, sprintf(<span class="string">'%4d'</span>,yyyy), sprintf(<span class="string">'%02d'</span>,mm) );
+0311                    newfiles = dir(fullfile(seisandir, sprintf(<span class="string">'*%4d%02d'</span>,yyyy,mm)));
+0312                    <span class="keyword">for</span> i=1:length(newfiles)
+0313                        dnum = Sfile.filename2datenum(newfiles(i).name);
+0314                        <span class="keyword">if</span> dnum &gt;= snum &amp; dnum &lt;= enum
+0315                            fileindex = fileindex + 1;
+0316                            newfiles(i).dir = seisandir;
+0317                            files = [files; newfiles(i)];
+0318                        <span class="keyword">elseif</span> dnum&gt;enum
+0319                            <span class="keyword">break</span>;
+0320                        <span class="keyword">end</span>
+0321                    <span class="keyword">end</span>
+0322                <span class="keyword">end</span>
+0323             <span class="keyword">end</span>
+0324 
+0325             <span class="comment">%% Echo the list of matching sfiles</span>
+0326             fprintf(<span class="string">'There are %d sfiles matching your request in %s\n'</span>,numel(files),dbpath)
+0327 
+0328             debug.printfunctionstack(<span class="string">'&lt;'</span>)
+0329         <span class="keyword">end</span>
+0330 
+0331     <span class="keyword">end</span>
+0332 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

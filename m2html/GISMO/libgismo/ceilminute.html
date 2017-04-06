@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ceilminute</title>
+  <meta name="keywords" content="ceilminute">
+  <meta name="description" content="CEILMINUTE round up datenum to next minute mark">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">libgismo</a> &gt; ceilminute.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/libgismo&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>ceilminute
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>CEILMINUTE round up datenum to next minute mark</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function dnum=ceilminute(dnum, nummins) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> CEILMINUTE round up datenum to next minute mark
+ dnum=ceilminute(dnum)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/applications/+iceweb/spectrogram_iceweb.html" class="code" title="function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)">spectrogram_iceweb</a>	SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of</li><li><a href="../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>	Purpose:</li><li><a href="../../GISMO/core/@rsam/read_bob_file.html" class="code" title="function self=read_bob_file(varargin)">read_bob_file</a>	READ_BOB_FILE Load RSAM-like data from a BOB file into a SAM object.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function dnum=ceilminute(dnum, nummins)</a>
+0002 <span class="comment">% CEILMINUTE round up datenum to next minute mark</span>
+0003 <span class="comment">% dnum=ceilminute(dnum)</span>
+0004 
+0005 <span class="comment">% AUTHOR: Glenn Thompson, University of Alaska Fairbanks</span>
+0006 <span class="comment">% $Date$</span>
+0007 <span class="comment">% $Revision$</span>
+0008 <span class="keyword">if</span> ~exist(<span class="string">'nummins'</span>,<span class="string">'var'</span>)
+0009     nummins =1;
+0010 <span class="keyword">end</span>
+0011 factor = 1440/nummins;
+0012 dnum=ceil(dnum*factor)/factor;
+0013 
+0014</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

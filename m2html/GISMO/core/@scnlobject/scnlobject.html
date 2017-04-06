@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of scnlobject</title>
+  <meta name="keywords" content="scnlobject">
+  <meta name="description" content="scnl (deprecated) : object that holds the stations, channel, network, and location for">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@scnlobject</a> &gt; scnlobject.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@scnlobject&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>scnlobject
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>scnl (deprecated) : object that holds the stations, channel, network, and location for</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function SCNLs = scnlobject(stations, channels, networks, locations) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> scnl (deprecated) : object that holds the stations, channel, network, and location for
+ a seismic trace.  This object is used by the datasource object.
+ SCNLOBJECT has been replaced by CHANNELTAG
+
+ scnlobject is now just a backwards-compatibility wrapper for ChannelTag
+ 
+ see ChannelTag</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>	ChannelTag Converter from scnlobject to ChannelTag</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed/+obspy/incomplete.html" class="code" title="function [w,scnl]=obspy.stream2waveform(path_to_python, path_to_converter, path_to_data)">incomplete</a>	OBSPY.STREAM2WAVEFORM Use ObsPy to read a stream object and then convert</li><li><a href="../../../GISMO/contributed/+obspy/stream2waveform.html" class="code" title="function [w,scnl]=obspy.stream2waveform(path_to_python, path_to_converter, path_to_data)">stream2waveform</a>	OBSPY.STREAM2WAVEFORM Use ObsPy to read a stream object and then convert</li><li><a href="../../../GISMO/contributed/+obspy/stream_matfile2waveform.html" class="code" title="function [w,scnl]=stream_matfile2waveform(matfilepath)">stream_matfile2waveform</a>	OBSPY.STREAM2WAVEFORM Use ObsPy to read a stream object and then convert</li><li><a href="../../../GISMO/contributed/instrument_response/demo_plutons.html" class="code" title="">demo_plutons</a>	</li><li><a href="../../../GISMO/contributed/instrument_response/response_get_from_db.html" class="code" title="function [response] = response_get_from_db(station, channel, time, frequencies, dbName)">response_get_from_db</a>	RESPONSE_GET_FROM_DB Get instrument response from database.</li><li><a href="../../../GISMO/contributed/instrument_response/response_get_from_polezero.html" class="code" title="function response = response_get_from_polezero(frequencies,polezero)">response_get_from_polezero</a>	RESPONSE_GET_FROM_POLEZERO Create response structure from poles/zeros</li><li><a href="../../../GISMO/contributed_antelope/double_difference/dd_process_scp.html" class="code" title="function dd_process_scp(dbname,scpfile,varargin)">dd_process_scp</a>	DD_PROCESS_SCP Process correlations by station and channel</li><li><a href="../../../GISMO/contributed_antelope/import_events/import_events.html" class="code" title="function [ eqtc, varargout ] = import_events(dbname, chanfile, starttime, endtime, phase, delay, enddelay, varargin)">import_events</a>	IMPORT_EVENTS Import waveforms associated with earthquake events.</li><li><a href="../../../GISMO/core/+antelope/arrivals2waveforms.html" class="code" title="function w = arrivals2waveforms(dbpath, arrivals, pretrig, posttrig, taper_seconds, nwaveforms)">arrivals2waveforms</a>	ARRIVALS2WAVEFORMS Load waveform objects corresponding to an arrivals structure</li><li><a href="../../../GISMO/core/+scnlobject/cookbook.html" class="code" title="">cookbook</a>	% The SCNLOBJECT cookbook</li><li><a href="../../../GISMO/core/@datasource/query_file.html" class="code" title="function [scnls starttimes endtimes] = query_file(ds, filename)">query_file</a>	QUERY_FILE retrieves scnl, starttime and endtime information for all</li><li><a href="../../../GISMO/core/@rsam/getwaveform.html" class="code" title="function w=getwaveform(self, datapath)">getwaveform</a>	rsam.getwaveform() Get the waveform corresponding to the RSAM data</li><li><a href="../../../GISMO/core/@sacpz/sacpz.html" class="code" title="">sacpz</a>	SACPZ Class for reading SAC pole-zero files downloaded from IRIS</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/@waveform/private/sac2waveform.html" class="code" title="function allWaveforms = sac2waveform(sacStructure)">sac2waveform</a>	SAC2WAVEFORM fill a waveform object from a sac header</li><li><a href="../../../GISMO/deprecated/+waveform_extensions/sacload.html" class="code" title="function w = load(fileList)">sacload</a>	SACLOAD Load SAC files into MATLAB as waveform objects</li><li><a href="../../../GISMO/tests/testScnlobject.html" class="code" title="">testScnlobject</a>	</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../GISMO/tests/test_waveform_constructor.html" class="code" title="">test_waveform_constructor</a>	test waveform creation</li><li><a href="../../../GISMO/tests/trloadcss_test.html" class="code" title="function tests = trloadcss_test()">trloadcss_test</a>	% Main function to generate tests</li><li><a href="../../../GISMO/tests/waveform_antelope_test.html" class="code" title="function tests = waveform_antelope_test()">waveform_antelope_test</a>	% Main function to generate tests</li><li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li><li><a href="../../../GISMO/uaf_internal/AEIC_AVO/+check/crossfeed.html" class="code" title="function crossfeed(varargin)">crossfeed</a>	CROSSFEED Checks for crossfeeding and duplicate data channels</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function scnl = singleSCNL(sta, cha, net, loc)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function SCNLs = scnlobject(stations, channels, networks, locations)</a>
+0002    <span class="comment">% scnl (deprecated) : object that holds the stations, channel, network, and location for</span>
+0003    <span class="comment">% a seismic trace.  This object is used by the datasource object.</span>
+0004    <span class="comment">% SCNLOBJECT has been replaced by CHANNELTAG</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">% scnlobject is now just a backwards-compatibility wrapper for ChannelTag</span>
+0007    <span class="comment">%</span>
+0008    <span class="comment">% see ChannelTag</span>
+0009 
+0010    
+0011    <span class="keyword">switch</span> (nargin)
+0012       <span class="keyword">case</span> 0 <span class="comment">%default</span>
+0013       <span class="keyword">case</span> 4 <span class="comment">%stations, channel, network, location</span>
+0014       <span class="keyword">case</span> 3 <span class="comment">%stations, channel, network</span>
+0015       <span class="keyword">case</span> 2 <span class="comment">%stations, channel</span>
+0016       <span class="keyword">case</span> 1 <span class="comment">%</span>
+0017          <span class="keyword">switch</span> class(stations)
+0018             <span class="keyword">case</span> <span class="string">'ChannelTag'</span>
+0019                <span class="keyword">for</span> i = numel(stations): -1 : 1
+0020                   SCNLs(i).tag = stations(i);
+0021                <span class="keyword">end</span>
+0022                SCNLs = class(SCNLs,<span class="string">'scnlobject'</span>);
+0023                <span class="keyword">return</span>
+0024             <span class="keyword">case</span> <span class="string">'scnlobject'</span>
+0025                SCNLs = stations;
+0026                <span class="keyword">return</span>
+0027             <span class="keyword">otherwise</span>
+0028                tags = ChannelTag.array(stations);
+0029                <span class="keyword">for</span> i = numel(tags) : -1 : 1
+0030                   SCNLs(i).tag = tags(i);
+0031                <span class="keyword">end</span>
+0032                SCNLs = class(SCNLs,<span class="string">'scnlobject'</span>);
+0033                <span class="keyword">return</span>
+0034          <span class="keyword">end</span>
+0035    <span class="keyword">end</span>
+0036    
+0037    
+0038    <span class="comment">% initialize defaults</span>
+0039    defaultStation = <span class="string">''</span>;
+0040    defaultChannel = <span class="string">''</span>;
+0041    defaultNetwork = <span class="string">''</span>; <span class="comment">%changed default from '--'</span>
+0042    defaultLocation = <span class="string">''</span>;<span class="comment">%changed default from '--'</span>
+0043    
+0044    <span class="comment">% assign default if it seems appropriate</span>
+0045    <span class="keyword">if</span> ~exist(<span class="string">'stations'</span>,<span class="string">'var'</span>) || <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(stations)
+0046       stations = defaultStation;
+0047    <span class="keyword">end</span>
+0048    <span class="keyword">if</span> ~exist(<span class="string">'channels'</span>,<span class="string">'var'</span>) || <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(channels)
+0049       channels = defaultChannel;
+0050    <span class="keyword">end</span>
+0051    <span class="keyword">if</span> ~exist(<span class="string">'networks'</span>,<span class="string">'var'</span>) || <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(networks)
+0052       networks = defaultNetwork;
+0053    <span class="keyword">end</span>
+0054    <span class="keyword">if</span> ~exist(<span class="string">'locations'</span>,<span class="string">'var'</span>) || <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(locations)
+0055       locations = defaultLocation;
+0056    <span class="keyword">end</span>
+0057    
+0058    <span class="keyword">if</span>  any(cellfun(@iscell,{networks,stations,locations,channels}))
+0059       <span class="comment">% we're building an array of SCNLs pass work off to ChannelTag</span>
+0060       all_tags = ChannelTag.array(networks,stations,locations,channels);
+0061       <span class="keyword">for</span> i = numel(all_tags) : -1 : 1
+0062          SCNLs(i).tag = all_tags(i);
+0063       <span class="keyword">end</span>
+0064       SCNLs = class(SCNLs,<span class="string">'scnlobject'</span>);
+0065    <span class="keyword">else</span>
+0066       SCNLs = <a href="#_sub1" class="code" title="subfunction scnl = singleSCNL(sta, cha, net, loc)">singleSCNL</a>(stations, channels, networks, locations);
+0067    <span class="keyword">end</span>
+0068    
+0069 <span class="keyword">end</span>
+0070 
+0071 <a name="_sub1" href="#_subfunctions" class="code">function scnl = singleSCNL(sta, cha, net, loc)</a>
+0072    scnl.tag = <a href="ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>(net, sta, loc, cha);
+0073    scnl = class(scnl,<span class="string">'scnlobject'</span>);
+0074 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

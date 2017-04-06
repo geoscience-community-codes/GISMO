@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of crop</title>
+  <meta name="keywords" content="crop">
+  <meta name="description" content="crop   crop all waveforms to a time window">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; crop.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>crop
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>crop   crop all waveforms to a time window</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = crop(c, pretrig, posttrig) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">crop   crop all waveforms to a time window
+ c = CROP(c,[PRETRIG POSTTRIG])
+ This function crop all waveforms to a time window defined by pretrig and
+ posttrig. Pretrig and posttrig are values in seconds relative to the
+ trigger time. The START field is adjusted for the new trace start times.
+ Any missing data is replaced with zeros. Typically this operation will
+ be used after traces have been aligned on a common trigger (with
+ ADJUSTTRIG).
+
+ c = CROP(c,PRETRIG,POSTTRIG) Alternate input format. Included for backward
+ compatibility. The first usage is more consistent with other uses of
+ PRETRIG and POSTTRIG.
+
+ EXAMPLE:
+    C = CROP(C,[-3 5])
+    CROPS the traces to 8 seconds in length beginning 3 seconds before the
+    trigger.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/contributed/correlation_derived/corrderived_plot_swarm_history.html" class="code" title="function corrderived_plot_swarm_history(c,varargin)">corrderived_plot_swarm_history</a>	CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms</li><li><a href="../../../../GISMO/core/@correlation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../../GISMO/core/@correlation/correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="../../../../GISMO/core/@correlation/interferogram.html" class="code" title="function [c,t,i,CC,LL] = interferogram(c,varargin)">interferogram</a>	C = INTERFEROGRAM(C)</li><li><a href="../../../../GISMO/core/@correlation/minus.html" class="code" title="function c = minus(c,varargin)">minus</a>	C = MINUS(C,I)</li><li><a href="../../../../GISMO/core/@correlation/norm.html" class="code" title="function c = norm(c,varargin)">norm</a>	C = NORM(C)</li><li><a href="../../../../GISMO/core/@correlation/private/occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li><li><a href="../../../../GISMO/core/@correlation/xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	C = XCORR(C)</li><li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="minus.html" class="code" title="function c = minus(c,I)">minus</a>	C = MINUS(C,I)</li><li><a href="norm.html" class="code" title="function c = norm(c,varargin)">norm</a>	C = NORM(C)</li><li><a href="occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="stack.html" class="code" title="function c = stack(c,index)">stack</a>	c = STACK(c)</li><li><a href="xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	xcorr   calculate the correlation and lag for traces</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = crop(c, pretrig, posttrig)</a>
+0002    <span class="comment">%crop   crop all waveforms to a time window</span>
+0003    <span class="comment">% c = CROP(c,[PRETRIG POSTTRIG])</span>
+0004    <span class="comment">% This function crop all waveforms to a time window defined by pretrig and</span>
+0005    <span class="comment">% posttrig. Pretrig and posttrig are values in seconds relative to the</span>
+0006    <span class="comment">% trigger time. The START field is adjusted for the new trace start times.</span>
+0007    <span class="comment">% Any missing data is replaced with zeros. Typically this operation will</span>
+0008    <span class="comment">% be used after traces have been aligned on a common trigger (with</span>
+0009    <span class="comment">% ADJUSTTRIG).</span>
+0010    <span class="comment">%</span>
+0011    <span class="comment">% c = CROP(c,PRETRIG,POSTTRIG) Alternate input format. Included for backward</span>
+0012    <span class="comment">% compatibility. The first usage is more consistent with other uses of</span>
+0013    <span class="comment">% PRETRIG and POSTTRIG.</span>
+0014    <span class="comment">%</span>
+0015    <span class="comment">% EXAMPLE:</span>
+0016    <span class="comment">%    C = CROP(C,[-3 5])</span>
+0017    <span class="comment">%    CROPS the traces to 8 seconds in length beginning 3 seconds before the</span>
+0018    <span class="comment">%    trigger.</span>
+0019    <span class="comment">%</span>
+0020    
+0021    <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0022    <span class="comment">% $Date$</span>
+0023    <span class="comment">% $Revision$</span>
+0024    
+0025    narginchk(2,3);
+0026    <span class="keyword">if</span> ~exist(<span class="string">'posttrig'</span>,<span class="string">'var'</span>)
+0027       assert(numel(pretrig) == 2, <span class="string">'When CROP has only two arguments, the latter must be a two element vector.'</span>);
+0028       posttrig = pretrig(2);
+0029       pretrig = pretrig(1);
+0030    <span class="keyword">end</span>
+0031    
+0032    assert(numel(pretrig) == 1, <span class="string">'Single trigger time required for pretrig'</span>)
+0033    assert(numel(posttrig) == 1, <span class="string">'Single trigger time allowed for posttrig'</span>)
+0034    
+0035    <span class="comment">% CROP EACH TRACE</span>
+0036    sampRate = c.samplerate;
+0037    wStarts = c.traces.firstsampletime();
+0038    imax = numel(wStarts);
+0039    Mo = c.data_length;
+0040    M = round(sampRate*(posttrig-pretrig));
+0041    wstartrel = 86400*(wStarts-c.trig);    <span class="comment">% relative start time, typically negative</span>
+0042    s1_all = round(sampRate * (wstartrel - pretrig));
+0043    needsPadding = s1_all &gt; 0;
+0044    samp_per_day = 86400 * sampRate;
+0045    T = c.traces; <span class="comment">%it is more efficient to modify traces and then put back into NewCorrelation</span>
+0046    <span class="keyword">for</span> i = 1:imax
+0047       <span class="comment">%samples to pad or crop</span>
+0048       w2 = zeros(M,1);
+0049       <span class="keyword">if</span> needsPadding(i); <span class="comment">%s1_all(i) &gt; 0                         % beginning of traces must be PADDED</span>
+0050          s2 =  <a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([Mo, M-s1_all(i)]);         <span class="comment">% number of data samples to include</span>
+0051          w2(s1_all(i)+(1:s2)) = T(i).data(1:s2); <span class="comment">% Pad beginning with zeros</span>
+0052          start2 = wStarts(i) - (s1_all(i))/samp_per_day;
+0053       <span class="keyword">else</span>
+0054          s1 = -1*s1_all(i);                   <span class="comment">% beginning of traces must be CLIPPED</span>
+0055          s2 =  <a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([Mo-s1, M]);         <span class="comment">% number of data samples to include</span>
+0056          w2(1:s2) = T(i).data(s1 + (1:s2)); <span class="comment">%crop beginning</span>
+0057          start2 = wStarts(i)+(s1)/samp_per_day;
+0058       <span class="keyword">end</span>;
+0059       T(i).data = w2;
+0060       T(i).start = start2;
+0061    <span class="keyword">end</span>;
+0062    c.traces = T; <span class="comment">%assign all changed traces at once.</span>
+0063 <span class="keyword">end</span>
+0064</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

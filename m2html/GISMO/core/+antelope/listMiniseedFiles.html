@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of listMiniseedFiles</title>
+  <meta name="keywords" content="listMiniseedFiles">
+  <meta name="description" content="LISTMINISEEDFILES retrieve a list of the Miniseed files referenced by a datasource, ChannelTag object and start/end times.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">+antelope</a> &gt; listMiniseedFiles.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+antelope&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>listMiniseedFiles
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>LISTMINISEEDFILES retrieve a list of the Miniseed files referenced by a datasource, ChannelTag object and start/end times.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [mseedfiles] = listMiniseedFiles(ds, chantag, snum, enum) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> LISTMINISEEDFILES retrieve a list of the Miniseed files referenced by a datasource, ChannelTag object and start/end times.
+ mseedfiles = LISTMINISEEDFILES(ds, chantag, snum, enum) Uses the
+ datasource/getfilename method to retrieve the filepath for data
+ corresponding to ds, chantag and snum (enum is ignored because it is not
+ implemented by datasource/getfilename). Also checks if each filepath
+ returned exists. Does not check if the file is a valid Miniseed file,
+ although that could be tested via a modification to the miniseed class.
+
+ It can be useful to call this function prior to a waveform call, e.g.
+    flist = listMiniseedFiles(ds, scnl, snum, enum)
+    if sum(flist.exists)&gt;0
+        w = waveform(ds, scnl, snum, enum)
+    end
+
+ 
+ Input:
+   ds - a datasource object
+   chantag - a ChannelTag object (or scnlobject)
+   snum - start time in Matlab datenum format 
+       e.g. snum = datenum('1999-01-12 10:00:00')
+   enum - end time, used only for subsetting database, not for finding
+       database with getfilename
+
+ Output:
+   a structure with two elements:
+       filepath = path from current directory to MiniSEED file as given by
+                   database dir &amp; dpath fields
+       exists = whether that path exists on the current system</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/+Catalog/+read_catalog/ensure_dateformat.html" class="code" title="function out = ensure_dateformat(t)">ensure_dateformat</a>	stolen from waveform</li><li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>	GETFILENAME returns a filename that is associated with a single SCNL</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>	EPOCH = DATENUM2EPOCH(TIME) translates Matlab numeric</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function out = ensure_dateformat(t)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [mseedfiles] = listMiniseedFiles(ds, chantag, snum, enum)</a>
+0002 <span class="comment">% LISTMINISEEDFILES retrieve a list of the Miniseed files referenced by a datasource, ChannelTag object and start/end times.</span>
+0003 <span class="comment">% mseedfiles = LISTMINISEEDFILES(ds, chantag, snum, enum) Uses the</span>
+0004 <span class="comment">% datasource/getfilename method to retrieve the filepath for data</span>
+0005 <span class="comment">% corresponding to ds, chantag and snum (enum is ignored because it is not</span>
+0006 <span class="comment">% implemented by datasource/getfilename). Also checks if each filepath</span>
+0007 <span class="comment">% returned exists. Does not check if the file is a valid Miniseed file,</span>
+0008 <span class="comment">% although that could be tested via a modification to the miniseed class.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% It can be useful to call this function prior to a waveform call, e.g.</span>
+0011 <span class="comment">%    flist = listMiniseedFiles(ds, scnl, snum, enum)</span>
+0012 <span class="comment">%    if sum(flist.exists)&gt;0</span>
+0013 <span class="comment">%        w = waveform(ds, scnl, snum, enum)</span>
+0014 <span class="comment">%    end</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% Input:</span>
+0018 <span class="comment">%   ds - a datasource object</span>
+0019 <span class="comment">%   chantag - a ChannelTag object (or scnlobject)</span>
+0020 <span class="comment">%   snum - start time in Matlab datenum format</span>
+0021 <span class="comment">%       e.g. snum = datenum('1999-01-12 10:00:00')</span>
+0022 <span class="comment">%   enum - end time, used only for subsetting database, not for finding</span>
+0023 <span class="comment">%       database with getfilename</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% Output:</span>
+0026 <span class="comment">%   a structure with two elements:</span>
+0027 <span class="comment">%       filepath = path from current directory to MiniSEED file as given by</span>
+0028 <span class="comment">%                   database dir &amp; dpath fields</span>
+0029 <span class="comment">%       exists = whether that path exists on the current system</span>
+0030 
+0031 
+0032 <span class="comment">% AUTHOR: Glenn Thompson, UAF-GI</span>
+0033 <span class="comment">% $Date: $</span>
+0034 <span class="comment">% $Revision: -1 $</span>
+0035     snum = <a href="../../../GISMO/core/+Catalog/+read_catalog/ensure_dateformat.html" class="code" title="function out = ensure_dateformat(t)">ensure_dateformat</a>(snum);
+0036     enum = <a href="../../../GISMO/core/+Catalog/+read_catalog/ensure_dateformat.html" class="code" title="function out = ensure_dateformat(t)">ensure_dateformat</a>(enum);
+0037     <span class="keyword">for</span> c=1:length(chantag)
+0038         mseedfiles(c).filepath={};
+0039         mseedfiles(c).exists=[];
+0040         <span class="keyword">try</span>
+0041             debug.print_debug(2, <span class="string">'Calling getfilename'</span>);
+0042             dbname = <a href="../../../GISMO/core/@datasource/getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>(ds, chantag(c), snum); <span class="comment">% this is a cell array</span>
+0043             <span class="keyword">for</span> k=1:numel(dbname)
+0044                 debug.print_debug(2, sprintf(<span class="string">'dbname = %s\n'</span>,dbname{k}));
+0045             <span class="keyword">end</span>
+0046         <span class="keyword">catch</span>
+0047             debug.print_debug(1,sprintf(<span class="string">'getfilename failed for %s'</span>,string(chantag(c))));
+0048             <span class="keyword">continue</span>;
+0049         <span class="keyword">end</span>
+0050 
+0051         <span class="keyword">if</span> exist(sprintf(<span class="string">'%s.wfdisc'</span>,dbname{1}), <span class="string">'file'</span>) | exist(dbname{1}, <span class="string">'file'</span>)
+0052             <span class="keyword">try</span>
+0053                 debug.print_debug(5,<span class="string">'Opening database %s'</span>,dbname{1});
+0054                 db=dbopen(dbname{1},<span class="string">'r'</span>);
+0055             <span class="keyword">catch</span>
+0056                 debug.print_debug(1,sprintf(<span class="string">'Could not dbopen database %s or %s.wfdisc - possibly no descriptor'</span>,dbname{1}, dbname{1}));
+0057                 <span class="keyword">try</span>
+0058                     db=dblookup_table(db,sprintf(<span class="string">'%s.wfdisc'</span>,dbname{1}));
+0059                 <span class="keyword">catch</span>
+0060                     <span class="keyword">continue</span>;
+0061                 <span class="keyword">end</span>
+0062             <span class="keyword">end</span>
+0063             <span class="keyword">try</span>
+0064                 debug.print_debug(2,<span class="string">'Opening table %s.wfdisc'</span>,dbname{1});
+0065                 db=dblookup_table(db,<span class="string">'wfdisc'</span>);
+0066             <span class="keyword">catch</span>
+0067                 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'Failed on dblookup_table wfdisc'</span>);
+0068                 <span class="keyword">continue</span>;
+0069             <span class="keyword">end</span>
+0070             sta=strrep(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(chantag(c),<span class="string">'station'</span>),<span class="string">'*'</span>,<span class="string">'.*'</span>);
+0071             chan=strrep(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(chantag(c),<span class="string">'channel'</span>),<span class="string">'*'</span>,<span class="string">'.*'</span>);
+0072             <span class="comment">%expr = sprintf('sta=&quot;%s&quot; &amp;&amp; chan==&quot;%s&quot; &amp;&amp; time &lt;= %f &amp;&amp; endtime &gt;= %f',get(chantag(c),'station'), get(chantag(c),'channel'), datenum2epoch(enum), datenum2epoch(snum));</span>
+0073             expr = sprintf(<span class="string">'sta=~/%s/ &amp;&amp; chan=~/%s/ &amp;&amp; time &lt;= %f &amp;&amp; endtime &gt;= %f'</span>,sta, chan, <a href="../../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>(enum), <a href="../../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>(snum));
+0074             <span class="keyword">try</span>
+0075                 debug.print_debug(2, <span class="string">'Trying dbsubset with: %s\n'</span>,expr);
+0076                 db=dbsubset(db,expr);
+0077             <span class="keyword">catch</span>
+0078                 debug.print_debug(2,<span class="string">'Failed on dbsubset'</span>);
+0079                 <span class="keyword">continue</span>;
+0080             <span class="keyword">end</span>
+0081             <span class="keyword">try</span>
+0082                 debug.print_debug(2,<span class="string">'Trying dbquery for RECORD_COUNT'</span>);
+0083                 nrecs = dbquery(db, <span class="string">'dbRECORD_COUNT'</span>);
+0084             <span class="keyword">catch</span>
+0085                 debug.print_debug(2,<span class="string">'Failed on dbquery'</span>);
+0086                 <span class="keyword">continue</span>;
+0087             <span class="keyword">end</span>
+0088             debug.print_debug(2, <span class="string">'Number of records = %d\n'</span>,nrecs);
+0089             dbdir = fileparts(dbname{1});
+0090             <span class="keyword">if</span> nrecs&gt;0
+0091                 <span class="keyword">try</span>
+0092                     debug.print_debug(2, <span class="string">'Getting dir, dfile, time, endtime\n'</span>);
+0093                     [ddir, ddfile] = dbgetv(db, <span class="string">'dir'</span>, <span class="string">'dfile'</span>, <span class="string">'time'</span>, <span class="string">'endtime'</span>);
+0094                     <span class="keyword">if</span> ~(strcmp(class(ddir),<span class="string">'cell'</span>))
+0095                         ddir={ddir};
+0096                         ddfile={ddfile};
+0097                     <span class="keyword">end</span>
+0098                     <span class="keyword">if</span> debug.get_debug()&gt;0
+0099                         dbdir
+0100                         ddir
+0101                         ddfile
+0102                     <span class="keyword">end</span>
+0103                     ddfullfile = fullfile(dbdir, ddir, ddfile); <span class="comment">% ddir and ddfile are both cell arrays &amp; file paths are relative to db dir</span>
+0104                     uniquefile = <a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(ddfullfile); <span class="comment">% if there are two time segments pointing to same file, there are two wfdisc records. but we want only the unique dir/dfile combos here</span>
+0105                     <span class="comment">% could check here if enum &lt;= endtime, and if not repeat</span>
+0106                     <span class="comment">% this for &quot;dbname = getfilename(ds, chantag, enum)&quot;</span>
+0107 
+0108                 <span class="keyword">catch</span>
+0109                     debug.print_debug(2,<span class="string">'Failed on dbgetv'</span>);
+0110                 <span class="keyword">end</span>
+0111 
+0112                 <span class="comment">%           GT 20150916 I do not think it is possible to have multiple uniquefiles because getfilename returns database for a specific time, not time range</span>
+0113                 <span class="comment">%             for k=1:numel(uniquefile)</span>
+0114                 <span class="comment">%                 mseedfiles(c).filepath{k} = uniquefile{k};</span>
+0115                 <span class="comment">%                 mseedfiles(c).exists(k) = exist(mseedfiles(c).filepath{k}, 'file');</span>
+0116                 <span class="comment">%             end</span>
+0117                 <span class="keyword">try</span>
+0118                     mseedfiles(c).filepath = uniquefile{1};
+0119                     mseedfiles(c).exists = exist(uniquefile{1}, <span class="string">'file'</span>);
+0120                 <span class="keyword">catch</span>
+0121                     uniquefile
+0122                     <span class="keyword">continue</span>
+0123                     mseedfiles(c).filepath = {};
+0124                     mseedfiles(c).exists(k) = 0;
+0125 
+0126 
+0127                 <span class="keyword">end</span>
+0128             <span class="keyword">else</span>
+0129                 mseedfiles(c).filepath = {};
+0130                 mseedfiles(c).exists(k) = 0;
+0131                 debug.print_debug(1,<span class="string">'no records selected for %s matching %s\n'</span>,dbname{1}, expr);
+0132             <span class="keyword">end</span>
+0133         <span class="keyword">else</span>
+0134             debug.print_debug(1,<span class="string">'database %s not found\n'</span>,dbname{1});
+0135         <span class="keyword">end</span>
+0136 
+0137     <span class="keyword">end</span>
+0138 <span class="keyword">end</span>
+0139 <a name="_sub1" href="#_subfunctions" class="code">function out = ensure_dateformat(t)</a>
+0140    <span class="comment">% returns a matrix of datenums of same shape as t</span>
+0141    <span class="keyword">if</span> isnumeric(t)
+0142       out = t;
+0143    <span class="keyword">elseif</span> ischar(t),
+0144       <span class="keyword">for</span> n = size(t,1) : -1 : 1
+0145          out(n) = datenum(t(n,:));
+0146       <span class="keyword">end</span>
+0147    <span class="keyword">elseif</span> iscell(t)
+0148       out(:) = datenum(t);
+0149    <span class="keyword">end</span>
+0150 <span class="keyword">end</span>
+0151 
+0152 
+0153</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

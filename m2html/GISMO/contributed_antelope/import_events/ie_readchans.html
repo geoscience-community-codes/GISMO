@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ie_readchans</title>
+  <meta name="keywords" content="ie_readchans">
+  <meta name="description" content="IE_READCHANS Read and parse station/channel list from file">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed_antelope</a> &gt; <a href="index.html">import_events</a> &gt; ie_readchans.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed_antelope/import_events&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>ie_readchans
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>IE_READCHANS Read and parse station/channel list from file</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function chanlist = ie_readchans(chanfile) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">IE_READCHANS Read and parse station/channel list from file
+ CHANLIST = IE_READCHANS(CHANFILE) returns a string cell array of stations
+ and their associated channels, read from comma-delimited input filename CHANFILE.
+ Each line of CHANFILE should contain up to four fields: a station name in
+ the first column, then either one or three channel names in the
+ subsequent columns.  Lines beginning with the percent sign % are ignored.
+
+ IE_READCHANS performs some basic error checking on the input file, but
+ does not compare against any database or other listing of station data.
+ This is left up to the user.
+
+ EXAMPLE
+
+ Suppose CHANFILE points to the following file:
+
+ % Stations and channels of interest in Uturuncu data set
+ UTCA,SHZ,SHN,SHE
+ UTCM,SHZ,,
+ %UTKH,BHZ,BHN,BHE
+ %UTLA2,SHZ,SHN,SHE
+ UTSW,SHZ,SHN,SHE
+
+ Then IE_READCHANS will return:
+
+ ans = 
+     'UTCA'    'SHZ'    'SHN'    'SHE'
+     'UTCM'    'SHZ'       ''       ''
+     'UTSW'    'SHZ'    'SHN'    'SHE'
+
+ Author: Christopher Bruton, Geophysical Institute, University of Alaska Fairbanks
+ $Date$
+ $Revision$</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="import_events.html" class="code" title="function [ eqtc, varargout ] = import_events(dbname, chanfile, starttime, endtime, phase, delay, enddelay, varargin)">import_events</a>	IMPORT_EVENTS Import waveforms associated with earthquake events.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function chanlist = ie_readchans(chanfile)</a>
+0002 <span class="comment">%IE_READCHANS Read and parse station/channel list from file</span>
+0003 <span class="comment">% CHANLIST = IE_READCHANS(CHANFILE) returns a string cell array of stations</span>
+0004 <span class="comment">% and their associated channels, read from comma-delimited input filename CHANFILE.</span>
+0005 <span class="comment">% Each line of CHANFILE should contain up to four fields: a station name in</span>
+0006 <span class="comment">% the first column, then either one or three channel names in the</span>
+0007 <span class="comment">% subsequent columns.  Lines beginning with the percent sign % are ignored.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% IE_READCHANS performs some basic error checking on the input file, but</span>
+0010 <span class="comment">% does not compare against any database or other listing of station data.</span>
+0011 <span class="comment">% This is left up to the user.</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% EXAMPLE</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Suppose CHANFILE points to the following file:</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% % Stations and channels of interest in Uturuncu data set</span>
+0018 <span class="comment">% UTCA,SHZ,SHN,SHE</span>
+0019 <span class="comment">% UTCM,SHZ,,</span>
+0020 <span class="comment">% %UTKH,BHZ,BHN,BHE</span>
+0021 <span class="comment">% %UTLA2,SHZ,SHN,SHE</span>
+0022 <span class="comment">% UTSW,SHZ,SHN,SHE</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% Then IE_READCHANS will return:</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% ans =</span>
+0027 <span class="comment">%     'UTCA'    'SHZ'    'SHN'    'SHE'</span>
+0028 <span class="comment">%     'UTCM'    'SHZ'       ''       ''</span>
+0029 <span class="comment">%     'UTSW'    'SHZ'    'SHN'    'SHE'</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% Author: Christopher Bruton, Geophysical Institute, University of Alaska Fairbanks</span>
+0032 <span class="comment">% $Date$</span>
+0033 <span class="comment">% $Revision$</span>
+0034 
+0035     [fp, message] = fopen(chanfile,<span class="string">'r'</span>); <span class="comment">% Open the file</span>
+0036     
+0037     <span class="keyword">if</span> fp &lt; 0 <span class="comment">% Could not open the file</span>
+0038         error([<span class="string">'Could not open file '</span> chanfile <span class="string">': '</span> message]);
+0039     <span class="keyword">end</span>
+0040     
+0041     <span class="comment">% The following seems to be the best way to read a CSV file of text.</span>
+0042     <span class="comment">% csvread() can only handle numeric data.</span>
+0043     filecontents = textscan(fp,<span class="string">'%s %s %s %s'</span>,<span class="string">'Delimiter'</span>,<span class="string">','</span>,<span class="string">'ReturnOnError'</span>,false,<span class="string">'CommentStyle'</span>,<span class="string">'%'</span>);
+0044     
+0045     fclose(fp); <span class="comment">% Close file handle</span>
+0046     
+0047     <span class="comment">% Concatenate into one cell array</span>
+0048     chanlist = <a href="../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(2,filecontents{:});
+0049     
+0050     <span class="comment">% Run some mechanical checks</span>
+0051     
+0052     <span class="keyword">for</span> n = 1:size(chanlist,1)
+0053         <span class="comment">% Empty station?</span>
+0054         <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(chanlist{n,1})
+0055             error([<span class="string">'Empty station on line '</span> num2str(n) <span class="string">' of input file '</span> chanfile]);
+0056         <span class="keyword">end</span>
+0057         
+0058         <span class="comment">% Number of empty channels</span>
+0059         n_empty = 0;
+0060         <span class="keyword">for</span> c = 2:4
+0061             <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(chanlist{n,c})
+0062                 n_empty = n_empty + 1;
+0063             <span class="keyword">end</span>
+0064         <span class="keyword">end</span>
+0065         
+0066         <span class="comment">% Error if we have wrong number of empty channel names</span>
+0067         <span class="keyword">if</span> (n_empty ~= 2) &amp;&amp; (n_empty ~= 0)
+0068             error([<span class="string">'Incorrect number of channels specified on line '</span> num2str(n) <span class="string">' of input file '</span> chanfile <span class="string">'.  Please specify either 1 or 3 channel names.'</span>]);
+0069         <span class="keyword">end</span>
+0070         
+0071         <span class="comment">% All channels must have unique names</span>
+0072         <span class="keyword">if</span> length(<a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(chanlist(n,2:4))) ~= (3-(n_empty&gt;0))
+0073             error([<span class="string">'Nonunique channel names specified on line '</span> num2str(n) <span class="string">' of input file '</span> chanfile]);
+0074         <span class="keyword">end</span>
+0075     <span class="keyword">end</span>
+0076     
+0077     <span class="comment">% All stations must have unique names</span>
+0078     <span class="keyword">if</span> length(<a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(chanlist(:,1))) ~= length(chanlist(:,1))
+0079         error([<span class="string">'Nonunique station names specified in input file '</span> chanfile]);
+0080     <span class="keyword">end</span>
+0081     
+0082 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

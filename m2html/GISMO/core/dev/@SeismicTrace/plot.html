@@ -1,0 +1,380 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plot</title>
+  <meta name="keywords" content="plot">
+  <meta name="description" content="plot   plots a SeismicTrace">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@SeismicTrace</a> &gt; plot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@SeismicTrace&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>plot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>plot   plots a SeismicTrace</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = plot(T, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">plot   plots a SeismicTrace
+   plot(traces) Plots traces, handling the title and axis labeling.
+  
+   [h, handles] = plot(traces) will return handles to various elements
+   of the plot.  H will contain the line handles, while HANDLES will be
+   a struct that includes handles to the line as well as titles and
+   axis labels.
+
+   h = plot(traces, ...)
+   Plots a trace, passing additional parameters to matlab's PLOT
+   routine.  Trace specific parameters are discussed below.
+
+   h = plot(..., 'xunit', xvalue)
+   sets the xunit property of the graph, which is used to determine how
+   the times of the traces are interpereted.  Possible values for XVALUE
+   are 's', 'm', 'h', 'd', 'doy', 'date'.
+
+        'seconds' - seconds
+        'minutes' - minutes
+        'hours' - hours
+        'day_of_year' - day of year
+        'date' - full date
+        'samples' - sample number
+
+   for multiple traces, specifying XUNITs of 's', 'm', and 'h' will
+   cause all the traces to be plotted starting at 0.  An XUNIT of
+   'date' will force all traces to plot starting at their starttimes.
+
+   the default XUNIT is seconds
+
+  h = plot(..., 'fontsize', value) will set the fontsize for the axis,
+  title, and labels.
+
+  For the following examples:
+  % T is a SeismicTrace, and T2 is a smaller trice (from within T)
+  T = SeismicTrace('SSLN','SHZ','04/02/2005 01:00:00', '04/02/2005 01:10:00');
+  T2 = extract(T,'date','04/02/2005 01:06:10','04/02/2005 01:06:33');
+
+ EXAMPLE 1:
+   % This example plots the traces at their absolute times...
+   plot(T, 'xunit','date'); % plots the trace
+   hold on;
+   h = T2.plot('xunit','date', 'r', 'linewidth', 1);
+          % plots your other trace in red, and with a wider line
+
+ EXAMPLE 2:
+   % This example plots the traces, starting at time 0
+   plot(T); % plots the trace with seconds on the x axis
+   hold on;
+   plot(T2, 'xunit','s', 'color', [0.5 0.5 0.5]);  % plots your other
+                                       % trace, starting in unison
+                                       % with the prev trace, then
+                                       % change the color of the new
+                                       % plot to grey (RGB)
+
+
+  Y values can be autoscaled with the property pair: 'autoscale',true
+  although it only works for single traces...
+
+  See also datetick, <a href="plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../../GISMO/core/@spectralobject/private/parse_xunit.html" class="code" title="function [unitName, secondMultiplier] = parse_xunit(unitName)">parse_xunit</a>	PARSE_XUNIT returns a labelname and a multiplier for an incoming xunit</li><li><a href="../../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../../GISMO/core/@waveform/private/parse_xunit.html" class="code" title="function [unitName, secondMultiplier] = parse_xunit(unitName)">parse_xunit</a>	PARSE_XUNIT returns a labelname and a multiplier for an incoming xunit</li><li><a href="../../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li><li><a href="../../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/applications/+iceweb/spectrogram_iceweb.html" class="code" title="function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)">spectrogram_iceweb</a>	SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of</li><li><a href="../../../../GISMO/applications/uispecgram.html" class="code" title="function varargout = uispecgram(varargin)">uispecgram</a>	UISPECGRAM M-file for uispecgram.fig</li><li><a href="../../../../GISMO/contributed/correlation_derived/corrderived_plot_swarm_history.html" class="code" title="function corrderived_plot_swarm_history(c,varargin)">corrderived_plot_swarm_history</a>	CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms</li><li><a href="../../../../GISMO/contributed/instrument_response/demo_plutons.html" class="code" title="">demo_plutons</a>	</li><li><a href="../../../../GISMO/contributed/instrument_response/response_cookbook.html" class="code" title="">response_cookbook</a>	% Instrument response cookbook</li><li><a href="../../../../GISMO/contributed/instrument_response/response_plot.html" class="code" title="function response_plot(response,xLimits,noLegend)">response_plot</a>	RESPONSE_PLOT plot an instrument response</li><li><a href="../../../../GISMO/contributed/master_correlation/+mastercorr/cookbook.html" class="code" title="">cookbook</a>	COOKBOOK demonstrate the features of the mastercorr package.</li><li><a href="../../../../GISMO/contributed/master_correlation/+mastercorr/plot_stats.html" class="code" title="function plot_stats(W)">plot_stats</a>	PLOT_STATS plot statistics from master correlation algorithm</li><li><a href="../../../../GISMO/contributed/master_correlation/mastercorr_cookbook.html" class="code" title="">mastercorr_cookbook</a>	Demonstration of the major features of the master waveform correlation</li><li><a href="../../../../GISMO/contributed/master_correlation/mastercorr_plot_stats.html" class="code" title="function mastercorr_plot_stats(W)">mastercorr_plot_stats</a>	MASTERCORR_PLOT_STATS plot statistics from master correlation algorithm</li><li><a href="../../../../GISMO/contributed_antelope/attenuation/hankelq.html" class="code" title="function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)">hankelq</a>	HANKELQ Compute spectral ratio in two frequency bands</li><li><a href="../../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/depth_section.html" class="code" title="function depth_section(dbName)">depth_section</a>	DEPTH_SECTION plot depth sections of ray coverage.</li><li><a href="../../../../GISMO/core/+Detection/sta_lta.html" class="code" title="function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)">sta_lta</a>	STA_LTA: Short-Time-Average/Long-Time-Average event detector.</li><li><a href="../../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="../../../../GISMO/core/@Catalog/plotprmm.html" class="code" title="function plotprmm(catalogObject)">plotprmm</a>	CATALOG.PLOTPRMM Plot the peak rate and maximum magnitude of a</li><li><a href="../../../../GISMO/core/@EventRate/EventRate.html" class="code" title="">EventRate</a>	</li><li><a href="../../../../GISMO/core/@EventRate/cookbook.html" class="code" title="">cookbook</a>	% EventRate Cookbook</li><li><a href="../../../../GISMO/core/@correlation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../../GISMO/core/@correlation/private/dendrogramplot.html" class="code" title="function dendrogramplot(c);">dendrogramplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/eventplot.html" class="code" title="function eventplot(c,scale,howmany);">eventplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/overlayplot.html" class="code" title="function overlayplot(c,scale,ord)">overlayplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/sampleplot.html" class="code" title="function sampleplot(c,scale,ord)">sampleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/statplot.html" class="code" title="function statplot(c);">statplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@drumplot/cookbook.html" class="code" title="">cookbook</a>	% drumplot cookbook</li><li><a href="../../../../GISMO/core/@drumplot/drumplot.html" class="code" title="">drumplot</a>	DRUMPLOT the blueprint for drumplot objects in GISMO</li><li><a href="../../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../../GISMO/core/@rsam/detectTremorEvents.html" class="code" title="function rsamobj = detectTremorEvents(stationName, chan, DP, snum, enum, spikeRatio, transientEventRatio, STA_minutes, LTA_minutes, stepsize, ratio_on, ratio_off, plotResults)">detectTremorEvents</a>	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</li><li><a href="../../../../GISMO/core/@rsam/duration_amplitude.html" class="code" title="function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)">duration_amplitude</a>	DURATION_AMPLITUDE Use the duration-amplitde</li><li><a href="../../../../GISMO/core/@rsam/oneMinuteData.html" class="code" title="">oneMinuteData</a>	</li><li><a href="../../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../../GISMO/core/@rsam/plotrsam.html" class="code" title="function [rsamobjects, ah]=plotrsam(sta, chan, snum, enum, DATAPATH)">plotrsam</a>	[rsamobjects, ah]=plotrsam_wrapper(sta, chan, snum, enum, DATAPATH)</li><li><a href="../../../../GISMO/core/@rsam/rsam.html" class="code" title="">rsam</a>	</li><li><a href="../../../../GISMO/core/@rsam/scrollplot.html" class="code" title="function scrollplot(s)">scrollplot</a>	Created by Steven Lord, slord@mathworks.com</li><li><a href="../../../../GISMO/core/@spectralobject/specgram2.html" class="code" title="function specgram2(s, ws, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li><li><a href="../../../../GISMO/core/@threecomp/cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="../../../../GISMO/core/@threecomp/cookbook_map.html" class="code" title="function cookbook_map(TC,W,backAzimuth)">cookbook_map</a>	COOKBOOK_MAP Plots a simple map to accompany cookbook data</li><li><a href="../../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/plot2.html" class="code" title="function fh=plot2(TC,varargin)">plot2</a>	PLOT2 a figure of three component traces (deprecated).</li><li><a href="../../../../GISMO/core/@threecomp/plotpm.html" class="code" title="function plotpm(TC);">plotpm</a>	PLOTPM Plot particle motion coefficients.</li><li><a href="../../../../GISMO/core/@threecomp/private/create_demo_data.html" class="code" title="">create_demo_data</a>	This script was used once to create the demo dataset</li><li><a href="../../../../GISMO/core/@threecomp/spin.html" class="code" title="function [TC,c2, c3] = spin(TCin,varargin)">spin</a>	SPIN rotate and plot horizontal components</li><li><a href="../../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../../GISMO/core/@waveform/plot_helicorder.html" class="code" title="function [ output_args ] = plot_helicorder( w, varargin )">plot_helicorder</a>	WAVEFORM/PLOT_HELICORDER Plot waveform objects as helicorders</li><li><a href="../../../../GISMO/core/@waveform/plot_panels.html" class="code" title="function fh=plot_panels(w, alignWaveforms)">plot_panels</a>	PLOT_PANELS Plot multiple waveform objects as separate linked panels</li><li><a href="../../../../GISMO/core/@waveform/plot_spectrum.html" class="code" title="function s = plot_spectrum(w)">plot_spectrum</a>	add_spectral_data Simple method to compute frequency</li><li><a href="../../../../GISMO/core/@waveform/scroll.html" class="code" title="function scroll(w, timeStepSeconds)">scroll</a>	SCROLL scroll through the data in a waveform vector</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/dendrogramplot.html" class="code" title="function dendrogramplot(c)">dendrogramplot</a>	dendrogramplot   create a dendrogram plot</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/eventplot.html" class="code" title="function eventplot(c,scale,howmany)">eventplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/overlayplot.html" class="code" title="function overlayplot(c,scale,ord)">overlayplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/sampleplot.html" class="code" title="function sampleplot(c,scale,ord)">sampleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/statplot.html" class="code" title="function statplot(c)">statplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>	Private method. See ../plot for details.</li><li><a href="SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="linkedplot.html" class="code" title="function linkedplot(T, alignTraces)">linkedplot</a>	linkedplot   Plot multiple waveform objects as separate linked panels</li><li><a href="plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../../GISMO/core/dev/@TraceSpectra/specgram2.html" class="code" title="function h = specgram2(s, T, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li><li><a href="../../../../GISMO/deprecated/@helicorder/build.html" class="code" title="function varargout = build(h)">build</a>	BUILD: Helicorder builder function. A helicorder object (h) contains no</li><li><a href="../../../../GISMO/deprecated/fft_tools/+wf_fft/freqindex.html" class="code" title="function W = freqindex(W,varargin)">freqindex</a>	WAVEFORM = FREQINDEX(WAVEFORM) calculates the frequency index of a waveform.</li><li><a href="../../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li><li><a href="../../../../GISMO/deprecated/fft_tools/wf_fftplot.html" class="code" title="function wf_fftplot(w);">wf_fftplot</a>	WF_FFTPLOT(WAVEFORM) plot fourier transform of the data.</li><li><a href="../../../../GISMO/deprecated/fft_tools/wf_fi.html" class="code" title="function W = wf_fi(W,varargin)">wf_fi</a>	WAVEFORM = WF_FI(WAVEFORM) calculates the frequency index of a waveform.</li><li><a href="../../../../GISMO/tests/amplitude_spectrum_test.html" class="code" title="function tests = amplitude_spectrum_test()">amplitude_spectrum_test</a>	% Main function to generate tests</li><li><a href="../../../../GISMO/tests/obsolete/medfilt1_test.html" class="code" title="">medfilt1_test</a>	</li><li><a href="../../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li><li><a href="../../../../GISMO/uaf_internal/AEIC_AVO/+check/crossfeed.html" class="code" title="function crossfeed(varargin)">crossfeed</a>	CROSSFEED Checks for crossfeeding and duplicate data channels</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [formatDescriptor, params] = peelFormat(params)</a></li><li><a href="#_sub2" class="code">function p = parseParameters(argList)</a></li><li><a href="#_sub3" class="code">function yunit = getYunit(T)</a></li><li><a href="#_sub4" class="code">function [xLabel, Xvalues] = prepareXvalues(T, xunit)</a></li><li><a href="#_sub5" class="code">function doy = dayOfYearFromTrace(T)</a></li><li><a href="#_sub6" class="code">function titletext = getTitleText(T)</a></li><li><a href="#_sub7" class="code">function [unitName, secondMultiplier] = parse_xunit(unitName)</a></li><li><a href="#_sub8" class="code">function newParams = buildParameterList(formatDescriptor, paramStruct)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = plot(T, varargin)</a>
+0002    <span class="comment">%plot   plots a SeismicTrace</span>
+0003    <span class="comment">%   plot(traces) Plots traces, handling the title and axis labeling.</span>
+0004    <span class="comment">%</span>
+0005    <span class="comment">%   [h, handles] = plot(traces) will return handles to various elements</span>
+0006    <span class="comment">%   of the plot.  H will contain the line handles, while HANDLES will be</span>
+0007    <span class="comment">%   a struct that includes handles to the line as well as titles and</span>
+0008    <span class="comment">%   axis labels.</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">%   h = plot(traces, ...)</span>
+0011    <span class="comment">%   Plots a trace, passing additional parameters to matlab's PLOT</span>
+0012    <span class="comment">%   routine.  Trace specific parameters are discussed below.</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">%   h = plot(..., 'xunit', xvalue)</span>
+0015    <span class="comment">%   sets the xunit property of the graph, which is used to determine how</span>
+0016    <span class="comment">%   the times of the traces are interpereted.  Possible values for XVALUE</span>
+0017    <span class="comment">%   are 's', 'm', 'h', 'd', 'doy', 'date'.</span>
+0018    <span class="comment">%</span>
+0019    <span class="comment">%        'seconds' - seconds</span>
+0020    <span class="comment">%        'minutes' - minutes</span>
+0021    <span class="comment">%        'hours' - hours</span>
+0022    <span class="comment">%        'day_of_year' - day of year</span>
+0023    <span class="comment">%        'date' - full date</span>
+0024    <span class="comment">%        'samples' - sample number</span>
+0025    <span class="comment">%</span>
+0026    <span class="comment">%   for multiple traces, specifying XUNITs of 's', 'm', and 'h' will</span>
+0027    <span class="comment">%   cause all the traces to be plotted starting at 0.  An XUNIT of</span>
+0028    <span class="comment">%   'date' will force all traces to plot starting at their starttimes.</span>
+0029    <span class="comment">%</span>
+0030    <span class="comment">%   the default XUNIT is seconds</span>
+0031    <span class="comment">%</span>
+0032    <span class="comment">%  h = plot(..., 'fontsize', value) will set the fontsize for the axis,</span>
+0033    <span class="comment">%  title, and labels.</span>
+0034    <span class="comment">%</span>
+0035    <span class="comment">%  For the following examples:</span>
+0036    <span class="comment">%  % T is a SeismicTrace, and T2 is a smaller trice (from within T)</span>
+0037    <span class="comment">%  T = SeismicTrace('SSLN','SHZ','04/02/2005 01:00:00', '04/02/2005 01:10:00');</span>
+0038    <span class="comment">%  T2 = extract(T,'date','04/02/2005 01:06:10','04/02/2005 01:06:33');</span>
+0039    <span class="comment">%</span>
+0040    <span class="comment">% EXAMPLE 1:</span>
+0041    <span class="comment">%   % This example plots the traces at their absolute times...</span>
+0042    <span class="comment">%   plot(T, 'xunit','date'); % plots the trace</span>
+0043    <span class="comment">%   hold on;</span>
+0044    <span class="comment">%   h = T2.plot('xunit','date', 'r', 'linewidth', 1);</span>
+0045    <span class="comment">%          % plots your other trace in red, and with a wider line</span>
+0046    <span class="comment">%</span>
+0047    <span class="comment">% EXAMPLE 2:</span>
+0048    <span class="comment">%   % This example plots the traces, starting at time 0</span>
+0049    <span class="comment">%   plot(T); % plots the trace with seconds on the x axis</span>
+0050    <span class="comment">%   hold on;</span>
+0051    <span class="comment">%   plot(T2, 'xunit','s', 'color', [0.5 0.5 0.5]);  % plots your other</span>
+0052    <span class="comment">%                                       % trace, starting in unison</span>
+0053    <span class="comment">%                                       % with the prev trace, then</span>
+0054    <span class="comment">%                                       % change the color of the new</span>
+0055    <span class="comment">%                                       % plot to grey (RGB)</span>
+0056    <span class="comment">%</span>
+0057    <span class="comment">%</span>
+0058    <span class="comment">%  Y values can be autoscaled with the property pair: 'autoscale',true</span>
+0059    <span class="comment">%  although it only works for single traces...</span>
+0060    <span class="comment">%</span>
+0061    <span class="comment">%  See also datetick, plot</span>
+0062    
+0063    <span class="comment">% AUTHOR: Celso Reyes, with contribution from Jason Amundson</span>
+0064    
+0065    
+0066    <span class="comment">%Look for an odd number of arguments beyond the first.  If there are an odd</span>
+0067    <span class="comment">%number, then it is expected that the first argument is the formatting</span>
+0068    <span class="comment">%string.</span>
+0069    
+0070    [formatDescriptor, params] = <a href="#_sub1" class="code" title="subfunction [formatDescriptor, params] = peelFormat(params)">peelFormat</a>(varargin);
+0071    p = <a href="#_sub2" class="code" title="subfunction p = parseParameters(argList)">parseParameters</a>(params);
+0072    xunit = p.Results.xunit;
+0073    [xunit, Xvalues] = <a href="#_sub4" class="code" title="subfunction [xLabel, Xvalues] = prepareXvalues(T, xunit)">prepareXvalues</a>(T, xunit);
+0074    
+0075    newParams = <a href="#_sub8" class="code" title="subfunction newParams = buildParameterList(formatDescriptor, paramStruct)">buildParameterList</a>(formatDescriptor, p.Unmatched);
+0076    ax = gca;
+0077    plotHandles = struct(); <span class="comment">% contain the various plotting handles</span>
+0078    plotHandles.axis = ax;
+0079    plotHandles.lines = <a href="plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>(ax, Xvalues, <a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(T,<span class="string">'nan'</span>) , newParams{:} );
+0080    
+0081    <span class="keyword">if</span> p.Results.autoscale
+0082       <span class="comment">% modify yunit and rescale the plot data</span>
+0083       yunit = SeismicTrace.autoscale(plotHandles.lines, <a href="#_sub3" class="code" title="subfunction yunit = getYunit(T)">getYunit</a>(T));
+0084    <span class="keyword">else</span>
+0085       yunit = <a href="#_sub3" class="code" title="subfunction yunit = getYunit(T)">getYunit</a>(T);
+0086    <span class="keyword">end</span>
+0087    
+0088    <span class="keyword">switch</span> lower(xunit)
+0089       <span class="keyword">case</span> <span class="string">'date'</span>
+0090          datetick(ax, <span class="string">'x'</span>, <span class="string">'keepticks'</span>,<span class="string">'keeplimits'</span>);
+0091       <span class="keyword">otherwise</span>
+0092          <span class="comment">% do nothing</span>
+0093    <span class="keyword">end</span>
+0094    
+0095    <span class="comment">% label the plot</span>
+0096    plotHandles.yunits = ylabel(ax, yunit, <span class="string">'fontsize'</span>,p.Results.fontsize);
+0097    plotHandles.xunits = xlabel(ax, xunit, <span class="string">'fontsize'</span>,p.Results.fontsize);
+0098    plotHandles.title = title(ax, <a href="#_sub6" class="code" title="subfunction titletext = getTitleText(T)">getTitleText</a>(T), <span class="string">'interpreter'</span>, <span class="string">'none'</span>);
+0099    <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(plotHandles.title,<span class="string">'fontsize'</span>, p.Results.fontsize);
+0100    <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax,<span class="string">'fontsize'</span>, p.Results.fontsize);
+0101    
+0102    <span class="comment">% return the graphics handles if desired</span>
+0103    <span class="keyword">switch</span> nargout
+0104       <span class="keyword">case</span> 0
+0105          <span class="comment">% do nothing</span>
+0106       <span class="keyword">case</span> 1
+0107          varargout = {plotHandles.lines};
+0108       <span class="keyword">case</span> 2
+0109          varargout = {plotHandles.lines, plotHandles};
+0110    <span class="keyword">end</span>
+0111 <span class="keyword">end</span> <span class="comment">%plot</span>
+0112 
+0113 <a name="_sub1" href="#_subfunctions" class="code">function [formatDescriptor, params] = peelFormat(params)</a>
+0114    <span class="comment">%peelFormat   identifies and removesline format descriptor from the argument list</span>
+0115    <span class="comment">%</span>
+0116    <span class="comment">%   [formatDescriptor, params] = peelFormat(params) will look to see if</span>
+0117    <span class="comment">%   there are an uneven number of [property, value] pairs.  If there are,</span>
+0118    <span class="comment">%   then it is assumed that the first argument is the formatting string</span>
+0119    <span class="comment">%   sample formatting strings: 'b', '-' 's+', etc.</span>
+0120    <span class="comment">%</span>
+0121    <span class="comment">%   See also plot</span>
+0122    hasOddInputs =  mod(numel(params),2);
+0123    <span class="keyword">if</span> hasOddInputs
+0124       formatDescriptor = params{1};
+0125       params(1)=[];
+0126    <span class="keyword">else</span>
+0127       formatDescriptor = <span class="string">''</span>;
+0128    <span class="keyword">end</span>
+0129    
+0130 <span class="keyword">end</span>
+0131 
+0132 <a name="_sub2" href="#_subfunctions" class="code">function p = parseParameters(argList)</a>
+0133    <span class="comment">%parseParameters   return an inputParer object containing the parsed args</span>
+0134    <span class="comment">%   p = parseParameters(argList)</span>
+0135    <span class="comment">%</span>
+0136    <span class="comment">%   p.Results contains arguments specific to the trace implementation of plot.</span>
+0137    <span class="comment">%   These are: autoscale,xunit, and fontsize</span>
+0138    <span class="comment">%   All other values are returned in p.unmatched.</span>
+0139    <span class="comment">%</span>
+0140    <span class="comment">%   See also inputParser</span>
+0141    p = inputParser;
+0142    p.KeepUnmatched = true;
+0143    p.CaseSensitive = false;
+0144    p.StructExpand = false;
+0145    <span class="keyword">if</span> verLessThan(<span class="string">'matlab'</span>,<span class="string">'8.2'</span>); <span class="comment">%r2013b</span>
+0146       apv = @addParamValue;
+0147    <span class="keyword">else</span>
+0148       apv = @addParameter;
+0149    <span class="keyword">end</span>
+0150       apv(p,<span class="string">'autoscale'</span>, false);
+0151       apv(p,<span class="string">'xunit'</span>, <span class="string">'s'</span>);
+0152       apv(p,<span class="string">'fontsize'</span>, 10);
+0153    p.parse(argList{:});
+0154 <span class="keyword">end</span>
+0155 
+0156 <a name="_sub3" href="#_subfunctions" class="code">function yunit = getYunit(T)</a>
+0157    <span class="comment">%getYunit   returns the unique labels for Y based on the traces' units</span>
+0158    <span class="keyword">if</span> isscalar(T)
+0159       yunit = T.units;
+0160    <span class="keyword">else</span>
+0161       yunit = arrayfun(@(tr) tr.units, T, <span class="string">'UniformOutput'</span>,false);
+0162       yunit = <a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(yunit);
+0163    <span class="keyword">end</span>
+0164 <span class="keyword">end</span>
+0165 
+0166 <a name="_sub4" href="#_subfunctions" class="code">function [xLabel, Xvalues] = prepareXvalues(T, xunit)</a>
+0167    <span class="comment">%prepareXvalues   changes x axis based on type of plot</span>
+0168    <span class="comment">%   [xLabel, Xvalues] = prepareXvalues(T, xunit)</span>
+0169    <span class="comment">%</span>
+0170    <span class="comment">%   xunit:</span>
+0171    <span class="comment">%      'date'  - use the sample times for the x axis</span>
+0172    <span class="comment">%      'day of year' - use the day of year for the x axis</span>
+0173    <span class="comment">%      otherwise, uses seconds for the x axis</span>
+0174    [xLabel, xfactor] = <a href="../../../../GISMO/core/@spectralobject/private/parse_xunit.html" class="code" title="function [unitName, secondMultiplier] = parse_xunit(unitName)">parse_xunit</a>(xunit);
+0175    
+0176    <span class="keyword">switch</span> lower(xLabel)
+0177       <span class="keyword">case</span> <span class="string">'date'</span>
+0178          <span class="comment">% sample Times</span>
+0179          traceToX = @(tr) tr.sampletimes;
+0180          
+0181       <span class="keyword">case</span> {<span class="string">'day of year'</span>,<span class="string">'day_of_year'</span>}
+0182          <span class="comment">% sampleNumber (from 0)  .*  periodInUnits  + dayOfYear</span>
+0183          traceToX = @(tr) (0:(tr.nsamples()-1)) .* <span class="keyword">...</span>
+0184                           (tr.period() ./ xfactor) + <span class="keyword">...</span>
+0185                           <a href="#_sub5" class="code" title="subfunction doy = dayOfYearFromTrace(T)">dayOfYearFromTrace</a>(tr);
+0186          
+0187       <span class="keyword">case</span> <span class="string">'samples'</span>
+0188          <span class="comment">% sampleNumber</span>
+0189          traceToX = @(tr) 1:tr.nsamples;
+0190          
+0191       <span class="keyword">otherwise</span>
+0192          <span class="comment">% sampleNumber  ./  timescale</span>
+0193          traceToX = @(tr) (1:tr.nsamples) ./ <span class="keyword">...</span>
+0194             (tr.samplerate .* xfactor);
+0195    <span class="keyword">end</span>
+0196    
+0197    traceLengths = T(:).nsamples();
+0198    Xvalues = nan(<a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(traceLengths), numel(T)); <span class="comment">%preallocate</span>
+0199    <span class="keyword">for</span> n=1:numel(T)
+0200       Xvalues(1:traceLengths(n),n) = traceToX(T(n));
+0201    <span class="keyword">end</span>
+0202    
+0203 <span class="keyword">end</span>
+0204 
+0205 <a name="_sub5" href="#_subfunctions" class="code">function doy = dayOfYearFromTrace(T)</a>
+0206    <span class="comment">%dayOfYearFromTrace</span>
+0207    [y, ~, ~] = datevec(T.firstsampletime());
+0208    doy = datenum(T.firstsampletime()) - datenum(y,12,31,0,0,0);
+0209 <span class="keyword">end</span>
+0210    
+0211 <a name="_sub6" href="#_subfunctions" class="code">function titletext = getTitleText(T)</a>
+0212    <span class="comment">%getTitleText   generate title text based on size of trace plus contents</span>
+0213    <span class="keyword">if</span> isscalar(T)
+0214       titletext = sprintf(<span class="string">'%s (%s) @ %3.2f samp/sec'</span>, T.name, T.start, T.samplerate);
+0215    <span class="keyword">else</span>
+0216       titletext = sprintf(<span class="string">'Multiple Traces.  Trace(1) = %s - starting %s'</span>, T(1).name, T(1).start);
+0217    <span class="keyword">end</span>;
+0218 <span class="keyword">end</span>
+0219 
+0220 <a name="_sub7" href="#_subfunctions" class="code">function [unitName, secondMultiplier] = parse_xunit(unitName)</a>
+0221    <span class="comment">%parse_xunit   returns a labelname and a multiplier for an incoming</span>
+0222    <span class="comment">%   xunit value.  This routine was removed to centralize this function</span>
+0223    <span class="comment">%   [unitName, secondMultiplier] = parse_xunit(unitName)</span>
+0224    
+0225    <span class="keyword">switch</span> lower(unitName)
+0226       <span class="keyword">case</span> {<span class="string">'m'</span>,<span class="string">'minutes'</span>}
+0227          unitName = <span class="string">'Minutes'</span>;
+0228          secondMultiplier = 60; <span class="comment">% seconds / minute</span>
+0229       <span class="keyword">case</span> {<span class="string">'h'</span>,<span class="string">'hours'</span>}
+0230          unitName = <span class="string">'Hours'</span>;
+0231          secondMultiplier = 3600; <span class="comment">% seconds / hour</span>
+0232       <span class="keyword">case</span> {<span class="string">'d'</span>,<span class="string">'days'</span>}
+0233          unitName = <span class="string">'Days'</span>;
+0234          secondMultiplier = 86400; <span class="comment">% seconds / day</span>
+0235       <span class="keyword">case</span> {<span class="string">'doy'</span>,<span class="string">'day_of_year'</span>}
+0236          unitName = <span class="string">'Day of Year'</span>;
+0237          secondMultiplier = 86400; <span class="comment">% seconds/ day</span>
+0238       <span class="keyword">case</span> <span class="string">'date'</span>,
+0239          unitName = <span class="string">'Date'</span>;
+0240          secondMultiplier = nan; <span class="comment">%inconsequential!</span>
+0241       <span class="keyword">case</span> {<span class="string">'s'</span>,<span class="string">'seconds'</span>}
+0242          unitName = <span class="string">'Seconds'</span>;
+0243          secondMultiplier = 1;
+0244       <span class="keyword">case</span> {<span class="string">'samples'</span>}
+0245          unitName = <span class="string">'Samples'</span>;
+0246          secondMultiplier = nan;
+0247       <span class="keyword">otherwise</span>,
+0248          unitName = <span class="string">'Seconds'</span>;
+0249          secondMultiplier = 1;
+0250    <span class="keyword">end</span>
+0251 <span class="keyword">end</span>
+0252 
+0253 <a name="_sub8" href="#_subfunctions" class="code">function newParams = buildParameterList(formatDescriptor, paramStruct)</a>
+0254    <span class="comment">%newParams   creates argument list from a struct to pass to the builtin plot</span>
+0255    fieldList = fieldnames(paramStruct);
+0256    <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(fieldList)
+0257       <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(formatDescriptor);
+0258          newParams = {formatDescriptor};
+0259       <span class="keyword">else</span>
+0260          newParams = {};
+0261       <span class="keyword">end</span>
+0262    <span class="keyword">else</span>
+0263       v = struct2cell(paramStruct);
+0264       <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(formatDescriptor);
+0265          newParams = [{formatDescriptor} horzcat(fieldList,v)];
+0266       <span class="keyword">else</span>
+0267          newParams = horzcat(fieldList,v);
+0268          newParams = newParams';
+0269          newParams = newParams(:);
+0270       <span class="keyword">end</span>
+0271    <span class="keyword">end</span>
+0272 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

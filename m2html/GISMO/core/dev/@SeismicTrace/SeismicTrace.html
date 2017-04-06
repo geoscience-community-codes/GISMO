@@ -1,0 +1,1293 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of SeismicTrace</title>
+  <meta name="keywords" content="SeismicTrace">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@SeismicTrace</a> &gt; SeismicTrace.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@SeismicTrace&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>SeismicTrace
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>	C = SORT(C,'TIME')</li><li><a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../../GISMO/core/@rsam/extract.html" class="code" title="function s=extract(self, snum, enum)">extract</a>	</li><li><a href="../../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../../GISMO/core/@scnlobject/ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>	ChannelTag Converter from scnlobject to ChannelTag</li><li><a href="../../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>	ISMEMBER for scnlobjects</li><li><a href="../../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>	ADDFIELD add fields and values to waveform object(s)                V1.1</li><li><a href="../../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../../GISMO/core/@waveform/extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../../GISMO/core/@waveform/history.html" class="code" title="function [actions dates] = history(w)">history</a>	HISTORY retrieve the history of a waveform object</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>	ISFIELD checks the presence of waveform fields.</li><li><a href="../../../../GISMO/core/@waveform/ismember.html" class="code" title="function [results, loc] = ismember(mywave,anythingelse)">ismember</a>	ISMEMBER waveform implementation of ismember</li><li><a href="../../../../GISMO/core/@waveform/legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>	legend creates a legend for a waveform graph</li><li><a href="../../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../../GISMO/core/@waveform/private/time2offset.html" class="code" title="function [offset actualTime] = time2offset(w,whichTime)">time2offset</a>	time2offset returns the offset within a waveform's data for time T</li><li><a href="../../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/sort.html" class="code" title="function c = sort(c)">sort</a>	C = SORT(C) Sorts traces from oldest to youngest.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="legend.html" class="code" title="function varargout = legend(T, varargin)">legend</a>	legend   Create a legend for the graph of a trace.</li><li><a href="linkedplot.html" class="code" title="function linkedplot(T, alignTraces)">linkedplot</a>	linkedplot   Plot multiple waveform objects as separate linked panels</li><li><a href="plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>	</li><li><a href="../../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li><li><a href="../../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/dev/+dataretrieval/@antelopesource/antelopesource.html" class="code" title="">antelopesource</a>	</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="../../../../GISMO/core/dev/@TraceFilter/TraceFilter.html" class="code" title="">TraceFilter</a>	</li><li><a href="../../../../GISMO/core/dev/@TraceSpectra/specgram.html" class="code" title="function h = specgram(s, T, varargin)">specgram</a>	specgram - plots spectrogram of traces</li><li><a href="../../../../GISMO/core/dev/@TraceSpectra/specgram2.html" class="code" title="function h = specgram2(s, T, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li><li><a href="../../../../GISMO/tests/test_ChanDetails.html" class="code" title="">test_ChanDetails</a>	</li><li><a href="../../../../GISMO/tests/waveform_antelope_test.html" class="code" title="function tests = waveform_antelope_test()">waveform_antelope_test</a>	% Main function to generate tests</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = SeismicTrace(varargin)</a></li><li><a href="#_sub2" class="code">function N = get.network(obj)</a></li><li><a href="#_sub3" class="code">function obj = set.network(obj, val)</a></li><li><a href="#_sub4" class="code">function S = get.station(obj)</a></li><li><a href="#_sub5" class="code">function obj = set.station(obj, val)</a></li><li><a href="#_sub6" class="code">function L = get.location(obj)</a></li><li><a href="#_sub7" class="code">function obj = set.location(obj, val)</a></li><li><a href="#_sub8" class="code">function C = get.channel(obj)</a></li><li><a href="#_sub9" class="code">function obj = set.channel(obj, val)</a></li><li><a href="#_sub10" class="code">function st = get.start(obj)</a></li><li><a href="#_sub11" class="code">function obj = set.start(obj, v)</a></li><li><a href="#_sub12" class="code">function val = sampletimes(obj)</a></li><li><a href="#_sub13" class="code">function val = firstsampletime(obj, stringformat)</a></li><li><a href="#_sub14" class="code">function val = lastsampletime(obj, stringformat)</a></li><li><a href="#_sub15" class="code">function tf = startsbefore(A, B)</a></li><li><a href="#_sub16" class="code">function tf = startsafter(A, B)</a></li><li><a href="#_sub17" class="code">function tf = endsbefore(A, B)</a></li><li><a href="#_sub18" class="code">function tf = endsafter(A, B)</a></li><li><a href="#_sub19" class="code">function s = get.name(T)</a></li><li><a href="#_sub20" class="code">function T = set.name(T, val)</a></li><li><a href="#_sub21" class="code">function T = align(T,alignTime, newSamprate, method)</a></li><li><a href="#_sub22" class="code">function T = noteRealignment(T, startt, samprate)</a></li><li><a href="#_sub23" class="code">function T = set.userdata(T, val)</a></li><li><a href="#_sub24" class="code">function T = renameUserField(T, oldField, newField, failSilently)</a></li><li><a href="#_sub25" class="code">function subfield = mvField(subfield, oldField, newField)</a></li><li><a href="#_sub26" class="code">function testUserField(obj, fn, value)</a></li><li><a href="#_sub27" class="code">function T = setUserDataRule(T, fieldname, allowedType, allowedCount, allowedRange)</a></li><li><a href="#_sub28" class="code">function [T, I] = sortby(T, criteria)</a></li><li><a href="#_sub29" class="code">function combined_traces = combine (traces)</a></li><li><a href="#_sub30" class="code">function Tout = pieceTogether(T1, T2)</a></li><li><a href="#_sub31" class="code">function T1 = spliceAndPad(T1, T2, nToPad)</a></li><li><a href="#_sub32" class="code">function T1 = spliceTrace(T1, T2)</a></li><li><a href="#_sub33" class="code">function T = timesort(T)</a></li><li><a href="#_sub34" class="code">function outW = extract(T, method, startV, endV)</a></li><li><a href="#_sub35" class="code">function  [B,A] = swap(A,B)</a></li><li><a href="#_sub36" class="code">function obj = calibapply(obj)</a></li><li><a href="#_sub37" class="code">function obj = calibunapply(obj)</a></li><li><a href="#_sub38" class="code">function T = addhistory(T, whathappened,varargin)</a></li><li><a href="#_sub39" class="code">function T = clearhistory(T)</a></li><li><a href="#_sub40" class="code">function [myhist] = get.history(t)</a></li><li><a href="#_sub41" class="code">function W = waveform(T)</a></li><li><a href="#_sub42" class="code">function CT = ChannelTag(T)</a></li><li><a href="#_sub43" class="code">function T = toTrace(item, itemlabel, conversionfunction)</a></li><li><a href="#_sub44" class="code">function T = syntheticdata(names, starts, ends, samplerate)</a></li><li><a href="#_sub45" class="code">function T = retrieve(ds, names, starts, ends, miscfilters)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="SeismicTrace.html" class="code" title="">SeismicTrace</a> &lt; <a href="../../../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>
+0002    <span class="comment">%SeismicTrace   Control seismic data including channel and time info</span>
+0003    <span class="comment">%  SeismicTrace inherits the ability to manipulate timeseries data from</span>
+0004    <span class="comment">%  TraceData, and adds the capability to handle chanel descriptor tags,</span>
+0005    <span class="comment">%  handle userdata fields, track history, timestamping, and basic</span>
+0006    <span class="comment">%  calibration.</span>
+0007    <span class="comment">%</span>
+0008    <span class="comment">%  SeismicTrace is the replacement class for waveform</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">%  Much functionality is provided by the TraceData class, so see the</span>
+0011    <span class="comment">%  help for that class for more details</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">%  See also retrieve, TraceData, waveform, ChannelTag</span>
+0014    
+0015    <span class="comment">% Author: Celso Reyes, unless otherwise specified in the class functions</span>
+0016    <span class="comment">% Contributions by: Glenn Thompson, Michael West, Carl Tape</span>
+0017    <span class="comment">% Based on waveform, by Celso Reyes</span>
+0018    
+0019    properties(Dependent)
+0020       <span class="comment">% Network.Station.Location.Channel code, as char.</span>
+0021       <span class="comment">% By setting the name, the related network, station, location,</span>
+0022       <span class="comment">% channel, and channelinfo fields are also set</span>
+0023       <span class="comment">% see also network, station, location, channel, channelinfo</span>
+0024       name <span class="comment">% N.S.L.C code</span>
+0025       network <span class="comment">% network code</span>
+0026       station <span class="comment">% station code</span>
+0027       location <span class="comment">% location code</span>
+0028       channel <span class="comment">% channel code</span>
+0029       start
+0030    <span class="keyword">end</span>
+0031    
+0032    properties
+0033       <span class="comment">% history, stored as a structure of (what, when),</span>
+0034       <span class="comment">% where &quot;what&quot; can be anything, and &quot;when&quot; is a matlab datenum</span>
+0035       <span class="comment">% see also SeismicTrace.addhistory, SeismicTrace.clearhistory</span>
+0036       <a href="../../../../GISMO/core/@waveform/history.html" class="code" title="function [actions dates] = history(w)">history</a> = struct(<span class="string">'what'</span>,<span class="string">'created SeismicTrace'</span>,<span class="string">'when'</span>,now); 
+0037       <span class="comment">% structure containing user-defined fields</span>
+0038       <span class="comment">% Field names are case sensitive.</span>
+0039       <span class="comment">% Field values can be validated if a UserDataRule is specified.</span>
+0040       <span class="comment">%</span>
+0041       <span class="comment">% see also SeismicTrace.userdata, SeismicTrace.setUserDataRule,</span>
+0042       <span class="comment">% SeismicTrace.renameUserField</span>
+0043       userdata = struct();
+0044       <span class="comment">% contains calibration values for this trace.</span>
+0045       <span class="comment">% see also SeismicTrace.setcalib, SeismicTrace.removecalib, SeismicTrace.applycalib</span>
+0046       calib = struct(<span class="string">'value'</span>,1,<span class="string">'applied'</span>,false);
+0047       
+0048       <span class="comment">%struct that mirrors userdata, but contains two fields:</span>
+0049       <span class="comment">%   allowed_type: a class name (or empty). If this</span>
+0050       <span class="comment">%   exist, then when data is assigned to userdata, it</span>
+0051       <span class="comment">%   will be type-checked.</span>
+0052       <span class="comment">%   min_count, max_count: if empty,any sized array can be</span>
+0053       <span class="comment">%   assigned to this field.  If a single number, then</span>
+0054       <span class="comment">%   eac assignment must have exactly this number of values.</span>
+0055       <span class="comment">%   if [min max], then any number of values between min</span>
+0056       <span class="comment">%   and max inclusive may be assigned to this.</span>
+0057       <span class="comment">% see also SeismicTrace.userdata, SeismicTrace.setUserDataRule,</span>
+0058       <span class="comment">% SeismicTrace.renameUserField</span>
+0059       UserDataRules 
+0060    <span class="keyword">end</span>
+0061    
+0062    properties(Hidden)
+0063       mat_starttime <span class="comment">% start time in matlab-time</span>
+0064       channelinfo = <a href="../../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>; <span class="comment">% channelTag</span>
+0065    <span class="keyword">end</span>
+0066    
+0067    properties(Hidden, Dependent)
+0068    <span class="keyword">end</span>
+0069    
+0070    methods
+0071       <a name="_sub0" href="#_subfunctions" class="code">function obj = SeismicTrace(varargin)</a>
+0072          <span class="comment">%SeismicTrace   Constructor for SeismicTrace objects</span>
+0073          <span class="comment">%   St=SeismicTrace will return an empty SeismicTrace</span>
+0074          <span class="comment">%   St=SeismicTrace(waveform) creates a SeismicTrace from a</span>
+0075          <span class="comment">%   waveform objct. This might get removed and put into waveform</span>
+0076          <span class="comment">%</span>
+0077          <span class="comment">%   See also TraceData, ChannelTag, Waveform</span>
+0078          
+0079          obj@<a href="../../../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>(varargin{:});
+0080          <span class="keyword">switch</span> nargin
+0081             <span class="keyword">case</span> 1
+0082                <span class="keyword">if</span> isa(varargin{1}, <span class="string">'waveform'</span>)
+0083                   <span class="keyword">if</span> numel(varargin{1}) &gt; 1
+0084                      <span class="keyword">for</span> n=1:numel(varargin{1})
+0085                         st(n) = <a href="SeismicTrace.html" class="code" title="">SeismicTrace</a>(varargin{1}(n));
+0086                      <span class="keyword">end</span>
+0087                      obj = reshape(st,size(varargin{1}));
+0088                      <span class="keyword">return</span>
+0089                   <span class="keyword">end</span>
+0090                   obj.channelinfo = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{1},<span class="string">'channeltag'</span>);
+0091                   obj.mat_starttime = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{1}, <span class="string">'start'</span>);
+0092                   
+0093                   H = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{1}, <span class="string">'history'</span>);
+0094                   <span class="keyword">for</span> n=1:size(H,1);
+0095                      <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(H{n,1}) || <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(H{n,2})
+0096                         <span class="keyword">continue</span>
+0097                      <span class="keyword">end</span>
+0098                      obj.history(end+1).what = H{n,1};
+0099                      obj.history(end).when = H{n,2};
+0100                   <span class="keyword">end</span>
+0101                   miscFields = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{1},<span class="string">'misc_fields'</span>);
+0102                   <span class="keyword">for</span> n = 1: numel(miscFields)
+0103                      <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(miscFields{n})
+0104                         obj.userdata.(miscFields{n})= <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(varargin{1},miscFields{n});
+0105                      <span class="keyword">end</span>
+0106                   <span class="keyword">end</span>
+0107                <span class="keyword">else</span>
+0108                   error(<span class="string">'SeismicTrace:unknownConversion'</span>,<span class="keyword">...</span>
+0109                      <span class="string">'Do not know how to make a SeismicTrace from a %s'</span>,<span class="keyword">...</span>
+0110                      class(varargin{1}));
+0111                <span class="keyword">end</span>
+0112                   
+0113          <span class="keyword">end</span> <span class="comment">%switch</span>
+0114       <span class="keyword">end</span>
+0115       
+0116       <span class="comment">%% get/set of channel-related data</span>
+0117       <a name="_sub1" href="#_subfunctions" class="code">function N = get.network(obj)</a>
+0118          N = obj.channelinfo.network;
+0119       <span class="keyword">end</span>
+0120       <a name="_sub2" href="#_subfunctions" class="code">function obj = set.network(obj, val)</a>
+0121          obj.channelinfo.network = val;
+0122       <span class="keyword">end</span>
+0123       
+0124       <a name="_sub3" href="#_subfunctions" class="code">function S = get.station(obj)</a>
+0125          S = obj.channelinfo.station;
+0126       <span class="keyword">end</span>
+0127       <a name="_sub4" href="#_subfunctions" class="code">function obj = set.station(obj, val)</a>
+0128          obj.channelinfo.station = val;
+0129       <span class="keyword">end</span>
+0130       
+0131       <a name="_sub5" href="#_subfunctions" class="code">function L = get.location(obj)</a>
+0132          L = obj.channelinfo.location;
+0133       <span class="keyword">end</span>
+0134       <a name="_sub6" href="#_subfunctions" class="code">function obj = set.location(obj, val)</a>
+0135          obj.channelinfo.location = val;
+0136       <span class="keyword">end</span>
+0137       
+0138       <a name="_sub7" href="#_subfunctions" class="code">function C = get.channel(obj)</a>
+0139          C = obj.channelinfo.channel;
+0140       <span class="keyword">end</span>
+0141       <a name="_sub8" href="#_subfunctions" class="code">function obj = set.channel(obj, val)</a>
+0142          obj.channelinfo.channel = val;
+0143       <span class="keyword">end</span>
+0144       
+0145       <span class="comment">%%</span>
+0146       <a name="_sub9" href="#_subfunctions" class="code">function st = get.start(obj)</a>
+0147          st = datestr(obj.mat_starttime,<span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>);
+0148       <span class="keyword">end</span>
+0149       
+0150       <a name="_sub10" href="#_subfunctions" class="code">function obj = set.start(obj, v)</a>
+0151          <span class="keyword">if</span> isnumeric(v) &amp;&amp; numel(v) == 1
+0152             obj.mat_starttime = v;
+0153          <span class="keyword">elseif</span> ischar(v)
+0154             obj.mat_starttime = datenum(v);
+0155          <span class="keyword">else</span>
+0156             error(<span class="string">'do not understand start assignment. must be a matlab datenum or a string'</span>)
+0157          <span class="keyword">end</span>
+0158          <span class="comment">% could add ability to translate from java or datetime</span>
+0159       <span class="keyword">end</span>
+0160       <a name="_sub11" href="#_subfunctions" class="code">function val = sampletimes(obj)</a>
+0161          <span class="comment">%sampletimes   Retrieve matlab date for each sample</span>
+0162          <span class="comment">%</span>
+0163          <span class="comment">%   Replaces waveform's get(w, 'timevector')</span>
+0164          
+0165          val = <a href="#_sub12" class="code" title="subfunction val = sampletimes(obj)">sampletimes</a>@<a href="../../../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>(obj) + obj.mat_starttime;
+0166       <span class="keyword">end</span>
+0167       
+0168       <a name="_sub12" href="#_subfunctions" class="code">function val = firstsampletime(obj, stringformat)</a>
+0169          <span class="comment">%firstsampletime   Time of first sample as matlab date or string.</span>
+0170          <span class="comment">%  val = trace.lastsampletime will return as a datenum</span>
+0171          <span class="comment">%  val = trace.lastsampletime(FORMAT) will return a string</span>
+0172          <span class="comment">%  formatted according to FORMAT.</span>
+0173          <span class="comment">%  For multiple traces, a character array will be returned.</span>
+0174          <span class="comment">%</span>
+0175          <span class="comment">%  See also datestr</span>
+0176          val = [obj.mat_starttime];
+0177          <span class="keyword">if</span> exist(<span class="string">'stringformat'</span>,<span class="string">'var'</span>)
+0178             val = datestr(val,stringformat);
+0179          <span class="keyword">else</span>
+0180             val = reshape(val,size(obj));
+0181          <span class="keyword">end</span>
+0182       <span class="keyword">end</span>
+0183       <a name="_sub13" href="#_subfunctions" class="code">function val = lastsampletime(obj, stringformat)</a>
+0184          <span class="comment">%lastsampletime   Time of last sample as matlab date or string.</span>
+0185          <span class="comment">%  val = trace.lastsampletime will return as a datenum</span>
+0186          <span class="comment">%  val = trace.lastsampletime(FORMAT) will return a string</span>
+0187          <span class="comment">%  formatted according to FORMAT.</span>
+0188          <span class="comment">%</span>
+0189          <span class="comment">%  For multiple traces, a character array will be returned.</span>
+0190          <span class="comment">%  See also datestr</span>
+0191          secDurs = [obj.duration];
+0192          secDurs = secDurs(:);
+0193          assert(all(~isnan([obj.samplerate])),<span class="keyword">...</span>
+0194             <span class="string">'SeismicTrace:lastsampletime:Uncalculatable'</span>,<span class="keyword">...</span>
+0195             <span class="string">'Missing samplerate for one or more waveforms. lastsampletime is incalculable'</span>);
+0196          idx = secDurs &gt; 0;
+0197          ps_idx = 1./[obj(idx).samplerate];
+0198          secDurs_idx = secDurs(idx);
+0199          secDurs(idx) = secDurs_idx - ps_idx(:);
+0200          fst = obj.firstsampletime();
+0201          val = fst(:) + secDurs(:)/86400;
+0202          <span class="keyword">if</span> exist(<span class="string">'stringformat'</span>,<span class="string">'var'</span>)
+0203             val = datestr(val,stringformat);
+0204          <span class="keyword">else</span>
+0205             val = reshape(val,size(obj));
+0206          <span class="keyword">end</span>
+0207       <span class="keyword">end</span>
+0208       
+0209       <a name="_sub14" href="#_subfunctions" class="code">function tf = startsbefore(A, B)</a>
+0210          <span class="comment">%startsbefore   Compare starttimes of SeismicTrace</span>
+0211          <span class="comment">%   tf = A.startsbefore(B)  will return TRUE if Trace A starts</span>
+0212          <span class="comment">%   before trace B starts.</span>
+0213          <span class="comment">%</span>
+0214          <span class="comment">%   If B is something other than a SeismicTrace, then it will try</span>
+0215          <span class="comment">%   to convert to a MATLAB datenum before converting.</span>
+0216          <span class="comment">%</span>
+0217          <span class="comment">%   See also: startsafter, endsbefore, endsafter, datenum,</span>
+0218          <span class="comment">%   datetime</span>
+0219          <span class="keyword">if</span> isa(B,<span class="string">'SeismicTrace'</span>)
+0220             tf = A.firstsampletime &lt; B.firstsampletime;
+0221          <span class="keyword">else</span> <span class="comment">% handle datenums, datestrings, or datetimes</span>
+0222             tf = A.firstsampletime &lt; datenum(B);
+0223          <span class="keyword">end</span>
+0224       <span class="keyword">end</span>
+0225       
+0226       <a name="_sub15" href="#_subfunctions" class="code">function tf = startsafter(A, B)</a>
+0227          <span class="comment">%startsafter   Compare starttimes of SeismicTrace</span>
+0228          <span class="comment">%   tf = A.startsafter (B) will return TRUE if Trace A starts after</span>
+0229          <span class="comment">%   Trace B.</span>
+0230          <span class="comment">%</span>
+0231          <span class="comment">%   If B is something other than a SeismicTrace, then it will try</span>
+0232          <span class="comment">%   to convert to a MATLAB datenum before converting.</span>
+0233          <span class="comment">%</span>
+0234          <span class="comment">%   See also: startsafter, endsbefore, endsafter, datenum,</span>
+0235          <span class="comment">%   datetime</span>
+0236          <span class="keyword">if</span> isa(B,<span class="string">'SeismicTrace'</span>)
+0237             tf = A.firstsampletime &gt; B.firstsampletime;
+0238          <span class="keyword">else</span> <span class="comment">% handle datenums, datestrings, or datetimes</span>
+0239             tf = A.firstsampletime &gt; datenum(B);
+0240          <span class="keyword">end</span>
+0241       <span class="keyword">end</span>
+0242       <a name="_sub16" href="#_subfunctions" class="code">function tf = endsbefore(A, B)</a>
+0243          <span class="comment">%endsbefore   Compare last samples of SeismicTrace</span>
+0244          <span class="comment">%   tf = A.endsbefore (B)  will return TRUE if Trace A ends before</span>
+0245          <span class="comment">%   trace B</span>
+0246          <span class="comment">%</span>
+0247          <span class="comment">%   If B is something other than a SeismicTrace, then it will try</span>
+0248          <span class="comment">%   to convert to a MATLAB datenum before converting.</span>
+0249          <span class="comment">%</span>
+0250          <span class="comment">%   See also: startsafter, endsbefore, endsafter, datenum,</span>
+0251          <span class="comment">%   datetime</span>
+0252          <span class="keyword">if</span> isa(B,<span class="string">'SeismicTrace'</span>)
+0253             tf = A.lastsampletime &lt; B.lastsampletime;
+0254          <span class="keyword">else</span> <span class="comment">% handle datenums, datestrings, or datetimes</span>
+0255             tf = A.lastsampletime &lt; datenum(B);
+0256          <span class="keyword">end</span>
+0257       <span class="keyword">end</span>
+0258       <a name="_sub17" href="#_subfunctions" class="code">function tf = endsafter(A, B)</a>
+0259          <span class="comment">%endsafter   Compare last samples of SeismicTrace</span>
+0260          <span class="comment">%   tf = A.endsafter (B) will return TRUE if Trace A ends after</span>
+0261          <span class="comment">%   Trace B.</span>
+0262          <span class="comment">%</span>
+0263          <span class="comment">%   If B is something other than a SeismicTrace, then it will try</span>
+0264          <span class="comment">%   to convert to a MATLAB datenum before converting.</span>
+0265          <span class="comment">%</span>
+0266          <span class="comment">%   See also: startsafter, endsbefore, endsafter, datenum,</span>
+0267          <span class="comment">%   datetime</span>
+0268          <span class="keyword">if</span> isa(B,<span class="string">'SeismicTrace'</span>)
+0269             tf = A.lastsampletime &gt; B.lastsampletime;
+0270          <span class="keyword">else</span> <span class="comment">% handle datenums, datestrings, or datetimes</span>
+0271             tf = A.lastsampletime &gt; datenum(B); 
+0272          <span class="keyword">end</span>
+0273       <span class="keyword">end</span>
+0274       
+0275       <a name="_sub18" href="#_subfunctions" class="code">function s = get.name(T)</a>
+0276          <span class="keyword">if</span> numel(T) ==1
+0277             s = T.channelinfo.string;
+0278          <span class="keyword">else</span>
+0279             s=arrayfun(@(x) x.channelinfo.string, T, <span class="string">'UniformOutput'</span>,false);
+0280          <span class="keyword">end</span>
+0281       <span class="keyword">end</span>
+0282       <a name="_sub19" href="#_subfunctions" class="code">function T = set.name(T, val)</a>
+0283          assert(numel(T) == 1, <span class="string">'only can set name for individual traces'</span>);
+0284          T.channelinfo = <a href="../../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(val);
+0285       <span class="keyword">end</span>
+0286       
+0287       <a name="_sub20" href="#_subfunctions" class="code">function T = align(T,alignTime, newSamprate, method)</a>
+0288          <span class="comment">%align   Resample a seismic trace over a specified interval</span>
+0289          <span class="comment">%   T = T.align(alignTime, newSamprate)</span>
+0290          <span class="comment">%   T = T.align(alignTime, newSamprate, method)</span>
+0291          <span class="comment">%</span>
+0292          <span class="comment">%   Input Arguments</span>
+0293          <span class="comment">%       T: SeismicTrace      N-dimensional</span>
+0294          <span class="comment">%       ALIGNTIME: either a single matlab time or an array of times</span>
+0295          <span class="comment">%       the same shape as the input TRACE matrix.</span>
+0296          <span class="comment">%       NEWSAMPRATE: sample rate of the newly aligned traces</span>
+0297          <span class="comment">%       in samples/second</span>
+0298          <span class="comment">%       METHOD: Any of the methods listed in function INTERP1</span>
+0299          <span class="comment">%          If omitted, then the default is '&lt;a href=&quot;matlab: help pchip&quot;&gt;pchip&lt;/a&gt;'</span>
+0300          <span class="comment">%</span>
+0301          <span class="comment">%   Output</span>
+0302          <span class="comment">%       The output waveform has the new samplerate newSamprate and a</span>
+0303          <span class="comment">%       a starttime calculated by the specified method, using</span>
+0304          <span class="comment">%       the &lt;a href=&quot;matlab: help interp1&quot;&gt;interp1&lt;/a&gt; function.</span>
+0305          <span class="comment">%</span>
+0306          <span class="comment">%   METHODOLOGY</span>
+0307          <span class="comment">%     The alignTime is projected forward or backward in time at the</span>
+0308          <span class="comment">%     specified sample interval until it approaches the original waveform's</span>
+0309          <span class="comment">%     start time.  The rest of the waveform is then interpolated at the</span>
+0310          <span class="comment">%     sample rate.</span>
+0311          <span class="comment">%</span>
+0312          <span class="comment">%     Methodology Example.</span>
+0313          <span class="comment">%         A waveform starts on 1/1/2008 12:00, with sample rate of 10</span>
+0314          <span class="comment">%         samples/sec, and has data covering 10 minutes  (6000 samples).</span>
+0315          <span class="comment">%         The resampled data is requested for time 1/1/2008 12:05:00.03,</span>
+0316          <span class="comment">%         also at 10 samples/sec.</span>
+0317          <span class="comment">%         The resulting data will start at 1/1/2008 12:00:00.3, and have</span>
+0318          <span class="comment">%         5999 samples, with the last sample occurring at 12:09:59.830.</span>
+0319          <span class="comment">%</span>
+0320          <span class="comment">%   Examples of usefulness?  Particle motions, coordinate transformations.</span>
+0321          <span class="comment">%   If used for particle motions, consider &lt;a href=&quot;matlab:help plotmatrix&quot;&gt;plotmatrix&lt;/a&gt; command.</span>
+0322          <span class="comment">%</span>
+0323          <span class="comment">%   example:</span>
+0324          <span class="comment">%       chanNames = {'AV.KDAK..BHZ','AV.KDAK.BHN','AV.KDAK.BHE'};</span>
+0325          <span class="comment">%       tags = ChannelTag(chanNames); %grab all 3 channels</span>
+0326          <span class="comment">%       % for each component, grab winston data on Kurile Earthquake</span>
+0327          <span class="comment">%       T = Trace.retrieve(mydatasource,tags,'1/13/2007 04:20:00','1/13/2007 04:30:00');</span>
+0328          <span class="comment">%       T = T.align('1/37/2007 4:22:00', w(1).samplerate);</span>
+0329          <span class="comment">%</span>
+0330          <span class="comment">%</span>
+0331          <span class="comment">% See also interp1, plotmatrix</span>
+0332          
+0333          
+0334          oneSecond = 1/86400;
+0335          
+0336          <span class="keyword">if</span> ~exist(<span class="string">'method'</span>,<span class="string">'var'</span>)
+0337             method = <span class="string">'pchip'</span>;
+0338          <span class="keyword">end</span>
+0339          
+0340          <span class="keyword">if</span> ischar(alignTime),
+0341             alignTime =  datenum(alignTime);
+0342          <span class="keyword">end</span>
+0343          
+0344          oneAlignTime = numel(alignTime) == 1;
+0345          hasCompatibleSize = oneAlignTime || <span class="keyword">...</span><span class="comment"> single align time OR</span>
+0346             all(size(alignTime) == size(T)) || <span class="keyword">...</span><span class="comment"> same shape OR</span>
+0347             (numel(alignTime) == length(T) &amp;&amp; <span class="keyword">...</span><span class="comment"> both vectors have</span>
+0348             numel(T) == length(alignTime));     <span class="comment">% the same length</span>
+0349          
+0350          assert(hasCompatibleSize, <span class="string">'SeismicTrace:align:invalidAlignSize'</span>,<span class="keyword">...</span>
+0351             <span class="string">'alignTime must be either a single time or a matrix the same shape as the traces'</span>);
+0352          
+0353          <span class="keyword">if</span> oneAlignTime <span class="comment">% same align time for all traces</span>
+0354             alignTime = repmat(alignTime,size(T));
+0355          <span class="keyword">end</span>
+0356          
+0357          
+0358          newSamplesPerSec = 1 / newSamprate ;  <span class="comment">%# samplesPerSecond</span>
+0359          timeStep = newSamplesPerSec * oneSecond;
+0360          existingStarts = T.firstsampletime();
+0361          existingEnds = T.lastsampletime();
+0362          
+0363          <span class="comment">% calculate the offset of the closest &quot;aligned&quot; time, by projecting the</span>
+0364          <span class="comment">% desired sample rate and time forward or backward onto these waveforms'</span>
+0365          <span class="comment">% start time.</span>
+0366          deltaTime = existingStarts - alignTime;  <span class="comment">% time in between</span>
+0367          <span class="comment">% if deltatime (-):alignTime AFTER existingStarts,</span>
+0368          <span class="comment">% if deltatime (+):alignTime BEFORE existingStarts</span>
+0369          closestStartTime = existingStarts - rem(deltaTime,timeStep);
+0370          
+0371          <span class="keyword">for</span> n=1:numel(T)
+0372             origTimes = T(n).sampletimes;
+0373             <span class="comment">% newTimes MUST be in one column, else DATA field gets corrupted</span>
+0374             newTimes = ( closestStartTime(n):timeStep:existingEnds(n) )';
+0375             
+0376             <span class="comment">%get rid of samples that lay entirely outside the existing waveform's</span>
+0377             <span class="comment">%range (ie, only interpolate values BETWEEN points)</span>
+0378             newTimes(newTimes &lt; origTimes(1) | newTimes &gt; origTimes(end)) = [];
+0379             
+0380             T(n).data = interp1(<span class="keyword">...</span>
+0381                origTimes,<span class="keyword">...</span><span class="comment">     original times (x)</span>
+0382                T(n).data,<span class="keyword">...</span><span class="comment">         original data (y)</span>
+0383                newTimes,<span class="keyword">...</span><span class="comment">    new times (x1)</span>
+0384                method);           <span class="comment">%  method</span>
+0385             T(n).start = newTimes(1); <span class="comment">% must be a datenum</span>
+0386             T(n).samplerate = newSamprate;
+0387          <span class="keyword">end</span>
+0388          
+0389          <span class="comment">%% update histories</span>
+0390          <span class="comment">% if all waves were aligned to the same time, then handle all history here</span>
+0391          <span class="keyword">if</span> oneAlignTime
+0392             <a href="#_sub22" class="code" title="subfunction T = noteRealignment(T, startt, samprate)">noteRealignment</a>(T, alignTime(1), newSamprate);
+0393          <span class="keyword">else</span>
+0394             <span class="keyword">for</span> n=1:numel(T)
+0395                T(n) = <a href="#_sub22" class="code" title="subfunction T = noteRealignment(T, startt, samprate)">noteRealignment</a>(T(n), alignTime(n), newSamprate);
+0396             <span class="keyword">end</span>
+0397          <span class="keyword">end</span>
+0398          
+0399          <a name="_sub21" href="#_subfunctions" class="code">function T = noteRealignment(T, startt, samprate)</a>
+0400             timeStr = datestr(startt,<span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>);
+0401             myHistory = sprintf(<span class="string">'aligned data to %s at %f samples/sec'</span>, timeStr, samprate);
+0402             T = T.addhistory(myHistory);
+0403          <span class="keyword">end</span>
+0404       <span class="keyword">end</span>
+0405       
+0406       <span class="comment">%% Handling User-defined fields</span>
+0407       <span class="comment">%TODO: Guarentee or document how the userfield things work for</span>
+0408       <span class="comment">%multiple trace objects. First thought: They should be performed</span>
+0409       <span class="comment">%individually, on a single object</span>
+0410       <span class="comment">%</span>
+0411       <span class="comment">% waveform/delfield has been replaced by using matlab's rmfield:</span>
+0412       <span class="comment">% T.userdata = rmfield(T.userdata, 'fieldToDelete');</span>
+0413       
+0414       <span class="comment">% isfield is not implemented because matlab's can be used:</span>
+0415       <span class="comment">% isfield(T.userdata,'something');</span>
+0416       
+0417       <a name="_sub22" href="#_subfunctions" class="code">function T = set.userdata(T, val)</a>
+0418          <span class="comment">%sets userdata fields for a trace object</span>
+0419          <span class="comment">% T.userdata.myfield = value;</span>
+0420          <span class="comment">%</span>
+0421          <span class="comment">% to impose constraings on the values that this field can</span>
+0422          <span class="comment">% retrieve, use: SeismicTrace.SetUserDataRule(myfield,...)</span>
+0423          <span class="comment">%</span>
+0424          <span class="comment">% to delete the field:</span>
+0425          <span class="comment">% T.userdata = rmfield(T.userdata, 'fieldToRemove');</span>
+0426          <span class="comment">% see also SeismicTrace.SetUserDataRule, rmfield</span>
+0427          oldfields = fieldnames(T.userdata);
+0428          fn = fieldnames(val);
+0429          fieldToAdd = fn(~<a href="../../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(fn, oldfields));
+0430          <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(fieldToAdd) &amp;&amp; any(strcmpi(fieldToAdd, oldfields))
+0431             <span class="comment">% we have a case change!! uh-oh.</span>
+0432             similarlyNamed = oldfields{strcmpi(oldfields, fieldToAdd)};
+0433             error([<span class="string">'attempted to add field [''%s''], '</span><span class="keyword">...</span>
+0434                <span class="string">'but a similar field [''%s''] exists.\n'</span><span class="keyword">...</span>
+0435                <span class="string">'Check your case and try again'</span>],<span class="keyword">...</span>
+0436                fieldToAdd{1}, similarlyNamed);
+0437          <span class="keyword">end</span>
+0438          <span class="comment">%fn_existing = fieldnames(T.userdata);</span>
+0439          <span class="comment">%newfn = ~ismember(fieldnames(val),val</span>
+0440          <span class="keyword">for</span> f = 1:numel(fn);
+0441             <a href="#_sub26" class="code" title="subfunction testUserField(obj, fn, value)">testUserField</a>(T, fn{f}, val.(fn{f}))
+0442          <span class="keyword">end</span>
+0443          T.userdata = val;
+0444       <span class="keyword">end</span>
+0445       
+0446       <a name="_sub23" href="#_subfunctions" class="code">function T = renameUserField(T, oldField, newField, failSilently)</a>
+0447          <span class="comment">%renameUserField   Rename a userdata field</span>
+0448          <span class="comment">%  T = T.renameuserField(oldName, newName);</span>
+0449          <span class="comment">%  rename a field if it exists to a new name.</span>
+0450          <span class="comment">%</span>
+0451          <span class="comment">%  Also renames the associated Rules field</span>
+0452          <span class="comment">%</span>
+0453          <span class="comment">%  Possible sticking-points to deal with:</span>
+0454          <span class="comment">%  1. both oldField and newField exist in T.userdata -&gt; error</span>
+0455          <span class="comment">%  2. newField already exists in T.userdata -&gt; ignore</span>
+0456          <span class="comment">%  3. neither newField or oldfield exists in T.Userdata -&gt; warning</span>
+0457          <span class="comment">%</span>
+0458          <span class="comment">%  if failSilently is true, then failures will not result in an</span>
+0459          <span class="comment">%  error.</span>
+0460          <span class="comment">%</span>
+0461          <span class="comment">%  See also: userdata, userDataRule</span>
+0462          
+0463          
+0464          oldFieldExists = <a href="../../../../GISMO/core/@waveform/isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>(T.userdata, oldField);
+0465          newFieldExists = <a href="../../../../GISMO/core/@waveform/isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>(T.userdata, newField);
+0466          sameNames = strcmp(oldField, newField);
+0467          <span class="keyword">if</span> ~exist(<span class="string">'failSilently'</span>, <span class="string">'var'</span>); failSilently = false; <span class="keyword">end</span>;
+0468          <span class="keyword">if</span> sameNames
+0469             <span class="keyword">if</span> failSilently
+0470                <span class="keyword">return</span>
+0471             <span class="keyword">else</span>
+0472                warning(<span class="string">'oldField is the same as newField [%s]. Ignoring'</span>, oldField);
+0473                <span class="keyword">return</span>
+0474             <span class="keyword">end</span>
+0475          <span class="keyword">end</span>
+0476          <span class="keyword">if</span> oldFieldExists
+0477             <span class="keyword">if</span> newFieldExists <span class="comment">%BOTH fields exist</span>
+0478                <span class="keyword">if</span> (~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(newField))  <span class="comment">%but the new one isn't empty</span>
+0479                   error(<span class="string">'Both fields already exist, and userdata.%s already contains data'</span>,newField);
+0480                <span class="keyword">else</span> <span class="comment">% but the new one is empty, so proceed normally</span>
+0481                   <span class="keyword">if</span> ~failSilently
+0482                      warning(<span class="string">'Both fields exist, but since userdata.%s is empty, its value is being replaced'</span>, newField);
+0483                   <span class="keyword">end</span>
+0484                   T.userdata = <a href="#_sub25" class="code" title="subfunction subfield = mvField(subfield, oldField, newField)">mvField</a>(T.userdata, oldField, newField);
+0485                   <span class="keyword">if</span> <a href="../../../../GISMO/core/@waveform/isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>(T.UserDataRules,oldfield);
+0486                      T.UserDataRules = <a href="#_sub25" class="code" title="subfunction subfield = mvField(subfield, oldField, newField)">mvField</a>(T.UserDataRules,oldField, newField);
+0487                   <span class="keyword">end</span>
+0488                      
+0489                <span class="keyword">end</span>
+0490             <span class="keyword">else</span> <span class="comment">% only the old field exists, so proceed normally</span>
+0491                
+0492                   T.userdata = <a href="#_sub25" class="code" title="subfunction subfield = mvField(subfield, oldField, newField)">mvField</a>(T.userdata, oldField, newField);
+0493                   <span class="keyword">if</span> <a href="../../../../GISMO/core/@waveform/isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>(T.UserDataRules,oldfield);
+0494                      T.UserDataRules = <a href="#_sub25" class="code" title="subfunction subfield = mvField(subfield, oldField, newField)">mvField</a>(T.UserDataRules,oldField, newField);
+0495                   <span class="keyword">end</span>
+0496             <span class="keyword">end</span>
+0497          <span class="keyword">else</span>
+0498             <span class="keyword">if</span> newFieldExists  <span class="comment">%only the new field exists</span>
+0499                <span class="comment">% already renamed. ignore</span>
+0500             <span class="keyword">else</span> <span class="comment">% neither field exists</span>
+0501                <span class="keyword">if</span> ~failSilently
+0502                  warning(<span class="string">'field [%s] does not exist in userdata'</span>, oldField);
+0503                <span class="keyword">end</span>
+0504             <span class="keyword">end</span>
+0505          <span class="keyword">end</span>
+0506          
+0507          <a name="_sub24" href="#_subfunctions" class="code">function subfield = mvField(subfield, oldField, newField)</a>
+0508             tmp = subfield.(oldField);
+0509             subfield = rmfield(subfield,oldField);
+0510             [subfield.(newField)] = tmp;
+0511          <span class="keyword">end</span>
+0512       <span class="keyword">end</span>
+0513       
+0514       <a name="_sub25" href="#_subfunctions" class="code">function testUserField(obj, fn, value)</a>
+0515          <span class="comment">%testUserField   apply the testing rules to a userdata field</span>
+0516          <span class="comment">%  will error with detailed information about how the field fails</span>
+0517          <span class="comment">%  validation.</span>
+0518          <span class="comment">%</span>
+0519          <span class="comment">%  see also setUserDataRule</span>
+0520          
+0521          <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@waveform/isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>(obj.UserDataRules,fn)
+0522             <span class="keyword">return</span>;
+0523          <span class="keyword">end</span>
+0524          <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@waveform/isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>(obj.userdata,fn)
+0525             <span class="keyword">if</span> exist(<span class="string">'value'</span>,<span class="string">'var'</span>)
+0526                <span class="comment">% continue on</span>
+0527             <span class="keyword">else</span>
+0528                <span class="keyword">return</span>
+0529             <span class="keyword">end</span>
+0530          <span class="keyword">end</span>
+0531          rules = obj.UserDataRules.(fn);
+0532          <span class="keyword">if</span> ~rules.inUse
+0533             <span class="keyword">return</span>
+0534          <span class="keyword">end</span>
+0535          <span class="keyword">if</span> ~exist(<span class="string">'value'</span>,<span class="string">'var'</span>)
+0536             value = obj.userdata.(fn);
+0537          <span class="keyword">end</span>
+0538          <span class="comment">% test the type</span>
+0539          <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(rules.allowed_type) &amp;&amp; <span class="keyword">...</span>
+0540                ~isa(value, rules.allowed_type)
+0541             error(<span class="string">'User-defined field [%s] requires input of class [%s], but value was a [%s]'</span>,<span class="keyword">...</span>
+0542                fn, rules.allowed_type, class(value));
+0543          <span class="keyword">end</span>
+0544          <span class="comment">% test the number of items</span>
+0545          <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(rules.min_count) &amp;&amp; numel(value) &lt; rules.min_count
+0546             error(<span class="string">'User-defined field [%s]: Size of value [%d] is too small. Min allowed size is %d'</span>,<span class="keyword">...</span>
+0547                fn, numel(value), rules.min_count);
+0548          <span class="keyword">end</span>
+0549          <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(rules.max_count) &amp;&amp; numel(value) &gt; rules.max_count
+0550             error(<span class="string">'User-defined field [%s]: Size of value [%d] is too big. Max allowed size is %d'</span>,<span class="keyword">...</span>
+0551                fn, numel(value), rules.max_count);
+0552          <span class="keyword">end</span>
+0553          <span class="comment">% test the value (only works for numeric types)</span>
+0554          <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(rules.min_value) &amp;&amp; value &lt; rules.min_value
+0555             error(<span class="string">'User-defined field [%s]: Assigned value [%f] is too small. Min allowed is %f'</span>,<span class="keyword">...</span>
+0556                fn, value, rules.min_value);
+0557          <span class="keyword">end</span>
+0558          <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(rules.max_value) &amp;&amp; value &gt;rules.max_value
+0559             error(<span class="string">'User-defined field [%s]: Assigned value [%f] is too big. Max allowed is %f'</span>,<span class="keyword">...</span>
+0560                fn, value, rules.max_value);
+0561          <span class="keyword">end</span>
+0562       <span class="keyword">end</span>
+0563       
+0564       <a name="_sub26" href="#_subfunctions" class="code">function T = setUserDataRule(T, fieldname, allowedType, allowedCount, allowedRange)</a>
+0565          <span class="comment">%setUserDataRule   create rules to govern data entry into userdata fields.</span>
+0566          <span class="comment">% T = T.setUserData(fieldname, classname) will have the class</span>
+0567          <span class="comment">% checked each time a value is assigned to the userdata</span>
+0568          <span class="comment">% field T.userdata.fieldname.</span>
+0569          <span class="comment">%</span>
+0570          <span class="comment">% T = T.setUserDataRule(fieldname, classname, count) controls the</span>
+0571          <span class="comment">% array size for any assignments to T.userdata.fieldname.  count</span>
+0572          <span class="comment">% may be a single number N or a range [nMin nMax]</span>
+0573          <span class="comment">% for any value assigned to T.userdata.fieldname,</span>
+0574          <span class="comment">%    numel(value) == N or Nmin &lt;= numel(value) &lt;= Nmax</span>
+0575          <span class="comment">%</span>
+0576          <span class="comment">% T = T.setUserDataRule(fieldname, classname, count, range)</span>
+0577          <span class="comment">% for numeric classes, range will specify the min/max values.</span>
+0578          <span class="comment">%</span>
+0579          <span class="comment">% T = T.setUserDataRule(fieldname) will clear the constraints.</span>
+0580          <span class="comment">% examples:</span>
+0581          <span class="comment">% T = T.setUserDataRule('height','double',1, [0 inf]); will ensure</span>
+0582          <span class="comment">% that height will always be a scalar positive double</span>
+0583          <span class="comment">% ...setUserDataRule('code','char',[1 4]) will ensure that any</span>
+0584          <span class="comment">% assignments to T.userdata.code will be a string between 1 and 4</span>
+0585          <span class="comment">% characters in length.</span>
+0586          <span class="comment">%</span>
+0587          <span class="comment">% See also testUserField, renameUserField,</span>
+0588          assert(ischar(fieldname))
+0589          <span class="keyword">if</span> ~exist(<span class="string">'allowedType'</span>, <span class="string">'var'</span>)
+0590             T.UserDataRules.(fieldname).inUse = false;
+0591             <span class="keyword">return</span>
+0592          <span class="keyword">else</span>
+0593             T.UserDataRules.(fieldname).inUse = true;
+0594          <span class="keyword">end</span>
+0595          <span class="comment">%add the rules to UserDataRules</span>
+0596          <span class="keyword">if</span> ischar(allowedType) || <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(allowedType)
+0597             T.UserDataRules.(fieldname).allowed_type = allowedType;
+0598          <span class="keyword">else</span>
+0599             error(<span class="string">'AllowedType must be a class name or empty'</span>);
+0600          <span class="keyword">end</span>
+0601          
+0602          <span class="keyword">if</span> ~exist(<span class="string">'allowedCount'</span>, <span class="string">'var'</span>)
+0603             allowedCount = [];
+0604          <span class="keyword">end</span>
+0605          <span class="keyword">if</span> isnumeric(allowedCount)
+0606             <span class="keyword">switch</span> numel(allowedCount)
+0607                <span class="keyword">case</span> 0
+0608                   T.UserDataRules.(fieldname).min_count = -inf;
+0609                   T.UserDataRules.(fieldname).max_count = inf;
+0610                <span class="keyword">case</span> 1
+0611                   T.UserDataRules.(fieldname).min_count = allowedCount;
+0612                   T.UserDataRules.(fieldname).max_count = allowedCount;
+0613                <span class="keyword">case</span> 2
+0614                   T.UserDataRules.(fieldname).min_count = allowedCount(1);
+0615                   T.UserDataRules.(fieldname).max_count = allowedCount(2);
+0616                <span class="keyword">otherwise</span>
+0617                   error(<span class="string">'allowedCount must be either empty, or numeric with 1 or 2 values'</span>);
+0618             <span class="keyword">end</span>
+0619          <span class="keyword">else</span>
+0620             error(<span class="string">'allowedCount must be either empty, or numeric with 1 or 2 values'</span>);
+0621          <span class="keyword">end</span>
+0622          
+0623          <span class="keyword">if</span> ~exist(<span class="string">'allowedRange'</span>, <span class="string">'var'</span>) || strcmp(allowedType,<span class="string">'char'</span>)
+0624             allowedRange = [];
+0625          <span class="keyword">end</span>
+0626          <span class="keyword">if</span> isnumeric(allowedRange)
+0627             <span class="keyword">switch</span> numel(allowedRange)
+0628                <span class="keyword">case</span> 0
+0629                   T.UserDataRules.(fieldname).min_value = [];
+0630                   T.UserDataRules.(fieldname).max_value = [];
+0631                <span class="keyword">case</span> 2
+0632                   T.UserDataRules.(fieldname).min_value = allowedRange(1);
+0633                   T.UserDataRules.(fieldname).max_value = allowedRange(2);
+0634                <span class="keyword">otherwise</span>
+0635                   error(<span class="string">'allowedRange must be either empty, or [min max]'</span>);
+0636             <span class="keyword">end</span>
+0637          <span class="keyword">else</span>
+0638             error(<span class="string">'allowedRange must be either empty, or [min max]'</span>);
+0639          <span class="keyword">end</span>
+0640       <span class="keyword">end</span>
+0641       
+0642       <span class="comment">%%</span>
+0643       <a name="_sub27" href="#_subfunctions" class="code">function [T, I] = sortby(T, criteria)</a>
+0644          <span class="comment">%sortby   sort SeismicTraces based on a property</span>
+0645          <span class="comment">%  Tsorted = sortby(Tin) sorts by the name (N.S.L.C) in</span>
+0646          <span class="comment">%  purely alphabetical order. Depending on the length of each</span>
+0647          <span class="comment">%  field, the final results may not be in an expected order.</span>
+0648          <span class="comment">%</span>
+0649          <span class="comment">%  Tsorted = sortby(Tin, cirt), where CRIT is a valid property</span>
+0650          <span class="comment">%</span>
+0651          <span class="comment">% [Wsorted, I] = sortby(Win...) will also return the index list so that</span>
+0652          <span class="comment">%     Win(I) = Wsorted</span>
+0653          <span class="comment">%</span>
+0654          <span class="comment">%   Examples:</span>
+0655          <span class="comment">%   tSorted = T.sortby('samplerate');  % sort by sample rate</span>
+0656          <span class="comment">%   tSorted = T.sortby('firstsample'); % sort by start time</span>
+0657          <span class="comment">%   tSorted = T.sortby('station');     % sort by station name</span>
+0658          <span class="comment">%   tSorted = T.sortby('duration');    % sort by the duration</span>
+0659          <span class="comment">%   tSorted = T.sortby('var');         % sort bythe variance</span>
+0660          <span class="comment">%</span>
+0661          <span class="comment">%   Generally, if you can request a scalar value from a Seismic</span>
+0662          <span class="comment">%   Trace using function A, then 'A' is a valid criteria.</span>
+0663          <span class="comment">%</span>
+0664          <span class="comment">%   Advanced usage:</span>
+0665          <span class="comment">%   sortby also accepts functions, so that the following example is</span>
+0666          <span class="comment">%   valid:</span>
+0667          <span class="comment">%     myfunc = @(x) median(x) - min(x);</span>
+0668          <span class="comment">%     Tsorted = T.sortby(myfunc)</span>
+0669          <span class="comment">%</span>
+0670          <span class="comment">%</span>
+0671          <span class="comment">% see also: sort</span>
+0672                   
+0673          <span class="keyword">if</span> nargin &lt; 2
+0674             criteria = <span class="string">'name'</span>;
+0675          <span class="keyword">end</span>
+0676          <span class="keyword">if</span> ischar(criteria)
+0677             <span class="comment">% could be a property or a method</span>
+0678             <span class="keyword">if</span> <a href="../../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(criteria,properties(T))
+0679                <span class="keyword">if</span> ischar(T(1).(criteria))
+0680                [~,I] = <a href="../../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>({T.(criteria)});
+0681                <span class="keyword">else</span>
+0682                [~,I] = <a href="../../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>([T.(criteria)]);
+0683                <span class="keyword">end</span>
+0684             <span class="keyword">elseif</span> ismethod(T,criteria)
+0685                [~,I] = <a href="../../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>(T.(criteria));
+0686             <span class="keyword">end</span>
+0687          <span class="keyword">elseif</span> isa(criteria, <span class="string">'function_handle'</span>)
+0688             [~, I] = <a href="../../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>(criteria(T));
+0689          <span class="keyword">else</span>
+0690             error(<span class="string">'unable to sort'</span>);
+0691             <span class="comment">% TODO: add ability to sort userdata fields</span>
+0692          <span class="keyword">end</span>
+0693          <span class="comment">% sort by a field</span>
+0694          <span class="comment">% [~, I] = sort(get(T,criteria));</span>
+0695          T = T(I);
+0696       <span class="keyword">end</span>
+0697 
+0698       <a name="_sub28" href="#_subfunctions" class="code">function combined_traces = combine (traces)</a>
+0699          <span class="comment">%combine   Merge waveforms based on start/end times and ChannelTag</span>
+0700          <span class="comment">%  combined_waveforms = combine(traces) combines based on</span>
+0701          <span class="comment">%  ChannelTag and start/endtimes.</span>
+0702          <span class="comment">%</span>
+0703          <span class="comment">% DOES NO OTHER CHECKS</span>
+0704                   
+0705          <span class="keyword">if</span> numel(traces) == 0  <span class="comment">%nothing to do</span>
+0706             combined_traces = traces;
+0707             <span class="keyword">return</span>
+0708          <span class="keyword">end</span>
+0709          
+0710          chaninfo = [traces.channelinfo];
+0711          [uniquechans, ~, chanbin] = <a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(chaninfo);
+0712          
+0713          <span class="comment">%preallocate</span>
+0714          combined_traces = repmat(<a href="SeismicTrace.html" class="code" title="">SeismicTrace</a>,size(uniquechans));
+0715          
+0716          <span class="keyword">for</span> i=1:numel(uniquechans)
+0717             T = traces(chanbin == i);
+0718             T = <a href="#_sub33" class="code" title="subfunction T = timesort(T)">timesort</a>(T);
+0719             <span class="keyword">for</span> j=(numel(T)-1):-1:1
+0720                T(j) = <a href="#_sub30" class="code" title="subfunction Tout = pieceTogether(T1, T2)">pieceTogether</a>(T(j), T(j+1));
+0721                T(j+1) = [];
+0722             <span class="keyword">end</span>
+0723             combined_traces(i) = T;
+0724          <span class="keyword">end</span>
+0725          
+0726          <a name="_sub29" href="#_subfunctions" class="code">function Tout = pieceTogether(T1, T2)</a>
+0727             <span class="comment">%pieceTogether</span>
+0728             <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(T1.data)
+0729                Tout = T2;
+0730                <span class="keyword">return</span>;
+0731             <span class="keyword">end</span>;
+0732             dtSecs = (T2.firstsampletime - T1.lastsampletime) * 86400;
+0733             sampRate = T1.samplerate;
+0734             <span class="keyword">if</span> sampRate &gt; 1
+0735                sampRate = round(sampRate);
+0736             <span class="keyword">elseif</span> sampRate &gt; 0
+0737                sampRate = 1 / (round(1 / sampRate));
+0738             <span class="keyword">end</span>
+0739             sampleInterval = 1 ./ sampRate;
+0740             overlaps = (dtSecs - sampleInterval .* 1.25) &lt; 0;
+0741             <span class="keyword">if</span> overlaps
+0742                Tout = <a href="#_sub32" class="code" title="subfunction T1 = spliceTrace(T1, T2)">spliceTrace</a>(T1, T2);
+0743             <span class="keyword">else</span>
+0744                paddingAmount = round((dtSecs * sampRate)-1);
+0745                Tout = <a href="#_sub31" class="code" title="subfunction T1 = spliceAndPad(T1, T2, nToPad)">spliceAndPad</a>(T1,T2, paddingAmount);
+0746             <span class="keyword">end</span>
+0747          <span class="keyword">end</span>
+0748          
+0749          <a name="_sub30" href="#_subfunctions" class="code">function T1 = spliceAndPad(T1, T2, nToPad)</a>
+0750             <span class="comment">%spliceAndPad   Combine two traces that do not overlap</span>
+0751             <span class="keyword">if</span> nToPad &gt; 0 &amp;&amp; ~isinf(nToPad)
+0752                T1.data = [T1.data; nan(nToPad,1); T2.data];
+0753             <span class="keyword">else</span>
+0754                T1.data = [T1.data; T2.data];
+0755             <span class="keyword">end</span>
+0756          <span class="keyword">end</span>
+0757          
+0758          <a name="_sub31" href="#_subfunctions" class="code">function T1 = spliceTrace(T1, T2)</a>
+0759             <span class="comment">%spliceTrace   combines two traces that  overlap</span>
+0760             timesToGrab = sum(T1.sampletimes &lt; T2.firstsampletime);
+0761             samplesRemoved = numel(T1.data) - timesToGrab;
+0762             T1.data = [<a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(<a href="../../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>(T1,<span class="string">'index'</span>,1,timesToGrab)); T2.data];
+0763             T1= T1.addhistory(<span class="string">'SPLICEPOINT: %s, removed %d points (overlap)'</span>,<span class="keyword">...</span>
+0764                T2.start, samplesRemoved);
+0765          <span class="keyword">end</span>
+0766                   
+0767          <a name="_sub32" href="#_subfunctions" class="code">function T = timesort(T)</a>
+0768             [~, I] = <a href="../../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>([T.mat_starttime]);
+0769             T = T(I);
+0770          <span class="keyword">end</span>
+0771       <span class="keyword">end</span>
+0772       
+0773       
+0774          <span class="comment">%TODO: make this SeismicTrace-y.  This is currently written for waveforms</span>
+0775          <span class="comment">%TODO: Decide on proper wording! Should this be multiple functions?</span>
+0776       <a name="_sub33" href="#_subfunctions" class="code">function outW = extract(T, method, startV, endV)</a>
+0777          <span class="comment">%extract   creates a waveform with a subset of another's data.</span>
+0778          <span class="comment">%   waveform = extract(waveform, 'TIME', startTime, endTime)</span>
+0779          <span class="comment">%       returns a waveform with the subset of data from startTime to</span>
+0780          <span class="comment">%       endTime.  Both times are matlab formatted (string or datenum)</span>
+0781          <span class="comment">%</span>
+0782          <span class="comment">%   waveform = extract(waveform, 'INDEX', startIndex, endIndex)</span>
+0783          <span class="comment">%       returns a waveform with the subset of data from StartIndex to</span>
+0784          <span class="comment">%       EndIndex.  this is roughly equivelent to grabbing the waveform's</span>
+0785          <span class="comment">%       data into an array, as in D = get(W,'data'), then returning a</span>
+0786          <span class="comment">%       waveform with the subset of data,</span>
+0787          <span class="comment">%       ie. waveform = set(waveform,'data', D(startIndex:endIndex));</span>
+0788          <span class="comment">%</span>
+0789          <span class="comment">%   waveform = extract(waveform, 'INDEX&amp;DURATION', startIndex, duration)</span>
+0790          <span class="comment">%       a hybrid method that starts from data index startIndex, and then</span>
+0791          <span class="comment">%       returns a specified length of data as indicated by duration.</span>
+0792          <span class="comment">%       Duration is a matlab formatted time (string or datenum).</span>
+0793          <span class="comment">%</span>
+0794          <span class="comment">%   waveform = extract(waveform, 'TIME&amp;SAMPLES', startTime, Samples)</span>
+0795          <span class="comment">%       a hybrid method that starts from data index startIndex, and then</span>
+0796          <span class="comment">%       returns a specified length of data as indicated by duration.</span>
+0797          <span class="comment">%       Duration is a matlab formatted time (string or datenum).</span>
+0798          <span class="comment">%</span>
+0799          <span class="comment">%   Input Arguments:</span>
+0800          <span class="comment">%       WAVEFORM: waveform object        N-DIMENSIONAL</span>
+0801          <span class="comment">%       METHOD: 'TIME', or 'INDEX', or 'INDEX&amp;DURATION'</span>
+0802          <span class="comment">%           TIME: starttime and endtime are absolute times</span>
+0803          <span class="comment">%                   (include the date)</span>
+0804          <span class="comment">%           INDEX: startt and endt are the offset (index) within the data</span>
+0805          <span class="comment">%           INDEX&amp;DURATION: first value is an offset (index), the next says</span>
+0806          <span class="comment">%                           how much data to retrieve...</span>
+0807          <span class="comment">%           TIME&amp;SAMPLES: grab first value at time startTime, and grab</span>
+0808          <span class="comment">%                         Samplength data points</span>
+0809          <span class="comment">%       STARTTIME:  Start time (matlab or text format)</span>
+0810          <span class="comment">%       ENDTIME:    End time (matlab or text format)</span>
+0811          <span class="comment">%       STARTINDEX: position within data array to begin extraction</span>
+0812          <span class="comment">%       ENDINDEX:   final grabbed position within data array</span>
+0813          <span class="comment">%       DURATION:   matlab format time indicating duration of data to grab</span>
+0814          <span class="comment">%       SAMPLES: the number of data points to grab.</span>
+0815          <span class="comment">%</span>
+0816          <span class="comment">%   the output waveform will have the new, appropriate start time.</span>
+0817          <span class="comment">%   if the times are outside the range of the waveform object, then the</span>
+0818          <span class="comment">%   output waveform will contain only the portion of the data that is</span>
+0819          <span class="comment">%   appropriate.</span>
+0820          <span class="comment">%</span>
+0821          <span class="comment">%   *MULTIPLE EXTRACTIONS* can be received if the time values are vectors.</span>
+0822          <span class="comment">%   Both starttime/startindex and endtime/endindex/endduration/samples must</span>
+0823          <span class="comment">%   have the same number of elements.  In this case the output waveforms</span>
+0824          <span class="comment">%   will be reshaped with each waveform represented by row, and each</span>
+0825          <span class="comment">%   extracted time represented by column.  that is...</span>
+0826          <span class="comment">%</span>
+0827          <span class="comment">%  The output of this function, for multiple waveforms and times will be:</span>
+0828          <span class="comment">%         t1   t2  t3 ... tn</span>
+0829          <span class="comment">%    -----------------------</span>
+0830          <span class="comment">%    w1 |</span>
+0831          <span class="comment">%    w2 |</span>
+0832          <span class="comment">%    w3 |</span>
+0833          <span class="comment">%     . |</span>
+0834          <span class="comment">%     . |</span>
+0835          <span class="comment">%    wn |</span>
+0836          <span class="comment">%</span>
+0837          <span class="comment">%</span>
+0838          <span class="comment">%%   examples:</span>
+0839          <span class="comment">%       % say that Win is a waveform that starts 1/5/2007 04:00, and</span>
+0840          <span class="comment">%       % contains 1 hour of data at 100 Hz (360000 samples)</span>
+0841          <span class="comment">%</span>
+0842          <span class="comment">%       % grab samples between 4:15 and 4:20</span>
+0843          <span class="comment">%       Wout = extract(Win, 'TIME', '1/5/2007 4:15:00','1/5/2007 4:20:00');</span>
+0844          <span class="comment">%</span>
+0845          <span class="comment">%       % grab 3 minutes, starting at the 10000th sample</span>
+0846          <span class="comment">%       Wout = extract(Win, 'INDEX&amp;DURATION', 10000 , '0/0/0 00:03:00');</span>
+0847          <span class="comment">%</span>
+0848          <span class="comment">%</span>
+0849          <span class="comment">%%     example of multiple extract:</span>
+0850          <span class="comment">%  % declare the times we're interested in</span>
+0851          <span class="comment">%         firstsnippet = datenum('6/20/2003 00:00:00');</span>
+0852          <span class="comment">%         lastsnippet = datenum('6/20/2003 24:00:00');</span>
+0853          <span class="comment">%</span>
+0854          <span class="comment">%         % divide the day into 1-hour segments.</span>
+0855          <span class="comment">%         % 25 pieces. equivelent to 0:1:24, including both midnights</span>
+0856          <span class="comment">%         alltimes = linspace(firstsnippet, lastsnippet, 25);</span>
+0857          <span class="comment">%         starttimes = alltimes(1:end-1);</span>
+0858          <span class="comment">%         endtimes = alltimes(2:end);</span>
+0859          <span class="comment">%</span>
+0860          <span class="comment">%         % grab each hour of time, and shove it into wHours</span>
+0861          <span class="comment">%         wHours = extract(wDay, 'time',starttimes, endtimes);</span>
+0862          <span class="comment">%</span>
+0863          <span class="comment">%         scaleFactor = 4 * std(double(wDay));</span>
+0864          <span class="comment">%         wHours = wHours ./ scaleFactor;</span>
+0865          <span class="comment">% %</span>
+0866          <span class="comment">%          for n = 1:length(wHours)</span>
+0867          <span class="comment">%            wHours(n) = -wHours(n) + n; %add offset for plotting</span>
+0868          <span class="comment">%          end</span>
+0869          <span class="comment">%          plot(wHours,'xunit','m','b'); %plot it in blue with at nm scaling</span>
+0870          <span class="comment">%          axis ([0 60 1 25])</span>
+0871          <span class="comment">%          set(gca,'ytick',[0:2:24],'xgrid', 'on','ydir','reverse');</span>
+0872          <span class="comment">%          ylabel('Hour');</span>
+0873          <span class="comment">%</span>
+0874          <span class="comment">%   See also waveform/extract</span>
+0875                   
+0876          <span class="comment">%% Set up condition variables, and ensure validity of input</span>
+0877          MULTIPLE_WAVES = ~isscalar(T);
+0878          
+0879          <span class="comment">%if either of our times are strings, it's 'cause they're actually dates</span>
+0880          <span class="keyword">if</span> ischar(startV)
+0881             startV = datenum(startV);
+0882          <span class="keyword">end</span>
+0883          <span class="keyword">if</span> ischar(endV)
+0884             endV = datenum(endV);
+0885          <span class="keyword">end</span>
+0886          
+0887          <span class="keyword">if</span> numel(startV) ~= numel(endV)
+0888             error(<span class="string">'Waveform:extract:indexMismatch'</span>,<span class="keyword">...</span>
+0889                <span class="string">'Number of start times (or indexes) must equal number of end times'</span>)
+0890          <span class="keyword">end</span>
+0891          
+0892          <span class="comment">% are we getting a series of extractions from each waveform?</span>
+0893          MULTIPLE_EXTRACTION = numel(endV) &gt; 1;
+0894          
+0895          <span class="keyword">if</span> MULTIPLE_WAVES &amp;&amp; MULTIPLE_EXTRACTION
+0896             T = T(:);
+0897          <span class="keyword">end</span>
+0898          
+0899          <span class="comment">%%</span>
+0900          <span class="keyword">if</span> numel(T)==0 || numel(startV) ==0
+0901             warning(<span class="string">'Waveform:extract:emptyWaveform'</span>,<span class="string">'no waveforms to extract'</span>);
+0902             <span class="keyword">return</span>
+0903          <span class="keyword">end</span>
+0904          outW(numel(T),numel(startV)) = <a href="SeismicTrace.html" class="code" title="">SeismicTrace</a>;
+0905          
+0906          <span class="keyword">for</span> m = 1: numel(startV) <span class="comment">%loop through the number of extractions</span>
+0907             <span class="keyword">for</span> n=1:numel(T); <span class="comment">%loop through the waveforms</span>
+0908                inW = T(n);
+0909                myData = inW.data;
+0910                
+0911                <span class="keyword">switch</span> lower(method)
+0912                   <span class="keyword">case</span> <span class="string">'time'</span>
+0913                      
+0914                      <span class="comment">% startV and endV are both matlab formated dates</span>
+0915                      <span class="comment">%sampleTimes = get(inW,'timevector');</span>
+0916                      
+0917                      <span class="comment">%   ensure the format of our times</span>
+0918                      <span class="keyword">if</span> startV(m) &gt; endV(m)
+0919                         warning(<span class="string">'Waveform:extract:reversedValues'</span>,<span class="keyword">...</span>
+0920                            <span class="string">'Start time prior to end time.  Flipping.'</span>);
+0921                         [startV(m), endV(m)] = <a href="#_sub35" class="code" title="subfunction  [B,A] = swap(A,B)">swap</a>(startV(m), endV(m));
+0922                      <span class="keyword">end</span>
+0923                      
+0924                      
+0925                      <span class="comment">%if requested data is outside the existing waveform, change the</span>
+0926                      <span class="comment">%start time, and clear out the data.</span>
+0927                      startsAfterWave = startV(m) &gt; <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(inW,<span class="string">'end'</span>) ;
+0928                      endsBeforeWave = endV(m) &lt; <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(inW,<span class="string">'start'</span>);
+0929                      <span class="keyword">if</span> startsAfterWave || endsBeforeWave
+0930                         myStart = startV(m);
+0931                         myData = [];
+0932                      <span class="keyword">else</span>
+0933                         <span class="comment">%some aspect of this data must be represented by the waveform</span>
+0934                         [myStartI, myStartTime] = <a href="../../../../GISMO/core/@waveform/private/time2offset.html" class="code" title="function [offset actualTime] = time2offset(w,whichTime)">time2offset</a>(inW,startV(m));
+0935                         [myEndI] = <a href="../../../../GISMO/core/@waveform/private/time2offset.html" class="code" title="function [offset actualTime] = time2offset(w,whichTime)">time2offset</a>(inW,endV(m)) - 1;
+0936                         <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(myStartTime)
+0937                            <span class="comment">%waveform starts sometime after requested start</span>
+0938                            myStartTime = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(inW,<span class="string">'start'</span>);
+0939                            myStartI = 1;
+0940                         <span class="keyword">end</span>
+0941                         
+0942                         <span class="keyword">if</span> myEndI &gt; numel(myData)
+0943                            myEndI = numel(myData);
+0944                         <span class="keyword">end</span>
+0945                         myData = myData(myStartI:myEndI);
+0946                         myStart = myStartTime;
+0947                      <span class="keyword">end</span>
+0948                      
+0949                   <span class="keyword">case</span> <span class="string">'index'</span>
+0950                      <span class="comment">%startV and endV are both indexes into the data</span>
+0951                      
+0952                      
+0953                      <span class="keyword">if</span> startV(m) &gt; numel(myData)
+0954                         warning(<span class="string">'Waveform:extract:noDataFound'</span>,<span class="keyword">...</span>
+0955                            <span class="string">'no data after start index'</span>);
+0956                         <span class="keyword">return</span>
+0957                      <span class="keyword">end</span>;
+0958                      <span class="keyword">if</span> endV(m) &gt; numel(myData)
+0959                         endV(m) = length(myData);
+0960                         warning(<span class="string">'Waveform:extract:truncatingData'</span>,<span class="keyword">...</span>
+0961                            <span class="string">'end index too long, truncating to match data'</span>);
+0962                      <span class="keyword">end</span>
+0963                      
+0964                      <span class="keyword">if</span> startV(m) &gt; endV(m)
+0965                         warning(<span class="string">'Waveform:extract:reversedValues'</span>,<span class="keyword">...</span>
+0966                            <span class="string">'Start time prior to end time.  Flipping.'</span>);
+0967                         [startV(m), endV(m)] = <a href="#_sub35" class="code" title="subfunction  [B,A] = swap(A,B)">swap</a>(startV(m), endV(m));
+0968                      <span class="keyword">end</span>
+0969                      
+0970                      myData = myData(startV(m):endV(m));
+0971                      sampTimes = inW.sampletimes; <span class="comment">% grab individual sample times</span>
+0972                      myStart = sampTimes(startV(m));
+0973                      
+0974                      <span class="comment">%index&amp;duration deprecated, since apparently never used</span>
+0975                      
+0976                      
+0977                   <span class="keyword">case</span> <span class="string">'time&amp;samples'</span>
+0978                      <span class="comment">% startV is a matlab date, while endV is an index into the data</span>
+0979                      sampTimes = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(inW,<span class="string">'timevector'</span>); <span class="comment">% grab individual sample times</span>
+0980                      
+0981                      index_to_times = sampTimes &gt;= startV(m); <span class="comment">%mask of valid times</span>
+0982                      goodTimes = <a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(index_to_times,endV(m));<span class="comment">%first howevermany of these good times</span>
+0983                      
+0984                      myData = myData(goodTimes); <span class="comment">% keep matching samples</span>
+0985                      
+0986                      <span class="keyword">try</span>
+0987                         myStart = sampTimes(goodTimes(1)); <span class="comment">%first sample time is new waveform start</span>
+0988                      <span class="keyword">catch</span>
+0989                         warning(<span class="string">'Waveform:extract:NoDataFound'</span>,<span class="keyword">...</span>
+0990                            <span class="string">'no data'</span>);
+0991                         myStart = startV(1);
+0992                      <span class="keyword">end</span>
+0993                      
+0994                   <span class="keyword">otherwise</span>
+0995                      error(<span class="string">'Waveform:extract:unknownMethod'</span>,<span class="string">'unknown method: %s'</span>, method);
+0996                <span class="keyword">end</span>
+0997                
+0998                <span class="keyword">if</span> MULTIPLE_EXTRACTION
+0999                   outW(n,m).start = myStart;
+1000                   outW(n,m).data = myData;
+1001                   <span class="comment">%outW(n,m) = set(inW,'start',myStart, 'data', myData);</span>
+1002                <span class="keyword">else</span>
+1003                   outW(n).start = myStart;
+1004                   outW(n).data = myData;
+1005                   <span class="comment">%outW(n) = set(inW,'start',myStart, 'data', myData);</span>
+1006                <span class="keyword">end</span>
+1007             <span class="keyword">end</span> <span class="comment">% n-loop (looping through waveforms)</span>
+1008          <span class="keyword">end</span> <span class="comment">% m-loop (looping through extractions)</span>
+1009          
+1010          <a name="_sub34" href="#_subfunctions" class="code">function  [B,A] = swap(A,B)</a>
+1011             <span class="comment">%do nothing, just flip inputs &amp; outputs</span>
+1012          <span class="keyword">end</span>
+1013       <span class="keyword">end</span>
+1014       
+1015       <span class="comment">%TODO: function ismember</span>
+1016       
+1017       <span class="comment">%TODO: function calib_apply</span>
+1018       <a name="_sub35" href="#_subfunctions" class="code">function obj = calibapply(obj)</a>
+1019          <span class="comment">%calibapply   scale the data by the nominal calibration value</span>
+1020          <span class="comment">%  scaledtraces = calibapply(traces)</span>
+1021          <span class="comment">%</span>
+1022          <span class="comment">%  because of the nature of floating-point operations, it is</span>
+1023          <span class="comment">%  possible that repeated applications of calibapply and</span>
+1024          <span class="comment">%  calibunapply would introduce rounding errors</span>
+1025          <span class="comment">%</span>
+1026          <span class="comment">%  See also calibunapply</span>
+1027          appliedIndex = false(numel(obj));
+1028          <span class="keyword">for</span> n=1:numel(obj)
+1029             <span class="keyword">if</span> ~obj(n).calib.applied
+1030                obj(n).data = obj(n).data .* obj(n).calib.value;
+1031                obj(n).calib.applied = true;
+1032                appliedIndex(n) = true;
+1033             <span class="keyword">else</span>
+1034                warning(<span class="string">'SeismicTrace:calibapply:alreadyApplied'</span>,<span class="string">'Calibratin already applied'</span>);
+1035             <span class="keyword">end</span>
+1036          <span class="keyword">end</span>
+1037          
+1038          <span class="keyword">if</span> any(~appliedIndex)
+1039             <span class="comment">%could use appliedIndex to give more details</span>
+1040             warning(<span class="string">'SeismicTrace:calibapply:alreadyApplied'</span>,<span class="string">'Calibration already applied'</span>);
+1041          <span class="keyword">end</span>
+1042       <span class="keyword">end</span>
+1043       <a name="_sub36" href="#_subfunctions" class="code">function obj = calibunapply(obj)</a>
+1044          <span class="comment">%calibunapply  remove calibration from the data (divide by it)</span>
+1045          <span class="comment">%  unscaledtraces = calibunapply(traces)</span>
+1046          <span class="comment">%</span>
+1047          <span class="comment">%  because of the nature of floating-point operations, it is</span>
+1048          <span class="comment">%  possible that repeated applications of calibapply and</span>
+1049          <span class="comment">%  calibunapply would introduce rounding errors</span>
+1050          <span class="comment">%</span>
+1051          <span class="comment">%  See also calibapply</span>
+1052          unapplied = false(numel(obj));
+1053          <span class="keyword">for</span> n=1:numel(obj)
+1054             <span class="keyword">if</span> obj(n).calib.applied
+1055                obj(n).data = obj(n).data ./ obj(n).calib.value;
+1056                obj(n).calib.applied = false;
+1057                unapplied(n) = true;
+1058             <span class="keyword">end</span>
+1059          <span class="keyword">end</span>
+1060          <span class="keyword">if</span> any(~unapplied)
+1061             <span class="comment">%could use appliedIndex to give more details</span>
+1062             warning(<span class="string">'SeismicTrace:calibunapply:notApplied'</span>,<span class="string">'Calibration was not applied'</span>);
+1063          <span class="keyword">end</span>
+1064       <span class="keyword">end</span>
+1065       <span class="comment">%TODO: function calib_remove</span>
+1066       
+1067       <span class="comment">%% history-related functions</span>
+1068       <a name="_sub37" href="#_subfunctions" class="code">function T = addhistory(T, whathappened,varargin)</a>
+1069          <span class="comment">%addhistory   function in charge of adding history to a waveform</span>
+1070          <span class="comment">%   trace = trace.addhistory(whathappened);</span>
+1071          <span class="comment">%   trace = trace.addhistory(formatString, [variables...])</span>
+1072          <span class="comment">%</span>
+1073          <span class="comment">%   The second way of using addhistory follows the syntax of fprintf</span>
+1074          <span class="comment">%</span>
+1075          <span class="comment">%   Input Arguments</span>
+1076          <span class="comment">%       WAVEFORM: a SeismicTrace object</span>
+1077          <span class="comment">%       WHATHAPPENED: absolutely anything.  Really.</span>
+1078          <span class="comment">%</span>
+1079          <span class="comment">%   AddHistory appends not only what happened, but also keeps track of WHEN</span>
+1080          <span class="comment">%   it happened.</span>
+1081          <span class="comment">%</span>
+1082          <span class="comment">%   example</span>
+1083          <span class="comment">%       T = SeismicTrace; %create a blank trace</span>
+1084          <span class="comment">%       T = T.addhistory('the following procedures done by DoIt.m');</span>
+1085          <span class="comment">%       N = 1; M = 'Today'</span>
+1086          <span class="comment">%       T = T.addhistory('this is sample #%d date:%s',N,M);</span>
+1087          <span class="comment">%       % what is actually added: &quot;this is sample #1 date:Today&quot;</span>
+1088          <span class="comment">%</span>
+1089          <span class="comment">% See also SeismicTrace.history, fprintf</span>
+1090          
+1091          <span class="keyword">if</span> nargin &gt; 2,
+1092             whathappened = sprintf(whathappened, varargin{:});
+1093          <span class="keyword">end</span>
+1094          modtime = now;
+1095          <span class="keyword">for</span> N = 1 : numel(T);
+1096             <span class="comment">%History is stored in a cell, the format of which is [WHAT, WHEN]</span>
+1097                T(N).history(end+1).what = whathappened;
+1098                T(N).history(end).when = modtime;
+1099          <span class="keyword">end</span>
+1100       <span class="keyword">end</span>
+1101       <a name="_sub38" href="#_subfunctions" class="code">function T = clearhistory(T)</a>
+1102          <span class="comment">%clearhistory   reset history of a waveform</span>
+1103          <span class="comment">%   trace = trace.clearhistory</span>
+1104          <span class="comment">%   clears the history, leaving it blank</span>
+1105          <span class="comment">%</span>
+1106          <span class="comment">% See also SeismicTrace.addhistory SeismicTrace.history.</span>
+1107          <span class="keyword">for</span> N = 1: numel(T)
+1108             T(N).history= T(N).history([]);
+1109          <span class="keyword">end</span>
+1110       <span class="keyword">end</span>
+1111       <a name="_sub39" href="#_subfunctions" class="code">function [myhist] = get.history(t)</a>
+1112          <span class="comment">%history   retrieve the history of a waveform object</span>
+1113          <span class="comment">%   myhist = trace.history</span>
+1114          <span class="comment">%       returns a struct describing what's been done to this trace</span>
+1115          <span class="comment">%   myhist = trace.history(N)</span>
+1116          <span class="comment">%       get Nth element from the history.  End works,too!</span>
+1117          <span class="comment">% See also SeismicTrace.addhistory, SeismicTrace.clearhistory</span>
+1118          myhist = t.history;
+1119       <span class="keyword">end</span>
+1120       
+1121       <span class="comment">%% display functions - contained in external files</span>
+1122       <a href="disp.html" class="code" title="function disp(T)">disp</a>(T)
+1123       varargout = <a href="plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>(T, varargin)
+1124       <a href="linkedplot.html" class="code" title="function linkedplot(T, alignTraces)">linkedplot</a>(T, alignTraces)
+1125       varargout = <a href="legend.html" class="code" title="function varargout = legend(T, varargin)">legend</a>(T, varargin)
+1126    
+1127       <span class="comment">%% conversion functions</span>
+1128       <a name="_sub40" href="#_subfunctions" class="code">function W = waveform(T)</a>
+1129          <span class="comment">%waveform   convert SeismicTrace into waveform</span>
+1130          <span class="comment">%   w = waveform(Trace) converts a SeismicTrace into a waveform.</span>
+1131          <span class="comment">%</span>
+1132          <span class="comment">%  See also waveform, SeismicTrace</span>
+1133          
+1134          W = repmat(<a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>,size(T));
+1135          <span class="keyword">for</span> n=1:numel(T)
+1136             W(n) = <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(W(n),<span class="string">'channelinfo'</span>,T(n).channelinfo,<span class="keyword">...</span>
+1137                <span class="string">'freq'</span>, T(n).samplerate,<span class="keyword">...</span>
+1138                <span class="string">'data'</span>,T(n).data,<span class="keyword">...</span>
+1139                <span class="string">'units'</span>,T(n).units,<span class="keyword">...</span>
+1140                <span class="string">'start'</span>,T(n).firstsampletime);
+1141             ufields = fieldnames(T(n).userdata);
+1142             <span class="keyword">for</span> z = 1:numel(ufields)
+1143                W(n) = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W(n), ufields{z}, T(n).userdata, T(n).userdata.(ufields{z}));
+1144             <span class="keyword">end</span>
+1145          <span class="keyword">end</span>
+1146       <span class="keyword">end</span>
+1147       <a name="_sub41" href="#_subfunctions" class="code">function CT = ChannelTag(T)</a>
+1148          <span class="comment">%ChannelTag   Convert SeismicTrace into ChannelTag</span>
+1149          <span class="comment">%   ct = ChannelTag(trace)</span>
+1150          <span class="comment">%</span>
+1151          <span class="comment">%   see also ChannelTag, SeismicTrace</span>
+1152          CT = reshape([T.channelinfo], size(T));
+1153       <span class="keyword">end</span>
+1154    <span class="keyword">end</span>
+1155    methods(Static)
+1156       <a name="_sub42" href="#_subfunctions" class="code">function T = toTrace(item, itemlabel, conversionfunction)</a>
+1157          <span class="comment">%toTrace   convert anything into traces</span>
+1158          <span class="comment">% conversion functions exist outside SeismicTrace classdef so that</span>
+1159          <span class="comment">% adding/removing/changing the conversion functions do not affect</span>
+1160          <span class="comment">% this class</span>
+1161          <span class="comment">% some envisioned examples</span>
+1162          <span class="comment">% T = toTrace( X , 'fdsn_trace');</span>
+1163          <span class="comment">% T = toTrace( X, 'fdsn_sac');</span>
+1164          <span class="comment">% T = toTrace( X , 'winston');</span>
+1165          <span class="comment">% T = toTrace( X , 'miniseed');</span>
+1166          <span class="comment">% T = toTrace( X , 'seisan');</span>
+1167          <span class="comment">% T = toTrace( X , 'seisan');</span>
+1168          <span class="comment">% T = toTrace( X , 'waveform');</span>
+1169          
+1170          <span class="comment">%TODO: either flesh this out, or remove it</span>
+1171          
+1172          <span class="keyword">persistent</span> converters
+1173          <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(converters)
+1174             converters = [];
+1175             <span class="comment">%fill converters based on a directory/package</span>
+1176          <span class="keyword">end</span>
+1177       <span class="keyword">end</span>
+1178       
+1179       <a name="_sub43" href="#_subfunctions" class="code">function T = syntheticdata(names, starts, ends, samplerate)</a>
+1180          <span class="comment">%syntheticdata   Crates a SeismicTrace filled with synthetic data</span>
+1181          <span class="comment">%   T = syntheticdata(names, starts, ends, samplerate)</span>
+1182          <span class="comment">%</span>
+1183          <span class="comment">%   See also: randn, sin, SeismicTrace</span>
+1184          <span class="keyword">if</span> ~exist(<span class="string">'names'</span>,<span class="string">'var'</span>) || <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(names)
+1185             names = <span class="string">'NT.STA.LO.CHA'</span>; <span class="keyword">end</span>
+1186          <span class="keyword">if</span> ~exist(<span class="string">'starts'</span>,<span class="string">'var'</span>) || <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(starts)
+1187             starts = datenum([2015 09 23 15 45 0]);
+1188          <span class="keyword">end</span>
+1189          <span class="keyword">if</span> ~exist(<span class="string">'ends'</span>,<span class="string">'var'</span>) || <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(ends)
+1190             ends = starts + datenum([0 0 0 0 10 0]); <span class="comment">% 10 minutes of data</span>
+1191          <span class="keyword">end</span>
+1192          <span class="keyword">if</span> ~exist(<span class="string">'samplerate'</span>,<span class="string">'var'</span>) || <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(samplerate)
+1193             samplerate = 20;
+1194          <span class="keyword">end</span>
+1195          warning(<span class="string">'Creating a SeismicTrace using a noisy sine wave'</span>);
+1196          <span class="keyword">if</span> ischar(names)
+1197             names = {names};
+1198          <span class="keyword">end</span>
+1199          <span class="keyword">if</span> ~exist(<span class="string">'starts'</span>,<span class="string">'var'</span>)
+1200             <span class="comment">% build T from names</span>
+1201          <span class="keyword">else</span>
+1202             T = <a href="SeismicTrace.html" class="code" title="">SeismicTrace</a>; 
+1203             T.samplerate = samplerate;
+1204             T = repmat(T, numel(names), numel(starts));
+1205             
+1206             <span class="keyword">for</span> n=1:numel(names)
+1207                [T(n,:).name] = deal(names(n));
+1208             <span class="keyword">end</span>
+1209             <span class="keyword">for</span> n=1:numel(starts)
+1210                [T(:,n).start] = deal(starts(n));
+1211                nSeconds = (ends(n) - starts(n)) * 86400;
+1212                nsamples = nSeconds * samplerate;
+1213                D = sin((-nsamples: 2 : nsamples-1) / 600) * 10 + randn(size(-nsamples: 2 : nsamples-1));
+1214                [T(:,n).data] = deal(D);
+1215             <span class="keyword">end</span>
+1216             <span class="comment">% now fill with bogus data</span>
+1217          <span class="keyword">end</span>
+1218       <span class="keyword">end</span>
+1219       
+1220       <a name="_sub44" href="#_subfunctions" class="code">function T = retrieve(ds, names, starts, ends, miscfilters)</a>
+1221          <span class="comment">%retrieve   Get a SeismicTrace from external data source</span>
+1222          <span class="comment">%</span>
+1223          <span class="comment">% UNDER CONSTRUCTION. for now, this is a wrapper around waveform.</span>
+1224          <span class="comment">% it will use the waveform class to get data, and will then</span>
+1225          <span class="comment">% convert to traces and pass that along.</span>
+1226          <span class="comment">%</span>
+1227          <span class="comment">% T = retrieve(datasouce, names, starts, ends, miscfilters)</span>
+1228          <span class="comment">% names are channeltags OR N.S.L.C strings.</span>
+1229          <span class="comment">% in future, this will be able to accept bulkdataselect (BDS)-type requests</span>
+1230          <span class="comment">%    if BDS type, then starts, ends, miscfilters ignored.</span>
+1231          <span class="comment">% for now</span>
+1232          <span class="comment">% starts is either text, or array fo start times</span>
+1233          <span class="comment">% find data pointed to by ds, names, starts, ends</span>
+1234          <span class="comment">% convertToTraces</span>
+1235          <span class="comment">% return the traces</span>
+1236          
+1237          <span class="keyword">if</span> isa(names,<span class="string">'cell'</span>) || isa(names,<span class="string">'char'</span>)
+1238             names = ChannelTag.array(names);
+1239          <span class="keyword">end</span>
+1240          w = <a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds, names, starts, ends);
+1241          T = <a href="SeismicTrace.html" class="code" title="">SeismicTrace</a>(w);
+1242       <span class="keyword">end</span>
+1243    <span class="keyword">end</span> <span class="comment">%static methods</span>
+1244 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

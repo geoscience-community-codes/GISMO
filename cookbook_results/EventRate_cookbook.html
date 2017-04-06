@@ -1,0 +1,208 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>EventRate Cookbook</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-22"><meta name="DC.source" content="EventRate_cookbook.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>EventRate Cookbook</h1><!--introduction--><p>The EventRate class is for making plots of:</p><div><ul><li>number of events per unit time (often called "counts")</li><li>energy release rate / cumulative magnitude per unit time</li></ul></div><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Simple EventRate example</a></li><li><a href="#9">Event rates for overlapping time windows</a></li><li><a href="#10">Plots of other event rate metrics</a></li><li><a href="#19">Other plot types</a></li></ul></div><h2>Simple EventRate example<a name="1"></a></h2><p>First we create a Catalog object from the Redoubt dataset</p><pre class="codeinput">dbpath = fullfile(TESTDATA, <span class="string">'css3.0'</span>, <span class="string">'avodb200903'</span>);
+redoubtLon = -152.7431;
+redoubtLat = 60.4853;
+maxR = km2deg(20.0);
+catalogObject = Catalog.retrieve(<span class="string">'antelope'</span>, <span class="string">'dbpath'</span>, dbpath, <span class="keyword">...</span>
+	<span class="string">'radialcoordinates'</span>, [redoubtLat redoubtLon maxR]);
+</pre><pre class="codeoutput">Loading data from /home/t/thompsong/src/GISMO.website/testdata/css3.0/avodb200903
+Got 1397 events
+</pre><p>For a quick plot of earthquakes per hour, we create an EventRate object and then plot it. Here our binsize is 1/24 days, i.e. 1 hour.</p><pre class="codeinput">eventrateObject = catalogObject.eventrate(<span class="string">'binsize'</span>, 1/24);
+eventrateObject.plot()
+</pre><img vspace="5" hspace="5" src="EventRate_cookbook_01.png" alt=""> <p>Change to a smaller bin size of 20 minutes:</p><pre class="codeinput">eventrateObject = catalogObject.eventrate(<span class="string">'binsize'</span>, 20/1440);
+plot(eventrateObject);
+</pre><img vspace="5" hspace="5" src="EventRate_cookbook_02.png" alt=""> <p>Note that</p><pre class="language-matlab">eventrateObject.plot()
+</pre><p>and</p><pre class="language-matlab">plot(eventrateObject)
+</pre><p>do exactly the same thing. The first is the object-oriented style OBJECT.METHOD(INPUT PARAMETERS), the second is the functional style FUNCTION(OBJECT, INPUT PARAMETERS). The object oriented style is preferable.</p><h2>Event rates for overlapping time windows<a name="9"></a></h2><p>Sometimes it is desirable to compute event rate metrics for sliding - i.e. overlapping - time windows. This is easily done with the 'stepsize' parameter. If omitted, stepsize defaults to the binsize - which is the length of the time window. So in the previous example, both binsize and stepsize were 1.0 hours. But we can just as easily compute an EventRate object for the same EventRate object with a binsize of 1 hour, and stepsize of 1 minute. This effectively converts a Catalog into a set of continuous metrics, measured every minute, directly comparable to 1-minute RSAM.</p><pre class="codeinput">eventrateObject = catalogObject.eventrate(<span class="string">'binsize'</span>, 1/24,  <span class="string">'stepsize'</span>, 1/1440);
+eventrateObject.plot()
+</pre><img vspace="5" hspace="5" src="EventRate_cookbook_03.png" alt=""> <h2>Plots of other event rate metrics<a name="10"></a></h2><pre class="language-matlab">eventrateObject.plot()
+</pre><p>is equivalent to typing:</p><pre class="language-matlab">eventrateObject.plot(<span class="string">'metric'</span>, <span class="string">'counts'</span>);
+</pre><p>The full list of metrics that can be plotted are:</p><div><ul><li>counts</li><li>mean_rate</li><li>median_rate</li><li>cum_mag</li><li>mean_mag</li><li>median_mag</li><li>energy</li></ul></div><p>All of these are properties of an EventRate object except for energy, which is computed from <i>cum_mag</i> on-the-fly. Several can be plotted at once in subplots of the same figure using a cell array:</p><pre class="codeinput">eventrateObject.plot(<span class="string">'metric'</span>, {<span class="string">'mean_rate'</span>; <span class="string">'median_rate'</span>; <span class="string">'mean_mag'</span>; <span class="string">'cum_mag'</span>});
+</pre><img vspace="5" hspace="5" src="EventRate_cookbook_04.png" alt=""> <p>They can of course be plotted in separate figure windows:</p><pre class="codeinput">eventrateObject.plot(<span class="string">'metric'</span>, <span class="string">'mean_rate'</span>)
+eventrateObject.plot(<span class="string">'metric'</span>, <span class="string">'median_rate'</span>)
+eventrateObject.plot(<span class="string">'metric'</span>, <span class="string">'mean_mag'</span>)
+eventrateObject.plot(<span class="string">'metric'</span>, <span class="string">'cum_mag'</span>)
+</pre><img vspace="5" hspace="5" src="EventRate_cookbook_05.png" alt=""> <img vspace="5" hspace="5" src="EventRate_cookbook_06.png" alt=""> <img vspace="5" hspace="5" src="EventRate_cookbook_07.png" alt=""> <img vspace="5" hspace="5" src="EventRate_cookbook_08.png" alt=""> <p>These are the same metrics, binsize and stepsize used by the [AVO swarm tracking system] (<a href="http://www.aeic.alaska.edu/input/west/papers/2009_srl_thompson_redoubtSwarms.pdf">http://www.aeic.alaska.edu/input/west/papers/2009_srl_thompson_redoubtSwarms.pdf</a>).</p><h2>Other plot types<a name="19"></a></h2><p>Two more simple plot types are:</p><pre class="codeinput">eventrateObject.helenaplot()
+</pre><img vspace="5" hspace="5" src="EventRate_cookbook_09.png" alt=""> <p>and:</p><pre class="codeinput">eventrateObject.pythonplot()
+</pre><img vspace="5" hspace="5" src="EventRate_cookbook_10.png" alt=""> <p>End of tutorial</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% EventRate Cookbook
+% The EventRate class is for making plots of:
+%
+% * number of events per unit time (often called "counts")
+% * energy release rate / cumulative magnitude per unit time
+
+%% Simple EventRate example
+% First we create a Catalog object from the Redoubt dataset
+dbpath = fullfile(TESTDATA, 'css3.0', 'avodb200903');
+redoubtLon = -152.7431; 
+redoubtLat = 60.4853;
+maxR = km2deg(20.0);
+catalogObject = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
+	'radialcoordinates', [redoubtLat redoubtLon maxR]);
+
+%% 
+% For a quick plot of earthquakes per hour, we create an EventRate object and then plot it. Here our binsize is 1/24 days, i.e. 1 hour.
+
+eventrateObject = catalogObject.eventrate('binsize', 1/24);
+eventrateObject.plot()
+
+%%
+% Change to a smaller bin size of 20 minutes:
+
+eventrateObject = catalogObject.eventrate('binsize', 20/1440);
+plot(eventrateObject);
+
+%%
+% Note that
+
+%%
+%   eventrateObject.plot()
+
+%%
+% and
+
+%%
+%   plot(eventrateObject)
+
+%%
+% do exactly the same thing. The first is the object-oriented style 
+% OBJECT.METHOD(INPUT PARAMETERS), the second is the functional style 
+% FUNCTION(OBJECT, INPUT PARAMETERS). The object oriented style is 
+% preferable.
+
+%% Event rates for overlapping time windows
+% Sometimes it is desirable to compute event rate metrics for sliding - 
+% i.e. overlapping - time windows. This is easily done with the 'stepsize' 
+% parameter. If omitted, stepsize defaults to the binsize - which is the 
+% length of the time window. So in the previous example, both binsize 
+% and stepsize were 1.0 hours. But we can just as easily compute an 
+% EventRate object for the same EventRate object with a binsize of 1 hour, 
+% and stepsize of 1 minute. This effectively converts a Catalog into a set
+% of continuous metrics, measured every minute, directly comparable to
+% 1-minute RSAM.
+
+eventrateObject = catalogObject.eventrate('binsize', 1/24,  'stepsize', 1/1440);
+eventrateObject.plot()
+
+%% Plots of other event rate metrics
+%%
+%   eventrateObject.plot() 
+
+%%
+% is equivalent to typing:
+
+%%
+%   eventrateObject.plot('metric', 'counts');
+
+%%
+% The full list of metrics that can be plotted are:
+
+%%
+% 
+% * counts
+% * mean_rate
+% * median_rate
+% * cum_mag
+% * mean_mag
+% * median_mag
+% * energy
+
+%%
+% All of these are properties of an EventRate object except for energy, which is computed from _cum_mag_ on-the-fly. Several can be plotted at once in subplots of the same figure using a cell array:
+
+eventrateObject.plot('metric', {'mean_rate'; 'median_rate'; 'mean_mag'; 'cum_mag'});
+
+%%
+% They can of course be plotted in separate figure windows:
+
+eventrateObject.plot('metric', 'mean_rate')
+eventrateObject.plot('metric', 'median_rate')
+eventrateObject.plot('metric', 'mean_mag')
+eventrateObject.plot('metric', 'cum_mag')
+
+%%
+% These are the same metrics, binsize and stepsize used by the [AVO swarm tracking system] (http://www.aeic.alaska.edu/input/west/papers/2009_srl_thompson_redoubtSwarms.pdf).
+
+%% Other plot types
+% Two more simple plot types are:
+
+eventrateObject.helenaplot()
+
+%%
+% and: 
+
+eventrateObject.pythonplot()
+
+%%
+% End of tutorial
+
+##### SOURCE END #####
+--></body></html>

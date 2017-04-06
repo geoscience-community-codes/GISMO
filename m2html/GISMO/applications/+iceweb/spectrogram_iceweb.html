@@ -1,0 +1,292 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of spectrogram_iceweb</title>
+  <meta name="keywords" content="spectrogram_iceweb">
+  <meta name="description" content="SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="../index.html">applications</a> &gt; <a href="index.html">+iceweb</a> &gt; spectrogram_iceweb.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/applications/+iceweb&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>spectrogram_iceweb
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of
+ AVO web (IceWeb) spectrograms, by wrapping the default MATLAB spectrogram
+ function
+
+ Usage:
+     [result, Tcell, Fcell, Ycell] =spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)
+
+ Inputs:
+    w - a vector of waveform objects
+    s - a spectralobject
+    spectrogramFraction - fraction of a panel height the spectrogram should take up (default: 0.8). 
+            The waveform trace takes up the remaining fraction.
+    mycolormap - (Optional) a user-defined colormap
+
+ Outputs:
+    (other than a figure on the screen)
+    result = true if successful, false if there was an error
+   T - cell array of date/time for each spectrogram/waveform
+   F - cell array of frequency vector from fmin to fmax for each spectrogram/waveform
+   Y - cell array of spectrogram absolute amplitudes from fmin to fmax for each spectrogram/waveform</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>	C = COLORMAP(C)</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/setmap.html" class="code" title="function setmap(s, alternateMap)">setmap</a>	SETMAP   sets the default colormap used with spectrograms</li><li><a href="../../../GISMO/core/@spectralobject/spectralobject.html" class="code" title="function s = spectralobject(anyV,overlap,freqmax,dBlims, scaling)">spectralobject</a>	SPECTRALOBJECT - spectralobject class constructor</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/@waveform/gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>	GETTIMERANGE returns the list of start and end times from a waveform array</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/@waveform/spectrogram.html" class="code" title="function spectrogram( w, s )">spectrogram</a>	SPECTROGRAM Plot an IceWeb-style spectrogram</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/colormap.html" class="code" title="function c = colormap(c,mapname)">colormap</a>	colormap   apply a colormap to the cross-correlation</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li><li><a href="../../../GISMO/libgismo/ceilminute.html" class="code" title="function dnum=ceilminute(dnum, nummins)">ceilminute</a>	CEILMINUTE round up datenum to next minute mark</li><li><a href="../../../GISMO/libgismo/floorminute.html" class="code" title="function dnum=floorminute(dnum,nummins)">floorminute</a>	FLOORMINUTE round up datenum to next minute mark</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function plotTrace(tracePosition, data, freqSamp, Xtickmarks, timewindow, mycolormap, s, thissta, thischan);</a></li><li><a href="#_sub2" class="code">function rgb = amplitude2tracecolor(maxAmpl, mycolormap, s);</a></li><li><a href="#_sub3" class="code">function [Xtickmarks,Xticklabels]=findMinuteMarks(timewindow);</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)</a>
+0002 <span class="comment">% SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of</span>
+0003 <span class="comment">% AVO web (IceWeb) spectrograms, by wrapping the default MATLAB spectrogram</span>
+0004 <span class="comment">% function</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Usage:</span>
+0007 <span class="comment">%     [result, Tcell, Fcell, Ycell] =spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Inputs:</span>
+0010 <span class="comment">%    w - a vector of waveform objects</span>
+0011 <span class="comment">%    s - a spectralobject</span>
+0012 <span class="comment">%    spectrogramFraction - fraction of a panel height the spectrogram should take up (default: 0.8).</span>
+0013 <span class="comment">%            The waveform trace takes up the remaining fraction.</span>
+0014 <span class="comment">%    mycolormap - (Optional) a user-defined colormap</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% Outputs:</span>
+0017 <span class="comment">%    (other than a figure on the screen)</span>
+0018 <span class="comment">%    result = true if successful, false if there was an error</span>
+0019 <span class="comment">%   T - cell array of date/time for each spectrogram/waveform</span>
+0020 <span class="comment">%   F - cell array of frequency vector from fmin to fmax for each spectrogram/waveform</span>
+0021 <span class="comment">%   Y - cell array of spectrogram absolute amplitudes from fmin to fmax for each spectrogram/waveform</span>
+0022 
+0023 <span class="comment">% waveform should already have had zero-length waveform objects replaced by zero vectors</span>
+0024 
+0025 <span class="comment">% AUTHOR: Glenn Thompson, University of Alaska Fairbanks</span>
+0026 
+0027 debug.printfunctionstack(<span class="string">'&gt;'</span>);
+0028 
+0029 
+0030 
+0031 result = 0;
+0032 
+0033 
+0034 <span class="comment">% % reverse the order of the waveforms so they plot top to bottom in same</span>
+0035 <span class="comment">% % order as in mulplt and as in waveform vector</span>
+0036 <span class="comment">% w = fliplr(w); don't need this with calculatePanelPositions2</span>
+0037 
+0038 numw = numel(w);
+0039 <span class="keyword">if</span> numw==0
+0040     <span class="keyword">return</span>;
+0041 <span class="keyword">end</span>
+0042 <span class="keyword">if</span> ~exist(<span class="string">'s'</span>,<span class="string">'var'</span>)
+0043     s = <a href="../../../GISMO/core/@spectralobject/spectralobject.html" class="code" title="function s = spectralobject(anyV,overlap,freqmax,dBlims, scaling)">spectralobject</a>(1024, 924, 10, [60 120]);
+0044 <span class="keyword">end</span>
+0045 <span class="keyword">if</span> ~exist(<span class="string">'spectrogramFraction'</span>,<span class="string">'var'</span>)
+0046     spectrogramFraction = 1;
+0047 <span class="keyword">end</span>
+0048 <span class="keyword">if</span> ~exist(<span class="string">'mycolormap'</span>, <span class="string">'var'</span>)
+0049     mycolormap = jet; <span class="comment">% should be using SPECTRAL_MAP here?</span>
+0050 <span class="keyword">end</span>
+0051 
+0052 <span class="comment">%save lastspecgramcall.mat s w spectrogramFraction mycolormap</span>
+0053 debug.print_debug(2, sprintf(<span class="string">'%d waveform objects'</span>,numel(w)));
+0054 
+0055 <span class="comment">% Default colormap is JET. Override that here.</span>
+0056 <span class="keyword">if</span> exist(<span class="string">'mycolormap'</span>, <span class="string">'var'</span>)
+0057         <a href="../../../GISMO/core/@spectralobject/setmap.html" class="code" title="function setmap(s, alternateMap)">setmap</a>(s, mycolormap);      
+0058 <span class="keyword">end</span>
+0059 
+0060 <span class="comment">% To get a colorbar, stop the function here and set colorbar option to vert</span>
+0061 
+0062 <span class="comment">% Reset axes position &amp; squeeze in the trace panels</span>
+0063 
+0064 nfft = round(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(s,<span class="string">'nfft'</span>));
+0065 overlap = floor(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(s, <span class="string">'over'</span>));
+0066 dBlims = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(s, <span class="string">'dBlims'</span>)
+0067 fmax = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(s, <span class="string">'freqmax'</span>);
+0068 
+0069 <span class="comment">% Set appropriate date ticks</span>
+0070 [wsnum, wenum]=<a href="../../../GISMO/core/@waveform/gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>(w);
+0071 wt.start = <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(wsnum);
+0072 wt.stop = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(wenum);
+0073 [Xtickmarks,XTickLabel]=<a href="#_sub3" class="code" title="subfunction [Xtickmarks,Xticklabels]=findMinuteMarks(timewindow);">findMinuteMarks</a>(wt);
+0074 
+0075 Ycell = {}; Fcell = {}; Tcell = {};
+0076 <span class="keyword">for</span> c=1:numw
+0077     fsamp = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(c), <span class="string">'freq'</span>);
+0078     data = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(c), <span class="string">'data'</span>);
+0079     
+0080     <span class="keyword">if</span> length(data) &gt; nfft
+0081         [S,F,T] = <a href="../../../GISMO/core/@waveform/spectrogram.html" class="code" title="function spectrogram( w, s )">spectrogram</a>(data, nfft, nfft/2, nfft, fsamp);
+0082 
+0083         Y = 20*log10(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(S)+eps);
+0084         fmax
+0085         <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(F)
+0086         index = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(F &lt;= fmax)
+0087         <span class="keyword">if</span> F(1)==0,
+0088             F(1)=0.001;
+0089         <span class="keyword">end</span>
+0090 
+0091         [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numw, c, spectrogramFraction, 0.08, 0.05, 0.88, 0.95);
+0092         axes(<span class="string">'position'</span>, spectrogramPosition);
+0093         T = wt.start + T/86400;
+0094         F = F(1:<a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(index));
+0095         Y = Y(1:<a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(index),:);
+0096         S = S(1:<a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(index),:);
+0097         <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(dBlims)
+0098             imagesc(T,F,<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(S));
+0099             <span class="comment">% mean frequency</span>
+0100             numerator = <a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(S)' * F;
+0101             denominator = sum(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(S),1);
+0102             meanF = numerator./denominator';
+0103             hold on; <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(T,meanF,<span class="string">'k'</span>,<span class="string">'LineWidth'</span>,3);
+0104             <span class="comment">% peak frequency</span>
+0105             [maxvalue,maxindex] = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(S));
+0106             size(maxindex)
+0107             fmax = F(maxindex);
+0108             size(fmax)
+0109             hold on; <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(T,fmax,<span class="string">'r'</span>,<span class="string">'LineWidth'</span>,3);
+0110             
+0111         <span class="keyword">else</span>
+0112             imagesc(T,F,Y,dBlims); 
+0113         <span class="keyword">end</span>
+0114         axis xy;
+0115         <a href="../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>(mycolormap);
+0116 
+0117         <span class="comment">% Change Y-Labels to 'sta.chan'</span>
+0118         ylabel( sprintf(<span class="string">'%s\n%s'</span>,<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(c), <span class="string">'station'</span>), <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(c), <span class="string">'channel'</span>)), <span class="string">'FontSize'</span>, 10);
+0119         xlabel(<span class="string">''</span>)
+0120         title(<span class="string">''</span>)
+0121         <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca,<span class="string">'XLim'</span>, [wt.start wt.stop]);
+0122         <span class="keyword">if</span> c==numw
+0123             <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'XTick'</span>, Xtickmarks, <span class="string">'XTickLabel'</span>, XTickLabel,  <span class="string">'FontSize'</span>, 10); <span class="comment">% time labels only on bottom spectrogram</span>
+0124         <span class="keyword">else</span>
+0125             <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'XTick'</span>, Xtickmarks, <span class="string">'XTickLabel'</span>, {});
+0126         <span class="keyword">end</span>
+0127 
+0128         <span class="keyword">if</span> spectrogramFraction &lt; 1
+0129             thissta = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(c), <span class="string">'station'</span>);
+0130             thischan = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(c), <span class="string">'channel'</span>);
+0131             <a href="#_sub1" class="code" title="subfunction plotTrace(tracePosition, data, freqSamp, Xtickmarks, timewindow, mycolormap, s, thissta, thischan);">plotTrace</a>(tracePosition, <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(c),<span class="string">'data'</span>), <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(c),<span class="string">'freq'</span>), Xtickmarks, wt, mycolormap, s, thissta, thischan);
+0132             <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca,<span class="string">'XLim'</span>, [wt.start wt.stop]); <span class="comment">% added 20111214 to align trace with spectrogram when data missing (prevent trace being stretched out)</span>
+0133 
+0134             <span class="comment">% change the trace background color if we want to identify</span>
+0135             <span class="comment">% broadband stations</span>
+0136     <span class="comment">%         if (regexp(thischan, '[BH]H.'))</span>
+0137     <span class="comment">%             set(gca, 'Color', [.8 .8 .8]);</span>
+0138     <span class="comment">%         end</span>
+0139 
+0140         <span class="keyword">end</span>
+0141         result = result + 1;
+0142         Ycell{c} = Y; Fcell{c} = F; Tcell{c} = T;
+0143     <span class="keyword">else</span>
+0144         Ycell{c} = []; Fcell{c} = []; Tcell{c} = [];
+0145     <span class="keyword">end</span>
+0146     
+0147 <span class="keyword">end</span>
+0148 
+0149 debug.printfunctionstack(<span class="string">'&lt;'</span>);
+0150 
+0151 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0152 <a name="_sub1" href="#_subfunctions" class="code">function plotTrace(tracePosition, data, freqSamp, Xtickmarks, timewindow, mycolormap, s, thissta, thischan);</a>
+0153 debug.printfunctionstack(<span class="string">'&gt;'</span>);
+0154 snum =timewindow.start;
+0155 
+0156 <span class="comment">% set axes position</span>
+0157 axes(<span class="string">'position'</span>,tracePosition);
+0158 
+0159 <span class="comment">% trace time vector - bins are ~0.01 s apart (not 5 s as for spectrogram time)</span>
+0160 <span class="comment">% not really worthwhile plotting more than 1000 points on the screen</span>
+0161 dnum = ((1:length(data))./freqSamp)/86400 + snum;
+0162 
+0163 <span class="comment">% plot seismogram - assuming data cleaned already with</span>
+0164 <span class="comment">% w=detrend(fillgaps(w,'interp'))</span>
+0165 traceHandle = <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(dnum, data);
+0166 
+0167 <span class="comment">% blow up trace detail so it almost fills frame</span>
+0168 maxAmpl = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(data));
+0169 <span class="keyword">if</span> (maxAmpl == 0) <span class="comment">% make sure that max_ampl is not zero</span>
+0170     maxAmpl = 1;
+0171 <span class="keyword">end</span>
+0172 
+0173 <span class="comment">% set properties - here we set trace color according to amplitude</span>
+0174 <span class="comment">%rgb = amplitude2tracecolor(maxAmpl, mycolormap, s);</span>
+0175 <span class="comment">%set (traceHandle,'LineWidth',[0.01],'Color',rgb)</span>
+0176 <span class="comment">% or we can use this...</span>
+0177 <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a> (traceHandle,<span class="string">'LineWidth'</span>,[0.01],<span class="string">'Color'</span>,[0 0 0])
+0178 
+0179 <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'XTick'</span>, Xtickmarks, <span class="string">'XTickLabel'</span>, <span class="string">''</span>, <span class="string">'XLim'</span>, [timewindow.start timewindow.stop], <span class="string">'Ytick'</span>,[],<span class="string">'YTickLabel'</span>,[<span class="string">''</span>]);
+0180 
+0181 <span class="keyword">if</span> ~isnan(maxAmpl) <span class="comment">% make sure it is not NaN else will crash</span>
+0182     traceRange = [dnum(1) dnum(end) -maxAmpl*1.1 maxAmpl*1.1];
+0183     decibels = 20 * log10(maxAmpl) + eps;
+0184     fprintf(<span class="string">'%s: %s.%s: Max amplitude %.1e nm/s (%d dB)\n'</span>,mfilename, thissta, thischan, maxAmpl,round(decibels)); 
+0185     axis(traceRange);
+0186 <span class="keyword">end</span>
+0187 debug.printfunctionstack(<span class="string">'&lt;'</span>);
+0188 
+0189 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0190 <a name="_sub2" href="#_subfunctions" class="code">function rgb = amplitude2tracecolor(maxAmpl, mycolormap, s);</a>
+0191 debug.printfunctionstack(<span class="string">'&gt;'</span>);
+0192 a = 20 * log10(maxAmpl) + eps;
+0193 dBlims = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(s, <span class="string">'dBlims'</span>);
+0194 index = round( ( (a - dBlims(1)) / (dBlims(2) - dBlims(1)) ) * (length(mycolormap)-1) ) + 1;
+0195 index=<a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>([index 1]);
+0196 index=<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([index length(mycolormap)]);
+0197 rgb = mycolormap(index, :);
+0198 debug.printfunctionstack(<span class="string">'&lt;'</span>);
+0199 
+0200 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0201 
+0202 <a name="_sub3" href="#_subfunctions" class="code">function [Xtickmarks,Xticklabels]=findMinuteMarks(timewindow);</a>
+0203 debug.printfunctionstack(<span class="string">'&gt;'</span>);
+0204 
+0205 <span class="comment">% calculate where minute marks should be, and labels</span>
+0206 snum = <a href="../../../GISMO/libgismo/ceilminute.html" class="code" title="function dnum=ceilminute(dnum, nummins)">ceilminute</a>(timewindow.start);
+0207 enum = <a href="../../../GISMO/libgismo/floorminute.html" class="code" title="function dnum=floorminute(dnum,nummins)">floorminute</a>(timewindow.stop);
+0208 
+0209 <span class="comment">% Number of minute marks should be no greater than 20</span>
+0210 numMins = (enum - snum) * 1440;
+0211 stepMinOptions = [1 2 3 5 10 15 20 30 60 120 180 240 360 480 720 1440];
+0212 c = 1;
+0213 <span class="keyword">while</span> (numMins / stepMinOptions(c) &gt; 12)
+0214     c = c + 1;
+0215 <span class="keyword">end</span>
+0216 stepMins = stepMinOptions(c);
+0217 
+0218 Xtickmarks = snum:stepMins/1440:enum;
+0219 Xticklabels = datestr(Xtickmarks,15); 
+0220 debug.printfunctionstack(<span class="string">'&lt;'</span>);
+0221 
+0222 
+0223 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0224</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

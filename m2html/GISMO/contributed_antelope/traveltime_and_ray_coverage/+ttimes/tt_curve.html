@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of tt_curve</title>
+  <meta name="keywords" content="tt_curve">
+  <meta name="description" content="TRAVELTIME make travel time plots.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">contributed_antelope</a> &gt; <a href="#">traveltime_and_ray_coverage</a> &gt; <a href="index.html">+ttimes</a> &gt; tt_curve.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>tt_curve
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>TRAVELTIME make travel time plots.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function traveltime(dbName,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">TRAVELTIME make travel time plots.
+ TRAVELTIME(dbName) creates travel time plots for database dbName. The top
+ plot for P and S plots ditance vs. traveltime in seconds adjusted by a
+ velocity reduction.
+
+ TRAVELTIME(dbName,[Vp Vs]) use the specified velocities to reduce the
+ times on the travel time plots. The default values are Vp = 7 and Vs = 4.
+
+ see also ttimes.<a href="dbload.html" class="code" title="function [origin,site,arrival,ray] = dbload(dbName)">dbload</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>	C = COLORMAP(C)</li><li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/colormap.html" class="code" title="function c = colormap(c,mapname)">colormap</a>	colormap   apply a colormap to the cross-correlation</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function traveltime(dbName,varargin)</a>
+0002 
+0003 <span class="comment">%TRAVELTIME make travel time plots.</span>
+0004 <span class="comment">% TRAVELTIME(dbName) creates travel time plots for database dbName. The top</span>
+0005 <span class="comment">% plot for P and S plots ditance vs. traveltime in seconds adjusted by a</span>
+0006 <span class="comment">% velocity reduction.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% TRAVELTIME(dbName,[Vp Vs]) use the specified velocities to reduce the</span>
+0009 <span class="comment">% times on the travel time plots. The default values are Vp = 7 and Vs = 4.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% see also ttimes.dbload</span>
+0012  
+0013 
+0014 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0015 <span class="comment">% $Date$</span>
+0016 <span class="comment">% $Revision$</span>
+0017 
+0018 
+0019 <span class="comment">% GET ARGUMENTS</span>
+0020 <span class="keyword">if</span> length(varargin)==1
+0021     VpVs = varargin{1};
+0022 <span class="keyword">else</span>
+0023     VpVs = [7 4];
+0024 <span class="keyword">end</span>
+0025 
+0026 
+0027 
+0028 <span class="comment">% LOAD DATABASE</span>
+0029 [origin,site,arrival,ray] = ttimes.dbload(dbName);
+0030 
+0031 
+0032 
+0033 <span class="comment">% TRAVEL TIME PLOTS</span>
+0034 figure(<span class="string">'Position'</span>,[0 0 1100 850],<span class="string">'Color'</span>,<span class="string">'w'</span>);
+0035 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gcf,<span class="string">'DefaultAxesFontSize'</span>,14);
+0036 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gcf,<span class="string">'DefaultAxesLineWidth'</span>,0.25);
+0037 
+0038 
+0039 <span class="comment">% P WAVES</span>
+0040 f = <a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(strcmp(arrival.iphase,<span class="string">'P'</span>));
+0041 h1 = subplot(2,2,1);
+0042 scatter(ray.flatDist(f),arrival.travelTime(f)-ray.flatDist(f)/VpVs(1),30,ray.originDepth(f),<span class="string">'filled'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);
+0043 hold on; box on; grid on;
+0044 xlabel(<span class="string">'Distance (km)'</span>);
+0045 ylabel([<span class="string">'Traveltime - distance/'</span> num2str(VpVs(1)) <span class="string">'km/s (s)'</span>]);
+0046 title(<span class="string">'P wave travel times'</span>);
+0047 xlim1 = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca,<span class="string">'xlim'</span>);
+0048 ylim1 = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca,<span class="string">'ylim'</span>);
+0049 <span class="comment">%</span>
+0050 h3 = subplot(2,2,3);
+0051 scatter(ray.flatDist(f),arrival.timeres(f),30,ray.originDepth(f),<span class="string">'filled'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);
+0052 hold on; box on; grid on;
+0053 xlabel(<span class="string">'Distance (km)'</span>);
+0054 ylabel(<span class="string">'Time residual (s)'</span>);
+0055 title(<span class="string">'P wave travel time residuals'</span>);
+0056 xlim3 = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca,<span class="string">'xlim'</span>);
+0057 ylim3 = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca,<span class="string">'ylim'</span>);
+0058 
+0059 
+0060 <span class="comment">% S WAVES</span>
+0061 f = <a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(strcmp(arrival.iphase,<span class="string">'S'</span>));
+0062 h2 = subplot(2,2,2);
+0063 scatter(ray.flatDist(f),arrival.travelTime(f)-ray.flatDist(f)/VpVs(2),30,ray.originDepth(f),<span class="string">'filled'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);
+0064 hold on; box on; grid on;
+0065 xlabel(<span class="string">'Distance (km)'</span>);
+0066 ylabel([<span class="string">'Traveltime - distance/'</span> num2str(VpVs(2)) <span class="string">'km/s (s)'</span>]);
+0067 title(<span class="string">'S wave travel times'</span>);
+0068 xlim2 = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca,<span class="string">'xlim'</span>);
+0069 ylim2 = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca,<span class="string">'ylim'</span>);
+0070 <span class="comment">%</span>
+0071 h4 = subplot(2,2,4);
+0072 scatter(ray.flatDist(f),arrival.timeres(f),30,ray.originDepth(f),<span class="string">'filled'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>);
+0073 hold on; box on; grid on;
+0074 xlabel(<span class="string">'Distance (km)'</span>);
+0075 ylabel(<span class="string">'Time residual (s)'</span>);
+0076 title(<span class="string">'S wave travel time residuals'</span>);
+0077 xlim4 = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca,<span class="string">'xlim'</span>);
+0078 ylim4 = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca,<span class="string">'ylim'</span>);
+0079 <span class="comment">%</span>
+0080 h = colorbar(<span class="string">'Location'</span>,<span class="string">'east'</span>);
+0081 cmap = hot;
+0082 <span class="comment">%colormap(flipud(cmap));</span>
+0083 <a href="../../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>(cmap);
+0084 position = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(h,<span class="string">'Position'</span>);
+0085 position(3) = position(3)/2;
+0086 position(4) = position(4)/2;
+0087 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h,<span class="string">'Position'</span>,position);
+0088 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h,<span class="string">'YDir'</span>,<span class="string">'reverse'</span>);
+0089 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h,<span class="string">'FontSize'</span>,9);
+0090 hh = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(h,<span class="string">'YLabel'</span>);
+0091 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(hh,<span class="string">'String'</span>,<span class="string">'Depth (km)'</span>);
+0092 <span class="comment">%</span>
+0093 xLim = [0 <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(ray.flatDist)];
+0094 yLim12 = [ <a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([ylim1 ylim2]) <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>([ylim1 ylim2])];
+0095 yLim34 = [ <a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([ylim3 ylim4]) <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>([ylim3 ylim4])];
+0096 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h1,<span class="string">'xlim'</span>,xLim,<span class="string">'ylim'</span>,yLim12);
+0097 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h2,<span class="string">'xlim'</span>,xLim,<span class="string">'ylim'</span>,yLim12);
+0098 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h3,<span class="string">'xlim'</span>,xLim,<span class="string">'ylim'</span>,yLim34);
+0099 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h4,<span class="string">'xlim'</span>,xLim,<span class="string">'ylim'</span>,yLim34);
+0100 <span class="comment">%</span>
+0101 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gcf, <span class="string">'paperorientation'</span>, <span class="string">'landscape'</span>);
+0102 <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gcf, <span class="string">'paperposition'</span>, [.5 .5 10 7.5] );
+0103 print(gcf, <span class="string">'-dpsc2'</span>, <span class="string">'FIG_tt_curve.ps'</span>);
+0104 
+0105</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

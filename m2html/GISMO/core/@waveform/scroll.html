@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of scroll</title>
+  <meta name="keywords" content="scroll">
+  <meta name="description" content="SCROLL scroll through the data in a waveform vector">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; scroll.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>scroll
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>SCROLL scroll through the data in a waveform vector</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function scroll(w, timeStepSeconds) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SCROLL scroll through the data in a waveform vector</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../GISMO/core/@rsam/extract.html" class="code" title="function s=extract(self, snum, enum)">extract</a>	</li><li><a href="../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../GISMO/core/@rsam/scrollplot.html" class="code" title="function scrollplot(s)">scrollplot</a>	Created by Steven Lord, slord@mathworks.com</li><li><a href="../../../GISMO/core/@threecomp/extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>	GETTIMERANGE returns the list of start and end times from a waveform array</li><li><a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function scroll(w, timeStepSeconds)</a>
+0002 <span class="comment">%SCROLL scroll through the data in a waveform vector</span>
+0003 
+0004 <span class="comment">% fh = plot_panels(w);</span>
+0005 <span class="comment">% % hScrollLeft = uicontrol('Parent', fh, 'Style', 'pushbutton','String','&lt;-','Position',[0 0 40 20]);</span>
+0006 <span class="comment">% % p = get(fh, 'Position');</span>
+0007 <span class="comment">% % hScrollRight = uicontrol('Parent', fh, 'Style', 'pushbutton','String','-&gt;','Position',[p(3)-40 0 40 20]);</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% hScrollLeft = uicontrol('Parent', fh, 'Style', 'pushbutton','String','&lt;-','Position',[0 0 0.05 0.01],'units','normalized');</span>
+0011 <span class="comment">% p = get(fh, 'Position');</span>
+0012 <span class="comment">% hScrollRight = uicontrol('Parent', fh, 'Style', 'pushbutton','String','-&gt;','Position',[0.95 0 0.05 0.01],'units','normalized');</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% get(hScrollRight)</span>
+0015 <span class="comment">% set(hScrollRight,'units')</span>
+0016 
+0017 
+0018 [snum enum]=<a href="gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>(w);
+0019 close all
+0020 h = <a href="../../../GISMO/core/@rsam/scrollplot.html" class="code" title="function scrollplot(s)">scrollplot</a>();
+0021 data = guidata(h);
+0022 data.w = w;
+0023 data.snum = <a href="min.html" class="code" title="function [Y, I] = min(w)">min</a>(snum);
+0024 data.enum = <a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>(enum);
+0025 data.timeStep = timeStepSeconds/86400;
+0026 data.winstart = data.snum;
+0027 data.winend = data.snum + data.timeStep * 2;
+0028 data.zoomstart = data.winstart;
+0029 data.zoomend = data.winend;
+0030 data.we = <a href="extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>(w,<span class="string">'time'</span>, data.winstart, data.winend);
+0031 data.autoscale = true;
+0032 guidata(h,data);
+0033 <a href="plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>(data.we,<span class="string">'axeshandle'</span>,data.axes1,<span class="string">'autoscale'</span>,data.autoscale)
+0034 ylabel(data.axes1,<span class="string">''</span>);
+0035 <span class="keyword">end</span>
+0036</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

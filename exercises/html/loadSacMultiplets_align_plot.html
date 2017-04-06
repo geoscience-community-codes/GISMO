@@ -1,0 +1,306 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Load event files, align them with cross-correlation, plot them</title><meta name="generator" content="MATLAB 8.5"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-10-11"><meta name="DC.source" content="loadSacMultiplets_align_plot.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Load event files, align them with cross-correlation, plot them</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Overview</a></li><li><a href="#2">1. List our data files</a></li><li><a href="#4">2. Set the time range of interest</a></li><li><a href="#5">3. Set the stations/channels to load</a></li><li><a href="#6">4. Set the datasource for each file and load it as a separate waveform</a></li><li><a href="#8">5. Plot the waveform objects</a></li><li><a href="#10">6. Extract the good part of the signal</a></li><li><a href="#12">7. now correlate each against waveform 1</a></li><li><a href="#14">8. Finally we plot our waveforms aligned using the lagtimes from xcorr</a></li></ul></div><h2>Overview<a name="1"></a></h2><p>In this example we load some similar looking seismic events from Soufriere Hills Volcano, Montserrat. They are stored in individual SAC files. We then align them via cross-correlation, and plot them to show waveform similarity.</p><p>We will use the waveform command to load our sac files. This requires three things:</p><div><ul><li>a datasource - where to get the data from</li><li>a time range - start and end of the time window to load data for</li><li>a scnlobject - this defines the stations &amp; channels of interest</li></ul></div><p>We will also be using MATLAB's xcorr() function to align waveforms and the correlation class to plot our aligned waveforms.</p><h2>1. List our data files<a name="2"></a></h2><p>First let's use MATLAB's dir command to see what SAC files our directory contains:</p><pre class="codeinput">sacdir = <span class="string">'/home/t/thompsong/Downloads'</span>;
+sacfiles = dir(fullfile(sacdir, <span class="string">'*_SAC'</span>));
+sacfiles.name
+</pre><pre class="codeoutput">
+ans =
+
+F_2008-07-26-1249-08S.MVO___031_MBBY__BH_Z_SAC
+
+
+ans =
+
+F_2008-07-26-1609-11S.MVO___031_MBBY__BH_Z_SAC
+
+
+ans =
+
+F_2008-07-26-1848-50S.MVO___031_MBBY__BH_Z_SAC
+
+
+ans =
+
+F_2008-07-27-1844-10S.MVO___031_MBBY__BH_Z_SAC
+
+</pre><p>You will notice there are 4 files, recorded on 2008-07-26 and 2008-07-27</p><h2>2. Set the time range of interest<a name="4"></a></h2><p>Next we have to define the start and end of the time window we are interested in. As long as our files fall within this time range, it is ok.</p><pre class="codeinput">snum = datenum(2008,7,26); <span class="comment">% start time using MATLAB's datenum format</span>
+enum = snum + 2; <span class="comment">% end time, 2 days after start time</span>
+</pre><h2>3. Set the stations/channels to load<a name="5"></a></h2><p>All the files are for station Broderick's Yard, MBBY. We can wildcard the channel name in the case:</p><pre class="codeinput">scnl = scnlobject(<span class="string">'MBBY'</span>, <span class="string">'*'</span>)
+</pre><pre class="codeoutput"> 
+scnl =
+ 
+   station: MBBY
+   channel: *
+   network: 
+  location: 
+</pre><h2>4. Set the datasource for each file and load it as a separate waveform<a name="6"></a></h2><p>Often we can get away with using a single datasource object. But in this case we need to create one for each specific file, since the start times of each file are not predictable (in future we might modify datasource to handle this better). The fullfile() function just creates an OS-system independent path to each SAC file.</p><pre class="codeinput"><span class="keyword">for</span> filenum=1:length(sacfiles)
+    ds = datasource(<span class="string">'sac'</span>, fullfile(sacdir, sacfiles(filenum).name) );
+    w(filenum) = waveform(ds, scnl, snum, enum);
+<span class="keyword">end</span>
+</pre><p>now we have a vector of waveform objects, w. w(1) is the first waveform object - corresponds to the first SAC file, we have 4 waveform objects in total, since we had 4 SAC files.</p><h2>5. Plot the waveform objects<a name="8"></a></h2><pre class="codeinput">plot_panels(w, true); <span class="comment">% true here means align on the start of each trace</span>
+</pre><img vspace="5" hspace="5" src="loadSacMultiplets_align_plot_01.png" alt=""> <p>On each trace the number in blue is the trace mean, the green text is the timestamp of the start of the trace, and the red number is the maximum amplitude of the trace.</p><p>You will notice these particular SAC files have some garbage at the beginning for about 1.5 seconds. That's really in the files - read them into sac and you will see the same thing.</p><h2>6. Extract the good part of the signal<a name="10"></a></h2><p>Let's get rid of those bad first 2 seconds with the waveform.extract() method.</p><pre class="codeinput"><span class="keyword">for</span> wnum=1:numel(w) <span class="comment">% loop over each waveform object</span>
+    fs = get(w(wnum), <span class="string">'freq'</span>); <span class="comment">% get the sampling frequency</span>
+    snum = get(w(wnum), <span class="string">'start'</span>); <span class="comment">% get the start time</span>
+    enum = get(w(wnum), <span class="string">'end'</span>); <span class="comment">% get the end time</span>
+    <span class="comment">% extract from start time + 2 seconds to the end time</span>
+    <span class="comment">% note we divide by the number of seconds in a day, because</span>
+    <span class="comment">% MATLAB datenum's are in days (since year 0), not seconds</span>
+    secondsPerDay = 60 * 60 * 24;
+    w(wnum) = extract(w(wnum), <span class="string">'time'</span>, snum + 2/secondsPerDay, enum);
+<span class="keyword">end</span>
+</pre><p>Now if we replot the data, we see the garbage is gone, and the timestamp is 2 seconds later (the string in green for each trace).</p><pre class="codeinput">plot_panels(w, true)
+</pre><pre class="codeoutput">
+ans = 
+
+  Figure (50) with properties:
+
+      Number: 50
+        Name: ''
+       Color: [0.9400 0.9400 0.9400]
+    Position: [680 558 560 420]
+       Units: 'pixels'
+
+  Use GET to show all properties
+
+</pre><img vspace="5" hspace="5" src="loadSacMultiplets_align_plot_02.png" alt=""> <h2>7. now correlate each against waveform 1<a name="12"></a></h2><pre class="codeinput">y = get(w, <span class="string">'data'</span>); <span class="comment">% get the data - this gives us a cell array,</span>
+                    <span class="comment">% e.g. y{1} is the data from w(1)</span>
+fs = get(w, <span class="string">'freq'</span>); <span class="comment">% get the sampling rates - gives us a vector fs(1)</span>
+                     <span class="comment">% is for first waveform object</span>
+snum = get(w, <span class="string">'start'</span>); <span class="comment">% get the start times for each waveform object</span>
+                        <span class="comment">% snum(1) is for first waveform object</span>
+lagtime = snum; <span class="comment">% set our lagtime vector equal to snum for now</span>
+                <span class="comment">% you will see later that we need to pass a vector of</span>
+                <span class="comment">% "trigger times" to correlation() for it to align on.</span>
+</pre><pre class="codeinput"><span class="keyword">for</span> wnum=2:4 <span class="comment">% we use y{1} as our template (or needle), and then try to</span>
+             <span class="comment">% others (our haystacks) with it</span>
+    [c, lags] = xcorr(y{wnum}, y{1}); <span class="comment">% use xcorr to compute the</span>
+                                      <span class="comment">% cross-correlation of this haystack</span>
+                                      <span class="comment">% with our needle</span>
+
+    <span class="comment">% we can plot the resulting cross-correlation function</span>
+    figure
+    plot(lags,c);
+    xlabel(<span class="string">'Sample lag'</span>);
+    ylabel(<span class="string">'cross correlation'</span>);
+    title(sprintf(<span class="string">'Cross-correlation of event %d and event 1'</span>,wnum))
+
+    <span class="comment">% what we want is the sample lag that corresponds to the maximum</span>
+    <span class="comment">% cross-correlation, i.e. the best match</span>
+    [maxc, maxindex] = max(c);
+    bestSampleLag = lags(maxindex);
+
+    <span class="comment">% Now we have to convert our bestSampleLag to days ...</span>
+    bestDaysLag = (bestSampleLag / fs(wnum) ) / secondsPerDay;
+
+    <span class="comment">% ... and then add this to the start time of our haystack to get the</span>
+    <span class="comment">% "trigger time" we need for aligning this with our needle when we use</span>
+    <span class="comment">% the correlation command below</span>
+    lagtime(wnum) = snum(wnum) + bestDaysLag;
+
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="loadSacMultiplets_align_plot_03.png" alt=""> <img vspace="5" hspace="5" src="loadSacMultiplets_align_plot_04.png" alt=""> <img vspace="5" hspace="5" src="loadSacMultiplets_align_plot_05.png" alt=""> <h2>8. Finally we plot our waveforms aligned using the lagtimes from xcorr<a name="14"></a></h2><p>This part uses the correlation class to make a correlation object and plot it.</p><pre class="codeinput">corrobj = correlation(w, lagtime);
+figure
+plot(corrobj)
+</pre><img vspace="5" hspace="5" src="loadSacMultiplets_align_plot_06.png" alt=""> <img vspace="5" hspace="5" src="loadSacMultiplets_align_plot_07.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Load event files, align them with cross-correlation, plot them
+
+%% Overview
+% In this example we load some similar looking seismic events from 
+% Soufriere Hills Volcano, Montserrat. They are stored in individual SAC 
+% files. We then align them via cross-correlation, and plot them to show
+% waveform similarity.
+%
+% We will use the waveform command to load our sac files. This requires
+% three things:
+%
+% * a datasource - where to get the data from
+% * a time range - start and end of the time window to load data for
+% * a scnlobject - this defines the stations & channels of interest
+%
+% We will also be using MATLAB's xcorr() function to align waveforms and
+% the correlation class to plot our aligned waveforms.
+
+%% 1. List our data files
+% First let's use MATLAB's dir command to see what SAC files our directory
+% contains:
+sacdir = '/home/t/thompsong/Downloads';
+sacfiles = dir(fullfile(sacdir, '*_SAC'));
+sacfiles.name
+
+%%
+% You will notice there are 4 files, recorded on 2008-07-26 and 2008-07-27
+
+%% 2. Set the time range of interest
+% Next we have to define the start and end of the time window we are
+% interested in. As long as our files fall within this time range, it is
+% ok.
+snum = datenum(2008,7,26); % start time using MATLAB's datenum format
+enum = snum + 2; % end time, 2 days after start time
+
+%% 3. Set the stations/channels to load
+% All the files are for station Broderick's Yard, MBBY. We can wildcard the
+% channel name in the case:
+scnl = scnlobject('MBBY', '*')
+
+%% 4. Set the datasource for each file and load it as a separate waveform
+% Often we can get away with using a single datasource object. But in this
+% case we need to create one for each specific file, since the start times
+% of each file are not predictable (in future we might modify datasource to
+% handle this better).
+% The fullfile() function just creates an OS-system independent path to
+% each SAC file.
+for filenum=1:length(sacfiles)
+    ds = datasource('sac', fullfile(sacdir, sacfiles(filenum).name) );
+    w(filenum) = waveform(ds, scnl, snum, enum);
+end
+
+%%
+% now we have a vector of waveform objects, w. 
+% w(1) is the first waveform object - corresponds to the first SAC file,
+% we have 4 waveform objects in total, since we had 4 SAC files.
+
+%% 5. Plot the waveform objects
+plot_panels(w, true); % true here means align on the start of each trace
+%%
+% On each trace the number in blue is the trace mean, the green text is the
+% timestamp of the start of the trace, and the red number is the maximum
+% amplitude of the trace.
+%
+% You will notice these particular SAC files have some garbage at the
+% beginning for about 1.5 seconds. That's really in the files - read them
+% into sac and you will see the same thing.
+
+%% 6. Extract the good part of the signal
+% Let's get rid of those bad first 2 seconds with the waveform.extract() method. 
+
+for wnum=1:numel(w) % loop over each waveform object
+    fs = get(w(wnum), 'freq'); % get the sampling frequency
+    snum = get(w(wnum), 'start'); % get the start time
+    enum = get(w(wnum), 'end'); % get the end time
+    % extract from start time + 2 seconds to the end time
+    % note we divide by the number of seconds in a day, because
+    % MATLAB datenum's are in days (since year 0), not seconds
+    secondsPerDay = 60 * 60 * 24;
+    w(wnum) = extract(w(wnum), 'time', snum + 2/secondsPerDay, enum);
+end
+
+%%
+% Now if we replot the data, we see the garbage is gone, and the timestamp
+% is 2 seconds later (the string in green for each trace).
+plot_panels(w, true)
+
+%% 7. now correlate each against waveform 1
+y = get(w, 'data'); % get the data - this gives us a cell array, 
+                    % e.g. y{1} is the data from w(1)
+fs = get(w, 'freq'); % get the sampling rates - gives us a vector fs(1) 
+                     % is for first waveform object
+snum = get(w, 'start'); % get the start times for each waveform object
+                        % snum(1) is for first waveform object
+lagtime = snum; % set our lagtime vector equal to snum for now
+                % you will see later that we need to pass a vector of 
+                % "trigger times" to correlation() for it to align on.
+
+%%               
+for wnum=2:4 % we use y{1} as our template (or needle), and then try to 
+             % others (our haystacks) with it
+    [c, lags] = xcorr(y{wnum}, y{1}); % use xcorr to compute the 
+                                      % cross-correlation of this haystack
+                                      % with our needle
+                                      
+    % we can plot the resulting cross-correlation function
+    figure
+    plot(lags,c); 
+    xlabel('Sample lag'); 
+    ylabel('cross correlation');
+    title(sprintf('Cross-correlation of event %d and event 1',wnum))
+    
+    % what we want is the sample lag that corresponds to the maximum
+    % cross-correlation, i.e. the best match
+    [maxc, maxindex] = max(c);
+    bestSampleLag = lags(maxindex);
+    
+    % Now we have to convert our bestSampleLag to days ...
+    bestDaysLag = (bestSampleLag / fs(wnum) ) / secondsPerDay;
+    
+    % ... and then add this to the start time of our haystack to get the
+    % "trigger time" we need for aligning this with our needle when we use
+    % the correlation command below
+    lagtime(wnum) = snum(wnum) + bestDaysLag;
+
+end
+
+%% 8. Finally we plot our waveforms aligned using the lagtimes from xcorr 
+% This part uses the correlation class to make a correlation object and
+% plot it. 
+corrobj = correlation(w, lagtime);
+figure
+plot(corrobj)
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of deconv</title>
+  <meta name="keywords" content="deconv">
+  <meta name="description" content="c = DECONV(c) convolves all traces with the final trace. By default the new">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; deconv.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>deconv
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>c = DECONV(c) convolves all traces with the final trace. By default the new</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = deconv(c) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> c = DECONV(c) convolves all traces with the final trace. By default the new
+ correlation object has traces that are 2*N-1 samples long, where the
+ original traces are of length N. Because all traces ...
+ 
+ ** NOTE TO USERS: Though most plotting routines normalize adjacent traces
+ to comparable amplitudes for display, the real trace amplitudes often
+ very by orders of magnitudes. Depending on the features the user is
+ trying to highlight, it may make sense to normalize the trace amplitudes
+ before stacking. This can be performed with the NORM function.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>	RSAM/SAVE - save an rsam-like object to an RSAM/BOB binary</li><li><a href="../../../../GISMO/core/@spectralobject/fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>	FFT Discrete Fourier transform.  OVERLOADED for waveform & Spectralobject</li><li><a href="../../../../GISMO/core/@spectralobject/ifft.html" class="code" title="function [varargout] = ifft(s, w)">ifft</a>	IFFT Inverse discrete Fourier transform.  OVERLOADED FOR Spectralobject</li><li><a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="unifytracelengths.html" class="code" title="function c = unifytracelengths(c)">unifytracelengths</a>	unifytracelengths   make all traces the same length (mode length)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = deconv(c)</a>
+0002 
+0003 <span class="comment">% c = DECONV(c) convolves all traces with the final trace. By default the new</span>
+0004 <span class="comment">% correlation object has traces that are 2*N-1 samples long, where the</span>
+0005 <span class="comment">% original traces are of length N. Because all traces ...</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% ** NOTE TO USERS: Though most plotting routines normalize adjacent traces</span>
+0008 <span class="comment">% to comparable amplitudes for display, the real trace amplitudes often</span>
+0009 <span class="comment">% very by orders of magnitudes. Depending on the features the user is</span>
+0010 <span class="comment">% trying to highlight, it may make sense to normalize the trace amplitudes</span>
+0011 <span class="comment">% before stacking. This can be performed with the NORM function.</span>
+0012 
+0013 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0014 <span class="comment">% $Date$</span>
+0015 <span class="comment">% $Revision$</span>
+0016 
+0017 
+0018 
+0019 
+0020 
+0021 error(<span class="string">'This code is not yet functional. Sorry - MEW'</span>);
+0022 
+0023 
+0024 <span class="comment">% GENERAL PARAMETERS</span>
+0025 c = <a href="unifytracelengths.html" class="code" title="function c = unifytracelengths(c)">unifytracelengths</a>(c);
+0026 keyTrace = c.ntraces;
+0027 
+0028 
+0029 X = <a href="../../../../GISMO/core/@spectralobject/fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>(<a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(c.traces));      <span class="comment">% all traces</span>
+0030 Y = repmat( <a href="../../../../GISMO/core/@spectralobject/fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>(<a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(c.traces(keyTrace))) , 1 , c.ntraces );   <span class="comment">% single trace</span>
+0031 
+0032 
+0033 
+0034 
+0035 <span class="comment">%Z = ifft(X ./ Y);</span>
+0036 e = 0.01 * sum(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(Y(:,1)).^2);
+0037 numerator = X .* conj(Y) ;
+0038 denominator = <a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(Y).^2 + e ;
+0039 <span class="comment">%denominator = Y .* conj(Y) + e ;</span>
+0040 Z = <a href="../../../../GISMO/core/@spectralobject/ifft.html" class="code" title="function [varargout] = ifft(s, w)">ifft</a>( numerator ./ denominator );
+0041 
+0042 <a href="../../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>
+0043 
+0044 <span class="keyword">for</span> n = 1:c.ntraces
+0045    c.traces(n).data = Z(:,n);
+0046 <span class="keyword">end</span>
+0047 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of waveform</title>
+  <meta name="keywords" content="waveform">
+  <meta name="description" content="WAVEFORM Waveform Class constructor">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; waveform.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>waveform
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>WAVEFORM Waveform Class constructor</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function w = waveform(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">WAVEFORM Waveform Class constructor
+    Create a waveform object. This is mainly used to load waveform data 
+    from different file formats (e.g. MiniSEED, Seisan, SAC) and services
+    (e.g. IRIS webservices, Earthworm/Winston waveserver).
+    
+    The general format is:
+    
+      w = WAVEFORM(ds, chantags, starttime, endtime)
+    
+    or:
+    
+      w = WAVEFORM(ds, scnls, starttime, endtime)
+    
+    Arguments:
+       ds - a DATASOURCE object. This defines where to get the
+       waveform data from.
+    
+       ctags - an array of ChannelTag objects.
+       These describe the network.station.locations.channel combinations
+       to load data for. E.g. ctags = ChannelTag('AV.REF..EHZ') to get
+       channel 'EHZ' from station 'REF' for network 'AV' (location is
+       blank, hence the ..)
+    
+           or scnlobjects - an array of SCNLOBJECT objects, which
+           describe the station-channel-network-location combinations
+           to load data for 
+               e.g. scnls = scnlobject('REF', 'EHZ', 'AV', '')
+    
+       start_time - the start of the time window to load. Can be a DATENUM
+       e.g. datenum(YYYY,MM,DD,hh,mm,ss), or any date string literal
+       accepted by DATESTR.
+    
+       endtime - the end of the time window to load.
+    
+    Other ways to construct a waveform object:
+    
+     w = WAVEFORM() creates a blank waveform object
+    
+     w = WAVEFORM(ChannelTag, samplerate, starttime, data, units) creates
+         a waveform from consituent parts.
+    
+         CHANNELTAG - either 'net.sta.loc.cha' or a ChannelTag 
+         SAMPLERATE - Sampling frequency, in Hz       (default nan)
+         DATA - a vector of seismic amplitudes        (default [])
+         STARTTIME - Start time, in most any format   (default '1/1/1970')
+         UNITS - a string describing the data units
+    
+       If the data requested by waveform consists of multiple segments, then
+       these segments will be combined into a single time series, with the 
+       value NaN filling any missing samples. 
+    
+    --------
+    EXAMPLES
+    --------
+    The only thing that varies between loading from IRIS DMC webservices,
+    an Miniseed or SAC file, a WINSTON or Earthworm waveform and an 
+    Antelope database is the datasource(...) command. So the following
+    examples also show some different ways to construct the other
+    arguments - chantags/scnls, startTime &amp; endTime, which will work 
+    regardless of which datasource is used.
+    
+    (1) IRIS DMC web services:
+    --------------------------
+       ds = datasource('irisdmcws'); % data_source is IRIS DMC webservices
+       startTime = '2012-03-03 00:00:00';
+       endTime   = '2012-03-03 01:00:00'; % 1 hour later
+       
+       % Get TA pressure sensor stations within a circular region:
+       s = irisFetch.Channels('channel','TA','*','*','BD*', ... 
+           'StartTime', startTime, 'EndTime', endTime, ... 
+           'radialcoordinates',[33.87 -85.30 km2deg(200) 0]);
+       
+       % Make a ChannelTag array of all the net.sta.loc.chan combos:
+       chantags = ChannelTag.array({s.NetworkCode}, {s.StationCode}, ...
+           {s.LocationCode}, {s.ChannelCode});
+    
+       % Create the waveform object (load the data)
+       w = waveform(ds, chantags, startTime, endTime);
+    
+    (2) Antelope database:
+    ----------------------
+    
+       dbpath = '/path/to/my/antelope/database';
+       ds = datasource('antelope', dbpath);
+       startTime = datenum(2009,3,22);
+       endTime = startTime + 1/24; % 1 hour of data
+       % get EHZ channel for stations RSO and REF
+       scnls = scnlobject({'REF';'RSO'},'EHZ'); 
+       w = waveform(ds, scnls, startTime, endTime);
+    
+       % NOTE: You must have the Antelope toolbox installed, since GISMO 
+       uses this to load Antelope databases.
+    
+    (3) WINSTON or Earthworm waveServer:
+    -------------------------------------
+    
+       % This example attempts gets the last 10 minutes of data 
+       % from the AVO public WINSTON server for the EHZ channel at
+       stations REF and RSO.
+    
+         chantags = ChannelTag({'AV.RSO..EHZ','AV.REF..EHZ'});
+         ds = datasource('winston','pubavo1.wr.usgs.gov',16022);
+         w = waveform(ds, chantags, now - 10/1440, now);
+    
+       WARNING: Data received through winston is in COUNTS, and is
+       not adjusted for instrument gain. To fix this, you'll
+       need to scale the data by the correct gain (e.g. in nm/s per count) 
+               Ex: w = w .* instrumentGain
+    
+    (4) MiniSEED file:
+    ------------------
+       chantag = ChannelTag('AV.PN7A.-.BDF')
+       startTime = datenum(2007,8,28);
+       endTime = startTime + 1; % 1 day later 
+       mseedfile = 'SEEDDATA/PN7A.BDF.2007.240';
+       ds = datasource('miniseed', mseedfile );
+       w=waveform(ds, chantag, startTime, endTime);
+    
+    (5) SAC file:
+    -------------
+       chantag = ChannelTag('AV.PN7A.-.BDF')
+       startTime = datenum(2007,8,28);
+       endTime = startTime + 1; % 1 day later 
+       sacfile = 'SACDATA/PN7A.BDF.2007-08-28T00:00:00.000000Z.sac';
+       ds = datasource('sac', sacfile );
+       w=waveform(ds, chantag, startTime, endTime);
+    
+    see also ChannelTag, datasource, scnlobject, datenum, datestr
+
+    VERSION: 2.0 of <a href="waveform.html" class="code" title="function w = waveform(varargin)">waveform</a> objects
+    AUTHOR: Celso Reyes
+    Help updated by Glenn 02-AUG-2016 to make it easier for users to find
+    examples of modern usage and common data sources
+
+    considerations when changing the internals:
+     when replacing scnl with ChannelTag, affects loadobj!</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/+Catalog/+read_catalog/ensure_dateformat.html" class="code" title="function out = ensure_dateformat(t)">ensure_dateformat</a>	stolen from waveform</li><li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>	ChannelTag Converter from scnlobject to ChannelTag</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/private/as_channeltag.html" class="code" title="function obj = as_channeltag(obj)">as_channeltag</a>	</li><li><a href="../../../GISMO/core/@waveform/private/loadGlobalNamespace.html" class="code" title="function isloaded = loadGlobalNamespace()">loadGlobalNamespace</a>	loadGlobalNamespace handles the global variables and routines used within</li><li><a href="../../../GISMO/core/@waveform/private/load_from_datasource.html" class="code" title="function w = load_from_datasource(ds, chans, startt, endt, combine_waves, usewkaround)">load_from_datasource</a>	load_from_datasource</li><li><a href="../../../GISMO/core/@waveform/private/peel_option.html" class="code" title="function [optExists, value, vargs] = peel_option(vargs, searchValue, searchClass, minPos)">peel_option</a>	</li><li><a href="../../../GISMO/core/@waveform/private/winston_access.html" class="code" title="function w = winston_access(varargin)">winston_access</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/waveform_wrapper.html" class="code" title="function w=waveform_wrapper(ds, chantag, snum, enum);">waveform_wrapper</a>	WAVEFORM_WRAPPER try multiple datasource objects in</li><li><a href="../../../GISMO/applications/uispecgram.html" class="code" title="function varargout = uispecgram(varargin)">uispecgram</a>	UISPECGRAM M-file for uispecgram.fig</li><li><a href="../../../GISMO/contributed/+obspy/incomplete.html" class="code" title="function [w,scnl]=obspy.stream2waveform(path_to_python, path_to_converter, path_to_data)">incomplete</a>	OBSPY.STREAM2WAVEFORM Use ObsPy to read a stream object and then convert</li><li><a href="../../../GISMO/contributed/+obspy/stream2waveform.html" class="code" title="function [w,scnl]=obspy.stream2waveform(path_to_python, path_to_converter, path_to_data)">stream2waveform</a>	OBSPY.STREAM2WAVEFORM Use ObsPy to read a stream object and then convert</li><li><a href="../../../GISMO/contributed/+obspy/stream_matfile2waveform.html" class="code" title="function [w,scnl]=stream_matfile2waveform(matfilepath)">stream_matfile2waveform</a>	OBSPY.STREAM2WAVEFORM Use ObsPy to read a stream object and then convert</li><li><a href="../../../GISMO/contributed/correlation_derived/corrderived_plot_swarm_history.html" class="code" title="function corrderived_plot_swarm_history(c,varargin)">corrderived_plot_swarm_history</a>	CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms</li><li><a href="../../../GISMO/contributed/instrument_response/demo_plutons.html" class="code" title="">demo_plutons</a>	</li><li><a href="../../../GISMO/contributed/iris_dmc_tools/+irisdmc/cookbook.html" class="code" title="function cookbook">cookbook</a>	COOKBOOK example program using the IRIS DMC web services</li><li><a href="../../../GISMO/contributed/iris_dmc_tools/dmc_cookbook.html" class="code" title="function dmc_cookbook">dmc_cookbook</a>	</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/scan.html" class="code" title="function [WW,WWxc] = scan(WW,WWsnippet,threshold)">scan</a>	SCAN scans a waveform for events which match a master.</li><li><a href="../../../GISMO/contributed/master_correlation/mastercorr_scan.html" class="code" title="function [WW,WWxc] = mastercorr_scan(WW,WWsnippet,threshold)">mastercorr_scan</a>	MASTERCORR_SCAN scans a waveform for events which match a master.</li><li><a href="../../../GISMO/contributed_antelope/double_difference/dd_process_scp.html" class="code" title="function dd_process_scp(dbname,scpfile,varargin)">dd_process_scp</a>	DD_PROCESS_SCP Process correlations by station and channel</li><li><a href="../../../GISMO/contributed_antelope/import_events/import_events.html" class="code" title="function [ eqtc, varargout ] = import_events(dbname, chanfile, starttime, endtime, phase, delay, enddelay, varargin)">import_events</a>	IMPORT_EVENTS Import waveforms associated with earthquake events.</li><li><a href="../../../GISMO/contributed_antelope/reduced_displacement/reducedisp_wfmeas.html" class="code" title="function reducedisp_wfmeas(varargin);">reducedisp_wfmeas</a>	REDUCEDISP_WFMEAS(STARTTIME,ENDTIME,SCNL,DIST,DS,DBOUT,FILT,TIMESTEP,ALGORITHM)</li><li><a href="../../../GISMO/core/+antelope/antelope2waveform.html" class="code" title="function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)">antelope2waveform</a>	ANTELOPE2WAVEFORM Load waveform objects from Antelope database</li><li><a href="../../../GISMO/core/+antelope/arrivals2waveforms.html" class="code" title="function w = arrivals2waveforms(dbpath, arrivals, pretrig, posttrig, taper_seconds, nwaveforms)">arrivals2waveforms</a>	ARRIVALS2WAVEFORMS Load waveform objects corresponding to an arrivals structure</li><li><a href="../../../GISMO/core/@correlation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../GISMO/core/@correlation/correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="../../../GISMO/core/@correlation/private/makesynthwaves.html" class="code" title="function c = makesynthwaves(n);">makesynthwaves</a>	Add N traces of synthetic data to a correlation object. Alters properties: waves, trig,</li><li><a href="../../../GISMO/core/@drumplot/cookbook.html" class="code" title="">cookbook</a>	% drumplot cookbook</li><li><a href="../../../GISMO/core/@drumplot/drumplot.html" class="code" title="">drumplot</a>	DRUMPLOT the blueprint for drumplot objects in GISMO</li><li><a href="../../../GISMO/core/@rsam/oneMinuteData.html" class="code" title="">oneMinuteData</a>	</li><li><a href="../../../GISMO/core/@threecomp/diagnostic.html" class="code" title="function diagnostic(threecomp)">diagnostic</a>	DIAGNOSTIC check for accurate behavior of threecomp object.</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/particlemotion.html" class="code" title="function TC = particlemotion(TC, varargin)">particlemotion</a>	PARTICLEMOTION calculates particle motion vectors for threecomp object</li><li><a href="../../../GISMO/core/@threecomp/threecomp.html" class="code" title="">threecomp</a>	THREECOMP Object for three component waveform data</li><li><a href="combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and ChannelTag info.</li><li><a href="isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>	ISFIELD checks the presence of waveform fields.</li><li><a href="loadobj.html" class="code" title="function b = loadobj(a)">loadobj</a>	LOADOBJ updates older versions of waveform class upon loading</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope_old.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope_old</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope_workaround.html" class="code" title="function outputWaveforms = load_antelope_workaround(datarequest, COMBINE_WAVEFORMS, specificDatabase)">load_antelope_workaround</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_file.html" class="code" title="function w = load_file(request)">load_file</a>	LOAD_FILE</li><li><a href="../../../GISMO/core/@waveform/private/load_from_datasource.html" class="code" title="function w = load_from_datasource(ds, chans, startt, endt, combine_waves, usewkaround)">load_from_datasource</a>	load_from_datasource</li><li><a href="../../../GISMO/core/@waveform/private/load_from_file.html" class="code" title="function w = load_from_file(myLoadFunc, fname, allowMultiple, ErrorOnEmpty)">load_from_file</a>	load waveforms from a file using myLoadfunc</li><li><a href="../../../GISMO/core/@waveform/private/load_irisdmcws.html" class="code" title="function wavef = load_irisdmcws(request)">load_irisdmcws</a>	LOAD_IRISDMCWS loads waveforms using the IRIS Web Services Java Library</li><li><a href="../../../GISMO/core/@waveform/private/load_matfile.html" class="code" title="function w = load_matfile(request)">load_matfile</a>	LOAD_FILE</li><li><a href="../../../GISMO/core/@waveform/private/load_miniseed.html" class="code" title="function w = load_miniseed(request)">load_miniseed</a>	LOAD_MINISEED loads a waveform from MINISEED files</li><li><a href="../../../GISMO/core/@waveform/private/load_obspy.html" class="code" title="function w = load_obspy(request)">load_obspy</a>	LOAD_OBSPY loads matlab files that were saved by ObsPy as per the ObsPy tutorial</li><li><a href="../../../GISMO/core/@waveform/private/load_sac.html" class="code" title="function w = load_sac(request)">load_sac</a>	LOAD_SAC loads a waveform from SAC files</li><li><a href="../../../GISMO/core/@waveform/private/load_seisan.html" class="code" title="function w = load_seisan(request)">load_seisan</a>	LOAD_SEISAN loads a waveform from SEISAN files</li><li><a href="../../../GISMO/core/@waveform/private/load_winston.html" class="code" title="function allWaves = load_winston(request)">load_winston</a>	LOAD_WINSTON handles retrieval of data from a winston waveserver.</li><li><a href="../../../GISMO/core/@waveform/private/sac2waveform.html" class="code" title="function allWaveforms = sac2waveform(sacStructure)">sac2waveform</a>	SAC2WAVEFORM fill a waveform object from a sac header</li><li><a href="../../../GISMO/core/@waveform/private/winston_access.html" class="code" title="function w = winston_access(varargin)">winston_access</a>	</li><li><a href="../../../GISMO/core/dev/+dataretrieval/@antelopesource/antelopesource.html" class="code" title="">antelopesource</a>	</li><li><a href="../../../GISMO/core/dev/+dataretrieval/iriswebservicesource.html" class="code" title="">iriswebservicesource</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/makesynthwaves.html" class="code" title="function c = makesynthwaves(n)">makesynthwaves</a>	Add N traces of synthetic data to a correlation object. Alters properties: waves, trig,</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="../../../GISMO/deprecated/+waveform_extensions/sacload.html" class="code" title="function w = load(fileList)">sacload</a>	SACLOAD Load SAC files into MATLAB as waveform objects</li><li><a href="../../../GISMO/deprecated/@helicorder/build.html" class="code" title="function varargout = build(h)">build</a>	BUILD: Helicorder builder function. A helicorder object (h) contains no</li><li><a href="../../../GISMO/deprecated/@helicorder/helicorder.html" class="code" title="function h = helicorder(varargin)">helicorder</a>	HELICORDER: Helicorder generates a multi-line display of input waveform</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/wfa2nan.html" class="code" title="function nan = wfa2nan(wfa, varargin)">wfa2nan</a>	</li><li><a href="../../../GISMO/tests/amplitude_spectrum_test.html" class="code" title="function tests = amplitude_spectrum_test()">amplitude_spectrum_test</a>	% Main function to generate tests</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../GISMO/tests/test_waveform_constructor.html" class="code" title="">test_waveform_constructor</a>	test waveform creation</li><li><a href="../../../GISMO/tests/trloadcss_test.html" class="code" title="function tests = trloadcss_test()">trloadcss_test</a>	% Main function to generate tests</li><li><a href="../../../GISMO/tests/waveform_antelope_test.html" class="code" title="function tests = waveform_antelope_test()">waveform_antelope_test</a>	% Main function to generate tests</li><li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li><li><a href="../../../GISMO/uaf_internal/AEIC_AVO/+check/crossfeed.html" class="code" title="function crossfeed(varargin)">crossfeed</a>	CROSSFEED Checks for crossfeeding and duplicate data channels</li><li><a href="../../../GISMO/uaf_internal/IDEAS_format/ideas2waveform.html" class="code" title="function w = ideas2waveform(fileName)">ideas2waveform</a>	OPEN_INFRASOUND Open UAF/GI infrasound data as a waveform object.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function w = genericWaveform()</a></li><li><a href="#_sub2" class="code">function w = waveformFromParts(chaTag, freq, starttime, data, units)</a></li><li><a href="#_sub3" class="code">function w = waveformFromDatasource(ds, chans, startt, endt)</a></li><li><a href="#_sub4" class="code">function out = ensure_dateformat(t)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = waveform(varargin)</a>
+0002 <span class="comment">%WAVEFORM Waveform Class constructor</span>
+0003 <span class="comment">%    Create a waveform object. This is mainly used to load waveform data</span>
+0004 <span class="comment">%    from different file formats (e.g. MiniSEED, Seisan, SAC) and services</span>
+0005 <span class="comment">%    (e.g. IRIS webservices, Earthworm/Winston waveserver).</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%    The general format is:</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">%      w = WAVEFORM(ds, chantags, starttime, endtime)</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%    or:</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">%      w = WAVEFORM(ds, scnls, starttime, endtime)</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">%    Arguments:</span>
+0016 <span class="comment">%       ds - a DATASOURCE object. This defines where to get the</span>
+0017 <span class="comment">%       waveform data from.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%       ctags - an array of ChannelTag objects.</span>
+0020 <span class="comment">%       These describe the network.station.locations.channel combinations</span>
+0021 <span class="comment">%       to load data for. E.g. ctags = ChannelTag('AV.REF..EHZ') to get</span>
+0022 <span class="comment">%       channel 'EHZ' from station 'REF' for network 'AV' (location is</span>
+0023 <span class="comment">%       blank, hence the ..)</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">%           or scnlobjects - an array of SCNLOBJECT objects, which</span>
+0026 <span class="comment">%           describe the station-channel-network-location combinations</span>
+0027 <span class="comment">%           to load data for</span>
+0028 <span class="comment">%               e.g. scnls = scnlobject('REF', 'EHZ', 'AV', '')</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">%       start_time - the start of the time window to load. Can be a DATENUM</span>
+0031 <span class="comment">%       e.g. datenum(YYYY,MM,DD,hh,mm,ss), or any date string literal</span>
+0032 <span class="comment">%       accepted by DATESTR.</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%       endtime - the end of the time window to load.</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">%    Other ways to construct a waveform object:</span>
+0037 <span class="comment">%</span>
+0038 <span class="comment">%     w = WAVEFORM() creates a blank waveform object</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%     w = WAVEFORM(ChannelTag, samplerate, starttime, data, units) creates</span>
+0041 <span class="comment">%         a waveform from consituent parts.</span>
+0042 <span class="comment">%</span>
+0043 <span class="comment">%         CHANNELTAG - either 'net.sta.loc.cha' or a ChannelTag</span>
+0044 <span class="comment">%         SAMPLERATE - Sampling frequency, in Hz       (default nan)</span>
+0045 <span class="comment">%         DATA - a vector of seismic amplitudes        (default [])</span>
+0046 <span class="comment">%         STARTTIME - Start time, in most any format   (default '1/1/1970')</span>
+0047 <span class="comment">%         UNITS - a string describing the data units</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">%       If the data requested by waveform consists of multiple segments, then</span>
+0050 <span class="comment">%       these segments will be combined into a single time series, with the</span>
+0051 <span class="comment">%       value NaN filling any missing samples.</span>
+0052 <span class="comment">%</span>
+0053 <span class="comment">%    --------</span>
+0054 <span class="comment">%    EXAMPLES</span>
+0055 <span class="comment">%    --------</span>
+0056 <span class="comment">%    The only thing that varies between loading from IRIS DMC webservices,</span>
+0057 <span class="comment">%    an Miniseed or SAC file, a WINSTON or Earthworm waveform and an</span>
+0058 <span class="comment">%    Antelope database is the datasource(...) command. So the following</span>
+0059 <span class="comment">%    examples also show some different ways to construct the other</span>
+0060 <span class="comment">%    arguments - chantags/scnls, startTime &amp; endTime, which will work</span>
+0061 <span class="comment">%    regardless of which datasource is used.</span>
+0062 <span class="comment">%</span>
+0063 <span class="comment">%    (1) IRIS DMC web services:</span>
+0064 <span class="comment">%    --------------------------</span>
+0065 <span class="comment">%       ds = datasource('irisdmcws'); % data_source is IRIS DMC webservices</span>
+0066 <span class="comment">%       startTime = '2012-03-03 00:00:00';</span>
+0067 <span class="comment">%       endTime   = '2012-03-03 01:00:00'; % 1 hour later</span>
+0068 <span class="comment">%</span>
+0069 <span class="comment">%       % Get TA pressure sensor stations within a circular region:</span>
+0070 <span class="comment">%       s = irisFetch.Channels('channel','TA','*','*','BD*', ...</span>
+0071 <span class="comment">%           'StartTime', startTime, 'EndTime', endTime, ...</span>
+0072 <span class="comment">%           'radialcoordinates',[33.87 -85.30 km2deg(200) 0]);</span>
+0073 <span class="comment">%</span>
+0074 <span class="comment">%       % Make a ChannelTag array of all the net.sta.loc.chan combos:</span>
+0075 <span class="comment">%       chantags = ChannelTag.array({s.NetworkCode}, {s.StationCode}, ...</span>
+0076 <span class="comment">%           {s.LocationCode}, {s.ChannelCode});</span>
+0077 <span class="comment">%</span>
+0078 <span class="comment">%       % Create the waveform object (load the data)</span>
+0079 <span class="comment">%       w = waveform(ds, chantags, startTime, endTime);</span>
+0080 <span class="comment">%</span>
+0081 <span class="comment">%    (2) Antelope database:</span>
+0082 <span class="comment">%    ----------------------</span>
+0083 <span class="comment">%</span>
+0084 <span class="comment">%       dbpath = '/path/to/my/antelope/database';</span>
+0085 <span class="comment">%       ds = datasource('antelope', dbpath);</span>
+0086 <span class="comment">%       startTime = datenum(2009,3,22);</span>
+0087 <span class="comment">%       endTime = startTime + 1/24; % 1 hour of data</span>
+0088 <span class="comment">%       % get EHZ channel for stations RSO and REF</span>
+0089 <span class="comment">%       scnls = scnlobject({'REF';'RSO'},'EHZ');</span>
+0090 <span class="comment">%       w = waveform(ds, scnls, startTime, endTime);</span>
+0091 <span class="comment">%</span>
+0092 <span class="comment">%       % NOTE: You must have the Antelope toolbox installed, since GISMO</span>
+0093 <span class="comment">%       uses this to load Antelope databases.</span>
+0094 <span class="comment">%</span>
+0095 <span class="comment">%    (3) WINSTON or Earthworm waveServer:</span>
+0096 <span class="comment">%    -------------------------------------</span>
+0097 <span class="comment">%</span>
+0098 <span class="comment">%       % This example attempts gets the last 10 minutes of data</span>
+0099 <span class="comment">%       % from the AVO public WINSTON server for the EHZ channel at</span>
+0100 <span class="comment">%       stations REF and RSO.</span>
+0101 <span class="comment">%</span>
+0102 <span class="comment">%         chantags = ChannelTag({'AV.RSO..EHZ','AV.REF..EHZ'});</span>
+0103 <span class="comment">%         ds = datasource('winston','pubavo1.wr.usgs.gov',16022);</span>
+0104 <span class="comment">%         w = waveform(ds, chantags, now - 10/1440, now);</span>
+0105 <span class="comment">%</span>
+0106 <span class="comment">%       WARNING: Data received through winston is in COUNTS, and is</span>
+0107 <span class="comment">%       not adjusted for instrument gain. To fix this, you'll</span>
+0108 <span class="comment">%       need to scale the data by the correct gain (e.g. in nm/s per count)</span>
+0109 <span class="comment">%               Ex: w = w .* instrumentGain</span>
+0110 <span class="comment">%</span>
+0111 <span class="comment">%    (4) MiniSEED file:</span>
+0112 <span class="comment">%    ------------------</span>
+0113 <span class="comment">%       chantag = ChannelTag('AV.PN7A.-.BDF')</span>
+0114 <span class="comment">%       startTime = datenum(2007,8,28);</span>
+0115 <span class="comment">%       endTime = startTime + 1; % 1 day later</span>
+0116 <span class="comment">%       mseedfile = 'SEEDDATA/PN7A.BDF.2007.240';</span>
+0117 <span class="comment">%       ds = datasource('miniseed', mseedfile );</span>
+0118 <span class="comment">%       w=waveform(ds, chantag, startTime, endTime);</span>
+0119 <span class="comment">%</span>
+0120 <span class="comment">%    (5) SAC file:</span>
+0121 <span class="comment">%    -------------</span>
+0122 <span class="comment">%       chantag = ChannelTag('AV.PN7A.-.BDF')</span>
+0123 <span class="comment">%       startTime = datenum(2007,8,28);</span>
+0124 <span class="comment">%       endTime = startTime + 1; % 1 day later</span>
+0125 <span class="comment">%       sacfile = 'SACDATA/PN7A.BDF.2007-08-28T00:00:00.000000Z.sac';</span>
+0126 <span class="comment">%       ds = datasource('sac', sacfile );</span>
+0127 <span class="comment">%       w=waveform(ds, chantag, startTime, endTime);</span>
+0128 <span class="comment">%</span>
+0129 <span class="comment">%    see also ChannelTag, datasource, scnlobject, datenum, datestr</span>
+0130 <span class="comment">%</span>
+0131 <span class="comment">%    VERSION: 2.0 of waveform objects</span>
+0132 <span class="comment">%    AUTHOR: Celso Reyes</span>
+0133 <span class="comment">%    Help updated by Glenn 02-AUG-2016 to make it easier for users to find</span>
+0134 <span class="comment">%    examples of modern usage and common data sources</span>
+0135 <span class="comment">%</span>
+0136 <span class="comment">%    considerations when changing the internals:</span>
+0137 <span class="comment">%     when replacing scnl with ChannelTag, affects loadobj!</span>
+0138    
+0139    <span class="keyword">global</span> WaveformNamespaceIsLoaded
+0140    <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(WaveformNamespaceIsLoaded)
+0141       WaveformNamespaceIsLoaded = <a href="../../../GISMO/core/@waveform/private/loadGlobalNamespace.html" class="code" title="function isloaded = loadGlobalNamespace()">loadGlobalNamespace</a>();
+0142    <span class="keyword">end</span>;
+0143    <span class="keyword">persistent</span> waveformversion
+0144    <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(waveformversion)
+0145       waveformversion = 2.0;
+0146    <span class="keyword">end</span>
+0147    
+0148    <span class="comment">% usage: [optExists, value, vargs] = peel_option(vargs, searchValue, searchClass, minPos)</span>
+0149    [COMBINE_WAVES, ~, varargin] = <a href="../../../GISMO/core/@waveform/private/peel_option.html" class="code" title="function [optExists, value, vargs] = peel_option(vargs, searchValue, searchClass, minPos)">peel_option</a>(varargin, <span class="string">'nocombine'</span>, <span class="string">'char'</span>, 5);
+0150    [NOEXIT_OPTION, bwkaround, varargin] = <a href="../../../GISMO/core/@waveform/private/peel_option.html" class="code" title="function [optExists, value, vargs] = peel_option(vargs, searchValue, searchClass, minPos)">peel_option</a>(varargin, [], <span class="string">'logical'</span>, 5);
+0151    
+0152    argCount = numel(varargin);
+0153    
+0154    updateWarningID = <span class="string">'Waveform:waveform:oldUsage'</span>;
+0155    
+0156    <span class="keyword">switch</span> argCount
+0157       <span class="keyword">case</span> 0
+0158          w = <a href="#_sub1" class="code" title="subfunction w = genericWaveform()">genericWaveform</a>();
+0159       <span class="comment">%{</span>
+0160       <span class="keyword">case</span> 1   <span class="comment">%&quot;copy&quot; a waveform object. Matlab naturally bypasses this.</span>
+0161          <span class="keyword">if</span> isa(varargin{1}, <span class="string">'waveform'</span>)
+0162             w = varargin{1};
+0163          <span class="keyword">end</span>;
+0164       <span class="comment">%}</span>
+0165          
+0166       <span class="keyword">case</span> 4
+0167          [arg1, arg2, arg3, arg4] = deal(varargin{:});
+0168          <span class="keyword">switch</span> class(arg1)
+0169             <span class="keyword">case</span> <span class="string">'datasource'</span> <span class="comment">%datsource, ChannelTag/scnl/text, starttimes, endtimes</span>
+0170                w = <a href="#_sub3" class="code" title="subfunction w = waveformFromDatasource(ds, chans, startt, endt)">waveformFromDatasource</a>(arg1, <a href="../../../GISMO/core/@waveform/private/as_channeltag.html" class="code" title="function obj = as_channeltag(obj)">as_channeltag</a>(arg2), arg3, arg4);
+0171             <span class="keyword">otherwise</span> <span class="comment">% assumed to be Channeltag or something that can be converted into it</span>
+0172                w = <a href="#_sub2" class="code" title="subfunction w = waveformFromParts(chaTag, freq, starttime, data, units)">waveformFromParts</a>(<a href="../../../GISMO/core/@waveform/private/as_channeltag.html" class="code" title="function obj = as_channeltag(obj)">as_channeltag</a>(arg1), arg2, arg3, arg4, <span class="string">'Counts'</span>);
+0173          <span class="keyword">end</span>
+0174       <span class="keyword">case</span> 5
+0175          [arg1, arg2, arg3, arg4, arg5] = deal(varargin{:});
+0176          <span class="keyword">switch</span> class(arg1)
+0177             <span class="keyword">case</span> <span class="string">'datasource'</span> <span class="comment">%INPUT(datasource, ChannelTag, starttimes, endtimes)</span>
+0178                error(updateWarningID,<span class="string">'Should never get to this section of code'</span>);
+0179             <span class="keyword">otherwise</span>
+0180                <span class="keyword">if</span> ischar(arg1) &amp;&amp; ischar(arg2) <span class="comment">%given station, channel</span>
+0181                   warning(updateWarningID,<span class="keyword">...</span><span class="comment"> % could make this a ERROR instead</span>
+0182                      [<span class="string">'ancient usage.\nInstead of:\n   waveform(''%s'', ''%s'', ...\n'</span>,<span class="keyword">...</span>
+0183                      <span class="string">'use the ''NET.STA.LOC.CHA'' form:\n   waveform(''.%s..%s'', ...\n'</span>,<span class="keyword">...</span>
+0184                      <span class="string">'however, it is recommended that you include network and location info if available'</span>],<span class="keyword">...</span>
+0185                      arg1, arg2, arg1, arg2);
+0186                   arg1 = [<span class="string">'.'</span> arg1 <span class="string">'..'</span> arg2];
+0187                   [arg2, arg3, arg4, arg5] = deal(arg3, arg4, arg5, <span class="string">'Counts'</span>);
+0188                <span class="keyword">end</span>
+0189                arg1 = <a href="../../../GISMO/core/@waveform/private/as_channeltag.html" class="code" title="function obj = as_channeltag(obj)">as_channeltag</a>(arg1);
+0190                w = <a href="#_sub2" class="code" title="subfunction w = waveformFromParts(chaTag, freq, starttime, data, units)">waveformFromParts</a>(arg1, arg2, arg3, arg4, arg5);
+0191          <span class="keyword">end</span>
+0192          
+0193       <span class="keyword">case</span> 8
+0194          w = <a href="../../../GISMO/core/@waveform/private/winston_access.html" class="code" title="function w = winston_access(varargin)">winston_access</a>(varargin{:});
+0195       <span class="keyword">otherwise</span>
+0196          <a href="disp.html" class="code" title="function disp(w)">disp</a>(<span class="string">'Invalid arguments in waveform constructor:'</span>);
+0197          <a href="disp.html" class="code" title="function disp(w)">disp</a>(varargin);
+0198          error(<span class="string">'Waveform:waveform:InvalidWaveformArugments'</span>,<span class="keyword">...</span>
+0199             [<span class="string">'Valid ways of calling waveform include: \n'</span>,<span class="keyword">...</span>
+0200             <span class="string">'   w = WAVEFORM()\n'</span>,<span class="keyword">...</span>
+0201             <span class="string">'   w = WAVEFORM(datasource, ChannelTag, starttimes, endtimes)\n'</span>,<span class="keyword">...</span>
+0202             <span class="string">'   w = WAVEFORM(ChannelTag, samplefreq, starttime, data, units)\n'</span>]);
+0203    <span class="keyword">end</span>
+0204    
+0205    <a name="_sub1" href="#_subfunctions" class="code">function w = genericWaveform()</a>
+0206       <span class="keyword">persistent</span> blankW
+0207       <span class="keyword">persistent</span> wCreated
+0208       <span class="keyword">if</span> ~<a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(wCreated)
+0209          w = blankW;
+0210          w.history = {<span class="string">'created'</span>, now};
+0211       <span class="keyword">else</span>
+0212          <span class="comment">%create a fresh waveform.  All calls to the waveform object, aside</span>
+0213          <span class="comment">%from the &quot;copy&quot; call (case nargin==1) will be initated HERE.</span>
+0214          blankW.cha_tag = <a href="../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>();
+0215          blankW.Fs = nan;
+0216          blankW.start = 719529; <span class="comment">% datenum for 1970-01-01</span>
+0217          blankW.data = <a href="double.html" class="code" title="function n = double(W, option)">double</a>([]);
+0218          blankW.units = <span class="string">'Counts'</span>;
+0219          blankW.version = waveformversion; <span class="comment">%version of waveform object (internal)</span>
+0220          blankW.misc_fields = {}; <span class="comment">%add'l fields, such as &quot;comments&quot;, or &quot;trig&quot;</span>
+0221          blankW.misc_values = {}; <span class="comment">%values for these fields</span>
+0222          blankW.history = {<span class="string">'created'</span>,[]};
+0223          blankW = class(blankW, <span class="string">'waveform'</span>);
+0224          wCreated = true;
+0225          w = blankW;
+0226       <span class="keyword">end</span>
+0227    <span class="keyword">end</span>
+0228    
+0229    <a name="_sub2" href="#_subfunctions" class="code">function w = waveformFromParts(chaTag, freq, starttime, data, units)</a>
+0230       w = <a href="#_sub1" class="code" title="subfunction w = genericWaveform()">genericWaveform</a>();
+0231       w.cha_tag = chaTag;<span class="comment">%(DEFAULT_STATION,DEFAULT_CHAN);</span>
+0232       w.Fs = freq;
+0233       w.start = datenum(starttime);
+0234       w.data = <a href="double.html" class="code" title="function n = double(W, option)">double</a>(data(:));
+0235       w.units = units; <span class="comment">%units for data (nm? counts?)</span>
+0236       w.version = waveformversion; <span class="comment">%version of waveform object (internal)</span>
+0237       w.misc_fields = {}; <span class="comment">%add'l fields, such as &quot;comments&quot;, or &quot;trig&quot;</span>
+0238       w.misc_values = {}; <span class="comment">%values for these fields</span>
+0239    <span class="keyword">end</span>
+0240    
+0241    <a name="_sub3" href="#_subfunctions" class="code">function w = waveformFromDatasource(ds, chans, startt, endt)</a>
+0242          startt = <a href="../../../GISMO/core/+Catalog/+read_catalog/ensure_dateformat.html" class="code" title="function out = ensure_dateformat(t)">ensure_dateformat</a>(startt);
+0243          endt = <a href="../../../GISMO/core/+Catalog/+read_catalog/ensure_dateformat.html" class="code" title="function out = ensure_dateformat(t)">ensure_dateformat</a>(endt);
+0244          usewkaround = NOEXIT_OPTION &amp;&amp; bwkaround;
+0245          w = <a href="../../../GISMO/core/@waveform/private/load_from_datasource.html" class="code" title="function w = load_from_datasource(ds, chans, startt, endt, combine_waves, usewkaround)">load_from_datasource</a>(ds, chans, startt, endt, COMBINE_WAVES, usewkaround);
+0246    <span class="keyword">end</span>
+0247 <span class="keyword">end</span>
+0248 
+0249 <a name="_sub4" href="#_subfunctions" class="code">function out = ensure_dateformat(t)</a>
+0250    <span class="comment">% returns a matrix of datenums of same shape as t</span>
+0251    <span class="keyword">if</span> isnumeric(t)
+0252       out = t;
+0253    <span class="keyword">elseif</span> ischar(t),
+0254       <span class="keyword">for</span> n = size(t,1) : -1 : 1
+0255          out(n) = datenum(t(n,:));
+0256       <span class="keyword">end</span>
+0257    <span class="keyword">elseif</span> iscell(t)
+0258       out(:) = datenum(t);
+0259    <span class="keyword">end</span>
+0260 <span class="keyword">end</span>
+0261</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

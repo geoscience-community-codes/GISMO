@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of load_objects_from_file</title>
+  <meta name="keywords" content="load_objects_from_file">
+  <meta name="description" content="grab all the variables in a matlab file, and flip through them, returning">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@datasource</a> &gt; load_objects_from_file.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@datasource&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>load_objects_from_file
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>grab all the variables in a matlab file, and flip through them, returning</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function allObj = load_objects_from_file(ds,searchClass,chanTag,startt,endt) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">grab all the variables in a matlab file, and flip through them, returning
+those that match the criteria
+ allObj = load_file(datasource,searchClass,scnl,starttime,endtime)
+   DATASOURCE is a single datasource object (of type &quot;file&quot;)
+   SEARCHCLASS is a string containing the name of the class you are
+   searching for.  eg, 'double','waveform', etc.
+   CHANTAG is an array of ChannelTags which hold
+   network/station/location/channel/network matches.
+   STARTTIME is the starting time in matlab datenum format
+   ENDTIME is the ending time in matlab datenum format
+
+   This function returns a 1xN dimesional array of all relevent objects
+   found within the searched file(s).  All variable identity from within
+   the files is lost.
+   - - -
+   SO, for example, in the context of searching for waveform data...
+   if there is a searchfile, that contians the variables: W (1x3
+   waveform), W2 (1x1 waveform), MyWc (2x2 cell with waveforms in it), and
+   D (double).
+
+   the load_file method will rip out each and every waveform (recursing
+   through cells), then lump all of them into a large 1xN waveform.  Each
+   waveform that doesn't meet the SCNL criteria is discarded.  Then, all
+   waveforms that don't have data somewhere within the starttime-endtime
+   timeframe will be discarded as well.
+
+   It is important to note that the recovered objects aren't trimmed to
+   the starttime-endtime timeeframe.  That is, individual objects are not
+   altered through the use of this function.
+
+   IF CHANNELTAG is empty, then all channels don't matter.
+   If STARTTIME or ENDTIME are empty, then time doesn't matter.
+
+ Any object can be loaded from file, however since this was designed to
+ work with seismic data, it must have an ISMEMBER function that takes as
+ it's parameters the object itself and a ChannelTag.  Also required is the
+ [Starts Ends] = GETTIMERANGE(obj) function. (see waveform/gettimerange
+ for an example implementation.
+
+ see also ISMEMBER, WAVEFORM/GETTIMERANGE</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>	GETFILENAME returns a filename that is associated with a single SCNL</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>	Purpose:</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>	ISMEMBER for scnlobjects</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>	GETTIMERANGE returns the list of start and end times from a waveform array</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/ismember.html" class="code" title="function [results, loc] = ismember(mywave,anythingelse)">ismember</a>	ISMEMBER waveform implementation of ismember</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@waveform/private/load_file.html" class="code" title="function w = load_file(request)">load_file</a>	LOAD_FILE</li><li><a href="../../../GISMO/core/@waveform/private/load_matfile.html" class="code" title="function w = load_matfile(request)">load_matfile</a>	LOAD_FILE</li><li><a href="../../../GISMO/core/@waveform/private/load_obspy.html" class="code" title="function w = load_obspy(request)">load_obspy</a>	LOAD_OBSPY loads matlab files that were saved by ObsPy as per the ObsPy tutorial</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function hasValidRange = isWithinTimeRange(myObj,startt,endt)</a></li><li><a href="#_sub2" class="code">function mObj = getFromCells(searchClass, mycell)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function allObj = load_objects_from_file(ds,searchClass,chanTag,startt,endt)</a>
+0002    <span class="comment">%grab all the variables in a matlab file, and flip through them, returning</span>
+0003    <span class="comment">%those that match the criteria</span>
+0004    <span class="comment">% allObj = load_file(datasource,searchClass,scnl,starttime,endtime)</span>
+0005    <span class="comment">%   DATASOURCE is a single datasource object (of type &quot;file&quot;)</span>
+0006    <span class="comment">%   SEARCHCLASS is a string containing the name of the class you are</span>
+0007    <span class="comment">%   searching for.  eg, 'double','waveform', etc.</span>
+0008    <span class="comment">%   CHANTAG is an array of ChannelTags which hold</span>
+0009    <span class="comment">%   network/station/location/channel/network matches.</span>
+0010    <span class="comment">%   STARTTIME is the starting time in matlab datenum format</span>
+0011    <span class="comment">%   ENDTIME is the ending time in matlab datenum format</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">%   This function returns a 1xN dimesional array of all relevent objects</span>
+0014    <span class="comment">%   found within the searched file(s).  All variable identity from within</span>
+0015    <span class="comment">%   the files is lost.</span>
+0016    <span class="comment">%   - - -</span>
+0017    <span class="comment">%   SO, for example, in the context of searching for waveform data...</span>
+0018    <span class="comment">%   if there is a searchfile, that contians the variables: W (1x3</span>
+0019    <span class="comment">%   waveform), W2 (1x1 waveform), MyWc (2x2 cell with waveforms in it), and</span>
+0020    <span class="comment">%   D (double).</span>
+0021    <span class="comment">%</span>
+0022    <span class="comment">%   the load_file method will rip out each and every waveform (recursing</span>
+0023    <span class="comment">%   through cells), then lump all of them into a large 1xN waveform.  Each</span>
+0024    <span class="comment">%   waveform that doesn't meet the SCNL criteria is discarded.  Then, all</span>
+0025    <span class="comment">%   waveforms that don't have data somewhere within the starttime-endtime</span>
+0026    <span class="comment">%   timeframe will be discarded as well.</span>
+0027    <span class="comment">%</span>
+0028    <span class="comment">%   It is important to note that the recovered objects aren't trimmed to</span>
+0029    <span class="comment">%   the starttime-endtime timeeframe.  That is, individual objects are not</span>
+0030    <span class="comment">%   altered through the use of this function.</span>
+0031    <span class="comment">%</span>
+0032    <span class="comment">%   IF CHANNELTAG is empty, then all channels don't matter.</span>
+0033    <span class="comment">%   If STARTTIME or ENDTIME are empty, then time doesn't matter.</span>
+0034    <span class="comment">%</span>
+0035    <span class="comment">% Any object can be loaded from file, however since this was designed to</span>
+0036    <span class="comment">% work with seismic data, it must have an ISMEMBER function that takes as</span>
+0037    <span class="comment">% it's parameters the object itself and a ChannelTag.  Also required is the</span>
+0038    <span class="comment">% [Starts Ends] = GETTIMERANGE(obj) function. (see waveform/gettimerange</span>
+0039    <span class="comment">% for an example implementation.</span>
+0040    <span class="comment">%</span>
+0041    <span class="comment">% see also ISMEMBER, WAVEFORM/GETTIMERANGE</span>
+0042    
+0043    <span class="comment">%The file looks a little opaque because it deals generically with classes</span>
+0044    <span class="comment">%and objects, rather than tying itself down to any particular object.</span>
+0045    allfilen = <a href="getfilename.html" class="code" title="function [filename] = getfilename(ds, scnls, starttimes)">getfilename</a>(ds,chanTag,startt);
+0046    allObj = cell(size(allfilen));   <span class="comment">%preallocate</span>
+0047    <span class="keyword">for</span> thisfile = 1 : numel(allfilen)
+0048       filen = allfilen{thisfile};
+0049       
+0050       <span class="keyword">if</span> ~exist(filen,<span class="string">'file'</span>)
+0051          <a href="disp.html" class="code" title="function disp(ds)">disp</a>([<span class="string">'unable to find file: '</span>, filen]);
+0052          <span class="keyword">continue</span>
+0053       <span class="keyword">end</span>
+0054       
+0055       <span class="comment">%find out which variables exist within the file...</span>
+0056       fcontents = whos(<span class="string">'-file'</span>,filen);
+0057       variablesToLoad = <a href="../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>({fcontents.class},{searchClass, <span class="string">'cell'</span>});
+0058       <span class="keyword">if</span> ~any(variablesToLoad),
+0059          <span class="comment">%disp(['no items of the this class exist within the file:',filen]);</span>
+0060          <span class="keyword">continue</span>
+0061       <span class="keyword">end</span>
+0062       
+0063       <span class="comment">% load all variables into a big cell.</span>
+0064       <span class="comment">% each variable becomes a cell within this big cell, so variable names are lost)</span>
+0065       fileAsCell = struct2cell(<a href="../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>(filen,fcontents(variablesToLoad).name));
+0066       myObj = <a href="#_sub2" class="code" title="subfunction mObj = getFromCells(searchClass, mycell)">getFromCells</a>(searchClass, fileAsCell);
+0067 
+0068       <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(chanTag)
+0069          myObj = myObj(<a href="../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(myObj,chanTag));
+0070       <span class="keyword">end</span>
+0071       
+0072       <span class="keyword">if</span> ~(<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(startt) || <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(endt))
+0073          hasValidRange = <a href="#_sub1" class="code" title="subfunction hasValidRange = isWithinTimeRange(myObj,startt,endt)">isWithinTimeRange</a>(myObj,startt,endt);
+0074          allObj(thisfile) = {myObj(hasValidRange)};
+0075       <span class="keyword">else</span>
+0076          allObj(thisFile) = {myObj};
+0077       <span class="keyword">end</span>
+0078       
+0079    <span class="keyword">end</span>
+0080    
+0081    <span class="keyword">if</span> ~exist(<span class="string">'allObj'</span>,<span class="string">'var'</span>)
+0082       warning(<span class="string">'no %ss found'</span>,searchClass);
+0083       allObj = {};
+0084    <span class="keyword">end</span>
+0085    
+0086    allObj = [allObj{:}];
+0087 <span class="keyword">end</span>
+0088 
+0089 <a name="_sub1" href="#_subfunctions" class="code">function hasValidRange = isWithinTimeRange(myObj,startt,endt)</a>
+0090    <span class="comment">% TODO: split out each test to provide more flexibility</span>
+0091    [theseStarts, theseEnds] = <a href="../../../GISMO/core/@waveform/gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>(myObj);
+0092    hasValidRange = false(size(theseStarts));
+0093    
+0094    <span class="comment">%check each object's range against all requested ranges</span>
+0095    <span class="keyword">for</span> timeidx = 1:numel(startt)
+0096       requestedStart = startt(timeidx);
+0097       requestedEnd = endt(timeidx);
+0098       
+0099       <span class="comment">% make sure the data doesn't start AFTER requested data...</span>
+0100       validStarts = (theseStarts &lt;=requestedEnd);
+0101       <span class="comment">% ...and make sure the data doesn't end BEFORE requested data</span>
+0102       validEnds = (theseEnds &gt;= requestedStart);
+0103       
+0104       <span class="comment">%add objects that match the criteria to the OK list</span>
+0105       hasValidRange = hasValidRange | (validStarts &amp; validEnds);
+0106    <span class="keyword">end</span>
+0107 <span class="keyword">end</span>
+0108 
+0109 <a name="_sub2" href="#_subfunctions" class="code">function mObj = getFromCells(searchClass, mycell)</a>
+0110    <span class="comment">% returns an 1xN array of objects</span>
+0111    
+0112    <span class="comment">%might break if searchClass == 'cell'. but I haven't tested it</span>
+0113    searchFn = @(x) isa (x, searchClass);
+0114    makeRows = @(x) reshape(x,1,numel(x));
+0115    
+0116    target = cellfun(searchFn, mycell);
+0117    objs = cellfun(makeRows, mycell(target), <span class="string">'uniformoutput'</span>, false);
+0118   
+0119    holdsCell = cellfun(@iscell, mycell);
+0120    <span class="keyword">if</span> any(holdsCell)
+0121       mObj = <a href="#_sub2" class="code" title="subfunction mObj = getFromCells(searchClass, mycell)">getFromCells</a>(searchClass, mycell{holdsCell}); <span class="comment">%recurse</span>
+0122    <span class="keyword">else</span>
+0123       mObj = {};
+0124    <span class="keyword">end</span>
+0125    mObj = [mObj{:} objs{:}];
+0126 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

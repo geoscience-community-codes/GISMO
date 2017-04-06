@@ -1,0 +1,2115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of irisFetch</title>
+  <meta name="keywords" content="irisFetch">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">iris_dmc_tools</a> &gt; irisFetch.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed/iris_dmc_tools&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>irisFetch
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="irisFetch.html" class="code" title="">irisFetch</a>	</li><li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@sacpz/sacpz.html" class="code" title="">sacpz</a>	SACPZ Class for reading SAC pole-zero files downloaded from IRIS</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>	ISMEMBER for scnlobjects</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/ismember.html" class="code" title="function [results, loc] = ismember(mywave,anythingelse)">ismember</a>	ISMEMBER waveform implementation of ismember</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="irisFetch.html" class="code" title="">irisFetch</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function v = version()</a></li><li><a href="#_sub2" class="code">function ts = Traces(network, station, location, channel, startDate, endDate, varargin )</a></li><li><a href="#_sub3" class="code">function extractAdditionalArguments(argList)</a></li><li><a href="#_sub4" class="code">function getTheTraces()</a></li><li><a href="#_sub5" class="code">function [channelStructure, urlParams] = Channels(detailLevel, varargin)</a></li><li><a href="#_sub6" class="code">function [stationStructure, urlParams] = Stations(detailLevel, varargin)</a></li><li><a href="#_sub7" class="code">function [networkStructure, urlParams] = Networks(detailLevel, network, station, location, channel, varargin)</a></li><li><a href="#_sub8" class="code">function verifyArguments(nArgs)</a></li><li><a href="#_sub9" class="code">function setOutputLevel()</a></li><li><a href="#_sub10" class="code">function connectToStationService()</a></li><li><a href="#_sub11" class="code">function setBaseUrlFromParameterList()</a></li><li><a href="#_sub12" class="code">function removeParameter(s)</a></li><li><a href="#_sub13" class="code">function [p, i] = getParameter(s)</a></li><li><a href="#_sub14" class="code">function pn = parameterNames()</a></li><li><a href="#_sub15" class="code">function pv = parameterValues()</a></li><li><a href="#_sub16" class="code">function setCriteria()</a></li><li><a href="#_sub17" class="code">function fetchTheStations()</a></li><li><a href="#_sub18" class="code">function [events, urlParams] = Events(varargin)</a></li><li><a href="#_sub19" class="code">function connectToJar(isSilent)</a></li><li><a href="#_sub20" class="code">function [respstructures, urlparams] = Resp(network, station, location, channel, starttime, endtime)</a></li><li><a href="#_sub21" class="code">function runExamples()</a></li><li><a href="#_sub22" class="code">function channelList = flattenToChannel(networkTree)</a></li><li><a href="#_sub23" class="code">function stationList = flattenToStation(networkTree)</a></li><li><a href="#_sub24" class="code">function [js, je] = testResp(starttime, endtime)</a></li><li><a href="#_sub25" class="code">function testThis(varargin)</a></li><li><a href="#_sub26" class="code">function javadateTime = showTimeInDetail(t)</a></li><li><a href="#_sub27" class="code">function myDateStr = makeDateStr(dateInput)</a></li><li><a href="#_sub28" class="code">function d = jArrayList2complex(jArrayList)</a></li><li><a href="#_sub29" class="code">function mts = convertTraces(traces)</a></li><li><a href="#_sub30" class="code">function javadate = mdate2jdate(matlabdate)</a></li><li><a href="#_sub31" class="code">function M = getSettableFields(obj)</a></li><li><a href="#_sub32" class="code">function [M, argType] = getSetters(obj)</a></li><li><a href="#_sub33" class="code">function [M, argType] = getSetters(obj)</a></li><li><a href="#_sub34" class="code">function [methodList, argType] = getMethods(obj,searchPrefix)</a></li><li><a href="#_sub35" class="code">function [getterList, fieldList] = getMethodsAndFields(obj)</a></li><li><a href="#_sub36" class="code">function out = parser_for_IRIS_WS_2_0_0(value)</a></li><li><a href="#_sub37" class="code">function s = parse(value,stacklistt)</a></li><li><a href="#_sub38" class="code">function matlabdate = jdate2mdate(javadate)</a></li><li><a href="#_sub39" class="code">function s = addUnits(theUnit)</a></li><li><a href="#_sub40" class="code">function s = parseAnArray(theArray)</a></li><li><a href="#_sub41" class="code">function crit = addCriteria(crit, value, addMethod)</a></li><li><a href="#_sub42" class="code">function crit = setBoxCoordinates(crit, value)</a></li><li><a href="#_sub43" class="code">function crit = setCriteria(crit, paramList)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="irisFetch.html" class="code" title="">irisFetch</a>
+0002    <span class="comment">% IRISFETCH allows seamless access to data stored within the IRIS-DMC via FDSN services</span>
+0003    <span class="comment">%</span>
+0004    <span class="comment">% irisFetch Methods:</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">% irisFetch waveform retrieval Methods:</span>
+0007    <span class="comment">%    Traces - retrieve sac-equivalent waveforms with channel metadata</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">% irisFetch FDSN station webservice Methods:</span>
+0010    <span class="comment">%    Channels - retrieve metadata as an array of channels</span>
+0011    <span class="comment">%    Stations - retrieve metadata as an array of stations</span>
+0012    <span class="comment">%    Networks - retrieve metadata as an array of networks</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">% irisFetch FDSN event webservice Methods:</span>
+0015    <span class="comment">%    Events - retrieve events parameters (such as origins and magnitudes) from a catalog</span>
+0016    <span class="comment">%</span>
+0017    <span class="comment">% irisFetch miscelleneous Methods:</span>
+0018    <span class="comment">%    Resp - retrive RESP formatted response data from the irisws-resp service</span>
+0019    <span class="comment">%    version - display the current version number</span>
+0020    <span class="comment">%    connectToJar - attempt to connect to the required IRIS-WS JAR file</span>
+0021    <span class="comment">%    runExamples - displays and runs some sample queries to the web service.</span>
+0022    <span class="comment">%</span>
+0023    <span class="comment">%  irisFetch requires version 2.0 or greater of the IRIS Web Services Library java jar</span>
+0024    <span class="comment">%  for more details, click on 'connectToJar' above.</span>
+0025    <span class="comment">%</span>
+0026    <span class="comment">%  For additional guidance, type help &lt;method&gt;, use irisFetch.runExamples, or check out</span>
+0027    <span class="comment">%  the online manual http://www.iris.edu/dms/nodes/dmc/software/downloads/irisFetch.m/.</span>
+0028    <span class="comment">%</span>
+0029    <span class="comment">%see also JAVAADDPATH</span>
+0030    
+0031    
+0032    <span class="comment">% Celso Reyes, Rich Karstens</span>
+0033    <span class="comment">% IRIS-DMC</span>
+0034    <span class="comment">% February 2014</span>
+0035    
+0036    <span class="comment">%{</span>
+0037  *******************************************************************************
+0038  * Copyright (c) 2013 IRIS DMC supported by the National Science Foundation.
+0039  *
+0040  * This file is part of Iris Matlab Fetch (<a href="irisFetch.html" class="code" title="">irisFetch</a>).
+0041  *
+0042  * <a href="irisFetch.html" class="code" title="">irisFetch</a> is free software: you can redistribute it and/or modify
+0043  * it under the terms of the GNU Lesser General Public License as
+0044  * published by the Free Software Foundation, either <a href="#_sub1" class="code" title="subfunction v = version()">version</a> 3 of the
+0045  * License, or (at your option) any later version.
+0046  *
+0047  * <a href="irisFetch.html" class="code" title="">irisFetch</a> is distributed in the hope that it will be useful,
+0048  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+0049  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+0050  * GNU Lesser General Public License <span class="keyword">for</span> more details.
+0051  *
+0052  * A copy of the GNU Lesser General Public License is available at
+0053  * &lt;http://www.gnu.org/licenses/&gt;.
+0054  ******************************************************************************
+0055    <span class="comment">%}</span>
+0056    
+0057    properties (Constant = true)
+0058       VERSION           = <span class="string">'2.0.6'</span>;  <span class="comment">% irisFetch version number</span>
+0059       DATE_FORMATTER    = <span class="string">'yyyy-mm-dd HH:MM:SS.FFF'</span>; <span class="comment">%default data format, in ms</span>
+0060       MIN_JAR_VERSION   = <span class="string">'2.0.4'</span>; <span class="comment">% minimum version of IRIS-WS jar required for compatibility</span>
+0061       
+0062       VALID_QUALITIES   = {<span class="string">'D'</span>,<span class="string">'R'</span>,<span class="string">'Q'</span>,<span class="string">'M'</span>,<span class="string">'B'</span>}; <span class="comment">% list of Qualities accepted by Traces</span>
+0063       DEFAULT_QUALITY   = <span class="string">'B'</span>; <span class="comment">% default Quality for Traces</span>
+0064       FETCHER_LIST      = {<span class="string">'Traces'</span>,<span class="string">'Stations'</span>,<span class="string">'Events'</span>,<span class="string">'Resp'</span>}; <span class="comment">% list of functions that fetch</span>
+0065       forceDataAsDouble = true; <span class="comment">%require that traces are returned as doubles regardless of original format</span>
+0066    <span class="keyword">end</span> <span class="comment">%constant properties</span>
+0067    
+0068    properties (Constant = true, Hidden = true)
+0069       MS_IN_DAY         = 86400000; <span class="comment">% milliseconds in day</span>
+0070       BASE_DATENUM      = 719529; <span class="comment">% Matlab startdate=0000-Jan-1 vs java's startdate=1970-Jan-1</span>
+0071       
+0072       SURROGATE_JAR     = <span class="string">'http://www.iris.edu/files/IRIS-WS/2/IRIS-WS-2.0-latest.jar'</span>;
+0073       M2J_MAP           = containers.Map (<span class="keyword">...</span>
+0074          {<span class="string">'java.util.Date'</span>,<span class="keyword">...</span>
+0075          <span class="string">'java.lang.Double'</span>,<span class="keyword">...</span>
+0076          <span class="string">'java.lang.Long'</span>,<span class="keyword">...</span>
+0077          <span class="string">'java.lang.Integer'</span>,<span class="keyword">...</span>
+0078          <span class="string">'java.lang.String'</span>,<span class="keyword">...</span>
+0079          <span class="string">'boolean'</span>},<span class="keyword">...</span>
+0080          {@(x) java.util.Date(((datenum(x)-irisFetch.BASE_DATENUM) * irisFetch.MS_IN_DAY) + .5), <span class="keyword">...</span><span class="comment">%@(x) irisFetch.mdate2jdate(x) ,...</span>
+0081          @(x) java.lang.Double(x),<span class="keyword">...</span>
+0082          @(x) java.lang.Long(x),<span class="keyword">...</span>
+0083          @(x) java.lang.Integer(x),<span class="keyword">...</span>
+0084          @(x) x,<span class="keyword">...</span>
+0085          @(x) x}<span class="keyword">...</span>
+0086          ); <span class="comment">%details for MATLAB to JAVA conversions</span>
+0087       appName           = [<span class="string">'MATLAB:irisFetch/'</span> irisFetch.VERSION]; <span class="comment">%used as useragent of queries</span>
+0088       recursionAssert   = false; <span class="comment">%check for recursions while parsing java into structs</span>
+0089    <span class="keyword">end</span> <span class="comment">%hidden constant properties</span>
+0090    
+0091    methods(Static)
+0092       <a name="_sub0" href="#_subfunctions" class="code">function v = version()</a>
+0093          v = irisFetch.VERSION;
+0094       <span class="keyword">end</span>
+0095       
+0096       <a name="_sub1" href="#_subfunctions" class="code">function ts = Traces(network, station, location, channel, startDate, endDate, varargin )</a>
+0097          <span class="comment">%irisFetch.Traces retrieves sac-equivalent waveform with channel metadata</span>
+0098          <span class="comment">%  tr = irisFetch.Traces(network, station, location, channel, startDate, endDate)</span>
+0099          <span class="comment">%  will use channel and date criteria to retrieve one or more seismic traces,</span>
+0100          <span class="comment">%  which are stored as structures containing typical SAC-equivalent metadata.</span>
+0101          <span class="comment">%</span>
+0102          <span class="comment">%  startDate and endDate must be formatted thusly:</span>
+0103          <span class="comment">%      'YYYY-MM-DD hh:mm:ss' or 'YYYY-MM-DD hh:mm:ss.sss'</span>
+0104          <span class="comment">%</span>
+0105          <span class="comment">%  network, station, location, and channel all accept comma separated lists, as</span>
+0106          <span class="comment">%  well as '*' and '?' wildcards.</span>
+0107          <span class="comment">%</span>
+0108          <span class="comment">%  tr = irisFetch.Traces(..., quality) allows you to specify the data's quality,</span>
+0109          <span class="comment">%  such as 'B' (which stands for &quot;best&quot;).  This SEED quality code defines how data overlaps</span>
+0110          <span class="comment">%   are processed by the dataselect service.</span>
+0111          <span class="comment">%</span>
+0112          <span class="comment">%  tr = irisFetch.Traces(..., 'includePZ') will also retrieve poles and zeroes.</span>
+0113          <span class="comment">%  These are the same poles/zeros as found from http://service.iris.edu/irisws/sacpz/1/</span>
+0114          <span class="comment">%</span>
+0115          <span class="comment">%  tr = irisFetch.Traces(..., 'verbose') provides additional debugging information</span>
+0116          <span class="comment">%</span>
+0117          <span class="comment">%  tr = irisFetch.Traces(..., usernameAndPassword ) allows authorized users to</span>
+0118          <span class="comment">%  access restricted data. usernameAndPassword must be a cell containing the</span>
+0119          <span class="comment">%  username and password.</span>
+0120          <span class="comment">%     Sample:</span>
+0121          <span class="comment">%       unamepwd = {'nobody@iris.edu', 'anonymous'}</span>
+0122          <span class="comment">%</span>
+0123          <span class="comment">%  tr = irisFetch.Traces(..., urlbase) will allow traces to be read from an</span>
+0124          <span class="comment">%  alternate data center. url base is only the first part of the web address. For</span>
+0125          <span class="comment">%  example, the IRIS datacenter would be 'http://service.iris.edu/'. These</span>
+0126          <span class="comment">%  settings are &quot;sticky&quot;, so that all calls for waveform data or station metadata</span>
+0127          <span class="comment">%  will go to that datacenter until a new one is specified.</span>
+0128          <span class="comment">%</span>
+0129          <span class="comment">%  ABOUT THE RETURNED TRACE</span>
+0130          <span class="comment">%    The returned trace(s) will be a 1xN array of structs. Each struct contains</span>
+0131          <span class="comment">%    fields with information pertaining to that specific trace, such as channel</span>
+0132          <span class="comment">%    information, start &amp; end times, units, etc.</span>
+0133          <span class="comment">%</span>
+0134          <span class="comment">%    If the requested data does not exist, then an empty (1x0) trace struct will be</span>
+0135          <span class="comment">%    returned. If the original data contains data gaps, then each continuous data</span>
+0136          <span class="comment">%    segment will be returned as its own trace.</span>
+0137          <span class="comment">%</span>
+0138          <span class="comment">%  COMMON MANIPULATIONS:</span>
+0139          <span class="comment">%</span>
+0140          <span class="comment">%    See a text representation of the start date to millisecond accuracy, from a trace tr:</span>
+0141          <span class="comment">%      datestr(tr.startTime, 'yyyy-mm-dd HH:MM:SS.FFF')</span>
+0142          <span class="comment">%</span>
+0143          <span class="comment">%    Scale the data, so that resulting values are in sensitivityUnits.</span>
+0144          <span class="comment">%      tr.data = tr.data ./ tr.sensitivity;    % this example works only for single trace</span>
+0145          <span class="comment">%</span>
+0146          <span class="comment">%  EXAMPLES:</span>
+0147          <span class="comment">%    Get 4 hours of data (timeseries + metdata) from a station:</span>
+0148          <span class="comment">%      tr = irisFetch.Traces('IU','ANMO','10','BHZ','2010-02-27 06:30:00','2010-02-27 10:30:00')</span>
+0149          <span class="comment">%</span>
+0150          <span class="comment">%    Get 3 channels (via wildcards), including response, for a 4-hour time period:</span>
+0151          <span class="comment">%      ts = irisFetch.Traces('IU','ANMO','10','BH?','2010-02-27 06:30:00','2010-02-27 10:30:00','includePZ')</span>
+0152          <span class="comment">%</span>
+0153          <span class="comment">%</span>
+0154          <span class="comment">%    Get data from all channels from a comma-separated list of stations:</span>
+0155          <span class="comment">%      ts = irisFetch.Traces('IU','ANMO,ANTO,YSS','00','*','2010-02-27 06:30:00','2010-02-27 10:30:00')</span>
+0156          <span class="comment">%</span>
+0157          <span class="comment">%  SEE ALSO datestr</span>
+0158          
+0159          <span class="keyword">if</span> ~exist(<span class="string">'extensions.fetch.TraceData'</span>,<span class="string">'class'</span>)
+0160             irisFetch.connectToJar()
+0161          <span class="keyword">end</span>
+0162          
+0163          import edu.iris.dmc.*
+0164          <span class="comment">% import edu.iris.dmc.*</span>
+0165          
+0166          <span class="comment">% these variables are shared among all the nested functions</span>
+0167          getsacpz    = false;
+0168          verbosity   = false;
+0169          authorize   = false;
+0170          quality     = irisFetch.DEFAULT_QUALITY;
+0171          username    = <span class="string">''</span>;
+0172          userpwd     = <span class="string">''</span>;
+0173          newbase     = <span class="string">''</span>;
+0174          safeLocation = @(x) strrep(x,<span class="string">' '</span>,<span class="string">'-'</span>);
+0175          
+0176          <a href="#_sub3" class="code" title="subfunction extractAdditionalArguments(argList)">extractAdditionalArguments</a>(varargin);
+0177          
+0178          startDateStr   = irisFetch.makeDateStr(startDate);
+0179          endDateStr     = irisFetch.makeDateStr(endDate);
+0180          location       = safeLocation(location);
+0181          
+0182          tracedata      = edu.iris.dmc.extensions.fetch.TraceData();
+0183          tracedata.setAppName(irisFetch.appName);
+0184          tracedata.setVerbosity(verbosity);
+0185          <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(newbase)
+0186             <span class="keyword">if</span> (verbosity)
+0187                 fprintf (<span class="string">'Using services at base: %s\n'</span>, newbase);
+0188             <span class="keyword">end</span>
+0189             tracedata.setBASE_URL(newbase);
+0190          <span class="keyword">end</span>
+0191 
+0192          <a href="#_sub4" class="code" title="subfunction getTheTraces()">getTheTraces</a>();
+0193          
+0194          <span class="keyword">return</span>
+0195          
+0196          <span class="comment">% ---------------------------------------------------------------</span>
+0197          <span class="comment">% END TRACES: MAIN</span>
+0198          <span class="comment">% ===============================================================</span>
+0199          
+0200          
+0201          <a name="_sub2" href="#_subfunctions" class="code">function extractAdditionalArguments(argList)</a>
+0202             <span class="comment">% extracts getsacpz, verbosity, authorize, quality, username, and userpwd</span>
+0203             <span class="comment">% Parameters are handled &quot;intelligently&quot; so that [paramname, paramval] pairs</span>
+0204             <span class="comment">% aren't necessry</span>
+0205             
+0206             <span class="keyword">for</span> n=1:numel(argList)
+0207                param = argList{n};
+0208                <span class="keyword">switch</span> class(param)
+0209                   <span class="keyword">case</span> <span class="string">'cell'</span>
+0210                      assert(numel(param)==2 &amp;&amp; all(cellfun(@ischar, param)),<span class="keyword">...</span>
+0211                         <span class="string">'A cell parameter is assumed to contain credentials. eg. {''nobody@iris.edu'',''anonymous''}.'</span>);
+0212                      [username, userpwd] = deal(param{:});
+0213                      authorize         = true;
+0214                   <span class="keyword">case</span> <span class="string">'char'</span>
+0215                      <span class="keyword">switch</span> upper(param)
+0216                         <span class="keyword">case</span> irisFetch.VALID_QUALITIES
+0217                            quality     = param;
+0218                         <span class="keyword">case</span> {<span class="string">'INCLUDEPZ'</span>}
+0219                            getsacpz    = true;
+0220                         <span class="keyword">case</span> {<span class="string">'VERBOSE'</span>}
+0221                            verbosity   = true;
+0222                         <span class="keyword">otherwise</span>
+0223                            <span class="keyword">if</span> length(param)&gt;7 &amp;&amp; strcmpi(param(1:7),<span class="string">'http://'</span>)
+0224                               <span class="comment">% set the bases</span>
+0225                               newbase = param;
+0226                            <span class="keyword">else</span>
+0227                            error(<span class="string">'IRISFETCH:Trace:unrecognizedParameter'</span>,<span class="keyword">...</span>
+0228                               <span class="string">'The text you included as an optional parameter did not parse to either a qualitytype (D,R,Q,M,B) or ''INCLUDEPZ'' or ''VERBOSE'' or a service base URL'</span>);
+0229                            <span class="keyword">end</span>
+0230                      <span class="keyword">end</span>
+0231                      <span class="comment">%case 'logical' DEPRECATED</span>
+0232                      <span class="comment">%   verbosity         = param; % old usage, deprecated.</span>
+0233                   <span class="keyword">otherwise</span>
+0234                      error(<span class="string">'IRISFETCH:Trace:unrecognizedParameter'</span>,<span class="keyword">...</span>
+0235                         <span class="string">'The optional parameter wasn''t recognized. %s'</span>, class(param));
+0236                <span class="keyword">end</span>
+0237             <span class="keyword">end</span>
+0238             
+0239             <span class="keyword">if</span> verbosity
+0240                <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>({<span class="string">'spz:'</span>,getsacpz,<span class="string">'vb:'</span>,verbosity,<span class="string">'auth:'</span>,authorize,<span class="string">'qual:'</span>,quality,<span class="string">'un&amp;pw:'</span>,username,userpwd});
+0241             <span class="keyword">end</span>
+0242             
+0243          <span class="keyword">end</span> <span class="comment">% extractAdditionalArguments</span>
+0244          
+0245          <a name="_sub3" href="#_subfunctions" class="code">function getTheTraces()</a>
+0246             traces=[];
+0247             <span class="keyword">try</span>
+0248                <span class="keyword">if</span> authorize
+0249                   <span class="keyword">if</span> verbosity
+0250                      fprintf(<span class="string">'traces = tracedata.fetchTraces(&quot;%s&quot;, &quot;%s&quot;, &quot;%s&quot;, &quot;%s&quot;, &quot;%s&quot;, &quot;%s&quot;, ''%s'', %d, &quot;%s&quot;, &quot;%s&quot;)\n'</span>,<span class="keyword">...</span>
+0251                         network, station, location, channel, startDateStr, endDateStr, quality, getsacpz, username, userpwd);<span class="comment">%char(userpwd - userpwd + 42));</span>
+0252                   <span class="keyword">end</span>
+0253                   traces = tracedata.fetchTraces(network, station, location, channel, <span class="keyword">...</span>
+0254                      startDateStr, endDateStr, quality, getsacpz, username, userpwd);  <span class="comment">%db removed (;)</span>
+0255                <span class="keyword">else</span>
+0256                   <span class="keyword">if</span> verbosity
+0257                      fprintf(<span class="string">'traces = tracedata.fetchTraces(&quot;%s&quot;, &quot;%s&quot;, &quot;%s&quot;, &quot;%s&quot;, &quot;%s&quot;, &quot;%s&quot;, ''%s'', %d)\n'</span>,<span class="keyword">...</span>
+0258                         network, station, location, channel, startDateStr, endDateStr, quality, getsacpz);
+0259                   <span class="keyword">end</span>
+0260                   traces = tracedata.fetchTraces(network, station, location, channel, <span class="keyword">...</span>
+0261                      startDateStr, endDateStr, quality, getsacpz); <span class="comment">%db removed (;)</span>
+0262                <span class="keyword">end</span>
+0263                <span class="keyword">if</span> verbosity
+0264                   fprintf(<span class="string">'tracedata.fetchTraces successfully completed, resulting in %d traces before converting\n'</span>, numel(traces)); <span class="comment">%db</span>
+0265                <span class="keyword">end</span>
+0266             <span class="keyword">catch</span> je
+0267                <span class="comment">% Debug messages:</span>
+0268                <span class="comment">%warning('An [%s] exception occurred in irisFetch.getTheTraces() but was caught\n full text follows:\nmessage:\n%s\n\n', je.identifier,je.message) %db</span>
+0269                <span class="comment">%disp(je.cause); %db</span>
+0270                <span class="comment">%disp(je.stack); %db</span>
+0271                
+0272                <span class="keyword">switch</span> je.identifier
+0273                   <span class="keyword">case</span> <span class="string">'MATLAB:Java:GenericException'</span>
+0274                      <span class="keyword">if</span> any(strfind(je.message,<span class="string">'URLNotFoundException'</span>));
+0275                         error(<span class="string">'IRISFETCH:Trace:URLNotFoundException'</span>,<span class="keyword">...</span>
+0276                            <span class="string">'Trace found no requested data and returned the following error:\n%s'</span>,<span class="keyword">...</span>
+0277                            je.message);
+0278                      <span class="keyword">end</span>
+0279                      <span class="keyword">if</span> any(strfind(je.message,<span class="string">'java.io.IOException: edu.iris.dmc.service.UnauthorizedAccessException'</span>));
+0280                         error(<span class="string">'IRISFETCH:Trace:UnauthorizedAccessException'</span>,<span class="keyword">...</span>
+0281                            <span class="string">'Invalid Username and Password combination\n'</span>);
+0282                      <span class="keyword">end</span>
+0283                      <span class="keyword">if</span> any(strfind(je.message,<span class="string">'NoDataFoundException'</span>));
+0284                         <span class="keyword">if</span> verbosity
+0285                            warning(<span class="string">'IRISFETCH:Trace:URLNotFoundException'</span>,<span class="keyword">...</span>
+0286                            <span class="string">'Trace found no requested data and returned the following error:\n%s'</span>,<span class="keyword">...</span>
+0287                            je.message);
+0288                         <span class="keyword">end</span>
+0289                      <span class="keyword">end</span>
+0290                   <span class="keyword">otherwise</span>
+0291                      fprintf(<span class="string">'Exception occured in IRIS Web Services Library: %s\n'</span>, je.message);
+0292                      rethrow(je)
+0293                <span class="keyword">end</span>
+0294             <span class="keyword">end</span>
+0295             
+0296             ts = irisFetch.convertTraces(traces);
+0297             clear traces
+0298             
+0299          <span class="keyword">end</span> <span class="comment">%function getTheTraces</span>
+0300       <span class="keyword">end</span> <span class="comment">% Traces</span>
+0301       
+0302       <a name="_sub4" href="#_subfunctions" class="code">function [channelStructure, urlParams] = Channels(detailLevel, varargin)</a>
+0303          <span class="comment">%irisFetch.Channels retrieves station metadata from IRIS-DMC as an array of channels</span>
+0304          <span class="comment">%  s = irisFetch.Channels(DETAIL,NETWORK,STATION,LOCATION,CHANNEL) retrieves</span>
+0305          <span class="comment">%  station metadata from the IRIS-DMC into an array of channels.  DETAIL is one of</span>
+0306          <span class="comment">%  'CHANNEL', or 'RESPONSE' and should be explicitly declared. DETAIL defaults to 'CHANNEL'</span>
+0307          <span class="comment">%  Network, station, location, and channel parameters are passed directly to the</span>
+0308          <span class="comment">%  java library, so both comma-separated  lists and wildcards (? and *) are accepted.</span>
+0309          <span class="comment">%</span>
+0310          <span class="comment">%  All five parameters are required for all queries, but may be wildcarded by</span>
+0311          <span class="comment">%  using '' for their values.</span>
+0312          <span class="comment">%</span>
+0313          <span class="comment">%  [s, myParams] = irisFetch.Channels( ... ) also returns the URL parameters that</span>
+0314          <span class="comment">%  were used to make the query.</span>
+0315          <span class="comment">%</span>
+0316          <span class="comment">%  irisFetch.Channels(..., 'BASEURL',alternateURL) specifies an alternate base URL</span>
+0317          <span class="comment">%  to query. By default queries go to: http://service.iris.edu/fdsnws/station/1/</span>
+0318          <span class="comment">%</span>
+0319          <span class="comment">%  s = irisFetch.Channels( ... , paramName, value [, ...]]) allows any number of</span>
+0320          <span class="comment">%  parameter-value pairs to be included in the selection criteria.  Valid</span>
+0321          <span class="comment">%  parameter names are listed in help for irisFetch.Networks</span>
+0322          <span class="comment">%</span>
+0323          <span class="comment">%  Example: to retrieve channel-level BHZ metadata from any station named ANMO:</span>
+0324          <span class="comment">%      s = irisFetch.Channels('channel','*','ANMO','*','BHZ')</span>
+0325          <span class="comment">%</span>
+0326          <span class="comment">%  Note: This function effectively deprecates irisFetch.flattenToChannel</span>
+0327          <span class="comment">%</span>
+0328          <span class="comment">%See also Networks, Stations</span>
+0329          
+0330          <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(detailLevel)
+0331             detailLevel = <span class="string">'CHANNEL'</span>;
+0332          <span class="keyword">end</span>         
+0333          assert(<a href="../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(upper(detailLevel),{<span class="string">'CHANNEL'</span>,<span class="string">'RESPONSE'</span>}),<span class="keyword">...</span>
+0334             <span class="string">'To retrieve channels, the detailLevel must be either ''CHANNEL'' or ''RESPONSE'''</span>);
+0335          [channelStructure, urlParams] = irisFetch.Networks(detailLevel, varargin{:});
+0336          <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(channelStructure)
+0337             channelStructure = irisFetch.flattenToChannel(channelStructure);
+0338          <span class="keyword">end</span>
+0339       <span class="keyword">end</span>
+0340       
+0341       <a name="_sub5" href="#_subfunctions" class="code">function [stationStructure, urlParams] = Stations(detailLevel, varargin)</a>
+0342          <span class="comment">%irisFetch.Stations retrieves station metadata from IRIS-DMC as an array of stations</span>
+0343          <span class="comment">%  s = irisFetch.Stations(DETAIL,NETWORK,STATION,LOCATION,CHANNEL) retrieves</span>
+0344          <span class="comment">%  station metadata from the IRIS-DMC into an array of stations.  DETAIL is one</span>
+0345          <span class="comment">%  of 'STATION','CHANNEL', or  'RESPONSE' and should be explicitly declared.</span>
+0346          <span class="comment">%  DETAIL defaults to 'STATION'</span>
+0347          <span class="comment">%</span>
+0348          <span class="comment">%  Network, station, location, and channel parameters are passed directly to the</span>
+0349          <span class="comment">%  java library, so both comma-separated lists and wildcards (? and *) are accepted.</span>
+0350          <span class="comment">%</span>
+0351          <span class="comment">%  All five parameters are required for all queries, but may be wildcarded by</span>
+0352          <span class="comment">%  using '' for their values.</span>
+0353          <span class="comment">%</span>
+0354          <span class="comment">%  [s, myParams] = irisFetch.Stations( ... ) also returns the URL parameters that</span>
+0355          <span class="comment">%  were used to make the query.</span>
+0356          <span class="comment">%</span>
+0357          <span class="comment">%  irisFetch.Stations(..., 'BASEURL',alternateURL) specifies an alternate base URL</span>
+0358          <span class="comment">%  to query. By default queries go to: http://service.iris.edu/fdsnws/station/1/</span>
+0359          <span class="comment">%</span>
+0360          <span class="comment">%  s = irisFetch.Stations( ... , paramName, value [, ...]]) allows any number of</span>
+0361          <span class="comment">%  parameter-value pairs to be included in the selection criteria.  Valid</span>
+0362          <span class="comment">%  parameter names are listed in help for irisFetch.Networks</span>
+0363          <span class="comment">%</span>
+0364          <span class="comment">%  Example: to retrieve channel-level metadata, stored in an array of stations:</span>
+0365          <span class="comment">%      s = irisFetch.Stations('channel','IU','A*','*','BHZ')</span>
+0366          <span class="comment">%</span>
+0367          <span class="comment">%  Note: This function effectively deprecates the irisFetch.flattenToStation</span>
+0368          <span class="comment">%</span>
+0369          <span class="comment">%See also Networks, Channels</span>
+0370          
+0371          <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(detailLevel)
+0372             detailLevel = <span class="string">'STATION'</span>;
+0373          <span class="keyword">end</span>         
+0374          assert(<a href="../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(upper(detailLevel),{<span class="string">'STATION'</span>,<span class="string">'CHANNEL'</span>,<span class="string">'RESPONSE'</span>}),<span class="keyword">...</span>
+0375             <span class="string">'To retrieve stations, the detailLevel must be either ''STATION'', ''CHANNEL'', or ''RESPONSE'''</span>);
+0376          [stationStructure, urlParams] = irisFetch.Networks(detailLevel,varargin{:});
+0377          <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(stationStructure)
+0378             stationStructure = irisFetch.flattenToStation(stationStructure);
+0379          <span class="keyword">end</span>
+0380       <span class="keyword">end</span>
+0381       
+0382       <a name="_sub6" href="#_subfunctions" class="code">function [networkStructure, urlParams] = Networks(detailLevel, network, station, location, channel, varargin)</a>
+0383          <span class="comment">%irisFetch.Stations retrieves station metadata from IRIS-DMC as an array of networks</span>
+0384          <span class="comment">%  s = irisFetch.Networks(DETAIL,NETWORK,STATION,LOCATION,CHANNEL), retrieves</span>
+0385          <span class="comment">%  station metadata into an array of networks. These parameters are required for</span>
+0386          <span class="comment">%  all queries, but may be wildcarded by using '' for their values. Network,</span>
+0387          <span class="comment">%  station, location, and channel parameters are passed directly to the java</span>
+0388          <span class="comment">%  library, so both comma-separated lists and wildcards (? and *) are accepted.</span>
+0389          <span class="comment">%  Detail is one of 'NETWORK','STATION','CHANNEL', or 'RESPONSE' and should be</span>
+0390          <span class="comment">%  explicitly declared. Defaults to 'NETWORK'</span>
+0391          <span class="comment">%</span>
+0392          <span class="comment">%  [s, myParams] = irisFetch.Networks( ... ) also returns the URL parameters that</span>
+0393          <span class="comment">%  were used to make the query.</span>
+0394          <span class="comment">%</span>
+0395          <span class="comment">%  irisFetch.Networks(..., 'BASEURL',alternateURL) specifies an alternate base URL</span>
+0396          <span class="comment">%  to query. By default queries go to: http://service.iris.edu/fdsnws/station/1/</span>
+0397          <span class="comment">%</span>
+0398          <span class="comment">%  s = irisFetch.Networks( ... , paramName, value [, ...]]) allows any number of</span>
+0399          <span class="comment">%  parameter-value pairs to be included in the selection criteria.  See the list</span>
+0400          <span class="comment">%  below.</span>
+0401          <span class="comment">%</span>
+0402          <span class="comment">%  Valid parameters are listed below.  For detailed descriptions of their effect</span>
+0403          <span class="comment">%  and use, consult the station webservice webpage, available at:</span>
+0404          <span class="comment">%     http://service.iris.edu/fdsnws/station/1/</span>
+0405          <span class="comment">%</span>
+0406          <span class="comment">%  PARAMETER LIST (for IRIS-WS-2.0.0.jar)</span>
+0407          <span class="comment">%    The following take time values, of the format 'yyyy-mm-dd HH:MM:SS'</span>
+0408          <span class="comment">%      'StartTime', 'EndTime', 'StartBefore', 'EndBefore'</span>
+0409          <span class="comment">%      'StartAfter', 'EndAfter' 'UpdatedAfter'</span>
+0410          <span class="comment">%</span>
+0411          <span class="comment">%    The following take values in degrees and work together to define a search box</span>
+0412          <span class="comment">%      'MinimumLatitude', 'MaximumLatitude', 'MinimumLongitude','MaximumLongitude'</span>
+0413          <span class="comment">%</span>
+0414          <span class="comment">%    These params take values in degrees to define a search disk / annular region</span>
+0415          <span class="comment">%      'Latitude', 'Longitude', 'MinimumRadius','MaximumRadius'</span>
+0416          <span class="comment">%</span>
+0417          <span class="comment">%    Other params, that accept true or false  (no quotes)</span>
+0418          <span class="comment">%    'IncludeAvailability','MatchTimeSeries', 'IncludeRestricted'</span>
+0419          <span class="comment">%</span>
+0420          <span class="comment">%  CONVENIENCE PARAMETERS</span>
+0421          <span class="comment">%    'boxcoordinates'    : [minLat, maxLat, minLon, maxLon]</span>
+0422          <span class="comment">%                           % use NaN as a wildcard</span>
+0423          <span class="comment">%    'radialcoordinates' : 1x4 double :</span>
+0424          <span class="comment">%                           [Lat, Lon, MaxRadius, MinRadius]</span>
+0425          <span class="comment">%                           % MinRadius is optional</span>
+0426          <span class="comment">%</span>
+0427          <span class="comment">%  To retrieve similar information, but organize as an array of either channels</span>
+0428          <span class="comment">%  or stations, use irisFetch.Channels or irisFetch.Stations respectively.</span>
+0429          <span class="comment">%</span>
+0430          <span class="comment">%SEE ALSO Channels, Stations</span>
+0431          import edu.iris.dmc.*
+0432          outputLevel  = <span class="string">''</span>;
+0433          service      = []; <span class="comment">% will be a java service object</span>
+0434          crit         = []; <span class="comment">% will be a java criteria object</span>
+0435          j_networks   = []; <span class="comment">% will be the returned java networks</span>
+0436          
+0437          <span class="comment">%if ~exist('edu.iris.dmc.criteria.StationCriteria','class')</span>
+0438          <span class="keyword">if</span> ~exist(<span class="string">'criteria.StationCriteria'</span>,<span class="string">'class'</span>)
+0439             irisFetch.connectToJar()
+0440          <span class="keyword">end</span>
+0441                   
+0442          <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(detailLevel)
+0443             detailLevel = <span class="string">'NETWORK'</span>;
+0444          <span class="keyword">end</span>         
+0445          
+0446          <a href="#_sub8" class="code" title="subfunction verifyArguments(nArgs)">verifyArguments</a>(nargin);
+0447          <a href="#_sub9" class="code" title="subfunction setOutputLevel()">setOutputLevel</a>();
+0448          <a href="#_sub10" class="code" title="subfunction connectToStationService()">connectToStationService</a>();
+0449          <a href="#_sub16  43" class="code" title="subfunction setCriteria()function crit = setCriteria(crit, paramList)">setCriteria</a>();
+0450          <a href="#_sub17" class="code" title="subfunction fetchTheStations()">fetchTheStations</a>();
+0451          networkStructure=irisFetch.parser_for_IRIS_WS_2_0_0(j_networks);
+0452          
+0453          <span class="keyword">if</span> nargout == 2
+0454             urlParams = crit.toUrlParams;
+0455          <span class="keyword">end</span>
+0456          <span class="keyword">return</span>
+0457          
+0458          <span class="comment">% -------------------------------------------------------------</span>
+0459          <span class="comment">% END STATIONS: MAIN</span>
+0460          <span class="comment">% =============================================================</span>
+0461          
+0462          <a name="_sub7" href="#_subfunctions" class="code">function verifyArguments(nArgs)</a>
+0463             <span class="keyword">if</span> nArgs==1 &amp;&amp; strcmpi(detailLevel,<span class="string">'help'</span>)
+0464                <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'HELP request recognized, but not implemented'</span>);
+0465                <span class="keyword">return</span>
+0466             <span class="keyword">elseif</span> nArgs &lt; 5
+0467                error(<span class="string">'not enough arguments.%d'</span>,nArgs);
+0468             <span class="keyword">end</span>
+0469          <span class="keyword">end</span> <span class="comment">%verifyArguments</span>
+0470          
+0471          <a name="_sub8" href="#_subfunctions" class="code">function setOutputLevel()</a>
+0472             <span class="keyword">try</span>
+0473                outputLevel = edu.iris.dmc.criteria.OutputLevel.(upper(detailLevel));
+0474                <span class="comment">% outputLevel = edu.iris.dmc.criteria.OutputLevel.(upper(detailLevel));</span>
+0475             <span class="keyword">catch</span> je
+0476                <span class="keyword">switch</span> je.identifier
+0477                   <span class="keyword">case</span> <span class="string">'MATLAB:undefinedVarOrClass'</span>
+0478                      error(<span class="string">'IRISFETCH:NoIrisWSJarInstalled'</span>,<span class="keyword">...</span>
+0479                         [<span class="string">'The necessary IRIS-WS java library was not recognized or found. '</span>,<span class="keyword">...</span>
+0480                         <span class="string">'Please ensure it is on your javaclasspath'</span>]);
+0481                   <span class="keyword">case</span> <span class="string">'MATLAB:subscripting:classHasNoPropertyOrMethod'</span>
+0482                      error(<span class="string">'IRISFETCH:invalidOutputLevel'</span>,<span class="keyword">...</span>
+0483                         <span class="string">'The selected outputLevel [''%s''] was not recognized.'</span>,<span class="keyword">...</span>
+0484                         upper(detailLevel));
+0485                   <span class="keyword">otherwise</span>
+0486                      rethrow(je);
+0487                <span class="keyword">end</span>
+0488             <span class="keyword">end</span>
+0489          <span class="keyword">end</span> <span class="comment">% setOutputLevel</span>
+0490          
+0491          <a name="_sub9" href="#_subfunctions" class="code">function connectToStationService()</a>
+0492             serviceManager = edu.iris.dmc.service.ServiceUtil.getInstance();
+0493             serviceManager.setAppName([<span class="string">'MATLAB:irisFetch/'</span> irisFetch.version()])
+0494             <a href="#_sub11" class="code" title="subfunction setBaseUrlFromParameterList()">setBaseUrlFromParameterList</a>();
+0495             <a href="#_sub12" class="code" title="subfunction removeParameter(s)">removeParameter</a>(<span class="string">'BASEURL'</span>);
+0496             <span class="keyword">return</span>
+0497             
+0498             <span class="comment">% - - - - - - - - - - - - - - -</span>
+0499             <a name="_sub10" href="#_subfunctions" class="code">function setBaseUrlFromParameterList()</a>
+0500                baseUrl = <a href="#_sub13" class="code" title="subfunction [p, i] = getParameter(s)">getParameter</a>(<span class="string">'BASEURL'</span>);
+0501                <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(baseUrl)
+0502                   service = serviceManager.getStationService(baseUrl);
+0503                <span class="keyword">else</span>
+0504                   service = serviceManager.getStationService();
+0505                <span class="keyword">end</span> <span class="comment">% setBaseUrlFromParameterList</span>
+0506             <span class="keyword">end</span>
+0507             
+0508          <span class="keyword">end</span> <span class="comment">%connectToStationService()</span>
+0509          
+0510          <a name="_sub11" href="#_subfunctions" class="code">function removeParameter(s)</a>
+0511             [UNUSED_VARIABLE, idx] = <a href="#_sub13" class="code" title="subfunction [p, i] = getParameter(s)">getParameter</a>(s); <span class="comment">%#ok&lt;ASGLU&gt;</span>
+0512             varargin(idx * 2 -1 : idx* 2) = [];
+0513          <span class="keyword">end</span>
+0514          
+0515          <a name="_sub12" href="#_subfunctions" class="code">function [p, i] = getParameter(s)</a>
+0516             i = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(strcmpi(<a href="#_sub14" class="code" title="subfunction pn = parameterNames()">parameterNames</a>(),s),1,<span class="string">'first'</span>);
+0517             p = <a href="#_sub15" class="code" title="subfunction pv = parameterValues()">parameterValues</a>();
+0518             p = p(i);
+0519          <span class="keyword">end</span>
+0520          
+0521          <a name="_sub13" href="#_subfunctions" class="code">function pn = parameterNames()</a>
+0522             pn = varargin(1:2:end);
+0523          <span class="keyword">end</span>
+0524          
+0525          <a name="_sub14" href="#_subfunctions" class="code">function pv = parameterValues()</a>
+0526             pv = varargin(2:2:end);
+0527          <span class="keyword">end</span>
+0528          
+0529          <a name="_sub15" href="#_subfunctions" class="code">function setCriteria()</a>
+0530             crit = edu.iris.dmc.criteria.StationCriteria;
+0531             <span class="comment">%crit = edu.iris.dmc.criteria.StationCriteria;</span>
+0532             
+0533             <span class="comment">%----------------------------------------------------------</span>
+0534             <span class="comment">% Deal with the Station/Network/Channel/Location parameters</span>
+0535             <span class="comment">% These are treated separately, as they're &quot;add&quot; &amp; not &quot;set&quot;</span>
+0536             <span class="comment">% Each may handle multiple strings (as a cell array)</span>
+0537             <span class="comment">%----------------------------------------------------------</span>
+0538             
+0539             crit = irisFetch.addCriteria(crit, network, <span class="string">'addNetwork'</span>);
+0540             crit = irisFetch.addCriteria(crit, station, <span class="string">'addStation'</span>);
+0541             crit = irisFetch.addCriteria(crit, location,<span class="string">'addLocation'</span>);
+0542             crit = irisFetch.addCriteria(crit, channel, <span class="string">'addChannel'</span>);
+0543             crit = irisFetch.setCriteria(crit, varargin);
+0544          <span class="keyword">end</span> <span class="comment">%setCriteria</span>
+0545          
+0546          <a name="_sub16" href="#_subfunctions" class="code">function fetchTheStations()</a>
+0547             <span class="keyword">try</span>
+0548                j_networks = service.fetch(crit, outputLevel);
+0549             <span class="keyword">catch</span> je
+0550                <span class="keyword">if</span> strfind(je.message,<span class="string">'ServiceNotSupportedException'</span>)
+0551                   error(<span class="string">'IRISFETCH:ServiceNotSupportedByLibrary'</span>,<span class="keyword">...</span>
+0552                      <span class="string">'The IRIS-WS java library version doesn''t support the requested station service version'</span>);
+0553                <span class="keyword">elseif</span> strfind(je.message,<span class="string">'NoDataFoundException'</span>)
+0554                   warning(<span class="string">'IRISFETCH:NoDataFoundException'</span>,<span class="string">'No data was found that matched your criteria'</span>);
+0555                   j_networks = [];
+0556                <span class="keyword">else</span>
+0557                   rethrow(je)
+0558                <span class="keyword">end</span>
+0559             <span class="keyword">end</span> <span class="comment">%catch</span>
+0560          <span class="keyword">end</span> <span class="comment">%fetchTheStations</span>
+0561          
+0562       <span class="keyword">end</span> <span class="comment">%Networks</span>
+0563       
+0564       <a name="_sub17" href="#_subfunctions" class="code">function [events, urlParams] = Events(varargin)</a>
+0565          <span class="comment">%irisFetch.Events retrieves event data from the IRIS-DMC</span>
+0566          <span class="comment">%  ev = irisFetch.Events(param, value [, ...]) retrieves event data from the</span>
+0567          <span class="comment">%  IRIS-DMC database as a matlab structure.  An arbitrary number of</span>
+0568          <span class="comment">%  parameter-value pairs may be specified in order to narrow down the search</span>
+0569          <span class="comment">%  results.</span>
+0570          <span class="comment">%</span>
+0571          <span class="comment">%  [ev, myParams] = irisFetch.Events( ... ) also returns the URL parameters that</span>
+0572          <span class="comment">%  were used to make the query.</span>
+0573          <span class="comment">%</span>
+0574          <span class="comment">%  irisFetch.Events(..., 'BASEURL',alternateURL) specifies an alternate base URL</span>
+0575          <span class="comment">%  to query. By default queries go to: http://service.iris.edu/fdsnws/event/1/</span>
+0576          <span class="comment">%</span>
+0577          <span class="comment">%  Usable parameters are listed below.  For detailed descriptions of their effect</span>
+0578          <span class="comment">%  and use, consult the webservice webpage for events, available at:</span>
+0579          <span class="comment">%</span>
+0580          <span class="comment">%  http://service.iris.edu/fdsnws/event/1/</span>
+0581          <span class="comment">%</span>
+0582          <span class="comment">%  Examples:</span>
+0583          <span class="comment">%</span>
+0584          <span class="comment">%  Retrieve event parameters regarding earthquakes of a specific size and location:</span>
+0585          <span class="comment">%      ev = irisFetch.Events('MinimumMagnitude',6.0,...</span>
+0586          <span class="comment">%          'minimumLatitude',45,'maximumLatitude', 60,...</span>
+0587          <span class="comment">%          'minimumLongitude', -150,'maximumLongitude', -90)</span>
+0588          <span class="comment">%</span>
+0589          <span class="comment">%PARAMETER LIST (for IRIS-WS-2.0.0.jar)</span>
+0590          <span class="comment">% contributor, endTime, eventId, fetchLimit, latitude, longitude, magnitudeType,</span>
+0591          <span class="comment">% maximumDepth, maximumLatitude, maximumLongitude, maximumMagnitude,</span>
+0592          <span class="comment">% minimumDepth, minimumLatitude, minimumLongitude, minimumMagnitude,</span>
+0593          <span class="comment">% minimumRadius, maximumRadius, offset, startTime updatedAfter</span>
+0594          <span class="comment">%</span>
+0595          <span class="comment">%CONVENIENCE PARAMETERS</span>
+0596          <span class="comment">%   'boxcoordinates'    : [minLat, maxLat, minLon, maxLon]   % use NaN as a wildcard</span>
+0597          <span class="comment">%   'radialcoordinates' : [Lat, Lon, MaxRadius, MinRadius]   % MinRadius is optional</span>
+0598          <span class="comment">%</span>
+0599          <span class="comment">%NOTE: Any parameter-value pair that is not listed here will be passed along to</span>
+0600          <span class="comment">%      the Event Service. this is to accomodate other datacenters that may have</span>
+0601          <span class="comment">%      specialized request parameters.</span>
+0602          
+0603          import edu.iris.dmc.*
+0604          <span class="comment">% import edu.iris.dmc.*</span>
+0605          
+0606          <span class="comment">%if ~exist('edu.iris.dmc.criteria.EventCriteria','class')</span>
+0607          <span class="keyword">if</span> ~exist(<span class="string">'criteria.EventCriteria'</span>,<span class="string">'class'</span>)
+0608             irisFetch.connectToJar()
+0609          <span class="keyword">end</span>
+0610          
+0611          <span class="comment">%serviceManager = ws.service.ServiceUtil.getInstance();</span>
+0612          serviceManager = edu.iris.dmc.service.ServiceUtil.getInstance();
+0613          serviceManager.setAppName([<span class="string">'MATLAB:irisFetch/'</span> irisFetch.version()]);
+0614          
+0615          indexOffsetOfBASEURL=<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(strcmpi(varargin(1:2:end),<span class="string">'BASEURL'</span>),1,<span class="string">'first'</span>) * 2;
+0616          
+0617          <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(indexOffsetOfBASEURL)
+0618             baseURL = varargin{indexOffsetOfBASEURL};
+0619          <span class="keyword">end</span>
+0620          
+0621          <span class="keyword">if</span> exist(<span class="string">'baseURL'</span>,<span class="string">'var'</span>)
+0622             varargin(indexOffsetOfBASEURL-1:indexOffsetOfBASEURL) = [];
+0623             service = serviceManager.getEventService(baseURL);
+0624          <span class="keyword">else</span>
+0625             service = serviceManager.getEventService();
+0626          <span class="keyword">end</span>
+0627          
+0628          <span class="comment">%crit = ws.criteria.EventCriteria;</span>
+0629          crit = criteria.EventCriteria;
+0630          crit = irisFetch.setCriteria(crit, varargin);
+0631          <span class="keyword">if</span> nargout == 2
+0632             urlParams = crit.toUrlParams;
+0633          <span class="keyword">end</span>
+0634          <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'fetching...'</span>)
+0635          <span class="keyword">try</span>
+0636             j_events = service.fetch(crit);
+0637          <span class="keyword">catch</span> er
+0638             <span class="keyword">if</span> any(strfind(er.message,<span class="string">'NoDataFoundException'</span>)) || any(strfind(er.message,<span class="string">'No Content'</span>))
+0639                warning(<span class="string">'IRISFETCH:NoDataFoundException'</span>,<span class="string">'No data was found that matched your criteria'</span>);
+0640                events=[];
+0641                <span class="keyword">return</span>
+0642             <span class="keyword">end</span>
+0643             rethrow(er);
+0644          <span class="keyword">end</span>
+0645          fprintf(<span class="string">'\n\n%d events found *************\n\n'</span>,j_events.size);
+0646          <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'parsing into MATLAB structures'</span>)
+0647          events=irisFetch.parser_for_IRIS_WS_2_0_0(j_events);
+0648          <span class="comment">% v2.0 uses Preferred, while original code uses &quot;Primary&quot;</span>
+0649       <span class="keyword">end</span>
+0650             
+0651       <a name="_sub18" href="#_subfunctions" class="code">function connectToJar(isSilent)</a>
+0652          <span class="comment">%irisFetch.connectToJar connects to the jar for this MATLAB session</span>
+0653          <span class="comment">%  irisFetch.connectToJar() searches the javaclasspath for the</span>
+0654          <span class="comment">%  IRIS-WS jar file. If it does not exist, then it will try to access the latest</span>
+0655          <span class="comment">%  jar over the internet. If it cannot connect, it will error.</span>
+0656          <span class="comment">%</span>
+0657          <span class="comment">%  irisFetch requires version 2.0.2 or greater of the IRIS Web Services Library java jar,</span>
+0658          <span class="comment">%  available from:</span>
+0659          <span class="comment">%</span>
+0660          <span class="comment">%  http://www.iris.edu/files/IRIS-WS/2/</span>
+0661          <span class="comment">%</span>
+0662          <span class="comment">%  This jar file must be added to your MATLAB path, which may be done</span>
+0663          <span class="comment">%  in a variety of ways.  One common way is to include a javaaddpath</span>
+0664          <span class="comment">%  statement in the startup.m file.  For more details, consult MATLAB's</span>
+0665          <span class="comment">%  documentation for 'Bringing Java Classes and Methods into MATLAB</span>
+0666          <span class="comment">%  Workspace'.</span>
+0667          <span class="comment">%</span>
+0668          <span class="comment">% SEE ALSO javaaddpath</span>
+0669          
+0670          assert(usejava(<span class="string">'jvm'</span>),<span class="string">'IRISFETCH:jvmNotRunning'</span>,<span class="string">'irisFetch requires Java to run.'</span>);
+0671          isSilent = nargin&gt;0 &amp;&amp; strcmpi(isSilent,<span class="string">'silent'</span>);
+0672          
+0673          <span class="keyword">if</span> exist(<span class="string">'edu.iris.dmc.extensions.fetch.TraceData'</span>,<span class="string">'class'</span>);
+0674             <span class="keyword">return</span>
+0675          <span class="keyword">end</span>
+0676          
+0677          <span class="keyword">if</span> ~isSilent
+0678             <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'please add the latest IRIS-WS.jar file to your javaclasspath.'</span>);
+0679             fprintf(<span class="string">'Available here: %s\n'</span>,irisFetch.SURROGATE_JAR);
+0680             <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'ex.  javaaddpath(''/usr/local/somewhere/IRIS-WS.jar'');'</span>);
+0681          <span class="keyword">end</span>
+0682          
+0683          javaaddpath(irisFetch.SURROGATE_JAR);
+0684          
+0685          <span class="keyword">if</span> ~exist(<span class="string">'edu.iris.dmc.extensions.fetch.TraceData'</span>,<span class="string">'class'</span>);
+0686             error(<span class="string">'irisFetch:noDefaultJar'</span>,<span class="keyword">...</span>
+0687                <span class="string">'Unable to access the default jar.  Please download and add the latest IRIS-WS-JAR to your javaclasspath.'</span>);
+0688          <span class="keyword">end</span>
+0689       <span class="keyword">end</span>
+0690             
+0691       <a name="_sub19" href="#_subfunctions" class="code">function [respstructures, urlparams] = Resp(network, station, location, channel, starttime, endtime)</a>
+0692          <span class="comment">% retrieve the RESP information into a character string.</span>
+0693          <span class="comment">% net, sta, loc, and cha are all required.</span>
+0694          <span class="comment">% channels and locations may be wildcarded using either ? or *</span>
+0695          <span class="comment">% starttime and endtime options may be ignored by using [] instead of a time.</span>
+0696          
+0697          import edu.iris.dmc.*
+0698          
+0699          <span class="comment">%crit = edu.iris.dmc.criteria.RespCriteria();</span>
+0700          crit = criteria.RespCriteria();
+0701          crit.setNetwork(network);
+0702          crit.setStation(station);
+0703          crit.setLocation(location);
+0704          crit.setChannel(channel);
+0705          <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(starttime)
+0706             crit.setStartTime(irisFetch.mdate2jdate(starttime));
+0707          <span class="keyword">end</span>
+0708          <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(endtime)
+0709             crit.setEndTime(irisFetch.mdate2jdate(endtime));
+0710          <span class="keyword">end</span>
+0711          urlparams = char(crit.toUrlParams());
+0712          
+0713          serviceManager = edu.iris.dmc.service.ServiceUtil.getInstance();
+0714          baseUrl = <span class="string">'http://service.iris.edu/irisws/resp/1/'</span>;
+0715          serviceManager.setAppName([<span class="string">'MATLAB:irisFetch/'</span> irisFetch.version()]);
+0716          service = serviceManager.getRespService(baseUrl);
+0717          respstructures= char(service.fetch(crit));
+0718       <span class="keyword">end</span>
+0719       
+0720       <a name="_sub20" href="#_subfunctions" class="code">function runExamples()</a>
+0721          delay=1; <span class="comment">% seconds</span>
+0722          codeToExecute={
+0723             <span class="string">'% Retrieve 1 hr of all ''HZ'' channels from all locations at station ANMO for net IU'</span>
+0724             <span class="string">'traces = irisFetch.Traces(''IU'',''ANMO'',''*'',''?HZ'',''2010-02-27 06:30:00'',''2010-02-27 07:30:00'')'</span>
+0725             <span class="string">'% Notice that multiple traces were retrieved, look at the first trace.'</span>
+0726             <span class="string">'tr = traces(1)'</span>
+0727             <span class="string">'% -------- plot the data from the first trace, and then label the plot ------'</span>
+0728             <span class="string">'sampletimes=linspace(tr.startTime,tr.endTime,tr.sampleCount); %calculate the time of each sample'</span>
+0729             <span class="string">'whos(''sampletimes'')'</span>
+0730             <span class="string">'plot(sampletimes,tr.data);'</span>
+0731             <span class="string">'legendDetails = sprintf(''%s-%s-%s'', tr.network, tr.station, tr.location, tr.channel)'</span>
+0732             <span class="string">'legend(legendDetails);'</span>
+0733             <span class="string">'title(''Simple plot'');'</span>
+0734             <span class="string">'datetick;'</span>
+0735             <span class="string">' '</span>
+0736             <span class="string">'% next, get some station data (same data, at different levels of detail'</span>
+0737             <span class="string">'n = irisFetch.Networks(''Response'',''IU'',''ANMO'','''',''BHZ'',''baseurl'',''http://service.iris.edu/fdsnws/station/1/'')'</span>;
+0738             <span class="string">'s = irisFetch.Stations(''Response'',''IU'',''ANMO'','''',''BHZ'')'</span>;
+0739             <span class="string">'c = irisFetch.Channels(''Response'',''IU'',''ANMO'','''',''BHZ'')'</span>;
+0740             <span class="string">' '</span>
+0741             <span class="string">'% retrieve station data using other search parameters'</span>
+0742             <span class="string">'arcticNetworkList = irisFetch.Networks(''Station'','''','''','''','''',''minimumlatitude'',66.3)'</span>;
+0743             <span class="string">'netNames = {arcticNetworkList.NetworkCode}'</span>
+0744             <span class="string">' '</span>
+0745             <span class="string">'% retrieve event data'</span>
+0746             <span class="string">' ev = irisFetch.Events(''minimummagnitude'',8.0)'</span>
+0747             <span class="string">' ev(1)'</span>
+0748             <span class="string">' ev = irisFetch.Events(''starttime'',''2010-02-27'',''endtime'',''2010-02-28 12:00:00'',''catalog'',''ISC'',''includeallorigins'',true,''includeallmagnitudes'',true)'</span>
+0749             <span class="string">' '</span>
+0750             <span class="string">'% retrieve the RESP formatted response for a station'</span>
+0751             <span class="string">'irisFetch.Resp(''IU'',''ANMO'',''00'',''BHZ'',now,now)'</span>
+0752             };
+0753          <span class="keyword">for</span> n=1:numel(codeToExecute)
+0754             <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(codeToExecute{n});
+0755             eval(codeToExecute{n});
+0756             pause(delay);
+0757          <span class="keyword">end</span>
+0758          clear traces tr n s c ev
+0759          
+0760       <span class="keyword">end</span> <span class="comment">%fn runExamples</span>
+0761    <span class="keyword">end</span> <span class="comment">% static methods</span>
+0762    
+0763    methods(Static, Hidden=true)
+0764       
+0765       <a name="_sub21" href="#_subfunctions" class="code">function channelList = flattenToChannel(networkTree)</a>
+0766          <span class="comment">%irisFetch.flattenToChannel flattens the structure returned by irisFetch.Networks</span>
+0767          <span class="comment">%  flatStruct = irisFetch.flattenToChannel(networkTree) takes the hierarchy</span>
+0768          <span class="comment">%  returned by irisFetch.Networks, and returns a 1xN array of channels  (channel</span>
+0769          <span class="comment">%  epochs, technically).</span>
+0770          <span class="comment">%</span>
+0771          <span class="comment">%  flatStruct is an array containing ALL channel epochs.</span>
+0772                            
+0773          assert(isa(networkTree,<span class="string">'struct'</span>),<span class="string">'Cannot Flatten a non-structure'</span>);
+0774          
+0775          <span class="comment">%eliminate stations that have no channels</span>
+0776          <span class="keyword">for</span> n=1:numel(networkTree)
+0777             hasNoChannel = arrayfun(@(x) <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(x.Channels),networkTree(n).Stations);
+0778             networkTree(n).Stations(hasNoChannel) = []; <span class="comment">% networkTree(n).Stations(~hasNoChannel);</span>
+0779          <span class="keyword">end</span>         
+0780          
+0781          <span class="comment">%eliminate networks that have no stations</span>
+0782          networksWithoutStations = arrayfun(@(x) <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(x.Stations),networkTree);         
+0783          networkTree(networksWithoutStations) = [];
+0784          
+0785          <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(networkTree); 
+0786             warning(<span class="string">'IRISFETCH:flattenToChannel:noValidChannels'</span>,<span class="string">'No channels found, returning an empty array'</span>);
+0787             <span class="keyword">return</span>
+0788          <span class="keyword">end</span>
+0789          
+0790          <span class="keyword">for</span> n=1:numel(networkTree)
+0791             nc    = networkTree(n).NetworkCode;
+0792             nd    = networkTree(n).Description;
+0793             [networkTree(n).Stations.NetworkCode]        = deal(nc);
+0794             [networkTree(n).Stations.NetworkDescription] = deal(nd);
+0795             <span class="keyword">for</span> m = 1 : numel(networkTree(n).Stations)
+0796                sc = networkTree(n).Stations(m).StationCode;
+0797                sd = networkTree(n).Stations(m).Description;
+0798                sn = networkTree(n).Stations(m).Site;
+0799                [networkTree(n).Stations(m).Channels.NetworkCode]        = deal(nc);
+0800                [networkTree(n).Stations(m).Channels.NetworkDescription] = deal(nd);
+0801                [networkTree(n).Stations(m).Channels.StationCode]        = deal(sc);
+0802                [networkTree(n).Stations(m).Channels.StationDescription] = deal(sd);
+0803                [networkTree(n).Stations(m).Channels.Site] = deal(sn);
+0804                <span class="comment">% write the long StationName again to the main level.</span>
+0805                [networkTree(n).Stations(m).Channels.StationName] = deal(sn.Name);
+0806             <span class="keyword">end</span>
+0807          <span class="keyword">end</span>
+0808          tmp = [networkTree.Stations];
+0809          channelList=[tmp.Channels];    
+0810          
+0811          clear tmp
+0812          <span class="comment">% now, reorder to make it visually coherent.</span>
+0813          descriptorstuff={<span class="string">'NetworkCode'</span>;<span class="string">'StationCode'</span>;<span class="string">'LocationCode'</span>;<span class="string">'ChannelCode'</span>;<span class="string">'NetworkDescription'</span>;<span class="string">'StationName'</span>;<span class="string">'Site'</span>};
+0814          positionalstuff={<span class="string">'Latitude'</span>;<span class="string">'Longitude'</span>;<span class="string">'Elevation'</span>;<span class="string">'Depth'</span>;<span class="string">'Azimuth'</span>;<span class="string">'Dip'</span>};
+0815          otherstuff={<span class="string">'SampleRate'</span>;<span class="string">'SampleRateRatio'</span>;<span class="string">'StartDate'</span>;<span class="string">'EndDate'</span>};
+0816          fieldsattop=[descriptorstuff; positionalstuff; otherstuff];
+0817          
+0818          fn = fieldnames(channelList);
+0819          fieldsattop = fieldsattop(<a href="../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(fieldsattop,fn)); <span class="comment">%ensure fields exist</span>
+0820          
+0821          <span class="keyword">for</span> n=1:numel(fieldsattop);
+0822             fn(strcmp(fn,fieldsattop(n))) = [];
+0823          <span class="keyword">end</span>
+0824          neworder = [fieldsattop; fn];
+0825          channelList = orderfields(channelList, neworder);
+0826       <span class="keyword">end</span>
+0827       
+0828       <a name="_sub22" href="#_subfunctions" class="code">function stationList = flattenToStation(networkTree)</a>
+0829          <span class="comment">%irisFetch.flattenToStation flattens the structure returned by irisFetch.Stations</span>
+0830          <span class="comment">%</span>
+0831          <span class="comment">%USAGE</span>
+0832          <span class="comment">%  flatStruct = irisFetch.flattenToStation(networkTree)</span>
+0833          <span class="comment">%</span>
+0834          <span class="comment">%This takes the hierarchy returned by irisFetch.Stations, and</span>
+0835          <span class="comment">%returns a 1xN array of stations (station epochs, technically).</span>
+0836          
+0837          assert(isa(networkTree,<span class="string">'struct'</span>),<span class="string">'Cannot Flatten a non-structure'</span>);
+0838                   
+0839          emptyNetworks = arrayfun(@(x) <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(x.Stations),networkTree);
+0840          
+0841          <span class="keyword">for</span> n=1:numel(networkTree)
+0842             nc    = networkTree(n).NetworkCode;
+0843             nd    = networkTree(n).Description;
+0844             [networkTree(n).Stations.NetworkCode]        = deal(nc);
+0845             [networkTree(n).Stations.NetworkDescription] = deal(nd);
+0846          <span class="keyword">end</span>
+0847          
+0848          stationList = [networkTree(~emptyNetworks).Stations];
+0849          
+0850          <span class="keyword">for</span> m=1:numel(stationList)
+0851                stationList(m).StationName = stationList(m).Site.Name;
+0852          <span class="keyword">end</span>
+0853          
+0854          <span class="comment">% now, reorder to make it visually coherent.</span>
+0855          descriptorstuff={<span class="string">'NetworkCode'</span>;<span class="string">'StationCode'</span>;<span class="string">'NetworkDescription'</span>;<span class="string">'StationName'</span>;<span class="string">'Site'</span>};
+0856          positionalstuff={<span class="string">'Latitude'</span>;<span class="string">'Longitude'</span>;<span class="string">'Elevation'</span>};
+0857          otherstuff={<span class="string">'StartDate'</span>;<span class="string">'EndDate'</span>};
+0858          fieldsattop=[descriptorstuff; positionalstuff; otherstuff];
+0859          <span class="keyword">if</span> ~isstruct(stationList)
+0860             warning(<span class="string">'IRISFETCH:flattenToStation:noValidStations'</span>,<span class="string">'No stations found, returning an empty array'</span>);
+0861             <span class="keyword">return</span>
+0862          <span class="keyword">end</span>
+0863          fn = fieldnames(stationList);
+0864          fieldsattop = fieldsattop(<a href="../../../GISMO/core/@scnlobject/ismember.html" class="code" title="function [results, loc] = ismember(A,B)">ismember</a>(fieldsattop,fn)); <span class="comment">%ensure fields exist</span>
+0865          
+0866          <span class="keyword">for</span> n=1:numel(fieldsattop);
+0867             fn(strcmp(fn,fieldsattop(n))) = [];
+0868          <span class="keyword">end</span>
+0869          neworder = [fieldsattop; fn];
+0870          stationList = orderfields(stationList, neworder);
+0871       <span class="keyword">end</span>
+0872      
+0873       <a name="_sub23" href="#_subfunctions" class="code">function [js, je] = testResp(starttime, endtime)</a>
+0874          n=now;
+0875          <a href="#_sub25" class="code" title="subfunction testThis(varargin)">testThis</a>(<span class="string">'IU'</span>,<span class="string">'ANMO'</span>,<span class="string">'00'</span>,<span class="string">'BHZ'</span>,[],[]);
+0876          <a href="#_sub25" class="code" title="subfunction testThis(varargin)">testThis</a>(<span class="string">'IU'</span>,<span class="string">'ANMO'</span>,<span class="string">'00'</span>,<span class="string">'*'</span>,[],[]);
+0877          <a href="#_sub25" class="code" title="subfunction testThis(varargin)">testThis</a>(<span class="string">'IU'</span>,<span class="string">'ANMO'</span>,<span class="string">'*'</span>,<span class="string">'BHZ'</span>,[],[]);
+0878          <a href="#_sub25" class="code" title="subfunction testThis(varargin)">testThis</a>(<span class="string">'IU'</span>,<span class="string">'ANMO'</span>,<span class="string">'00'</span>,<span class="string">'BHZ'</span>,[],now-1);
+0879          <a href="#_sub25" class="code" title="subfunction testThis(varargin)">testThis</a>(<span class="string">'IU'</span>,<span class="string">'ANMO'</span>,<span class="string">'00'</span>,<span class="string">'BHZ'</span>,n-600,[]);
+0880          <a href="#_sub25" class="code" title="subfunction testThis(varargin)">testThis</a>(<span class="string">'IU'</span>,<span class="string">'ANMO'</span>,<span class="string">'00'</span>,<span class="string">'BHZ'</span>,n,n-1);
+0881          <a href="#_sub25" class="code" title="subfunction testThis(varargin)">testThis</a>(<span class="string">'IU'</span>,<span class="string">'ANMO'</span>,<span class="string">'?0'</span>,<span class="string">'BHZ'</span>,n,n-1);
+0882          <a href="#_sub25" class="code" title="subfunction testThis(varargin)">testThis</a>(<span class="string">'IU'</span>,<span class="string">'ANMO'</span>,<span class="string">'00'</span>,<span class="string">'B?Z'</span>,n,n-1);
+0883          <a href="#_sub25" class="code" title="subfunction testThis(varargin)">testThis</a>(<span class="string">'IU'</span>,<span class="string">'ANMO'</span>,<span class="string">'00'</span>,<span class="string">'BHZ'</span>,<span class="string">'9/20/2012'</span>,<span class="string">'9/20/2012 03:00:00'</span>);
+0884          <span class="comment">%testThis('IU','*','00','BHZ',[],[]); %should fail</span>
+0885          <span class="comment">%testThis('*','ANMO','00','BHZ',[],[]); % should fail</span>
+0886          <span class="keyword">if</span> exist(<span class="string">'starttime'</span>,<span class="string">'var'</span>) &amp;&amp; ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(starttime)
+0887             js = <a href="#_sub26" class="code" title="subfunction javadateTime = showTimeInDetail(t)">showTimeInDetail</a>(starttime);
+0888          <span class="keyword">end</span>
+0889          <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">' '</span>);
+0890          <span class="keyword">if</span> exist(<span class="string">'endtime'</span>,<span class="string">'var'</span>) &amp;&amp; ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(endtime)
+0891             je = <a href="#_sub26" class="code" title="subfunction javadateTime = showTimeInDetail(t)">showTimeInDetail</a>(endtime);
+0892          <span class="keyword">end</span>
+0893          
+0894          <a name="_sub24" href="#_subfunctions" class="code">function testThis(varargin)</a>
+0895             <span class="keyword">try</span>
+0896                [r, url] = irisFetch.Resp(varargin{:});
+0897                whos r
+0898                <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'url: '</span>, url]);
+0899                
+0900                parampairs={
+0901                   <span class="string">'network'</span>   ,varargin{1}, <span class="string">'station'</span>   ,varargin{2}, <span class="string">'location'</span>  ,varargin{3}, <span class="string">'channel'</span>   ,varargin{4}
+0902                   };
+0903                <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(paramPairs)
+0904                
+0905                <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(varargin{5})
+0906                   st = datestr(varargin{5},31);
+0907                   st(11)=<span class="string">'T'</span>;
+0908                   parampairs = [parampairs, {<span class="string">'starttime'</span>,st}];
+0909                <span class="keyword">end</span>
+0910                
+0911                <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(varargin{6})
+0912                   ed = datestr(varargin{6},31);
+0913                   ed(11)=<span class="string">'T'</span>;
+0914                   parampairs = [parampairs, {<span class="string">'endtime'</span>,ed}];
+0915                <span class="keyword">end</span>
+0916                
+0917                [s,code]=urlread(<span class="string">'http://service.iris.edu/irisws/resp/1/query'</span>,<span class="string">'get'</span>, parampairs); <span class="comment">%#ok&lt;NASGU&gt;</span>
+0918                
+0919                assert(strcmp(r,s));
+0920             <span class="keyword">catch</span> myerror
+0921                warning(<span class="string">'RESPTEST:failure'</span>,myerror.identifier);
+0922             <span class="keyword">end</span>
+0923          <span class="keyword">end</span>
+0924          
+0925          <a name="_sub25" href="#_subfunctions" class="code">function javadateTime = showTimeInDetail(t)</a>
+0926             dv          = datevec(t);
+0927             dv(6)       = ceil(dv(6) * 1000) / 1000;
+0928             t           = datenum(dv);
+0929             s           = dv(6);
+0930             <span class="comment">% t must be either a date number or a string.</span>
+0931             javadateTime      = irisFetch.mdate2jdate(t);
+0932             matlabTimeString  = datestr(t,irisFetch.DATE_FORMATTER);
+0933             <span class="comment">%crit          = edu.iris.dmc.criteria.RespCriteria();</span>
+0934             crit          = criteria.RespCriteria();
+0935             crit.setEndTime(javadateTime);
+0936             reconvertedMatlabTime = <span class="keyword">...</span>
+0937                datestr(irisFetch.jdate2mdate(javadateTime),irisFetch.DATE_FORMATTER);
+0938             <span class="comment">%urlString         = char(criteria.toUrlParams().get(0));</span>
+0939             urlString         = crit.toUrlParams().get(0).toCharArray()';
+0940             <span class="keyword">if</span> ~(all(reconvertedMatlabTime == matlabTimeString));
+0941                <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(s-fix(s));
+0942                <span class="keyword">if</span> datenum(reconvertedMatlabTime) &gt; datenum(t)
+0943                   fprintf(<span class="string">'^ '</span>);
+0944                <span class="keyword">else</span>
+0945                   fprintf(<span class="string">'v '</span>);
+0946                <span class="keyword">end</span>
+0947                fprintf(<span class="string">'InputTime: %s  ; jDateTime: %s ; millis: %d\nReConvert: %s\nURL: %s\n'</span>,<span class="keyword">...</span>
+0948                   matlabTimeString, <span class="keyword">...</span>
+0949                   javadateTime.toGMTString.toCharArray()', <span class="keyword">...</span>
+0950                   rem(javadateTime.getTime(),1000),<span class="keyword">...</span>
+0951                   reconvertedMatlabTime,<span class="keyword">...</span>
+0952                   urlString);
+0953             <span class="keyword">end</span>
+0954          <span class="keyword">end</span> <span class="comment">%fn showTimeInDetail</span>
+0955       <span class="keyword">end</span> <span class="comment">%fn testResp</span>
+0956    <span class="keyword">end</span> <span class="comment">%static hidden methods</span>
+0957   
+0958    
+0959    methods(Static, Access=protected)      
+0960       <a name="_sub26" href="#_subfunctions" class="code">function myDateStr = makeDateStr(dateInput)</a>
+0961          myDateStr = datestr(dateInput, irisFetch.DATE_FORMATTER);
+0962       <span class="keyword">end</span>
+0963       
+0964       <a name="_sub27" href="#_subfunctions" class="code">function d = jArrayList2complex(jArrayList)</a>
+0965          <span class="comment">% for use on ArrayList objects containing things with getReal() and getImaginary()</span>
+0966          <span class="comment">%  edu.iris.dmc.sacpz.model.Pole</span>
+0967          <span class="comment">%  edu.iris.dmc.sacpz.model.Zero</span>
+0968          <span class="comment">%  edu.iris.dmc.station.model.ComplexNumber</span>
+0969          
+0970          <span class="keyword">if</span> jArrayList.size()&lt;1
+0971             assert(0==1,<span class="string">'Never should reach this'</span>);
+0972             d      = zeros(0,1); <span class="comment">% optimized</span>
+0973          <span class="keyword">else</span>
+0974             jArray = jArrayList.toArray;
+0975             dr     = zeros(numel(jArray),1);
+0976             di     = zeros(numel(jArray),1);
+0977             
+0978             <span class="keyword">for</span> n = 1 : jArrayList.size()<span class="comment">%:-1: 1</span>
+0979                dr(n,1) = jArray(n).getReal().doubleValue;
+0980                di(n,1) = jArray(n).getImaginary().doubleValue;
+0981             <span class="keyword">end</span>
+0982             d      = complex(dr,di);
+0983          <span class="keyword">end</span>
+0984          
+0985       <span class="keyword">end</span>
+0986       
+0987       <a name="_sub28" href="#_subfunctions" class="code">function mts = convertTraces(traces)</a>
+0988          <span class="comment">%irisFetch.convertTraces converts traces from java to a matlab structure</span>
+0989          <span class="comment">%   mts = convertTraces(traces) where TRACES a java trace class. If the input</span>
+0990          <span class="comment">%   traces are empty, then a 1x0 structure is returned.</span>
+0991          blankSacPZ = struct(<span class="string">'units'</span>,<span class="string">''</span>,<span class="string">'constant'</span>,[],<span class="string">'poles'</span>,[],<span class="string">'zeros'</span>,[]);
+0992          
+0993          blankTrace = struct(<span class="string">'network'</span>,<span class="string">''</span>,<span class="string">'station'</span>,<span class="string">''</span>,<span class="string">'location'</span>,<span class="string">''</span><span class="keyword">...</span>
+0994             ,<span class="string">'channel'</span>,<span class="string">''</span>,<span class="string">'quality'</span>,<span class="string">''</span>,<span class="keyword">...</span>
+0995             <span class="string">'latitude'</span>,0,<span class="string">'longitude'</span>,0,<span class="string">'elevation'</span>,0,<span class="string">'depth'</span>,0,<span class="keyword">...</span>
+0996             <span class="string">'azimuth'</span>,0,<span class="string">'dip'</span>,0,<span class="keyword">...</span>
+0997             <span class="string">'sensitivity'</span>,0,<span class="string">'sensitivityFrequency'</span>,0,<span class="keyword">...</span>
+0998             <span class="string">'instrument'</span>,<span class="string">''</span>,<span class="string">'sensitivityUnits'</span>,<span class="string">'UNK'</span>,<span class="keyword">...</span>
+0999             <span class="string">'data'</span>,[],<span class="string">'sampleCount'</span>,0,<span class="string">'sampleRate'</span>,nan,<span class="keyword">...</span>
+1000             <span class="string">'startTime'</span>,0,<span class="string">'endTime'</span>,0,<span class="string">'sacpz'</span>,blankSacPZ);
+1001          mts=blankTrace;
+1002          <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(traces)
+1003             <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'... since traces is empty, creating an empty structure'</span>)
+1004             mts(1) = []; <span class="comment">% keep the structure, but force it to be 1x0 trace</span>
+1005          <span class="keyword">end</span>
+1006          <span class="keyword">for</span> i = 1:length(traces)
+1007             mt=blankTrace;
+1008             mt.network  = char(traces(i).getNetwork());
+1009             mt.station  = char(traces(i).getStation());
+1010             mt.location = char(traces(i).getLocation());
+1011             mt.channel  = char(traces(i).getChannel());
+1012             
+1013             mt.quality  = char(traces(i).getQuality());
+1014             
+1015             mt.latitude  = traces(i).getLatitude();
+1016             mt.longitude = traces(i).getLongitude();
+1017             mt.elevation = traces(i).getElevation();
+1018             mt.depth     = traces(i).getDepth();
+1019             mt.azimuth   = traces(i).getAzimuth();
+1020             mt.dip       = traces(i).getDip();
+1021             
+1022             mt.sensitivity = traces(i).getSensitivity();
+1023             mt.sensitivityFrequency = traces(i).getSensitivityFrequency();
+1024             
+1025             mt.instrument  = char(traces(i).getInstrument());
+1026             mt.sensitivityUnits = char(traces(i).getSensitivityUnits());
+1027             dataType = char(traces(i).getDataType);
+1028             <span class="keyword">switch</span> dataType
+1029                <span class="keyword">case</span> {<span class="string">'INTEGER'</span>,<span class="string">'INT24'</span>}
+1030                   mt.data        = traces(i).getAsInt();
+1031                <span class="keyword">case</span> {<span class="string">'DOUBLE'</span>}
+1032                   mt.data        = traces(i).getAsDouble();
+1033                <span class="keyword">case</span> {<span class="string">'FLOAT'</span>}
+1034                   mt.data        = traces(i).getAsFloat();
+1035                <span class="keyword">case</span> {<span class="string">'SHORT'</span>}
+1036                   mt.data        = traces(i).getAsShort();
+1037                <span class="keyword">otherwise</span>
+1038                   <span class="comment">% mt.data      = traces(i).getData(); %returns an ArrayList</span>
+1039                   mt.data        = traces(i).getAsDouble();
+1040                   warning(<span class="string">'IRISFETCH:convertTraces:noDataTypeSpecified'</span>,<span class="keyword">...</span>
+1041                      <span class="string">'No dataType was specified by the retrieved trace. returning as Double (which may be incorrect)'</span>);
+1042             <span class="keyword">end</span>
+1043             <span class="keyword">if</span> irisFetch.forceDataAsDouble
+1044                mt.data = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(mt.data);
+1045             <span class="keyword">end</span>
+1046             mt.sampleCount = traces(i).getSampleCount();
+1047             mt.sampleRate  = traces(i).getSampleRate();
+1048             
+1049             startDateString = char(traces(i).getStartTime().toString());
+1050             endDateString  = char(traces(i).getEndTime().toString());
+1051             
+1052             mt.startTime   = datenum(startDateString, irisFetch.DATE_FORMATTER);
+1053             mt.endTime     = datenum(endDateString, irisFetch.DATE_FORMATTER);
+1054             
+1055             <span class="keyword">try</span>
+1056                jsacpz = traces(i).getSacpz();
+1057             <span class="keyword">catch</span> er
+1058                warning(<span class="string">'An [%s] exception occurred in irisFetch.convertTraces() but was caught\n full text follows'</span>, er.identifier) <span class="comment">%db</span>
+1059                <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(er);
+1060                <span class="keyword">if</span> strcmp(er.identifier,<span class="string">'MATLAB:noSuchMethodOrField'</span>)
+1061                   warning(<span class="string">'IRISFETCH:convertTraces:noGetSacPZmethod'</span>,<span class="keyword">...</span>
+1062                      <span class="string">'probably using older verision of the ws-library. please retrieve the latest version'</span>);
+1063                   jsacpz = [];
+1064                <span class="keyword">else</span>
+1065                   rethrow(er)
+1066                <span class="keyword">end</span>
+1067             <span class="keyword">end</span>
+1068             <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(jsacpz)
+1069                sacpz.units       = char(traces(i).getSacpz().getInputUnit());
+1070                sacpz.constant    = traces(i).getSacpz().getConstant();
+1071                <span class="keyword">if</span> ( not(traces(i).getSacpz().getPoles().isEmpty()) )
+1072                    sacpz.poles   = irisFetch.jArrayList2complex(traces(i).getSacpz().getPoles());
+1073                <span class="keyword">else</span>
+1074                    sacpz.poles   = [];
+1075                <span class="keyword">end</span>
+1076                <span class="keyword">if</span> ( not(traces(i).getSacpz().getZeros().isEmpty()) )
+1077                    sacpz.zeros   = irisFetch.jArrayList2complex(traces(i).getSacpz().getZeros());
+1078                <span class="keyword">else</span>
+1079                    sacpz.zeros   = [];
+1080                <span class="keyword">end</span>
+1081                mt.sacpz          = <a href="../../../GISMO/core/@sacpz/sacpz.html" class="code" title="">sacpz</a>;
+1082             <span class="keyword">end</span>
+1083             mts(i) = mt;
+1084          <span class="keyword">end</span>
+1085       <span class="keyword">end</span>
+1086       
+1087       
+1088       <span class="comment">%----------------------------------------------------------------</span>
+1089       <span class="comment">% DATE conversion routines</span>
+1090       <span class="comment">%</span>
+1091       <span class="comment">% Java classes that can be used:</span>
+1092       <span class="comment">%     java.sql.Timestamp : handles nanoseconds</span>
+1093       <span class="comment">%     java.util.Date     : handles milliseconds</span>
+1094       <span class="comment">%</span>
+1095       <span class="comment">% MATLAB is accurate to 0.01 milliseconds</span>
+1096       <span class="comment">%----------------------------------------------------------------</span>
+1097       
+1098       <a name="_sub29" href="#_subfunctions" class="code">function javadate = mdate2jdate(matlabdate)</a>
+1099          <span class="comment">%mdate2jdate converts a matlab date to a java Date class</span>
+1100          <span class="comment">%  javadate = irisFetch.mdate2jdate(matlab_date)converts from matlab to java with</span>
+1101          <span class="comment">%  millisecond precision.</span>
+1102          
+1103          <span class="keyword">if</span> ischar(matlabdate)
+1104             matlabdate = datenum(matlabdate);
+1105          <span class="keyword">end</span>
+1106          <span class="keyword">if</span> ~isnumeric(matlabdate) || ~isscalar(matlabdate)
+1107             error(<span class="string">'IRISFETCH:mdate2jdate:incorrectDateFormat'</span>,<span class="keyword">...</span>
+1108                <span class="string">'A scalar matlab datenum was expected, but a different kind of value was received.'</span>);
+1109          <span class="keyword">end</span>
+1110          
+1111          jmillis = ((matlabdate-irisFetch.BASE_DATENUM) * irisFetch.MS_IN_DAY) + .5 ; <span class="comment">% add 0.5 to keep it in sync.</span>
+1112          
+1113          javadate = java.util.Date(jmillis); <span class="comment">%convert to a Date, loosing nanosecond precision</span>
+1114          <span class="comment">% javadate = java.util.Date(((datenum(matlabdate)-irisFetch.BASE_DATENUM) * irisFetch.MS_IN_DAY) + .5 )</span>
+1115       <span class="keyword">end</span>
+1116       
+1117       <span class="comment">%----------------------------------------------------------------</span>
+1118       <span class="comment">% Look for GET / SET methods for the class.</span>
+1119       <span class="comment">%----------------------------------------------------------------</span>
+1120       <a name="_sub30" href="#_subfunctions" class="code">function M = getSettableFields(obj)</a>
+1121          <span class="comment">% strip the first 3 letters off the field ('set')</span>
+1122          M        = irisFetch.getSetters(obj);
+1123          startsWithSet=<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(strncmp(M,<span class="string">'set'</span>,3));
+1124          <span class="keyword">for</span> n=1:numel(startsWithSet)
+1125             M(startsWithSet(n))  = {M{startsWithSet(n)}(4:end)};
+1126          <span class="keyword">end</span>
+1127       <span class="keyword">end</span>
+1128       <span class="comment">%{</span>
+1129        <a name="_sub31" href="#_subfunctions" class="code">function [M, argType] = getSetters(obj)</a>
+1130           [M, argType] = irisFetch.getMethods(obj,<span class="string">'set'</span>);
+1131        <span class="keyword">end</span>
+1132       <span class="comment">%}</span>
+1133       <a name="_sub32" href="#_subfunctions" class="code">function [M, argType] = getSetters(obj)</a>
+1134          <span class="comment">% assumption is that any function that returns a criteria object of the same class is</span>
+1135          <span class="comment">% a &quot;Set&quot; method. The first time a class is encountered, it's set methods and</span>
+1136          <span class="comment">% arguments are memorized.</span>
+1137          
+1138          <span class="keyword">persistent</span> className             <span class="comment">% contains the list of classes that have already been done</span>
+1139          <span class="keyword">persistent</span> listOfSetters         <span class="comment">% contains a cell list of set-methods for each class</span>
+1140          <span class="keyword">persistent</span> listOfArguments       <span class="comment">% contains a cell list of inputs corresponding to each setter</span>
+1141          
+1142          <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(className)
+1143             className = {};
+1144             listOfSetters={};
+1145             listOfArguments={};
+1146          <span class="keyword">end</span>
+1147          
+1148          thisClass=class(obj);
+1149          
+1150          memorizedClass                 = strcmp(thisClass, className);
+1151          
+1152          <span class="keyword">if</span> ~any(memorizedClass)
+1153             classIndex                  = numel(className) + 1;
+1154             className(classIndex)       = {thisClass};
+1155             
+1156             all_methods                 = methods(thisClass);
+1157             full_methods                = methods(thisClass,<span class="string">'-full'</span>);
+1158             is_setter                   = strcmp(thisClass, strtok(full_methods));
+1159             [UNUSED_VARIABLE, setter_inputs]          = strtok(strtok(full_methods(is_setter),<span class="string">')'</span>),<span class="string">'('</span>); <span class="comment">%#ok&lt;ASGLU&gt; %loose ()</span>
+1160             
+1161             listOfArguments(classIndex) = {strrep(setter_inputs,<span class="string">'('</span>,<span class="string">''</span>)};
+1162             listOfSetters(classIndex)   = {all_methods(is_setter)};
+1163             
+1164             memorizedClass = strcmp(thisClass, className);
+1165             <span class="comment">% disp (['Adding ', thisClass, ' setters ...']);</span>
+1166          <span class="keyword">end</span>
+1167          
+1168          M                             = listOfSetters{memorizedClass};
+1169          argType                       = listOfArguments{memorizedClass};
+1170       <span class="keyword">end</span>
+1171       
+1172       <a name="_sub33" href="#_subfunctions" class="code">function [methodList, argType] = getMethods(obj,searchPrefix)</a>
+1173          <span class="keyword">persistent</span> className methodsAndArguments
+1174          <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(className)
+1175             className            = {<span class="string">''</span>};
+1176             methodsAndArguments  = {{<span class="string">''</span>},{<span class="string">''</span>}};
+1177          <span class="keyword">end</span>
+1178          
+1179          thisClass = class(obj);
+1180          TF = strcmp(thisClass, className);
+1181          <span class="keyword">if</span> any(TF) <span class="comment">% shortcut if this has been done before</span>
+1182             methodList  = methodsAndArguments{TF,1};
+1183             argType     = methodsAndArguments{TF,2};
+1184             <span class="keyword">return</span>
+1185          <span class="keyword">else</span>
+1186             loc = numel(className)+1;
+1187          <span class="keyword">end</span>
+1188          
+1189          
+1190          argType     = {}; <span class="comment">%methodList = [];</span>
+1191          M           = methods(obj);
+1192          M2          = methods(obj,<span class="string">'-full'</span>);
+1193          idx         = strncmp(searchPrefix,M, length(searchPrefix));
+1194          methodList  = M(idx);
+1195          argList     = M2(idx);
+1196          
+1197          p1          = strfind(argList,<span class="string">'('</span>);
+1198          p2          = strfind(argList,<span class="string">')'</span>);
+1199          <span class="keyword">for</span> n=1:numel(argList)
+1200             argType(n) = {argList{n}(p1{n}+1:p2{n}-1)}; <span class="comment">%#ok&lt;AGROW&gt;</span>
+1201          <span class="keyword">end</span>
+1202          
+1203          className(loc)             = {thisClass};
+1204          methodsAndArguments(loc,1) = {methodList};
+1205          methodsAndArguments(loc,2) = {argType};
+1206          
+1207       <span class="keyword">end</span>
+1208       <span class="comment">%%</span>
+1209       <span class="comment">%================================================================</span>
+1210       <span class="comment">%----------------------------------------------------------------</span>
+1211       <span class="comment">% BEGIN: PARSING ROUTINES</span>
+1212       <span class="comment">%----------------------------------------------------------------</span>
+1213       
+1214       <a name="_sub34" href="#_subfunctions" class="code">function [getterList, fieldList] = getMethodsAndFields(obj)</a>
+1215          
+1216          
+1217          <span class="comment">% this function uses a cache to speed up the retrieval of</span>
+1218          <span class="comment">% get_methods and fieldnames.</span>
+1219          
+1220          <span class="keyword">persistent</span> className
+1221          <span class="keyword">persistent</span> methodL
+1222          <span class="keyword">persistent</span> fieldL
+1223          
+1224          <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(className)
+1225             className = {<span class="string">''</span>};
+1226             methodL = {<span class="string">''</span>};
+1227             fieldL = {<span class="string">''</span>};
+1228          <span class="keyword">end</span>
+1229          
+1230          thisClass = class(obj);
+1231          
+1232          TF = strcmp(thisClass, className);
+1233          
+1234          <span class="keyword">if</span> any(TF) <span class="comment">% shortcut if this has been done before</span>
+1235             getterList = methodL{TF};
+1236             fieldList = fieldL{TF};
+1237             <span class="keyword">return</span>
+1238          <span class="keyword">else</span>
+1239             loc = numel(className)+1;
+1240          <span class="keyword">end</span>
+1241          
+1242          allMethods = methods(obj);
+1243          getterList = allMethods(strncmp(<span class="string">'get'</span>,allMethods, 3));
+1244          
+1245          <span class="comment">% filter classes need class names for them to make sense to users.</span>
+1246          <span class="keyword">if</span> isa(obj,<span class="string">'edu.iris.dmc.station.model.Filter'</span>)
+1247             getterList = getterList(<span class="keyword">...</span>
+1248                ~( strcmp(<span class="string">'get'</span>,getterList) | <span class="keyword">...</span>
+1249                strcmp(<span class="string">'getAny'</span>,getterList) ));
+1250             
+1251          <span class="keyword">else</span>
+1252             getterList = getterList(<span class="keyword">...</span>
+1253                ~( strcmp(<span class="string">'get'</span>,getterList) | <span class="keyword">...</span>
+1254                strcmp(<span class="string">'getClass'</span>,getterList) | <span class="keyword">...</span>
+1255                strcmp(<span class="string">'getAny'</span>,getterList) ));
+1256          <span class="keyword">end</span>
+1257          <span class="comment">% eliminate recursions</span>
+1258          <span class="keyword">switch</span> thisClass
+1259             <span class="keyword">case</span> <span class="string">'edu.iris.dmc.station.model.Station'</span>
+1260                n = strcmp(getterList,<span class="string">'getNetwork'</span>);
+1261             <span class="keyword">case</span> <span class="string">'edu.iris.dmc.station.model.StationEpoch'</span>
+1262                n = strcmp(getterList,<span class="string">'getStations'</span>);
+1263             <span class="keyword">case</span> <span class="string">'edu.iris.dmc.station.model.Channel'</span>
+1264                n = strcmp(getterList,<span class="string">'getStationEpoch'</span>);
+1265             <span class="keyword">case</span> <span class="string">'edu.iris.dmc.station.model.ChannelEpoch'</span>
+1266                n = strcmp(getterList,<span class="string">'getChannels'</span>);
+1267             <span class="keyword">case</span> <span class="string">'edu.iris.dmc.station.model.Response'</span>
+1268                n = strcmp(getterList,<span class="string">'getChannelEpoch'</span>);
+1269             <span class="keyword">case</span> <span class="string">'edu.iris.dmc.station.model.Sensor'</span>
+1270                n = strcmp(getterList,<span class="string">'getChannelEpoch'</span>);
+1271             <span class="keyword">otherwise</span>
+1272                n=[];
+1273          <span class="keyword">end</span>
+1274          getterList(n)  = [];
+1275          
+1276          fieldList      = strrep(getterList,<span class="string">'get'</span>,<span class="string">''</span>); <span class="comment">%get rid of 'get'</span>
+1277          
+1278          className(loc) = {thisClass};
+1279          methodL(loc)   = {getterList};
+1280          fieldL(loc)    = {fieldList};
+1281       <span class="keyword">end</span>
+1282       
+1283       <a name="_sub35" href="#_subfunctions" class="code">function out = parser_for_IRIS_WS_2_0_0(value)</a>
+1284          <span class="comment">% call other classes based on this function</span>
+1285          
+1286          out=irisFetch.parse(value, containers.Map);
+1287       <span class="keyword">end</span>
+1288       
+1289       <a name="_sub36" href="#_subfunctions" class="code">function s = parse(value,stacklistt)</a>
+1290          <span class="comment">% parse takes each value, looks up its class, and converts it to MATLAB</span>
+1291          <span class="comment">% struct = parse(javaObject) recursively parses a java object. If the java object</span>
+1292          <span class="comment">% contains objects of other java classes, then they will be parsed also.</span>
+1293          <span class="comment">%</span>
+1294          <span class="comment">% struct = parse(javaObject, stacklistt)</span>
+1295          
+1296          <span class="keyword">persistent</span> stacklist
+1297          <span class="keyword">if</span> nargin == 2
+1298             stacklist = stacklistt;
+1299          <span class="keyword">end</span>
+1300          
+1301          
+1302          myClass = class(value);
+1303          
+1304          <span class="keyword">if</span> irisFetch.recursionAssert
+1305             <span class="keyword">try</span>
+1306                tf = stacklist(myClass);
+1307             <span class="keyword">catch</span> <span class="comment">%#ok&lt;CTCH&gt;</span>
+1308                stacklist(myClass)= false;
+1309                tf = false;
+1310             <span class="keyword">end</span>
+1311             <span class="keyword">if</span> tf
+1312                <span class="comment">% if stacklist(myClass)</span>
+1313                [x,UNUSED_VARIABLE] = dbstack(1); <span class="comment">%#ok&lt;NASGU&gt; %remove this call from the stack, and get the list</span>
+1314                error([<span class="string">'\n\nRecursion detected. attempt to parse a\n  [%s] \n  '</span><span class="keyword">...</span>
+1315                   <span class="string">'when a parent of the same class exists.\n'</span><span class="keyword">...</span>
+1316                   <span class="string">'Please comment out the offending line of code (line %d)\n'</span>],myClass,x(1).line);
+1317             <span class="keyword">end</span>
+1318             stacklist(myClass)=true;
+1319             
+1320          <span class="keyword">end</span>
+1321          
+1322          <span class="keyword">switch</span> myClass
+1323             
+1324             <span class="keyword">case</span> {<span class="string">'java.util.ArrayList'</span>}
+1325                <span class="keyword">if</span> irisFetch.recursionAssert
+1326                   stacklist(myClass)=false;
+1327                <span class="keyword">end</span>
+1328                <span class="comment">% disp(['parsing array of: ', class(value.get(0)) ]) ;</span>
+1329                <span class="keyword">for</span> n=1 : value.size()
+1330                   s(n)=irisFetch.parse(value.get(n-1)); <span class="comment">%#ok&lt;AGROW&gt; % class(value.get(0))</span>
+1331                <span class="keyword">end</span>
+1332             <span class="keyword">case</span> <span class="string">'double'</span>
+1333                s=value;
+1334             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Dip'</span> <span class="comment">%MOVED</span>
+1335                   <span class="string">'edu.iris.dmc.fdsn.station.model.AngleType'</span>
+1336                   <span class="string">'edu.iris.dmc.fdsn.station.model.SampleRate'</span>
+1337                   <span class="string">'edu.iris.dmc.fdsn.station.model.SecondType'</span>
+1338                   <span class="string">'edu.iris.dmc.fdsn.station.model.VoltageType'</span>
+1339                   <span class="string">'edu.iris.dmc.fdsn.station.model.Frequency'</span>
+1340                   <span class="string">'edu.iris.dmc.fdsn.station.model.Azimuth'</span>
+1341                   <span class="string">'edu.iris.dmc.fdsn.station.model.Channel$ClockDrift'</span>
+1342                   <span class="string">'edu.iris.dmc.fdsn.station.model.Distance'</span>
+1343                   <span class="string">'edu.iris.dmc.fdsn.station.model.LongitudeBaseType'</span>
+1344                   <span class="string">'edu.iris.dmc.fdsn.station.model.LatitudeBaseType'</span>
+1345                   <span class="string">'edu.iris.dmc.fdsn.station.model.Float'</span>
+1346                   }
+1347                s                  = value.getValue();
+1348                <span class="comment">% unused get routines: getUnit, getPlusError,getMinusError</span>
+1349                
+1350             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.timeseries.model.Timeseries'</span>}
+1351                s.NetworkCode             = char(value.getNetworkCode());
+1352                s.StationCode             = char(value.getStationCode());
+1353                s.Location                = char(value.getLocation());
+1354                s.ChannelCode             = char(value.getChannelCode());
+1355                s.DataQuality             = irisFetch.parse(value.getDataQuality()); <span class="comment">% get char</span>
+1356                s.Segments                = irisFetch.parse(value.getSegments());    <span class="comment">% get java.util.Collection</span>
+1357                
+1358             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.FIR$NumeratorCoefficient'</span>}
+1359                s                   = value.getValue(); <span class="comment">%was s.Value</span>
+1360                
+1361             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.ResponseListElement'</span>}
+1362                s.Frequency               = irisFetch.parse(value.getFrequency());   <span class="comment">% get edu.iris.dmc.fdsn.station.model.Frequency</span>
+1363                s.Amplitude               = irisFetch.parse(value.getAmplitude());   <span class="comment">% get edu.iris.dmc.fdsn.station.model.Float</span>
+1364                s.Phase                   = irisFetch.parse(value.getPhase());       <span class="comment">% get edu.iris.dmc.fdsn.station.model.AngleType</span>
+1365                
+1366             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.RestrictedStatus'</span>}
+1367                s.value                   = char(value.value());
+1368                s.values                  = irisFetch.parseAnArray(value.values());
+1369                s.name                    = char(value.name());
+1370                s.ordinal                 = value.ordinal();
+1371                
+1372             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Sensitivity'</span>}
+1373                s.FrequencyStart          = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getFrequencyStart());
+1374                s.FrequencyEnd            = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getFrequencyEnd());
+1375                s.FrequencyDBVariation    = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getFrequencyDBVariation());
+1376                s.Value                   = value.getValue();
+1377                s.Frequency               = value.getFrequency();
+1378                s.InputUnits = irisFetch.addUnits(value.getInputUnits);
+1379                s.OutputUnits = irisFetch.addUnits(value.getOutputUnits);
+1380                <span class="comment">% s.OutputUnitsName         = char(value.getOutputUnits().getName); % get edu.iris.dmc.fdsn.station.model.Units</span>
+1381                <span class="comment">% s.OutputUnitsDescription  = char(value.getOutputUnits().getDescription); % get edu.iris.dmc.fdsn.station.model.Units</span>
+1382                
+1383                
+1384             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Polynomial'</span>}
+1385                s.ApproximationType       = char(value.getApproximationType());
+1386                s.Name                    = char(value.getName());
+1387                s.Description             = char(value.getDescription());
+1388                s.Coefficient = irisFetch.parseAnArray(value.getCoefficient());
+1389                s.FrequencyLowerBound     = value.getFrequencyLowerBound().getValue; <span class="comment">% get edu.iris.dmc.fdsn.station.model.Frequency</span>
+1390                s.FrequencyUpperBound     = value.getFrequencyUpperBound().getValue; <span class="comment">% get edu.iris.dmc.fdsn.station.model.Frequency</span>
+1391                s.ApproximationLowerBound = value.getApproximationLowerBound().doubleValue;
+1392                s.ApproximationUpperBound = value.getApproximationUpperBound().doubleValue;
+1393                s.MaximumError            = value.getMaximumError().doubleValue;
+1394                s.ResourceId              = char(value.getResourceId());
+1395                s.InputUnits = irisFetch.addUnits(value.getInputUnits());  <span class="comment">% get edu.iris.dmc.fdsn.station.model.Units</span>
+1396                s.OutputUnits = irisFetch.addUnits(value.getOutputUnits());  <span class="comment">% get edu.iris.dmc.fdsn.station.model.Units</span>
+1397                
+1398             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.timeseries.model.Segment$Type'</span>}
+1399                s.values = irisFetch.parseAnArray(value.values());
+1400                s.name                    = char(value.name());
+1401                s.ordinal                 = value.ordinal();
+1402                
+1403                
+1404             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.package-info'</span>}
+1405                
+1406             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.BaseFilter'</span>}
+1407                s.Name                    = char(value.getName());
+1408                s.Description             = char(value.getDescription());
+1409                s.InputUnits = irisFetch.addUnits(value.getInputUnits);
+1410                s.OutputUnits = irisFetch.addUnits(value.getOutputUnits);
+1411                s.ResourceId              = char(value.getResourceId());
+1412                
+1413             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.LogType'</span>}
+1414                s.Entry = irisFetch.parseAnArray(value.getEntry());
+1415                
+1416             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.ResponseList'</span>}
+1417                s.ResponseListElement = irisFetch.parseAnArray(value.getResponseListElement());
+1418                s.Name                    = char(value.getName());
+1419                s.Description             = char(value.getDescription());
+1420                s.InputUnits = irisFetch.addUnits(value.getInputUnits);
+1421                s.OutputUnits = irisFetch.addUnits(value.getOutputUnits);
+1422                s.ResourceId              = char(value.getResourceId());
+1423                
+1424             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Units'</span>}
+1425                s.Name                    = char(value.getName());
+1426                s.Description             = char(value.getDescription());
+1427                
+1428             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.ResponseStage'</span>}
+1429                s.Number                  = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getNumber());
+1430                s.PolesZeros              = irisFetch.parse(value.getPolesZeros());  <span class="comment">% get edu.iris.dmc.fdsn.station.model.PolesZeros</span>
+1431                s.Coefficients            = irisFetch.parse(value.getCoefficients()); <span class="comment">% get edu.iris.dmc.fdsn.station.model.Coefficients</span>
+1432                s.ResponseList            = irisFetch.parse(value.getResponseList()); <span class="comment">% get edu.iris.dmc.fdsn.station.model.ResponseList</span>
+1433                s.FIR                     = irisFetch.parse(value.getFIR());         <span class="comment">% get edu.iris.dmc.fdsn.station.model.FIR</span>
+1434                s.Polynomial              = irisFetch.parse(value.getPolynomial());  <span class="comment">% get edu.iris.dmc.fdsn.station.model.Polynomial</span>
+1435                s.Decimation              = irisFetch.parse(value.getDecimation());  <span class="comment">% get edu.iris.dmc.fdsn.station.model.Decimation</span>
+1436                s.StageGain               = irisFetch.parse(value.getStageGain());   <span class="comment">% get edu.iris.dmc.fdsn.station.model.Gain</span>
+1437                
+1438                
+1439             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.SampleRateRatioType'</span>}
+1440                s.NumberSamples           = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getNumberSamples());
+1441                s.NumberSeconds           = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getNumberSeconds());
+1442                
+1443             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Decimation'</span>}
+1444                s.Offset                  = value.getOffset().doubleValue;
+1445                s.Delay                   = irisFetch.parse(value.getDelay());       <span class="comment">% get edu.iris.dmc.fdsn.station.model.Float</span>
+1446                s.InputSampleRate         = irisFetch.parse(value.getInputSampleRate()); <span class="comment">% get edu.iris.dmc.fdsn.station.model.Frequency</span>
+1447                s.Factor                  = value.getFactor().doubleValue;
+1448                s.Correction              = irisFetch.parse(value.getCorrection());  <span class="comment">% get edu.iris.dmc.fdsn.station.model.Float</span>
+1449                
+1450             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.timeseries.model.Segment'</span>}
+1451                s.Type                    = irisFetch.parse(value.getType());        <span class="comment">% get edu.iris.dmc.timeseries.model.Segment$Type</span>
+1452                s.StartTime               = irisFetch.parse(value.getStartTime());   <span class="comment">% get java.sql.Timestamp</span>
+1453                s.EndTime                 = irisFetch.parse(value.getEndTime());     <span class="comment">% get java.sql.Timestamp</span>
+1454                s.ShortData               = irisFetch.parseAnArray(value.getShortData());
+1455                s.SampleCount             = value.getSampleCount();
+1456                s.Samplerate              = value.getSamplerate();
+1457                s.DoubleData              = irisFetch.parseAnArray(value.getDoubleData());
+1458                s.FloatData               = irisFetch.parseAnArray(value.getFloatData());
+1459                s.IntData                 = irisFetch.parseAnArray(value.getIntData());
+1460                s.ExpectedNextSampleTime  = irisFetch.parse(value.getExpectedNextSampleTime()); <span class="comment">% get java.sql.Timestamp</span>
+1461                
+1462                
+1463             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.PhoneNumberType'</span>}
+1464                s.Phone = sprintf(<span class="string">'%s: [+%d] %03d %s'</span>,<span class="keyword">...</span><span class="comment"> % desc: [+country] area phonenum</span>
+1465                   char(value.getDescription()),<span class="keyword">...</span>
+1466                   <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getCountryCode()),<span class="keyword">...</span>
+1467                   <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getAreaCode()),<span class="keyword">...</span>
+1468                   char(value.getPhoneNumber()) );
+1469                
+1470             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.sacpz.model.PZ'</span>,<span class="keyword">...</span>
+1471                   <span class="string">'edu.iris.dmc.fdsn.station.model.ComplexNumber'</span>,<span class="keyword">...</span>
+1472                   <span class="string">'edu.iris.dmc.sacpz.model.Zero'</span>,<span class="keyword">...</span>
+1473                   <span class="string">'edu.iris.dmc.fdsn.station.model.PoleZero'</span>,<span class="keyword">...</span>
+1474                   <span class="string">'edu.iris.dmc.sacpz.model.Pole'</span>}
+1475                s = complex(value.getReal.getValue(), value.getImaginary.getValue());
+1476                
+1477             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.sacpz.model.PolesZeros'</span>}
+1478                s.Poles = irisFetch.parseAnArray(value.getPoles());
+1479                s.Zeros = irisFetch.parseAnArray(value.getZeros());
+1480                
+1481             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Filter'</span>}
+1482                s.Name                    = char(value.getName());
+1483                s.Description             = char(value.getDescription());
+1484                s.InputUnits = irisFetch.addUnits(value.getInputUnits);
+1485                s.OutputUnits = irisFetch.addUnits(value.getOutputUnits);
+1486                s.ResourceId              = char(value.getResourceId());
+1487                
+1488             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.FIR'</span>}
+1489                s.Symmetry                = char(value.getSymmetry());
+1490                sz = value.getNumeratorCoefficient.size;
+1491                <span class="keyword">if</span> sz&gt;0
+1492                   s.NumeratorCoefficient=arrayfun(@getValue,value.getNumeratorCoefficient.toArray(javaArray(<span class="string">'edu.iris.dmc.fdsn.station.model.FIR$NumeratorCoefficient'</span>,sz)));
+1493                   <span class="comment">% s.Numerator(sz,1)=0;</span>
+1494                <span class="keyword">else</span>
+1495                   s.NumeratorCoefficient=[];
+1496                <span class="keyword">end</span>
+1497                value.getNumeratorCoefficient.clear;
+1498                <span class="comment">%s.NumeratorCoefficient = irisFetch.parseAnArray(value.getNumeratorCoefficient());</span>
+1499                s.Name                    = char(value.getName());
+1500                s.Description             = char(value.getDescription());
+1501                s.InputUnits = irisFetch.addUnits(value.getInputUnits);
+1502                s.OutputUnits = irisFetch.addUnits(value.getOutputUnits);
+1503                s.ResourceId              = char(value.getResourceId());
+1504                
+1505             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.DataAvailability'</span>}
+1506                s.Extent                  = irisFetch.parse(value.getExtent());      <span class="comment">% get edu.iris.dmc.fdsn.station.model.DataAvailabilityExtent</span>
+1507                s.Span = irisFetch.parseAnArray(value.getSpan());
+1508                
+1509             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.RestrictedStatusType'</span>}
+1510                s.value                   = char(value.value());
+1511                s.values = irisFetch.parseAnArray(value.values());
+1512                s.name                    = char(value.name());
+1513                s.ordinal                 = value.ordinal();
+1514                
+1515             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Gain'</span>}
+1516                s.Value                   = value.getValue();
+1517                s.Frequency               = value.getFrequency();
+1518                
+1519             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Equipment'</span>}
+1520                s.Type                    = char(value.getType());
+1521                s.SerialNumber            = char(value.getSerialNumber());
+1522                s.Description             = char(value.getDescription());
+1523                s.Model                   = char(value.getModel());
+1524                s.Manufacturer            = char(value.getManufacturer());
+1525                s.Vendor                  = char(value.getVendor());
+1526                s.InstallationDate        = irisFetch.jdate2mdate(value.getInstallationDate());
+1527                s.RemovalDate             = irisFetch.jdate2mdate(value.getRemovalDate());
+1528                s.CalibrationDate = irisFetch.parseAnArray(value.getCalibrationDate());
+1529                s.ResourceId              = char(value.getResourceId());
+1530                
+1531             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.DataAvailabilityExtent'</span>}
+1532                s.End                     = irisFetch.jdate2mdate(value.getEnd());
+1533                s.Start                   = irisFetch.jdate2mdate(value.getStart());
+1534                
+1535                
+1536             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Coefficients'</span>}
+1537                s.CfTransferFunctionType  = char(value.getCfTransferFunctionType());
+1538                sz = value.getNumerator.size;
+1539                <span class="keyword">if</span> sz&gt;0
+1540                   s.Numerator=arrayfun(@getValue,value.getNumerator.toArray(javaArray(<span class="string">'edu.iris.dmc.fdsn.station.model.Float'</span>,sz)));
+1541                   <span class="comment">% s.Numerator(sz,1)=0;</span>
+1542                <span class="keyword">else</span>
+1543                   s.Numerator=[];
+1544                <span class="keyword">end</span>
+1545                s.Denominator = irisFetch.parseAnArray(value.getDenominator());
+1546                s.Name                    = char(value.getName());
+1547                s.Description             = char(value.getDescription());
+1548                s.InputUnits = irisFetch.addUnits(value.getInputUnits);
+1549                s.OutputUnits = irisFetch.addUnits(value.getOutputUnits);
+1550                s.ResourceId              = char(value.getResourceId());
+1551                
+1552             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.sacpz.model.AbstractPZ'</span>}
+1553                s.Real                    = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getReal());
+1554                s.Imaginary               = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getImaginary());
+1555                
+1556                <span class="comment">%----------------------------------------------------------------------------------</span>
+1557                <span class="comment">% EVENT</span>
+1558                <span class="comment">%----------------------------------------------------------------------------------</span>
+1559             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.event.model.Origin'</span>}
+1560                s.Time                    = irisFetch.jdate2mdate(value.getTime());
+1561                s.Latitude                = value.getLatitude();
+1562                s.Longitude               = value.getLongitude();
+1563                s.Depth                   = value.getDepth() / 1000; <span class="comment">%getDepth returns m. stored as km</span>
+1564                s.Author                  = char(value.getAuthor());
+1565                s.Catalog                 = char(value.getCatalog());
+1566                s.Contributor             = char(value.getContributor());
+1567                s.ContributorOriginId     = char(value.getContributorOriginId());
+1568                s.ContributorEventId      = char(value.getContributorEventId());
+1569                s.PublicId                = char(value.getPublicId());
+1570                s.Arrivals = irisFetch.parseAnArray(value.getArrivals());
+1571                
+1572             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.event.model.Pick'</span>}
+1573                s.Location                = char(value.getLocation());
+1574                s.Channel                 = char(value.getChannel());
+1575                s.Time                    = irisFetch.jdate2mdate(value.getTime());
+1576                s.Network                 = char(value.getNetwork());
+1577                s.Station                 = char(value.getStation());
+1578                s.PickId                  = char(value.getPickId());
+1579                
+1580             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.event.model.Arrival'</span>}
+1581                s.PublicId                = char(value.getPublicId());
+1582                s.Distance                = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getDistance());
+1583                s.Azimuth                 = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getAzimuth());
+1584                s.Phase                   = char(value.getPhase());
+1585                s.Picks = irisFetch.parseAnArray(value.getPicks());
+1586                s.TimeResidual            = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getTimeResidual());
+1587                
+1588             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.event.model.Magnitude'</span>}
+1589                s.Value                   = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getValue());
+1590                s.Type                    = char(value.getType());
+1591                s.Author                  = char(value.getAuthor());
+1592                s.PublicId                = char(value.getPublicId());
+1593                s.OriginPublicId          = char(value.getOriginPublicId());
+1594                
+1595             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.event.model.Event'</span>}
+1596                s.Type                    = char(value.getType());
+1597                s.FlinnEngdahlRegionCode  = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getFlinnEngdahlRegionCode());
+1598                s.FlinnEngdahlRegionName  = char(value.getFlinnEngdahlRegionName());
+1599                <span class="keyword">try</span>
+1600                   tmpPreferredOrigin         = irisFetch.parse(value.getPreferredOrigin()); <span class="comment">% get edu.iris.dmc.event.model.Origin</span>
+1601                <span class="keyword">catch</span> <span class="comment">%#ok&lt;CTCH&gt;</span>
+1602                   tmpPreferredOrigin=[];
+1603                <span class="keyword">end</span>
+1604                <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(tmpPreferredOrigin)
+1605                   s.PreferredTime         = tmpPreferredOrigin.Time;
+1606                   s.PreferredLatitude     = tmpPreferredOrigin.Latitude;
+1607                   s.PreferredLongitude    = tmpPreferredOrigin.Longitude;
+1608                   s.PreferredDepth        = tmpPreferredOrigin.Depth;
+1609                <span class="keyword">else</span>
+1610                   [s.PreferredTime, s.PreferredLatitude, s.PreferredLongitude,s.PreferredDepth] = deal(nan);
+1611                <span class="keyword">end</span>
+1612                tmpPreferredMagnitude      = irisFetch.parse(value.getPreferredMagnitude()); <span class="comment">% get edu.iris.dmc.event.model.Magnitude</span>
+1613                <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(tmpPreferredMagnitude)
+1614                   s.PreferredMagnitudeType = tmpPreferredMagnitude.Type;
+1615                   s.PreferredMagnitudeValue = tmpPreferredMagnitude.Value;
+1616                <span class="keyword">else</span>
+1617                   s.PreferredMagnitudeType = <span class="string">''</span>;
+1618                   s.PreferredMagnitudeValue = nan;
+1619                <span class="keyword">end</span>
+1620                s.PreferredOrigin     = tmpPreferredOrigin;
+1621                s.Origins            = irisFetch.parseAnArray(value.getOrigins());
+1622                s.PreferredMagnitude = tmpPreferredMagnitude;
+1623                s.Magnitudes         = irisFetch.parseAnArray(value.getMagnitudes());
+1624                s.Picks = irisFetch.parseAnArray(value.getPicks());
+1625                s.PublicId                = char(value.getPublicId());
+1626                
+1627             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Message'</span>}
+1628                s.Networks = irisFetch.parseAnArray(value.getNetwork());
+1629                
+1630             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.sacpz.model.NumberUnit'</span>}
+1631                s.Value                   = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getValue());
+1632                s.Unit                    = char(value.getUnit());
+1633                
+1634             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Comment'</span>}
+1635                s.Value                   = char(value.getValue());
+1636                s.Id                      = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getId());
+1637                s.Author = irisFetch.parseAnArray(value.getAuthor());
+1638                s.BeginEffectiveDate      = irisFetch.jdate2mdate(value.getBeginEffectiveDate());
+1639                s.EndEffectiveDate        = irisFetch.jdate2mdate(value.getEndEffectiveDate());
+1640                <span class="comment">% s.BeginEffectiveTime      = irisFetch.jdate2mdate(value.getBeginEffectiveTime());</span>
+1641                <span class="comment">% s.EndEffectiveTime        = irisFetch.jdate2mdate(value.getEndEffectiveTime());</span>
+1642                
+1643             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.PolesZeros'</span>}
+1644                s.Zero = irisFetch.parseAnArray(value.getZero());
+1645                s.PzTransferFunctionType  = char(value.getPzTransferFunctionType());
+1646                s.NormalizationFactor     = value.getNormalizationFactor();
+1647                s.Pole = irisFetch.parseAnArray(value.getPole());
+1648                s.NormalizationFrequency  = irisFetch.parse(value.getNormalizationFrequency()); <span class="comment">% get edu.iris.dmc.fdsn.station.model.Frequency</span>
+1649                s.Name                    = char(value.getName());
+1650                s.Description             = char(value.getDescription());
+1651                s.ResourceId              = char(value.getResourceId());
+1652                s.InputUnits = irisFetch.addUnits(value.getInputUnits);
+1653                s.OutputUnits = irisFetch.addUnits(value.getOutputUnits);
+1654                
+1655             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.DataAvailabilitySpan'</span>}
+1656                s.End                     = irisFetch.jdate2mdate(value.getEnd());
+1657                s.Start                   = irisFetch.jdate2mdate(value.getStart());
+1658                s.NumberSegments          = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getNumberSegments());
+1659                s.MaximumTimeTear         = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getMaximumTimeTear());
+1660                
+1661             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Site'</span>}
+1662                s.Name                    = char(value.getName());
+1663                s.Country                 = char(value.getCountry());
+1664                s.Description             = char(value.getDescription());
+1665                s.Town                    = char(value.getTown());
+1666                s.County                  = char(value.getCounty());
+1667                s.Region                  = char(value.getRegion());
+1668                
+1669             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Polynomial$Coefficient'</span>}
+1670                s = value.getValue();
+1671                
+1672             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.NominalType'</span>}
+1673                s.value                   = char(value.value());
+1674                s.values = irisFetch.parseAnArray(value.values());
+1675                s.name                    = char(value.name());
+1676                s.ordinal                 = value.ordinal();
+1677                
+1678                
+1679             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Response'</span>}
+1680                s.InstrumentSensitivity   = irisFetch.parse(value.getInstrumentSensitivity()); <span class="comment">% get edu.iris.dmc.fdsn.station.model.Sensitivity</span>
+1681                s.Stage = irisFetch.parseAnArray(value.getStage());
+1682                s.InstrumentPolynomial    = irisFetch.parse(value.getInstrumentPolynomial()); <span class="comment">% get edu.iris.dmc.fdsn.station.model.Polynomial</span>
+1683                
+1684                
+1685             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Station$Operator'</span>}
+1686                s.Agency = irisFetch.parseAnArray(value.getAgency());
+1687                s.Contact = irisFetch.parseAnArray(value.getContact());
+1688                s.WebSite                 = char(value.getWebSite());
+1689                
+1690             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.timeseries.model.Record'</span>}
+1691                s.Location = irisFetch.parseAnArray(value.getLocation());
+1692                s.StartTime               = irisFetch.parse(value.getStartTime());   <span class="comment">% get java.sql.Timestamp</span>
+1693                s.EndTime                 = irisFetch.parse(value.getEndTime());     <span class="comment">% get java.sql.Timestamp</span>
+1694                s.SampleRate              = value.getSampleRate();
+1695                s.ExpectedNextSampleTime  = irisFetch.parse(value.getExpectedNextSampleTime()); <span class="comment">% get java.sql.Timestamp</span>
+1696                s.NumberOfSamples         = value.getNumberOfSamples();
+1697                
+1698             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.PersonType'</span>}
+1699                s.Name = irisFetch.parseAnArray(value.getName());
+1700                s.Agency = irisFetch.parseAnArray(value.getAgency());
+1701                s.Email = irisFetch.parseAnArray(value.getEmail());
+1702                s.Phone = irisFetch.parseAnArray(value.getPhone());
+1703                
+1704             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.BaseNodeType'</span>}
+1705                assert(<span class="string">'did not expect to get here'</span>);
+1706                s.Comment = irisFetch.parseAnArray(value.getComment());
+1707                s.Code                    = char(value.getCode());
+1708                s.Description             = char(value.getDescription());
+1709                s.StartDate               = irisFetch.jdate2mdate(value.getStartDate());
+1710                s.EndDate                 = irisFetch.jdate2mdate(value.getEndDate());
+1711                <span class="comment">% s.StartTime               = irisFetch.jdate2mdate(value.getStartTime());</span>
+1712                <span class="comment">% s.EndTime                 = irisFetch.jdate2mdate(value.getEndTime());</span>
+1713                <span class="comment">% assert(strcmp(datestr(s.StartTime,31), datestr(s.StartDate,31)),'dates don''t match for network %s  %s vs %s\n',s.Code, datestr(s.StartTime,31), datestr(s.StartDate,31))</span>
+1714                s.DataAvailability        = irisFetch.parse(value.getDataAvailability()); <span class="comment">% get edu.iris.dmc.fdsn.station.model.DataAvailability</span>
+1715                s.RestrictedStatus        = char(value.getRestrictedStatus());
+1716                s.AlternateCode           = char(value.getAlternateCode());
+1717                s.HistoricalCode          = char(value.getHistoricalCode());
+1718                
+1719                
+1720             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Channel'</span>}
+1721                s.ChannelCode                    = char(value.getCode());
+1722                s.LocationCode            = char(value.getLocationCode());
+1723                s.Description             = char(value.getDescription());
+1724                s.Type = char(value.getType());
+1725                s.Response                = irisFetch.parse(value.getResponse());    <span class="comment">% get edu.iris.dmc.fdsn.station.model.Response</span>
+1726                <span class="comment">% take the instrument sensitivity. These values are the INPUT units, which</span>
+1727                <span class="comment">% matches previous irisFetch</span>
+1728                <span class="keyword">if</span> isstruct(s.Response.InstrumentSensitivity)
+1729                   s.SensitivityFrequency= s.Response.InstrumentSensitivity.Frequency;
+1730                   s.SensitivityUnitDescription = s.Response.InstrumentSensitivity.InputUnits{2};
+1731                   s.SensitivityUnits = s.Response.InstrumentSensitivity.InputUnits{1};
+1732                   s.SensitivityValue = s.Response.InstrumentSensitivity.Value;
+1733                <span class="keyword">else</span>
+1734                   s.SensitivityFrequency = NaN;
+1735                   s.SensitivityUnitDescription = <span class="string">''</span>;
+1736                   s.SensitivityUnits = <span class="string">''</span>;
+1737                   s.SensitivityValue = NaN;
+1738                <span class="keyword">end</span>
+1739                
+1740                s.Equipment               = irisFetch.parse(value.getEquipment());   <span class="comment">% get edu.iris.dmc.fdsn.station.model.Equipment</span>
+1741                s.SampleRateRatio         = irisFetch.parse(value.getSampleRateRatio()); <span class="comment">% get edu.iris.dmc.fdsn.station.model.SampleRateRatioType</span>
+1742                s.StorageFormat           = char(value.getStorageFormat());
+1743                s.ClockDrift              = irisFetch.parse(value.getClockDrift());  <span class="comment">% get edu.iris.dmc.fdsn.station.model.Channel$ClockDrift</span>
+1744                s.DataLogger              = irisFetch.parse(value.getDataLogger());  <span class="comment">% get edu.iris.dmc.fdsn.station.model.Equipment</span>
+1745                s.Sensor                  = irisFetch.parse(value.getSensor());      <span class="comment">% get edu.iris.dmc.fdsn.station.model.Equipment</span>
+1746                s.PreAmplifier            = irisFetch.parse(value.getPreAmplifier()); <span class="comment">% get edu.iris.dmc.fdsn.station.model.Equipment</span>
+1747                s.ExternalReference = irisFetch.parseAnArray(value.getExternalReference());
+1748                
+1749                s.Latitude           = value.getLatitudeValue().doubleValue;
+1750                s.Longitude          = value.getLongitudeValue().doubleValue;
+1751                s.Elevation          = value.getElevationValue().doubleValue;
+1752                s.Depth              = value.getDepthValue().doubleValue;
+1753                s.Azimuth            = value.getAzimuthValue().doubleValue;
+1754                s.Dip                = value.getDipValue().doubleValue;
+1755                
+1756                s.SampleRate         = value.getSampleRateValue().doubleValue;
+1757                
+1758                s.CalibrationUnits        = irisFetch.parse(value.getCalibrationUnits()); <span class="comment">% get edu.iris.dmc.fdsn.station.model.Units</span>
+1759                <span class="comment">%         s.Comment = irisFetch.parseAnArray(value.getComment());</span>
+1760                <span class="comment">%s.StartTime               = irisFetch.jdate2mdate(value.getStartTime());</span>
+1761                s.StartDate               = irisFetch.jdate2mdate(value.getStartDate());<span class="comment">% duplicates StartTime ( but using org.apache.xerces.jaxp.datatype.XMLGregorianCalendarImpl)</span>
+1762                <span class="comment">%s.EndTime                 = irisFetch.jdate2mdate(value.getEndTime());</span>
+1763                s.EndDate                 = irisFetch.jdate2mdate(value.getEndDate());<span class="comment">% duplicates EndTime ( but using org.apache.xerces.jaxp.datatype.XMLGregorianCalendarImpl)</span>
+1764                s.DataAvailability        = irisFetch.parse(value.getDataAvailability()); <span class="comment">% get edu.iris.dmc.fdsn.station.model.DataAvailability</span>
+1765                s.RestrictedStatus        = char(value.getRestrictedStatus());
+1766                s.AlternateCode           = char(value.getAlternateCode());
+1767                s.HistoricalCode          = char(value.getHistoricalCode());
+1768                
+1769             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Station'</span>}
+1770                <span class="comment">% s.Network                 = irisFetch.parse(value.getNetwork());     % get edu.iris.dmc.fdsn.station.model.Network</span>
+1771                s.StationCode                    = char(value.getCode());
+1772                <span class="comment">% s.AlternateCode           = char(value.getAlternateCode());</span>
+1773                <span class="comment">% s.Channel                = irisFetch.parseAnArray(value.getChannels());</span>
+1774                s.Latitude                = value.getLatitude().getValue();    <span class="comment">% get edu.iris.dmc.fdsn.station.model.Latitude</span>
+1775                s.Longitude               = value.getLongitude().getValue();   <span class="comment">% get edu.iris.dmc.fdsn.station.model.Longitude</span>
+1776                s.Elevation               = irisFetch.parse(value.getElevation());   <span class="comment">% get edu.iris.dmc.fdsn.station.model.Distance</span>
+1777                s.Site                    = irisFetch.parse(value.getSite());        <span class="comment">% get edu.iris.dmc.fdsn.station.model.Site</span>
+1778                <span class="comment">% s.Vault                   = char(value.getVault());</span>
+1779                <span class="comment">% s.Geology                 = char(value.getGeology());</span>
+1780                <span class="comment">% s.Equipment = irisFetch.parseAnArray(value.getEquipment());</span>
+1781                <span class="comment">% s.Operator = irisFetch.parseAnArray(value.getOperator());</span>
+1782                <span class="comment">% s.CreationDate            = irisFetch.jdate2mdate(value.getCreationDate());</span>
+1783                <span class="comment">% s.TerminationDate         = irisFetch.jdate2mdate(value.getTerminationDate());</span>
+1784                <span class="comment">% s.ExternalReference = irisFetch.parseAnArray(value.getExternalReference());</span>
+1785                s.Comment = irisFetch.parseAnArray(value.getComment());
+1786                s.Description             = char(value.getDescription());
+1787                <span class="comment">%s.StartTime               = irisFetch.jdate2mdate(value.getStartTime());</span>
+1788                <span class="comment">%s.EndTime                 = irisFetch.jdate2mdate(value.getEndTime());</span>
+1789                s.StartDate               = irisFetch.jdate2mdate(value.getStartDate()); <span class="comment">% duplicates StartTime ( but using org.apache.xerces.jaxp.datatype.XMLGregorianCalendarImpl)</span>
+1790                s.EndDate                 = irisFetch.jdate2mdate(value.getEndDate()); <span class="comment">% duplicates EndTime ( but using org.apache.xerces.jaxp.datatype.XMLGregorianCalendarImpl)</span>
+1791                s.DataAvailability        = irisFetch.parse(value.getDataAvailability()); <span class="comment">% get edu.iris.dmc.fdsn.station.model.DataAvailability</span>
+1792                s.RestrictedStatus        = char(value.getRestrictedStatus());
+1793                <span class="comment">%s.HistoricalCode          = char(value.getHistoricalCode());</span>
+1794                s.Channels                = irisFetch.parseAnArray(value.getChannels());
+1795                s.TotalNumberChannels     = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getTotalNumberChannels());
+1796                s.SelectedNumberChannels  = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getSelectedNumberChannels());
+1797                
+1798             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Network'</span>}
+1799                s.NetworkCode                    = char(value.getCode());
+1800                s.Description             = char(value.getDescription());
+1801                s.Comment                 = irisFetch.parseAnArray(value.getComment());
+1802                <span class="comment">%s.StartTime               = irisFetch.jdate2mdate(value.getStartTime());</span>
+1803                s.StartDate               = irisFetch.jdate2mdate(value.getStartDate());<span class="comment">% duplicates StartTime ( but using org.apache.xerces.jaxp.datatype.XMLGregorianCalendarImpl)</span>
+1804                <span class="comment">%s.EndTime                 = irisFetch.jdate2mdate(value.getEndTime());</span>
+1805                s.TotalNumberStations     = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getTotalNumberStations());
+1806                s.SelectedNumberStations  = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getSelectedNumberStations());
+1807                s.EndDate                 = irisFetch.jdate2mdate(value.getEndDate()); <span class="comment">% duplicates EndTime ( but using org.apache.xerces.jaxp.datatype.XMLGregorianCalendarImpl)</span>
+1808                s.DataAvailability        = irisFetch.parse(value.getDataAvailability()); <span class="comment">% get edu.iris.dmc.fdsn.station.model.DataAvailability</span>
+1809                s.Stations                = irisFetch.parseAnArray(value.getStations());
+1810                s.RestrictedStatus        = char(value.getRestrictedStatus());
+1811                <span class="comment">% s.AlternateCode           = char(value.getAlternateCode());</span>
+1812                <span class="comment">% s.HistoricalCode          = char(value.getHistoricalCode());</span>
+1813                
+1814                
+1815             <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.sacpz.model.Sacpz'</span>}
+1816                s.Location                = char(value.getLocation());
+1817                s.Channel                 = char(value.getChannels());
+1818                s.Comment                 = char(value.getComment());
+1819                s.StartTime               = irisFetch.jdate2mdate(value.getStartTime());
+1820                s.Description             = char(value.getDescription());
+1821                s.Depth                   = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getDepth());
+1822                s.Azimuth                 = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getAzimuth());
+1823                s.Elevation               = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getElevation());
+1824                s.EndTime                 = irisFetch.jdate2mdate(value.getEndTime());
+1825                s.SampleRate              = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getSampleRate());
+1826                s.Network                 = char(value.getNetwork());
+1827                s.Station                 = char(value.getStations());
+1828                s.Latitude                = value.getLatitude().getValue();
+1829                s.Longitude               = value.getLongitude().getValue();
+1830                s.Sensitivity             = irisFetch.parse(value.getSensitivity()); <span class="comment">% get edu.iris.dmc.sacpz.model.NumberUnit</span>
+1831                s.Created                 = irisFetch.jdate2mdate(value.getCreated());
+1832                s.Poles                 = irisFetch.parseAnArray(value.getPoles());
+1833                s.Zeros                 = irisFetch.parseAnArray(value.getZeros());
+1834                s.Inclination             = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getInclination());
+1835                s.InputUnit               = char(value.getInputUnit());
+1836                s.OutputUnit              = char(value.getOutputUnit());
+1837                s.InstrumentType          = char(value.getInstrumentType());
+1838                s.InstrumentGain          = irisFetch.parse(value.getInstrumentGain()); <span class="comment">% get edu.iris.dmc.sacpz.model.NumberUnit</span>
+1839                s.A0                      = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(value.getA0());
+1840                s.Constant                = value.getConstant();
+1841                
+1842             <span class="keyword">otherwise</span>
+1843                warning(<span class="string">'IRISFETCH:parse:classNotFound'</span>,<span class="string">'%s was not found'</span>,myClass)<span class="comment">%who knows?</span>
+1844          <span class="keyword">end</span> <span class="comment">% cases</span>
+1845          <span class="keyword">if</span> irisFetch.recursionAssert
+1846             stacklist(myClass)=false;
+1847          <span class="keyword">end</span>
+1848       <span class="keyword">end</span>  <span class="comment">% main function</span>
+1849       
+1850       <a name="_sub37" href="#_subfunctions" class="code">function matlabdate = jdate2mdate(javadate)</a>
+1851          <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(javadate)
+1852             matlabdate = [];
+1853             <span class="keyword">return</span>;
+1854          <span class="keyword">end</span>
+1855          <span class="comment">% NOTE: Matlab cannot provide nanosecond resolution, though it can come close...</span>
+1856          <span class="keyword">switch</span> class(javadate)
+1857             <span class="keyword">case</span> <span class="string">'java.sql.Timestamp'</span> <span class="comment">% nanosecond precision</span>
+1858                matlabdate = datenummx(1970, 1, 1, 0, 0, (fix(javadate.getTime()/1000) + javadate.getNanos / 1000000000));
+1859             <span class="keyword">case</span> <span class="string">'java.util.Date'</span> <span class="comment">% millisecond precision</span>
+1860                matlabdate = datenummx(1970, 1, 1, 0, 0, javadate.getTime()/1000);
+1861             <span class="keyword">case</span>{<span class="string">'javax.xml.datatype.XMLGregorianCalendar'</span>,<span class="keyword">...</span>
+1862                   <span class="string">'org.apache.xerces.jaxp.datatype.XMLGregorianCalendarImpl'</span>}
+1863                <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(javadate.getFractionalSecond)
+1864                   mySecond=javadate.getSecond;
+1865                <span class="keyword">else</span>
+1866                   mySecond=javadate.getSecond + <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(javadate.getFractionalSecond);
+1867                <span class="keyword">end</span>
+1868                matlabdate= datenummx(<span class="keyword">...</span>
+1869                   javadate.getYear, javadate.getMonth,  javadate.getDay, <span class="keyword">...</span>
+1870                   javadate.getHour, javadate.getMinute, mySecond);
+1871             <span class="keyword">otherwise</span>
+1872                matlabdate= datenum(strrep(char(javadate.toString),<span class="string">'T'</span>,<span class="string">' '</span>)); <span class="comment">% this will probably crash</span>
+1873          <span class="keyword">end</span>
+1874          matlabdate=datestr(matlabdate, irisFetch.DATE_FORMATTER);
+1875       <span class="keyword">end</span> <span class="comment">%fn jdate2mdate</span>
+1876       
+1877       <a name="_sub38" href="#_subfunctions" class="code">function s = addUnits(theUnit)</a>
+1878          <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(theUnit)
+1879             s         = { char(theUnit.getName), char(theUnit.getDescription) };  <span class="comment">% get edu.iris.dmc.fdsn.station.model.Units</span>
+1880          <span class="keyword">else</span>
+1881             s = {<span class="string">''</span>,<span class="string">''</span>};
+1882          <span class="keyword">end</span>
+1883       <span class="keyword">end</span>
+1884       
+1885       <a name="_sub39" href="#_subfunctions" class="code">function s = parseAnArray(theArray)</a>
+1886          <span class="keyword">persistent</span> getAz getDis getResid
+1887          <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(getAz) || <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(getDis) || <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(getResid)
+1888             getAz    =@(x) <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(x.getAzimuth());
+1889             getDis   =@(x) <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(x.getDistance());
+1890             getResid =@(x) <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(x.getTimeResidual());
+1891          <span class="keyword">end</span>
+1892          <span class="keyword">if</span> isnumeric(theArray),
+1893             s = theArray;
+1894             <span class="keyword">return</span>
+1895          <span class="keyword">end</span>
+1896          
+1897          arraySize = theArray.size();
+1898          <span class="keyword">if</span> arraySize == 0,
+1899             s=[];
+1900             <span class="keyword">return</span>
+1901          <span class="keyword">end</span>
+1902          
+1903          firstItem = theArray.get(0);
+1904          
+1905          <span class="keyword">if</span> isjava(firstItem)
+1906             <span class="keyword">switch</span> class(firstItem)
+1907                <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.event.model.Event'</span>}
+1908                   <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'counter detailing the event'</span>)
+1909                <span class="keyword">case</span> {<span class="string">'edu.iris.dmc.fdsn.station.model.Network'</span>}
+1910                   <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'counter detailing network'</span>);
+1911             <span class="keyword">end</span>
+1912             <span class="keyword">for</span> nn=arraySize : -1 : 1
+1913                s(nn)= irisFetch.parse(theArray.get(nn-1));
+1914             <span class="keyword">end</span>
+1915             theArray.clear;
+1916             <span class="keyword">return</span>
+1917          <span class="keyword">end</span>
+1918          
+1919          <span class="keyword">if</span> arraySize == 1
+1920             s=firstItem;
+1921          <span class="keyword">elseif</span> ischar(firstItem)
+1922             s=char(theArray);
+1923          <span class="keyword">else</span> <span class="comment">% the array doesn't contain java or text, so it's probably just numbers.</span>
+1924             <span class="keyword">try</span>
+1925                s=<a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(theArray.toArray(javaArray(<span class="string">'java.lang.Double'</span>,arraySize)));
+1926             <span class="keyword">catch</span> er
+1927                <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(er.message)
+1928                fprintf(<span class="string">'unable to convert %s as though it were numbers.\n'</span>, class(theArray.get(0)));
+1929                <span class="keyword">for</span> nn=arraySize:-1:1
+1930                   s(nn)={theArray.get(nn-1)};<span class="comment">% create a cell</span>
+1931                <span class="keyword">end</span>
+1932             <span class="keyword">end</span>
+1933          <span class="keyword">end</span>
+1934          theArray.clear;
+1935       <span class="keyword">end</span> <span class="comment">%fn parseAnArray</span>
+1936       
+1937       <span class="comment">%----------------------------------------------------------------</span>
+1938       <span class="comment">% END: PARSING ROUTINES</span>
+1939       <span class="comment">%----------------------------------------------------------------</span>
+1940       <span class="comment">%================================================================</span>
+1941       <span class="comment">%%</span>
+1942       
+1943       <a name="_sub40" href="#_subfunctions" class="code">function crit = addCriteria(crit, value, addMethod)</a>
+1944          <span class="comment">%used to add Sta, Net, Loc, Chan to criteria</span>
+1945          <span class="comment">% For example:</span>
+1946          <span class="comment">%   singleAddToCriteria(criteria, {'OKCF','MNO?'},'addStation')</span>
+1947          <span class="comment">% will invoke:</span>
+1948          <span class="comment">%   criteria.addStation('OKCF').addStation('MNO?')</span>
+1949          
+1950          <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(value)
+1951             <span class="keyword">return</span> <span class="comment">%do nothing</span>
+1952          <span class="keyword">end</span>
+1953          <span class="keyword">if</span> ~iscell(value)
+1954             <span class="comment">% it's probably a string</span>
+1955             crit.(addMethod)(value);
+1956          <span class="keyword">else</span>
+1957             <span class="comment">% a cell may have multiple values.</span>
+1958             <span class="keyword">for</span> n=1:numel(value)
+1959                crit.(addMethod)(value{n});
+1960             <span class="keyword">end</span>
+1961          <span class="keyword">end</span>
+1962       <span class="keyword">end</span>
+1963       
+1964       <a name="_sub41" href="#_subfunctions" class="code">function crit = setBoxCoordinates(crit, value)</a>
+1965          <span class="comment">% setBoxCoordinates (minLat, maxLat, minLon, maxLon)</span>
+1966          <span class="comment">% values of 'NAN' are ignored</span>
+1967          assert(numel(value)==4,<span class="string">'IRISFETCH:setBoxCoordinates:InvalidParameterCount'</span>,<span class="keyword">...</span>
+1968             <span class="string">'Expected [minLat, maxLat, minLon, maxLon]'</span>);
+1969          
+1970          setMethods = {<span class="string">'setMinimumLatitude'</span>,<span class="string">'setMaximumLatitude'</span>,<span class="keyword">...</span>
+1971             <span class="string">'setMinimumLongitude'</span>,<span class="string">'setMaximumLongitude'</span>};
+1972          <span class="keyword">for</span> n=1:numel(setMethods)
+1973             <span class="keyword">if</span> ~isnan(value(n))
+1974                crit.(setMethods{n})(java.lang.Double(value(n)));
+1975             <span class="keyword">end</span>
+1976          <span class="keyword">end</span>
+1977       <span class="keyword">end</span>
+1978       
+1979       <a name="_sub42" href="#_subfunctions" class="code">function crit = setCriteria(crit, paramList)</a>
+1980          
+1981          <span class="comment">%----------------------------------------------------------</span>
+1982          <span class="comment">% The following code allows for open-ended search criteria</span>
+1983          <span class="comment">% that can change when the java library changes</span>
+1984          <span class="comment">%</span>
+1985          <span class="comment">% Instead of hard-coding each Setter, query the java class to determine its set methods</span>
+1986          <span class="comment">%</span>
+1987          <span class="comment">% Also determine the input parameters for each setter, then</span>
+1988          <span class="comment">% use that to properly create/cast the data.</span>
+1989          <span class="comment">%----------------------------------------------------------</span>
+1990          
+1991          <span class="comment">% Get a list of parameters, their set functions, and input</span>
+1992          <span class="comment">% types, and do it outside the loop so they are not needlessly</span>
+1993          <span class="comment">% rerun</span>
+1994          
+1995          [allSetMethods, argType]   = irisFetch.getSetters(crit);
+1996          settableFieldnames         = irisFetch.getSettableFields(crit);
+1997          allMethods                 = methods(crit);
+1998          
+1999          <span class="keyword">while</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(paramList) &amp;&amp; numel(paramList) &gt;= 2
+2000             
+2001             <span class="comment">% Grab the parameter pair, then remove from parameter list</span>
+2002             [param value] = deal(paramList{1:2});
+2003             paramList(1:2)=[];
+2004             
+2005             indexOfMethod = strcmpi(param,settableFieldnames);
+2006             
+2007             <span class="keyword">if</span> any(indexOfMethod)
+2008                <span class="keyword">try</span>
+2009                   converter=irisFetch.M2J_MAP(argType{indexOfMethod});
+2010                <span class="keyword">catch</span> er
+2011                   <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(er.message)
+2012                   fprintf(<span class="string">'Unanticipated argument type [%s]... trying\n'</span>,argType{indexOfMethod});
+2013                   converter=@(x) x;
+2014                <span class="keyword">end</span>
+2015                crit.(allSetMethods{indexOfMethod})(converter(value));
+2016                <span class="keyword">continue</span>
+2017             <span class="keyword">end</span> <span class="comment">% if any</span>
+2018             
+2019             <span class="comment">% we shall only pass this point if existing methods were not used</span>
+2020             
+2021             <span class="keyword">switch</span> lower(param)
+2022                <span class="comment">%handle special cases</span>
+2023                <span class="keyword">case</span> <span class="string">'boxcoordinates'</span>
+2024                   crit = irisFetch.setBoxCoordinates(crit, value);
+2025                                     
+2026                <span class="keyword">case</span> <span class="string">'radialcoordinates'</span>
+2027                   crit.setLatitude(java.lang.Double(value(1)));
+2028                   crit.setLongitude(java.lang.Double(value(2)));
+2029                   crit.setMaximumRadius(java.lang.Double(value(3)));
+2030                   <span class="keyword">if</span> numel(value) ==4 &amp;&amp; ~isnan(value(4))
+2031                      crit.setMinimumRadius(java.lang.Double(value(4)));
+2032                   <span class="keyword">end</span>
+2033                   
+2034                   
+2035                <span class="keyword">case</span> <span class="string">'includeavailability'</span> 
+2036                   assert((islogical(value)||isnumeric(value)) &amp;&amp;isscalar(value),<span class="string">'The value of IncludeAvailability should be a scalar logical: true or false (no quotes)'</span>);
+2037                   crit.setIncludeAvailability(value);
+2038                <span class="keyword">case</span> <span class="string">'includerestricted'</span>
+2039                   assert((islogical(value)||isnumeric(value)) &amp;&amp;isscalar(value),<span class="string">'The value of IncludeRestricted should be a logical: true or false (no quotes)'</span>);
+2040                   crit.setIncludeRestricted(value);
+2041                <span class="keyword">case</span> <span class="string">'matchtimeseries'</span>
+2042                   assert((islogical(value)||isnumeric(value)) &amp;&amp;isscalar(value),<span class="string">'The value of MatchTimeseries should be a logical: true or false (no quotes)'</span>);
+2043                   crit.setMatchTimeSeries(value);
+2044                   
+2045                <span class="keyword">case</span> <span class="string">'limit'</span>
+2046                   crit.setFetchLimit(java.lang.Integer(value));
+2047                <span class="keyword">otherwise</span>
+2048                   <span class="keyword">try</span>
+2049                      <span class="comment">% this will blow up if java doesn't recognize &quot;value&quot;</span>
+2050                      crit.(allMethods{strcmpi(allMethods,param)})(value);
+2051                   <span class="keyword">catch</span>
+2052                      <span class="keyword">switch</span>(class(value))
+2053                         <span class="keyword">case</span> <span class="string">'double'</span>; value=num2str(value);
+2054                         <span class="keyword">case</span> <span class="string">'logical'</span>; <span class="keyword">if</span> value; value=<span class="string">'true'</span>; <span class="keyword">else</span> value=<span class="string">'false'</span>; <span class="keyword">end</span>
+2055                      <span class="keyword">end</span>
+2056                      assert(ischar(value),<span class="string">'IRISFETCH:Event:InvalidParameterPair'</span>,<span class="string">'When adding arbitrary parameter pairs, value must be a string. In this case, %s=&lt;%s&gt;'</span>,param,class(value));
+2057                      crit.add(param,value); <span class="comment">%as of 2.0.2 can add arbitrary parameter/value pairs.</span>
+2058                   <span class="keyword">end</span>
+2059                   <span class="comment">% %this will blow up if java doesn't recognize &quot;value&quot;</span>
+2060                   <span class="comment">% crit.(allMethods{strcmpi(allMethods,param)})(value);</span>
+2061             <span class="keyword">end</span>
+2062          <span class="keyword">end</span>
+2063       <span class="keyword">end</span>
+2064    <span class="keyword">end</span> <span class="comment">%static protected methods</span>
+2065 <span class="keyword">end</span>
+2066</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

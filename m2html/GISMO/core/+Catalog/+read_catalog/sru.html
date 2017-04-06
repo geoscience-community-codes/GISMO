@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sru</title>
+  <meta name="keywords" content="sru">
+  <meta name="description" content="readEvents.sru read a catalog sent by Seismic Research Unit, University of West">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">+Catalog</a> &gt; <a href="index.html">+read_catalog</a> &gt; sru.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+Catalog/+read_catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>sru
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>readEvents.sru read a catalog sent by Seismic Research Unit, University of West</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function self=sru(filename) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">readEvents.sru read a catalog sent by Seismic Research Unit, University of West
+Indies
+   Based on a Dominica catalog sent to Ophelia George
+   cObject = read_SRU(filename) will read the catalog file, and create a
+   Catalog object
+
+   File has lines like:
+   #EVENT_ID    P    S    LAT.    LONG    DEP.    DATE    TIME    RMSE    MAG.
+   9703120.002    3    3    15.4170N    61.2890W    3    19970322    658.23    0.347    2.5
+
+ Glenn Thompson 2014/11/14</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="../../../../GISMO/core/@waveform/rms.html" class="code" title="function RMS = rms(W, varargin)">rms</a>	RMS root mean square of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function self=sru(filename)</a>
+0002 <span class="comment">%readEvents.sru read a catalog sent by Seismic Research Unit, University of West</span>
+0003 <span class="comment">%Indies</span>
+0004 <span class="comment">%   Based on a Dominica catalog sent to Ophelia George</span>
+0005 <span class="comment">%   cObject = read_SRU(filename) will read the catalog file, and create a</span>
+0006 <span class="comment">%   Catalog object</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   File has lines like:</span>
+0009 <span class="comment">%   #EVENT_ID    P    S    LAT.    LONG    DEP.    DATE    TIME    RMSE    MAG.</span>
+0010 <span class="comment">%   9703120.002    3    3    15.4170N    61.2890W    3    19970322    658.23    0.347    2.5</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% Glenn Thompson 2014/11/14</span>
+0013 
+0014     <span class="comment">%% read the headers and data</span>
+0015     fid = fopen(filename);
+0016     headers = textscan(fid, <span class="string">'%s'</span>, 10); <span class="comment">% header is just 10 strings</span>
+0017     data = textscan(fid, <span class="string">'%f%d%d%s%s%f%s%f%f%f'</span>); <span class="comment">% import the columns from each tab separated row as float, integer, integer, string, ...</span>
+0018     fclose(fid);
+0019     
+0020     <span class="comment">%% wrangle the data into variables we can use</span>
+0021     evid=data{1}; <span class="comment">% event id - like 9703120.002 - but we'll probably just renumber them from 1</span>
+0022     nassP=data{2}; <span class="comment">% number of associated P arrivals - like 3</span>
+0023     nassS=data{3}; <span class="comment">% number of associated S arrivals - like 3</span>
+0024     
+0025     <span class="comment">% latitude like '15.4170N'</span>
+0026     latstr = data{4};
+0027     <span class="keyword">for</span> c=1:numel(latstr)
+0028         thislatstr = latstr{c};
+0029         hemisphere = thislatstr(end);
+0030         lat(c) = str2num(thislatstr(1:end-1));
+0031         <span class="keyword">if</span> lower(hemisphere)==<span class="string">'s'</span>
+0032             lat(c) = -lat(c);
+0033         <span class="keyword">end</span>
+0034     <span class="keyword">end</span>
+0035     
+0036     <span class="comment">% longitude like '61.2890W'</span>
+0037     lonstr = data{5};
+0038     <span class="keyword">for</span> c=1:numel(lonstr)
+0039         thislonstr = lonstr{c};
+0040         hemisphere = thislonstr(end);
+0041         lon(c) = str2num(thislonstr(1:end-1));
+0042         <span class="keyword">if</span> lower(hemisphere)==<span class="string">'w'</span>
+0043             lon(c) = -lon(c);
+0044         <span class="keyword">end</span>
+0045     <span class="keyword">end</span>
+0046     
+0047     <span class="comment">% depth like 3</span>
+0048     depth = data{6};
+0049     
+0050     <span class="comment">% date like 19970322</span>
+0051     yyyymmdd = data{7};
+0052     <span class="keyword">for</span> c=1:numel(yyyymmdd)
+0053         thisyyyymmdd = yyyymmdd{c};
+0054         yyyy(c) = str2num(thisyyyymmdd(:,1:4));
+0055         mo(c) = str2num(thisyyyymmdd(:,5:6));
+0056         dd(c) = str2num(thisyyyymmdd(:,7:8));
+0057     <span class="keyword">end</span>
+0058     
+0059     <span class="comment">% time like 658.23 for 00:06:58.23 but really HHMMSS.MS</span>
+0060     hhmmss = data{8};
+0061     <span class="keyword">for</span> c=1:numel(hhmmss)
+0062         thishhmmss = sprintf(<span class="string">'%09.2f'</span>,hhmmss(c));
+0063         hh(c) = str2num(thishhmmss(:,1:2));
+0064         mm(c) = str2num(thishhmmss(:,3:4));
+0065         ss(c) = str2num(thishhmmss(:,5:9));
+0066     <span class="keyword">end</span>
+0067     
+0068     dnum = datenum(yyyy, mo, dd, hh, mm, ss);
+0069     datestr(dnum)
+0070     
+0071     <span class="comment">% RMS Error</span>
+0072     <a href="../../../../GISMO/core/@waveform/rms.html" class="code" title="function RMS = rms(W, varargin)">rms</a> = data{9};
+0073     
+0074     <span class="comment">% Magnitude</span>
+0075     mag = data{10};
+0076     
+0077     
+0078     <span class="comment">%% Create an etype (assume type 'tectonic')</span>
+0079     etype = repmat(<span class="string">'t'</span>,numel(dnum));
+0080     
+0081     <span class="comment">%% Create our Catalog object</span>
+0082     self = <a href="../../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>(dnum, lon, lat, depth, mag, {}, etype);
+0083 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

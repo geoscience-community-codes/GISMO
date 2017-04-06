@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of check</title>
+  <meta name="keywords" content="check">
+  <meta name="description" content="Check various features of a correlation object.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; check.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>check
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>Check various features of a correlation object.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function val = check(c, whatToCheck) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Check various features of a correlation object.
+
+ VAL = CHECK(C,'OFFSET') Check to see if traces have the same amount of
+ time before and after their respective trigger times. 
+ VAL = false means that the traces are not similarly aligned on their trigger times. 
+ VAL = true means that thet are, to within a tolerance of one sample period.
+
+ VAL = CHECK(C,'STA') Check to see if traces have the same station codes.
+ VAL = false means that the traces do not all share the same station code. VAL
+ VAL = true means that they do. A match is sought only on the first three
+ characters of the station name (there are internal reasons for this).
+
+ VAL = CHECK(C,'FREQ') Check to see if traces have the same frequency.
+ VAL = false means that the traces do not all share the same frequency. VAL
+ VAL = true means that they do.
+
+ VAL = CHECK(C,'SAMPLES') Check to see if traces have the same station
+ codes. VAL = false means that the traces do not all share the same station
+ code. VAL = true means that they do.
+
+ VAL = CHECK(C,'CHAN') Check to see if traces have the same channel codes.
+ VAL = false means that the traces do not all share the same channel code. VAL
+ = true means that they do.
+
+ VAL = CHECK(C,'SCALE') Check to see if traces have similar maximum
+ amplitudes. This is a rough check to determine whether the traces have
+ been normalized. VAL = false means that at least one trace has a maxium
+ amplitude that is 50% larger than the mean of the other traces (zero
+ traces are ignored).</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/contributed/correlation_derived/corrderived_plot_swarm_history.html" class="code" title="function corrderived_plot_swarm_history(c,varargin)">corrderived_plot_swarm_history</a>	CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms</li><li><a href="../../../../GISMO/core/@correlation/correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="../../../../GISMO/core/@correlation/interferogram.html" class="code" title="function [c,t,i,CC,LL] = interferogram(c,varargin)">interferogram</a>	C = INTERFEROGRAM(C)</li><li><a href="../../../../GISMO/core/@correlation/minus.html" class="code" title="function c = minus(c,varargin)">minus</a>	C = MINUS(C,I)</li><li><a href="../../../../GISMO/core/@correlation/private/sampleplot.html" class="code" title="function sampleplot(c,scale,ord)">sampleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/shadedplot.html" class="code" title="function shadedplot(c,scale,ord)">shadedplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>	Private method. See ../plot for details.</li><li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="interferogram.html" class="code" title="function [c,t,i,CC,LL] = interferogram(c, width, timestep, masterIdx)">interferogram</a>	C = INTERFEROGRAM(C)</li><li><a href="minus.html" class="code" title="function c = minus(c,I)">minus</a>	C = MINUS(C,I)</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function isValid = do_offset(c)</a></li><li><a href="#_sub2" class="code">function isValid = do_stations(c)</a></li><li><a href="#_sub3" class="code">function isValid = do_channels(c)</a></li><li><a href="#_sub4" class="code">function isValid = do_frequency(c)</a></li><li><a href="#_sub5" class="code">function isValid = do_samples(c)</a></li><li><a href="#_sub6" class="code">function isValid = do_scale(c)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function val = check(c, whatToCheck)</a>
+0002    
+0003    <span class="comment">% Check various features of a correlation object.</span>
+0004    <span class="comment">%</span>
+0005    <span class="comment">% VAL = CHECK(C,'OFFSET') Check to see if traces have the same amount of</span>
+0006    <span class="comment">% time before and after their respective trigger times.</span>
+0007    <span class="comment">% VAL = false means that the traces are not similarly aligned on their trigger times.</span>
+0008    <span class="comment">% VAL = true means that thet are, to within a tolerance of one sample period.</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">% VAL = CHECK(C,'STA') Check to see if traces have the same station codes.</span>
+0011    <span class="comment">% VAL = false means that the traces do not all share the same station code. VAL</span>
+0012    <span class="comment">% VAL = true means that they do. A match is sought only on the first three</span>
+0013    <span class="comment">% characters of the station name (there are internal reasons for this).</span>
+0014    <span class="comment">%</span>
+0015    <span class="comment">% VAL = CHECK(C,'FREQ') Check to see if traces have the same frequency.</span>
+0016    <span class="comment">% VAL = false means that the traces do not all share the same frequency. VAL</span>
+0017    <span class="comment">% VAL = true means that they do.</span>
+0018    <span class="comment">%</span>
+0019    <span class="comment">% VAL = CHECK(C,'SAMPLES') Check to see if traces have the same station</span>
+0020    <span class="comment">% codes. VAL = false means that the traces do not all share the same station</span>
+0021    <span class="comment">% code. VAL = true means that they do.</span>
+0022    <span class="comment">%</span>
+0023    <span class="comment">% VAL = CHECK(C,'CHAN') Check to see if traces have the same channel codes.</span>
+0024    <span class="comment">% VAL = false means that the traces do not all share the same channel code. VAL</span>
+0025    <span class="comment">% = true means that they do.</span>
+0026    <span class="comment">%</span>
+0027    <span class="comment">% VAL = CHECK(C,'SCALE') Check to see if traces have similar maximum</span>
+0028    <span class="comment">% amplitudes. This is a rough check to determine whether the traces have</span>
+0029    <span class="comment">% been normalized. VAL = false means that at least one trace has a maxium</span>
+0030    <span class="comment">% amplitude that is 50% larger than the mean of the other traces (zero</span>
+0031    <span class="comment">% traces are ignored).</span>
+0032    <span class="comment">%</span>
+0033    
+0034    <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0035    <span class="comment">% $Date$</span>
+0036    <span class="comment">% $Revision$</span>
+0037    
+0038    
+0039    <span class="keyword">switch</span> upper(whatToCheck)
+0040       <span class="keyword">case</span> {<span class="string">'OFFSET'</span>}
+0041          val = <a href="#_sub1" class="code" title="subfunction isValid = do_offset(c)">do_offset</a>(c);
+0042       <span class="keyword">case</span> {<span class="string">'STA'</span>}
+0043          val = <a href="#_sub2" class="code" title="subfunction isValid = do_stations(c)">do_stations</a>(c);
+0044       <span class="keyword">case</span> {<span class="string">'CHAN'</span>}
+0045          val = <a href="#_sub3" class="code" title="subfunction isValid = do_channels(c)">do_channels</a>(c);
+0046       <span class="keyword">case</span> {<span class="string">'FREQ'</span>}
+0047          val = <a href="#_sub4" class="code" title="subfunction isValid = do_frequency(c)">do_frequency</a>(c);
+0048       <span class="keyword">case</span> {<span class="string">'SAMPLES'</span>}
+0049          val = <a href="#_sub5" class="code" title="subfunction isValid = do_samples(c)">do_samples</a>(c);
+0050       <span class="keyword">case</span> {<span class="string">'SCALE'</span>}
+0051          val = <a href="#_sub6" class="code" title="subfunction isValid = do_scale(c)">do_scale</a>(c);
+0052       <span class="keyword">case</span> {<span class="string">'OFF'</span>,<span class="string">'CHA'</span>,<span class="string">'FRE'</span>,<span class="string">'SAM'</span>,<span class="string">'SCA'</span>}
+0053          error(<span class="string">'please use full option name: OFFSET, CHAN, FREQ, SAMPLES, SCALE'</span>);
+0054       <span class="keyword">otherwise</span>
+0055          error(<span class="string">'CHECK requires a valid method as second parameter.'</span>);
+0056    <span class="keyword">end</span>
+0057 <span class="keyword">end</span>
+0058 
+0059 <span class="comment">%% Check offsets</span>
+0060 <a name="_sub1" href="#_subfunctions" class="code">function isValid = do_offset(c)</a>
+0061    
+0062    srt_offset = (c.trig - c.traces.firstsampletime() ) * 86400;
+0063    end_offset = (  c.traces.lastsampletime() - c.trig ) * 86400;
+0064    
+0065    isValid = all(( <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(srt_offset) - <a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(srt_offset) ) &lt;= c.traces(1).period) &amp;&amp; <span class="keyword">...</span>
+0066       all(( <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(end_offset) - <a href="../../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(end_offset) ) &lt;= c.traces(1).period);
+0067 <span class="keyword">end</span>
+0068 
+0069 
+0070 <span class="comment">%% Check station codes</span>
+0071 <a name="_sub2" href="#_subfunctions" class="code">function isValid = do_stations(c)</a>
+0072    sta = c.stations;
+0073    isValid = <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>([sta{:}]) || all(strcmpi(sta(1), sta));
+0074 <span class="keyword">end</span>
+0075 
+0076 <span class="comment">%% Check channel codes</span>
+0077 <a name="_sub3" href="#_subfunctions" class="code">function isValid = do_channels(c)</a>
+0078    
+0079    chan = c.channels;
+0080    isValid = <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>([chan{:}]) || all(strcmpi(chan(1), chan));
+0081 <span class="keyword">end</span>
+0082 
+0083 <span class="comment">%% Check frequencies</span>
+0084 <a name="_sub4" href="#_subfunctions" class="code">function isValid = do_frequency(c)</a>
+0085    x = [c.traces.samplerate];
+0086    isValid = all(x == x(1));
+0087 <span class="keyword">end</span>
+0088 
+0089 
+0090 <span class="comment">%% Check number of samples in traces</span>
+0091 <a name="_sub5" href="#_subfunctions" class="code">function isValid = do_samples(c)</a>
+0092    x = c.traces.nsamples();
+0093    isValid = all(x == x(1));
+0094 <span class="keyword">end</span>
+0095 
+0096 
+0097 <span class="comment">%% Check absolute amplitude of the traces</span>
+0098 <a name="_sub6" href="#_subfunctions" class="code">function isValid = do_scale(c)</a>
+0099    
+0100    d = <a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(c.traces);
+0101    x = <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d));
+0102    f = x&gt;0;
+0103    isValid = ( <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(x) / <a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(x(f)) ) &lt;= 1.5;
+0104 <span class="keyword">end</span>
+0105 
+0106</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

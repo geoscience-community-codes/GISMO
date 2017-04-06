@@ -1,0 +1,217 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of antelope2waveform</title>
+  <meta name="keywords" content="antelope2waveform">
+  <meta name="description" content="ANTELOPE2WAVEFORM Load waveform objects from Antelope database">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">+antelope</a> &gt; antelope2waveform.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+antelope&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>antelope2waveform
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>ANTELOPE2WAVEFORM Load waveform objects from Antelope database</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function w=antelope2waveform(dbpath, sta, chan, starttime, endtime) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">ANTELOPE2WAVEFORM Load waveform objects from Antelope database
+ W=ANTELOPE2WAVEFORM(DBPATH, STA_EXPR, CHAN_EXPR, STARTTIME, ENDTIME) will
+ load a vector of waveform objects from an Antelope database containing a
+ wfdisc table. The database given by DBPATH is subsetted for the given
+ STA_EXPR and CHAN_EXPR which must be valid dbsubset expressions that work
+ in dbe. The database is also subsetted from STARTTIME to ENDTIME which
+ must be in epoch format, not MATLAB datenum. The returned waveform
+ objects are NaN-padded from STARTTIME to ENDTIME.
+ Internally ANTELOPE2WAVEFORM uses trload_css and trextract_data.
+ trload_css often fails in bulk request mode, e.g. if there is a problem
+ with the Miniseed file pointed to by one wfdisc row. So ANTELOPE2WAVEFORM
+ will automatically failover to get one waveform object at a time.
+
+ To do:
+    currently if you request a set of stations like 'AKT|CRAP|VIB' where
+    there are no records for CRAP in the time range, only 2 waveform
+    objects returned, not 3. It all depends on the dbsubset, so also a set
+    of stations like 'AKT|AKT|AKT' will return just 1 waveform object. It
+    would be convenient if empty waveforms (NaN-padded?) were returned for
+    missing stations. Same logic for channels. 
+
+ Note that seg faults seem so far to be related to opening too many
+ databases and running out of memory to load more. I think I now have the
+ right combination of dbfree and dbclose to avoid this.
+
+
+ Glenn Thompson, 2015/11/13</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/combine.html" class="code" title="function catalogObject = combine(catalogObject1, catalogObject2)">combine</a>	CATALOG.COMBINE combine two Catalog objects</li><li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>	ChannelTag Converter from scnlobject to ChannelTag</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../../GISMO/core/@waveform/combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and ChannelTag info.</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/pad.html" class="code" title="function [ w ] = pad( w, snum, enum, padvalue )">pad</a>	PAD Pad a waveform from snum to enum</li><li><a href="../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>	TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function w = trace2waveform(tr)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)</a>
+0002 <span class="comment">%ANTELOPE2WAVEFORM Load waveform objects from Antelope database</span>
+0003 <span class="comment">% W=ANTELOPE2WAVEFORM(DBPATH, STA_EXPR, CHAN_EXPR, STARTTIME, ENDTIME) will</span>
+0004 <span class="comment">% load a vector of waveform objects from an Antelope database containing a</span>
+0005 <span class="comment">% wfdisc table. The database given by DBPATH is subsetted for the given</span>
+0006 <span class="comment">% STA_EXPR and CHAN_EXPR which must be valid dbsubset expressions that work</span>
+0007 <span class="comment">% in dbe. The database is also subsetted from STARTTIME to ENDTIME which</span>
+0008 <span class="comment">% must be in epoch format, not MATLAB datenum. The returned waveform</span>
+0009 <span class="comment">% objects are NaN-padded from STARTTIME to ENDTIME.</span>
+0010 <span class="comment">% Internally ANTELOPE2WAVEFORM uses trload_css and trextract_data.</span>
+0011 <span class="comment">% trload_css often fails in bulk request mode, e.g. if there is a problem</span>
+0012 <span class="comment">% with the Miniseed file pointed to by one wfdisc row. So ANTELOPE2WAVEFORM</span>
+0013 <span class="comment">% will automatically failover to get one waveform object at a time.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% To do:</span>
+0016 <span class="comment">%    currently if you request a set of stations like 'AKT|CRAP|VIB' where</span>
+0017 <span class="comment">%    there are no records for CRAP in the time range, only 2 waveform</span>
+0018 <span class="comment">%    objects returned, not 3. It all depends on the dbsubset, so also a set</span>
+0019 <span class="comment">%    of stations like 'AKT|AKT|AKT' will return just 1 waveform object. It</span>
+0020 <span class="comment">%    would be convenient if empty waveforms (NaN-padded?) were returned for</span>
+0021 <span class="comment">%    missing stations. Same logic for channels.</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% Note that seg faults seem so far to be related to opening too many</span>
+0024 <span class="comment">% databases and running out of memory to load more. I think I now have the</span>
+0025 <span class="comment">% right combination of dbfree and dbclose to avoid this.</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%</span>
+0028 <span class="comment">% Glenn Thompson, 2015/11/13</span>
+0029 
+0030 
+0031     <span class="comment">% set return variables blank in case we exit early</span>
+0032     w = [];
+0033     <span class="keyword">if</span> isa(dbpath,<span class="string">'cell'</span>)
+0034         dbpath = dbpath{1};
+0035     <span class="keyword">end</span>
+0036     wfdisctable = sprintf(<span class="string">'%s.wfdisc'</span>,dbpath);
+0037     <span class="keyword">if</span> ~exist(wfdisctable, <span class="string">'file'</span>)
+0038         <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(sprintf(<span class="string">'%s: does not exist'</span>,wfdisctable));
+0039         <span class="keyword">return</span>
+0040     <span class="keyword">end</span>
+0041         
+0042 
+0043     <span class="comment">% open the database, subset</span>
+0044     db = dbopen( dbpath,<span class="string">'r'</span> );
+0045     db = dblookup_table( db,<span class="string">'wfdisc'</span> );
+0046     db = dbsubset(db, sprintf(<span class="string">'sta=~/%s/ &amp;&amp; chan=~/%s/ '</span>,sta, chan));
+0047     db = dbsubset(db, sprintf(<span class="string">'time &lt;= %f &amp;&amp; endtime &gt;= %f'</span>,endtime,starttime));
+0048     
+0049     <span class="comment">% return if no rows</span>
+0050     <span class="keyword">if</span> dbnrecs(db)==0
+0051         <span class="keyword">return</span>
+0052     <span class="keyword">end</span>
+0053     fprintf(<span class="string">'Got %d matching records\n'</span>,dbnrecs(db));
+0054     [wfid,sta,chan,st,et]=dbgetv(db, <span class="string">'wfid'</span>,<span class="string">'sta'</span>,<span class="string">'chan'</span>,<span class="string">'time'</span>, <span class="string">'endtime'</span>);
+0055     sta = cellstr(sta);
+0056     chan = cellstr(chan);
+0057     <span class="keyword">for</span> c=1:numel(sta)
+0058         fprintf(<span class="string">'%12d %s %s %f %f\n'</span>,wfid(c), sta{c}, chan{c}, st(c), et(c));
+0059     <span class="keyword">end</span>
+0060 
+0061     <span class="comment">% if starttime and endtime blank, get from min/max times in wfdisc table</span>
+0062     <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(starttime) &amp; <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(endtime)
+0063         starttime = <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(st);
+0064         endtime = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(et);
+0065     <span class="keyword">end</span>
+0066     
+0067     <span class="comment">% save this view to a database &amp; display starttime &amp; endtime for</span>
+0068     <span class="comment">% troubleshooting</span>
+0069     dbunjoin( db,<span class="string">'/tmp/newdb'</span>);    
+0070     format long
+0071     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(starttime);
+0072     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(endtime);
+0073 
+0074     <span class="comment">% create trace table &amp; close database</span>
+0075     <span class="keyword">try</span>
+0076         fprintf(<span class="string">'Bulk mode'</span>)
+0077         tr = trload_css(db, starttime, endtime);
+0078         st=tr2struct(tr)
+0079         w = <a href="#_sub1" class="code" title="subfunction w = trace2waveform(tr)">trace2waveform</a>(tr);
+0080         <span class="comment">% sometimes this fails with error like:</span>
+0081             <span class="comment">% Warning: some failure reading and interpreting the data for AKT:HHZ at 11/16/2011 (320) 15:44:27.706</span>
+0082             <span class="comment">%</span>
+0083             <span class="comment">% Error using trload_css</span>
+0084             <span class="comment">% trload_css failed</span>
+0085     <span class="keyword">catch</span> <span class="comment">% here we try to loop over each row in db. just setting db.record = c in insufficient as it seems</span>
+0086         <span class="comment">% whenever trload_css is given a dbpointer it reads whole view, not</span>
+0087         <span class="comment">% just the record specified. so instead we subset view with the</span>
+0088         <span class="comment">% wfid for each record in turn, and pass this new view to</span>
+0089         <span class="comment">% trload_css.</span>
+0090         <span class="comment">% However, now we get segmentation faults because too many</span>
+0091         <span class="comment">% databases are open. Yet closing them just results in</span>
+0092         fprintf(<span class="string">' - failed\n\nTrying single mode\n'</span>);
+0093         wt = [];
+0094         <span class="keyword">for</span> c=1:dbnrecs(db)
+0095             db.record = c-1;
+0096             wfid=dbgetv(db, <span class="string">'wfid'</span>);
+0097             db2 = dbsubset(db, sprintf(<span class="string">'wfid==%d'</span>,wfid));
+0098             fprintf(<span class="string">'Got %d matching records\n'</span>,dbnrecs(db2));
+0099             [wfid, sta, chan, st, et]=dbgetv(db2, <span class="string">'wfid'</span>,<span class="string">'sta'</span>,<span class="string">'chan'</span>,<span class="string">'time'</span>, <span class="string">'endtime'</span>);
+0100             fprintf(<span class="string">'%12d %s %s %f %f\n'</span>,wfid, sta, chan, st, et);
+0101             <span class="keyword">try</span>
+0102                 tr = trload_css(db2, starttime, endtime);
+0103                 wt = [wt;<a href="#_sub1" class="code" title="subfunction w = trace2waveform(tr)">trace2waveform</a>(tr)];
+0104                 trdestroy( tr );
+0105             <span class="keyword">catch</span> ME
+0106                 <span class="keyword">if</span> strcmp(ME.identifier, <span class="string">'MATLAB:unassignedOutputs'</span>)
+0107                     <span class="comment">% no trace table returned by trload_css</span>
+0108                     wt = [wt; <a href="../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(<a href="../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(<span class="string">''</span>,sta,<span class="string">''</span>,chan), NaN, <a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(starttime), [], <span class="string">''</span>)];
+0109                 <span class="keyword">else</span>
+0110                     rethrow(ME)
+0111                 <span class="keyword">end</span>
+0112             <span class="keyword">end</span>
+0113             <span class="keyword">try</span>
+0114                 dbfree(db2)
+0115             <span class="keyword">catch</span> ME
+0116                 ME.identifier
+0117                 rethrow ME
+0118             <span class="keyword">end</span>     
+0119         <span class="keyword">end</span>
+0120         w=wt;
+0121         
+0122     <span class="keyword">end</span>
+0123     dbclose( db );
+0124     w = <a href="../../../GISMO/core/@Catalog/combine.html" class="code" title="function catalogObject = combine(catalogObject1, catalogObject2)">combine</a>(w);
+0125     w=<a href="../../../GISMO/core/@waveform/pad.html" class="code" title="function [ w ] = pad( w, snum, enum, padvalue )">pad</a>(w,<a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(starttime), <a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(endtime), NaN);
+0126 <span class="keyword">end</span>
+0127 
+0128 <a name="_sub1" href="#_subfunctions" class="code">function w = trace2waveform(tr)</a>
+0129     <span class="comment">% create empty waveform variables</span>
+0130     wt = repmat(<a href="../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(),dbnrecs(tr),1);
+0131 
+0132     <span class="comment">% load data and metadata from trace table into waveform objects</span>
+0133     <span class="keyword">for</span> cc=1:dbnrecs(tr)
+0134         tr.record = cc-1;
+0135         [trsta, trchan, trtime, trendtime, trnsamp, trsamprate, trinstype, trcalib, trcalper, trresponse, trdatatype, trsegtype] = dbgetv(tr, <span class="string">'sta'</span>, <span class="string">'chan'</span>, <span class="string">'time'</span>, <span class="string">'endtime'</span>, <span class="string">'nsamp'</span>, <span class="string">'samprate'</span>,<span class="string">'instype'</span>,<span class="string">'calib'</span>,<span class="string">'calper'</span>,<span class="string">'response'</span>,<span class="string">'datatype'</span>,<span class="string">'segtype'</span>);
+0136         trdata=trextract_data( tr );
+0137         trunits = <span class="string">''</span>;
+0138         wt(cc) = <a href="../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(<a href="../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(<span class="string">''</span>,trsta,<span class="string">''</span>,trchan), trsamprate, <a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(trtime), trdata, trunits);
+0139     <span class="keyword">end</span>
+0140     w = <a href="../../../GISMO/core/@Catalog/combine.html" class="code" title="function catalogObject = combine(catalogObject1, catalogObject2)">combine</a>(wt); <span class="comment">% combine waveforms based on ChannelTag (I think)</span>
+0141     clear wt
+0142 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of test_Correlation</title>
+  <meta name="keywords" content="test_Correlation">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">tests</a> &gt; test_Correlation.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/tests&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>test_Correlation
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="test_Correlation.html" class="code" title="">test_Correlation</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="test_Correlation.html" class="code" title="">test_Correlation</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function TestAdjustTrigDefaults(testCase)</a></li><li><a href="#_sub2" class="code">function TestAdjustTrigTimeshift(testCase)</a></li><li><a href="#_sub3" class="code">function TestAdjustTrigMin(testCase)</a></li><li><a href="#_sub4" class="code">function TestAdjustTrigMedian(testCase)</a></li><li><a href="#_sub5" class="code">function TestAdjustTrigMaxLag(testCase)</a></li><li><a href="#_sub6" class="code">function TestAdjustTrigIndex(testCase)</a></li><li><a href="#_sub7" class="code">function TestAdjustTrigIndexRelativeToSpecificTrace(testCase)</a></li><li><a href="#_sub8" class="code">function TestAdjustTrigLeastSquares(testCase)</a></li><li><a href="#_sub9" class="code">function TestAutoGainControl(testCase)</a></li><li><a href="#_sub10" class="code">function TestAlign(testCase)</a></li><li><a href="#_sub11" class="code">function testButter(testCase)</a></li><li><a href="#_sub12" class="code">function testCat(testCase)</a></li><li><a href="#_sub13" class="code">function testCheck(testCase)</a></li><li><a href="#_sub14" class="code">function testCluster(testCase)</a></li><li><a href="#_sub15" class="code">function testColormap(testCase)</a></li><li><a href="#_sub16" class="code">function testConv(testCase)</a></li><li><a href="#_sub17" class="code">function testCrop(testCase)</a></li><li><a href="#_sub18" class="code">function testDeconv(testCase)</a></li><li><a href="#_sub19" class="code">function testDemean(testCase)</a></li><li><a href="#_sub20" class="code">function testDetrend(testCase)</a></li><li><a href="#_sub21" class="code">function testDiff(testCase)</a></li><li><a href="#_sub22" class="code">function testFind(testCae)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="test_Correlation.html" class="code" title="">test_Correlation</a> &lt; matlab.unittest.TestCase
+0002    <span class="comment">%UNTITLED Summary of this class goes here</span>
+0003    <span class="comment">%   Detailed explanation goes here</span>
+0004    
+0005    properties
+0006    <span class="keyword">end</span>
+0007    
+0008    methods(Test)
+0009       
+0010       <span class="comment">% Cases for adjusttrig</span>
+0011       <a name="_sub0" href="#_subfunctions" class="code">function TestAdjustTrigDefaults(testCase)</a>
+0012          c = correlation.demo();
+0013          c = c.adjustrig();
+0014       <span class="keyword">end</span>
+0015       <a name="_sub1" href="#_subfunctions" class="code">function TestAdjustTrigTimeshift(testCase)</a>
+0016          c = correlation.demo();
+0017          c = c.adjustrig(<span class="string">'index'</span>, 10);
+0018       <span class="keyword">end</span>
+0019       <a name="_sub2" href="#_subfunctions" class="code">function TestAdjustTrigMin(testCase)</a>
+0020          c = correlation.demo();
+0021          c = c.adjustrig(<span class="string">'min'</span>);
+0022       <span class="keyword">end</span>
+0023       <a name="_sub3" href="#_subfunctions" class="code">function TestAdjustTrigMedian(testCase)</a>
+0024          c = correlation.demo();
+0025          c = c.adjustrig(<span class="string">'median'</span>);
+0026       <span class="keyword">end</span>
+0027       <a name="_sub4" href="#_subfunctions" class="code">function TestAdjustTrigMaxLag(testCase)</a>
+0028          c = correlation.demo();
+0029          c = c.adjustrig(<span class="string">'min'</span>, 1);
+0030       <span class="keyword">end</span>
+0031       <a name="_sub5" href="#_subfunctions" class="code">function TestAdjustTrigIndex(testCase)</a>
+0032          c = correlation.demo();
+0033          c = c.adjustrig(<span class="string">'index'</span>);
+0034       <span class="keyword">end</span>
+0035       <a name="_sub6" href="#_subfunctions" class="code">function TestAdjustTrigIndexRelativeToSpecificTrace(testCase)</a>
+0036          c = correlation.demo();
+0037          c = c.adjustrig(<span class="string">'index'</span>, 10);
+0038       <span class="keyword">end</span>
+0039       <a name="_sub7" href="#_subfunctions" class="code">function TestAdjustTrigLeastSquares(testCase)</a>
+0040          c = correlation.demo();
+0041          c = c.adjustrig(<span class="string">'lsq'</span>);
+0042          
+0043          <span class="comment">% TEST RESULT</span>
+0044       <span class="keyword">end</span>
+0045       
+0046       <span class="comment">% tests for agc</span>
+0047       <a name="_sub8" href="#_subfunctions" class="code">function TestAutoGainControl(testCase)</a>
+0048       <span class="keyword">end</span>
+0049       <a name="_sub9" href="#_subfunctions" class="code">function TestAlign(testCase)</a>
+0050       <span class="keyword">end</span>
+0051       <a name="_sub10" href="#_subfunctions" class="code">function testButter(testCase)</a>
+0052       <span class="keyword">end</span>
+0053       <a name="_sub11" href="#_subfunctions" class="code">function testCat(testCase)</a>
+0054       <span class="keyword">end</span>
+0055       <a name="_sub12" href="#_subfunctions" class="code">function testCheck(testCase)</a>
+0056       <span class="keyword">end</span>
+0057       <a name="_sub13" href="#_subfunctions" class="code">function testCluster(testCase)</a>
+0058       <span class="keyword">end</span>
+0059       <a name="_sub14" href="#_subfunctions" class="code">function testColormap(testCase)</a>
+0060       <span class="keyword">end</span>
+0061       <a name="_sub15" href="#_subfunctions" class="code">function testConv(testCase)</a>
+0062       <span class="keyword">end</span>
+0063       <a name="_sub16" href="#_subfunctions" class="code">function testCrop(testCase)</a>
+0064       <span class="keyword">end</span>
+0065       <a name="_sub17" href="#_subfunctions" class="code">function testDeconv(testCase)</a>
+0066       <span class="keyword">end</span>
+0067       <a name="_sub18" href="#_subfunctions" class="code">function testDemean(testCase)</a>
+0068       <span class="keyword">end</span>
+0069       <a name="_sub19" href="#_subfunctions" class="code">function testDetrend(testCase)</a>
+0070       <span class="keyword">end</span>
+0071       <a name="_sub20" href="#_subfunctions" class="code">function testDiff(testCase)</a>
+0072       <span class="keyword">end</span>
+0073       <a name="_sub21" href="#_subfunctions" class="code">function testFind(testCae)</a>
+0074       <span class="keyword">end</span>
+0075       
+0076    <span class="keyword">end</span>
+0077 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of filter_by_time</title>
+  <meta name="keywords" content="filter_by_time">
+  <meta name="description" content="filter_by_time">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; filter_by_time.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>filter_by_time
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>filter_by_time</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = filter_by_time(w, myStartTime, myEndTime) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> filter_by_time 
+ w = filter_by_time(w, startTime, endTime)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../../../GISMO/core/@rsam/extract.html" class="code" title="function s=extract(self, snum, enum)">extract</a>	</li><li><a href="../../../../GISMO/core/@threecomp/extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="../../../../GISMO/core/@waveform/extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="../../../../GISMO/core/@waveform/gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>	GETTIMERANGE returns the list of start and end times from a waveform array</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="load_from_datasource.html" class="code" title="function w = load_from_datasource(ds, chans, startt, endt, combine_waves, usewkaround)">load_from_datasource</a>	load_from_datasource</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = filter_by_time(w, myStartTime, myEndTime)</a>
+0002    <span class="comment">% filter_by_time</span>
+0003    <span class="comment">% w = filter_by_time(w, startTime, endTime)</span>
+0004    
+0005    <span class="comment">% subset and consolidate</span>
+0006    [wstarts, wends] = <a href="../../../../GISMO/core/@waveform/gettimerange.html" class="code" title="function [startTimeList endTimeList] = gettimerange(w)">gettimerange</a>(w);
+0007    wavesWithinWindow = wstarts &lt; myEndTime &amp; wends &gt; myStartTime;
+0008    <span class="keyword">if</span> any(wavesWithinWindow)
+0009       w = <a href="../../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>(w(wavesWithinWindow),<span class="string">'time'</span>,myStartTime,myEndTime);
+0010    <span class="keyword">else</span>
+0011       w(:)=[]; <span class="comment">%return an empty waveform</span>
+0012    <span class="keyword">end</span>
+0013 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

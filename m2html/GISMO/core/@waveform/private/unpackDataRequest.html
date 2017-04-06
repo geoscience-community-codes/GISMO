@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of unpackDataRequest</title>
+  <meta name="keywords" content="unpackDataRequest">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; unpackDataRequest.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>unpackDataRequest
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [dataSource, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="load_antelope.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="load_antelope_old.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope_old</a>	load a waveform from antelope</li><li><a href="load_file.html" class="code" title="function w = load_file(request)">load_file</a>	LOAD_FILE</li><li><a href="load_irisdmcws.html" class="code" title="function wavef = load_irisdmcws(request)">load_irisdmcws</a>	LOAD_IRISDMCWS loads waveforms using the IRIS Web Services Java Library</li><li><a href="load_matfile.html" class="code" title="function w = load_matfile(request)">load_matfile</a>	LOAD_FILE</li><li><a href="load_miniseed.html" class="code" title="function w = load_miniseed(request)">load_miniseed</a>	LOAD_MINISEED loads a waveform from MINISEED files</li><li><a href="load_obspy.html" class="code" title="function w = load_obspy(request)">load_obspy</a>	LOAD_OBSPY loads matlab files that were saved by ObsPy as per the ObsPy tutorial</li><li><a href="load_sac.html" class="code" title="function w = load_sac(request)">load_sac</a>	LOAD_SAC loads a waveform from SAC files</li><li><a href="load_seisan.html" class="code" title="function w = load_seisan(request)">load_seisan</a>	LOAD_SEISAN loads a waveform from SEISAN files</li><li><a href="load_winston.html" class="code" title="function allWaves = load_winston(request)">load_winston</a>	LOAD_WINSTON handles retrieval of data from a winston waveserver.</li><li><a href="../../../../GISMO/core/dev/+dataretrieval/@antelopesource/antelopesource.html" class="code" title="">antelopesource</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [dataSource, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request)</a>
+0002    dataSource = request.dataSource;
+0003    chanInfo = request.chanInfo;
+0004    startTimes = request.startTimes;
+0005    endTimes = request.endTimes;
+0006    combineWaves = request.combineWaves;
+0007 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

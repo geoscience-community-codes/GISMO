@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of load_antelope</title>
+  <meta name="keywords" content="load_antelope">
+  <meta name="description" content="load a waveform from antelope">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="../index.html">+dataretrieval</a> &gt; <a href="index.html">@antelopesource</a> &gt; load_antelope.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/+dataretrieval/@antelopesource&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>load_antelope
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>load a waveform from antelope</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function outputWaveforms = load_antelope(obj, specificDatabase) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> load a waveform from antelope
+  w = obj.load_antelope(specificDatabase)
+   database is the antelope database</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="get_antelope_traces.html" class="code" title="function [obj, rawDb, filteredDb] =  get_antelope_traces(obj)">get_antelope_traces</a>	GET_ANTELOPE_TRACE gets interesting data from database, and returns the tracebuf object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="../../../../../GISMO/core/@waveform/private/get_load_routine.html" class="code" title="function myLoadRoutine = get_load_routine(ds, use_wkaround)">get_load_routine</a>	determine the load function based upon the datasource's type</li><li><a href="../../../../../GISMO/core/@waveform/private/load_antelope.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="../../../../../GISMO/core/@waveform/private/load_antelope_old.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope_old</a>	load a waveform from antelope</li><li><a href="antelopesource.html" class="code" title="">antelopesource</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function outputWaveforms = load_antelope(obj, specificDatabase)</a>
+0002    <span class="comment">% load a waveform from antelope</span>
+0003    <span class="comment">%  w = obj.load_antelope(specificDatabase)</span>
+0004    <span class="comment">%   database is the antelope database</span>
+0005    
+0006    <span class="comment">% AUTHOR: Celso Reyes</span>
+0007    <span class="comment">% MODIFICATIONS: Glenn Thompson, Carl Tape</span>
+0008    
+0009    <span class="comment">%TODO: maybe order of operations can be changed to avoid unpacking</span>
+0010    <span class="comment">%request when unnecessary.</span>
+0011          
+0012    <span class="comment">%call this routine for each database, then return the waveforms.</span>
+0013    <span class="keyword">if</span> exist(<span class="string">'specificDatabase'</span>,<span class="string">'var'</span>)
+0014       obj.dbname = specificDatabase;
+0015       outputWaveforms = emptyWaveform();
+0016       
+0017       <span class="comment">%convert each channeltag into</span>
+0018       obj = obj.buildSearchCriteria();
+0019       <span class="keyword">for</span> i = 1:numel(obj.searchcriteria)
+0020          <span class="comment">%if multiple traces will result, then there may be multiple records for tr</span>
+0021          [tr, dbname, fdb] = <a href="get_antelope_traces.html" class="code" title="function [obj, rawDb, filteredDb] =  get_antelope_traces(obj)">get_antelope_traces</a>(obj, obj.searchcriteria{i});
+0022          w = cycleThroughTraces(tr, obj.combinetraces);
+0023          outputWaveforms = [outputWaveforms; w]; <span class="comment">%#ok&lt;AGROW&gt;</span>
+0024       <span class="keyword">end</span>
+0025       dbclose(fdb);
+0026    <span class="keyword">else</span>
+0027       outputWaveforms = RecursivelyLoadFromEachDatabase(obj);
+0028    <span class="keyword">end</span>
+0029 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

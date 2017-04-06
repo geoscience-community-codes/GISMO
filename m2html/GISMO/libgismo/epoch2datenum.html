@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of epoch2datenum</title>
+  <meta name="keywords" content="epoch2datenum">
+  <meta name="description" content="TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">libgismo</a> &gt; epoch2datenum.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/libgismo&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>epoch2datenum
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function time = epoch2datenum(epoch) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab
+ numeric date format.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/contributed_antelope/attenuation/hankelq.html" class="code" title="function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)">hankelq</a>	HANKELQ Compute spectral ratio in two frequency bands</li><li><a href="../../GISMO/contributed_antelope/double_difference/dd_make_scp.html" class="code" title="function dd_make_scp(dbname,varargin)">dd_make_scp</a>	DD_MAKE_SCP Create a draft control file for the correlation process</li><li><a href="../../GISMO/contributed_antelope/double_difference/dd_process_scp.html" class="code" title="function dd_process_scp(dbname,scpfile,varargin)">dd_process_scp</a>	DD_PROCESS_SCP Process correlations by station and channel</li><li><a href="../../GISMO/contributed_antelope/import_events/import_events.html" class="code" title="function [ eqtc, varargout ] = import_events(dbname, chanfile, starttime, endtime, phase, delay, enddelay, varargin)">import_events</a>	IMPORT_EVENTS Import waveforms associated with earthquake events.</li><li><a href="../../GISMO/contributed_antelope/reduced_displacement/reducedisp_plot.html" class="code" title="function reducedisp_plot(dbname)">reducedisp_plot</a>	REDUCEDISP_PLOT plot reduced displacement data.</li><li><a href="../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/dbload.html" class="code" title="function [origin,site,arrival,ray] = dbload(dbName)">dbload</a>	DBLOAD extracts travel times from a database</li><li><a href="../../GISMO/core/+Arrival/+read_arrivals/antelope.html" class="code" title="function arrivalObj = read_antelope(dbname, subset_expr)">antelope</a>	LOAD_ARRIVALS Load arrivals from a CSS3.0 database</li><li><a href="../../GISMO/core/+antelope/antelope2waveform.html" class="code" title="function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)">antelope2waveform</a>	ANTELOPE2WAVEFORM Load waveform objects from Antelope database</li><li><a href="../../GISMO/core/+antelope/arrivals2waveforms.html" class="code" title="function w = arrivals2waveforms(dbpath, arrivals, pretrig, posttrig, taper_seconds, nwaveforms)">arrivals2waveforms</a>	ARRIVALS2WAVEFORMS Load waveform objects corresponding to an arrivals structure</li><li><a href="../../GISMO/core/+antelope/dbgetarrivals.html" class="code" title="function a = dbgetarrivals(databasePath, subset_expr)">dbgetarrivals</a>	DBGETARRIVALS Load arrivals from an Antelope CSS3.0 database</li><li><a href="../../GISMO/core/+antelope/dbgetorigins.html" class="code" title="function origins = dbgetorigins(dbpath, subset_expression)">dbgetorigins</a>	DBGETORIGINS Load preferred origins from an Antelope CSS3.0</li><li><a href="../../GISMO/core/@EventRate/EventRate.html" class="code" title="">EventRate</a>	</li><li><a href="../../GISMO/core/@waveform/private/load_antelope.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="../../GISMO/core/@waveform/private/load_antelope_old.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope_old</a>	load a waveform from antelope</li><li><a href="../../GISMO/core/@waveform/private/load_miniseed.html" class="code" title="function w = load_miniseed(request)">load_miniseed</a>	LOAD_MINISEED loads a waveform from MINISEED files</li><li><a href="../../GISMO/core/dev/+dataretrieval/@antelopesource/get_antelope_traces.html" class="code" title="function [obj, rawDb, filteredDb] =  get_antelope_traces(obj)">get_antelope_traces</a>	GET_ANTELOPE_TRACE gets interesting data from database, and returns the tracebuf object</li><li><a href="../../GISMO/uaf_internal/AEIC_AVO/+aeic_catalog/get_total.html" class="code" title="function catalog = get_total(varargin)">get_total</a>	GET_TOTAL Read in the complete AEIC Total earthquake catalog</li><li><a href="../../GISMO/uaf_internal/AEIC_AVO/aeic_total_catalog.html" class="code" title="function catalog = aeic_total_catalog(varargin)">aeic_total_catalog</a>	AEIC_TOTAL_CATALOG Read in the complete AEIC Total earthquake catalog</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab</span>
+0002 <span class="comment">% numeric date format.</span>
+0003 
+0004 <span class="comment">% Author: Michael West, Modified by Glenn Thompson</span>
+0005 <span class="comment">% $Date$</span>
+0006 <span class="comment">% $Revision$</span>
+0007 
+0008 <a name="_sub0" href="#_subfunctions" class="code">function time = epoch2datenum(epoch)</a>
+0009     <span class="keyword">if</span> admin.antelope_exists()
+0010         time = datenum(epoch2str(epoch,<span class="string">'%m %d %Y %H %M %S.%s'</span>),<span class="string">'mm dd yyyy HH MM SS.FFF'</span>);
+0011     <span class="keyword">else</span> <span class="comment">% does not handle leap seconds</span>
+0012         time = datenum(1970,1,1,0,0,epoch);
+0013     <span class="keyword">end</span>
+0014 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of linkage</title>
+  <meta name="keywords" content="linkage">
+  <meta name="description" content="c = LINKAGE(c) Creates a hierarchical cluster tree for all waveforms in">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@correlation</a> &gt; linkage.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@correlation&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>linkage
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>c = LINKAGE(c) Creates a hierarchical cluster tree for all waveforms in</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function c = linkage(c,varargin); </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> c = LINKAGE(c) Creates a hierarchical cluster tree for all waveforms in
+ the correlation object. It reads the CORR field (must be filled) and
+ fills in the LINK field. This iuse is identical to c =
+ LINKAGE(c,'average').
+
+ c = LINKAGE(c,...) is just a wrapper program which calls the linkage
+ function in the matlab stats toolbox.  Usage is the same as the stats
+ toolbox version except that the first argument and the returned value are
+ correlation objects. In most cases these will be the same object. See
+ HELP LINKAGE for details and usage. All options and user controls are the
+ same. 
+ 
+ ** IMPORTANT NOTE **: There is one significant difference from the
+ built-in linkage routine. The native linkage command operates on
+ *dissimilarity* information. That is, the opposite of correlation values.
+ When linkage is called on a correlation object, it expects max
+ correlation values as input. Temporary dissimiliarity information is
+ created internally and passed to the built in linkage routine.
+
+ Common uses include:
+   c = LINKAGE(c)           % returns clusters of similar waveforms 
+     c = LINKAGE(c,'average') % same as first use
+     c = LINKAGE(c,'single')  % useful for evolving waveforms</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="linkage.html" class="code" title="function c = linkage(c,varargin);">linkage</a>	c = LINKAGE(c) Creates a hierarchical cluster tree for all waveforms in</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/linkage.html" class="code" title="function c = linkage(c,varargin)">linkage</a>	linkage   Agglomerative hierarchical cluster tree for Seismic Traces</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG adjusts the trigger times of each trace</li><li><a href="cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="linkage.html" class="code" title="function c = linkage(c,varargin);">linkage</a>	c = LINKAGE(c) Creates a hierarchical cluster tree for all waveforms in</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG  adjusts the trigger times of each trace</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/linkage.html" class="code" title="function c = linkage(c,varargin)">linkage</a>	linkage   Agglomerative hierarchical cluster tree for Seismic Traces</li><li><a href="../../../GISMO/uaf_internal/AEIC_AVO/+check/crossfeed.html" class="code" title="function crossfeed(varargin)">crossfeed</a>	CROSSFEED Checks for crossfeeding and duplicate data channels</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = linkage(c,varargin);</a>
+0002 
+0003 <span class="comment">% c = LINKAGE(c) Creates a hierarchical cluster tree for all waveforms in</span>
+0004 <span class="comment">% the correlation object. It reads the CORR field (must be filled) and</span>
+0005 <span class="comment">% fills in the LINK field. This iuse is identical to c =</span>
+0006 <span class="comment">% LINKAGE(c,'average').</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% c = LINKAGE(c,...) is just a wrapper program which calls the linkage</span>
+0009 <span class="comment">% function in the matlab stats toolbox.  Usage is the same as the stats</span>
+0010 <span class="comment">% toolbox version except that the first argument and the returned value are</span>
+0011 <span class="comment">% correlation objects. In most cases these will be the same object. See</span>
+0012 <span class="comment">% HELP LINKAGE for details and usage. All options and user controls are the</span>
+0013 <span class="comment">% same.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% ** IMPORTANT NOTE **: There is one significant difference from the</span>
+0016 <span class="comment">% built-in linkage routine. The native linkage command operates on</span>
+0017 <span class="comment">% *dissimilarity* information. That is, the opposite of correlation values.</span>
+0018 <span class="comment">% When linkage is called on a correlation object, it expects max</span>
+0019 <span class="comment">% correlation values as input. Temporary dissimiliarity information is</span>
+0020 <span class="comment">% created internally and passed to the built in linkage routine.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% Common uses include:</span>
+0023 <span class="comment">%   c = LINKAGE(c)           % returns clusters of similar waveforms</span>
+0024 <span class="comment">%     c = LINKAGE(c,'average') % same as first use</span>
+0025 <span class="comment">%     c = LINKAGE(c,'single')  % useful for evolving waveforms</span>
+0026 
+0027 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0028 <span class="comment">% $Date$</span>
+0029 <span class="comment">% $Revision$</span>
+0030 
+0031 
+0032 <span class="keyword">if</span> nargin &lt;= 0
+0033     error(<span class="string">'Not enough inputs'</span>);
+0034 <span class="keyword">end</span>
+0035 
+0036 <span class="keyword">if</span> ~isa(c,<span class="string">'correlation'</span>)
+0037     error(<span class="string">'First input must be a correlation object'</span>);
+0038 <span class="keyword">end</span>;
+0039 
+0040 <span class="keyword">if</span> <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'TRACES'</span>)&lt;2
+0041     error(<span class="string">'correlationLinkageTooFewTraces'</span>,<span class="string">'Correlation object must contain at least two traces to use the LINKAGE function'</span>);
+0042 <span class="keyword">end</span>;
+0043 
+0044 
+0045 <span class="comment">% if isempty(get(c,'LAG'))</span>
+0046 <span class="comment">%     error('LAG field must be filled in input object');</span>
+0047 <span class="comment">%     error('See correlation/linkage function');</span>
+0048 <span class="comment">% end;</span>
+0049 
+0050 
+0051 
+0052 
+0053 K = 1.001 - c.C;            <span class="comment">% create dissimilarity matrix</span>
+0054 K = K - diag(diag(K));            <span class="comment">% remove diagonal (required format)</span>
+0055 Y = squareform(K);          <span class="comment">% transform to &quot;pdist&quot; vector format</span>
+0056 
+0057 
+0058 <span class="keyword">if</span> nargin == 1
+0059     c.link = <a href="linkage.html" class="code" title="function c = linkage(c,varargin);">linkage</a>(Y,<span class="string">'average'</span>);
+0060 <span class="keyword">else</span>
+0061     c.link = <a href="linkage.html" class="code" title="function c = linkage(c,varargin);">linkage</a>(Y,varargin{:});
+0062 <span class="keyword">end</span>
+0063 
+0064</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

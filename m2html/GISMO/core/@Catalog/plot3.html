@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plot3</title>
+  <meta name="keywords" content="plot3">
+  <meta name="description" content="CATALOG.PLOT3 Plot hypocenters in 3-D">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@Catalog</a> &gt; plot3.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@Catalog&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>plot3
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>CATALOG.PLOT3 Plot hypocenters in 3-D</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function plot3(catalogObject, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CATALOG.PLOT3 Plot hypocenters in 3-D
+   catalogObject.plot3()
+
+   Optional name/value pairs:
+     'nsigma' - controls how zoomed-in the axes are (default
+     5)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="../../../GISMO/core/@threecomp/plot3.html" class="code" title="function plot3(TC)">plot3</a>	PLOT3 Interactively make 3D plot of particle motion vector evolution</li><li><a href="../../../GISMO/core/dev/@ChannelDetails/ChannelDetails.html" class="code" title="">ChannelDetails</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function plot3(catalogObject, varargin)</a>
+0002     <span class="comment">%CATALOG.PLOT3 Plot hypocenters in 3-D</span>
+0003     <span class="comment">%   catalogObject.plot3()</span>
+0004     <span class="comment">%</span>
+0005     <span class="comment">%   Optional name/value pairs:</span>
+0006     <span class="comment">%     'nsigma' - controls how zoomed-in the axes are (default</span>
+0007     <span class="comment">%     5)</span>
+0008 
+0009     <span class="comment">% Glenn Thompson 2014/06/01</span>
+0010     <span class="keyword">if</span> all(isnan(catalogObject.lat))
+0011         warning(<span class="string">'No hypocenter data to plot'</span>);
+0012         <span class="keyword">return</span>
+0013     <span class="keyword">end</span>
+0014     p = inputParser;
+0015     p.addParamValue(<span class="string">'nsigma'</span>, <span class="string">'5'</span>, @isstr);
+0016     p.parse(varargin{:});
+0017     nsigma = p.Results.nsigma;            
+0018 
+0019     <span class="comment">% change region</span>
+0020     region = get_region(catalogObject, nsigma);
+0021 
+0022     <span class="comment">% Compute Marker Size</span>
+0023     symsize = get_symsize(catalogObject);
+0024 
+0025     <span class="comment">% 3D plot</span>
+0026     figure
+0027     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gcf,<span class="string">'Color'</span>, [1 1 1]);
+0028     scatter3(catalogObject.lon, catalogObject.lat, catalogObject.depth, symsize);
+0029     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'ZDir'</span>, <span class="string">'reverse'</span>);
+0030     grid on;
+0031     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'XLim'</span>, [region(1) region(2)]);
+0032     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'YLim'</span>, [region(3) region(4)]);
+0033     xlabel(<span class="string">'Longitude'</span>);
+0034     ylabel(<span class="string">'Latitude'</span>);
+0035     zlabel(<span class="string">'Depth (km)'</span>);
+0036 
+0037 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

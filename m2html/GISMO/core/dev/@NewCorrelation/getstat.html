@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of getstat</title>
+  <meta name="keywords" content="getstat">
+  <meta name="description" content="c = GETSTAT(c)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; getstat.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>getstat
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>c = GETSTAT(c)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c=getstat(c) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> c = GETSTAT(c)
+ This routine distills the results of a cross correlation into statistics
+ by trace. These statistics are stored in an Mx? matrix in the STAT field
+ of the correlation object, where M is the number of traces. See help
+ correlation for description of individual statisitics columns within the
+ STAT field. See Vandecar and Crosson (BSSA 1990) for details of how these
+ statistics are calculated.
+
+ Note that statistics determined from the maximum cross correlation values
+ are transformed to z space to determine the mean and rms error and then
+ transformed back for presentation, where
+
+   z = 1/2 * log ( (1+r) / (1-r) ) r = (exp(2*Z)-1)./(exp(2*Z)+1)
+
+ This is done because the cross correlation value is bounded by 1 on the
+ high side and not normally distributed. Fisher's transform (z) translates
+ the correlation values into a space where they have a roughly normal
+ distribution. The implimentation here is a slight approximation because
+ the matrix of maximum correlations contains the diagonal values of one
+ where each trace is compared against itself. GETSTAT makes an
+ approximation to remove this bias. For very small numbers of traces, this
+ approach may break down. But then, for small numbers of the traces, the
+ statistics aren't terribly valid anyway.
+
+ The least squares inversion in this routine bogs down quickly when
+ operating on more than a few hundred traces.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="../../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>	STD Standard deviation of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG adjusts the trigger times of each trace</li><li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c=getstat(c)</a>
+0002    
+0003    <span class="comment">% c = GETSTAT(c)</span>
+0004    <span class="comment">% This routine distills the results of a cross correlation into statistics</span>
+0005    <span class="comment">% by trace. These statistics are stored in an Mx? matrix in the STAT field</span>
+0006    <span class="comment">% of the correlation object, where M is the number of traces. See help</span>
+0007    <span class="comment">% correlation for description of individual statisitics columns within the</span>
+0008    <span class="comment">% STAT field. See Vandecar and Crosson (BSSA 1990) for details of how these</span>
+0009    <span class="comment">% statistics are calculated.</span>
+0010    <span class="comment">%</span>
+0011    <span class="comment">% Note that statistics determined from the maximum cross correlation values</span>
+0012    <span class="comment">% are transformed to z space to determine the mean and rms error and then</span>
+0013    <span class="comment">% transformed back for presentation, where</span>
+0014    <span class="comment">%</span>
+0015    <span class="comment">%   z = 1/2 * log ( (1+r) / (1-r) ) r = (exp(2*Z)-1)./(exp(2*Z)+1)</span>
+0016    <span class="comment">%</span>
+0017    <span class="comment">% This is done because the cross correlation value is bounded by 1 on the</span>
+0018    <span class="comment">% high side and not normally distributed. Fisher's transform (z) translates</span>
+0019    <span class="comment">% the correlation values into a space where they have a roughly normal</span>
+0020    <span class="comment">% distribution. The implimentation here is a slight approximation because</span>
+0021    <span class="comment">% the matrix of maximum correlations contains the diagonal values of one</span>
+0022    <span class="comment">% where each trace is compared against itself. GETSTAT makes an</span>
+0023    <span class="comment">% approximation to remove this bias. For very small numbers of traces, this</span>
+0024    <span class="comment">% approach may break down. But then, for small numbers of the traces, the</span>
+0025    <span class="comment">% statistics aren't terribly valid anyway.</span>
+0026    <span class="comment">%</span>
+0027    <span class="comment">% The least squares inversion in this routine bogs down quickly when</span>
+0028    <span class="comment">% operating on more than a few hundred traces.</span>
+0029    
+0030    
+0031    <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0032    <span class="comment">% $Date$</span>
+0033    <span class="comment">% $Revision$</span>
+0034    <span class="comment">% TODO: needs better handling of xcorr=1 values (MEW - 11/20/06)</span>
+0035    
+0036    <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(c.corrmatrix)
+0037       error(<span class="string">'CORR and LAG fields must be filled in input object.\nSee xcorr function'</span>);
+0038    <span class="keyword">end</span>
+0039    
+0040    
+0041    <span class="comment">% GET MEAN AND STD OF MAX. CROSS CORRELATION (EQ. 4)</span>
+0042    Ztmp = c.corrmatrix - 0.3*eye(size(c.corrmatrix));
+0043    Z = 0.5 * log((1+Ztmp)./(1-Ztmp));
+0044    Zmean = <a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(Z);
+0045    Zrmshi = <a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(Z) + <a href="../../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>(Z);
+0046    Zrmslo = <a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(Z) - <a href="../../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>(Z);
+0047    Rmean = (exp(2*Zmean)-1)./(exp(2*Zmean)+1);
+0048    Rrmshi = (exp(2*Zrmshi)-1)./(exp(2*Zrmshi)+1);
+0049    Rrmslo = (exp(2*Zrmslo)-1)./(exp(2*Zrmslo)+1);
+0050    
+0051    
+0052    
+0053    <span class="comment">% BUILD A AND dT</span>
+0054    nTraces = size(c.corrmatrix,1);
+0055    m = nTraces*(nTraces-1)/2+1;
+0056    A = sparse(m,nTraces);
+0057    A(m,:) = 1;
+0058    dT = zeros(m,1);
+0059    W = speye(m);
+0060    I = zeros(m,1);
+0061    J = zeros(m,1);
+0062    count = 0;
+0063    <span class="keyword">for</span> p = 1:nTraces-1
+0064       <span class="keyword">for</span> q = (p+1):nTraces
+0065          count = count + 1;
+0066          A(count,p) = 1;
+0067          A(count,q) = -1;
+0068          dT(count) = c.lags(p,q);
+0069          W(count,count) = c.corrmatrix(p,q);
+0070       <span class="keyword">end</span>;
+0071    <span class="keyword">end</span>;
+0072    
+0073    
+0074    
+0075    <span class="comment">% INVERT FOR Test</span>
+0076    T = inv( A' * A ) * A' * dT;            <span class="comment">% unweighted</span>
+0077    <span class="comment">%Tw = inv( A' * W * A ) * A' * W * dT;        % weighted</span>
+0078    
+0079    
+0080    
+0081    <span class="comment">% ESTIMATE RESIDUALS, STD</span>
+0082    <span class="keyword">for</span> p = 1:nTraces
+0083       <span class="keyword">for</span> q = 1:nTraces
+0084          res(p,q) = c.lags(p,q) - ( T(p) - T(q) );    <span class="comment">%eq. 7</span>
+0085       <span class="keyword">end</span>;
+0086    <span class="keyword">end</span>;
+0087    Trms = <a href="../../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>(res)';        <span class="comment">% ~eq. 8</span>
+0088    
+0089    
+0090    c.stat(:,1) = Rmean;
+0091    c.stat(:,2) = Rrmshi;
+0092    c.stat(:,3) = Rrmslo;
+0093    c.stat(:,4) = -1*T;
+0094    c.stat(:,5) = Trms;
+0095 <span class="keyword">end</span>
+0096 
+0097 
+0098</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

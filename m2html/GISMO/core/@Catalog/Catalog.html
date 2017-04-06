@@ -1,0 +1,401 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Catalog</title>
+  <meta name="keywords" content="Catalog">
+  <meta name="description" content="CATALOG the blueprint for Catalog objects in GISMO">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@Catalog</a> &gt; Catalog.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@Catalog&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>Catalog
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>CATALOG the blueprint for Catalog objects in GISMO</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CATALOG the blueprint for Catalog objects in GISMO
+ A Catalog object is a container for event metadata
+ See also <a href="eventrate.html" class="code" title="function erobj=eventrate(catalogObject, varargin)">EventRate</a>, readEvents, Catalog/Cookbook</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed/iris_dmc_tools/+irisdmc/cookbook.html" class="code" title="function cookbook">cookbook</a>	COOKBOOK example program using the IRIS DMC web services</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/cookbook.html" class="code" title="">cookbook</a>	COOKBOOK demonstrate the features of the mastercorr package.</li><li><a href="../../../GISMO/core/+scnlobject/cookbook.html" class="code" title="">cookbook</a>	% The SCNLOBJECT cookbook</li><li><a href="Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="addwaveforms.html" class="code" title="function cobj = addwaveforms(cobj, w_continuous)">addwaveforms</a>	Catalog.addwaveforms Add waveform objects corresponding to ontimes and</li><li><a href="bvalue.html" class="code" title="function bvalue(catalogObject, mcType)">bvalue</a>	BVALUE evaluate b-value, a-value and magnitude of completeness</li><li><a href="combine.html" class="code" title="function catalogObject = combine(catalogObject1, catalogObject2)">combine</a>	CATALOG.COMBINE combine two Catalog objects</li><li><a href="cookbook.html" class="code" title="">cookbook</a>	% Catalog Cookbook</li><li><a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="eev.html" class="code" title="function eev(obj, eventnum)">eev</a>	CATALOG.EEV - Browse an Catalog object one event at a time.</li><li><a href="eventrate.html" class="code" title="function erobj=eventrate(catalogObject, varargin)">eventrate</a>	CATALOG.EVENTRATE</li><li><a href="hist.html" class="code" title="function hist(catalogObject);">hist</a>	HIST plot histograms of magnitude distribution, depth</li><li><a href="plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="plot3.html" class="code" title="function plot3(catalogObject, varargin)">plot3</a>	CATALOG.PLOT3 Plot hypocenters in 3-D</li><li><a href="plot_time.html" class="code" title="function plot_time(catalogObject)">plot_time</a>	CATALOG.PLOT_TIME Plot magnitude and depth against time</li><li><a href="plotprmm.html" class="code" title="function plotprmm(catalogObject)">plotprmm</a>	CATALOG.PLOTPRMM Plot the peak rate and maximum magnitude of a</li><li><a href="subclassify.html" class="code" title="function c = subclassify(catalogObject, subclasses)">subclassify</a>	% SUBCLASSIFY</li><li><a href="subset.html" class="code" title="function catalogObject2 = subset(catalogObject, indices)">subset</a>	CATALOG.SUBSET Create a new catalogObject by subsetting based</li><li><a href="summary.html" class="code" title="function summary(obj)">summary</a>	CATALOG.SUMMARY Summarise a Catalog object</li><li><a href="webmap.html" class="code" title="function webmap(catalogObject)">webmap</a>	CATALOG.WEBMAP Plot hypocenters in map view using webmap</li><li><a href="write.html" class="code" title="function write(catalogObject, outformat, outpath, schema)">write</a>	CATALOG.WRITE Write an Catalog object to disk</li><li><a href="../../../GISMO/core/@EventRate/cookbook.html" class="code" title="">cookbook</a>	% EventRate Cookbook</li><li><a href="../../../GISMO/core/@correlation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/@correlation/subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@drumplot/cookbook.html" class="code" title="">cookbook</a>	% drumplot cookbook</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@rsam/bvalue.html" class="code" title="function [aw,tt1, tt2, tmc, mag_zone]=bvalue(this, mcType, method)">bvalue</a>	BVALUE evaluate b-value, a-value and magnitude of completeness</li><li><a href="../../../GISMO/core/@rsam/cookbook.html" class="code" title="">cookbook</a>	% RSAM Cookbook</li><li><a href="../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../GISMO/core/@threecomp/plot3.html" class="code" title="function plot3(TC)">plot3</a>	PLOT3 Interactively make 3D plot of particle motion vector evolution</li><li><a href="../../../GISMO/core/@waveform/combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and ChannelTag info.</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../GISMO/core/dev/@TraceFilter/cookbook.html" class="code" title="function cookbook()">cookbook</a>	cookbook   Cookbook for TraceFilter</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/cookbook.html" class="code" title="function cookbook()">cookbook</a>	cookbook   Cookbook for TraceSpectra</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/+Catalog/+read_catalog/aef.html" class="code" title="function self = aef(varargin)">aef</a>	READ_CATALOG.AEF</li><li><a href="../../../GISMO/core/+Catalog/+read_catalog/antelope.html" class="code" title="function self = antelope(varargin)">antelope</a>	READ_CATALOG.ANTELOPE load events from a CSS3.0 database using Antelope.</li><li><a href="../../../GISMO/core/+Catalog/+read_catalog/iris.html" class="code" title="function self = iris(ev)">iris</a>	READ_CATALOG.IRIS</li><li><a href="../../../GISMO/core/+Catalog/+read_catalog/seisan.html" class="code" title="function self = seisan(varargin)">seisan</a>	READ_CATALOG.SEISAN Read a Seisan event database - consisting of</li><li><a href="../../../GISMO/core/+Catalog/+read_catalog/sru.html" class="code" title="function self=sru(filename)">sru</a>	readEvents.sru read a catalog sent by Seismic Research Unit, University of West</li><li><a href="../../../GISMO/core/+Catalog/+read_catalog/usgsrealtime.html" class="code" title="function self = usgsrealtime(timeperiod)">usgsrealtime</a>	READEVENTS.USGSREALTIME Read last week or month of data from USGS</li><li><a href="../../../GISMO/core/+Catalog/+read_catalog/zmap.html" class="code" title="function self = zmap(zmapdata)">zmap</a>	readEvents.zmap Translate a ZMAP-format data matrix into a Catalog object</li><li><a href="../../../GISMO/core/+Detection/sta_lta.html" class="code" title="function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)">sta_lta</a>	STA_LTA: Short-Time-Average/Long-Time-Average event detector.</li><li><a href="../../../GISMO/core/@Arrival/Arrival.html" class="code" title="">Arrival</a>	Arrival the blueprint for Arrival objects in GISMO</li><li><a href="Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="subclassify.html" class="code" title="function c = subclassify(catalogObject, subclasses)">subclassify</a>	% SUBCLASSIFY</li><li><a href="subset.html" class="code" title="function catalogObject2 = subset(catalogObject, indices)">subset</a>	CATALOG.SUBSET Create a new catalogObject by subsetting based</li><li><a href="webmap.html" class="code" title="function webmap(catalogObject)">webmap</a>	CATALOG.WEBMAP Plot hypocenters in map view using webmap</li><li><a href="../../../GISMO/core/@drumplot/drumplot.html" class="code" title="">drumplot</a>	DRUMPLOT the blueprint for drumplot objects in GISMO</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function obj = Catalog(varargin)</a></li><li><a href="#_sub2" class="code">function val = get.otime(obj)</a></li><li><a href="#_sub3" class="code">function val = get.lon(obj)</a></li><li><a href="#_sub4" class="code">function val = get.lat(obj)</a></li><li><a href="#_sub5" class="code">function val = get.depth(obj)</a></li><li><a href="#_sub6" class="code">function val = get.mag(obj)</a></li><li><a href="#_sub7" class="code">function val = get.magtype(obj)</a></li><li><a href="#_sub8" class="code">function val = get.etype(obj)</a></li><li><a href="#_sub9" class="code">function val = get.ontime(obj)</a></li><li><a href="#_sub10" class="code">function val = get.offtime(obj)</a></li><li><a href="#_sub11" class="code">function val = get.numberOfEvents(obj)</a></li><li><a href="#_sub12" class="code">function t=gettimerange(obj)</a></li><li><a href="#_sub13" class="code">function binsize = autobinsize(catalogObject)</a></li><li><a href="#_sub14" class="code">function region = get_region(catalogObject, nsigma)</a></li><li><a href="#_sub15" class="code">function symsize = get_symsize(catalogObject)</a></li><li><a href="#_sub16" class="code">function self = retrieve(dataformat, varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%CATALOG the blueprint for Catalog objects in GISMO</span>
+0002 <span class="comment">% A Catalog object is a container for event metadata</span>
+0003 <span class="comment">% See also EventRate, readEvents, Catalog/Cookbook</span>
+0004 classdef <a href="Catalog.html" class="code" title="">Catalog</a>
+0005 
+0006     properties(Dependent) <span class="comment">% These all come from table, computed on the fly</span>
+0007         otime = [];<span class="comment">% origin time</span>
+0008         date = {};
+0009         time = {};
+0010         lon = [];
+0011         lat = [];
+0012         depth = [];
+0013         mag = [];
+0014         magtype = {};
+0015         etype = {};
+0016         ontime = [];
+0017         offtime = [];
+0018         
+0019         numberOfEvents = 0;
+0020   
+0021     <span class="keyword">end</span>
+0022     
+0023     properties <span class="comment">% These are properties of the catalog itself</span>
+0024         request = struct();
+0025 <span class="comment">%         request.dataformat = '';</span>
+0026 <span class="comment">%         request.minimumLongitude = -Inf;</span>
+0027 <span class="comment">%         request.maximumLongitude = Inf;</span>
+0028 <span class="comment">%         request.minimumLatitude = -Inf;</span>
+0029 <span class="comment">%         request.maximumLatitude = Inf;</span>
+0030 <span class="comment">%         request.minimumDepth = -Inf;</span>
+0031 <span class="comment">%         request.maximumDepth = Inf;</span>
+0032 <span class="comment">%         request.minimumRadius = 0;</span>
+0033 <span class="comment">%         request.maximumRadius = Inf;</span>
+0034 <span class="comment">%         request.minimumMagnitude = -Inf;</span>
+0035 <span class="comment">%         request.maximumMagnitude = Inf;</span>
+0036         arrivals = {};
+0037 <span class="comment">%         magnitudes = {};</span>
+0038         waveforms = {}; <span class="comment">% cell array with one vector waveform objects per event</span>
+0039     <span class="keyword">end</span>
+0040     
+0041     properties(Hidden) <span class="comment">% internal, external code cannot access them</span>
+0042         table = table([], [], [],[], [], [], [], {}, {}, [], [], <span class="keyword">...</span>
+0043                 <span class="string">'VariableNames'</span>, <span class="keyword">...</span>
+0044                 {<span class="string">'otime'</span> <span class="string">'date'</span> <span class="string">'time'</span> <span class="string">'lon'</span> <span class="string">'lat'</span> <span class="string">'depth'</span> <span class="string">'mag'</span> <span class="string">'magtype'</span> <span class="string">'etype'</span> <span class="string">'ontime'</span> <span class="string">'offtime'</span>});
+0045     <span class="keyword">end</span>
+0046 
+0047     methods
+0048 
+0049         <span class="comment">%function obj = Catalog(otime, lon, lat, depth, mag, magtype, etype, varargin)</span>
+0050         <a name="_sub0" href="#_subfunctions" class="code">function obj = Catalog(varargin)</a>
+0051             <span class="comment">%Catalog.Catalog constructor for Catalog object</span>
+0052             <span class="comment">% catalogObject = Catalog(lat, lon, depth, time, mag, etype, varargin)</span>
+0053             
+0054             <span class="comment">% Blank constructor</span>
+0055             <span class="keyword">if</span> nargin==0
+0056                 <span class="keyword">return</span>
+0057             <span class="keyword">end</span>
+0058             
+0059             <span class="comment">% Table constructor</span>
+0060             <span class="keyword">if</span> nargin==1
+0061                 <span class="keyword">if</span> isa(varargin{1},<span class="string">'table'</span>)
+0062                     obj.table = varargin{1};
+0063                 <span class="keyword">end</span>
+0064                 <span class="keyword">return</span>
+0065             <span class="keyword">end</span>
+0066             
+0067             <span class="comment">% Parse required, optional and param-value pair arguments,</span>
+0068             <span class="comment">% set default values, and add validation conditions</span>
+0069             p = inputParser;
+0070             p.addOptional(<span class="string">'otime'</span>, [], @isnumeric) <span class="comment">% positional</span>
+0071             p.addOptional(<span class="string">'lon'</span>, [], @isnumeric)
+0072             p.addOptional(<span class="string">'lat'</span>, [], @isnumeric)
+0073             p.addOptional(<span class="string">'depth'</span>, [], @isnumeric);
+0074             p.addOptional(<span class="string">'mag'</span>, [], @isnumeric);
+0075             p.addOptional(<span class="string">'magtype'</span>, {}, @iscell);
+0076             p.addOptional(<span class="string">'etype'</span>, {}, @iscell);
+0077             p.addParameter(<span class="string">'request'</span>, struct(), @isstruct); <span class="comment">% optional name-param pairs</span>
+0078             p.addParameter(<span class="string">'ontime'</span>, [], @isnumeric)
+0079             p.addParameter(<span class="string">'offtime'</span>, [], @isnumeric)
+0080             <span class="comment">%p.parse(otime, lon, lat, depth, mag, magtype, etype, varargin{:});</span>
+0081             p.parse(varargin{:});
+0082             fields = fieldnames(p.Results);
+0083             <span class="keyword">for</span> i=1:length(fields)
+0084                 field=fields{i};
+0085                 val = p.Results.(field);
+0086                 eval(sprintf(<span class="string">'%s = val;'</span>,field));
+0087             <span class="keyword">end</span>
+0088 
+0089            <span class="comment">% If we only have trigger on (&amp;off) times but not origin times,</span>
+0090            <span class="comment">% set origin times equal to ontimes</span>
+0091            <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(otime) &amp; ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(ontime)
+0092                otime = ontime;
+0093            <span class="keyword">end</span>
+0094            
+0095            <span class="comment">% reshape</span>
+0096            s=size(otime);
+0097            s1=<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(s);
+0098            s2=<a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(s);
+0099            
+0100            <span class="keyword">if</span> s1*s2 &gt; 0
+0101            
+0102                otime = reshape(otime, [s2 s1]);
+0103 
+0104                 <span class="comment">% Fill empty vectors to size of time</span>
+0105                 <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(lon)
+0106                     lon = NaN(s2,s1);
+0107                 <span class="keyword">end</span>
+0108                 <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(lat)
+0109                     lat = NaN(s2,s1);
+0110                 <span class="keyword">end</span>   
+0111                 <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(depth)
+0112                     depth = NaN(s2,s1);
+0113                 <span class="keyword">end</span>
+0114                 <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(mag)
+0115                     mag = NaN(s2,s1);
+0116                 <span class="keyword">end</span>  
+0117                 <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(magtype) <span class="comment">% 'u' for unknown</span>
+0118                     magtype = cellstr(repmat(<span class="string">'u'</span>,[s2 s1]));
+0119                 <span class="keyword">end</span> 
+0120                 <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(etype)  <span class="comment">% 'u' for unknown</span>
+0121                     etype = cellstr(repmat(<span class="string">'u'</span>,[s2 s1]));
+0122                 <span class="keyword">end</span>   
+0123 
+0124                 <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(ontime)  <span class="comment">% 'u' for unknown</span>
+0125                     ontime = NaN(s2,s1);
+0126                 <span class="keyword">end</span>   
+0127                 <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(offtime)  <span class="comment">% 'u' for unknown</span>
+0128                     offtime = NaN(s2,s1);
+0129                 <span class="keyword">end</span>   
+0130                lon = reshape(lon, [s2 s1]);
+0131                lat = reshape(lat, [s2 s1]);
+0132                depth = reshape(depth, [s2 s1]);
+0133                mag = reshape(mag, [s2 s1]);
+0134                magtype = reshape(magtype, [s2 s1]);
+0135                <span class="keyword">if</span> numel(ontime)==s1*s2
+0136                    ontime = reshape(ontime, [s2 s1]);
+0137                    offtime = reshape(offtime, [s2 s1]);
+0138                <span class="keyword">end</span>
+0139                clear s s1 s2
+0140 
+0141                dstr = datestr(otime, <span class="string">'yyyy_mm_dd'</span>);
+0142                tstr = datestr(otime, <span class="string">'HH:MM:SS.fff'</span>); 
+0143                tstr = tstr(:,1:10);
+0144 
+0145                obj.table = table(otime, dstr, tstr, <span class="keyword">...</span>
+0146                    lon, lat, depth, mag, magtype, etype, ontime, offtime, <span class="keyword">...</span>
+0147                     <span class="string">'VariableNames'</span>, {<span class="string">'otime'</span> <span class="string">'yyyy_mm_dd'</span> <span class="string">'hh_mm_ss'</span> <span class="string">'lon'</span> <span class="string">'lat'</span> <span class="string">'depth'</span> <span class="string">'mag'</span> <span class="string">'magtype'</span> <span class="string">'etype'</span> <span class="string">'ontime'</span> <span class="string">'offtime'</span>});   
+0148 
+0149                 obj.table = sortrows(obj.table, <span class="string">'otime'</span>, <span class="string">'ascend'</span>); 
+0150                 fprintf(<span class="string">'Got %d events\n'</span>,obj.numberOfEvents);
+0151            <span class="keyword">end</span>
+0152 
+0153         <span class="keyword">end</span>
+0154         
+0155         <a name="_sub1" href="#_subfunctions" class="code">function val = get.otime(obj)</a>
+0156             val = obj.table.otime;
+0157         <span class="keyword">end</span> 
+0158         
+0159         <a name="_sub2" href="#_subfunctions" class="code">function val = get.lon(obj)</a>
+0160             val = obj.table.lon;
+0161         <span class="keyword">end</span>        
+0162         
+0163         <a name="_sub3" href="#_subfunctions" class="code">function val = get.lat(obj)</a>
+0164             val = obj.table.lat;
+0165         <span class="keyword">end</span>
+0166         
+0167         <a name="_sub4" href="#_subfunctions" class="code">function val = get.depth(obj)</a>
+0168             val = obj.table.depth;
+0169         <span class="keyword">end</span>        
+0170         
+0171         <a name="_sub5" href="#_subfunctions" class="code">function val = get.mag(obj)</a>
+0172             val = obj.table.mag;
+0173         <span class="keyword">end</span>          
+0174         
+0175         <a name="_sub6" href="#_subfunctions" class="code">function val = get.magtype(obj)</a>
+0176             val = obj.table.magtype;
+0177         <span class="keyword">end</span>        
+0178         
+0179         <a name="_sub7" href="#_subfunctions" class="code">function val = get.etype(obj)</a>
+0180             val = obj.table.etype;
+0181         <span class="keyword">end</span>
+0182         
+0183         <a name="_sub8" href="#_subfunctions" class="code">function val = get.ontime(obj)</a>
+0184             val = obj.table.ontime;
+0185         <span class="keyword">end</span>
+0186         
+0187         <a name="_sub9" href="#_subfunctions" class="code">function val = get.offtime(obj)</a>
+0188             val = obj.table.offtime;
+0189         <span class="keyword">end</span>
+0190         
+0191         <a name="_sub10" href="#_subfunctions" class="code">function val = get.numberOfEvents(obj)</a>
+0192             val = height(obj.table);
+0193         <span class="keyword">end</span>
+0194         
+0195         <a name="_sub11" href="#_subfunctions" class="code">function t=gettimerange(obj)</a>
+0196             snum = nanmin([obj.table.otime; obj.table.ontime]);
+0197             enum = nanmax([obj.table.otime; obj.table.offtime]);
+0198             t = [snum enum];
+0199         <span class="keyword">end</span>
+0200           
+0201         <span class="comment">% Prototypes</span>
+0202         <a href="summary.html" class="code" title="function summary(obj)">summary</a>(obj)
+0203         <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(catalogObject)
+0204         catalogObject = <a href="combine.html" class="code" title="function catalogObject = combine(catalogObject1, catalogObject2)">combine</a>(catalogObject1, catalogObject2)
+0205         <a href="webmap.html" class="code" title="function webmap(catalogObject)">webmap</a>(catalogObject)
+0206         <a href="plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(catalogObject, varargin)
+0207         <a href="plot3.html" class="code" title="function plot3(catalogObject, varargin)">plot3</a>(catalogObject, varargin)
+0208         <a href="plot_time.html" class="code" title="function plot_time(catalogObject)">plot_time</a>(catalogObject)
+0209         <a href="hist.html" class="code" title="function hist(catalogObject);">hist</a>(catalogObject)
+0210         <a href="bvalue.html" class="code" title="function bvalue(catalogObject, mcType)">bvalue</a>(catalogObject, mcType)     
+0211         catalogObjects=<a href="subclassify.html" class="code" title="function c = subclassify(catalogObject, subclasses)">subclassify</a>(catalogObject, subclasses)         
+0212         erobj=<a href="eventrate.html" class="code" title="function erobj=eventrate(catalogObject, varargin)">eventrate</a>(catalogObject, varargin)
+0213         <a href="plotprmm.html" class="code" title="function plotprmm(catalogObject)">plotprmm</a>(catalogObject)
+0214         <a href="eev.html" class="code" title="function eev(obj, eventnum)">eev</a>(obj, eventnum)
+0215         <a href="write.html" class="code" title="function write(catalogObject, outformat, outpath, schema)">write</a>(catalogObject, outformat, outpath, schema)
+0216         catalogObject2 = <a href="subset.html" class="code" title="function catalogObject2 = subset(catalogObject, indices)">subset</a>(catalogObject, indices)
+0217         catalogObject = <a href="addwaveforms.html" class="code" title="function cobj = addwaveforms(cobj, w_continuous)">addwaveforms</a>(catalogObject, w);
+0218     <span class="keyword">end</span>
+0219 <span class="comment">%% ---------------------------------------------------</span>
+0220     methods (Access=protected, Hidden=true)
+0221         
+0222         <span class="comment">%% AUTOBINSIZE</span>
+0223         <a name="_sub12" href="#_subfunctions" class="code">function binsize = autobinsize(catalogObject)</a>
+0224         <span class="comment">%autobinsize Compute the best bin size based on start and end times</span>
+0225             binsize = binning.autobinsize(catalogObject.enum - catalogObject.snum);
+0226         <span class="keyword">end</span>
+0227 <span class="comment">%% ---------------------------------------------------</span>
+0228         <a name="_sub13" href="#_subfunctions" class="code">function region = get_region(catalogObject, nsigma)</a>
+0229         <span class="comment">% region Compute the region to plot based on spread of lon,lat data</span>
+0230             medianlat = nanmedian(catalogObject.lat);
+0231             medianlon = nanmedian(catalogObject.lon);
+0232             cosine = cos(medianlat);
+0233             stdevlat = nanstd(catalogObject.lat);
+0234             stdevlon = nanstd(catalogObject.lon);
+0235             rangeindeg = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>([stdevlat stdevlon*cosine]) * nsigma;
+0236             region = [(medianlon - rangeindeg/2) (medianlon + rangeindeg/2) (medianlat - rangeindeg/2) (medianlat + rangeindeg/2)];
+0237         <span class="keyword">end</span>
+0238         
+0239 <span class="comment">%% ---------------------------------------------------</span>
+0240         <a name="_sub14" href="#_subfunctions" class="code">function symsize = get_symsize(catalogObject)</a>
+0241             <span class="comment">%get_symsize Get symbol marker size based on magnitude of event</span>
+0242             <span class="comment">% Compute Marker Size</span>
+0243             minsymsize = 3;
+0244             maxsymsize = 50;
+0245             symsize = (catalogObject.mag + 2) * 10; <span class="comment">% -2- -&gt; 1, 1 -&gt; 10, 0 -&gt; 20, 1 -&gt; 30, 2-&gt; 40, 3+ -&gt; 50 etc.</span>
+0246             symsize(symsize&lt;minsymsize)=minsymsize;
+0247             symsize(symsize&gt;maxsymsize)=maxsymsize;
+0248             <span class="comment">% deal with NULL (NaN) values</span>
+0249             symsize(isnan(symsize))=minsymsize;
+0250         <span class="keyword">end</span>
+0251 <span class="comment">%% ---------------------------------------------------</span>
+0252                 
+0253     <span class="keyword">end</span>
+0254 
+0255     methods(Static)
+0256         <a name="_sub15" href="#_subfunctions" class="code">function self = retrieve(dataformat, varargin)</a>
+0257         <span class="comment">%CATALOG.RETRIEVE Read seismic events from common file formats &amp; data sources.</span>
+0258         <span class="comment">% retrieve can read events from many different earthquake catalog file</span>
+0259         <span class="comment">% formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) into a</span>
+0260         <span class="comment">% GISMO Catalog object.</span>
+0261         <span class="comment">%</span>
+0262         <span class="comment">% Usage:</span>
+0263         <span class="comment">%       catalogObject = CATALOG.RETRIEVE(dataformat, 'param1', _value1_, ...</span>
+0264         <span class="comment">%                                                   'paramN', _valueN_)</span>
+0265         <span class="comment">%</span>
+0266         <span class="comment">% dataformat may be:</span>
+0267         <span class="comment">%</span>
+0268         <span class="comment">%   * 'iris' (for IRIS DMC, using irisFetch.m),</span>
+0269         <span class="comment">%   * 'antelope' (for a CSS3.0 Antelope/Datascope database)</span>
+0270         <span class="comment">%   * 'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)</span>
+0271         <span class="comment">%   * 'zmap' (converts a Zmap data strcture to a Catalog object)</span>
+0272         <span class="comment">%</span>
+0273         <span class="comment">% The name-value parameter pairs supported are the same as those supported</span>
+0274         <span class="comment">% by irisFetch.Events(). Currently these are:</span>
+0275         <span class="comment">%</span>
+0276         <span class="comment">%     startTime</span>
+0277         <span class="comment">%     endTime</span>
+0278         <span class="comment">%     eventId</span>
+0279         <span class="comment">%     fetchLimit</span>
+0280         <span class="comment">%     magnitudeType</span>
+0281         <span class="comment">%     minimumLongitude</span>
+0282         <span class="comment">%     maximumLongitude</span>
+0283         <span class="comment">%     minimumLatitude</span>
+0284         <span class="comment">%     maximumLatitude</span>
+0285         <span class="comment">%     minimumMagnitude</span>
+0286         <span class="comment">%     maximumMagnitude</span>
+0287         <span class="comment">%     minimumDepth</span>
+0288         <span class="comment">%     maximumDepth</span>
+0289         <span class="comment">%</span>
+0290         <span class="comment">% And the two convenience parameters:</span>
+0291         <span class="comment">%</span>
+0292         <span class="comment">% radialcoordinates = [ centerLatitude, centerLongitude, maximumRadius ]</span>
+0293         <span class="comment">%</span>
+0294         <span class="comment">% boxcoordinates = [ minimumLatitude maximumLatitude minimumLongitude maximumLongitude ]</span>
+0295         <span class="comment">%</span>
+0296         <span class="comment">% For examples, see Catalog_cookbook. Also available at:</span>
+0297         <span class="comment">% https://geoscience-community-codes.github.io/GISMO/tutorials/html/Catalog_cookbook.html</span>
+0298         <span class="comment">%</span>
+0299         <span class="comment">%</span>
+0300         <span class="comment">% See also CATALOG, IRISFETCH, CATALOG_COOKBOOK</span>
+0301 
+0302         <span class="comment">% Author: Glenn Thompson (glennthompson1971@gmail.com)</span>
+0303 
+0304         <span class="comment">%% To do:</span>
+0305         <span class="comment">% Implement name-value parameter pairs for all methods</span>
+0306         <span class="comment">% Test the Antelope method still works after factoring out db_load_origins</span>
+0307         <span class="comment">% Test the Seisan method more</span>
+0308         <span class="comment">% Add in support for 'get_arrivals'</span>
+0309             
+0310             debug.printfunctionstack(<span class="string">'&gt;'</span>)
+0311 
+0312             <span class="keyword">switch</span> lower(dataformat)
+0313                 <span class="keyword">case</span> <span class="string">'iris'</span>
+0314                     <span class="keyword">if</span> exist(<span class="string">'irisFetch.m'</span>,<span class="string">'file'</span>)
+0315                             ev = irisFetch.Events(varargin{:});
+0316                             self = Catalog.read_catalog.iris(ev);
+0317                     <span class="keyword">else</span>
+0318                         warning(<span class="string">'Cannot find irisFetch.m'</span>)
+0319                     <span class="keyword">end</span>
+0320                 <span class="keyword">case</span> {<span class="string">'css3.0'</span>,<span class="string">'antelope'</span>, <span class="string">'datascope'</span>}
+0321                     <span class="keyword">if</span> admin.antelope_exists()
+0322                         self = Catalog.read_catalog.antelope(varargin{:});
+0323                     <span class="keyword">else</span>
+0324                         warning(<span class="string">'Sorry, cannot read event Catalog from Antelope database as Antelope toolbox for MATLAB not found'</span>)
+0325                         self = <a href="Catalog.html" class="code" title="">Catalog</a>();
+0326                     <span class="keyword">end</span>
+0327                 <span class="keyword">case</span> <span class="string">'seisan'</span>
+0328                     self = Catalog.read_catalog.seisan(varargin{:});
+0329                 <span class="keyword">case</span> <span class="string">'aef'</span>
+0330                     self = Catalog.read_catalog.aef(varargin{:});
+0331                 <span class="keyword">case</span> <span class="string">'sru'</span>
+0332                     self = Catalog.read_catalog.sru(varargin{:});
+0333                 <span class="keyword">case</span> <span class="string">'vdap'</span>
+0334                     self = Catalog.read_catalog.vdap(varargin{:});
+0335                 <span class="keyword">case</span> <span class="string">'zmap'</span>
+0336                     self = Catalog.read_catalog.zmap(varargin{:});
+0337                 <span class="keyword">otherwise</span>
+0338                     self = NaN;
+0339                     fprintf(<span class="string">'format %s unknown\n\n'</span>,data_source);
+0340             <span class="keyword">end</span>
+0341             <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(self)
+0342                 self=<a href="Catalog.html" class="code" title="">Catalog</a>();
+0343             <span class="keyword">end</span>
+0344 
+0345             debug.printfunctionstack(<span class="string">'&lt;'</span>)
+0346         <span class="keyword">end</span>
+0347         
+0348         <a href="cookbook.html" class="code" title="">cookbook</a>()
+0349     <span class="keyword">end</span>
+0350 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

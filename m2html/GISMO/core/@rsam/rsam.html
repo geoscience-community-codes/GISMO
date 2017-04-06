@@ -1,0 +1,272 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of rsam</title>
+  <meta name="keywords" content="rsam">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@rsam</a> &gt; rsam.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@rsam&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>rsam
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../../GISMO/core/@Catalog/bvalue.html" class="code" title="function bvalue(catalogObject, mcType)">bvalue</a>	BVALUE evaluate b-value, a-value and magnitude of completeness</li><li><a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="Fs.html" class="code" title="function fs = Fs(self)">Fs</a>	</li><li><a href="bvalue.html" class="code" title="function [aw,tt1, tt2, tmc, mag_zone]=bvalue(this, mcType, method)">bvalue</a>	BVALUE evaluate b-value, a-value and magnitude of completeness</li><li><a href="duration_amplitude.html" class="code" title="function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)">duration_amplitude</a>	DURATION_AMPLITUDE Use the duration-amplitde</li><li><a href="extract.html" class="code" title="function s=extract(self, snum, enum)">extract</a>	</li><li><a href="findfiles.html" class="code" title="function self = findfiles(self, file)">findfiles</a>	Generate a list of files corresponding to the file pattern,</li><li><a href="getwaveform.html" class="code" title="function w=getwaveform(self, datapath)">getwaveform</a>	rsam.getwaveform() Get the waveform corresponding to the RSAM data</li><li><a href="load.html" class="code" title="function self = load(self)">load</a>	Purpose:</li><li><a href="loadbobfile.html" class="code" title="function rsamobj = loadbobfile(infile, snum, enum)">loadbobfile</a>	LOADBOBFILE Load an RSAM binary file</li><li><a href="makebobfile.html" class="code" title="function makebobfile(outfile, days)">makebobfile</a>	makebobfile(outfile, days);</li><li><a href="medfilt1.html" class="code" title="function rsamobj = medfilt1(rsamobj, nsamples_to_average_over)">medfilt1</a>	MEDFILT1 Median filter for RSAM objects</li><li><a href="plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="read_bob_file.html" class="code" title="function self=read_bob_file(varargin)">read_bob_file</a>	READ_BOB_FILE Load RSAM-like data from a BOB file into a SAM object.</li><li><a href="rsam.html" class="code" title="">rsam</a>	</li><li><a href="save.html" class="code" title="function save(self, filepattern)">save</a>	RSAM/SAVE - save an rsam-like object to an RSAM/BOB binary</li><li><a href="toTextFile.html" class="code" title="function toTextFile(self, filepath)">toTextFile</a>	toTextFile(filepath);</li><li><a href="../../../GISMO/core/@threecomp/extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../GISMO/core/@waveform/extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="../../../GISMO/core/@waveform/medfilt1.html" class="code" title="function w = medfilt1(w,size)">medfilt1</a>	MEDFILT1: Wrapper function for applying 1-D Median Filter (Signal</li><li><a href="../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li><li><a href="cookbook.html" class="code" title="">cookbook</a>	% RSAM Cookbook</li><li><a href="despike.html" class="code" title="function self = despike(self, spiketype, maxRatio)">despike</a>	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</li><li><a href="detectTremorEvents.html" class="code" title="function rsamobj = detectTremorEvents(stationName, chan, DP, snum, enum, spikeRatio, transientEventRatio, STA_minutes, LTA_minutes, stepsize, ratio_on, ratio_off, plotResults)">detectTremorEvents</a>	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</li><li><a href="loadbobfile.html" class="code" title="function rsamobj = loadbobfile(infile, snum, enum)">loadbobfile</a>	LOADBOBFILE Load an RSAM binary file</li><li><a href="loadwfmeastable.html" class="code" title="function self = loadwfmeastable(sta, chan, snum, enum, measure, dbname)">loadwfmeastable</a>	</li><li><a href="plotrsam.html" class="code" title="function [rsamobjects, ah]=plotrsam(sta, chan, snum, enum, DATAPATH)">plotrsam</a>	[rsamobjects, ah]=plotrsam_wrapper(sta, chan, snum, enum, DATAPATH)</li><li><a href="read_bob_file.html" class="code" title="function self=read_bob_file(varargin)">read_bob_file</a>	READ_BOB_FILE Load RSAM-like data from a BOB file into a SAM object.</li><li><a href="rsam.html" class="code" title="">rsam</a>	</li><li><a href="tremorstalta.html" class="code" title="function [self, timeWindow] = tremorstalta(self, varargin)">tremorstalta</a>	rsam.detect Run an STA/LTA detector on a rsam object</li><li><a href="../../../GISMO/core/@waveform/waveform2rsam.html" class="code" title="function s = waveform2rsam(w, method, samplingPeriod)">waveform2rsam</a>	WAVEFORM2RSAM create an RSAM-like object from a waveform object</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self=rsam(dnum, data, varargin)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="rsam.html" class="code" title="">rsam</a> 
+0002 <span class="comment">% RSAM Seismic Amplitude Measurement class constructor, version 1.0.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% RSAM is a generic term used here to represent any continuous data</span>
+0005 <span class="comment">% sampled at a regular time interval (usually 1 minute). This is a</span>
+0006 <span class="comment">% format widely used within the USGS Volcano Hazards Programme which</span>
+0007 <span class="comment">% originally stems from the RSAM system (Endo &amp; Murray, 1989)</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% Written for loading and plotting RSAM data at the Montserrat Volcano</span>
+0010 <span class="comment">% Observatory (MVO), and then similar measurements derived from the VME</span>
+0011 <span class="comment">% &quot;ltamon&quot; program and ampengfft and rbuffer2bsam which took Seisan</span>
+0012 <span class="comment">% waveform files as input.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% RSAM data are historically stored in &quot;BOB&quot; format, which consists</span>
+0015 <span class="comment">% of a 4 byte floating number for each minute of the year, for a</span>
+0016 <span class="comment">% single station-channel.</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% s = rsam() creates an empty RSAM object.</span>
+0019 <span class="comment">%</span>
+0020 <span class="comment">% s = rsam(dnum, data, 'sta', sta, 'chan', chan, 'measure', measure, 'seismogram_type', seismogram_type, 'units', units)</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%     dnum        % the dates/times (as datenum) corresponding to the start</span>
+0023 <span class="comment">%                   of each time window</span>
+0024 <span class="comment">%     data        % the value at each dnum</span>
+0025 <span class="comment">%     sta         % station</span>
+0026 <span class="comment">%     chan        % channel</span>
+0027 <span class="comment">%     measure     % statistical measure, default is 'mean'</span>
+0028 <span class="comment">%     seismogram_type % e.g. 'velocity' or 'displacement', default is 'raw'</span>
+0029 <span class="comment">%     units       % units to label y-axis, e.g. 'nm/s' or 'nm' or 'cm2', default is 'counts'</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% Example 1:</span>
+0032 <span class="comment">%</span>
+0033 <span class="comment">%     t = [0:60:1440]/1440;</span>
+0034 <span class="comment">%     y = randn(size(t)) + rand(size(t));</span>
+0035 <span class="comment">%     s = rsam(t, y);</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">% Example 2:</span>
+0038 <span class="comment">%     dp = 'INETER_DATA/RSAM/MOMN2015.DAT';</span>
+0039 <span class="comment">%     s = rsam.read_bob_file('file', dp, 'snum', datenum(2015,1,1), ...</span>
+0040 <span class="comment">%           'enum', datenum(2015,2,1), 'sta', 'MOMN', 'units', 'Counts')</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">% Example 3:</span>
+0043 <span class="comment">%     dp = 'INETER_DATA/RSAM/SSSSYYYY.DAT';</span>
+0044 <span class="comment">%     s = rsam.read_bob_file('file', dp, 'snum', datenum(2015,1,1), ...</span>
+0045 <span class="comment">%           'enum', datenum(2015,2,1), 'sta', 'MOMN', 'units', 'Counts')</span>
+0046 <span class="comment">%</span>
+0047 
+0048 <span class="comment">% See also: read_bob_file, oneMinuteData, waveform&gt;rsam</span>
+0049 <span class="comment">%</span>
+0050 <span class="comment">% % ------- DESCRIPTION OF FIELDS IN RSAM OBJECT ------------------</span>
+0051 <span class="comment">%   DNUM:   a vector of MATLAB datenum's</span>
+0052 <span class="comment">%   DATA:   a vector of data (same size as DNUM)</span>
+0053 <span class="comment">%   MEASURE:    a string describing the statistic used to compute the</span>
+0054 <span class="comment">%               data, e.g. &quot;mean&quot;, &quot;max&quot;, &quot;std&quot;, &quot;rms&quot;, &quot;meanf&quot;, &quot;peakf&quot;,</span>
+0055 <span class="comment">%               &quot;energy&quot;</span>
+0056 <span class="comment">%   SEISMOGRAM_TYPE: a string describing whether the RSAM data were computed</span>
+0057 <span class="comment">%                    from &quot;raw&quot; seismogram, &quot;velocity&quot;, &quot;displacement&quot;</span>
+0058 <span class="comment">%   REDUCED:    a structure that is set is data are &quot;reduced&quot;, i.e. corrected</span>
+0059 <span class="comment">%               for geometric spreading (and possibly attenuation)</span>
+0060 <span class="comment">%               Has 4 fields:</span>
+0061 <span class="comment">%                   REDUCED.Q = the value of Q used to reduce the data</span>
+0062 <span class="comment">%                   (Inf by default, which indicates no attenuation)</span>
+0063 <span class="comment">%                   REDUCED.SOURCELAT = the latitude used for reducing the data</span>
+0064 <span class="comment">%                   REDUCED.SOURCELON = the longitude used for reducing the data</span>
+0065 <span class="comment">%                   REDUCED.STATIONLAT = the station latitude</span>
+0066 <span class="comment">%                   REDUCED.STATIONLON = the station longitude</span>
+0067 <span class="comment">%                   REDUCED.DISTANCE = the distance between source and</span>
+0068 <span class="comment">%                   station in km</span>
+0069 <span class="comment">%                   REDUCED.WAVETYPE = the wave type (body or surface)</span>
+0070 <span class="comment">%                   assumed</span>
+0071 <span class="comment">%                   REDUCED.F = the frequency used for surface waves</span>
+0072 <span class="comment">%                   REDUCED.WAVESPEED = the S wave speed</span>
+0073 <span class="comment">%                   REDUCED.ISREDUCED = True if the data are reduced</span>
+0074 <span class="comment">%   UNITS:  the units of the data, e.g. nm / sec.</span>
+0075 <span class="comment">%   USE: use this rsam object in plots?</span>
+0076 <span class="comment">%   FILES: structure of files data is loaded from</span>
+0077 
+0078 <span class="comment">% AUTHOR: Glenn Thompson, Montserrat Volcano Observatory</span>
+0079 <span class="comment">% $Date: $</span>
+0080 <span class="comment">% $Revision: $</span>
+0081 
+0082     properties(Access = public)
+0083         dnum = [];
+0084         data = []; <span class="comment">%</span>
+0085         measure = <span class="string">'mean'</span>;
+0086         seismogram_type = <span class="string">'raw'</span>;
+0087         <span class="comment">%reduced = struct('Q', Inf, 'sourcelat', NaN, 'sourcelon', NaN, 'distance', NaN, 'waveType', '', 'isReduced', false, 'f', NaN, 'waveSpeed', NaN, 'stationlat', NaN, 'stationlon', NaN);</span>
+0088         units = <span class="string">'counts'</span>;
+0089         <span class="comment">%use = true;</span>
+0090         files = <span class="string">''</span>;
+0091         sta = <span class="string">''</span>;
+0092         chan = <span class="string">''</span>;
+0093         snum = -Inf;
+0094         enum = Inf;
+0095         <span class="comment">%spikes = []; % a vector of rsam objects that describe large spikes</span>
+0096         <span class="comment">% in the data. Populated after running 'despike' method. These are</span>
+0097         <span class="comment">% removed simultaneously from the data vector.</span>
+0098         <span class="comment">%transientEvents = []; % a vector of rsam objects that describe</span>
+0099         <span class="comment">% transient events in the data that might correspond to vt, rf, lp</span>
+0100         <span class="comment">% etc. Populated after running 'despike' method with the</span>
+0101         <span class="comment">% 'transientEvents' argument. These are not removed from the data</span>
+0102         <span class="comment">% vector, but are instead returned in the continuousData vector.</span>
+0103         <span class="comment">%continuousData = []; %</span>
+0104         <span class="comment">%continuousEvents = []; % a vector of rsam objects that describe tremor</span>
+0105 
+0106     <span class="keyword">end</span>
+0107     <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0108     methods(Access = public)
+0109 
+0110         <a name="_sub0" href="#_subfunctions" class="code">function self=rsam(dnum, data, varargin)</a>
+0111             <span class="keyword">if</span> nargin==0
+0112                 <span class="keyword">return</span>;
+0113             <span class="keyword">end</span>
+0114             
+0115             <span class="keyword">if</span> nargin&gt;1
+0116                 self.dnum = dnum;
+0117                 self.data = data;
+0118                 <span class="keyword">if</span> nargin&gt;2
+0119                    classFields = {<span class="string">'sta'</span>,<span class="string">'chan'</span>,<span class="string">'measure'</span>,<span class="string">'seismogram_type'</span>,<span class="string">'units'</span>,<span class="string">'snum'</span>,<span class="string">'enum'</span>};
+0120                    p = inputParser;
+0121                    <span class="keyword">for</span> n=1:numel(classFields)
+0122                       p.addParameter(classFields{n}, self.(classFields{n}));
+0123                    <span class="keyword">end</span>
+0124                    p.parse(varargin{:});
+0125                    
+0126                    <span class="comment">% modify class values based on user-provided values</span>
+0127                    <span class="keyword">for</span> n = 1:numel(classFields)
+0128                       self.(classFields{n}) = p.Results.(classFields{n});
+0129                    <span class="keyword">end</span>
+0130                 <span class="keyword">end</span>
+0131             <span class="keyword">end</span>
+0132             
+0133         <span class="keyword">end</span>
+0134 <span class="comment">% % %         function result=snum(self)</span>
+0135 <span class="comment">% % %             result = nanmin(self.dnum);</span>
+0136 <span class="comment">% % %         end</span>
+0137 <span class="comment">% % %         function result=enum(self)</span>
+0138 <span class="comment">% % %             result = nanmax(self.dnum);</span>
+0139 <span class="comment">% % %         end</span>
+0140         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0141         <span class="comment">% Prototypes</span>
+0142         self = <a href="findfiles.html" class="code" title="function self = findfiles(self, file)">findfiles</a>(self, file)
+0143         self = <a href="load.html" class="code" title="function self = load(self)">load</a>(self)
+0144         handlePlot = <a href="plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>(rsam_vector, varargin)
+0145         <a href="save.html" class="code" title="function save(self, filepattern)">save</a>(self, filepattern)
+0146         <a href="toTextFile.html" class="code" title="function toTextFile(self, filepath)">toTextFile</a>(self, filepath)
+0147         [aw,tt1, tt2, tmc, mag_zone]=<a href="bvalue.html" class="code" title="function [aw,tt1, tt2, tmc, mag_zone]=bvalue(this, mcType, method)">bvalue</a>(this, mcType, method)
+0148         [lambda, r2] = <a href="duration_amplitude.html" class="code" title="function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)">duration_amplitude</a>(self, law, min_amplitude, mag_zone)
+0149         s=<a href="extract.html" class="code" title="function s=extract(self, snum, enum)">extract</a>(self, snum, enum)
+0150         fs = <a href="Fs.html" class="code" title="function fs = Fs(self)">Fs</a>(self)
+0151         self = <a href="medfilt1.html" class="code" title="function rsamobj = medfilt1(rsamobj, nsamples_to_average_over)">medfilt1</a>(self, nsamples_to_average_over)
+0152         w=<a href="getwaveform.html" class="code" title="function w=getwaveform(self, datapath)">getwaveform</a>(self, datapath)
+0153         <span class="comment">%scrollplot(s)</span>
+0154         <span class="comment">%plotyy(obj1, obj2, varargin)</span>
+0155         <span class="comment">%self = reduce(self, waveType, sourcelat, sourcelon, stationlat, stationlon, varargin)</span>
+0156         <span class="comment">%[self, timeWindow] = tremorstalta(self, varargin)</span>
+0157         <span class="comment">%self = resample(self, varargin)</span>
+0158         
+0159         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0160 <span class="comment">%         function save2wfmeastable(self, dbname)</span>
+0161 <span class="comment">%             datascopegt.save2wfmeas(self.scnl, self.dnum, self.data, self.measure, self.units, dbname);</span>
+0162 <span class="comment">%         end</span>
+0163 <span class="comment">%         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0164 <span class="comment">%         function self = remove_calibs(self)</span>
+0165 <span class="comment">%              for c=1:numel(self)</span>
+0166 <span class="comment">%             % run twice since there may be two pulses per day</span>
+0167 <span class="comment">%                     self(c).data = remove_calibration_pulses(self(c).dnum, self(c).data);</span>
+0168 <span class="comment">%                     self(c).data = remove_calibration_pulses(self(c).dnum, self(c).data);</span>
+0169 <span class="comment">%              end</span>
+0170 <span class="comment">%         end</span>
+0171 <span class="comment">%         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0172 <span class="comment">%         function self = correct(self)</span>
+0173 <span class="comment">%              ref = 0.707; % note that median, rms and std all give same value on x=sin(0:pi/1000:2*pi)</span>
+0174 <span class="comment">%              for c=1:numel(self)</span>
+0175 <span class="comment">%                 if strcmp(self(c).measure, 'max')</span>
+0176 <span class="comment">%                     self(c).data = self(c).data * ref;</span>
+0177 <span class="comment">%                 end</span>
+0178 <span class="comment">%                 if strcmp(self(c).measure, '68')</span>
+0179 <span class="comment">%                     self(c).data = self(c).data/0.8761 * ref;</span>
+0180 <span class="comment">%                 end</span>
+0181 <span class="comment">%                 if strcmp(self(c).measure, 'mean')</span>
+0182 <span class="comment">%                     self(c).data = self(c).data/0.6363 * ref;</span>
+0183 <span class="comment">%                 end</span>
+0184 <span class="comment">%              end</span>
+0185 <span class="comment">%         end</span>
+0186 <span class="comment">%         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0187 <span class="comment">%         function self=rsam2energy(self, r)</span>
+0188 <span class="comment">%             % should i detrend first?</span>
+0189 <span class="comment">%             e = energy(self.data, r, get(self.scnl, 'channel'), self.Fs(), self.units);</span>
+0190 <span class="comment">%                 self = set(self, 'energy', e);</span>
+0191 <span class="comment">%         end</span>
+0192 <span class="comment">%         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0193 <span class="comment">%         function w=rsam2waveform(self)</span>
+0194 <span class="comment">%             w = waveform;</span>
+0195 <span class="comment">%             w = set(w, 'station', self.sta);</span>
+0196 <span class="comment">%             w = set(w, 'channel', self.chan);</span>
+0197 <span class="comment">%             w = set(w, 'units', self.units);</span>
+0198 <span class="comment">%             w = set(w, 'data', self.data);</span>
+0199 <span class="comment">%             w = set(w, 'start', self.snum);</span>
+0200 <span class="comment">%             %w = set(w, 'end', self.enum);</span>
+0201 <span class="comment">%             w = set(w, 'freq', 1/ (86400 * (self.dnum(2) - self.dnum(1))));</span>
+0202 <span class="comment">%             w = addfield(w, 'reduced', self.reduced);</span>
+0203 <span class="comment">%             w = addfield(w, 'measure', self.measure);</span>
+0204 <span class="comment">%         end</span>
+0205         <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0206  
+0207 
+0208     <span class="keyword">end</span> <span class="comment">% end of dynamic methods</span>
+0209 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0210     methods(Access = public, Static)
+0211         self = <a href="read_bob_file.html" class="code" title="function self=read_bob_file(varargin)">read_bob_file</a>(varargin)
+0212         <a href="makebobfile.html" class="code" title="function makebobfile(outfile, days)">makebobfile</a>(outfile, days)
+0213         self = <a href="loadbobfile.html" class="code" title="function rsamobj = loadbobfile(infile, snum, enum)">loadbobfile</a>(infile, snum, enum)
+0214         <span class="comment">%self = loadwfmeastable(sta, chan, snum, enum, measure, dbname)</span>
+0215         <span class="comment">%[data]=remove_calibration_pulses(dnum, data)</span>
+0216         <span class="comment">%[rsamobjects, ah]=plotrsam(sta, chan, snum, enum, DATAPATH)</span>
+0217         <span class="comment">%rsamobj = detectTremorEvents(stationName, chan, DP, snum, enum, ...</span>
+0218         <span class="comment">% spikeRatio, transientEventRatio, STA_minutes, LTA_minutes, ...</span>
+0219         <span class="comment">% stepsize, ratio_on, ratio_off, plotResults)</span>
+0220     <span class="keyword">end</span>
+0221 
+0222 <span class="keyword">end</span> <span class="comment">% classdef</span>
+0223</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

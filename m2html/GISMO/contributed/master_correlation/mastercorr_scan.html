@@ -1,0 +1,293 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mastercorr_scan</title>
+  <meta name="keywords" content="mastercorr_scan">
+  <meta name="description" content="MASTERCORR_SCAN scans a waveform for events which match a master.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">master_correlation</a> &gt; mastercorr_scan.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed/master_correlation&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>mastercorr_scan
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>MASTERCORR_SCAN scans a waveform for events which match a master.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [WW,WWxc] = mastercorr_scan(WW,WWsnippet,threshold) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MASTERCORR_SCAN scans a waveform for events which match a master.
+ W = MASTERCORR_SCAN(W,SNIPPET,THRESHOLD) scans through continuous data,
+ W, for sections that match the (much shorter) waveform SNIPPET. SNIPPET
+ is the so-called master event. A time domain convolution algorithm is
+ used to compare SNIPPET at all lag offsets against waveform W. A
+ normalized cross-correlation function is derived in the process. Any
+ waveform segment which cross correlates with SNIPPET above a correlation
+ value of THRESHOLD is considered a successful match. These matches are
+ then saved as the following fields in W:
+
+ MASTERCORR_TRIG       % &quot;trigger&quot; times of matches in Matlab date format
+ MASTERCORR_CORR       % value of the correlation. should be &gt;= threshold
+ MASTERCORR_ADJACENT_CORR     % max correlation of adjancent peak(s) 
+ MASTERCORR_SNIPPET    % the actual snippet is stored in the waveform for
+                         future reference
+ 
+ If W is of size NxM and SNIPPET is 1x1, then the same SNIPPET is applied
+ to each element of W. If SNIPPET is NxM and W is 1x1, each SNIPPET is
+ applied individually to W and the returned W is NxM. If W and SNIPPET are
+ both NxM then SNIPPETs are applied one-by-one to their respective element
+ of W.
+
+ [W,XC] = MASTERCORR_SCAN(W,SNIPPET,THRESHOLD) has same usage except that
+ the actual cross correlation functions are returned in XC. XC is
+ essentially a waveform the same as W, except that the waveform data has
+ been replaced with the normalized cross correlation function(s).
+
+ *** NOTE ABOUT TRIGGER TIMES ***
+ MASTERCORR_SCAN has the ability to syncronize its trigger times on a
+ master event trigger. This allows traces to be referenced to a
+ user-selected point in the waveform (such as a P wave pick). The
+ resulting times for detected events will then be referenced to this time.
+ This can be useful in later stages of processing as these reference times
+ become the trigger times in the correlation objects produced by
+ MASTERCORR_EXTRACT. If no such reference in included, the default
+ reference time is the start time of SNIPPET. To include this feature, the
+ waveform SNIPPET should include a field called TRIGGER. TRIGGER is a
+ scalar time (Matlab format). See MASTERCORR_COOKBOOK for example use.
+
+ See also <a href="mastercorr_plot_stats.html" class="code" title="function mastercorr_plot_stats(W)">mastercorr_plot_stats</a>, <a href="mastercorr_cookbook.html" class="code" title="">mastercorr_cookbook</a>, <a href="mastercorr_extract.html" class="code" title="function varargout = mastercorr_extract(W,varargin)">mastercorr_extract</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@correlation/conv.html" class="code" title="function c = conv(c,varargin)">conv</a>	c = CONV(c) convolves all traces with the final trace. By default the new</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>	ADDFIELD add fields and values to waveform object(s)                V1.1</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/@waveform/getpeaks.html" class="code" title="function peakmask = getpeaks(w)">getpeaks</a>	GETPEAKS return mask for peak values for a waveform</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/conv.html" class="code" title="function c = conv(c)">conv</a>	conv   convolve all traces with the final trace</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="mastercorr_cookbook.html" class="code" title="">mastercorr_cookbook</a>	Demonstration of the major features of the master waveform correlation</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [W,Wxc] = do_single_waveform(W,Wsnippet,threshold)</a></li><li><a href="#_sub2" class="code">function adjacentPeakValues = find_adjacent_peaks(f,allPeaks,allPeakValues,goodPeaks)</a></li><li><a href="#_sub3" class="code">function fieldExists = ismiscfield(W,fieldName)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [WW,WWxc] = mastercorr_scan(WW,WWsnippet,threshold)</a>
+0002 
+0003 <span class="comment">%MASTERCORR_SCAN scans a waveform for events which match a master.</span>
+0004 <span class="comment">% W = MASTERCORR_SCAN(W,SNIPPET,THRESHOLD) scans through continuous data,</span>
+0005 <span class="comment">% W, for sections that match the (much shorter) waveform SNIPPET. SNIPPET</span>
+0006 <span class="comment">% is the so-called master event. A time domain convolution algorithm is</span>
+0007 <span class="comment">% used to compare SNIPPET at all lag offsets against waveform W. A</span>
+0008 <span class="comment">% normalized cross-correlation function is derived in the process. Any</span>
+0009 <span class="comment">% waveform segment which cross correlates with SNIPPET above a correlation</span>
+0010 <span class="comment">% value of THRESHOLD is considered a successful match. These matches are</span>
+0011 <span class="comment">% then saved as the following fields in W:</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% MASTERCORR_TRIG       % &quot;trigger&quot; times of matches in Matlab date format</span>
+0014 <span class="comment">% MASTERCORR_CORR       % value of the correlation. should be &gt;= threshold</span>
+0015 <span class="comment">% MASTERCORR_ADJACENT_CORR     % max correlation of adjancent peak(s)</span>
+0016 <span class="comment">% MASTERCORR_SNIPPET    % the actual snippet is stored in the waveform for</span>
+0017 <span class="comment">%                         future reference</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% If W is of size NxM and SNIPPET is 1x1, then the same SNIPPET is applied</span>
+0020 <span class="comment">% to each element of W. If SNIPPET is NxM and W is 1x1, each SNIPPET is</span>
+0021 <span class="comment">% applied individually to W and the returned W is NxM. If W and SNIPPET are</span>
+0022 <span class="comment">% both NxM then SNIPPETs are applied one-by-one to their respective element</span>
+0023 <span class="comment">% of W.</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% [W,XC] = MASTERCORR_SCAN(W,SNIPPET,THRESHOLD) has same usage except that</span>
+0026 <span class="comment">% the actual cross correlation functions are returned in XC. XC is</span>
+0027 <span class="comment">% essentially a waveform the same as W, except that the waveform data has</span>
+0028 <span class="comment">% been replaced with the normalized cross correlation function(s).</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% *** NOTE ABOUT TRIGGER TIMES ***</span>
+0031 <span class="comment">% MASTERCORR_SCAN has the ability to syncronize its trigger times on a</span>
+0032 <span class="comment">% master event trigger. This allows traces to be referenced to a</span>
+0033 <span class="comment">% user-selected point in the waveform (such as a P wave pick). The</span>
+0034 <span class="comment">% resulting times for detected events will then be referenced to this time.</span>
+0035 <span class="comment">% This can be useful in later stages of processing as these reference times</span>
+0036 <span class="comment">% become the trigger times in the correlation objects produced by</span>
+0037 <span class="comment">% MASTERCORR_EXTRACT. If no such reference in included, the default</span>
+0038 <span class="comment">% reference time is the start time of SNIPPET. To include this feature, the</span>
+0039 <span class="comment">% waveform SNIPPET should include a field called TRIGGER. TRIGGER is a</span>
+0040 <span class="comment">% scalar time (Matlab format). See MASTERCORR_COOKBOOK for example use.</span>
+0041 <span class="comment">%</span>
+0042 <span class="comment">% See also mastercorr_plot_stats, mastercorr_cookbook, mastercorr_extract</span>
+0043 
+0044 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0045 <span class="comment">% $Date$</span>
+0046 <span class="comment">% $Revision$</span>
+0047 <span class="comment">% TODO: HANDLE NO TRIGGERS</span>
+0048 
+0049 
+0050 
+0051 <span class="comment">% CHECK INPUTS</span>
+0052 <span class="keyword">if</span> nargin ~= 3
+0053     error(<span class="string">'Incorrect number of inputs'</span>);
+0054 <span class="keyword">end</span>
+0055 <span class="keyword">if</span> ~isa(WW,<span class="string">'waveform'</span>) | ~isa(WWsnippet,<span class="string">'waveform'</span>)
+0056     error(<span class="string">'First two arguments must be waveform objects'</span>);
+0057 <span class="keyword">end</span>
+0058 <span class="keyword">if</span> threshold&lt;-1 | threshold&gt;1
+0059     error(<span class="string">'Correlation threshold must be between -1 and 1'</span>);
+0060 <span class="keyword">end</span>
+0061 
+0062 
+0063 <span class="comment">% SET SNIPPET LENGTH</span>
+0064 <span class="keyword">if</span> numel(WW)&gt;1 &amp; numel(WWsnippet)==1
+0065     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'One snippet applied to multiple continuous waveforms ...'</span>);
+0066     WWsnippet = repmat(WWsnippet,size(WW));
+0067 <span class="keyword">elseif</span> numel(WW)==1 &amp; numel(WWsnippet)&gt;1
+0068     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'Multiple snippets applied to one continuous waveform ...'</span>);
+0069     WW = repmat(WW,size(WWsnippet));
+0070 <span class="keyword">elseif</span> (numel(WW)==numel(WWsnippet)) &amp; (size(WW,1)==size(WWsnippet,1))
+0071     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'One snippet per continuous waveform ...'</span>);
+0072 <span class="keyword">else</span>
+0073     error(<span class="string">'Mismatch in matrix size between W and SNIPPET arguments'</span>);
+0074 <span class="keyword">end</span>
+0075 
+0076 
+0077 <span class="comment">% PROCESS EACH WAVEFORM</span>
+0078 WWxc = WW;    <span class="comment">% establishes the dimensions of WWxc</span>
+0079 fprintf(<span class="string">'%s'</span>,[<span class="string">'Processing '</span> num2str(numel(WW)) <span class="string">' waveforms  '</span>]);
+0080 <span class="keyword">for</span> n = 1:numel(WW)
+0081     <span class="comment">%disp(['Processing ' num2str(n) ' out of ' num2str(numel(WW)) ' waveforms ...')]);</span>
+0082     fprintf(<span class="string">'%s'</span>,<span class="string">'.'</span>);
+0083     [WW(n),WWxc(n)] = <a href="#_sub1" class="code" title="subfunction [W,Wxc] = do_single_waveform(W,Wsnippet,threshold)">do_single_waveform</a>(WW(n),WWsnippet(n),threshold);
+0084 <span class="keyword">end</span>
+0085 fprintf(<span class="string">'\n'</span>);
+0086  
+0087 
+0088 
+0089 
+0090 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0091 <span class="comment">%</span>
+0092 <a name="_sub1" href="#_subfunctions" class="code">function [W,Wxc] = do_single_waveform(W,Wsnippet,threshold)</a>
+0093 
+0094 
+0095 <span class="comment">% SET SNIPPET TRIGGER TIME</span>
+0096 <span class="keyword">if</span> ~<a href="#_sub3" class="code" title="subfunction fieldExists = ismiscfield(W,fieldName)">ismiscfield</a>(Wsnippet,<span class="string">'TRIGGER'</span>)
+0097     Wsnippet = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(Wsnippet,<span class="string">'TRIGGER'</span>,<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wsnippet,<span class="string">'START'</span>));
+0098     <span class="comment">%disp('Adding trigger');</span>
+0099 <span class="keyword">end</span>
+0100 trigger = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wsnippet,<span class="string">'TRIGGER'</span>);
+0101 <span class="keyword">if</span> trigger&lt;<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wsnippet,<span class="string">'START'</span>) | trigger&gt;<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wsnippet,<span class="string">'END'</span>)
+0102     warning(<span class="string">'Note that trigger time is outside the time range of the snippet'</span>);
+0103 <span class="keyword">end</span>
+0104 timeOffset = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wsnippet,<span class="string">'TRIGGER'</span>) - <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wsnippet,<span class="string">'START'</span>);
+0105 
+0106 
+0107 <span class="comment">% CHECK SAMPLE RATES</span>
+0108 tolerance = 0.5;   <span class="comment">% allowable time slop in samples</span>
+0109 dataLengthMisMatch = (<a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wsnippet,<span class="string">'PERIOD'</span>)-<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(W,<span class="string">'PERIOD'</span>))*<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wsnippet,<span class="string">'DATA_LENGTH'</span>));
+0110 <span class="keyword">if</span> dataLengthMisMatch &gt; tolerance*<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wsnippet,<span class="string">'PERIOD'</span>)
+0111     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'Continuous waveform sample rate: '</span> num2str(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(W,<span class="string">'FREQ'</span>))]);
+0112     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'Waveform snippet sample rate:    '</span> num2str(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wsnippet,<span class="string">'FREQ'</span>))]);
+0113     error(<span class="string">'Sample rates do not match waveform snippet within tolerance. Consider using WAVEFORM/ALIGN.'</span>);
+0114 <span class="keyword">end</span>
+0115 
+0116 
+0117 <span class="comment">% GET AMPLITUDE COEFFICIENTS</span>
+0118 <span class="comment">%Wcoeff = xcorr( double(W).^2 , ones(get(Wsnippet,'DATA_LENGTH'),1) );</span>
+0119 <span class="comment">%Wcoeff = Wcoeff(get(W,'DATA_LENGTH'):end);</span>
+0120 <span class="comment">%Wcoeff = 1 ./ sqrt(Wcoeff);</span>
+0121 Wcoeff = <a href="../../../GISMO/core/@correlation/conv.html" class="code" title="function c = conv(c,varargin)">conv</a>( <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(W).^2 , ones(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wsnippet,<span class="string">'DATA_LENGTH'</span>),1) );
+0122 Wcoeff = Wcoeff(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wsnippet,<span class="string">'DATA_LENGTH'</span>):end);
+0123 Wcoeff = 1 ./ sqrt(Wcoeff);
+0124 WsnippetCoeff = 1/sqrt(sum(<a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(Wsnippet).^2));
+0125 
+0126 
+0127 <span class="comment">% GET XCORR FUNCTION AS A WAVEFORM</span>
+0128 XC = <a href="../../../GISMO/core/@correlation/conv.html" class="code" title="function c = conv(c,varargin)">conv</a>(<a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(W),flipud(<a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(Wsnippet)));
+0129 XC = XC(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wsnippet,<span class="string">'DATA_LENGTH'</span>):end);
+0130 XC = XC .* Wcoeff .* WsnippetCoeff;     <span class="comment">% apply normalization</span>
+0131 Wxc = <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(W,<span class="string">'Data'</span>,XC);
+0132 Wxc = <a href="../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>;
+0133 Wxc = <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( Wxc , <span class="string">'STATION'</span> , <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(W,<span class="string">'STATION'</span>) , <span class="string">'CHANNEL'</span> , <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(W,<span class="string">'CHANNEL'</span>) );
+0134 Wxc = <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( Wxc , <span class="string">'START'</span> , <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(W,<span class="string">'START'</span>) , <span class="string">'FREQ'</span> , <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(W,<span class="string">'FREQ'</span>) );
+0135 Wxc = <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>( Wxc , <span class="string">'DATA'</span> , XC );
+0136 
+0137 
+0138 <span class="comment">% ADD MATCH TIMES TO WAVEFORM</span>
+0139 allPeaks = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(<a href="../../../GISMO/core/@waveform/getpeaks.html" class="code" title="function peakmask = getpeaks(w)">getpeaks</a>(Wxc));
+0140 allPeakValues = XC(allPeaks);
+0141 f = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>( allPeakValues&gt;=threshold );
+0142 goodPeaks = allPeaks(f);
+0143 goodPeakValues = allPeakValues(f);
+0144 timeVector = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wxc,<span class="string">'TIMEVECTOR'</span>);
+0145 dataVector = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(Wxc,<span class="string">'DATA'</span>);
+0146 mastercorr_trig = timeVector(goodPeaks) + timeOffset;
+0147 mastercorr_corr = goodPeakValues;
+0148 adjacentPeakValues = <a href="#_sub2" class="code" title="subfunction adjacentPeakValues = find_adjacent_peaks(f,allPeaks,allPeakValues,goodPeaks)">find_adjacent_peaks</a>(f,allPeaks,allPeakValues,goodPeaks)';
+0149 W = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W,<span class="string">'MASTERCORR_TRIG'</span>,mastercorr_trig);
+0150 W = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W,<span class="string">'MASTERCORR_ADJACENT_CORR'</span>,adjacentPeakValues);
+0151 W = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W,<span class="string">'MASTERCORR_CORR'</span>,mastercorr_corr);
+0152 W = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(W,<span class="string">'MASTERCORR_SNIPPET'</span>,Wsnippet);
+0153 
+0154 
+0155 
+0156 
+0157 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0158 <span class="comment">%</span>
+0159 <a name="_sub2" href="#_subfunctions" class="code">function adjacentPeakValues = find_adjacent_peaks(f,allPeaks,allPeakValues,goodPeaks)</a>
+0160 
+0161 <span class="comment">% allPeaks:         index of peaks in coorelation function</span>
+0162 <span class="comment">% allPeakValues:    cross correlation value of peak</span>
+0163 <span class="comment">% f:                indicates those allPeaks which surpass the threshold</span>
+0164 <span class="comment">% goodPeaks:        index of peaks (above threshold) in correlation function</span>
+0165 <span class="comment">% goodPeakValues:   cross correlation value of peak (above threshold)</span>
+0166 
+0167 
+0168 <span class="keyword">if</span> numel(goodPeaks)==0
+0169     adjacentPeakValues = [];
+0170 <span class="keyword">else</span>
+0171     <span class="comment">% FIRST PEAK</span>
+0172     <span class="keyword">if</span> goodPeaks(1)==allPeaks(1)
+0173         adjacentPeakValues(1) = allPeakValues(f(1)+1);
+0174     <span class="keyword">else</span>
+0175         adjacentPeakValues(1) = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>([allPeakValues(f(1)-1)' ; allPeakValues(f(1)+1)']);
+0176     <span class="keyword">end</span>
+0177     <span class="comment">% END PEAK</span>
+0178     <span class="keyword">if</span> goodPeaks(end)==allPeaks(end)
+0179         adjacentPeakValues(numel(f)) = allPeakValues(f(end)+1);
+0180     <span class="keyword">else</span>
+0181         adjacentPeakValues(numel(f)) = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>([allPeakValues(f(end)-1)' ; allPeakValues(f(end)+1)']);
+0182     <span class="keyword">end</span>
+0183     <span class="comment">% MIDDLE PEAKS</span>
+0184     adjacentPeakValues(2:end-1) = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>([allPeakValues(f(2:end-1)-1)' ; allPeakValues(f(2:end-1)+1)']);
+0185 <span class="keyword">end</span>
+0186 
+0187 
+0188 
+0189 
+0190 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0191 <span class="comment">%</span>
+0192 <a name="_sub3" href="#_subfunctions" class="code">function fieldExists = ismiscfield(W,fieldName)</a>
+0193 
+0194 <span class="comment">% For W of length 1 only.</span>
+0195 
+0196 miscFields = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(W,<span class="string">'misc_fields'</span>);
+0197 
+0198 <span class="keyword">if</span> <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(strcmpi(miscFields,fieldName)) 
+0199     fieldExists = 1;
+0200 <span class="keyword">else</span>
+0201     fieldExists = 0;
+0202 <span class="keyword">end</span>
+0203 
+0204 
+0205</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

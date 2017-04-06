@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plot_time</title>
+  <meta name="keywords" content="plot_time">
+  <meta name="description" content="CATALOG.PLOT_TIME Plot magnitude and depth against time">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@Catalog</a> &gt; plot_time.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@Catalog&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>plot_time
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>CATALOG.PLOT_TIME Plot magnitude and depth against time</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function plot_time(catalogObject) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">CATALOG.PLOT_TIME Plot magnitude and depth against time
+   catalogObject.plot_time()</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function plot_time(catalogObject)</a>
+0002     <span class="comment">%CATALOG.PLOT_TIME Plot magnitude and depth against time</span>
+0003     <span class="comment">%   catalogObject.plot_time()</span>
+0004 
+0005     <span class="comment">% Glenn Thompson 2014/06/01</span>
+0006 
+0007     symsize = get_symsize(catalogObject); 
+0008     timerange = catalogObject.gettimerange();
+0009     xlims = [floor(timerange(1)) ceil(timerange(2))];
+0010 
+0011     <span class="comment">% time-depth</span>
+0012     <span class="keyword">if</span> all(isnan(catalogObject.depth))
+0013         warning(<span class="string">'No depth data to plot'</span>);
+0014     <span class="keyword">else</span>
+0015         figure;
+0016         <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gcf,<span class="string">'Color'</span>, [1 1 1]);
+0017         subplot(2,1,1);
+0018         scatter(catalogObject.otime, catalogObject.depth, symsize);
+0019         <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'XLim'</span>, xlims);
+0020         datetick(<span class="string">'x'</span>);
+0021         xlabel(<span class="string">'Date'</span>);
+0022         ylabel(<span class="string">'Depth (km)'</span>);
+0023         <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'YDir'</span>, <span class="string">'reverse'</span>);
+0024         grid on;
+0025 
+0026         <span class="comment">% time-mag</span>
+0027         subplot(2,1,2);
+0028     <span class="keyword">end</span>
+0029     <span class="keyword">if</span> all(isnan(catalogObject.mag))
+0030         warning(<span class="string">'No magnitude data to plot'</span>);
+0031     <span class="keyword">else</span>
+0032         scatter(catalogObject.otime, catalogObject.mag, symsize);
+0033         <span class="comment">%stem(catalogObject.otime, catalogObject.mag);</span>
+0034         <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'XLim'</span>, xlims);
+0035         datetick(<span class="string">'x'</span>);
+0036         xlabel(<span class="string">'Date'</span>);
+0037         ylabel(<span class="string">'Magnitude'</span>);
+0038         grid on;
+0039     <span class="keyword">end</span>
+0040 <span class="keyword">end</span>
+0041</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of hilbert</title>
+  <meta name="keywords" content="hilbert">
+  <meta name="description" content="HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; hilbert.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>hilbert
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function W = hilbert(W, n) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.
+   waveform = hilbert(waveform)
+   waveform = hilbert(waveform, N);
+
+ THIS version only returns the abs value in the waveform.  If you want to
+ keep the imaginary values, then you should use the built-in hilbert
+ transform.  ie.  Don't feed it a wavform object, feed it a vector... - CR
+
+
+ See also FFT, IFFT, for details and the meaning of &quot;N&quot; see <a href="hilbert.html" class="code" title="function W = hilbert(W, n)">HILBERT</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li><li><a href="abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="hilbert.html" class="code" title="function W = hilbert(W, n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed/correlation_derived/corrderived_plot_swarm_history.html" class="code" title="function corrderived_plot_swarm_history(c,varargin)">corrderived_plot_swarm_history</a>	CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms</li><li><a href="../../../GISMO/core/@correlation/hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li><li><a href="hilbert.html" class="code" title="function W = hilbert(W, n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/hilbert.html" class="code" title="function c = hilbert(c,n)">hilbert</a>	HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</li><li><a href="../../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>	</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function W = hilbert(W, n)</a>
+0002    <span class="comment">%HILBERT (for WAVEFORM objects) Discrete-time analytic Hilbert transform.</span>
+0003    <span class="comment">%   waveform = hilbert(waveform)</span>
+0004    <span class="comment">%   waveform = hilbert(waveform, N);</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">% THIS version only returns the abs value in the waveform.  If you want to</span>
+0007    <span class="comment">% keep the imaginary values, then you should use the built-in hilbert</span>
+0008    <span class="comment">% transform.  ie.  Don't feed it a wavform object, feed it a vector... - CR</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">%</span>
+0011    <span class="comment">% See also FFT, IFFT, for details and the meaning of &quot;N&quot; see HILBERT</span>
+0012    
+0013    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0014    <span class="comment">% $Date$</span>
+0015    <span class="comment">% $Revision$</span>
+0016    
+0017    <span class="keyword">for</span> idx = 1:numel(W)
+0018       <span class="comment">% d = W(idx).data;</span>
+0019       <span class="keyword">if</span> exist(<span class="string">'n'</span>,<span class="string">'var'</span>),
+0020          W(idx).data = <a href="abs.html" class="code" title="function w = abs(w)">abs</a>(<a href="hilbert.html" class="code" title="function W = hilbert(W, n)">hilbert</a>(W(idx).data,n));
+0021       <span class="keyword">else</span>
+0022          W(idx).data = <a href="abs.html" class="code" title="function w = abs(w)">abs</a>(<a href="hilbert.html" class="code" title="function W = hilbert(W, n)">hilbert</a>(W(idx).data));
+0023       <span class="keyword">end</span>
+0024       <span class="comment">% W(idx) = set(W(idx),'data',d);</span>
+0025    <span class="keyword">end</span>
+0026 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

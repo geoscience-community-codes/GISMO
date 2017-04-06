@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dd_make_scp</title>
+  <meta name="keywords" content="dd_make_scp">
+  <meta name="description" content="DD_MAKE_SCP Create a draft control file for the correlation process">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed_antelope</a> &gt; <a href="index.html">double_difference</a> &gt; dd_make_scp.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed_antelope/double_difference&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>dd_make_scp
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>DD_MAKE_SCP Create a draft control file for the correlation process</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function dd_make_scp(dbname,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DD_MAKE_SCP Create a draft control file for the correlation process
+
+ DD_MAKE_SCP('dbclust')
+
+ DD_MAKE_SCP(DBNAME) reads database DBNAME and writes out a text
+ files OUTFILE containing one row for each unique combination of station,
+ channel and iphase in the database. The database must contain a the
+ tables: origin, event, assoc and arrival. Only preferred origins are
+ included. All remaining columns in the 'SCP' file are filed with default
+ values.
+
+ DD_MAKE_SCP(DBNAME,PRETRIG,POSTTRIG,MINCORR,MAXLAG,HPF,LPF,PREFHORZ,SCPFILE)
+ writes the same file using the specified pre-trigger times, post-trigger,
+ minimum correlation values, maximum lag times, high and low pass filter,
+ preferred horizontal component, and name of output scp file.
+ 
+ DD_MAKE_SCP(DBNAME) is the same as
+ DD_MAKE_SCP(DBNAME, -0.3, 0.5, 0.7, 0.2, 2, 20, 'N', 'matdd_scp.txt')
+
+ SCP OUTPUT FILE FORMAT
+   col 1       station 
+   col 2       channel
+   col 3       iphase
+   col 4       no. of arrivals matching this sta/chan/iphase combo
+   col 5       pre-trig (time included before the pick time)
+   col 6       post-trig (time included after the pick time)
+   col 7       The minimum correlation value required for inclusion
+   col 8       The maximum lag time required for inclusion
+   col 9-10    Bandpass filter applied to waveforms before correlating</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>	TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="dd_cookbook.html" class="code" title="">dd_cookbook</a>	% HypoDD cross correlation toolbox</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function dd_make_scp(dbname,varargin)</a>
+0002 
+0003 <span class="comment">%DD_MAKE_SCP Create a draft control file for the correlation process</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% DD_MAKE_SCP('dbclust')</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% DD_MAKE_SCP(DBNAME) reads database DBNAME and writes out a text</span>
+0008 <span class="comment">% files OUTFILE containing one row for each unique combination of station,</span>
+0009 <span class="comment">% channel and iphase in the database. The database must contain a the</span>
+0010 <span class="comment">% tables: origin, event, assoc and arrival. Only preferred origins are</span>
+0011 <span class="comment">% included. All remaining columns in the 'SCP' file are filed with default</span>
+0012 <span class="comment">% values.</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% DD_MAKE_SCP(DBNAME,PRETRIG,POSTTRIG,MINCORR,MAXLAG,HPF,LPF,PREFHORZ,SCPFILE)</span>
+0015 <span class="comment">% writes the same file using the specified pre-trigger times, post-trigger,</span>
+0016 <span class="comment">% minimum correlation values, maximum lag times, high and low pass filter,</span>
+0017 <span class="comment">% preferred horizontal component, and name of output scp file.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% DD_MAKE_SCP(DBNAME) is the same as</span>
+0020 <span class="comment">% DD_MAKE_SCP(DBNAME, -0.3, 0.5, 0.7, 0.2, 2, 20, 'N', 'matdd_scp.txt')</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% SCP OUTPUT FILE FORMAT</span>
+0023 <span class="comment">%   col 1       station</span>
+0024 <span class="comment">%   col 2       channel</span>
+0025 <span class="comment">%   col 3       iphase</span>
+0026 <span class="comment">%   col 4       no. of arrivals matching this sta/chan/iphase combo</span>
+0027 <span class="comment">%   col 5       pre-trig (time included before the pick time)</span>
+0028 <span class="comment">%   col 6       post-trig (time included after the pick time)</span>
+0029 <span class="comment">%   col 7       The minimum correlation value required for inclusion</span>
+0030 <span class="comment">%   col 8       The maximum lag time required for inclusion</span>
+0031 <span class="comment">%   col 9-10    Bandpass filter applied to waveforms before correlating</span>
+0032 
+0033 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0034 <span class="comment">% $Date$</span>
+0035 <span class="comment">% $Revision$</span>
+0036 
+0037 
+0038 
+0039 
+0040 <span class="comment">%% SET CONSTANTS</span>
+0041 <span class="keyword">if</span> nargin==9
+0042     pretrig = varargin{1};
+0043     posttrig = varargin{2};
+0044     minC = varargin{3};
+0045     maxL = varargin{4};
+0046     hpf = varargin{5};
+0047     lpf = varargin{6};
+0048     prefhorz = varargin{7};
+0049     outfile = varargin{8};
+0050 <span class="keyword">elseif</span> nargin==1
+0051     pretrig = -0.3;
+0052     posttrig = 0.5;
+0053     minC = 0.7;
+0054     maxL = 0.2;
+0055     hpf = 2;
+0056     lpf = 20;
+0057     prefhorz = <span class="string">'N'</span>;
+0058     outfile = <span class="string">'matdd_scp.txt'</span>;
+0059 <span class="keyword">else</span>
+0060     error(<span class="string">'Incorrect number of inputs'</span>);
+0061 <span class="keyword">end</span>
+0062 
+0063     
+0064 <span class="comment">%% LOAD VALUES FROM DATABASE</span>
+0065 <span class="keyword">try</span>
+0066     db = dbopen(dbname,<span class="string">'r'</span>);
+0067 <span class="keyword">catch</span>
+0068     error([<span class="string">'Could not open database: '</span> dbname]);
+0069 <span class="keyword">end</span>
+0070 db = dblookup_table(db,<span class="string">'origin'</span>);
+0071 db1 = dblookup_table(db,<span class="string">'event'</span>);
+0072 db = dbjoin(db,db1);
+0073 db = dbsubset(db,<span class="string">'orid==prefor'</span>);
+0074 db1 = dblookup_table(db,<span class="string">'assoc'</span>);
+0075 db = dbjoin(db,db1);
+0076 db1 = dblookup_table(db,<span class="string">'arrival'</span>);
+0077 db = dbjoin(db,db1);
+0078 nrecords = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>)
+0079 [sta,chan,or_time,orid,ar_time,arid,iphase] = dbgetv(db,<span class="string">'sta'</span>,<span class="string">'chan'</span>,<span class="string">'origin.time'</span>,<span class="string">'orid'</span>,<span class="string">'arrival.time'</span>,<span class="string">'arid'</span>,<span class="string">'iphase'</span>);
+0080 ar_time = <a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(ar_time);
+0081 or_time = <a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(or_time);
+0082 dbclose(db)
+0083 stalist = <a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(sta);
+0084 
+0085 
+0086 
+0087 <span class="comment">%% ADJUST HORIZONTAL CHANNELS TO THE &quot;PREFERRED&quot; CHANNEL</span>
+0088 <span class="comment">%load junk</span>
+0089 
+0090 chanchar = char(chan);
+0091 f = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>( <span class="string">'N'</span>==chanchar(:,3) | <span class="string">'E'</span>==chanchar(:,3) );
+0092 chanlist = <a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(chan(f));
+0093 chanlistchar = char(chanlist);
+0094 prefix = <a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(chanlistchar(:,1:2),<span class="string">'rows'</span>);
+0095 
+0096 <span class="keyword">if</span> prefhorz==<span class="string">'N'</span>
+0097     unprefhorz=<span class="string">'E'</span>;
+0098 <span class="keyword">elseif</span> prefhorz==<span class="string">'E'</span>
+0099     unprefhorz=<span class="string">'N'</span>;
+0100 <span class="keyword">else</span>
+0101    error(<span class="string">'Preferred horizontal component must be either E or N'</span>); 
+0102 <span class="keyword">end</span>
+0103 
+0104 <span class="keyword">for</span> n = 1:size(prefix,1)
+0105     prefchan =   [ prefix(n,:) prefhorz ];
+0106     unprefchan = [ prefix(n,:) unprefhorz ];
+0107     <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'Changing any '</span> unprefchan <span class="string">' channels to '</span> prefchan <span class="string">' ...'</span>]);
+0108     f = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>( strcmp(unprefchan,chan) );
+0109     chan(f) = {prefchan};  
+0110 <span class="keyword">end</span>
+0111 
+0112 
+0113 
+0114 
+0115 <span class="comment">%% PREPARE LIST OF UNIQUE STA/CHAN/IPHASE</span>
+0116 scp = [];       <span class="comment">% sta/chan/phase combinations</span>
+0117 <span class="keyword">for</span> ns = 1:length(stalist)
+0118     fs = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>( strcmp(stalist{ns},sta) );
+0119     chanlist = <a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(chan(fs));
+0120     <span class="keyword">for</span> nc = 1:length(chanlist)
+0121         fc = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(  strcmp(stalist{ns},sta) &amp; strcmp(chanlist{nc},chan) );
+0122         iphaselist = <a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(iphase(fc));
+0123         <span class="keyword">for</span> np = 1:length(iphaselist)
+0124             fp = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(  strcmp(stalist{ns},sta) &amp; strcmp(chanlist{nc},chan) &amp; strcmp(iphaselist{np},iphase) );
+0125             scp = <a href="../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1,scp,[stalist(ns) chanlist(nc) iphaselist(np) numel(fp) ]);
+0126         <span class="keyword">end</span>
+0127     <span class="keyword">end</span>
+0128 <span class="keyword">end</span>
+0129 
+0130 
+0131 
+0132 <span class="comment">%% WRITE OUT SCP FILE</span>
+0133 fid = fopen(outfile,<span class="string">'w'</span>);
+0134 fprintf(fid,<span class="string">'sta     chan   phase   picks  pretrig posttrig  MinCorr   MaxLag    hpf      lpf\n'</span>);
+0135 <span class="keyword">for</span> n = 1:size(scp,1)
+0136     fprintf(fid,<span class="string">'%-8s %-6s %-5s %5.0f %8.3f %8.3f %8.3f %8.3f %8.3f %8.3f\n'</span>,scp{n,1},scp{n,2},scp{n,3},scp{n,4},pretrig,posttrig,minC,maxL,hpf,lpf);
+0137 <span class="keyword">end</span>
+0138 fclose(fid);
+0139</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

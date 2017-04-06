@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of reduce</title>
+  <meta name="keywords" content="reduce">
+  <meta name="description" content="s.reduce('waveType', 'surface', 'waveSpeed', 2000, 'f', 2.0, );">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@rsam</a> &gt; reduce.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@rsam&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>reduce
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>s.reduce('waveType', 'surface', 'waveSpeed', 2000, 'f', 2.0, );</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function self = reduce(self, waveType, sourcelat, sourcelon, stationlat, stationlon, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> s.reduce('waveType', 'surface', 'waveSpeed', 2000, 'f', 2.0, );
+ s.distance and waveSpeed assumed to be in metres (m)
+ (INPUT) s.data assumed to be in nm or Pa
+ (OUTPUT) s.data in cm^2 or Pa.m</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function self = reduce(self, waveType, sourcelat, sourcelon, stationlat, stationlon, varargin)</a>
+0002     <span class="comment">% s.reduce('waveType', 'surface', 'waveSpeed', 2000, 'f', 2.0, );</span>
+0003     <span class="comment">% s.distance and waveSpeed assumed to be in metres (m)</span>
+0004     <span class="comment">% (INPUT) s.data assumed to be in nm or Pa</span>
+0005     <span class="comment">% (OUTPUT) s.data in cm^2 or Pa.m</span>
+0006     p = inputParser;
+0007     p.addParameter(<span class="string">'waveSpeed'</span>, 2000);
+0008     p.addParamter(<span class="string">'f'</span>, 2.0);
+0009     p.parse(varargin{:});
+0010 
+0011     self.reduced.waveSpeed = p.Results.waveSpeed;
+0012 
+0013     <span class="keyword">if</span> self.reduced.isReduced
+0014         <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'Data are already reduced'</span>);
+0015         <span class="keyword">return</span>;
+0016     <span class="keyword">end</span>
+0017 
+0018     self.reduced.distance = deg2km(distance(sourcelat, sourcelon, stationlat, stationlon)) *1000; <span class="comment">% m</span>
+0019 
+0020     <span class="keyword">switch</span> self.units
+0021         <span class="keyword">case</span> <span class="string">'nm'</span>  <span class="comment">% Displacement</span>
+0022             <span class="comment">% Do computation in cm</span>
+0023             self.data = self.data / 1e7;
+0024             r = self.reduced.distance * 100; <span class="comment">% cm</span>
+0025             ws = waveSpeed * 100; <span class="comment">% cm/2</span>
+0026             self.measure = sprintf(<span class="string">'%sR%s'</span>,self.measure(1),self.measure(2:end));
+0027             <span class="keyword">switch</span> self.reduced.waveType
+0028                 <span class="keyword">case</span> <span class="string">'body'</span>
+0029                     self.data = self.data * r; <span class="comment">% cm^2</span>
+0030                     self.units = <span class="string">'cm^2'</span>;
+0031                 <span class="keyword">case</span> <span class="string">'surface'</span>
+0032                     wavelength = ws / p.Results.f; <span class="comment">% cm</span>
+0033                     <span class="keyword">try</span>
+0034                             self.data = self.data .* sqrt(r * wavelength); <span class="comment">% cm^2</span>
+0035                     <span class="keyword">catch</span>
+0036                             debug.print_debug(5, <span class="string">'mean wavelength instead'</span>)
+0037                             self.data = self.data * sqrt(r * <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(wavelength)); <span class="comment">% cm^2</span>
+0038                     <span class="keyword">end</span>
+0039                     self.units = <span class="string">'cm^2'</span>;
+0040                     self.reduced.isReduced = true;
+0041                 <span class="keyword">otherwise</span>
+0042                     error(sprintf(<span class="string">'Wave type %s not recognised'</span>), self.reduced.waveType); 
+0043             <span class="keyword">end</span>
+0044         <span class="keyword">case</span> <span class="string">'Pa'</span>  <span class="comment">% Pressure</span>
+0045             <span class="comment">% Do computation in metres</span>
+0046             self.data = self.data * self.reduced.distance; <span class="comment">% Pa.m</span>
+0047             self.units = <span class="string">'Pa m'</span>;
+0048             self.reduced.isReduced = true;
+0049             self.measure = sprintf(<span class="string">'%sR%s'</span>,self.measure(1),self.measure(2:end));
+0050         <span class="keyword">otherwise</span>
+0051             error(sprintf(<span class="string">'Units %s for measure %s not recognised'</span>, self.units, self.measure));
+0052     <span class="keyword">end</span>
+0053     self.reduced.sourcelat = sourcelat;
+0054     self.reduced.sourcelon = sourcelon;
+0055     self.reduced.stationlat = stationlat;
+0056     self.reduced.stationlon = stationlon;
+0057 
+0058 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cookbook_map</title>
+  <meta name="keywords" content="cookbook_map">
+  <meta name="description" content="COOKBOOK_MAP Plots a simple map to accompany cookbook data">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@threecomp</a> &gt; cookbook_map.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@threecomp&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>cookbook_map
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>COOKBOOK_MAP Plots a simple map to accompany cookbook data</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function cookbook_map(TC,W,backAzimuth) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">COOKBOOK_MAP Plots a simple map to accompany cookbook data
+ COOKBOOK_MAP(TC,W) plots a simple map of station and origin locations
+ for the demo dataset used in the threecomp cookbook. It is intended to be
+ used internal to the demo only.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/@waveform/legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>	legend creates a legend for a waveform graph</li><li><a href="../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/legend.html" class="code" title="function varargout = legend(T, varargin)">legend</a>	legend   Create a legend for the graph of a trace.</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function cookbook_map(TC,W,backAzimuth)</a>
+0002 
+0003 <span class="comment">%COOKBOOK_MAP Plots a simple map to accompany cookbook data</span>
+0004 <span class="comment">% COOKBOOK_MAP(TC,W) plots a simple map of station and origin locations</span>
+0005 <span class="comment">% for the demo dataset used in the threecomp cookbook. It is intended to be</span>
+0006 <span class="comment">% used internal to the demo only.</span>
+0007  
+0008 
+0009 <span class="comment">% PLOT MAP</span>
+0010 figure(<span class="string">'Color'</span>,<span class="string">'w'</span>,<span class="string">'Position'</span>,[50 50 400 400]);
+0011 staLat = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'STATIONLATITUDE'</span>);
+0012 staLon = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'STATIONLONGITUDE'</span>);
+0013 origLat = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'ORIGINLATITUDE'</span>);
+0014 origLon = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'ORIGINLONGITUDE'</span>);
+0015 staName = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(W(:,1),<span class="string">'STATION'</span>);
+0016 <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(staLon,staLat,<span class="string">'bo'</span>,<span class="string">'LineWidth'</span>,3,<span class="string">'MarkerSize'</span>,7);
+0017 hold on; box on; grid on;
+0018 <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(origLon,origLat,<span class="string">'ro'</span>,<span class="string">'LineWidth'</span>,3,<span class="string">'MarkerSize'</span>,9);
+0019 <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(gca,<span class="string">'DataAspectRatio'</span>,[1 cosd(34) 1]);
+0020 <span class="keyword">if</span> exist(<span class="string">'reckon'</span>)==2
+0021     <span class="keyword">for</span> n=1:size(W,1)
+0022         text(staLon(n),staLat(n),[<span class="string">'  '</span> staName{n}],<span class="string">'FontWeight'</span>,<span class="string">'bold'</span>);
+0023         [arrowLat(1) arrowLon(1)] = reckon(staLat(n),staLon(n), -0.3, backAzimuth(n));
+0024         [arrowLat(2) arrowLon(2)] = reckon(staLat(n),staLon(n), 0.3, backAzimuth(n));
+0025         <a href="plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>(arrowLon,arrowLat,<span class="string">'b-'</span>);
+0026     <span class="keyword">end</span>
+0027 <span class="keyword">else</span>
+0028     <a href="disp.html" class="code" title="function disp(TC)">disp</a>(<span class="string">'** WARNING **'</span>);
+0029     <a href="disp.html" class="code" title="function disp(TC)">disp</a>(<span class="string">'Full cookbook example requires the mapping toolbox. It is used to '</span>);
+0030     <a href="disp.html" class="code" title="function disp(TC)">disp</a>(<span class="string">'plot backazimuths. Note thta the mapping toolbox is NOT needed to '</span>);
+0031     <a href="disp.html" class="code" title="function disp(TC)">disp</a>(<span class="string">'use the threecomp object, however.'</span>);
+0032 <span class="keyword">end</span>
+0033 text(origLon(n),origLat(n),[<span class="string">'  origin'</span>],<span class="string">'FontWeight'</span>,<span class="string">'bold'</span>);
+0034 xlabel(<span class="string">'Longitude'</span>);
+0035 ylabel(<span class="string">'Latitude'</span>);
+0036 <a href="../../../GISMO/core/@waveform/legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>(<span class="string">'stations'</span>,<span class="string">'origin'</span>,<span class="string">'backazimuth'</span>,<span class="string">'Location'</span>,<span class="string">'NorthWest'</span>);
+0037</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

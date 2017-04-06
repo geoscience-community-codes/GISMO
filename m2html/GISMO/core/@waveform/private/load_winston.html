@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of load_winston</title>
+  <meta name="keywords" content="load_winston">
+  <meta name="description" content="LOAD_WINSTON handles retrieval of data from a winston waveserver.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; load_winston.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>load_winston
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>LOAD_WINSTON handles retrieval of data from a winston waveserver.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function allWaves = load_winston(request) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> LOAD_WINSTON handles retrieval of data from a winston waveserver.
+  all times are matlab formatted datenums
+  allWaves = load_winston(request)
+  server and port are dictatd by the datasource included within the request.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../../GISMO/core/@rsam/extract.html" class="code" title="function s=extract(self, snum, enum)">extract</a>	</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/success.html" class="code" title="function [mask,conflicts] = success(TC)">success</a>	SUCCESS Checks the success of a conversion to threecomp object.</li><li><a href="../../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../../../GISMO/core/@waveform/addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>	ADDHISTORY function in charge of adding history to a waveform</li><li><a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../../GISMO/core/@waveform/extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>	convert an epoch date to a matlab date</li><li><a href="mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>	convert a matlab date to an epoch date</li><li><a href="unpackDataRequest.html" class="code" title="function [dataSource, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request)">unpackDataRequest</a>	</li><li><a href="../../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="get_load_routine.html" class="code" title="function myLoadRoutine = get_load_routine(ds, use_wkaround)">get_load_routine</a>	determine the load function based upon the datasource's type</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function w = grab_for_time(chanInfo, t1, t2, ds)</a></li><li><a href="#_sub2" class="code">function [w, successful] = getFromWinston(chanTag,stime,etime,ds)</a></li><li><a href="#_sub3" class="code">function success = getWinstonWorking()</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function allWaves = load_winston(request)</a>
+0002    <span class="comment">% LOAD_WINSTON handles retrieval of data from a winston waveserver.</span>
+0003    <span class="comment">%  all times are matlab formatted datenums</span>
+0004    <span class="comment">%  allWaves = load_winston(request)</span>
+0005    <span class="comment">%  server and port are dictatd by the datasource included within the request.</span>
+0006    
+0007    <span class="comment">% 2015 - CR refractored.  winstonNotWorking is now an error, so this</span>
+0008    <span class="comment">% should be used within some try-catch statement.</span>
+0009    
+0010    <span class="keyword">persistent</span> winstonIsWorking
+0011    
+0012    <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(winstonIsWorking) || ~winstonIsWorking
+0013       winstonIsWorking = <a href="#_sub3" class="code" title="subfunction success = getWinstonWorking()">getWinstonWorking</a>();
+0014    <span class="keyword">end</span>
+0015    
+0016    <span class="keyword">if</span> ~winstonIsWorking
+0017       error(<span class="string">'waveform:load_winston:winstonNotWorking'</span>,<span class="keyword">...</span>
+0018          <span class="string">'failed to access winston'</span>);
+0019    <span class="keyword">end</span>
+0020    
+0021    [ds, channelInfo, sTime, eTime, ~] = <a href="unpackDataRequest.html" class="code" title="function [dataSource, chanInfo, startTimes, endTimes, combineWaves] = unpackDataRequest(request)">unpackDataRequest</a>(request);
+0022    validTimes = eTime &gt; sTime;
+0023    sTime = sTime(validTimes);
+0024    eTime = eTime(validTimes);
+0025    
+0026    sTime_epoch = <a href="mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>(sTime);
+0027    eTime_epoch = <a href="mep2dep.html" class="code" title="function n = mep2dep(n)">mep2dep</a>(eTime);
+0028    
+0029    timefn = @(t1, t2) <a href="#_sub1" class="code" title="subfunction w = grab_for_time(chanInfo, t1, t2, ds)">grab_for_time</a>(channelInfo, t1, t2, ds);
+0030    allWaves = arrayfun(timefn, sTime_epoch, eTime_epoch, <span class="string">'uniformoutput'</span>,false);
+0031    allWaves = [allWaves{:}];
+0032 <span class="keyword">end</span>
+0033 
+0034 <a name="_sub1" href="#_subfunctions" class="code">function w = grab_for_time(chanInfo, t1, t2, ds)</a>
+0035       myfn = @(nslc) <a href="#_sub2" class="code" title="subfunction [w, successful] = getFromWinston(chanTag,stime,etime,ds)">getFromWinston</a>(nslc, t1, t2, ds);
+0036       w = arrayfun(myfn, chanInfo, <span class="string">'uniformoutput'</span>, false);
+0037       w = [w{:}];
+0038 <span class="keyword">end</span>
+0039 
+0040 <a name="_sub2" href="#_subfunctions" class="code">function [w, successful] = getFromWinston(chanTag,stime,etime,ds)</a>
+0041    <span class="comment">%include</span>
+0042    successful = false;
+0043    
+0044    w = <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(<a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>,<span class="string">'channeltag'</span>,chanTag);  <span class="comment">%initialize a waveform</span>
+0045    WWS = gov.usgs.volcanoes.winston.legacyServer.WWSClient(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ds,<span class="string">'server'</span>),<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ds,<span class="string">'port'</span>));
+0046    
+0047    <span class="comment">%grab the winston data, then close the database</span>
+0048    mychan = chanTag.channel;
+0049    mynet = chanTag.network;
+0050    mysta = chanTag.station;
+0051    myloc = chanTag.location;
+0052    
+0053    <span class="keyword">try</span>
+0054       d = WWS.getRawData(mysta,mychan,mynet,myloc,stime,etime);
+0055       WWS.close;
+0056    <span class="keyword">catch</span> er
+0057       warning(<span class="string">'Waveform:load_winston:noServerAccess'</span>, <span class="string">'Unable to access Winston Wave Server'</span>);
+0058       rethrow(er)
+0059    <span class="keyword">end</span>
+0060    
+0061    <span class="keyword">if</span> ~exist(<span class="string">'d'</span>,<span class="string">'var'</span>) || <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(d)
+0062       fprintf(<span class="string">'%s %s - %s not found on server\n'</span>, char(chanTag), datestr(<a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(stime),31), datestr(<a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(etime),31));
+0063       <span class="keyword">return</span>;
+0064    <span class="keyword">end</span>
+0065    fs = d.getSamplingRate;
+0066    data_start = <a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(d.getStartTime);
+0067    data_end = <a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(d.getEndTime);
+0068    spikes = d.buffer == intmin(<span class="string">'int32'</span>);
+0069    data = <a href="../../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(d.buffer); <span class="comment">% d.buffer must be converted from int32</span>
+0070    data(spikes) = nan; <span class="comment">% spikes used to be set to 0</span>
+0071    w = <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w,<span class="string">'start'</span>, data_start,<span class="string">'freq'</span>,fs,<span class="string">'data'</span>,data);
+0072    
+0073    <span class="comment">%if a greater range of data was found, then truncate to the desired times.</span>
+0074    <span class="keyword">if</span> data_start &lt; <a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(stime) || data_end &gt; <a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(etime)
+0075       w = <a href="../../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>(w,<span class="string">'time'</span>, <a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(stime),<a href="dep2mep.html" class="code" title="function n = dep2mep(n)">dep2mep</a>(etime));
+0076    <span class="keyword">end</span>
+0077    w = <a href="../../../../GISMO/core/@waveform/addhistory.html" class="code" title="function w = addhistory(w, whathappened,varargin)">addhistory</a>(<a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(w,<span class="string">'history'</span>,{}),<span class="string">'CREATED'</span>);
+0078    successful = true; <span class="comment">%successfully completed</span>
+0079 <span class="keyword">end</span>
+0080 
+0081 
+0082 <span class="comment">%% Adding the Java path</span>
+0083 <a name="_sub3" href="#_subfunctions" class="code">function success = getWinstonWorking()</a>
+0084    <a href="../../../../GISMO/core/@threecomp/success.html" class="code" title="function [mask,conflicts] = success(TC)">success</a> = false;
+0085    <span class="keyword">if</span> usejava(<span class="string">'jvm'</span>) 
+0086        <span class="comment">% path updated by Glenn Thompson 20160526 based on tar -tvf</span>
+0087        <span class="comment">% swarm.jar | grep WWSClient</span>
+0088       <span class="keyword">if</span> exist(<span class="string">'gov.usgs.volcanoes.winston.legacyServer.WWSClient'</span>, <span class="string">'class'</span>);
+0089           <a href="../../../../GISMO/core/@threecomp/success.html" class="code" title="function [mask,conflicts] = success(TC)">success</a> = true;
+0090       <span class="keyword">else</span>
+0091         warning(<span class="string">'gov.usgs.volcanoes.winston.legacyServer.WWSClient not found'</span>);
+0092       <span class="keyword">end</span>
+0093    <span class="keyword">else</span>
+0094       warning(<span class="string">'Java not enabled on this machine. Winston will not work.'</span>)
+0095    <span class="keyword">end</span>
+0096 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

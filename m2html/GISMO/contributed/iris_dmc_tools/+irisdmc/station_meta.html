@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of station_meta</title>
+  <meta name="keywords" content="station_meta">
+  <meta name="description" content="station_meta adds station metadata to a waveform">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="../index.html">iris_dmc_tools</a> &gt; <a href="index.html">+irisdmc</a> &gt; station_meta.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed/iris_dmc_tools/+irisdmc&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>station_meta
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>station_meta adds station metadata to a waveform</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function [w,successList] = station_meta(w,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">station_meta adds station metadata to a waveform
+  W = STATION_META(W) looks up station metadata at the IRIS Data 
+  Management Center (DMC) based on the network, station and time of each 
+  waveform. These fields are added to the waveform. W may be of aritrary 
+  size and dimension. If a particular network-station-time combination is
+  not found at the DMC, that particular waveform is returned as is with no
+  additional fields.
+    STATION_STARTDATE        On date of the station (Matlab date format)
+    STATION_ENDDATE          Off date of the station (Matlab date format)
+    STATION_LATITUDE         latitude in degrees (double)
+    STATION_LONGITUDE        longitude in degress (double)
+    STATION_ELEVATION        elevation above sea level in meters (double)
+    STATION_NAME             full station name (text string)
+    STATION_NUMBEROFCHANNELS no. channels from station (double)
+        
+  [W,SUCCESS] = STATION_META(W) returns a matrix SUCCESS which is the
+  same size as W. SUCCESS is a mask containing ones and zeros that can be
+  used to identify which waveforms where successfully tagged with metadata
+  from the DMC. Reasons that the metadata lookup might fail include:
+       - this network-station is not on record at the DMC
+       - this network-station is not on record at the time range requested
+       - there was no internet connection at the time of connection
+       - the DMC's web services were down (rare, but does happen)
+
+  [W,SUCCESS] = STATION_META(W,'CheckEach') For speed, this function
+  only looks up a given network-station combination once and applies it 
+  to all elements of W that match the network-station. This is reasonable
+  for most W that might contain many waveforms from the same station and
+  general time range (e.g. a swarm of earthquakes over a few months). In
+  cases where the user suspects station data may have changed (e.g. a 
+  decade of earthquakes from an unfamiliar network), the CheckEach flag 
+  rerequests metadata for each individual waveform</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@threecomp/success.html" class="code" title="function [mask,conflicts] = success(TC)">success</a>	SUCCESS Checks the success of a conversion to threecomp object.</li><li><a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>	ADDFIELD add fields and values to waveform object(s)                V1.1</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [w,successList] = station_meta(w,varargin)</a>
+0002 
+0003 <span class="comment">%station_meta adds station metadata to a waveform</span>
+0004 <span class="comment">%  W = STATION_META(W) looks up station metadata at the IRIS Data</span>
+0005 <span class="comment">%  Management Center (DMC) based on the network, station and time of each</span>
+0006 <span class="comment">%  waveform. These fields are added to the waveform. W may be of aritrary</span>
+0007 <span class="comment">%  size and dimension. If a particular network-station-time combination is</span>
+0008 <span class="comment">%  not found at the DMC, that particular waveform is returned as is with no</span>
+0009 <span class="comment">%  additional fields.</span>
+0010 <span class="comment">%    STATION_STARTDATE        On date of the station (Matlab date format)</span>
+0011 <span class="comment">%    STATION_ENDDATE          Off date of the station (Matlab date format)</span>
+0012 <span class="comment">%    STATION_LATITUDE         latitude in degrees (double)</span>
+0013 <span class="comment">%    STATION_LONGITUDE        longitude in degress (double)</span>
+0014 <span class="comment">%    STATION_ELEVATION        elevation above sea level in meters (double)</span>
+0015 <span class="comment">%    STATION_NAME             full station name (text string)</span>
+0016 <span class="comment">%    STATION_NUMBEROFCHANNELS no. channels from station (double)</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%  [W,SUCCESS] = STATION_META(W) returns a matrix SUCCESS which is the</span>
+0019 <span class="comment">%  same size as W. SUCCESS is a mask containing ones and zeros that can be</span>
+0020 <span class="comment">%  used to identify which waveforms where successfully tagged with metadata</span>
+0021 <span class="comment">%  from the DMC. Reasons that the metadata lookup might fail include:</span>
+0022 <span class="comment">%       - this network-station is not on record at the DMC</span>
+0023 <span class="comment">%       - this network-station is not on record at the time range requested</span>
+0024 <span class="comment">%       - there was no internet connection at the time of connection</span>
+0025 <span class="comment">%       - the DMC's web services were down (rare, but does happen)</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%  [W,SUCCESS] = STATION_META(W,'CheckEach') For speed, this function</span>
+0028 <span class="comment">%  only looks up a given network-station combination once and applies it</span>
+0029 <span class="comment">%  to all elements of W that match the network-station. This is reasonable</span>
+0030 <span class="comment">%  for most W that might contain many waveforms from the same station and</span>
+0031 <span class="comment">%  general time range (e.g. a swarm of earthquakes over a few months). In</span>
+0032 <span class="comment">%  cases where the user suspects station data may have changed (e.g. a</span>
+0033 <span class="comment">%  decade of earthquakes from an unfamiliar network), the CheckEach flag</span>
+0034 <span class="comment">%  rerequests metadata for each individual waveform</span>
+0035 
+0036 <span class="comment">%  AUTHOR: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0037 <span class="comment">%  $Date$</span>
+0038 <span class="comment">%  $Revision$</span>
+0039 
+0040 
+0041 
+0042 <span class="comment">% SETTINGS</span>
+0043 httpServer = <span class="string">'http://www.iris.edu/ws/station/'</span>;
+0044 
+0045 
+0046 <span class="comment">% CHECK ARGUMENTS</span>
+0047 <span class="keyword">if</span> numel(varargin)&gt;1
+0048    error(<span class="string">'station_meta:incorrectNumberArguments'</span>,<span class="string">'Incorrect number of arguments'</span>); 
+0049 <span class="keyword">end</span>
+0050 <span class="keyword">if</span> ~strcmpi(class(w),<span class="string">'waveform'</span>)
+0051     error(<span class="string">'station_meta:missingWaveform'</span>,<span class="string">'First input must be a waveform object'</span>);
+0052 <span class="keyword">end</span>
+0053 checkEach = 0;
+0054 <span class="keyword">if</span> numel(varargin)&gt;=1
+0055     <span class="keyword">if</span> strcmpi(varargin{1},<span class="string">'checkEach'</span>)
+0056         checkEach = 1;
+0057     <span class="keyword">end</span>
+0058 <span class="keyword">end</span>
+0059 
+0060 
+0061 <span class="comment">% GET LIST OF UNIQUE CALLS TO SERVER</span>
+0062 indexList = {[]};
+0063 <span class="keyword">if</span> ~checkEach
+0064     scnl = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w,<span class="string">'SCNLOBJECT'</span>);
+0065     netSta = cellstr(strcat([char(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(scnl,<span class="string">'NETWORK'</span>)) char(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(scnl,<span class="string">'STATION'</span>)) ]));
+0066     uniqueSta = <a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(netSta);
+0067     <span class="keyword">for</span> n = 1:length(uniqueSta)
+0068         indexList(n) = {<a href="../../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(strcmpi(netSta,uniqueSta(n)))};
+0069     <span class="keyword">end</span>
+0070 <span class="keyword">else</span>
+0071     <span class="keyword">for</span> n =1:length(w)
+0072         indexList(n) = {n}; 
+0073     <span class="keyword">end</span>
+0074 <span class="keyword">end</span>
+0075 
+0076 
+0077 <span class="comment">% LOOP THROUGH THE SERVER CALLS</span>
+0078 successList = zeros(size(w));
+0079 <span class="keyword">for</span> n = 1:numel(indexList)
+0080     index = indexList{n};
+0081     scnlRequest = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(index(1)),<span class="string">'SCNLOBJECT'</span>);
+0082     station = upper(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(scnlRequest,<span class="string">'STATION'</span>));
+0083     network = upper(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(scnlRequest,<span class="string">'NETWORK'</span>));
+0084     timeStart =  datestr(floor(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(index(1)),<span class="string">'START'</span>)),<span class="string">'yyyy-mm-dd'</span>);
+0085     timeEnd   =  datestr(ceil(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(w(index(1)),<span class="string">'END'</span>)),<span class="string">'yyyy-mm-dd'</span>);
+0086     httpLink = [httpServer <span class="string">'query?net='</span> network <span class="string">'&amp;sta='</span> station  <span class="string">'&amp;timewindow='</span> timeStart <span class="string">','</span> timeEnd <span class="string">'&amp;level=sta'</span>];
+0087     <span class="comment">%disp(httpLink);</span>
+0088     [s,<a href="../../../../GISMO/core/@threecomp/success.html" class="code" title="function [mask,conflicts] = success(TC)">success</a>] = irisdmc.xml2struct(httpLink);
+0089     <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/success.html" class="code" title="function [mask,conflicts] = success(TC)">success</a>
+0090         w(index) = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w(index),<span class="string">'STATION_STARTDATE'</span>,datenum(s.StaMessage.Station.StationEpoch.StartDate.Text,<span class="string">'yyyy-mm-ddTHH:MM:SS'</span>));
+0091         w(index) = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w(index),<span class="string">'STATION_ENDDATE'</span>,datenum(s.StaMessage.Station.StationEpoch.EndDate.Text,<span class="string">'yyyy-mm-ddTHH:MM:SS'</span>));
+0092         w(index) = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w(index),<span class="string">'STATION_LATITUDE'</span>,str2double(s.StaMessage.Station.StationEpoch.Lat.Text));
+0093         w(index) = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w(index),<span class="string">'STATION_LONGITUDE'</span>,str2double(s.StaMessage.Station.StationEpoch.Lon.Text));
+0094         w(index) = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w(index),<span class="string">'STATION_ELEVATION'</span>,str2double(s.StaMessage.Station.StationEpoch.Elevation.Text));
+0095         w(index) = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w(index),<span class="string">'STATION_NAME'</span>,char(s.StaMessage.Station.StationEpoch.Site.Country.Text));
+0096         w(index) = <a href="../../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(w(index),<span class="string">'STATION_NUMBEROFCHANNELS'</span>,str2double(s.StaMessage.Station.StationEpoch.NumberChannels.Text));
+0097         successList(index) = 1;
+0098     <span class="keyword">end</span>
+0099 <span class="keyword">end</span>
+0100 
+0101</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

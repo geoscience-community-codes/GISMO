@@ -1,0 +1,256 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of interferogram</title>
+  <meta name="keywords" content="interferogram">
+  <meta name="description" content="C = INTERFEROGRAM(C)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@correlation</a> &gt; interferogram.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@correlation&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>interferogram
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>C = INTERFEROGRAM(C)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [c,t,i,CC,LL] = interferogram(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> C = INTERFEROGRAM(C)
+ This function calculates an interferogram from the waveforms in a 
+ correlation object against the a single &quot;master&quot; trace.
+
+ The routine interatively selects a narrow time window on all traces,
+ carries out a cross-correlation, and stores the maximum correlation value
+ and the time lag necessary to acheive this best fit for each time window.
+ All cross correlations include sub-sample interpolation of lag values
+ (see HELP XCORR for details). The results are two matrices of correlation
+ value and lag time. These can be plotted with the C-INTERFER and
+ L-INTERFER options in correlation plot.
+
+ [C,TIME,INDEX,MAXCORR,LAG] = INTERFEROGRAM(C,...) In addition to the
+ correlation object, this use returns a vector of window center times
+ relative to trigger times (1xM), a vector of trace indices (Nx1), a
+ matrix of maximum correlation values (NxM), and a matrix of optimum lag
+ times (NxM). These values can be used to generate a custom interferogram
+ figure, for example:
+    imagesc(TIME,INDEX,MAXCORR)
+
+ [C ...] = INTERFEROGRAM(C,WIDTH) Specify the half width of the time window
+ explicitly. Default value is 1/20 of the mean trace length.
+
+ [C ...] = INTERFEROGRAM(C,WIDTH,TIMESTEP) Specify the timestep interval
+ explicitly. If TIMESTEP is a scalar, it is treated as the interval
+ between adjacent time windows. If TIMESTEP is a vector, the values are
+ treated as the specific center time times of each window.
+
+ [C ...] = INTERFEROGRAM(C,WIDTH,TIMESTEP,TRACENUM) Specify which trace
+ should be treated as the master trace against which all correlation
+ values will be based.
+ 
+ ** NOTE ABOUT DATA STORAGE **
+ The interferogram routine by default places the four output terms
+ (TIME,INDEX,MAXCORR and LAG) into supplimental fields in the waveform
+ object which holds the first trace. This is embarassingly clunky. However
+ it works and allows the data to be passed directly to the plotting
+ routine. These terms can always be accessed by extracting them from the
+ first waveform using the field names INTERFEROGRAM_TIME,
+ INTERFEROGRAM_INDEX, INTERFEROGRAM_MAXCORR, INTERFEROGRAM_LAG. Because of
+ this ad hoc structure though, in many cases it may be better to simply
+ save the data straight out of the routine and handle it yourself. It is
+ automatically placed in the first waveform however to fascilitate a quick
+ plotting option. INTERFEROGRAM_TIME is given in units of seconds relative
+ to the trigger time.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="check.html" class="code" title="function val = check(c,varargin)">check</a>	Check various features of a correlation object.</li><li><a href="crop.html" class="code" title="function c = crop(c,varargin)">crop</a>	c = CROP(c,[PRETRIG POSTTRIG])</li><li><a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	C = XCORR(C)</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>	ADDFIELD add fields and values to waveform object(s)                V1.1</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>	TIMES (.*) overloaded Array multiply for WAVEFORM objects.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/check.html" class="code" title="function val = check(c, whatToCheck)">check</a>	Check various features of a correlation object.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/crop.html" class="code" title="function c = crop(c, pretrig, posttrig)">crop</a>	crop   crop all waveforms to a time window</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	xcorr   calculate the correlation and lag for traces</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [c,t,i,CC,LL] = interferogram(c,varargin)</a>
+0002 
+0003 <span class="comment">% C = INTERFEROGRAM(C)</span>
+0004 <span class="comment">% This function calculates an interferogram from the waveforms in a</span>
+0005 <span class="comment">% correlation object against the a single &quot;master&quot; trace.</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">% The routine interatively selects a narrow time window on all traces,</span>
+0008 <span class="comment">% carries out a cross-correlation, and stores the maximum correlation value</span>
+0009 <span class="comment">% and the time lag necessary to acheive this best fit for each time window.</span>
+0010 <span class="comment">% All cross correlations include sub-sample interpolation of lag values</span>
+0011 <span class="comment">% (see HELP XCORR for details). The results are two matrices of correlation</span>
+0012 <span class="comment">% value and lag time. These can be plotted with the C-INTERFER and</span>
+0013 <span class="comment">% L-INTERFER options in correlation plot.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% [C,TIME,INDEX,MAXCORR,LAG] = INTERFEROGRAM(C,...) In addition to the</span>
+0016 <span class="comment">% correlation object, this use returns a vector of window center times</span>
+0017 <span class="comment">% relative to trigger times (1xM), a vector of trace indices (Nx1), a</span>
+0018 <span class="comment">% matrix of maximum correlation values (NxM), and a matrix of optimum lag</span>
+0019 <span class="comment">% times (NxM). These values can be used to generate a custom interferogram</span>
+0020 <span class="comment">% figure, for example:</span>
+0021 <span class="comment">%    imagesc(TIME,INDEX,MAXCORR)</span>
+0022 <span class="comment">%</span>
+0023 <span class="comment">% [C ...] = INTERFEROGRAM(C,WIDTH) Specify the half width of the time window</span>
+0024 <span class="comment">% explicitly. Default value is 1/20 of the mean trace length.</span>
+0025 <span class="comment">%</span>
+0026 <span class="comment">% [C ...] = INTERFEROGRAM(C,WIDTH,TIMESTEP) Specify the timestep interval</span>
+0027 <span class="comment">% explicitly. If TIMESTEP is a scalar, it is treated as the interval</span>
+0028 <span class="comment">% between adjacent time windows. If TIMESTEP is a vector, the values are</span>
+0029 <span class="comment">% treated as the specific center time times of each window.</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">% [C ...] = INTERFEROGRAM(C,WIDTH,TIMESTEP,TRACENUM) Specify which trace</span>
+0032 <span class="comment">% should be treated as the master trace against which all correlation</span>
+0033 <span class="comment">% values will be based.</span>
+0034 <span class="comment">%</span>
+0035 <span class="comment">% ** NOTE ABOUT DATA STORAGE **</span>
+0036 <span class="comment">% The interferogram routine by default places the four output terms</span>
+0037 <span class="comment">% (TIME,INDEX,MAXCORR and LAG) into supplimental fields in the waveform</span>
+0038 <span class="comment">% object which holds the first trace. This is embarassingly clunky. However</span>
+0039 <span class="comment">% it works and allows the data to be passed directly to the plotting</span>
+0040 <span class="comment">% routine. These terms can always be accessed by extracting them from the</span>
+0041 <span class="comment">% first waveform using the field names INTERFEROGRAM_TIME,</span>
+0042 <span class="comment">% INTERFEROGRAM_INDEX, INTERFEROGRAM_MAXCORR, INTERFEROGRAM_LAG. Because of</span>
+0043 <span class="comment">% this ad hoc structure though, in many cases it may be better to simply</span>
+0044 <span class="comment">% save the data straight out of the routine and handle it yourself. It is</span>
+0045 <span class="comment">% automatically placed in the first waveform however to fascilitate a quick</span>
+0046 <span class="comment">% plotting option. INTERFEROGRAM_TIME is given in units of seconds relative</span>
+0047 <span class="comment">% to the trigger time.</span>
+0048 
+0049 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0050 <span class="comment">% $Date$</span>
+0051 <span class="comment">% $Revision$</span>
+0052 
+0053 
+0054 <span class="comment">% GET INPUT PARAMETERS</span>
+0055 <span class="keyword">if</span> ~isa(c,<span class="string">'correlation'</span>)
+0056     error(<span class="string">'First input parameter must be a correlation object'</span>);
+0057 <span class="keyword">end</span>
+0058 
+0059 
+0060 <span class="comment">% TEST FOR ALIGNED TRACES</span>
+0061 <span class="keyword">if</span> ~<a href="check.html" class="code" title="function val = check(c,varargin)">check</a>(c,<span class="string">'OFFSET'</span>)
+0062    <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'Data not uniformly aligned around triggers. Consider using CROP function.'</span>); 
+0063 <span class="keyword">end</span>
+0064 
+0065 
+0066 <span class="comment">% SET WINDOW WIDTH</span>
+0067 srt_offset = ( <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'Start'</span>) - <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'Trig'</span>) ) * 86400;
+0068 end_offset = ( <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'End'</span>) - <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'Trig'</span>) ) * 86400;
+0069 <span class="keyword">if</span> length(varargin)&gt;=1
+0070     width = varargin{1};
+0071 <span class="keyword">else</span>
+0072     width = ( <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(end_offset)-<a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(srt_offset) ) / 20;
+0073 <span class="keyword">end</span>
+0074 
+0075 
+0076 <span class="comment">% SET TIME STEP</span>
+0077 <span class="keyword">if</span> length(varargin)&gt;=2
+0078     <span class="keyword">if</span> length(varargin{2}) == 1
+0079         tstep = varargin{2};
+0080         t = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(srt_offset) : tstep : <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(end_offset);
+0081     <span class="keyword">else</span>
+0082         t = varargin{2};
+0083     <span class="keyword">end</span>
+0084 <span class="keyword">else</span>
+0085     tstep = ( <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(end_offset)-<a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(srt_offset) ) / 50;
+0086     t = <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(srt_offset) : tstep : <a href="../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(end_offset);
+0087 <span class="keyword">end</span>
+0088 
+0089 
+0090 <span class="comment">% SET MASTER TRACE</span>
+0091 <span class="keyword">if</span> length(varargin)==3
+0092     trace = varargin{3};
+0093 <span class="keyword">else</span>
+0094     trace = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'TRACES'</span>);
+0095 <span class="keyword">end</span>
+0096 
+0097 
+0098 <span class="comment">% CHECK INPUT TERMS</span>
+0099 <span class="keyword">if</span> length(varargin)&gt;3
+0100     error(<span class="string">'Wrong number of inputs'</span>);
+0101 <span class="keyword">end</span>
+0102 
+0103 
+0104 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'Time step: '</span> num2str(tstep,<span class="string">'%4.3f'</span>) <span class="string">'    Window width: '</span> num2str(width,<span class="string">'%4.3f'</span>) <span class="string">'    Reference trace no.: '</span> num2str(trace,<span class="string">'%2.0f'</span>) ]);
+0105 
+0106 
+0107 <span class="comment">% CALC INTERFEROGRAM VOLUME</span>
+0108 CC = [];
+0109 LL = [];
+0110 <a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a> = [];
+0111 <span class="keyword">for</span> i = 1:length(t);
+0112     <a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a> = <a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>(1,<a href="../../../GISMO/core/@waveform/times.html" class="code" title="function A = times(A,B)">times</a>,t(i));
+0113     <span class="keyword">if</span> (mod(i,10)==1)
+0114         <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'Center of time window: '</span> num2str(t(i),<span class="string">'%4.3f'</span>) <span class="string">' ...'</span>]);
+0115     <span class="keyword">end</span>
+0116     ctmp = <a href="crop.html" class="code" title="function c = crop(c,varargin)">crop</a>(c,t(i)-width,t(i)+width);
+0117     ctmp = <a href="xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>(ctmp,<span class="string">'row'</span>,trace);
+0118     corr = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(ctmp,<span class="string">'CORR'</span>);
+0119     lag  = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(ctmp,<span class="string">'LAG'</span>);
+0120     CC(:,i) = corr(:,trace);
+0121     LL(:,i) = lag(:,trace);
+0122 <span class="keyword">end</span>;
+0123 
+0124 
+0125 <span class="comment">% PLACE OUTPUT INTO FIRST WAVEFORM FIELD</span>
+0126 i = [1:<a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'TRACES'</span>)]';
+0127 c.W(1) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(c.W(1),<span class="string">'Interferogram_index'</span>,i);
+0128 c.W(1) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(c.W(1),<span class="string">'Interferogram_time'</span>,t);
+0129 c.W(1) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(c.W(1),<span class="string">'Interferogram_maxcorr'</span>,CC);
+0130 c.W(1) = <a href="../../../GISMO/core/@waveform/addfield.html" class="code" title="function w = addfield(w,fieldname,value,noHistOption)">addfield</a>(c.W(1),<span class="string">'Interferogram_lag'</span>,LL);
+0131 
+0132 
+0133 
+0134 
+0135 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0136 <span class="comment">%</span>
+0137 <span class="comment">% Original code which correlates and saves all traces against all traces</span>
+0138 <span class="comment">% Works great, but is computationally unnecessary</span>
+0139 <span class="comment">%</span>
+0140 <span class="comment">%</span>
+0141 <span class="comment">% % CALC INTERFEROGRAM VOLUME</span>
+0142 <span class="comment">% % FYI: 3D matrix order is (Y,X,Z)</span>
+0143 <span class="comment">% n = size(get(c,'CORR'),1);</span>
+0144 <span class="comment">% [T,N1,N2] = meshgrid(t,1:n,1:n);</span>
+0145 <span class="comment">% CC = [];</span>
+0146 <span class="comment">% LL = [];</span>
+0147 <span class="comment">% times = [];</span>
+0148 <span class="comment">% for i = 1:length(t);</span>
+0149 <span class="comment">%     times = cat(1,times,t(i));</span>
+0150 <span class="comment">%     if (mod(i,10)==1)</span>
+0151 <span class="comment">%         disp(['Time step: ' num2str(t(i),'%4.3f') ' ...']);</span>
+0152 <span class="comment">%     end</span>
+0153 <span class="comment">%     ctmp = crop(c,t(i)-width,t(i)+width);</span>
+0154 <span class="comment">%     %ctmp = taper(ctmp);</span>
+0155 <span class="comment">%     ctmp = xcorr(ctmp);</span>
+0156 <span class="comment">%     CC(:,i,:) = get(ctmp,'CORR');</span>
+0157 <span class="comment">%     LL(:,i,:) = get(ctmp,'LAG');</span>
+0158 <span class="comment">% end;</span>
+0159 <span class="comment">%</span>
+0160 <span class="comment">% % PREPARE OUTPUT</span>
+0161 <span class="comment">% I = [];</span>
+0162 <span class="comment">% i = [1:get(c,'TRACES')]';</span>
+0163 <span class="comment">% t = times';</span>
+0164 <span class="comment">% CC = squeeze(CC(:,:,end));</span>
+0165 <span class="comment">% LL = squeeze(LL(:,:,end));</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

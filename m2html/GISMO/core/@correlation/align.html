@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of align</title>
+  <meta name="keywords" content="align">
+  <meta name="description" content="c = ALIGN(c)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@correlation</a> &gt; align.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@correlation&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>align
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>c = ALIGN(c)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function c = align(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> c = ALIGN(c)
+ This function resamples the traces in a correlation object so that one
+ sample falls precisely on the trigger time. By aligning the samples in
+ adjacent traces, traces can be stacked, differenced or otherwise
+ manipulated sample by sample. 
+ 
+ c = ALIGN(c,ALIGNFREQ)
+ Specify a new sampling frequency for the data.
+
+ NOTE: Most applications will not require a direct call to this routine.
+ It is used internally by several correlation routines. Note the slightly
+ different usage than waveform/align. The correlation version is
+ hardwired to align on the trigger time.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="align.html" class="code" title="function c = align(c,varargin)">align</a>	c = ALIGN(c)</li><li><a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="verify.html" class="code" title="function c = verify(c)">verify</a>	VERIFY</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>	ALIGN Align and trim traces in threecomp object.</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/verify.html" class="code" title="function [conflicts] = verify(TC)">verify</a>	VERIFY Check for property conflicts in the threecomp object.</li><li><a href="../../../GISMO/core/@waveform/align.html" class="code" title="function w = align(w,alignTime, newFrequency, method)">align</a>	ALIGN resamples a waveform at over a specified interval</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/align.html" class="code" title="function c = align(c, alignfreq)">align</a>	align   resample traces so that a sample falls exactly on trigger time.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="align.html" class="code" title="function c = align(c,varargin)">align</a>	c = ALIGN(c)</li><li><a href="correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="minus.html" class="code" title="function c = minus(c,varargin)">minus</a>	C = MINUS(C,I)</li><li><a href="stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li><li><a href="../../../GISMO/core/@threecomp/align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>	ALIGN Align and trim traces in threecomp object.</li><li><a href="../../../GISMO/core/@threecomp/threecomp.html" class="code" title="">threecomp</a>	THREECOMP Object for three component waveform data</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/align.html" class="code" title="function c = align(c, alignfreq)">align</a>	align   resample traces so that a sample falls exactly on trigger time.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/minus.html" class="code" title="function c = minus(c,I)">minus</a>	C = MINUS(C,I)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/stack.html" class="code" title="function c = stack(c,index)">stack</a>	c = STACK(c)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = align(c,varargin)</a>
+0002 
+0003 <span class="comment">% c = ALIGN(c)</span>
+0004 <span class="comment">% This function resamples the traces in a correlation object so that one</span>
+0005 <span class="comment">% sample falls precisely on the trigger time. By aligning the samples in</span>
+0006 <span class="comment">% adjacent traces, traces can be stacked, differenced or otherwise</span>
+0007 <span class="comment">% manipulated sample by sample.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% c = ALIGN(c,ALIGNFREQ)</span>
+0010 <span class="comment">% Specify a new sampling frequency for the data.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% NOTE: Most applications will not require a direct call to this routine.</span>
+0013 <span class="comment">% It is used internally by several correlation routines. Note the slightly</span>
+0014 <span class="comment">% different usage than waveform/align. The correlation version is</span>
+0015 <span class="comment">% hardwired to align on the trigger time.</span>
+0016 
+0017 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0018 <span class="comment">% $Date$</span>
+0019 <span class="comment">% $Revision$</span>
+0020 
+0021 
+0022 
+0023 
+0024 <span class="comment">% READ &amp; CHECK ARGUMENTS</span>
+0025 <span class="keyword">if</span> (nargin&gt;2)
+0026     error(<span class="string">'Wrong number of inputs'</span>);
+0027 <span class="keyword">end</span>;
+0028 
+0029 <span class="keyword">if</span> ~isa(c,<span class="string">'correlation'</span>)
+0030     error(<span class="string">'First input must be a correlation object'</span>);
+0031 <span class="keyword">end</span>
+0032 
+0033 <span class="keyword">if</span> nargin==2
+0034     alignfreq = varargin{1};
+0035 <span class="keyword">else</span>
+0036     alignfreq = <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c,<span class="string">'Fs'</span>);
+0037 <span class="keyword">end</span>
+0038     
+0039     
+0040 <span class="comment">% CALL WAVEFORM/ALIGN</span>
+0041 c.W = <a href="align.html" class="code" title="function c = align(c,varargin)">align</a>(c.W,c.trig,alignfreq);
+0042 c = <a href="verify.html" class="code" title="function c = verify(c)">verify</a>(c);
+0043 
+0044 
+0045 
+0046 
+0047 
+0048 
+0049</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

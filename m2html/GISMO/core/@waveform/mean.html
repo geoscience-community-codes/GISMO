@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mean</title>
+  <meta name="keywords" content="mean">
+  <meta name="description" content="MEAN Average or mean value of waveform's data.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; mean.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>mean
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>MEAN Average or mean value of waveform's data.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function y = mean(w) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">MEAN Average or mean value of waveform's data.
+   Y = mean(waveform)
+   returns a scalar containing the mean value of the waveform data
+
+   Input Arguments
+       WAVEFORM: waveform object   N-DIMENSIONAL
+
+   Output
+       Y: array of same size as WAVEFORM, with each element corresponding
+          to the mean value of the matching waveform
+
+   NOTE: Values of NaN are ignored.
+
+   See also NANMEAN, WAVEFORM/MIN, WAVEFORM/MAX, WAVEFORM/MEDIAN, SORT.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed_antelope/attenuation/hankelq.html" class="code" title="function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)">hankelq</a>	HANKELQ Compute spectral ratio in two frequency bands</li><li><a href="../../../GISMO/contributed_antelope/reduced_displacement/reducedisp_write_wfmeas.html" class="code" title="function reducedisp_write_wfmeas(dbname,w,flt,algorithm);">reducedisp_write_wfmeas</a>	Opens DBNAME and inserts new reduced dispacement rows, one</li><li><a href="../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/depth_section.html" class="code" title="function depth_section(dbName)">depth_section</a>	DEPTH_SECTION plot depth sections of ray coverage.</li><li><a href="../../../GISMO/core/+Catalog/+bvalue_lib/bmemag.html" class="code" title="function [mean_m1, b1, sig1, av2] =  bmemag(mag);">bmemag</a>	BMEMAG</li><li><a href="../../../GISMO/core/+Catalog/+bvalue_lib/calc_bmemag.html" class="code" title="function [fMeanMag, fBValue, fStdDev, fAValue] =calc_bmemag(mag, fBinning)">calc_bmemag</a>	CALC_BMEMAG Calculate Maximum Likelihood b-value</li><li><a href="../../../GISMO/core/@correlation/adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG adjusts the trigger times of each trace</li><li><a href="../../../GISMO/core/@correlation/agc.html" class="code" title="function c = agc(c,varargin)">agc</a>	This function applies automatic gain control (AGC) to each trace. This</li><li><a href="../../../GISMO/core/@correlation/check.html" class="code" title="function val = check(c,varargin)">check</a>	Check various features of a correlation object.</li><li><a href="../../../GISMO/core/@correlation/getstat.html" class="code" title="function c=getstat(c)">getstat</a>	c = GETSTAT(c)</li><li><a href="../../../GISMO/core/@correlation/interferogram.html" class="code" title="function [c,t,i,CC,LL] = interferogram(c,varargin)">interferogram</a>	C = INTERFEROGRAM(C)</li><li><a href="../../../GISMO/core/@correlation/minus.html" class="code" title="function c = minus(c,varargin)">minus</a>	C = MINUS(C,I)</li><li><a href="../../../GISMO/core/@correlation/private/makesynthwaves.html" class="code" title="function c = makesynthwaves(n);">makesynthwaves</a>	Add N traces of synthetic data to a correlation object. Alters properties: waves, trig,</li><li><a href="../../../GISMO/core/@correlation/private/occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/overlayplot.html" class="code" title="function overlayplot(c,scale,ord)">overlayplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li><li><a href="../../../GISMO/core/@rsam/despike.html" class="code" title="function self = despike(self, spiketype, maxRatio)">despike</a>	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</li><li><a href="../../../GISMO/core/@rsam/oneMinuteData.html" class="code" title="">oneMinuteData</a>	</li><li><a href="../../../GISMO/core/@rsam/reduce.html" class="code" title="function self = reduce(self, waveType, sourcelat, sourcelon, stationlat, stationlon, varargin)">reduce</a>	s.reduce('waveType', 'surface', 'waveSpeed', 2000, 'f', 2.0, );</li><li><a href="../../../GISMO/core/@rsam/resample.html" class="code" title="function self = resample(self, varargin)">resample</a>	RESAMPLE resamples a rsam object at over every specified intercrunchfactor</li><li><a href="../../../GISMO/core/@spectralobject/specgram.html" class="code" title="function h = specgram(s, ws, varargin)">specgram</a>	SPECGRAM - plots spectrogram of waveforms</li><li><a href="../../../GISMO/core/@threecomp/extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="demean.html" class="code" title="function w = demean (w)">demean</a>	DEMEAN remove offset voltage from signal</li><li><a href="fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>	FILLGAPS - fill missing data with values of your choice</li><li><a href="mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="plot_spectrum.html" class="code" title="function s = plot_spectrum(w)">plot_spectrum</a>	add_spectral_data Simple method to compute frequency</li><li><a href="../../../GISMO/core/@waveform/private/waveform2sacheader.html" class="code" title="function header = waveform2sacheader(w)">waveform2sacheader</a>	WAVEFORM2SACHEADER generates a SAC header from a waveform object</li><li><a href="resample.html" class="code" title="function w = resample(w,method, crunchfactor)">resample</a>	RESAMPLE resamples a waveform at over every specified interval</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG  adjusts the trigger times of each trace</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/agc.html" class="code" title="function c = agc(c,windowInSeconds)">agc</a>	acg   apply automatic gain control to each trace</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/check.html" class="code" title="function val = check(c, whatToCheck)">check</a>	Check various features of a correlation object.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/getstat.html" class="code" title="function c=getstat(c)">getstat</a>	c = GETSTAT(c)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/interferogram.html" class="code" title="function [c,t,i,CC,LL] = interferogram(c, width, timestep, masterIdx)">interferogram</a>	C = INTERFEROGRAM(C)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/makesynthwaves.html" class="code" title="function c = makesynthwaves(n)">makesynthwaves</a>	Add N traces of synthetic data to a correlation object. Alters properties: waves, trig,</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/minus.html" class="code" title="function c = minus(c,I)">minus</a>	C = MINUS(C,I)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/overlayplot.html" class="code" title="function overlayplot(c,scale,ord)">overlayplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/stack.html" class="code" title="function c = stack(c,index)">stack</a>	c = STACK(c)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/linkedplot.html" class="code" title="function linkedplot(T, alignTraces)">linkedplot</a>	linkedplot   Plot multiple waveform objects as separate linked panels</li><li><a href="../../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>	</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/specgram.html" class="code" title="function h = specgram(s, T, varargin)">specgram</a>	specgram - plots spectrogram of traces</li><li><a href="../../../GISMO/deprecated/@helicorder/build.html" class="code" title="function varargout = build(h)">build</a>	BUILD: Helicorder builder function. A helicorder object (h) contains no</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/freqindex.html" class="code" title="function W = freqindex(W,varargin)">freqindex</a>	WAVEFORM = FREQINDEX(WAVEFORM) calculates the frequency index of a waveform.</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li><li><a href="../../../GISMO/deprecated/fft_tools/amplitude_spectrum.html" class="code" title="function w = add_spectral_data(w)">amplitude_spectrum</a>	add_spectral_data Simple method to compute frequency</li><li><a href="../../../GISMO/deprecated/fft_tools/wf_fftplot.html" class="code" title="function wf_fftplot(w);">wf_fftplot</a>	WF_FFTPLOT(WAVEFORM) plot fourier transform of the data.</li><li><a href="../../../GISMO/deprecated/fft_tools/wf_fi.html" class="code" title="function W = wf_fi(W,varargin)">wf_fi</a>	WAVEFORM = WF_FI(WAVEFORM) calculates the frequency index of a waveform.</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function y = mean(w)</a>
+0002    <span class="comment">%MEAN Average or mean value of waveform's data.</span>
+0003    <span class="comment">%   Y = mean(waveform)</span>
+0004    <span class="comment">%   returns a scalar containing the mean value of the waveform data</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">%   Input Arguments</span>
+0007    <span class="comment">%       WAVEFORM: waveform object   N-DIMENSIONAL</span>
+0008    <span class="comment">%</span>
+0009    <span class="comment">%   Output</span>
+0010    <span class="comment">%       Y: array of same size as WAVEFORM, with each element corresponding</span>
+0011    <span class="comment">%          to the mean value of the matching waveform</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">%   NOTE: Values of NaN are ignored.</span>
+0014    <span class="comment">%</span>
+0015    <span class="comment">%   See also NANMEAN, WAVEFORM/MIN, WAVEFORM/MAX, WAVEFORM/MEDIAN, SORT.</span>
+0016    
+0017    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0018    <span class="comment">% $Date$</span>
+0019    <span class="comment">% $Revision$</span>
+0020    
+0021    y = nan(size(w));
+0022    <span class="comment">% if the statistics toolbox is installed, use the builtin nanmean function</span>
+0023    <span class="comment">% to ignore NaN values during the variance calculation.</span>
+0024    <span class="keyword">if</span> ~<a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(ver(<span class="string">'stats'</span>))
+0025       <span class="keyword">for</span> I = 1 : numel(w);
+0026          y(I) = nanmean( w(I).data );
+0027       <span class="keyword">end</span>
+0028    <span class="keyword">else</span>
+0029       <span class="comment">% the statistics toolbox is not installed, so any nan values will have</span>
+0030       <span class="comment">% to be dealt with (ignored) manually.</span>
+0031       <span class="keyword">for</span> I = 1 : numel(w);
+0032          d = w(I).data;
+0033          d = d(~isnan(d)); <span class="comment">%ignore NaN values</span>
+0034          <span class="keyword">if</span> ~<a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(d)
+0035             y(I) = <a href="mean.html" class="code" title="function y = mean(w)">mean</a>( d );
+0036          <span class="keyword">end</span>
+0037       <span class="keyword">end</span>
+0038    <span class="keyword">end</span>
+0039 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

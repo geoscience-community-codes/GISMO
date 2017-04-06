@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dmc_xml2struct</title>
+  <meta name="keywords" content="dmc_xml2struct">
+  <meta name="description" content="Convert xml file into a MATLAB structure">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">contributed</a> &gt; <a href="index.html">iris_dmc_tools</a> &gt; dmc_xml2struct.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/contributed/iris_dmc_tools&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>dmc_xml2struct
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Convert xml file into a MATLAB structure</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [s,success] = dmc_xml2struct(file) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">Convert xml file into a MATLAB structure
+  [S,SUCCESS]= DMC_XML2STRUCT(SOURCE) Reads xml-formatted SOURCE and returns a
+  structure S. S contains the attributes in SOURCE, nested to reflect the
+  xml children as appropriate. If SOURCE cannot be parsed for any reason
+  the s is returned as an empty matrix [] and SUCCESS is set to 0.
+  Otherwise SUCCESS is 1.
+
+  EXAMPLE
+  A file containing:
+    &lt;XMLname attrib1=&quot;Some value&quot;&gt;
+      &lt;Element&gt;Some text&lt;/Element&gt;
+      &lt;DifferentElement attrib2=&quot;2&quot;&gt;Some more text&lt;/Element&gt;
+      &lt;DifferentElement attrib3=&quot;2&quot; attrib4=&quot;1&quot;&gt;Even more text&lt;/DifferentElement&gt;
+    &lt;/XMLname&gt;
+
+  Will produce:
+    s.XMLname.Attributes.attrib1 = &quot;Some value&quot;;
+    s.XMLname.Element.Text = &quot;Some text&quot;;
+    s.XMLname.DifferentElement{1}.Attributes.attrib2 = &quot;2&quot;;
+    s.XMLname.DifferentElement{1}.Text = &quot;Some more text&quot;;
+    s.XMLname.DifferentElement{2}.Attributes.attrib3 = &quot;2&quot;;
+    s.XMLname.DifferentElement{2}.Attributes.attrib4 = &quot;1&quot;;
+    s.XMLname.DifferentElement{2}.Text = &quot;Even more text&quot;;
+
+  Note the characters : - and . are not supported in structure fieldnames and
+  are replaced by _</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/success.html" class="code" title="function [mask,conflicts] = success(TC)">success</a>	SUCCESS Checks the success of a conversion to threecomp object.</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>	ISFIELD checks the presence of waveform fields.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="dmc_station_meta.html" class="code" title="function [w,successList] = dmc_station_meta(w,varargin)">dmc_station_meta</a>	DMC_STATION_META adds station metadata to a waveform</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function [children,ptext] = parseChildNodes(theNode)</a></li><li><a href="#_sub2" class="code">function [text,name,attr,childs] = getNodeData(theNode)</a></li><li><a href="#_sub3" class="code">function attributes = parseAttributes(theNode)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [s,success] = dmc_xml2struct(file)</a>
+0002 
+0003 <span class="comment">%Convert xml file into a MATLAB structure</span>
+0004 <span class="comment">%  [S,SUCCESS]= DMC_XML2STRUCT(SOURCE) Reads xml-formatted SOURCE and returns a</span>
+0005 <span class="comment">%  structure S. S contains the attributes in SOURCE, nested to reflect the</span>
+0006 <span class="comment">%  xml children as appropriate. If SOURCE cannot be parsed for any reason</span>
+0007 <span class="comment">%  the s is returned as an empty matrix [] and SUCCESS is set to 0.</span>
+0008 <span class="comment">%  Otherwise SUCCESS is 1.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%  EXAMPLE</span>
+0011 <span class="comment">%  A file containing:</span>
+0012 <span class="comment">%    &lt;XMLname attrib1=&quot;Some value&quot;&gt;</span>
+0013 <span class="comment">%      &lt;Element&gt;Some text&lt;/Element&gt;</span>
+0014 <span class="comment">%      &lt;DifferentElement attrib2=&quot;2&quot;&gt;Some more text&lt;/Element&gt;</span>
+0015 <span class="comment">%      &lt;DifferentElement attrib3=&quot;2&quot; attrib4=&quot;1&quot;&gt;Even more text&lt;/DifferentElement&gt;</span>
+0016 <span class="comment">%    &lt;/XMLname&gt;</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">%  Will produce:</span>
+0019 <span class="comment">%    s.XMLname.Attributes.attrib1 = &quot;Some value&quot;;</span>
+0020 <span class="comment">%    s.XMLname.Element.Text = &quot;Some text&quot;;</span>
+0021 <span class="comment">%    s.XMLname.DifferentElement{1}.Attributes.attrib2 = &quot;2&quot;;</span>
+0022 <span class="comment">%    s.XMLname.DifferentElement{1}.Text = &quot;Some more text&quot;;</span>
+0023 <span class="comment">%    s.XMLname.DifferentElement{2}.Attributes.attrib3 = &quot;2&quot;;</span>
+0024 <span class="comment">%    s.XMLname.DifferentElement{2}.Attributes.attrib4 = &quot;1&quot;;</span>
+0025 <span class="comment">%    s.XMLname.DifferentElement{2}.Text = &quot;Even more text&quot;;</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">%  Note the characters : - and . are not supported in structure fieldnames and</span>
+0028 <span class="comment">%  are replaced by _</span>
+0029 
+0030 <span class="comment">%  Modified from function xml2struct (Matlab exchange File ID: #28518)</span>
+0031 <span class="comment">%  Copyright by W. Falkena. distributed under BSD license.</span>
+0032 <span class="comment">%  Last accessed Feb. 3, 2011</span>
+0033 <span class="comment">%  Modifications here allow xml loading from URLs and return null</span>
+0034 <span class="comment">%  result when file or URL is invalid.</span>
+0035 <span class="comment">%</span>
+0036 <span class="comment">%  MODIFIED BY: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0037 <span class="comment">%  $Date$</span>
+0038 <span class="comment">%  $Revision$</span>
+0039 
+0040 
+0041 
+0042 <span class="comment">%check for URL for file name</span>
+0043 <span class="keyword">if</span> (nargin~=1)
+0044     error(<span class="string">'xml2struct:IncorrectNumberOfArguments'</span>,<span class="string">'Incorrect number of arguments'</span>);
+0045 <span class="keyword">end</span>
+0046 <span class="comment">% VALID = 0;</span>
+0047 <span class="comment">% if strfind(file,'http://')</span>
+0048 <span class="comment">%     VALID = 1;</span>
+0049 <span class="comment">% elseif exist(file,'file')</span>
+0050 <span class="comment">%     VALID = 1;</span>
+0051 <span class="comment">% elseif exist([file '.xml'],'file')</span>
+0052 <span class="comment">%     VALID = 1;</span>
+0053 <span class="comment">% else</span>
+0054 <span class="comment">%     warning('xml2struct:argumentIsNotFileOrURL',['URL or filename not recognized: ' file]);</span>
+0055 <span class="comment">% end</span>
+0056 
+0057 <span class="keyword">try</span> 
+0058     xDoc = xmlread(file);
+0059     s = <a href="#_sub1" class="code" title="subfunction [children,ptext] = parseChildNodes(theNode)">parseChildNodes</a>(xDoc);
+0060     <a href="../../../GISMO/core/@threecomp/success.html" class="code" title="function [mask,conflicts] = success(TC)">success</a> = 1;
+0061 <span class="keyword">catch</span>
+0062     <span class="comment">%warning('xml2struct:InvalidFileOrURL',['No xml code could be parsed from URL (or filename): ' file]);</span>
+0063     s = [];
+0064     <a href="../../../GISMO/core/@threecomp/success.html" class="code" title="function [mask,conflicts] = success(TC)">success</a> = 0;
+0065 <span class="keyword">end</span>
+0066 
+0067 
+0068 
+0069 
+0070 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0071 <span class="comment">%   Subfunction parseChildNodes</span>
+0072 <a name="_sub1" href="#_subfunctions" class="code">function [children,ptext] = parseChildNodes(theNode)</a>
+0073 <span class="comment">% Recurse over node children.</span>
+0074 children = struct;
+0075 ptext = [];
+0076 <span class="keyword">if</span> theNode.hasChildNodes
+0077     childNodes = theNode.getChildNodes;
+0078     numChildNodes = childNodes.getLength;
+0079     
+0080     <span class="keyword">for</span> count = 1:numChildNodes
+0081         theChild = childNodes.item(count-1);
+0082         [text,name,attr,childs] = <a href="#_sub2" class="code" title="subfunction [text,name,attr,childs] = getNodeData(theNode)">getNodeData</a>(theChild);
+0083         
+0084         <span class="keyword">if</span> (~strcmp(name,<span class="string">'#text'</span>) &amp;&amp; ~strcmp(name,<span class="string">'#comment'</span>))
+0085             <span class="comment">%XML allows the same elements to be defined multiple times,</span>
+0086             <span class="comment">%put each in a different cell</span>
+0087             <span class="keyword">if</span> (<a href="../../../GISMO/core/@waveform/isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>(children,name))
+0088                 <span class="keyword">if</span> (~iscell(children.(name)))
+0089                     <span class="comment">%put existsing element into cell format</span>
+0090                     children.(name) = {children.(name)};
+0091                 <span class="keyword">end</span>
+0092                 index = length(children.(name))+1;
+0093                 <span class="comment">%add new element</span>
+0094                 children.(name){index} = childs;
+0095                 <span class="keyword">if</span>(~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(text))
+0096                     children.(name){index}.(<span class="string">'Text'</span>) = text;
+0097                 <span class="keyword">end</span>
+0098                 <span class="keyword">if</span>(~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(attr))
+0099                     children.(name){index}.(<span class="string">'Attributes'</span>) = attr;
+0100                 <span class="keyword">end</span>
+0101             <span class="keyword">else</span>
+0102                 <span class="comment">%add previously unkown new element to the structure</span>
+0103                 children.(name) = childs;
+0104                 <span class="keyword">if</span>(~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(text))
+0105                     children.(name).(<span class="string">'Text'</span>) = text;
+0106                 <span class="keyword">end</span>
+0107                 <span class="keyword">if</span>(~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(attr))
+0108                     children.(name).(<span class="string">'Attributes'</span>) = attr;
+0109                 <span class="keyword">end</span>
+0110             <span class="keyword">end</span>
+0111         <span class="keyword">elseif</span> (strcmp(name,<span class="string">'#text'</span>))
+0112             <span class="comment">%this is the text in an element (i.e. the parentNode)</span>
+0113             <span class="keyword">if</span> (~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(regexprep(text,<span class="string">'[\s]*'</span>,<span class="string">''</span>)))
+0114                 <span class="keyword">if</span> (<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(ptext))
+0115                     ptext = text;
+0116                 <span class="keyword">else</span>
+0117                     <span class="comment">%what to do when element data is as follows:</span>
+0118                     <span class="comment">%&lt;element&gt;Text &lt;!--Comment--&gt; More text&lt;/element&gt;</span>
+0119                     
+0120                     <span class="comment">%put the text in different cells:</span>
+0121                     <span class="comment">% if (~iscell(ptext)) ptext = {ptext}; end</span>
+0122                     <span class="comment">% ptext{length(ptext)+1} = text;</span>
+0123                     
+0124                     <span class="comment">%just append the text</span>
+0125                     ptext = [ptext text];
+0126                 <span class="keyword">end</span>
+0127             <span class="keyword">end</span>
+0128         <span class="keyword">end</span>
+0129     <span class="keyword">end</span>
+0130 <span class="keyword">end</span>
+0131 
+0132 
+0133 
+0134 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0135 <span class="comment">% GET NODE DATA</span>
+0136 <a name="_sub2" href="#_subfunctions" class="code">function [text,name,attr,childs] = getNodeData(theNode)</a>
+0137 <span class="comment">% Create structure of node info.</span>
+0138 
+0139 <span class="comment">%make sure name is allowed as structure name</span>
+0140 name = regexprep(char(theNode.getNodeName),<span class="string">'[-:.]'</span>,<span class="string">'_'</span>);
+0141 
+0142 attr = <a href="#_sub3" class="code" title="subfunction attributes = parseAttributes(theNode)">parseAttributes</a>(theNode);
+0143 <span class="keyword">if</span> (<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(fieldnames(attr)))
+0144     attr = [];
+0145 <span class="keyword">end</span>
+0146 
+0147 <span class="comment">%parse child nodes</span>
+0148 [childs,text] = <a href="#_sub1" class="code" title="subfunction [children,ptext] = parseChildNodes(theNode)">parseChildNodes</a>(theNode);
+0149 
+0150 <span class="keyword">if</span> (<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(fieldnames(childs)))
+0151     <span class="comment">%get the data of any childless nodes</span>
+0152     <span class="keyword">try</span>
+0153         <span class="comment">%faster then if any(strcmp(methods(theNode), 'getData'))</span>
+0154         text = char(theNode.getData);
+0155     <span class="keyword">catch</span>
+0156         <span class="comment">%no data</span>
+0157     <span class="keyword">end</span>
+0158 <span class="keyword">end</span>
+0159 
+0160 
+0161 
+0162 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0163 <span class="comment">% PARSE THE ATTRIBURES</span>
+0164 <a name="_sub3" href="#_subfunctions" class="code">function attributes = parseAttributes(theNode)</a>
+0165 <span class="comment">% Create attributes structure.</span>
+0166 
+0167 attributes = struct;
+0168 <span class="keyword">if</span> theNode.hasAttributes
+0169     theAttributes = theNode.getAttributes;
+0170     numAttributes = theAttributes.getLength;
+0171     
+0172     <span class="keyword">for</span> count = 1:numAttributes
+0173         attrib = theAttributes.item(count-1);
+0174         attr_name = regexprep(char(attrib.getName),<span class="string">'[-:.]'</span>,<span class="string">'_'</span>);
+0175         attributes.(attr_name) = char(attrib.getValue);
+0176     <span class="keyword">end</span>
+0177 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

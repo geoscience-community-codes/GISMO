@@ -1,0 +1,259 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of test_TraceData</title>
+  <meta name="keywords" content="test_TraceData">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">tests</a> &gt; test_TraceData.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/tests&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>test_TraceData
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>	SIGN removes the mean of each trace.</li><li><a href="../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../GISMO/core/@waveform/sign.html" class="code" title="function w = sign(w)">sign</a>	SIGN Signum function for waveforms.</li><li><a href="../../GISMO/core/dev/@NewCorrelation/sign.html" class="code" title="function c = sign(c)">sign</a>	SIGN convert traces to the sign of their data (+1, 0, -1)</li><li><a href="../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>	</li><li><a href="test_TraceData.html" class="code" title="">test_TraceData</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="test_TraceData.html" class="code" title="">test_TraceData</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function T = makeTraceData(data_, samplerate_, units_)</a></li><li><a href="#_sub2" class="code">function testConstructors(testCase)</a></li><li><a href="#_sub3" class="code">function test_data(testCase)</a></li><li><a href="#_sub4" class="code">function test_samplerate(testCase)</a></li><li><a href="#_sub5" class="code">function test_duration(testCase)</a></li><li><a href="#_sub6" class="code">function test_eq(testCase)</a></li><li><a href="#_sub7" class="code">function test_units(testCase)</a></li><li><a href="#_sub8" class="code">function test_uminus(testCase)</a></li><li><a href="#_sub9" class="code">function test_plus(testCase)</a></li><li><a href="#_sub10" class="code">function testMinus(testCase)</a></li><li><a href="#_sub11" class="code">function test_times(testCase)</a></li><li><a href="#_sub12" class="code">function test_mtimes(testCase)</a></li><li><a href="#_sub13" class="code">function test_rdivide(testCase)</a></li><li><a href="#_sub14" class="code">function test_power(testCase)</a></li><li><a href="#_sub15" class="code">function test_min(testCase)</a></li><li><a href="#_sub16" class="code">function test_max(testCase)</a></li><li><a href="#_sub17" class="code">function test_median(testCase)</a></li><li><a href="#_sub18" class="code">function test_mean(testCase)</a></li><li><a href="#_sub19" class="code">function test_std(testCase)</a></li><li><a href="#_sub20" class="code">function test_var(testCase)</a></li><li><a href="#_sub21" class="code">function test_abs(testCase)</a></li><li><a href="#_sub22" class="code">function test_sign(testCase)</a></li><li><a href="#_sub23" class="code">function test_demean(testCase)</a></li><li><a href="#_sub24" class="code">function test_integerate(testCase)</a></li><li><a href="#_sub25" class="code">function test_diff(testCase)</a></li><li><a href="#_sub26" class="code">function test_detrend(testCase)</a></li><li><a href="#_sub27" class="code">function test_double(testCase)</a></li><li><a href="#_sub28" class="code">function test_resample(testCase)</a></li><li><a href="#_sub29" class="code">function test_smooth(testCase)</a></li><li><a href="#_sub30" class="code">function test_fillgaps(testCase)</a></li><li><a href="#_sub31" class="code">function test_clip(testCase)</a></li><li><a href="#_sub32" class="code">function stack(testCase)</a></li><li><a href="#_sub33" class="code">function binstack(testCase)</a></li><li><a href="#_sub34" class="code">function test_taper(testCase)</a></li><li><a href="#_sub35" class="code">function test_hilbert(testCase)</a></li><li><a href="#_sub36" class="code">function test_zero2nan(testCase)</a></li><li><a href="#_sub37" class="code">function test_extract(testCase)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="test_TraceData.html" class="code" title="">test_TraceData</a> &lt; matlab.unittest.TestCase
+0002    <span class="comment">%testTraceData tests the TraceData class</span>
+0003    <span class="comment">%   Detailed explanation goes here</span>
+0004    
+0005    properties
+0006    <span class="keyword">end</span>
+0007    methods(Static)
+0008       <a name="_sub0" href="#_subfunctions" class="code">function T = makeTraceData(data_, samplerate_, units_)</a>
+0009          T = <a href="../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>;
+0010          T.data = data_;
+0011          T.samplerate = samplerate_;
+0012          T.units = units_;
+0013       <span class="keyword">end</span>
+0014       
+0015    <span class="keyword">end</span>
+0016    methods(Test)
+0017       <a name="_sub1" href="#_subfunctions" class="code">function testConstructors(testCase)</a>
+0018       <span class="keyword">end</span>
+0019       <a name="_sub2" href="#_subfunctions" class="code">function test_data(testCase)</a>
+0020          import matlab.unittest.constraints.IsEmpty;
+0021          T = <a href="../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>;
+0022          testCase.verifyThat(T.data, IsEmpty, <span class="keyword">...</span>
+0023             <span class="string">'default data should be empty'</span>);
+0024          testdata = [1 2 3 -inf inf 0];
+0025          T.data = testdata;
+0026          testCase.verifyEqual(T.data, testdata(:));
+0027       <span class="keyword">end</span>
+0028       <a name="_sub3" href="#_subfunctions" class="code">function test_samplerate(testCase)</a>
+0029          T = <a href="../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>;
+0030          T.samplerate = 10;
+0031          testCase.verifyEqual(T.samplerate, 10);
+0032       <span class="keyword">end</span>
+0033       <a name="_sub4" href="#_subfunctions" class="code">function test_duration(testCase)</a>
+0034          simpledata = [1 2 3 -inf inf nan 0];
+0035          T = test_TraceData.makeTraceData(simpledata, 1, <span class="string">'counts'</span>);
+0036          testCase.verifyEqual(T.duration, numel(simpledata));
+0037          T.samplerate = numel(simpledata);
+0038          testCase.verifyEqual(T.duration, 1);
+0039          T.data = [];
+0040          testCase.verifyEqual(T.duration, 0);
+0041          T.data = nan;
+0042          testCase.verifyEqual(T.duration, 1/numel(simpledata));
+0043       <span class="keyword">end</span>
+0044       <a name="_sub5" href="#_subfunctions" class="code">function test_eq(testCase)</a>
+0045          simpledata = [1 2 3 -inf inf 0];
+0046          A = test_TraceData.makeTraceData(simpledata, 1, <span class="string">'counts'</span>);
+0047          B = test_TraceData.makeTraceData(simpledata, 1, <span class="string">'counts'</span>);
+0048          testCase.assumeEqual(A.data, B.data);
+0049          testCase.assumeEqual(A.samplerate, B.samplerate);
+0050          testCase.assumeEqual(A.units, B.units);
+0051          testCase.verifyTrue(A == B);
+0052          testCase.verifyFalse(A ~= B);
+0053          testCase.verifyTrue(-A ~= B);
+0054       <span class="keyword">end</span>
+0055       <a name="_sub6" href="#_subfunctions" class="code">function test_units(testCase)</a>
+0056          T = <a href="../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>;
+0057          T.units = <span class="string">'abc'</span>;
+0058          testCase.verifyEqual(T.units, <span class="string">'abc'</span>);
+0059       <span class="keyword">end</span>
+0060       <a name="_sub7" href="#_subfunctions" class="code">function test_uminus(testCase)</a>
+0061          simpledata=[-inf -5 0 10 20.05 inf];
+0062          T = test_TraceData.makeTraceData(simpledata, 5, <span class="string">'counts'</span>);
+0063          testCase.verifyEqual(-simpledata(:), -T.data);
+0064          testCase.verifyEqual(-(-(-T)), -T);
+0065       <span class="keyword">end</span>
+0066       <a name="_sub8" href="#_subfunctions" class="code">function test_plus(testCase)</a>
+0067          simpledata = (-1:.2:10)';
+0068          T = test_TraceData.makeTraceData(simpledata, 1, <span class="string">'counts'</span>);
+0069          <span class="comment">% tests for a single TraceData</span>
+0070          Ta = T + 0;
+0071          testCase.assertEqual(Ta.data, simpledata);
+0072          Ta = T + 1.23;
+0073          testCase.assertEqual(Ta.data, simpledata + 1.23);
+0074          Ta = T + T.data;
+0075          testCase.verifyEqual(Ta.data, 2*simpledata);
+0076          testCase.verifyEqual(T+T.data+T.data, test_TraceData.makeTraceData(3 * simpledata, 1, <span class="string">'counts'</span>));
+0077          <span class="comment">% TODO: tests for multiple TraceDatas</span>
+0078          T2 = [T; T];
+0079          T2 = T2 + 4;
+0080          testCase.verifySize(T2,[2,1]);
+0081          testCase.assumeEqual([T2.samplerate],[1;1]);
+0082          testCase.verifyEqual(T2(1).data, T2(2).data);
+0083          testCase.verifyEqual(T2(1).data, simpledata(:) + 4);
+0084          T2 = [T, T];
+0085          testCase.verifySize(T2,[1,2]);
+0086          testCase.assumeEqual([T2.samplerate],[1;1]);
+0087          testCase.verifyEqual(T2(1), T2(2));
+0088          testCase.verifyEqual(T2(1).data, simpledata(:) + 4);
+0089          Ta = T + T.data;
+0090          TestCase.verifyEqual(Ta, T + T.data);
+0091          
+0092       <span class="keyword">end</span>
+0093       <a name="_sub9" href="#_subfunctions" class="code">function testMinus(testCase)</a>
+0094          simpledata = [1 2 3 -inf inf 0];
+0095          T = test_TraceData.makeTraceData(simpledata, 10, <span class="string">'counts'</span>);
+0096          T2 = T - 5;
+0097          testCase.verifyEqual(T + (-5), T2);
+0098       <span class="keyword">end</span>
+0099       <a name="_sub10" href="#_subfunctions" class="code">function test_times(testCase)</a>
+0100          simpledata = [1 2 3 -inf inf 0];
+0101          T = test_TraceData.makeTraceData(simpledata, 10, <span class="string">'counts'</span>);
+0102          testCase.verifyEqual(T + T.data, T .* 2);
+0103       <span class="keyword">end</span>
+0104       <a name="_sub11" href="#_subfunctions" class="code">function test_mtimes(testCase)</a>
+0105          
+0106       <span class="keyword">end</span>
+0107       <a name="_sub12" href="#_subfunctions" class="code">function test_rdivide(testCase)</a>
+0108       <span class="keyword">end</span>
+0109       <a name="_sub13" href="#_subfunctions" class="code">function test_power(testCase)</a>
+0110          simpledata = [1 2 3 -inf inf 0];
+0111          powT = test_TraceData.makeTraceData(simpledata .^ 3.5, 10, <span class="string">'counts'</span>);
+0112          T = test_TraceData.makeTraceData(simpledata, 10, <span class="string">'counts'</span>);
+0113          testCase.verifyEqual(T .^ 2, T .* T.data);
+0114          testCase.verifyEqual(T .^ 3.5, powT);
+0115       <span class="keyword">end</span>
+0116       <a name="_sub14" href="#_subfunctions" class="code">function test_min(testCase)</a>
+0117       <span class="keyword">end</span>
+0118       <a name="_sub15" href="#_subfunctions" class="code">function test_max(testCase)</a>
+0119       <span class="keyword">end</span>
+0120       <a name="_sub16" href="#_subfunctions" class="code">function test_median(testCase)</a>
+0121       <span class="keyword">end</span>
+0122       <a name="_sub17" href="#_subfunctions" class="code">function test_mean(testCase)</a>
+0123       <span class="keyword">end</span>
+0124       <a name="_sub18" href="#_subfunctions" class="code">function test_std(testCase)</a>
+0125       <span class="keyword">end</span>
+0126       <a name="_sub19" href="#_subfunctions" class="code">function test_var(testCase)</a>
+0127       <span class="keyword">end</span>
+0128       <a name="_sub20" href="#_subfunctions" class="code">function test_abs(testCase)</a>
+0129          simpledata = [1 2 3 -inf inf 0];
+0130          T = test_TraceData.makeTraceData(simpledata, 10, <span class="string">'counts'</span>);
+0131          Tkey = test_TraceData.makeTraceData(<a href="../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(simpledata), 10, <span class="string">'counts'</span>);
+0132          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(T), Tkey);
+0133       <span class="keyword">end</span>
+0134       <a name="_sub21" href="#_subfunctions" class="code">function test_sign(testCase)</a>
+0135          simpledata = [1 2 3 -inf inf 0];
+0136          T = test_TraceData.makeTraceData(simpledata, 10, <span class="string">'counts'</span>);
+0137          Tsig = test_TraceData.makeTraceData(<a href="../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>(simpledata), 10, <span class="string">'sign(counts)'</span>);
+0138          testCase.verifyEqual(<a href="../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>(T),Tsig);
+0139       <span class="keyword">end</span>
+0140       <a name="_sub22" href="#_subfunctions" class="code">function test_demean(testCase)</a>
+0141       <span class="keyword">end</span>
+0142       <a name="_sub23" href="#_subfunctions" class="code">function test_integerate(testCase)</a>
+0143       <span class="keyword">end</span>
+0144       <a name="_sub24" href="#_subfunctions" class="code">function test_diff(testCase)</a>
+0145       <span class="keyword">end</span>
+0146       <a name="_sub25" href="#_subfunctions" class="code">function test_detrend(testCase)</a>
+0147          simpledata = [1 1 2 2 3 3 4 4 5 5];
+0148          T= test_TraceData.makeTraceData(simpledata, 10, <span class="string">'counts'</span>);
+0149       <span class="keyword">end</span>
+0150       <a name="_sub26" href="#_subfunctions" class="code">function test_double(testCase)</a>
+0151          simpledata = [1 2 3 -inf inf 0]';
+0152          T(1) = test_TraceData.makeTraceData(simpledata, 10, <span class="string">'counts'</span>);
+0153          T(2) = -T(1);
+0154          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(T(1)), simpledata);
+0155          testCase.verifyEqual(<a href="../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(T), [simpledata,-simpledata]);
+0156       <span class="keyword">end</span>
+0157       <a name="_sub27" href="#_subfunctions" class="code">function test_resample(testCase)</a>
+0158          simpledata = [-20 20 0 0 -1 1 3 4 10 20 -14 -12];
+0159          T10 = test_TraceData.makeTraceData(simpledata, 10, <span class="string">'counts'</span>);
+0160          T5 = test_TraceData.makeTraceData([], 5, <span class="string">'counts'</span>);
+0161          <span class="comment">%           'max' : maximum value</span>
+0162          T5.data = [20 0 1 4 20 -12];
+0163          testCase.verifyEqual(T10.resample(<span class="string">'max'</span>,2), T5)
+0164          <span class="comment">%           'min' : minimum value</span>
+0165          T5.data = [-20 0 -1 3 10 -14];
+0166          testCase.verifyEqual(T10.resample(<span class="string">'min'</span>,2), T5)
+0167          <span class="comment">%           'mean': average value</span>
+0168          T5.data = [0 0 0 3.5 15 -13];
+0169          testCase.verifyEqual(T10.resample(<span class="string">'mean'</span>,2), T5)
+0170          <span class="comment">%           'rms' : rms value (added 2011/06/01)</span>
+0171          <span class="comment">%           'absmax': absolute maximum value (greatest deviation from zero)</span>
+0172          T5.data = [20 0 1 4 20 14];
+0173          testCase.verifyEqual(T10.resample(<span class="string">'absmax'</span>,2), T5)
+0174          <span class="comment">%           'absmin': absolute minimum value (smallest deviation from zero)</span>
+0175          T5.data = [20 0 1 3 10 12];
+0176          testCase.verifyEqual(T10.resample(<span class="string">'absmin'</span>,2), T5)
+0177          <span class="comment">%           'absmean' : mean deviation from zero (added 2011/06/01)</span>
+0178          <span class="comment">%           'median' : median value</span>
+0179          T10.data = [0 0 0 3.5 -15 100 82 95 90 ]; T10.samplerate = 9;
+0180          T5.data = [0 3.5 90];
+0181          T5 = test_TraceData.makeTraceData(T5.data, 3, <span class="string">'counts'</span>);
+0182          testCase.verifyEqual(T10.resample(<span class="string">'median'</span>,3), T5)
+0183          <span class="comment">%           'absmedian' : median deviation from zero (added 2011/06/01)</span>
+0184          <span class="comment">%           'builtin': Use MATLAB's built in resample routine</span>
+0185       <span class="keyword">end</span>
+0186       <a name="_sub28" href="#_subfunctions" class="code">function test_smooth(testCase)</a>
+0187          testCase.assumeEqual(exist(<span class="string">'smooth'</span>),2);
+0188          error(<span class="string">'smooth test not written'</span>);
+0189       <span class="keyword">end</span>
+0190       <a name="_sub29" href="#_subfunctions" class="code">function test_fillgaps(testCase)</a>
+0191       <span class="keyword">end</span>
+0192       <a name="_sub30" href="#_subfunctions" class="code">function test_clip(testCase)</a>
+0193       <span class="keyword">end</span>
+0194       <a name="_sub31" href="#_subfunctions" class="code">function stack(testCase)</a>
+0195       <span class="keyword">end</span>
+0196       <a name="_sub32" href="#_subfunctions" class="code">function binstack(testCase)</a>
+0197       <span class="keyword">end</span>
+0198       <a name="_sub33" href="#_subfunctions" class="code">function test_taper(testCase)</a>
+0199       <span class="keyword">end</span>
+0200       <a name="_sub34" href="#_subfunctions" class="code">function test_hilbert(testCase)</a>
+0201       <span class="keyword">end</span>
+0202       <a name="_sub35" href="#_subfunctions" class="code">function test_zero2nan(testCase)</a>
+0203       <span class="keyword">end</span>
+0204       <a name="_sub36" href="#_subfunctions" class="code">function test_extract(testCase)</a>
+0205       <span class="keyword">end</span>
+0206       
+0207    <span class="keyword">end</span>
+0208    
+0209 <span class="keyword">end</span>
+0210</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

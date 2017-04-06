@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of find</title>
+  <meta name="keywords" content="find">
+  <meta name="description" content="INDEX = FIND(c,'CLUST',WHICH_CLUSTER)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@correlation</a> &gt; find.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@correlation&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>find
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function index = find(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> INDEX = FIND(c,'CLUST',WHICH_CLUSTER)
+ Returns a list of trace numbers belonging to the cluster specified by
+ WHICH_CLUSTER. If WHICH_CLUSTER is 1, then cluster with the most traces
+ will be returned. If WHICH_CLUSTER is 2, then the seconds largest cluster
+ will be returned, and so on. Often this use will be paired with SUBSET or
+ STACK. For example, to plot the largest cluster of traces followed by 
+ a stack of these traces:
+   INDEX = FIND(c,'CLUST',1)
+   c1 = SUBSET(c,INDEX)  
+   c1 = stack(c1)
+   plot(c1)
+
+ INDEX = FIND(c,'BIG',SIZE)
+ Returns a list of trace numbers belonging to any cluster that has at
+ leats SIZE number of traces. For example, to get all clusters that
+ contain 5 or more traces:
+   INDEX = FIND(c,'BIG',5)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="sort.html" class="code" title="function c = norm(c,varargin)">sort</a>	C = SORT(C,'TIME')</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/sort.html" class="code" title="function c = sort(c)">sort</a>	C = SORT(C) Sorts traces from oldest to youngest.</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li><li><a href="../../../GISMO/applications/+iceweb/spectrogram_iceweb.html" class="code" title="function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)">spectrogram_iceweb</a>	SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of</li><li><a href="../../../GISMO/applications/uispecgram.html" class="code" title="function varargout = uispecgram(varargin)">uispecgram</a>	UISPECGRAM M-file for uispecgram.fig</li><li><a href="../../../GISMO/contributed/ReadMSEEDFast/ReadMSEEDFast.html" class="code" title="function [signalStruct] = ReadMSEEDFast(fileName)">ReadMSEEDFast</a>	ReadMSEEDFast( fileName )</li><li><a href="../../../GISMO/contributed/correlation_derived/corrderived_plot_swarm_history.html" class="code" title="function corrderived_plot_swarm_history(c,varargin)">corrderived_plot_swarm_history</a>	CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms</li><li><a href="../../../GISMO/contributed/instrument_response/demo_plutons.html" class="code" title="">demo_plutons</a>	</li><li><a href="../../../GISMO/contributed/instrument_response/response_get_from_db.html" class="code" title="function [response] = response_get_from_db(station, channel, time, frequencies, dbName)">response_get_from_db</a>	RESPONSE_GET_FROM_DB Get instrument response from database.</li><li><a href="../../../GISMO/contributed/iris_dmc_tools/+irisdmc/station_meta.html" class="code" title="function [w,successList] = station_meta(w,varargin)">station_meta</a>	station_meta adds station metadata to a waveform</li><li><a href="../../../GISMO/contributed/iris_dmc_tools/dmc_station_meta.html" class="code" title="function [w,successList] = dmc_station_meta(w,varargin)">dmc_station_meta</a>	DMC_STATION_META adds station metadata to a waveform</li><li><a href="../../../GISMO/contributed/iris_dmc_tools/irisFetch.html" class="code" title="">irisFetch</a>	</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/scan.html" class="code" title="function [WW,WWxc] = scan(WW,WWsnippet,threshold)">scan</a>	SCAN scans a waveform for events which match a master.</li><li><a href="../../../GISMO/contributed/master_correlation/mastercorr_extract.html" class="code" title="function varargout = mastercorr_extract(W,varargin)">mastercorr_extract</a>	MASTERCORR_EXTRACT extract matches to the master waveform</li><li><a href="../../../GISMO/contributed/master_correlation/mastercorr_scan.html" class="code" title="function [WW,WWxc] = mastercorr_scan(WW,WWsnippet,threshold)">mastercorr_scan</a>	MASTERCORR_SCAN scans a waveform for events which match a master.</li><li><a href="../../../GISMO/contributed_antelope/attenuation/hankelq.html" class="code" title="function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)">hankelq</a>	HANKELQ Compute spectral ratio in two frequency bands</li><li><a href="../../../GISMO/contributed_antelope/double_difference/dd_collate.html" class="code" title="function dd_collate(eventdat,varargin)">dd_collate</a>	dd_collate('event.dat')</li><li><a href="../../../GISMO/contributed_antelope/double_difference/dd_make_scp.html" class="code" title="function dd_make_scp(dbname,varargin)">dd_make_scp</a>	DD_MAKE_SCP Create a draft control file for the correlation process</li><li><a href="../../../GISMO/contributed_antelope/import_events/arrivals_rearrange.html" class="code" title="function [sta_index, orid_index, eqtimes, eqindices, nstations, norigins] = arrivals_rearrange(arrivals, stations)">arrivals_rearrange</a>	% Arrange info from earthquake catalogue into a more useful format</li><li><a href="../../../GISMO/contributed_antelope/import_events/import_events.html" class="code" title="function [ eqtc, varargout ] = import_events(dbname, chanfile, starttime, endtime, phase, delay, enddelay, varargin)">import_events</a>	IMPORT_EVENTS Import waveforms associated with earthquake events.</li><li><a href="../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/arrival_histogram.html" class="code" title="function arrival_histogram(dbName)">arrival_histogram</a>	ARRIVAL_HISTOGRAM compare the number of arrivals to each station.</li><li><a href="../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/dbload.html" class="code" title="function [origin,site,arrival,ray] = dbload(dbName)">dbload</a>	DBLOAD extracts travel times from a database</li><li><a href="../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/depth_section.html" class="code" title="function depth_section(dbName)">depth_section</a>	DEPTH_SECTION plot depth sections of ray coverage.</li><li><a href="../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/map.html" class="code" title="function map(dbName)">map</a>	MAP plot a map of ray coverage.</li><li><a href="../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/tt_curve.html" class="code" title="function traveltime(dbName,varargin)">tt_curve</a>	TRAVELTIME make travel time plots.</li><li><a href="../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/write_lotos.html" class="code" title="function write_lotos(dbName)">write_lotos</a>	WRITE_LOTOS write files for LOTOS tomography codes.</li><li><a href="../../../GISMO/core/+Catalog/+binning/bin_irregular.html" class="code" title="function [dnum_bin, counts_per_bin, sum_per_bin, smallest_per_bin, biggest_per_bin, median_per_bin, std_per_bin, median_time_interval] = bin_irregular(dnum, data, binsize, snum, enum, stepsize)">bin_irregular</a>	BIN_IRREGULAR bin an irregularly-sampled timeseries (like earthquake origin times).</li><li><a href="../../../GISMO/core/+Catalog/+bvalue_lib/calc_McBest.html" class="code" title="function [fMc, fMc95, fMc90] = calc_McBest(mag, fBinning);">calc_McBest</a>	CALC_MCBEST Calculate best Mc from combining methods</li><li><a href="../../../GISMO/core/+Catalog/+bvalue_lib/calc_McMaxCurvature.html" class="code" title="function [fMc] = calc_McMaxCurvature(mag);">calc_McMaxCurvature</a>	CALC_MCMAXCURVATURE</li><li><a href="../../../GISMO/core/+Catalog/+bvalue_lib/synthb_aut.html" class="code" title="">synthb_aut</a>	This is synthetic219</li><li><a href="../../../GISMO/core/+Catalog/+read_catalog/aef.html" class="code" title="function self = aef(varargin)">aef</a>	READ_CATALOG.AEF</li><li><a href="../../../GISMO/core/+admin/which.html" class="code" title="function which(sourceLocation)">which</a>	WHICH manage and switch between multiple GISMO archives</li><li><a href="../../../GISMO/core/+antelope/dbgetorigins.html" class="code" title="function origins = dbgetorigins(dbpath, subset_expression)">dbgetorigins</a>	DBGETORIGINS Load preferred origins from an Antelope CSS3.0</li><li><a href="../../../GISMO/core/+magnitude/mag2eng.html" class="code" title="function eng=mag2eng(mag);">mag2eng</a>	MAG2ENG Convert (a vector of) magnitude into (a vector of) equivalent energy(ies).</li><li><a href="../../../GISMO/core/@Catalog/bvalue.html" class="code" title="function bvalue(catalogObject, mcType)">bvalue</a>	BVALUE evaluate b-value, a-value and magnitude of completeness</li><li><a href="../../../GISMO/core/@Catalog/eev.html" class="code" title="function eev(obj, eventnum)">eev</a>	CATALOG.EEV - Browse an Catalog object one event at a time.</li><li><a href="../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="../../../GISMO/core/@EventRate/EventRate.html" class="code" title="">EventRate</a>	</li><li><a href="adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG adjusts the trigger times of each trace</li><li><a href="check.html" class="code" title="function val = check(c,varargin)">check</a>	Check various features of a correlation object.</li><li><a href="cluster.html" class="code" title="function c=cluster(c,varargin)">cluster</a>	c = CLUSTER(c,CUTOFF) cuts the "branches" of the linkage tree to create</li><li><a href="cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="getclusterstat.html" class="code" title="function family=getclusterstat(c)">getclusterstat</a>	GETCLUSTERSTAT gets detais of individual correlation clusters.</li><li><a href="match.html" class="code" title="function [c1,c2] = match(c1,c2,varargin)">match</a>	Retain matching elements of two correlation objects.</li><li><a href="../../../GISMO/core/@correlation/private/eventplot.html" class="code" title="function eventplot(c,scale,howmany);">eventplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@correlation/private/xcorr1xr.html" class="code" title="function d = xcorr1xr(d,style)">xcorr1xr</a>	XCORR1XR Cross correlate 1 trace against all other traces at once.</li><li><a href="verify.html" class="code" title="function c = verify(c)">verify</a>	VERIFY</li><li><a href="../../../GISMO/core/@datasource/setfile.html" class="code" title="function ds = setfile(ds, desc_string, varargin)">setfile</a>	SETFILE associates a datasource object with a file (or directory)</li><li><a href="../../../GISMO/core/@datasource/subdivide_files_by_date.html" class="code" title="function allDatesToCheck = subdivide_files_by_date(ds,startt,endt)">subdivide_files_by_date</a>	SUBDIVIDE_FILES_BY_DATE given a datasource and daterange return list of files</li><li><a href="../../../GISMO/core/@rsam/bvalue.html" class="code" title="function [aw,tt1, tt2, tmc, mag_zone]=bvalue(this, mcType, method)">bvalue</a>	BVALUE evaluate b-value, a-value and magnitude of completeness</li><li><a href="../../../GISMO/core/@rsam/duration_amplitude.html" class="code" title="function [lambda, r2] = duration_amplitude(self, law, min_amplitude, mag_zone)">duration_amplitude</a>	DURATION_AMPLITUDE Use the duration-amplitde</li><li><a href="../../../GISMO/core/@rsam/extract.html" class="code" title="function s=extract(self, snum, enum)">extract</a>	</li><li><a href="../../../GISMO/core/@rsam/oneMinuteData.html" class="code" title="">oneMinuteData</a>	</li><li><a href="../../../GISMO/core/@rsam/read_bob_file.html" class="code" title="function self=read_bob_file(varargin)">read_bob_file</a>	READ_BOB_FILE Load RSAM-like data from a BOB file into a SAM object.</li><li><a href="../../../GISMO/core/@rsam/remove_calibration_pulses.html" class="code" title="function [data]=remove_calibration_pulses(dnum, data)">remove_calibration_pulses</a>	</li><li><a href="../../../GISMO/core/@rsam/resample.html" class="code" title="function self = resample(self, varargin)">resample</a>	RESAMPLE resamples a rsam object at over every specified intercrunchfactor</li><li><a href="../../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>	RSAM/SAVE - save an rsam-like object to an RSAM/BOB binary</li><li><a href="../../../GISMO/core/@sacpz/sacpz.html" class="code" title="">sacpz</a>	SACPZ Class for reading SAC pole-zero files downloaded from IRIS</li><li><a href="../../../GISMO/core/@spectralobject/specgram.html" class="code" title="function h = specgram(s, ws, varargin)">specgram</a>	SPECGRAM - plots spectrogram of waveforms</li><li><a href="../../../GISMO/core/@spectralobject/specgram2.html" class="code" title="function specgram2(s, ws, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li><li><a href="../../../GISMO/core/@threecomp/extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="../../../GISMO/core/@threecomp/particlemotion.html" class="code" title="function TC = particlemotion(TC, varargin)">particlemotion</a>	PARTICLEMOTION calculates particle motion vectors for threecomp object</li><li><a href="../../../GISMO/core/@threecomp/private/getproperty.html" class="code" title="function [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)">getproperty</a>	GETPROPERTY returns a property value from a property list, or a default</li><li><a href="../../../GISMO/core/@threecomp/threecomp.html" class="code" title="">threecomp</a>	THREECOMP Object for three component waveform data</li><li><a href="../../../GISMO/core/@waveform/extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="../../../GISMO/core/@waveform/fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>	FILLGAPS - fill missing data with values of your choice</li><li><a href="../../../GISMO/core/@waveform/plot_spectrum.html" class="code" title="function s = plot_spectrum(w)">plot_spectrum</a>	add_spectral_data Simple method to compute frequency</li><li><a href="../../../GISMO/core/@waveform/private/autoscale.html" class="code" title="function newunit = autoscale(axishandle, oldunit)">autoscale</a>	will automatically find the correct y-unites with which to plot something</li><li><a href="../../../GISMO/core/@waveform/private/getproperty.html" class="code" title="function [isfound, foundvalue, properties] = getproperty(desiredproperty,properties,defaultvalue)">getproperty</a>	GETPROPERTY returns a property value from a property list, or a default</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope_workaround.html" class="code" title="function outputWaveforms = load_antelope_workaround(datarequest, COMBINE_WAVEFORMS, specificDatabase)">load_antelope_workaround</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/rqhd.html" class="code" title="function [varargout]=rqhd(headin,varargin)">rqhd</a>	RQHD  Read seismic handler (SH) header variables</li><li><a href="../../../GISMO/core/@waveform/zero2nan.html" class="code" title="function w = zero2nan(w,mgl)">zero2nan</a>	ZERO2NAN: This function takes a waveform with gaps that have been filled</li><li><a href="../../../GISMO/core/dev/@ChannelDetails/ChannelDetails.html" class="code" title="">ChannelDetails</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/adjusttrig.html" class="code" title="function c = adjusttrig(c,varargin)">adjusttrig</a>	ADJUSTTRIG  adjusts the trigger times of each trace</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/eventplot.html" class="code" title="function eventplot(c,scale,howmany)">eventplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/getclusterstat.html" class="code" title="function family=getclusterstat(c)">getclusterstat</a>	GETCLUSTERSTAT gets detais of individual correlation clusters.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/match.html" class="code" title="function [c1,c2] = match(c1,c2,toleranceInSeconds)">match</a>	Retain matching elements of two correlation objects.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="../../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>	</li><li><a href="../../../GISMO/core/dev/@TraceData/autoscale.html" class="code" title="function newunit = autoscale(axishandle, oldunit)">autoscale</a>	autoscale   automatically determine correct y-units for plotting</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/sst2ssd.html" class="code" title="function ssd = sst2ssd(sst,w)">sst2ssd</a>	</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/compute.html" class="code" title="function w = compute(w);">compute</a>	COMPUTE calculates the fast fourier transform of a waveform object</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/freqindex.html" class="code" title="function W = freqindex(W,varargin)">freqindex</a>	WAVEFORM = FREQINDEX(WAVEFORM) calculates the frequency index of a waveform.</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li><li><a href="../../../GISMO/deprecated/fft_tools/amplitude_spectrum.html" class="code" title="function w = add_spectral_data(w)">amplitude_spectrum</a>	add_spectral_data Simple method to compute frequency</li><li><a href="../../../GISMO/deprecated/fft_tools/wf_fft.html" class="code" title="function w = wf_fft(w);">wf_fft</a>	WAVEFORM = WF_FFT(WAVEFORM)  calculate frequency spectrum of a waveform.</li><li><a href="../../../GISMO/deprecated/fft_tools/wf_fftplot.html" class="code" title="function wf_fftplot(w);">wf_fftplot</a>	WF_FFTPLOT(WAVEFORM) plot fourier transform of the data.</li><li><a href="../../../GISMO/deprecated/fft_tools/wf_fi.html" class="code" title="function W = wf_fi(W,varargin)">wf_fi</a>	WAVEFORM = WF_FI(WAVEFORM) calculates the frequency index of a waveform.</li><li><a href="../../../GISMO/uaf_internal/AEIC_AVO/+aeic_catalog/get_total.html" class="code" title="function catalog = get_total(varargin)">get_total</a>	GET_TOTAL Read in the complete AEIC Total earthquake catalog</li><li><a href="../../../GISMO/uaf_internal/AEIC_AVO/+check/crossfeed.html" class="code" title="function crossfeed(varargin)">crossfeed</a>	CROSSFEED Checks for crossfeeding and duplicate data channels</li><li><a href="../../../GISMO/uaf_internal/AEIC_AVO/aeic_total_catalog.html" class="code" title="function catalog = aeic_total_catalog(varargin)">aeic_total_catalog</a>	AEIC_TOTAL_CATALOG Read in the complete AEIC Total earthquake catalog</li><li><a href="../../../GISMO/uaf_internal/gismo_management/whichgismo.html" class="code" title="function whichgismo(sourceLocation)">whichgismo</a>	WHICHGISMO   Select from multiple GISMO archives.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function index = find_clu(c,n);</a></li><li><a href="#_sub2" class="code">function index = find_big(c,n);</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function index = find(c,varargin)</a>
+0002 
+0003 <span class="comment">% INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</span>
+0004 <span class="comment">% Returns a list of trace numbers belonging to the cluster specified by</span>
+0005 <span class="comment">% WHICH_CLUSTER. If WHICH_CLUSTER is 1, then cluster with the most traces</span>
+0006 <span class="comment">% will be returned. If WHICH_CLUSTER is 2, then the seconds largest cluster</span>
+0007 <span class="comment">% will be returned, and so on. Often this use will be paired with SUBSET or</span>
+0008 <span class="comment">% STACK. For example, to plot the largest cluster of traces followed by</span>
+0009 <span class="comment">% a stack of these traces:</span>
+0010 <span class="comment">%   INDEX = FIND(c,'CLUST',1)</span>
+0011 <span class="comment">%   c1 = SUBSET(c,INDEX)</span>
+0012 <span class="comment">%   c1 = stack(c1)</span>
+0013 <span class="comment">%   plot(c1)</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% INDEX = FIND(c,'BIG',SIZE)</span>
+0016 <span class="comment">% Returns a list of trace numbers belonging to any cluster that has at</span>
+0017 <span class="comment">% leats SIZE number of traces. For example, to get all clusters that</span>
+0018 <span class="comment">% contain 5 or more traces:</span>
+0019 <span class="comment">%   INDEX = FIND(c,'BIG',5)</span>
+0020 <span class="comment">%</span>
+0021 
+0022 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0023 <span class="comment">% $Date$</span>
+0024 <span class="comment">% $Revision$</span>
+0025 
+0026 
+0027 <span class="comment">% READ &amp; CHECK ARGUMENTS</span>
+0028 <span class="keyword">if</span> ~isa(c,<span class="string">'correlation'</span>)
+0029     error(<span class="string">'First input must be a correlation object'</span>);
+0030 <span class="keyword">end</span>
+0031 
+0032 <span class="keyword">if</span> length(varargin)==0
+0033    error(<span class="string">'More arguments needed'</span>);
+0034 <span class="keyword">else</span>
+0035     type = varargin{1};
+0036 <span class="keyword">end</span>
+0037     
+0038 
+0039 <span class="comment">% EXECUTE FIND TYPE</span>
+0040 <span class="keyword">if</span> strncmpi(type,<span class="string">'CLU'</span>,3)
+0041     n = varargin{2};
+0042     <span class="keyword">if</span> isa(n,<span class="string">'double'</span>)
+0043         index = <a href="#_sub1" class="code" title="subfunction index = find_clu(c,n);">find_clu</a>(c,n);
+0044     <span class="keyword">else</span>
+0045        error(<span class="string">'second argument must be a number'</span>); 
+0046     <span class="keyword">end</span>
+0047 <span class="keyword">elseif</span> strncmpi(type,<span class="string">'BIG'</span>,3)
+0048     n = varargin{2};
+0049     <span class="keyword">if</span> isa(n,<span class="string">'double'</span>)
+0050         index = <a href="#_sub2" class="code" title="subfunction index = find_big(c,n);">find_big</a>(c,n);
+0051     <span class="keyword">else</span>
+0052        error(<span class="string">'second argument must be a number'</span>); 
+0053     <span class="keyword">end</span>    
+0054 <span class="keyword">else</span>
+0055     error(<span class="string">'This use of find is not recognized'</span>);
+0056 <span class="keyword">end</span>;
+0057 
+0058 
+0059 
+0060 
+0061 
+0062 
+0063 
+0064 
+0065 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0066 <span class="comment">% FIND CLUSTERS</span>
+0067 <span class="comment">%</span>
+0068 
+0069 <a name="_sub1" href="#_subfunctions" class="code">function index = find_clu(c,n);</a>
+0070 <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(c.clust)
+0071     error(<span class="string">'No cluster information available. Consider using the linkage and cluster functions.'</span>);
+0072 <span class="keyword">end</span>
+0073 famsize = histc(c.clust,[0:<a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(c.clust)]+.5  );
+0074 [famsize,fami] = <a href="sort.html" class="code" title="function c = norm(c,varargin)">sort</a>(famsize,<span class="string">'descend'</span>);
+0075 <span class="keyword">if</span> n &gt; <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(c.clust)
+0076    error([<span class="string">'There are only '</span> num2str(<a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(c.clust)) <span class="string">' clusters'</span>]); 
+0077 <span class="keyword">end</span>
+0078 index = [];
+0079 <span class="keyword">for</span> i = 1:length(n)
+0080     index = <a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>(1,index,<a href="find.html" class="code" title="function index = find(c,varargin)">find</a>(c.clust==fami(n(i))));
+0081 <span class="keyword">end</span>
+0082 
+0083 
+0084 
+0085 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0086 <span class="comment">% FIND BIGGEST CLUSTERS</span>
+0087 <span class="comment">%</span>
+0088 
+0089 <a name="_sub2" href="#_subfunctions" class="code">function index = find_big(c,n);</a>
+0090 
+0091 famsize = histc(c.clust,[0:<a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(c.clust)]+.5  );
+0092 [famsize,fami] = <a href="sort.html" class="code" title="function c = norm(c,varargin)">sort</a>(famsize,<span class="string">'descend'</span>);
+0093 <span class="keyword">if</span> n &gt; <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(famsize)
+0094    <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'There are no clusters with more than '</span> num2str(<a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(famsize)) <span class="string">' traces'</span>]); 
+0095 <span class="keyword">end</span>
+0096 index = [];
+0097 
+0098 f = <a href="find.html" class="code" title="function index = find(c,varargin)">find</a>(famsize&gt;=n);
+0099 
+0100 <span class="keyword">for</span> i = 1:length(f)
+0101     index = <a href="cat.html" class="code" title="function c = cat(varargin)">cat</a>(1,index,<a href="find.html" class="code" title="function index = find(c,varargin)">find</a>(c.clust==fami(f(i))));
+0102 <span class="keyword">end</span>
+0103</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

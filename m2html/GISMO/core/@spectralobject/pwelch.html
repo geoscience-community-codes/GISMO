@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of pwelch</title>
+  <meta name="keywords" content="pwelch">
+  <meta name="description" content="PWELCH   overloaded pwelch for spectralobjects">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@spectralobject</a> &gt; pwelch.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@spectralobject&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>pwelch
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>PWELCH   overloaded pwelch for spectralobjects</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = pwelch(s,w, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">PWELCH   overloaded pwelch for spectralobjects
+   pwelch(spectralobject, waveform) - plots the spectral density
+       Pxx = pwelch(spectralobject, waveform) - returns the Power Spectral
+           Density (PSD) estimate, Pxx, of a discrete-time signal 
+           vector X using Welch's averaged,  modified periodogram method.
+       [Pxx, Freqs] = pwelch(spectralobject, waveform) - returns spectral
+       density and associated frequency bins.
+
+       Options, pwelch(s,w, 'DEFAULT') - plots the spectral density using
+       pwelch's defaults (8 averaged windows, 50% overlap)
+   window is length of entire waveform..
+
+   NOTE: voltage offsets may cause a large spike for lowest Pxx value.
+   NOTE: NaN values will result in blank
+
+ See also <a href="pwelch.html" class="code" title="function varargout = pwelch(s,w, varargin)">pwelch</a>, waveform/fillgaps</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@rsam/Fs.html" class="code" title="function fs = Fs(self)">Fs</a>	</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="pwelch.html" class="code" title="function varargout = pwelch(s,w, varargin)">pwelch</a>	PWELCH   overloaded pwelch for spectralobjects</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="pwelch.html" class="code" title="function varargout = pwelch(s,w, varargin)">pwelch</a>	PWELCH   overloaded pwelch for spectralobjects</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = pwelch(s,w, varargin)</a>
+0002 <span class="comment">%PWELCH   overloaded pwelch for spectralobjects</span>
+0003 <span class="comment">%   pwelch(spectralobject, waveform) - plots the spectral density</span>
+0004 <span class="comment">%       Pxx = pwelch(spectralobject, waveform) - returns the Power Spectral</span>
+0005 <span class="comment">%           Density (PSD) estimate, Pxx, of a discrete-time signal</span>
+0006 <span class="comment">%           vector X using Welch's averaged,  modified periodogram method.</span>
+0007 <span class="comment">%       [Pxx, Freqs] = pwelch(spectralobject, waveform) - returns spectral</span>
+0008 <span class="comment">%       density and associated frequency bins.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%       Options, pwelch(s,w, 'DEFAULT') - plots the spectral density using</span>
+0011 <span class="comment">%       pwelch's defaults (8 averaged windows, 50% overlap)</span>
+0012 <span class="comment">%   window is length of entire waveform..</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">%   NOTE: voltage offsets may cause a large spike for lowest Pxx value.</span>
+0015 <span class="comment">%   NOTE: NaN values will result in blank</span>
+0016 <span class="comment">%</span>
+0017 <span class="comment">% See also pwelch, waveform/fillgaps</span>
+0018 
+0019 <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0020 <span class="comment">% $Date$</span>
+0021 <span class="comment">% $Revision$</span>
+0022 
+0023 <span class="comment">%variables used</span>
+0024 
+0025 <span class="keyword">if</span> nargin &lt; 2
+0026     error(<span class="string">'Spectralobject:pwelch:insufficientArguments'</span>,<span class="keyword">...</span>
+0027         <span class="string">'usage: [out] = pwelch(spectralobject, waveform, [''default'']'</span>);
+0028 <span class="keyword">end</span>
+0029 
+0030 <span class="keyword">if</span> ~isscalar(w)
+0031     error(<span class="string">'Spectralobject:pwelch:nonScalarWaveform'</span>,<span class="keyword">...</span>
+0032         <span class="string">'waveform must be scalar (1x1)'</span>);
+0033 <span class="keyword">end</span>
+0034 
+0035 <span class="keyword">if</span> ~isa(w,<span class="string">'waveform'</span>)
+0036     error(<span class="string">'Spectralobject:pwelch:invalidArgument'</span>,<span class="keyword">...</span>
+0037         <span class="string">'second argument expected to be WAVEFORM, but was [%s]'</span>, class(w));
+0038 <span class="keyword">end</span>
+0039 
+0040 <span class="keyword">if</span> any(isnan(<a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w)))
+0041     warning(<span class="string">'Spectralobject:pwelch:nanValue'</span>,<span class="keyword">...</span>
+0042         [<span class="string">'This waveform has at least one NaN value. '</span>,<span class="keyword">...</span>
+0043         <span class="string">'Remove NaN values by either splitting up the'</span>,<span class="keyword">...</span>
+0044         <span class="string">' waveform into non-NaN sections or by using '</span>,<span class="keyword">...</span>
+0045         <span class="string">'waveform/fillgaps to replace the NaN values.'</span>]);
+0046 <span class="keyword">end</span>
+0047 <a href="../../../GISMO/core/@rsam/Fs.html" class="code" title="function fs = Fs(self)">Fs</a> = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(w,<span class="string">'fs'</span>);
+0048 NFFT = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(s,<span class="string">'nfft'</span>);
+0049 over = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(s,<span class="string">'overlap'</span>);
+0050 data = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w);
+0051 window = length(data);
+0052 <span class="keyword">if</span> nargin == 3
+0053     varargin{1}
+0054     <span class="keyword">if</span> strcmpi(varargin{1}, <span class="string">'DEFAULT'</span>)
+0055         <span class="comment">%disp('defaulting')</span>
+0056         window = [];
+0057         over = [];
+0058     <span class="keyword">end</span>
+0059 <span class="keyword">end</span>
+0060 clear w
+0061 [varargout{1:nargout}] =  <a href="pwelch.html" class="code" title="function varargout = pwelch(s,w, varargin)">pwelch</a>(data,window,over,NFFT,<a href="../../../GISMO/core/@rsam/Fs.html" class="code" title="function fs = Fs(self)">Fs</a>);</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

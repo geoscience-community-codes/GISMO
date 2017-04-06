@@ -1,0 +1,223 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of antelope</title>
+  <meta name="keywords" content="antelope">
+  <meta name="description" content="READ_CATALOG.ANTELOPE load events from a CSS3.0 database using Antelope.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">+Catalog</a> &gt; <a href="index.html">+read_catalog</a> &gt; antelope.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+Catalog/+read_catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>antelope
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>READ_CATALOG.ANTELOPE load events from a CSS3.0 database using Antelope.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function self = antelope(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> READ_CATALOG.ANTELOPE load events from a CSS3.0 database using Antelope.
+ Requires Antelope and the Antelope toolbox from BRTT.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/cat.html" class="code" title="function c = cat(varargin)">cat</a>	c = cat(c1,c2,c3,...)</li><li><a href="../../../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>	EPOCH = DATENUM2EPOCH(TIME) translates Matlab numeric</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function found = strfindbool(haystack, needle)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function self = antelope(varargin)   </a>
+0002 <span class="comment">% READ_CATALOG.ANTELOPE load events from a CSS3.0 database using Antelope.</span>
+0003 <span class="comment">% Requires Antelope and the Antelope toolbox from BRTT.</span>
+0004 
+0005     debug.printfunctionstack(<span class="string">'&gt;'</span>)
+0006     self = 0;
+0007 <span class="comment">%     if ~admin.antelope_exists</span>
+0008 <span class="comment">%         warning('This function requires the Antelope toolbox for Matlab');</span>
+0009 <span class="comment">%         self = Catalog([], [], [], [], [], {}, {});</span>
+0010 <span class="comment">%         return;</span>
+0011 <span class="comment">%     end</span>
+0012 
+0013     <span class="comment">% Process input arguments</span>
+0014     p = inputParser;
+0015     p.addParamValue(<span class="string">'dbpath'</span>, @isstr);
+0016     p.addParamValue(<span class="string">'startTime'</span>, []);  
+0017     p.addParamValue(<span class="string">'endTime'</span>, []);
+0018     p.addParamValue(<span class="string">'minimumMagnitude'</span>, [], @isnumeric);
+0019     p.addParamValue(<span class="string">'maximumMagnitude'</span>, [], @isnumeric);
+0020     p.addParamValue(<span class="string">'minimumLatitude'</span>, [], @isnumeric);
+0021     p.addParamValue(<span class="string">'maximumLatitude'</span>, [], @isnumeric);
+0022     p.addParamValue(<span class="string">'minimumLongitude'</span>, [], @isnumeric);
+0023     p.addParamValue(<span class="string">'maximumLongitude'</span>, [], @isnumeric);  
+0024     p.addParamValue(<span class="string">'minimumDepth'</span>, [], @isnumeric);
+0025     p.addParamValue(<span class="string">'maximumDepth'</span>, [], @isnumeric); 
+0026     p.addParamValue(<span class="string">'minimumRadius'</span>, [], @isnumeric);
+0027     p.addParamValue(<span class="string">'maximumRadius'</span>, [], @isnumeric);     
+0028     p.addParamValue(<span class="string">'boxcoordinates'</span>, @isnumeric);    <span class="comment">%[minLat, maxLat, minLon, maxLon]   % use NaN as a wildcard</span>
+0029     p.addParamValue(<span class="string">'radialcoordinates'</span>, @isnumeric); <span class="comment">% [Lat, Lon, MaxRadius, MinRadius]   % MinRadius is optional</span>
+0030     p.addParamValue(<span class="string">'addarrivals'</span>, false, @islogical);
+0031     
+0032     <span class="comment">% CUSTOM PARAMETERS</span>
+0033     p.addParamValue(<span class="string">'subset_expression'</span>, <span class="string">''</span>, @isstr);    
+0034     p.addParamValue(<span class="string">'subclass'</span>, <span class="string">'*'</span>, @ischar);
+0035     
+0036     p.parse(varargin{:});
+0037     fields = fieldnames(p.Results);
+0038     <span class="keyword">for</span> i=1:length(fields)
+0039         field=fields{i};
+0040         <span class="comment">% val = eval(sprintf('p.Results.%s;',field));</span>
+0041         val = p.Results.(field);
+0042         eval(sprintf(<span class="string">'%s = val;'</span>,field));
+0043     <span class="keyword">end</span> 
+0044     
+0045     <span class="keyword">if</span> exist(<span class="string">'boxcoordinates'</span>,<span class="string">'var'</span>)
+0046         minimumLatitude = boxcoordinates(1);
+0047         maximumLatitude = boxcoordinates(2);
+0048         minimumLongitude = boxcoordinates(3);
+0049         maximumLongitude = boxcoordinates(4);            
+0050     <span class="keyword">end</span>
+0051     
+0052     <span class="keyword">if</span> exist(<span class="string">'radialcoordinates'</span>,<span class="string">'var'</span>)
+0053         centerLatitude = radialcoordinates(1);
+0054         centerLongitude = radialcoordinates(2);
+0055         maximumRadius = radialcoordinates(3);
+0056         <span class="comment">%minimumRadius = radialcoordinates(4);</span>
+0057     <span class="keyword">end</span>
+0058     
+0059     <span class="comment">% Check start &amp; end times</span>
+0060     snum = Catalog.read_catalog.ensure_dateformat(startTime);
+0061     enum = Catalog.read_catalog.ensure_dateformat(endTime);
+0062 
+0063     <span class="comment">% Create a dbeval subset_expression if not already set.</span>
+0064     <span class="keyword">if</span> ~exist(<span class="string">'subset_expression'</span>, <span class="string">'var'</span>) | <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(subset_expression)
+0065         <span class="keyword">if</span> nargin &gt; 2
+0066             expr = <span class="string">''</span>;
+0067             <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(snum) &amp; isnumeric(snum) 
+0068                 expr = sprintf(<span class="string">'%s &amp;&amp; time &gt;= %f'</span>,expr,<a href="../../../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>(snum));
+0069             <span class="keyword">end</span> 
+0070             <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(enum) &amp; isnumeric(enum) 
+0071                 expr = sprintf(<span class="string">'%s &amp;&amp; time &lt;= %f'</span>,expr,<a href="../../../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>(enum));
+0072             <span class="keyword">end</span>
+0073             <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(minimumMagnitude) &amp; isnumeric(minimumMagnitude)
+0074                 expr = sprintf(<span class="string">'%s &amp;&amp; (ml &gt;= %f || mb &gt;= %f || ms &gt;= %f)'</span>,expr,minimumMagnitude,minimumMagnitude,minimumMagnitude);
+0075             <span class="keyword">end</span>
+0076             <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(maximumMagnitude) &amp; isnumeric(maximumMagnitude)
+0077                 expr = sprintf(<span class="string">'%s &amp;&amp; (ml &gt;= %f || mb &gt;= %f || ms &gt;= %f)'</span>,expr,maximumMagnitude,maximumMagnitude,maximumMagnitude);
+0078             <span class="keyword">end</span>
+0079             <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(minimumLatitude) &amp; isnumeric(minimumLatitude)
+0080                 expr = sprintf(<span class="string">'%s &amp;&amp; (lat &gt;= %f)'</span>,expr, minimumLatitude);
+0081             <span class="keyword">end</span>
+0082             <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(maximumLatitude) &amp; isnumeric(maximumLatitude)
+0083                 expr = sprintf(<span class="string">'%s &amp;&amp; (lat &lt;= %f)'</span>,expr, maximumLatitude);
+0084             <span class="keyword">end</span>            
+0085             <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(minimumLongitude) &amp; isnumeric(minimumLongitude)
+0086                 expr = sprintf(<span class="string">'%s &amp;&amp; (lon &gt;= %f)'</span>,expr, minimumLongitude);
+0087             <span class="keyword">end</span>
+0088             <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(maximumLongitude) &amp; isnumeric(maximumLongitude)
+0089                 expr = sprintf(<span class="string">'%s &amp;&amp; (lon &lt;= %f)'</span>,expr, maximumLongitude);
+0090             <span class="keyword">end</span>            
+0091             <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(minimumDepth) &amp; isnumeric(minimumDepth)
+0092                 expr = sprintf(<span class="string">'%s &amp;&amp; (depth &gt;= %f)'</span>, expr,minimumDepth); 
+0093             <span class="keyword">end</span>
+0094             <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(maximumDepth) &amp; isnumeric(maximumDepth)
+0095                 expr = sprintf(<span class="string">'%s &amp;&amp; (depth &lt;= %f)'</span>, expr,maximumDepth); 
+0096             <span class="keyword">end</span>
+0097             <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(maximumRadius) &amp; isnumeric(maximumRadius)
+0098                 expr = sprintf(<span class="string">'%s &amp;&amp; (distance(lat, lon, %f, %f) &lt;= %f)'</span>, <span class="keyword">...</span>
+0099                     expr, centerLatitude, centerLongitude, maximumRadius); 
+0100             <span class="keyword">end</span>            
+0101             subset_expression = expr(4:end);
+0102             clear expr
+0103         <span class="keyword">end</span>
+0104     <span class="keyword">end</span>
+0105 
+0106     <span class="comment">% BUILD DBNAMELIST</span>
+0107     dbpathlist = {};
+0108     
+0109     <span class="comment">% Loop over databases split into day, month or year volumes</span>
+0110     <span class="keyword">if</span> <a href="#_sub1" class="code" title="subfunction found = strfindbool(haystack, needle)">strfindbool</a>(dbpath, <span class="string">'%DD'</span>) ||  <a href="#_sub1" class="code" title="subfunction found = strfindbool(haystack, needle)">strfindbool</a>(dbpath, <span class="string">'%MM'</span>) || <a href="#_sub1" class="code" title="subfunction found = strfindbool(haystack, needle)">strfindbool</a>(dbpath, <span class="string">'%YYYY'</span>) <span class="comment">% strfind returns [] if false</span>
+0111         <span class="keyword">if</span> snum &lt; enum
+0112             <span class="keyword">for</span> dnum=floor(snum):floor(enum-1/1440)
+0113                 dv = datevec(dnum);
+0114                 thisdb = dbpath;
+0115                 thisdb = regexprep(thisdb, <span class="string">'%YYYY'</span>, sprintf(<span class="string">'%04d'</span>,dv(1)) );
+0116                 thisdb = regexprep(thisdb, <span class="string">'%MM'</span>, sprintf(<span class="string">'%02d'</span>,dv(2)) );
+0117                 thisdb = regexprep(thisdb, <span class="string">'%DD'</span>, sprintf(<span class="string">'%02d'</span>,dv(3)) );
+0118                 <span class="keyword">if</span> exist(sprintf(<span class="string">'%s.origin'</span>,thisdb),<span class="string">'file'</span>)
+0119                     dbpathlist{end+1} = thisdb; <span class="comment">% Add here</span>
+0120                 <span class="keyword">end</span>
+0121             <span class="keyword">end</span>
+0122             dbpathlist = <a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(dbpathlist);
+0123         <span class="keyword">else</span>
+0124             debug.print_debug(0,<span class="string">'when using %YYYY, %MM or %DD in dbpath, must also specify startTime and endTime'</span>)
+0125         <span class="keyword">end</span>
+0126     <span class="keyword">else</span>
+0127         dbpathlist = {dbpath};
+0128     <span class="keyword">end</span>
+0129 
+0130     <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(dbpathlist)
+0131         debug.print_debug(0, <span class="string">'no database found'</span>);
+0132     <span class="keyword">end</span>
+0133     
+0134     <span class="comment">% Initialize to empty</span>
+0135     [lat, lon, depth, time, evid, orid, nass, mag, ml, mb, ms] = deal([]);
+0136     [etype, auth, magtype] = deal({});
+0137 
+0138     <span class="comment">% Loop over databases</span>
+0139     <span class="keyword">for</span> dbpathitem = dbpathlist
+0140         <span class="comment">% Load vectors</span>
+0141         origins = antelope.dbgetorigins(dbpath, subset_expression);
+0142         <span class="keyword">if</span> length(origins.lon) == length(origins.mag)
+0143             <span class="comment">% Concatentate vectors</span>
+0144             time  = <a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1, time,  origins.time);           
+0145             lon   = <a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1, lon,   origins.lon);
+0146             lat   = <a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1, lat,   origins.lat);
+0147             depth = <a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1, depth, origins.depth);
+0148             evid  = <a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1, evid,  origins.evid);
+0149             orid  = <a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1, orid,  origins.orid);
+0150             nass  = <a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1, nass,  origins.nass);
+0151             mag   = <a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1, mag,   origins.mag);
+0152             mb   = <a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1, mb,   origins.mb);
+0153             ml   = <a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1, ml,   origins.ml);
+0154             ms   = <a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1, ms,   origins.ms);
+0155             etype  = <a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1, etype, origins.etype);
+0156             auth = <a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1,  auth, origins.auth);
+0157             magtype = <a href="../../../../GISMO/core/@correlation/cat.html" class="code" title="function c = cat(varargin)">cat</a>(1, magtype, origins.magtype);
+0158         <span class="keyword">end</span>
+0159     <span class="keyword">end</span>
+0160     mag(mag&lt;-3.0)=NaN; <span class="comment">% I think Antelope uses a dummy value like -9.9</span>
+0161     <span class="comment">%self = Catalog(epoch2datenum(time), lon, lat, depth, mag, magtype, etype);</span>
+0162     self = <a href="../../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>(time, lon, lat, depth, mag, magtype, etype);
+0163     
+0164     debug.printfunctionstack(<span class="string">'&lt;'</span>)
+0165 <span class="keyword">end</span>
+0166 
+0167 
+0168 <a name="_sub1" href="#_subfunctions" class="code">function found = strfindbool(haystack, needle)</a>
+0169     found = strfind(haystack, needle);
+0170     <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(found)
+0171         found = false;
+0172     <span class="keyword">end</span>
+0173 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of colormap</title>
+  <meta name="keywords" content="colormap">
+  <meta name="description" content="colormap   apply a colormap to the cross-correlation">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; colormap.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>colormap
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>colormap   apply a colormap to the cross-correlation</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = colormap(c,mapname) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">colormap   apply a colormap to the cross-correlation
+ C = COLORMAP(C)
+ Apply the standard correlation toolbox colormap for cross-correlation
+ values. This is the same colormap used in PLOT(C,'CORR').
+
+ C = COLORMAP(C,'CORR')
+ Same as above but specifies the specific correlation colorscale on [0 1].
+
+ C = COLORMAP(C,'LTCORR')
+ A lightened version of the correlation colorscale.
+
+ C = COLORMAP(C,'LAG')
+ Specifies the lag plot colorscale.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>	C = COLORMAP(C)</li><li><a href="../../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>	Purpose:</li><li><a href="colormap.html" class="code" title="function c = colormap(c,mapname)">colormap</a>	colormap   apply a colormap to the cross-correlation</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/applications/+iceweb/spectrogram_iceweb.html" class="code" title="function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)">spectrogram_iceweb</a>	SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of</li><li><a href="../../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/tt_curve.html" class="code" title="function traveltime(dbName,varargin)">tt_curve</a>	TRAVELTIME make travel time plots.</li><li><a href="../../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>	C = COLORMAP(C)</li><li><a href="../../../../GISMO/core/@correlation/private/corrplot.html" class="code" title="function corrplot(c)">corrplot</a>	Called internally by correlation/plot to plot correlation matrix.</li><li><a href="../../../../GISMO/core/@correlation/private/lagplot.html" class="code" title="function lagplot(c);">lagplot</a>	Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</li><li><a href="../../../../GISMO/core/@correlation/private/shadedplot.html" class="code" title="function shadedplot(c,scale,ord)">shadedplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@spectralobject/colorbar_axis.html" class="code" title="function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)">colorbar_axis</a>	COLORBAR - Display color bar (color scale).</li><li><a href="../../../../GISMO/core/@spectralobject/specgram.html" class="code" title="function h = specgram(s, ws, varargin)">specgram</a>	SPECGRAM - plots spectrogram of waveforms</li><li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="colormap.html" class="code" title="function c = colormap(c,mapname)">colormap</a>	colormap   apply a colormap to the cross-correlation</li><li><a href="corrplot.html" class="code" title="function corrplot(c)">corrplot</a>	corrplot   plot the correlation matrix</li><li><a href="lagplot.html" class="code" title="function lagplot(c)">lagplot</a>	lagplot</li><li><a href="shadedplot.html" class="code" title="function shadedplot(c,scale,ord)">shadedplot</a>	Private method. See ../plot for details.</li><li><a href="wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/dev/@TraceSpectra/TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li><li><a href="../../../../GISMO/core/dev/@TraceSpectra/specgram.html" class="code" title="function h = specgram(s, T, varargin)">specgram</a>	specgram - plots spectrogram of traces</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = colormap(c,mapname)</a>
+0002    <span class="comment">%colormap   apply a colormap to the cross-correlation</span>
+0003    <span class="comment">% C = COLORMAP(C)</span>
+0004    <span class="comment">% Apply the standard correlation toolbox colormap for cross-correlation</span>
+0005    <span class="comment">% values. This is the same colormap used in PLOT(C,'CORR').</span>
+0006    <span class="comment">%</span>
+0007    <span class="comment">% C = COLORMAP(C,'CORR')</span>
+0008    <span class="comment">% Same as above but specifies the specific correlation colorscale on [0 1].</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">% C = COLORMAP(C,'LTCORR')</span>
+0011    <span class="comment">% A lightened version of the correlation colorscale.</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">% C = COLORMAP(C,'LAG')</span>
+0014    <span class="comment">% Specifies the lag plot colorscale.</span>
+0015    
+0016    <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0017    <span class="comment">% $Date$</span>
+0018    <span class="comment">% $Revision$</span>
+0019    
+0020    
+0021    <span class="comment">% READ &amp; CHECK ARGUMENTS</span>
+0022    narginchk(1,2)
+0023    
+0024    <span class="keyword">if</span> ~exist(<span class="string">'mapname'</span>,<span class="string">'var'</span>)
+0025       mapname = <span class="string">'CORR'</span>;
+0026    <span class="keyword">end</span>
+0027    
+0028    <span class="keyword">switch</span> upper(mapname)
+0029       <span class="keyword">case</span> {<span class="string">'CORR'</span>, <span class="string">'COR'</span>}
+0030          cmap = <a href="../../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>(<span class="string">'colormap_corr.txt'</span>);
+0031          <a href="colormap.html" class="code" title="function c = colormap(c,mapname)">colormap</a>(cmap);
+0032          caxis([0 1]);
+0033       <span class="keyword">case</span> <span class="string">'LAG'</span>
+0034          cmap = <a href="../../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>(<span class="string">'colormap_lag.txt'</span>);
+0035          <a href="colormap.html" class="code" title="function c = colormap(c,mapname)">colormap</a>(cmap);
+0036       <span class="keyword">case</span> {<span class="string">'LTCORR'</span>, <span class="string">'LTC'</span>}
+0037          cmap = <a href="../../../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>(<span class="string">'colormap_corr.txt'</span>);
+0038          cmap = ( cmap + ones(size(cmap)) ) /2;
+0039          <a href="colormap.html" class="code" title="function c = colormap(c,mapname)">colormap</a>(cmap);
+0040          caxis([0 1]);
+0041       <span class="keyword">otherwise</span>
+0042          error(<span class="string">'Color scale not recognized'</span>);
+0043    <span class="keyword">end</span>
+0044 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

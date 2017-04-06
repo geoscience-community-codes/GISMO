@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of norm</title>
+  <meta name="keywords" content="norm">
+  <meta name="description" content="C = NORM(C)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; norm.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>norm
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>C = NORM(C)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = norm(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> C = NORM(C)
+ This function normalizes the amplitudes of all traces.
+
+ C = NORM(C,'max')
+ Normalize to the maximum absolute value of each trace.
+ This is the default.
+
+ C = NORM(C,'std')
+ Normalize to one half of the standard deviation of the absolute value of
+ each trace.
+
+ C = NORM(C,METHOD,PRETRIG,POSTTRIG) Normalize traces based on the segment
+ of data specified by PRETRIG and POSTTRIG. This is useful for scaling an
+ entire trace based on the amplitude of a particular arrival. METHOD may
+ be either 'max' or 'std'.
+
+ C = NORM(C,SCALE)
+ Multiply each trace by SCALE factor, where SCALE is a scalar number.
+
+ C = NORM(C,...,INDEX) Apply normalization/scaling only to the traces in
+ INDEX. INDEX must appear as the third argument to NORM.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/crop.html" class="code" title="function c = crop(c,varargin)">crop</a>	c = CROP(c,[PRETRIG POSTTRIG])</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>	STD Standard deviation of a waveform</li><li><a href="crop.html" class="code" title="function c = crop(c, pretrig, posttrig)">crop</a>	crop   crop all waveforms to a time window</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../../GISMO/core/@correlation/private/occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/overlayplot.html" class="code" title="function overlayplot(c,scale,ord)">overlayplot</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../../GISMO/core/@correlation/private/wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>	Private method. See ../plot for details.</li><li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="occurrenceplot.html" class="code" title="function occurrenceplot(c,scale,clusternum)">occurrenceplot</a>	Private method. See ../plot for details.</li><li><a href="overlayplot.html" class="code" title="function overlayplot(c,scale,ord)">overlayplot</a>	Private method. See ../plot for details.</li><li><a href="wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="wiggleplot.html" class="code" title="function wiggleplot(c,scale,ord,norm)">wiggleplot</a>	Private method. See ../plot for details.</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function m = normalizationMethod(val)</a></li><li><a href="#_sub2" class="code">function c = cropIfRequested(c, vals)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = norm(c,varargin)</a>
+0002    
+0003    <span class="comment">% C = NORM(C)</span>
+0004    <span class="comment">% This function normalizes the amplitudes of all traces.</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">% C = NORM(C,'max')</span>
+0007    <span class="comment">% Normalize to the maximum absolute value of each trace.</span>
+0008    <span class="comment">% This is the default.</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">% C = NORM(C,'std')</span>
+0011    <span class="comment">% Normalize to one half of the standard deviation of the absolute value of</span>
+0012    <span class="comment">% each trace.</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">% C = NORM(C,METHOD,PRETRIG,POSTTRIG) Normalize traces based on the segment</span>
+0015    <span class="comment">% of data specified by PRETRIG and POSTTRIG. This is useful for scaling an</span>
+0016    <span class="comment">% entire trace based on the amplitude of a particular arrival. METHOD may</span>
+0017    <span class="comment">% be either 'max' or 'std'.</span>
+0018    <span class="comment">%</span>
+0019    <span class="comment">% C = NORM(C,SCALE)</span>
+0020    <span class="comment">% Multiply each trace by SCALE factor, where SCALE is a scalar number.</span>
+0021    <span class="comment">%</span>
+0022    <span class="comment">% C = NORM(C,...,INDEX) Apply normalization/scaling only to the traces in</span>
+0023    <span class="comment">% INDEX. INDEX must appear as the third argument to NORM.</span>
+0024    <span class="comment">%</span>
+0025    
+0026    <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0027    <span class="comment">% $Date$</span>
+0028    <span class="comment">% $Revision$</span>
+0029    
+0030    
+0031    <span class="comment">% READ &amp; CHECK ARGUMENTS</span>
+0032    
+0033    <span class="comment">% TODO: fine tune the way traces are reassigned.</span>
+0034    
+0035    <span class="comment">%SPECIFY THE NORMALIZATION METHOD</span>
+0036    method = <a href="#_sub1" class="code" title="subfunction m = normalizationMethod(val)">normalizationMethod</a>(varargin);
+0037    c = <a href="#_sub2" class="code" title="subfunction c = cropIfRequested(c, vals)">cropIfRequested</a>(c, varargin);
+0038    
+0039    <span class="comment">% determine the index</span>
+0040    <span class="keyword">if</span> numel(varargin) == 2 <span class="comment">% NORM(C, METHOD / SCALE, INDEX)</span>
+0041       index = varargin{2};
+0042    <span class="keyword">else</span>
+0043       index = 1:c.ntraces;
+0044    <span class="keyword">end</span>
+0045       
+0046    <span class="comment">% NORMALIZE EACH TRACE</span>
+0047    <span class="keyword">switch</span> upper(method(1:3))
+0048       <span class="keyword">case</span> <span class="string">'MAX'</span>
+0049          <span class="keyword">for</span> i = index
+0050             maxd = <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(c.traces(i)));
+0051             <span class="keyword">if</span> maxd ~= 0
+0052                c.traces(i) = c.traces(i) ./  maxd;
+0053             <span class="keyword">end</span>;
+0054          <span class="keyword">end</span>
+0055          
+0056       <span class="keyword">case</span> <span class="string">'SCA'</span> <span class="comment">% scaled</span>
+0057             c.traces(index) = c.traces(index) .* scale;
+0058          
+0059       <span class="keyword">case</span> {<span class="string">'RMS'</span>, <span class="string">'STD'</span>}
+0060          <span class="keyword">for</span> i = index
+0061             d2 = c.traces(i).data;
+0062             stdd = 0.5 * <a href="../../../../GISMO/core/@waveform/std.html" class="code" title="function Y = std(w,flag)">std</a>(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(d2));
+0063             <span class="keyword">if</span> stdd ~= 0
+0064                c.traces(i) = c.traces(i) ./ stdd;
+0065             <span class="keyword">end</span>;
+0066          <span class="keyword">end</span>
+0067    <span class="keyword">end</span>
+0068 <span class="keyword">end</span>
+0069 
+0070 <a name="_sub1" href="#_subfunctions" class="code">function m = normalizationMethod(val)</a>
+0071    <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(val)
+0072       m = <span class="string">'max'</span>;
+0073    <span class="keyword">elseif</span> isnumeric(val{1})
+0074       m = <span class="string">'sca'</span>;
+0075    <span class="keyword">elseif</span> ischar(val{1})
+0076       m = val{1};
+0077    <span class="keyword">else</span>
+0078       error(<span class="string">'unknown normalization method'</span>);
+0079    <span class="keyword">end</span>
+0080 <span class="keyword">end</span>
+0081 
+0082 <a name="_sub2" href="#_subfunctions" class="code">function c = cropIfRequested(c, vals)</a>
+0083    <span class="keyword">if</span> numel(vals) == 3
+0084       c = <a href="crop.html" class="code" title="function c = crop(c, pretrig, posttrig)">crop</a>(c,vals{2:3});
+0085    <span class="keyword">end</span>
+0086 <span class="keyword">end</span>
+0087</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

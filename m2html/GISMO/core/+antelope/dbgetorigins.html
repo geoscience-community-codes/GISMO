@@ -1,0 +1,250 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of dbgetorigins</title>
+  <meta name="keywords" content="dbgetorigins">
+  <meta name="description" content="DBGETORIGINS Load preferred origins from an Antelope CSS3.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">+antelope</a> &gt; dbgetorigins.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+antelope&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>dbgetorigins
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>DBGETORIGINS Load preferred origins from an Antelope CSS3.0</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function origins = dbgetorigins(dbpath, subset_expression) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">DBGETORIGINS Load preferred origins from an Antelope CSS3.0
+database
+ origins = DBGETORIGINS(dbpath) opens the origin table belonging to
+ the database specified by dbpath. The origin table will be joined to
+ the event and netmag tables too, if these are present. Only preferred
+ origins are loaded. The output is a structure containing the fields:
+   * lon
+   * lat
+   * depth
+   * time (date/time converted from epoch to MATLAB datenum)
+   * evid
+   * orid
+   * nass
+   * mag
+   * mb
+   * ml
+   * ms
+   * etype
+   * auth
+   * magtype
+
+ All these fields are vectors of numbers, apart from the last 3 which
+ are cell arrays of strings.
+
+ origins = DBGETORIGINS(dbpath, subset_expression) evaluates the
+ subset specified before reading the origins. subset_expression must
+ be a valid expression accepted by dbe/dbeval.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>	TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function origins = dbgetorigins(dbpath, subset_expression)</a>
+0002     <span class="comment">%DBGETORIGINS Load preferred origins from an Antelope CSS3.0</span>
+0003     <span class="comment">%database</span>
+0004     <span class="comment">% origins = DBGETORIGINS(dbpath) opens the origin table belonging to</span>
+0005     <span class="comment">% the database specified by dbpath. The origin table will be joined to</span>
+0006     <span class="comment">% the event and netmag tables too, if these are present. Only preferred</span>
+0007     <span class="comment">% origins are loaded. The output is a structure containing the fields:</span>
+0008     <span class="comment">%   * lon</span>
+0009     <span class="comment">%   * lat</span>
+0010     <span class="comment">%   * depth</span>
+0011     <span class="comment">%   * time (date/time converted from epoch to MATLAB datenum)</span>
+0012     <span class="comment">%   * evid</span>
+0013     <span class="comment">%   * orid</span>
+0014     <span class="comment">%   * nass</span>
+0015     <span class="comment">%   * mag</span>
+0016     <span class="comment">%   * mb</span>
+0017     <span class="comment">%   * ml</span>
+0018     <span class="comment">%   * ms</span>
+0019     <span class="comment">%   * etype</span>
+0020     <span class="comment">%   * auth</span>
+0021     <span class="comment">%   * magtype</span>
+0022     <span class="comment">%</span>
+0023     <span class="comment">% All these fields are vectors of numbers, apart from the last 3 which</span>
+0024     <span class="comment">% are cell arrays of strings.</span>
+0025     <span class="comment">%</span>
+0026     <span class="comment">% origins = DBGETORIGINS(dbpath, subset_expression) evaluates the</span>
+0027     <span class="comment">% subset specified before reading the origins. subset_expression must</span>
+0028     <span class="comment">% be a valid expression accepted by dbe/dbeval.</span>
+0029     
+0030     debug.printfunctionstack(<span class="string">'&gt;'</span>)
+0031     
+0032 
+0033     <span class="comment">% initialize</span>
+0034     numorigins = 0;
+0035     origins = struct();
+0036     [lat, lon, depth, time, evid, orid, nass, mag, ml, mb, ms] = deal([]);
+0037     [etype, auth, magtype] = deal({});
+0038     
+0039     <span class="comment">% process command line arguments</span>
+0040     <span class="keyword">if</span> ~exist(<span class="string">'dbpath'</span>,<span class="string">'var'</span>)
+0041         warning(<span class="string">'No dbpath given'</span>)
+0042         <span class="keyword">return</span>
+0043     <span class="keyword">end</span>
+0044     <span class="keyword">if</span> ~exist(<span class="string">'subset_expression'</span>,<span class="string">'var'</span>)
+0045         subset_expression = <span class="string">''</span>;
+0046         <span class="keyword">return</span>
+0047     <span class="keyword">end</span> 
+0048     
+0049     <span class="comment">% ensure dbpath is a string, not a cell</span>
+0050     <span class="keyword">if</span> iscell(dbpath)
+0051         dbpath = dbpath{1};
+0052     <span class="keyword">end</span>
+0053     
+0054     debug.print_debug(0, sprintf(<span class="string">'Loading data from %s'</span>,dbpath));
+0055     ORIGIN_TABLE_PRESENT = antelope.dbtable_present(dbpath, <span class="string">'origin'</span>);
+0056     <span class="keyword">if</span> (ORIGIN_TABLE_PRESENT)
+0057         db = dblookup_table(dbopen(dbpath, <span class="string">'r'</span>), <span class="string">'origin'</span>);
+0058         numorigins = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0059         debug.print_debug(1,sprintf(<span class="string">'Got %d records from %s.origin'</span>,numorigins,dbpath));
+0060         <span class="keyword">if</span> numorigins &gt; 0
+0061             EVENT_TABLE_PRESENT = antelope.dbtable_present(dbpath, <span class="string">'event'</span>); 
+0062             NETMAG_TABLE_PRESENT = antelope.dbtable_present(dbpath, <span class="string">'netmag'</span>);  
+0063             <span class="keyword">if</span> (EVENT_TABLE_PRESENT)
+0064                 db = dbjoin(db, dblookup_table(db, <span class="string">'event'</span>) );
+0065                 numorigins = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0066                 debug.print_debug(1,sprintf(<span class="string">'Got %d records after joining event with %s.origin'</span>,numorigins,dbpath));
+0067                 <span class="keyword">if</span> numorigins &gt; 0
+0068                     db = dbsubset(db, <span class="string">'orid == prefor'</span>);
+0069                     numorigins = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0070                     debug.print_debug(1,sprintf(<span class="string">'Got %d records after subsetting with orid==prefor'</span>,numorigins));
+0071                     <span class="keyword">if</span> numorigins &gt; 0
+0072                         db = dbsort(db, <span class="string">'time'</span>);
+0073                     <span class="keyword">else</span>
+0074                         <span class="comment">% got no origins after subsetting for prefors - already reported</span>
+0075                         debug.print_debug(1,sprintf(<span class="string">'%d records after subsetting with orid==prefor'</span>,numorigins));
+0076                         <span class="keyword">return</span>
+0077                     <span class="keyword">end</span>
+0078                 <span class="keyword">else</span>
+0079                     <span class="comment">% got no origins after joining event to origin table - already reported</span>
+0080                     debug.print_debug(1,sprintf(<span class="string">'%d records after joining event table with origin table'</span>,numorigins));
+0081                     <span class="keyword">return</span>
+0082                 <span class="keyword">end</span>
+0083             <span class="keyword">else</span>
+0084                 debug.print_debug(0,<span class="string">'No event table found, so will use all origins from origin table, not just prefors'</span>);
+0085             <span class="keyword">end</span>
+0086         <span class="keyword">else</span>
+0087             <span class="comment">% got no origins after opening origin table - already reported</span>
+0088             debug.print_debug(0,sprintf(<span class="string">'origin table has %d records'</span>,numorigins));
+0089             <span class="keyword">return</span>
+0090         <span class="keyword">end</span>
+0091     <span class="keyword">else</span>
+0092         debug.print_debug(0,<span class="string">'no origin table found'</span>);
+0093         <span class="keyword">return</span>
+0094     <span class="keyword">end</span>
+0095 
+0096     numorigins = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0097     debug.print_debug(2,sprintf(<span class="string">'Got %d prefors prior to subsetting'</span>,numorigins));
+0098 
+0099     <span class="comment">% Do the subsetting</span>
+0100     <span class="keyword">if</span> ~<a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(subset_expression)
+0101         db = dbsubset(db, subset_expression);
+0102         numorigins = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0103         debug.print_debug(2,sprintf(<span class="string">'Got %d prefors after subsetting'</span>,numorigins));
+0104     <span class="keyword">end</span>
+0105 
+0106     <span class="keyword">if</span> numorigins&gt;0
+0107         <span class="keyword">if</span> EVENT_TABLE_PRESENT
+0108             [lat, lon, depth, time, evid, orid, nass, ml, mb, ms, auth] = dbgetv(db,<span class="string">'lat'</span>, <span class="string">'lon'</span>, <span class="string">'depth'</span>, <span class="string">'time'</span>, <span class="string">'evid'</span>, <span class="string">'orid'</span>, <span class="string">'nass'</span>, <span class="string">'ml'</span>, <span class="string">'mb'</span>, <span class="string">'ms'</span>, <span class="string">'auth'</span>);
+0109         <span class="keyword">else</span>
+0110             [lat, lon, depth, time, orid, nass, ml, mb, ms, auth] = dbgetv(db,<span class="string">'lat'</span>, <span class="string">'lon'</span>, <span class="string">'depth'</span>, <span class="string">'time'</span>, <span class="string">'orid'</span>, <span class="string">'nass'</span>, <span class="string">'ml'</span>, <span class="string">'mb'</span>, <span class="string">'ms'</span>, <span class="string">'auth'</span>);  
+0111             <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'Setting evid == orid'</span>);
+0112             evid = orid;
+0113         <span class="keyword">end</span>
+0114         etype = dbgetv(db,<span class="string">'etype'</span>);
+0115 
+0116         <span class="comment">% convert etypes?</span>
+0117         <span class="comment">% AVO Classification Codes</span>
+0118         <span class="comment">% 'a' = Volcano-Tectonic (VT)</span>
+0119         <span class="comment">% 'b' = Low-Frequency (LF)</span>
+0120         <span class="comment">% 'h' = Hybrid</span>
+0121         <span class="comment">% 'E' = Regional-Tectonic</span>
+0122         <span class="comment">% 'T' = Teleseismic</span>
+0123         <span class="comment">% 'i' = Shore-Ice</span>
+0124         <span class="comment">% 'C' = Calibrations</span>
+0125         <span class="comment">% 'o' = Other non-seismic</span>
+0126         <span class="comment">% 'x' = Cause unknown</span>
+0127         <span class="comment">% But AVO catalog also contains A, B, G, L, O, R, X</span>
+0128         <span class="comment">% Assuming A, B, O and X are same as a, b, o and x, that still</span>
+0129         <span class="comment">% leaves G, L and R</span>
+0130 
+0131         <span class="comment">% get largest mag &amp; magtype for this mag</span>
+0132         [mag,magind] = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>([ml mb ms], [], 2);
+0133         magtypes = {<span class="string">'ml'</span>;<span class="string">'mb'</span>;<span class="string">'ms'</span>};
+0134         magtype = magtypes(magind);
+0135         
+0136         <span class="keyword">if</span> NETMAG_TABLE_PRESENT
+0137             <span class="comment">% loop over each origin and find largest mag for each orid in</span>
+0138             <span class="comment">% netmag</span>
+0139             dbn = dblookup_table(dbopen(dbpath, <span class="string">'r'</span>), <span class="string">'netmag'</span>);
+0140             numrecs = dbquery(dbn,<span class="string">'dbRECORD_COUNT'</span>);
+0141             <span class="keyword">if</span> numrecs &gt; 0
+0142                 [nevid, norid, nmagtype, nmag] = dbgetv(dbn, <span class="string">'evid'</span>, <span class="string">'orid'</span>, <span class="string">'magtype'</span>, <span class="string">'magnitude'</span>);
+0143             <span class="keyword">end</span>
+0144             <span class="keyword">for</span> oi = 1:numel(orid)
+0145                 oin = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(norid == orid(oi));
+0146                 [mmax, indmax] = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(nmag(oin));
+0147                 <span class="keyword">if</span> mmax &gt; mag(oi)
+0148                     mag(oi) = mmax;
+0149                     magtype{oi} = nmagtype(oin(indmax));
+0150                 <span class="keyword">end</span>
+0151             <span class="keyword">end</span>
+0152         <span class="keyword">end</span>
+0153             
+0154         <span class="comment">% convert time from epoch to Matlab datenumber</span>
+0155         time = <a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(time);
+0156     <span class="keyword">end</span>
+0157 
+0158     <span class="comment">% close database</span>
+0159     dbclose(db);
+0160 
+0161     origins.lat = lat;
+0162     origins.lon = lon;
+0163     origins.depth = depth;
+0164     origins.time = time;
+0165     origins.evid = evid;
+0166     origins.orid = orid;
+0167     origins.nass = nass;
+0168     origins.ml = ml;
+0169     origins.mb = mb;
+0170     origins.ms = ms;
+0171     origins.auth = auth;
+0172     origins.mag = mag;
+0173     origins.magtype = magtype;
+0174     origins.etype = etype;
+0175 
+0176     debug.printfunctionstack(<span class="string">'&lt;'</span>)
+0177 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

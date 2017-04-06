@@ -1,0 +1,408 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of specgram</title>
+  <meta name="keywords" content="specgram">
+  <meta name="description" content="specgram - plots spectrogram of traces">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@TraceSpectra</a> &gt; specgram.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@TraceSpectra&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>specgram
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>specgram - plots spectrogram of traces</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function h = specgram(s, T, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">specgram - plots spectrogram of traces
+  h = TraceSpectra.specgram(traces) Generates a spectrogram from the
+  trace(s), overwriting the current figure.  The return value is a
+  handle to the spectrogram, and is optional. The spectrograms will be
+  created in the same shape as the passed traces.  ie, if W is a 2x3
+  matrix of traces, then specgram(TraceSpectra,W) will generate a 2x3
+  plot of spectra.
+
+  Many additional behaviors can be modified through the passing of
+  additional parameters, as listed further below.  These parameters are
+  always passed in pairs, as such:
+
+  TraceSpectra.specgram(traces,'PARAM1',VALUE1,...,'PARAMn',VALUEn)
+    Any number of these parameters may be passed to specgram.
+
+  specgram(..., 'axis', AXIS_HANDLE)
+    Specify the axis AXIS_HANDLE within which the spectrogram will be
+    generated.  The boundary of the axis becomes the boundary for the
+    entire spectra plot.  For a matrix of traces, this area is
+    subdivided into NxM subplots, where N and M are the size of the
+    trace matrix.
+
+  specgram(..., 'xunit', XUNIT)
+    Spedifies the x-unit scale to be used with the spectrogram.  The
+    default unit is 'seconds'.
+    valid xunits:
+     'seconds','minutes','hours','days','doy' (day of year),and 'date'
+
+  specgram(..., 'colormap', ALTERNATEMAP)
+    Instead of using the default colormap, any colormap may be used.  An
+    alternate way of setting the global map is by using the SETMAP
+    function.  ALTERNATEMAP will either be a name (eg. grayscale) or an
+    Nx3 numeric. Type HELP GRAPH3D to see additional useful colormaps.
+
+
+  specgram(..., 'colorbar', COLORBAR_OPTION)
+    Generates a spectrogram from the trace and uses a specific map
+    valid COLORBAR_OPTION values: 'horiz' (default),'vert','none',
+      'HORIZ' places a single colorbar below all plots
+      'VERT' places a single colorbar to the right of all plots
+      'NONE' supresses the colorbar placement
+
+  specgram(..., 'yscale', YSCALE)
+    Choosing 'log' Allows the y-axis to be generated on a log-frequency
+    scale, with uneven vertical cell spacing.  The default value is
+    'normal', and provides the standard spectrogram view.
+    valid yscales: 'normal', 'log' (see NOTE below)
+
+    NOTE: In order to use the log scale, UIMAGESC needs to be available on
+    the matlab path.  This routine was created by Frederic Moisy, and may
+    be downloaded from the maltabcentral fileexchange (File ID: 11368).
+    If this routine is not found,then the original spectrogram will be
+    created.
+
+   h = specgram(..., 'fontsize', FONTSIZE)
+   Specify the font size for a spectrogram.  The default font size is 8.
+
+  specgram2(..., 'innerLabels', SHOWINNERLABELS)
+    Suppress the labling of the inside graphs by setting SHOWINNERLABELS
+    to false.  If this is false, then the frequency label only shows on
+    the leftmost spectrograms, and the X-unit label only shows on the
+    bottommost spectrograms.
+
+  The following plots a trace using an alternate mapping, an xunit of
+  'hours', and with the y-axis plotted using a log scale.
+  ex. specgram(TraceSpectra, trace,...
+      'colormap', alternateMap,'xunit','h','yscale','log')
+
+
+  Example:
+    % create an arbitrary subplot, and then plot multiple spectra
+    a = subplot(3,2,1);
+    specgram(TraceSpectra,waves,'axis',a); % waves is an NxM trace
+
+
+  See also SPECTRALOBJECT/SPECGRAM2, trace/PLOT, trace/FILLGAPS</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>	C = COLORMAP(C)</li><li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../../GISMO/core/@spectralobject/fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>	FFT Discrete Fourier transform.  OVERLOADED for waveform & Spectralobject</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../../GISMO/core/@spectralobject/specgram.html" class="code" title="function h = specgram(s, ws, varargin)">specgram</a>	SPECGRAM - plots spectrogram of waveforms</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="../../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/colormap.html" class="code" title="function c = colormap(c,mapname)">colormap</a>	colormap   apply a colormap to the cross-correlation</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="parseSpecgramInputs.html" class="code" title="function p = parseSpecgramInputs(me, cellOfArgs)">parseSpecgramInputs</a>	parseSpecgramInputs   handles inputs for specgram functions</li><li><a href="specgram.html" class="code" title="function h = specgram(s, T, varargin)">specgram</a>	specgram - plots spectrogram of traces</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/applications/uispecgram.html" class="code" title="function varargout = uispecgram(varargin)">uispecgram</a>	UISPECGRAM M-file for uispecgram.fig</li><li><a href="../../../../GISMO/core/@spectralobject/specgram.html" class="code" title="function h = specgram(s, ws, varargin)">specgram</a>	SPECGRAM - plots spectrogram of waveforms</li><li><a href="../../../../GISMO/core/@spectralobject/specgram2.html" class="code" title="function specgram2(s, ws, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li><li><a href="TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li><li><a href="specgram.html" class="code" title="function h = specgram(s, T, varargin)">specgram</a>	specgram - plots spectrogram of traces</li><li><a href="specgram2.html" class="code" title="function h = specgram2(s, T, varargin)">specgram2</a>	SPECGRAM2 - plots spectrograms of waveforms with waveform along top</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001       <a name="_sub0" href="#_subfunctions" class="code">function h = specgram(s, T, varargin)</a>
+0002          <span class="comment">%specgram - plots spectrogram of traces</span>
+0003          <span class="comment">%  h = TraceSpectra.specgram(traces) Generates a spectrogram from the</span>
+0004          <span class="comment">%  trace(s), overwriting the current figure.  The return value is a</span>
+0005          <span class="comment">%  handle to the spectrogram, and is optional. The spectrograms will be</span>
+0006          <span class="comment">%  created in the same shape as the passed traces.  ie, if W is a 2x3</span>
+0007          <span class="comment">%  matrix of traces, then specgram(TraceSpectra,W) will generate a 2x3</span>
+0008          <span class="comment">%  plot of spectra.</span>
+0009          <span class="comment">%</span>
+0010          <span class="comment">%  Many additional behaviors can be modified through the passing of</span>
+0011          <span class="comment">%  additional parameters, as listed further below.  These parameters are</span>
+0012          <span class="comment">%  always passed in pairs, as such:</span>
+0013          <span class="comment">%</span>
+0014          <span class="comment">%  TraceSpectra.specgram(traces,'PARAM1',VALUE1,...,'PARAMn',VALUEn)</span>
+0015          <span class="comment">%    Any number of these parameters may be passed to specgram.</span>
+0016          <span class="comment">%</span>
+0017          <span class="comment">%  specgram(..., 'axis', AXIS_HANDLE)</span>
+0018          <span class="comment">%    Specify the axis AXIS_HANDLE within which the spectrogram will be</span>
+0019          <span class="comment">%    generated.  The boundary of the axis becomes the boundary for the</span>
+0020          <span class="comment">%    entire spectra plot.  For a matrix of traces, this area is</span>
+0021          <span class="comment">%    subdivided into NxM subplots, where N and M are the size of the</span>
+0022          <span class="comment">%    trace matrix.</span>
+0023          <span class="comment">%</span>
+0024          <span class="comment">%  specgram(..., 'xunit', XUNIT)</span>
+0025          <span class="comment">%    Spedifies the x-unit scale to be used with the spectrogram.  The</span>
+0026          <span class="comment">%    default unit is 'seconds'.</span>
+0027          <span class="comment">%    valid xunits:</span>
+0028          <span class="comment">%     'seconds','minutes','hours','days','doy' (day of year),and 'date'</span>
+0029          <span class="comment">%</span>
+0030          <span class="comment">%  specgram(..., 'colormap', ALTERNATEMAP)</span>
+0031          <span class="comment">%    Instead of using the default colormap, any colormap may be used.  An</span>
+0032          <span class="comment">%    alternate way of setting the global map is by using the SETMAP</span>
+0033          <span class="comment">%    function.  ALTERNATEMAP will either be a name (eg. grayscale) or an</span>
+0034          <span class="comment">%    Nx3 numeric. Type HELP GRAPH3D to see additional useful colormaps.</span>
+0035          <span class="comment">%</span>
+0036          <span class="comment">%</span>
+0037          <span class="comment">%  specgram(..., 'colorbar', COLORBAR_OPTION)</span>
+0038          <span class="comment">%    Generates a spectrogram from the trace and uses a specific map</span>
+0039          <span class="comment">%    valid COLORBAR_OPTION values: 'horiz' (default),'vert','none',</span>
+0040          <span class="comment">%      'HORIZ' places a single colorbar below all plots</span>
+0041          <span class="comment">%      'VERT' places a single colorbar to the right of all plots</span>
+0042          <span class="comment">%      'NONE' supresses the colorbar placement</span>
+0043          <span class="comment">%</span>
+0044          <span class="comment">%  specgram(..., 'yscale', YSCALE)</span>
+0045          <span class="comment">%    Choosing 'log' Allows the y-axis to be generated on a log-frequency</span>
+0046          <span class="comment">%    scale, with uneven vertical cell spacing.  The default value is</span>
+0047          <span class="comment">%    'normal', and provides the standard spectrogram view.</span>
+0048          <span class="comment">%    valid yscales: 'normal', 'log' (see NOTE below)</span>
+0049          <span class="comment">%</span>
+0050          <span class="comment">%    NOTE: In order to use the log scale, UIMAGESC needs to be available on</span>
+0051          <span class="comment">%    the matlab path.  This routine was created by Frederic Moisy, and may</span>
+0052          <span class="comment">%    be downloaded from the maltabcentral fileexchange (File ID: 11368).</span>
+0053          <span class="comment">%    If this routine is not found,then the original spectrogram will be</span>
+0054          <span class="comment">%    created.</span>
+0055          <span class="comment">%</span>
+0056          <span class="comment">%   h = specgram(..., 'fontsize', FONTSIZE)</span>
+0057          <span class="comment">%   Specify the font size for a spectrogram.  The default font size is 8.</span>
+0058          <span class="comment">%</span>
+0059          <span class="comment">%  specgram2(..., 'innerLabels', SHOWINNERLABELS)</span>
+0060          <span class="comment">%    Suppress the labling of the inside graphs by setting SHOWINNERLABELS</span>
+0061          <span class="comment">%    to false.  If this is false, then the frequency label only shows on</span>
+0062          <span class="comment">%    the leftmost spectrograms, and the X-unit label only shows on the</span>
+0063          <span class="comment">%    bottommost spectrograms.</span>
+0064          <span class="comment">%</span>
+0065          <span class="comment">%  The following plots a trace using an alternate mapping, an xunit of</span>
+0066          <span class="comment">%  'hours', and with the y-axis plotted using a log scale.</span>
+0067          <span class="comment">%  ex. specgram(TraceSpectra, trace,...</span>
+0068          <span class="comment">%      'colormap', alternateMap,'xunit','h','yscale','log')</span>
+0069          <span class="comment">%</span>
+0070          <span class="comment">%</span>
+0071          <span class="comment">%  Example:</span>
+0072          <span class="comment">%    % create an arbitrary subplot, and then plot multiple spectra</span>
+0073          <span class="comment">%    a = subplot(3,2,1);</span>
+0074          <span class="comment">%    specgram(TraceSpectra,waves,'axis',a); % waves is an NxM trace</span>
+0075          <span class="comment">%</span>
+0076          <span class="comment">%</span>
+0077          <span class="comment">%  See also SPECTRALOBJECT/SPECGRAM2, trace/PLOT, trace/FILLGAPS</span>
+0078 
+0079          
+0080          <span class="comment">% Thanks to Jason Amundson for providing the way to do log scales</span>
+0081                   
+0082          
+0083          <span class="comment">% currFontSize = 8; % replaced in the parser</span>
+0084          <span class="comment">%enforce input arguments.</span>
+0085          <span class="keyword">if</span> ~isa(T,<span class="string">'TraceData'</span>)
+0086             <span class="keyword">try</span>
+0087                T = <a href="../../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>(T);
+0088             <span class="keyword">catch</span> er
+0089                error(<span class="string">'Second input argument should be a TraceData, not a %s'</span>,class(T));
+0090             <span class="keyword">end</span>
+0091          <span class="keyword">end</span>
+0092          p = <a href="parseSpecgramInputs.html" class="code" title="function p = parseSpecgramInputs(me, cellOfArgs)">parseSpecgramInputs</a>(s, varargin);
+0093 
+0094          <span class="comment">%% search for relevent property pairs passed as parameters</span>
+0095          myaxis = p.Results.axis; <span class="comment">% area to be used</span>
+0096          <span class="comment">% position not used...</span>
+0097          alternateMap = p.Results.colormap; 
+0098          xChoice = p.Results.xunit; <span class="comment">%time units for plot</span>
+0099          currFontSize = p.Results.fontsize; <span class="comment">% used for all laels within plot</span>
+0100          colorbarpref = p.Results.colorbar; <span class="comment">%position of colorbar</span>
+0101          suppressLabels = p.Results.innerlabels; <span class="comment">%show only outside</span>
+0102          useXlabel = p.Results.useXlabel; <span class="comment">% no x labels</span>
+0103          useYlabel = p.Results.useYlabel; <span class="comment">% no y labels</span>
+0104 
+0105          logscale = strcmpi(p.Results.yscale,<span class="string">'log'</span>);
+0106 
+0107          
+0108          <span class="comment">%% figure out exactly WHERE to plot the spectrogram(s)</span>
+0109          <span class="comment">%find out area(axis) in which the spectrograms will be plotted</span>
+0110          clabel= <span class="string">'Relative Amplitude  (dB)'</span>;
+0111          
+0112          <span class="keyword">if</span> myaxis == 0,
+0113             clf;
+0114             myaxis = gca;
+0115             <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gca,<span class="string">'position'</span>);
+0116          <span class="keyword">else</span>
+0117             <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(myaxis,<span class="string">'position'</span>);
+0118          <span class="keyword">end</span>
+0119          
+0120          <span class="comment">%% If there are multiple traces...</span>
+0121          <span class="comment">% subdivide the axis and loop through specgram2 with individual traces.</span>
+0122                   
+0123          <span class="keyword">if</span> numel(T) &gt; 1
+0124             <span class="comment">%create the colorbar if desired</span>
+0125             TraceSpectra.createcolorbar(s, colorbarpref, clabel, currFontSize)
+0126             h = TraceSpectra.subdivide_axes(myaxis,size(T));
+0127             remainingproperties = TraceSpectra.buildParameterList(p.Unmatched);
+0128             <span class="keyword">for</span> n=1:numel(h)
+0129                keepYlabel =  ~suppressLabels || (n &lt;= size(h,1));
+0130                keepXlabel = ~suppressLabels || (mod(n,size(h,2))==0);
+0131                <a href="specgram.html" class="code" title="function h = specgram(s, T, varargin)">specgram</a>(s,T(n),<span class="keyword">...</span>
+0132                   <span class="string">'xunit'</span>,xChoice,<span class="keyword">...</span>
+0133                   <span class="string">'axis'</span>,h(n),<span class="keyword">...</span>
+0134                   <span class="string">'fontsize'</span>,currFontSize,<span class="keyword">...</span>
+0135                   <span class="string">'useXlabel'</span>,keepXlabel,<span class="keyword">...</span>
+0136                   <span class="string">'useYlabel'</span>,keepYlabel,<span class="keyword">...</span>
+0137                   <span class="string">'colorbar'</span>,<span class="string">'none'</span>,<span class="keyword">...</span>
+0138                   remainingproperties{:});
+0139             <span class="keyword">end</span>
+0140             <span class="keyword">return</span>
+0141          <span class="keyword">end</span>
+0142          
+0143          axes(myaxis);
+0144          
+0145          <span class="keyword">if</span> T.hasnan <span class="comment">% only 1 trace guaranteed at this point...</span>
+0146             warning(<span class="string">'TraceSpectra:specgram:nanValue'</span>,<span class="keyword">...</span>
+0147                [<span class="string">'This trace has at least one NaN value, which will blank'</span>,<span class="keyword">...</span>
+0148                <span class="string">'the related spectrogram segment. '</span>,<span class="keyword">...</span>
+0149                <span class="string">'Remove NaN values by either splitting up the '</span>,<span class="keyword">...</span>
+0150                <span class="string">'trace into non-NaN sections or by using TraceData/fillgaps'</span>,<span class="keyword">...</span>
+0151                <span class="string">' to replace the NaN values.'</span>]);
+0152          <span class="keyword">end</span>
+0153          
+0154          [xunit, xfactor] = TraceSpectra.parse_xunit(xChoice);
+0155          
+0156          <span class="keyword">switch</span> lower(xunit)
+0157             <span class="keyword">case</span> <span class="string">'date'</span>
+0158                <span class="comment">% we need the actual times...</span>
+0159                Xvalues = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(T,<span class="string">'timevector'</span>);
+0160                
+0161             <span class="keyword">case</span> <span class="string">'day of year'</span>
+0162                startvec = datevec(<a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(T,<span class="string">'start'</span>));
+0163                Xvalues = <a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(T,<span class="string">'timevector'</span>);
+0164                dec31 = datenum(startvec(1)-1,12,31); <span class="comment">% 12/31/xxxx of previous year in Matlab format</span>
+0165                Xvalues = Xvalues - dec31;
+0166                xunit = [xunit, <span class="string">' ('</span>, datestr(startvec,<span class="string">'yyyy'</span>),<span class="string">')'</span>];
+0167                
+0168             <span class="keyword">otherwise</span>,
+0169                dl= 1:T.nsamples(); <span class="comment">%dl : DataLength</span>
+0170                Xvalues = dl .* T.period ./ xfactor;
+0171          <span class="keyword">end</span>
+0172          
+0173          
+0174          <span class="comment">%%  once was function specgram(d, NYQ, nfft, noverlap, freqmax, dBlims)</span>
+0175          
+0176          nx = length(T.data);
+0177          window = hanning(s.nfft);
+0178          nwind = length(window);
+0179          <span class="keyword">if</span> nx &lt; nwind    <span class="comment">% zero-pad x if it has length less than the window length</span>
+0180             T.data(nwind) = 0;
+0181             nx = nwind;
+0182          <span class="keyword">end</span>
+0183          
+0184          ncol = fix( (nx - s.over) / (nwind - s.over) );
+0185          
+0186          <span class="comment">%added &quot;floor&quot; below</span>
+0187          colindex = 1 + floor(0:(ncol-1))*(nwind- s.over);
+0188          rowindex = (1:nwind)';
+0189          <span class="keyword">if</span> length(T.data)&lt;(nwind+colindex(ncol)-1)
+0190             T.data(nwind+colindex(ncol)-1) = 0;   <span class="comment">% zero-pad x</span>
+0191          <span class="keyword">end</span>
+0192          
+0193          y = zeros(nwind,ncol);
+0194          
+0195          <span class="comment">% put x into columns of y with the proper offset</span>
+0196          <span class="comment">% should be able to do this with fancy indexing!</span>
+0197          A_ = colindex(  ones(nwind, 1) ,: )    ;
+0198          B_ = rowindex(:, ones(1, ncol)    )    ;
+0199          y(:) = T.data(fix(A_ + B_ -1));
+0200          clear A_ B_
+0201          
+0202          <span class="keyword">for</span> k = 1:ncol;         <span class="comment">%  remove the mean from each column of y</span>
+0203             y(:,k) = y(:,k)-<a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(y(:,k));
+0204          <span class="keyword">end</span>
+0205          
+0206          <span class="comment">% Apply the window to the array of offset signal segments.</span>
+0207          y = window(:,ones(1,ncol)).*y;
+0208          
+0209          <span class="comment">% USE FFT</span>
+0210          <span class="comment">% now fft y which does the columns</span>
+0211          y = <a href="../../../../GISMO/core/@spectralobject/fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>(y,s.nfft);
+0212          <span class="keyword">if</span> ~any(any(imag(T.data)))    <span class="comment">% x purely real</span>
+0213             <span class="keyword">if</span> rem(s.nfft,2),    <span class="comment">% nfft odd</span>
+0214                select = 1:(s.nfft+1)/2;
+0215             <span class="keyword">else</span>
+0216                select = 1:s.nfft/2+1;
+0217             <span class="keyword">end</span>
+0218             y = y(select,:);
+0219          <span class="keyword">else</span>
+0220             select = 1:s.nfft;
+0221          <span class="keyword">end</span>
+0222          f = (select - 1)' * T.samplerate / s.nfft;
+0223                   
+0224          NF = s.nfft/2 + 1;
+0225          nf1=round(f(1) / T.nyquist * NF);                     <span class="comment">%frequency window</span>
+0226          <span class="keyword">if</span> nf1==0, nf1=1; <span class="keyword">end</span>
+0227          nf2=NF;
+0228          
+0229          y = 20*log10(<a href="../../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(y(nf1:nf2,:)));
+0230          
+0231          F = f(f &lt;= s.freqmax);
+0232          
+0233          
+0234          <span class="keyword">if</span> F(1)==0,
+0235             F(1)=0.001;
+0236          <span class="keyword">end</span>
+0237          
+0238          <span class="keyword">if</span> logscale
+0239             t = linspace(Xvalues(1), Xvalues(end),ncol); <span class="comment">% Replaced by TCB - 01/18/2012</span>
+0240             <span class="keyword">try</span>
+0241                h = uimagesc(t, log10(F), y(nf1:length(F),:), s.dBlims);
+0242             <span class="keyword">catch</span> exception
+0243                <span class="keyword">if</span> strcmp(exception.identifier, <span class="string">'MATLAB:UndefinedFunction'</span>)
+0244                   warning(<span class="string">'Spectralobject:specgram:uimageNotInstalled'</span>,<span class="keyword">...</span>
+0245                      [<span class="string">'Cannot plot with log spacing because uimage, uimagesc '</span>,<span class="keyword">...</span>
+0246                      <span class="string">' not installed or not visible in matlab path.'</span>]);
+0247                   h = imagesc(Xvalues,F,y(nf1:length(F),:),s.dBlims);
+0248                   logscale = false;
+0249                <span class="keyword">else</span>
+0250                   rethrow(exception)
+0251                <span class="keyword">end</span>
+0252             <span class="keyword">end</span>
+0253          <span class="keyword">else</span>
+0254             h = imagesc(Xvalues, F, y(nf1:length(F),:), s.dBlims);
+0255          <span class="keyword">end</span>
+0256          <a href="../../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'fontsize'</span>, currFontSize);
+0257          <span class="keyword">if</span> strcmpi(xunit, <span class="string">'date'</span>)
+0258             datetick(<span class="string">'x'</span>, <span class="string">'keepticks'</span>);
+0259          <span class="keyword">end</span>
+0260          titlename = [T.station <span class="string">'-'</span> T.channel <span class="string">'  from:'</span> T.start];
+0261          title (titlename);
+0262          axis xy;
+0263          <a href="../../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>(alternateMap);
+0264          shading flat
+0265          axis tight;
+0266          <span class="keyword">if</span> useYlabel
+0267             <span class="keyword">if</span> ~logscale
+0268                ylabel (<span class="string">'Frequency (Hz)'</span>)
+0269             <span class="keyword">else</span>
+0270                ylabel (<span class="string">'Log Frequency (log Hz)'</span>)
+0271             <span class="keyword">end</span>
+0272             
+0273          <span class="keyword">end</span>
+0274          <span class="keyword">if</span> useXlabel
+0275             xlabel([<span class="string">'Time - '</span>,xunit]);
+0276          <span class="keyword">end</span>
+0277 
+0278          <span class="comment">%create the colorbar if desired</span>
+0279          TraceSpectra.createcolorbar(s,colorbarpref, clabel, currFontSize);
+0280          
+0281          <span class="comment">%% added a series of functions that help with argument parsing.</span>
+0282          <span class="comment">% These were ported from my trace/plot function.</span>
+0283          
+0284 
+0285       <span class="keyword">end</span> <span class="comment">%specgram</span>
+0286</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

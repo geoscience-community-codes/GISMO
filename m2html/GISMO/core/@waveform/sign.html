@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of sign</title>
+  <meta name="keywords" content="sign">
+  <meta name="description" content="SIGN Signum function for waveforms.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; sign.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>sign
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>SIGN Signum function for waveforms.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function w = sign(w) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">SIGN Signum function for waveforms.
+ WAVEFORM = SIGN(WAVEFORM)
+ see sign</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>	SIGN removes the mean of each trace.</li><li><a href="sign.html" class="code" title="function w = sign(w)">sign</a>	SIGN Signum function for waveforms.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/sign.html" class="code" title="function c = sign(c)">sign</a>	SIGN convert traces to the sign of their data (+1, 0, -1)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed/ReadMSEEDFast/ReadMSEEDFast.html" class="code" title="function [signalStruct] = ReadMSEEDFast(fileName)">ReadMSEEDFast</a>	ReadMSEEDFast( fileName )</li><li><a href="../../../GISMO/core/@correlation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../GISMO/core/@correlation/sign.html" class="code" title="function c = sign(c,varargin);">sign</a>	SIGN removes the mean of each trace.</li><li><a href="../../../GISMO/core/@spectralobject/colorbar_axis.html" class="code" title="function handle = colorbar_axis(s,loc,clabel,rlab1,rlab2, fontsize)">colorbar_axis</a>	COLORBAR - Display color bar (color scale).</li><li><a href="sign.html" class="code" title="function w = sign(w)">sign</a>	SIGN Signum function for waveforms.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/sign.html" class="code" title="function c = sign(c)">sign</a>	SIGN convert traces to the sign of their data (+1, 0, -1)</li><li><a href="../../../GISMO/core/dev/@TraceData/TraceData.html" class="code" title="">TraceData</a>	</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li><li><a href="../../../GISMO/deprecated/@helicorder/helicorder.html" class="code" title="function h = helicorder(varargin)">helicorder</a>	HELICORDER: Helicorder generates a multi-line display of input waveform</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../GISMO/tests/test_TraceData.html" class="code" title="">test_TraceData</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = sign(w)</a>
+0002    <span class="comment">%SIGN Signum function for waveforms.</span>
+0003    <span class="comment">% WAVEFORM = SIGN(WAVEFORM)</span>
+0004    <span class="comment">% see sign</span>
+0005    
+0006    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0007    <span class="comment">% $Date$</span>
+0008    <span class="comment">% $Revision$</span>
+0009    
+0010    <span class="keyword">for</span> n=1:numel(w)
+0011       <span class="comment">% w(n) = set(w(n),'data',sign(double(get(w(n),'data'))));</span>
+0012       w(n).data = <a href="sign.html" class="code" title="function w = sign(w)">sign</a>(w(n).data);
+0013    <span class="keyword">end</span>
+0014 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

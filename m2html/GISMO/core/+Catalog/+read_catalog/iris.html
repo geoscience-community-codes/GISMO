@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of iris</title>
+  <meta name="keywords" content="iris">
+  <meta name="description" content="READ_CATALOG.IRIS">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">+Catalog</a> &gt; <a href="index.html">+read_catalog</a> &gt; iris.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+Catalog/+read_catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>iris
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>READ_CATALOG.IRIS</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function self = iris(ev) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">READ_CATALOG.IRIS
+ convert an events structure from irisfetch into an Catalog object</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function self = iris(ev)</a>
+0002     <span class="comment">%READ_CATALOG.IRIS</span>
+0003     <span class="comment">% convert an events structure from irisfetch into an Catalog object</span>
+0004     
+0005     debug.printfunctionstack(<span class="string">'&gt;'</span>)
+0006   
+0007     <span class="keyword">for</span> i=1:length(ev) <span class="comment">% Loop over each element in vector</span>
+0008 
+0009         otime(i) = datenum(ev(i).PreferredTime);
+0010         lon(i) = ev(i).PreferredLongitude;
+0011         lat(i) = ev(i).PreferredLatitude;
+0012         depth(i) = ev(i).PreferredDepth;
+0013         
+0014         <span class="keyword">if</span> ~isnan(ev(i).PreferredMagnitudeValue)
+0015             mag(i) = ev(i).PreferredMagnitude.Value;
+0016             magtype{i} = ev(i).PreferredMagnitude.Type;
+0017         <span class="keyword">else</span>
+0018             mag(i) = NaN;
+0019             magtype{i} = <span class="string">''</span>;
+0020         <span class="keyword">end</span>
+0021         
+0022         etype{i} = ev(i).Type;
+0023 
+0024     <span class="keyword">end</span>
+0025     
+0026     request.dataformat = <span class="string">'iris'</span>;
+0027     self = <a href="../../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>(otime', lon', lat', depth', mag', magtype', etype', <span class="string">'request'</span>, request);
+0028     
+0029     debug.printfunctionstack(<span class="string">'&lt;'</span>)
+0030     
+0031 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,1034 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of EventRate</title>
+  <meta name="keywords" content="EventRate">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@EventRate</a> &gt; EventRate.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@EventRate&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>EventRate
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed/iris_dmc_tools/+irisdmc/cookbook.html" class="code" title="function cookbook">cookbook</a>	COOKBOOK example program using the IRIS DMC web services</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/cookbook.html" class="code" title="">cookbook</a>	COOKBOOK demonstrate the features of the mastercorr package.</li><li><a href="../../../GISMO/core/+scnlobject/cookbook.html" class="code" title="">cookbook</a>	% The SCNLOBJECT cookbook</li><li><a href="../../../GISMO/core/@Catalog/cookbook.html" class="code" title="">cookbook</a>	% Catalog Cookbook</li><li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="EventRate.html" class="code" title="">EventRate</a>	</li><li><a href="cookbook.html" class="code" title="">cookbook</a>	% EventRate Cookbook</li><li><a href="../../../GISMO/core/@correlation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/cookbook.html" class="code" title="">cookbook</a>	% drumplot cookbook</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@rsam/cookbook.html" class="code" title="">cookbook</a>	% RSAM Cookbook</li><li><a href="../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../GISMO/core/@rsam/plotyy.html" class="code" title="function plotyy(obj1, obj2, varargin)">plotyy</a>	</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/@waveform/smooth.html" class="code" title="function W = smooth(W, varargin)">smooth</a>	SMOOTH overloaded smooth function for waveform</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../GISMO/core/dev/@TraceFilter/cookbook.html" class="code" title="function cookbook()">cookbook</a>	cookbook   Cookbook for TraceFilter</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/cookbook.html" class="code" title="function cookbook()">cookbook</a>	cookbook   Cookbook for TraceSpectra</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li><li><a href="../../../GISMO/libgismo/catmatrices.html" class="code" title="function cmatrix=catmatrices(matrix2,matrix1);">catmatrices</a>	CATMATRICES - concatenate 2D matrices of arbitrary size</li><li><a href="../../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>	EPOCH = DATENUM2EPOCH(TIME) translates Matlab numeric</li><li><a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>	TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/eventrate.html" class="code" title="function erobj=eventrate(catalogObject, varargin)">eventrate</a>	CATALOG.EVENTRATE</li><li><a href="EventRate.html" class="code" title="">EventRate</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function self = EventRate(time, counts, energy, median_energy,</a></li><li><a href="#_sub2" class="code">function cum_mag = get.cum_mag(erobj)</a></li><li><a href="#_sub3" class="code">function mean_mag = get.mean_mag(erobj)</a></li><li><a href="#_sub4" class="code">function mean_rate = get.mean_rate(erobj)</a></li><li><a href="#_sub5" class="code">function total_mag = get.total_mag(erobj)</a></li><li><a href="#_sub6" class="code">function plotold(obj, varargin)</a></li><li><a href="#_sub7" class="code">function plot(obj, varargin)</a></li><li><a href="#_sub8" class="code">function pythonplot(obj)</a></li><li><a href="#_sub9" class="code">function helenaplot(obj)</a></li><li><a href="#_sub10" class="code">function pvalue(obj)</a></li><li><a href="#_sub11" class="code">function sausageplot(obj, numBinsToUse, varargin)</a></li><li><a href="#_sub12" class="code">function obj = importswarmdb(obj, dbname, auth, snum, enum)</a></li><li><a href="#_sub13" class="code">function obj = addfield(obj,fieldname,val)</a></li><li><a href="#_sub14" class="code">function obj = set(obj, varargin)</a></li><li><a href="#_sub15" class="code">function val = get(obj,prop_name)</a></li><li><a href="#_sub16" class="code">function p=percentiles(vals)</a></li><li><a href="#_sub17" class="code">function plot_percentiles(p)</a></li><li><a href="#_sub18" class="code">function labels = metric2label(metric, binsize)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="EventRate.html" class="code" title="">EventRate</a>
+0002 <span class="comment">%EventRate Event Rate class constructor.</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">%    EventRate is a class that has been developed around plotting earthquake</span>
+0005 <span class="comment">%    counts - i.e. the rate of events per unit time. It has evolved to compute</span>
+0006 <span class="comment">%    other metrics such the hourly mean event rate, median event rate, mean</span>
+0007 <span class="comment">%    magnitude and cumulative magnitude, which are important metrics for an AVO</span>
+0008 <span class="comment">%    swarm tracking system.</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">%    EventRate can import information from:</span>
+0011 <span class="comment">%    (1) a Catalog object.</span>
+0012 <span class="comment">%    (2) a Datascope database written in the &quot;swarms1.0&quot; schema, defined at AVO.</span>
+0013 <span class="comment">%        This is the format used by the swarm tracking system (Thompson &amp;</span>
+0014 <span class="comment">%        West, 2010).</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">%    ER = EventRate(Catalog_OBJECT, 'binsize', BINSIZE) creates an eventrate object</span>
+0017 <span class="comment">%    from a Catalog object using non-overlapping bins of BINSIZE days.</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">%    ER = EventRate(Catalog_OBJECT, 'binsize', BINSIZE, 'stepsize', STEPSIZE) creates an eventrate object</span>
+0020 <span class="comment">%    using overlapping bins. If omitted STEPSIZE==BINSIZE.</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">%%   EXAMPLES:</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">%       First create a catalog object from the demo database:</span>
+0025 <span class="comment">%           dbpath = demodb('avo')</span>
+0026 <span class="comment">%           catalogObject = readEvents('datascope', 'dbpath', dbpath, ...</span>
+0027 <span class="comment">%                  'dbeval', ...</span>
+0028 <span class="comment">%                  'deg2km(distance(lat, lon, 60.4853, -152.7431))&lt;15.0' ...</span>
+0029 <span class="comment">%                  );</span>
+0030 <span class="comment">%</span>
+0031 <span class="comment">%       (1) Create an eventrate object using a binsize of 1 day:</span>
+0032 <span class="comment">%           erobj = catalogObject.eventrate('binsize', 1);</span>
+0033 <span class="comment">%</span>
+0034 <span class="comment">%       (2) Create an eventrate object using a binsize of 1 hour:</span>
+0035 <span class="comment">%           erobj = catalogObject.eventrate('binsize', 1/24);</span>
+0036 <span class="comment">%</span>
+0037 <span class="comment">%       (3) Create an eventrate object using a binsize of 1 hour but a stepsize of 5 minutes:</span>
+0038 <span class="comment">%           erobj = catalogObject.eventrate('binsize', 1/24, 'stepsize', 5/1440);</span>
+0039 <span class="comment">%</span>
+0040 <span class="comment">%       (4) Create a vector of eventrate objects subclassified using event types 'r', 'e', 'l', 'h', 't':</span>
+0041 <span class="comment">%               erobj = eventrate(catalogObject, 1, 'etypes', 'relht');</span>
+0042 <span class="comment">%           To plot counts on separate figures:</span>
+0043 <span class="comment">%               erobj.plot()</span>
+0044 <span class="comment">%           To plot counts and energy panels, each event type as a separate figure:</span>
+0045 <span class="comment">%               erobj.plot('metric', {'counts';'energy'});</span>
+0046 <span class="comment">%           To plot counts and energy panels on separate figures, each event type as panels:</span>
+0047 <span class="comment">%               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'panels');</span>
+0048 <span class="comment">%           To plot counts and energy panels on separate figures, each event type stacked:</span>
+0049 <span class="comment">%               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');</span>
+0050 <span class="comment">%</span>
+0051 <span class="comment">%       (5) A full example:</span>
+0052 <span class="comment">%               catalogObject = catalog(fullfile(MVO_DATA, 'mbwh_catalog'), 'seisan', 'snum', datenum(1996,10,1), 'enum', datenum(2004,3,1), 'region', 'Montserrat')</span>
+0053 <span class="comment">%               erobj = eventrate(catalogObject, 365/12, 'stepsize', 1, 'etypes', 'thlr');</span>
+0054 <span class="comment">%               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');</span>
+0055 <span class="comment">%</span>
+0056 <span class="comment">%</span>
+0057 <span class="comment">%%   PROPERTIES</span>
+0058 <span class="comment">%</span>
+0059 <span class="comment">%    For a list of all properties type properties(EventRate)</span>
+0060 <span class="comment">%</span>
+0061 <span class="comment">%    time                % (array) time of the center of each bin as a DATENUM</span>
+0062 <span class="comment">%</span>
+0063 <span class="comment">%    METRICS:</span>
+0064 <span class="comment">%        counts              % (array) number of events in each bin</span>
+0065 <span class="comment">%        mean_rate           % (array) number of events per hour in each bin</span>
+0066 <span class="comment">%        median_rate         % (array) reciprocal of the median time interval between events. Represented as an hourly rate.</span>
+0067 <span class="comment">%        cum_mag             % (array) total sum of energy in each bin, represented as a magnitude.</span>
+0068 <span class="comment">%        mean_mag             % (array) mean magnitude of events in each bin</span>
+0069 <span class="comment">%        median_mag          % (array) median magnitude of events in each bin</span>
+0070 <span class="comment">%        min_mag             % (array) smallest magnitude in each bin</span>
+0071 <span class="comment">%        max_mag             % (array) largest magnitude in each bin</span>
+0072 <span class="comment">%</span>
+0073 <span class="comment">%    SUMMARY DATA:</span>
+0074 <span class="comment">%        numbins             % (scalar) number of bins used for grouping</span>
+0075 <span class="comment">%                                events</span>
+0076 <span class="comment">%        total_counts        % (scalar) sum of counts</span>
+0077 <span class="comment">%        total_mag           % (scalar) total sum of energy of all catalogObjects, represented as a magnitude</span>
+0078 <span class="comment">%</span>
+0079 <span class="comment">%    METADATA:</span>
+0080 <span class="comment">%        etype               % event type/classification.</span>
+0081 <span class="comment">%        snum                % (scalar) start date/time in DATENUM format</span>
+0082 <span class="comment">%        enum                % (scalar) end date/time in DATENUM format</span>
+0083 <span class="comment">%        binsize             % (scalar) bin size in days</span>
+0084 <span class="comment">%        stepsize            % (scalar) step size in days</span>
+0085 <span class="comment">%        region              % (4-element vector) [minlon maxlon minlat maxlat]</span>
+0086 <span class="comment">%        minmag              % (scalar) magnitudes smaller than this were eliminated</span>
+0087 <span class="comment">%        dbroot              % path to the original data on disk</span>
+0088 <span class="comment">%        archiveformat       % indicates if the source is a flat file, or</span>
+0089 <span class="comment">%                              'daily' or 'monthly' volumes</span>
+0090 <span class="comment">%        auth                % auth of the events</span>
+0091 <span class="comment">%</span>
+0092 <span class="comment">%%   METHODS</span>
+0093 <span class="comment">%</span>
+0094 <span class="comment">%    For a list of all methods type methods EventRate</span>
+0095 <span class="comment">%</span>
+0096 <span class="comment">%</span>
+0097 <span class="comment">%%   See also Catalog, Catalog_lite</span>
+0098 <span class="comment">%</span>
+0099 <span class="comment">%% AUTHOR: Glenn Thompson</span>
+0100 
+0101 <span class="comment">% $Date: 2014-05-06 14:52:40 -0800 (Tue, 06 May 2014) $</span>
+0102 <span class="comment">% $Revision: 404 $</span>
+0103 
+0104 <span class="comment">%% PROPERTIES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0105 
+0106     properties(GetAccess = <span class="string">'public'</span>, SetAccess = <span class="string">'public'</span>)
+0107         time = [];          <span class="comment">% (array) in datenum format</span>
+0108         counts = [];         <span class="comment">% (array) number of events in each bin</span>
+0109         mean_rate = [];      <span class="comment">% (array) number of events per hour in each bin</span>
+0110         median_rate = [];    <span class="comment">% (array) reciprocal of the median time interval between events. Represented as an hourly rate.</span>
+0111         cum_mag = [];        <span class="comment">% (array) total sum of energy in each bin, represented as a magnitude.</span>
+0112         mean_mag = [];        <span class="comment">% (array)</span>
+0113         median_mag = [];     <span class="comment">% (array)</span>
+0114         energy = [];
+0115         total_counts = [];   <span class="comment">% (scalar) sum of counts</span>
+0116         total_mag = [];      <span class="comment">% (scalar) total sum of energy of all catalogObjects, represented as a magnitude</span>
+0117         numbins = [];        <span class="comment">% (scalar)</span>
+0118         min_mag = [];
+0119         max_mag = [];
+0120         etype = <span class="string">'*'</span>;
+0121         snum = 0;
+0122         enum = now;
+0123         binsize = 1;
+0124         stepsize = 1;
+0125         misc_fields = {};
+0126         misc_values = {};
+0127     <span class="keyword">end</span>
+0128     
+0129  <span class="comment">%% PUBLIC METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0130    
+0131     methods
+0132         <span class="comment">%% CONSTRUCTOR</span>
+0133         <a name="_sub0" href="#_subfunctions" class="code">function self = EventRate(time, counts, energy, median_energy, </a><span class="keyword">...</span>
+0134                 smallest_energy, biggest_energy, median_time_interval, total_counts, <span class="keyword">...</span>
+0135                 snum, enum, etypes, binsize, stepsize, numbins)
+0136             self.time = time;
+0137             self.counts = counts;          
+0138             self.median_rate = 1 ./ (median_time_interval * 24); 
+0139             self.median_rate(counts&lt;10) = 0;
+0140             self.median_rate = <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>([self.counts / (24 * binsize); self.median_rate]);      
+0141             self.median_mag = magnitude.eng2mag(median_energy);
+0142             self.energy = energy;
+0143             self.total_counts = total_counts;      
+0144             self.numbins = numbins;
+0145             self.min_mag = magnitude.eng2mag(smallest_energy);
+0146             self.max_mag = magnitude.eng2mag(biggest_energy);
+0147             self.etype = etypes;
+0148             self.snum = snum;
+0149             self.enum = enum;
+0150             self.binsize = binsize;
+0151             self.stepsize = stepsize;
+0152         <span class="keyword">end</span>
+0153         
+0154         <span class="comment">%% ----------------------------------------------</span>
+0155         <span class="comment">%% GETTERS</span>
+0156         <a name="_sub1" href="#_subfunctions" class="code">function cum_mag = get.cum_mag(erobj)</a>
+0157             cum_mag = magnitude.eng2mag(erobj.energy);
+0158         <span class="keyword">end</span>
+0159         <a name="_sub2" href="#_subfunctions" class="code">function mean_mag = get.mean_mag(erobj)</a>
+0160             mean_mag = magnitude.eng2mag(erobj.energy./erobj.counts);
+0161         <span class="keyword">end</span>
+0162         <a name="_sub3" href="#_subfunctions" class="code">function mean_rate = get.mean_rate(erobj)</a>
+0163             mean_rate = erobj.counts / (24 * erobj.binsize);
+0164         <span class="keyword">end</span>
+0165         <a name="_sub4" href="#_subfunctions" class="code">function total_mag = get.total_mag(erobj)</a>
+0166             total_mag = magnitude.eng2mag(sum(erobj.energy));
+0167         <span class="keyword">end</span>
+0168        
+0169         <a name="_sub5" href="#_subfunctions" class="code">function plotold(obj, varargin) </a>
+0170             <span class="comment">%EventRate/plot</span>
+0171             <span class="comment">%   Plot metrics of an EventRate object</span>
+0172             <span class="comment">%</span>
+0173             <span class="comment">%   The following metrics are available:</span>
+0174             <span class="comment">%</span>
+0175             <span class="comment">%        counts              % number of events in each bin</span>
+0176             <span class="comment">%        mean_rate           % number of events per hour in each bin</span>
+0177             <span class="comment">%        median_rate         % reciprocal of the median time interval between events. Represented as an hourly rate.</span>
+0178             <span class="comment">%        energy              % total sum of energy in each bin</span>
+0179             <span class="comment">%        cum_mag             % total sum of energy in each bin, represented as a magnitude.</span>
+0180             <span class="comment">%        mean_mag             % mean magnitude of events in each bin</span>
+0181             <span class="comment">%        median_mag          % median magnitude of events in each bin</span>
+0182             <span class="comment">%        min_mag             % smallest magnitude in each bin</span>
+0183             <span class="comment">%</span>
+0184             <span class="comment">%   erobj.plot() or plot(erobj) will produce a plot of event</span>
+0185             <span class="comment">%   counts per unit time. The time unit is given by erobj.binsize</span>
+0186             <span class="comment">%   days.</span>
+0187             <span class="comment">%</span>
+0188             <span class="comment">%   erobj.plot('metric', list_of_metrics) will plot each metric</span>
+0189             <span class="comment">%   requested in list_of_metrics in a separate panel.</span>
+0190             <span class="comment">%   list_of_metrics should be a cell array of valid metric</span>
+0191             <span class="comment">%   strings. However, it may be a string if only one metric is</span>
+0192             <span class="comment">%   requested.</span>
+0193             <span class="comment">%</span>
+0194             <span class="comment">%   erobj.plot('metric', 'counts') is equivalent to</span>
+0195             <span class="comment">%   erobj.plot() and erobj.plot('metric', {'counts'})</span>
+0196             <span class="comment">%</span>
+0197             <span class="comment">%   erobj.plot('metric', 'mean_rate') is similar, but the</span>
+0198             <span class="comment">%   mean_rate is always events per hour, regardless of the</span>
+0199             <span class="comment">%   binsize. So if erobj.binsize = 1 (day), counts will be</span>
+0200             <span class="comment">%   exactly 24 * mean_rate.</span>
+0201             <span class="comment">%</span>
+0202             <span class="comment">%   erobj.plot('metric', {'counts';'cum_mag'}) will plot counts</span>
+0203             <span class="comment">%   in one panel and the cumulative magnitude per bin in</span>
+0204             <span class="comment">%   another panel.</span>
+0205             <span class="comment">%</span>
+0206             <span class="comment">%   In general any number of metrics can be given in</span>
+0207             <span class="comment">%   list_of_metrics.</span>
+0208             <span class="comment">%</span>
+0209             <span class="comment">%   If erobj is an array of eventrate structures (e.g. one per</span>
+0210             <span class="comment">%   etype), each is plotted on a separate figure. However the</span>
+0211             <span class="comment">%   plotmode variable overrides this:</span>
+0212             <span class="comment">%</span>
+0213             <span class="comment">%     plot(eventrate_vector, 'plotmode', 'panels') will plot them</span>
+0214             <span class="comment">%     in separate panels on the same figure</span>
+0215             <span class="comment">%</span>
+0216             <span class="comment">%     plot(eventrate_vector, 'plotmode', 'single') will plot them</span>
+0217             <span class="comment">%     in a single panel</span>
+0218             
+0219             p = inputParser;
+0220             p.addParamValue(<span class="string">'metric'</span>, {<span class="string">'counts'</span>}, @(c) iscell(c)||isstr(c));
+0221             p.addParamValue(<span class="string">'plotmode'</span>, <span class="string">'figures'</span>, @isstr);
+0222             p.addParamValue(<span class="string">'smooth'</span>, 1, @isnumeric);
+0223             p.parse(varargin{:});
+0224             metric = p.Results.metric;
+0225             plotmode = p.Results.plotmode;
+0226             smoothbins = p.Results.smooth; <span class="comment">% NOT DOING ANYTHING WITH THIS YET BUT COULD SMOOTH COUNTS OVER SEVERAL BINS</span>
+0227             <span class="keyword">if</span> ~iscell(metric)
+0228                 metric = {metric};
+0229             <span class="keyword">end</span>
+0230             numMetrics = numel(metric);
+0231             colors = {[0.7 0.7 0] [0 0 1]};
+0232 
+0233             <span class="comment">% plot each etype on a separate figure, each metric as a</span>
+0234             <span class="comment">% subplot</span>
+0235            
+0236             <span class="keyword">if</span> strcmp(plotmode, <span class="string">'figures'</span>) || length(obj)==1
+0237             
+0238                 <span class="keyword">for</span> c = 1 : numel(obj)
+0239                     binsize_str = Catalog.binning.binsizelabel(obj(c).binsize);
+0240                     numsubplots = length(metric);
+0241                     <span class="comment">%figure(get(gcf,'Number')+1)</span>
+0242                     figure
+0243                     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gcf,<span class="string">'Color'</span>, [1 1 1]);
+0244                     <span class="keyword">for</span> cc = 1: numsubplots <span class="comment">% number of metrics to plot</span>
+0245                         <span class="comment">%eval(  sprintf('data = obj(c).%s;',metric{cc} ) );</span>
+0246                         data = obj(c).(metric{cc});
+0247                         <span class="keyword">if</span> numel(data)&gt;0 &amp; ~all(isinf(data)) &amp; ~all(isnan(data))
+0248                             <span class="comment">% replace -Inf values as they mess up plots</span>
+0249                             ydata = data; <span class="comment">% ydata is the data we will plot, but we keep data for cumulative energy etc.</span>
+0250                             <span class="keyword">if</span> smoothbins &gt; 1
+0251                                 ydata = <a href="../../../GISMO/core/@waveform/smooth.html" class="code" title="function W = smooth(W, varargin)">smooth</a>(ydata, smoothbins);
+0252                             <span class="keyword">end</span>
+0253 <span class="comment">%                             ydata(isinf(data))=NaN;</span>
+0254 <span class="comment">%                             mindata = nanmin(ydata);</span>
+0255 <span class="comment">%                             ydata(isnan(ydata))=mindata; % we replace NaNs and Infs in data with nanmin(data) in ydata</span>
+0256                             <span class="keyword">if</span> (obj(c).binsize == obj(c).stepsize) &amp; ( strcmp(metric{cc}, <span class="string">'counts'</span>) | strcmp(metric{cc}, <span class="string">'energy'</span>) | strcmp(metric{cc}, <span class="string">'cum_mag'</span>) )
+0257                                 <span class="keyword">if</span> strfind(metric{cc}, <span class="string">'mag'</span>)
+0258                                     cumdata = magnitude.eng2mag(cumsum(magnitude.mag2eng(data)));           
+0259                                     subplot(numsubplots,1,cc), [ax, h1, h2] = <a href="../../../GISMO/core/@rsam/plotyy.html" class="code" title="function plotyy(obj1, obj2, varargin)">plotyy</a>(obj(c).time, ydata, obj(c).time, cumdata, @stairs, @<a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a> );
+0260                                     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h1, <span class="string">'Color'</span>, colors{1});
+0261                                 <span class="keyword">else</span>
+0262                                     subplot(numsubplots,1,cc), [ax, h1, h2] = <a href="../../../GISMO/core/@rsam/plotyy.html" class="code" title="function plotyy(obj1, obj2, varargin)">plotyy</a>(obj(c).time, data, obj(c).time + obj(c).binsize/2, cumsum(data), @bar, @stairs );
+0263                                     <span class="comment">%subplot(numsubplots,1,cc), [ax, h1, h2] = plotyy(obj(c).time, ydata, obj(c).time, cumsum(data), @stairs, @plot );</span>
+0264                                     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h1, <span class="string">'FaceColor'</span>, colors{1}, <span class="string">'EdgeColor'</span>, colors{1})
+0265                                     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h1, <span class="string">'BarWidth'</span>, 1);
+0266                                     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h1, <span class="string">'LineWidth'</span>, 0.1);
+0267                                 <span class="keyword">end</span>
+0268                                 datetick(ax(1), <span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+0269                                 ylabel(ax(1), <a href="#_sub18" class="code" title="subfunction labels = metric2label(metric, binsize)">metric2label</a>(metric{cc}, obj(c).binsize), <span class="string">'Color'</span>, colors{1}, <span class="string">'FontSize'</span>,12)
+0270                                 datetick(ax(2), <span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+0271                                 ylabel(ax(2),<span class="string">'Cumulative'</span>, <span class="string">'Color'</span>, colors{2}, <span class="string">'FontSize'</span>,12)
+0272                                 <span class="comment">%set(h1, 'Color', colors{1});</span>
+0273                                 <span class="comment">%set(h2, 'Color', colors{2}, 'LineWidth', 2);</span>
+0274                                 ylims = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax(1), <span class="string">'YLim'</span>);
+0275                                 <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax(1), <span class="string">'YColor'</span>, colors{1}, <span class="string">'YLim'</span>, [0 ylims(2)]);
+0276                                 ylims = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax(2), <span class="string">'YLim'</span>);
+0277                                 <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax(2), <span class="string">'YColor'</span>, colors{2}, <span class="string">'YLim'</span>, [0 ylims(2)]);
+0278                                 linkaxes(ax, <span class="string">'x'</span>);
+0279                             <span class="keyword">else</span>
+0280 
+0281                                 <span class="keyword">if</span> strfind(metric{cc}, <span class="string">'mag'</span>)           
+0282                                     subplot(numsubplots,1,cc), stairs(obj(c).time, ydata, <span class="string">'Color'</span>, colors{1});
+0283                                 <span class="keyword">else</span>
+0284                                     subplot(numsubplots,1,cc), bar(obj(c).time, data, 1, <span class="string">'FaceColor'</span>, colors{1}, <span class="string">'EdgeColor'</span>, colors{1}, <span class="string">'BarWidth'</span>, 1, <span class="string">'LineWidth'</span>, 0.1);
+0285                                     <span class="comment">%subplot(numsubplots,1,cc), stairs(obj(c).time, ydata, 'Color', colors{1});</span>
+0286                                 <span class="keyword">end</span>
+0287                                 datetick(<span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+0288                                 ylabel(<a href="#_sub18" class="code" title="subfunction labels = metric2label(metric, binsize)">metric2label</a>(metric{cc}, obj(c).binsize), <span class="string">'FontSize'</span>,12)                        
+0289                             <span class="keyword">end</span>
+0290                         <span class="keyword">end</span>
+0291 <span class="comment">%                         axis tight;</span>
+0292 <span class="comment">%                         a=axis;</span>
+0293 <span class="comment">%                         axis([a(1) a(2) 0 a(4)])</span>
+0294                     <span class="keyword">end</span>
+0295                 <span class="keyword">end</span>
+0296                 
+0297                 <span class="comment">%% FROM HERE ON THE PLOTMODES HAVE NOT BEEN UPDATED</span>
+0298             <span class="keyword">elseif</span> strcmp(plotmode, <span class="string">'panels'</span>)
+0299                 <span class="comment">% Each metric on a separate figure, showing all requested</span>
+0300                 <span class="comment">% subclasses on separate panels</span>
+0301                   <span class="keyword">for</span> c = 1 : numel(metric)
+0302                     <span class="comment">%figure(get(gcf,'Number')+c)</span>
+0303                     figure
+0304                     numsubplots = numel(obj);
+0305 
+0306                     <span class="comment">%for cc = numsubplots: -1: 1</span>
+0307                     <span class="keyword">for</span> cc = 1:numsubplots
+0308                         ccc = numsubplots-cc+1;
+0309                         <span class="keyword">if</span> strcmp(metric{c},<span class="string">'energy'</span>)
+0310                             <span class="comment">%data = cumsum(magnitude.mag2eng(obj(cc).cum_mag));</span>
+0311                             data = (magnitude.mag2eng(obj(ccc).cum_mag));
+0312 
+0313                         <span class="keyword">else</span>
+0314                             <span class="comment">% eval(  sprintf('data = obj(cc).%s;',metric{c} ) );</span>
+0315                             data = obj(ccc).(metric{c});
+0316                         <span class="keyword">end</span>
+0317                         <span class="keyword">if</span> numel(data)&gt;0 &amp; ~all(isinf(data)) &amp; ~all(isnan(data))
+0318                             <span class="keyword">if</span> smoothbins &gt; 1
+0319                                 data = <a href="../../../GISMO/core/@waveform/smooth.html" class="code" title="function W = smooth(W, varargin)">smooth</a>(data, smoothbins);
+0320                             <span class="keyword">end</span>                      
+0321                             <span class="comment">% where to position the axes</span>
+0322                             pos(1) = 0.1;
+0323                             pos(2) = 0.1+(0.95-0.1)*(cc-1)/numsubplots;
+0324                             pos(3) = 0.8;
+0325                             pos(4) = (0.8*(0.95-0.1)/numsubplots);
+0326                             axes(<span class="string">'position'</span>, pos);
+0327                         <span class="keyword">end</span>
+0328                         
+0329                         <span class="comment">% plot</span>
+0330                         <span class="keyword">if</span> numel(data)&gt;0
+0331                             bar( obj(ccc).time, data, 1, <span class="string">'EdgeColor'</span>, <span class="string">'none'</span>, <span class="string">'FaceColor'</span>, [0 0 0] );
+0332     <span class="comment">%                         hold on;</span>
+0333     <span class="comment">%                         sdata = smooth(data, 30, 'lowess');</span>
+0334     <span class="comment">%                         plot( obj(cc).time, sdata, 'k-', 'linewidth', 2);</span>
+0335 
+0336 
+0337                             <span class="comment">% range and label</span>
+0338                             datetick(<span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+0339                             <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'XLim'</span>, [obj(ccc).snum obj(ccc).enum]);
+0340                             ymax = nanmax(<a href="../../../GISMO/libgismo/catmatrices.html" class="code" title="function cmatrix=catmatrices(matrix2,matrix1);">catmatrices</a>(1, data));
+0341     <span class="comment">%                         ymax = min([max(sdata)*2 max(data)*1.01]);</span>
+0342                             <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'YLim'</span>, [0 ymax]);
+0343                             ylabel(obj(ccc).etype);
+0344                         <span class="keyword">end</span>
+0345                         
+0346                         
+0347                         
+0348                     <span class="keyword">end</span>
+0349                     <span class="comment">%title(metric{c});</span>
+0350                     fprintf(<span class="string">'metric for figure %d is %s\n'</span>, <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gcf,<span class="string">'Number'</span>), metric{c});
+0351                   <span class="keyword">end</span>               
+0352                 
+0353                   
+0354             <span class="keyword">elseif</span> strcmp(plotmode, <span class="string">'single'</span>)
+0355                   <span class="comment">% Each metric on a separate figure, showing all requested</span>
+0356                   <span class="comment">% subclasses on the same panel</span>
+0357                   colour = <span class="string">'rgbcm'</span>;
+0358                   <span class="keyword">for</span> c = 1 : numel(metric)
+0359                     <span class="comment">%figure(get(gcf,'Number')+c)</span>
+0360                     figure
+0361                     <span class="keyword">for</span> cc = 1: length(obj)
+0362                         <span class="keyword">if</span> strcmp(metric{c},<span class="string">'energy'</span>)
+0363                             <span class="comment">%data = cumsum(magnitude.mag2eng(obj(cc).cum_mag));</span>
+0364                             data = (magnitude.mag2eng(obj(cc).cum_mag));
+0365                         <span class="keyword">else</span>
+0366                             <span class="comment">% eval(  sprintf('data = obj(cc).%s;',metric{c} ) );</span>
+0367                             data = obj(cc).(metric{c});
+0368                         <span class="keyword">end</span>
+0369                         
+0370                         <span class="keyword">if</span> numel(data)&gt;0 &amp; ~all(isinf(data)) &amp; ~all(isnan(data))
+0371                         
+0372                             <span class="keyword">if</span> smoothbins &gt; 1
+0373                                 data = <a href="../../../GISMO/core/@waveform/smooth.html" class="code" title="function W = smooth(W, varargin)">smooth</a>(data, smoothbins);
+0374                             <span class="keyword">end</span>    
+0375 
+0376                             <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>( obj(cc).time, data, sprintf(<span class="string">'-%c'</span>,colour(cc)) );
+0377                             hold on;
+0378                             datetick(<span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+0379                             <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'XLim'</span>, [obj(cc).snum obj(cc).enum]);
+0380                             <span class="comment">%ymax = nanmax(catmatrices(1, data));</span>
+0381                             <span class="comment">%set(gca, 'YLim', [0 ymax]);</span>
+0382                             <span class="comment">%ylabel(obj(cc).etype);</span>
+0383                         <span class="keyword">end</span>
+0384                     <span class="keyword">end</span>
+0385                     title(metric{c});
+0386                   <span class="keyword">end</span>         
+0387                 
+0388                   
+0389              <span class="keyword">elseif</span> strcmp(plotmode, <span class="string">'stacked'</span>)
+0390                  <span class="comment">% Each metric on a separate figure, showing all subclasses</span>
+0391                  <span class="comment">% stacked on the same panel</span>
+0392                   colour = <span class="string">'rgbcm'</span>;
+0393                   <span class="keyword">for</span> c = 1 : numel(metric)
+0394                     figure(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gcf,<span class="string">'Number'</span>)+c)
+0395                     data =[];
+0396                     <span class="keyword">for</span> cc = 1: length(obj)
+0397                         <span class="keyword">if</span> strcmp(metric{c},<span class="string">'energy'</span>)
+0398                             data = (magnitude.mag2eng(obj(cc).cum_mag));
+0399                         <span class="keyword">else</span>
+0400                             <span class="comment">%eval(  sprintf('data(:,cc) = obj(cc).%s;',metric{c} ) );</span>
+0401                             <span class="comment">%data(:,cc) = obj(cc).(metric{c});</span>
+0402                             data = obj(cc).(metric{c});
+0403                             <span class="keyword">if</span> findstr(metric{c}, <span class="string">'mag'</span>)
+0404                                 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'Warning: It is meaningless to stack magnitude data'</span>);
+0405                                 data(data&lt;0)=0;
+0406                                 data(isnan(data))=0;
+0407                             <span class="keyword">end</span>
+0408                         <span class="keyword">end</span>
+0409                         <span class="keyword">if</span> numel(data)&gt;0 &amp; ~all(isinf(data)) &amp; ~all(isnan(data))
+0410                             <span class="keyword">if</span> smoothbins &gt; 1
+0411                                 data = <a href="../../../GISMO/core/@waveform/smooth.html" class="code" title="function W = smooth(W, varargin)">smooth</a>(data, smoothbins);
+0412                             <span class="keyword">end</span>    
+0413 
+0414                             <span class="comment">%bar( obj(cc).time, data, 1, 'stack' );</span>
+0415                             area(obj(cc).time, data);
+0416                             datetick(<span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+0417                             <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'XLim'</span>, [obj(cc).snum obj(cc).enum]);
+0418                             title(metric{c});
+0419                         <span class="keyword">end</span>
+0420                     <span class="keyword">end</span>
+0421                 <span class="keyword">end</span>               
+0422             <span class="keyword">end</span>        
+0423         <span class="keyword">end</span>
+0424 
+0425         <a name="_sub6" href="#_subfunctions" class="code">function plot(obj, varargin) </a>
+0426             <span class="comment">%EventRate/plot</span>
+0427             <span class="comment">%   Plot metrics of an EventRate object</span>
+0428             <span class="comment">%</span>
+0429             <span class="comment">%   The following metrics are available:</span>
+0430             <span class="comment">%</span>
+0431             <span class="comment">%        counts              % number of events in each bin</span>
+0432             <span class="comment">%        mean_rate           % number of events per hour in each bin</span>
+0433             <span class="comment">%        median_rate         % reciprocal of the median time interval between events. Represented as an hourly rate.</span>
+0434             <span class="comment">%        energy              % total sum of energy in each bin</span>
+0435             <span class="comment">%        cum_mag             % total sum of energy in each bin, represented as a magnitude.</span>
+0436             <span class="comment">%        mean_mag             % mean magnitude of events in each bin</span>
+0437             <span class="comment">%        median_mag          % median magnitude of events in each bin</span>
+0438             <span class="comment">%        min_mag             % smallest magnitude in each bin</span>
+0439             <span class="comment">%</span>
+0440             <span class="comment">%   erobj.plot() or plot(erobj) will produce a plot of event</span>
+0441             <span class="comment">%   counts per unit time. The time unit is given by erobj.binsize</span>
+0442             <span class="comment">%   days.</span>
+0443             <span class="comment">%</span>
+0444             <span class="comment">%   erobj.plot('metric', list_of_metrics) will plot each metric</span>
+0445             <span class="comment">%   requested in list_of_metrics in a separate panel.</span>
+0446             <span class="comment">%   list_of_metrics should be a cell array of valid metric</span>
+0447             <span class="comment">%   strings. However, it may be a string if only one metric is</span>
+0448             <span class="comment">%   requested.</span>
+0449             <span class="comment">%</span>
+0450             <span class="comment">%   erobj.plot('metric', 'counts') is equivalent to</span>
+0451             <span class="comment">%   erobj.plot() and erobj.plot('metric', {'counts'})</span>
+0452             <span class="comment">%</span>
+0453             <span class="comment">%   erobj.plot('metric', 'mean_rate') is similar, but the</span>
+0454             <span class="comment">%   mean_rate is always events per hour, regardless of the</span>
+0455             <span class="comment">%   binsize. So if erobj.binsize = 1 (day), counts will be</span>
+0456             <span class="comment">%   exactly 24 * mean_rate.</span>
+0457             <span class="comment">%</span>
+0458             <span class="comment">%   erobj.plot('metric', {'counts';'cum_mag'}) will plot counts</span>
+0459             <span class="comment">%   in one panel and the cumulative magnitude per bin in</span>
+0460             <span class="comment">%   another panel.</span>
+0461             <span class="comment">%</span>
+0462             <span class="comment">%   In general any number of metrics can be given in</span>
+0463             <span class="comment">%   list_of_metrics.</span>
+0464             <span class="comment">%</span>
+0465             <span class="comment">%   If erobj is an array of eventrate structures (e.g. one per</span>
+0466             <span class="comment">%   etype), each is plotted on a separate figure. However the</span>
+0467             <span class="comment">%   plotmode variable overrides this:</span>
+0468             <span class="comment">%</span>
+0469             <span class="comment">%     plot(eventrate_vector, 'plotmode', 'panels') will plot them</span>
+0470             <span class="comment">%     in separate panels on the same figure</span>
+0471             <span class="comment">%</span>
+0472             <span class="comment">%     plot(eventrate_vector, 'plotmode', 'single') will plot them</span>
+0473             <span class="comment">%     in a single panel</span>
+0474             
+0475             p = inputParser;
+0476             p.addParameter(<span class="string">'metric'</span>, {<span class="string">'counts'</span>}, @(c) iscell(c)||isstr(c));
+0477             p.addParameter(<span class="string">'plotmode'</span>, <span class="string">'figures'</span>, @isstr);
+0478             p.addParameter(<span class="string">'smooth'</span>, 1, @isnumeric);
+0479             p.parse(varargin{:});
+0480             metric = p.Results.metric;
+0481             plotmode = p.Results.plotmode;
+0482             smoothbins = p.Results.smooth; <span class="comment">% NOT DOING ANYTHING WITH THIS YET BUT COULD SMOOTH COUNTS OVER SEVERAL BINS</span>
+0483             <span class="keyword">if</span> ~iscell(metric)
+0484                 metric = {metric};
+0485             <span class="keyword">end</span>
+0486             numMetrics = numel(metric);
+0487             colors = {[0 0.8 0] [0 0 0.8]};
+0488 
+0489             <span class="comment">% plot each etype on a separate figure, each metric as a</span>
+0490             <span class="comment">% subplot</span>
+0491       
+0492             <span class="keyword">if</span> strcmp(plotmode, <span class="string">'figures'</span>) || length(obj)==1
+0493                 fh = [];
+0494                 <span class="keyword">for</span> c = 1 : numel(obj)
+0495                     binsize_str = Catalog.binning.binsizelabel(obj(c).binsize);
+0496                     numsubplots = length(metric);
+0497                     fh(c) = figure;
+0498                     unique_subclasses = <a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(char([obj(c).etype{:}])')
+0499                     <span class="keyword">if</span> length(unique_subclasses)==1
+0500                         longname = Catalog.subclass2longname(unique_subclasses)
+0501                     <span class="keyword">else</span>
+0502                         longname = Catalog.subclass2longname(<span class="string">'*'</span>)
+0503                     <span class="keyword">end</span>
+0504                     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(fh(c),<span class="string">'Color'</span>, [1 1 1], <span class="string">'Name'</span>, sprintf(<span class="string">'%s activity beginning %s'</span>,longname, datestr(obj(c).time(1),29) ) );
+0505                     <span class="keyword">for</span> cc = 1: numsubplots <span class="comment">% number of metrics to plot</span>
+0506                         data = obj(c).(metric{cc});
+0507                         <span class="keyword">if</span> numel(data)&gt;0 &amp; ~all(isinf(data)) &amp; ~all(isnan(data))
+0508                             <span class="comment">% replace -Inf values as they mess up plots</span>
+0509                             y = data; <span class="comment">% ydata is the data we will plot, but we keep data for cumulative energy etc.</span>
+0510                             <span class="keyword">if</span> smoothbins &gt; 1
+0511                                 y = <a href="../../../GISMO/core/@waveform/smooth.html" class="code" title="function W = smooth(W, varargin)">smooth</a>(y, smoothbins);
+0512                             <span class="keyword">end</span>
+0513                             y(isinf(y))=NaN;
+0514                             mindata = nanmin(y); 
+0515                             y(isnan(y))=mindata; <span class="comment">% we replace NaNs and Infs in data with nanmin(data) in ydata</span>
+0516                             <span class="keyword">if</span> (obj(c).binsize == obj(c).stepsize) &amp; ( strcmp(metric{cc}, <span class="string">'counts'</span>) | strcmp(metric{cc}, <span class="string">'energy'</span>) | strcmp(metric{cc}, <span class="string">'cum_mag'</span>) )
+0517 <span class="comment">%                                 if strfind(metric{cc}, 'mag')</span>
+0518 <span class="comment">%                                     cumy = magnitude.eng2mag(cumsum(magnitude.mag2eng(y)));</span>
+0519 <span class="comment">%                                     subplot(numsubplots,1,cc), [ax, h1, h2] = plotyy(obj(c).time, y, obj(c).time, cumy, @stairs, @plot );</span>
+0520 <span class="comment">%                                     set(h1, 'Color', colors{1});</span>
+0521 <span class="comment">%                                 else</span>
+0522                                     labels = <a href="#_sub18" class="code" title="subfunction labels = metric2label(metric, binsize)">metric2label</a>(metric{cc}, obj(c).binsize);
+0523                                     t = [ obj(c).time - obj(c).binsize/2 ]; t = [t t(end)+obj(c).binsize];
+0524                                     y = [y y(end)];
+0525                                     clear ax h1 h2
+0526                                     <span class="keyword">if</span> numel(labels)==2
+0527                                         cumy = cumsum(data); cumy = [cumy cumy(end)];
+0528                                         subplot(numsubplots,1,cc), [ax, h1, h2] = <a href="../../../GISMO/core/@rsam/plotyy.html" class="code" title="function plotyy(obj1, obj2, varargin)">plotyy</a>(t, y, t, cumy, @stairs, @stairs );
+0529                                         <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h2, <span class="string">'LineWidth'</span>, 3, <span class="string">'Color'</span>, colors{2});
+0530                                         datetick(ax(2), <span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+0531                                         ylabel(ax(2),labels{2}, <span class="string">'Color'</span>, colors{2}, <span class="string">'FontSize'</span>,12)
+0532                                         ylims = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax(2), <span class="string">'YLim'</span>)
+0533                                         <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax(2), <span class="string">'YColor'</span>, colors{2}, <span class="string">'YLim'</span>, [0 <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>([ylims(2) 1])], <span class="string">'XLim'</span>, [t(1) t(end)]);
+0534                                     <span class="keyword">else</span>
+0535                                         
+0536                                         ax(1) = subplot(numsubplots,1,cc)
+0537                                         h1 = stairs(ax(1), t, y);
+0538                                         <span class="comment">%[ax, h1, h2] = plotyy(t, y, t, y, @stairs, @stairs );</span>
+0539                                     <span class="keyword">end</span>
+0540                                     <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(h1, <span class="string">'LineWidth'</span>, 3, <span class="string">'Color'</span>, colors{1});
+0541                                     
+0542                                 <span class="comment">%end</span>
+0543                                 datetick(ax(1), <span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+0544                                 ylabel(ax(1), labels{1}, <span class="string">'Color'</span>, colors{1}, <span class="string">'FontSize'</span>,12)
+0545                                 ylims = <a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(ax(1), <span class="string">'YLim'</span>);
+0546                                 <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(ax(1), <span class="string">'YColor'</span>, colors{1}, <span class="string">'YLim'</span>, [0 <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>([ylims(2) 1])], <span class="string">'XLim'</span>, [t(1) t(end)]);
+0547                                 linkaxes(ax, <span class="string">'x'</span>);
+0548                             <span class="keyword">else</span>
+0549 
+0550                                 <span class="keyword">if</span> strfind(metric{cc}, <span class="string">'mag'</span>)           
+0551                                     subplot(numsubplots,1,cc), stairs(obj(c).time, ydata, <span class="string">'Color'</span>, colors{1});
+0552                                 <span class="keyword">else</span>
+0553                                     subplot(numsubplots,1,cc), bar(obj(c).time, data, 1, <span class="string">'FaceColor'</span>, colors{1}, <span class="string">'EdgeColor'</span>, colors{1}, <span class="string">'BarWidth'</span>, 1, <span class="string">'LineWidth'</span>, 0.1);
+0554                                     <span class="comment">%subplot(numsubplots,1,cc), stairs(obj(c).time, ydata, 'Color', colors{1});</span>
+0555                                 <span class="keyword">end</span>
+0556                                 datetick(<span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+0557                                 ylabel(<a href="#_sub18" class="code" title="subfunction labels = metric2label(metric, binsize)">metric2label</a>(metric{cc}, obj(c).binsize), <span class="string">'FontSize'</span>,12)                        
+0558                             <span class="keyword">end</span>
+0559                         <span class="keyword">end</span>
+0560 <span class="comment">%                         axis tight;</span>
+0561 <span class="comment">%                         a=axis;</span>
+0562 <span class="comment">%                         axis([a(1) a(2) 0 a(4)])</span>
+0563                     <span class="keyword">end</span>
+0564                 <span class="keyword">end</span>
+0565                 
+0566                 <span class="comment">%% FROM HERE ON THE PLOTMODES HAVE NOT BEEN UPDATED</span>
+0567             <span class="keyword">elseif</span> strcmp(plotmode, <span class="string">'panels'</span>)
+0568             <span class="keyword">end</span>
+0569         <span class="keyword">end</span>
+0570         
+0571         
+0572         
+0573         
+0574         
+0575         
+0576         <span class="comment">%% PYTHONPLOT</span>
+0577         <a name="_sub7" href="#_subfunctions" class="code">function pythonplot(obj)</a>
+0578             obj.plot(<span class="string">'metric'</span>, {<span class="string">'counts'</span>;<span class="string">'cum_mag'</span>});
+0579         <span class="keyword">end</span>
+0580         
+0581         <span class="comment">%% HELENAPLOT</span>
+0582         <a name="_sub8" href="#_subfunctions" class="code">function helenaplot(obj)</a>
+0583             <span class="keyword">for</span> c=1:length(obj)
+0584                 figure
+0585                 <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gcf,<span class="string">'Color'</span>, [1 1 1]);
+0586                 cumcummag = magnitude.eng2mag(cumsum(magnitude.mag2eng(obj(c).cum_mag)));
+0587                 [ax, h1, h2] = <a href="../../../GISMO/core/@rsam/plotyy.html" class="code" title="function plotyy(obj1, obj2, varargin)">plotyy</a>(obj(c).time, cumcummag, obj(c).time, cumsum(obj(c).energy), @<a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>, @<a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>);
+0588                 datetick(ax(1), <span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+0589                 datetick(ax(2), <span class="string">'x'</span>,<span class="string">'keeplimits'</span>);
+0590                 ylabel(ax(1), <span class="string">'Cumulative Magnitude'</span>, <span class="string">'FontSize'</span>,12);
+0591                 ylabel(ax(2), <span class="string">'Cumulative Energy'</span>, <span class="string">'FontSize'</span>,12);
+0592             <span class="keyword">end</span>
+0593         <span class="keyword">end</span>
+0594 
+0595         
+0596         <a name="_sub9" href="#_subfunctions" class="code">function pvalue(obj)</a>
+0597             logt = log10(obj.time-obj.time(1));
+0598             logc = log10(obj.counts);
+0599             <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(logt, logc);
+0600             p = logt \ logc'
+0601 <span class="comment">%             p = polyfit(logt, logc, 1)</span>
+0602 <span class="comment">%             hold on</span>
+0603 <span class="comment">%             logt1 = min(logt);</span>
+0604 <span class="comment">%             logc1 = polyval(p, logt1);</span>
+0605 <span class="comment">%             logt2 = max(logt);</span>
+0606 <span class="comment">%             logc2 = polyval(p, logt2);</span>
+0607 <span class="comment">%             line([logt1 logt2], [logc1 logc2]);</span>
+0608         <span class="keyword">end</span>
+0609             
+0610             
+0611         <span class="comment">%% SAUSAGEPLOT</span>
+0612         <a name="_sub10" href="#_subfunctions" class="code">function sausageplot(obj, numBinsToUse, varargin)</a>
+0613             <span class="comment">%sausageplot</span>
+0614             <span class="comment">%    Under development, this function attempts to replicate the</span>
+0615             <span class="comment">%    capabilities of sausageplot.xpy written by Glenn Thompson</span>
+0616             <span class="comment">%    at AVO.</span>
+0617             p = inputParser;
+0618             p.addRequired(<span class="string">'numBinsToUse'</span>, @isnumeric);
+0619             p.addOptional(<span class="string">'numPoints'</span>, 1, @isnumeric);
+0620             p.addOptional(<span class="string">'radii'</span>, [], @isnumeric);
+0621             p.parse(numBinsToUse, varargin{:});
+0622             numBinsToUse = p.Results.numBinsToUse;
+0623             numPoints = p.Results.numPoints;
+0624             radii = p.Results.radii;
+0625 <span class="comment">%             % Page size, dots-per-inch and scale settings</span>
+0626 <span class="comment">%             fh = figure()</span>
+0627 <span class="comment">%             if numBinsToUse &gt; NUMPOINTS</span>
+0628 <span class="comment">%                 dpi = 6*(numBinsToUse+1);</span>
+0629 <span class="comment">%                 axes_width = 0.8 * (NUMPOINTS + 1) / (numBinsToUse + 1);</span>
+0630 <span class="comment">%                 axes_height = 0.8;</span>
+0631 <span class="comment">%             else</span>
+0632 <span class="comment">%                 dpi = 6*(NUMPOINTS+1);</span>
+0633 <span class="comment">%                 axes_width = 0.8;</span>
+0634 <span class="comment">%                 axes_height = 0.8 * (numBinsToUse + 1) / (NUMPOINTS + 1);</span>
+0635 <span class="comment">%             end</span>
+0636 <span class="comment">%             fh.set_dpi(dpi)</span>
+0637 <span class="comment">%             fh.set_size_inches((10.0,10.0),forward=True)</span>
+0638 <span class="comment">%             fig2ax1 = fig2.add_axes([0.1, 0.85-axes_height, axes_width, axes_height]);</span>
+0639 <span class="comment">%             print_pixels(fig2, fig2ax1, numBinsToUse, NUMPOINTS);</span>
+0640 <span class="comment">%             colormapname = 'hot_r';</span>
+0641             MAXMAGCOLORBAR = 5.0;
+0642             MINMAGCOLORBAR = 1.0;
+0643             <span class="comment">% Marker size configuration</span>
+0644 <span class="comment">%             SCALEFACTOR = 84.0 / dpi;</span>
+0645 <span class="comment">%             MAXMARKERSIZE = 43.0 * SCALEFACTOR;</span>
+0646 <span class="comment">%             MINMARKERSIZE = 4.0 * SCALEFACTOR;</span>
+0647             PTHRESHOLD = 50;
+0648             <span class="keyword">for</span> c = 1:length(obj)
+0649                 <span class="comment">% set up weekending list for yticklabels</span>
+0650                 binendstr = {};
+0651                 <span class="keyword">for</span> bin_index=numel(obj.time)-numBinsToUse+1: numel(obj.time)
+0652                     
+0653                     dstr = datestr(obj.time(bin_index))
+0654                     binendstr{bin_index} = dstr;
+0655                 <span class="keyword">end</span>
+0656                 pointlabels = {};
+0657                 <span class="keyword">for</span> i=1:length(numPoints)
+0658                     <span class="comment">% filter here based on points and radii</span>
+0659                     j = 1:length(obj(c).counts); <span class="comment">% replace this</span>
+0660                     counts = obj(c).counts(j);
+0661                     cummag = obj(c).cum_mag(j);
+0662                     prcntile = <a href="#_sub16" class="code" title="subfunction p=percentiles(vals)">percentiles</a>(obj(c).counts);
+0663                     <span class="comment">%pointlabels{i} = sprintf('%s(%d)', point_label{i}, counts(-1));</span>
+0664                     pointlabels{i}=<span class="string">''</span>;
+0665                     <span class="keyword">for</span> bin_index=numel(obj.time)-numBinsToUse+1: numel(obj.time)<span class="comment">%-numBinsToUse-1: 1: 0</span>
+0666                         y = obj(c).counts(bin_index);
+0667                         magnitude = obj(c).cum_mag(bin_index);
+0668                         p = y2percentile(y,prcntile);
+0669                         <span class="keyword">if</span> y&gt;0
+0670                             colorVal = scalarMap.to_rgba(magnitude)
+0671                             msize = MINMARKERSIZE + (p-PTHRESHOLD) * (MAXMARKERSIZE - MINMARKERSIZE) / (100-PTHRESHOLD);
+0672                             <span class="keyword">if</span> msize&lt;MINMARKERSIZE
+0673                                 msize=MINMARKERSIZE;
+0674                             <span class="keyword">end</span>
+0675 <span class="comment">%                             fig2ax1.plot(i+0.5, w, 's', color=colorVal, markersize=msize, linewidth=0 );</span>
+0676                             scatter(i+0.5, bin_index, msize, y, <span class="string">'s'</span>, <span class="string">'filled'</span>)
+0677                             <span class="keyword">if</span> msize &gt; MAXMARKERSIZE * 0.3
+0678                                 text(i+0.5, bin_index, num2str(y))
+0679 <span class="comment">%                                fig2ax1.text(i+0.5, w, '%d', y, horizontalalignment='center', verticalalignment='center', fontsize = 8 * SCALEFACTOR)</span>
+0680                             <span class="keyword">end</span>
+0681                         <span class="keyword">end</span>
+0682                     <span class="keyword">end</span>
+0683                 <span class="keyword">end</span>
+0684 
+0685                 <span class="comment">% Adding xticks, yticks, labels, grid</span>
+0686 <span class="comment">%                 fig2ax1.set_axisbelow(True) % I think this puts grid and tickmarks below actual data plotted</span>
+0687 
+0688                 <span class="comment">% x-axis</span>
+0689 <span class="comment">%                 fig2ax1.set_xticks(np.arange(.5,NUMVOLCANOES+.5,1))</span>
+0690                 <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'XTick'</span>, 0.5:1:numPoints+0.5);
+0691 <span class="comment">%                 fig2ax1.set_xlim([-0.5, NUMVOLCANOES+0.5])</span>
+0692                 <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'XLim'</span>, [-0.5 numPoints+0.5])
+0693 <span class="comment">%                 fig2ax1.xaxis.grid(True, linestyle='-', color='gray')</span>
+0694                 grid on;
+0695                 <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'XTickLabel'</span>, pointlabels)
+0696 <span class="comment">%                 fig2ax1.xaxis.set_ticks_position('top')</span>
+0697 <span class="comment">%                 fig2ax1.xaxis.set_label_position('top')</span>
+0698                 <span class="comment">%plt.setp( fig2ax1.get_xticklabels(), rotation=45, horizontalalignment='left', fontsize=10*SCALEFACTOR )</span>
+0699 
+0700                 <span class="comment">% y-axis</span>
+0701 <span class="comment">%                 fig2ax1.set_yticks(np.arange(-number_of_weeks_to_plot-0.5, 0, 1))</span>
+0702                 <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'YTick'</span>, -numBinsToUse-0.5: 1: 0)
+0703 <span class="comment">%                 fig2ax1.set_yticklabels(weekending)</span>
+0704                 <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'YTickLabel'</span>, binendstr)
+0705 <span class="comment">%                 fig2ax1.set_ylim([-number_of_weeks_to_plot - 0.5, -0.5])</span>
+0706                 <a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>(gca, <span class="string">'YLim'</span>, -numBinsToUse -0.5 : 1 : -0.5)
+0707 <span class="comment">%                 plt.setp( fig2ax1.get_yticklabels(), fontsize=10*SCALEFACTOR )</span>
+0708             <span class="keyword">end</span>
+0709         <span class="keyword">end</span>
+0710 
+0711 
+0712          
+0713         <span class="comment">%% IMPORTSWARMDB</span>
+0714         <a name="_sub11" href="#_subfunctions" class="code">function obj = importswarmdb(obj, dbname, auth, snum, enum)</a>
+0715             <span class="comment">% IMPORTSWARMDB</span>
+0716             <span class="comment">% Load a swarm database metrics table into an EventRate object</span>
+0717             <span class="comment">% eventrate = importswarmdb(erobj, dbname, auth, snum, enum);</span>
+0718             <span class="comment">%</span>
+0719             <span class="comment">% INPUT:</span>
+0720             <span class="comment">%    dbname        the path of the database (must have a 'metrics' table)</span>
+0721             <span class="comment">%    auth        name of the grid to load swarm tracking metrics for</span>
+0722             <span class="comment">%    snum,enum    start and end datenumbers (Matlab time format, see 'help datenum')</span>
+0723             <span class="comment">%</span>
+0724             <span class="comment">% OUTPUT:</span>
+0725             <span class="comment">%    obj        an eventrate object</span>
+0726             <span class="comment">%</span>
+0727             <span class="comment">% Example:</span>
+0728             <span class="comment">%    erobj = importswarmdb('/avort/devrun/dbswarm/swarm_metadata', 'RD_lo', datenum(2010, 7, 1), datenum(2010, 7, 14) );</span>
+0729 
+0730             <span class="comment">% Glenn Thompson, 20100714</span>
+0731 
+0732             <span class="comment">% initialize</span>
+0733             obj.dbroot = dbname;
+0734             obj.snum = snum;
+0735             obj.enum = enum;
+0736             obj.auth = auth;
+0737 
+0738             <span class="comment">% check that database exists</span>
+0739             dbtablename = sprintf(<span class="string">'%s.metrics'</span>,dbname);
+0740             <span class="keyword">if</span> exist(dbtablename,<span class="string">'file'</span>)
+0741                 <span class="comment">% load the data</span>
+0742                 <span class="keyword">try</span>
+0743                     db = dbopen(dbname, <span class="string">'r'</span>);
+0744                 <span class="keyword">catch</span> me
+0745                     fprintf(<span class="string">'Error: Could not open %s for reading'</span>,dbname);
+0746                         <span class="keyword">return</span>;
+0747                 <span class="keyword">end</span>
+0748                 db = dblookup_table(db, <span class="string">'metrics'</span>);
+0749                 <span class="keyword">if</span> (dbquery(db, <span class="string">'dbRECORD_COUNT'</span>)==0)
+0750                     fprintf(<span class="string">'Error: Could not open %s for reading'</span>,dbtablename);
+0751                     <span class="keyword">return</span>;
+0752                 <span class="keyword">end</span>
+0753                 db = dbsubset(db, sprintf(<span class="string">'auth ~= /.*%s.*/'</span>,auth));
+0754                 numrows = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0755                 debug.print_debug(sprintf(<span class="string">'Got %d rows after auth subset'</span>,numrows),2);
+0756                 sepoch = <a href="../../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>(snum);
+0757                 eepoch = <a href="../../../GISMO/libgismo/datenum2epoch.html" class="code" title="function epoch = datenum2epoch(time)">datenum2epoch</a>(enum);
+0758                 db = dbsubset(db, sprintf(<span class="string">'timewindow_starttime &gt;= %f &amp;&amp; timewindow_endtime &lt;= %f'</span>,sepoch,eepoch));
+0759                 numrows = dbquery(db,<span class="string">'dbRECORD_COUNT'</span>);
+0760                 debug.print_debug(sprintf(<span class="string">'Got %d rows after time subset'</span>,numrows),2);
+0761 
+0762                 <span class="keyword">if</span> numrows &gt; 0
+0763                     <span class="comment">% Note that metrics are only saved when mean_rate &gt;= 1.</span>
+0764                     <span class="comment">% Therefore there will be lots of mean_rate==0 timewindows not in</span>
+0765                     <span class="comment">% database.</span>
+0766                     [tempsepoch, tempeepoch, mean_rate, median_rate, mean_mag, cum_mag] = dbgetv(db,<span class="string">'timewindow_starttime'</span>, <span class="string">'timewindow_endtime'</span>, <span class="string">'mean_rate'</span>, <span class="string">'median_rate'</span>, <span class="string">'mean_ml'</span>, <span class="string">'cum_ml'</span>);
+0767                     obj.binsize = (tempeepoch(1) - tempsepoch(1))/86400;
+0768                     obj.stepsize = <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(tempsepoch(2:end) - tempsepoch(1:end-1))/86400;
+0769                     obj.time = snum+obj.stepsize:obj.stepsize:enum;
+0770                     obj.numbins = length(obj.time);
+0771                     obj.mean_rate = zeros(obj.numbins, 1);
+0772                     obj.counts = zeros(obj.numbins, 1);
+0773                     obj.median_rate = zeros(obj.numbins, 1);
+0774                     obj.mean_mag = zeros(obj.numbins, 1);
+0775                     obj.cum_mag = zeros(obj.numbins, 1);
+0776                     <span class="keyword">for</span> c=1:length(tempeepoch)
+0777                         tempenum = <a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(tempeepoch(c));
+0778                         i = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(obj.time == tempenum);
+0779                         obj.mean_rate(i) = mean_rate(c);
+0780                         obj.counts(i) = mean_rate(c) * (obj.binsize * 24);
+0781                         obj.median_rate(i) = median_rate(c); 
+0782                         obj.mean_mag(i) = mean_mag(c);
+0783                         obj.cum_mag(i) = cum_mag(c);
+0784                     <span class="keyword">end</span>
+0785                 <span class="keyword">end</span>
+0786                 dbclose(db);
+0787 
+0788             <span class="keyword">else</span>
+0789                 <span class="comment">% error - table does not exist</span>
+0790                 fprintf(<span class="string">'Error: %s does not exist'</span>,dbtablename);
+0791                 <span class="keyword">return</span>;
+0792             <span class="keyword">end</span>
+0793 
+0794             obj.total_counts = sum(obj.counts)*obj.stepsize/obj.binsize;
+0795 
+0796         <span class="keyword">end</span>
+0797         
+0798         <span class="comment">%% ADDFIELD</span>
+0799         <a name="_sub12" href="#_subfunctions" class="code">function obj = addfield(obj,fieldname,val)</a>
+0800             <span class="comment">%ADDFIELD add fields and values to object(s)</span>
+0801             <span class="comment">%   obj = addfield(obj, fieldname, value)</span>
+0802             <span class="comment">%   This function creates a new user defined field, and fills it with the</span>
+0803             <span class="comment">%   included value.  If fieldname exists, it will overwrite the existing</span>
+0804             <span class="comment">%   value.</span>
+0805             <span class="comment">%</span>
+0806             <span class="comment">%   Input Arguments</span>
+0807             <span class="comment">%       obj: an EventRate object</span>
+0808             <span class="comment">%       fieldname: a string name</span>
+0809             <span class="comment">%       value: a value to be added for those fields.  Value can be anything</span>
+0810             <span class="comment">%</span>
+0811             <span class="comment">%   EventRate objects can hold user-defined fields.  To access the contents,</span>
+0812             <span class="comment">%   use EventRate/get.</span>
+0813             <span class="comment">%</span>
+0814             <span class="comment">%   Example:</span>
+0815             <span class="comment">%       % add a field called &quot;TESTFIELD&quot;, containing the numbers 1-45</span>
+0816             <span class="comment">%       obj = addfield(obj,'TestField',1:45);</span>
+0817             <span class="comment">%</span>
+0818             <span class="comment">%       % add a cell field called &quot;MISHMOSH&quot;</span>
+0819             <span class="comment">%       obj = addfield(obj,'mishmosh',{'hello';'world'});</span>
+0820             <span class="comment">%</span>
+0821             <span class="comment">%       % see the result</span>
+0822             <span class="comment">%       disp(obj)</span>
+0823             <span class="comment">%</span>
+0824             <span class="comment">% See also EventRate/set, EventRate/get</span>
+0825 
+0826             <span class="comment">% AUTHOR: Glenn Thompson</span>
+0827 
+0828             <span class="keyword">if</span> ischar(fieldname)
+0829                 mask = strcmp(fieldname, properties(obj));
+0830                 <span class="keyword">if</span> any(mask)
+0831                     obj = obj.set(fieldname, val);
+0832                 <span class="keyword">else</span>
+0833                     mask = strcmp(upper(fieldname),obj.misc_fields);
+0834                     <span class="keyword">if</span> any(mask)
+0835                         obj = obj.set(fieldname, val);
+0836                     <span class="keyword">else</span>
+0837                         obj.misc_fields = [obj.misc_fields, upper(fieldname)];
+0838                         obj = obj.set(upper(fieldname), val);
+0839                     <span class="keyword">end</span>
+0840                 <span class="keyword">end</span>   
+0841             <span class="keyword">else</span>
+0842                 error(<span class="string">'%s:addfield:invalidFieldname'</span>,<span class="string">'fieldname must be a string'</span>, class(catalogObject))
+0843             <span class="keyword">end</span>
+0844 
+0845         <span class="keyword">end</span>
+0846 
+0847         <span class="comment">%% SET</span>
+0848         <a name="_sub13" href="#_subfunctions" class="code">function obj = set(obj, varargin)</a>
+0849             <span class="comment">%SET Set properties for EventRate object(s)</span>
+0850             <span class="comment">%   obj = set(obj,'property_name', val, ['property_name2', val2])</span>
+0851             <span class="comment">%   SET is one of the two gateway functions of an object, such as EventRate.</span>
+0852             <span class="comment">%   Properties that are changed through SET are typechecked and otherwise</span>
+0853             <span class="comment">%   scrutinized before being stored within the EventRate object.  This</span>
+0854             <span class="comment">%   ensures that the other EventRate methods are all retrieving valid data,</span>
+0855             <span class="comment">%   thereby increasing the reliability of the code.</span>
+0856             <span class="comment">%</span>
+0857             <span class="comment">%   Another strong advantage to using SET and GET to change and retrieve</span>
+0858             <span class="comment">%   properties, rather than just assigning them to EventRate object directly,</span>
+0859             <span class="comment">%   is that the underlying data structure can change and grow without</span>
+0860             <span class="comment">%   harming the code that is written based on the EventRate object.</span>
+0861             <span class="comment">%</span>
+0862             <span class="comment">%   For a list of valid property names, type:</span>
+0863             <span class="comment">%       properties(obj)</span>
+0864             <span class="comment">%</span>
+0865             <span class="comment">%   If user-defined fields were added to the EventRate object (ie, through</span>
+0866             <span class="comment">%   addField), these fieldnames are also available through set.</span>
+0867             <span class="comment">%</span>
+0868             <span class="comment">%   Examples:</span>
+0869             <span class="comment">%       (1) Change the description property</span>
+0870             <span class="comment">%           obj = obj.set('description','hello world');</span>
+0871             <span class="comment">%</span>
+0872             <span class="comment">%       (2) Add new a field called CLOSEST_STATION with</span>
+0873             <span class="comment">%           % the value 'MBLG'</span>
+0874             <span class="comment">%           obj = obj.addfield('CLOSEST_STATION','MBLG');</span>
+0875             <span class="comment">%</span>
+0876             <span class="comment">%           % change the value of the CLOSEST_STATION field</span>
+0877             <span class="comment">%           obj = obj.set('CLOSEST_STATION','MBWH');</span>
+0878             <span class="comment">%</span>
+0879             <span class="comment">%  See also EventRate/get, EventRate/addfield</span>
+0880 
+0881             Vidx = 1 : numel(varargin);
+0882 
+0883             <span class="keyword">while</span> numel(Vidx) &gt;= 2
+0884                 prop_name = upper(varargin{Vidx(1)});
+0885                 val = varargin{Vidx(2)};
+0886                 mask = strcmp(upper(prop_name),upper(properties(obj)));
+0887                 <span class="keyword">if</span> any(mask)
+0888                     mc = metaclass(obj);
+0889                     i = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(mask);
+0890                     prop_name = mc.PropertyList(i).Name;
+0891                     <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(mc.PropertyList(i).GetMethod)
+0892                         <span class="comment">%eval(sprintf('obj.%s=val;',prop_name));</span>
+0893                         obj.(prop_name) = val;
+0894                     <span class="keyword">else</span>
+0895                         warning(<span class="string">'Property %s is a derived property and cannot be set'</span>,prop_name);
+0896                     <span class="keyword">end</span>
+0897                 <span class="keyword">else</span>
+0898                     <span class="keyword">switch</span> prop_name
+0899                         <span class="keyword">case</span> obj.misc_fields
+0900                             mask = strcmp(prop_name,obj.misc_fields);
+0901                             obj.misc_values(mask) = {val};
+0902                         <span class="keyword">otherwise</span>
+0903                             error(<span class="string">'%s:set:unknownProperty'</span>,<span class="keyword">...</span>
+0904                                 <span class="string">'can''t understand property name : %s'</span>, mfilename,prop_name);
+0905                     <span class="keyword">end</span>
+0906                 <span class="keyword">end</span>
+0907                 Vidx(1:2) = []; <span class="comment">%done with those parameters, move to the next ones...</span>
+0908             <span class="keyword">end</span> 
+0909         <span class="keyword">end</span>     
+0910         
+0911         <span class="comment">%% GET</span>
+0912         <a name="_sub14" href="#_subfunctions" class="code">function val = get(obj,prop_name)</a>
+0913             <span class="comment">%GET Get EventRate properties</span>
+0914             <span class="comment">%   val = get(EventRate_object,'property_name')</span>
+0915             <span class="comment">%</span>
+0916             <span class="comment">%   To see valid property names, type:</span>
+0917             <span class="comment">%       properties(EventRate_object)</span>
+0918             <span class="comment">%</span>
+0919             <span class="comment">%       If additional fields were added to EventRate using ADDFIELD, then</span>
+0920             <span class="comment">%       values from these can be retrieved using the fieldname</span>
+0921             <span class="comment">%</span>
+0922             <span class="comment">%   See also EventRate/SET, EventRate/ADDFIELD, Catalog/GET</span>
+0923 
+0924             mask = strcmp(prop_name, properties(obj));
+0925             <span class="keyword">if</span> any(mask)
+0926                 <span class="comment">% eval(sprintf('val=obj.%s;',prop_name));</span>
+0927                 val = obj.(prop_name);
+0928             <span class="keyword">else</span>
+0929                 mask = strcmp(upper(prop_name),obj.misc_fields);
+0930                 <span class="keyword">if</span> any(mask)
+0931                     val = obj.misc_values{mask};
+0932                 <span class="keyword">else</span>
+0933                     warning(<span class="string">'%s:get:unrecognizedProperty'</span>,<span class="keyword">...</span>
+0934                         <span class="string">'Unrecognized property name : %s'</span>,  class(obj), prop_name);
+0935                 <span class="keyword">end</span>
+0936             <span class="keyword">end</span>
+0937         <span class="keyword">end</span>
+0938 
+0939     
+0940     <span class="keyword">end</span> <span class="comment">% methods</span>
+0941 
+0942    
+0943     methods(Static)
+0944         <a href="cookbook.html" class="code" title="">cookbook</a>()
+0945     <span class="keyword">end</span>
+0946 
+0947 <span class="keyword">end</span>
+0948 <span class="comment">%% PERCENTILES</span>
+0949 <a name="_sub15" href="#_subfunctions" class="code">function p=percentiles(vals)</a>
+0950     lenVals = length(vals);
+0951     <span class="keyword">for</span> i=1:100
+0952         p(i) = vals(floor(i/100 * (lenVals-1))+1);
+0953     <span class="keyword">end</span>
+0954 <span class="keyword">end</span>
+0955 
+0956 <span class="comment">%% PLOT_PERCENTILES</span>
+0957 <a name="_sub16" href="#_subfunctions" class="code">function plot_percentiles(p)</a>
+0958     figure(<a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>(gcf,<span class="string">'Number'</span>)+1, <span class="string">'Color'</span>, [1 1 1])
+0959     <a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(1:100, p);
+0960 <span class="keyword">end</span>
+0961 
+0962 <a name="_sub17" href="#_subfunctions" class="code">function labels = metric2label(metric, binsize)</a>
+0963     <span class="comment">% label = metric2label(metric, binsize)</span>
+0964     labels={};
+0965     blabel = Catalog.binning.binsizelabel(binsize);
+0966     time_unit = blabel(4:end);
+0967     <span class="keyword">if</span> strcmp(metric, <span class="string">'counts'</span>)
+0968         labels{1} = sprintf(<span class="string">'# Events %s'</span>,blabel);
+0969         labels{2} = <span class="string">'Cumulative # events'</span>;
+0970     <span class="keyword">elseif</span> strcmp(metric, <span class="string">'energy'</span>)
+0971         labels{1} = sprintf(<span class="string">'Energy %s (J)'</span>,blabel);
+0972         labels{2} = <span class="string">'Cumulative energy (J)'</span>;
+0973     <span class="keyword">elseif</span> strcmp(metric, <span class="string">'mean_rate'</span>)
+0974         labels{1} = sprintf(<span class="string">'Mean # events per hour (binsize %s)'</span>, time_unit);
+0975     <span class="keyword">elseif</span> strcmp(metric, <span class="string">'median_rate'</span>)
+0976         labels{1} = sprintf(<span class="string">'Median # events per hour (binsize %s)'</span>, time_unit);
+0977     <span class="keyword">elseif</span> strcmp(metric, <span class="string">'cum_mag'</span>)
+0978         labels{1} = sprintf(<span class="string">'Cumulative Magnitude per hour (binsize %s)'</span>, time_unit);;
+0979     <span class="keyword">elseif</span> strcmp(metric, <span class="string">'mean_mag'</span>)
+0980         labels{1} = sprintf(<span class="string">'Mean Magnitude per hour (binsize %s)'</span>, time_unit);
+0981     <span class="keyword">elseif</span> strcmp(metric, <span class="string">'median_mag'</span>)
+0982         labels{1} = sprintf(<span class="string">'Median Magnitude per hour (binsize %s)'</span>, time_unit);
+0983     <span class="keyword">end</span>
+0984 <span class="keyword">end</span>
+0985</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

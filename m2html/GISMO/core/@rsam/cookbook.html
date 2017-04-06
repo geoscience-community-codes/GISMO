@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of cookbook</title>
+  <meta name="keywords" content="cookbook">
+  <meta name="description" content="% RSAM Cookbook">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@rsam</a> &gt; cookbook.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@rsam&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>cookbook
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>% RSAM Cookbook</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% RSAM Cookbook
+ GISMO can read and plot RSAM data from BOB binary files. GISMO can also
+ create RSAM data from waveform objects and save RSAM data to BOB binary
+ files, or to text files.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="rsam.html" class="code" title="">rsam</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="../../../GISMO/core/@EventRate/EventRate.html" class="code" title="">EventRate</a>	</li><li><a href="../../../GISMO/core/@correlation/correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="../../../GISMO/core/@drumplot/drumplot.html" class="code" title="">drumplot</a>	DRUMPLOT the blueprint for drumplot objects in GISMO</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@TraceFilter/TraceFilter.html" class="code" title="">TraceFilter</a>	</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%% RSAM Cookbook</span>
+0002 <span class="comment">% GISMO can read and plot RSAM data from BOB binary files. GISMO can also</span>
+0003 <span class="comment">% create RSAM data from waveform objects and save RSAM data to BOB binary</span>
+0004 <span class="comment">% files, or to text files.</span>
+0005 
+0006 <span class="comment">%% Create an RSAM object by hand</span>
+0007 t = [0:60:1440]/1440;
+0008 y = randn(size(t)) + rand(size(t));
+0009 s = <a href="rsam.html" class="code" title="">rsam</a>(t, y);
+0010 
+0011 <span class="comment">%% Load an RSAM binary file:</span>
+0012 
+0013 <span class="comment">% For one station we can use an explicit path</span>
+0014 dp = <span class="string">'INETER_DATA/RSAM/MOMN2015.DAT'</span>;
+0015 
+0016 <span class="comment">% But if we want to load several files, we can use a file pattern</span>
+0017 dp = <span class="string">'INETER_DATA/RSAM/SSSSYYYY.DAT'</span>; <span class="comment">%SSSS means station, YYYY means year</span>
+0018 s = rsam.read_bob_file(<span class="string">'file'</span>, dp, <span class="string">'snum'</span>, datenum(2015,1,1), <span class="keyword">...</span>
+0019       <span class="string">'enum'</span>, datenum(2015,2,1), <span class="string">'sta'</span>, <span class="string">'MOMN'</span>, <span class="string">'units'</span>, <span class="string">'Counts'</span>)
+0020 
+0021 
+0022</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

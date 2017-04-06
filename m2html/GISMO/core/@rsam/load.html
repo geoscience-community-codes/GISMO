@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of load</title>
+  <meta name="keywords" content="load">
+  <meta name="description" content="Purpose:">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@rsam</a> &gt; load.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@rsam&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>load
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Purpose:</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function self = load(self) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Purpose:
+    Loads derived data from a binary file in the BOB RSAM format
+    The pointer position at which to reading from the binary file is determined from f.snum 
+    Load all the data from f.snum to f.enum. So if timewindow is 12:34:56 to 12:44:56, 
+    it is the samples at 12:35, ..., 12:44 - i.e. 10 of them. 
+    
+ Input:
+    self.f - a structure which contains 'file', 'snum', 'enum' and 'found' parameters
+ Author:
+   Glenn Thompson, MVO, 2000</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/libgismo/catmatrices.html" class="code" title="function cmatrix=catmatrices(matrix2,matrix1);">catmatrices</a>	CATMATRICES - concatenate 2D matrices of arbitrary size</li><li><a href="../../../GISMO/libgismo/ceilminute.html" class="code" title="function dnum=ceilminute(dnum, nummins)">ceilminute</a>	CEILMINUTE round up datenum to next minute mark</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/iceweb.html" class="code" title="function iceweb(ds, varargin)">iceweb</a>	</li><li><a href="../../../GISMO/applications/+iceweb/montserrat_remove_analog_sites.html" class="code" title="function montserrat_remove_analog_sites">montserrat_remove_analog_sites</a>	</li><li><a href="../../../GISMO/contributed/+obspy/incomplete.html" class="code" title="function [w,scnl]=obspy.stream2waveform(path_to_python, path_to_converter, path_to_data)">incomplete</a>	OBSPY.STREAM2WAVEFORM Use ObsPy to read a stream object and then convert</li><li><a href="../../../GISMO/contributed/+obspy/stream2waveform.html" class="code" title="function [w,scnl]=obspy.stream2waveform(path_to_python, path_to_converter, path_to_data)">stream2waveform</a>	OBSPY.STREAM2WAVEFORM Use ObsPy to read a stream object and then convert</li><li><a href="../../../GISMO/contributed/+obspy/stream_matfile2waveform.html" class="code" title="function [w,scnl]=stream_matfile2waveform(matfilepath)">stream_matfile2waveform</a>	OBSPY.STREAM2WAVEFORM Use ObsPy to read a stream object and then convert</li><li><a href="../../../GISMO/contributed/instrument_response/demo_plutons.html" class="code" title="">demo_plutons</a>	</li><li><a href="../../../GISMO/contributed/instrument_response/response_demo_waveforms.html" class="code" title="function w = response_demo_waveforms">response_demo_waveforms</a>	RESPONSE_DEMO_WAVEFORMS returns the absolute path to the demo database</li><li><a href="../../../GISMO/contributed/iris_dmc_tools/dmc_cookbook.html" class="code" title="function dmc_cookbook">dmc_cookbook</a>	</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/load_cookbook_data.html" class="code" title="function W = load_cookbook_data">load_cookbook_data</a>	LOAD_COOKBOOK_DATA Load sample data used in MASTERCORR.COOKBOOK</li><li><a href="../../../GISMO/contributed/master_correlation/mastercorr_cookbook.html" class="code" title="">mastercorr_cookbook</a>	Demonstration of the major features of the master waveform correlation</li><li><a href="../../../GISMO/contributed_antelope/double_difference/dd_collate.html" class="code" title="function dd_collate(eventdat,varargin)">dd_collate</a>	dd_collate('event.dat')</li><li><a href="../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/map.html" class="code" title="function map(dbName)">map</a>	MAP plot a map of ray coverage.</li><li><a href="../../../GISMO/core/@Catalog/cookbook.html" class="code" title="">cookbook</a>	% Catalog Cookbook</li><li><a href="../../../GISMO/core/@Catalog/webmap.html" class="code" title="function webmap(catalogObject)">webmap</a>	CATALOG.WEBMAP Plot hypocenters in map view using webmap</li><li><a href="../../../GISMO/core/@correlation/colormap.html" class="code" title="function c = align(c,varargin)">colormap</a>	C = COLORMAP(C)</li><li><a href="../../../GISMO/core/@correlation/correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="../../../GISMO/core/@correlation/private/corrplot.html" class="code" title="function corrplot(c)">corrplot</a>	Called internally by correlation/plot to plot correlation matrix.</li><li><a href="../../../GISMO/core/@correlation/private/lagplot.html" class="code" title="function lagplot(c);">lagplot</a>	Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</li><li><a href="../../../GISMO/core/@correlation/private/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/@datasource/load_file.html" class="code" title="function allObj = load_file(ds,searchClass,scnl,startt,endt)">load_file</a>	grab all the variables in a matlab file, and flip through them, returning</li><li><a href="../../../GISMO/core/@datasource/load_objects_from_file.html" class="code" title="function allObj = load_objects_from_file(ds,searchClass,chanTag,startt,endt)">load_objects_from_file</a>	grab all the variables in a matlab file, and flip through them, returning</li><li><a href="loadbobfile.html" class="code" title="function rsamobj = loadbobfile(infile, snum, enum)">loadbobfile</a>	LOADBOBFILE Load an RSAM binary file</li><li><a href="rsam.html" class="code" title="">rsam</a>	</li><li><a href="../../../GISMO/core/@spectralobject/spectralobject.html" class="code" title="function s = spectralobject(anyV,overlap,freqmax,dBlims, scaling)">spectralobject</a>	SPECTRALOBJECT - spectralobject class constructor</li><li><a href="../../../GISMO/core/@threecomp/demo.html" class="code" title="function [w,backAzimuth,trigger,staLat,staLon,origLat,origLon] = demo(TC)">demo</a>	DEMO</li><li><a href="../../../GISMO/core/@threecomp/diagnostic.html" class="code" title="function diagnostic(threecomp)">diagnostic</a>	DIAGNOSTIC check for accurate behavior of threecomp object.</li><li><a href="../../../GISMO/core/@waveform/private/load_file.html" class="code" title="function w = load_file(request)">load_file</a>	LOAD_FILE</li><li><a href="../../../GISMO/core/@waveform/private/load_matfile.html" class="code" title="function w = load_matfile(request)">load_matfile</a>	LOAD_FILE</li><li><a href="../../../GISMO/core/@waveform/private/load_obspy.html" class="code" title="function w = load_obspy(request)">load_obspy</a>	LOAD_OBSPY loads matlab files that were saved by ObsPy as per the ObsPy tutorial</li><li><a href="../../../GISMO/core/dev/+dataretrieval/spatiotemporal_file.html" class="code" title="">spatiotemporal_file</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/colormap.html" class="code" title="function c = colormap(c,mapname)">colormap</a>	colormap   apply a colormap to the cross-correlation</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/corrplot.html" class="code" title="function corrplot(c)">corrplot</a>	corrplot   plot the correlation matrix</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/lagplot.html" class="code" title="function lagplot(c)">lagplot</a>	lagplot</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/wiggleinterferogram.html" class="code" title="function wiggleinterferogram(c,scale,type,norm,range)">wiggleinterferogram</a>	Private method. See ../plot for details.</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/TraceSpectra.html" class="code" title="">TraceSpectra</a>	</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li><li><a href="../../../GISMO/uaf_internal/IDEAS_format/ideas2waveform.html" class="code" title="function w = ideas2waveform(fileName)">ideas2waveform</a>	OPEN_INFRASOUND Open UAF/GI infrasound data as a waveform object.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function self = load(self)</a>
+0002 <span class="comment">% Purpose:</span>
+0003 <span class="comment">%    Loads derived data from a binary file in the BOB RSAM format</span>
+0004 <span class="comment">%    The pointer position at which to reading from the binary file is determined from f.snum</span>
+0005 <span class="comment">%    Load all the data from f.snum to f.enum. So if timewindow is 12:34:56 to 12:44:56,</span>
+0006 <span class="comment">%    it is the samples at 12:35, ..., 12:44 - i.e. 10 of them.</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% Input:</span>
+0009 <span class="comment">%    self.f - a structure which contains 'file', 'snum', 'enum' and 'found' parameters</span>
+0010 <span class="comment">% Author:</span>
+0011 <span class="comment">%   Glenn Thompson, MVO, 2000</span>
+0012 
+0013     <span class="comment">% initialise return variables</span>
+0014 
+0015     f = self.files;
+0016     
+0017     [yyyy, ~]=datevec(f.snum);
+0018     days=365;
+0019     <span class="keyword">if</span> mod(yyyy,4)==0
+0020         days=366;
+0021     <span class="keyword">end</span>
+0022 
+0023     datapointsperday = 1440;
+0024     headersamples = 0;
+0025     tz=0;
+0026     <span class="keyword">if</span> strfind(f.file,<span class="string">'RSAM'</span>) 
+0027         headersamples=datapointsperday;<span class="comment">% for PC-SEIS RSAM data there is a 1 day header</span>
+0028         tz=-4;<span class="comment">% for Montserrat RSAM data time zone is off by 4 hours</span>
+0029     <span class="keyword">end</span>
+0030     startsample = ceil( (f.snum-datenum(yyyy,1,1))*datapointsperday)+headersamples;
+0031     endsample   = (f.enum-datenum(yyyy,1,1)) *datapointsperday + headersamples;
+0032     nsamples    = endsample - startsample + 1;
+0033 
+0034     <span class="comment">% create dnum &amp; blank data vector</span>
+0035     dnum_ = <a href="../../../GISMO/libgismo/ceilminute.html" class="code" title="function dnum=ceilminute(dnum, nummins)">ceilminute</a>(f.snum)+(0:nsamples-1)/datapointsperday - tz/24;
+0036     data_ = nan(1,length(dnum_));
+0037 
+0038     <span class="keyword">if</span> f.found    
+0039         <span class="comment">% file found</span>
+0040         debug.print_debug(0, sprintf( <span class="string">'Loading data from %s, position %d to %d of %d'</span>, <span class="keyword">...</span>
+0041              f.file, startsample,(startsample+nsamples-1),(datapointsperday*days) )); 
+0042 
+0043         fid=fopen(f.file,<span class="string">'r'</span>, <span class="string">'l'</span>); <span class="comment">% big-endian for Sun, little-endian for PC</span>
+0044 
+0045         <span class="comment">% Position the pointer</span>
+0046         offset=(startsample)*4;
+0047         fseek(fid,offset,<span class="string">'bof'</span>);
+0048 
+0049         <span class="comment">% Read the data</span>
+0050         [data_, ~] = fread(fid, nsamples, <span class="string">'float32'</span>);
+0051         fclose(fid);
+0052         debug.print_debug(0, sprintf(<span class="string">'mean of data loaded is %e'</span>,nanmean(data_)));
+0053 
+0054         <span class="comment">% Transpose to give same dimensions as dnum</span>
+0055         data_=data_';
+0056 
+0057         <span class="comment">% Test for Nulls</span>
+0058         datafound = any(data_ &gt; 0);
+0059     <span class="keyword">else</span>
+0060        datafound = false;
+0061        debug.print_debug(0, sprintf(<span class="string">'File %s not found'</span>, f.file));
+0062     <span class="keyword">end</span>
+0063 
+0064     <span class="comment">% Now paste together the matrices</span>
+0065     self.dnum = <a href="../../../GISMO/libgismo/catmatrices.html" class="code" title="function cmatrix=catmatrices(matrix2,matrix1);">catmatrices</a>(dnum_, self.dnum);
+0066     self.data = <a href="../../../GISMO/libgismo/catmatrices.html" class="code" title="function cmatrix=catmatrices(matrix2,matrix1);">catmatrices</a>(data_, self.data);
+0067 
+0068     <span class="keyword">if</span> ~datafound
+0069         debug.print_debug(0, sprintf(<span class="string">'%s: No data loaded from file %s'</span>,mfilename,f.file));
+0070     <span class="keyword">end</span>
+0071 
+0072     <span class="comment">% eliminate any data outside range asked for</span>
+0073     myRange = self.dnum &gt;= self.snum &amp; self.dnum &lt;= self.enum;
+0074     self.dnum = self.dnum(myRange);
+0075     self.data = self.data(myRange);
+0076 
+0077     <span class="comment">% Fill NULL values with NaN</span>
+0078     self.data(self.data == -998 | self.data == 0) = NaN;
+0079 
+0080 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of eev</title>
+  <meta name="keywords" content="eev">
+  <meta name="description" content="CATALOG.EEV - Browse an Catalog object one event at a time.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@Catalog</a> &gt; eev.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@Catalog&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>eev
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>CATALOG.EEV - Browse an Catalog object one event at a time.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function eev(obj, eventnum) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> CATALOG.EEV - Browse an Catalog object one event at a time.
+  catalogObject.EEV() Browse through an Catalog object one event
+  at a time in a similar way to the Seisan program 'eev'.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function eev(obj, eventnum)</a>
+0002     <span class="comment">% CATALOG.EEV - Browse an Catalog object one event at a time.</span>
+0003     <span class="comment">%  catalogObject.EEV() Browse through an Catalog object one event</span>
+0004     <span class="comment">%  at a time in a similar way to the Seisan program 'eev'.</span>
+0005 
+0006     <span class="keyword">if</span> ~exist(<span class="string">'eventnum'</span>,<span class="string">'var'</span>)
+0007         eventnum = 1;
+0008     <span class="keyword">end</span>
+0009 
+0010     <span class="keyword">while</span> 1,
+0011 
+0012         <span class="comment">% don't beyond start or end of this catalogObject object</span>
+0013         <span class="keyword">if</span> eventnum&lt;1
+0014             eventnum=1;
+0015         <span class="keyword">end</span>
+0016         <span class="keyword">if</span> eventnum&gt;numel(obj.otime)
+0017             eventnum=numel(obj.otime);
+0018         <span class="keyword">end</span>           
+0019         <span class="comment">% display line for this event</span>
+0020         dstr=datestr(obj.otime(eventnum),31);
+0021         subclass=obj.etype{eventnum};
+0022         mag=obj.mag(eventnum);
+0023         outstr=sprintf(<span class="string">'%s %7.2f %7.2f %7.2 %5.1f %s %s'</span>,dstr, obj.lon(eventnum), obj.lat(eventnum), obj.depth(eventnum), mag, obj.magtype{eventnum}, subclass);
+0024         choice=input([outstr,<span class="string">':  ?'</span>],<span class="string">'s'</span>);           
+0025 
+0026         <span class="comment">% process choice</span>
+0027         <span class="keyword">if</span> <a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(choice)
+0028             eventnum=eventnum+1; <span class="comment">% ENTER goes to next event</span>
+0029 
+0030         <span class="keyword">elseif</span> (choice(1)==<span class="string">'c'</span>) <span class="comment">% CLASSIFY</span>
+0031             classify_event(datenum);
+0032 <span class="comment">% ^^ does this line need obj.otime?</span>
+0033 
+0034         <span class="keyword">elseif</span> (choice(1)==<span class="string">'f'</span>) <span class="comment">% FORWARD N EVENTS</span>
+0035             num=1;
+0036             <span class="keyword">if</span> length(choice)&gt;1
+0037                 num=str2num(choice(2:end));
+0038             <span class="keyword">end</span>
+0039             eventnum=eventnum+num; 
+0040 
+0041         <span class="keyword">elseif</span> (choice(1)==<span class="string">'b'</span>) <span class="comment">% BACKWARD N EVENTS</span>
+0042             num=1;
+0043             <span class="keyword">if</span> length(choice)&gt;1
+0044                 num=str2num(choice(2:end));
+0045             <span class="keyword">end</span>
+0046             eventnum=eventnum-num;
+0047 
+0048         <span class="keyword">elseif</span> (choice(1)==<span class="string">'t'</span>) <span class="comment">% JUMP TO TIME</span>
+0049             month=1;dd=1;hr=0;
+0050             <span class="keyword">if</span> length(choice)&gt;4
+0051                 year=str2num(choice(2:5));
+0052             <span class="keyword">end</span>
+0053             <span class="keyword">if</span> length(choice)&gt;6
+0054                 month=str2num(choice(6:7));
+0055             <span class="keyword">end</span>
+0056             <span class="keyword">if</span> length(choice)&gt;8
+0057                 dd=str2num(choice(8:9));
+0058             <span class="keyword">end</span>
+0059             <span class="keyword">if</span> length(choice)&gt;10
+0060                 hr=str2num(choice(10:11));
+0061             <span class="keyword">end</span>
+0062             jumptime=datenum(year,month,dd,hr,0,0);
+0063             eventnum = <a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(obj.otime &gt;= jumptime));
+0064 
+0065         <span class="keyword">elseif</span> (choice(1)==<span class="string">'s'</span>) <span class="comment">% SUMMARISE - SHOW S FILE or similar data</span>
+0066             fprintf(<span class="string">'\nTime:\t\t%s\n'</span>,dstr);
+0067             fprintf(<span class="string">'Longitude:\t%7.2f degrees\n'</span>,obj.lon(eventnum));
+0068             fprintf(<span class="string">'Latitude:\t%7.2f degrees\n'</span>,obj.lat(eventnum));
+0069             fprintf(<span class="string">'Depth:\t\t%7.2f km\n'</span>,obj.depth(eventnum));
+0070             fprintf(<span class="string">'Magnitude:\t%7.2f\n'</span>,obj.mag(eventnum));
+0071             fprintf(<span class="string">'Magnitude Type:\t%s\n'</span>,obj.magtype{eventnum});
+0072             fprintf(<span class="string">'Event Type:\t%s\n'</span>,obj.etype{eventnum});
+0073             fprintf(<span class="string">'\n'</span>);
+0074 
+0075         <span class="keyword">elseif</span> (choice(1)==<span class="string">'x'</span>) <span class="comment">% CLOSE ALL</span>
+0076             close all;
+0077 
+0078         <span class="keyword">elseif</span> (choice==<span class="string">'q'</span>) <span class="comment">% QUIT</span>
+0079             <span class="keyword">break</span>;
+0080 
+0081         <span class="keyword">elseif</span> (choice(1)==<span class="string">'h'</span>) <span class="comment">% HELP</span>
+0082             <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">' '</span>);
+0083             <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'Options:'</span>);
+0084             <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'________'</span>);
+0085             <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">' '</span>);
+0086             <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'b[num]            - go backward 1 event (or N events)'</span>);
+0087             <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'c                 - classify'</span>);
+0088             <span class="comment">%disp('e                 - edit/generate S-file');</span>
+0089             <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'f[num]            - go forward 1 event (or N events)'</span>);
+0090             <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'h                 - this help'</span>);
+0091             <span class="comment">%disp('p                 - plot');</span>
+0092             <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'s                 - summarise'</span>);
+0093             <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'tYYYY[MM[DD[HH]]] - jump to date/hour specified'</span>);
+0094             <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'x                 - close all figure windows'</span>);
+0095             <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'q                 - quit'</span>);
+0096             <a href="disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">' '</span>);
+0097         <span class="keyword">end</span>
+0098     <span class="keyword">end</span>
+0099 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of xcorr1x1</title>
+  <meta name="keywords" content="xcorr1x1">
+  <meta name="description" content="This function is the same as xcwfm1xr except that it uses matlab's xcorr">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; xcorr1x1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>xcorr1x1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>This function is the same as xcwfm1xr except that it uses matlab's xcorr</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function d = xcorr1x1(d) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> This function is the same as xcwfm1xr except that it uses matlab's xcorr
+ function and cycles through cross correlations individually instead by
+ row. It appears to run somewhat slower.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../../GISMO/core/@correlation/xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	C = XCORR(C)</li><li><a href="../../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	xcorr   calculate the correlation and lag for traces</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/DEP_xcorr.html" class="code" title="function c=xcorr(c,varargin)">DEP_xcorr</a>	C = XCORR(C)</li><li><a href="../../../../GISMO/core/@correlation/xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>	C = XCORR(C)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function d = xcorr1x1(d)</a>
+0002    
+0003    <span class="comment">% This function is the same as xcwfm1xr except that it uses matlab's xcorr</span>
+0004    <span class="comment">% function and cycles through cross correlations individually instead by</span>
+0005    <span class="comment">% row. It appears to run somewhat slower.</span>
+0006    <span class="comment">%</span>
+0007    
+0008    <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0009    <span class="comment">% $Date$</span>
+0010    <span class="comment">% $Revision$</span>
+0011    
+0012    
+0013    <span class="comment">% CREATE EMPTY CORRELATION AND LAG MATRICES</span>
+0014    d.corrmatrix = eye(length(d.trig),<span class="string">'single'</span>);
+0015    d.lags = zeros(length(d.trig),<span class="string">'single'</span>);
+0016    
+0017    
+0018    <span class="comment">% TIME THE PROCESS</span>
+0019    myTimer = tic;
+0020    t0 = cputime;
+0021    numcorr = ((length(d.trig))^2-length(d.trig))/2;
+0022    count = 0;
+0023    
+0024    
+0025    <span class="comment">% GET XCORR FUNCTION HANDLE</span>
+0026    Hxcorr = @<a href="xcorr.html" class="code" title="function c=xcorr(c,varargin)">xcorr</a>;
+0027    
+0028    
+0029    <span class="comment">% LOOP THROUGH FIRST WAVEFORM</span>
+0030    <span class="keyword">for</span> i = 1:length(d.trig)
+0031       d1 = d.w(:,i);
+0032       st1 = d.start(i);
+0033       
+0034       <span class="comment">% LOOP THROUGH SECOND WAVEFORM</span>
+0035       <span class="keyword">for</span> j = (i+1):length(d.trig)
+0036          count = count + 1;
+0037          d2 = d.w(:,j);
+0038          st2 = d.start(j);
+0039          
+0040          <span class="comment">% &quot;shift&quot; allows flexibility in when the waveforms actually start</span>
+0041          shift = 86400*((d.trig(j)-st2)-(d.trig(i)-st1));
+0042          
+0043          <span class="comment">% DO CORRELATION</span>
+0044          <span class="comment">%[corr,l]=xcorr(d1,d2,'coeff');</span>
+0045          [corr,l]=feval(Hxcorr,d1,d2,<span class="string">'coeff'</span>);
+0046          
+0047          [~,index] = <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(corr);
+0048          d.corrmatrix(i,j)=corr(index);
+0049          d.lags(i,j)=l(index)/d.Fs + shift; <span class="comment">% lag in seconds</span>
+0050          
+0051          <span class="comment">% SHOW PROGRESS</span>
+0052          <span class="keyword">if</span> (mod(count,round(numcorr/4))==0)
+0053             <a href="disp.html" class="code" title="function disp(c)">disp</a>([num2str(count) <span class="string">' of '</span> num2str(numcorr,<span class="string">'%2.0f'</span>) <span class="string">' complete ('</span> num2str(100*count/numcorr,<span class="string">'%2.0f'</span>) <span class="string">'%)'</span>]);
+0054          <span class="keyword">end</span>;
+0055          
+0056       <span class="keyword">end</span>;
+0057       
+0058    <span class="keyword">end</span>;
+0059    
+0060    
+0061    <span class="comment">% FILL LOWER TRIANGULAR PART OF MATRICES</span>
+0062    d.corrmatrix = NewCorrelation.fillLowerTriangleFromUpper(d.corrmatrix);
+0063    d.lags = d.lags - d.lags';
+0064    
+0065    
+0066    <span class="comment">% DISPLAY RUN TIMES</span>
+0067    tclock = toc(myTimer);
+0068    tcpu = cputime-t0;
+0069    <a href="disp.html" class="code" title="function disp(c)">disp</a>([<span class="string">'Clock time to complete correlations: '</span> num2str(tclock,<span class="string">'%5.1f'</span>) <span class="string">' s'</span>]);
+0070    <a href="disp.html" class="code" title="function disp(c)">disp</a>([<span class="string">'CPU time to complete correlations:   '</span> num2str(tcpu,<span class="string">'%5.1f'</span>) <span class="string">' s'</span>]);
+0071 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of minus</title>
+  <meta name="keywords" content="minus">
+  <meta name="description" content="C = MINUS(C,I)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; minus.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>minus
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>C = MINUS(C,I)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = minus(c,I) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> C = MINUS(C,I)
+ The function subtracts the waveform specified by trace index I from all
+ other traces. The resulting correlation object has the same number of
+ traces as the original though trace I is essentially zero amplitude.
+
+ C = MINUS(C)
+ Short hand version of MINUS where I is assumed to be the last trace in
+ the list. That is, MINUS(C, C.ntraces ). This use is common
+ following the STACK routine.
+
+ Before using MINUS, time windows need to be cropped to the same interval
+ relative to the triggers. This is most easily accomplished using the CROP
+ function prior to MINUS. If the traces have not been cropped, MINUS will
+ attempt to figure out which time window of data should be differenced.
+ This can result in unanticipated signals at the ends of each trace.
+ Caveat Emptor!
+
+ MINUS will erase the CORR, LAG, STAT, LINK and CLUST fields from the
+ objects. After differencing, these fields are no longer valid.
+
+ The traces are not normalized prior to subtracting. For most
+ applications the user will first want to normalize the trace amplitudes
+ using the NORM function. Typically, plots of the residual data will use
+ the 'raw' plotting option.
+
+ In order to be differenced, the &quot;phase shift&quot; of the samples within the
+ trace must be the same. If it is not, MINUS will make a call to ALIGN to
+ resample all traces such that one sample falls directly on the trigger
+ time.
+
+ Example - subtract the stacked waveform from each trace
+   c = xcorr(c)
+   c = adjusttrig(c)
+   c = crop(c,-3,5)
+   c = stack(c)
+   c = norm(c)      % stacked waveform is the last trace
+   c_residual = minus(c)
+   plot(c_residual,'raw');</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../../GISMO/core/@Catalog/subset.html" class="code" title="function catalogObject2 = subset(catalogObject, indices)">subset</a>	CATALOG.SUBSET Create a new catalogObject by subsetting based</li><li><a href="../../../../GISMO/core/@correlation/align.html" class="code" title="function c = align(c,varargin)">align</a>	c = ALIGN(c)</li><li><a href="../../../../GISMO/core/@correlation/check.html" class="code" title="function val = check(c,varargin)">check</a>	Check various features of a correlation object.</li><li><a href="../../../../GISMO/core/@correlation/crop.html" class="code" title="function c = crop(c,varargin)">crop</a>	c = CROP(c,[PRETRIG POSTTRIG])</li><li><a href="../../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../../GISMO/core/@correlation/subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li><li><a href="../../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../../GISMO/core/@rsam/Fs.html" class="code" title="function fs = Fs(self)">Fs</a>	</li><li><a href="../../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../../GISMO/core/@threecomp/align.html" class="code" title="function TCnew = align(TC,varargin)">align</a>	ALIGN Align and trim traces in threecomp object.</li><li><a href="../../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../../GISMO/core/@waveform/align.html" class="code" title="function w = align(w,alignTime, newFrequency, method)">align</a>	ALIGN resamples a waveform at over a specified interval</li><li><a href="../../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="align.html" class="code" title="function c = align(c, alignfreq)">align</a>	align   resample traces so that a sample falls exactly on trigger time.</li><li><a href="check.html" class="code" title="function val = check(c, whatToCheck)">check</a>	Check various features of a correlation object.</li><li><a href="crop.html" class="code" title="function c = crop(c, pretrig, posttrig)">crop</a>	crop   crop all waveforms to a time window</li><li><a href="disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>	c = SUBSET(c,INDEX)</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = minus(c,I)</a>
+0002    
+0003    <span class="comment">% C = MINUS(C,I)</span>
+0004    <span class="comment">% The function subtracts the waveform specified by trace index I from all</span>
+0005    <span class="comment">% other traces. The resulting correlation object has the same number of</span>
+0006    <span class="comment">% traces as the original though trace I is essentially zero amplitude.</span>
+0007    <span class="comment">%</span>
+0008    <span class="comment">% C = MINUS(C)</span>
+0009    <span class="comment">% Short hand version of MINUS where I is assumed to be the last trace in</span>
+0010    <span class="comment">% the list. That is, MINUS(C, C.ntraces ). This use is common</span>
+0011    <span class="comment">% following the STACK routine.</span>
+0012    <span class="comment">%</span>
+0013    <span class="comment">% Before using MINUS, time windows need to be cropped to the same interval</span>
+0014    <span class="comment">% relative to the triggers. This is most easily accomplished using the CROP</span>
+0015    <span class="comment">% function prior to MINUS. If the traces have not been cropped, MINUS will</span>
+0016    <span class="comment">% attempt to figure out which time window of data should be differenced.</span>
+0017    <span class="comment">% This can result in unanticipated signals at the ends of each trace.</span>
+0018    <span class="comment">% Caveat Emptor!</span>
+0019    <span class="comment">%</span>
+0020    <span class="comment">% MINUS will erase the CORR, LAG, STAT, LINK and CLUST fields from the</span>
+0021    <span class="comment">% objects. After differencing, these fields are no longer valid.</span>
+0022    <span class="comment">%</span>
+0023    <span class="comment">% The traces are not normalized prior to subtracting. For most</span>
+0024    <span class="comment">% applications the user will first want to normalize the trace amplitudes</span>
+0025    <span class="comment">% using the NORM function. Typically, plots of the residual data will use</span>
+0026    <span class="comment">% the 'raw' plotting option.</span>
+0027    <span class="comment">%</span>
+0028    <span class="comment">% In order to be differenced, the &quot;phase shift&quot; of the samples within the</span>
+0029    <span class="comment">% trace must be the same. If it is not, MINUS will make a call to ALIGN to</span>
+0030    <span class="comment">% resample all traces such that one sample falls directly on the trigger</span>
+0031    <span class="comment">% time.</span>
+0032    <span class="comment">%</span>
+0033    <span class="comment">% Example - subtract the stacked waveform from each trace</span>
+0034    <span class="comment">%   c = xcorr(c)</span>
+0035    <span class="comment">%   c = adjusttrig(c)</span>
+0036    <span class="comment">%   c = crop(c,-3,5)</span>
+0037    <span class="comment">%   c = stack(c)</span>
+0038    <span class="comment">%   c = norm(c)      % stacked waveform is the last trace</span>
+0039    <span class="comment">%   c_residual = minus(c)</span>
+0040    <span class="comment">%   plot(c_residual,'raw');</span>
+0041    
+0042    <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0043    <span class="comment">% $Date$</span>
+0044    <span class="comment">% $Revision$</span>
+0045    
+0046    
+0047    <span class="comment">% READ &amp; CHECK ARGUMENTS</span>
+0048    <span class="keyword">if</span> ~exist(<span class="string">'I'</span>,<span class="string">'var'</span>)
+0049       I = c.ntraces;
+0050    <span class="keyword">end</span>;
+0051    assert(numel(I)==1, <span class="string">'Only one trace can be subtracted from the others'</span>);
+0052    
+0053    <span class="keyword">if</span> <a href="check.html" class="code" title="function val = check(c, whatToCheck)">check</a>(c,<span class="string">'SCALE'</span>)
+0054       <a href="disp.html" class="code" title="function disp(c)">disp</a>(<span class="string">'Warning: Traces appear to have very different overall amplitudes'</span>);
+0055    <span class="keyword">end</span>
+0056    
+0057    
+0058    
+0059    
+0060    <span class="comment">% CREATE CORREATION OBJECT FOR INTERNAL MANIPULATIONS</span>
+0061    c1 = <a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>;
+0062    c1.traces = c.traces;
+0063    c1.trig = c.trig;
+0064    <span class="keyword">if</span> exist(<span class="string">'index'</span>,<span class="string">'var'</span>)               <span class="comment">% Is this necessary?</span>
+0065       c1 = <a href="subset.html" class="code" title="function c = subset(c,index)">subset</a>(c1,index);
+0066    <span class="keyword">end</span>
+0067    
+0068    
+0069    <span class="comment">% CHECK IF TRACES ARE DESCRITIZED ON THE SAME INVERVALS</span>
+0070    t = 86400 * (c1.trig - c1.traces.firstsampletime());
+0071    <a href="../../../../GISMO/core/@rsam/Fs.html" class="code" title="function fs = Fs(self)">Fs</a> = c1.samplerate;
+0072    sampleshift = mod(t,1/<a href="../../../../GISMO/core/@rsam/Fs.html" class="code" title="function fs = Fs(self)">Fs</a>);
+0073    <span class="keyword">if</span> (<a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(sampleshift) ~= sampleshift)   <span class="comment">% if all sampleshifts are the same</span>
+0074       c1 = <a href="align.html" class="code" title="function c = align(c, alignfreq)">align</a>(c1);
+0075    <span class="keyword">end</span>
+0076    
+0077    
+0078    <span class="comment">% CHECK IF TRACES ARE EQUALLY CROPPED</span>
+0079    pretrig  = c1.traces.firstsampletime() - c1.trig; <span class="comment">%ALL? just one?</span>
+0080    posttrig = c1.traces.lastsampletime()  - c1.trig;
+0081    <span class="keyword">if</span> (<a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(pretrig)~=pretrig(1)) || (<a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>(posttrig)~=posttrig(1))
+0082       center = <a href="../../../../GISMO/core/@waveform/mean.html" class="code" title="function y = mean(w)">mean</a>([pretrig ; posttrig])*86400;
+0083       pretrig = center - (0.5 * c1.nsamples * <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1,<span class="string">'Period'</span>));
+0084       posttrig = pretrig + (c1.nsamples + 1) * <a href="get.html" class="code" title="function val = get(c,prop_name)">get</a>(c1,<span class="string">'Period'</span>);
+0085       <span class="comment">% is it the right length?</span>
+0086       c1 = <a href="crop.html" class="code" title="function c = crop(c, pretrig, posttrig)">crop</a>(c1,pretrig(1),posttrig(1)); <span class="comment">%should all have same pre &amp; post</span>
+0087    <span class="keyword">end</span>
+0088    
+0089    toSubtract = c1.traces(I).data; <span class="comment">%this trace will be subtracted from all</span>
+0090    <span class="keyword">for</span> i = 1:length(c.trig)
+0091       d = c1.traces(i).data - toSubtract;
+0092       c.traces(i).data = d;
+0093       c.trig(i) = c1.trig(i);
+0094    <span class="keyword">end</span>
+0095    c.corrmatrix = [];
+0096    c.lags = [];
+0097    c.stat = [];
+0098    c.link = [];
+0099    c.clust = [];
+0100 <span class="keyword">end</span>
+0101</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of test_ChanDetails</title>
+  <meta name="keywords" content="test_ChanDetails">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">tests</a> &gt; test_ChanDetails.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/tests&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>test_ChanDetails
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="../../GISMO/core/@scnlobject/ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>	ChannelTag Converter from scnlobject to ChannelTag</li><li><a href="../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="test_ChanDetails.html" class="code" title="">test_ChanDetails</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="test_ChanDetails.html" class="code" title="">test_ChanDetails</a>	</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function TestRetrieve(testCase)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 classdef <a href="test_ChanDetails.html" class="code" title="">test_ChanDetails</a> &lt; matlab.unittest.TestCase
+0002    <span class="comment">%UNTITLED Summary of this class goes here</span>
+0003    <span class="comment">%   Detailed explanation goes here</span>
+0004    
+0005    properties
+0006    <span class="keyword">end</span>
+0007    
+0008    methods(Test)
+0009       <a name="_sub0" href="#_subfunctions" class="code">function TestRetrieve(testCase)</a>
+0010          ANMO = <span class="string">'IU.ANMO.00.BHZ'</span>;
+0011          ANTO = <span class="string">'IU.ANTO.00.BHZ'</span>;
+0012          <span class="comment">% * test retrieve with default source *</span>
+0013          cdKey = ChannelDetails.retrieve([], <span class="string">'station'</span>,<span class="string">'ANMO'</span>,<span class="keyword">...</span>
+0014             <span class="string">'channel'</span>,<span class="string">'BHZ'</span>,<span class="string">'location'</span>,<span class="string">'00'</span>,<span class="string">'network'</span>,<span class="string">'IU'</span>,<span class="keyword">...</span>
+0015             <span class="string">'starttime'</span>,<span class="string">'2015-10-21'</span>);
+0016          <span class="comment">% make sure the first one works, so we can trust use it to</span>
+0017          <span class="comment">% evaluate the other ones</span>
+0018          testCase.assertLength(cdKey, 1);
+0019          testCase.assertEqual(cdKey.channelinfo,<a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(ANMO));
+0020          testCase.assertEqual(cdKey.samplerate, 20);
+0021          testCase.assertEqual(cdKey.elevation, 1671);
+0022          testCase.assertEqual(cdKey.latitude, 34.9459, <span class="string">'absTol'</span>, 0.0001);
+0023          testCase.assertEqual(cdKey.depth, 145);
+0024          testCase.assertEqual(cdKey.azimuth, 0);
+0025          testCase.assertEqual(cdKey.dip, -90);
+0026          testCase.assertEqual(cdKey.sensordescription,<span class="string">'Geotech KS-54000 Borehole Seismometer'</span>);
+0027          testCase.assertEqual(cdKey.scalefreq,0.0200);
+0028          testCase.assertEqual(cdKey.scaleunits,<span class="string">'M/S'</span>);
+0029          testCase.assertEqual(datestr(cdKey.starttime),<span class="string">'17-Dec-2014 18:40:00'</span>);
+0030          testCase.assertGreaterThan(cdKey.endtime, cdKey.starttime);
+0031          
+0032          <span class="comment">% test retrieve with a single N.S.L.C string</span>
+0033          chd = ChannelDetails.retrieve([], ANMO);
+0034          testCase.verifyEqual(chd(end),cdKey);
+0035          <span class="comment">% test retrieve with ChannelTag</span>
+0036          chaninfo = <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(ANMO);
+0037          chd = ChannelDetails.retrieve([], chaninfo);
+0038          testCase.verifyEqual(chd(end),cdKey);
+0039          <span class="comment">% test retrieve with multiple channeltags</span>
+0040          chansinfo = <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>({ANMO, ANTO});
+0041          chd = ChannelDetails.retrieve([], [chansinfo; chansinfo]);
+0042          testCase.verifySize(chd, [2 2], <span class="string">'Wrong size returned for multiple Traces'</span>);
+0043          <span class="comment">% test retrieve with SeismicTrace</span>
+0044          T = <a href="../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>; T.name = ANMO;T.start = datenum(<span class="string">'2015-10-21'</span>);
+0045          chd = ChannelDetails.retrieve([],T);
+0046          testCase.verifyEqual(chd,cdKey);
+0047          <span class="comment">% test retrieve with multiple Traces</span>
+0048          chd = ChannelDetails.retrieve([], [T T; T T]);
+0049          testCase.verifySize(chd, [2, 2], <span class="string">'Wrong size returned for multiple Traces'</span>);
+0050       <span class="keyword">end</span>
+0051    <span class="keyword">end</span>
+0052    
+0053 <span class="keyword">end</span>
+0054</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

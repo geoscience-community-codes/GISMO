@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of filterobject</title>
+  <meta name="keywords" content="filterobject">
+  <meta name="description" content="FILTEROBJECT constructor for a filter object">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@filterobject</a> &gt; filterobject.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@filterobject&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>filterobject
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>FILTEROBJECT constructor for a filter object</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function f = filterobject(anything, cutoff, poles) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> FILTEROBJECT constructor for a filter object
+   f = filterobject() creates a new default filterobject
+   f = filterobject(filterobject) duplicates a filterobject
+   f = filterobject(type, cutoff, poles) create user-defined filterobject
+
+   TYPE:  'B' : Bandpass, 'H' : Highpass, 'L' : Lowpass
+   CUTOFF: [low, high] for bandpass, single value for others
+   POLES: number of poles used in the filter
+
+   default new object: Bandpass from 0.8 Hz to 5Hz, 2 poles (as dictated
+   by this constructor file</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>	FILTEROBJECT constructor for a filter object</li><li><a href="set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/setup.html" class="code" title="function setup(subnet, snum, enum, setupfile, chanmatch)">setup</a>	</li><li><a href="../../../GISMO/contributed/instrument_response/demo_plutons.html" class="code" title="">demo_plutons</a>	</li><li><a href="../../../GISMO/contributed/instrument_response/response_cookbook.html" class="code" title="">response_cookbook</a>	% Instrument response cookbook</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/cookbook.html" class="code" title="">cookbook</a>	COOKBOOK demonstrate the features of the mastercorr package.</li><li><a href="../../../GISMO/contributed/master_correlation/mastercorr_cookbook.html" class="code" title="">mastercorr_cookbook</a>	Demonstration of the major features of the master waveform correlation</li><li><a href="../../../GISMO/contributed_antelope/attenuation/hankelq.html" class="code" title="function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)">hankelq</a>	HANKELQ Compute spectral ratio in two frequency bands</li><li><a href="../../../GISMO/core/@correlation/butter.html" class="code" title="function c = butter(c,varargin)">butter</a>	C = BUTTER(C,[TYPE],CUTOFF,[POLES])</li><li><a href="../../../GISMO/core/@drumplot/cookbook.html" class="code" title="">cookbook</a>	% drumplot cookbook</li><li><a href="filt.html" class="code" title="function wave = filt(wave,f_type,f_rng)">filt</a>	FILT: Quick function for 2-pole filtering waveforms and avoiding the</li><li><a href="filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>	FILTEROBJECT constructor for a filter object</li><li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li><li><a href="../../../GISMO/training/separating_tremor_and_events.html" class="code" title="">separating_tremor_and_events</a>	Tremor range is 1-5 Hz</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function load_global_namespace()</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function f = filterobject(anything, cutoff, poles)</a>
+0002 <span class="comment">% FILTEROBJECT constructor for a filter object</span>
+0003 <span class="comment">%   f = filterobject() creates a new default filterobject</span>
+0004 <span class="comment">%   f = filterobject(filterobject) duplicates a filterobject</span>
+0005 <span class="comment">%   f = filterobject(type, cutoff, poles) create user-defined filterobject</span>
+0006 <span class="comment">%</span>
+0007 <span class="comment">%   TYPE:  'B' : Bandpass, 'H' : Highpass, 'L' : Lowpass</span>
+0008 <span class="comment">%   CUTOFF: [low, high] for bandpass, single value for others</span>
+0009 <span class="comment">%   POLES: number of poles used in the filter</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">%   default new object: Bandpass from 0.8 Hz to 5Hz, 2 poles (as dictated</span>
+0012 <span class="comment">%   by this constructor file</span>
+0013 
+0014 <span class="comment">% VERSION: 1.0 of filter objects</span>
+0015 <span class="comment">% AUTHOR: Celso Reyes</span>
+0016 <span class="comment">% LASTUPDATE: 1/30/2007</span>
+0017 
+0018 <a href="#_sub1" class="code" title="subfunction load_global_namespace()">load_global_namespace</a>;
+0019 
+0020 <span class="keyword">switch</span> nargin
+0021     <span class="keyword">case</span> 0
+0022             <span class="comment">%create a fresh filterobject</span>
+0023             f.type = <span class="string">'B'</span>;
+0024             f.cutoff = [0.8 5];
+0025             f.poles = 2;
+0026             f = class(f, <span class="string">'filterobject'</span>);
+0027 
+0028     <span class="keyword">case</span> 1
+0029         <span class="keyword">if</span> isa(anything, <span class="string">'filterobject'</span>)
+0030             f = anything;
+0031         <span class="keyword">else</span>
+0032             error([<span class="string">'trying to use filterobject('</span> class(anything) <span class="string">')'</span>]);
+0033         <span class="keyword">end</span>
+0034         
+0035     <span class="keyword">case</span> 3
+0036         f = <a href="filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>;
+0037         f = <a href="set.html" class="code" title="function f = set(f, varargin)">set</a>(f,<span class="string">'type'</span>,anything, <span class="string">'cutoff'</span>, cutoff,<span class="string">'poles'</span>,poles);
+0038 
+0039     <span class="keyword">otherwise</span>
+0040         <a href="disp.html" class="code" title="function disp(f)">disp</a>(<span class="string">'Invalid arguments in filterobject constructor'</span>);
+0041 <span class="keyword">end</span>;
+0042 
+0043 <span class="comment">%% LOAD filterobject's global namespace</span>
+0044 <span class="comment">% replaces SUITE_STUFF</span>
+0045 <a name="_sub1" href="#_subfunctions" class="code">function load_global_namespace()</a>
+0046 
+0047 <span class="keyword">persistent</span> FILTER_NAMESPACE
+0048 
+0049 <span class="keyword">if</span> FILTER_NAMESPACE
+0050     <span class="keyword">return</span>
+0051 <span class="keyword">else</span>
+0052     FILTER_NAMESPACE = true;
+0053 <span class="keyword">end</span>
+0054 <span class="comment">%</span>
+0055 <span class="comment">% global FILTER_LONG</span>
+0056 <span class="comment">% global FILTER_STANDARD</span>
+0057 <span class="comment">%</span>
+0058 <span class="comment">% FILTER_LONG = filterobject('L',0.999,2);</span>
+0059 <span class="comment">% FILTER_STANDARD = filterobject('B', [0.8 5.0] ,2);</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of rotate</title>
+  <meta name="keywords" content="rotate">
+  <meta name="description" content="Rotate component orientations">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@threecomp</a> &gt; rotate.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@threecomp&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>rotate
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>Rotate component orientations</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function TC = rotate(TC,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">Rotate component orientations
+ TC = ROTATE(TC,BEARING) Rotates the horizontal components of a threecomp
+ object so that the first horizontal component (N, R or 1) points in the
+ direction given by BEARING. If the rotation is to north/east or
+ radial/transverse then the horizontral channel names will be renamed to
+ ??N/??E or ??R/??T accordingly. If the rotation is to an arbitrary
+ direction, the channels will be renamed to ??2/??1.
+
+ TC = ROTATE(TC) is shorthand for ROTATE(TC,-BACKAZIMUTH). This common
+ usage rotates horizontal traces to the radial and transverse directions,
+ where radial is inline (and away) from the source. The transverse
+ direction points +90 from the radial. For example,for a wave arriving
+ from due south, there is no rotation and N+ becomes R+, while E+ becomes
+ T+. This useage requires that the backAzimuth property be set.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../GISMO/core/@waveform/set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="cookbook.html" class="code" title="function cookbook(TC)">cookbook</a>	This cookbook contains sample code to illustrate the basic functions of</li><li><a href="particlemotion.html" class="code" title="function TC = particlemotion(TC, varargin)">particlemotion</a>	PARTICLEMOTION calculates particle motion vectors for threecomp object</li><li><a href="spin.html" class="code" title="function [TC,c2, c3] = spin(TCin,varargin)">spin</a>	SPIN rotate and plot horizontal components</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function TC = rotate(TC,varargin)</a>
+0002 
+0003 <span class="comment">%Rotate component orientations</span>
+0004 <span class="comment">% TC = ROTATE(TC,BEARING) Rotates the horizontal components of a threecomp</span>
+0005 <span class="comment">% object so that the first horizontal component (N, R or 1) points in the</span>
+0006 <span class="comment">% direction given by BEARING. If the rotation is to north/east or</span>
+0007 <span class="comment">% radial/transverse then the horizontral channel names will be renamed to</span>
+0008 <span class="comment">% ??N/??E or ??R/??T accordingly. If the rotation is to an arbitrary</span>
+0009 <span class="comment">% direction, the channels will be renamed to ??2/??1.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% TC = ROTATE(TC) is shorthand for ROTATE(TC,-BACKAZIMUTH). This common</span>
+0012 <span class="comment">% usage rotates horizontal traces to the radial and transverse directions,</span>
+0013 <span class="comment">% where radial is inline (and away) from the source. The transverse</span>
+0014 <span class="comment">% direction points +90 from the radial. For example,for a wave arriving</span>
+0015 <span class="comment">% from due south, there is no rotation and N+ becomes R+, while E+ becomes</span>
+0016 <span class="comment">% T+. This useage requires that the backAzimuth property be set.</span>
+0017 
+0018 
+0019 <span class="comment">% TODO: DISALLOW NO BACKAZIMUTH AND NO ARGUMENT</span>
+0020 
+0021 
+0022 <span class="comment">% CHECK ARGUMENTS AND GET FINAL BEARING</span>
+0023 <span class="keyword">if</span> length(varargin)&gt;=1  <span class="comment">% bearing provided by user</span>
+0024     bearing = varargin{1};
+0025     <span class="keyword">if</span> ~isa(bearing,<span class="string">'double'</span>) 
+0026        error(<span class="string">'Threecomp:rotate:badArgumentType'</span>,<span class="string">'Rotation angle must be a number'</span>); 
+0027     <span class="keyword">end</span>
+0028     <span class="keyword">if</span> bearing&lt;-360 || bearing&gt;720
+0029        error(<span class="string">'Threecomp:rotate:badArgumentValue'</span>,<span class="string">'Rotation angle must be between 0 and 360'</span>); 
+0030     <span class="keyword">end</span>
+0031 <span class="keyword">else</span>
+0032     bearing = NaN * zeros(size(TC));
+0033     <span class="keyword">for</span> n = 1:numel(TC)
+0034         <span class="keyword">if</span> ~<a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(TC(n).backAzimuth)
+0035             bearing(n) = TC(n).backAzimuth+180;
+0036         <span class="keyword">end</span>
+0037         bearing = reshape(bearing,size(TC));
+0038         bearing = mod(bearing,360);
+0039     <span class="keyword">end</span>
+0040 <span class="keyword">end</span>
+0041 
+0042 
+0043 <span class="comment">% COMPUTE ROTATION ANGLES</span>
+0044 orientation = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC,<span class="string">'ORIENTATION'</span>);
+0045 <span class="keyword">for</span> n = 1:length(TC)
+0046    <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(orientation) 
+0047        error(<span class="string">'ThreeComp:rotate:noOrientations'</span>,<span class="string">'Component orientations must be provided'</span>);
+0048    <span class="keyword">end</span>
+0049 <span class="keyword">end</span>
+0050 rotAngle = mod(bearing-orientation(:,3),360);
+0051 
+0052 
+0053 
+0054 
+0055 <span class="comment">% APPLY ROTATION</span>
+0056 <span class="keyword">for</span> n = 1:length(TC)
+0057     data = <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(TC(n).traces(2:3))';
+0058     rotMatrix = [cosd(rotAngle(n)) sind(rotAngle(n)) ; -sind(rotAngle(n)) cosd(rotAngle(n))];
+0059     Dout = rotMatrix * data;
+0060     TC(n).traces(2) = <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(TC(n).traces(2),<span class="string">'DATA'</span>,Dout(1,:));
+0061     TC(n).traces(3) = <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(TC(n).traces(3),<span class="string">'DATA'</span>,Dout(2,:));
+0062     newOrientation = TC(n).orientation;
+0063     newOrientation([3 5]) = mod(newOrientation([3 5])+rotAngle(n),360);
+0064     TC(n).orientation = newOrientation;
+0065 <span class="keyword">end</span>
+0066 
+0067 
+0068 
+0069 <span class="comment">% ADJUST CHANNEL NAMES</span>
+0070 <span class="keyword">for</span> n = 1:length(TC)
+0071     channels = <a href="get.html" class="code" title="function val = get(TC,varargin)">get</a>(TC(n),<span class="string">'CHANNEL'</span>);
+0072     chan2 = channels{1}(2);
+0073     chan2 = chan2{1};
+0074     chan3 = channels{1}(3);
+0075     chan3 = chan3{1};
+0076     <span class="keyword">if</span> <a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(TC(n).orientation(3)-0)&lt;0.5
+0077         chan2(3) = <span class="string">'N'</span>;
+0078         chan3(3) = <span class="string">'E'</span>;
+0079     <span class="keyword">elseif</span> <a href="../../../GISMO/core/@waveform/abs.html" class="code" title="function w = abs(w)">abs</a>(mod((TC(n).orientation(3)+180),360)-TC(n).backAzimuth)&lt;0.5
+0080         chan2(3) = <span class="string">'R'</span>;
+0081         chan3(3) = <span class="string">'T'</span>;
+0082     <span class="keyword">else</span>
+0083         chan2(3) = <span class="string">'2'</span>;
+0084         chan3(3) = <span class="string">'1'</span>;
+0085     <span class="keyword">end</span>
+0086     TC(n).traces(2) = <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(TC(n).traces(2),<span class="string">'CHANNEL'</span>,chan2);
+0087     TC(n).traces(3) = <a href="set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>(TC(n).traces(3),<span class="string">'CHANNEL'</span>,chan3);
+0088 <span class="keyword">end</span>
+0089</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

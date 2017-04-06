@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of segtype2units</title>
+  <meta name="keywords" content="segtype2units">
+  <meta name="description" content="segtype2units   retrieves unit and description based on the segtype code">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../../index.html">Home</a> &gt;  <a href="../../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="../index.html">+dataretrieval</a> &gt; <a href="index.html">@antelopesource</a> &gt; segtype2units.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../../index.html"><img alt="<" border="0" src="../../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/+dataretrieval/@antelopesource&nbsp;<img alt=">" border="0" src="../../../../../right.png"></a></td></tr></table>-->
+
+<h1>segtype2units
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>segtype2units   retrieves unit and description based on the segtype code</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="box"><strong>function [units, data_description] = segtype2units(unitCode) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">segtype2units   retrieves unit and description based on the segtype code
+'segtype' in antelope datasets indicate the natural units of the detector</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="../../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="../../../../../GISMO/contributed/instrument_response/response_get_from_db.html" class="code" title="function [response] = response_get_from_db(station, channel, time, frequencies, dbName)">response_get_from_db</a>	RESPONSE_GET_FROM_DB Get instrument response from database.</li><li><a href="../../../../../GISMO/core/@waveform/private/load_antelope.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="../../../../../GISMO/core/@waveform/private/load_antelope_old.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope_old</a>	load a waveform from antelope</li><li><a href="../../../../../GISMO/core/@waveform/private/load_antelope_workaround.html" class="code" title="function outputWaveforms = load_antelope_workaround(datarequest, COMBINE_WAVEFORMS, specificDatabase)">load_antelope_workaround</a>	load a waveform from antelope</li><li><a href="antelopesource.html" class="code" title="">antelopesource</a>	</li><li><a href="traceToWaveform.html" class="code" title="function allw = traceToWaveform(obj)">traceToWaveform</a>	traceToWaveform converts traceobjects to waveforms</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function SU = createCodeKey()</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [units, data_description] = segtype2units(unitCode)</a>
+0002    <span class="comment">%segtype2units   retrieves unit and description based on the segtype code</span>
+0003    <span class="comment">%'segtype' in antelope datasets indicate the natural units of the detector</span>
+0004    <span class="keyword">persistent</span> codeKey
+0005    <span class="keyword">if</span> <a href="../../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(codeKey)
+0006       codeKey = <a href="#_sub1" class="code" title="subfunction SU = createCodeKey()">createCodeKey</a>();
+0007    <span class="keyword">end</span>
+0008    <span class="keyword">if</span> codeKey.isKey(unitCode)
+0009       details = codeKey(unitCode);
+0010       units = details{1};
+0011       data_description = details{2};
+0012    <span class="keyword">else</span>
+0013       [units, data_description] = deal(<span class="string">'null'</span>);
+0014    <span class="keyword">end</span>
+0015    
+0016    <a name="_sub1" href="#_subfunctions" class="code">function SU = createCodeKey()</a>
+0017       <span class="comment">%createSegUnits   creates a map  where SU(char) = {units, data_description}</span>
+0018       SU = containers.Map;
+0019       SU(<span class="string">'A'</span>) = {<span class="string">'nm / sec / sec'</span>,<span class="string">'acceleration'</span>};
+0020       SU(<span class="string">'B'</span>) = {<span class="string">'25 mw / m / m'</span>,<span class="string">'UV (sunburn) index(NOAA)'</span>};
+0021       SU(<span class="string">'D'</span>) = {<span class="string">'nm'</span>, <span class="string">'displacement'</span>};
+0022       SU(<span class="string">'H'</span>) = {<span class="string">'Pa'</span>,<span class="string">'hydroacoustic'</span>};
+0023       SU(<span class="string">'I'</span>) = {<span class="string">'Pa'</span>,<span class="string">'infrasound'</span>};
+0024       SU(<span class="string">'J'</span>) = {<span class="string">'watts'</span>,<span class="string">'power (Joulses/sec) (UCSD)'</span>};
+0025       SU(<span class="string">'K'</span>) = {<span class="string">'kPa'</span>,<span class="string">'generic pressure (UCSB)'</span>};
+0026       SU(<span class="string">'M'</span>) = {<span class="string">'mm'</span>,<span class="string">'Wood-Anderson drum recorder'</span>};
+0027       SU(<span class="string">'P'</span>) = {<span class="string">'mb'</span>,<span class="string">'barometric pressure'</span>};
+0028       SU(<span class="string">'R'</span>) = {<span class="string">'mm'</span>,<span class="string">'rain fall (UCSD)'</span>};
+0029       SU(<span class="string">'S'</span>) = {<span class="string">'nm / m'</span>,<span class="string">'strain'</span>};
+0030       SU(<span class="string">'T'</span>) = {<span class="string">'sec'</span>,<span class="string">'time'</span>};
+0031       SU(<span class="string">'V'</span>) = {<span class="string">'nm / sec'</span>,<span class="string">'velocity'</span>};
+0032       SU(<span class="string">'W'</span>) = {<span class="string">'watts / m / m'</span>, <span class="string">'insolation'</span>};
+0033       SU(<span class="string">'a'</span>) = {<span class="string">'deg'</span>, <span class="string">'azimuth'</span>};
+0034       SU(<span class="string">'b'</span>) = {<span class="string">'bits/ sec'</span>, <span class="string">'bit rate'</span>};
+0035       SU(<span class="string">'c'</span>) = {<span class="string">'counts'</span>, <span class="string">'dimensionless integer'</span>};
+0036       SU(<span class="string">'d'</span>) = {<span class="string">'m'</span>, <span class="string">'depth or height (e.g., water)'</span>};
+0037       SU(<span class="string">'f'</span>) = {<span class="string">'micromoles / sec / m /m'</span>, <span class="string">'photoactive radiation flux'</span>};
+0038       SU(<span class="string">'h'</span>) = {<span class="string">'pH'</span>,<span class="string">'hydrogen ion concentration'</span>};
+0039       SU(<span class="string">'i'</span>) = {<span class="string">'amp'</span>,<span class="string">'electric curent'</span>};
+0040       SU(<span class="string">'m'</span>) = {<span class="string">'bitmap'</span>,<span class="string">'dimensionless bitmap'</span>};
+0041       SU(<span class="string">'n'</span>) = {<span class="string">'nanoradians'</span>,<span class="string">'angle (tilt)'</span>};
+0042       SU(<span class="string">'o'</span>) = {<span class="string">'mg/l'</span>,<span class="string">'diliution of oxygen (Mark VanScoy)'</span>};
+0043       SU(<span class="string">'p'</span>) = {<span class="string">'percent'</span>,<span class="string">'percentage'</span>};
+0044       SU(<span class="string">'r'</span>) = {<span class="string">'in'</span>,<span class="string">'rainfall (UCSD)'</span>};
+0045       SU(<span class="string">'s'</span>) = {<span class="string">'m / sec'</span>, <span class="string">'speed (e.g., wind)'</span>};
+0046       SU(<span class="string">'t'</span>) = {<span class="string">'C'</span>,<span class="string">'temperature'</span>};
+0047       SU(<span class="string">'u'</span>) = {<span class="string">'microsiemens/cm'</span>,<span class="string">'conductivity'</span>};
+0048       SU(<span class="string">'v'</span>) = {<span class="string">'volts'</span>,<span class="string">'electric potential'</span>};
+0049       SU(<span class="string">'w'</span>) = {<span class="string">'rad / sec'</span>, <span class="string">'rotation rate'</span>};
+0050       SU(<span class="string">'-'</span>) = {<span class="string">'null'</span>,<span class="string">'null'</span>};
+0051    <span class="keyword">end</span>
+0052 <span class="keyword">end</span>
+0053</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

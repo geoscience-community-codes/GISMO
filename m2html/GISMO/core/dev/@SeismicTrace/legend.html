@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of legend</title>
+  <meta name="keywords" content="legend">
+  <meta name="description" content="legend   Create a legend for the graph of a trace.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@SeismicTrace</a> &gt; legend.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@SeismicTrace&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>legend
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>legend   Create a legend for the graph of a trace.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function varargout = legend(T, varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">legend   Create a legend for the graph of a trace.
+  legend(traces) attempts to automatically create a legend based upon
+  unique values within the traces.  in order, the legend will
+  preferentially use station, channel, start time.
+
+  legend(traces, field1, [field2, [..., fieldn]]) will create a legend,
+  using the fieldnames.
+
+  h = legend(...) returns the handle for the created legend.  this handle
+  can be used to later modify the legend entry (such as setting the
+  location, etc.)
+
+  For additional control, use matlab's legend function by passing it
+  cells &amp; strings instead of a trace.
+    (hint:useful functions include  strcat, sprintf, num2str)
+
+  See also <a href="plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>, <a href="legend.html" class="code" title="function varargout = legend(T, varargin)">legend</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../../GISMO/core/@waveform/legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>	legend creates a legend for a waveform graph</li><li><a href="legend.html" class="code" title="function varargout = legend(T, varargin)">legend</a>	legend   Create a legend for the graph of a trace.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/contributed/correlation_derived/corrderived_plot_swarm_history.html" class="code" title="function corrderived_plot_swarm_history(c,varargin)">corrderived_plot_swarm_history</a>	CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms</li><li><a href="../../../../GISMO/contributed/master_correlation/+mastercorr/plot_stats.html" class="code" title="function plot_stats(W)">plot_stats</a>	PLOT_STATS plot statistics from master correlation algorithm</li><li><a href="../../../../GISMO/contributed/master_correlation/mastercorr_plot_stats.html" class="code" title="function mastercorr_plot_stats(W)">mastercorr_plot_stats</a>	MASTERCORR_PLOT_STATS plot statistics from master correlation algorithm</li><li><a href="../../../../GISMO/contributed_antelope/traveltime_and_ray_coverage/+ttimes/arrival_histogram.html" class="code" title="function arrival_histogram(dbName)">arrival_histogram</a>	ARRIVAL_HISTOGRAM compare the number of arrivals to each station.</li><li><a href="../../../../GISMO/core/+Catalog/+bvalue_lib/synthb_aut.html" class="code" title="">synthb_aut</a>	This is synthetic219</li><li><a href="../../../../GISMO/core/@threecomp/cookbook_map.html" class="code" title="function cookbook_map(TC,W,backAzimuth)">cookbook_map</a>	COOKBOOK_MAP Plots a simple map to accompany cookbook data</li><li><a href="../../../../GISMO/core/@threecomp/plotpm.html" class="code" title="function plotpm(TC);">plotpm</a>	PLOTPM Plot particle motion coefficients.</li><li><a href="../../../../GISMO/core/@waveform/legend.html" class="code" title="function varargout = legend(wave, varargin)">legend</a>	legend creates a legend for a waveform graph</li><li><a href="SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="legend.html" class="code" title="function varargout = legend(T, varargin)">legend</a>	legend   Create a legend for the graph of a trace.</li><li><a href="../../../../GISMO/tests/obsolete/medfilt1_test.html" class="code" title="">medfilt1_test</a>	</li><li><a href="../../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../../GISMO/uaf_internal/AEIC_AVO/+check/crossfeed.html" class="code" title="function crossfeed(varargin)">crossfeed</a>	CROSSFEED Checks for crossfeeding and duplicate data channels</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function stuff = anything2textCell(stuff)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function varargout = legend(T, varargin)</a>
+0002    <span class="comment">%legend   Create a legend for the graph of a trace.</span>
+0003    <span class="comment">%  legend(traces) attempts to automatically create a legend based upon</span>
+0004    <span class="comment">%  unique values within the traces.  in order, the legend will</span>
+0005    <span class="comment">%  preferentially use station, channel, start time.</span>
+0006    <span class="comment">%</span>
+0007    <span class="comment">%  legend(traces, field1, [field2, [..., fieldn]]) will create a legend,</span>
+0008    <span class="comment">%  using the fieldnames.</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">%  h = legend(...) returns the handle for the created legend.  this handle</span>
+0011    <span class="comment">%  can be used to later modify the legend entry (such as setting the</span>
+0012    <span class="comment">%  location, etc.)</span>
+0013    <span class="comment">%</span>
+0014    <span class="comment">%  For additional control, use matlab's legend function by passing it</span>
+0015    <span class="comment">%  cells &amp; strings instead of a trace.</span>
+0016    <span class="comment">%    (hint:useful functions include  strcat, sprintf, num2str)</span>
+0017    <span class="comment">%</span>
+0018    <span class="comment">%  See also plot, legend</span>
+0019    
+0020    <span class="keyword">if</span> nargin == 1
+0021       <span class="comment">% automatically determine the legend</span>
+0022       total_waves = numel(T);
+0023       cha_tags = [T.channelinfo];
+0024       ncha_tags = numel(<a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(cha_tags));
+0025       <span class="keyword">if</span> ncha_tags == 1
+0026          <span class="comment">% all cha_tags represent the same station</span>
+0027          items = T.start;
+0028       <span class="keyword">else</span>
+0029          uniquestations = <a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>({cha_tags.station});
+0030          stationsareunique = numel(uniquestations) == total_waves;
+0031          issinglestation = isscalar(uniquestations);
+0032          
+0033          uniquechannels = <a href="../../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>({cha_tags.channel});
+0034          channelsareunique = numel(uniquechannels) == total_waves;
+0035          issinglechannel = isscalar(uniquechannels);
+0036          
+0037          <span class="keyword">if</span> stationsareunique
+0038             <span class="keyword">if</span> issinglechannel
+0039                items = {cha_tags.station};
+0040             <span class="keyword">else</span>
+0041                items = strcat({cha_tags.station},<span class="string">':'</span>,{cha_tags.channel});
+0042             <span class="keyword">end</span>
+0043          <span class="keyword">elseif</span> issinglestation
+0044             <span class="keyword">if</span> issinglechannel
+0045                items = T.start;
+0046             <span class="keyword">elseif</span> channelsareunique
+0047                items = {cha_tags.channel};
+0048             <span class="keyword">else</span>
+0049                <span class="comment">% 1 station, mixed channels</span>
+0050                items = strcat({cha_tags.channel},<span class="string">': '</span>,T.start);
+0051             <span class="keyword">end</span>
+0052          <span class="keyword">else</span> <span class="comment">%mixed stations</span>
+0053             <span class="keyword">if</span> issinglechannel
+0054                items = strcat({cha_tags.station},<span class="string">': '</span>,T.start);
+0055             <span class="keyword">else</span>
+0056                items = strcat({cha_tags.station},<span class="string">':'</span>, {cha_tags.channel});
+0057             <span class="keyword">end</span>
+0058          <span class="keyword">end</span>
+0059       <span class="keyword">end</span>
+0060       
+0061    <span class="keyword">else</span>
+0062       <span class="comment">%let the provided fieldnames determine the legend.</span>
+0063       items = T.(varargin{1});
+0064       items = <a href="#_sub1" class="code" title="subfunction stuff = anything2textCell(stuff)">anything2textCell</a>(items);
+0065       
+0066       <span class="keyword">for</span> n = 2:nargin-1
+0067          nextitems = T.(varargin{n});
+0068          items = strcat(items,<span class="string">':'</span>,<a href="#_sub1" class="code" title="subfunction stuff = anything2textCell(stuff)">anything2textCell</a>(nextitems));
+0069       <span class="keyword">end</span>
+0070    <span class="keyword">end</span>
+0071    
+0072    h = <a href="legend.html" class="code" title="function varargout = legend(T, varargin)">legend</a>(items);
+0073    <span class="keyword">if</span> nargout == 1
+0074       varargout = {h};
+0075    <span class="keyword">end</span>
+0076    
+0077    <a name="_sub1" href="#_subfunctions" class="code">function stuff = anything2textCell(stuff)</a>
+0078       <span class="comment">%convert anything to a text cell</span>
+0079       <span class="keyword">if</span> isnumeric(stuff)
+0080          stuff=num2str(stuff);
+0081       <span class="keyword">elseif</span> iscell(stuff)
+0082          <span class="keyword">if</span> isnumeric(stuff{1})
+0083             <span class="keyword">for</span> m=1 : numel(stuff)
+0084                stuff(m) = {num2str(stuff{m})};
+0085             <span class="keyword">end</span>
+0086          <span class="keyword">end</span>
+0087       <span class="keyword">end</span>
+0088    <span class="keyword">end</span>
+0089 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

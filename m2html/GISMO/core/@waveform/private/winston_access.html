@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of winston_access</title>
+  <meta name="keywords" content="winston_access">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">@waveform</a> &gt; <a href="index.html">private</a> &gt; winston_access.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform/private&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>winston_access
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function w = winston_access(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>	DATASOURCE constructor for a datasource object.</li><li><a href="../../../../GISMO/core/@scnlobject/ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>	ChannelTag Converter from scnlobject to ChannelTag</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li></ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function s = updateWarningMessage()</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = winston_access(varargin)</a>
+0002    p.channel = <span class="string">'EHZ'</span>;
+0003    p.station = <span class="string">'UNK'</span>;
+0004    p.tStart = datenum(1970, 1, 1, 0 ,0, 0);
+0005    p.tEnd = datenum(1970, 1, 1, 0, 5, 0);
+0006    p.network = <span class="string">''</span>;
+0007    p.location = <span class="string">''</span>; <span class="comment">%should this be '--' ?</span>
+0008    p.server = <span class="string">'churchill.giseis.alaska.edu'</span>;
+0009    p.port = 16022;
+0010    
+0011    warning(<span class="string">'Waveform:waveform:oldUsage'</span>,<a href="#_sub1" class="code" title="subfunction s = updateWarningMessage()">updateWarningMessage</a>);
+0012    
+0013    <span class="comment">% INPUT: waveform (station, channel, start, end, network,</span>
+0014    <span class="comment">%                  location, server, port)</span>
+0015    
+0016    MyVars = {<span class="string">'station'</span>, <span class="string">'channel'</span>, <span class="string">'tStart'</span>, <span class="string">'tEnd'</span>, <span class="string">'network'</span>, <span class="keyword">...</span>
+0017       <span class="string">'location'</span>, <span class="string">'server'</span>, <span class="string">'port'</span>};
+0018    
+0019    <span class="comment">%Fill in all the variables with the appropriate default values</span>
+0020    <span class="keyword">for</span> N = 1:argCount
+0021       <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(varargin{N}),
+0022          p.(MyVars{N}) = varargin{N};
+0023       <span class="keyword">end</span>
+0024    <span class="keyword">end</span>
+0025    thesechans = <a href="../../../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(p.station,p.channel,p.network,p.location);
+0026    
+0027    mysource = <a href="../../../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'winston'</span>,p.server,p.port);
+0028    w = <a href="../../../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(mysource, thesechans, datenum(p.tStart), datenum(p.tEnd));
+0029 <span class="keyword">end</span>
+0030 
+0031 <a name="_sub1" href="#_subfunctions" class="code">function s = updateWarningMessage()</a>
+0032    
+0033    updateMessageBase = <span class="keyword">...</span>
+0034       [<span class="string">'Instead, please call the waveform constructor with '</span><span class="keyword">...</span>
+0035       <span class="string">' a datasource and locationtag. \n'</span><span class="keyword">...</span>
+0036       <span class="string">'USAGE: w = waveform(datasource, locationtag, starttimes, endtimes)\n'</span><span class="keyword">...</span>
+0037       <span class="string">'   ...modifying request and proceeding.'</span>];
+0038    s = sprintf(<span class="string">'%s'</span>,updateMessageBase);
+0039 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

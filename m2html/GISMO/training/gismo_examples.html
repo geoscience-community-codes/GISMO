@@ -1,0 +1,360 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of gismo_examples</title>
+  <meta name="keywords" content="gismo_examples">
+  <meta name="description" content="Standard clearing MATLAB workspace &amp; command window, closing figures">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">training</a> &gt; gismo_examples.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/training&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>gismo_examples
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Standard clearing MATLAB workspace &amp; command window, closing figures</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Standard clearing MATLAB workspace &amp; command window, closing figures</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../GISMO/core/@Catalog/combine.html" class="code" title="function catalogObject = combine(catalogObject1, catalogObject2)">combine</a>	CATALOG.COMBINE combine two Catalog objects</li><li><a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>	DETREND removes the slope of each trace.</li><li><a href="../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../GISMO/core/@correlation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li><li><a href="../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>	DATASOURCE constructor for a datasource object.</li><li><a href="../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../GISMO/core/@filterobject/filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>	FILTEROBJECT constructor for a filter object</li><li><a href="../../GISMO/core/@filterobject/filtfilt.html" class="code" title="function w =filtfilt(f, w, NYQ)">filtfilt</a>	FILTFILT - filterobject implementation of FILTFILT, use on waveform Object</li><li><a href="../../GISMO/core/@rsam/extract.html" class="code" title="function s=extract(self, snum, enum)">extract</a>	</li><li><a href="../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a>	Purpose:</li><li><a href="../../GISMO/core/@rsam/medfilt1.html" class="code" title="function rsamobj = medfilt1(rsamobj, nsamples_to_average_over)">medfilt1</a>	MEDFILT1 Median filter for RSAM objects</li><li><a href="../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a>	RSAM/SAVE - save an rsam-like object to an RSAM/BOB binary</li><li><a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>	scnl (deprecated) : object that holds the stations, channel, network, and location for</li><li><a href="../../GISMO/core/@threecomp/extract.html" class="code" title="function pm = extract(TC,varargin)">extract</a>	EXTRACT particle motion parameters from a threecomp object</li><li><a href="../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../GISMO/core/@waveform/combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and ChannelTag info.</li><li><a href="../../GISMO/core/@waveform/detrend.html" class="code" title="function w = detrend (w, varargin)">detrend</a>	DETREND remove linear trend from a waveform</li><li><a href="../../GISMO/core/@waveform/diff.html" class="code" title="function w = diff (w)">diff</a>	DIFF Differentiate waveform</li><li><a href="../../GISMO/core/@waveform/extract.html" class="code" title="function outW = extract(w, method, startV, endV)">extract</a>	EXTRACT creates a waveform with a subset of another's data.</li><li><a href="../../GISMO/core/@waveform/fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>	FILLGAPS - fill missing data with values of your choice</li><li><a href="../../GISMO/core/@waveform/integrate.html" class="code" title="function w = integrate (w,method)">integrate</a>	INTEGRATE integrates a waveform signal</li><li><a href="../../GISMO/core/@waveform/medfilt1.html" class="code" title="function w = medfilt1(w,size)">medfilt1</a>	MEDFILT1: Wrapper function for applying 1-D Median Filter (Signal</li><li><a href="../../GISMO/core/@waveform/plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../GISMO/core/@waveform/plot_helicorder.html" class="code" title="function [ output_args ] = plot_helicorder( w, varargin )">plot_helicorder</a>	WAVEFORM/PLOT_HELICORDER Plot waveform objects as helicorders</li><li><a href="../../GISMO/core/@waveform/plot_panels.html" class="code" title="function fh=plot_panels(w, alignWaveforms)">plot_panels</a>	PLOT_PANELS Plot multiple waveform objects as separate linked panels</li><li><a href="../../GISMO/core/@waveform/plot_spectrum.html" class="code" title="function s = plot_spectrum(w)">plot_spectrum</a>	add_spectral_data Simple method to compute frequency</li><li><a href="../../GISMO/core/@waveform/spectrogram.html" class="code" title="function spectrogram( w, s )">spectrogram</a>	SPECTROGRAM Plot an IceWeb-style spectrogram</li><li><a href="../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../GISMO/core/@waveform/waveform2rsam.html" class="code" title="function s = waveform2rsam(w, method, samplingPeriod)">waveform2rsam</a>	WAVEFORM2RSAM create an RSAM-like object from a waveform object</li><li><a href="../../GISMO/core/@waveform/waveform2sound.html" class="code" title="function isSuccessful = waveform2sound(w, speedup, outfile)">waveform2sound</a>	WAVEFORM2SOUND generate an audio file from a waveform object.</li><li><a href="../../GISMO/core/dev/@NewCorrelation/detrend.html" class="code" title="function c = detrend(c)">detrend</a>	DETREND   removes the slope of each trace.</li><li><a href="../../GISMO/core/dev/@NewCorrelation/diff.html" class="code" title="function c = diff(c)">diff</a>	DIFF differentiate each trace.</li><li><a href="../../GISMO/core/dev/@NewCorrelation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li><li><a href="../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li><li><a href="messitup.html" class="code" title="function [w]=messitup(w)">messitup</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Standard clearing MATLAB workspace &amp; command window, closing figures</span>
+0002 clc
+0003 clear all
+0004 close all
+0005 warning off
+0006 
+0007 <span class="comment">%% 1. INTRODUCTION</span>
+0008 <span class="comment">% &lt;http://geoscience-community-codes.github.io/GISMO/files/gismo_presentation_ineter2.pdf 1.1 Yesterday's presentation&gt;</span>
+0009 <span class="comment">%</span>
+0010 <span class="comment">% &lt;https://github.com/geoscience-community-codes/GISMO/wiki/What-is-GISMO%3F 1.2 What is GISMO?&gt;</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% &lt;https://github.com/geoscience-community-codes/GISMO/wiki/Who-uses-it%3F 1.3 Who uses it?&gt;</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% &lt;https://github.com/geoscience-community-codes/GISMO/wiki/Historical-development 1.4 Historical development&gt;</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% &lt;https://github.com/geoscience-community-codes/GISMO/wiki/object-oriented 1.5 Object-oriented programming terminology&gt;</span>
+0017 
+0018 <span class="comment">%% 2. GETTING STARTED</span>
+0019 <span class="comment">%%</span>
+0020 <span class="comment">% &lt;https://github.com/geoscience-community-codes/GISMO/wiki/Getting-started Getting started&gt;</span>
+0021 
+0022 <span class="comment">%% 3. WAVEFORM DATA</span>
+0023 
+0024 <span class="comment">%% 3.1 Reading waveform data</span>
+0025 <span class="comment">% To retrieve a waveform object, the command is:</span>
+0026 <span class="comment">%    w = waveform(ds, scnl, starttime, endtime)</span>
+0027 <span class="comment">% The arguments are:</span>
+0028 <span class="comment">%%</span>
+0029 <span class="comment">%</span>
+0030 <span class="comment">% * ds - a datasource object. This describes where to get the data from.</span>
+0031 <span class="comment">% * scnl - a scnlobject. This describes the station, channel, network and location code to retrieve.</span>
+0032 <span class="comment">% * starttime - the start date/time in MATLAB format</span>
+0033 <span class="comment">% * endtime - the end date/time in MATLAB format</span>
+0034 <span class="comment">%</span>
+0035 
+0036 <span class="comment">%%</span>
+0037 <span class="comment">% *Reading waveform data from a Miniseed file which contains data from a single station*</span>
+0038 ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'miniseed'</span>, fullfile(<span class="string">'GISMO_DATA'</span>,<span class="string">'REF.EHZ.2009.080'</span>));
+0039 scnl = <a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(<span class="string">'REF'</span>, <span class="string">'EHZ'</span>);
+0040 starttime = datenum(2009,3,21);
+0041 endtime=datenum(2009,3,22);
+0042 w1 = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds, scnl, starttime, endtime)
+0043 
+0044 <span class="comment">%%</span>
+0045 <span class="comment">% w1 contains a single waveform object</span>
+0046 
+0047 <span class="comment">%%</span>
+0048 <span class="comment">% *Reading waveform data from a SAC file*</span>
+0049 ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'sac'</span>, <span class="string">'GISMO_DATA/REF.EHZ.2009-03-22T00.00.00.000000Z.sac'</span>);
+0050 scnl = <a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(<span class="string">'REF'</span>, <span class="string">'EHZ'</span>);
+0051 starttime = datenum(2009,3,22);
+0052 endtime=datenum(2009,3,23);
+0053 w2 = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds, scnl, starttime, endtime)
+0054 
+0055 <span class="comment">%%</span>
+0056 <span class="comment">% *Reading waveform data from a Seisan file which contains data from multiple stations*</span>
+0057 ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'seisan'</span>, <span class="string">'GISMO_DATA/2001-02-02-0303-55S.MVO___019'</span>);
+0058 scnl = <a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(<span class="string">'*'</span>, <span class="string">'BHZ'</span>);
+0059 starttime = datenum(2001,2,2,03,03,00);
+0060 endtime=datenum(2001,2,2,03,23,00);
+0061 w3 = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds, scnl, starttime, endtime)
+0062 
+0063 <span class="comment">%%</span>
+0064 <span class="comment">% w3 is an array of 19 waveform objects</span>
+0065 
+0066 <span class="comment">%%</span>
+0067 <span class="comment">% *Other datasources are:*</span>
+0068 <span class="comment">%%</span>
+0069 <span class="comment">%</span>
+0070 <span class="comment">% * IRIS DMC - datasource('irisdmcws')</span>
+0071 <span class="comment">% * Earthworm/Winston waveserver - datasource('winston', 'pubavo1.wr.usgs.gov', 16022)</span>
+0072 <span class="comment">% * CSS3.0 databases (needs Antelope) - datasource('css3.0', 'path_to_css3_database')</span>
+0073 <span class="comment">%</span>
+0074 
+0075 <span class="comment">%% 3.2 Waveform methods</span>
+0076 <span class="comment">% For a full list of the methods associated with a waveform object, type:</span>
+0077 methods(<a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>)
+0078 
+0079 <span class="comment">%%</span>
+0080 <span class="comment">% To get help on any of these, use the help function</span>
+0081 help <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>/<a href="../../GISMO/core/@Catalog/combine.html" class="code" title="function catalogObject = combine(catalogObject1, catalogObject2)">combine</a>
+0082 
+0083 <span class="comment">%%</span>
+0084 <span class="comment">% We can combine w1 and w2 because although they come from different file</span>
+0085 <span class="comment">% types (miniseed and sac), they are for the same station &amp; channel and for</span>
+0086 <span class="comment">% consecutive days</span>
+0087 w4 = <a href="../../GISMO/core/@Catalog/combine.html" class="code" title="function catalogObject = combine(catalogObject1, catalogObject2)">combine</a>([w1 w2])
+0088 
+0089 <span class="comment">%% 3.3 Plotting waveform data</span>
+0090 <span class="comment">% First let us plot w4, which is a single waveform object</span>
+0091 <span class="comment">% The simplest type of plot is made with the *plot* method</span>
+0092 figure; <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(w4)
+0093 
+0094 <span class="comment">%%</span>
+0095 <span class="comment">% The x-axis is labelled in seconds, which are hard to read. Switch to</span>
+0096 <span class="comment">% hours.</span>
+0097 figure; <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(w4, <span class="string">'xunit'</span>, <span class="string">'hours'</span>)
+0098 
+0099 <span class="comment">%%</span>
+0100 <span class="comment">% Another simple type of plot is a helicorder plot with *plot_helicorder*</span>
+0101 <span class="comment">% Since w4 contains 2 days of data, let's use 60 minutes per line (mpl)</span>
+0102 <a href="../../GISMO/core/@waveform/plot_helicorder.html" class="code" title="function [ output_args ] = plot_helicorder( w, varargin )">plot_helicorder</a>(w4, <span class="string">'mpl'</span>, 60)
+0103 
+0104 <span class="comment">%%</span>
+0105 <span class="comment">% Now let us plot w2, which is an array of 19 waveform objects</span>
+0106 figure; <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(w3)
+0107 
+0108 <span class="comment">%%</span>
+0109 <span class="comment">% This looks awful!</span>
+0110 
+0111 <span class="comment">%%</span>
+0112 <span class="comment">% We can also use *plot_panels* to put each waveform object in a separate</span>
+0113 <span class="comment">% panel:</span>
+0114 <a href="../../GISMO/core/@waveform/plot_panels.html" class="code" title="function fh=plot_panels(w, alignWaveforms)">plot_panels</a>(w3([8 11 18]))
+0115 
+0116 <span class="comment">%%</span>
+0117 <span class="comment">% We can also plot spectral data. First plot amplitude spectra:</span>
+0118 <a href="../../GISMO/core/@waveform/plot_spectrum.html" class="code" title="function s = plot_spectrum(w)">plot_spectrum</a>(w3([8 11 18]))
+0119 
+0120 <span class="comment">%%</span>
+0121 <span class="comment">% Second, plot spectrograms:</span>
+0122 figure; <a href="../../GISMO/core/@waveform/spectrogram.html" class="code" title="function spectrogram( w, s )">spectrogram</a>(w3([8 11 18]))
+0123 
+0124 
+0125 <span class="comment">%% 3.4 Processing waveform data</span>
+0126 <span class="comment">% Extract / subset a waveform from a waveform</span>
+0127 w5 = <a href="../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>(w4, <span class="string">'time'</span>, datenum(2009,3,22,20,0,0), datenum(2009,3,22,21,0,0))
+0128 figure; <a href="../../GISMO/core/@waveform/spectrogram.html" class="code" title="function spectrogram( w, s )">spectrogram</a>(w5)
+0129 <span class="comment">%%</span>
+0130 <span class="comment">% Plot</span>
+0131 figure;
+0132 <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(w5)
+0133 title(<span class="string">'Raw seismogram'</span>)
+0134 
+0135 <span class="comment">%%</span>
+0136 help <a href="../../GISMO/core/@filterobject/filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>
+0137 <span class="comment">%%</span>
+0138 help <a href="../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>
+0139 
+0140 <span class="comment">%%</span>
+0141 <span class="comment">% Plot displacement, velocity &amp; acceleration seismograms</span>
+0142 figure
+0143 
+0144 ax(1)=subplot(3,1,1);
+0145 w5=<a href="../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>(w5);
+0146 fobj = <a href="../../GISMO/core/@filterobject/filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>(<span class="string">'h'</span>, 0.5, 2);
+0147 w5 = filter(fobj, w5);
+0148 <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(<a href="../../GISMO/core/@correlation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>(w5))
+0149 ylabel(<span class="string">'Displacement'</span>)
+0150 
+0151 ax(2)=subplot(3,1,2);
+0152 <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(w5)
+0153 ylabel(<span class="string">'Velocity'</span>)
+0154 
+0155 ax(3)=subplot(3,1,3); 
+0156 <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(<a href="../../GISMO/core/@correlation/diff.html" class="code" title="function c = diff(c)">diff</a>(w5))
+0157 ylabel(<span class="string">'Acceleration'</span>)
+0158 
+0159 linkaxes(ax,<span class="string">'x'</span>)
+0160 
+0161 <span class="comment">%%</span>
+0162 <span class="comment">% Save waveform as an audio file</span>
+0163 <a href="../../GISMO/core/@waveform/waveform2sound.html" class="code" title="function isSuccessful = waveform2sound(w, speedup, outfile)">waveform2sound</a>(w5, 60, <span class="string">'test.wav'</span>);
+0164 
+0165 <span class="comment">%%</span>
+0166 <span class="comment">% Open spectrogram browser for Sakurajima 2015</span>
+0167 <span class="comment">% &lt;http://vps-geoscience-web1.it.usf.edu/iceweb_php/mosaicMaker.php?subnet=Sakurajima&amp;year=2015&amp;month=05&amp;day=19&amp;hour=00&amp;minute=00&amp;numhours=24&amp;plotsPerRow=4 Sakurajima Spectrograms&gt;</span>
+0168 web(<span class="string">'http://vps-geoscience-web1.it.usf.edu/iceweb_php/mosaicMaker.php?subnet=Sakurajima&amp;year=2015&amp;month=05&amp;day=20&amp;hour=00&amp;minute=00&amp;numhours=24&amp;plotsPerRow=4'</span>)
+0169 
+0170 <span class="comment">%% 3.5 Saving waveform data</span>
+0171 <span class="comment">% Waveform objects can be written to SAC files. However, much easier is</span>
+0172 <span class="comment">% just to write to MATLAB files:</span>
+0173 <a href="../../GISMO/core/@rsam/save.html" class="code" title="function save(self, filepattern)">save</a> REF.EHZ.20090321.mat w4
+0174 clear w4
+0175 
+0176 <span class="comment">%%</span>
+0177 <a href="../../GISMO/core/@rsam/load.html" class="code" title="function self = load(self)">load</a> REF.EHZ.20090321.mat
+0178 
+0179 <span class="comment">%% 4. EVENT CATALOGS</span>
+0180 
+0181 <span class="comment">%% 4.1 Reading event catalogs</span>
+0182 
+0183 
+0184 <span class="comment">%% 4.2 Processing event catalogs</span>
+0185 <span class="comment">%% 4.3 Plotting event catalogs</span>
+0186 <span class="comment">%% 4.4 Event rates</span>
+0187 <span class="comment">%% 4.5 Saving event catalogs</span>
+0188 
+0189 <span class="comment">%% 5. RSAM DATA</span>
+0190 <span class="comment">%% 5.1 Reading RSAM data from binary files</span>
+0191 <span class="comment">% For one station we can use an explicit path</span>
+0192 dp = <span class="string">'GISMO_DATA/MOMN2015.DAT'</span>;
+0193 <span class="comment">%%</span>
+0194 <span class="comment">% But if we want to load several files, we can use a file pattern</span>
+0195 dp = <span class="string">'GISMO_DATA/SSSSYYYY.DAT'</span>; <span class="comment">%SSSS means station, YYYY means year</span>
+0196 s = rsam.read_bob_file(<span class="string">'file'</span>, dp, <span class="string">'snum'</span>, datenum(2015,1,1), <span class="keyword">...</span>
+0197       <span class="string">'enum'</span>, datenum(2015,2,1), <span class="string">'sta'</span>, <span class="string">'MOMN'</span>, <span class="string">'units'</span>, <span class="string">'Counts'</span>)
+0198   
+0199 <span class="comment">%% 5.2 Plotting RSAM data</span>
+0200 s.plot()
+0201 
+0202 <span class="comment">%% 5.3 Generating RSAM data from waveform data</span>
+0203 w4
+0204 r = <a href="../../GISMO/core/@waveform/waveform2rsam.html" class="code" title="function s = waveform2rsam(w, method, samplingPeriod)">waveform2rsam</a>(w4)
+0205 r.plot()
+0206 
+0207 <span class="comment">%% 5.4 Saving RSAM data</span>
+0208 <span class="comment">% *save to a text file*</span>
+0209 r.toTextFile(<span class="string">'REF_EHZ_2009.DAT'</span>)
+0210 <span class="comment">%%</span>
+0211 <span class="comment">% view the text file</span>
+0212 type(<span class="string">'REF_EHZ_2009.DAT'</span>)
+0213 
+0214 <span class="comment">%%</span>
+0215 <span class="comment">% *save to a binary (BOB) file*</span>
+0216 r.save(<span class="string">'YYYY_SSSS_CCC_MMMM.bob'</span>);
+0217 
+0218 <span class="comment">%% 6. OTHER THINGS</span>
+0219 <span class="comment">%% 6.1 sta/lta event detection</span>
+0220 
+0221 <span class="comment">% Plot continuous drumplot</span>
+0222 <a href="../../GISMO/core/@waveform/plot_helicorder.html" class="code" title="function [ output_args ] = plot_helicorder( w, varargin )">plot_helicorder</a>(w5, <span class="string">'mpl'</span>, 5);
+0223 
+0224 <span class="comment">%%</span>
+0225 <span class="comment">% set the STA/LTA detector</span>
+0226 sta_seconds = 0.7; <span class="comment">% STA time window 0.7 seconds</span>
+0227 lta_seconds = 7.0; <span class="comment">% LTA time window 7 seconds</span>
+0228 thresh_on = 3; <span class="comment">% Event triggers &quot;ON&quot; with STA/LTA ratio exceeds 3</span>
+0229 thresh_off = 1.5; <span class="comment">% Event triggers &quot;OFF&quot; when STA/LTA ratio drops below 1.5</span>
+0230 minimum_event_duration_seconds = 2.0; <span class="comment">% Trigger must be on at least 2 secs</span>
+0231 pre_trigger_seconds = 0; <span class="comment">% Do not pad before trigger</span>
+0232 post_trigger_seconds = 0; <span class="comment">% Do not pad after trigger</span>
+0233 event_detection_params = [sta_seconds lta_seconds thresh_on thresh_off <span class="keyword">...</span>
+0234     minimum_event_duration_seconds];
+0235 
+0236 <span class="comment">%%</span>
+0237 <span class="comment">% run the STA/LTA detector. lta_mode = 'frozen' means the LTA stops</span>
+0238 <span class="comment">% updating when trigger is &quot;ON&quot;.</span>
+0239 [cobj,sta,lta,sta_to_lta] = Detection.sta_lta(w5, <span class="string">'edp'</span>, event_detection_params, <span class="keyword">...</span>
+0240     <span class="string">'lta_mode'</span>, <span class="string">'frozen'</span>);
+0241 
+0242 <span class="comment">%%</span>
+0243 <span class="comment">% Plot detected events on top of the continuous drumplot</span>
+0244 <a href="../../GISMO/core/@waveform/plot_helicorder.html" class="code" title="function [ output_args ] = plot_helicorder( w, varargin )">plot_helicorder</a>(w5, <span class="string">'mpl'</span>, 5, <span class="string">'catalog'</span>, cobj)
+0245 <span class="comment">%h3 = drumplot(w5, 'mpl', 5, 'catalog', cobj);</span>
+0246 <span class="comment">%plot(h3)</span>
+0247 
+0248 <span class="comment">%% 6.2 Reading SAC pole-zero files</span>
+0249 <span class="comment">%% 6.3 Removing instrument responses</span>
+0250 <span class="comment">%% 6.4 The correlation cookbook</span>
+0251 
+0252 <span class="comment">%% 7. EXAMPLES</span>
+0253 <span class="comment">%% 7.1 Cleaning waveform data</span>
+0254 <span class="comment">% Seismic waveform data can have all sorts of problems, including:</span>
+0255 <span class="comment">%%</span>
+0256 <span class="comment">% * Spikes (outliers)</span>
+0257 <span class="comment">% * Dropouts (missing data)</span>
+0258 <span class="comment">% * Irregular sample intervals</span>
+0259 <span class="comment">% * Drift (trends)</span>
+0260 <span class="comment">% * Noise</span>
+0261 
+0262 <span class="comment">%%</span>
+0263 <span class="comment">%</span>
+0264 clear ax
+0265 close all
+0266 figure
+0267 ax(1) = subplot(3,2,1); <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(w5); title(<span class="string">'raw'</span>)
+0268 hold on
+0269 
+0270 <span class="comment">%%</span>
+0271 <span class="comment">% load a waveform object that has many problems</span>
+0272 w6 = <a href="messitup.html" class="code" title="function [w]=messitup(w)">messitup</a>(w5);
+0273 ax(2) = subplot(3,2,2); <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(w6); title(<span class="string">'messed up'</span>)
+0274 
+0275 <span class="comment">%%</span>
+0276 <span class="comment">% remove spikes with a median filter</span>
+0277 w6 = <a href="../../GISMO/core/@rsam/medfilt1.html" class="code" title="function rsamobj = medfilt1(rsamobj, nsamples_to_average_over)">medfilt1</a>(w6, 3);
+0278 ax(3) = subplot(3,2,3); <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(w6); title(<span class="string">'despiked'</span>)
+0279 
+0280 <span class="comment">%%</span>
+0281 <span class="comment">% in case there are gaps in the time series (marked by NaN) we can interpolate a</span>
+0282 <span class="comment">% meaningful value</span>
+0283 w6 = <a href="../../GISMO/core/@waveform/fillgaps.html" class="code" title="function w = fillgaps(w,value, gapvalue)">fillgaps</a>(w6, <span class="string">'interp'</span>);
+0284 ax(4) = subplot(3,2,4); <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(w6); title(<span class="string">'interpolated'</span>)
+0285 <span class="comment">%%</span>
+0286 <span class="comment">% detrend the time series - this removes linear drift</span>
+0287 w6 = <a href="../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>(w6);
+0288 ax(5) = subplot(3,2,5); <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(w6); title(<span class="string">'detrended'</span>)
+0289 
+0290 <span class="comment">%%</span>
+0291 <span class="comment">% band pass filter to enhance signal to noise</span>
+0292 <span class="comment">% create a Butterworth bandpass filter from 0.5 to 15 Hz, 2 poles</span>
+0293 fobj = <a href="../../GISMO/core/@filterobject/filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>(<span class="string">'b'</span>, [0.5 15], 2);
+0294 
+0295 <span class="comment">%%</span>
+0296 <span class="comment">% apply the filter in both directions (acausal) - this is a zero phase</span>
+0297 <span class="comment">% filter which is helpful because it doesn't disperse different frequency</span>
+0298 <span class="comment">% components. the caveat is that it can spread energy so arrivals may appear</span>
+0299 <span class="comment">% slighter earlier than they actually are</span>
+0300 w6 = <a href="../../GISMO/core/@filterobject/filtfilt.html" class="code" title="function w =filtfilt(f, w, NYQ)">filtfilt</a>(fobj, w6);
+0301 ax(6) = subplot(3,2,6); <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(w6); title(<span class="string">'filtered'</span>)
+0302 linkaxes(ax,<span class="string">'x'</span>);
+0303 
+0304 <span class="comment">%%</span>
+0305 figure;
+0306 clear ax
+0307 ax(1)=subplot(2,1,1); <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(w5)
+0308 ax(2)=subplot(2,1,2); <a href="../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>(w6)
+0309 linkaxes(ax,<span class="string">'x'</span>)
+0310 
+0311 
+0312 
+0313</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

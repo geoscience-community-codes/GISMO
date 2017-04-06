@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of power</title>
+  <meta name="keywords" content="power">
+  <meta name="description" content="POWER (.^) waveform implementation of element-by-element power (.^)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; power.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>power
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>POWER (.^) waveform implementation of element-by-element power (.^)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function a = power(a, b) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">POWER (.^) waveform implementation of element-by-element power (.^)
+   waveform = waveform .^ Z;
+   waveform = power(waveform,Z);
+   raises each data point within the waveform objects to the power Z
+   if Z is an array (or a waveform), then each element of WAVEFORM is
+   multiplied by the appropriate element of Z.  Therefore, both the data
+   length of waveform and the array length of Z must be the same.
+
+ See also <a href="power.html" class="code" title="function a = power(a, b)">POWER</a></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/+magnitude/mag2eng.html" class="code" title="function eng=mag2eng(mag);">mag2eng</a>	MAG2ENG Convert (a vector of) magnitude into (a vector of) equivalent energy(ies).</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function a = power(a, b)</a>
+0002    <span class="comment">%POWER (.^) waveform implementation of element-by-element power (.^)</span>
+0003    <span class="comment">%   waveform = waveform .^ Z;</span>
+0004    <span class="comment">%   waveform = power(waveform,Z);</span>
+0005    <span class="comment">%   raises each data point within the waveform objects to the power Z</span>
+0006    <span class="comment">%   if Z is an array (or a waveform), then each element of WAVEFORM is</span>
+0007    <span class="comment">%   multiplied by the appropriate element of Z.  Therefore, both the data</span>
+0008    <span class="comment">%   length of waveform and the array length of Z must be the same.</span>
+0009    <span class="comment">%</span>
+0010    <span class="comment">% See also POWER</span>
+0011    
+0012    <span class="comment">% VERSION: 1.0 of waveform objects</span>
+0013    <span class="comment">% AUTHOR: Celso Reyes (celso@gi.alaska.edu)</span>
+0014    <span class="comment">% LASTUPDATE: 4/16/2008</span>
+0015    
+0016    <span class="keyword">if</span> ~ isa(a,<span class="string">'waveform'</span>)
+0017       error(<span class="string">'Waveform:power:invalidBase'</span>,<span class="string">'Usage: waveform .^ double'</span>);
+0018    <span class="keyword">end</span>
+0019    <span class="keyword">if</span> ~(isnumeric(b) || isa(b,<span class="string">'waveform'</span>))
+0020       error(<span class="string">'Waveform:power:invalidPower'</span>,<span class="string">'Usage: waveform .^ double'</span>);
+0021    <span class="keyword">end</span>
+0022    <span class="keyword">for</span> N = 1:numel(a)
+0023       a(N).data(:) = a(N).data .^ <a href="double.html" class="code" title="function n = double(W, option)">double</a>(b);
+0024    <span class="keyword">end</span>
+0025 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

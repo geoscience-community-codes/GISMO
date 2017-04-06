@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of separating_tremor_and_events</title>
+  <meta name="keywords" content="separating_tremor_and_events">
+  <meta name="description" content="Tremor range is 1-5 Hz">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">training</a> &gt; separating_tremor_and_events.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/training&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>separating_tremor_and_events
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>Tremor range is 1-5 Hz</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> Tremor range is 1-5 Hz
+ Swarm events are 0.5-15 Hz</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/core/@filterobject/filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>	FILTEROBJECT constructor for a filter object</li><li><a href="../../GISMO/core/@filterobject/filtfilt.html" class="code" title="function w =filtfilt(f, w, NYQ)">filtfilt</a>	FILTFILT - filterobject implementation of FILTFILT, use on waveform Object</li><li><a href="../../GISMO/core/@waveform/waveform2rsam.html" class="code" title="function s = waveform2rsam(w, method, samplingPeriod)">waveform2rsam</a>	WAVEFORM2RSAM create an RSAM-like object from a waveform object</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% Tremor range is 1-5 Hz</span>
+0002 <span class="comment">% Swarm events are 0.5-15 Hz</span>
+0003 fobj = <a href="../../GISMO/core/@filterobject/filterobject.html" class="code" title="function f = filterobject(anything, cutoff, poles)">filterobject</a>(<span class="string">'b'</span>, [1 5], 2);
+0004 wtremor = <a href="../../GISMO/core/@filterobject/filtfilt.html" class="code" title="function w =filtfilt(f, w, NYQ)">filtfilt</a>(fobj, w);
+0005 wevents = w - wtremor;
+0006 cobj = Detect.sta_lta(wevents, <span class="string">'edp'</span>, event_detection_params)
+0007 
+0008 <span class="comment">% RSAM</span>
+0009 rsam_tremor = <a href="../../GISMO/core/@waveform/waveform2rsam.html" class="code" title="function s = waveform2rsam(w, method, samplingPeriod)">waveform2rsam</a>(wtremor, <span class="string">'method'</span>, <span class="string">'median'</span>)
+0010 rsam_events = <a href="../../GISMO/core/@waveform/waveform2rsam.html" class="code" title="function s = waveform2rsam(w, method, samplingPeriod)">waveform2rsam</a>(wevents, <span class="string">'method'</span>, <span class="string">'max'</span>)
+0011</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

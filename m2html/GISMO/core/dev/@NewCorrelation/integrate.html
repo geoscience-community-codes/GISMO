@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of integrate</title>
+  <meta name="keywords" content="integrate">
+  <meta name="description" content="INTEGRATE   integrates each trace.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; integrate.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>integrate
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>INTEGRATE   integrates each trace.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = integrate(c) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">INTEGRATE   integrates each trace.
+
+ C = INTEGRATE(C) integrates each trace. Prior to integrating, the trend
+ and mean of each trace is removed. Depending on the application, it is
+ recommended that users also consider applying a gentle high pass filter
+ to remove unwanted low frequencies that can dominate the integrated
+ waveforms.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@correlation/demean.html" class="code" title="function c = demean(c,varargin);">demean</a>	DEMEAN removes the mean of each trace.</li><li><a href="../../../../GISMO/core/@correlation/detrend.html" class="code" title="function c = detrend(c,varargin);">detrend</a>	DETREND removes the slope of each trace.</li><li><a href="../../../../GISMO/core/@correlation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li><li><a href="../../../../GISMO/core/@waveform/demean.html" class="code" title="function w = demean (w)">demean</a>	DEMEAN remove offset voltage from signal</li><li><a href="../../../../GISMO/core/@waveform/detrend.html" class="code" title="function w = detrend (w, varargin)">detrend</a>	DETREND remove linear trend from a waveform</li><li><a href="../../../../GISMO/core/@waveform/integrate.html" class="code" title="function w = integrate (w,method)">integrate</a>	INTEGRATE integrates a waveform signal</li><li><a href="demean.html" class="code" title="function c = demean(c)">demean</a>	DEMEAN removes the mean of each trace.</li><li><a href="detrend.html" class="code" title="function c = detrend(c)">detrend</a>	DETREND   removes the slope of each trace.</li><li><a href="integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/contributed_antelope/attenuation/hankelq.html" class="code" title="function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)">hankelq</a>	HANKELQ Compute spectral ratio in two frequency bands</li><li><a href="../../../../GISMO/contributed_antelope/reduced_displacement/reducedisp_calc.html" class="code" title="function w = reducedisp_calc(w,dist,varargin)">reducedisp_calc</a>	WAVEFORM = REDUCEDISP(WAVEFORM,DISTANCE) This function calculates the</li><li><a href="../../../../GISMO/core/@correlation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li><li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li><li><a href="../../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = integrate(c)</a>
+0002    
+0003    <span class="comment">%INTEGRATE   integrates each trace.</span>
+0004    <span class="comment">%</span>
+0005    <span class="comment">% C = INTEGRATE(C) integrates each trace. Prior to integrating, the trend</span>
+0006    <span class="comment">% and mean of each trace is removed. Depending on the application, it is</span>
+0007    <span class="comment">% recommended that users also consider applying a gentle high pass filter</span>
+0008    <span class="comment">% to remove unwanted low frequencies that can dominate the integrated</span>
+0009    <span class="comment">% waveforms.</span>
+0010    
+0011    <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0012    <span class="comment">% $Date$</span>
+0013    <span class="comment">% $Revision$</span>
+0014    
+0015    c.traces = <a href="detrend.html" class="code" title="function c = detrend(c)">detrend</a>(c.traces);
+0016    c.traces = <a href="demean.html" class="code" title="function c = demean(c)">demean</a>(c.traces);
+0017    c.traces = <a href="integrate.html" class="code" title="function c = integrate(c)">integrate</a>(c.traces);
+0018 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

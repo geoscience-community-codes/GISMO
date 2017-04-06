@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of Fs</title>
+  <meta name="keywords" content="Fs">
+  <meta name="description" content="">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@rsam</a> &gt; Fs.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@rsam&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>Fs
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong></strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function fs = Fs(self) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"></pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>	MEDIAN middlemost value of waveform's sorted data.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/+Detection/sta_lta.html" class="code" title="function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)">sta_lta</a>	STA_LTA: Short-Time-Average/Long-Time-Average event detector.</li><li><a href="../../../GISMO/core/@correlation/minus.html" class="code" title="function c = minus(c,varargin)">minus</a>	C = MINUS(C,I)</li><li><a href="../../../GISMO/core/@correlation/stack.html" class="code" title="function c = stack(c,varargin)">stack</a>	c = STACK(c)</li><li><a href="rsam.html" class="code" title="">rsam</a>	</li><li><a href="../../../GISMO/core/@spectralobject/pwelch.html" class="code" title="function varargout = pwelch(s,w, varargin)">pwelch</a>	PWELCH   overloaded pwelch for spectralobjects</li><li><a href="../../../GISMO/core/@spectralobject/specgram.html" class="code" title="function h = specgram(s, ws, varargin)">specgram</a>	SPECGRAM - plots spectrogram of waveforms</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/minus.html" class="code" title="function c = minus(c,I)">minus</a>	C = MINUS(C,I)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/stack.html" class="code" title="function c = stack(c,index)">stack</a>	c = STACK(c)</li><li><a href="../../../GISMO/deprecated/+waveform_extensions/sta_lta.html" class="code" title="function events = sta_lta(wave,varargin)">sta_lta</a>	STA_LTA: Short-Time-Average/Long-Time-Average event detector.</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li><li><a href="../../../GISMO/deprecated/fft_tools/wf_fftplot.html" class="code" title="function wf_fftplot(w);">wf_fftplot</a>	WF_FFTPLOT(WAVEFORM) plot fourier transform of the data.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function fs = Fs(self)</a>
+0002     l = length(self.dnum);
+0003     s = self.dnum(2:l) - self.dnum(1:l-1);
+0004     fs = 1.0/(<a href="../../../GISMO/core/@waveform/median.html" class="code" title="function y = median(w)">median</a>(s)*86400);
+0005 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

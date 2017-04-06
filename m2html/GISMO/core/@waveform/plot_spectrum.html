@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of plot_spectrum</title>
+  <meta name="keywords" content="plot_spectrum">
+  <meta name="description" content="add_spectral_data Simple method to compute frequency">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; plot_spectrum.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>plot_spectrum
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>add_spectral_data Simple method to compute frequency</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function s = plot_spectrum(w) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> add_spectral_data Simple method to compute frequency
+ spectrum for a vector waveform object. Uses the MATLAB fft function.
+   w = add_spectral_data(w)
+
+   Inputs:
+       w - a waveform object (or vector of waveform objects)
+
+   Outputs:
+       s - a structure for each waveform containing:
+           f - the frequency values corresponding to elements of amp and phi
+           amp - amplitude spectrum values
+           phi - phase angle values (in radians)
+           peakf - peak frequency
+           meanf - mean frequency
+           freqindex - frequency index (Buurman &amp; West)
+           freqratio - frequency ratio (Rodgers)
+
+   Example 1 (for a single waveform object, w):
+       s = add_spectral_values(w)
+       semilogx(s.f, s.amp)
+       xlabel('Frequency (Hz)')
+       ylabel('Amplitude');
+       
+   Example 2 (for a waveform vector, w)
+       s = add_spectral_values(w);
+       t = get(w, 'start')
+       peakf = [s.peakf];
+       plot(t, peakf,'o')
+       datetick('x')
+
+   Glenn Thompson, May 21, 2016 after amplitude_spectrum function of November 21, 2014.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/plot.html" class="code" title="function plot(catalogObject, varargin)">plot</a>	CATALOG.PLOT Plot hypocenters in map view and cross-sections</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/plot.html" class="code" title="function varargout = plot(h)">plot</a>	PLOT: Drumplot plotting function. A drumplot object (h) contains no</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@rsam/plot.html" class="code" title="function handlePlot = plot(rsam_vector, varargin)">plot</a>	RSAM/PLOT plot rsam data</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@spectralobject/fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>	FFT Discrete Fourier transform.  OVERLOADED for waveform & Spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/plot.html" class="code" title="function varargout = plot(TC, varargin)">plot</a>	PLOT plots a threecomp object</li><li><a href="abs.html" class="code" title="function w = abs(w)">abs</a>	ABS Absolute value for the waveform object</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="mean.html" class="code" title="function y = mean(w)">mean</a>	MEAN Average or mean value of waveform's data.</li><li><a href="plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>	PLOT plots a waveform object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/plot.html" class="code" title="function plot(c,varargin)">plot</a>	PLOT(C) plots waveforms stored in a correlation object. Traces are</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/plot.html" class="code" title="function varargout = plot(T, varargin)">plot</a>	plot   plots a SeismicTrace</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/plot.html" class="code" title="function plot(w)">plot</a>	PLOT plot fourier transform of a waveform</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function s = plot_spectrum(w)</a>
+0002     <span class="comment">% add_spectral_data Simple method to compute frequency</span>
+0003     <span class="comment">% spectrum for a vector waveform object. Uses the MATLAB fft function.</span>
+0004     <span class="comment">%   w = add_spectral_data(w)</span>
+0005     <span class="comment">%</span>
+0006     <span class="comment">%   Inputs:</span>
+0007     <span class="comment">%       w - a waveform object (or vector of waveform objects)</span>
+0008     <span class="comment">%</span>
+0009     <span class="comment">%   Outputs:</span>
+0010     <span class="comment">%       s - a structure for each waveform containing:</span>
+0011     <span class="comment">%           f - the frequency values corresponding to elements of amp and phi</span>
+0012     <span class="comment">%           amp - amplitude spectrum values</span>
+0013     <span class="comment">%           phi - phase angle values (in radians)</span>
+0014     <span class="comment">%           peakf - peak frequency</span>
+0015     <span class="comment">%           meanf - mean frequency</span>
+0016     <span class="comment">%           freqindex - frequency index (Buurman &amp; West)</span>
+0017     <span class="comment">%           freqratio - frequency ratio (Rodgers)</span>
+0018     <span class="comment">%</span>
+0019     <span class="comment">%   Example 1 (for a single waveform object, w):</span>
+0020     <span class="comment">%       s = add_spectral_values(w)</span>
+0021     <span class="comment">%       semilogx(s.f, s.amp)</span>
+0022     <span class="comment">%       xlabel('Frequency (Hz)')</span>
+0023     <span class="comment">%       ylabel('Amplitude');</span>
+0024     <span class="comment">%</span>
+0025     <span class="comment">%   Example 2 (for a waveform vector, w)</span>
+0026     <span class="comment">%       s = add_spectral_values(w);</span>
+0027     <span class="comment">%       t = get(w, 'start')</span>
+0028     <span class="comment">%       peakf = [s.peakf];</span>
+0029     <span class="comment">%       plot(t, peakf,'o')</span>
+0030     <span class="comment">%       datetick('x')</span>
+0031     <span class="comment">%</span>
+0032     <span class="comment">%   Glenn Thompson, May 21, 2016 after amplitude_spectrum function of November 21, 2014.</span>
+0033     
+0034     <span class="comment">% Check input is a waveform object</span>
+0035     <span class="keyword">if</span> ~isa(w, <span class="string">'waveform'</span>)
+0036         warning(<span class="string">'Not a waveform object'</span>)
+0037         <span class="keyword">return</span>
+0038     <span class="keyword">end</span>
+0039     
+0040     figure
+0041     <span class="keyword">for</span> count = 1:numel(w)
+0042         Fsamp= <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(count), <span class="string">'freq'</span>);
+0043         signal=<a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(count), <span class="string">'data'</span>);
+0044         Nsignal=length(signal);
+0045         NFFT = 2^nextpow2(Nsignal); <span class="comment">% Next power of 2 from length of y</span>
+0046         Y=<a href="../../../GISMO/core/@spectralobject/fft.html" class="code" title="function [varargout] = fft(s, w)">fft</a>(signal,NFFT); <span class="comment">% X will have same length as signal, and will be complex with a magnitude and phase</span>
+0047         NumUniquePts = NFFT/2 + 1; <span class="comment">% Mike uses ceil((N+1)/2) in wf_fft</span>
+0048         A=2*<a href="abs.html" class="code" title="function w = abs(w)">abs</a>(Y(1:NumUniquePts))/Nsignal;
+0049         phi = angle(Y(1:NumUniquePts));
+0050         f = Fsamp/2*linspace(0,1,NumUniquePts);
+0051         ax(count)=subplot(numel(w), 1, count);
+0052         <a href="plot.html" class="code" title="function varargout = plot(w, varargin)">plot</a>(f, A); 
+0053         ctag = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(count),<span class="string">'ChannelTag'</span>);
+0054         title(ctag.string());
+0055         xlabel(<span class="string">'f (Hz)'</span>)
+0056         ylabel(<span class="string">'Amp'</span>)
+0057         
+0058         <span class="comment">% add spectrum vectors to a structure</span>
+0059         s(count).f = f; <span class="comment">% frequencies</span>
+0060         s(count).amp = A'; <span class="comment">% amplitude</span>
+0061         s(count).phi = phi'; <span class="comment">% phase angle in radians</span>
+0062         
+0063         <span class="comment">% peak frequency</span>
+0064         s(count).peakf = f(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(A == <a href="max.html" class="code" title="function [Y, I] = max(w)">max</a>(A)));
+0065         
+0066         <span class="comment">% mean frequency</span>
+0067         s(count).meanf = sum(s(count).f.*s(count).amp)/sum(s(count).amp);
+0068         
+0069         <span class="comment">% frequency ratio</span>
+0070         Al = <a href="mean.html" class="code" title="function y = mean(w)">mean</a>(A(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(f &gt;= 1 &amp; f &lt;= 2)));
+0071         Ah = <a href="mean.html" class="code" title="function y = mean(w)">mean</a>(A(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(f &gt;= 10 &amp; f &lt;= 20)));
+0072         s(count).freqindex = log10(Ah/Al);
+0073         
+0074         <span class="comment">% frequency ratio</span>
+0075         Al = <a href="mean.html" class="code" title="function y = mean(w)">mean</a>(A(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(f &gt;= 1 &amp; f &lt;= 5)));
+0076         Ah = <a href="mean.html" class="code" title="function y = mean(w)">mean</a>(A(<a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(f &gt;= 5 &amp; f &lt;= 15)));
+0077         s(count).freqratio= log2(Ah/Al);
+0078        
+0079     <span class="keyword">end</span>
+0080     linkaxes(ax,<span class="string">'x'</span>);
+0081 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

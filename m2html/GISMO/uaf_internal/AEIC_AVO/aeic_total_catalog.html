@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of aeic_total_catalog</title>
+  <meta name="keywords" content="aeic_total_catalog">
+  <meta name="description" content="AEIC_TOTAL_CATALOG Read in the complete AEIC Total earthquake catalog">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">uaf_internal</a> &gt; <a href="index.html">AEIC_AVO</a> &gt; aeic_total_catalog.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/uaf_internal/AEIC_AVO&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>aeic_total_catalog
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>AEIC_TOTAL_CATALOG Read in the complete AEIC Total earthquake catalog</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function catalog = aeic_total_catalog(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">AEIC_TOTAL_CATALOG Read in the complete AEIC Total earthquake catalog
+  CATALOG = AEIC_TOTAL_CATALOG reads the entire &quot;Total&quot; database of AEIC
+  earthquakes. The output field CATALOG is a structure containing field
+  names that adhere farily closely to their database definitions and
+  should be self explanatory. Origin time is given in Matlab date format.
+
+ CATALOG = AEIC_TOTAL_CATALOG(DATABASE) specifies the path and name where
+ the database can be found. If not specified the DATABASE name defaults to
+ the location on the Seismology Linux Network. This function may work
+ generically on other databases. However the table requirements and the
+ preferred magnitude algorithm are tailoered specifically to the AEIC
+ Total database.
+
+ For each event AEIC_TOTAL_CATALOG distills the multiple possible 
+ magnitudes into a single creates a &quot;preferred magnitude&quot; based on the 
+ following order of preference:
+        1. Hrvd Mw
+        2. AEIC Mw
+        3. AEIC Ms
+        4. AEIC mb
+        5. AEIC ml
+ Events with no magnitude are removed from the catalog. Md magnitudes are
+ not currently considered (I believe tall Md magnitudes also have an ml).</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>	C = SORT(C,'TIME')</li><li><a href="../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>	UNIQUE return set of unique scnlobjects from an array</li><li><a href="../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/find.html" class="code" title="function index = find(c, type, value)">find</a>	INDEX = FIND(c,'CLUST',WHICH_CLUSTER)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/sort.html" class="code" title="function c = sort(c)">sort</a>	C = SORT(C) Sorts traces from oldest to youngest.</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li><li><a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>	TIME = EPOCH2DATENUM(EPOCH) translates Unix epoch date format into Matlab</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function catalog = aeic_total_catalog(varargin)</a>
+0002 
+0003 <span class="comment">%AEIC_TOTAL_CATALOG Read in the complete AEIC Total earthquake catalog</span>
+0004 <span class="comment">%  CATALOG = AEIC_TOTAL_CATALOG reads the entire &quot;Total&quot; database of AEIC</span>
+0005 <span class="comment">%  earthquakes. The output field CATALOG is a structure containing field</span>
+0006 <span class="comment">%  names that adhere farily closely to their database definitions and</span>
+0007 <span class="comment">%  should be self explanatory. Origin time is given in Matlab date format.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% CATALOG = AEIC_TOTAL_CATALOG(DATABASE) specifies the path and name where</span>
+0010 <span class="comment">% the database can be found. If not specified the DATABASE name defaults to</span>
+0011 <span class="comment">% the location on the Seismology Linux Network. This function may work</span>
+0012 <span class="comment">% generically on other databases. However the table requirements and the</span>
+0013 <span class="comment">% preferred magnitude algorithm are tailoered specifically to the AEIC</span>
+0014 <span class="comment">% Total database.</span>
+0015 <span class="comment">%</span>
+0016 <span class="comment">% For each event AEIC_TOTAL_CATALOG distills the multiple possible</span>
+0017 <span class="comment">% magnitudes into a single creates a &quot;preferred magnitude&quot; based on the</span>
+0018 <span class="comment">% following order of preference:</span>
+0019 <span class="comment">%        1. Hrvd Mw</span>
+0020 <span class="comment">%        2. AEIC Mw</span>
+0021 <span class="comment">%        3. AEIC Ms</span>
+0022 <span class="comment">%        4. AEIC mb</span>
+0023 <span class="comment">%        5. AEIC ml</span>
+0024 <span class="comment">% Events with no magnitude are removed from the catalog. Md magnitudes are</span>
+0025 <span class="comment">% not currently considered (I believe tall Md magnitudes also have an ml).</span>
+0026 
+0027 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0028 <span class="comment">% $Date$</span>
+0029 <span class="comment">% $Revision$</span>
+0030 
+0031 
+0032 admin.deprecated(mfilename,<span class="string">'aeic_catalog.get_total'</span>);
+0033 
+0034 <span class="comment">% CHECK ARGUMENTS</span>
+0035 <span class="keyword">if</span> ~admin.antelope_exists
+0036     error(<span class="string">'This function requires Antelope'</span>);
+0037 <span class="keyword">end</span>
+0038 <span class="keyword">if</span> numel(varargin)&gt;0
+0039     dbName = varargin{1};
+0040 <span class="keyword">else</span>
+0041     dbName = <span class="string">'/home/admin/databases/AEIC_CATALOG/Total'</span>;
+0042 <span class="keyword">end</span>;
+0043 
+0044 
+0045 <span class="comment">% LOAD EVENTS FROM NETMAG TABLE WITH Mw MAGNITUDES</span>
+0046 db = dbopen(dbName,<span class="string">'r'</span>);
+0047 db = dblookup(db,<span class="string">''</span>,<span class="string">'origin'</span>,<span class="string">''</span>,<span class="string">''</span>);
+0048 db1 = dblookup(db,<span class="string">''</span>,<span class="string">'netmag'</span>,<span class="string">''</span>,<span class="string">''</span>);
+0049 db = dbjoin(db,db1);
+0050 db = dbsubset(db,<span class="string">'magtype==''mw'''</span>);
+0051 [mw.orid,mw.magtype,mw.magnitude,mw.auth] = dbgetv(db,<span class="string">'orid'</span>,<span class="string">'magtype'</span>,<span class="string">'magnitude'</span>,<span class="string">'netmag.auth'</span>);
+0052 dbclose(db);
+0053 
+0054 
+0055 <span class="comment">% SELECT THE PREFERRED AUTH FOR Mw WHEN MULTIPLES EXIST</span>
+0056 <span class="comment">% Order hrvd before aeic</span>
+0057 mw.auth = lower(mw.auth);
+0058 <span class="comment">% order hrvd before aeic authored solutions</span>
+0059 [tmp index] = <a href="../../../GISMO/core/@correlation/sort.html" class="code" title="function c = norm(c,varargin)">sort</a>(mw.auth);
+0060 index = flipud(index);
+0061 mw.orid = mw.orid(index);
+0062 mw.magtype = mw.magtype(index);
+0063 mw.magnitude = mw.magnitude(index);
+0064 mw.auth = mw.auth(index);
+0065 <span class="comment">% remove duplicate Mw slecting prefered author</span>
+0066 [tmp index tmp1] = <a href="../../../GISMO/core/@scnlobject/unique.html" class="code" title="function [B,I,J] = unique(A)">unique</a>(mw.orid);
+0067 mw.orid = mw.orid(index);
+0068 mw.magtype = mw.magtype(index);
+0069 mw.magnitude = mw.magnitude(index);
+0070 mw.auth = mw.auth(index);
+0071 
+0072 
+0073 <span class="comment">% LOAD ORIGIN TABLE CATALOG</span>
+0074 db = dbopen(dbName,<span class="string">'r'</span>);
+0075 db = dblookup(db,<span class="string">''</span>,<span class="string">'origin'</span>,<span class="string">''</span>,<span class="string">''</span>);
+0076 db = dbsort(db,<span class="string">'orid'</span>);
+0077 [catalog.time,catalog.lat,catalog.lon,catalog.depth,catalog.orid] = dbgetv(db,<span class="string">'time'</span>,<span class="string">'lat'</span>,<span class="string">'lon'</span>,<span class="string">'depth'</span>,<span class="string">'orid'</span>);
+0078 [catalog.nass,catalog.ndef,catalog.etype,catalog.auth] = dbgetv(db,<span class="string">'nass'</span>,<span class="string">'ndef'</span>,<span class="string">'etype'</span>,<span class="string">'auth'</span>);
+0079 [catalog.ml,catalog.mb,catalog.ms] = dbgetv(db,<span class="string">'ml'</span>,<span class="string">'mb'</span>,<span class="string">'ms'</span>);
+0080 dbclose(db);
+0081 catalog.time = <a href="../../../GISMO/libgismo/epoch2datenum.html" class="code" title="function time = epoch2datenum(epoch)">epoch2datenum</a>(catalog.time);
+0082 f = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(catalog.ml==-999);     catalog.ml(f) = NaN;
+0083 f = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(catalog.mb==-999);     catalog.mb(f) = NaN;
+0084 f = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(catalog.ms==-999);     catalog.ms(f) = NaN;
+0085 catalog.mw = NaN * catalog.ml;
+0086 
+0087 
+0088 <span class="comment">% ADD Mw TO ORIGIN CATALOG WHEN IT EXISTS</span>
+0089 <span class="keyword">for</span> n = 1:numel(mw.orid)
+0090     f = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(catalog.orid==mw.orid(n));
+0091     <span class="keyword">if</span> numel(f)~=1
+0092         error(<span class="string">'orid mismatch'</span>);
+0093     <span class="keyword">else</span>
+0094         catalog.mw(f) = mw.magnitude(n);
+0095         <span class="comment">%disp(['Updated orid ' num2str(catalog.orid(f)) '  ' num2str(mw.orid(n)) ]);</span>
+0096     <span class="keyword">end</span>
+0097 <span class="keyword">end</span>
+0098 
+0099 
+0100 <span class="comment">% CREATE A PREFERRED MAGNITUDE</span>
+0101 catalog.prefMagType = repmat({<span class="string">'none'</span>},size(catalog.ml));
+0102 catalog.prefMagnitude = NaN * catalog.ml;
+0103 <span class="comment">% set pref magnitude as ml</span>
+0104 f = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(~isnan(catalog.ml));
+0105 catalog.prefMagType(f) = {<span class="string">'ml'</span>};
+0106 catalog.prefMagnitude(f) = catalog.ml(f);
+0107 <span class="comment">% set pref magnitude as mb</span>
+0108 f = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(~isnan(catalog.mb));
+0109 catalog.prefMagType(f) = {<span class="string">'mb'</span>};
+0110 catalog.prefMagnitude(f) = catalog.mb(f);
+0111 <span class="comment">% set pref magnitude as ms</span>
+0112 f = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(~isnan(catalog.ms));
+0113 catalog.prefMagType(f) = {<span class="string">'ms'</span>};
+0114 catalog.prefMagnitude(f) = catalog.ms(f);
+0115 <span class="comment">% set pref magnitude as mw</span>
+0116 f = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(~isnan(catalog.mw));
+0117 catalog.prefMagType(f) = {<span class="string">'mw'</span>};
+0118 catalog.prefMagnitude(f) = catalog.mw(f);
+0119 
+0120 
+0121 <span class="comment">% REMOVE EVENTS WITH NO MAGNITUDE</span>
+0122 f = <a href="../../../GISMO/core/@correlation/find.html" class="code" title="function index = find(c,varargin)">find</a>(~isnan(catalog.prefMagnitude));
+0123 numEventsAll = num2str(numel(catalog.prefMagnitude));
+0124 numEventsWithMag = num2str(numel(f));
+0125 catalog.time          = catalog.time(f);
+0126 catalog.lat           = catalog.lat(f);
+0127 catalog.lon           = catalog.lon(f);
+0128 catalog.depth         = catalog.depth(f);
+0129 catalog.orid          = catalog.orid(f);
+0130 catalog.nass          = catalog.nass(f);
+0131 catalog.ndef          = catalog.ndef(f);
+0132 catalog.etype         = catalog.etype(f);
+0133 catalog.auth          = catalog.auth(f);
+0134 catalog.ml            = catalog.ml(f);
+0135 catalog.mb            = catalog.mb(f);
+0136 catalog.ms            = catalog.ms(f);
+0137 catalog.mw            = catalog.mw(f);
+0138 catalog.prefMagType   = catalog.prefMagType(f);
+0139 catalog.prefMagnitude = catalog.prefMagnitude(f);
+0140 
+0141 
+0142 <span class="comment">% STATUS LINE</span>
+0143 dateEarliest = datestr(<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>(catalog.time),<span class="string">'yyyy/mm/dd HH:MM:SS'</span>);
+0144 dateMostRecent = datestr(<a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(catalog.time),<span class="string">'yyyy/mm/dd HH:MM:SS'</span>);
+0145 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'  Retrieved '</span> numEventsWithMag <span class="string">' earthquakes with magnitudes (out of '</span> numEventsAll <span class="string">' total)'</span>]);
+0146 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'       Earliest:    '</span> dateEarliest ]);
+0147 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>([<span class="string">'       Most recent: '</span> dateMostRecent ]);
+0148 <a href="../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">''</span>);
+0149</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

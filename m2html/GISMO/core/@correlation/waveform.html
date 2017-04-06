@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of waveform</title>
+  <meta name="keywords" content="waveform">
+  <meta name="description" content="WAVEFORM Extract a waveform object.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@correlation</a> &gt; waveform.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@correlation&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>waveform
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>WAVEFORM Extract a waveform object.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function w = waveform(c,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">WAVEFORM Extract a waveform object.
+
+ W = WAVEFORM(C) Extracts a waveform object from inside a correlation
+ object. This is really just intuitive shorthand for W =
+ GET(C,'WAVEFORM').
+
+ W = WAVEFORM(C,INDEX) returns a waveform object W that includes only the
+ traces specified by INDEX, where INDEX is a vector of trace indices.
+
+ This function is particularly useful for manipulating waveforms using
+ tools outside the correlation toolbox. 
+ 
+ Example:
+   % square the amplitudes of each trace (sign-sensitive)
+   w  = waveform(c);
+   w1 = (w.^2)
+   w2 = sign(w);
+   for n = 1:numel(w)
+        w(n) = w1(n) .* w2(n);
+   end
+   c = correlation(c,w);</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/applications/+iceweb/waveform_wrapper.html" class="code" title="function w=waveform_wrapper(ds, chantag, snum, enum);">waveform_wrapper</a>	WAVEFORM_WRAPPER try multiple datasource objects in</li><li><a href="../../../GISMO/applications/uispecgram.html" class="code" title="function varargout = uispecgram(varargin)">uispecgram</a>	UISPECGRAM M-file for uispecgram.fig</li><li><a href="../../../GISMO/contributed/+obspy/incomplete.html" class="code" title="function [w,scnl]=obspy.stream2waveform(path_to_python, path_to_converter, path_to_data)">incomplete</a>	OBSPY.STREAM2WAVEFORM Use ObsPy to read a stream object and then convert</li><li><a href="../../../GISMO/contributed/+obspy/stream2waveform.html" class="code" title="function [w,scnl]=obspy.stream2waveform(path_to_python, path_to_converter, path_to_data)">stream2waveform</a>	OBSPY.STREAM2WAVEFORM Use ObsPy to read a stream object and then convert</li><li><a href="../../../GISMO/contributed/+obspy/stream_matfile2waveform.html" class="code" title="function [w,scnl]=stream_matfile2waveform(matfilepath)">stream_matfile2waveform</a>	OBSPY.STREAM2WAVEFORM Use ObsPy to read a stream object and then convert</li><li><a href="../../../GISMO/contributed/correlation_derived/corrderived_plot_swarm_history.html" class="code" title="function corrderived_plot_swarm_history(c,varargin)">corrderived_plot_swarm_history</a>	CORRDERIVED_PLOT_SWARM_HISTORY plots relevent details of seismic swarms</li><li><a href="../../../GISMO/contributed/instrument_response/demo_plutons.html" class="code" title="">demo_plutons</a>	</li><li><a href="../../../GISMO/contributed/iris_dmc_tools/+irisdmc/cookbook.html" class="code" title="function cookbook">cookbook</a>	COOKBOOK example program using the IRIS DMC web services</li><li><a href="../../../GISMO/contributed/iris_dmc_tools/dmc_cookbook.html" class="code" title="function dmc_cookbook">dmc_cookbook</a>	</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/extract.html" class="code" title="function varargout = extract(W,varargin)">extract</a>	EXTRACT extract matches to the master waveform</li><li><a href="../../../GISMO/contributed/master_correlation/+mastercorr/scan.html" class="code" title="function [WW,WWxc] = scan(WW,WWsnippet,threshold)">scan</a>	SCAN scans a waveform for events which match a master.</li><li><a href="../../../GISMO/contributed/master_correlation/mastercorr_scan.html" class="code" title="function [WW,WWxc] = mastercorr_scan(WW,WWsnippet,threshold)">mastercorr_scan</a>	MASTERCORR_SCAN scans a waveform for events which match a master.</li><li><a href="../../../GISMO/contributed_antelope/double_difference/dd_process_scp.html" class="code" title="function dd_process_scp(dbname,scpfile,varargin)">dd_process_scp</a>	DD_PROCESS_SCP Process correlations by station and channel</li><li><a href="../../../GISMO/contributed_antelope/import_events/import_events.html" class="code" title="function [ eqtc, varargout ] = import_events(dbname, chanfile, starttime, endtime, phase, delay, enddelay, varargin)">import_events</a>	IMPORT_EVENTS Import waveforms associated with earthquake events.</li><li><a href="../../../GISMO/contributed_antelope/reduced_displacement/reducedisp_wfmeas.html" class="code" title="function reducedisp_wfmeas(varargin);">reducedisp_wfmeas</a>	REDUCEDISP_WFMEAS(STARTTIME,ENDTIME,SCNL,DIST,DS,DBOUT,FILT,TIMESTEP,ALGORITHM)</li><li><a href="../../../GISMO/core/+antelope/antelope2waveform.html" class="code" title="function w=antelope2waveform(dbpath, sta, chan, starttime, endtime)">antelope2waveform</a>	ANTELOPE2WAVEFORM Load waveform objects from Antelope database</li><li><a href="../../../GISMO/core/+antelope/arrivals2waveforms.html" class="code" title="function w = arrivals2waveforms(dbpath, arrivals, pretrig, posttrig, taper_seconds, nwaveforms)">arrivals2waveforms</a>	ARRIVALS2WAVEFORMS Load waveform objects corresponding to an arrivals structure</li><li><a href="cookbook.html" class="code" title="function correlationVariables = cookbook(corr)">cookbook</a>	% Correlation object cookbook</li><li><a href="correlation.html" class="code" title="function c = correlation(varargin)">correlation</a>	</li><li><a href="../../../GISMO/core/@correlation/private/makesynthwaves.html" class="code" title="function c = makesynthwaves(n);">makesynthwaves</a>	Add N traces of synthetic data to a correlation object. Alters properties: waves, trig,</li><li><a href="../../../GISMO/core/@drumplot/cookbook.html" class="code" title="">cookbook</a>	% drumplot cookbook</li><li><a href="../../../GISMO/core/@drumplot/drumplot.html" class="code" title="">drumplot</a>	DRUMPLOT the blueprint for drumplot objects in GISMO</li><li><a href="../../../GISMO/core/@rsam/oneMinuteData.html" class="code" title="">oneMinuteData</a>	</li><li><a href="../../../GISMO/core/@threecomp/diagnostic.html" class="code" title="function diagnostic(threecomp)">diagnostic</a>	DIAGNOSTIC check for accurate behavior of threecomp object.</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/particlemotion.html" class="code" title="function TC = particlemotion(TC, varargin)">particlemotion</a>	PARTICLEMOTION calculates particle motion vectors for threecomp object</li><li><a href="../../../GISMO/core/@threecomp/threecomp.html" class="code" title="">threecomp</a>	THREECOMP Object for three component waveform data</li><li><a href="../../../GISMO/core/@waveform/combine.html" class="code" title="function combined_waveforms = combine (waveformlist)">combine</a>	COMBINE merges waveforms based on start/end times and ChannelTag info.</li><li><a href="../../../GISMO/core/@waveform/isfield.html" class="code" title="function TF = isfield(w,testField)">isfield</a>	ISFIELD checks the presence of waveform fields.</li><li><a href="../../../GISMO/core/@waveform/loadobj.html" class="code" title="function b = loadobj(a)">loadobj</a>	LOADOBJ updates older versions of waveform class upon loading</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope_old.html" class="code" title="function outputWaveforms = load_antelope(request, specificDatabase)">load_antelope_old</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_antelope_workaround.html" class="code" title="function outputWaveforms = load_antelope_workaround(datarequest, COMBINE_WAVEFORMS, specificDatabase)">load_antelope_workaround</a>	load a waveform from antelope</li><li><a href="../../../GISMO/core/@waveform/private/load_file.html" class="code" title="function w = load_file(request)">load_file</a>	LOAD_FILE</li><li><a href="../../../GISMO/core/@waveform/private/load_from_datasource.html" class="code" title="function w = load_from_datasource(ds, chans, startt, endt, combine_waves, usewkaround)">load_from_datasource</a>	load_from_datasource</li><li><a href="../../../GISMO/core/@waveform/private/load_from_file.html" class="code" title="function w = load_from_file(myLoadFunc, fname, allowMultiple, ErrorOnEmpty)">load_from_file</a>	load waveforms from a file using myLoadfunc</li><li><a href="../../../GISMO/core/@waveform/private/load_irisdmcws.html" class="code" title="function wavef = load_irisdmcws(request)">load_irisdmcws</a>	LOAD_IRISDMCWS loads waveforms using the IRIS Web Services Java Library</li><li><a href="../../../GISMO/core/@waveform/private/load_matfile.html" class="code" title="function w = load_matfile(request)">load_matfile</a>	LOAD_FILE</li><li><a href="../../../GISMO/core/@waveform/private/load_miniseed.html" class="code" title="function w = load_miniseed(request)">load_miniseed</a>	LOAD_MINISEED loads a waveform from MINISEED files</li><li><a href="../../../GISMO/core/@waveform/private/load_obspy.html" class="code" title="function w = load_obspy(request)">load_obspy</a>	LOAD_OBSPY loads matlab files that were saved by ObsPy as per the ObsPy tutorial</li><li><a href="../../../GISMO/core/@waveform/private/load_sac.html" class="code" title="function w = load_sac(request)">load_sac</a>	LOAD_SAC loads a waveform from SAC files</li><li><a href="../../../GISMO/core/@waveform/private/load_seisan.html" class="code" title="function w = load_seisan(request)">load_seisan</a>	LOAD_SEISAN loads a waveform from SEISAN files</li><li><a href="../../../GISMO/core/@waveform/private/load_winston.html" class="code" title="function allWaves = load_winston(request)">load_winston</a>	LOAD_WINSTON handles retrieval of data from a winston waveserver.</li><li><a href="../../../GISMO/core/@waveform/private/sac2waveform.html" class="code" title="function allWaveforms = sac2waveform(sacStructure)">sac2waveform</a>	SAC2WAVEFORM fill a waveform object from a sac header</li><li><a href="../../../GISMO/core/@waveform/private/winston_access.html" class="code" title="function w = winston_access(varargin)">winston_access</a>	</li><li><a href="../../../GISMO/core/dev/+dataretrieval/@antelopesource/antelopesource.html" class="code" title="">antelopesource</a>	</li><li><a href="../../../GISMO/core/dev/+dataretrieval/iriswebservicesource.html" class="code" title="">iriswebservicesource</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/makesynthwaves.html" class="code" title="function c = makesynthwaves(n)">makesynthwaves</a>	Add N traces of synthetic data to a correlation object. Alters properties: waves, trig,</li><li><a href="../../../GISMO/core/dev/@SeismicTrace/SeismicTrace.html" class="code" title="">SeismicTrace</a>	</li><li><a href="../../../GISMO/deprecated/+waveform_extensions/sacload.html" class="code" title="function w = load(fileList)">sacload</a>	SACLOAD Load SAC files into MATLAB as waveform objects</li><li><a href="../../../GISMO/deprecated/@helicorder/build.html" class="code" title="function varargout = build(h)">build</a>	BUILD: Helicorder builder function. A helicorder object (h) contains no</li><li><a href="../../../GISMO/deprecated/@helicorder/helicorder.html" class="code" title="function h = helicorder(varargin)">helicorder</a>	HELICORDER: Helicorder generates a multi-line display of input waveform</li><li><a href="../../../GISMO/deprecated/@helicorder/private/Event_Conversion/wfa2nan.html" class="code" title="function nan = wfa2nan(wfa, varargin)">wfa2nan</a>	</li><li><a href="../../../GISMO/tests/amplitude_spectrum_test.html" class="code" title="function tests = amplitude_spectrum_test()">amplitude_spectrum_test</a>	% Main function to generate tests</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../GISMO/tests/test_waveform_constructor.html" class="code" title="">test_waveform_constructor</a>	test waveform creation</li><li><a href="../../../GISMO/tests/trloadcss_test.html" class="code" title="function tests = trloadcss_test()">trloadcss_test</a>	% Main function to generate tests</li><li><a href="../../../GISMO/tests/waveform_antelope_test.html" class="code" title="function tests = waveform_antelope_test()">waveform_antelope_test</a>	% Main function to generate tests</li><li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li><li><a href="../../../GISMO/uaf_internal/AEIC_AVO/+check/crossfeed.html" class="code" title="function crossfeed(varargin)">crossfeed</a>	CROSSFEED Checks for crossfeeding and duplicate data channels</li><li><a href="../../../GISMO/uaf_internal/IDEAS_format/ideas2waveform.html" class="code" title="function w = ideas2waveform(fileName)">ideas2waveform</a>	OPEN_INFRASOUND Open UAF/GI infrasound data as a waveform object.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = waveform(c,varargin)</a>
+0002 
+0003 <span class="comment">%WAVEFORM Extract a waveform object.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% W = WAVEFORM(C) Extracts a waveform object from inside a correlation</span>
+0006 <span class="comment">% object. This is really just intuitive shorthand for W =</span>
+0007 <span class="comment">% GET(C,'WAVEFORM').</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% W = WAVEFORM(C,INDEX) returns a waveform object W that includes only the</span>
+0010 <span class="comment">% traces specified by INDEX, where INDEX is a vector of trace indices.</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% This function is particularly useful for manipulating waveforms using</span>
+0013 <span class="comment">% tools outside the correlation toolbox.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Example:</span>
+0016 <span class="comment">%   % square the amplitudes of each trace (sign-sensitive)</span>
+0017 <span class="comment">%   w  = waveform(c);</span>
+0018 <span class="comment">%   w1 = (w.^2)</span>
+0019 <span class="comment">%   w2 = sign(w);</span>
+0020 <span class="comment">%   for n = 1:numel(w)</span>
+0021 <span class="comment">%        w(n) = w1(n) .* w2(n);</span>
+0022 <span class="comment">%   end</span>
+0023 <span class="comment">%   c = correlation(c,w);</span>
+0024 
+0025 <span class="comment">% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0026 <span class="comment">% $Date$</span>
+0027 <span class="comment">% $Revision$</span>
+0028 
+0029 
+0030 
+0031 <span class="keyword">if</span> numel(varargin)==1
+0032     <span class="keyword">if</span> ~isa(varargin{1},<span class="string">'double'</span>)
+0033        error(<span class="string">'correlation:waveform'</span>,<span class="string">'argument must be a numeric double'</span>); 
+0034     <span class="keyword">end</span>
+0035     index = varargin{1};
+0036 <span class="keyword">else</span>
+0037     index = 1:numel(c.W);
+0038 <span class="keyword">end</span>
+0039 <span class="keyword">if</span> <a href="../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(index)&gt;numel(c.W)
+0040     error(<span class="string">'correlation:waveform'</span>,<span class="string">'index exceeds the number of traces'</span>); 
+0041 <span class="keyword">end</span>
+0042 
+0043 
+0044 w = c.W(index);</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

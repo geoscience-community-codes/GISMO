@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of fft</title>
+  <meta name="keywords" content="fft">
+  <meta name="description" content="FFT Discrete Fourier transform.  OVERLOADED for waveform &amp; Spectralobject">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@spectralobject</a> &gt; fft.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@spectralobject&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>fft
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>FFT Discrete Fourier transform.  OVERLOADED for waveform &amp; Spectralobject</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [varargout] = fft(s, w) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">FFT Discrete Fourier transform.  OVERLOADED for waveform &amp; Spectralobject
+   USAGE
+       v = fft(s, w);      % get the fft only
+       [v, f] = fft(s,w);  % get the fft &amp; assoc. frequencies
+       [v, f, Pyy] = fft(s,w); % get fft, frequencies, and Power Spectrum
+
+   See also SPECTRALOBJECT/IFFT, <a href="fft.html" class="code" title="function [varargout] = fft(s, w)">FFT</a>, FFT2, FFTN, FFTSHIFT, FFTW, IFFT2, IFFTN, WAVEFORM/FILLGAPS.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>	DOUBLE returns a waveform's data as a double type</li><li><a href="../../../GISMO/core/@waveform/get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed/instrument_response/response_apply.html" class="code" title="function wNew = response_apply(w,filterObj,sourceType,source)">response_apply</a>	RESPONSE_APPLY Deconvolve an instrument response from a waveform object.</li><li><a href="../../../GISMO/core/@correlation/conv.html" class="code" title="function c = conv(c,varargin)">conv</a>	c = CONV(c) convolves all traces with the final trace. By default the new</li><li><a href="../../../GISMO/core/@correlation/deconv.html" class="code" title="function c = deconv(c,varargin)">deconv</a>	c = DECONV(c) convolves all traces with the final trace. By default the new</li><li><a href="../../../GISMO/core/@correlation/private/DEPRICATED_xcorr1xr.html" class="code" title="function d = xcorr1xr(d)">DEPRICATED_xcorr1xr</a>	This function performs cross correlations in sets by correlating one</li><li><a href="../../../GISMO/core/@correlation/private/DEPRICATED_xcorrcxc.html" class="code" title="function d = xcorr1xr(d)">DEPRICATED_xcorrcxc</a>	This function performs cross correlations of one correlation object</li><li><a href="../../../GISMO/core/@correlation/private/xcorr1xr.html" class="code" title="function d = xcorr1xr(d,style)">xcorr1xr</a>	XCORR1XR Cross correlate 1 trace against all other traces at once.</li><li><a href="../../../GISMO/core/@correlation/private/xcorr1xr_orig.html" class="code" title="function d = xcorr1xr_orig(d)">xcorr1xr_orig</a>	This function performs cross correlations in sets by correlating one</li><li><a href="../../../GISMO/core/@correlation/private/xcorrdec.html" class="code" title="function d = xcorrdec(d)">xcorrdec</a>	Same algorithm as xcorr1xr, except this function decomposes the complex</li><li><a href="../../../GISMO/core/@correlation/private/xcorrrow.html" class="code" title="function d = xcorrrow(d,c,index)">xcorrrow</a>	XCORRROW Cross correlation for one or more traces.</li><li><a href="specgram.html" class="code" title="function h = specgram(s, ws, varargin)">specgram</a>	SPECGRAM - plots spectrogram of waveforms</li><li><a href="../../../GISMO/core/@waveform/plot_spectrum.html" class="code" title="function s = plot_spectrum(w)">plot_spectrum</a>	add_spectral_data Simple method to compute frequency</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/conv.html" class="code" title="function c = conv(c)">conv</a>	conv   convolve all traces with the final trace</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/deconv.html" class="code" title="function c = deconv(c)">deconv</a>	c = DECONV(c) convolves all traces with the final trace. By default the new</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/xcorr1xr.html" class="code" title="function d = xcorr1xr(d,style)">xcorr1xr</a>	XCORR1XR Cross correlate 1 trace against all other traces at once.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/xcorr1xr_orig.html" class="code" title="function d = xcorr1xr_orig(d)">xcorr1xr_orig</a>	This function performs cross correlations in sets by correlating one</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/xcorrdec.html" class="code" title="function d = xcorrdec(d)">xcorrdec</a>	Same algorithm as xcorr1xr, except this function decomposes the complex</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/xcorrrow.html" class="code" title="function d = xcorrrow(d,c,index)">xcorrrow</a>	XCORRROW Cross correlation for one or more traces.</li><li><a href="../../../GISMO/core/dev/@TraceData/amplitude_spectrum.html" class="code" title="function [A, phi, f] = amplitude_spectrum(td)">amplitude_spectrum</a>	amplitude_spectrum   Simple method to compute amplitude</li><li><a href="../../../GISMO/core/dev/@TraceSpectra/specgram.html" class="code" title="function h = specgram(s, T, varargin)">specgram</a>	specgram - plots spectrogram of traces</li><li><a href="../../../GISMO/deprecated/fft_tools/+wf_fft/compute.html" class="code" title="function w = compute(w);">compute</a>	COMPUTE calculates the fast fourier transform of a waveform object</li><li><a href="../../../GISMO/deprecated/fft_tools/amplitude_spectrum.html" class="code" title="function w = add_spectral_data(w)">amplitude_spectrum</a>	add_spectral_data Simple method to compute frequency</li><li><a href="../../../GISMO/deprecated/fft_tools/wf_fft.html" class="code" title="function w = wf_fft(w);">wf_fft</a>	WAVEFORM = WF_FFT(WAVEFORM)  calculate frequency spectrum of a waveform.</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [varargout] = fft(s, w)</a>
+0002 <span class="comment">%FFT Discrete Fourier transform.  OVERLOADED for waveform &amp; Spectralobject</span>
+0003 <span class="comment">%   USAGE</span>
+0004 <span class="comment">%       v = fft(s, w);      % get the fft only</span>
+0005 <span class="comment">%       [v, f] = fft(s,w);  % get the fft &amp; assoc. frequencies</span>
+0006 <span class="comment">%       [v, f, Pyy] = fft(s,w); % get fft, frequencies, and Power Spectrum</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">%   See also SPECTRALOBJECT/IFFT, FFT, FFT2, FFTN, FFTSHIFT, FFTW, IFFT2, IFFTN, WAVEFORM/FILLGAPS.</span>
+0009 
+0010 <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0011 <span class="comment">% $Date$</span>
+0012 <span class="comment">% $Revision$</span>
+0013 
+0014 <span class="keyword">if</span> nargin &lt; 2
+0015     error(<span class="string">'Spectralobject:fft:insufficientArguments'</span>,<span class="keyword">...</span>
+0016         <span class="string">'Not enough input arguments. [out]=fft(spectralobject, waveform)'</span>);
+0017 <span class="keyword">end</span>
+0018 
+0019 <span class="keyword">if</span> ~isscalar(w)
+0020     error(<span class="string">'Spectralobject:fft:nonScalarWaveform'</span>,<span class="keyword">...</span>
+0021         <span class="string">'waveform must be scalar (1x1)'</span>);
+0022 <span class="keyword">end</span>
+0023 
+0024 <span class="keyword">if</span> ~isa(w,<span class="string">'waveform'</span>)
+0025     error(<span class="string">'Spectralobject:fft:invalidArgument'</span>,<span class="keyword">...</span>
+0026         <span class="string">'second argument expected to be WAVEFORM, but was [%s]'</span>, class(w));
+0027 <span class="keyword">end</span>
+0028 
+0029 <span class="keyword">if</span> any(isnan(<a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w)))
+0030     warning(<span class="string">'Spectralobject:fft:nanValue'</span>,<span class="keyword">...</span>
+0031         [<span class="string">'This waveform has at least one NaN value, which returns NaN '</span>,<span class="keyword">...</span>
+0032         <span class="string">'results. Remove NaN values by either splitting up the '</span>,<span class="keyword">...</span>
+0033         <span class="string">'waveform into non-NaN sections or by using waveform/fillgaps'</span>,<span class="keyword">...</span>
+0034         <span class="string">' to replace the NaN values.'</span>]);
+0035 <span class="keyword">end</span>
+0036 
+0037 varargout{1} = builtin(<span class="string">'fft'</span>, <a href="../../../GISMO/core/@waveform/double.html" class="code" title="function n = double(W, option)">double</a>(w));
+0038 varargout{2} = <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(w,<span class="string">'fs'</span>) * (0:fix(<a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(s,<span class="string">'nfft'</span>)./2)) / <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(s,<span class="string">'nfft'</span>);
+0039 varargout{3} = varargout{1}.* conj(varargout{1}) / <a href="get.html" class="code" title="function out = get(s, prop_name)">get</a>(s,<span class="string">'nfft'</span>);
+0040 varargout{3} = varargout{3}(1:length(varargout{2}));
+0041 
+0042</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

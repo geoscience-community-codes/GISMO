@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of test_waveform_constructor</title>
+  <meta name="keywords" content="test_waveform_constructor">
+  <meta name="description" content="test waveform creation">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">tests</a> &gt; test_waveform_constructor.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/tests&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>test_waveform_constructor
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>test waveform creation</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> test waveform creation
+deprecated by testWaveform.m</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>	DATASOURCE constructor for a datasource object.</li><li><a href="../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../GISMO/core/@scnlobject/ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>	ChannelTag Converter from scnlobject to ChannelTag</li><li><a href="../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>	scnl (deprecated) : object that holds the stations, channel, network, and location for</li><li><a href="../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% test waveform creation</span>
+0002 <span class="comment">%deprecated by testWaveform.m</span>
+0003 
+0004 data = 1:(10*60*60*2.5);
+0005 st_mat = now-1;
+0006 st_txt = <span class="string">'5/5/2014'</span>;
+0007 et_mat = now-0.98;
+0008 et_txt = <span class="string">'5/5/2004 01:00:00'</span>;
+0009 sta = <span class="string">'XXXX'</span>;
+0010 net = <span class="string">'NW'</span>;
+0011 cha = <span class="string">'BHZ'</span>;
+0012 loc = <span class="string">'00'</span>;
+0013 nslctxt = [net, <span class="string">'.'</span>, sta, <span class="string">'.'</span>, loc, <span class="string">'.'</span>, cha];
+0014 hz = 20;
+0015 unit = <span class="string">'CNT'</span>;
+0016 scnl = <a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(sta,cha,net,loc);
+0017 tag = <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(net,sta,loc,cha);
+0018 ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>;
+0019 
+0020 <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'************* starting test  **********'</span>);
+0021 <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: default'</span>)
+0022 w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>()
+0023 <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: copy'</span>)
+0024 w2 = w
+0025 <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: sta cha hz st data'</span>)
+0026 w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(sta,       cha,  hz,      st_mat,  data)
+0027 <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: scnl hz st data unit'</span>)
+0028 w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(scnl,      hz,   st_mat,  data,    unit)
+0029 <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: nscltxt hz st data unit'</span>)
+0030 w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(nslctxt,   hz,   st_mat,  data,    unit)
+0031 <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: tag hz st data unit'</span>)
+0032 w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(tag,       hz,   st_mat,  data,    unit)
+0033 <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: scnl hz st data'</span>)
+0034 w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(scnl,      hz,   st_mat,  data)
+0035 <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: nscltxt hz st data'</span>)
+0036 w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(nslctxt,   hz,   st_mat,  data)
+0037 <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: tag hz st data'</span>)
+0038 w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(tag,       hz,   st_mat,  data)
+0039 
+0040 
+0041 <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'CREATE: tag hz st data unit nocombine'</span>)
+0042 w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(tag,       hz,   st_mat,  data,    unit, <span class="string">'nocombine'</span>)
+0043 
+0044 <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'** done **'</span>);
+0045 
+0046</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

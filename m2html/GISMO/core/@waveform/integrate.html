@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of integrate</title>
+  <meta name="keywords" content="integrate">
+  <meta name="description" content="INTEGRATE integrates a waveform signal">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@waveform</a> &gt; integrate.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@waveform&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>integrate
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>INTEGRATE integrates a waveform signal</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function w = integrate (w,method) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">INTEGRATE integrates a waveform signal
+   waveform = integrate(waveform, [method])
+   goes from Acceleration -&gt; Velocity, and from Velocity -&gt; displacement
+
+   wave = integrate(waveform)  or
+   wave = integrate(waveform,'cumsum') performs integration by summing the
+   data points with the cumsum function, taking into account time interval
+   and updating the units as appropriate.
+
+   waveform = integrate(waveform, 'trapz') as above, but uses matlab's
+   cumtrapz function to perform the integration.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@correlation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/@correlation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/core/@datasource/get.html" class="code" title="function val = get(ds, propertyname)">get</a>	</li><li><a href="../../../GISMO/core/@drumplot/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get drumplot properties</li><li><a href="../../../GISMO/core/@drumplot/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set drumplot properties</li><li><a href="../../../GISMO/core/@filterobject/get.html" class="code" title="function val = get(f, prop_name)">get</a>	GET - Get filterobject properties</li><li><a href="../../../GISMO/core/@filterobject/set.html" class="code" title="function f = set(f, varargin)">set</a>	SET - Set filterobject properties</li><li><a href="../../../GISMO/core/@scnlobject/get.html" class="code" title="function stuff = get(scnl, prop_name)">get</a>	GET for the scnl object</li><li><a href="../../../GISMO/core/@scnlobject/set.html" class="code" title="function scnl = set(scnl, varargin)">set</a>	SET - Set properties for scnlobject</li><li><a href="../../../GISMO/core/@spectralobject/get.html" class="code" title="function out = get(s, prop_name)">get</a>	GET - Get properties for spectralobject</li><li><a href="../../../GISMO/core/@spectralobject/set.html" class="code" title="function s = set(s, varargin)">set</a>	SET - Set properties for spectralobject</li><li><a href="../../../GISMO/core/@threecomp/get.html" class="code" title="function val = get(TC,varargin)">get</a>	GET    Get threecomp object properties.</li><li><a href="../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../GISMO/core/@threecomp/set.html" class="code" title="function TC = set(TC, fieldName, val)">set</a>	SET inserts properties for threecomp object</li><li><a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>	GET Get waveform properties</li><li><a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="set.html" class="code" title="function w = set(w, varargin)">set</a>	SET Set properties for waveform object(s)</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/get.html" class="code" title="function val = get(c,prop_name)">get</a>	GET - Get correlation properties</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/set.html" class="code" title="function c = set(c, prop_name, val)">set</a>	SET Set properties for correlation object</li><li><a href="../../../GISMO/deprecated/@helicorder/get.html" class="code" title="function val = get(h,prop_name)">get</a>	GET: Get helicorder properties</li><li><a href="../../../GISMO/deprecated/@helicorder/set.html" class="code" title="function h = set(h,varargin)">set</a>	SET: Set helicorder properties</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/contributed_antelope/attenuation/hankelq.html" class="code" title="function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)">hankelq</a>	HANKELQ Compute spectral ratio in two frequency bands</li><li><a href="../../../GISMO/contributed_antelope/reduced_displacement/reducedisp_calc.html" class="code" title="function w = reducedisp_calc(w,dist,varargin)">reducedisp_calc</a>	WAVEFORM = REDUCEDISP(WAVEFORM,DISTANCE) This function calculates the</li><li><a href="../../../GISMO/core/@correlation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="../../../GISMO/core/dev/@NewCorrelation/integrate.html" class="code" title="function c = integrate(c)">integrate</a>	INTEGRATE   integrates each trace.</li><li><a href="../../../GISMO/tests/testWaveform.html" class="code" title="">testWaveform</a>	</li><li><a href="../../../GISMO/training/gismo_examples.html" class="code" title="">gismo_examples</a>	Standard clearing MATLAB workspace & command window, closing figures</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function w = integrate (w,method)</a>
+0002    <span class="comment">%INTEGRATE integrates a waveform signal</span>
+0003    <span class="comment">%   waveform = integrate(waveform, [method])</span>
+0004    <span class="comment">%   goes from Acceleration -&gt; Velocity, and from Velocity -&gt; displacement</span>
+0005    <span class="comment">%</span>
+0006    <span class="comment">%   wave = integrate(waveform)  or</span>
+0007    <span class="comment">%   wave = integrate(waveform,'cumsum') performs integration by summing the</span>
+0008    <span class="comment">%   data points with the cumsum function, taking into account time interval</span>
+0009    <span class="comment">%   and updating the units as appropriate.</span>
+0010    <span class="comment">%</span>
+0011    <span class="comment">%   waveform = integrate(waveform, 'trapz') as above, but uses matlab's</span>
+0012    <span class="comment">%   cumtrapz function to perform the integration.</span>
+0013    
+0014    <span class="comment">%   Input Arguments</span>
+0015    <span class="comment">%       WAVEFORM: a waveform object   N-DIMENSIONAL</span>
+0016    <span class="comment">%       METHOD: either 'cumtrapz' or 'cumsum'  [default is cumsum]</span>
+0017    <span class="comment">%</span>
+0018    <span class="comment">%   Actual implementation  merely does a cumulative sum of the waveform's</span>
+0019    <span class="comment">%   samples, and updates the units accordingly.  These units may be a</span>
+0020    <span class="comment">%   little kludgey.</span>
+0021    <span class="comment">%</span>
+0022    <span class="comment">%</span>
+0023    <span class="comment">%   See also CUMSUM, CUMTRAPZ, WAVEFORM/DIFF</span>
+0024    
+0025    <span class="comment">% AUTHOR: Celso Reyes, Geophysical Institute, Univ. of Alaska Fairbanks</span>
+0026    <span class="comment">% $Date$</span>
+0027    <span class="comment">% $Revision $</span>
+0028    
+0029    Nmax = numel(w);
+0030    allfreq = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w,<span class="string">'freq'</span>);
+0031    
+0032    <span class="keyword">if</span> ~exist(<span class="string">'method'</span>,<span class="string">'var'</span>)
+0033       method = <span class="string">'cumsum'</span>;
+0034    <span class="keyword">end</span>
+0035    
+0036    <span class="keyword">switch</span> lower(method)
+0037       <span class="keyword">case</span> <span class="string">'cumsum'</span>
+0038          integratefn = str2func(<span class="string">'cumsum'</span>);
+0039       <span class="keyword">case</span> <span class="string">'trapz'</span>
+0040          integratefn = str2func(<span class="string">'cumtrapz'</span>);
+0041       <span class="keyword">otherwise</span>
+0042          error(<span class="string">'Waveform:integrate:unknownMethod'</span>,<span class="keyword">...</span>
+0043             <span class="string">'Unknown integration method.  Valid methods are ''cumsum'' and ''trap'''</span>);
+0044    <span class="keyword">end</span>
+0045    
+0046    <span class="keyword">for</span> I = 1 : Nmax
+0047       w(I) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(I),<span class="string">'data'</span>,integratefn(w(I).data) ./ allfreq(I));
+0048       tempUnits = <a href="get.html" class="code" title="function val = get(w,prop_name)">get</a>(w(I),<span class="string">'units'</span>);
+0049       whereInUnits = strfind(tempUnits,<span class="string">' / sec'</span>);
+0050       <span class="keyword">if</span> <a href="isempty.html" class="code" title="function TF = isempty(w)">isempty</a>(whereInUnits)
+0051          w(I) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(I),<span class="string">'units'</span>, [tempUnits, <span class="string">' * sec'</span>]);
+0052       <span class="keyword">else</span>
+0053          tempUnits(whereInUnits(1) :whereInUnits(1)+5) = [];
+0054          w(I) = <a href="set.html" class="code" title="function w = set(w, varargin)">set</a>(w(I),<span class="string">'units'</span>,tempUnits);
+0055       <span class="keyword">end</span>
+0056       <span class="comment">%w(I) = set(w(I),'units', [get(w(I),'units'), ' * sec']);</span>
+0057    <span class="keyword">end</span>
+0058 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

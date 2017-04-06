@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of trloadcss_test</title>
+  <meta name="keywords" content="trloadcss_test">
+  <meta name="description" content="% Main function to generate tests">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="../index.html">GISMO</a> &gt; <a href="index.html">tests</a> &gt; trloadcss_test.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/tests&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>trloadcss_test
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>% Main function to generate tests</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function tests = trloadcss_test() </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Main function to generate tests
+ TEST script modified after Carl Tape's post here:
+ https://code.google.com/p/gismotools/source/detail?r=397
+ Modified by Glenn Thompson to break down into testable sections
+ Testing waveform via trload_css, which breaks for unknown reasons</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>	</li><li><a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>	DATASOURCE constructor for a datasource object.</li><li><a href="../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../GISMO/core/@scnlobject/ChannelTag.html" class="code" title="function ct = ChannelTag(scnl)">ChannelTag</a>	ChannelTag Converter from scnlobject to ChannelTag</li><li><a href="../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>	scnl (deprecated) : object that holds the stations, channel, network, and location for</li><li><a href="../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../GISMO/core/@threecomp/waveform.html" class="code" title="function w = waveform(TC)">waveform</a>	WAVEFORM Get waveforms from a threecomp object</li><li><a href="../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../GISMO/core/@waveform/waveform.html" class="code" title="function w = waveform(varargin)">waveform</a>	WAVEFORM Waveform Class constructor</li><li><a href="../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../GISMO/core/dev/@NewCorrelation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>	WAVEFORM Extract a waveform object.</li><li><a href="../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function testFunctionOne(testCase)</a></li><li><a href="#_sub2" class="code">function testFunctionTwo(testCase)</a></li><li><a href="#_sub3" class="code">function testFunctionThree(testCase)</a></li><li><a href="#_sub4" class="code">function testFunctionFour(testCase)</a></li><li><a href="#_sub5" class="code">function testFunctionSix(testCase)</a></li><li><a href="#_sub6" class="code">function testFunctionSeven(testCase)</a></li><li><a href="#_sub7" class="code">function testFunctionEight(testCase)</a></li><li><a href="#_sub8" class="code">function testFunctionNine(testCase)</a></li><li><a href="#_sub9" class="code">function testFunctionTen(testCase)</a></li><li><a href="#_sub10" class="code">function testIRIS(testCase)</a></li><li><a href="#_sub11" class="code">function testWinston(testCase)</a></li><li><a href="#_sub12" class="code">function setupOnce(testCase)</a></li><li><a href="#_sub13" class="code">function teardownOnce(testCase)</a></li><li><a href="#_sub14" class="code">function setup(testCase)</a></li><li><a href="#_sub15" class="code">function teardown(testCase)</a></li><li><a href="#_sub16" class="code">function [ds,chan,startTime,endTime]=setdatasource1()</a></li><li><a href="#_sub17" class="code">function tryAllSources(ds, sta, chan, startTime, endTime)</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%% Main function to generate tests</span>
+0002 <span class="comment">% TEST script modified after Carl Tape's post here:</span>
+0003 <span class="comment">% https://code.google.com/p/gismotools/source/detail?r=397</span>
+0004 <span class="comment">% Modified by Glenn Thompson to break down into testable sections</span>
+0005 <span class="comment">% Testing waveform via trload_css, which breaks for unknown reasons</span>
+0006 
+0007 <span class="comment">% Added tests for other datasources</span>
+0008 <a name="_sub0" href="#_subfunctions" class="code">function tests = trloadcss_test()</a>
+0009     <span class="comment">% warning on</span>
+0010     <span class="comment">% coredir=fileparts(fileparts(which('Catalog')));</span>
+0011     <span class="comment">% addpath(fullfile(coredir, 'dev'));</span>
+0012     tests = functiontests(localfunctions);
+0013 <span class="keyword">end</span>
+0014 
+0015 <span class="comment">% %% Test Functions</span>
+0016 
+0017 <a name="_sub1" href="#_subfunctions" class="code">function testFunctionOne(testCase)</a>
+0018 <span class="comment">%% example 1 - station COLA is okay</span>
+0019     fprintf(<span class="string">'\nTest 1\n'</span>);
+0020     startTime = datenum(2009,2,15,19,33,20);
+0021     endTime = datenum(2009,2,15,19,40,0);
+0022     ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'uaf_continuous'</span>);
+0023     chan=<span class="string">'BHZ*'</span>;
+0024     sta = <span class="string">'COLA'</span>;
+0025     w=<a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds, <a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(sta,chan), startTime, endTime)
+0026 <span class="keyword">end</span>
+0027 
+0028 <a name="_sub2" href="#_subfunctions" class="code">function testFunctionTwo(testCase)</a>
+0029 <span class="comment">%% example 2 - station COR is a problem</span>
+0030     fprintf(<span class="string">'\nTest 2\n'</span>);
+0031     startTime = datenum(2009,2,15,19,33,20);
+0032     endTime = datenum(2009,2,15,19,40,0);
+0033     ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'uaf_continuous'</span>);
+0034     chan=<span class="string">'BHZ*'</span>;
+0035     sta = {<span class="string">'COLA'</span>;<span class="string">'COR'</span>};
+0036     w=<a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds, <a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(sta,chan), startTime, endTime)
+0037 <span class="keyword">end</span>
+0038 
+0039 <a name="_sub3" href="#_subfunctions" class="code">function testFunctionThree(testCase)</a>
+0040 <span class="comment">%% example 5 BEAAR station DH1 is a problem)</span>
+0041     startTime = <span class="string">'2000/07/31 22:44:38'</span>;
+0042     endTime = <span class="string">'2000/07/31 23:59:38'</span>;
+0043     sta = {<span class="string">'BYR'</span>;<span class="string">'CAR'</span>;<span class="string">'DH1'</span>};
+0044     chan = <span class="string">'BHZ_01'</span>;
+0045     dbpath = <span class="string">'/home/admin/databases/BEAAR/wf/beaar'</span>;
+0046     ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'antelope'</span>,dbpath);
+0047     w=<a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds, <a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(sta,chan), startTime, endTime)
+0048 <span class="keyword">end</span>
+0049 
+0050 <a name="_sub4" href="#_subfunctions" class="code">function testFunctionFour(testCase)</a>
+0051 <span class="comment">%% example 5 BEAAR station DH1 is a problem)</span>
+0052     startTime = <span class="string">'2000/07/31 22:44:38'</span>;
+0053     endTime = <span class="string">'2000/07/31 23:59:38'</span>;
+0054     sta = <span class="string">'*'</span>;
+0055     chan = <span class="string">'BHZ_01'</span>;
+0056     dbpath = <span class="string">'/home/admin/databases/BEAAR/wf/beaar'</span>;
+0057     ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'antelope'</span>,dbpath);
+0058     w=<a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds, <a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(sta,chan), startTime, endTime)
+0059 <span class="keyword">end</span>
+0060  
+0061 <a name="_sub5" href="#_subfunctions" class="code">function testFunctionSix(testCase)</a>
+0062 <span class="comment">%% example 6 - station AKT is a problem</span>
+0063     startTime = datenum(2011,11,16,16,29,0);
+0064     endTime = startTime + 1/100;
+0065     sta = <span class="string">'*'</span>;
+0066     chan = <span class="string">'HHZ*'</span>;
+0067     scnl = <a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(sta,chan,<span class="string">''</span>,<span class="string">''</span>);
+0068     ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'uaf_continuous'</span>);
+0069     w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds,scnl,startTime,endTime)
+0070 <span class="keyword">end</span>
+0071 
+0072 <a name="_sub6" href="#_subfunctions" class="code">function testFunctionSeven(testCase)</a>
+0073 <span class="comment">%% example 7 - test over a day boundary</span>
+0074     startTime = <span class="string">'2009/03/21 23:00:00'</span>;
+0075     endTime = <span class="string">'2009/03/22 01:00:00'</span>;
+0076     sta = {<span class="string">'REF'</span>;<span class="string">'RSO'</span>};
+0077     chan = <span class="string">'EHZ'</span>;
+0078     scnl = <a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(sta,chan,<span class="string">''</span>,<span class="string">''</span>);
+0079     ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'uaf_continuous'</span>);
+0080     w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds,scnl,startTime,endTime)
+0081 <span class="keyword">end</span>
+0082 
+0083 <a name="_sub7" href="#_subfunctions" class="code">function testFunctionEight(testCase)</a>
+0084 <span class="comment">%% example 8 - Carl's test case, wildcard sta &amp; wildcard chan (not designed for, but workaround added)</span>
+0085     startTime = 7.338198148159491e+05;  <span class="comment">% 2009-02-15 19:33:20</span>
+0086     endTime = 7.338198194455787e+05;
+0087     sta = <span class="string">'C*'</span>;
+0088     chan = <span class="string">'BHZ*'</span>;
+0089     datestr(startTime)
+0090     <span class="comment">% this will work, even though COR is the problem</span>
+0091     <span class="comment">%scnl = scnlobject({'COLA','COR','KDAK'},chan,'','');</span>
+0092     <span class="comment">% this will fail when asking for all stations</span>
+0093     scnl = <a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(sta,chan,<span class="string">''</span>,<span class="string">''</span>);
+0094     ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'uaf_continuous'</span>);
+0095     w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds,scnl,startTime,endTime); whos w
+0096 <span class="keyword">end</span>
+0097 
+0098 <a name="_sub8" href="#_subfunctions" class="code">function testFunctionNine(testCase)</a>
+0099 <span class="comment">%% example 9 - test</span>
+0100     startTime = <span class="string">'2010-09-18 14:14:42'</span>;
+0101     endTime = <span class="string">'2010-09-18 14:16:12'</span>;
+0102     sta = <span class="string">'X*'</span>;
+0103     chan = <span class="string">'*'</span>;
+0104     scnl = <a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(sta,chan,<span class="string">''</span>,<span class="string">''</span>);
+0105     ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'antelope'</span>,<span class="string">'/home/admin/databases/YAHTSE/wf/yahtse'</span>);
+0106     w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds,scnl,startTime,endTime)
+0107 <span class="keyword">end</span>
+0108 
+0109 <a name="_sub9" href="#_subfunctions" class="code">function testFunctionTen(testCase)</a>
+0110 <span class="comment">%% example 10 - Carl's test case, wildcard sta &amp; wildcard chan (not designed for, but workaround added)</span>
+0111     startTime = 7.338198148159491e+05;  <span class="comment">% 2009-02-15 19:33:20</span>
+0112     endTime = 7.338198194455787e+05;
+0113     sta = <span class="string">'C*'</span>;
+0114     chan = <span class="string">'BHZ*'</span>;
+0115     datestr(startTime)
+0116     <span class="comment">% this will work, even though COR is the problem</span>
+0117     <span class="comment">%scnl = scnlobject({'COLA','COR','KDAK'},chan,'','');</span>
+0118     <span class="comment">% this will fail when asking for all stations</span>
+0119     scnl = <a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(sta,chan,<span class="string">''</span>,<span class="string">''</span>);
+0120     ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'uaf_continuous'</span>);
+0121     w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds,scnl,startTime,endTime); whos w
+0122 <span class="keyword">end</span>
+0123 
+0124 <a name="_sub10" href="#_subfunctions" class="code">function testIRIS(testCase)</a>
+0125     w=<a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(<a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'irisdmcws'</span>), <a href="../../GISMO/core/@ChannelTag/ChannelTag.html" class="code" title="">ChannelTag</a>(<span class="string">'IU.ANMO.10.BHZ'</span>), <span class="string">'2010-02-27 06:30:00'</span>,<span class="string">'2010-02-27 10:30:00'</span>)
+0126 <span class="keyword">end</span>
+0127 
+0128 <a name="_sub11" href="#_subfunctions" class="code">function testWinston(testCase)</a>
+0129      ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'winston'</span>,<span class="string">'pubavo1.wr.usgs.gov'</span>,16022);
+0130      chanInfo = ChannelTag.array(<span class="string">'AV.REF.--.EHZ'</span>);
+0131      w = <a href="../../GISMO/core/@correlation/waveform.html" class="code" title="function w = waveform(c,varargin)">waveform</a>(ds,chanInfo,now-1,now-0.995)
+0132 <span class="keyword">end</span>
+0133 
+0134 <span class="comment">%% Optional file fixtures</span>
+0135 <a name="_sub12" href="#_subfunctions" class="code">function setupOnce(testCase)  </a><span class="comment">% do not change function name</span>
+0136     <span class="comment">% set a new path, for example</span>
+0137 <span class="keyword">end</span>
+0138 
+0139 <a name="_sub13" href="#_subfunctions" class="code">function teardownOnce(testCase)  </a><span class="comment">% do not change function name</span>
+0140     <span class="comment">% change back to original path, for example</span>
+0141 <span class="keyword">end</span>
+0142 
+0143 <span class="comment">%% Optional fresh fixtures</span>
+0144 <a name="_sub14" href="#_subfunctions" class="code">function setup(testCase)  </a><span class="comment">% do not change function name</span>
+0145     <span class="comment">% open a figure, for example</span>
+0146     <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'***********************************'</span>)
+0147     close all
+0148 <span class="keyword">end</span>
+0149 
+0150 <a name="_sub15" href="#_subfunctions" class="code">function teardown(testCase)  </a><span class="comment">% do not change function name</span>
+0151     <span class="comment">% close figure, for example</span>
+0152     close all
+0153 <span class="keyword">end</span>
+0154 
+0155 <a name="_sub16" href="#_subfunctions" class="code">function [ds,chan,startTime,endTime]=setdatasource1()</a>
+0156     startTime = datenum(2009,2,15,19,33,20);
+0157     endTime = datenum(2009,2,15,19,40,0);
+0158     ds = <a href="../../GISMO/core/@datasource/datasource.html" class="code" title="function ds = datasource(whichsource, varargin)">datasource</a>(<span class="string">'uaf_continuous'</span>);
+0159     chan=<span class="string">'BHZ*'</span>;
+0160 <span class="keyword">end</span>
+0161 
+0162 <a name="_sub17" href="#_subfunctions" class="code">function tryAllSources(ds, sta, chan, startTime, endTime)</a>
+0163     scnl = <a href="../../GISMO/core/@scnlobject/scnlobject.html" class="code" title="function SCNLs = scnlobject(stations, channels, networks, locations)">scnlobject</a>(sta, chan);
+0164     <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'Trying waveform'</span>)
+0165     w = tryWaveform(ds, scnl, startTime, endTime)
+0166     <a href="../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'**************'</span>)
+0167 <span class="comment">%     disp('Trying waveform_wrapper')</span>
+0168 <span class="comment">%     w = tryWaveformWrapper(ds, scnl, startTime, endTime)</span>
+0169 <span class="comment">%     disp('**************')</span>
+0170 <span class="comment">%     disp('Trying SeismicTrace')</span>
+0171 <span class="comment">%     tr = trySeismicTrace(ds, scnl, startTime, endTime)</span>
+0172 <span class="comment">%     disp('**************')</span>
+0173 <span class="comment">%     disp('Trying antelope2waveform')</span>
+0174 <span class="comment">%     dbpath=get(ds,'location');</span>
+0175 <span class="comment">%     w = antelope.antelope2waveform(dbpath, sta, chan, startTime, endTime)</span>
+0176 <span class="keyword">end</span>
+0177 
+0178</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

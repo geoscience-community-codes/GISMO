@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of readphafile</title>
+  <meta name="keywords" content="readphafile">
+  <meta name="description" content="READPHAFILE Read a Hypoellipse PHA pickfile">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="index.html">@Arrival</a> &gt; readphafile.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/@Arrival&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>readphafile
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>READPHAFILE Read a Hypoellipse PHA pickfile</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function self=readphafile(phafilename) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">READPHAFILE Read a Hypoellipse PHA pickfile
+ ARRIVALS = READPHAFILE(PHAFILENAME) Read a Hypoellipse phase file into a
+ structure.
+
+ Example: 
+     gismopath = fileparts(which('startup_GISMO'));
+     arrivals = READPHAFILE(fullfile(gismopath, 'classes/@Arrival/examplePHAfile.PHA'))</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>	MIN    Smallest value of a waveform.</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+<h2><a name="_subfunctions"></a>SUBFUNCTIONS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="#_sub1" class="code">function dnum = str2datenum(yrmodyhrmn, sec);</a></li></ul>
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function self=readphafile(phafilename)</a>
+0002 <span class="comment">%READPHAFILE Read a Hypoellipse PHA pickfile</span>
+0003 <span class="comment">% ARRIVALS = READPHAFILE(PHAFILENAME) Read a Hypoellipse phase file into a</span>
+0004 <span class="comment">% structure.</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% Example:</span>
+0007 <span class="comment">%     gismopath = fileparts(which('startup_GISMO'));</span>
+0008 <span class="comment">%     arrivals = READPHAFILE(fullfile(gismopath, 'classes/@Arrival/examplePHAfile.PHA'))</span>
+0009 
+0010 <span class="comment">%   PHA phase file has lines like:</span>
+0011 <span class="comment">%   MGHZEP 1 950814071436.76</span>
+0012 <span class="comment">%   MSPTIPU0 950814071437.96</span>
+0013 <span class="comment">%   MGATEPU0 950814071437.92                                              00011</span>
+0014 <span class="comment">%   MLGT PD0 950814071438.09       39.41 S 2</span>
+0015 <span class="comment">%   MWHTEPD1 950814071437.61       38.78 S 2                              00009</span>
+0016 <span class="comment">%   1-4: sta code</span>
+0017 <span class="comment">%   5:   E or I</span>
+0018 <span class="comment">%   6:   P (or blank)</span>
+0019 <span class="comment">%   7:   U or D</span>
+0020 <span class="comment">%   8:   quality 0-4</span>
+0021 <span class="comment">%  10-24: YYMMDDhhmmss.ii for P</span>
+0022 <span class="comment">%  32-36: ss.ii for S</span>
+0023 <span class="comment">%  38:   S (or blank)</span>
+0024 <span class="comment">%  40:   quality 0-4</span>
+0025 
+0026 self = [];
+0027 c=0;
+0028      fid = fopen(phafilename);
+0029      tline = fgetl(fid);
+0030      <span class="keyword">while</span> ischar(tline)
+0031          tline = tline(1:<a href="../../../GISMO/core/@waveform/min.html" class="code" title="function [Y, I] = min(w)">min</a>([50 length(tline)])); <span class="comment">% ignore characters after 50th</span>
+0032          tline = deblank(tline);
+0033         <span class="keyword">if</span> length(tline)&gt;=24
+0034              clear a
+0035                  a.stacode = tline(1:4);
+0036                  a.p_eori = tline(5);
+0037                  a.p_polarity = tline(7);
+0038                  a.p_quality = str2num(tline(8));
+0039                  a.p_time = <a href="#_sub1" class="code" title="subfunction dnum = str2datenum(yrmodyhrmn, sec);">str2datenum</a>(tline(10:19), tline(20:24));
+0040                  <span class="keyword">if</span> length(tline)&gt;=40
+0041                     a.s_time = <a href="#_sub1" class="code" title="subfunction dnum = str2datenum(yrmodyhrmn, sec);">str2datenum</a>(tline(10:19), tline(32:36));
+0042                     a.s_quality = str2num(tline(40));
+0043                  <span class="keyword">else</span>
+0044                      [a.s_time, a.s_quality] = deal(0);
+0045                  <span class="keyword">end</span>
+0046                  <span class="keyword">if</span> length(tline)&gt;=50
+0047                     a.maxamp = str2num(tline(44:47));
+0048                     a.period = str2num(tline(48:50));
+0049                  <span class="keyword">else</span>
+0050                      [a.maxamp, a.period] = deal(0);
+0051                  <span class="keyword">end</span>
+0052                  c=c+1;
+0053                  self = [self a];
+0054         <span class="keyword">end</span>
+0055         tline = fgetl(fid);
+0056      <span class="keyword">end</span>
+0057      fclose(fid);
+0058 self = self';
+0059 <span class="keyword">end</span>
+0060 
+0061 <a name="_sub1" href="#_subfunctions" class="code">function dnum = str2datenum(yrmodyhrmn, sec);</a>
+0062     yr = yrmodyhrmn(1:2);
+0063     <span class="keyword">if</span> str2num(yr)&lt;30
+0064         yyyy = 2000 + str2num(yr);
+0065     <span class="keyword">else</span>
+0066         yyyy = 1900 + str2num(yr);
+0067     <span class="keyword">end</span>
+0068     mo = str2num(yrmodyhrmn(3:4));
+0069     dy = str2num(yrmodyhrmn(5:6));
+0070     hh = str2num(yrmodyhrmn(7:8));
+0071     mi = str2num(yrmodyhrmn(9:10));
+0072     dnum = datenum(yyyy, mo, dy, hh, mi, str2num(sec));
+0073 <span class="keyword">end</span>
+0074</pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

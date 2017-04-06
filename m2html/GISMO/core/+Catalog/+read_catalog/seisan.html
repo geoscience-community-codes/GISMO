@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of seisan</title>
+  <meta name="keywords" content="seisan">
+  <meta name="description" content="READ_CATALOG.SEISAN Read a Seisan event database - consisting of">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="../index.html">+Catalog</a> &gt; <a href="index.html">+read_catalog</a> &gt; seisan.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/+Catalog/+read_catalog&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>seisan
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>READ_CATALOG.SEISAN Read a Seisan event database - consisting of</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function self = seisan(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> READ_CATALOG.SEISAN Read a Seisan event database - consisting of
+ S-files. Gathers a list of S-files matching the request and then uses
+ the read_sfile function, to return a structure for each S-file.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>	CATALOG the blueprint for Catalog objects in GISMO</li><li><a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>	CATALOG.DISP Display Catalog object</li><li><a href="../../../../GISMO/core/@Sfile/Sfile.html" class="code" title="">Sfile</a>	Class that describes data in a Seisan S-file</li><li><a href="../../../../GISMO/core/@datasource/disp.html" class="code" title="function disp(ds)">disp</a>	DISP Datasource disp overloaded operator</li><li><a href="../../../../GISMO/core/@filterobject/disp.html" class="code" title="function disp(f)">disp</a>	DISP - Filterobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@scnlobject/disp.html" class="code" title="function disp(sncl)">disp</a>	DISP - scnl disp overloaded operator</li><li><a href="../../../../GISMO/core/@spectralobject/disp.html" class="code" title="function disp(s)">disp</a>	DISP - spectralobject disp overloaded operator</li><li><a href="../../../../GISMO/core/@threecomp/disp.html" class="code" title="function disp(TC)">disp</a>	DISP Display threecomp object</li><li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@waveform/disp.html" class="code" title="function disp(w)">disp</a>	DISP Waveform disp overloaded operator</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li><li><a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>	MIN    Largest value of a waveform.</li><li><a href="../../../../GISMO/core/dev/@NewCorrelation/disp.html" class="code" title="function disp(c)">disp</a>	CORRELATION/DISPLAY Command window display of a correlation object</li><li><a href="../../../../GISMO/core/dev/@SeismicTrace/disp.html" class="code" title="function disp(T)">disp</a>	disp   Display information about SeismicTrace(s)</li><li><a href="../../../../GISMO/deprecated/@helicorder/disp.html" class="code" title="function disp(h)">disp</a>	DISP: Helicorder disp overloaded operator</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function self = seisan(varargin)</a>
+0002     <span class="comment">% READ_CATALOG.SEISAN Read a Seisan event database - consisting of</span>
+0003     <span class="comment">% S-files. Gathers a list of S-files matching the request and then uses</span>
+0004     <span class="comment">% the read_sfile function, to return a structure for each S-file.</span>
+0005 
+0006     debug.printfunctionstack(<span class="string">'&gt;'</span>)
+0007     
+0008     <span class="comment">% Process input arguments</span>
+0009     <span class="comment">% Process input arguments</span>
+0010     p = inputParser;
+0011     p.addParameter(<span class="string">'dbpath'</span>, <span class="string">''</span>, @isstr);
+0012     p.addParameter(<span class="string">'startTime'</span>, -Inf);  
+0013     p.addParameter(<span class="string">'endTime'</span>, Inf);
+0014     p.addParameter(<span class="string">'minimumMagnitude'</span>, -Inf, @isnumeric);
+0015     p.addParameter(<span class="string">'maximumMagnitude'</span>, Inf, @isnumeric);
+0016     p.addParameter(<span class="string">'minimumLatitude'</span>, -90., @isnumeric);
+0017     p.addParameter(<span class="string">'maximumLatitude'</span>, 90., @isnumeric);
+0018     p.addParameter(<span class="string">'minimumLongitude'</span>, -180., @isnumeric);
+0019     p.addParameter(<span class="string">'maximumLongitude'</span>, 180., @isnumeric);  
+0020     p.addParameter(<span class="string">'minimumDepth'</span>, -12, @isnumeric);
+0021     p.addParameter(<span class="string">'maximumDepth'</span>, 6400., @isnumeric); 
+0022     p.addParameter(<span class="string">'minimumRadius'</span>, 0., @isnumeric);
+0023     p.addParameter(<span class="string">'maximumRadius'</span>, deg2km(180.0), @isnumeric);     
+0024     p.addParameter(<span class="string">'boxcoordinates'</span>, [], @isnumeric);    <span class="comment">%[minLat, maxLat, minLon, maxLon]   % use NaN as a wildcard</span>
+0025     p.addParameter(<span class="string">'radialcoordinates'</span>, [], @isnumeric); <span class="comment">% [Lat, Lon, MaxRadius, MinRadius]   % MinRadius is optional</span>
+0026     p.addParameter(<span class="string">'addarrivals'</span>, false, @islogical);
+0027     
+0028     <span class="comment">% CUSTOM PARAMETERS</span>
+0029     p.addParameter(<span class="string">'subclass'</span>, <span class="string">'*'</span>, @ischar);
+0030     
+0031     p.parse(varargin{:});
+0032     fields = fieldnames(p.Results);
+0033     <span class="keyword">for</span> i=1:length(fields)
+0034         field=fields{i};
+0035         <span class="comment">% val = eval(sprintf('p.Results.%s;',field));</span>
+0036         val = p.Results.(field);
+0037         eval(sprintf(<span class="string">'%s = val;'</span>,field));
+0038     <span class="keyword">end</span> 
+0039     
+0040     self.request.dbpath = dbpath;
+0041     self.request.startTime = startTime;
+0042     self.request.endTime = endTime;
+0043     
+0044 <span class="comment">%     % SCAFFOLD: might have deleted something here. These 2 lines might not</span>
+0045 <span class="comment">%     % be correct</span>
+0046 <span class="comment">%     self.request.minimumMagnitude = minimumMagnitude;</span>
+0047 <span class="comment">%     p.addParameter('minimumMagnitude', [], @isnumeric);</span>
+0048 <span class="comment">%</span>
+0049 <span class="comment">%     p.addParameter('maximumMagnitude', [], @isnumeric);</span>
+0050 <span class="comment">%     p.addParameter('minimumLatitude', [], @isnumeric);</span>
+0051 <span class="comment">%     p.addParameter('maximumLatitude', [], @isnumeric);</span>
+0052 <span class="comment">%     p.addParameter('minimumLongitude', [], @isnumeric);</span>
+0053 <span class="comment">%     p.addParameter('maximumLongitude', [], @isnumeric);</span>
+0054 <span class="comment">%     p.addParameter('minimumDepth', [], @isnumeric);</span>
+0055 <span class="comment">%     p.addParameter('maximumDepth', [], @isnumeric);</span>
+0056 <span class="comment">%     p.addParameter('minimumRadius', [], @isnumeric);</span>
+0057 <span class="comment">%     p.addParameter('maximumRadius', [], @isnumeric);</span>
+0058 <span class="comment">%     p.addParameter('boxcoordinates', @isnumeric);    %[minLat, maxLat, minLon, maxLon]   % use NaN as a wildcard</span>
+0059 <span class="comment">%     p.addParameter('radialcoordinates', @isnumeric); % [Lat, Lon, MaxRadius, MinRadius]   % MinRadius is optional</span>
+0060 <span class="comment">%     p.addParameter('addarrivals', false, @islogical);</span>
+0061     
+0062     <span class="keyword">if</span> numel(boxcoordinates)==4
+0063         minimumLatitude = boxcoordinates(1);
+0064         maximumLatitude = boxcoordinates(2);
+0065         minimumLongitude = boxcoordinates(3);
+0066         maximumLongitude = boxcoordinates(4);            
+0067     <span class="keyword">end</span>
+0068     
+0069     <span class="keyword">if</span> numel(radialcoordinates)==4
+0070         centerLatitude = radialcoordinates(1);
+0071         centerLongitude = radialcoordinates(2);
+0072         maximumRadius = radialcoordinates(3);
+0073         <span class="comment">%minimumRadius = radialcoordinates(4);</span>
+0074     <span class="keyword">end</span>
+0075     
+0076     <span class="comment">% Check start &amp; end times</span>
+0077     snum = Catalog.read_catalog.ensure_dateformat(startTime);
+0078     enum = Catalog.read_catalog.ensure_dateformat(endTime);
+0079     
+0080     <span class="keyword">if</span> ~exist(dbpath, <span class="string">'dir'</span>)
+0081         fprintf(<span class="string">'Directory %s not found\n'</span>,dbpath);
+0082         self = struct;
+0083         <span class="keyword">return</span>;
+0084     <span class="keyword">end</span>
+0085     
+0086     <span class="comment">% get dir list of matching sfiles</span>
+0087     sfiles = Sfile.list_sfiles(dbpath, snum, enum);
+0088     
+0089     <span class="comment">% loop over sfiles</span>
+0090     <span class="keyword">for</span> i=1:length(sfiles)
+0091         <span class="comment">% read</span>
+0092         fprintf(<span class="string">'Processing %s\n'</span>,fullfile(sfiles(i).dir, sfiles(i).name));
+0093         thiss = <a href="../../../../GISMO/core/@Sfile/Sfile.html" class="code" title="">Sfile</a>(fileread(fullfile(sfiles(i).dir, sfiles(i).name)));
+0094         <span class="keyword">try</span>
+0095             s(i)=thiss;
+0096         <span class="keyword">catch</span>
+0097             s(i)
+0098             thiss
+0099             error(<span class="string">'Wrong number of fields?'</span>)
+0100         <span class="keyword">end</span>
+0101 
+0102         <span class="comment">% add to catalog</span>
+0103         dnum(i)  = s(i).otime;
+0104         etype{i} = s(i).subclass;
+0105         lat(i) = s(i).latitude;
+0106         lon(i) = s(i).longitude;
+0107         depth(i) = s(i).depth;
+0108         
+0109         <span class="comment">% SCAFFOLD</span>
+0110         mag(i) = NaN;
+0111         <span class="keyword">try</span>
+0112             sfile_mags = [s(i).magnitude.value];
+0113             <span class="keyword">if</span> ~<a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(sfile_mags)
+0114                 <a href="../../../../GISMO/core/@Catalog/disp.html" class="code" title="function disp(obj, showall)">disp</a>(<span class="string">'**************** ********************'</span>)
+0115                 mag(i) = <a href="../../../../GISMO/core/@waveform/max.html" class="code" title="function [Y, I] = max(w)">max</a>(sfile_mags);
+0116             <span class="keyword">end</span>
+0117         <span class="keyword">end</span>
+0118 
+0119         <span class="comment">% SCAFFOLD also use durations (bbdur) and ampengfft info</span>
+0120         <span class="comment">% Compute a magnitude from amp &amp; eng, but need to know where</span>
+0121         <span class="comment">% stations are. I can save these as MA and ME, to distinguish from</span>
+0122         <span class="comment">% Ml, Ms, Mb, Mw if those exist</span>
+0123     <span class="keyword">end</span>
+0124     magtype = {};
+0125     
+0126     <span class="comment">% save request</span>
+0127     fields = fieldnames(p.Results);
+0128     <span class="keyword">for</span> i=1:length(fields)
+0129         field=fields{i};
+0130         eval(sprintf(<span class="string">'request.%s = eval(field);'</span>,field));
+0131     <span class="keyword">end</span> 
+0132     
+0133     <span class="comment">% create Catalog object</span>
+0134     self = <a href="../../../../GISMO/core/@Catalog/Catalog.html" class="code" title="">Catalog</a>(dnum', lon', lat', depth', mag', magtype', etype', <span class="string">'request'</span>, request);
+0135     request.startTime = snum;
+0136     request.endTime = enum;
+0137     self.request = request;
+0138     debug.printfunctionstack(<span class="string">'&lt;'</span>)
+0139 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

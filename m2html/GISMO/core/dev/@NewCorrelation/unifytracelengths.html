@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of unifytracelengths</title>
+  <meta name="keywords" content="unifytracelengths">
+  <meta name="description" content="unifytracelengths   make all traces the same length (mode length)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../../index.html">Home</a> &gt;  <a href="../../../index.html">GISMO</a> &gt; <a href="#">core</a> &gt; <a href="#">dev</a> &gt; <a href="index.html">@NewCorrelation</a> &gt; unifytracelengths.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../../index.html"><img alt="<" border="0" src="../../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for GISMO/core/dev/@NewCorrelation&nbsp;<img alt=">" border="0" src="../../../../right.png"></a></td></tr></table>-->
+
+<h1>unifytracelengths
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>unifytracelengths   make all traces the same length (mode length)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="box"><strong>function c = unifytracelengths(c) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">unifytracelengths   make all traces the same length (mode length)
+   C = unifytracelengths(C) if traces are of unequal lengths, then they
+   are either trimmed or zero-padded to the same size.  The final length
+   will be the mode length of the original set of traces.
+
+   See also mode</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>	ISEMPTY Display threecomp object</li><li><a href="../../../../GISMO/core/@waveform/isempty.html" class="code" title="function TF = isempty(w)">isempty</a>	ISEMPTY returns TRUE if waveform contains no data</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../../matlabicon.gif)">
+<li><a href="NewCorrelation.html" class="code" title="">NewCorrelation</a>	</li><li><a href="align.html" class="code" title="function c = align(c, alignfreq)">align</a>	align   resample traces so that a sample falls exactly on trigger time.</li><li><a href="conv.html" class="code" title="function c = conv(c)">conv</a>	conv   convolve all traces with the final trace</li><li><a href="deconv.html" class="code" title="function c = deconv(c)">deconv</a>	c = DECONV(c) convolves all traces with the final trace. By default the new</li><li><a href="stack.html" class="code" title="function c = stack(c,index)">stack</a>	c = STACK(c)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function c = unifytracelengths(c)</a>
+0002    <span class="comment">%unifytracelengths   make all traces the same length (mode length)</span>
+0003    <span class="comment">%   C = unifytracelengths(C) if traces are of unequal lengths, then they</span>
+0004    <span class="comment">%   are either trimmed or zero-padded to the same size.  The final length</span>
+0005    <span class="comment">%   will be the mode length of the original set of traces.</span>
+0006    <span class="comment">%</span>
+0007    <span class="comment">%   See also mode</span>
+0008    
+0009    <span class="keyword">if</span> <a href="../../../../GISMO/core/@threecomp/isempty.html" class="code" title="function TF = isempty(TC)">isempty</a>(c.traces)
+0010       <span class="keyword">return</span>
+0011    <span class="keyword">end</span>
+0012    
+0013    lengths = [c.traces.nsamples];
+0014    ideal = mode(lengths);
+0015    
+0016    tooShort = lengths &lt; ideal;
+0017    tooLong = lengths &gt; ideal;
+0018    
+0019    <span class="keyword">for</span> i = 1:numel(lengths)
+0020       <span class="keyword">if</span> tooShort(i)
+0021          c.traces(i).data(ideal) = 0;
+0022       <span class="keyword">elseif</span> tooLong(i)
+0023          c.traces(i).data = c.traces(i).data(1:ideal);
+0024       <span class="keyword">end</span>
+0025    <span class="keyword">end</span>
+0026 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 12-Oct-2016 17:36:30 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
