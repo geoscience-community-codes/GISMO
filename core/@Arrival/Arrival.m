@@ -170,6 +170,7 @@ classdef Arrival
         %arrivalobj = setminman(self, w, pretrig, posttrig, maxtimediff)
         arrivalobj = addmetrics(self, maxtimediff)
         arrivalobj = addwaveforms(self, datasourceobj, pretrigsecs, posttrigsecs);
+        write(arrivalobj, FORMAT, PATH);
     end
     methods(Static)
         function self = retrieve(dataformat, varargin)
