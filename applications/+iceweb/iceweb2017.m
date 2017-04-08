@@ -151,8 +151,9 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
         debug.print_debug(1, sprintf('Creating %s',spectrogramFilename));
         close all
         spectrogramFraction = 0.75;
-        specObj = spectralobject(1024, 924, 10, [60 120]);
-        
+        dbLims = [products.spectrograms.dBmin products.spectrograms.dBmax]; 
+        specObj = spectralobject(1024, 924, products.spectrograms.fmax, dbLims);
+
         % if any channels have units 'Pa', multiple by 1000 so they are
         % visible
         for wavnum=1:numel(w)

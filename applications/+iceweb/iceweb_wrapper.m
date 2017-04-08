@@ -32,10 +32,14 @@ function iceweb_wrapper(PRODUCTS_TOP_DIR, subnetName, datasourceObject, ChannelT
 % set up products structure for iceweb
 products.waveform_plot.doit = true;
 products.rsam.doit = true;
-products.rsam.samplingIntervalSeconds = [60];
-products.rsam.measures = {'mean'};
+products.rsam.samplingIntervalSeconds = [10 60 600];
+products.rsam.measures = {'max';'mean';'median'};
 products.spectrograms.doit = true;
 products.spectrograms.timeWindowMinutes = 10;
+%products.spectrograms.fmin = 0.5;
+products.spectrograms.fmax = 10; % Hz
+products.spectrograms.dBmin = 60; % white level
+products.spectrograms.dBmax = 120; % pink level
 products.spectral_data.doit = true;
 products.spectral_data.samplingIntervalSeconds = 60;
 products.reduced_displacement.doit = false;
