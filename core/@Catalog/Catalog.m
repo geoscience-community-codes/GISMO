@@ -5,8 +5,8 @@ classdef Catalog
 
     properties
         otime = [];% origin time
-        date = {};
-        time = {};
+%         date = {};
+%         time = {};
         lon = [];
         lat = [];
         depth = [];
@@ -15,9 +15,6 @@ classdef Catalog
         etype = {};
         ontime = [];
         offtime = [];
-        
-
-
         request = struct();
 %         request.dataformat = '';
 %         request.minimumLongitude = -Inf;
@@ -37,6 +34,7 @@ classdef Catalog
     
     properties(Dependent)
         numberOfEvents;
+        duration;
     end
 
 
@@ -187,6 +185,10 @@ classdef Catalog
 %         function val = get.offtime(obj)
 %             val = obj.table.offtime;
 %         end
+
+        function val = get.duration(obj)
+            val = 86400 * (obj.offtime - obj.ontime);
+        end
         
         function val = get.numberOfEvents(obj)
             val = max([ numel(obj.otime) numel(obj.ontime)]);
