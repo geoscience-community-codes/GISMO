@@ -13,9 +13,22 @@ function erobj=eventrate(catalogObject, varargin)
     p = inputParser;
     p.addParamValue('binsize', 0, @isnumeric);
     p.addParamValue('stepsize', 0, @isnumeric);
+    p.addParamValue('snum', 0, @isnumeric);
+    p.addParamValue('enum', 0, @isnumeric);
     p.parse(varargin{:});
     binsize = p.Results.binsize;
     stepsize = p.Results.stepsize;
+    snum = p.Results.snum;
+    enum = p.Results.enum;
+    if snum>0 && enum>0
+        for c=1:numel(catalogObject)
+            indices = find(catalogObject(c).otime >= snum & catalogObject(c).otime <= enum);
+            catalogObject(c) = catalogObject(c).subset(indices);
+        end
+    end
+    
+    
+        
 
     for i=1:numel(catalogObject)
         if catalogObject(i).numberOfEvents > 0

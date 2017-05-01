@@ -22,6 +22,7 @@ classdef Arrival
         signal2noise
         %qual
         %auth
+        traveltime
         waveforms
     end
     methods
@@ -48,7 +49,7 @@ classdef Arrival
             obj.amp = p.Results.amp; 
             obj.per = p.Results.per; 
             obj.signal2noise = p.Results.signal2noise; 
-            fprintf('\nGot %d arrivals\n',numel(obj.time));
+            debug.print_debug(1,sprintf('\nGot %d arrivals\n',numel(obj.time)));
                 
         end
         
@@ -159,14 +160,60 @@ classdef Arrival
 %                     self2.misc_fields = setfield(self2.misc_fields, fields{fieldnum}, fieldval(indexes));
 %                 end
 %             end
+            if numel(self.traveltime)==N
+                self2.traveltime = self.traveltime(indexes);
+            end
             if numel(self.waveforms)==N
                 self2.waveforms = self.waveforms(indexes);
-            end
+            end            
             
         end 
+         function plot(obj)
+            ctaguniq = unique(obj.channelinfo)
+            N = numel(ctaguniq);
+            hf1=figure;
+            suptitle('Cumulative arrivals vs time')
+            hf2=figure;
+            suptitle('Percentage of arrivals captured by signal2noise')
+            disp(sprintf('Arrivals: %d',numel(obj.time)))
+            for c=1:N
+               indexes = find(strcmp(obj.channelinfo,ctaguniq{c})==1);
+%                size(indexes)
+%                indexes(1:10)
+               figure(hf1)
+               %subplot(N,1,c);
+               hold on
+               t = obj.time(indexes);
+               y = cumsum(ones(size(t)));
+               plot(t,y);
+               %ylabel(ctaguniq{c});
+               ylabel(sprintf('Cumulative #\nArrivals'))
+               xlabel('Date/Time')
+               datetick('x')
+               set(gca,'XLim',[min(obj.time) max(obj.time)]);
+               disp(sprintf('- %s: %d',ctaguniq{c},length(indexes==1)));
+               
+               figure(hf2) 
+               %subplot(N,1,c);
+               hold on
+               s = obj.signal2noise(indexes);
+               s(s>101)=101;
+               [n x]=hist(s, 1:0.1:100);
+               plot(x,100-cumsum(n)/sum(n)*100);
+               xlabel('signal2noise');
+               %ylabel(ctaguniq{c});
+               ylabel('%age')
+               set(gca, 'XLim', [2.4 20]);
+            end
+            figure(hf1)
+            legend(ctaguniq)
+            figure(hf2)
+            legend(ctaguniq)            
+         end       
         
+         
         % prototypes
-        catalogobj = associate(self, maxTimeDiff)
+        [catalogobj,arrivalobj] = associate(self, maxTimeDiff, sites, source)
         %arrivalobj = setminman(self, w, pretrig, posttrig, maxtimediff)
         arrivalobj = addmetrics(self, maxtimediff)
         arrivalobj = addwaveforms(self, datasourceobj, pretrigsecs, posttrigsecs);

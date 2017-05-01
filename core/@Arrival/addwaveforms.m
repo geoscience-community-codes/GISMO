@@ -36,7 +36,7 @@ function arrivalobj = addwaveforms(arrivalobj, datasourceobj, pretrigsecs, postt
             fprintf('\nDone %d out of %d\n',c, Na);
         end
     end
-    arrivalobj.waveforms = w';
+    arrivalobj.waveforms = clean(w');
     fprintf('\n(added %d of %d waveforms successfully)\n', numsuccess,  numel(arrivalobj.time));   
 
 end

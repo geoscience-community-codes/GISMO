@@ -28,13 +28,36 @@ function w = addmetrics(w, maxTimeDiff)
         fprintf('.');
         clear metrics
         
-        thisW = detrend(fillgaps(w(wavnum),'interp')); % make sure there is no trend or offset
+        %thisW = detrend(fillgaps(w(wavnum),'interp')); % make sure there is no trend or offset
+        thisW = clean(w(wavnum));
         wstart = get(thisW,'start'); % waveform start time
         wend = get(thisW,'end'); % waveform end time
         wstd = std(thisW); % waveform standard deviation - for noise estimation
         fs = get(thisW,'freq');
         y = get(thisW,'data');
         u = get(thisW,'units');
+        
+%         %% THIS IS THE START OF AN ATTEMPT TO FIND THE EVENT START AND END TIME BY RUNNING AN STA/LTA
+%         close all
+%         %plot(thisW)
+%         % set the STA/LTA detector
+%         sta_seconds = 0.7; % STA time window 0.7 seconds
+%         lta_seconds = 10.0; % LTA time window 7 seconds
+%         thresh_on = 2.0; % Event triggers "ON" with STA/LTA ratio exceeds 3
+%         thresh_off = 1.0; % Event triggers "OFF" when STA/LTA ratio drops below 1.5
+%         minimum_event_duration_seconds = 1.0; % Trigger must be on at least 2 secs
+%         pre_trigger_seconds = 0; % Do not pad before trigger
+%         post_trigger_seconds = 0; % Do not pad after trigger
+%         event_detection_params = [sta_seconds lta_seconds thresh_on thresh_off ...
+%             minimum_event_duration_seconds];
+%         [cobj,sta,lta,sta_to_lta] = Detection.sta_lta(thisW, 'edp', event_detection_params, ...
+%             'lta_mode', 'frozen');
+% %         h3 = drumplot(thisW, 'mpl', 1, 'catalog', cobj);
+% %         plot(h3)
+%         input('any key')
+%         % Several events may be detected. Need to pick the one at the
+%         % expected time, considering the travel time
+
         
         % WHAT TYPE OF MAXIMUM & MINIMUM DO WE WANT?
         if exist('maxTimeDiff', 'var')
@@ -53,6 +76,7 @@ function w = addmetrics(w, maxTimeDiff)
             N = round(fs * maxTimeDiff); 
 
             % COMPUTING AMPLITUDE METRICS
+            try
             [vamin, vamax] = running_min_max(y, N);
             vap2p = vamax-vamin; % biggest peak to peak in each timewindow of length N
             [maxap2p, maxap2pindex] = max(vap2p);         
@@ -60,6 +84,11 @@ function w = addmetrics(w, maxTimeDiff)
             amax = vamax(maxap2pindex);
             amaxindex = find(y==amax);
             aminindex = find(y==amin);
+            catch
+            [amax, amaxindex] = max(thisW);
+            [amin, aminindex] = min(thisW);               
+            end
+            
         else
             [amax, amaxindex] = max(thisW);
             [amin, aminindex] = min(thisW);

@@ -1,9 +1,34 @@
-function list_waveform_metrics(cobj)
-    wcell =  cobj.waveforms;
-    numevents = numel(wcell);
-    if numevents == 0
-        return
+function list_waveform_metrics(cobj, list_arrival_metrics_instead)
+%LIST_WAVEFORM_METRICS For each event in a Catalog object, list the metrics for each station-channel.
+% For this to work, the addwaveforms() and addmetrics() methods must have been run on a Catalog object.
+%
+% Inputs:
+%	cobj                         = a Catalog object to which waveforms, or Arrival waveforms have been added
+%	list_arrival_metrics_instead = an optional argument. Can be true or false. default: false
+%
+% list_waveform_metrics(catalogObj) List amplitude for each station-channel for each event. Catalog.addwaveforms()
+%      and Catalog.addmetrics() must have been run. For example, the metrics for event 1 can be viewed with:
+%          get(catalogObj.waveforms{1}, 'metrics')
+%
+% 
+% list_waveform_metrics(catalogObj, true) List amplitude for each Arrival in each event. Arrival.addwaveforms()
+%      and Arrival.addmetrics() and Arrival.associate() must have been run. For example, the metrics for event 1 can be viewed with:
+%          get(catalogObj.arrivals{1}.waveforms, 'metrics')
+
+
+    
+    if list_arrival_metrics_instead
+	numevents = numel(cobj.arrivals);
+	if numevents == 0
+		disp('No Arrivals found in Catalog. You may need to run Detection.associate() or Arrival.associate()')
+        end
+    else
+	numevents = numel(cobj.waveforms);
+	if numevents == 0
+		disp('No Waveforms found in Catalog. You may need to run Catalog.addwaveforms() and Catalog.addmetrics()')
+        end
     end
+
 
     % get a complete list of channel tags
     ctags = [];
@@ -11,7 +36,11 @@ function list_waveform_metrics(cobj)
     mintime = Inf;
     maxtime = -Inf;
     for eventnum=1:numevents
-        w = wcell{eventnum};
+        if list_arrival_metrics_instead
+        	w = cobj.arrivals{eventnum}.waveforms;
+	else
+		w = cobj.waveforms{eventnum};
+	end
         [snum enum]=gettimerange(w);
         if min(snum)<mintime
             mintime = min(snum);
@@ -44,7 +73,11 @@ function list_waveform_metrics(cobj)
     % event for each channel
     for eventnum=1:numevents
         fprintf('%5d:', eventnum);
-        w = wcell{eventnum};
+        if list_arrival_metrics_instead
+        	w = cobj.arrivals{eventnum}.waveforms;
+	else
+		w = cobj.waveforms{eventnum};
+	end
         wctags = get(w,'ChannelTag');
         a = [];
         t = Inf;
@@ -54,18 +87,18 @@ function list_waveform_metrics(cobj)
             
             idx = find(ismember(wctags.string(), thisctag.string()));
             if idx
-                try
-                    m = get(w(idx),'metrics');
-                    a(ctagnum) = max(abs([m.minAmp m.maxAmp]));
-                    t = min([m.minTime m.maxTime t]);
-                catch
-                    disp('no metrics')
-                end
+                m = get(w(idx(1)),'metrics');
+                a(ctagnum) = max(abs([m.minAmp m.maxAmp]));
+                t = min([m.minTime m.maxTime t]);
             end
         end
         fprintf('\t%s\t%7d', datestr(t),datenum2julday(t));
         for ctagnum = 1:numel(ctags)
-            fprintf('\t%15.1f', a(ctagnum));
+            if a(ctagnum)>=0
+                fprintf('\t%15.1f', a(ctagnum));
+            else
+                fprintf('\t%s', '               '); %change whats here but keept o 15 characters if need change in table
+            end
         end
         fprintf('\n');
     end

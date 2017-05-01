@@ -13,7 +13,7 @@ function write(catalogObject, outformat, outpath, varargin)
 
     switch outformat
         case {'text';'csv';'xls'} % help table.write for more info
-            write(catalogObject.table, outpath);
+            write(catalogObject.table(), outpath); % add a table method to Catalog after changing Catalog so it no longer uses a table internally
 
         case 'antelope'
 
@@ -83,6 +83,8 @@ function write(catalogObject, outformat, outpath, varargin)
                         origin.lat = catalogObject.lat(eventidx);
                         origin.depth = catalogObject.depth(eventidx);
                         origin.etype = catalogObject.etype{eventidx};
+%                         if isnan(origin.lat)
+%                             origin.lat = %%% ad dfeault
 
                         % Antelope etype can only be two characters
                         % Antelope uses 'eq' where IRIS use
@@ -106,8 +108,19 @@ function write(catalogObject, outformat, outpath, varargin)
                             'prefor', origin.orid);
 
                         % Add new record to origin table & write to
-                        % it
                         dbo.record = dbaddnull(dbo);
+                        if isnan(origin.lat)
+                            origin.lat = -999.0;
+                        end
+                        if isnan(origin.lon)
+                            origin.lon = -999.0;
+                        end     
+                        if isnan(origin.depth)
+                            origin.depth = -999.0;
+                        end  
+%                         if strcmp(origin.etype,'')
+%                             origin.etype = '-';
+%                         end                        
                         dbputv(dbo, 'lat', origin.lat, ...
                             'lon', origin.lon, ...
                             'depth', origin.depth, ...
@@ -157,9 +170,16 @@ function write(catalogObject, outformat, outpath, varargin)
                                     aarid = dbnextid(dbar,'arid');
                                     achan = ctag.channel;
                                     aiphase = thisA.iphase{arrnum}; 
-                                    aamp = thisA.amp(arrnum);
-                                    %aper = thisA.per(arrnum);
-                                    %asnr = thisA.snr(arrnum);
+                                    aamp = -1.0; aper = -1.0; asnr = -1;
+                                    try
+                                        aamp = thisA.amp(arrnum);
+                                    end
+                                    try
+                                        asnr = thisA.signal2noise(arrnum);  
+                                    end
+                                    try
+                                        aper = thisA.per(arrnum);
+                                    end
                                     
                                     % add arrival row
                                     dbar.record = dbaddnull(dbar);
@@ -168,9 +188,9 @@ function write(catalogObject, outformat, outpath, varargin)
                                         'arid', aarid, ...
                                         'chan', achan, ...
                                         'iphase', aiphase, ...
-                                        'amp', aamp);
-                                        %'per', aper, ...
-                                        %'snr', asnr, ...
+                                        'amp', aamp, ...);
+                                        'per', aper, ...
+                                        'snr', asnr);
                                     
                                     % add assoc row
                                     dbas.record = dbaddnull(dbas);
@@ -206,103 +226,105 @@ function waveform2wfmeas(dbwm, thisW, aarid, asta, achan)
     wstartepoch = datenum2epoch(wsnum);
     wendepoch = datenum2epoch(wenum);
     u = get(thisW,'units');
-%     try 
+     try 
         m = get(thisW, 'metrics'); % will error if metrics not defined
-        
-        % add minTime maxTime minAmp maxAmp
-        dbwm.record = dbaddnull(dbwm);
-        dbputv(dbwm, 'sta', wsta, ...
-            'chan', wchan, ...
-            'meastype', 'amplitude', ...
-            'time', datenum2epoch(m.minTime), ...
-            'endtime', datenum2epoch(m.maxTime), ...
-            'val1', m.minAmp, ...
-            'val2', m.maxAmp, ...
-            'units1', u, ...
-            'units2', u);
-        if exist('aarid', 'var')
-            if strcmp(wsta, asta) & strcmp(wchan, achan)
-                dbputv(dbwm, 'arid', aarid);
+        if ~isnan(m.maxAmp)
+            % add minTime maxTime minAmp maxAmp
+            dbwm.record = dbaddnull(dbwm);
+
+            dbputv(dbwm, 'sta', wsta, ...
+                'chan', wchan, ...
+                'meastype', 'amplitude', ...
+                'time', datenum2epoch(m.minTime), ...
+                'endtime', datenum2epoch(m.maxTime), ...
+                'val1', m.minAmp, ...
+                'val2', m.maxAmp, ...
+                'units1', u, ...
+                'units2', u);
+            if exist('aarid', 'var')
+                if strcmp(wsta, asta) & strcmp(wchan, achan)
+                    dbputv(dbwm, 'arid', aarid);
+                end
+            end   
+
+            % add stdev
+            dbwm.record = dbaddnull(dbwm);
+            dbputv(dbwm, 'sta', wsta, ...
+                'chan', wchan, ...
+                'meastype', 'stdev', ...
+                'time', wstartepoch, ...
+                'endtime', wendepoch, ...
+                'val1', m.stdev, ...
+                'units1', u);
+            if exist('aarid', 'var')
+                if strcmp(wsta, asta) & strcmp(wchan, achan)
+                    dbputv(dbwm, 'arid', aarid);
+                end
+            end  
+
+            % add energy
+            e = m.energy;
+            eu = u;
+            eu(eu==' ') = ''; % remove whitespace
+            if length(eu)>=4 & strcmp(eu(1:4), 'nm/s')
+                eu = 'nm^2/s';
             end
-        end   
-        
-        % add stdev
-        dbwm.record = dbaddnull(dbwm);
-        dbputv(dbwm, 'sta', wsta, ...
-            'chan', wchan, ...
-            'meastype', 'stdev', ...
-            'time', wstartepoch, ...
-            'endtime', wendepoch, ...
-            'val1', m.stdev, ...
-            'units1', u);
-        if exist('aarid', 'var')
-            if strcmp(wsta, asta) & strcmp(wchan, achan)
-                dbputv(dbwm, 'arid', aarid);
+            if strcmp(eu(1:2), 'Pa')
+                eu = 'Pa^2.s';
+            end        
+            if strfind(eu, 'nm')
+                if e >= 1e12
+                    e = e / 1e6;
+                    eu = strrep(eu, 'nm', 'um');
+                end
             end
-        end  
-        
-        % add energy
-        e = m.energy;
-        eu = u;
-        eu(eu==' ') = ''; % remove whitespace
-        if length(eu)>=4 & strcmp(eu(1:4), 'nm/s')
-            eu = 'nm^2/s';
+            dbwm.record = dbaddnull(dbwm);
+            dbputv(dbwm, 'sta', wsta, ...
+                'chan', wchan, ...
+                'meastype', 'energy', ...
+                'time', wstartepoch, ...
+                'endtime', wendepoch, ...
+                'val1', e, ...
+                'units1', eu);
+            if exist('aarid', 'var')
+                if strcmp(wsta, asta) & strcmp(wchan, achan)
+                    dbputv(dbwm, 'arid', aarid);
+                end
+            end          
+
+    %         %names = fieldnames(m);
+    %         names = {'stdev';'energy'};
+    %         for namecount = 1:numel(names)
+    %             thisname = names{namecount};
+    % 
+    %             % write a wfmeas row for each metric in
+    %             % this waveform
+    %             dbwm.record = dbaddnull(dbwm);
+    %             val1 = getfield(m, thisname);
+    %             if strfind(thisname, 'Time')
+    %                 val1=datenum2epoch(val1);
+    %             end
+    % 
+    %             dbputv(dbwm, 'sta', wsta, ...
+    %                 'chan', wchan, ...
+    %                 'meastype', thisname, ...
+    %                 'time', wstartepoch, ...
+    %                 'endtime', wendepoch, ...
+    %                 'val1', val1 );
+    %                 %'filter', filterdesc, ...                
+    %                 %'tmeas', atime, ...
+    %                 %'twin', atwin, ...
+    %                 %'val2', , ...
+    %                 %'units1', , ...
+    %                 %'units2', , ...
+    %             if exist('aarid', 'var')
+    %                 if strcmp(wsta, asta) & strcmp(wchan, achan)
+    %                     dbputv(dbwm, 'arid', aarid);
+    %                 end
+    %             end
+    %         end
         end
-        if strcmp(eu(1:2), 'Pa')
-            eu = 'Pa^2.s';
-        end        
-        if strfind(eu, 'nm')
-            if e >= 1e12
-                e = e / 1e6;
-                eu = strrep(eu, 'nm', 'um');
-            end
-        end
-        dbwm.record = dbaddnull(dbwm);
-        dbputv(dbwm, 'sta', wsta, ...
-            'chan', wchan, ...
-            'meastype', 'energy', ...
-            'time', wstartepoch, ...
-            'endtime', wendepoch, ...
-            'val1', e, ...
-            'units1', eu);
-        if exist('aarid', 'var')
-            if strcmp(wsta, asta) & strcmp(wchan, achan)
-                dbputv(dbwm, 'arid', aarid);
-            end
-        end          
-        
-%         %names = fieldnames(m);
-%         names = {'stdev';'energy'};
-%         for namecount = 1:numel(names)
-%             thisname = names{namecount};
-% 
-%             % write a wfmeas row for each metric in
-%             % this waveform
-%             dbwm.record = dbaddnull(dbwm);
-%             val1 = getfield(m, thisname);
-%             if strfind(thisname, 'Time')
-%                 val1=datenum2epoch(val1);
-%             end
-% 
-%             dbputv(dbwm, 'sta', wsta, ...
-%                 'chan', wchan, ...
-%                 'meastype', thisname, ...
-%                 'time', wstartepoch, ...
-%                 'endtime', wendepoch, ...
-%                 'val1', val1 );
-%                 %'filter', filterdesc, ...                
-%                 %'tmeas', atime, ...
-%                 %'twin', atwin, ...
-%                 %'val2', , ...
-%                 %'units1', , ...
-%                 %'units2', , ...
-%             if exist('aarid', 'var')
-%                 if strcmp(wsta, asta) & strcmp(wchan, achan)
-%                     dbputv(dbwm, 'arid', aarid);
-%                 end
-%             end
-%         end
-%    catch
-%        disp('No metrics for this waveform object')
-%    end
+    catch
+        disp('No metrics for this waveform object')
+    end
 end

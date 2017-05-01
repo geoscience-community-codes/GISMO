@@ -3,7 +3,7 @@
 % See also EventRate, readEvents, Catalog/Cookbook
 classdef Catalog
 
-    properties(Dependent) % These all come from table, computed on the fly
+    properties
         otime = [];% origin time
         date = {};
         time = {};
@@ -16,11 +16,8 @@ classdef Catalog
         ontime = [];
         offtime = [];
         
-        numberOfEvents = 0;
-  
-    end
-    
-    properties % These are properties of the catalog itself
+
+
         request = struct();
 %         request.dataformat = '';
 %         request.minimumLongitude = -Inf;
@@ -38,11 +35,10 @@ classdef Catalog
         waveforms = {}; % cell array with one vector waveform objects per event
     end
     
-    properties(Hidden) % internal, external code cannot access them
-        table = table([], [], [],[], [], [], [], {}, {}, [], [], ...
-                'VariableNames', ...
-                {'otime' 'date' 'time' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype' 'ontime' 'offtime'});
+    properties(Dependent)
+        numberOfEvents;
     end
+
 
     methods
 
@@ -56,13 +52,13 @@ classdef Catalog
                 return
             end
             
-            % Table constructor
-            if nargin==1
-                if isa(varargin{1},'table')
-                    obj.table = varargin{1};
-                end
-                return
-            end
+%             % Table constructor
+%             if nargin==1
+%                 if isa(varargin{1},'table')
+%                     obj.table = varargin{1};
+%                 end
+%                 return
+%             end
             
             % Parse required, optional and param-value pair arguments,
             % set default values, and add validation conditions
@@ -138,63 +134,67 @@ classdef Catalog
                end
                clear s s1 s2
 
-               dstr = datestr(otime, 'yyyy_mm_dd');
-               tstr = datestr(otime, 'HH:MM:SS.fff'); 
-               tstr = tstr(:,1:10);
+%                dstr = datestr(otime, 'yyyy_mm_dd');
+%                tstr = datestr(otime, 'HH:MM:SS.fff'); 
+%                tstr = tstr(:,1:10);
+               obj.otime = otime;
+               obj.lat = lat;
+               obj.lon = lon;
+               obj.depth = depth;
+               obj.mag = mag;
+               obj.magtype = magtype;
+               obj.etype = etype;
+               obj.ontime = ontime;
+               obj.offtime = offtime;
 
-               obj.table = table(otime, dstr, tstr, ...
-                   lon, lat, depth, mag, magtype, etype, ontime, offtime, ...
-                    'VariableNames', {'otime' 'yyyy_mm_dd' 'hh_mm_ss' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype' 'ontime' 'offtime'});   
-
-                obj.table = sortrows(obj.table, 'otime', 'ascend'); 
                 fprintf('Got %d events\n',obj.numberOfEvents);
            end
 
         end
         
-        function val = get.otime(obj)
-            val = obj.table.otime;
-        end 
-        
-        function val = get.lon(obj)
-            val = obj.table.lon;
-        end        
-        
-        function val = get.lat(obj)
-            val = obj.table.lat;
-        end
-        
-        function val = get.depth(obj)
-            val = obj.table.depth;
-        end        
-        
-        function val = get.mag(obj)
-            val = obj.table.mag;
-        end          
-        
-        function val = get.magtype(obj)
-            val = obj.table.magtype;
-        end        
-        
-        function val = get.etype(obj)
-            val = obj.table.etype;
-        end
-        
-        function val = get.ontime(obj)
-            val = obj.table.ontime;
-        end
-        
-        function val = get.offtime(obj)
-            val = obj.table.offtime;
-        end
+%         function val = get.otime(obj)
+%             val = obj.table.otime;
+%         end 
+%         
+%         function val = get.lon(obj)
+%             val = obj.table.lon;
+%         end        
+%         
+%         function val = get.lat(obj)
+%             val = obj.table.lat;
+%         end
+%         
+%         function val = get.depth(obj)
+%             val = obj.table.depth;
+%         end        
+%         
+%         function val = get.mag(obj)
+%             val = obj.table.mag;
+%         end          
+%         
+%         function val = get.magtype(obj)
+%             val = obj.table.magtype;
+%         end        
+%         
+%         function val = get.etype(obj)
+%             val = obj.table.etype;
+%         end
+%         
+%         function val = get.ontime(obj)
+%             val = obj.table.ontime;
+%         end
+%         
+%         function val = get.offtime(obj)
+%             val = obj.table.offtime;
+%         end
         
         function val = get.numberOfEvents(obj)
-            val = height(obj.table);
+            val = max([ numel(obj.otime) numel(obj.ontime)]);
         end
         
         function t=gettimerange(obj)
-            snum = nanmin([obj.table.otime; obj.table.ontime]);
-            enum = nanmax([obj.table.otime; obj.table.offtime]);
+            snum = nanmin([obj.otime; obj.ontime]);
+            enum = nanmax([obj.otime; obj.offtime]);
             t = [snum enum];
         end
           
@@ -216,7 +216,8 @@ classdef Catalog
         plotprmm(catalogObject)
         summary(catalogObject)
         webmap(catalogObject)
-        write(catalogObject, outformat, outpath, schema)        
+        write(catalogObject, outformat, outpath, schema)
+        arrivals_per_event(catalogObject)
     end
 %% ---------------------------------------------------
     methods (Access=protected, Hidden=true)

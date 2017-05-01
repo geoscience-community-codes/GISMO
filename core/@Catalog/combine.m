@@ -11,6 +11,6 @@ function catalogObject = combine(catalogObject1, catalogObject2)
 
     catalogObject = catalogObject1;
 
-    catalogObject.table = union(catalogObject1.table, catalogObject2.table);
+    catalogObject.table = union(catalogObject1.table(), catalogObject2.table());
 
 end

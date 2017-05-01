@@ -15,7 +15,8 @@ function cobj = addwaveforms(cobj, varargin)
     switch nargin
         case 2
             if isa(varargin{1},'waveform')
-                w_temp = extract(varargin{1}, 'time', cobj.ontime, cobj.offtime);
+                w_cont = clean(varargin{1});
+                w_temp = extract(w_cont, 'time', cobj.ontime, cobj.offtime);
                 for count = 1:cobj.numberOfEvents
                     fprintf('.');
                     w_events{count} = w_temp(:,count);
@@ -30,7 +31,7 @@ function cobj = addwaveforms(cobj, varargin)
                 for count = 1:cobj.numberOfEvents
                     fprintf('.');
                     thisw  = waveform(varargin{1}, varargin{2}, cobj.ontime(count)-varargin{3}/86400, cobj.offtime(count)+varargin{4}/86400); 
-                    w_events{count} = thisw;
+                    w_events{count} = clean(thisw);
                     if mod(count,30) == 0
                         fprintf('\nDone %d out of %d\n',count, cobj.numberOfEvents);
                     end

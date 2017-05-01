@@ -174,6 +174,15 @@ function plot(obj, varargin)
 
         % fontsize for labels - this does not appear to work
         set(findall(gcf,'-property','FontSize'),'FontSize',fontsize)
+        
+        % fix yticklabels
+        axish = get(gcf,'Children');
+        for axisnum=1:numel(axish)
+            if strcmp('matlab.graphics.axis.Axes',class(axish(1)))
+                set(axish(axisnum),'YTickLabel',get(axish(axisnum),'YTick'));
+            end
+        end
+        
     end
 end
 
