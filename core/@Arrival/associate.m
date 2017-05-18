@@ -106,8 +106,13 @@ arrivalobj = arrivalobj.subset(indices);
 
     %% CREATE CATALOG
     fprintf('\nCreating Catalog\n')
-    olon = source.lon*ones(size(otime));
-    olat = source.lat*ones(size(otime));
+    if exist('source','var')
+        olon = source.lon*ones(size(otime));
+        olat = source.lat*ones(size(otime));
+    else
+        olon = NaN(size(otime));
+        olat = NaN(size(otime));        
+    end
     catalogobj = Catalog(otime, olon, olat, [], [], {}, {}, 'ontime', firstArrivalTime, 'offtime', lastArrivalTime);
     catalogobj.arrivals = arrivalobj2;
     fprintf('%d arrivals were determined to be duplicates using a time window of %.1f seconds\n',duplicatecount, maxTimeDiff);

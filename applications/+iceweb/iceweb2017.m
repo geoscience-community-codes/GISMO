@@ -103,6 +103,11 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
 
         % Clean the waveforms
         w = clean(w);
+        
+        % Apply filterobject if exists
+        if ~isempty(products.waveform.filterobject)
+            w = filtfilt(products.waveform.filterobject, w);
+        end
 
         % Pad all waveforms to same start/end
         [wsnum wenum] = gettimerange(w); % assume gaps already filled, signal

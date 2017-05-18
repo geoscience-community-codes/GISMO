@@ -117,7 +117,7 @@ text(PosX,PosY,['Cluster #' num2str(nclust)],'Color','k','FontWeight','bold');
  
 
 % DO STACK PLOT
-subplot('Position',[.5 .99-.094*n .47 .09]);
+thisax = subplot('Position',[.5 .99-.094*n .47 .09]);
 c1 = subset(c1,include);
 Ts = 86400*(get(c1.W,'START')-c1.trig);
 Te = 86400*(get(c1.W,'END')-c1.trig);
@@ -126,9 +126,9 @@ c1 = norm(c1);
 c1 = crop(c1,mean(Ts),mean(Te));
 w = get(c1,'WAVEFORMS');
 xlim([0 get(w(end),'DURATION_EPOCH')]);
-plot(w,'Color',[.7 .7 .7],'LineWidth',.5);
+plot(w,'Color',[.7 .7 .7],'LineWidth',.5,'axeshandle',thisax);
 hold on;
-plot(w(end),'Color','k','LineWidth',1);
+plot(w(end),'Color','k','LineWidth',1,'axeshandle',thisax);
 xlim([0 get(w(end),'DURATION_EPOCH')]);
 ylabel(' '); set(gca,'YTickLabel',[]);
 title('');

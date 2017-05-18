@@ -213,13 +213,13 @@ function correlationVariables = cookbook(corr)
    plot(c1,'int',1,'lag',.01);    % plot the lag value interferogram
    set(gcf,'Position',[50 50 700 400]);
    
-   
+
    %% Occurence plot
    % Display stacked traces for the 10 largest clusters and plot them against
    % the time history of the events.
    
    c = crop(c,-3,10);
-   plot(c,'occurence',1,1:10);
+   plot(c,'occurrence',1,1:10);
    set(gcf,'Position',[50 50 700 400]);
    
    
@@ -233,7 +233,7 @@ function correlationVariables = cookbook(corr)
    
    correlationVariables.c1 = c1;
    correlationVariables.c2 = c2;
-   correlationVariables.corr = corr;
+   %correlationVariables.corr = corr;
    correlationVariables.corr_matrix = corr_matrix;
    correlationVariables.index = index;
    correlationVariables.n = n;
