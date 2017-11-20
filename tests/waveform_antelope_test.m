@@ -1,23 +1,35 @@
 %% Main function to generate tests
 function tests = waveform_antelope_test()
-tests = functiontests(localfunctions);
+    tests = [];
+    try 
+        if ~admin.antelope_exists()
+            disp('ATM not working')
+            return
+        end
+    catch
+        disp('Probably could not find admin.antelope_exists()')
+    end
+    tests = functiontests(localfunctions);
 end
 
 %% Test Functions
 function w=testFunctionOne(testCase)
 %% old style
+    global TESTDATA
     w=waveform();
     gismodir = fileparts(which('startup_GISMO'));
-    demodbpath = fullfile(gismodir, 'tests', 'test_data', 'demodb');
+    demodbpath = fullfile(TESTDATA, 'css3.0', 'demodb')
     ds = datasource('antelope',demodbpath);
     scnl = scnlobject('RSO','EHZ');
-    flist=antelope.listMiniseedFiles(ds,scnl,datenum(2009,3,20),datenum(2009,3,20,1,0,0));
-    if sum(flist.exists)>0
-        w=waveform(ds,scnl,datenum(2009,3,20),datenum(2009,3,20,1,0,0));
+    snum = datenum(2009,3,20);
+    enum = datenum(2009,3,20,1,0,0);
+    flist=antelope.listMiniseedFiles(ds,scnl,snum,enum)
+    %if sum(flist.exists)>0
+        w=waveform(ds,scnl,snum,enum);
         w=combine(w);
-    else
+    %else
         disp('No waveform files found')
-    end
+    %end
     w
 %%
 end
