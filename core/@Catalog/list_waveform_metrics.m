@@ -16,16 +16,19 @@ function list_waveform_metrics(cobj, list_arrival_metrics_instead)
 %          get(catalogObj.arrivals{1}.waveforms, 'metrics')
 
 
+    if ~exist('list_arrival_metrics_instead', 'var')
+        list_arrival_metrics_instead = false;
+    end
     
     if list_arrival_metrics_instead
-	numevents = numel(cobj.arrivals);
-	if numevents == 0
-		disp('No Arrivals found in Catalog. You may need to run Detection.associate() or Arrival.associate()')
+        numevents = numel(cobj.arrivals);
+        if numevents == 0
+            disp('No Arrivals found in Catalog. You may need to run Detection.associate() or Arrival.associate()')
         end
     else
-	numevents = numel(cobj.waveforms);
-	if numevents == 0
-		disp('No Waveforms found in Catalog. You may need to run Catalog.addwaveforms() and Catalog.addmetrics()')
+        numevents = numel(cobj.waveforms);
+        if numevents == 0
+            disp('No Waveforms found in Catalog. You may need to run Catalog.addwaveforms() and Catalog.addmetrics()')
         end
     end
 
@@ -37,17 +40,17 @@ function list_waveform_metrics(cobj, list_arrival_metrics_instead)
     maxtime = -Inf;
     for eventnum=1:numevents
         if list_arrival_metrics_instead
-        	w = cobj.arrivals{eventnum}.waveforms;
-	else
-		w = cobj.waveforms{eventnum};
-	end
+            w = cobj.arrivals{eventnum}.waveforms;
+        else
+            w = cobj.waveforms{eventnum};
+        end
         [snum enum]=gettimerange(w);
         if min(snum)<mintime
             mintime = min(snum);
         end
         if max(enum)>maxtime
             maxtime = max(enum);
-        end        
+        end
         ctags = unique([ctags; get(w,'ChannelTag')]);
     end
     timediff = maxtime-mintime;
