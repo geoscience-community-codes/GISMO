@@ -32,8 +32,8 @@ function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
 %       databases, for example.
 
     if ~admin.antelope_exists
-	warning('Antelope not installed on this computer')
-	return
+        warning('Antelope not installed on this computer')
+        return
     end
 
     if ~exist('max_arrivals','var')
@@ -42,11 +42,18 @@ function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
 
     taper_seconds=pretrigger+posttrigger;
 
-    arrivals = antelope.dbgetarrivals(dbpath, expr);
-    w = antelope.arrivals2waveforms(dbpath, arrivals, pretrigger, posttrigger, taper_seconds, max_arrivals);
-    %w = waveform_clean(w);
-    [y, t]=plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2);
+    %arrivals = antelope.dbgetarrivals(dbpath, expr);
+    arrivalobj = Arrival.retrieve('antelope', dbpath)
+    arrivalobj = arrivalobj.subset([1:10])
+    arrivalobj = arrivalobj.addwaveforms(datasource('antelope', dbpath), pretrigger, posttrigger);
     
+    %arrivalobj(1)
+    return
+    
+%     w = antelope.arrivals2waveforms(dbpath, arrivals, pretrigger, posttrigger, taper_seconds, max_arrivals);
+    %w = waveform_clean(w);
+    %[y, t]=plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2);
+    [y, t]=plot_arrival_waveforms(arrivalobj, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2);
     % This is the figure we use to derive q from spectral ratios for
     % earthquakes of different distances (travel times)
     % Q comes from the slope
@@ -65,7 +72,8 @@ function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
     title(sprintf('Q = %.0f', q));
 end
 
-function [y, t] = plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2)
+%function [y, t] = plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2)
+function [y, t] = plot_arrival_waveforms(arrivalobj, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2)
     FMIN = 1.0;
     close all
     
