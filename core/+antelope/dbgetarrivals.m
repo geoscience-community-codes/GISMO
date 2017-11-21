@@ -1,8 +1,8 @@
 function a = dbgetarrivals(databasePath, subset_expr)
     %DBGETARRIVALS Load arrivals from an Antelope CSS3.0 database
     %
-    % arrivals = DBGETORIGINS(dbpath) opens the arrival table belonging to
-    % the database specified by dbpath. The arrival table will be joined to
+    % arrivals = DBGETORIGINS(databasePath) opens the arrival table belonging to
+    % the database specified by databasePath. The arrival table will be joined to
     % the assoc, origin and event tables too, if these are present. If all
     % of these is present, only arrivals corresponding to preferred origins
     % will be loaded. If assoc is present, but not event or origin, only
@@ -29,7 +29,7 @@ function a = dbgetarrivals(databasePath, subset_expr)
     % All these fields are vectors of numbers, or cell arrays of strings.
     % If you want more fields adding, please email Glenn    
     %
-    % arrivals = DBGETARRIVALS(dbpath, subset_expression) evaluates the
+    % arrivals = DBGETARRIVALS(databasePath, subset_expression) evaluates the
     % subset specified before reading the arrivals. subset_expression must
     % be a valid expression accepted by dbe/dbeval.
     
@@ -51,16 +51,16 @@ function a = dbgetarrivals(databasePath, subset_expr)
         return
     end
     debug.print_debug(0, sprintf('Loading data from %s',databasePath));
-    ARRIVAL_TABLE_PRESENT = dbtable_present(databasePath, 'arrival');    
+    ARRIVAL_TABLE_PRESENT = antelope.dbtable_present(databasePath, 'arrival');    
     if (ARRIVAL_TABLE_PRESENT) % Open the arrival table, subset if expr exists
         db = dbopen(databasePath, 'r');
         db = dblookup_table(db, 'arrival');
         numarrivals = dbquery(db,'dbRECORD_COUNT');
-        debug.print_debug(1,sprintf('Got %d records from %s.arrival',numarrivals,dbpath));
+        debug.print_debug(1,sprintf('Got %d records from %s.arrival',numarrivals,databasePath));
         if numarrivals > 0
-            ASSOC_TABLE_PRESENT = dbtable_present(dbpath, 'assoc'); 
-            ORIGIN_TABLE_PRESENT = dbtable_present(dbpath, 'origin'); 
-            EVENT_TABLE_PRESENT = dbtable_present(dbpath, 'event');  
+            ASSOC_TABLE_PRESENT = antelope.dbtable_present(databasePath, 'assoc'); 
+            ORIGIN_TABLE_PRESENT = antelope.dbtable_present(databasePath, 'origin'); 
+            EVENT_TABLE_PRESENT = antelope.dbtable_present(databasePath, 'event');  
             
             if (ASSOC_TABLE_PRESENT)              
                 % open and join the assoc table
@@ -75,8 +75,9 @@ function a = dbgetarrivals(databasePath, subset_expr)
                     if dbnrecs(db) > 0 & (EVENT_TABLE_PRESENT)
                         % open and join the event table and subset for prefor
                         db4=dblookup_table( db, 'event');
-                        db= dbjoin(db, db4);   
-                        db = dbsubset('origin.orid = event.prefor');
+                        db= dbjoin(db, db4);
+                        %dbunjoin(db, 'dbview2')
+                        db = dbsubset( db, 'origin.orid == event.prefor');
                     end
                 end
             end
@@ -84,15 +85,18 @@ function a = dbgetarrivals(databasePath, subset_expr)
                 db = dbsubset(db, subset_expr);
             end
             
+
             if dbnrecs(db)>0
     
                 % read (some) fields & close db
+                dbsave_view(db)
                 [a.sta, a.chan, a.time, a.phase, a.arid, a.amp, a.snr, a.deltim] = dbgetv(db, 'sta', 'chan', 'arrival.time', 'iphase', 'arid', 'amp', 'snr', 'deltim');
                 if (ASSOC_TABLE_PRESENT)
                     [a.delta, a.seaz, a.esaz, a.timeres] = dbgetv(db, 'assoc.delta', 'assoc.seaz', 'assoc.esaz', 'assoc.timeres');
                 end
                 if (ORIGIN_TABLE_PRESENT)
                     [a.otime, a.orid, a.evid] = dbgetv(db, 'origin.time', 'origin.orid', 'origin.evid');
+                    a.otime
                     a.traveltime = a.time - a.otime;
                 end
  
@@ -112,6 +116,7 @@ function a = dbgetarrivals(databasePath, subset_expr)
                 % Display counts
                 fprintf('\n%d arrivals\n',numel(a.time));
             end
+
         end
     end
 
