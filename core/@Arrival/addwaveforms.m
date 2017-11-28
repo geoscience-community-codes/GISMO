@@ -24,14 +24,14 @@ function arrivalobj = addwaveforms(arrivalobj, datasourceobj, pretrigsecs, postt
         ctag = ChannelTag(arrivalobj.channelinfo(c));
         snum = arrivalobj.time(c) - pretrigsecs/86400;
         enum = arrivalobj.time(c) + posttrigsecs/86400;
-        try
+%         try
             w = [w waveform(datasourceobj, ctag, snum, enum)];
             fprintf('.');
             numsuccess = numsuccess + 1;
-        catch
-            w = [w waveform()];
-            fprintf('x');
-        end
+%         catch
+%             w = [w waveform()];
+%             fprintf('x');
+%         end
         if mod(c,30) == 0
             fprintf('\nDone %d out of %d\n',c, Na);
         end

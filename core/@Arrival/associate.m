@@ -1,4 +1,4 @@
-function [catalogobj, arrivalobj] = associate(arrivalobj, maxTimeDiff, sites, source)
+edit function [catalogobj, arrivalobj] = associate(arrivalobj, maxTimeDiff, sites, source)
 %ASSOCIATE Associate arrivals into events
 % [catalogobj] = associate(arrivals, maxTimeDiff) will scan through an
 % arrivals object and look for times where there are at least 2 arrivals on

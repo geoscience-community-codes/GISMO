@@ -5,10 +5,10 @@ classdef Arrival
     properties
         channelinfo
         time
-        %arid
+        arid
         %jdate
         iphase
-        %deltim
+        deltim
         %azimuth
         %delaz
         %slow
@@ -22,7 +22,14 @@ classdef Arrival
         signal2noise
         %qual
         %auth
+        seaz
+        delta
+        otime
+        orid
+        evid
+        timeres
         traveltime
+        depth
         waveforms
     end
     methods
@@ -38,6 +45,15 @@ classdef Arrival
             p.addParameter('amp', [], @isnumeric);
             p.addParameter('per', [], @isnumeric);
             p.addParameter('signal2noise', [], @isnumeric);
+            p.addParameter('arid', [], @isnumeric);
+            p.addParameter('seaz', [], @isnumeric);  
+            p.addParameter('deltim', [], @isnumeric);
+            p.addParameter('delta', [], @isnumeric);
+            p.addParameter('otime', [], @isnumeric);
+            p.addParameter('orid', [], @isnumeric);
+            p.addParameter('evid', [], @isnumeric);  
+            p.addParameter('timeres', [], @isnumeric);
+            p.addParameter('depth', [], @isnumeric);
             
             % Missed several properties out here just because of laziness.
             % Add them as needed.
@@ -49,6 +65,15 @@ classdef Arrival
             obj.amp = p.Results.amp; 
             obj.per = p.Results.per; 
             obj.signal2noise = p.Results.signal2noise; 
+            obj.arid = p.Results.arid;
+            obj.seaz = p.Results.seaz;
+            obj.deltim = p.Results.deltim;
+            obj.delta = p.Results.delta;
+            obj.otime = p.Results.otime;
+            obj.orid = p.Results.orid;
+            obj.evid = p.Results.evid;
+            obj.timeres = p.Results.timeres;
+            obj.depth = p.Results.depth;
             debug.print_debug(1,sprintf('\nGot %d arrivals\n',numel(obj.time)));
                 
         end
@@ -80,7 +105,6 @@ classdef Arrival
         function summary(obj, showall)
         % ARRIVAL.SUMMARY Summarise Arrival object
             for c=1:numel(obj)
-                obj(c)
                 numrows = numel(obj(c).time);
                 fprintf('Number of arrivals: %d\n',numarrs);
                 if numrows > 0
@@ -151,22 +175,39 @@ classdef Arrival
             if numel(self.signal2noise)==N
                 self2.signal2noise = self.signal2noise(indexes);
             end
-%             % now go into misc_fields and apply same index subset to
-%             % anything with N elements
-%             fields = fieldnames(self.misc_fields);
-%             for fieldnum=1:numel(fields)
-%                 fieldval = getfield(self.misc_fields, fields{fieldnum});
-%                 if numel(fieldval)==N
-%                     self2.misc_fields = setfield(self2.misc_fields, fields{fieldnum}, fieldval(indexes));
-%                 end
-%             end
             if numel(self.traveltime)==N
                 self2.traveltime = self.traveltime(indexes);
             end
+            if numel(self.arid)==N
+                self2.arid = self.arid(indexes);
+            end
+            if numel(self.seaz)==N
+                self2.seaz = self.seaz(indexes);
+            end
+             if numel(self.deltim)==N
+                self2.deltim = self.deltim(indexes);
+            end
+            if numel(self.delta)==N
+                self2.delta = self.delta(indexes);
+            end
+            if numel(self.otime)==N
+                self2.otime = self.otime(indexes);
+            end           
+            if numel(self.orid)==N
+                self2.orid = self.orid(indexes);
+            end
+            if numel(self.evid)==N
+                self2.evid = self.evid(indexes);
+            end            
             if numel(self.waveforms)==N
                 self2.waveforms = self.waveforms(indexes);
+            end 
+             if numel(self.timeres)==N
+                self2.timeres = self.timeres(indexes);
+             end  
+              if numel(self.depth)==N
+                self2.depth = self.depth(indexes);
             end            
-            
         end 
          function plot(obj)
             ctaguniq = unique(obj.channelinfo)
@@ -252,11 +293,11 @@ classdef Arrival
             switch lower(dataformat)
                 case {'css3.0','antelope', 'datascope'}
                     if admin.antelope_exists()
-                        try
+                        %try
                             self = Arrival.read_arrivals.antelope(varargin{:});
-                        catch
+                        %catch
                             % no arrivals
-                        end
+                        %end
                     else
                         warning('Antelope toolbox for MATLAB not found')
                     end

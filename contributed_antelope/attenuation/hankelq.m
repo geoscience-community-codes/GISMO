@@ -1,4 +1,4 @@
-function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
+function arrivalobj = hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
 %HANKELQ Compute spectral ratio in two frequency bands
 %   HANKELQ(dbpath, expr, freq_high, freq_low, pretrigger_seconds, posttrigger_seconds, max_arrivals ) 
 %   Loads arrivals from an arrival table (after subsetting with expr)
@@ -18,7 +18,7 @@ function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
 %     Caribbean", BSSA, 72, 4, 1379-1402.
 %
 %   Example:
-%       hankelq('/raid/data/antelope/databases/PLUTONS/dbmerged', 'sta==''PLWB'' && iphase==''P''', 20, 5, 0.3, 1.28, 10);
+%       
 %
 %   History:
 %     April 2014: Glenn Thompson
@@ -31,9 +31,10 @@ function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
 %       also generic - works with input variables so it can be used on different
 %       databases, for example.
 
+    
     if ~admin.antelope_exists
-	warning('Antelope not installed on this computer')
-	return
+        warning('Antelope not installed on this computer')
+        return
     end
 
     if ~exist('max_arrivals','var')
@@ -42,11 +43,16 @@ function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
 
     taper_seconds=pretrigger+posttrigger;
 
-    arrivals = antelope.dbgetarrivals(dbpath, expr);
-    w = antelope.arrivals2waveforms(dbpath, arrivals, pretrigger, posttrigger, taper_seconds, max_arrivals);
-    %w = waveform_clean(w);
-    [y, t]=plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2);
+    %arrivals = antelope.dbgetarrivals(dbpath, expr);
+    arrivalobj = Arrival.retrieve('antelope', dbpath);
+    arrivalobj = arrivalobj.subset(1:min([10 max_arrivals]));  %when done, comment this line out, it's just for testing
+    arrivalobj = arrivalobj.addwaveforms(datasource('antelope', dbpath), pretrigger+taper_seconds, posttrigger+taper_seconds);
     
+%     w = antelope.arrivals2waveforms(dbpath, arrivals, pretrigger, posttrigger, taper_seconds, max_arrivals);
+    %w = waveform_clean(w);
+    close all
+    %[y, t]=plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2);
+    [y, t]=plot_arrival_waveforms(arrivalobj, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2);
     % This is the figure we use to derive q from spectral ratios for
     % earthquakes of different distances (travel times)
     % Q comes from the slope
@@ -65,9 +71,11 @@ function hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
     title(sprintf('Q = %.0f', q));
 end
 
-function [y, t] = plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2)
+%function [y, t] = plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2)
+function [y, t] = plot_arrival_waveforms(arrivalobj, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2)
+
     FMIN = 1.0;
-    close all
+
     
     %% open an output file
     fid=fopen([mfilename,'.txt'],'w');
@@ -75,11 +83,10 @@ function [y, t] = plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, t
     taper_fraction = (taper_seconds * 2) / (taper_seconds * 2 + pretrigger + posttrigger);
     
     % get travel time for p-wave
-    p_time = arrivals.time-arrivals.otime;
+    p_time = arrivalobj.time - arrivalobj.otime
+    anum = arrivalobj.time;
 
-    % time conversion
-    anum = epoch2datenum(arrivals.time);
-
+    w = arrivalobj.waveforms
     for i=1:min([max_arrivals numel(w)])
         signal = get(w(i),'data');
         N = length(signal);
@@ -96,67 +103,86 @@ function [y, t] = plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, t
             fobj = filterobject('b', [FMIN fmax], 2); 
             wf = filtfilt(fobj, wf);
             [snum, enum]=gettimerange(wf);
-            wf=subtime(wf, snum+taper_seconds/86400, enum-taper_seconds/86400);
+
+            %wf=subtime(wf, snum+taper_seconds/86400, enum-taper_seconds/86400);
+            wf=extract(wf, 'time', snum+taper_seconds/86400, enum-taper_seconds/86400);
             
             % integrate
             dwf = integrate(wf);
 
             % Plot waveform
-            figure(i)
-            subplot(3,1,1);
-            plot(w(i), 'xunit', 'date', 'color', 'r'); %unfiltered signal
+            
+            hf(i)=figure;
+            ax(i,1)=subplot(3,1,1);
+            plot(w(i), 'xunit', 'date', 'color', 'r', 'axeshandle', ax(i,1)); %unfiltered signal
             hold on;
-            plot(wf, 'xunit', 'date', 'color', 'g'); %filtered signal
+            plot(wf, 'xunit', 'date', 'color', 'g', 'axeshandle', ax(i,1)); %filtered signal
             xlabel(sprintf('Time with arrival at %s',datestr(anum(i), 'yyyy-mm-dd HH:MM:SS.FFF')));
             ylabel('Velocity'); 
-            title(sprintf('%s.%s',arrivals.sta{i},arrivals.chan{i}));
+            title(sprintf('%s',arrivalobj.channelinfo{i}));
             % plot arrival time as grey dotted line
             ylim=get(gca,'YLim');
+            hold on
             plot([anum(i) anum(i)],ylim,'Color',[0.5 0.5 0.5], 'linestyle', '--')
             hold off            
             
-            subplot(3,1,2);
-            plot(dwf, 'xunit', 'date', 'color', 'b'); %filtered & integrated signal
+            ax(i,2)=subplot(3,1,2);
+            plot(dwf, 'xunit', 'date', 'color', 'b', 'axeshandle', ax(i,2)); %filtered & integrated signal
             xlabel(sprintf('Time with arrival at %s',datestr(anum(i), 'yyyy-mm-dd HH:MM:SS.FFF')));
             ylabel('Displacement'); 
-            title(sprintf('%s.%s',arrivals.sta{i},arrivals.chan{i}));
+            title(sprintf('%s',arrivalobj.channelinfo{i}));
             % plot arrival time as grey dotted line
             ylim=get(gca,'YLim');
             hold on
             plot([anum(i) anum(i)],ylim,'Color',[0.5 0.5 0.5], 'linestyle', '--')
             hold off  
             
+
             % compute and plot amplitude spectrum
-            [A, phi, f] = amplitude_spectrum(dwf);
-            subplot(3,1,3)
+            s = amplitude_spectrum(dwf);
+            A = s.amp;
+            f = s.f;
+            phi = s.phi;
+%             [A, phi, f] = amplitude_spectrum(dwf);
+            ax(i,3)=subplot(3,1,3);
+            A=smooth(A);
             plot(f,A);
+            size(f)
             %loglog(f, A)
             xlabel('Frequency (Hz)')
-            ylabel('Displacement Amplitude Spectrum')
+            ylabel('Amplitude')
+            hold on
+            
             
             % evaluate the spectral ratio
             A1=mean(A(find(f>=f1*0.9 & f<=f1*1.1))); %  for 20 Hz, this is 18-22 Hz
             A2=mean(A(find(f>=f2*0.8 & f<=f2*1.2 ))); % for 5 Hz this is 4-6 Hz
+            patch([f1*0.9 f1*1.1 f1*1.1 f1*0.9],[0 0 A1 A1],[0.9 0.9 0.9])
+            patch([f2*0.8 f2*1.2 f2*1.2 f2*0.8],[0 0 A2 A2],[0.9 0.9 0.9])
             disp(sprintf('A1 = %6.3f, A2 = %6.3f, A1/A2 = %5.2f',A1, A2, A1/A2));
 
             % add title
-            outstr=sprintf('phase=%s orid=%d seaz=%6.2f delta=%5.3f depth=%5.1f\nA1=%5.3f A2=%5.3f A1/A2=%5.2f\n',arrivals.phase{i}, arrivals.orid(i), arrivals.seaz(i), arrivals.delta(i), arrivals.depth(i), A1, A2, A1/A2);
+            %outstr=sprintf('phase=%s orid=%d seaz=%6.2f delta=%5.3f depth=%5.1f\nA1=%5.3f A2=%5.3f A1/A2=%5.2f\n',arrivals.phase{i}, arrivals.orid(i), arrivals.seaz(i), arrivals.delta(i), arrivals.depth(i), A1, A2, A1/A2);
+            outstr=sprintf('phase=%s orid=%d seaz=%6.2f delta=%5.3f depth=%5.1f\nA1=%5.3f A2=%5.3f A1/A2=%5.2f\n',arrivalobj.iphase{i}, arrivalobj.orid(i), arrivalobj.seaz(i), arrivalobj.delta(i), arrivalobj.depth(i), A1, A2, A1/A2);
             title(outstr)
 
             % write out to file & close plot
             filename=sprintf('%s-%d',mfilename,i);
             print('-dpng', figure(i),filename)
-            close
+            if numel(w)>10
+                close
+            end
             
             % compute y=ln A1/A2 & t for formula 2 in Hankel (1982)
             y(i) = log(A1/A2);
-            [times, phasenames] = arrtimes(arrivals.delta(i), arrivals.depth(i));
+            [times, phasenames] = arrtimes(arrivalobj.delta(i), arrivalobj.depth(i));
             phase_index = 1;
             found = false;
             while phase_index <= length(times) & ~found
                 thisphase = lower(phasenames{phase_index});
                 thisphase = thisphase(1);
-                if strcmp(lower(arrivals.phase{i}), thisphase)
+                %if strcmp(lower(arrivals.phase{i}), thisphase)
+                if strcmp(lower(arrivalobj.iphase{i}), thisphase)
                     t(i)=times(phase_index);
                     found=true;
                 end
@@ -164,7 +190,7 @@ function [y, t] = plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, t
             end
              
             %% write out to file
-            fprintf(fid,'%14.2f %8.2f %6.3f %5.1f %4.1f %4.1f %e %e\n', p_time(i), t(i), arrivals.delta(i), arrivals.depth(i), f1, f2, A1, A2);
+            fprintf(fid,'%14.2f %8.2f %6.3f %5.1f %4.1f %4.1f %e %e\n', p_time(i), t(i), arrivalobj.delta(i), arrivalobj.depth(i), f1, f2, A1, A2);
                
         end
 

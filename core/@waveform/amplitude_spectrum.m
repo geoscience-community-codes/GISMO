@@ -1,7 +1,7 @@
-function s = plot_spectrum(w)
-    % add_spectral_data Simple method to compute frequency
+function s = amplitude_spectrum(w)
+    % amplitde_spectrum Simple method to compute amplitude
     % spectrum for a vector waveform object. Uses the MATLAB fft function.
-    %   w = add_spectral_data(w)
+    %   s = amplitude_spectrum(w)
     %
     %   Inputs:
     %       w - a waveform object (or vector of waveform objects)
@@ -17,13 +17,13 @@ function s = plot_spectrum(w)
     %           freqratio - frequency ratio (Rodgers)
     %
     %   Example 1 (for a single waveform object, w):
-    %       s = add_spectral_values(w)
+    %       s = amplitude_spectrum(w)
     %       semilogx(s.f, s.amp)
     %       xlabel('Frequency (Hz)')
     %       ylabel('Amplitude');
     %       
     %   Example 2 (for a waveform vector, w)
-    %       s = add_spectral_values(w);
+    %       s = amplitude_spectrum(w)
     %       t = get(w, 'start')
     %       peakf = [s.peakf];
     %       plot(t, peakf,'o')
@@ -37,11 +37,9 @@ function s = plot_spectrum(w)
 		return
     end
     
-    colours = 'rgbmcyk';
-    figure
-    ax= []; % axis array
     for count = 1:numel(w)
-        colour = colours(mod(count-1, 7) + 1);
+
+        
         Fsamp= get(w(count), 'freq');
         signal=get(w(count), 'data');
         Nsignal=length(signal);
@@ -49,17 +47,11 @@ function s = plot_spectrum(w)
         Y=fft(signal,NFFT); % X will have same length as signal, and will be complex with a magnitude and phase
         NumUniquePts = NFFT/2 + 1; % Mike uses ceil((N+1)/2) in wf_fft
         A=2*abs(Y(1:NumUniquePts))/Nsignal;
-A=smooth(A,100);
+        %A=smooth(A,100);
         phi = angle(Y(1:NumUniquePts));
         f = Fsamp/2*linspace(0,1,NumUniquePts);
-        %ax(count)=subplot(numel(w), 1, count);
-        %ax(count) = loglog(f, A, colour); hold on;
-        ax(count) = plot(f, A, colour); hold on;
-        axis tight;
-        ctag = get(w(count),'ChannelTag');
-        %title(ctag.string());
-        xlabel('f (Hz)')
-        ylabel('Amplitude')
+        
+
         
         % add spectrum vectors to a structure
         s(count).f = f; % frequencies
@@ -83,9 +75,29 @@ A=smooth(A,100);
         s(count).freqratio= log2(Ah/Al);
        
     end
-    ctags = get(w,'ChannelTag');
-    legend(ctags.string(),'location', 'south')
-    try
-    	linkaxes(ax,'x');
+    
+    
+    if nargout==999
+        colours = 'rgbmcyk';
+        figure
+        ax= []; % axis array
+        for count = 1:numel(w)
+            colour = colours(mod(count-1, 7) + 1);
+            %ax(count)=subplot(numel(w), 1, count);
+            %ax(count) = loglog(f, A, colour); hold on;
+            ax(count) = plot(f, A, colour); hold on;
+            axis tight;
+            ctag = get(w(count),'ChannelTag');
+            %title(ctag.string());
+            xlabel('f (Hz)')
+            ylabel('Amplitude')
+        end
+        
+        ctags = get(w,'ChannelTag');
+        legend(ctags.string(),'location', 'south')
+        try
+            linkaxes(ax,'x');
+        end
     end
+
 end

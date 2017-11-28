@@ -27,6 +27,14 @@ function varargout = plot(w, varargin)
    %
    %   the default XUNIT is seconds
    %
+   %   plot(waveform, 'axeshandle', axh, ...) plots the waveform in the axes
+   %   defined by axh, rather than starting with a new figure.
+   %
+   %   plot(waveform, 'starttime', datenum(2000,1,1,1,0,0), 'endtime', datenum(2001,1,1,1,10,0), ...)
+   %   will force the plot to start and end at those times, regardless of
+   %   the time data in the waveform.
+   %
+   %
    %  For the following examples:
    %  % W is a waveform, and W2 is a smaller waveform (from within W)
    %  W = waveform('SSLN','SHZ','04/02/2005 01:00:00', '04/02/2005 01:10:00');
