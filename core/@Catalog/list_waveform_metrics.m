@@ -16,16 +16,19 @@ function list_waveform_metrics(cobj, list_arrival_metrics_instead)
 %          get(catalogObj.arrivals{1}.waveforms, 'metrics')
 
 
+    if ~exist('list_arrival_metrics_instead', 'var')
+        list_arrival_metrics_instead = false;
+    end
     
     if list_arrival_metrics_instead
-	numevents = numel(cobj.arrivals);
-	if numevents == 0
-		disp('No Arrivals found in Catalog. You may need to run Detection.associate() or Arrival.associate()')
+        numevents = numel(cobj.arrivals);
+        if numevents == 0
+            disp('No Arrivals found in Catalog. You may need to run Detection.associate() or Arrival.associate()')
         end
     else
-	numevents = numel(cobj.waveforms);
-	if numevents == 0
-		disp('No Waveforms found in Catalog. You may need to run Catalog.addwaveforms() and Catalog.addmetrics()')
+        numevents = numel(cobj.waveforms);
+        if numevents == 0
+            disp('No Waveforms found in Catalog. You may need to run Catalog.addwaveforms() and Catalog.addmetrics()')
         end
     end
 
@@ -37,17 +40,17 @@ function list_waveform_metrics(cobj, list_arrival_metrics_instead)
     maxtime = -Inf;
     for eventnum=1:numevents
         if list_arrival_metrics_instead
-        	w = cobj.arrivals{eventnum}.waveforms;
-	else
-		w = cobj.waveforms{eventnum};
-	end
+            w = cobj.arrivals{eventnum}.waveforms;
+        else
+            w = cobj.waveforms{eventnum};
+        end
         [snum enum]=gettimerange(w);
         if min(snum)<mintime
             mintime = min(snum);
         end
         if max(enum)>maxtime
             maxtime = max(enum);
-        end        
+        end
         ctags = unique([ctags; get(w,'ChannelTag')]);
     end
     timediff = maxtime-mintime;
@@ -55,8 +58,11 @@ function list_waveform_metrics(cobj, list_arrival_metrics_instead)
     % titles
     disp('Maximum Amplitude____________________')
     fprintf('\nEvent\tdd-mmm-yyyy hh:mm:ss\tJulianDay');
+    
     for ctagnum = 1:numel(ctags)
-        fprintf('\t%s', ctags(ctagnum).string());
+        thischan = get(ctags(ctagnum),'channel');
+        %fprintf('\t%s', ctags(ctagnum).string());
+        fprintf('\t%s', thischan(1:3));
     end
     fprintf('\n.....\t....................\t.........');
     for ctagnum = 1:numel(ctags)
@@ -92,7 +98,8 @@ function list_waveform_metrics(cobj, list_arrival_metrics_instead)
                 t = min([m.minTime m.maxTime t]);
             end
         end
-        fprintf('\t%s\t%7d', datestr(t),datenum2julday(t));
+        jday = datenum2julday(t);
+        fprintf('\t%s\t%3d', datestr(t),mod(jday,1000));
         for ctagnum = 1:numel(ctags)
             if a(ctagnum)>=0
                 fprintf('\t%15.1f', a(ctagnum));

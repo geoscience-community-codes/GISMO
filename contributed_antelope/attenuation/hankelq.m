@@ -44,6 +44,7 @@ function arrivalobj = hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max
     taper_seconds=pretrigger+posttrigger;
 
     %arrivals = antelope.dbgetarrivals(dbpath, expr);
+<<<<<<< HEAD
     arrivalobj = Arrival.retrieve('antelope', dbpath);
     arrivalobj = arrivalobj.subset(1:min([10 max_arrivals]));  %when done, comment this line out, it's just for testing
     arrivalobj = arrivalobj.addwaveforms(datasource('antelope', dbpath), pretrigger+taper_seconds, posttrigger+taper_seconds);
@@ -51,6 +52,17 @@ function arrivalobj = hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max
 %     w = antelope.arrivals2waveforms(dbpath, arrivals, pretrigger, posttrigger, taper_seconds, max_arrivals);
     %w = waveform_clean(w);
     close all
+=======
+    arrivalobj = Arrival.retrieve('antelope', dbpath)
+    arrivalobj = arrivalobj.subset([1:10])
+    arrivalobj = arrivalobj.addwaveforms(datasource('antelope', dbpath), pretrigger, posttrigger);
+    
+    %arrivalobj(1)
+    return
+    
+%     w = antelope.arrivals2waveforms(dbpath, arrivals, pretrigger, posttrigger, taper_seconds, max_arrivals);
+    %w = waveform_clean(w);
+>>>>>>> 2fc5b9e9e00aba88a0ee1786c8a4fcdfd0ce8396
     %[y, t]=plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2);
     [y, t]=plot_arrival_waveforms(arrivalobj, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2);
     % This is the figure we use to derive q from spectral ratios for
@@ -73,7 +85,10 @@ end
 
 %function [y, t] = plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2)
 function [y, t] = plot_arrival_waveforms(arrivalobj, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 2fc5b9e9e00aba88a0ee1786c8a4fcdfd0ce8396
     FMIN = 1.0;
 
     
@@ -199,7 +214,7 @@ function [y, t] = plot_arrival_waveforms(arrivalobj, pretrigger, posttrigger, ta
     %% close output file
     fclose(fid);
 end 
-
+ 
 
 
 
