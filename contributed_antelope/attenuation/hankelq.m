@@ -30,7 +30,11 @@ function arrivalobj = hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max
 %       Modified method to compute amplitude spectra. Now computes Q too. Now
 %       also generic - works with input variables so it can be used on different
 %       databases, for example.
-
+%     November 2017: Glenn Thompson
+%       Fixed to work with updated GISMO classes
+%
+%     NEED TO FIX TO CALCULATE Q based on seaz- Q is azimuthally dependent
+%     at Uturuncu stations!
     
     if ~admin.antelope_exists
         warning('Antelope not installed on this computer')
@@ -42,10 +46,11 @@ function arrivalobj = hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max
     end
 
     taper_seconds=pretrigger+posttrigger;
-
+    
     %arrivals = antelope.dbgetarrivals(dbpath, expr);
-    arrivalobj = Arrival.retrieve('antelope', dbpath);
-    %arrivalobj = arrivalobj.subset(1:min([10 max_arrivals]));  %when done, comment this line out, it's just for testing
+    arrivalobj = Arrival.retrieve('antelope', dbpath, 'subset_expr', expr);
+    %arrivalobj = arrivalobj.subset(expr)
+    %arrivalobj = arrivalobj.subset(1:max_arrivals);  %when done, comment this line out, it's just for testing
     arrivalobj = arrivalobj.addwaveforms(datasource('antelope', dbpath), pretrigger+taper_seconds, posttrigger+taper_seconds);
     
 %     w = antelope.arrivals2waveforms(dbpath, arrivals, pretrigger, posttrigger, taper_seconds, max_arrivals);
@@ -69,7 +74,7 @@ function arrivalobj = hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max
     
     slope = (yline(2) - yline(1)) / (xlim(2) - xlim(1));
     q = - pi * (f1 - f2) / slope;
-    title(sprintf('Q = %.0f', q));
+    title(sprintf('Q = %.0f', q)); %% Can we add something that denotes whether the Q value is for Qp or Qs? 
 end
 
 %function [y, t] = plot_arrival_waveforms(arrivals, w, pretrigger, posttrigger, taper_seconds, max_arrivals, f1, f2)

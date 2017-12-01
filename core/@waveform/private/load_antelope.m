@@ -46,6 +46,7 @@ function outputWaveforms = load_antelope(request, specificDatabase)
       outputWaveforms = emptyWaveform();
       
       % Glenn 2016/05/12 Check if wfdisc table exists
+database
       if ~antelope.dbtable_present(database, 'wfdisc')
           disp(sprintf('database %s contains no wfdisc table',database));
           return

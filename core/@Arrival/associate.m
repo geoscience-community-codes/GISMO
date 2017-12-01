@@ -1,4 +1,4 @@
-edit function [catalogobj, arrivalobj] = associate(arrivalobj, maxTimeDiff, sites, source)
+function [catalogobj, arrivalobj] = associate(arrivalobj, maxTimeDiff, sites, source)
 %ASSOCIATE Associate arrivals into events
 % [catalogobj] = associate(arrivals, maxTimeDiff) will scan through an
 % arrivals object and look for times where there are at least 2 arrivals on
@@ -117,7 +117,7 @@ arrivalobj = arrivalobj.subset(indices);
     catalogobj.arrivals = arrivalobj2;
     fprintf('%d arrivals were determined to be duplicates using a time window of %.1f seconds\n',duplicatecount, maxTimeDiff);
 
-end
+
 
 % function result = alreadyHaveArrivalFromThisChannel(ctaglist, thisctag)
 % result = sum(cellfun(@(s) ~isempty(strfind(thisctag, s)), ctaglist));

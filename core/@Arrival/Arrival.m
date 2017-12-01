@@ -293,11 +293,14 @@ classdef Arrival
             switch lower(dataformat)
                 case {'css3.0','antelope', 'datascope'}
                     if admin.antelope_exists()
-                        %try
-                            self = Arrival.read_arrivals.antelope(varargin{:});
-                        %catch
-                            % no arrivals
-                        %end
+                        switch nargin
+                            case 2
+                                self = Arrival.read_arrivals.antelope(varargin{1});
+                            case 4
+                                if strcmp(varargin{2}, 'subset_expr')
+                                    self = Arrival.read_arrivals.antelope(varargin{1}, varargin{3});
+                                end
+                        end
                     else
                         warning('Antelope toolbox for MATLAB not found')
                     end
