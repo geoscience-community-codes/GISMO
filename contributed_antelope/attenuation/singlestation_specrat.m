@@ -1,4 +1,4 @@
-function arrivalobj = hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
+function arrivalobj = singlestation_specrat(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
 %HANKELQ Compute spectral ratio in two frequency bands
 %   HANKELQ(dbpath, expr, freq_high, freq_low, pretrigger_seconds, posttrigger_seconds, max_arrivals ) 
 %   Loads arrivals from an arrival table (after subsetting with expr)
@@ -32,7 +32,9 @@ function arrivalobj = hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max
 %       databases, for example.
 %     November 2017: Glenn Thompson
 %       Fixed to work with updated GISMO classes
-%
+%                    Heather McFarlin
+%       Added units to Y-axis on plots
+%       Added amplitude spectrum of noise before waveform onto amplitude spectrum plot
 %     NEED TO FIX TO CALCULATE Q based on seaz- Q is azimuthally dependent
 %     at Uturuncu stations!
     
@@ -50,8 +52,9 @@ function arrivalobj = hankelq(dbpath, expr, f1, f2, pretrigger, posttrigger, max
     %arrivals = antelope.dbgetarrivals(dbpath, expr);
     arrivalobj = Arrival.retrieve('antelope', dbpath, 'subset_expr', expr);
     %arrivalobj = arrivalobj.subset(expr)
-    %arrivalobj = arrivalobj.subset(1:max_arrivals);  %when done, comment this line out, it's just for testing
+    arrivalobj = arrivalobj.subset(1:max_arrivals);  %when done, comment this line out, it's just for testing
     arrivalobj = arrivalobj.addwaveforms(datasource('antelope', dbpath), pretrigger+taper_seconds, posttrigger+taper_seconds);
+    
     
 %     w = antelope.arrivals2waveforms(dbpath, arrivals, pretrigger, posttrigger, taper_seconds, max_arrivals);
     %w = waveform_clean(w);
@@ -90,7 +93,8 @@ function [y, t] = plot_arrival_waveforms(arrivalobj, pretrigger, posttrigger, ta
     % get travel time for p-wave
     p_time = arrivalobj.time - arrivalobj.otime
     anum = arrivalobj.time;
-
+    
+    
     w = arrivalobj.waveforms
     for i=1:min([max_arrivals numel(w)])
         signal = get(w(i),'data');
@@ -108,22 +112,35 @@ function [y, t] = plot_arrival_waveforms(arrivalobj, pretrigger, posttrigger, ta
             fobj = filterobject('b', [FMIN fmax], 2); 
             wf = filtfilt(fobj, wf);
             [snum, enum]=gettimerange(wf);
-
+            
+           
+           
+            %get noise before event 
+            wf_noise = extract(wf, 'time', snum, anum(i)-pretrigger/86400)
+            
             %wf=subtime(wf, snum+taper_seconds/86400, enum-taper_seconds/86400);
-            wf=extract(wf, 'time', snum+taper_seconds/86400, enum-taper_seconds/86400);
+            wf=extract(wf, 'time', snum+taper_seconds/86400, enum-taper_seconds/86400)
             
             % integrate
             dwf = integrate(wf);
+            
+            % integrate noise
+            
+            dwf_noise = integrate(wf_noise);
 
             % Plot waveform
-            
             hf(i)=figure;
-            ax(i,1)=subplot(3,1,1);
-            plot(w(i), 'xunit', 'date', 'color', 'r', 'axeshandle', ax(i,1)); %unfiltered signal
+            ax(i,1)=subplot(3,1,1);  
+            plot(w(i), 'xunit', 'date', 'color', 'r', 'axeshandle', ax(i,1)); %detrended and cleaned waveform -artifacts at beginning of signal are likely due to cleaning and detrending filters 
+            datetick('x','HH:MM:SS', 'keeplimits')
             hold on;
             plot(wf, 'xunit', 'date', 'color', 'g', 'axeshandle', ax(i,1)); %filtered signal
+            datetick('x','HH:MM:SS','keeplimits')
+            hold on
+            plot(wf_noise, 'xunit', 'date', 'color', 'k', 'axeshandle', ax(i,1)) % noise
+            datetick('x','HH:MM:SS', 'keeplimits')
             xlabel(sprintf('Time with arrival at %s',datestr(anum(i), 'yyyy-mm-dd HH:MM:SS.FFF')));
-            ylabel('Velocity'); 
+            ylabel('Velocity (nm/s)'); 
             title(sprintf('%s',arrivalobj.channelinfo{i}));
             % plot arrival time as grey dotted line
             ylim=get(gca,'YLim');
@@ -133,8 +150,9 @@ function [y, t] = plot_arrival_waveforms(arrivalobj, pretrigger, posttrigger, ta
             
             ax(i,2)=subplot(3,1,2);
             plot(dwf, 'xunit', 'date', 'color', 'b', 'axeshandle', ax(i,2)); %filtered & integrated signal
+            datetick('x','HH:MM:SS:FFF', 'keeplimits', 'keepticks')
             xlabel(sprintf('Time with arrival at %s',datestr(anum(i), 'yyyy-mm-dd HH:MM:SS.FFF')));
-            ylabel('Displacement'); 
+            ylabel('Displacement (nm)'); 
             title(sprintf('%s',arrivalobj.channelinfo{i}));
             % plot arrival time as grey dotted line
             ylim=get(gca,'YLim');
@@ -151,24 +169,43 @@ function [y, t] = plot_arrival_waveforms(arrivalobj, pretrigger, posttrigger, ta
 %             [A, phi, f] = amplitude_spectrum(dwf);
             ax(i,3)=subplot(3,1,3);
             A=smooth(A);
-            plot(f,A);
+            semilogy(f,A);
             size(f)
             %loglog(f, A)
             xlabel('Frequency (Hz)')
-            ylabel('Amplitude')
+            ylabel('Amplitude (nm)')
             hold on
-            
-            
+            % add noise spectrum
+            s_noise = amplitude_spectrum(dwf_noise);
+            A_noise = s_noise.amp;
+            f_noise = s_noise.f;
+            phi_noise = s_noise.phi;
+            A_noise = smooth(A_noise);
+            semilogy(f_noise, A_noise, 'color', 'k');
+            size(f_noise)
+            hold on
             % evaluate the spectral ratio
             A1=mean(A(find(f>=f1*0.9 & f<=f1*1.1))); %  for 20 Hz, this is 18-22 Hz
-            A2=mean(A(find(f>=f2*0.8 & f<=f2*1.2 ))); % for 5 Hz this is 4-6 Hz
-            patch([f1*0.9 f1*1.1 f1*1.1 f1*0.9],[0 0 A1 A1],[0.9 0.9 0.9])
-            patch([f2*0.8 f2*1.2 f2*1.2 f2*0.8],[0 0 A2 A2],[0.9 0.9 0.9])
-            disp(sprintf('A1 = %6.3f, A2 = %6.3f, A1/A2 = %5.2f',A1, A2, A1/A2));
+            A2=mean(A(find(f>=f2*0.8 & f<=f2*1.2 ))); % for 5 Hz this is 4-6 Hz            
+            patch([f1*0.9 f1*1.1 f1*1.1 f1*0.9],[0 0 A1 A1],[0.9 0.9 0.9]);
+            patch([f2*0.8 f2*1.2 f2*1.2 f2*0.8],[0 0 A2 A2],[0.9 0.9 0.9]);
+            %evaluate spectral ratio of  noise
+            A1_noise = mean(A_noise(find(f_noise>=f1*0.9 & f_noise<=f1*1.1))); % for 20 Hz noise
+            A2_noise = mean(A_noise(find(f_noise>= f2*0.8 & f_noise<=f2*1.2))); % for 5 Hz noise
+            snr1 = A1/A1_noise;
+            snr2 = A2/A2_noise;
+            disp(sprintf('A1 = %6.3f, A2 = %6.3f, A1/A2 = %5.2f', A1, A2, A1/A2));
+            hold on 
+            disp(sprintf('SNR1 = %6.3f, SNR2 = %6.3f', snr1, snr2));
+            hold off
+            
+            
+            
+            
 
             % add title
             %outstr=sprintf('phase=%s orid=%d seaz=%6.2f delta=%5.3f depth=%5.1f\nA1=%5.3f A2=%5.3f A1/A2=%5.2f\n',arrivals.phase{i}, arrivals.orid(i), arrivals.seaz(i), arrivals.delta(i), arrivals.depth(i), A1, A2, A1/A2);
-            outstr=sprintf('phase=%s orid=%d seaz=%6.2f delta=%5.3f depth=%5.1f\nA1=%5.3f A2=%5.3f A1/A2=%5.2f\n',arrivalobj.iphase{i}, arrivalobj.orid(i), arrivalobj.seaz(i), arrivalobj.delta(i), arrivalobj.depth(i), A1, A2, A1/A2);
+            outstr=sprintf('phase=%s orid=%d seaz=%6.2f delta=%5.3f depth=%5.1f\nA1=%5.3f A2=%5.3f A1/A2=%5.2f\n SNR1 = %6.3f SNR2 = %6.3f',arrivalobj.iphase{i}, arrivalobj.orid(i), arrivalobj.seaz(i), arrivalobj.delta(i), arrivalobj.depth(i), A1, A2, A1/A2, snr1, snr2);
             title(outstr)
 
             % write out to file & close plot
@@ -204,14 +241,3 @@ function [y, t] = plot_arrival_waveforms(arrivalobj, pretrigger, posttrigger, ta
     %% close output file
     fclose(fid);
 end 
- 
-
-
-
-
-
-
-
-
-
-
