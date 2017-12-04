@@ -115,13 +115,29 @@ for c=1:numw
         S = S(1:max(index),:);
         
         % mean frequency
-        numerator = abs(S)' * F;
-        denominator = sum(abs(S),1);
-        meanF{c} = numerator./denominator';
+        %minS = min(min(abs(S)+eps));
+        minS = prctile(reshape(S,numel(S),1),40);
+        S2 = abs(S)-minS;
+        S2(S2<eps)=eps;
+        numerator = abs(S2)' * F;
+        denominator = sum(S2,1);
+        thismeanf = numerator./denominator';
         
         % peak frequency
-        [maxvalue,maxindex] = max(abs(S));
-        peakF{c} = F(maxindex);
+        [maxvalue,maxindex] = max(S2);
+        thispeakf = F(maxindex);
+        
+%         % remove very small signals
+%         Ymin_all = min(min(Y));
+%         Ymax_all = max(max(Y));
+%         Ymax_time = max(Y);
+%         Ythreshold = Ymin_all + (Ymax_all - Ymin_all) * 50/70;
+%         Ythreshold = prctile(reshape(Y, numel(Y),1),80);
+%         thismeanf(Ymax_time < Ythreshold) = NaN;
+%         thispeakf(Ymax_time < Ythreshold) = NaN;
+        meanF{c} = thismeanf;
+        peakF{c} = thispeakf;
+        
             
         if isempty(dBlims)
             % plot spectrogram

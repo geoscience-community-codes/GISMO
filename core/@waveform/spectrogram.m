@@ -1,4 +1,4 @@
-function [Tcell, meanf, peakf] = spectrogram( w, varargin )
+function [Tcell, Fcell, Ycell, meanf, peakf] = spectrogram( w, varargin )
 %SPECTROGRAM Plot an IceWeb-style spectrogram
 %   spectrogram(w, s) Creates an IceWeb style spectrogram by wrapping the
 %   function iceweb.spectrogram_iceweb(). If s is omitted it defaults to:

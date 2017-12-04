@@ -35,6 +35,7 @@ function arrivalobj = singlestation_specrat(dbpath, expr, f1, f2, pretrigger, po
 %                    Heather McFarlin
 %       Added units to Y-axis on plots
 %       Added amplitude spectrum of noise before waveform onto amplitude spectrum plot
+%       Added noise part of waveform to top subplot 
 %     NEED TO FIX TO CALCULATE Q based on seaz- Q is azimuthally dependent
 %     at Uturuncu stations!
     
@@ -52,7 +53,7 @@ function arrivalobj = singlestation_specrat(dbpath, expr, f1, f2, pretrigger, po
     %arrivals = antelope.dbgetarrivals(dbpath, expr);
     arrivalobj = Arrival.retrieve('antelope', dbpath, 'subset_expr', expr);
     %arrivalobj = arrivalobj.subset(expr)
-    arrivalobj = arrivalobj.subset(1:max_arrivals);  %when done, comment this line out, it's just for testing
+    %arrivalobj = arrivalobj.subset(1:max_arrivals);  %when done, comment this line out, it's just for testing
     arrivalobj = arrivalobj.addwaveforms(datasource('antelope', dbpath), pretrigger+taper_seconds, posttrigger+taper_seconds);
     
     
@@ -65,6 +66,7 @@ function arrivalobj = singlestation_specrat(dbpath, expr, f1, f2, pretrigger, po
     % This is the figure we use to derive q from spectral ratios for
     % earthquakes of different distances (travel times)
     % Q comes from the slope
+    y
     figure;
     plot(t, y, 'o');
     ylabel('ln(A_1/A_2)')
@@ -96,6 +98,7 @@ function [y, t] = plot_arrival_waveforms(arrivalobj, pretrigger, posttrigger, ta
     
     
     w = arrivalobj.waveforms
+    
     for i=1:min([max_arrivals numel(w)])
         signal = get(w(i),'data');
         N = length(signal);

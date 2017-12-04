@@ -26,7 +26,7 @@ for t=1:burntime
     a(t+1) = (thrust - drag) / mean([m(t)  m(t+1)]) - mean([g(t) g(t+1)]) ;
     v(t+1) = v(t) + a(t);
     c(t+1) = max([c(1) - d(t)/500 * 2  300]); % based on tables of elevation, pressure, temperature & c
-    f(t+1) = f(1) - v(t+1) / c(t+1);
+    f(t+1) = f(1) * c(t+1) / (c(t+1) + v(t+1) );
     d(t+1) = d(t) + mean([v(t) v(t+1)]);
 end
 figure
@@ -38,4 +38,4 @@ xlabel('time (s)'); ylabel('velocity (km/s)')
 subplot(2,2,3),plot(t,d/1000);
 xlabel('time (s)'); ylabel('altitude (km)')
 subplot(2,2,4),plot(t,f);
-xlabel('time (s)'); ylabel('Doppler-shifted frequency (Hz)')
+xlabel('time (s)'); ylabel('Doppler-shifted frequency (Hz)'); set(gca, 'YLim', [0 f(1)]);
