@@ -62,7 +62,7 @@ plot(TC.energy,'k-','axeshandle',gca);
 set(gca,'YScale','linear');
 d = get(TC.energy,'Data');
 ylim(gca,[0 1.1*max(d)]);
-legend(gca,'Energy',1);
+legend(gca,'Energy');
 title(gca,'');
 %set(gca,'XTickLabel',[]);
 set(gca,'XGrid','on')
@@ -75,7 +75,7 @@ hold on;
 plot(TC.planarity,'ko','MarkerFaceColor','y','axeshandle',gca);
 xlabel(gca,'Seconds');
 ylim(gca,[0 1]);
-legend(gca,'Rectilinearity','Planarity',1);
+legend(gca,'Rectilinearity','Planarity');
 title(gca,'');
 %set(gca,'XTickLabel',[]);
 set(gca,'XGrid','on')
@@ -89,7 +89,7 @@ if bool_inc_az
     set(gca,'YTick',[-360:90:360]);
     ylim(gca,[-1 361]);
     xlabel(gca,'')
-    legend('Azimuth',1);
+    legend('Azimuth');
     title(gca,'');
     set(gca,'XTickLabel',[]);
     set(gca,'XGrid','on')
@@ -101,7 +101,7 @@ if bool_inc_az
     set(gca,'YTick',[-90:30:90]);
     ylim(gca,[-1 91]);
     xlabel(gca,'')
-    legend(gca,'Inclination',1);
+    legend(gca,'Inclination');
     title(gca,'');
     set(gca,'XGrid','on')
     set(gca,'XLim',xlim)

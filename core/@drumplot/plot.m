@@ -73,6 +73,7 @@ function varargout = plot(h)
         if isempty(h.catalog.waveforms)
             h.catalog = h.catalog.addwaveforms(h.wave);
         end
+        h.catalog.waveforms
         w = [h.catalog.waveforms{1,:}];
         w = combine(w);
         w = pad(w, snum, enum, NaN);
