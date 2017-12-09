@@ -67,6 +67,7 @@ function arrivalobj = singlestation_specrat(dbpath, expr, f1, f2, pretrigger, po
     % earthquakes of different distances (travel times)
     % Q comes from the slope
     y
+    t
     figure;
     plot(t, y, 'o');
     ylabel('ln(A_1/A_2)')

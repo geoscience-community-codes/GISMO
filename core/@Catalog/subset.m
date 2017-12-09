@@ -30,9 +30,13 @@ function cobj2 = subset(cobj, indices)
         cobj2.arrivals = cobj.arrivals(indices);
     end
     if numel(cobj.waveforms)==N
-        try
-        cobj2.waveforms = cobj.waveforms{indices};
-        end
+        cobj2.waveforms = cobj.waveforms(indices);
+%         counter = 1;
+%         indices
+%         for thisindex=indices
+%             cobj2.waveforms{counter} = cobj.waveforms{thisindex};
+%             counter = counter + 1;
+%         end
     end
     if numel(cobj.ontime)==N
         cobj2.ontime = cobj.ontime(indices);

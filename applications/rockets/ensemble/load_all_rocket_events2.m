@@ -1,10 +1,8 @@
-localgismo
-cd('~/Dropbox/scratch_matlab')
 close all
 clear all
 clc
-mkdir('ensemble2')
-cd('ensemble2')
+mkdir('ensemble1')
+cd('ensemble1')
 
 %% 0. have we run this before and saved the data?
 if exist('rocketmaster.mat', 'file')

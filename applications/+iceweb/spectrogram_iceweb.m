@@ -141,7 +141,8 @@ for c=1:numw
             
         if isempty(dBlims)
             % plot spectrogram
-            imagesc(T,F,abs(S));
+            %imagesc(T,F,abs(S));
+            imagesc(T,F,Y);
         else
             imagesc(T,F,Y,dBlims); 
         end
@@ -175,7 +176,7 @@ for c=1:numw
             % broadband stations
     % 		if (regexp(thischan, '[BH]H.'))
     % 			set(gca, 'Color', [.8 .8 .8]);
-    %         end
+    %         end[30 100
 
         end
         result = result + 1;
