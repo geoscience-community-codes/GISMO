@@ -169,7 +169,7 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
             end
         end
         
-        [sgresult, Tcell, Fcell, Ycell] = iceweb.spectrogram_iceweb(specObj, w, spectrogramFraction, iceweb.extended_spectralobject_colormap);
+        [sgresult, Tcell, Fcell, Ycell] = iceweb.spectrogram_iceweb(specObj, w, 'spectrogramFraction', spectrogramFraction, 'colormap', iceweb.extended_spectralobject_colormap);
 
             
         if sgresult > 0 % sgresult = number of waveforms for which a spectrogram was successfully plotted
