@@ -14,7 +14,7 @@ else
     ds = datasource('antelope', dbpath); 
 
     %% 2. Load arrival table into an Arrival object
-    arrivalobj = Arrival.retrieve('antelope', dbpath);
+    arrivalobj = Arrival.retrieve('antelope', dbpath );
     if isempty(arrivalobj)
        error('No arrivals loaded') 
     end

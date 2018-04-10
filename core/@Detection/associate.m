@@ -43,6 +43,16 @@ function catalogobj = associate(obj, maxTimeDiff, sites, source)
 %   association_time_window = 2; % max seconds from seismic to infrasound arrival
 %   catalogobj = detobj.associate(maxtimediff, sites);
 
+    % break up detection types
+    detections_on = obj.subset('state', 'ON');
+    detections_d = obj.subset('state', 'D');
+    detections_off = obj.subset('state', 'OFF');
+    if detections_d.numel > 0
+        obj = detections_d;
+    elseif detections_on.numel > 0
+        obj = detections_on;
+    end
+
     %% REDUCE BY SUBTRACTING TRAVEL TIME
     % If sites exist, let's correct the arrival times first
     if exist('sites', 'var')
@@ -125,9 +135,19 @@ function catalogobj = associate(obj, maxTimeDiff, sites, source)
     end
 
     %% CREATE CATALOG
+    if numel(otime)==0
+        % no events
+        catalogobj = Catalog();
+        return
+    end
+
     fprintf('\nCreating Catalog\n')
-    olon = source.lon*ones(size(otime));
-    olat = source.lat*ones(size(otime));
+    olon=[];
+    olat=[];
+    if exist('source','var')
+        olon = source.lon*ones(size(otime));
+        olat = source.lat*ones(size(otime));
+    end
     catalogobj = Catalog(otime, olon, olat, [], [], {}, {}, 'ontime', firstDetectionTime, 'offtime', lastDetectionTime);
     catalogobj.arrivals = arrivalobj;
     fprintf('%d detections were determined to be duplicates using a time window of %.1f seconds\n',duplicatecount, maxTimeDiff);
@@ -143,7 +163,8 @@ function arrivalobj = detection2arrival(detectionobj)
     end
     sta = get(ctag, 'station');
     chan = get(ctag, 'channel');
-    arrivalobj = Arrival(cellstr(sta), cellstr(chan), detectionobj.time, cellstr(detectionobj.state), 'signal2noise', detectionobj.signal2noise);
+    arrivalobj = Arrival(cellstr(sta), cellstr(chan), detectionobj.time, ...
+        cellstr(detectionobj.state), 'signal2noise', detectionobj.signal2noise);
 
 end
 

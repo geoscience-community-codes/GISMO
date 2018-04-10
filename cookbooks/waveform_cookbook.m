@@ -46,11 +46,11 @@ w = waveform(ds, ctag, startTime, endTime)
 % reading from IRIS DMC webservices, except that the datasource should be 
 % 'earthworm' or 'winston', and the two arguments are the host-ip-address
 % and the port number:
-ds = datasource('winston', 'pubavo1.wr.usgs.gov', 16022);
-ctag = ChannelTag('AV', 'RSO', '--', 'EHZ');
-startTime = now-1/24;
-endTime = now;
-w = waveform(ds, ctag, startTime, endTime)
+% ds = datasource('winston', 'pubavo1.wr.usgs.gov', 16022);
+% ctag = ChannelTag('AV', 'RSO', '--', 'EHZ');
+% startTime = now-1/24;
+% endTime = now;
+% w = waveform(ds, ctag, startTime, endTime)
 
 %%
 % *Reading waveform data from an CSS3.0 flat-file database (the format used
@@ -120,12 +120,13 @@ plot(w)
 %%
 % *Spectrum*
 % An amplitude spectrum can be generated with:
-plot_spectrum(w)
+s=amplitude_spectrum(w)
+plot(s.f, s.amp); xlabel('Frequency (Hz)'); ylabel('Amplitude')
+
 
 %%
 % *Spectrogram*
 % A spectrogram can be generated with:
-figure
 spectrogram(w)
 
 %%

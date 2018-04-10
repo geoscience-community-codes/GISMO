@@ -54,6 +54,7 @@ function [bestbackaz, bestspeed,distanceDiff,speedMatrix] = beamform2d(easting, 
         warning('You can only set fixbackaz or fixspeed, not both. Ignoring fixbackaz')
     end
 
+
     if exist('fixbackaz', 'var')
         backaz = fixbackaz - 1.0: 0.1: fixbackaz + 1.0;
     else
@@ -76,7 +77,9 @@ function [bestbackaz, bestspeed,distanceDiff,speedMatrix] = beamform2d(easting, 
             for column=1:N
                 distanceDiff(row, column) = dot( [eastingDiff(row, column)  northingDiff(row, column)], [unit_vector_easting(c) unit_vector_northing(c)] );
             end
+            %distanceDiff
         end
+
         speedMatrix = distanceDiff ./ meanSecsDiff;
         a =[];
         for row=1:N

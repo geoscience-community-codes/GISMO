@@ -6,6 +6,8 @@ function arrivalobj = addwaveforms(arrivalobj, datasourceobj, pretrigsecs, postt
 %   
 %   Usage:
 %       arrivalobj = arrivalobj.addwaveforms(datasourceobj, pretrigsecs, posttrigsecs)
+%   or:
+%       arrivalobj = arrivalobj.addwaveforms(waveformobj, pretrigsecs, posttrigsecs)
 %
 %   Example:
 %       dbpath = '/raid/data/sakurajima/db';
@@ -24,10 +26,20 @@ function arrivalobj = addwaveforms(arrivalobj, datasourceobj, pretrigsecs, postt
         ctag = ChannelTag(arrivalobj.channelinfo(c));
         snum = arrivalobj.time(c) - pretrigsecs/86400;
         enum = arrivalobj.time(c) + posttrigsecs/86400;
+        if strcmp(class(datasourceobj),'waveform')
+            index = match_channel(ctag, get(datasourceobj,'channelinfo') );
+            neww = extract(datasourceobj(index),'time',snum,enum);
+        else
 %         try
-            w = [w waveform(datasourceobj, ctag, snum, enum)];
-            fprintf('.');
-            numsuccess = numsuccess + 1;
+            neww = waveform(datasourceobj, ctag, snum, enum);
+        end
+        
+        if isempty(neww)
+            error('Blank waveform')
+        end
+        w = [w neww];
+        fprintf('.');
+        numsuccess = numsuccess + 1;
 %         catch
 %             w = [w waveform()];
 %             fprintf('x');
@@ -35,9 +47,25 @@ function arrivalobj = addwaveforms(arrivalobj, datasourceobj, pretrigsecs, postt
         if mod(c,30) == 0
             fprintf('\nDone %d out of %d\n',c, Na);
         end
+
     end
     arrivalobj.waveforms = clean(w');
     fprintf('\n(added %d of %d waveforms successfully)\n', numsuccess,  numel(arrivalobj.time));   
 
+end
+
+function index=match_channel(chaninfo, chaninfo_list)
+    index=0;
+    for c=1:numel(chaninfo_list)
+        pattern = chaninfo.string();
+        if strcmp(pattern(end-2),'_') % take care of when the location has changed between waveform and arrival
+            pattern = pattern(1:end-3);
+        end
+        result=strfind(chaninfo_list{c},pattern);
+        if ~isempty(result)
+            index=result;
+            break;
+        end
+    end
 end
 

@@ -10,6 +10,9 @@ classdef Detection
         signal2noise
         traveltime
     end
+    properties(Dependent)
+        numel
+    end
     methods
         function obj = Detection(sta, chan, time, state, filterString, signal2noise)
             % Parse required, optional and param-value pair arguments,
@@ -32,13 +35,30 @@ classdef Detection
             obj.state = p.Results.state;  
             obj.filterString = p.Results.filterString; 
             obj.signal2noise = p.Results.signal2noise; 
-            fprintf('\nGot %d detections\n',numel(obj.time));
+            N = numel(obj.time);
+            fprintf('\nGot %d detections\n',N);
+            if numel(obj.state) == 0
+                obj.state = repmat({''},1,N);
+            end
+            if numel(obj.filterString) == 0
+                obj.filterString = repmat({''},1,N);
+            end
+            if numel(obj.signal2noise) == 0
+                obj.signal2noise = repmat({''},1,N);
+            end    
+            if numel(obj.traveltime) == 0
+                obj.traveltime = repmat(NaN,1,N);
+            end               
                 
         end
         
         function val = get.time(obj)
             val = obj.time;
-        end 
+        end
+        
+        function val = get.numel(obj)
+            val = numel(obj.time);
+        end
         
 %         function val = get.channelinfo(obj)
 %             val = obj.channelinfo;
@@ -176,10 +196,33 @@ plot(x,100-cumsum(n)/sum(n)*100,'LineWidth',5);
             if numel(self.signal2noise)==N
                 self2.signal2noise = self.signal2noise(indexes);
             end
-            
+            if numel(self.traveltime)==N
+                self2.traveltime = self.traveltime(indexes);
+            end            
         end 
         
-        
+        function self = append(self1, self2)
+            disp('Appending...')
+            [newtime, indices] = sort([self1.time self2.time]);
+            size(cellstr(self1.channelinfo))
+            size(cellstr(self2.channelinfo))
+            newchannelinfo = [cellstr(self1.channelinfo); cellstr(self2.channelinfo)];
+            newchannelinfo = newchannelinfo(indices);
+            newstate = [cellstr(self1.state); cellstr(self2.state)];
+            newstate = newstate(indices);
+            newfs = [cellstr(self1.filterString); cellstr(self2.filterString)];
+            newfs = newfs(indices); 
+            newsnr = [self1.signal2noise self2.signal2noise];
+            newsnr = newsnr(indices);
+            ctags = ChannelTag(newchannelinfo);
+            %self = Detection(cellstr([get(ctags,'station')]), cellstr([get(ctags,'channel')]), newtime, cellstr([newstate]), cellstr([newfs]), newsnr)
+            self = Detection([get(ctags,'station')], ...
+                [get(ctags,'channel')], ...
+                newtime, ...
+                newstate, ...
+                [newfs], ...
+                newsnr)
+        end
         
         % prototypes
          catalogobj = associate(self, maxTimeDiff, sites, source)

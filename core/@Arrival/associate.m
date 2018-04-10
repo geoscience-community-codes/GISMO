@@ -32,6 +32,9 @@ if exist('sites', 'var')
     for c=1:numel(sites)
         thissite = sites(c);
         thischanstr = thissite.channeltag.string();
+        if strcmp(thischanstr(end-2),'_')
+            thischanstr=thischanstr(1,end-3);
+        end
         i = strcmp(arrivalobj.channelinfo, thischanstr)==1;
         arrivalobj.traveltime(i) = sites(c).traveltime;
         arrivalobj.time(i) = arrivalobj.time(i) - sites(c).traveltime/86400;      
@@ -55,7 +58,7 @@ arrivalobj = arrivalobj.subset(indices);
     % 2. Remove decrementing series, e.g. replace sequence 
     % like 6 5 4 3 2 1 with 6 0 0 0 0 0
     numarrivals = [numarrivals(1) diff(numarrivals)+1];
-    %numarrivals(numarrivals<=1)=0;
+    numarrivals(numarrivals<=1)=0;
 
     % 3. Now loop over numarrivals and create events
     fprintf('Making events')
@@ -64,8 +67,7 @@ arrivalobj = arrivalobj.subset(indices);
     for c=1:numel(numarrivals)
         if numarrivals(c)>0
             fprintf('.')
-            eventnum = eventnum + 1;
-            otime(eventnum) = arrtimes(c);
+
             try
                 eventarrivalobj = arrivalobj.subset([c : c + numarrivals(c) - 1]);
             catch
@@ -75,22 +77,29 @@ arrivalobj = arrivalobj.subset(indices);
                 rethrow();
             end
 
-            % remove the reduced time
-            if exist('sites','var')
-                for cc=1:numel(eventarrivalobj.time)
-                    eventarrivalobj.time(cc) = eventarrivalobj.time(cc) + eventarrivalobj.traveltime(cc)/86400;
-                end
-            end
+
+%             % remove the reduced time
+%             if exist('sites','var')
+%                 for cc=1:numel(eventarrivalobj.time)  
+%                     eventarrivalobj.time(cc) = eventarrivalobj.time(cc) + eventarrivalobj.traveltime(cc)/86400;
+%                 end
+%             end
+            
 
             % remove duplicate channels
             [uc,ia]  = unique(eventarrivalobj.channelinfo, 'stable');
             duplicatecount = duplicatecount + numel(eventarrivalobj.channelinfo) - numel(uc);
-            eventarrivalobj = eventarrivalobj.subset(ia);
+            if numel(ia)>1
+                eventarrivalobj = eventarrivalobj.subset(ia);
+                eventnum = eventnum + 1;
+                otime(eventnum) = arrtimes(c);
 
-            % set the arrivalobj for this event
-            arrivalobj2{eventnum} = eventarrivalobj;
-            firstArrivalTime(eventnum) = min(eventarrivalobj.time);
-            lastArrivalTime(eventnum) = max(eventarrivalobj.time); 
+                % set the arrivalobj for this event
+                arrivalobj2{eventnum} = eventarrivalobj;
+                firstArrivalTime(eventnum) = min(eventarrivalobj.time);
+                lastArrivalTime(eventnum) = max(eventarrivalobj.time); 
+                
+            end
 
         end
         if mod(c,30) == 0
@@ -113,6 +122,11 @@ arrivalobj = arrivalobj.subset(indices);
         olon = NaN(size(otime));
         olat = NaN(size(otime));        
     end
+    
+    for enum=1:numel(otime)
+        %disp(sprintf('%d: %s-%s',enum,firstArrivalTime,lastArrivalTime));
+    end
+
     catalogobj = Catalog(otime, olon, olat, [], [], {}, {}, 'ontime', firstArrivalTime, 'offtime', lastArrivalTime);
     catalogobj.arrivals = arrivalobj2;
     fprintf('%d arrivals were determined to be duplicates using a time window of %.1f seconds\n',duplicatecount, maxTimeDiff);

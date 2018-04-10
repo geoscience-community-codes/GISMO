@@ -5,16 +5,14 @@
 %% setup
 clear all
 close all
-rmpath(genpath('/raid/apps/src/GISMO'))
-make_figures = true
-addpath('infrasoundGT')
-figureOutDirectory = '20160901_SpaceXpolsion2';
-mkdir('.',figureOutDirectory);
-
-%% constants
+matfile = '/Users/glennthompson/Dropbox/Rockets/analysis/20160901_SpaceXplosion/explosion2.mat';
+if exist(matfile,'file')
+    load(matfile);
+else
 
     % waveform data parameters
-    ds = datasource('antelope', '/raid/data/rockets/dbspacexplosion');
+    %ds = datasource('antelope', '/raid/data/rockets/dbspacexplosion');
+    ds = datasource('antelope', '/Users/glennthompson/Dropbox/Rockets/db/20160901_explosion');
     snum=datenum(2016,9,1,13,0,0);
     enum = snum + 1/24;
     scnl = scnlobject('BCHH', '*', 'FL');
@@ -24,7 +22,7 @@ mkdir('.',figureOutDirectory);
     lat = [28.574182 28.573894 28.574004 28.574013 28.574013 28.574013];
     lon = [-80.572410 -80.572352 -80.572561 -80.572360  -80.572360 -80.572360];
     source.lat = 28.562106; % SLC40 - SpaceX launch complex
-    source.lon = -80.57718; 
+    source.lon = -80.57718;
     % Wind tower data - could read this from Excel instead
     relativeHumidity = 92; % percent from NASA weather tower data
     temperatureF = 80; % 80 Fahrenheit according to weather tower data from NASA
@@ -32,19 +30,27 @@ mkdir('.',figureOutDirectory);
     wind_direction = mod(wind_direction_from + 180, 360);
     wind_speed_knots = 10; % knots
     wind_speed = wind_speed_knots * 0.514444; % m/s
+    % rmpath(genpath('/raid/apps/src/GISMO'))
     
+    %% compute speed of sound based on temperature & rel. humidity
+    temperatureC = fahrenheit2celsius(temperatureF);
+    speed_of_sound = computeSpeedOfSound(temperatureC, relativeHumidity);
+    disp(sprintf('speed of sound at %.1f Celsius and %f percent relative humidity is %.1f',temperatureC, relativeHumidity, speed_of_sound));
+    
+    %% load waveform data
+    disp('Loading waveform data...')
+    w=waveform(ds,scnl,snum,enum);
+    
+    save(matfile);
+end
 
-%% compute speed of sound based on temperature & rel. humidity
-temperatureC = fahrenheit2celsius(temperatureF);
-speed_of_sound = computeSpeedOfSound(temperatureC, relativeHumidity);
-disp(sprintf('speed of sound at %.1f Celsius and %f percent relative humidity is %.1f',temperatureC, relativeHumidity, speed_of_sound));
+make_figures = true
+%addpath('infrasoundGT')
+figureOutDirectory = '20160901_results';
+mkdir('.',figureOutDirectory);
 
-save spacexplosion.mat
 
-%% load waveform data
-disp('Loading waveform data...')
-w=waveform(ds,scnl,snum,enum);
-save spacexplosion.mat
+save(matfile)
 
 %% plot raw waveform data
 if make_figures

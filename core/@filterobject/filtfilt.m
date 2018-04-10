@@ -39,13 +39,20 @@ elseif isa(w,'waveform')
             'will cause filtfilt to return an answer of all NaN.  To prevent '...
             'this, use waveform/fillgaps to replace NaN with an appropriate'...
             ' value.  \nSee help waveform/fillgaps.']);
+        return
     end
     
     
     for n = 1 : numel(w);
-        WN = f.cutoff / get(w(n),'NYQ');     %only one filter is assumed!
-        [b, a] = getButter(f,WN);
-        w(n) = set(w(n),'data', filtfilt(b, a, double(w(n))) );
+        fnyq = get(w(n),'NYQ');
+        if fnyq>0
+            WN = f.cutoff / fnyq;     %only one filter is assumed!
+            [b, a] = getButter(f,WN);
+            w(n) = set(w(n),'data', filtfilt(b, a, double(w(n))) );
+        else
+            warning('Sampling rate is not set on this waveform. Use w = set(w, ''freq'', 100) to set to 100 Hz, for example. Cannot design a Butterworth filter')
+            return
+        end
     end
 end
 
@@ -55,6 +62,7 @@ w = addhistory(w,['Filtered: Type:', get(f,'type'), ' Cutoff: [',...
 
 %- - - -  helper function - - - - %
 function [b, a] = getButter(f, WN)
+
 switch f.type
     case 'H';
         [b,a] = butter(f.poles, WN, 'high');

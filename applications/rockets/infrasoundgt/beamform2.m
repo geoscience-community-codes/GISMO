@@ -35,6 +35,7 @@ function [bestbackaz, bestspeed,distanceDiff,speedMatrix] = beamform2d(easting, 
 
     bestbackaz = NaN;
     bestspeed = NaN;
+    disp('goit here')
 
     % First we use travel time ratios to find back azimuthal angle of the beam
     % this means we do not need to know speed
@@ -68,6 +69,9 @@ function [bestbackaz, bestspeed,distanceDiff,speedMatrix] = beamform2d(easting, 
             northingDiff(row, column) = northing(row) - northing(column);
         end
     end
+    eastingDiff
+    northingDiff
+    meanSecsDiff
 
     %for thisaz = backaz
     for c=1:length(backaz)
