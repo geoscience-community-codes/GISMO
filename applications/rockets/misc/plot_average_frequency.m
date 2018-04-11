@@ -15,4 +15,5 @@ function plot_average_frequency(w)
         chan= get(w(c),'channel');
         th=text(0.1,0.9, sprintf('%s %s.%s',datestr(Tcell{c}(1),30),sta,chan),'Units','normalized')
     end
+
 end
