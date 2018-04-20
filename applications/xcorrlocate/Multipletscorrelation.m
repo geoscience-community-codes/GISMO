@@ -1,12 +1,5 @@
-% Author: Mitchell Hastings
-% Welcome Weary Seismologists!
-% This is a .m script made to automate the process of creating a subset
-% of waveforms at each station at Telica volcano, Nicaragua. This script 
-% can work with any kind of waveform data if you are making subsets of 
-% families of waveforms. This script was written for the purpose of a class
-% project for Steve McNutt's Volcano Seismology course. The author is tired
-% and wishes to no longer continue modulating this script, but he may come
-% back to doing so....eventually...
+function mitchmadnesswrapper()
+
 
 clear all
 close all
@@ -14,19 +7,39 @@ clc
 
 POSTTRIG = 20
 
-%% THIS IS THE ONLY SECTION IN THE SCRIPT THAT NEEDS CHANGED 
-  %SIMPLY CHANGE THE WORKING DIRECTORY AND THE FILENAME TO RUN IT
-  %NOTE: MUST HAVE THE SAME DATA STRUCTURE AND NAMING SCHEME AS 
-  %MEL'S DATA
-   
+%% THIS IS THE ONLY SECTION IN THE SCRIPT THAT NEEDS CHANGED
+%SIMPLY CHANGE THE WORKING DIRECTORY AND THE FILENAME TO RUN IT
+%NOTE: MUST HAVE THE SAME DATA STRUCTURE AND NAMING SCHEME AS
+%MEL'S DATA
+
+MULTIPLETS_TOP_DIR = '~/Desktop/Multiplets';
+PEAKMATCH_OUTPUT_FILE = 'M-2012-05-11-edit2.dat';
+
 % Move to the working directory that contains the correct data structure
 % for this script, which is...
-cd ~/Desktop/Multiplets
+cd(MULTIPLETS_TOP_DIR);
 
-% Read in file that has the original list of the Multiplets and all 
-% member events 
-filename = 'M-2012-05-11-edit2.dat';
-fid = fopen(filename,'r');
+mitchmadness(PEAKMATCH_OUTPUT_FILE, POSTTRIG);
+
+
+end
+
+function mitchmadness(PEAKMATCH_OUTPUT_FILE, POSTTRIG)
+% Author: Mitchell Hastings
+% Welcome Weary Seismologists!
+% This is a .m script made to automate the process of creating a subset
+% of waveforms at each station at Telica volcano, Nicaragua. This script
+% can work with any kind of waveform data if you are making subsets of
+% families of waveforms. This script was written for the purpose of a class
+% project for Steve McNutt's Volcano Seismology course. The author is tired
+% and wishes to no longer continue modulating this script, but he may come
+% back to doing so....eventually...
+
+% Read in file that has the original list of the Multiplets and all
+% member events
+PEAKMATCH_OUTPUT_FILE = 'M-2012-05-11-edit2.dat';
+fid = fopen(PEAKMATCH_OUTPUT_FILE,'r');
+
 %% TBTN--------------------------------------------------------------------
 % loop to read in each line and write a file path relative to the working
 % directory
@@ -65,7 +78,7 @@ for count = 1:numel(h)
     count = count + 1;
 end
 
-% Use the subset_list to find the waveforms that correlate above the 
+% Use the subset_list to find the waveforms that correlate above the
 % threshold on other stations
 
 %% TBMR--------------------------------------------------------------------
@@ -83,7 +96,7 @@ end
 count = 1;
 for count = 1:numel(subMR)
     w_subMR(count) = waveform(subMR{count}, 'sac');
-    count = count + 1; 
+    count = count + 1;
 end
 
 % Now this step is to do the correlation with the subset on TBMR
@@ -127,7 +140,7 @@ end
 count = 1;
 for count = 1:numel(subHY)
     w_subHY(count) = waveform(subHY{count}, 'sac');
-    count = count + 1; 
+    count = count + 1;
 end
 
 % Now this step is to do the correlation with the subset on TBHY
@@ -171,7 +184,7 @@ end
 count = 1;
 for count = 1:numel(subHS)
     w_subHS(count) = waveform(subHY{count}, 'sac');
-    count = count + 1; 
+    count = count + 1;
 end
 
 % Now this step is to do the correlation with the subset on TBHY
@@ -278,7 +291,7 @@ CTN2 = xcorr(CTN, [1 POSTTRIG]);
 corr = get(CTN2, 'CORR'); % just to check correlation coefficients
 CTN3 = adjusttrig(CTN2, 'median');
 
-% plot(CTN3); 
+% plot(CTN3);
 
 CTN4 = stack(CTN3);
 % plot(CTN4);
@@ -300,7 +313,7 @@ CMR2 = xcorr(CMR, [1 POSTTRIG]);
 corr = get(CMR2, 'CORR'); % just to check correlation coefficients
 CMR3 = adjusttrig(CMR2, 'median');
 
-% plot(CMR3); 
+% plot(CMR3);
 
 CMR4 = stack(CMR3);
 % plot(CMR4);
@@ -321,7 +334,7 @@ CHY2 = xcorr(CHY, [1 POSTTRIG]);
 corr = get(CHY2, 'CORR'); % just to check correlation coefficients
 CHY3 = adjusttrig(CHY2, 'median');
 
-% plot(CHY3); 
+% plot(CHY3);
 
 CHY4 = stack(CHY3);
 % plot(CHY4);
@@ -343,7 +356,7 @@ CHS2 = xcorr(CHS, [1 POSTTRIG]);
 corr = get(CHS2, 'CORR'); % just to check correlation coefficients
 CHS3 = adjusttrig(CHS2, 'median');
 
-% plot(CHS3); 
+% plot(CHS3);
 
 CHS4 = stack(CHS3);
 % plot(CHS4);
@@ -352,7 +365,34 @@ plot(WHS4(end)); % stacked waveform
 % plot(WHS4(1)); % master waveform
 plot_panels(WHS4, 'alignWaveform', 1)
 
-%%
+end
+
+
+function glenngadzeeks()
+
+%% STUFF ADDED BY GLENN
+% Maths to use for computing arrival time:
+%   where:
+%       wEvent is a real event
+%       lagSeconds is xcorr(wstack, wEvent)
+%       onsetDelaySeconds is how far into stack we pick the arrival onset
+%       arrivalDatenum = wEventDateNum + (lagSeconds + onsetDelaySeconds)/SECONDS_PER_DAY
+%
+% This test example shows that xcorr(a,b) where b is a delayed by 1 sample produces a lag of -1
+%
+%     b = randn(1,10) + [0 0 0 0 0 10 0 0 0 0];
+%     a = randn(1,10) + [0 0 0 0 10 0 0 0 0 0];
+%     [acor,lag] = xcorr(a,b);
+%     plot(lag,acor)
+%
+% then we create Arrival objects, add them into Catalog object
+%
+% write Catalog object to Antelope database
+%
+% Linux script Antelope relocate or dbgenloc or dblocsat to locate events using those Arrivals time
+% Also drive db2kml to plot in Google Earth (or GMT)
+
+end
 
 
 
