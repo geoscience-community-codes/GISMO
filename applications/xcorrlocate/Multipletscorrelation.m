@@ -37,7 +37,6 @@ function mitchmadness(PEAKMATCH_OUTPUT_FILE, POSTTRIG)
 
 % Read in file that has the original list of the Multiplets and all
 % member events
-PEAKMATCH_OUTPUT_FILE = 'M-2012-05-11-edit2.dat';
 fid = fopen(PEAKMATCH_OUTPUT_FILE,'r');
 
 %% TBTN--------------------------------------------------------------------
