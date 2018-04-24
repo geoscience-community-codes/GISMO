@@ -103,7 +103,7 @@ function disp_event(obj, eventnum)
     end        
     if sum(~isnan(obj.mag))
         fprintf('\t%.1f', obj.mag(eventnum) );
-    end     
+    end 
     if sum(~strcmp(obj.magtype,'u'))
         fprintf('\t%s', obj.magtype{eventnum} );
     end  

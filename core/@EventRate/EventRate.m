@@ -37,23 +37,6 @@ classdef EventRate
 %       (3) Create an eventrate object using a binsize of 1 hour but a stepsize of 5 minutes:
 %           erobj = catalogObject.eventrate('binsize', 1/24, 'stepsize', 5/1440);
 %
-%       (4) Create a vector of eventrate objects subclassified using event types 'r', 'e', 'l', 'h', 't':
-%               erobj = eventrate(catalogObject, 1, 'etypes', 'relht');
-%           To plot counts on separate figures:
-%               erobj.plot()
-%           To plot counts and energy panels, each event type as a separate figure:
-%               erobj.plot('metric', {'counts';'energy'});
-%           To plot counts and energy panels on separate figures, each event type as panels:
-%               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'panels'); 
-%           To plot counts and energy panels on separate figures, each event type stacked:
-%               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');
-%
-%       (5) A full example:
-%               catalogObject = catalog(fullfile(MVO_DATA, 'mbwh_catalog'), 'seisan', 'snum', datenum(1996,10,1), 'enum', datenum(2004,3,1), 'region', 'Montserrat')
-%               erobj = eventrate(catalogObject, 365/12, 'stepsize', 1, 'etypes', 'thlr');
-%               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');
-%
-%
 %%   PROPERTIES
 %
 %    For a list of all properties type properties(EventRate)
@@ -100,6 +83,25 @@ classdef EventRate
 
 % $Date: 2014-05-06 14:52:40 -0800 (Tue, 06 May 2014) $
 % $Revision: 404 $
+
+
+% I don't think these parts work anymore
+%       (4) Create a vector of eventrate objects subclassified using event types 'r', 'e', 'l', 'h', 't':
+%               erobj = eventrate(catalogObject, 1, 'etypes', 'relht');
+%           To plot counts on separate figures:
+%               erobj.plot()
+%           To plot counts and energy panels, each event type as a separate figure:
+%               erobj.plot('metric', {'counts';'energy'});
+%           To plot counts and energy panels on separate figures, each event type as panels:
+%               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'panels'); 
+%           To plot counts and energy panels on separate figures, each event type stacked:
+%               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');
+%
+%       (5) A full example:
+%               catalogObject = catalog(fullfile(MVO_DATA, 'mbwh_catalog'), 'seisan', 'snum', datenum(1996,10,1), 'enum', datenum(2004,3,1), 'region', 'Montserrat')
+%               erobj = eventrate(catalogObject, 365/12, 'stepsize', 1, 'etypes', 'thlr');
+%               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');
+%
 
 %% PROPERTIES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

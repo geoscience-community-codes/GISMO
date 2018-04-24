@@ -199,6 +199,24 @@ classdef Catalog
             enum = nanmax([obj.otime; obj.offtime]);
             t = [snum enum];
         end
+        
+        function cobj3 = add(cobj1, cobj2)
+% combine method already exists, but uses tables - Catalog isn't a table
+% anymore
+            cobj3 = cobj1;
+            cobj3.otime = [cobj1.otime; cobj2.otime];
+            cobj3.lon = [cobj1.lon; cobj2.lon];
+            cobj3.lat = [cobj1.lat; cobj2.lat];
+            cobj3.depth = [cobj1.depth; cobj2.depth];
+            cobj3.mag = [cobj1.mag; cobj2.mag];
+            cobj3.magtype = [cobj1.magtype; cobj2.magtype];
+            cobj3.etype = [cobj1.etype; cobj2.etype];
+            cobj3.ontime = [cobj1.ontime; cobj2.ontime];
+            cobj3.offtime = [cobj1.offtime; cobj2.offtime];
+            cobj3.arrivals = [cobj1.arrivals; cobj2.arrivals];
+            cobj3.waveforms = [cobj1.waveforms; cobj2.waveforms];    
+        end
+            
           
         % Prototypes
         bvalue(catalogObject, mcType)     
@@ -220,6 +238,7 @@ classdef Catalog
         webmap(catalogObject)
         write(catalogObject, outformat, outpath, schema)
         arrivals_per_event(catalogObject)
+        
     end
 %% ---------------------------------------------------
     methods (Access=protected, Hidden=true)

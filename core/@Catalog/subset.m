@@ -17,14 +17,23 @@ function cobj2 = subset(cobj, indices)
         cobj2.mag = cobj.mag(indices);
     end
     if numel(cobj.magtype)==N
-        try % there is a limit on subsetting cell array
-        cobj2.magtype = cobj.magtype{indices};
+%         try % there is a limit on subsetting cell array
+%         cobj2.magtype = cobj.magtype{indices};
+%         end
+        for c=1:numel(indices)
+            dummy{c} = cobj.magtype{indices(c)};
         end
+        cobj2.magtype = dummy;
+        clear dummy
     end
     if numel(cobj.etype)==N
-        try
-        cobj2.etype = cobj.etype{indices};
+        for c=1:numel(indices)
+            dummy{c} = cobj.etype{indices(c)};
         end
+        cobj2.etype = dummy;
+%         try
+%         cobj2.etype = cobj.etype{indices};
+%         end
     end
     if numel(cobj.arrivals)==N
         cobj2.arrivals = cobj.arrivals(indices);

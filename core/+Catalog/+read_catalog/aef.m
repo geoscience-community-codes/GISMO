@@ -54,7 +54,8 @@ function self = aef(varargin)
         fprintf('Directory %s not found. Perhaps you need to generate from S files?\n',dbpath);
         return;
     end
-    
+    snum=startTime;
+    enum=endTime;
     lnum=snum;
 
     % loop over all years and months selected
@@ -62,9 +63,11 @@ function self = aef(varargin)
         [yyyy, mm] = datevec(lnum);
 
         % concatenate catalogs
-        Object0 = import_aef_file(dbpath,yyyy,mm,snum,enum,p.Results.RUNMODE);
+        Object0 = import_aef_file(dbpath,yyyy,mm,snum,enum);%,p.Results.RUNMODE);
         if exist('self', 'var')
-            self = self + Object0;
+            %self = self + Object0;
+            %self = combine(self, Object0);
+            self = add(self, Object0);
         else
             self = Object0;
         end
@@ -76,13 +79,13 @@ function self = aef(varargin)
 
     self.mag(self.mag<-3)=NaN;
 
-    if ~isempty(self.dnum)
+    if ~isempty(self.otime)
 
         % cut data according to threshold mag
         if ~isempty(minimumMagnitude)
             disp('Applying minimum magnitude filter')
             m = find(self.mag > minimumMagnitude);
-            fprintf('Accepting %d events out of %d\n',length(m),length(self.dnum));
+            fprintf('Accepting %d events out of %d\n',length(m),length(self.otime));
             self.event_list = self.event_list(m);
         end    
     end
@@ -134,8 +137,7 @@ function self = import_aef_file(dirpath, yyyy, mm, snum, enum, RUNMODE)
         [yr,mn,dd,hh,mi,ss,etype0,mag0] = textread(datfile,'%d %d %d %d %d %d %s %f');
         dnum = datenum(yr,mn,dd,hh,mi,ss)';
         mag = mag0';
-        etype = char(etype0)';
-        self = Catalog(dnum, [], [], [], mag, {}, etype); 
+        self = Catalog(dnum, [], [], [], mag, {}, etype0); 
     else
         disp([datfile,' not found']);
     end
