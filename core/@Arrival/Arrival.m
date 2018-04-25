@@ -34,8 +34,14 @@ classdef Arrival
     end
     methods
         function obj = Arrival(sta, chan, time, iphase, varargin)
+
+            % Blank constructor
+            if ~exist('sta','var')
+                return
+            end
+            
             % Parse required, optional and param-value pair arguments,
-            % set default values, and add validation conditions          
+            % set default values, and add validation conditions             
             p = inputParser;
             p.addRequired('sta', @iscell);
             p.addRequired('chan', @iscell);

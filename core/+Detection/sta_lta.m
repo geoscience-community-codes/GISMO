@@ -1,5 +1,5 @@
 function [detObj, sta, lta, sta_to_lta] = sta_lta(wave,varargin)
-%function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)
+%function [detectionObject, sta, lta, sta_to_lta] = sta_lta(wave, varargin)
 
 %STA_LTA: Short-Time-Average/Long-Time-Average event detector.
 %
@@ -36,13 +36,13 @@ function [detObj, sta, lta, sta_to_lta] = sta_lta(wave,varargin)
 %     --> 'continuous' - LTA window continues w/ STA window after trigger 
 %                        is turned on (Same behavior as before trigger)
             
-%OUTPUTS: events - Catalog object
+%OUTPUTS: Detection object
 
-% Author: Glenn Thompson 2016-04-19 inspired by an earlier program by Dane
+% Author: Glenn Thompson 2016-04-19 based heavily on an earlier program by Dane
 % Ketner (Alaska Volcano Observatory). The main differences are:
-%   * algorithm completely rewritten to improve execution speed, clarity
+%   * algorithm rewritten to improve execution speed, clarity
 %   * visualization of the sta_lta ratio added
-%   * triggered events are returned as a GISMO Catalog object, for
+%   * triggered events are returned as a GISMO Detection object, for
 %     consistency across GISMO
 %   
 % $Date$
