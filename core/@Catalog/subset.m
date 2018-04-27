@@ -27,7 +27,7 @@ function cobj2 = subset(cobj, varargin)
 %     datestr(max(cobj.otime))
 %     datestr(start_time)
 %     datestr(end_time)
-indices
+
     if isempty(indices)
         i1 = 1:numel(cobj.otime);
         if start_time
@@ -41,7 +41,8 @@ indices
         end
         indices = intersect(i1, i2);
     end    
-        
+    
+
     cobj2 = cobj;
     N = numel(cobj.otime);
     disp(sprintf('Subsetting from %d events to %d events',N, numel(indices)));
@@ -59,6 +60,7 @@ indices
         cobj2.mag = cobj.mag(indices);
     end
     if numel(cobj.magtype)==N
+        dummy=[];
 %         try % there is a limit on subsetting cell array
 %         cobj2.magtype = cobj.magtype{indices};
 %         end
@@ -69,13 +71,12 @@ indices
         clear dummy
     end
     if numel(cobj.etype)==N
+        dummy=[];
         for c=1:numel(indices)
             dummy{c} = cobj.etype{indices(c)};
         end
         cobj2.etype = dummy;
-%         try
-%         cobj2.etype = cobj.etype{indices};
-%         end
+        clear dummy;
     end
     if numel(cobj.arrivals)==N
         cobj2.arrivals = cobj.arrivals(indices);
