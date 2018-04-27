@@ -222,7 +222,7 @@ classdef Catalog
         bvalue(catalogObject, mcType)     
         catalogObject = addwaveforms(catalogObject, varargin);
         catalogObject = combine(catalogObject1, catalogObject2)
-        catalogObject2 = subset(catalogObject, indices)
+        catalogObject2 = subset(catalogObject, varargin)
         catalogObjects=subclassify(catalogObject, subclasses)         
         disp(catalogObject)
         eev(obj, eventnum)
