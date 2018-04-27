@@ -364,6 +364,47 @@ plot(WHS4(end)); % stacked waveform
 % plot(WHS4(1)); % master waveform
 plot_panels(WHS4, 'alignWaveform', 1)
 
+%% DOING X-CORRELATION BETWEEN THE STACK AND THE SUBORDINATNT WAVEFORM
+
+
+list_of_arrivals_TBTN = cell(16,1)
+plot(WTN4(17));
+q = ginput(1);
+q = q(1);
+pick_time = datenum(0,0,0,0,0,q);
+
+for count=1:16
+    data = get(WTN4, 'data');
+    [corr, lag] = xcorr(data{count}, data{17}, 'coeff');
+    [maxcorr, I] = max(corr);
+    lagsamp = lag(I);
+    freq = get(WTN4(count), 'freq');
+    lagtime = lagsamp/freq;
+    lag_time = datenum(0,0,0,0,0,lagtime);
+    start_time = get(WTN4(count), 'start');
+    list_of_arrivals_TBTN{count} = start_time + lag_time + pick_time;
+end
+
+debug = cell(1,1);
+
+% data = get(WTN4, 'data'); % grab data for all wavefroms and stack at station
+% [corr, lag] = xcorr(data{1}, data{17}, 'coeff'); % get normalized corr and lag
+% [maxcorr, I] = max(corr); % find maximum correlation value 
+% lagsamp = lag(I); % lag time for producing max correlation
+% freq = get(WTN4(1), 'freq');
+% lagtime = lagsamp/freq
+
+% plot(WTN4(17));
+% q = ginput(1) % make the pick time on the stack
+% q = q(1);
+% pick_time = datenum(0,0,0,0,0,q);
+% lag_time = datenum(0,0,0,0,0,lagtime);
+% start_time = get(WTN4(1), 'start');
+% 
+% new_pick_time = start_time + lag_time + pick_time;
+
+
+
 end
 
 
@@ -392,6 +433,5 @@ function glenngadzeeks()
 % Also drive db2kml to plot in Google Earth (or GMT)
 
 end
-
 
 
