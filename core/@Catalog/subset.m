@@ -32,12 +32,12 @@ function cobj2 = subset(cobj, varargin)
         i1 = 1:numel(cobj.otime);
         if start_time
             i1 = find(cobj.otime >= start_time);
-            disp(sprintf('Found %d events after %s',numel(i1), datestr(start_time)));
+            debug.print_debug(1,sprintf('Found %d events after %s',numel(i1), datestr(start_time)));
         end
         i2 = 1:numel(cobj.otime);
         if end_time
             i2 = find(cobj.otime <= end_time);
-            disp(sprintf('Found %d events before %s',numel(i1), datestr(end_time)));
+            debug.print_debug(1,sprintf('Found %d events before %s',numel(i1), datestr(end_time)));
         end
         indices = intersect(i1, i2);
     end    
@@ -45,7 +45,7 @@ function cobj2 = subset(cobj, varargin)
 
     cobj2 = cobj;
     N = numel(cobj.otime);
-    disp(sprintf('Subsetting from %d events to %d events',N, numel(indices)));
+    debug.print_debug(1,sprintf('Subsetting from %d events to %d events',N, numel(indices)));
     cobj2.otime = cobj.otime(indices);
     if numel(cobj.lon)==N
         cobj2.lon = cobj.lon(indices);
@@ -95,5 +95,19 @@ function cobj2 = subset(cobj, varargin)
     end
     if numel(cobj.offtime)==N
         cobj2.offtime = cobj.offtime(indices);
+    end 
+    
+    %% Added by Glenn Thompson 2018-05-01 to add a request start & end time
+    if isempty(start_time)
+        cobj2.request.start_time = min(cobj2.otime);
+    else
+        cobj2.request.start_time = start_time;
+    end
+    if isempty(end_time)
+        cobj2.request.end_time = max(cobj2.otime);
+    else
+        cobj2.request.end_time = end_time;
     end    
+    
+    
 end

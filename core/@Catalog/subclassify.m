@@ -12,7 +12,7 @@ function c = subclassify(catalogObject, subclasses)
             subclass{i} = subclasses(i);
             index = strfind(char(catalogObject.etype)', subclass{i}); % previously findstr
             if length(index)>0
-                c(i) = catalogObject.subset(index);
+                c(i) = catalogObject.subset('indices',index);
             else
                 c(i) = Catalog();
             end

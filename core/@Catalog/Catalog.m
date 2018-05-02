@@ -35,6 +35,9 @@ classdef Catalog
     properties(Dependent)
         numberOfEvents;
         duration;
+        cum_mag;
+        max_mag;
+        peakrate;
     end
 
 
@@ -193,6 +196,32 @@ classdef Catalog
         function val = get.numberOfEvents(obj)
             val = max([ numel(obj.otime) numel(obj.ontime)]);
         end
+
+        function val = get.cum_mag(obj)
+            val = magnitude.eng2mag( sum(magnitude.mag2eng(obj.mag)) );
+        end 
+        
+        function mm = get.max_mag(obj)    
+            % return max_mag as the real component & percentage through the
+            % time series as the imaginary component (use real() & imag()
+            % to separate these)
+            t=obj.gettimerange();
+            days = t(2) - t(1);
+            [mm, mmi] = max(obj.mag);
+            mmpercent = 100*(obj.otime(mmi) - t(1))/days;
+            mm = mm + mmpercent * j;
+        end
+        
+        function pr = get.peakrate(obj)
+            t=obj.gettimerange();
+            days = t(2) - t(1);
+            binsize = days/100;
+            erobj = obj.eventrate('binsize',binsize);
+            [pr, pri] = max(erobj.counts);              
+            pr = pr + 100*(erobj.time(pri) - erobj.snum)/(erobj.enum-erobj.snum) * j;
+        end
+            
+
         
         function t=gettimerange(obj)
             snum = nanmin([obj.otime; obj.ontime]);
@@ -219,7 +248,7 @@ classdef Catalog
             
           
         % Prototypes
-        bvalue(catalogObject, mcType)     
+        gr = bvalue(catalogObject, mcType)     
         catalogObject = addwaveforms(catalogObject, varargin);
         catalogObject = combine(catalogObject1, catalogObject2)
         catalogObject2 = subset(catalogObject, varargin)

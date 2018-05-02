@@ -10,15 +10,18 @@ function disp(obj, showall)
     %         subclass = obj(c).table.etype{1};
     %     end
         try
-        disp(sprintf('%s object: Event type: %s',class(obj(c)),obj(c).request.subclass));
+        disp(sprintf('\n%s object: Event type: %s',class(obj(c)),obj(c).request.subclass));
         catch
 
         end
         fprintf('Number of events: %d\n',obj(c).numberOfEvents);
+        try
+        fprintf('Cumulative magnitude: %.2f\n',obj(c).cum_mag  );
+        end
         if obj(c).numberOfEvents > 0
             [maxmag, maxmagindex] = nanmax(obj(c).mag);
             if ~isnan(maxmag)
-                fprintf('Biggest event: %f at %s\n',maxmag, datestr(obj(c).otime(maxmagindex)));
+                fprintf('Biggest event: %.2f at %s\n',maxmag, datestr(obj(c).otime(maxmagindex)));
             end
             if ~exist('showall','var')
                     showall = false;
