@@ -21,7 +21,7 @@ snum = datenum(2009,3,22);
 enum=snum+1;
 
 % create the datasource object - in this case it is a SAC file
-ds = datasource('sac', 'SACDATA/REF.EHZ.2009-03-22T00:00:00.000000Z.sac');
+ds = datasource('sac', 'SACDATA/REF.EHZ.2009-03-22.sac');
 
 % create the waveform object with this datasource, ChannelTag, starttime
 % and endtime
@@ -77,16 +77,16 @@ pre_trigger_seconds = 0; % Do not pad before trigger
 post_trigger_seconds = 0; % Do not pad after trigger
 event_detection_params = [sta_seconds lta_seconds thresh_on thresh_off ...
     minimum_event_duration_seconds];
-
+%%
 % run the STA/LTA detector. lta_mode = 'frozen' means the LTA stops
 % updating when trigger is "ON". 
-[cobj,sta,lta,sta_to_lta] = Detection.sta_lta(w2, 'edp', event_detection_params, ...
+[detectionObject,sta,lta,sta_to_lta] = Detection.sta_lta(w2, 'edp', event_detection_params, ...
     'lta_mode', 'frozen');
 
 % not sure what this is for
 set(gca, 'XLim', [44*60 48*60])
 
 %% Plot detected events on top of the continuous drumplot
-h3 = drumplot(w2, 'mpl', 5, 'catalog', cobj);
+h3 = drumplot(w2, 'mpl', 5, 'detections', detectionObject);
 plot(h3)
 

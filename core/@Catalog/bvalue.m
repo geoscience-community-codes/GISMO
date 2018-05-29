@@ -1,10 +1,11 @@
-function bvalue(catalogObject, mcType)
+function gr=bvalue(catalogObject, mcType, manual_on)
     %BVALUE evaluate b-value, a-value and magnitude of completeness
     % of an earthquake catalog stored in a Catalog object.
     %
-    % BVALUE(catalogObject, MCTYPE) produces a Gutenberg-Richter type plot 
+    % gr = BVALUE(catalogObject, MCTYPE) produces a Gutenberg-Richter type plot 
     %    with the best fit line and display of b-,a-values and Mc 
-    %    for catalogObject. MCTYPE is a number from 1-5 
+    %    for catalogObject. These values are also returned in a structure.
+    %    MCTYPE is a number from 1-5 
     %    to select the algorithm used for calculation of the 
     %    magnitude of completeness. Options are:
     %
@@ -13,6 +14,14 @@ function bvalue(catalogObject, mcType)
     %    3: Mc90 (90% probability)
     %    4: Mc95 (95% probability)
     %    5: Best combination (Mc95 - Mc90 - maximum curvature)
+    %
+    % * Note: it seems only 1 only really works, and 5 is same as 1 *'
+    %
+    % gr = BVALUE(catalogObject, MCTYPE, manual_on) where the value of manual_on
+    %    computes as true will give the user the ability to manually pick a
+    %    linear segment on the graph too (which is then plotted with a
+    %    green line). The manual Mc and bvalue are returned in the gr
+    %    structure as gr.Mc_manual and gr.bvalue_manual
 
     % Liberally adapted from original code in ZMAP.
     % Author: Silvio De Angelis, 27/07/2012 00:00:00
@@ -35,16 +44,13 @@ function bvalue(catalogObject, mcType)
     % 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
     if nargin < 2
-        disp('--------------------------------------------------------')
-        disp('Usage is: catalogObject.bvalue(mcType)')
-        disp('--------------------------------------------------------')
-        disp('mcType can be:')
-        disp('1: Maximum curvature')
-        disp('2: Fixed Mc = minimum magnitude (Mmin)')
-        disp('3: Mc90 (90% probability)')
-        disp('4: Mc95 (95% probability)')
-        disp('5: Best combination (Mc95 - Mc90 - maximum curvature)')
-        return
+        disp('* Note: it seems only 1 only really works, and 5 is same as 1 *')
+        mcType = menu('mcType can be:','Maximum curvature','Fixed Mc = minimum magnitude (Mmin)', ...
+            'Mc90 (90% probability)', 'Mc95 (95% probability)', ...
+            'Best combination (Mc95 - Mc90 - maximum curvature)')
+    end
+    if ~exist('manual_on','var')
+        manual_on = false;
     end
 
     % form magnitude vector - removing any NaN values with find
@@ -163,6 +169,7 @@ function bvalue(catalogObject, mcType)
 
     magco = fMc;
     index_low=find(xt3 < magco+.05 & xt3 > magco-.05);
+try
     mag_hi = xt3(1);
     index_hi = 1;
     mz = xt3 <= mag_hi & xt3 >= magco-.0001;
@@ -212,4 +219,27 @@ function bvalue(catalogObject, mcType)
     text(.53,.88, ['b-value = ',tt1,' +/- ',tt2,',  a value = ',num2str(aw,3)],'FontSize',12);
     text(.53,.85,sol_type,'FontSize',12 );
     text(.53,.82,['Magnitude of Completeness = ',tmc],'FontSize',12);
+    
+    %% Added by Glenn 2018-05-01 to return a structure
+    gr.bvalue = str2num(tt1);
+    gr.bvalue_error = str2num(tt2);
+    gr.avalue = aw;
+    gr.Mc = str2num(tmc);
+    
+    %% Manually fit a line (added by Glenn 2018-05-01)
+    if manual_on
+        [xmag, yN] = ginput(2);
+        slope = (log10(yN(1)) - log10(yN(2) )) / (xmag(2) - xmag(1) )
+        plot(xmag, yN, 'g');
+        gr.Mc_manual = xmag(1);
+        gr.bvalue_manual = slope;
+        text(xmag(1) + (xmag(2)-xmag(1))*0.5, yN(1) + (yN(2)-yN(1))*0.5, sprintf('manual b=%.2f',slope),'Color','g');
+    end
+catch
+    gr.bvalue = NaN;
+    gr.Mc = NaN;
+    gr.avalue = NaN;
+    gr.bvalue_error = NaN;
+end
+    
 end 
