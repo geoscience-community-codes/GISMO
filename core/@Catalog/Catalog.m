@@ -40,10 +40,10 @@ classdef Catalog
 
     methods
 
-        %function obj = Catalog(otime, lon, lat, depth, mag, magtype, etype, varargin)
+        %function obj = 
         function obj = Catalog(varargin)
             %Catalog.Catalog constructor for Catalog object
-            % catalogObject = Catalog(lat, lon, depth, time, mag, etype, varargin)
+            % catalogObject = Catalog(otime, lon, lat, depth, mag, magtype, etype, varargin)
             
             % Blank constructor
             if nargin==0

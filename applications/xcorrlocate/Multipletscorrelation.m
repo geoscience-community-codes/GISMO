@@ -364,6 +364,12 @@ plot(WHS4(end)); % stacked waveform
 % plot(WHS4(1)); % master waveform
 plot_panels(WHS4, 'alignWaveform', 1)
 
+%%
+% Let's save all variables at this point
+save 
+
+
+
 %% DOING X-CORRELATION BETWEEN THE STACK AND THE SUBORDINATNT WAVEFORM
 
 
@@ -408,7 +414,36 @@ debug = cell(1,1);
 end
 
 
-function glenngadzeeks()
+function write_arrivals_to_antelope(list_of_arrivals, station, channel, phase, dbpath)
+% then we create Arrival objects
+
+
+load ~/Downloads/Mitch_Multiplets.mat
+arrivals={};
+for c=1:numel(list_of_arrivals_TBTN)
+    atime(c) = list_of_arrivals_TBTN{c};
+    arrivals{c} = Arrival({station},{channel},atime(c),{phase});
+end
+
+% add arrivals into Catalog object
+catalogObject = Catalog(atime);
+catalogObject.arrivals = arrivals;
+
+% write Catalog object to Antelope database
+catalogObject.write('antelope',dbpath);
+
+%% NEXT
+% Script Antelope relocate to locate events using those Arrivals time
+% this requires a site and origerr table
+
+% Also drive db2kml to plot in Google Earth (or GMT)
+
+
+end
+
+
+
+
 
 %% STUFF ADDED BY GLENN
 % Maths to use for computing arrival time:
@@ -425,12 +460,7 @@ function glenngadzeeks()
 %     [acor,lag] = xcorr(a,b);
 %     plot(lag,acor)
 %
-% then we create Arrival objects, add them into Catalog object
-%
-% write Catalog object to Antelope database
-%
-% Linux script Antelope relocate or dbgenloc or dblocsat to locate events using those Arrivals time
-% Also drive db2kml to plot in Google Earth (or GMT)
+
 
 end
 
