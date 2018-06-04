@@ -364,11 +364,16 @@ plot(WHS4(end)); % stacked waveform
 % plot(WHS4(1)); % master waveform
 plot_panels(WHS4, 'alignWaveform', 1)
 
+
+
 %% DOING X-CORRELATION BETWEEN THE STACK AND THE SUBORDINATNT WAVEFORM
 
+close all
 
 list_of_arrivals_TBTN = cell(16,1)
 plot(WTN4(17));
+waitforbuttonpress;
+waitforbuttonpress;
 q = ginput(1);
 q = q(1);
 pick_time = datenum(0,0,0,0,0,q);
@@ -385,8 +390,84 @@ for count=1:16
     list_of_arrivals_TBTN{count} = start_time + lag_time + pick_time;
 end
 
-debug = cell(1,1);
+clear q
 
+close all
+
+%
+list_of_arrivals_TBMR = cell(16,1)
+plot(WMR4(17));
+waitforbuttonpress;
+waitforbuttonpress;
+q = ginput(1);
+q = q(1);
+pick_time = datenum(0,0,0,0,0,q);
+
+for count=1:16
+    data = get(WMR4, 'data');
+    [corr, lag] = xcorr(data{count}, data{17}, 'coeff');
+    [maxcorr, I] = max(corr);
+    lagsamp = lag(I);
+    freq = get(WMR4(count), 'freq');
+    lagtime = lagsamp/freq;
+    lag_time = datenum(0,0,0,0,0,lagtime);
+    start_time = get(WMR4(count), 'start');
+    list_of_arrivals_TBMR{count} = start_time + lag_time + pick_time;
+end
+
+clear q 
+
+close all
+
+%
+list_of_arrivals_TBHY = cell(16,1)
+plot(WHY4(17));
+waitforbuttonpress;
+waitforbuttonpress;
+q = ginput(1);
+q = q(1);
+pick_time = datenum(0,0,0,0,0,q);
+
+for count=1:16
+    data = get(WHY4, 'data');
+    [corr, lag] = xcorr(data{count}, data{17}, 'coeff');
+    [maxcorr, I] = max(corr);
+    lagsamp = lag(I);
+    freq = get(WHY4(count), 'freq');
+    lagtime = lagsamp/freq;
+    lag_time = datenum(0,0,0,0,0,lagtime);
+    start_time = get(WHY4(count), 'start');
+    list_of_arrivals_TBHY{count} = start_time + lag_time + pick_time;
+end
+
+clear q
+
+close all
+
+%
+list_of_arrivals_TBHS = cell(16,1)
+plot(WHS4(17));
+waitforbuttonpress;
+waitforbuttonpress;
+q = ginput(1);
+q = q(1);
+pick_time = datenum(0,0,0,0,0,q);
+
+for count=1:16
+    data = get(WHS4, 'data');
+    [corr, lag] = xcorr(data{count}, data{17}, 'coeff');
+    [maxcorr, I] = max(corr);
+    lagsamp = lag(I);
+    freq = get(WHS4(count), 'freq');
+    lagtime = lagsamp/freq;
+    lag_time = datenum(0,0,0,0,0,lagtime);
+    start_time = get(WHS4(count), 'start');
+    list_of_arrivals_TBHS{count} = start_time + lag_time + pick_time;
+end
+
+save('Mitch_Multiplets.mat');
+
+                                                                                                                                                                                           
 % data = get(WTN4, 'data'); % grab data for all wavefroms and stack at station
 % [corr, lag] = xcorr(data{1}, data{17}, 'coeff'); % get normalized corr and lag
 % [maxcorr, I] = max(corr); % find maximum correlation value 
@@ -433,5 +514,67 @@ function glenngadzeeks()
 % Also drive db2kml to plot in Google Earth (or GMT)
 
 end
+
+
+
+
+
+
+
+
+
+% %% Attempt to make the script into functions
+% 
+% LIST='M-2012-05-11-edit2.dat';
+% WORKING_DIR='~/Desktop/Multiplets';
+% POSTTRIG = 20;
+% CORRTHRESH = 0.7;
+% 
+% cd(WORKING_DIR);
+% 
+% load_and_correlate(POSTTRIG,LIST,CORRTHRESH)
+% 
+% function [subset_list] = load_and_correlate(POSTTRIG, LIST, CORRTHRESH)
+% 
+% fid = fopen(LIST, 'r')
+% 
+% count = 1;
+% while 1
+%     tline = fgetl(fid);
+%     if ~ischar(tline), break, end;
+%     fname = tline;
+%     d = fname(1:4);
+%     full = fullfile(d,fname);
+%     w(count) = waveform(full, 'sac');
+%     count = count + 1;
+% end
+% 
+% % create correlation object of the waveforms to do the correlation
+% c = correlation(w, get(w, 'start'));
+% c2 = xcorr(c, [1 POSTTRIG]);
+% corr = get(c2, 'CORR');
+% lag = get(c2, 'LAG');
+% 
+% % create object with correlation coefficient above 0.7
+% corrthresh = 0.7;
+% keep = find(corr(:,1) > CORRTHRESH);
+% c3 = subset(c2, keep);
+% w3 = waveform(c3);
+% 
+% % Extract the waveform files that correlate above the threshold
+% h = get(w3, 'history');
+% subset_list = cell(numel(h), 1);
+% count = 1;
+% for count = 1:numel(h)
+%     h1 = h{count,1}{2,1};
+%     h11 = strrep(h1,'Loaded SAC file: ', '');
+%     subset_list{count} = h11;
+%     count = count + 1;
+% end
+% 
+% subset_list
+% 
+% 
+% end 
 
 
