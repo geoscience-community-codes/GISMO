@@ -164,7 +164,13 @@ function write(catalogObject, outformat, outpath, varargin)
                             
                             if N>0
                                 for arrnum = 1:N
-                                    ctag = ChannelTag(thisA.channelinfo{arrnum});
+                                    try
+                                        ctag = ChannelTag(thisA.channelinfo{arrnum});
+                                    catch
+                                        if arrnum==1
+                                            ctag = ChannelTag(thisA.channelinfo);
+                                        end
+                                    end
                                     asta = ctag.station;
                                     atime = datenum2epoch(thisA.time(arrnum));    
                                     aarid = dbnextid(dbar,'arid');
