@@ -10,9 +10,38 @@ cd(WORKING_DIR);
 % 
 % s = stack_waveforms(LIST, 'TBTN')
 
-a = pick_times(LIST, 'TBTN')
+% a = pick_times(LIST, 'TBTN')
+
+q = build_arrival(LIST, 'TBTN')
+
+cd('~/src/GISMO/applications/xcorrlocate')
+
+function [arrivals] = build_arrival(LIST, STATION)
+% Function for creating an arrival table to import into Antelope
+% must have antelope to create the file 'dbpicks'
+
+dbpath = '~/Desktop/Multiplets/dbpicks';
+
+a = pick_times(LIST, STATION);
+arrivals = {};
+for count = 1:numel(a)
+     atime(count) = a{count};
+end
+N=numel(a);
+arrivals = Arrival(repmat({STATION},N,1), repmat({'BHZ'},N,1), atime, repmat({'P'},N,1));
+
+% catalogObject = Catalog(atime);
+% catalogObject.arrivals = arrivals;
+% catalogObject.write('antelope', dbpath);
+
+arrivals.write('antelope', dbpath)
+
+save('arrival_test.mat')
+end
 
 function [w_stack] = stack_waveforms(LIST, STATION)
+% Function to make a stack from the list of waveforms and return the
+% waveform object that contains the stack. 
 
 CORRTHRESH = 0.6;
 f = subset_compare(LIST, CORRTHRESH);
@@ -32,6 +61,8 @@ plot(w_stack)
 end
 
 function [arrival_times] = pick_times(LIST, STATION)
+% Function for stacking the waveform subset and making an arrival pick on
+% the stack that is applied to each subordinate waveform in the object. 
 
 CORRTHRESH = 0.6;
 f = subset_compare(LIST, CORRTHRESH);
@@ -69,6 +100,9 @@ end
 end
 
 function [final_subset] = subset_compare(LIST, CORRTHRESH)
+% Function to cross-reference each subset that is made from
+% correlation_distribution() and keeps the waveforms that appear on all
+% four stations.
 
 [~, s1, ~] = correlation_distribution(LIST, CORRTHRESH, 'TBTN');
 [~, s2, ~] = correlation_distribution(LIST, CORRTHRESH, 'TBMR');
@@ -97,6 +131,9 @@ final_subset = transpose(final_subset);
 end
 
 function [corr, subset_list, percentile_6] = correlation_distribution(LIST, CORRTHRESH, STATION)
+% Function to correlate waveforms and return distribution of correlation
+% coefficients. To be used in pre-processing to determine appropriate
+% correlation threshold for families. 
 
 w = load_waveforms(LIST, 1)
 w = transpose(w)
@@ -119,6 +156,9 @@ percentile_6 = (N(7)+N(8)+N(9)+N(10))/sum(N);
 end
 
 function [new_subset] = station_replace(SUBSET, STRING, REPLACEMENT, TYPE)
+% Function to replace the portion in the filename that tells which station
+% an event is recorded on. 
+
 
 if TYPE == 0 % waveform object 
     h = get(SUBSET, 'history');
@@ -156,9 +196,11 @@ end
 end
 
 function [clipped_waveforms] = clip_waveforms(WAVEFORM_OBJECT)
-% Can add inputs to clip the waveform around the peak differently, see loop
+% Extract a portion of the waveform for the correlation. This is used in
+% conjuction with correlate_waveform() to analyze the same sample as
+% PEAKMATCH. Can add inputs to clip the waveform around the peak differently, see loop
 
-w_extracted = extract(WAVEFORM_OBJECT, 'INDEX', 250, 2000) % 5 to 40 sec
+w_extracted = extract(WAVEFORM_OBJECT, 'INDEX', 250, 2000) % 5 to 40 sec 
 
 data = get(w_extracted, 'data');
 count = 1;
@@ -173,6 +215,10 @@ end
 end
 
 function [waveform_object] = load_waveforms(LIST, CONDITION)
+% Function for loading waveforms from a file that contains a list of
+% waveforms or from an already existing list/cell array of waveforms.
+% Returns a waveform object that holds all waveforms in the file.
+
 
 if CONDITION == 1 % open file and load waveforms 
      fid = fopen(LIST, 'r');
@@ -200,6 +246,8 @@ end
 end
 
 function [subset_list, corr_m] = correlate_waveforms(WAVEFORM_OBJECT, CORRTHRESH)
+% Function to correlate waveforms in a waveform object and keep the
+% waveforms that correlate above the given threshold to the master waveform
 
 % create correlation object of the waveforms to do the correlation
 c = correlation(WAVEFORM_OBJECT, get(WAVEFORM_OBJECT, 'start'));
