@@ -2,6 +2,7 @@
 
 LIST='M-2012-05-11-edit2.dat';
 WORKING_DIR='~/Desktop/Multiplets';
+mkdir(WORKING_DIR);
 CORRTHRESH = 0.6;
 
 cd(WORKING_DIR);
@@ -14,13 +15,24 @@ cd(WORKING_DIR);
 
 q = build_arrival(LIST, 'TBTN')
 
-cd('~/src/GISMO/applications/xcorrlocate')
+
+
+
+%cd('~/src/GISMO/applications/xcorrlocate')
+
+%% write arrivals to CSS3.0 database
+% % must have antelope to create the database
+dbpath = './dbpicks';
+arrivals.write('antelope', dbpath)
+
+%% write all variables to MAT file
+save('arrival_test.mat')
+
+
 
 function [arrivals] = build_arrival(LIST, STATION)
 % Function for creating an arrival table to import into Antelope
-% must have antelope to create the file 'dbpicks'
 
-dbpath = '~/Desktop/Multiplets/dbpicks';
 
 a = pick_times(LIST, STATION);
 arrivals = {};
@@ -30,13 +42,7 @@ end
 N=numel(a);
 arrivals = Arrival(repmat({STATION},N,1), repmat({'BHZ'},N,1), atime, repmat({'P'},N,1));
 
-% catalogObject = Catalog(atime);
-% catalogObject.arrivals = arrivals;
-% catalogObject.write('antelope', dbpath);
 
-arrivals.write('antelope', dbpath)
-
-save('arrival_test.mat')
 end
 
 function [w_stack] = stack_waveforms(LIST, STATION)
