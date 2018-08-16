@@ -15,6 +15,12 @@ classdef Detection
     end
     methods
         function obj = Detection(sta, chan, time, state, filterString, signal2noise)
+            
+            % Blank constructor
+            if ~exist('sta','var')
+                return
+            end
+            
             % Parse required, optional and param-value pair arguments,
             % set default values, and add validation conditions          
             p = inputParser;

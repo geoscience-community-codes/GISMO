@@ -6,6 +6,8 @@ classdef drumplot
     properties
         wave = waveform();
         catalog = Catalog();
+        detections = Detection();
+        arrivals = Arrival();
         mpl = 10;   % 10 Minutes per line
         trace_color = [0 0 0]; % black
         event_color = [1 0 0]; % red
@@ -79,6 +81,8 @@ classdef drumplot
             p.addOptional('wave', obj.wave)
             p.addParameter('mpl', obj.mpl, @(i) floor(i)==i)
             p.addParameter('catalog', obj.catalog)
+            p.addParameter('detections', obj.detections)
+            p.addParameter('arrivals', obj.arrivals)
             p.addParameter('trace_color', obj.trace_color);
             p.addParameter('event_color', obj.event_color);
             p.addParameter('ytick', obj.ytick, @isnumeric);
@@ -100,6 +104,14 @@ classdef drumplot
             if ~isa(obj.catalog, 'Catalog') | numel(obj.catalog)~=1
                error('Input catalog must be a single Catalog object')
             end
+            
+            if ~isa(obj.detections, 'Detection') | numel(obj.detections)~=1
+               error('Input detections must be a single Detection object')
+            end
+            
+            if ~isa(obj.arrivals, 'Arrival') | numel(obj.arrivals)~=1
+               error('Input arrivals must be a single Arrival object')
+            end            
         end
         
         % Prototypes

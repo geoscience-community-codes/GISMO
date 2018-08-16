@@ -123,10 +123,10 @@ function plot(obj, varargin)
                     ylabel(ax(1), labels{1}, 'Color', colors{1}, 'FontSize', fontsize)
                     ylims = get(ax(1), 'YLim');
                     set(ax(1), 'YColor', colors{1}, 'YLim', [0 max([ylims(2) 1])], 'XLim', [t(1) t(end)]);
-                    xticklabels = get(ax(1), 'XTickLabels');
-                    set(ax(1), 'XTickLabels', xticklabels, 'FontSize', fontsize); 
-                    yticklabels = get(ax(1), 'YTickLabels');
-                    set(ax(1), 'YTickLabels', yticklabels, 'FontSize', fontsize); 
+                    xticklabels = get(ax(1), 'XTickLabel');
+                    set(ax(1), 'XTickLabel', xticklabels, 'FontSize', fontsize); 
+                    yticklabels = get(ax(1), 'YTickLabel');
+                    set(ax(1), 'YTickLabel', yticklabels, 'FontSize', fontsize); 
 
                     %% graph 2
                     set(h2, 'LineWidth', 3, 'Color', colors{2});
@@ -134,10 +134,10 @@ function plot(obj, varargin)
                     ylabel(ax(2),labels{2}, 'Color', colors{2}, 'FontSize', fontsize)
                     ylims = get(ax(2), 'YLim');
                     set(ax(2), 'YColor', colors{2}, 'YLim', [0 max([ylims(2) 1])], 'XLim', [t(1) t(end)]);
-                    xticklabels = get(ax(2), 'XTickLabels');
-                    set(ax(2), 'XTickLabels', xticklabels, 'FontSize', fontsize); 
-                    yticklabels = get(ax(2), 'YTickLabels');
-                    set(ax(2), 'YTickLabels', yticklabels, 'FontSize', fontsize); 
+                    xticklabels = get(ax(2), 'XTickLabel');
+                    set(ax(2), 'XTickLabel', xticklabels, 'FontSize', fontsize); 
+                    yticklabels = get(ax(2), 'YTickLabel');
+                    set(ax(2), 'YTickLabel', yticklabels, 'FontSize', fontsize); 
 
                     linkaxes(ax, 'x');
 

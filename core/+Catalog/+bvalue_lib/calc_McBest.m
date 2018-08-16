@@ -59,9 +59,9 @@ function [fMc, fMc95, fMc90] = calc_McBest(mag, fBinning);
     % Is fMc90 available
     nSel = min(find(mData(:,2) < 10));
     if isempty(nSel)
-        fMc90 = NaN;
+        fMc90 = NaN
     else
-        fMc90 = mData(nSel,1);
+        fMc90 = mData(nSel,1)
     end
 
     % Is fMc95 available

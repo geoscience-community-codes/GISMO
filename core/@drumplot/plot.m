@@ -70,12 +70,37 @@ drawnow
     
     % if there are catalog events, add waveform objects, return one waveform per line for event data
     B.line_waveform_events = [];
+    w = [];
     if drumplotobj.catalog.numberOfEvents > 0
         
         if isempty(drumplotobj.catalog.waveforms)
             drumplotobj.catalog = drumplotobj.catalog.addwaveforms(drumplotobj.wave);
         end
         w = [drumplotobj.catalog.waveforms{1,:}];
+    end
+    
+     if numel(drumplotobj.arrivals.time) > 0
+        pretrigsecs = 1; posttrigsecs = 1;
+        if isempty(drumplotobj.arrivals.waveforms)
+            drumplotobj.arrivals = drumplotobj.arrivals.addwaveforms(drumplotobj.wave, pretrigsecs, posttrigsecs);
+        end
+        w = [drumplotobj.arrivals.waveforms{1,:}];
+     end
+    
+     if drumplotobj.detections.numel() > 0
+        temp_cobj = associate(drumplotobj.detections, 0.01);
+        
+        
+        if isempty(temp_cobj.waveforms)
+            pretrigsecs = 1; posttrigsecs = 1;
+            temp_cobj = temp_cobj.addwaveforms(drumplotobj.wave, pretrigsecs, posttrigsecs);
+        end
+        w = [temp_cobj.waveforms{1,:}];
+    end
+w(1)
+w(2)
+     
+     if ~isempty(w)
         % go through w and check the channeltag is same as drumplotobj.wave
         mainctag = get(drumplotobj.wave,'ChannelTag');
         w2=[];

@@ -11,6 +11,10 @@ function w = waveform(varargin)
 %    or:
 %    
 %      w = WAVEFORM(ds, scnls, starttime, endtime)
+%
+%    or if loading a single file, there is this simple way that works for file_format = 'sac', 'seisan', 'seed' or 'miniseed':
+%
+%      w = WAVEFORM(filepath, file_format)
 %    
 %    Arguments:
 %       ds - a DATASOURCE object. This defines where to get the
@@ -60,7 +64,43 @@ function w = waveform(varargin)
 %    arguments - chantags/scnls, startTime & endTime, which will work 
 %    regardless of which datasource is used.
 %    
-%    (1) IRIS DMC web services:
+%    (1) MiniSEED file:
+%    ------------------
+%
+%	% The old, hard way to load a single MiniSEED file is like this:
+%
+%       chantag = ChannelTag('AV.PN7A.-.BDF')
+%       startTime = datenum(2007,8,28);
+%       endTime = startTime + 1; % 1 day later 
+%       mseedfile = 'SEEDDATA/PN7A.BDF.2007.240';
+%       ds = datasource('miniseed', mseedfile );
+%       w=waveform(ds, chantag, startTime, endTime);
+%
+%       % the easy way is like this:
+%
+%       mseedfile = 'SEEDDATA/PN7A.BDF.2007.240';
+%	w = waveform(mseedfile, 'miniseed')
+%
+%    
+%    (2) SAC file:
+%    -------------
+%
+%	% The old, hard way to load a single SAC file is like this:
+%
+%       chantag = ChannelTag('AV.PN7A.-.BDF')
+%       startTime = datenum(2007,8,28);
+%       endTime = startTime + 1; % 1 day later 
+%       sacfile = 'SACDATA/PN7A.BDF.2007-08-28T00:00:00.000000Z.sac';
+%       ds = datasource('sac', sacfile );
+%       w=waveform(ds, chantag, startTime, endTime);
+
+%       % the easy way is like this:
+%
+%       sacfile = 'SACDATA/PN7A.BDF.2007-08-28T00:00:00.000000Z.sac';
+%	w = waveform(sacfile, 'sac')
+%    
+%    
+%    (3) IRIS DMC web services:
 %    --------------------------
 %       ds = datasource('irisdmcws'); % data_source is IRIS DMC webservices
 %       startTime = '2012-03-03 00:00:00';
@@ -78,7 +118,7 @@ function w = waveform(varargin)
 %       % Create the waveform object (load the data)
 %       w = waveform(ds, chantags, startTime, endTime);
 %    
-%    (2) Antelope database:
+%    (4) Antelope database:
 %    ----------------------
 %    
 %       dbpath = '/path/to/my/antelope/database';
@@ -92,7 +132,7 @@ function w = waveform(varargin)
 %       % NOTE: You must have the Antelope toolbox installed, since GISMO 
 %       uses this to load Antelope databases.
 %    
-%    (3) WINSTON or Earthworm waveServer:
+%    (5) WINSTON or Earthworm waveServer:
 %    -------------------------------------
 %    
 %       % This example attempts gets the last 10 minutes of data 
@@ -108,23 +148,6 @@ function w = waveform(varargin)
 %       need to scale the data by the correct gain (e.g. in nm/s per count) 
 %               Ex: w = w .* instrumentGain
 %    
-%    (4) MiniSEED file:
-%    ------------------
-%       chantag = ChannelTag('AV.PN7A.-.BDF')
-%       startTime = datenum(2007,8,28);
-%       endTime = startTime + 1; % 1 day later 
-%       mseedfile = 'SEEDDATA/PN7A.BDF.2007.240';
-%       ds = datasource('miniseed', mseedfile );
-%       w=waveform(ds, chantag, startTime, endTime);
-%    
-%    (5) SAC file:
-%    -------------
-%       chantag = ChannelTag('AV.PN7A.-.BDF')
-%       startTime = datenum(2007,8,28);
-%       endTime = startTime + 1; % 1 day later 
-%       sacfile = 'SACDATA/PN7A.BDF.2007-08-28T00:00:00.000000Z.sac';
-%       ds = datasource('sac', sacfile );
-%       w=waveform(ds, chantag, startTime, endTime);
 %    
 %    see also ChannelTag, datasource, scnlobject, datenum, datestr
 %    
@@ -159,6 +182,15 @@ function w = waveform(varargin)
       case 2 
          if isa(varargin{1}, 'char')
             filename = varargin{1};
+
+	    % Glenn Thompson 20180703: added to deal with files downloaded from web addresses
+	    if strfind(filename,'http')
+		url=filename;
+		filename=strrep(url,'http://','');
+		filename=strrep(filename,'https://','');
+		filename=strrep(filename,'/','.');
+		websave(filename, url);
+	    end
             if exist(filename,'file')            
                 filetype = varargin{2};
                 switch lower(filetype)
@@ -213,6 +245,7 @@ function w = waveform(varargin)
          error('Waveform:waveform:InvalidWaveformArugments',...
             ['Valid ways of calling waveform include: \n',...
             '   w = WAVEFORM()\n',...
+            '   w = WAVEFORM(filename, file_format)\n', ...
             '   w = WAVEFORM(datasource, ChannelTag, starttimes, endtimes)\n',...
             '   w = WAVEFORM(ChannelTag, samplefreq, starttime, data, units)\n']);
    end
