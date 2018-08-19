@@ -1,7 +1,7 @@
 % Working out the functions for multiplet correlatons
 
-LIST='M-2012-05-11-edit2.dat';
-WORKING_DIR='~/Desktop/Multiplets';
+LIST='2012-05-11.dat';
+WORKING_DIR='/raid/shareddrive/xcorrlocate/telica';
 mkdir(WORKING_DIR);
 CORRTHRESH = 0.6;
 
@@ -251,8 +251,9 @@ function [waveform_object] = load_waveforms(LIST, CONDITION)
              tline = fgetl(fid);
              if ~ischar(tline), break, end;
              fname = tline;
-             d = fname(1:4);
-             full = fullfile(d,fname);
+             % d = fname(1:4); only need when working with mel's data
+             % structure
+             full = fullfile('/raid/shareddrive/xcorrlocate/telica/test_data',fname);
              waveform_object(count) = waveform(full, 'sac');
              count = count + 1;
          end
