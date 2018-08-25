@@ -31,6 +31,9 @@ if admin.antelope_exists
 
 end
 
+% write arrivals to Seisan S-files
+arrivalobj.write('seisan', '
+
 % write all variables to MAT file
 save('~/src/GISMO/applications/xcorrlocate/GISMOmultiplets.mat')
 
