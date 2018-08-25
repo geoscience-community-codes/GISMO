@@ -1,33 +1,31 @@
 % Working out the functions for multiplet correlatons
-
+function multiplet_functions()
 LIST='2012-05-11.dat';
-WORKING_DIR='/raid/shareddrive/xcorrlocate/telica';
-mkdir(WORKING_DIR);
-CORRTHRESH = 0.6;
+WORKING_DIR='/media/shared/mitch/telica';
+CORRTHRESH = 0.7;
 
 cd(WORKING_DIR);
 
-% [f] = subset_compare(LIST, CORRTHRESH)
-% 
-% s = stack_waveforms(LIST, 'TBTN')
-
-% a = pick_times(LIST, 'TBTN')
-
-arrivalobj = build_arrival_object(LIST, 'TBTN')
-detectionobj = build_detection_object(LIST, 'TBTN')
-% SCAFFOLD: *** REPEAT THESE LINES FOR OTHER STATIONS ***
+detectionobj0 = build_detection_object(LIST, 'TBTN')
+detectionobj1 = build_detection_object(LIST, 'TBMR')
+detectionobj2 = build_detection_object(LIST, 'TBHY')
+detectionobj3 = build_detection_object(LIST, 'TBHS')
 
 if admin.antelope_exists
     
     % write arrivals to CSS3.0 database
     % % must have antelope to create the database
-    dbpath = '~/src/GISMO/applications/xcorrlocate/dbGISMOmultiplets';
-    arrivalobj.write('antelope', dbpath)
+    %   dbpath = '~/src/GISMO/applications/xcorrlocate/dbGISMOmultiplets';
+    %   arrivalobj.write('antelope', dbpath)
 
     % write detections to CSS3.0 database
     % % must have antelope to create the database
-    dbpath = '~/src/GISMO/applications/xcorrlocate/dbGISMOmultiplets';
-    detectionobj.write('antelope', dbpath)
+    dbpath = '/media/shared/mitch/telica/dbGISMOmultiplets';
+    detectionobj0.write('antelope', dbpath)
+    detectionobj1.write('antelope', dbpath)
+    detectionobj2.write('antelope', dbpath)
+    detectionobj3.write('antelope', dbpath)
+    
 
 end
 
@@ -35,7 +33,8 @@ end
 arrivalobj.write('seisan', '
 
 % write all variables to MAT file
-save('~/src/GISMO/applications/xcorrlocate/GISMOmultiplets.mat')
+save('/media/shared/mitch/telica/GISMOmultiplets.mat')
+end
 
 %% ----------------------------------------------------------
 function [arrivals] = build_arrival_object(LIST, STATION)
@@ -61,7 +60,7 @@ function [detections] = build_detection_object(LIST, STATION)
     end
     N=numel(a);
     filterString = repmat({'GISMO_muliplets'},N,1);
-    detections = Detection(repmat({STATION},N,1), repmat({'BHZ'},N,1), atime, repmat({'D'},N,1), filterString, repmat(-1, N,1);
+    detections = Detection(repmat({STATION},N,1), repmat({'BHZ'},N,1), atime, repmat({'D'},N,1), filterString, repmat(-1, N,1));
     % Detection(sta, chan, time, state, filterString, signal2noise)
 end
 
@@ -198,8 +197,8 @@ function [new_subset] = station_replace(SUBSET, STRING, REPLACEMENT, TYPE)
             for count = 1:numel(h)
                 hh = h{count,1}{2,1};
                 hh_rep = strrep(hh,'Loaded SAC file: ', '');
-                hh_rep2 = strrep(hh_rep, STRING, REPLACEMENT)
-                new_subset{count} = hh_rep2;
+                filepath = strrep(hh_rep, STRING, REPLACEMENT)
+                new_subset{count} = filepath;
                 count = count + 1;
             end
         end
@@ -256,7 +255,7 @@ function [waveform_object] = load_waveforms(LIST, CONDITION)
              fname = tline;
              % d = fname(1:4); only need when working with mel's data
              % structure
-             full = fullfile('/raid/shareddrive/xcorrlocate/telica/test_data',fname);
+             full = fullfile('/media/shared/mitch/telica/test_data',fname);
              waveform_object(count) = waveform(full, 'sac');
              count = count + 1;
          end
