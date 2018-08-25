@@ -1,45 +1,54 @@
 % Working out the functions for multiplet correlatons
 function multiplet_functions()
-LIST='2012-05-11.dat';
-WORKING_DIR='/media/shared/mitch/telica';
-CORRTHRESH = 0.7;
 
-cd(WORKING_DIR);
+    %% CONSTANTS
+    LIST='2012-05-11.dat';
+    WORKING_DIR='/media/shared/mitch/telica';
+    CORRTHRESH = 0.7;
+    ANTELOPE_OUTPUT = false; % set to true to write Antelope tables
+    ANTELOPE_DBPATH = fullfile(WORKING_DIR,'dbGISMOmultiplets');
+    SEISAN_OUTPUT = true; % set to true to write Seisan S-files
+    SEISAN_DBPATH = fullfile(WORKING_DIR,'REA','TES_G');
+    stations = {'TBTN'; 'TBMR'; 'TBHY'; 'TBHS'};
+    MATFILE = fullfile(WORKING_DIR, sprintf('%s.mat',mfilename) );
 
-detectionobj0 = build_detection_object(LIST, 'TBTN')
-detectionobj1 = build_detection_object(LIST, 'TBMR')
-detectionobj2 = build_detection_object(LIST, 'TBHY')
-detectionobj3 = build_detection_object(LIST, 'TBHS')
+    %% PROCESSING
+    cd(WORKING_DIR);
 
-if admin.antelope_exists
-    
-    % write arrivals to CSS3.0 database
-    % % must have antelope to create the database
-    %   dbpath = '~/src/GISMO/applications/xcorrlocate/dbGISMOmultiplets';
-    %   arrivalobj.write('antelope', dbpath)
+    for stationnum = 1:numel(stations)
+        thissta = stations{stationnum};
+        disp(sprintf('Processing %s',thissta));
 
-    % write detections to CSS3.0 database
-    % % must have antelope to create the database
-    dbpath = '/media/shared/mitch/telica/dbGISMOmultiplets';
-    detectionobj0.write('antelope', dbpath)
-    detectionobj1.write('antelope', dbpath)
-    detectionobj2.write('antelope', dbpath)
-    detectionobj3.write('antelope', dbpath)
-    
+        % pick arrival times
+        pick_times{stationnum} = pick_times(LIST, thissta);
 
-end
+        % picks to detection object
+        detectionobj{stationnum} = build_detection_object(pick_times{stationnum}, thissta);
 
-% write arrivals to Seisan S-files
-arrivalobj.write('seisan', '
+        % picks to arrival object
+        arrivalobj{stationnum} = build_arrival_object(pick_times{stationnum}, thissta);
 
-% write all variables to MAT file
-save('/media/shared/mitch/telica/GISMOmultiplets.mat')
+        % save to Antelope CSS3.0 tables
+        if ANTELOPE_OUTPUT & admin.antelope_exists % must have antelope to create the database
+            arrivalobj{stationnum}.write('antelope', ANTELOPE_DBPATH);
+            detectionobj{stationnum}.write('antelope', ANTELOPE_DBPATH);
+        end
+
+        % save to Seisan S-files
+        if SEISAN_OUTPUT
+            mkdir(SEISAN_DBPATH);
+            arrivalobj{stationnum}.write('seisan', SEISAN_DBPATH);
+        end
+    end
+
+    % write all variables to MAT file
+    save(MATFILE)
 end
 
 %% ----------------------------------------------------------
-function [arrivals] = build_arrival_object(LIST, STATION)
+function [arrivals] = build_arrival_object(picktimes, STATION)
     % Function for creating an arrival table to import into Antelope
-    a = pick_times(LIST, STATION);
+    a = picktimes;
     arrivals = {};
     for count = 1:numel(a)
          atime(count) = a{count};
@@ -51,9 +60,9 @@ end
 
 
 
-function [detections] = build_detection_object(LIST, STATION)
+function [detections] = build_detection_object(picktimes, STATION)
     % Function for creating an arrival table to import into Antelope
-    a = pick_times(LIST, STATION);
+    a = picktimes;
     detections = {};
     for count = 1:numel(a)
          atime(count) = a{count};
