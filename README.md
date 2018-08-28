@@ -16,6 +16,8 @@ GISMO helps a lot of researchers prepare their papers for conferences and public
 
 Thompson G. and Reyes, C., (2017) GISMO - a seismic data analysis toolbox for MATLAB [software package], http://geoscience-community-codes.github.io/GISMO/. Accessed August 2018.
 
+https://zenodo.org/badge/latestdoi/44345759
+
 (update the month and year to the date you are visiting this site)
 
 Even better, invite us to collaborate!
