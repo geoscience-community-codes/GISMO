@@ -1,0 +1,3 @@
+addpath('/Users/gt/Dropbox/scratch_matlab/RocketSeismology')
+sync_spacex_videos_usfdata
+sync_youtube_video_usfdata

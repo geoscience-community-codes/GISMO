@@ -13,17 +13,35 @@ function erobj=eventrate(catalogObject, varargin)
     p = inputParser;
     p.addParamValue('binsize', 0, @isnumeric);
     p.addParamValue('stepsize', 0, @isnumeric);
+    p.addParamValue('snum', 0, @isnumeric);
+    p.addParamValue('enum', 0, @isnumeric);
     p.parse(varargin{:});
     binsize = p.Results.binsize;
     stepsize = p.Results.stepsize;
+    snum = p.Results.snum;
+    enum = p.Results.enum;
+    if snum>0 && enum>0
+        for c=1:numel(catalogObject)
+            indices = find(catalogObject(c).otime >= snum & catalogObject(c).otime <= enum);
+            catalogObject(c) = catalogObject(c).subset(indices);
+        end
+    end
+    
+    
+        
 
     for i=1:numel(catalogObject)
         if catalogObject(i).numberOfEvents > 0
-%             timerange = catalogObject(i).gettimerange();
-%             snum=timerange(1);
-%             enum=timerange(2);
-            snum = catalogObject(i).request.startTime;
-            enum = catalogObject(i).request.endTime;
+
+            try
+                snum = catalogObject(i).request.startTime;
+                enum = catalogObject(i).request.endTime;
+            catch
+               timerange = catalogObject(i).gettimerange();
+               snum=timerange(1);
+               enum=timerange(2);                
+            end
+           
             if ~(binsize>0)
                 binsize = Catalog.binning.autobinsize(enum-snum);
             end
@@ -53,4 +71,10 @@ function erobj=eventrate(catalogObject, varargin)
                 snum, enum, etypes, binsize, stepsize, numbins);
         end
     end
+end
+
+%% AUTOBINSIZE        
+function binsize = autobinsize(catalogObject)
+%autobinsize Compute the best bin size based on start and end times
+    binsize = binning.autobinsize(catalogObject.enum - catalogObject.snum);
 end

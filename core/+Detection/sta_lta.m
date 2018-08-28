@@ -1,4 +1,5 @@
-function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)
+function [detObj, sta, lta, sta_to_lta] = sta_lta(wave,varargin)
+%function [detectionObject, sta, lta, sta_to_lta] = sta_lta(wave, varargin)
 
 %STA_LTA: Short-Time-Average/Long-Time-Average event detector.
 %
@@ -35,13 +36,13 @@ function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)
 %     --> 'continuous' - LTA window continues w/ STA window after trigger 
 %                        is turned on (Same behavior as before trigger)
             
-%OUTPUTS: events - Catalog object
+%OUTPUTS: Detection object
 
-% Author: Glenn Thompson 2016-04-19 inspired by an earlier program by Dane
+% Author: Glenn Thompson 2016-04-19 based heavily on an earlier program by Dane
 % Ketner (Alaska Volcano Observatory). The main differences are:
-%   * algorithm completely rewritten to improve execution speed, clarity
+%   * algorithm rewritten to improve execution speed, clarity
 %   * visualization of the sta_lta ratio added
-%   * triggered events are returned as a GISMO Catalog object, for
+%   * triggered events are returned as a GISMO Detection object, for
 %     consistency across GISMO
 %   
 % $Date$
@@ -49,9 +50,27 @@ function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)
 
     %% Check waveform variable
     if isa(wave,'waveform')
+        if numel(wave)>1
+            detObj = [];
+            for wavnum=1:numel(wave)
+                [detObj0,sta,lta,sta_to_lta] = Detection.sta_lta(wave(wavnum),varargin{:});
+                if strcmp(class(detObj0),'Detection')
+                    if isempty(detObj)
+                        detObj = detObj0;
+                    else
+                        detObj = detObj.append(detObj0);
+                    end
+                end
+
+            end
+            return
+        end
+            
        Fs = get(wave,'freq');         % Sampling frequency
        l_v = get(wave,'data_length'); % Length of time series
        tv = get(wave, 'timevector');  % Time vector of waveform
+       staname = get(wave, 'station');
+       channame = get(wave, 'channel');
        if isempty(wave)
            disp('Input waveform empty, no events detected')
            events = [];
@@ -149,6 +168,7 @@ function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)
             EVENT_ON = true;
             eventstart = t(count);
             lta_freeze_level = lta(count);
+            snr_start = sta_to_lta(count);
         end
         
         if EVENT_ON & ((sta_to_lta(count) <= th_off) || count == length(y))
@@ -164,6 +184,10 @@ function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)
                 end
                 trig_array(eventnum, 1) = eventstart;
                 trig_array(eventnum, 2) = eventend;
+                snr_val(eventnum*2-1) = snr_start;
+                snr_val(eventnum*2) = sta_to_lta(count);
+%                 detectionArray(eventnum*2-1) = Detection(staname, channame, trig_array(eventnum,1) , 'ON', '', snr_start);
+%                 detectionArray(eventnum*2) = Detection(staname, channame, trig_array(eventnum,2) , 'OFF', '', snr_end);
                 eventstart = 0;
                 eventend = 0;
             end  
@@ -174,10 +198,18 @@ function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)
     t_secs=(t-t(1))*86400;
     ta_secs = (trig_array-t(1))*86400;
     
-    ax(1)=subplot(4,1,1);plot(t_secs,get(wave,'data'),'k'),title('waveform')
-    ax(2)=subplot(4,1,2);plot(t_secs,sta,'k'),title('STA')
-    ax(3)=subplot(4,1,3);plot(t_secs,lta,'k'),title('LTA')
-    ax(4)=subplot(4,1,4);plot(t_secs,sta_to_lta,'k'),title('STA:LTA')
+    ax(1)=subplot(4,1,1);
+    plot(t_secs, get(wave,'data'), 'k')
+    title('waveform')
+    ax(2)=subplot(4,1,2);
+    plot(t_secs, sta, 'k')
+    title('STA')
+    ax(3)=subplot(4,1,3);
+    plot(t_secs, lta, 'k')
+    title('LTA')
+    ax(4)=subplot(4,1,4);
+    plot(t_secs, sta_to_lta, 'k')
+    title('STA:LTA')
     linkaxes(ax,'x')
     hold on
     a=axis();
@@ -187,11 +219,24 @@ function [cobj,sta,lta,sta_to_lta] = sta_lta(wave,varargin)
     for count=1:size(ta_secs,1)
         plot(ta_secs(count,:),[0 0],'b','LineWidth',5);
     end
-    if eventnum==0
-        cobj = Catalog();
-    else
-        cobj = Catalog([], [], [], [], [], {}, {}, 'ontime', trig_array(:,1), 'offtime', trig_array(:,2));
-    end
+    %% CHANGED CODE FROM RETURNING A CATALOG TO RETURNING A DETECTION VECTOR
+%     if eventnum==0
+%         cobj = Catalog();
+%     else
+%         cobj = Catalog([], [], [], [], [], {}, {}, 'ontime', trig_array(:,1), 'offtime', trig_array(:,2));
+%     end
+
+      if eventnum>0
+          detObj = Detection(repmat(cellstr(staname),eventnum*2,1), ...
+              repmat(cellstr(channame),eventnum*2,1), ...
+              reshape(trig_array', 1, eventnum*2), ...
+              repmat({'ON';'OFF'},eventnum,1), ...
+              repmat(cellstr(''), eventnum*2,1), ...
+              snr_val);
+      else
+          detObj = 0;
+      end
+          
 
 end
 

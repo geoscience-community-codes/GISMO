@@ -9,15 +9,15 @@ function c = subclassify(catalogObject, subclasses)
     if strcmp(subclasses, '*')==0
         for i = 1:length(subclasses);
             c(i) = catalogObject;
-            subclass = subclasses(i);
-            index = strfind(char(catalogObject.etype)', subclass); % previously findstr
+            subclass{i} = subclasses(i);
+            index = strfind(char(catalogObject.etype)', subclass{i}); % previously findstr
             if length(index)>0
-                c(i) = catalogObject.subset(index);
+                c(i) = catalogObject.subset('indices',index);
             else
                 c(i) = Catalog();
             end
             c(i).request = catalogObject.request;
-            c(i).request.subclass = subclass;
+            c(i).request.subclass = subclass{i};
         end
     end     
 end

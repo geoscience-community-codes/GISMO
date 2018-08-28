@@ -43,6 +43,7 @@ function [w, successful] = getFromWinston(chanTag,stime,etime,ds)
    
    w = set(waveform,'channeltag',chanTag);  %initialize a waveform
    WWS = gov.usgs.volcanoes.winston.legacyServer.WWSClient(get(ds,'server'),get(ds,'port'));
+   WWS_old = gov.usgs.winston.server.WWSClient(get(ds,'server'),get(ds,'port'));
    
    %grab the winston data, then close the database
    mychan = chanTag.channel;
@@ -53,9 +54,15 @@ function [w, successful] = getFromWinston(chanTag,stime,etime,ds)
    try
       d = WWS.getRawData(mysta,mychan,mynet,myloc,stime,etime);
       WWS.close;
-   catch er
-      warning('Waveform:load_winston:noServerAccess', 'Unable to access Winston Wave Server');
-      rethrow(er)
+   catch 
+       try
+          disp('Trying old WWS interface')
+          d = WWS_old.getRawData(mysta,mychan,mynet,myloc,stime,etime);
+          WWS_old.close;      
+       catch er
+          warning('Waveform:load_winston:noServerAccess', 'Unable to access Winston Wave Server');
+          rethrow(er)
+       end
    end
    
    if ~exist('d','var') || isempty(d)

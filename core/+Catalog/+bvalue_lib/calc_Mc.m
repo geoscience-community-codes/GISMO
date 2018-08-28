@@ -67,7 +67,8 @@ function [fMc] = calc_Mc(mag, nMethod, fBinning, fMcCorrection)
             fMc = Catalog.bvalue_lib.calc_McMaxCurvature(mag);
         case 2
             % Fixed Mc (Mc = Mmin)
-            fMc = min(mag(:,6));
+            %fMc = min(mag(:,6));
+            fMc = min(mag);
         case 3
             % Automatic Mc90
             [fDummy, fDummy, fMc] = Catalog.bvalue_lib.calc_McBest(mag, fBinning);

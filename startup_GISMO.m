@@ -27,7 +27,7 @@ end
 addpath(fullfile(gismopath,'core'));
 
 % ADD PATH TO PREVIOUS CORE
-addpath(fullfile(gismopath,'core','deprecated'));
+%addpath(fullfile(gismopath,'core','deprecated'));
 
 % ADD A PATH TO EACH DIRCTORY IN CONTRIBUTED
 addContributed(gismopath,'contributed');
@@ -44,14 +44,32 @@ addContributed(gismopath,'uaf_internal');
 addpath(genpath(fullfile(gismopath,'applications')));
 
 % ADD A PATH TO JAR FILES
-javaaddpath(fullfile(gismopath,'contributed','iris_dmc_tools','IRIS-WS-2.0.15.jar'))
-javaaddpath(fullfile(gismopath,'core','swarm.jar'))
+f = fullfile(gismopath,'contributed','iris_dmc_tools','IRIS-WS-2.0.15.jar');
+try 
+    javaaddpath(f);
+    disp(['Adding path: ', f]);
+catch
+    disp(['Failed to add path: ', f]);
+end
+f = fullfile(gismopath,'core','swarm.jar');
+try 
+    javaaddpath(f);
+    disp(['Adding path: ', f]);
+catch
+    disp(['Failed to add path: ', f]);
+end
 
 % ADD PATH TO GISMO LIBRARY FUNCTIONS
+disp('Adding path: libgismo')
 addpath(fullfile(gismopath, 'libgismo'));
 
 % ADD PATH TO TESTS
+disp('Adding path: tests')
 addpath(fullfile(gismopath, 'tests'));
+
+% ADD PATH TO COOKBOOKS
+disp('Adding path: cookbooks')
+addpath(fullfile(gismopath, 'cookbooks'));
 
 %%
 function addContributed(gismopath, contribDir)

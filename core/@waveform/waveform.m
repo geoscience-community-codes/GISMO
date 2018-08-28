@@ -41,7 +41,7 @@ function w = waveform(varargin)
 %         a waveform from consituent parts.
 %    
 %         CHANNELTAG - either 'net.sta.loc.cha' or a ChannelTag 
-%         SAMPLERATE - Sampling frequency, in Hz       (default nan)
+%         SAMPLERATE - Sampling frequency, in Hz       (default NaN)
 %         DATA - a vector of seismic amplitudes        (default [])
 %         STARTTIME - Start time, in most any format   (default '1/1/1970')
 %         UNITS - a string describing the data units
@@ -227,7 +227,7 @@ function w = waveform(varargin)
          %create a fresh waveform.  All calls to the waveform object, aside
          %from the "copy" call (case nargin==1) will be initated HERE.
          blankW.cha_tag = ChannelTag();
-         blankW.Fs = nan;
+         blankW.Fs = NaN;
          blankW.start = 719529; % datenum for 1970-01-01
          blankW.data = double([]);
          blankW.units = 'Counts';

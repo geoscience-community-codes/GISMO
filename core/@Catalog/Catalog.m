@@ -3,10 +3,10 @@
 % See also EventRate, readEvents, Catalog/Cookbook
 classdef Catalog
 
-    properties(Dependent) % These all come from table, computed on the fly
+    properties
         otime = [];% origin time
-        date = {};
-        time = {};
+%         date = {};
+%         time = {};
         lon = [];
         lat = [];
         depth = [];
@@ -15,12 +15,6 @@ classdef Catalog
         etype = {};
         ontime = [];
         offtime = [];
-        
-        numberOfEvents = 0;
-  
-    end
-    
-    properties % These are properties of the catalog itself
         request = struct();
 %         request.dataformat = '';
 %         request.minimumLongitude = -Inf;
@@ -38,11 +32,14 @@ classdef Catalog
         waveforms = {}; % cell array with one vector waveform objects per event
     end
     
-    properties(Hidden) % internal, external code cannot access them
-        table = table([], [], [],[], [], [], [], {}, {}, [], [], ...
-                'VariableNames', ...
-                {'otime' 'date' 'time' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype' 'ontime' 'offtime'});
+    properties(Dependent)
+        numberOfEvents;
+        duration;
+        cum_mag;
+        max_mag;
+        peakrate;
     end
+
 
     methods
 
@@ -56,13 +53,13 @@ classdef Catalog
                 return
             end
             
-            % Table constructor
-            if nargin==1
-                if isa(varargin{1},'table')
-                    obj.table = varargin{1};
-                end
-                return
-            end
+%             % Table constructor
+%             if nargin==1
+%                 if isa(varargin{1},'table')
+%                     obj.table = varargin{1};
+%                 end
+%                 return
+%             end
             
             % Parse required, optional and param-value pair arguments,
             % set default values, and add validation conditions
@@ -138,213 +135,147 @@ classdef Catalog
                end
                clear s s1 s2
 
-               dstr = datestr(otime, 'yyyy_mm_dd');
-               tstr = datestr(otime, 'HH:MM:SS.fff'); 
-               tstr = tstr(:,1:10);
+%                dstr = datestr(otime, 'yyyy_mm_dd');
+%                tstr = datestr(otime, 'HH:MM:SS.fff'); 
+%                tstr = tstr(:,1:10);
+               obj.otime = otime;
+               obj.lat = lat;
+               obj.lon = lon;
+               obj.depth = depth;
+               obj.mag = mag;
+               obj.magtype = magtype;
+               obj.etype = etype;
+               obj.ontime = ontime;
+               obj.offtime = offtime;
 
-               obj.table = table(otime, dstr, tstr, ...
-                   lon, lat, depth, mag, magtype, etype, ontime, offtime, ...
-                    'VariableNames', {'otime' 'yyyy_mm_dd' 'hh_mm_ss' 'lon' 'lat' 'depth' 'mag' 'magtype' 'etype' 'ontime' 'offtime'});   
-
-                obj.table = sortrows(obj.table, 'otime', 'ascend'); 
                 fprintf('Got %d events\n',obj.numberOfEvents);
            end
 
         end
         
-        function val = get.otime(obj)
-            val = obj.table.otime;
-        end 
-        
-        function val = get.lon(obj)
-            val = obj.table.lon;
-        end        
-        
-        function val = get.lat(obj)
-            val = obj.table.lat;
-        end
-        
-        function val = get.depth(obj)
-            val = obj.table.depth;
-        end        
-        
-        function val = get.mag(obj)
-            val = obj.table.mag;
-        end          
-        
-        function val = get.magtype(obj)
-            val = obj.table.magtype;
-        end        
-        
-        function val = get.etype(obj)
-            val = obj.table.etype;
-        end
-        
-        function val = get.ontime(obj)
-            val = obj.table.ontime;
-        end
-        
-        function val = get.offtime(obj)
-            val = obj.table.offtime;
+%         function val = get.otime(obj)
+%             val = obj.table.otime;
+%         end 
+%         
+%         function val = get.lon(obj)
+%             val = obj.table.lon;
+%         end        
+%         
+%         function val = get.lat(obj)
+%             val = obj.table.lat;
+%         end
+%         
+%         function val = get.depth(obj)
+%             val = obj.table.depth;
+%         end        
+%         
+%         function val = get.mag(obj)
+%             val = obj.table.mag;
+%         end          
+%         
+%         function val = get.magtype(obj)
+%             val = obj.table.magtype;
+%         end        
+%         
+%         function val = get.etype(obj)
+%             val = obj.table.etype;
+%         end
+%         
+%         function val = get.ontime(obj)
+%             val = obj.table.ontime;
+%         end
+%         
+%         function val = get.offtime(obj)
+%             val = obj.table.offtime;
+%         end
+
+        function val = get.duration(obj)
+            val = 86400 * (obj.offtime - obj.ontime);
         end
         
         function val = get.numberOfEvents(obj)
-            val = height(obj.table);
+            val = max([ numel(obj.otime) numel(obj.ontime)]);
+        end
+
+        function val = get.cum_mag(obj)
+            val = magnitude.eng2mag( sum(magnitude.mag2eng(obj.mag)) );
+        end 
+        
+        function mm = get.max_mag(obj)    
+            % return max_mag as the real component & percentage through the
+            % time series as the imaginary component (use real() & imag()
+            % to separate these)
+            t=obj.gettimerange();
+            days = t(2) - t(1);
+            [mm, mmi] = max(obj.mag);
+            mmpercent = 100*(obj.otime(mmi) - t(1))/days;
+            mm = mm + mmpercent * j;
         end
         
+        function pr = get.peakrate(obj)
+            t=obj.gettimerange();
+            days = t(2) - t(1);
+            binsize = days/100;
+            erobj = obj.eventrate('binsize',binsize);
+            [pr, pri] = max(erobj.counts);              
+            pr = pr + 100*(erobj.time(pri) - erobj.snum)/(erobj.enum-erobj.snum) * j;
+        end
+            
+
+        
         function t=gettimerange(obj)
-            snum = nanmin([obj.table.otime; obj.table.ontime]);
-            enum = nanmax([obj.table.otime; obj.table.offtime]);
+            snum = nanmin([obj.otime; obj.ontime]);
+            enum = nanmax([obj.otime; obj.offtime]);
             t = [snum enum];
         end
+        
+        function cobj3 = add(cobj1, cobj2)
+% combine method already exists, but uses tables - Catalog isn't a table
+% anymore
+            cobj3 = cobj1;
+            cobj3.otime = [cobj1.otime; cobj2.otime];
+            cobj3.lon = [cobj1.lon; cobj2.lon];
+            cobj3.lat = [cobj1.lat; cobj2.lat];
+            cobj3.depth = [cobj1.depth; cobj2.depth];
+            cobj3.mag = [cobj1.mag; cobj2.mag];
+            cobj3.magtype = [cobj1.magtype; cobj2.magtype];
+            cobj3.etype = [cobj1.etype; cobj2.etype];
+            cobj3.ontime = [cobj1.ontime; cobj2.ontime];
+            cobj3.offtime = [cobj1.offtime; cobj2.offtime];
+            cobj3.arrivals = [cobj1.arrivals; cobj2.arrivals];
+            cobj3.waveforms = [cobj1.waveforms; cobj2.waveforms];    
+        end
+            
           
         % Prototypes
-        summary(obj)
-        disp(catalogObject)
+        gr = bvalue(catalogObject, mcType)     
+        catalogObject = addwaveforms(catalogObject, varargin);
         catalogObject = combine(catalogObject1, catalogObject2)
-        webmap(catalogObject)
+        catalogObject2 = subset(catalogObject, varargin)
+        catalogObjects=subclassify(catalogObject, subclasses)         
+        disp(catalogObject)
+        eev(obj, eventnum)
+        erobj=eventrate(catalogObject, varargin)
+        hist(catalogObject)
+        list_waveform_metrics(catalogObject);
         plot(catalogObject, varargin)
         plot3(catalogObject, varargin)
         plot_time(catalogObject)
-        hist(catalogObject)
-        bvalue(catalogObject, mcType)     
-        catalogObjects=subclassify(catalogObject, subclasses)         
-        erobj=eventrate(catalogObject, varargin)
+        plot_waveform_metrics(catalogObject);
         plotprmm(catalogObject)
-        eev(obj, eventnum)
+        summary(catalogObject)
+        webmap(catalogObject)
         write(catalogObject, outformat, outpath, schema)
-        catalogObject2 = subset(catalogObject, indices)
-        catalogObject = addwaveforms(catalogObject, w);
+        arrivals_per_event(catalogObject)
+        
     end
 %% ---------------------------------------------------
     methods (Access=protected, Hidden=true)
-        
-        %% AUTOBINSIZE        
-        function binsize = autobinsize(catalogObject)
-        %autobinsize Compute the best bin size based on start and end times
-            binsize = binning.autobinsize(catalogObject.enum - catalogObject.snum);
-        end
-%% ---------------------------------------------------        
-        function region = get_region(catalogObject, nsigma)
-        % region Compute the region to plot based on spread of lon,lat data
-			medianlat = nanmedian(catalogObject.lat);
-			medianlon = nanmedian(catalogObject.lon);
-			cosine = cos(medianlat);
-			stdevlat = nanstd(catalogObject.lat);
-			stdevlon = nanstd(catalogObject.lon);
-			rangeindeg = max([stdevlat stdevlon*cosine]) * nsigma;
-			region = [(medianlon - rangeindeg/2) (medianlon + rangeindeg/2) (medianlat - rangeindeg/2) (medianlat + rangeindeg/2)];
-        end
-        
-%% ---------------------------------------------------
-        function symsize = get_symsize(catalogObject)
-            %get_symsize Get symbol marker size based on magnitude of event
-            % Compute Marker Size
-            minsymsize = 3;
-            maxsymsize = 50;
-            symsize = (catalogObject.mag + 2) * 10; % -2- -> 1, 1 -> 10, 0 -> 20, 1 -> 30, 2-> 40, 3+ -> 50 etc.
-            symsize(symsize<minsymsize)=minsymsize;
-            symsize(symsize>maxsymsize)=maxsymsize;
-            % deal with NULL (NaN) values
-            symsize(isnan(symsize))=minsymsize;
-        end
-%% ---------------------------------------------------                      
-                
+        region = get_region(catalogObject, nsigma)
+        symsize = get_symsize(catalogObject)
     end
 
     methods(Static)
-        function self = retrieve(dataformat, varargin)
-        %CATALOG.RETRIEVE Read seismic events from common file formats & data sources.
-        % retrieve can read events from many different earthquake catalog file 
-        % formats (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) into a 
-        % GISMO Catalog object.
-        %
-        % Usage:
-        %       catalogObject = CATALOG.RETRIEVE(dataformat, 'param1', _value1_, ...
-        %                                                   'paramN', _valueN_)
-        % 
-        % dataformat may be:
-        %
-        %   * 'iris' (for IRIS DMC, using irisFetch.m), 
-        %   * 'antelope' (for a CSS3.0 Antelope/Datascope database)
-        %   * 'seisan' (for a Seisan database with a REA/YYYY/MM/ directory structure)
-        %   * 'zmap' (converts a Zmap data strcture to a Catalog object)
-        %
-        % The name-value parameter pairs supported are the same as those supported
-        % by irisFetch.Events(). Currently these are:
-        %
-        %     startTime
-        %     endTime
-        %     eventId
-        %     fetchLimit
-        %     magnitudeType
-        %     minimumLongitude
-        %     maximumLongitude
-        %     minimumLatitude
-        %     maximumLatitude
-        %     minimumMagnitude
-        %     maximumMagnitude
-        %     minimumDepth
-        %     maximumDepth
-        % 
-        % And the two convenience parameters:
-        %
-        % radialcoordinates = [ centerLatitude, centerLongitude, maximumRadius ]
-        %
-        % boxcoordinates = [ minimumLatitude maximumLatitude minimumLongitude maximumLongitude ]
-        % 
-        % For examples, see Catalog_cookbook. Also available at:
-        % https://geoscience-community-codes.github.io/GISMO/tutorials/html/Catalog_cookbook.html
-        %
-        %
-        % See also CATALOG, IRISFETCH, CATALOG_COOKBOOK
-
-        % Author: Glenn Thompson (glennthompson1971@gmail.com)
-
-        %% To do:
-        % Implement name-value parameter pairs for all methods
-        % Test the Antelope method still works after factoring out db_load_origins
-        % Test the Seisan method more
-        % Add in support for 'get_arrivals'
-            
-            debug.printfunctionstack('>')
-
-            switch lower(dataformat)
-                case 'iris'
-                    if exist('irisFetch.m','file')
-                            ev = irisFetch.Events(varargin{:});
-                            self = Catalog.read_catalog.iris(ev);
-                    else
-                        warning('Cannot find irisFetch.m')
-                    end
-                case {'css3.0','antelope', 'datascope'}
-                    if admin.antelope_exists()
-                        self = Catalog.read_catalog.antelope(varargin{:});
-                    else
-                        warning('Sorry, cannot read event Catalog from Antelope database as Antelope toolbox for MATLAB not found')
-                        self = Catalog();
-                    end
-                case 'seisan'
-                    self = Catalog.read_catalog.seisan(varargin{:});
-                case 'aef'
-                    self = Catalog.read_catalog.aef(varargin{:});
-                case 'sru'
-                    self = Catalog.read_catalog.sru(varargin{:});
-                case 'vdap'
-                    self = Catalog.read_catalog.vdap(varargin{:});
-                case 'zmap'
-                    self = Catalog.read_catalog.zmap(varargin{:});
-                otherwise
-                    self = NaN;
-                    fprintf('format %s unknown\n\n',data_source);
-            end
-            if isempty(self)
-                self=Catalog();
-            end
-
-            debug.printfunctionstack('<')
-        end
-        
-        cookbook()
+        self = retrieve(dataformat, varargin)
     end
 end

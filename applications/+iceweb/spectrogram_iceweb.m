@@ -1,17 +1,21 @@
-function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)
+function [result,Tcell,Fcell,Ycell,meanF,peakF] = spectrogram_iceweb(s, w, varargin)
 % SPECTROGRAM_ICEWEB produce an multi-channel spectrogram plot in the style of
 % AVO web (IceWeb) spectrograms, by wrapping the default MATLAB spectrogram
 % function
 %
 % Usage:
-% 	[result, Tcell, Fcell, Ycell] =spectrogram_iceweb(s, w, spectrogramFraction, mycolormap)
+% 	[result, Tcell, Fcell, Ycell] =spectrogram_iceweb(s, w, 'spectrogramFraction', 0.75, 'colormap', mycolormap, 'plot_metrics', 0)
 %
 % Inputs:
 %	w - a vector of waveform objects
 %	s - a spectralobject
 %	spectrogramFraction - fraction of a panel height the spectrogram should take up (default: 0.8). 
 %			The waveform trace takes up the remaining fraction.
-%	mycolormap - (Optional) a user-defined colormap
+%
+%   Name/Value pairs:
+%       'mycolormap' - (Optional) a user-defined colormap 
+%       'plot_metrics' - superimpose a plot of mean & dominant frequency.
+%                                                        0 or 1 (default 0)
 %
 % Outputs:
 %	(other than a figure on the screen)
@@ -26,10 +30,10 @@ function [result,Tcell,Fcell,Ycell] = spectrogram_iceweb(s, w, spectrogramFracti
 
 debug.printfunctionstack('>');
 
-
+% varargin
+% mycolormap
 
 result = 0;
-
 
 % % reverse the order of the waveforms so they plot top to bottom in same
 % % order as in mulplt and as in waveform vector
@@ -39,23 +43,40 @@ numw = numel(w);
 if numw==0
 	return;
 end
-if ~exist('s','var')
-	s = spectralobject(1024, 924, 10, [60 120]);
-end
-if ~exist('spectrogramFraction','var')
-	spectrogramFraction = 1;
-end
-if ~exist('mycolormap', 'var')
-    mycolormap = jet; % should be using SPECTRAL_MAP here?
-end
+% if ~exist('s','var')
+% 	s = spectralobject(1024, 924, 10, [60 120]);
+% end
+% if ~exist('spectrogramFraction','var')
+% 	spectrogramFraction = 1;
+% end
+nfft = 1024;
+overlap = 924;
+fmax = 10;
+dbLims = [60 120];
+
+p = inputParser;
+p.addParameter('spectrogramFraction', 0.75, @isnumeric);
+p.addParameter('colormap', jet, @isnumeric);
+p.addParameter('plot_metrics', 0, @isnumeric);
+p.parse(varargin{:});
+spectrogramFraction = p.Results.spectrogramFraction;
+
+
+% if nargin>=4
+%     if strcmp(
+%     if ~exist('mycolormap', 'var')
+%     mycolormap = jet; % should be using SPECTRAL_MAP here?
+% end
 
 %save lastspecgramcall.mat s w spectrogramFraction mycolormap
 debug.print_debug(2, sprintf('%d waveform objects',numel(w)));
 
-% Default colormap is JET. Override that here.
-if exist('mycolormap', 'var')
-        setmap(s, mycolormap);      
-end
+% % Default colormap is JET. Override that here.
+% if exist('mycolormap', 'var')
+%         setmap(s, mycolormap);      
+% end
+
+setmap(s, p.Results.colormap);
 
 % To get a colorbar, stop the function here and set colorbar option to vert
 
@@ -63,7 +84,7 @@ end
 
 nfft = round(get(s,'nfft'));
 overlap = floor(get(s, 'over'));
-dBlims = get(s, 'dBlims')
+dBlims = get(s, 'dBlims');
 fmax = get(s, 'freqmax');
 
 % Set appropriate date ticks
@@ -81,61 +102,81 @@ for c=1:numw
         [S,F,T] = spectrogram(data, nfft, nfft/2, nfft, fsamp);
 
         Y = 20*log10(abs(S)+eps);
-        fmax
-        max(F)
-        index = find(F <= fmax)
+        index = find(F <= fmax);
         if F(1)==0,
             F(1)=0.001;
         end
 
-        [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numw, c, spectrogramFraction, 0.08, 0.05, 0.88, 0.95);
+        [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numw, c, spectrogramFraction, 0.12, 0.05, 0.80, 0.9);
         axes('position', spectrogramPosition);
         T = wt.start + T/86400;
         F = F(1:max(index));
         Y = Y(1:max(index),:);
         S = S(1:max(index),:);
-        if isempty(dBlims)
-            imagesc(T,F,abs(S));
-            % mean frequency
-            numerator = abs(S)' * F;
-            denominator = sum(abs(S),1);
-            meanF = numerator./denominator';
-            hold on; plot(T,meanF,'k','LineWidth',3);
-            % peak frequency
-            [maxvalue,maxindex] = max(abs(S));
-            size(maxindex)
-            fmax = F(maxindex);
-            size(fmax)
-            hold on; plot(T,fmax,'r','LineWidth',3);
+        
+        % mean frequency
+        %minS = min(min(abs(S)+eps));
+        minS = prctile(reshape(S,numel(S),1),40);
+        S2 = abs(S)-minS;
+        S2(S2<eps)=eps;
+        numerator = abs(S2)' * F;
+        denominator = sum(S2,1);
+        thismeanf = numerator./denominator';
+        
+        % peak frequency
+        [maxvalue,maxindex] = max(S2);
+        thispeakf = F(maxindex);
+        
+%         % remove very small signals
+%         Ymin_all = min(min(Y));
+%         Ymax_all = max(max(Y));
+%         Ymax_time = max(Y);
+%         Ythreshold = Ymin_all + (Ymax_all - Ymin_all) * 50/70;
+%         Ythreshold = prctile(reshape(Y, numel(Y),1),80);
+%         thismeanf(Ymax_time < Ythreshold) = NaN;
+%         thispeakf(Ymax_time < Ythreshold) = NaN;
+        meanF{c} = thismeanf;
+        peakF{c} = thispeakf;
+        
             
+        if isempty(dBlims)
+            % plot spectrogram
+            %imagesc(T,F,abs(S));
+            imagesc(T,F,Y);
         else
             imagesc(T,F,Y,dBlims); 
         end
         axis xy;
-        colormap(mycolormap);
+        colormap(p.Results.colormap);
+        
+        % add plot of frequency metrics?
+        if p.Results.plot_metrics
+            hold on; plot(T,smooth(meanF{c}),'k','LineWidth',.5);
+            hold on; plot(T,smooth(peakF{c}),'w','LineWidth',.5);
+        end        
 
         % Change Y-Labels to 'sta.chan'
-        ylabel( sprintf('%s\n%s',get(w(c), 'station'), get(w(c), 'channel')), 'FontSize', 10);
+        thissta = get(w(c), 'station');
+        thischan = get(w(c), 'channel');
+        ylabel( sprintf('%s\n%s',thissta, thischan(1:3) ), 'FontSize', 8);
         xlabel('')
         title('')
         set(gca,'XLim', [wt.start wt.stop]);
         if c==numw
-            set(gca, 'XTick', Xtickmarks, 'XTickLabel', XTickLabel,  'FontSize', 10); % time labels only on bottom spectrogram
+            set(gca, 'XTick', Xtickmarks, 'XTickLabel', XTickLabel,  'FontSize', 8); % time labels only on bottom spectrogram
         else
             set(gca, 'XTick', Xtickmarks, 'XTickLabel', {});
         end
 
         if spectrogramFraction < 1
-            thissta = get(w(c), 'station');
-            thischan = get(w(c), 'channel');
-            plotTrace(tracePosition, get(w(c),'data'), get(w(c),'freq'), Xtickmarks, wt, mycolormap, s, thissta, thischan);
+            plotTrace(tracePosition, get(w(c),'data'), get(w(c),'freq'), Xtickmarks, wt, p.Results.colormap, s, thissta, thischan);
             set(gca,'XLim', [wt.start wt.stop]); % added 20111214 to align trace with spectrogram when data missing (prevent trace being stretched out)
 
             % change the trace background color if we want to identify
             % broadband stations
     % 		if (regexp(thischan, '[BH]H.'))
     % 			set(gca, 'Color', [.8 .8 .8]);
-    %         end
+    %         end[30 100
 
         end
         result = result + 1;
@@ -181,7 +222,7 @@ set(gca, 'XTick', Xtickmarks, 'XTickLabel', '', 'XLim', [timewindow.start timewi
 if ~isnan(maxAmpl) % make sure it is not NaN else will crash
 	traceRange = [dnum(1) dnum(end) -maxAmpl*1.1 maxAmpl*1.1];
 	decibels = 20 * log10(maxAmpl) + eps;
-	fprintf('%s: %s.%s: Max amplitude %.1e nm/s (%d dB)\n',mfilename, thissta, thischan, maxAmpl,round(decibels)); 
+	%fprintf('%s: %s.%s: Max amplitude %.1e (%d dB)\n',mfilename, thissta, thischan, maxAmpl,round(decibels)); 
 	axis(traceRange);
 end
 debug.printfunctionstack('<');
@@ -212,6 +253,10 @@ stepMinOptions = [1 2 3 5 10 15 20 30 60 120 180 240 360 480 720 1440];
 c = 1;
 while (numMins / stepMinOptions(c) > 12)
 	c = c + 1;
+    if c >= numel(stepMinOptions)
+        c = numel(stepMinOptions);
+        break;
+    end
 end
 stepMins = stepMinOptions(c);
 

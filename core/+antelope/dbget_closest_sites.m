@@ -54,6 +54,10 @@ if exist('enum', 'var')
 end
 nrecs = dbquery(dbptr_site, 'dbRECORD_COUNT');
 debug.print_debug(2,sprintf('After time subset: %d records', nrecs));
+if nrecs==0
+sites=struct();
+return
+end
 dbgetv(dbptr_site, 'sta')
 
 % Filter the sitechan table

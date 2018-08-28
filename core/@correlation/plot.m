@@ -162,7 +162,7 @@ elseif strncmpi(plottype,'STA',3)
 elseif strncmpi(plottype,'DEN',3)
     dendrogramplot(c);
 elseif strncmpi(plottype,'EVE',3)       % ord field has been co-opted 
-    admin.deprecated('event plot','occurence plot')
+    admin.deprecated('event plot','occurrence plot')
     if length(ord) > 1
         ord = 4;
     end

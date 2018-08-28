@@ -190,12 +190,12 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds)
 	    % load state
 	    statefile = sprintf('iceweb_%s_state.mat',subnet);
 	    if exist(statefile, 'file')
-		load(statefile)
-		if strcmp(subnet, subnet0)
-			if snum < snum0 % skip
-				%continue
-			end
-		end
+            load(statefile)
+            if strcmp(subnet, subnet0)
+                if snum < snum0 % skip
+                    %continue
+                end
+            end
 	    end
 		
 	    % save state

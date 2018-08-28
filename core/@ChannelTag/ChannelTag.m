@@ -12,6 +12,7 @@ classdef ChannelTag
    % ChannelTag Methods:
    %   char - Retrieve properties as 'network.station.location.channel'
    %   string - Retrieve properties as 'network.station.location.channel'
+   %   scn - Retrieve properties as 'station_channel_network'
    %   fixedlengthstrings -  return strings of a fixed length
    %   eq - == for channeltags, with simple '*' wildcard support
    %   ne - ~= for channeltag (no wilcard support)
@@ -345,7 +346,7 @@ classdef ChannelTag
             end
          end
          
-         function s = getDelimitedString(obj, delim)
+          function s = getDelimitedString(obj, delim)
             %getDelimitedString   return a string with delimited fields
             %   getDelimitedString(chtag, delim) returns the fields in
             %   network,station, location, channel order, with the
@@ -359,7 +360,44 @@ classdef ChannelTag
             %
             s = [obj.network, delim, obj.station, delim,...
                      obj.location, delim, obj.channel];
+          end
+      end
+      
+      function s = scn(obj, delim, option)
+         %scn returns scn representation of the channelTag(s)
+         % s = chaTag.scn()  will return the string representation 
+         %      (1xn char) in the format STA_CHA_NET
+         %
+         % s = chaTag.string(DELIM) will use DELIM to separate
+         %     fields.
+         %     ex.  chaTag.string('-'); will return NET-STA-LOC-CHA
+         %
+         % If chaTag is an array, then results are returned as a 
+         % a cell of strings of same shape as chaTag will be returned.
+         %
+         % s = chaTag.string(DELIM,'nocell') to overrides functionality
+         % to return a padded NxM char array
+         % if DELIM is empty, then '.' will be used.
+         if ~exist('delim','var') || isempty(delim)
+            delim = '_';
          end
+         if numel(obj) == 1
+            s = [obj.station, delim, obj.channel, delim, obj.network];
+         else
+            if exist('option','var') && strcmpi(option,'nocell')
+               s = '';
+               for n=1 : numel(obj)
+                  tmp = [obj.station, delim, obj.channel, delim, obj.network];
+                  s(n,1:numel(tmp)) = tmp;
+               end
+            else
+               s = cell(size(obj));
+               for n=1 : numel(obj)
+                  s(n) = {[obj.station, delim, obj.channel, delim, obj.network]};
+               end
+            end
+         end         
+         
       end
             
    end%methods

@@ -41,7 +41,7 @@ function w=waveform_wrapper(ds, chantag, snum, enum);
                                     get(chantag(c),'channel') );
             chantag(c) = thischantag;
         else
-            class(chantag(c))
+            class(chantag(c));
         end
     end
 
