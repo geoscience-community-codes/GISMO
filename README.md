@@ -12,11 +12,16 @@ Comments welcome. Send email to:
 gthompson (at) usf (dot) edu
 
 
-GISMO helps a lot of researchers prepare their papers for conferences and publication. There are around 300 subscribers to the GISMO Users listserv and GISMO is downloaded over 1000 times a year. But GISMO is supported by unpaid volunteers only. So please help us out by citing this work in your paper. Suggested citation:
+GISMO helps a lot of researchers prepare their papers for conferences and publication. There are around 300 subscribers to the GISMO Users listserv and GISMO is downloaded over 1000 times a year. But GISMO is supported by unpaid volunteers only. So please help us out by citing this work in your paper. Suggested citations:
 
-Thompson G. and Reyes, C., (2017) GISMO - a seismic data analysis toolbox for MATLAB [software package], http://geoscience-community-codes.github.io/GISMO/. Accessed August 2018.
+Thompson G. and Reyes, C., (2018) GISMO - a seismic data analysis toolbox for MATLAB [software package]. Available: http://geoscience-community-codes.github.io/GISMO/. Version 1.20b. Accessed: Aug. 2018. doi:10.5281/zenodo.1404723.
 
 http://doi.org/10.5281/zenodo.1404723
+
+
+    
+
+
 
 (update the month and year to the date you are visiting this site)
 
