@@ -248,7 +248,8 @@ classdef Catalog
             
           
         % Prototypes
-        gr = bvalue(catalogObject, mcType)     
+        gr = bvalue(catalogObject, mcType, runmode) 
+        gr = bvalue_rewrite(catalogObject, runmode)
         catalogObject = addwaveforms(catalogObject, varargin);
         catalogObject = combine(catalogObject1, catalogObject2)
         catalogObject2 = subset(catalogObject, varargin)

@@ -1,26 +1,18 @@
-function gr=bvalue(catalogObject, mcType, manual_on)
+function gr=bvalue_rewrite(catalogObject, runmode)
     %BVALUE evaluate b-value, a-value and magnitude of completeness
     % of an earthquake catalog stored in a Catalog object.
     %
-    % gr = BVALUE(catalogObject, MCTYPE) produces a Gutenberg-Richter type plot 
+    % gr = BVALUE(catalogObject) produces a Gutenberg-Richter type plot 
     %    with the best fit line and display of b-,a-values and Mc 
     %    for catalogObject. These values are also returned in a structure.
-    %    MCTYPE is a number from 1-5 
-    %    to select the algorithm used for calculation of the 
-    %    magnitude of completeness. Options are:
+    %    Uses Maximum curvature to find Mc.
     %
-    %    1: Maximum curvature
-    %    2: Fixed Mc = minimum magnitude (Mmin)
-    %    3: Mc90 (90% probability)
-    %    4: Mc95 (95% probability)
-    %    5: Best combination (Mc95 - Mc90 - maximum curvature)
-    %
-    % * Note: it seems only 1 only really works, and 5 is same as 1 *'
-    %
-    % gr = BVALUE(catalogObject, MCTYPE, manual_on) where the value of manual_on
-    %    computes as true will give the user the ability to manually pick a
-    %    linear segment on the graph too (which is then plotted with a
-    %    green line). The manual Mc and bvalue are returned in the gr
+    % gr = BVALUE(catalogObject, MCTYPE, runmode)
+    %    runmode can be:
+    %            0 - no plot
+    %            1 - show G-R plot & autofit a slope 
+    %            2 - as 1, but also allow user to manually fit a slope
+    %    The manual Mc and bvalue are returned in the gr
     %    structure as gr.Mc_manual and gr.bvalue_manual
 
     % Liberally adapted from original code in ZMAP.
@@ -43,188 +35,106 @@ function gr=bvalue(catalogObject, mcType, manual_on)
     % Free Software Foundation, Inc.,
     % 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-    if nargin < 2
-        disp('* Note: it seems only 1 only really works, and 5 is same as 1 *')
-        mcType = menu('mcType can be:','Maximum curvature','Fixed Mc = minimum magnitude (Mmin)', ...
-            'Mc90 (90% probability)', 'Mc95 (95% probability)', ...
-            'Best combination (Mc95 - Mc90 - maximum curvature)')
+    if ~exist('runmode','var')
+        runmode = 1;
     end
-    if ~exist('manual_on','var')
-        manual_on = false;
-    end
+    manual_on = (runmode == 2);
+    plot_figure = (runmode > 0);
+    magBinSize = 0.1;
 
     % form magnitude vector - removing any NaN values with find
     good_magnitude_indices = find(catalogObject.mag > -3.0);
     mag = catalogObject.mag(good_magnitude_indices);
+    if numel(mag)<30
+        error('Not enough data for a b-value');
+    end
+    
     %MIN AND MAX MAGNITUDE IN catalogObject
     minimum_mag = min(mag);
     maximum_mag = max(mag);
 
     %COUNT EVENTS IN EACH MAGNITUDE BIN
-    [bval, xt2] = hist(mag, (minimum_mag:0.1:maximum_mag));
+    binEdges = minimum_mag : magBinSize : maximum_mag;
+    [N, magBinCenter] = hist(mag, binEdges);
+    % xt2 = mag bin centers. rename this to magBinCenter
+    % bval = number in each bin. rename this to N
 
     %CUMULATIVE NUMBER OF EVENTS IN EACH MAGNITUDE BIN
-    bvalsum = cumsum(bval);
+    cumN = cumsum(N);
 
     %NUMBER OF EVENTS IN EACH BIN IN REVERSE ORDER
-    bval2 = bval(length(bval):-1:1);
+    reverseN = N(end:-1:1);
 
     %NUMBER OF EVENTS IN EACH MAGNITUDE BIN IN REVERSE ORDER
-    bvalsum3 = cumsum(bval(length(bval):-1:1));
-
+    cumReverseN = cumsum(reverseN);
+    
     %BINS IN REVERSE ORDER
-    xt3 = (maximum_mag:-0.1:minimum_mag);
-    backg_ab = log10(bvalsum3);
+    reverseBinEdges = fliplr(binEdges);
 
-    %CREATE FIGURE WINDOW AND MAKE FREQUENCY-MAGNITUDE PLOT
-    figure('Color','w','Position',[0 0 600 600])
-
-    pl = semilogy(xt3,bvalsum3,'sb'); % semilogy is same as plot, except a log (base10) scale is used for Y-axis
-    set(pl, 'LineWidth', [1.0],'MarkerSize', [10],'MarkerFaceColor','r','MarkerEdgeColor','k');
-    axis square
-    hold on
-
-    pl1 = semilogy(xt3,bval2,'^b');
-    set(pl1, 'LineWidth',[1.0],'MarkerSize',[10],'MarkerFaceColor','w','MarkerEdgeColor','k');
-    xlabel('Magnitude','Fontsize', 12)
-    ylabel('Cumulative Number','Fontsize',12)
-    set(gca,'visible','on','FontSize',12,'FontWeight','normal',...
-        'FontWeight','bold','LineWidth',[1.0],'TickDir','in','Ticklength',[0.01 0.01],...
-        'Box','on','Tag','cufi','color','w')
-
-    %ESTIMATE B-VALUE (MAX LIKELIHOOD ESTIMATE)
-    Nmin = 10;
-    fMccorr = 0;
-    fBinning = 0.1;
-
-    if length(mag) >= Nmin
-
-        %GOODNESS-OF-FIT TO POWER LAW
-        %%%%%%%%%%%%%%%%%% mcperc_ca3.m start %%%%%%%%%%%%%%%%%%%%
-        % This is a completeness determination test
-
-        [bval,xt2] = hist(mag,-2:0.1:6);
-        l = max(find(bval == max(bval)));
-        magco0 =  xt2(l);
-
-        dat = [];
-
-        %for i = magco0-0.6:0.1:magco0+0.2
-        for i = magco0-0.5:0.1:magco0+0.7
-            l = mag >= i - 0.0499;
-            nu = length(mag(l));
-            if length(mag(l)) >= 25;
-                %[bv magco stan av] =  bvalca3(catZmap(l,:),2,2);
-                [mw bv2 stan2 av] =  Catalog.bvalue_lib.bmemag(mag(l));
-                Catalog.bvalue_lib.synthb_aut;
-                dat = [ dat ; i res2];
-            else
-                dat = [ dat ; i nan];
+    % Sophisticated method for computing Mc  
+    fMccorr = 0; % Mc correction
+    try
+        mcType = 5;
+        Mc = Catalog.bvalue_lib.calc_Mc(mag, mcType, magBinSize, fMccorr);
+    catch
+        for mcType = 1:4
+            fMc(mcType) = NaN;
+            try
+                fMc(mcType) = Catalog.bvalue_lib.calc_Mc(mag, mcType, magBinSize, fMccorr);
             end
-
         end
-
-        j =  min(find(dat(:,2) < 10 ));
-        if isempty(j) == 1; Mc90 = nan ;
-        else;
-            Mc90 = dat(j,1);
-        end
-
-        j =  min(find(dat(:,2) < 5 ));
-        if isempty(j) == 1; Mc95 = nan ;
-        else;
-            Mc95 = dat(j,1);
-        end
-
-        j =  min(find(dat(:,2) < 10 ));
-        if isempty(j) == 1; j =  min(find(dat(:,2) < 15 )); end
-        if isempty(j) == 1; j =  min(find(dat(:,2) < 20 )); end
-        if isempty(j) == 1; j =  min(find(dat(:,2) < 25 )); end
-        j2 =  min(find(dat(:,2) == min(dat(:,2)) ));
-        %j = min([j j2]);
-
-        Mc = dat(j,1);
-        magco = Mc;
-        prf = 100 - dat(j2,2);
-        if isempty(magco) == 1; magco = nan; prf = 100 -min(dat(:,2)); end
-        %display(['Completeness Mc: ' num2str(Mc) ]);
-        %%%%%%%%%%%%%%%%%% mcperc_ca3.m end %%%%%%%%%%%%%%%%%%%%%%
-
-        %CALCULATE MC
-        [fMc] = Catalog.bvalue_lib.calc_Mc(mag, mcType, fBinning, fMccorr);
-        l = mag >= fMc-(fBinning/2);
-        if length(mag(l)) >= Nmin
-            [fMeanMag, fBValue, fStd_B, fAValue] =  Catalog.bvalue_lib.calc_bmemag(mag(l), fBinning);
-        else
-            [fMc, fBValue, fStd_B, fAValue] = deal(NaN);
-        end
-
-        %STANDARD DEV OF a-value SET TO NAN;
-        [fStd_A, fStd_Mc] = deal(NaN);
-
-    else
-        [fMc, fStd_Mc, fBValue, fStd_B, fAValue, fStd_A, ...
-            fStdDevB, fStdDevMc] = deal(NaN);
+        fMc
+        Mc = nanmedian(fMc);
+        clear fMc
+    end
+    
+    % Glenn's simple method for guessing Mc
+    % just take peak of N v magnitude curve
+    if isnan(Mc)
+        [Nmax,Nmaxi] = max(N);
+        Mc = magBinCenter(Nmaxi);
     end
 
-    magco = fMc;
-    index_low=find(xt3 < magco+.05 & xt3 > magco-.05);
-try
-    mag_hi = xt3(1);
-    index_hi = 1;
-    mz = xt3 <= mag_hi & xt3 >= magco-.0001;
-    mag_zone=xt3(mz);
-    y = backg_ab(mz);
+    % Compute a & b value  
+    gr = maxlik(mag, reverseBinEdges, magBinSize, Mc);
+      
+    if plot_figure
+        %CREATE FIGURE WINDOW AND MAKE FREQUENCY-MAGNITUDE PLOT
+        figure('Color','w','Position',[0 0 600 600])
 
-    %PLOT MC IN FIGURE
-    Mc = semilogy(xt3(index_low),bvalsum3(index_low)*1.5,'vk');
-    set(Mc,'LineWidth',[1.0],'MarkerSize',7)
-    Mc = text(xt3(index_low)+0.2,bvalsum3(index_low)*1.5,'Mc');
-    set(Mc,'FontWeight','normal','FontSize',12,'Color','k')
+        pl = semilogy(reverseBinEdges, cumReverseN,'sb'); % semilogy is same as plot, except a log (base10) scale is used for Y-axis
+        set(pl, 'LineWidth', [1.0],'MarkerSize', [10],'MarkerFaceColor','r','MarkerEdgeColor','k');
+        axis square
+        hold on
 
-    %CREATE AND PLOT FIT LINE
-    sol_type = 'Maximum Likelihood Solution';
-    bw=fBValue;
-    aw=fAValue;
-    ew=fStd_B;
-    p = [ -1*bw aw];
-    f = polyval(p,mag_zone);
-    f = 10.^f;
-    hold on
-    ttm= semilogy(mag_zone,f,'k');
-    set(ttm,'LineWidth',[2.0])
-    std_backg = ew;
+        pl1 = semilogy(reverseBinEdges,reverseN,'^b');
+        set(pl1, 'LineWidth',[1.0],'MarkerSize',[10],'MarkerFaceColor','w','MarkerEdgeColor','k');
+        xlabel('Magnitude','Fontsize', 12)
+        %ylabel('Cumulative Number','Fontsize',12)
+        ylabel('Number of events','Fontsize',12)
+        set(gca,'visible','on','FontSize',12,'FontWeight','normal',...
+            'FontWeight','bold','LineWidth',[1.0],'TickDir','in','Ticklength',[0.01 0.01],...
+            'Box','on','Tag','cufi','color','w')
 
-    %ERROR CALCULATIONS
-    %b = mag;
-    bv = [];
-    si = [];
+        %PLOT LINE FOR MC IN FIGURE
+        thisa = axis;
+        line([gr.Mc gr.Mc],[thisa(2) thisa(4)],'LineStyle',':','Color','b'); %'LineStyle',
 
-    set(gca,'XLim',[min(mag)-0.5  max(mag+0.5)])
-    %set(gca,'YLim',[0.9 length(mag+30)*2.5]);
+        %CREATE AND PLOT FIT LINE
+        p = [ -1*gr.bvalue gr.avalue];
+        f = polyval(p, gr.mag_zone);
+        f = 10.^f;
+        hold on
+        hfit= semilogy(gr.mag_zone, f,'k');
+        set(hfit,'LineWidth',[2.0])     
+        set(gca,'XLim',[min(mag)-0.5  max(mag+0.5)]);
+        
+        % Add title & legend
+        title(sprintf('log_{10}(cumN)=a-bM\nb=%.2f+/-%.2f a=%.2f', ...
+            gr.bvalue,gr.bvalue_error,gr.avalue),'FontSize',12);
+        legend({'cum N';'N'; sprintf('Mc=%.2f',gr.Mc); 'fitted slope'},'Location','northeast')
+    end
 
-    p=-p(1,1);
-    p=fix(100*p)/100;
-    tt1=num2str(bw,3);
-    tt2=num2str(std_backg,1);
-    tt4=num2str(bv,3);
-    tt5=num2str(si,2);
-    tmc=num2str(magco,2);
-    rect=[0 0 1 1];
-    h2=axes('position',rect);
-    set(h2,'visible','off');
-    t=catalogObject.gettimerange();
-    a0 = aw-log10((t(2)-t(1))/365);
-
-    text(.53,.88, ['b-value = ',tt1,' +/- ',tt2,',  a value = ',num2str(aw,3)],'FontSize',12);
-    text(.53,.85,sol_type,'FontSize',12 );
-    text(.53,.82,['Magnitude of Completeness = ',tmc],'FontSize',12);
-    
-    %% Added by Glenn 2018-05-01 to return a structure
-    gr.bvalue = str2num(tt1);
-    gr.bvalue_error = str2num(tt2);
-    gr.avalue = aw;
-    gr.Mc = str2num(tmc);
     
     %% Manually fit a line (added by Glenn 2018-05-01)
     if manual_on
@@ -235,11 +145,42 @@ try
         gr.bvalue_manual = slope;
         text(xmag(1) + (xmag(2)-xmag(1))*0.5, yN(1) + (yN(2)-yN(1))*0.5, sprintf('manual b=%.2f',slope),'Color','g');
     end
-catch
-    gr.bvalue = NaN;
-    gr.Mc = NaN;
-    gr.avalue = NaN;
-    gr.bvalue_error = NaN;
-end
+
     
 end 
+
+
+function gr = maxlik(mag, reverseBinEdges, magBinSize, Mc)
+%ESTIMATE B-VALUE (MAX LIKELIHOOD ESTIMATE)
+    Nmin = 10;
+    l = mag >= Mc - (magBinSize/2);
+    if length(mag(l)) >= Nmin
+        [fMeanMag, fBValue, fStd_B, fAValue] = Catalog.bvalue_lib.calc_bmemag(mag(l), magBinSize);
+
+        index_low=find(reverseBinEdges < Mc + magBinSize/2 & reverseBinEdges > Mc - magBinSize/2);
+        mag_hi = reverseBinEdges(1);
+        mz = reverseBinEdges <= mag_hi & reverseBinEdges >= Mc -.0001;
+        mag_zone=reverseBinEdges(mz);
+
+        % output structure    
+        gr.bvalue = fBValue;
+        gr.bvalue_error = fStd_B;
+        gr.avalue = fAValue;
+        gr.Mc = Mc;
+        gr.index_low = index_low;
+        gr.mag_hi = mag_hi;
+        gr.mag_zone = mag_zone;  
+    else
+        gr.bvalue = NaN;
+        gr.bvalue_error = NaN;
+        gr.avalue = NaN;
+        gr.Mc = Mc;
+        gr.index_low = NaN;
+        gr.mag_hi = NaN;
+        gr.mag_zone = NaN; 
+    end
+end
+
+
+
+    
