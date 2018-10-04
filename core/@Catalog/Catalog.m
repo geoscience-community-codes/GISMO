@@ -245,10 +245,12 @@ classdef Catalog
             cobj3.arrivals = [cobj1.arrivals; cobj2.arrivals];
             cobj3.waveforms = [cobj1.waveforms; cobj2.waveforms];    
         end
-            
           
         % Prototypes
-        gr = bvalue(catalogObject, mcType)     
+        gr = bvalue_old(catalogObject, mcType, runmode) 
+        gr = bvalue(catalogObject, runmode)
+        [a,b,Mc,berror]=bvaluetimeseries(cobj, N, stepsize)
+        [swarminess, magstd] = swarminess(cobj, N)
         catalogObject = addwaveforms(catalogObject, varargin);
         catalogObject = combine(catalogObject1, catalogObject2)
         catalogObject2 = subset(catalogObject, varargin)
