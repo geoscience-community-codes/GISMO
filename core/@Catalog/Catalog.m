@@ -249,15 +249,16 @@ classdef Catalog
         % Prototypes
         gr = bvalue_old(catalogObject, mcType, runmode) 
         gr = bvalue(catalogObject, runmode)
-        [a,b,Mc,berror]=bvaluetimeseries(cobj, N, stepsize)
+        [a,b,Mc,berror] = bvaluetimeseries(cobj, N, stepsize)
         [swarminess, magstd] = swarminess(cobj, N)
+        spatial_density(cobj)
         catalogObject = addwaveforms(catalogObject, varargin);
         catalogObject = combine(catalogObject1, catalogObject2)
         catalogObject2 = subset(catalogObject, varargin)
-        catalogObjects=subclassify(catalogObject, subclasses)         
+        catalogObjects = subclassify(catalogObject, subclasses)         
         disp(catalogObject)
         eev(obj, eventnum)
-        erobj=eventrate(catalogObject, varargin)
+        erobj = eventrate(catalogObject, varargin)
         hist(catalogObject)
         list_waveform_metrics(catalogObject);
         plot(catalogObject, varargin)
