@@ -181,16 +181,16 @@ function w = waveform(varargin)
          w = genericWaveform();
       case 2 
          if isa(varargin{1}, 'char')
-            filename = varargin{1};
+            filename = varargin{1}
 
-	    % Glenn Thompson 20180703: added to deal with files downloaded from web addresses
-	    if strfind(filename,'http')
-		url=filename;
-		filename=strrep(url,'http://','');
-		filename=strrep(filename,'https://','');
-		filename=strrep(filename,'/','.');
-		websave(filename, url);
-	    end
+            % Glenn Thompson 20180703: added to deal with files downloaded from web addresses
+            if strfind(filename,'http')
+                url=filename;
+                filename=strrep(url,'http://','');
+                filename=strrep(filename,'https://','');
+                filename=strrep(filename,'/','.');
+                websave(filename, url);
+            end
             if exist(filename,'file')            
                 filetype = varargin{2};
                 switch lower(filetype)

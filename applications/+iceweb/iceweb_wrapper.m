@@ -32,7 +32,7 @@ function iceweb_wrapper(PRODUCTS_TOP_DIR, subnetName, datasourceObject, ChannelT
 % set up products structure for iceweb
 products.waveform_plot.doit = true;
 products.rsam.doit = true;
-products.rsam.samplingIntervalSeconds = [10 60 600];
+products.rsam.samplingIntervalSeconds = [1 60];
 products.rsam.measures = {'max';'mean';'median'};
 products.spectrograms.doit = true;
 products.spectrograms.timeWindowMinutes = 10;
@@ -49,6 +49,12 @@ products.helicorders.timeWindowMinutes = 10;
 products.soundfiles.doit = true;
 
 gulpMinutes = products.spectrograms.timeWindowMinutes;
+
+global TZ
+TZ = 0;
+
+
+save icewebparams.mat
 
 % call iceweb_wrapper
 tic;

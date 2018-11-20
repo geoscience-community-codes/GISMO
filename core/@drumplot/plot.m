@@ -67,7 +67,7 @@ drawnow
     
     % split drumplotobj.wave into one waveform per line for continuous data
     B.line_waveform_continuous = extract(drumplotobj.wave, 'time', B.starttimes, B.endtimes);
-    datestr(get(B.line_waveform_continuous,'start'))
+
     % if there are catalog events, add waveform objects, return one waveform per line for event data
     B.line_waveform_events = [];
     w = [];
@@ -123,7 +123,7 @@ drawnow
 
     %% PLOT DRUMPLOT TRACES WITH EVENT OVERLAY
     for n = 1:B.number_of_lines 
-      B.line_offset(n) = (B.number_of_lines-n+0.5)/B.number_of_lines % Trace offset from bottom
+      B.line_offset(n) = (B.number_of_lines-n+0.5)/B.number_of_lines; % Trace offset from bottom
       B.line_waveform_continuous(n) = B.line_waveform_continuous(n) * B.scale + B.line_offset(n);
       plot(B.line_waveform_continuous(n), 'color', drumplotobj.trace_color, 'xunit', 'minutes', 'axeshandle', B.ax);
       hold on;
@@ -170,10 +170,8 @@ function add_y_ticks(drumplotobj,B)
     if ~isempty(drumplotobj.wave)
         ylabel(B.ax,'')
         tick_positions = B.line_offset;
-        N=numel(tick_positions);
-        tick_labels = flipud(cellstr(datestr(B.starttimes,15)))
+        tick_labels = flipud(cellstr(datestr(B.starttimes,15)));
         set(B.ax,'YTick',fliplr(tick_positions))
-        size(tick_labels,1)
         set(B.ax,'YTickLabel',tick_labels)
     end
 end
