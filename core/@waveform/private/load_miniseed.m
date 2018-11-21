@@ -39,18 +39,24 @@ function w = load_miniseed(request)
              wtmp = []; 
              %wtmp = mseedfilename2waveform(thisfilename{1}, startTime, endTime);
              wtmp = mseedfilename2waveform(filenamelist{c}{cc}, startTime, endTime);
-             wtmp = reshape(wtmp, [1 numel(wtmp)]);
-             wfiles = [wfiles wtmp];
+             if ~isempty(wtmp)
+                 wtmp = reshape(wtmp, [1 numel(wtmp)]);
+                 wfiles = [wfiles wtmp];
+             end
           end
       end
-      w = combine(wfiles);
       
-      % Extract based on time
-      w = extract(w, 'time', startTime, endTime);
-      
-      % Pad GT added 20181120
-      w = pad(w, startTime, endTime, 0);
-    
+      if ~isempty(wfiles)
+          w = combine(wfiles);
+
+          % Extract based on time
+          w = extract(w, 'time', startTime, endTime);
+
+          % Pad GT added 20181120
+          w = pad(w, startTime, endTime, 0);
+      else
+          w=[];
+      end
       
       % Extract based on ChannelTag
       %w = matchChannelTag(w);
@@ -66,11 +72,15 @@ function w = load_miniseed(request)
       end
    end
 end
-
+%%
 function w = mseedfilename2waveform(thisfilename, snum, enum)
-    s = ReadMSEEDFast(thisfilename); % written by Martin Mityska
-     for c=1:numel(s)
-        w(c) = waveform(ChannelTag(s(c).network, s(c).station, s(c).location, s(c).channel), ...
-            s(c).sampleRate, epoch2datenum(s(c).startTime), s(c).data);
-     end
+    if exist(thisfilename)
+        s = ReadMSEEDFast(thisfilename); % written by Martin Mityska
+         for c=1:numel(s)
+            w(c) = waveform(ChannelTag(s(c).network, s(c).station, s(c).location, s(c).channel), ...
+                s(c).sampleRate, epoch2datenum(s(c).startTime), s(c).data);
+         end
+    else
+        w=[];
+    end
 end
