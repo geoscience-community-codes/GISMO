@@ -251,7 +251,7 @@ classdef Catalog
         gr = bvalue(catalogObject, runmode)
         [a,b,Mc,berror] = bvaluetimeseries(cobj, N, stepsize)
         [swarminess, magstd] = swarminess(cobj, N)
-        spatial_density(cobj)
+        clusteriness = spatial_density(cobj)
         catalogObject = addwaveforms(catalogObject, varargin);
         catalogObject = combine(catalogObject1, catalogObject2)
         catalogObject2 = subset(catalogObject, varargin)
