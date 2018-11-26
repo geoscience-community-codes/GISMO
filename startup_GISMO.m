@@ -44,7 +44,7 @@ addContributed(gismopath,'uaf_internal');
 addpath(genpath(fullfile(gismopath,'applications')));
 
 % ADD A PATH TO JAR FILES
-f = fullfile(gismopath,'contributed','iris_dmc_tools','IRIS-WS-2.0.15.jar');
+f = fullfile(gismopath,'contributed','iris_dmc_tools','IRIS-WS-2.0.17.jar');
 try 
     javaaddpath(f);
     disp(['Adding path: ', f]);

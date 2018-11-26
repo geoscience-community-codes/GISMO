@@ -10,6 +10,7 @@ function w = load_miniseed(request)
       filenamelist={};
       
       % Work out which files we need
+      % Modified by GT on 20181120 to handle multiple chantags
       for i=1:numel(chanInfo)
             thisfilename = getfilename(thisSource,chanInfo(i),startTime);
             found=false;
@@ -25,18 +26,37 @@ function w = load_miniseed(request)
             end
       end
       wfiles = [];
+      % GT 20181120
+      % we now have filenamelist which is a cell array of cell arrays (1
+      % per chantag, but possibly more than 1 file per chantag is the
+      % request crosses file boundaries
       
       % Load waveforms from all these files
+      % Modified by GT 20181120 to loop over filenamelist and
+      % filenamelist{c}
       for c=1:numel(filenamelist)
-         wtmp = []; 
-         wtmp = mseedfilename2waveform(thisfilename{1}, startTime, endTime);
-         wtmp = reshape(wtmp, [1 numel(wtmp)]);
-         wfiles = [wfiles wtmp];
+          for cc=1:numel(filenamelist{c})
+             wtmp = []; 
+             %wtmp = mseedfilename2waveform(thisfilename{1}, startTime, endTime);
+             wtmp = mseedfilename2waveform(filenamelist{c}{cc}, startTime, endTime);
+             if ~isempty(wtmp)
+                 wtmp = reshape(wtmp, [1 numel(wtmp)]);
+                 wfiles = [wfiles wtmp];
+             end
+          end
       end
-      w = combine(wfiles);
       
-      % Extract based on time
-      w = extract(w, 'time', startTime, endTime);
+      if ~isempty(wfiles)
+          w = combine(wfiles);
+
+          % Extract based on time
+          w = extract(w, 'time', startTime, endTime);
+
+          % Pad GT added 20181120
+          w = pad(w, startTime, endTime, 0);
+      else
+          w=[];
+      end
       
       % Extract based on ChannelTag
       %w = matchChannelTag(w);
@@ -52,11 +72,15 @@ function w = load_miniseed(request)
       end
    end
 end
-
+%%
 function w = mseedfilename2waveform(thisfilename, snum, enum)
-    s = ReadMSEEDFast(thisfilename); % written by Martin Mityska
-     for c=1:numel(s)
-        w(c) = waveform(ChannelTag(s(c).network, s(c).station, s(c).location, s(c).channel), ...
-            s(c).sampleRate, epoch2datenum(s(c).startTime), s(c).data);
-     end
+    if exist(thisfilename)
+        s = ReadMSEEDFast(thisfilename); % written by Martin Mityska
+         for c=1:numel(s)
+            w(c) = waveform(ChannelTag(s(c).network, s(c).station, s(c).location, s(c).channel), ...
+                s(c).sampleRate, epoch2datenum(s(c).startTime), s(c).data);
+         end
+    else
+        w=[];
+    end
 end

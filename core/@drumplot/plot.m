@@ -60,14 +60,14 @@ drawnow
     enum = ceilminute(enum-1/86400, drumplotobj.mpl);
     
     % find start and end times for each line
-    B.number_of_lines = 1440*(enum-snum)/drumplotobj.mpl;
+    B.number_of_lines = round(1440*(enum-snum)/drumplotobj.mpl);
     days_per_line = (enum-snum)/B.number_of_lines;
     B.starttimes=snum:days_per_line:enum-days_per_line;
     B.endtimes=snum+days_per_line:days_per_line:enum;
     
     % split drumplotobj.wave into one waveform per line for continuous data
     B.line_waveform_continuous = extract(drumplotobj.wave, 'time', B.starttimes, B.endtimes);
-    
+
     % if there are catalog events, add waveform objects, return one waveform per line for event data
     B.line_waveform_events = [];
     w = [];
@@ -96,9 +96,7 @@ drawnow
             temp_cobj = temp_cobj.addwaveforms(drumplotobj.wave, pretrigsecs, posttrigsecs);
         end
         w = [temp_cobj.waveforms{1,:}];
-    end
-w(1)
-w(2)
+     end
      
      if ~isempty(w)
         % go through w and check the channeltag is same as drumplotobj.wave
@@ -124,7 +122,7 @@ w(2)
     B.scale=drumplotobj.scale/(B.number_of_lines*max_amplitude);
 
     %% PLOT DRUMPLOT TRACES WITH EVENT OVERLAY
-    for n = 1:B.number_of_lines % Glenn 20160513: For cookbook examples I had to add 1 here. Not sure why. Doesn't work in other cases
+    for n = 1:B.number_of_lines 
       B.line_offset(n) = (B.number_of_lines-n+0.5)/B.number_of_lines; % Trace offset from bottom
       B.line_waveform_continuous(n) = B.line_waveform_continuous(n) * B.scale + B.line_offset(n);
       plot(B.line_waveform_continuous(n), 'color', drumplotobj.trace_color, 'xunit', 'minutes', 'axeshandle', B.ax);
@@ -172,9 +170,9 @@ function add_y_ticks(drumplotobj,B)
     if ~isempty(drumplotobj.wave)
         ylabel(B.ax,'')
         tick_positions = B.line_offset;
-        tick_labels = datestr(B.starttimes,15);
+        tick_labels = flipud(cellstr(datestr(B.starttimes,15)));
         set(B.ax,'YTick',fliplr(tick_positions))
-        set(B.ax,'YTickLabel',flipud(tick_labels))
+        set(B.ax,'YTickLabel',tick_labels)
     end
 end
     

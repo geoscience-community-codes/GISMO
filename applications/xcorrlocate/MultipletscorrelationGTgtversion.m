@@ -1,52 +1,36 @@
-function Multipletscorrelation()
-
+% Author: Mitchell Hastings
+% Welcome Weary Seismologists!
+% This is a .m script made to automate the process of creating a subset
+% of waveforms at each station at Telica volcano, Nicaragua. This script 
+% can work with any kind of waveform data if you are making subsets of 
+% families of waveforms. This script was written for the purpose of a class
+% project for Steve McNutt's Volcano Seismology course. The author is tired
+% and wishes to no longer continue modulating this script, but he may come
+% back to doing so....eventually...
 
 clear all
 close all
 clc
-STATIONS = {'TBTN';'TBMR';'TBHY';'TBHS'};
+
 POSTTRIG = 20
 
-%% THIS IS THE ONLY SECTION IN THE SCRIPT THAT NEEDS CHANGED
-%SIMPLY CHANGE THE WORKING DIRECTORY AND THE FILENAME TO RUN IT
-%NOTE: MUST HAVE THE SAME DATA STRUCTURE AND NAMING SCHEME AS
-%MEL'S DATA
-
-MULTIPLETS_TOP_DIR = '~/Desktop/Multiplets';
-PEAKMATCH_OUTPUT_FILE = 'M-2012-05-11-edit2.dat';
-
+%% THIS IS THE ONLY SECTION IN THE SCRIPT THAT NEEDS CHANGED 
+  %SIMPLY CHANGE THE WORKING DIRECTORY AND THE FILENAME TO RUN IT
+  %NOTE: MUST HAVE THE SAME DATA STRUCTURE AND NAMING SCHEME AS 
+  %MEL'S DATA
+   
 % Move to the working directory that contains the correct data structure
 % for this script, which is...
-cd(MULTIPLETS_TOP_DIR);
+cd ~/Desktop/Multiplets
 
-[stacked_waveform, waveforms_that_went_into_stack] = stackwaveforms(PEAKMATCH_OUTPUT_FILE, POSTTRIG, STATIONS);
-stack_onset_time = manually_pick_onset_time(stacked_waveform);
-arrivals = find_onset_times(stacked_waveforms); % xcorr
-write_arrivals_to_antelope(arrivals, dbname); 
-
-end
-
-function stacked_waveforms = stackwaveforms(PEAKMATCH_OUTPUT_FILE, POSTTRIG, STATIONS)
-% % Author: Mitchell Hastings
-% % Welcome Weary Seismologists!
-% % This is a .m script made to automate the process of creating a subset
-% % of waveforms at each station at Telica volcano, Nicaragua. This script
-% % can work with any kind of waveform data if you are making subsets of
-% % families of waveforms. This script was written for the purpose of a class
-% % project for Steve McNutt's Volcano Seismology course. The author is tired
-% % and wishes to no longer continue modulating this script, but he may come
-% % back to doing so....eventually...
-%% NOW HACKED BY GLENN to
-% use functions, structures, loops, meaningful variable names
-% remove station names hardwired into variable names
-
-% Read in file that has the original list of the Multiplets and all
-% member events (this is for station TBTN only, that is all PeakMatch was run for)
-fid = fopen(PEAKMATCH_OUTPUT_FILE,'r');
-
+% Read in file that has the original list of the Multiplets and all 
+% member events 
+filename = 'M-2012-05-11-edit2.dat';
+fid = fopen(filename,'r');
 %% TBTN--------------------------------------------------------------------
-% loop to read in each line and read the corresponding SAC file into the
-% next element of the waveform vector, w
+% loop to read in each line and write a file path relative to the working
+% directory
+
 count = 1;
 while 1
     tline = fgetl(fid);
@@ -58,18 +42,16 @@ while 1
     count = count + 1;
 end
 
-% cross-correlate each element of w against every other
+% create correlation object of the waveforms to do the correlation
 c = correlation(w, get(w, 'start'));
 c2 = xcorr(c, [1 POSTTRIG]);
 corr = get(c2, 'CORR');
 lag = get(c2, 'LAG');
 
-% create correlation object with correlation coefficient above 0.7
+% create object with correlation coefficient above 0.7
 corrthresh = 0.7;
 keep = find(corr(:,1) > corrthresh);
 c3 = subset(c2, keep);
-
-% create waveform vector for these 
 w3 = waveform(c3);
 
 % Extract the waveform files that correlate above the threshold
@@ -83,7 +65,7 @@ for count = 1:numel(h)
     count = count + 1;
 end
 
-% Use the subset_list to find the waveforms that correlate above the
+% Use the subset_list to find the waveforms that correlate above the 
 % threshold on other stations
 
 %% TBMR--------------------------------------------------------------------
@@ -101,7 +83,7 @@ end
 count = 1;
 for count = 1:numel(subMR)
     w_subMR(count) = waveform(subMR{count}, 'sac');
-    count = count + 1;
+    count = count + 1; 
 end
 
 % Now this step is to do the correlation with the subset on TBMR
@@ -145,7 +127,7 @@ end
 count = 1;
 for count = 1:numel(subHY)
     w_subHY(count) = waveform(subHY{count}, 'sac');
-    count = count + 1;
+    count = count + 1; 
 end
 
 % Now this step is to do the correlation with the subset on TBHY
@@ -189,7 +171,7 @@ end
 count = 1;
 for count = 1:numel(subHS)
     w_subHS(count) = waveform(subHY{count}, 'sac');
-    count = count + 1;
+    count = count + 1; 
 end
 
 % Now this step is to do the correlation with the subset on TBHY
@@ -296,7 +278,7 @@ CTN2 = xcorr(CTN, [1 POSTTRIG]);
 corr = get(CTN2, 'CORR'); % just to check correlation coefficients
 CTN3 = adjusttrig(CTN2, 'median');
 
-% plot(CTN3);
+% plot(CTN3); 
 
 CTN4 = stack(CTN3);
 % plot(CTN4);
@@ -318,7 +300,7 @@ CMR2 = xcorr(CMR, [1 POSTTRIG]);
 corr = get(CMR2, 'CORR'); % just to check correlation coefficients
 CMR3 = adjusttrig(CMR2, 'median');
 
-% plot(CMR3);
+% plot(CMR3); 
 
 CMR4 = stack(CMR3);
 % plot(CMR4);
@@ -339,7 +321,7 @@ CHY2 = xcorr(CHY, [1 POSTTRIG]);
 corr = get(CHY2, 'CORR'); % just to check correlation coefficients
 CHY3 = adjusttrig(CHY2, 'median');
 
-% plot(CHY3);
+% plot(CHY3); 
 
 CHY4 = stack(CHY3);
 % plot(CHY4);
@@ -361,7 +343,7 @@ CHS2 = xcorr(CHS, [1 POSTTRIG]);
 corr = get(CHS2, 'CORR'); % just to check correlation coefficients
 CHS3 = adjusttrig(CHS2, 'median');
 
-% plot(CHS3);
+% plot(CHS3); 
 
 CHS4 = stack(CHS3);
 % plot(CHS4);
@@ -370,73 +352,7 @@ plot(WHS4(end)); % stacked waveform
 % plot(WHS4(1)); % master waveform
 plot_panels(WHS4, 'alignWaveform', 1)
 
-end
-
-function Multipletscorrelation()
-
-MULTIPLETS_TOP_DIR='~/Desktop/Multiplets';
-PEAKMATCH_OUTPUT_FILE='M-2012-05-11-edit2.dat';
-
-
-
-end 
-
-
-
-
-
-
-
-
-
-function stack_onset_time = manually_pick_onset_time(stacked_waveform);
-    plot(stacked_waveform)
-    [t,y]=ginput(1);
-    close
-    stack_onset_time = get(stacked_waveform,'start') + t/86400;
-end
-
-function arrivalobj = find_onset_times(stacked_waveforms); % xcorr
-% Maths to use for computing arrival time:
-%   where:
-%       wEvent is a real event
-%       lagSeconds is xcorr(wstack, wEvent)
-%       onsetDelaySeconds is how far into stack we pick the arrival onset
-%       arrivalDatenum = wEventDateNum + (lagSeconds + onsetDelaySeconds)/SECONDS_PER_DAY
-%
-% This test example shows that xcorr(a,b) where b is a delayed by 1 sample produces a lag of -1
-end
-
-function write_arrivals_to_antelope(arrivals, dbname); 
-% build a Catalog object
-end
-
-
-
-function ignore_these_notes
-%% STUFF ADDED BY GLENN
-% Maths to use for computing arrival time:
-%   where:
-%       wEvent is a real event
-%       lagSeconds is xcorr(wstack, wEvent)
-%       onsetDelaySeconds is how far into stack we pick the arrival onset
-%       arrivalDatenum = wEventDateNum + (lagSeconds + onsetDelaySeconds)/SECONDS_PER_DAY
-%
-% This test example shows that xcorr(a,b) where b is a delayed by 1 sample produces a lag of -1
-%
-%     b = randn(1,10) + [0 0 0 0 0 10 0 0 0 0];
-%     a = randn(1,10) + [0 0 0 0 10 0 0 0 0 0];
-%     [acor,lag] = xcorr(a,b);
-%     plot(lag,acor)
-%
-% then we create Arrival objects, add them into Catalog object
-%
-% write Catalog object to Antelope database
-%
-% Linux script Antelope relocate or dbgenloc or dblocsat to locate events using those Arrivals time
-% Also drive db2kml to plot in Google Earth (or GMT)
-
-end
+%%
 
 
 
