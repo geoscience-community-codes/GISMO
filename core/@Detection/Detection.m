@@ -15,6 +15,11 @@ classdef Detection
     end
     methods
         function obj = Detection(sta, chan, time, state, filterString, signal2noise)
+            % This is bad. It should use ChannelTag, not sta and chan.
+            % It was written this way to best deal with Antelope detection
+            % tables. But should be fixed.
+            % For now, just add a function that's adds network name to the
+            % channelinfo.
             
             % Blank constructor
             if ~exist('sta','var')
@@ -229,6 +234,17 @@ plot(x,100-cumsum(n)/sum(n)*100,'LineWidth',5);
                 [newfs], ...
                 newsnr)
         end
+        
+        function self = addnetwork(self,networkcode)
+            % trick to add networkcode so that things like plot_panels work
+            % because Detection only takes sta and chan in constructor, it
+            % loses the network code
+            for c=1:numel(self.channelinfo)
+                ct = self.channelinfo{c}
+                self.channelinfo{c} = sprintf('%s%s',networkcode,ct);
+            end
+        end
+
         
         % prototypes
          catalogobj = associate(self, maxTimeDiff, sites, source)

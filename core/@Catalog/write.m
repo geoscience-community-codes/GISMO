@@ -13,7 +13,7 @@ function write(catalogObject, outformat, outpath, varargin)
 
     switch outformat
         case {'text';'csv';'xls'} % help table.write for more info
-            write(catalogObject.table(), outpath); % add a table method to Catalog after changing Catalog so it no longer uses a table internally
+            writetable(catalogObject.table(), outpath); % similar to UW/PNSN format used in REDpy
 
         case 'antelope'
 

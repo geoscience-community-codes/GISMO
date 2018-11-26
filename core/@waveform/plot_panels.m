@@ -8,6 +8,8 @@ function plot_panels(w, varargin)
 %   PLOT_PANELS(w, 'alignWaveforms', true) will align the waveforms on their start times.
 %   PLOT_PANELS(w, 'arrivals', ArrivalObject) will superimpose arrival
 %                                             times on the waveforms.
+%   PLOT_PANELS(w, 'detections', DetectionObject) will superimpose
+%                                         detection times on the waveforms.
 %   PLOT_PANELS(w, 'visible', 'off') will prevent the plot showing on the
 %                                    screen.
 %   By default, plot_panels(..) will show 3 text labels for each waveform
@@ -37,11 +39,15 @@ function plot_panels(w, varargin)
     p.addParameter('visible', 'on', @isstr)
     p.addParameter('labels', {'time';'mean';'amplitude'}, @iscell)
     p.addParameter('arrivals', [])
+    p.addParameter('detections', [])
     p.parse(varargin{:});
     alignWaveforms = p.Results.alignWaveforms;
     visibility = p.Results.visible;
     if isa(p.Results.arrivals, 'Arrival')
         arrivalobj = p.Results.arrivals;
+    end
+    if isa(p.Results.detections, 'Detection')
+        detectionobj = p.Results.detections;
     end
     
     % get the first start time and last end time
@@ -99,6 +105,25 @@ function plot_panels(w, varargin)
             end
             %hold off
         end
+        
+        % detections
+        if exist('detectionobj','var')
+            disp('- adding detections to panel plot')
+            hold on
+            thisctag = strrep(string(get(w(wavnum),'ChannelTag')),'-','')
+            Index = find(ismember(detectionobj.channelinfo, thisctag))
+            for detnum=1:numel(Index)
+                dettime = detectionobj.time(Index(detnum));
+                if alignWaveforms
+                    reldettime = (dettime-min(dnum))*SECSPERDAY;
+                else
+                    reldettime = (dettime-snum)*SECSPERDAY;
+                end
+                reldettime
+                plot([reldettime reldettime], [min(y) max(y)],'r', 'LineWidth',3);
+            end
+            %hold off
+        end        
         
         % metrics
         try 

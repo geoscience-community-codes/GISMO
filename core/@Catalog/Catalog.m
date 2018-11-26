@@ -245,6 +245,16 @@ classdef Catalog
             cobj3.arrivals = [cobj1.arrivals; cobj2.arrivals];
             cobj3.waveforms = [cobj1.waveforms; cobj2.waveforms];    
         end
+        
+        function t=table(cobj) % similar to UW/PNSN format used in REDpy
+            % this is almost compatible with the catfill.py program in
+            % REDpy - see mshcat.csv for an example
+            evid = 1:numel(cobj.otime);
+            epochtime = datenum2epoch(cobj.otime);
+            timeutc = cellstr(datestr(cobj.otime, 'yyyy/mm/dd HH:MM:SS'));
+            disp('converting catalog object -> table')
+            t=table(evid', cobj.mag, epochtime, timeutc, cobj.lat, cobj.lon, cobj.depth, 'VariableNames', {'Evid', 'Magnitude', 'Epoch_UTC','Time_UTC', 'Lat', 'Lon', 'Depth_Km'});
+        end
           
         % Prototypes
         gr = bvalue_old(catalogObject, mcType, runmode) 
@@ -270,7 +280,7 @@ classdef Catalog
         webmap(catalogObject)
         write(catalogObject, outformat, outpath, schema)
         arrivals_per_event(catalogObject)
-        
+        %t=table(catalogObject)
     end
 %% ---------------------------------------------------
     methods (Access=protected, Hidden=true)

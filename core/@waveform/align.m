@@ -97,9 +97,13 @@ function w = align(w,alignTime, newFrequency, method)
    closestStartTime = existingStarts - rem(deltaTime,timeStep);
    
    for n=1:numel(w)
+       numel(w)
+       
       origTimes = get(w(n),'timevector');
+      origTimes
       % newTimes MUST be in one column, else DATA field gets corrupted
       newTimes = ( closestStartTime(n):timeStep:existingEnds(n) )';
+      newTimes
       
       %get rid of samples that lay entirely outside the existing waveform's
       %range (ie, only interpolate values BETWEEN points)

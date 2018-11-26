@@ -12,7 +12,8 @@ else
 
     % waveform data parameters
     %ds = datasource('antelope', '/raid/data/rockets/dbspacexplosion');
-    ds = datasource('antelope', '/Users/glennthompson/Dropbox/Rockets/db/20160901_explosion');
+    %ds = datasource('antelope', '/Users/glennthompson/Dropbox/Rockets/db/20160901_explosion');
+    ds = datasource('miniseed', '/Users/gt/Dropbox/RocketSeismology/explosion.mseed');
     snum=datenum(2016,9,1,13,0,0);
     enum = snum + 1/24;
     scnl = scnlobject('BCHH', '*', 'FL');
@@ -40,7 +41,7 @@ else
     %% load waveform data
     disp('Loading waveform data...')
     w=waveform(ds,scnl,snum,enum);
-    
+    %%
     save(matfile);
 end
 

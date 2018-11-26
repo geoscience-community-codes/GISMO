@@ -1,9 +1,10 @@
 %% plot array map & compute eastings and northings
-if make_figures
+if exist('make_figures','var') & make_figures
     disp('Plotting array map')
     close all
-    cols = 'rwbggg';
-    for c=1:length(lat)
+    cols = 'rwbggg'; % for spaceXplosion
+    %cols = 'kkkkkkkkkkkk';
+    for c=1:length(easting)
         chan = get(w(c),'channel');;
         plot(easting(c),northing(c),'o','MarkerFaceColor',cols(c),'MarkerSize',10)
         hold on

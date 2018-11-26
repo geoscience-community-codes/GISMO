@@ -1,5 +1,5 @@
 %POSIITON the blueprint for Position objects in GISMO
-classdef Location
+classdef Position
 
     properties
         latitude;

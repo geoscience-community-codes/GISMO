@@ -17,6 +17,6 @@ if admin.antelope_exists()
 else
     % Does not account for leap seconds.
     for n = 1:numel(time)
-        epoch(n) = (time - datenum(1970,1,1,0,0,0))*86400;
+        epoch(n) = (time(n) - datenum(1970,1,1,0,0,0))*86400;
     end
 end
