@@ -1,4 +1,4 @@
-function w = clean(w)
+function w = clean(w, f)
 % CLEAN Clean up waveform object(s)
 %   w = clean(w) will detrend waveforms (in a smart way, aware of NaN
 %   values marking missing values), then use fillgaps to mark bounded NaNs
@@ -8,6 +8,9 @@ function w = clean(w)
 %   filter.
 
 % Glenn Thompson March 28, 2017
+    if ~exist('f','var')
+        f = 0.05; % 20-s
+    end
 
     for c=1:numel(w)
         
@@ -23,8 +26,8 @@ function w = clean(w)
             w(c) = fillgaps(w(c), 'interp');
 
             % highpass data at 20s - to remove non-linear trends
-            f = filterobject('h',0.05,2);
-            w(c) = filtfilt(f,w(c));
+            fobj = filterobject('h',f,2);
+            w(c) = filtfilt(fobj,w(c));
         
         end
     end

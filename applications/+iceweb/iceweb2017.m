@@ -2,6 +2,11 @@ function iceweb2017(PRODUCTS_TOP_DIR, subnetName, ds, ChannelTagList, ...
     snum, enum, nummins, products)
     debug.printfunctionstack('>');
     
+    % knock out any rsam timewindows that would result in fewer than 2
+    % samples in gulpMinutes
+    products.rsam.samplingIntervalSeconds(products.rsam.samplingIntervalSeconds > (nummins*60)/2)=[];
+            products.rsam.samplingIntervalSeconds
+    
     % make the directory under which all products will be stored
     try
         mkdir(PRODUCTS_TOP_DIR);
@@ -70,10 +75,10 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
            
     %% Save raw waveform data to MAT file
     jjj = datenum2julday(snum);
-    wavrawmat = fullfile(PRODUCTS_TOP_DIR, 'waveforms', subnetName, filedate, sprintf('%s_%s_raw.mat',subnetName,filetime));
+    wavrawmat = fullfile(PRODUCTS_TOP_DIR, 'waveforms', subnetName, filedate, sprintf('%s_%s_raw.mat',subnetName,filetime))
     if ~exist(wavrawmat,'file')
         %% Get waveform data
-        debug.print_debug(1, sprintf('%s %s: Getting waveforms for %s from %s to %s at %s',mfilename, datestr(utnow), subnetName , datestr(snum), datestr(enum)));
+        debug.print_debug(1, sprintf('%s %s: Getting waveforms for %s from %s to %s at %s',mfilename, datestr(now), subnetName , datestr(snum), datestr(enum)));
         w = waveform(ds, ChannelTagList, snum, enum);
         %w = iceweb.waveform_wrapper(ds, ChannelTagList, snum, enum); % returns 1 waveform per channeltag, in same order
         if isempty(w)
@@ -90,6 +95,7 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
     end
     debug.printfunctionstack('<');
 
+
     % Save the cleaned waveform data to MAT file
     wavcleanmat = fullfile(PRODUCTS_TOP_DIR, 'waveforms', subnetName, filedate, sprintf('%s_%s_clean.mat',subnetName,filetime));
     if ~exist(wavcleanmat,'file')
@@ -105,8 +111,8 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
         w = clean(w);
         
         % Apply filterobject if exists
-        if ~isempty(products.waveform.filterobject)
-            w = filtfilt(products.waveform.filterobject, w);
+        if isfield(products,'filterobject') & ~isempty(products.filterobject)
+            w = filtfilt(products.filterobject, w);
         end
 
         % Pad all waveforms to same start/end
@@ -137,14 +143,12 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
     if products.rsam.doit
         for measureNum = 1:numel(products.rsam.measures)
             measure = products.rsam.measures{measureNum};
-            if numel(products.rsam.samplingIntervalSeconds)>1
-                samplingInterval = products.rsam.samplingIntervalSeconds(measureNum);
-            else
-                samplingInterval = products.rsam.samplingIntervalSeconds;
+            for sinum = 1:numel(products.rsam.samplingIntervalSeconds)
+                samplingInterval = products.rsam.samplingIntervalSeconds(sinum);
+                rsamobj = waveform2rsam(w, measure, samplingInterval);
+                %rsamobj.plot_panels()
+                rsamobj.save_to_bob_file(fullfile(PRODUCTS_TOP_DIR, 'bobfiles', subnetName, sprintf('SSSS.CCC.YYYY.MMMM.%03d.bob',samplingInterval) ));
             end
-            rsamobj = waveform2rsam(w, measure, samplingInterval);
-            %rsamobj.plot_panels()
-            rsamobj.save_to_bob_file(fullfile(PRODUCTS_TOP_DIR, 'bobfiles', subnetName, 'SSSS.CCC.YYYY.MMMM.bob'));
         end
     end
 
@@ -179,7 +183,7 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
             if iceweb.saveImageFile(spectrogramFilename, 72)
 
                 fileinfo = dir(spectrogramFilename); % getting a weird Index exceeds matrix dimensions error here.
-                debug.print_debug(1, sprintf('%s %s: spectrogram PNG size is %d',mfilename, datestr(utnow), fileinfo.bytes));	
+                debug.print_debug(1, sprintf('%s %s: spectrogram PNG size is %d',mfilename, datestr(now), fileinfo.bytes));	
 
                 % make thumbnails
                 iceweb.makespectrogramthumbnails(spectrogramFilename, spectrogramFraction);
@@ -313,4 +317,12 @@ function s = getmostcommon(ctags)
     end
     [~, itemp] = max(n);
     s= y{itemp};
+end
+
+function u = utnow(TZ)
+    global TZ
+    if ~exist('TZ','var')
+        TZ=0;
+    end
+    u = now - TZ/24;
 end

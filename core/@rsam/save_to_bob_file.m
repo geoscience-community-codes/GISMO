@@ -97,7 +97,7 @@ function save_to_bob_file(self, filepattern)
                     offset = startsample*4;
                     fid = fopen(fname,'r+');
                     fseek(fid,offset,'bof');
-                    debug.print_debug(2, sprintf('saving data with mean of %e from to file %s, starting at position %d',nanmean(datay),fname,startsample,(datapointsperday*daysperyear)));
+                    debug.print_debug(2, sprintf('saving data with mean of %e from to file %s, starting at position %d',nanmean(datay),fname,startsample,(SAMPLES_PER_DAY*daysperyear)));
                     fwrite(fid,datay(c),'float32');
                     fclose(fid);
                 end
