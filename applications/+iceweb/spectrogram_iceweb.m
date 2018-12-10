@@ -7,15 +7,18 @@ function [result,Tcell,Fcell,Ycell,meanF,peakF] = spectrogram_iceweb(s, w, varar
 % 	[result, Tcell, Fcell, Ycell] =spectrogram_iceweb(s, w, 'spectrogramFraction', 0.75, 'colormap', mycolormap, 'plot_metrics', 0)
 %
 % Inputs:
+%   s - a spectralobject (default, if left empty becomes that used for
+%                         iceweb)
 %	w - a vector of waveform objects
-%	s - a spectralobject
-%	spectrogramFraction - fraction of a panel height the spectrogram should take up (default: 0.8). 
-%			The waveform trace takes up the remaining fraction.
-%
+%	
 %   Name/Value pairs:
-%       'mycolormap' - (Optional) a user-defined colormap 
-%       'plot_metrics' - superimpose a plot of mean & dominant frequency.
-%                                                        0 or 1 (default 0)
+%       'spectrogramFraction' - fraction of a panel height the spectrogram should take up (default: 0.75). 
+%			The waveform trace takes up the remaining fraction.
+%       'mycolormap' - A user-defined colormap. (Default: iceweb colormap)
+%       'plot_metrics' - superimpose a plot of mean & dominant frequency
+%                        (default: false)
+%       'makeplot' - plot the spectrograms (default: true). But sometimes
+%                    we only want to compute the spectrogram.
 %
 % Outputs:
 %	(other than a figure on the screen)
@@ -43,21 +46,22 @@ numw = numel(w);
 if numw==0
 	return;
 end
-% if ~exist('s','var')
-% 	s = spectralobject(1024, 924, 10, [60 120]);
-% end
-% if ~exist('spectrogramFraction','var')
-% 	spectrogramFraction = 1;
-% end
-nfft = 1024;
-overlap = 924;
-fmax = 10;
-dbLims = [60 120];
+
+
+if isempty(s)
+    nfft = 1024;
+    overlap = 924;
+    fmax = 10;
+    dbLims = [60 120];
+    s = spectralobject(nfft, overlap, fmax, dbLims);
+end
+
 
 p = inputParser;
 p.addParameter('spectrogramFraction', 0.75, @isnumeric);
-p.addParameter('colormap', jet, @isnumeric);
-p.addParameter('plot_metrics', 0, @isnumeric);
+p.addParameter('colormap', iceweb.extended_spectralobject_colormap, @isnumeric);
+p.addParameter('plot_metrics', false, @islogical);
+p.addParameter('makeplot', true, @islogical);
 p.parse(varargin{:});
 spectrogramFraction = p.Results.spectrogramFraction;
 
@@ -99,6 +103,7 @@ for c=1:numw
     data = get(w(c), 'data');
     
     if length(data) > nfft
+        fprintf('Computing spectrogram %d\n',c)
         [S,F,T] = spectrogram(data, nfft, nfft/2, nfft, fsamp);
 
         Y = 20*log10(abs(S)+eps);
@@ -107,12 +112,10 @@ for c=1:numw
             F(1)=0.001;
         end
 
-        [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numw, c, spectrogramFraction, 0.12, 0.05, 0.80, 0.9);
-        axes('position', spectrogramPosition);
         T = wt.start + T/86400;
-        F = F(1:max(index));
-        Y = Y(1:max(index),:);
-        S = S(1:max(index),:);
+        Fplot = F(1:max(index));
+        Yplot = Y(1:max(index),:);
+        Splot = S(1:max(index),:);
         
         % mean frequency
         %minS = min(min(abs(S)+eps));
@@ -138,49 +141,56 @@ for c=1:numw
         meanF{c} = thismeanf;
         peakF{c} = thispeakf;
         
-            
-        if isempty(dBlims)
-            % plot spectrogram
-            %imagesc(T,F,abs(S));
-            imagesc(T,F,Y);
-        else
-            imagesc(T,F,Y,dBlims); 
-        end
-        axis xy;
-        colormap(p.Results.colormap);
+        result = result + 1
+        Ycell{c} = Y; Fcell{c} = F; Tcell{c} = T;     
         
-        % add plot of frequency metrics?
-        if p.Results.plot_metrics
-            hold on; plot(T,smooth(meanF{c}),'k','LineWidth',.5);
-            hold on; plot(T,smooth(peakF{c}),'w','LineWidth',.5);
-        end        
+        %% PLOT THE SPECTROGRAMS?
+        p.Results
+        if p.Results.makeplot
+            [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numw, c, spectrogramFraction, 0.12, 0.05, 0.80, 0.9);
+            axes('position', spectrogramPosition);
+            if isempty(dBlims)
+                % plot spectrogram
+                %imagesc(T,F,abs(S));
+                imagesc(T,Fplot,Yplot);
+            else
+                imagesc(T,Fplot,Yplot,dBlims); 
+            end
+            axis xy;
+            colormap(p.Results.colormap);
+        
+            %% superimpose graphs of frequency metrics?
+            if p.Results.plot_metrics
+                hold on; plot(T,smooth(meanF{c}),'k','LineWidth',.5);
+                hold on; plot(T,smooth(peakF{c}),'w','LineWidth',.5);
+            end        
 
-        % Change Y-Labels to 'sta.chan'
-        thissta = get(w(c), 'station');
-        thischan = get(w(c), 'channel');
-        ylabel( sprintf('%s\n%s',thissta, thischan(1:3) ), 'FontSize', 8);
-        xlabel('')
-        title('')
-        set(gca,'XLim', [wt.start wt.stop]);
-        if c==numw
-            set(gca, 'XTick', Xtickmarks, 'XTickLabel', XTickLabel,  'FontSize', 8); % time labels only on bottom spectrogram
-        else
-            set(gca, 'XTick', Xtickmarks, 'XTickLabel', {});
+            % Change Y-Labels to 'sta.chan'
+            thissta = get(w(c), 'station');
+            thischan = get(w(c), 'channel');
+            ylabel( sprintf('%s\n%s',thissta, thischan(1:3) ), 'FontSize', 8);
+            xlabel('')
+            title('')
+            set(gca,'XLim', [wt.start wt.stop]);
+            if c==numw
+                set(gca, 'XTick', Xtickmarks, 'XTickLabel', XTickLabel,  'FontSize', 8); % time labels only on bottom spectrogram
+            else
+                set(gca, 'XTick', Xtickmarks, 'XTickLabel', {});
+            end
+
+            if spectrogramFraction < 1
+                plotTrace(tracePosition, get(w(c),'data'), get(w(c),'freq'), Xtickmarks, wt, p.Results.colormap, s, thissta, thischan);
+                set(gca,'XLim', [wt.start wt.stop]); % added 20111214 to align trace with spectrogram when data missing (prevent trace being stretched out)
+
+                % change the trace background color if we want to identify
+                % broadband stations
+        % 		if (regexp(thischan, '[BH]H.'))
+        % 			set(gca, 'Color', [.8 .8 .8]);
+        %         end[30 100
+
+            end
         end
 
-        if spectrogramFraction < 1
-            plotTrace(tracePosition, get(w(c),'data'), get(w(c),'freq'), Xtickmarks, wt, p.Results.colormap, s, thissta, thischan);
-            set(gca,'XLim', [wt.start wt.stop]); % added 20111214 to align trace with spectrogram when data missing (prevent trace being stretched out)
-
-            % change the trace background color if we want to identify
-            % broadband stations
-    % 		if (regexp(thischan, '[BH]H.'))
-    % 			set(gca, 'Color', [.8 .8 .8]);
-    %         end[30 100
-
-        end
-        result = result + 1;
-        Ycell{c} = Y; Fcell{c} = F; Tcell{c} = T;
     else
         Ycell{c} = []; Fcell{c} = []; Tcell{c} = [];
     end
