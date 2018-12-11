@@ -142,8 +142,7 @@ function iceweb_helper(paths, PARAMS, subnets, tw, ds, products)
             rsamobj = waveform2rsam(w);
             rsamobj.save_to_bob_file(fullfile('data', 'rsam', subnet, 'SSSS.CCC.YYYY.MMMM.bob'));
         end
-    end
-    
+    end  
   
     % CREATE & SAVE HELICORDER PLOT
     if products.helicorders.doit 

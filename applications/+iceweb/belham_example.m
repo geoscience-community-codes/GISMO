@@ -29,8 +29,8 @@
 clc
 close all
 clear all
-warning off
-debug.set_debug(100)
+warning on
+debug.set_debug(0)
 
 %% These are same variables normally defined for a waveform
 % in this case, the files are stored by station & channel & day-of-year
@@ -53,121 +53,40 @@ startTime = datenum(2018,3,30);
 endTime = datenum(2018,3,31);
 
 %% Test the waveform parameters
-% clear w
-% w = waveform(datasourceObject, ChannelTagList, startTime, min([startTime+1/24 endTime]) );
-% if isempty(w)
-%     disp('No data')
-%     return
-% end
-% plot(w)
-% plot_panels(w)
-% % plot_helicorder(w)
+if 0 % set to 1 to run this part
+    clear w
+    w = waveform(datasourceObject, ChannelTagList, startTime, min([startTime+1/24 endTime]) );
+    if isempty(w)
+        disp('No data')
+        return
+    end
+    plot(w)
+    plot_panels(w)
+    % plot_helicorder(w)
+end
 
 %% Configure IceWeb
-%products_dir = '/media/sdd1/iceweb_data';
-products_dir = '~/Desktop/iceweb_data';
-network_name = 'Montserrat'; % can be anything
-% output directory is products_dir/network_name
-%
-% set up products structure for iceweb - DO NOT RECOMMEND CHANGING THESE
-products.waveform_plot.doit = true;
-products.rsam.doit = true;
-products.rsam.samplingIntervalSeconds = [1 60]; % [1 60] means record RSAM data at 1-second and 60-second intervals
-products.rsam.measures = {'max';'mean';'median'}; % {'max';'mean';'median'} records the max, mean and median in each 1-second and 60-second interval
-products.spectrograms.doit = true; % whether to plot & save spectrograms
-products.spectrograms.plot_metrics = true; % superimpose metrics on spectrograms
-products.spectrograms.timeWindowMinutes = 60; % 60 minute spectrograms. 10 minute spectrograms is another common choice
-%products.spectrograms.fmin = 0.5;
-products.spectrograms.fmax = 100; % Hz
-products.spectrograms.dBmin = 60; % white level
-products.spectrograms.dBmax = 120; % pink level
-products.spectral_data.doit = true; % whether to compute & save spectral data
-products.spectral_data.samplingIntervalSeconds = 60; % DO NOT CHANGE! spectral data are archived at this interval
-%  the following parameters are not really used yet - this functionality
-%  has not been added back to IceWeb yet
-products.reduced_displacement.doit = true;
-products.reduced_displacement.samplingIntervalSeconds = 60;
-products.helicorders.doit = true;
-products.helicorders.timeWindowMinutes = 10;
-products.soundfiles.doit = true;
-%
-% data will be swallowed in chunks of this size
-% 1 hour is optimal for speeding through data - smaller and larger chunks
-% will take longer overall
-% should always be at least products.spectrograms.timeWindowMinutes
-% otherwise spectrograms will be incomplete
-gulpMinutes = products.spectrograms.timeWindowMinutes;
+%PRODUCTS_TOP_DIR = '/media/sdd1/iceweb_data';
+PRODUCTS_TOP_DIR = '~/Desktop/iceweb_data';
+subnetName = 'Montserrat2'; % can be anything
+% output directory is PRODUCTS_TOP_DIR/network_name/subnetName
 
-
-% I think TZ is only used for the new version of utnow in iceweb2017 and
-% that is only used for debug output, so this can be ignored
-global TZ
-TZ = 0;
-
+% get parameters. these control what iceweb does.
+products.DAILYONLY = false; % set true to only produce day plots
+iceweb.get_params;
+   
 %%
 % save the parameters we are using to a timestamped mat file
-save(sprintf('icewebparams_%s_%s_%s_%s.mat',network_name,datestr(startTime,'yyyymmdd'),datestr(endTime,'yyyymmdd'),datestr(now,30)));
+save(sprintf('icewebparams_%s_%s_%s_%s.mat',subnetName,datestr(startTime,'yyyymmdd'),datestr(endTime,'yyyymmdd'),datestr(now,30)));
 
-%% run the IceWeb wrapper
-% uncomment the following line
-iceweb.iceweb2017(products_dir, network_name, datasourceObject, ChannelTagList, startTime, endTime, gulpMinutes, products)
-
-%% Daily plots
-close all; clc
-% ctags(1) = ChannelTag('MV','MTB1','00','HHZ');
-% ctags(2) = ChannelTag('MV','MTB1','10','HDF');
-% ctags(3) = ChannelTag('MV','MTB2','00','HHZ');
-% ctags(4) = ChannelTag('MV','MTB2','10','HDF');
-% ctags(5) = ChannelTag('MV','MTB3','00','HHZ');
-% ctags(6) = ChannelTag('MV','MTB3','10','HDF');
-% ctags(7) = ChannelTag('MV','MTB4','00','HHZ');
-% ctags(8) = ChannelTag('MV','MTB4','10','HDF');
-
-flptrn = fullfile(products_dir,'MV',network_name,'YYYY-MM-DD','spdata.NSLC.YYYY.MM.DD.max');
-
-for snum=floor(startTime):ceil(endTime-1)
-    enum = ceil(endTime)-eps;
-    
-    % DAILY SPECTROGRAMS
-    iceweb.plot_day_spectrogram('', flptrn, ChannelTagList, snum, enum);
-    dstr = datestr(snum,'yyyy-mm-dd');
-    daysgrampng = fullfile(products_dir,'MV',network_name,dstr,sprintf('daily_sgram_%s.png',dstr));
-    print('-dpng',daysgrampng);
-
-    % RSAM plots for max, mean, median
-    measures = {'max';'mean';'median'};
-    filepattern = fullfile(products_dir,'MV',network_name,'SSSS.CCC.YYYY.MMMM.060.bob');
-    for k=1:numel(measures)
-        plot_day_rsam(filepattern, snum, enum, ChannelTagList, measures{k});
-        pngfile = fullfile(products_dir,'MV',network_name,dstr,sprintf('daily_rsam_%s_%s.png',measures{k},dstr));
-        print('-dpng',pngfile);
-    end
-    
-    % SPECTRAL METRICS PLOTS
-    measures = {'findex';'fratio';'meanf';'peakf'};
-    filepattern = fullfile(products_dir,'MV',network_name,'SSSS.CCC.YYYY.MMMM.bob');
-    for k=1:numel(measures)
-        plot_day_rsam(filepattern, snum, enum, ChannelTagList, measures{k});
-        pngfile = fullfile(products_dir,'MV',network_name,dstr,sprintf('daily_%s_%s.png',measures{k},dstr));
-        print('-dpng',pngfile);
-    end    
-   
-end
-
-%%
-
-function plot_day_rsam(filepattern, snum, enum, ctag, measure)
-    for c=1:numel(ctag)
-        r(c) = rsam.read_bob_file(filepattern, 'snum', snum, 'enum', enum, 'sta', ctag(c).station, 'chan', ctag(c).channel, 'measure', measure, 'units', 'Hz')
-    end
-    r.plot_panels();
-end
+%% run IceWeb  ********************** this is where stuff really happens
+iceweb.run_iceweb(PRODUCTS_TOP_DIR, subnetName, datasourceObject, ChannelTagList, startTime, endTime, gulpMinutes, products)
 
 %% TO DO
 % 1. Calibrations
 % 2. Check options work
-% 3. Add option to remove normal spectrograms
-% 4. Add option to remove waveform files
+% 3. Add option to remove normal spectrograms DONE. Use DAILYONLY
+% 4. Add option to remove waveform files      DONE. Use removeWaveformFiles
 % (Which of 3 and 4 use the most space?)
 % 5. Generate HTML5 (+JS?) - or use a light PHP server?
 %  - different time scales

@@ -1,7 +1,8 @@
-function iceweb2017(PRODUCTS_TOP_DIR, subnetName, ds, ChannelTagList, ...
+function run_iceweb(PRODUCTS_TOP_DIR, subnetName, ds, ChannelTagList, ...
     snum, enum, nummins, products)
     debug.printfunctionstack('>');
     
+    %% Safety checks
     % knock out any rsam timewindows that would result in fewer than 2
     % samples in gulpMinutes
     products.rsam.samplingIntervalSeconds(products.rsam.samplingIntervalSeconds > (nummins*60)/2)=[];
@@ -9,29 +10,26 @@ function iceweb2017(PRODUCTS_TOP_DIR, subnetName, ds, ChannelTagList, ...
     % code assumes 60-s, any other value will break
     products.spectral_data.samplingIntervalSeconds = 60;
     
+    %% Directory setup
     % make the directory under which all products will be stored
+    networkName = getmostcommon(ChannelTagList);
+    products_dir = fullfile(PRODUCTS_TOP_DIR, networkName, subnetName);
     try
-        mkdir(PRODUCTS_TOP_DIR);
+        mkdir(products_dir);
     catch
-        error(sprintf('Cannot make directory %s',PRODUCTS_TOP_DIR));
+        error(sprintf('Cannot make directory %s',products_dir));
     end
 
-%     % load state
-%     statefile = fullfile(PRODUCTS_TOP_DIR, sprintf('iceweb_%s_state.mat',subnetName));
-%     if exist(statefile, 'file')
-%         load(statefile)
-%     end
-
-    % end time
+    %% Process waveform data in chunks nummins long from start time to end time
+    
+    % if end time empty, make it UTC time now
     if enum==0
         enum = utnow - delaymins/1440;
     end
     
     % generate list of timewindows
     timewindows = iceweb.get_timewindow(enum, nummins, snum);
-    
-    networkName = getmostcommon(ChannelTagList);
-    
+  
     % loop over timewindows
     for count = 1:length(timewindows.start)
         hh = datestr(timewindows.start(count),'HH');
@@ -42,14 +40,62 @@ function iceweb2017(PRODUCTS_TOP_DIR, subnetName, ds, ChannelTagList, ...
         if strcmp(mm,'00')
             fprintf('%s ',hh);
         end
-        process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTagList, timewindows.start(count), timewindows.stop(count), ds, products);
+        process_timewindow(products_dir, networkName, subnetName, ChannelTagList, timewindows.start(count), timewindows.stop(count), ds, products);
         %anykey = input('Press any key to continue');
     end
+    
+    %% Daily plots
+    close all
+
+    flptrn = fullfile(products_dir,'YYYY-MM-DD','spdata.NSLC.YYYY.MM.DD.max');
+
+    for snumday=floor(snum):ceil(enum-1)
+        enumday = ceil(enum)-eps;
+
+        % DAILY SPECTROGRAMS
+        if products.daily.spectrograms
+            iceweb.plot_day_spectrogram('', flptrn, ChannelTagList, snumday, enumday);
+            dstr = datestr(snumday,'yyyy-mm-dd');
+            daysgrampng = fullfile(products_dir,dstr,sprintf('daily_sgram_%s.png',dstr));
+            print('-dpng',daysgrampng);
+        end
+
+        % RSAM plots for max, mean, median
+        if products.daily.rsamplots
+            measures = {'max';'mean';'median'};
+            filepattern = fullfile(products_dir,'SSSS.CCC.YYYY.MMMM.060.bob');
+            for k=1:numel(measures)
+                iceweb.daily_rsam_plot(filepattern, snumday, enumday, ChannelTagList, measures{k});
+                pngfile = fullfile(products_dir,dstr,sprintf('daily_rsam_%s_%s.png',measures{k},dstr));
+                print('-dpng',pngfile);
+            end
+        end
+
+        % SPECTRAL METRICS PLOTS
+        if products.daily.spectralplots
+            measures = {'findex';'fratio';'meanf';'peakf'};
+            filepattern = fullfile(products_dir,'SSSS.CCC.YYYY.MMMM.bob');
+            for k=1:numel(measures)
+                iceweb.daily_rsam_plot(filepattern, snumday, enumday, ChannelTagList, measures{k});
+                pngfile = fullfile(products_dir, dstr, sprintf('daily_%s_%s.png',measures{k},dstr));
+                print('-dpng',pngfile);
+            end  
+        end
+        
+        % DAILY HELICORDERS
+        if products.daily.helicorders
+            % add code here
+        end
+
+    end
+
+    %%
+    disp('IceWeb completed run');
     debug.printfunctionstack('<');
 end
 
 
-function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTagList, snum, enum, ds, products)
+function process_timewindow(products_dir, networkName, subnetName, ChannelTagList, snum, enum, ds, products)
     debug.printfunctionstack('>');
     % compatible with Pensive, except it names files by endtime
     filedate = datestr(snum,'yyyy-mm-dd'); % ICEWEB
@@ -60,32 +106,30 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
     MILLISECOND_IN_DAYS = (1 / 86400000);
     enum = enum - MILLISECOND_IN_DAYS; % try to skip last sample
 
-%     % load state
-%     statefile = fullfile(PRODUCTS_TOP_DIR, sprintf('%s_state.mat',subnetName));
-%     if exist(statefile, 'file')
-%         load(statefile)
-%         if snum < snum0 
-%             return
-%         end
-%     end
-% 		
-%     % save state
-%     ds0=ds; ChannelTagList0=ChannelTagList; snum0=snum; enum0=enum; subnetName0 = subnetName;
-%     mkdir(fileparts(statefile));
-%     save(statefile, 'ds0', 'ChannelTagList0', 'snum0', 'enum0', 'subnetName0');
-%     clear ds0 ChannelTagList0 snum0 enum0 subnetName0
+    %% uncomment the following to use the state file
+    % this is best used only for a real-time system, to prevent
+    % re-processing the same data
+        %useStateFile;
            
     %% Save raw waveform data to MAT file
     jjj = datenum2julday(snum);
-    wavrawmat = fullfile(PRODUCTS_TOP_DIR, networkName, subnetName, filedate, sprintf('%s_%s_raw.mat',subnetName,filetime));
-    wavcleanmat = fullfile(PRODUCTS_TOP_DIR, networkName, subnetName, filedate, sprintf('%s_%s_clean.mat',subnetName,filetime));
+    wavrawmat = fullfile(products_dir, filedate, sprintf('%s_%s_raw.mat',subnetName,filetime));
+    wavcleanmat = fullfile(products_dir, filedate, sprintf('%s_%s_clean.mat',subnetName,filetime));
     if exist(wavcleanmat)
         fprintf('Waveform file %s already exists\n',wavcleanmat);
         load(wavcleanmat);
+        % keep waveform?
+        if products.removeWaveformFiles
+            delete(wavcleanmat);    
+        end 
     elseif exist(wavrawmat)
         fprintf('Waveform file %s not found\n',wavcleanmat);
         fprintf('but %s already exists\n',wavrawmat);
         load(wavrawmat);
+        % keep waveform?
+        if products.removeWaveformFiles
+            delete(wavrawmat);    
+        end 
     else
         %% Get waveform data
         fprintf('Waveform file %s not found\n',wavcleanmat);
@@ -101,7 +145,12 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
         end
         mkdir(fileparts(wavrawmat));
         debug.print_debug(1,sprintf('Saving waveform data to %s',wavrawmat));
-        save(wavrawmat,'w');   
+        
+        % save waveform?
+        if ~products.removeWaveformFiles
+            save(wavrawmat,'w');    
+        end
+          
     end
     debug.printfunctionstack('<');
 
@@ -130,16 +179,24 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
 
         mkdir(fileparts(wavcleanmat));
         debug.print_debug(1,sprintf('Saving waveform data to %s',wavcleanmat));
-        save(wavcleanmat,'w');   
+        
+        % save waveform?
+        if ~products.removeWaveformFiles
+            save(wavcleanmat,'w');   
+        end
     end
+    
+    % Apply calibs which should be stored within sites structure to
+    % waveform objects to convert from counts to real physical
+    % units
+    % w = apply_calib(w, sites);
+
     
     %% ICEWEB PRODUCTS
 
     % WAVEFORM PLOT
-    disp('Make waveform plot?')
-%     products.waveform_plot
     if products.waveform_plot.doit
-        fname = fullfile(PRODUCTS_TOP_DIR, networkName, subnetName, filedate, sprintf('%s_%s.png',subnetName,filetime));
+        fname = fullfile(products_dir, filedate, sprintf('%s_%s.png',subnetName,filetime));
         if ~exist(fname,'file')
             close all
             plot_panels(w, 'visible', 'off')
@@ -150,8 +207,6 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
     end
     
     % RSAM
-    disp('Make RSAM data?')
-%     products.rsam
     if products.rsam.doit
         for measureNum = 1:numel(products.rsam.measures)
             measure = products.rsam.measures{measureNum};
@@ -159,7 +214,7 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
                 samplingInterval = products.rsam.samplingIntervalSeconds(sinum);
                 rsamobj = waveform2rsam(w, measure, samplingInterval);
                 %rsamobj.plot_panels()
-                rsamobj.save_to_bob_file(fullfile(PRODUCTS_TOP_DIR, subnetName, sprintf('SSSS.CCC.YYYY.MMMM.%03d.bob',samplingInterval) ));
+                rsamobj.save_to_bob_file(fullfile(products_dir, sprintf('SSSS.CCC.YYYY.MMMM.%03d.bob',samplingInterval) ));
             end
         end
     end
@@ -174,13 +229,10 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
         if products.spectrograms.doit
             % filepath is compatible with Pensive, except iceweb names by
             % start of timewindow, pensive names by end
-            spectrogramFilename = fullfile(PRODUCTS_TOP_DIR, networkName, subnetName, filedate, sprintf('%s_%s.png',subnetName, filetime) );
+            spectrogramFilename = fullfile(products_dir, filedate, sprintf('%s_%s.png',subnetName, filetime) );
             debug.print_debug(1, sprintf('Creating %s',spectrogramFilename));
             close all
         end
-%         spectrogramFraction = 0.75;
-%         dbLims = [products.spectrograms.dBmin products.spectrograms.dBmax]; 
-%         specObj = spectralobject(1024, 924, products.spectrograms.fmax, dbLims);
 
         % if any channels have units 'Pa', multiple by 1000 so they are
         % visible
@@ -192,15 +244,7 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
             end
         end
         
-%         [sgresult, Tcell, Fcell, Ycell] = iceweb.spectrogram_iceweb(...
-%             specObj, w, 'spectrogramFraction', spectrogramFraction, ...
-%             'colormap', iceweb.extended_spectralobject_colormap, ...
-%             'plot_metrics', products.spectrograms.plot_metrics, ...
-%             'makeplot', products.spectrograms.doit);
-%         [sgresult, Tcell, Fcell, Ycell] = iceweb.spectrogram_iceweb(...
-%             specObj, w,  ...
-%             'plot_metrics', products.spectrograms.plot_metrics, ...
-%             'makeplot', products.spectrograms.doit);
+        % compute spectrogram
         [sgresult, Tcell, Fcell, Ycell] = iceweb.spectrogram_iceweb(...
             '', w,  ...
             'plot_metrics', products.spectrograms.plot_metrics, ...
@@ -260,58 +304,36 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
                         median_in_each_freq_band(:,k) = nanmedian(suby');
                     end
 
-%                         % Plot for verification
-%                         close all
-%                         subplot(2,1,1),plot(dnum,downsampled_peakf,'o');datetick('x');
-%                         hold on
-%                         plot(dnum,downsampled_meanf,'*');datetick('x');legend('peakf','meanf')
-%                         subplot(2,1,2),plot(dnum,downsampled_findex,'+');datetick('x');
-%                          hold on
-
-
-%                         plot(dnum,downsampled_fratio,'*');datetick('x');legend('findex','fratio')                       
-%                         anykey = input('Press any key to continue');
-
-                    % Save data
+                    % Save 1-minute spectral data
                     r1 = rsam(dnum, downsampled_peakf, 'ChannelTag', thisCtag, ...
                         'measure', 'peakf', ...
                         'units', 'Hz');
-                    r1.save_to_bob_file(fullfile(PRODUCTS_TOP_DIR, networkName, subnetName, 'SSSS.CCC.YYYY.peakf.bob'))
+                    r1.save_to_bob_file(fullfile(products_dir, 'SSSS.CCC.YYYY.peakf.bob'))
 
                     r2 = rsam(dnum, downsampled_meanf, 'ChannelTag', thisCtag, ...
                         'measure', 'meanf', ...
                         'units', 'Hz');
-                    r2.save_to_bob_file(fullfile(PRODUCTS_TOP_DIR, networkName, subnetName,  'SSSS.CCC.YYYY.meanf.bob'))
+                    r2.save_to_bob_file(fullfile(products_dir,  'SSSS.CCC.YYYY.meanf.bob'))
 
                     r3 = rsam(dnum, downsampled_findex, 'ChannelTag', thisCtag, ...
                         'measure', 'findex', ...
                         'units', 'none');
-                    r3.save_to_bob_file(fullfile(PRODUCTS_TOP_DIR, networkName, subnetName,   'SSSS.CCC.YYYY.findex.bob'))
+                    r3.save_to_bob_file(fullfile(products_dir,   'SSSS.CCC.YYYY.findex.bob'))
 
                     r4 = rsam(dnum, downsampled_fratio, 'ChannelTag', thisCtag, ...
                         'measure', 'fratio', ...
                         'units', 'none');
-                    r4.save_to_bob_file(fullfile(PRODUCTS_TOP_DIR, networkName, subnetName,   'SSSS.CCC.YYYY.fratio.bob'))                        
-
-
-%                     specdatafilename = fullfile(PRODUCTS_TOP_DIR, networkName, subnetName, filedate, sprintf('%s_%s.dat',thisCtag.scn(), filedate) ); 
-% 
-%                     specdatadir = fileparts(specdatafilename); % make the directory in case it does not exist
-%                     mkdir(specdatadir); % make the directory in case it does not exist
-%                     fspec = fopen(specdatafilename,'a');
-%                     fprintf(fspec, '%13.6f', min(dnum));
-%                     fprintf(fspec, ' %6.2e', max_in_each_freq_band); 
-%                     fprintf(fspec, '\n'); 
-%                     fclose(fspec);
-%                     %save(specdatafilename, 'dnum', 'max_in_each_freq_band') 
-%                     
-                    spdatafilepattern = fullfile(PRODUCTS_TOP_DIR, networkName, subnetName, 'YYYY-MM-DD', 'spdata.NSLC.YYYY.MM.DD.median');
+                    r4.save_to_bob_file(fullfile(products_dir,   'SSSS.CCC.YYYY.fratio.bob'))                        
+                     
+                    % median
+                    spdatafilepattern = fullfile(products_dir, 'YYYY-MM-DD', 'spdata.NSLC.YYYY.MM.DD.median');
                     save_to_spectraldata_file(spdatafilepattern, dnum, ...
                         thisF, median_in_each_freq_band, ...
                         products.spectral_data.samplingIntervalSeconds, ...
                         thisCtag)
                     
-                    spdatafilepattern = fullfile(PRODUCTS_TOP_DIR, networkName, subnetName, 'YYYY-MM-DD', 'spdata.NSLC.YYYY.MM.DD.max');
+                    % max
+                    spdatafilepattern = fullfile(products_dir, 'YYYY-MM-DD', 'spdata.NSLC.YYYY.MM.DD.max');
                     save_to_spectraldata_file(spdatafilepattern, dnum, ...
                         thisF, max_in_each_freq_band, ...
                         products.spectral_data.samplingIntervalSeconds, ...
@@ -329,26 +351,40 @@ function process_timewindow(PRODUCTS_TOP_DIR, networkName, subnetName, ChannelTa
 
     % SOUND FILES
     if products.soundfiles.doit
-        %try
-            % 20120221 Added a "sound file" like 201202211259.sound which simply records order of stachans in waveform object so
-            % php script can match spectrogram panel with appropriate wav file 
-            % 20121101 GTHO COmment: Could replace use of bnameroot below with strrep, since it is just used to change file extensions
-            % e.g. strrep(spectrogramFilename, '.png', sprintf('_%s_%s.wav', sta, chan)) 
-            %soundfileroot = fullfile('iceweb', networkName, subnetName, datestr(snum, 26) );
-            soundfileroot = fullfile(PRODUCTS_TOP_DIR, networkName, subnetName, filedate );
-            [dname, bnameroot, bnameext] = fileparts(soundfileroot);
-            soundfilelist = fullfile(soundfileroot, sprintf('%s.sound',datestr(snum,30)));
-            fsound = fopen(soundfilelist,'a');
-            for c=1:length(w)
-                soundfilename = fullfile(soundfileroot, sprintf('%s_%s_%s.wav',datestr(snum,30), get(w(c),'station'), get(w(c), 'channel')  ) );
-                fprintf(fsound,'%s\n', soundfilename);  
-                debug.print_debug(0, sprintf('Writing to %s',soundfilename)); 
-                isSuccessful = waveform2sound(w(c), 60, soundfilename)
-            end
-            fclose(fsound);
-        %end
-        
-    end  
+
+        % 20120221 Added a "sound file" like 201202211259.sound which simply records order of stachans in waveform object so
+        % php script can match spectrogram panel with appropriate wav file 
+        soundfileroot = fullfile(products_dir, filedate );
+        [dname, bnameroot, bnameext] = fileparts(soundfileroot);
+        soundfilelist = fullfile(soundfileroot, sprintf('%s.sound',datestr(snum,30)));
+        fsound = fopen(soundfilelist,'a');
+        for c=1:length(w)
+            soundfilename = fullfile(soundfileroot, sprintf('%s_%s_%s.wav',datestr(snum,30), get(w(c),'station'), get(w(c), 'channel')  ) );
+            fprintf(fsound,'%s\n', soundfilename);  
+            debug.print_debug(0, sprintf('Writing to %s',soundfilename)); 
+            isSuccessful = waveform2sound(w(c), 60, soundfilename)
+        end
+        fclose(fsound);
+
+
+    end
+    
+    % CREATE & SAVE HELICORDER PLOT
+    if products.helicorders.doit 
+        close all
+        for wi=1:numel(w)
+            heliplot = helicorder(w(wi),'mpl',3);
+            build(heliplot)
+            ct = get(w(wi),'channeltag');
+            helicorderFilename = fullfile(products_dir, filedate, sprintf('helicorder_%s_%s.png',ct.string(),filetime));
+            orient tall;
+            iceweb.saveImageFile(helicorderFilename, 72);
+            clear ct helicorderFilename
+        end
+        clear wi
+    end
+    
+    
     debug.printfunctionstack('<');
 end
 
@@ -475,5 +511,8 @@ function save_to_spectraldata_file(filepattern, dnum, F, spdata, samplingInterva
 
     end
 end
+%%
+
+
 
 

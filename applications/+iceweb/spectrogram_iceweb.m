@@ -104,8 +104,10 @@ for c=1:numw
     
     if length(data) > nfft
         fprintf('Computing spectrogram %d\n',c)
-        [S,F,T] = spectrogram(data, nfft, nfft/2, nfft, fsamp);
-
+        %[S,F,T] = spectrogram(data, nfft, nfft/2, nfft, fsamp);
+        [S,F,T] = spectrogram(data, nfft, overlap, nfft, fsamp); % 20181210 check this
+        % looks like could also try multitaper method by making 2nd and 3rd
+        % arguments smaller
         Y = 20*log10(abs(S)+eps);
         index = find(F <= fmax);
         if F(1)==0,
