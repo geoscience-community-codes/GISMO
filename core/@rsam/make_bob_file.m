@@ -3,7 +3,10 @@ function make_bob_file(outfile, days, SAMPLES_PER_DAY)
     samplesperyear = round(days)*round(SAMPLES_PER_DAY);
     a = zeros(samplesperyear,1);
     % ensure host directory exists
-    mkdir(fileparts(outfile));
+    outdir = fileparts(outfile);
+    if ~exist(outdir,'dir')
+    	mkdir(outdir);
+    end
     % write blank file
     fid = fopen(outfile,'w');
     fwrite(fid,a,'float32');

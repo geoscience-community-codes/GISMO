@@ -35,14 +35,15 @@ try
 	end
 
 	% Did our image file actually get saved?
+    dstr=datestr(utnow);
 	if exist(outpath, 'file')
-		debug.print_debug(1, sprintf('%s: Saved image file %s',datestr(utnow),outpath) );
+		debug.print_debug(1, sprintf('%s: Saved image file %s',dstr,outpath) );
 		result = 1;
 	else
-		debug.print_debug(1, sprintf('%s: Image file %s was not created',datestr(utnow),outpath));
+		debug.print_debug(1, sprintf('%s: Image file %s was not created',dstr,outpath));
 	end
 catch
-	debug.print_debug(0, sprintf('%s: Could not save the image file %s',datestr(utnow),outpath));
+	debug.print_debug(0, sprintf('%s: Could not save the image file %s',dstr,outpath));
 end
 
 %print_debug(sprintf('< %s',mfilename),2);

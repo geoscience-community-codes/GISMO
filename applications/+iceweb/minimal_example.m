@@ -1,28 +1,24 @@
+function iceweb_example()
 %% House cleaning
 clc
 close all
-clear all
 warning on
 debug.set_debug(100)
 
 %% These are same variables normally defined for a waveform
-datasourceObject = datasource('miniseed', '~/Desktop/iceweb_data/wfdata/%s.%s.%s.%s.D.%04d.%03d.miniseed','network','station','location','channel','year','jday');
+datasourceObject = datasource('miniseed', ...
+    '~/Desktop/iceweb_data/wfdata/%s.%s.%s.%s.D.%04d.%03d.miniseed', ...
+    'network','station','location','channel','year','jday');
 ChannelTagList = ChannelTag('MV','MTB1','00','HHZ');
 startTime = datenum(2018,3,30);
-endTime = datenum(2018,3,30,1,0,0);
+endTime = datenum(2018,3,31,0,0,0);
+
+%% Define calibration information
+iceweb.usf_calibrations;
+
 
 %% Test the waveform parameters
-if 1 % set to 1 to run this part
-    clear w
-    w = waveform(datasourceObject, ChannelTagList, startTime, min([startTime+1/24 endTime]) );
-    if isempty(w)
-        disp('No data')
-        return
-    end
-    %plot(w)
-    plot_panels(w)
-    % plot_helicorder(w)
-end
+iceweb.waveform_call_test;
 
 %% Configure IceWeb
 %PRODUCTS_TOP_DIR = '/media/sdd1/iceweb_data';
@@ -51,4 +47,9 @@ products.daily.rsamplots = false;
 products.daily.spectralplots = false;
    
 %% run IceWeb  ********************** this is where stuff really happens
-iceweb.run_iceweb(PRODUCTS_TOP_DIR, subnetName, datasourceObject, ChannelTagList, startTime, endTime, gulpMinutes, products)
+%iceweb.run_iceweb(PRODUCTS_TOP_DIR, subnetName, datasourceObject, ChannelTagList, startTime, endTime, gulpMinutes, products)
+iceweb.run_iceweb(PRODUCTS_TOP_DIR, subnetName, datasourceObject, ...
+    ChannelTagList, startTime, endTime, gulpMinutes, products, calibObjects)
+
+
+end

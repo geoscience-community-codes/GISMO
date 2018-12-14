@@ -29,10 +29,11 @@ function files_=filepattern_substitute(filepattern,ctag,dnum)
 %   2000/test.MV.MTB1.00.HHZ.2000.bob and 2001/test.MV.MTB1.00.HHZ.2001.bob
 % 
 % Glenn Thompson 2018/12/10 Barrow on Soar, UK
-
+    debug.printfunctionstack('>');
+    
     file = filepattern;
-    file = regexprep(file, 'SSSS', ctag.station()); % substitute for station
-    file = regexprep(file, 'CCC', ctag.channel());  % substitute for channel
+    file = regexprep(file, 'SSSS', ctag.station); % substitute for station
+    file = regexprep(file, 'CCC', ctag.channel);  % substitute for channel
     file = regexprep(file, 'NSLC', ctag.string());   % substitute for NSLC
     file = regexprep(file, 'SCN', ctag.scn());  % substitute for SCN
     snum = min(dnum);
@@ -50,7 +51,7 @@ function files_=filepattern_substitute(filepattern,ctag,dnum)
     [eyyy em ed]=datevec(enum);
 
     if regexp(file,'DD')
-        disp('Have to bother with days')
+        debug.print_debug(10,'Have to bother with days')
         if ~(   (regexp(file,'YYYY')) & (regexp(file,'MM'))  )
             error('Cannot span multiple days unless YYYY and MM also in file pattern')
         else
@@ -73,7 +74,7 @@ function files_=filepattern_substitute(filepattern,ctag,dnum)
         end
 
     elseif regexp(file,'MM')
-        disp('Have to bother with months')
+        debug.print_debug(10,'Have to bother with months')
         if ~regexp(file,'YYYY')
             error('Cannot span multiple months unless YYYY also in file pattern')
         else
@@ -97,7 +98,7 @@ function files_=filepattern_substitute(filepattern,ctag,dnum)
             end
         end
     elseif regexp(file,'YYYY')
-        disp('Have to bother with years')
+        debug.print_debug(10,'Have to bother with years')
         N=1;
         for thisyear = syyy:eyyy
 %             files_(N).snum = max([datenum(thisyear,1,1) snum]);
@@ -111,5 +112,5 @@ function files_=filepattern_substitute(filepattern,ctag,dnum)
             N=N+1;
         end
     end
-    
+    debug.printfunctionstack('<');
 end

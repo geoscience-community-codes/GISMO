@@ -103,7 +103,7 @@ for c=1:numw
     data = get(w(c), 'data');
     
     if length(data) > nfft
-        fprintf('Computing spectrogram %d\n',c)
+        %fprintf('Computing spectrogram %d\n',c)
         %[S,F,T] = spectrogram(data, nfft, nfft/2, nfft, fsamp);
         [S,F,T] = spectrogram(data, nfft, overlap, nfft, fsamp); % 20181210 check this
         % looks like could also try multitaper method by making 2nd and 3rd
@@ -143,11 +143,10 @@ for c=1:numw
         meanF{c} = thismeanf;
         peakF{c} = thispeakf;
         
-        result = result + 1
+        result = result + 1;
         Ycell{c} = Y; Fcell{c} = F; Tcell{c} = T;     
         
         %% PLOT THE SPECTROGRAMS?
-        p.Results
         if p.Results.makeplot
             [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numw, c, spectrogramFraction, 0.12, 0.05, 0.80, 0.9);
             axes('position', spectrogramPosition);

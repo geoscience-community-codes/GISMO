@@ -4,6 +4,7 @@ classdef Calibration
     properties
         nslc;
         calib;
+        units;
         ondate;
         offdate;
     end
@@ -28,6 +29,7 @@ classdef Calibration
             p = inputParser;
             p.addRequired('nslc', @(c) strcmp(class(c),'ChannelTag') ) % positional
             p.addRequired('calib', @isnumeric ) % positional
+            p.addRequired('units', @isstr ) % positional
             p.addOptional('ondate', [], @(t1) t1>datenum(1900,1,1) & t1<now+365) % ondate should be reasonable
             p.addOptional('offdate', [], @(t2) t2>datenum(1900,1,1))
             p.parse(varargin{:});

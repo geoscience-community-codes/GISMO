@@ -43,6 +43,7 @@ function fh = plot(drumplotobj)
 % B.line_waveform_continuous --> 1 waveform object per line
 % B.line_waveform_events --> 1 waveform object per line set to NaN between
 %  events from Catalog
+debug.printfunctionstack('>');
     %% INITIALIZE DRUMPLOT FIGURE
     B.fh = figure('Name','Drumplot');% New drumplot figure handle
     fh = B.fh;
@@ -87,7 +88,7 @@ drawnow
         w = [drumplotobj.arrivals.waveforms{1,:}];
      end
     
-     if drumplotobj.detections.numel() > 0
+     if drumplotobj.detections.numel > 0
         temp_cobj = associate(drumplotobj.detections, 0.01);
         
         
@@ -147,6 +148,7 @@ drawnow
 %     else
 %        warning('DRUMPLOT/PLOT Too many outputs')
 %     end
+debug.printfunctionstack('<');
 end
 
 %% ADD TITLE TO DRUMPLOT FIGURE

@@ -94,20 +94,20 @@ function [signalStruct] = ReadMSEEDFast(fileName)
     end
 
     % Let's announce what we are reading
-    fprintf('ReadMSEEDFast:\t%s\n',fileName);
-    
+    debug.print_debug(1,sprintf('ReadMSEEDFast:\t%s\n',fileName)); % GT changed
+   
     % Big / Little endian test
     Year = typecast(uint8(raw(20:21)),'uint16');
     if Year >= 2056
         isLittleEndian = 1;
     end
-    
+   
     %Let's read first header and estimate block record size (4096 bytes is
     %recommended length according to IRIS specification.
     firstHeader = ReadHeaders(typecast(uint8(raw),'uint8'),isLittleEndian);
     
     BLOCK_RECORD_SIZE=firstHeader.dataRecordLength;
-    
+  
     % Reshaping linear data to matrix form
     rawPacketMatrix = reshape(typecast(uint8(raw),'uint8'),BLOCK_RECORD_SIZE,[])';
     rawPacketMatrixSize = size(rawPacketMatrix);
@@ -126,12 +126,13 @@ function [signalStruct] = ReadMSEEDFast(fileName)
     uniqueStationsIndex=flipud(uniqueStationsIndex);
     
     for h=1:numel(stations)
+
         for k=1:numel(channels)
 
                 sameChannelRows=find((strcmp(headerInfo.channelId{1},channels(k)) & strcmp(headerInfo.stationCode{1},stations(h))));
                 encodedSignalMatrix = rawPacketMatrix(sameChannelRows,headerInfo.dataBeginOffset(1)+1:rawPacketMatrixSize(2));
                 signalMatrix=DecodeSignal(encodedSignalMatrix,ENCODING,isLittleEndian,BLOCK_RECORD_SIZE);
-
+                
                 %uci - unique channel index
                 uci = 1;
                 switch k
@@ -141,8 +142,7 @@ function [signalStruct] = ReadMSEEDFast(fileName)
                     uci = uniqueChannelsIndex(k-1)+1;
                 end
 
-                [dtStruct, dtString, unixTimeStamp]=ConstructDateTime(headerInfo.startTime(uci,:));
-                
+                [dtStruct, dtString, unixTimeStamp]=ConstructDateTime(headerInfo.startTime(uci,:));               
                 %Data type of the file
                 sampleType = 'i';
                 
@@ -157,14 +157,16 @@ function [signalStruct] = ReadMSEEDFast(fileName)
                         %Integer sample type
                         sampleType = 'i';
                 end
-                
+               
                 % Prepare result struct
                 signalStruct=[signalStruct;struct('network',headerInfo.networkCode{1}(sameChannelRows(1)),'station',headerInfo.stationCode{1}(sameChannelRows(1)),'location',headerInfo.locationCode{1}(sameChannelRows(1)),'channel',headerInfo.channelId{1}(sameChannelRows(1)),'dataquality','','type','','startTime',unixTimeStamp,'endTime',0,'sampleRate',double(headerInfo.sampleRate(sameChannelRows(1))),'sampleCount',size(signalMatrix,1),'numberOfSamples',size(signalMatrix,1),'sampleType',sampleType,'data',signalMatrix(:),'dateTime',dtStruct,'dateTimeString',dtString)];
 
         end
+        
     end
+    
     fclose(fp);
-
+  
 end
 
 function output = bitcmpOld(x,N)

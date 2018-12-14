@@ -28,7 +28,7 @@ global PARAMS
 
 
 if nargin == 0
-	utdnum_stop = utnow();
+	utdnum_stop = iceweb.utnow();
 end
 
 if nargin < 2
@@ -51,15 +51,18 @@ if (nargin == 3)
 	timewindow.start = snum_array;
 	timewindow.stop = enum_array;
 end	
+end
 	
 
 %%%%%%%%%%%%%%%%%%%
 function dnum1=boundaryBeforeDnum(dnum, numMins)
 dayFraction		=	rem(dnum,1); 
-minutesIntoThisDay	=	dayFraction*1440;
+minutesIntoThisDay	=	round(dayFraction*1440);
 dnum1 			= 	dnum - rem(minutesIntoThisDay, numMins)/1440;
+end
 
 function dnum1=boundaryAfterDnum(dnum, numMins)
 dnum1 = boundaryBeforeDnum(dnum, numMins) + numMins/1440; 
+end
 
 

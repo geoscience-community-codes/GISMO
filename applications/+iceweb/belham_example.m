@@ -1,3 +1,4 @@
+function belham_example()
 %% Running IceWeb on directory tree of Miniseed files
 % In my research groups in Alaska and now Florida, we always tended to
 % organize datasets into Antelope CSS3.0 databases. The advantage of this
@@ -28,7 +29,6 @@
 %% House cleaning
 clc
 close all
-clear all
 warning on
 debug.set_debug(0)
 
@@ -38,7 +38,9 @@ debug.set_debug(0)
 % (jday), and they reside in year directories
 %datasourceObject = datasource('miniseed', '/home/thompsong/shares/newton/data/Montserrat/LaharStudy/%s/%04d/%s/%s/%s.D/%s.%s.%s.%s.D.%04d.%03d.miniseed','station','year','network','station','channel','network','station','location','channel','year','jday')
 %datasourceObject = datasource('miniseed', '/Volumes/data/Montserrat/LaharStudy/%s/%04d/%s/%s/%s.D/%s.%s.%s.%s.D.%04d.%03d.miniseed','station','year','network','station','channel','network','station','location','channel','year','jday')
-datasourceObject = datasource('miniseed', '~/Desktop/iceweb_data/wfdata/%s.%s.%s.%s.D.%04d.%03d.miniseed','network','station','location','channel','year','jday');
+datasourceObject = datasource('miniseed', ...
+    '~/Desktop/iceweb_data/wfdata/%s.%s.%s.%s.D.%04d.%03d.miniseed', ...
+    'network','station','location','channel','year','jday');
 %
 % Multiple network/station/location/channel combinations can be defined
 % using ChannelTag.array()
@@ -50,25 +52,18 @@ clear ChannelTagList2
 % startTime = datenum(2018,4,3);
 % endTime = datenum(2018,4,4);
 startTime = datenum(2018,3,30);
-endTime = datenum(2018,3,31);
+endTime = datenum(2018,3,30,3,0,0);
+
+%% Define calibration information
+iceweb.usf_calibrations;
 
 %% Test the waveform parameters
-if 0 % set to 1 to run this part
-    clear w
-    w = waveform(datasourceObject, ChannelTagList, startTime, min([startTime+1/24 endTime]) );
-    if isempty(w)
-        disp('No data')
-        return
-    end
-    plot(w)
-    plot_panels(w)
-    % plot_helicorder(w)
-end
+iceweb.waveform_call_test;
 
 %% Configure IceWeb
 %PRODUCTS_TOP_DIR = '/media/sdd1/iceweb_data';
 PRODUCTS_TOP_DIR = '~/Desktop/iceweb_data';
-subnetName = 'Montserrat2'; % can be anything
+subnetName = 'Montserrat3'; % can be anything
 % output directory is PRODUCTS_TOP_DIR/network_name/subnetName
 
 % get parameters. these control what iceweb does.
@@ -77,13 +72,15 @@ iceweb.get_params;
    
 %%
 % save the parameters we are using to a timestamped mat file
-save(sprintf('icewebparams_%s_%s_%s_%s.mat',subnetName,datestr(startTime,'yyyymmdd'),datestr(endTime,'yyyymmdd'),datestr(now,30)));
+save(sprintf('icewebparams_%s_%s_%s_%s.mat',subnetName, ...
+    datestr(startTime,'yyyymmdd'),datestr(endTime,'yyyymmdd'),datestr(now,30)));
 
 %% run IceWeb  ********************** this is where stuff really happens
-iceweb.run_iceweb(PRODUCTS_TOP_DIR, subnetName, datasourceObject, ChannelTagList, startTime, endTime, gulpMinutes, products)
+iceweb.run_iceweb(PRODUCTS_TOP_DIR, subnetName, datasourceObject, ...
+    ChannelTagList, startTime, endTime, gulpMinutes, products, calibObjects)
 
 %% TO DO
-% 1. Calibrations
+% 1. Calibrations DONE
 % 2. Check options work
 % 3. Add option to remove normal spectrograms DONE. Use DAILYONLY
 % 4. Add option to remove waveform files      DONE. Use removeWaveformFiles
@@ -99,8 +96,9 @@ iceweb.run_iceweb(PRODUCTS_TOP_DIR, subnetName, datasourceObject, ChannelTagList
 % 7. Add helicorder plots (ensure adjacent lines are different colors)
 % 8. Add tremor alarm 
 % 9. Add shorter spectrograms too (e.g. 5 minutes)
-% 10. Put the big overlap back intro spectrograms?
+% 10. Put the big overlap back into spectrograms?
 % 11. Add ability not to reprocess same data (just add if new products
 % selected)
 % 12. Re-add my diagnostic data analysis tools
 % 13. Amplitude Location tool
+end
