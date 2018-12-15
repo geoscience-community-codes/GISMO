@@ -1,5 +1,5 @@
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% DEFAULTS - DO NOT RECOMMEND CHANGING THESE
+% DEFAULTS - MAXIMAL - DO NOT RECOMMEND CHANGING THESE
 defaultSamplingIntervalSeconds = 60;
 products.waveform_plot.doit = true;
 products.rsam.doit = true;
@@ -27,25 +27,27 @@ products.daily.rsamplots = true;
 products.daily.spectralplots = true;
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% products.DAILYONLY
+%% products.minimal
 % this is a master switch. if true, it will turn off plotting of all figures less
 % than 1 day. spectrograms will be computed, but no figures saved.
 % if true, iceweb behaves as if spectrograms.doit, soundfiles.doit, 
 % helicorders.doit and reduced.doit are all false, and daily.spectrograms,
 % daily.rsamplots, daily.helicorders and daily.spectralplots are true.
-if products.DAILYONLY
+if isfield(products,'minimal') & products.minimal
     products.daily.spectrograms = true;
-    products.daily.helicorders = true;
+    products.daily.helicorders = false;
     products.daily.rsamplots = true;
-    products.daily.spectralplots = true;
+    products.daily.spectralplots = false;
     products.waveform_plot.doit = false;
+    products.rsam.samplingIntervalSeconds = [60];
+    products.rsam.measures = {'mean'};
     products.spectrograms.doit = false; % whether to plot & save spectrograms
     products.spectrograms.plot_metrics = false; % superimpose metrics on spectrograms
     products.spectral_data.doit = true; % whether to compute & save spectral data
     products.soundfiles.doit = false;
     products.helicorders.doit = false;
     products.reduced.doit = false;
-    products.removeWaveformFiles = false;
+    products.removeWaveformFiles = true;
 end
 
 % data will be swallowed in chunks of this size
