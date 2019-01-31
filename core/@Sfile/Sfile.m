@@ -67,6 +67,25 @@ classdef Sfile
 
 			while linenum <= numel(lines),
                 tline = fileContents(1+(linenum-1)*82:min([length(fileContents) 80+(linenum-1)*82]));
+                %% Glenn Thompson 2019/01/28
+                % Note that Antoine Haddad in Dec 2018/Jan 2019 sent a
+                % message that he had to change the above to:
+%                 if linenum==1
+%                     tline = fileContents(1+(linenum­1)*82:min([length(fileContents) 80+(linenum­1)*82])); end
+%                 if linenum~=1
+%                     tline = fileContents((linenum­1)*82:min([length(fileContents) 80+(linenum­1)*82]));
+%                 end
+                % But this seems odd, since it is changing the offset for
+                % the line ending in 1 by 1. So presumably the first
+                % character is blank. But then it isn't the whole line in
+                % tline. It is the first line without the first column. 
+                % This could also be accomplished by altering the 'if
+                % lineend=='1'' section.
+                % I asked Antoine for a copy of an S-file he had trouble
+                % with, but no reply, so his change is unverified and not
+                % implemented. Just documented here for completeness.
+                %% GT
+                
                 linenum = linenum + 1;
                 %disp(sprintf('*%s*',tline));
                 linelength=length(tline); 
