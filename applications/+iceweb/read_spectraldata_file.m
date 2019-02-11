@@ -1,4 +1,4 @@
-function [dnum,data,F]=read_spectraldata_file(filepattern, snum, enum, ctag)
+                                    function [dnum,data,F]=read_spectraldata_file(filepattern, snum, enum, ctag)
 %READ_SPECTRALDATA_FILE Load RSAM-like data from a spectraldata binary file 
 %
 % [dnum,data] = read_spectraldata_file(filepattern, snum, enum, ctag)

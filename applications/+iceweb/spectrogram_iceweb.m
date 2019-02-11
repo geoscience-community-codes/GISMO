@@ -51,9 +51,9 @@ end
 if isempty(s)
     nfft = 1024;
     overlap = 924;
-    fmax = 10;
+    freqmax = 10;
     dbLims = [60 120];
-    s = spectralobject(nfft, overlap, fmax, dbLims);
+    s = spectralobject(nfft, overlap, freqmax, dbLims);
 end
 
 

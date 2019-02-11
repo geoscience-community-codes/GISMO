@@ -38,9 +38,12 @@ debug.set_debug(0)
 % (jday), and they reside in year directories
 %datasourceObject = datasource('miniseed', '/home/thompsong/shares/newton/data/Montserrat/LaharStudy/%s/%04d/%s/%s/%s.D/%s.%s.%s.%s.D.%04d.%03d.miniseed','station','year','network','station','channel','network','station','location','channel','year','jday')
 %datasourceObject = datasource('miniseed', '/Volumes/data/Montserrat/LaharStudy/%s/%04d/%s/%s/%s.D/%s.%s.%s.%s.D.%04d.%03d.miniseed','station','year','network','station','channel','network','station','location','channel','year','jday')
-datasourceObject = datasource('miniseed', ...
-    '~/Desktop/iceweb_data/wfdata/%s.%s.%s.%s.D.%04d.%03d.miniseed', ...
-    'network','station','location','channel','year','jday');
+% datasourceObject = datasource('miniseed', ...
+%     '~/Desktop/iceweb_data/wfdata/%s.%s.%s.%s.D.%04d.%03d.miniseed', ...
+%     'network','station','location','channel','year','jday');
+datasourceObject = datasource('miniseed', '/media/sdb1/LaharStudy/%s/%04d/%s/%s/%s.D/%s.%s.%s.%s.D.%04d.%03d.miniseed','station','year','network','station','channel','network','station','location','channel','year','jday')
+
+
 %
 % Multiple network/station/location/channel combinations can be defined
 % using ChannelTag.array()
@@ -51,9 +54,10 @@ clear ChannelTagList2
 
 % startTime = datenum(2018,4,3);
 % endTime = datenum(2018,4,4);
-startTime = datenum(2018,3,30);
-endTime = datenum(2018,3,30,3,0,0);
-
+% startTime = datenum(2018,3,30);
+% endTime = datenum(2018,7,12,0,0,0);
+startTime = datenum(2018,7,12);
+endTime = datenum(2019,1,13);
 %% Define calibration information
 iceweb.usf_calibrations;
 
@@ -61,9 +65,9 @@ iceweb.usf_calibrations;
 iceweb.waveform_call_test;
 
 %% Configure IceWeb
-%PRODUCTS_TOP_DIR = '/media/sdd1/iceweb_data';
-PRODUCTS_TOP_DIR = '~/Desktop/iceweb_data';
-subnetName = 'Montserrat3'; % can be anything
+PRODUCTS_TOP_DIR = '/media/sdb1/iceweb_data';
+%PRODUCTS_TOP_DIR = '~/Desktop/iceweb_data';
+subnetName = 'Monty'; % can be anything
 % output directory is PRODUCTS_TOP_DIR/network_name/subnetName
 
 % get parameters. these control what iceweb does.
