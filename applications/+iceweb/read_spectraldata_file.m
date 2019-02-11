@@ -35,7 +35,11 @@
         for filenum = 1:numel(filestruct)
             f = filestruct(filenum);
             if f.found
-                [dnum, data, F] = load(f, dnum, data, snum, enum);
+                try
+                    [dnum, data, F] = load(f, dnum, data, snum, enum);
+                catch
+                    warning(sprintf('Error found - could not read spectral data file: %s',f));
+                end
             else
                 warning(sprintf('%s: file not found',f.file));
             end
