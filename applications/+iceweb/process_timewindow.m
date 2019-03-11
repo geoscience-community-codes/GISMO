@@ -151,9 +151,16 @@ function process_timewindow(products_dir, networkName, subnetName, ...
             end
         end
         
+        % spectralobject
+        nfft = 1024;
+        overlap = 924;
+        freqmax = products.spectrograms.fmax;
+        dbLims = [products.spectrograms.dBmin products.spectrograms.dBmax];
+        spobj = spectralobject(nfft, overlap, freqmax, dbLims);
+        
         % compute spectrogram
         [sgresult, Tcell, Fcell, Ycell] = iceweb.spectrogram_iceweb(...
-            '', w,  ...
+            spobj, w,  ...
             'plot_metrics', products.spectrograms.plot_metrics, ...
             'makeplot', products.spectrograms.doit);
             

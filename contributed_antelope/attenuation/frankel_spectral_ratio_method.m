@@ -1,6 +1,6 @@
-function arrivalobj = singlestation_specrat(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
-%HANKELQ Compute spectral ratio in two frequency bands
-%   HANKELQ(dbpath, expr, freq_high, freq_low, pretrigger_seconds, posttrigger_seconds, max_arrivals ) 
+function arrivalobj = frankel_spectral_ratio_method(dbpath, expr, f1, f2, pretrigger, posttrigger, max_arrivals)
+%FRANKEL_SPECTRAL_RATIO_METHOD Compute spectral ratio in two frequency bands
+%   FRANKEL_SPECTRAL_RATIO_METHOD(dbpath, expr, freq_high, freq_low, pretrigger_seconds, posttrigger_seconds, max_arrivals ) 
 %   Loads arrivals from an arrival table (after subsetting with expr)
 %   retrieves waveform data corresponding to those arrivals, cleans and
 %   plots the waveform data. The spectral ratio in bands around freq_high
@@ -13,9 +13,9 @@ function arrivalobj = singlestation_specrat(dbpath, expr, f1, f2, pretrigger, po
 %   get waveform data for.
 %   max_arrivals is the maximum number of arrivals to process. 
 %
-%     Based on the method of Arthur Hankel, "The Effects of Attenuation and
+%     Based on the method of Arthur Frankel, "The Effects of Attenuation and
 %     Site Response on the Spectra of Microearthquakes in the Northeastern
-%     Caribbean", BSSA, 72, 4, 1379-1402.
+%     Caribbean", BSSA, 72, 4, 1379-1402, August 1982.
 %
 %   Example:
 %       

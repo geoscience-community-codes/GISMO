@@ -63,6 +63,7 @@ function run_iceweb(PRODUCTS_TOP_DIR, subnetName, ds, ChannelTagList, ...
             dstr = datestr(snumday,'yyyy-mm-dd');
             daysgrampng = fullfile(products_dir,dstr,sprintf('daily_sgram_%s.png',dstr));
             print('-dpng',daysgrampng);
+            close
         end
 
         % RSAM plots for max, mean, median
@@ -73,6 +74,7 @@ function run_iceweb(PRODUCTS_TOP_DIR, subnetName, ds, ChannelTagList, ...
                 iceweb.daily_rsam_plot(filepattern, snumday, enumday, ChannelTagList, measures{k});
                 pngfile = fullfile(products_dir,dstr,sprintf('daily_rsam_%s_%s.png',measures{k},dstr));
                 print('-dpng',pngfile);
+                close
             end
         end
 
@@ -84,6 +86,7 @@ function run_iceweb(PRODUCTS_TOP_DIR, subnetName, ds, ChannelTagList, ...
                 iceweb.daily_rsam_plot(filepattern, snumday, enumday, ChannelTagList, measures{k});
                 pngfile = fullfile(products_dir, dstr, sprintf('daily_%s_%s.png',measures{k},dstr));
                 print('-dpng',pngfile);
+                close
             end  
         end
         

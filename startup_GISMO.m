@@ -44,12 +44,16 @@ addContributed(gismopath,'uaf_internal');
 addpath(genpath(fullfile(gismopath,'applications')));
 
 % ADD A PATH TO JAR FILES
-f = fullfile(gismopath,'contributed','iris_dmc_tools','IRIS-WS-2.0.17.jar');
-try 
-    javaaddpath(f);
-    disp(['Adding path: ', f]);
-catch
-    disp(['Failed to add path: ', f]);
+f = fullfile(gismopath,'contributed','iris_dmc_tools','IRIS-WS-*');
+d = dir(f);
+if numel(d) == 1
+    f = fullfile(d.folder, d.name);
+    try 
+        javaaddpath(f);
+        disp(['Adding path: ', f]);
+    catch
+        disp(['Failed to add path: ', f]);
+    end
 end
 f = fullfile(gismopath,'core','swarm.jar');
 try 

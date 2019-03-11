@@ -1,4 +1,4 @@
-function [dnum,data,F]=read_spectraldata_file(filepattern, snum, enum, ctag)
+                                    function [dnum,data,F]=read_spectraldata_file(filepattern, snum, enum, ctag)
 %READ_SPECTRALDATA_FILE Load RSAM-like data from a spectraldata binary file 
 %
 % [dnum,data] = read_spectraldata_file(filepattern, snum, enum, ctag)
@@ -35,7 +35,11 @@ function [dnum,data,F]=read_spectraldata_file(filepattern, snum, enum, ctag)
         for filenum = 1:numel(filestruct)
             f = filestruct(filenum);
             if f.found
-                [dnum, data, F] = load(f, dnum, data, snum, enum);
+                try
+                    [dnum, data, F] = load(f, dnum, data, snum, enum);
+                catch
+                    warning(sprintf('Error found - could not read spectral data file: %s',f));
+                end
             else
                 warning(sprintf('%s: file not found',f.file));
             end
