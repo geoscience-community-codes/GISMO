@@ -121,7 +121,9 @@ function plot(rsam_vector, varargin)
                 end
                 axis tight
                 a = axis;
-                datetick('x')
+                %datetick('x')
+                %fileexchange.datetickzoom('x')
+                datetick2('x')
                 set(gca,'XLim',[a(1) a(2)]);
     %
                 xlabel(sprintf('Date/Time starting at %s',datestr(self.snum)))

@@ -41,7 +41,7 @@ debug.set_debug(0)
 % datasourceObject = datasource('miniseed', ...
 %     '~/Desktop/iceweb_data/wfdata/%s.%s.%s.%s.D.%04d.%03d.miniseed', ...
 %     'network','station','location','channel','year','jday');
-datasourceObject = datasource('miniseed', '/media/sdb1/LaharStudy/%s/%04d/%s/%s/%s.D/%s.%s.%s.%s.D.%04d.%03d.miniseed','station','year','network','station','channel','network','station','location','channel','year','jday')
+datasourceObject = datasource('miniseed', '/media/sdb1/belhamstudy/download2/%s/%04d/%s/%s/%s.D/%s.%s.%s.%s.D.%04d.%03d.miniseed','station','year','network','station','channel','network','station','location','channel','year','jday')
 
 
 %
@@ -56,16 +56,16 @@ clear ChannelTagList2
 % endTime = datenum(2018,4,4);
 % startTime = datenum(2018,3,30);
 % endTime = datenum(2018,7,12,0,0,0);
-startTime = datenum(2018,7,12);
-endTime = datenum(2019,1,13);
+startTime = datenum(2018,3,30);
+endTime = datenum(2019,1,10);
 %% Define calibration information
 iceweb.usf_calibrations;
 
 %% Test the waveform parameters
-iceweb.waveform_call_test;
+% iceweb.waveform_call_test;
 
 %% Configure IceWeb
-PRODUCTS_TOP_DIR = '/media/sdb1/iceweb_data';
+PRODUCTS_TOP_DIR = '/media/sdb1/belhamstudy/icewebproducts';
 %PRODUCTS_TOP_DIR = '~/Desktop/iceweb_data';
 subnetName = 'Monty'; % can be anything
 % output directory is PRODUCTS_TOP_DIR/network_name/subnetName
@@ -73,6 +73,7 @@ subnetName = 'Monty'; % can be anything
 % get parameters. these control what iceweb does.
 products.DAILYONLY = false; % set true to only produce day plots
 iceweb.get_params;
+
    
 %%
 % save the parameters we are using to a timestamped mat file

@@ -148,6 +148,7 @@ function plot_panels(w, varargin)
             plot((dnum-snum)*SECSPERDAY, y,'-k');
             set(gca, 'XLim', [0 enum-snum]*SECSPERDAY);
         end
+            set(ax(wavnum),'XTickMode','auto')
 %         xlim = get(gca, 'XLim');
 %         set(gca,'XTick', linspace(xlim(1), xlim(2), 11));
 
@@ -206,9 +207,9 @@ function plot_panels(w, varargin)
         linkaxes(ax,'x');
         
         % enable update x tick labels after zoom
-%         h = zoom(gcf);
-%         set(h,'ActionPostCallback',{@myzoomcallback,ax});
-%         set(h,'Enable','on');
+            h = zoom(gcf);
+            set(h,'ActionPostCallback',{@myzoomcallback,ax});
+            set(h,'Enable','on');
 
     end
 
@@ -216,8 +217,8 @@ function plot_panels(w, varargin)
     originalXticks = get(gca,'XTickLabel');
     
     f = uimenu('Label','X-Ticks');
-%     uimenu(f,'Label','seconds since start time','Callback',{@secondssince, originalXticks});
-%     uimenu(f,'Label','absolute time','Callback',{@datetickplot, snum, SECSPERDAY});
+        uimenu(f,'Label','seconds since start time','Callback',{@secondssince, originalXticks});
+        uimenu(f,'Label','absolute time','Callback',{@datetickplot, snum, SECSPERDAY});
     uimenu(f,'Label','time range','Callback',{@daterange, snum, SECSPERDAY});
     uimenu(f,'Label','quit','Callback','disp(''exit'')',... 
            'Separator','on','Accelerator','Q');
