@@ -15,6 +15,22 @@ function combined_waveforms = combine (waveformlist)
       return
    end
    
+   % GT code added 2019/04/02 because SOH data from Centaurs often has
+   % 0 samples, and it seems that combining 0 samples and >0 samples
+   % results in 0 samples unless I do this
+   % sanity check - remove anything with 0 samples
+   newwaveformlist = [];
+   for i=1:numel(waveformlist)
+       nsamps = get(waveformlist(i),'data_length');
+       if nsamps>0
+           newwaveformlist = [newwaveformlist waveformlist(i)];
+       end
+   end
+   waveformlist = newwaveformlist;
+   clear newwaveformlist;
+   
+           
+   
    channelinfo = get(waveformlist,'channeltag');
    [uniquescnls, idx, scnlmembers] = unique(channelinfo);
    
@@ -29,6 +45,7 @@ function combined_waveforms = combine (waveformlist)
          w(j+1) = waveform;
       end
       combined_waveforms(i) = w(1);
+      
    end
 end
 

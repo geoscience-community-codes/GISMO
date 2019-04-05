@@ -28,8 +28,8 @@ function [Y, I] = min(w)
    I = nan(size(w));
    for n = 1 : numel(w);
       if isempty(w(n).data)
-         warning('Waveform:min:noDataFound',...
-            'no data in waveform #%d, index and value are set to NaN', n);
+%          warning('Waveform:min:noDataFound',...
+%             'no data in waveform #%d, index and value are set to NaN', n);
          continue
       end
       [Y(n), I(n)] = min(w(n).data);

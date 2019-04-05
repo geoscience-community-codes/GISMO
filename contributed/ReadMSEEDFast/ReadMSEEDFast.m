@@ -94,7 +94,7 @@ function [signalStruct] = ReadMSEEDFast(fileName)
     end
 
     % Let's announce what we are reading
-    debug.print_debug(1,sprintf('ReadMSEEDFast:\t%s\n',fileName)); % GT changed
+    debug.print_debug(1,sprintf('%s:\t%s\n',mfilename,fileName)); % GT changed
    
     % Big / Little endian test
     Year = typecast(uint8(raw(20:21)),'uint16');

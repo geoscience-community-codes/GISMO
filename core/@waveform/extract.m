@@ -139,6 +139,19 @@ function outW = extract(w, method, startV, endV)
    for m = 1: numel(startV) %loop through the number of extractions
       for n=1:numel(w); %loop through the waveforms
          inW = w(n);
+         %%
+         % 20190402 Check for NaN start and end times Glenn Thompson
+         if isnan(get(inW,'start')) || isnan(get(inW,'end'))
+            warning(sprintf('%s: Undefined start or end time. Skipping.',mfilename));
+            if MULTIPLE_EXTRACTION
+                outW(n,m) = inW;
+            else
+                outW(n) = inW;
+            end 
+            continue;
+         end
+         %%
+         
          myData = inW.data;
          
          switch lower(method)
