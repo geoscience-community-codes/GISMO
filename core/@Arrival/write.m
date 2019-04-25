@@ -129,7 +129,9 @@ thisA = arrivalObject;
 N = numel(thisA.time);
 
 % SCAFFOLD: identify correct S-file and open it for writing as SFILEPTR
-SFILEPTR = fopen(SFILEPATH, 'a');
+mintime = min(thisA.time);
+sfiledummy = datestr(mintime,'dd-HH-MM-SS.dummysfile');
+SFILEPTR = fopen(fullfile(SFILEPATH,sfiledummy), 'a');
 
 if N>0
     for arrnum = 1:N
