@@ -8,14 +8,13 @@ Links:
 <li><a href="http://geoscience-community-codes.github.io/GISMO/">GISMO website</a></li>
 </ul>
 
-Comments welcome. Send email to: 
-thompsong (at) usf (dot) edu
+To get started with GISMO, visit the Getting started guide: https://github.com/geoscience-community-codes/GISMO/wiki/Getting-started
 
+Please join the GISMO Users group https://github.com/geoscience-community-codes/GISMO/wiki/The-GISMO-Users-Group. If you need help, send email to the Users . We (the developers) monitor this and will try to help.
 
-GISMO helps a lot of researchers prepare their papers for conferences and publication. There are around 300 subscribers to the GISMO Users listserv and GISMO is downloaded over 1000 times a year. But GISMO is supported by unpaid volunteers only. So please help us out by citing this work in your paper. Suggested citations:
+Please cite GISMO if you use it:
+https://github.com/geoscience-community-codes/GISMO/wiki/help-us---SUGGESTED-CITATION
 
-Thompson G. and Reyes, C., (2018) GISMO - a seismic data analysis toolbox for MATLAB [software package]. Available: http://geoscience-community-codes.github.io/GISMO/. Version 1.20b. Accessed: Aug. 2018. http://doi.org/10.5281/zenodo.1404723
+We're also happy to collaborate.
 
-(Update the accessed date with the appropriate month and year you last downloaded (or cloned/pulled) the code).
-
-Even better, invite us to collaborate!
+- Last updated: Glenn Thompson 2019/04/27
