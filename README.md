@@ -12,4 +12,5 @@ Steps:
 <li><a href="https://github.com/geoscience-community-codes/GISMO/wiki/help-us---SUGGESTED-CITATION">and please cite GISMO in your work</a></li>  
 </ol>
 
-- Last updated: Glenn Thompson 2019/04/27
+**
+Last updated: Glenn Thompson 2019/04/27
