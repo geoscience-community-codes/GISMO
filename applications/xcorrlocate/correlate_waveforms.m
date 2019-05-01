@@ -23,7 +23,6 @@ function [subset_list, corr_m] = correlate_waveforms(WAVEFORM_OBJECT, CORRTHRESH
     c2 = xcorr(c);
     corr = get(c2, 'CORR');
     corr_m = corr(:,1);
-    %lag = get(c2, 'LAG'); don't need but may be useful later...
 
     % create object with correlation coefficient above CORRTHRESH
     keep = find(corr(:,1) > CORRTHRESH);
@@ -31,16 +30,16 @@ function [subset_list, corr_m] = correlate_waveforms(WAVEFORM_OBJECT, CORRTHRESH
     w3 = waveform(c3);
 
     % Extract the waveform files that correlate above the threshold
-    h = get(w3, 'history');
-    q = numel(h);
-    if q == 4
+    history = get(w3, 'history');
+    elements = numel(history);
+    if numel(w3) == 1
         error('There is only one waveform in the waveform object!');
     else
-        subset_list = cell(numel(h), 1);
-        for count = 1:numel(h)
-            h1 = h{count,1}{2,1};
-            h11 = strrep(h1,'Loaded SAC file: ', '');
-            subset_list{count} = h11;
+        subset_list = cell(numel(history), 1);
+        for count = 1:numel(history)
+            file = history{count,1}{2,1};
+            file = strrep(file,'Loaded SAC file: ', '');
+            subset_list{count} = file;
         end
     end
 end
