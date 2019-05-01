@@ -49,7 +49,7 @@ function [waveform_object] = load_waveforms(LIST, TYPE)
                     waveform_object(count2) = waveform(LIST{count},'sac');
                     count2 = count2 + 1;
                 else
-                    sprintf('%s does not exist, maybe incorrect path?',LIST{count})
+                    warning('%s does not exist, maybe incorrect path?',LIST{count})
                 end
                 count = count + 1;
             end
