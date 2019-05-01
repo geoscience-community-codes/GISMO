@@ -1,8 +1,16 @@
 function [clipped_waveforms] = clip_waveforms(WAVEFORM_OBJECT)
-    % Extract a portion of the waveform for the correlation. This is used in
-    % conjuction with correlate_waveform() to analyze the same sample as
-    % PEAKMATCH. Can add inputs to clip the waveform around the peak differently, see loop
+%CLIP_WAVEFORMS extracts the portion of the waveforms that are used in the
+%correlations in peakmatch. This is to ensure that the correlations will be
+%the same as the ones from peakmatch. Peakmatch was finding the max peak
+%then extracting the peak with 4 seconds before and 8 seconds after. 
+%       Input Arguments:
+%           WAVEFORM_OBJECT: waveform object that needs to be clipped
+%       Output:
+%           clipped_waveforms: waveform object containing all of the
+%           waveforms from the input object clipped to have 4 seconds
+%           before and 8 seconds after the peak. 
     
+
     % this is specific to the telica data because some discrete waveforms
     % have multiple events within them but we only want the first one in
     % the waveform packet. 
