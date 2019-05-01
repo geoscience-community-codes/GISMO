@@ -31,13 +31,13 @@ function [network] = station_subsets(LIST,CT,STA,CHAN)
 %           Will give the list that correlates above CT on station TBTN
 %           channel BHZ
     
-    w = load_waveforms(LIST,1);
+    w = load_waveforms(LIST,'file');
     w = w';
     
     for station = 1:numel(STA)
         for channel = 1:numel(CHAN)
             w2 = station_replace(w,STA{station},CHAN{channel});
-            w2 = load_waveforms(w2,0);
+            w2 = load_waveforms(w2,'cellarray');
             w2 = clip_waveforms(w2); % clip to match peakmatch corr methods
             network.(STA{station}).(CHAN{channel}) = correlate_waveforms(w2,CT);
         end
