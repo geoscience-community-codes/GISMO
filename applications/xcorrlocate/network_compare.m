@@ -1,5 +1,5 @@
 function [all_sta] = network_compare(network)
-%SUBSET_COMPARE takes the structured array from the station_subsets()
+%NETWORK_COMPARE takes the structured array from the station_subsets()
 %function and finds which waveforms appear on all stations/channels.
 %       Input Argument(s):
 %           network: struct output from station_subsets
@@ -59,7 +59,7 @@ function [all_sta] = network_compare(network)
                     w{k} = w{k}(1:end-13);
                 end
                 
-                
+                % comparison loop
                 c = 1;
                 for k = 1:numel(minsta)
                     if any(strcmp(w,minsta{k}))
