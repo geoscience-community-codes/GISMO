@@ -1,4 +1,4 @@
-function [network] = station_subsets(LIST,CT,STA,CHAN)
+function [network,c] = station_subsets(LIST,CT,STA,CHAN)
 %STATION_SUBSETS creates a structure array of lists of waveforms that
 %correlate above a given threshold on each component within a station. 
 %       Input Arguments:
@@ -39,7 +39,11 @@ function [network] = station_subsets(LIST,CT,STA,CHAN)
             w2 = station_replace(w,STA{station},CHAN{channel});
             w2 = load_waveforms(w2,'cellarray');
             w2 = clip_waveforms(w2); % clip to match peakmatch corr methods
-            network.(STA{station}).(CHAN{channel}) = correlate_waveforms(w2,CT);
+            [s,c] = correlate_waveforms(w2,CT);
+            for i = 1:numel(s)
+                network.(STA{station}).(CHAN{channel}){i,1} = s{i};
+                network.(STA{station}).(CHAN{channel}){i,2} = c(i);
+            end
         end
     end
     
