@@ -1,4 +1,4 @@
-function [subset_list, corr_m] = correlate_waveforms(WAVEFORM_OBJECT, CORRTHRESH)
+function [subset_list, corr] = correlate_waveforms(WAVEFORM_OBJECT, CORRTHRESH)
 %CORRELATE_WAVEFORMS correlates all waveforms within the waveform object
 %passed to the function and generate a cell array of the waveforms that
 %correlate above a given threshold on the master waveform (the first on in
@@ -22,11 +22,12 @@ function [subset_list, corr_m] = correlate_waveforms(WAVEFORM_OBJECT, CORRTHRESH
     c = correlation(WAVEFORM_OBJECT, get(WAVEFORM_OBJECT, 'start'));
     c2 = xcorr(c);
     corr = get(c2, 'CORR');
-    corr_m = corr(:,1);
 
     % create object with correlation coefficient above CORRTHRESH
     keep = find(corr(:,1) > CORRTHRESH);
     c3 = subset(c2, keep);
+    corr = get(c3,'CORR');
+    corr = corr(:,1);
     w3 = waveform(c3);
 
     % Extract the waveform files that correlate above the threshold
