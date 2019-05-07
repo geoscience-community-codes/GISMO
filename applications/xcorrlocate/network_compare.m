@@ -8,13 +8,12 @@ function [all_sta] = network_compare(network)
 %           appears on all stations with their respective station and
 %           channel tag info in the file name for easy loading.
 
-
     % get station and channel fieldnames from the structured array
     stations = fieldnames(network);
     channels = fieldnames(network.(stations{1}));
     
     % initialize a minimum value from the structured array
-    min = numel(network.(stations{1}).(channels{1}));
+    min = length(network.(stations{1}).(channels{1}));
     
     % find the station/channel with the least amount of waveforms. That
     % station will be the cap for the comparison
@@ -22,20 +21,24 @@ function [all_sta] = network_compare(network)
         
         for j = 1:numel(channels) % loop over channels
             
-            len = numel(network.(stations{i}).(channels{j}));
+            len = length(network.(stations{i}).(channels{j}));
             
             if len < min
                 min = len;
                 min_station = i;
                 min_channel = j;
+                
             else
                 continue
+                
             end
+            
         end
+        
     end
     
     % station with minimum number of waveforms. Use in comparison
-    minsta = network.(stations{min_station}).(channels{min_channel});
+    minsta = network.(stations{min_station}).(channels{min_channel})(:,1);
     
     % remove the station and channel info for comparison across stations
     for i = 1:numel(minsta)
@@ -52,11 +55,11 @@ function [all_sta] = network_compare(network)
                 % waveforms
                 
                 % make the jth component on the ith station into a list
-                w = network.(stations{i}).(channels{j});
-                
-                % remove the station and channel tag for comparison
-                for k = 1:numel(w)
-                    w{k} = w{k}(1:end-13);
+                for k = 1:length(network.(stations{i}).(channels{j}))
+                    
+                    % remove station and channel tag for comparison
+                    w{k,1} = network.(stations{i}).(channels{j}){k,1}(1:end-13);
+                             
                 end
                 
                 % comparison loop
