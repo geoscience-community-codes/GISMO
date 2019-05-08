@@ -41,8 +41,8 @@ function [network,c] = station_subsets(LIST,CT,STA,CHAN)
             w2 = clip_waveforms(w2); % clip to match peakmatch corr methods
             [s,c] = correlate_waveforms(w2,CT);
             for i = 1:numel(s)
-                network.(STA{station}).(CHAN{channel}){i,1} = s{i};
-                network.(STA{station}).(CHAN{channel}){i,2} = c(i);
+                network.(strcat(STA{station},CHAN{channel})){i,1} = s{i};
+                network.(strcat(STA{station},CHAN{channel})){i,2} = c(i);
             end
         end
     end
