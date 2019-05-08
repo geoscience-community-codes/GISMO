@@ -39,8 +39,7 @@ function self = retrieve(dataformat, varargin)
 % boxcoordinates = [ minimumLatitude maximumLatitude minimumLongitude maximumLongitude ]
 % 
 % For examples, see Catalog_cookbook. Also available at:
-% https://geoscience-community-codes.github.io/GISMO/tutorials/html/Catalog_cookbook.html
-%
+% https://geoscience-community-codes.github.io/GISMO/cookbook_results/Catalog_cookbook.html
 %
 % See also CATALOG, IRISFETCH, CATALOG_COOKBOOK
 

@@ -1,0 +1,64 @@
+%%%%%%%%%%%%%%%% README FILE FOR THE XCORRLOCATE TOOLBOX %%%%%%%%%%%%%%%%
+
+Welcome weary seismologists!
+
+    This is the instructions on how to use the xcorrlocate toolbox within
+    the GISMO seismic analysis toolbox. The purpose of this toolbox is to 
+    provide a set of functions for working with similar waveforms/repeated 
+    earthquakes/multiplets. Currently, this toolbox is built to take output
+    from the Java program 'Peakmatch', which creates groupings of similar
+    waveforms based on a given correlation threshold, and convert it to a 
+    format that GISMO can work with. Below is a list of functions and their
+    descriptions. 
+
+Functions: (put in the order that you would typically use in the workflow)
+
+    load_waveforms()   -    Takes a list from the peakmatch output, finds 
+                            the files within your data structure, and loads
+                            them into a single waveform object.
+                            SCAFOLD: currently this function assumes a certain
+                            data structure. will update in release.
+
+    station_replace()  -    reads a waveform object and replaces the channel
+                            tag with whatever the user specifies. This function
+                            is used to find the same events on different
+                            stations.
+
+    clip_waveforms()   -    replicates the windowing done in peakmatch for
+                            the correlations. Peakmatch finds the highest 
+                            peak in the waveform and grabs 4 seconds before
+                            it and 8 seconds after. This function does that
+                            on the waveforms within the waveform object. 
+
+    correlate_waveforms() - correlates the waveforms in a waveform object 
+                            above the given threshold. 
+
+    station_subsets()  -    performs the correlations on all the stations 
+                            given and returns a struct with the list of
+                            events that correlates above the threshold on
+                            every station. 
+
+    network_compare()  -    takes the output struct from station_subsets() 
+                            and finds the events that appear on all of the
+                            stations and returns a struct with those events
+                            on each station. 
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
