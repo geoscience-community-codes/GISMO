@@ -1,6 +1,9 @@
-function [network,c] = station_subsets(LIST,CT,STA,CHAN)
-%STATION_SUBSETS creates a structure array of lists of waveforms that
-%correlate above a given threshold on each component within a station. 
+function [network] = network_subset(LIST,CT,STA,CHAN)
+%NETWORK_SUBSET finds the subset of waveforms that appears on all stations
+%within the network. This function is effectively the same as running
+%station_subsets then network_compare, however, this computes the final
+%subset through elimination rather than a comparison of individual subsets
+%on each station. For larger datasets this one is more efficient.
 %       Input Arguments:
 %           LIST: full path to file containing list of waveforms.
 %               Ex: LIST = '/path/to/file.dat' where each line in the file
@@ -10,16 +13,16 @@ function [network,c] = station_subsets(LIST,CT,STA,CHAN)
 %           recommended using at least 0.7
 %           STA: cell array of the station tags in the network
 %           CHAN: cell array of the channel tags for each station
-%       Example:
+%       Output/Example:    
 %           Given an initial list of waveforms on one component at a
 %           station (TBTN-BHZ) STATION_SUBSETS will give a structured array
-%           of all the subsets on the componenets you give it. Below is an
-%           example of looking across 4 stations with 3 components:
+%           of the subset that appears on all station on the componenets.
+%           Here is an example of looking across 4 stations with 3 components:
 %               LIST = '/media/shared/mitch/telica/2012-05-11.dat';
 %               CT = 0.7;
 %               STA = {'TBTN','TBMR','TBHS','TBHY'};
 %               CHAN = {'BHZ','BHN','BHE'};
-%               network = station_subsets(LIST,CT,STA,CHAN);
+%               network = network_subsets(LIST,CT,STA,CHAN);
 %
 %           The output variable "network" will have the structure:
 %           network.station.channel
@@ -30,21 +33,36 @@ function [network,c] = station_subsets(LIST,CT,STA,CHAN)
 %               >>network.TBTN.BHZ
 %           Will give the list that correlates above CT on station TBTN
 %           channel BHZ
-    
+
     w = load_waveforms(LIST,'file');
     w = w';
     
     for station = 1:numel(STA)
         for channel = 1:numel(CHAN)
-            w2 = station_replace(w,STA{station},CHAN{channel});
+            w = station_replace(w,STA{station},CHAN{channel});
+            w = load_waveforms(w,'cellarray');
+            w = clip_waveforms(w);
+            w = correlate_waveforms(w,CT);
+        end
+    end
+    
+    sta_elm = numel(STA);
+    chan_elm = numel(CHAN);
+    
+    % rebuild network array
+    for station = 1:numel(STA)
+        for channel = 1:numel(CHAN)
+            w2 = strrep(w,STA{sta_elm},STA{station});
+            w2 = strrep(w2,CHAN{chan_elm},CHAN{channel});
             w2 = load_waveforms(w2,'cellarray');
-            w2 = clip_waveforms(w2); % clip to match peakmatch corr methods
-            [s,c] = correlate_waveforms(w2,CT);
-            for i = 1:numel(s)
-                network.(STA{station}).(CHAN{channel}){i,1} = s{i};
+            w2 = clip_waveforms(w2);
+            [l,c] = correlate_waveforms(w2,CT);
+            for i = 1:numel(l)
+                network.(STA{station}).(CHAN{channel}){i,1} = l{i};
                 network.(STA{station}).(CHAN{channel}){i,2} = c(i);
             end
         end
     end
     
+
 end
