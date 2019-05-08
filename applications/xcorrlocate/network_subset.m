@@ -58,8 +58,8 @@ function [network] = network_subset(LIST,CT,STA,CHAN)
             w2 = clip_waveforms(w2);
             [l,c] = correlate_waveforms(w2,CT);
             for i = 1:numel(l)
-                network.(STA{station}).(CHAN{channel}){i,1} = l{i};
-                network.(STA{station}).(CHAN{channel}){i,2} = c(i);
+                network.(strcat(STA{station},CHAN{channel})){i,1} = l{i};
+                network.(strcat(STA{station},CHAN{channel})){i,2} = c(i);
             end
         end
     end
