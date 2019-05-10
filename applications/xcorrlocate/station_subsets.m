@@ -21,15 +21,10 @@ function [network] = station_subsets(LIST,CT,STA,CHAN)
 %               CHAN = {'BHZ','BHN','BHE'};
 %               network = station_subsets(LIST,CT,STA,CHAN);
 %
-%           The output variable "network" will have the structure:
-%           network.station.channel
-%           Each of the channels contains the list of waveforms that
-%           correlate above the given threshold for that respective station
-%           and channel. 
-%           You can inspect by prompting the array:
-%               >>network.TBTN.BHZ
-%           Will give the list that correlates above CT on station TBTN
-%           channel BHZ
+%           The output variable "network" is a Multiplet object with
+%           properties for channeltag, filepaths to waveforms, and
+%           waveform objects. The arrivals are left blank and can be filled
+%           with stack_and pick. 
     
     w = load_waveforms(LIST,'file');
     w = w';
