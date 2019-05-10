@@ -50,17 +50,18 @@ function [network] = network_subset(LIST,CT,STA,CHAN)
     chan_elm = numel(CHAN);
     
     % rebuild network array
+    i = 1;
     for station = 1:numel(STA)
         for channel = 1:numel(CHAN)
             w2 = strrep(w,STA{sta_elm},STA{station});
             w2 = strrep(w2,CHAN{chan_elm},CHAN{channel});
             w2 = load_waveforms(w2,'cellarray');
             w2 = clip_waveforms(w2);
-            [l,c] = correlate_waveforms(w2,CT);
-            for i = 1:numel(l)
-                network.(strcat(STA{station},CHAN{channel})){i,1} = l{i};
-                network.(strcat(STA{station},CHAN{channel})){i,2} = c(i);
-            end
+            f = correlate_waveforms(w2,CT);
+            w2 = load_waveforms(f,'cellarray');
+            c = ChannelTag('',STA{station},'',CHAN{channel});
+            network(i) = Multiplet(c,f,w2);
+            i = i + 1;
         end
     end
     
