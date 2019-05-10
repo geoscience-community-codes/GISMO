@@ -1,4 +1,4 @@
-%MULTIPLETCHAN - the blueprint for a Peakmatch Multiplet Channel object in GISMO
+%MULTIPLET - the blueprint for a Peakmatch Multiplet Channel object in GISMO
 %a multipletchan object is a container for the relevant information for a
 %peakmatch multiplet set such as channeltag and filepaths to waveforms,
 classdef Multiplet
@@ -63,7 +63,7 @@ classdef Multiplet
                 val(c) = numel(obj.filepaths);
             end
         end
-       
+
     end
 end
     
