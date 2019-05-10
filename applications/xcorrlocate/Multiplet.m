@@ -6,6 +6,8 @@ classdef Multiplet
     properties 
        ctag
        filepaths = {}
+       waveforms
+       arrivals
     end
     
     properties (Dependent)
@@ -27,6 +29,8 @@ classdef Multiplet
             % positional arguments - may change to parameter arguments idk
             p.addOptional('ctag', @ChannelTag)
             p.addOptional('filepaths', {}, @iscell)
+            p.addOptional('waveforms', @waveform)
+            p.addOptional('arrivals',@Arrival)
             
             p.parse(varargin{:});
             fields = fieldnames(p.Results);
@@ -36,9 +40,21 @@ classdef Multiplet
                 eval(sprintf('%s = val;',field));
             end
             
+            % if no waveform is passed make it an empty waveform object
+            if isempty(waveforms)
+               waveforms = waveform();
+            end
             
+            % if no arrival object passed make it an empty Arrival object
+            if isempty(arrivals)
+               arrivals = Arrival();
+            end
+            
+            % assign properties
             obj.ctag = ctag;
             obj.filepaths = filepaths;
+            obj.waveforms = waveforms;
+            obj.arrivals = arrivals;
             
         end
         
