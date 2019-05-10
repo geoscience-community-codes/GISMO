@@ -42,7 +42,7 @@ function [network] = station_subsets(LIST,CT,STA,CHAN)
             w2 = clip_waveforms(w2); % clip to match peakmatch corr methods
             f = correlate_waveforms(w2,CT);
             w2 = load_waveforms(f,'cellarray');
-            c = ChannelTag('TL',STA{station},'',CHAN{channel});
+            c = ChannelTag('',STA{station},'',CHAN{channel});
             network(i) = Multiplet(c,f,w2); % ctag first, filepaths second
             i = i + 1;
         end
