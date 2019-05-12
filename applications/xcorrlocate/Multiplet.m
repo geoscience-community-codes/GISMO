@@ -63,7 +63,80 @@ classdef Multiplet
                 val(c) = numel(obj.filepaths);
             end
         end
+        
+        
+        function w = stack(obj)
+            % waveforms are stored as the full discrete waveform from
+            % peakmatch. clip waveforms to align waveforms to mimic
+            % peakmatch correlation
+            w = obj.waveforms;
+            w = clip_waveforms(w);
+            c = correlation(w,get(w,'start'));
+            c = stack(c);
+            w = waveform(c);
+        end
+        
+        
+        function muck = pick(obj)
+            % makes pick on stack and applies the pick to each waveform in
+            % the multiplet object
+            
+            w = obj.stack;
+            stack = w(end);
+            
+            disp('Can only zoom on waveform once so include P and S in zoom')
+            plot(stack);
+            
+            % switch-case for the P-Arrival pick
+            reply = input('Is there a P-Arrival?(y/n): ','s');
+            
+            switch reply
+                case 'y'
+                    
+                    % allow to zoom on the waveform
+                    waitforbuttonpress;
+                    waitforbuttonpress;
+                    
+                    disp('Waiting for a P-arrival pick...')
+                    p_pick = ginput(1);
+                    p_pick = p_pick(1); % don't care about y-value
+                    
+                    p_phase = input('Phase Remark? ' ,'s');
+                    
+                case 'n'
+                    disp('Exiting pick')
+                otherwise
+                    disp('Must use a lowercase y or n')
+            end
+            
+            % switch-case for the S-Arrival pick
+            reply = input('Is there an S-Arival?(y/n): ','s');
+            
+            switch reply
+                case 'y'
+                    
+                    disp('Waiting for an S-Arrival pick...')
+                    s_pick = ginput(1);
+                    s_pick = s_pick(1); % don't care about y-value
+                    
+                    s_phase = input('Phase Remark? ','s');
+                    
+                    
+                case 'n'
+                    disp('Exiting pick')
+                otherwise
+                    disp('Must use a lowercase y or n')
+            
+            end
+            
+            muck = {};
+            muck{1,1} = p_pick;
+            muck{1,2} = p_phase;
+            muck{2,1} = s_pick;
+            muck{2,2} = s_phase;
 
+        end
+        
     end
 end
     
