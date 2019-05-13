@@ -72,19 +72,21 @@ classdef Multiplet
             w = obj.waveforms;
             w = clip_waveforms(w);
             c = correlation(w,get(w,'start'));
+            c = xcorr(c);
+            c = adjusttrig(c,'median');
             c = stack(c);
             w = waveform(c);
         end
         
         
-        function muck = pick(obj)
+        function [p_arrivals,s_arrivals] = pick(obj)
             % makes pick on stack and applies the pick to each waveform in
             % the multiplet object
             
             w = obj.stack;
             stack = w(end);
             
-            disp('Can only zoom on waveform once so include P and S in zoom')
+            disp('Zoom towards on waveform. Include S in zoom if possible')
             plot(stack);
             
             % switch-case for the P-Arrival pick
@@ -93,15 +95,11 @@ classdef Multiplet
             switch reply
                 case 'y'
                     
-                    % allow to zoom on the waveform
-                    waitforbuttonpress;
-                    waitforbuttonpress;
-                    
                     disp('Waiting for a P-arrival pick...')
                     p_pick = ginput(1);
-                    p_pick = p_pick(1); % don't care about y-value
+                    pick(1) = p_pick(1); % don't care about y-value
                     
-                    p_phase = input('Phase Remark? ' ,'s');
+                    phase{1} = input('Phase Remark? ' ,'s');
                     
                 case 'n'
                     disp('Exiting pick')
@@ -117,11 +115,10 @@ classdef Multiplet
                     
                     disp('Waiting for an S-Arrival pick...')
                     s_pick = ginput(1);
-                    s_pick = s_pick(1); % don't care about y-value
+                    pick(2) = s_pick(1); % don't care about y-value
                     
-                    s_phase = input('Phase Remark? ','s');
-                    
-                    
+                    phase{2} = input('Phase Remark? ','s');
+
                 case 'n'
                     disp('Exiting pick')
                 otherwise
@@ -129,11 +126,35 @@ classdef Multiplet
             
             end
             
-            muck = {};
-            muck{1,1} = p_pick;
-            muck{1,2} = p_phase;
-            muck{2,1} = s_pick;
-            muck{2,2} = s_phase;
+            % compute arrival time for each waveform 
+            for i = 1:numel(w)
+                
+                data = get(w,'data');
+                [corr,lag] = xcorr(data{i},data{end},'coeff'); % end = stack
+                [mcorr,ind] = max(corr); % get maxcorr and it's index
+                mcorr_samp = lag(ind); % maxcorr lag in samples
+                fs = get(w(i),'freq'); % sampling frequency
+                mcorr_lagtime = mcorr_samp/fs; % maxcorr lag in seconds
+                lag_time = mcorr_lagtime/86400; % maxcorr lag in days
+                start_time = get(w(i),'start'); % start_time in datenum (days)
+                
+                % arrival times in datenum format
+                p_arrivals(i) = start_time + lag_time + pick(1);
+                s_arrivals(i) = start_time + lag_time + pick(2);
+                
+            end
+            
+            
+
+            
+%           % write to arrival object
+%             for i = 1:2
+%                 sta = {obj.ctag.station()};
+%                 chan = {obj.ctag.channel()};
+%                 iphase = phase(1);
+%                 
+%             end
+
 
         end
         
