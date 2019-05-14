@@ -79,83 +79,111 @@ classdef Multiplet
         end
         
         
-        function [p_arrivals,s_arrivals] = pick(obj)
+        function obj = pick(obj)
             % makes pick on stack and applies the pick to each waveform in
             % the multiplet object
             
+            comp = obj.ctag.channel(3); % letter denoting channel (Z,E,N)
             w = obj.stack;
             stack = w(end);
+            data_stack = get(stack,'data'); % define outside loop
             
-            disp('Zoom towards on waveform. Include S in zoom if possible')
+            disp('Zoom towards pick area on the waveform')
             plot(stack);
             
-            % switch-case for the P-Arrival pick
-            reply = input('Is there a P-Arrival?(y/n): ','s');
-            
-            switch reply
-                case 'y'
+            switch comp
+                case 'Z'
                     
-                    disp('Waiting for a P-arrival pick...')
-                    p_pick = ginput(1);
-                    pick(1) = p_pick(1); % don't care about y-value
+                    reply = input('Is there a P-Arrival?(y/n): ','s');
                     
-                    phase{1} = input('Phase Remark? ' ,'s');
+                    switch reply
+                        case 'y'
+                            
+                            disp('Waiting for P-arrival pick...');
+                            p_pick = ginput(1);
+                            p_pick = p_pick(1)/86400; % datenum value
+                            
+                            iphase = input('Phase Remark?(IP/EP) ', 's');
+                            
+                            for i = 1:numel(w)
+                                
+                                data = get(w(i),'data');
+                                [corr,lag] = xcorr(data,data_stack,'coeff'); % stack defined outside loop
+                                [~,ind] = max(corr); % get maxcorr and it's index
+                                mcorr_samp = lag(ind); % maxcorr lag in samples
+                                fs = get(w(i),'freq'); % sampling frequency
+                                mcorr_lagtime = mcorr_samp/fs; % maxcorr lag in seconds
+                                lag_time = mcorr_lagtime/86400; % maxcorr lag in days
+                                start_time = get(w(i),'start'); % start_time in datenum (days)
+                                
+                                % arrival times in datenum format
+                                p_arrival = start_time + lag_time + p_pick;
+                                
+                                % build arrival object
+                                sta = {obj.ctag.station};
+                                chan = {obj.ctag.channel};
+                                a(i) = Arrival(sta,chan,p_arrival,{iphase});
+                                a(i).waveforms = w(i);
+                                
+                            end
+                            
+                        case 'n'
+                            
+                            disp('Exiting pick...')
+                            
+                        otherwise
+                            error("Must be lowercase 'y' or 'n'")
+                    end
                     
-                case 'n'
-                    disp('Exiting pick')
+                case {'E','N'}
+                    
+                    reply = input('Is there a S-Arrival?(y/n): ','s');
+                    
+                    switch reply
+                        case 'y'
+                            
+                            disp('Waiting for S-arrival pick...');
+                            s_pick = ginput(1);
+                            s_pick = s_pick(1)/86400; % datenum value
+                            
+                            iphase = input('Phase Remark?(IS/ES) ', 's');
+                            
+                            for i = 1:numel(w)
+                                
+                                data = get(w(i),'data');
+                                [corr,lag] = xcorr(data,data_stack,'coeff'); % stack defined outside loop
+                                [~,ind] = max(corr); % get maxcorr and it's index
+                                mcorr_samp = lag(ind); % maxcorr lag in samples
+                                fs = get(w(i),'freq'); % sampling frequency
+                                mcorr_lagtime = mcorr_samp/fs; % maxcorr lag in seconds
+                                lag_time = mcorr_lagtime/86400; % maxcorr lag in days
+                                start_time = get(w(i),'start'); % start_time in datenum (days)
+                                
+                                % arrival times in datenum format
+                                s_arrival = start_time + lag_time + s_pick;
+                                
+                                % build arrival object
+                                sta = {obj.ctag.station};
+                                chan = {obj.ctag.channel};
+                                a(i) = Arrival(sta,chan,s_arrival,{iphase});
+                                a(i).waveforms = w(i);
+                                
+                            end
+                            
+                        case 'n'
+                            
+                            disp('Exiting pick...')
+                            
+                        otherwise
+                            error("Must be lowercase 'y' or 'n'")
+                    end
+
                 otherwise
-                    disp('Must use a lowercase y or n')
+                    error("Component must be a 'Z','E',or 'N'")
             end
             
-            % switch-case for the S-Arrival pick
-            reply = input('Is there an S-Arival?(y/n): ','s');
+            obj.arrivals = a
             
-            switch reply
-                case 'y'
-                    
-                    disp('Waiting for an S-Arrival pick...')
-                    s_pick = ginput(1);
-                    pick(2) = s_pick(1); % don't care about y-value
-                    
-                    phase{2} = input('Phase Remark? ','s');
-
-                case 'n'
-                    disp('Exiting pick')
-                otherwise
-                    disp('Must use a lowercase y or n')
-            
-            end
-            
-            % compute arrival time for each waveform 
-            for i = 1:numel(w)
-                
-                data = get(w,'data');
-                [corr,lag] = xcorr(data{i},data{end},'coeff'); % end = stack
-                [mcorr,ind] = max(corr); % get maxcorr and it's index
-                mcorr_samp = lag(ind); % maxcorr lag in samples
-                fs = get(w(i),'freq'); % sampling frequency
-                mcorr_lagtime = mcorr_samp/fs; % maxcorr lag in seconds
-                lag_time = mcorr_lagtime/86400; % maxcorr lag in days
-                start_time = get(w(i),'start'); % start_time in datenum (days)
-                
-                % arrival times in datenum format
-                p_arrivals(i) = start_time + lag_time + pick(1);
-                s_arrivals(i) = start_time + lag_time + pick(2);
-                
-            end
-            
-            
-
-            
-%           % write to arrival object
-%             for i = 1:2
-%                 sta = {obj.ctag.station()};
-%                 chan = {obj.ctag.channel()};
-%                 iphase = phase(1);
-%                 
-%             end
-
-
         end
         
     end
