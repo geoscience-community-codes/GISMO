@@ -30,6 +30,7 @@ classdef Catalog
         arrivals = {};
 %         magnitudes = {};
         waveforms = {}; % cell array with one vector waveform objects per event
+%        aef = {}; % amplitude, energy, frequency information from Seisan - this should really be in an extended class definition of Catalog
     end
     
     properties(Dependent)
