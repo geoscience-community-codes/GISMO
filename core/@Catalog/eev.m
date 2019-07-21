@@ -2,7 +2,35 @@ function eev(obj, eventnum)
     % CATALOG.EEV - Browse an Catalog object one event at a time.
     %  catalogObject.EEV() Browse through an Catalog object one event
     %  at a time in a similar way to the Seisan program 'eev'.
-
+    %
+    % MENU:
+    %   <ENTER>            Next event
+    %   c                  Classify
+    %   f2                 Forward 2 events
+    %   b3                 Backward 3 events
+    %   t199703022359      Jump to time
+    %   s                  Summarise (also shows path to S-file)
+    %   S                  Show S-file
+    %   p                  Show path(s) to waveform file(s)
+    %   P                  Plot waveform files
+    %   e                  Edit S-file
+    %   x                  Close all figures
+    %   q                  Quit
+%             disp(' ');
+%             disp('Options:');
+%             disp('________');
+%             disp(' ');
+%             disp('b[num]            - go backward 1 event (or N events)');
+%             disp('c                 - classify');
+%             %disp('e                 - edit/generate S-file');
+%             disp('f[num]            - go forward 1 event (or N events)');
+%             disp('h                 - this help');
+%             %disp('p                 - plot');
+%             disp('s                 - summarise');
+%             disp('tYYYY[MM[DD[HH]]] - jump to date/hour specified');
+%             disp('x                 - close all figure windows');
+%             disp('q                 - quit');
+%             disp(' ');
     if ~exist('eventnum','var')
         eventnum = 1;
     end
@@ -62,7 +90,7 @@ function eev(obj, eventnum)
             jumptime=datenum(year,month,dd,hr,0,0);
             eventnum = min(find(obj.otime >= jumptime));
 
-        elseif (choice(1)=='s') % SUMMARISE - SHOW S FILE or similar data 
+        elseif (choice(1)=='s') % SUMMARISE 
             fprintf('\nTime:\t\t%s\n',dstr);
             fprintf('Longitude:\t%7.2f degrees\n',obj.lon(eventnum));
             fprintf('Latitude:\t%7.2f degrees\n',obj.lat(eventnum));
@@ -70,8 +98,35 @@ function eev(obj, eventnum)
             fprintf('Magnitude:\t%7.2f\n',obj.mag(eventnum));
             fprintf('Magnitude Type:\t%s\n',obj.magtype{eventnum});
             fprintf('Event Type:\t%s\n',obj.etype{eventnum});
+            fprintf('S-File:\t%s\n',obj.sfilepath{eventnum});
             fprintf('\n');
-
+            if strcmp(class(obj),'Seisan_Catalog')
+                if ~isempty(fieldnames(obj.aef{1}))
+                    obj.regress_energy_vs_amplitude(eventnum);
+                end
+            end
+             
+            
+         elseif (choice(1)=='p') % SHOW WAV FILES
+            thesewavfiles = cellstr(obj.wavfilepath{eventnum});
+            for wfnum=1:numel(thesewavfiles)
+                thiswavfile = [obj.topdir{eventnum},thesewavfiles{wfnum}];
+                fprintf('%s\n',thiswavfile);
+            end
+            fprintf('\n');
+            
+         elseif (choice(1)=='P') % plot WAV FILES
+            thesewavfiles = cellstr(obj.wavfilepath{eventnum});
+            for wfnum=1:numel(thesewavfiles)
+                thiswavfile = [obj.topdir{eventnum},thesewavfiles{wfnum}];
+                %fprintf('%s\n',thiswavfile);
+                w = waveform(thiswavfile,'seisan');
+                plot_panels(w)
+            end
+            fprintf('\n');  
+            
+        elseif (choice(1)=='S') % SHOW S FILE
+            type(obj.sfilepath{eventnum})
         elseif (choice(1)=='x') % CLOSE ALL
             close all;
 
@@ -79,21 +134,7 @@ function eev(obj, eventnum)
             break;
 
         elseif (choice(1)=='h') % HELP
-            disp(' ');
-            disp('Options:');
-            disp('________');
-            disp(' ');
-            disp('b[num]            - go backward 1 event (or N events)');
-            disp('c                 - classify');
-            %disp('e                 - edit/generate S-file');
-            disp('f[num]            - go forward 1 event (or N events)');
-            disp('h                 - this help');
-            %disp('p                 - plot');
-            disp('s                 - summarise');
-            disp('tYYYY[MM[DD[HH]]] - jump to date/hour specified');
-            disp('x                 - close all figure windows');
-            disp('q                 - quit');
-            disp(' ');
+            help Catalog/eev
         end
     end
 end  

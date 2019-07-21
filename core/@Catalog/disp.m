@@ -28,13 +28,13 @@ function disp(obj, showall)
             end
             if numel(obj) == 1
                 disp_title(obj);
-                if obj(c).numberOfEvents <= 50 || showall
+                %if obj(c).numberOfEvents <= 50 || showall
                     rows_to_show = obj(c).numberOfEvents;
-                else
-                    rows_to_show = 50;
-                    disp('* Only showing first 50 rows/events - to see all rows/events use:')
-                    disp('*      catalogObject.disp(true)')
-                end
+                %else
+                %    rows_to_show = 50;
+                %    disp('* Only showing first 50 rows/events - to see all rows/events use:')
+                %    disp('*      catalogObject.disp(true)')
+                %end
                 for eventnum=1:rows_to_show
                     disp_event(obj(c), eventnum);
                 end
@@ -60,13 +60,13 @@ function disp_title(obj)
         fprintf('\tDuration');
     end    
     if sum(~isnan(obj.lat))
-        fprintf('\tLat');
+        fprintf('\t   Lat');
     end    
     if sum(~isnan(obj.lon))
-        fprintf('\tLon');
+        fprintf('\t   Lon');
     end 
     if sum(~isnan(obj.depth))
-        fprintf('\tDepth');
+        fprintf('\t\tDepth');
     end        
     if sum(~isnan(obj.mag))
         fprintf('\tMag');
@@ -90,22 +90,30 @@ function disp_event(obj, eventnum)
         fprintf('\t%s',datestr(obj.ontime(eventnum), 'yyyy-mm-dd HH:MM.SS.FFF') );
     end  
     if sum(~isnan(obj.offtime))
-        fprintf('\t%s',datestr(obj.offtime(eventnum), 'yyyy-mm-dd HH:MM.SS.FFF') );
+        if ~isnan(obj.offtime(eventnum))
+            fprintf('\t%s',datestr(obj.offtime(eventnum), 'yyyy-mm-dd HH:MM.SS.FFF') );
+        else
+            fprintf('\t%s','                       ' );
+        end
     end
     if sum(~isnan(obj.offtime))
-        fprintf('\t%.4f s', obj.duration(eventnum) );
+        if ~isnan(obj.offtime(eventnum))        
+            fprintf('\t%6.2f s', obj.duration(eventnum) );
+        else
+            fprintf('\t%        ');
+        end            
     end        
     if sum(~isnan(obj.lat))
-        fprintf('\t%.4f', obj.lat(eventnum) );
+        fprintf('\t%7.4f', obj.lat(eventnum) );
     end    
     if sum(~isnan(obj.lon))
-        fprintf('\t%.4f', obj.lon(eventnum) );
+        fprintf('\t%8.4f', obj.lon(eventnum) );
     end 
     if sum(~isnan(obj.depth))
-        fprintf('\t%.2f', obj.depth(eventnum) );
+        fprintf('\t%6.2f', obj.depth(eventnum) );
     end        
     if sum(~isnan(obj.mag))
-        fprintf('\t%.1f', obj.mag(eventnum) );
+        fprintf('\t%3.1f', obj.mag(eventnum) );
     end 
     if sum(~strcmp(obj.magtype,'u'))
         fprintf('\t%s', obj.magtype{eventnum} );
