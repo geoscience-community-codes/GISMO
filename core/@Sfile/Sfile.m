@@ -178,12 +178,12 @@ classdef Sfile
                         if strfind(tline,'MAIN')  % This identifies the volcanic type 
                             s.subclass=tline(12);
                         else % A TYPE 3 LINE LIKE "VOLC STA"  
-                            [aef, aeflinenum, bbdur, spdur] = readaefline(tline, aef, aeflinenum, bbdur, spdur);
+                            [aef, aeflinenum, bbdur, spdur] = Sfile.readaefline(tline, aef, aeflinenum, bbdur, spdur);
                             s.bbdur = bbdur;
                             s.spdur = spdur;
                         end
                     elseif findstr(tline,'trig') 
-                        [bbdur spdur] = read_trigger_window_line(tline, bbdur, spdur);
+                        [bbdur spdur] = Sfile.read_trigger_window_line(tline, bbdur, spdur);
                         s.bbdur = bbdur;
                         s.spdur = spdur;
     
@@ -308,7 +308,7 @@ classdef Sfile
                         arr.iphase(arrivalnum) = tline(11);
                         hh0=str2num(tline(19:20))
                         mi0=str2num(tline(21:22))
-                        ss0=str2num(tline(24:28))
+                        ss0=str2num(tline(24:28/media/sdd1/seismo))
                         arr.tres(arrivalnum)=str2num(tline(65:70));
                         %dis=str2num(tline(75));
                         %caz=str2num(tline(77:79));
@@ -320,7 +320,7 @@ classdef Sfile
             
             s.aef = aef;
             %s.arrivals = arrivals;
-            if arrivalnum>0
+            if ~exist('arrivalnum','var') | arrivalnum>0
                 s.arrivals = Arrival(cellstr(arr.sta), ...
                             cellstr(''), arr.atime, cellstr(arr.iphase), ...
                             'timeres', arr.tres);   
@@ -365,7 +365,7 @@ classdef Sfile
             %   database for Sfiles matching the time range given by snum
             %   and enum.
             %
-            %   Notes:
+            %   Notes:/media/sdd1/seismo
             %     Seisan Sfiles are typically stored in a Seisan
             %     Seisan database, which is a tree of 4-digit-year/2-digit-month 
             %     directories. They have a name matching DD-HHMM-SSc.SYYYYMM
@@ -473,7 +473,7 @@ classdef Sfile
                 % {'trigger window = 105.7 s                                                      3'}
                 [bbdur spdur] = Sfile.read_trigger_window_line(tline, bbdur, spdur);
             end
-            aef
+           
 
 
         end
