@@ -33,21 +33,21 @@ function run_iceweb(PRODUCTS_TOP_DIR, subnetName, ds, ChannelTagList, ...
     timewindows = iceweb.get_timewindow(enum, nummins, snum);
     disp(sprintf('Planning to run IceWeb from %s to %s in (%d x) %d minute chunks',datestr(snum),datestr(enum),length(timewindows.start),nummins));
       
-%     % loop over timewindows
-%     for count = 1:length(timewindows.start)
-%         hh = datestr(timewindows.start(count),'HH');
-%         mm = datestr(timewindows.start(count),'MM');
-%         if strcmp(hh,'00') && strcmp(mm, '00') || count==1
-%             fprintf('\n%s ',datestr(timewindows.start(count),26));
-%         end
-%         if strcmp(mm,'00')
-%             fprintf('%s ',hh);
-%         end
-%         iceweb.process_timewindow(products_dir, networkName, ...
-%             subnetName, ChannelTagList, timewindows.start(count), ...
-%             timewindows.stop(count), ds, products, calibObjects);
-% 
-%     end
+    % loop over timewindows
+    for count = 1:length(timewindows.start)
+        hh = datestr(timewindows.start(count),'HH');
+        mm = datestr(timewindows.start(count),'MM');
+        if strcmp(hh,'00') && strcmp(mm, '00') || count==1
+            fprintf('\n%s ',datestr(timewindows.start(count),26));
+        end
+        if strcmp(mm,'00')
+            fprintf('%s ',hh);
+        end
+        iceweb.process_timewindow(products_dir, networkName, ...
+            subnetName, ChannelTagList, timewindows.start(count), ...
+            timewindows.stop(count), ds, products, calibObjects);
+
+    end
     
     %% Daily plots
     close all
@@ -112,9 +112,9 @@ function run_iceweb(PRODUCTS_TOP_DIR, subnetName, ds, ChannelTagList, ...
                 print('-dpng',pngfile);
                 %fileexchange.datetickzoom()
                 
-                i=input('enter to continue')
-                close
-                save
+%                 i=input('enter to continue')
+%                 close
+%                 save
                 
                 % existence plot
                 N = numel(r);

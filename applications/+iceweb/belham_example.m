@@ -65,7 +65,8 @@ iceweb.usf_calibrations;
 % iceweb.waveform_call_test;
 
 %% Configure IceWeb
-PRODUCTS_TOP_DIR = '/media/sdb1/belhamstudy/icewebproducts';
+%PRODUCTS_TOP_DIR = '/media/sdb1/belhamstudy/icewebproducts';
+PRODUCTS_TOP_DIR = 'shares/newton/data/Montserrat/iceweb';
 %PRODUCTS_TOP_DIR = '~/Desktop/iceweb_data';
 subnetName = 'Monty'; % can be anything
 % output directory is PRODUCTS_TOP_DIR/network_name/subnetName
