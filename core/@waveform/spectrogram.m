@@ -25,7 +25,8 @@ dbLims = [60 120];
 p = inputParser;
 p.addRequired('w');
 p.addParameter('spectralobject', spectralobject(nfft, overlap, fmax, dbLims));
-p.addParameter('plot_metrics', 0, @isnumeric);
+p.addParameter('plot_metrics', false, @isnumeric);
+p.addParameter('relative_time', false, @islogical); % if relative_time is false, absolute time is used for labelling x-axis
 p.parse(w, varargin{:});
 w=p.Results.w;
 s=p.Results.spectralobject;
@@ -36,11 +37,14 @@ s=p.Results.spectralobject;
         w = reshape(w, numel(w), 1);
     end
     
-    if p.Results.plot_metrics
-        [result,Tcell,Fcell,Ycell, meanf, peakf] = iceweb.spectrogram_iceweb(s, w, 'plot_metrics',1);
-    else
-        [result,Tcell,Fcell,Ycell, meanf, peakf] = iceweb.spectrogram_iceweb(s, w);
-    end
+    
+    [result,Tcell,Fcell,Ycell, meanf, peakf] = iceweb.spectrogram_iceweb(s, w, 'plot_metrics',p.Results.plot_metrics,'relative_time',p.Results.relative_time);
+    
+%     if p.Results.plot_metrics
+%         [result,Tcell,Fcell,Ycell, meanf, peakf] = iceweb.spectrogram_iceweb(s, w, 'plot_metrics',1);
+%     else
+%         [result,Tcell,Fcell,Ycell, meanf, peakf] = iceweb.spectrogram_iceweb(s, w);
+%     end
     
     
 end

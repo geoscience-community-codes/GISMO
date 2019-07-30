@@ -148,9 +148,13 @@ function catalogobj = associate(obj, maxTimeDiff, sites, source)
         olon = source.lon*ones(size(otime));
         olat = source.lat*ones(size(otime));
     end
+
     catalogobj = Catalog(otime, olon, olat, [], [], {}, {}, 'ontime', firstDetectionTime, 'offtime', lastDetectionTime);
     catalogobj.arrivals = arrivalobj;
     fprintf('%d detections were determined to be duplicates using a time window of %.1f seconds\n',duplicatecount, maxTimeDiff);
+    % ok, but here lastDetectionTime is not same as end of trigger time for
+    % an event. How do I get that? I need to sort through the OFF
+    % detections, perhaps using the same window size as for ON detections.
     
 
 end

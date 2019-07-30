@@ -247,7 +247,9 @@ plot(x,100-cumsum(n)/sum(n)*100,'LineWidth',5);
 
         
         % prototypes
-         catalogobj = associate(self, maxTimeDiff, sites, source)
+         catalogobj = associate(self, maxTimeDiff, sites, source) % only event starts
+         catalogobj = associate_event_start_and_end(self, maxTimeDiff, sites, source)
+         catalogobj = associate_event_start_and_end2(self, maxTimeDiff, sites, source)
 %         write(detectionobj, FORMAT, PATH);
     end
     methods(Static)

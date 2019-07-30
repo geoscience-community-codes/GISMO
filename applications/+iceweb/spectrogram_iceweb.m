@@ -62,9 +62,9 @@ p.addParameter('spectrogramFraction', 0.75, @isnumeric);
 p.addParameter('colormap', iceweb.extended_spectralobject_colormap, @isnumeric);
 p.addParameter('plot_metrics', false, @islogical);
 p.addParameter('makeplot', true, @islogical);
+p.addParameter('relative_time',false, @islogical);
 p.parse(varargin{:});
 spectrogramFraction = p.Results.spectrogramFraction;
-
 
 % if nargin>=4
 %     if strcmp(
@@ -92,10 +92,18 @@ dBlims = get(s, 'dBlims');
 fmax = get(s, 'freqmax');
 
 % Set appropriate date ticks
-[wsnum, wenum]=gettimerange(w);
-wt.start = min(wsnum);
-wt.stop = max(wenum);
-[Xtickmarks,XTickLabel]=findMinuteMarks(wt);
+if p.Results.relative_time
+    % RELATIVE TIME
+    [wsnum, wenum]=gettimerange(w);
+    wt.start = 0; 
+    wt.stop = (max(wenum) - min(wsnum)) * 86400;
+    Xtickmarks = []; XTickLabel={};
+else % ABSOLUTE TIME, plot minute marks
+    [wsnum, wenum]=gettimerange(w);
+    wt.start = min(wsnum);
+    wt.stop = max(wenum);
+    [Xtickmarks,XTickLabel]=findMinuteMarks(wt);
+end
 
 Ycell = {}; Fcell = {}; Tcell = {};
 for c=1:numw
@@ -113,8 +121,9 @@ for c=1:numw
         if F(1)==0,
             F(1)=0.001;
         end
-
-        T = wt.start + T/86400;
+        if ~p.Results.relative_time
+            T = wt.start + T/86400;
+        end
         Fplot = F(1:max(index));
         Yplot = Y(1:max(index),:);
         Splot = S(1:max(index),:);
@@ -172,12 +181,23 @@ for c=1:numw
             ylabel( sprintf('%s\n%s',thissta, thischan(1:3) ), 'FontSize', 8);
             xlabel('')
             title('')
+            
+                
             set(gca,'XLim', [wt.start wt.stop]);
+            
             if c==numw
-                set(gca, 'XTick', Xtickmarks, 'XTickLabel', XTickLabel,  'FontSize', 8); % time labels only on bottom spectrogram
+                if ~p.Results.relative_time
+                    set(gca, 'XTick', Xtickmarks, 'XTickLabel', XTickLabel,  'FontSize', 8); % time labels only on bottom spectrogram
+                end
+
             else
-                set(gca, 'XTick', Xtickmarks, 'XTickLabel', {});
+                if ~p.Results.relative_time
+                    set(gca, 'XTick', Xtickmarks, 'XTickLabel', {});
+                else
+                    set(gca, 'XTickLabel', {});
+                end
             end
+            
 
             if spectrogramFraction < 1
                 plotTrace(tracePosition, get(w(c),'data'), get(w(c),'freq'), Xtickmarks, wt, p.Results.colormap, s, thissta, thischan);
@@ -208,9 +228,13 @@ snum =timewindow.start;
 % set axes position
 axes('position',tracePosition);
 
-% trace time vector - bins are ~0.01 s apart (not 5 s as for spectrogram time)
-% not really worthwhile plotting more than 1000 points on the screen
-dnum = ((1:length(data))./freqSamp)/86400 + snum;
+if ~isempty(Xtickmarks)
+    % trace time vector - bins are ~0.01 s apart (not 5 s as for spectrogram time)
+    % not really worthwhile plotting more than 1000 points on the screen
+    dnum = ((1:length(data))./freqSamp)/86400 + snum;
+else
+    dnum = (1:length(data))./freqSamp;
+end
 
 % plot seismogram - assuming data cleaned already with
 % w=detrend(fillgaps(w,'interp'))
@@ -226,9 +250,11 @@ end
 %rgb = amplitude2tracecolor(maxAmpl, mycolormap, s);
 %set (traceHandle,'LineWidth',[0.01],'Color',rgb)
 % or we can use this...
-set (traceHandle,'LineWidth',[0.01],'Color',[0 0 0])
+set(traceHandle,'LineWidth',[0.01],'Color',[0 0 0])
 
-set(gca, 'XTick', Xtickmarks, 'XTickLabel', '', 'XLim', [timewindow.start timewindow.stop], 'Ytick',[],'YTickLabel',['']);
+if ~isempty(Xtickmarks)
+    set(gca, 'XTick', Xtickmarks, 'XTickLabel', '', 'XLim', [timewindow.start timewindow.stop], 'Ytick',[],'YTickLabel',['']);
+end
 
 if ~isnan(maxAmpl) % make sure it is not NaN else will crash
 	traceRange = [dnum(1) dnum(end) -maxAmpl*1.1 maxAmpl*1.1];
@@ -236,6 +262,7 @@ if ~isnan(maxAmpl) % make sure it is not NaN else will crash
 	%fprintf('%s: %s.%s: Max amplitude %.1e (%d dB)\n',mfilename, thissta, thischan, maxAmpl,round(decibels)); 
 	axis(traceRange);
 end
+
 debug.printfunctionstack('<');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

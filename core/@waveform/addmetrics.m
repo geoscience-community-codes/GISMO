@@ -254,11 +254,17 @@ function [amin,amax]=running_min_max(y, N)
     end
 end
 
+% function [amin, aminindex, amax, amaxindex] = find_biggest_peak2peak(y, N)
+% % SKELETON: NOT USED
+% % there are options in findpeaks to ignore small adjacent peaks i should be
+% % using here but don't
+%     [pos_pks, pos_locs] = findpeaks(y);
+%     [neg_pks, neg_locs] = findpeaks(-y);
+%     % now we just need to look for neg_pks which occur within 
+% end
+
 function [amin, aminindex, amax, amaxindex] = find_biggest_peak2peak(y, N)
-% SKELETON: NOT USED
-% there are options in findpeaks to ignore small adjacent peaks i should be
-% using here but don't
-    [pos_pks, pos_locs] = findpeaks(y);
-    [neg_pks, neg_locs] = findpeaks(-y);
+    [pos_pks, pos_locs] = findpeaks(detrend(y),'MinPeakProminence', max(y)/3, 'Threshold', max(y)/10);
+
     % now we just need to look for neg_pks which occur within 
 end

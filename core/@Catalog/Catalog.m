@@ -27,6 +27,7 @@ classdef Catalog
 %         request.maximumRadius = Inf;
 %         request.minimumMagnitude = -Inf;
 %         request.maximumMagnitude = Inf;
+        detections = {};
         arrivals = {};
 %         magnitudes = {};
         waveforms = {}; % cell array with one vector waveform objects per event

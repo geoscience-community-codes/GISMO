@@ -93,7 +93,7 @@ function w = waveform(varargin)
 %       sacfile = 'SACDATA/PN7A.BDF.2007-08-28T00:00:00.000000Z.sac';
 %       ds = datasource('sac', sacfile );
 %       w=waveform(ds, chantag, startTime, endTime);
-
+%
 %       % the easy way is like this:
 %
 %       sacfile = 'SACDATA/PN7A.BDF.2007-08-28T00:00:00.000000Z.sac';
