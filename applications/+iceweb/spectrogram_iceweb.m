@@ -159,6 +159,10 @@ for c=1:numw
         if p.Results.makeplot
             [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numw, c, spectrogramFraction, 0.12, 0.05, 0.80, 0.9);
             axes('position', spectrogramPosition);
+            % T2 = linspace(wt.start, wt.stop, length(T)); % I noticed the
+            % start and end of spectrograms are missing. Is this because of
+            % tapering? Anyway, tried to create a new time vector for
+            % spectrogram, but not very helpful
             if isempty(dBlims)
                 % plot spectrogram
                 %imagesc(T,F,abs(S));
@@ -181,7 +185,6 @@ for c=1:numw
             ylabel( sprintf('%s\n%s',thissta, thischan(1:3) ), 'FontSize', 8);
             xlabel('')
             title('')
-            
                 
             set(gca,'XLim', [wt.start wt.stop]);
             
