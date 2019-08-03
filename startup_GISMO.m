@@ -62,7 +62,13 @@ try
 catch
     disp(['Failed to add path: ', f]);
 end
-
+f = fullfile(gismopath,'core','wwsclient-1.3.1.jar');
+try 
+    javaaddpath(f);
+    disp(['Adding path: ', f]);
+catch
+    disp(['Failed to add path: ', f]);
+end
 % ADD PATH TO GISMO LIBRARY FUNCTIONS
 disp('Adding path: libgismo')
 addpath(fullfile(gismopath, 'libgismo'));
