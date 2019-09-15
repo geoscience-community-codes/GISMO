@@ -88,15 +88,23 @@ classdef Seisan_Catalog < Catalog
                     thiswavfile = [self.topdir{eventnum},thesewavfiles{wfnum}];
                     if exist(thiswavfile,'file')
                         w0 = [w0 waveform(thiswavfile,'seisan')];
+                    else
+                        disp(sprintf('%s not found',thiswavfile));
                     end
                 end
                 if numel(w0)>1
-                    w{eventnum} = combine(w0);
+                    %disp('combining & appending')
+                    w1=combine(w0);
+                    w{eventnum} = w1;
                 else
+                    %disp('appending')
                     w{eventnum} = w0;
                 end
             end
-            self.waveforms = w;        
+            self.waveforms = w; 
+            % SCAFFOLD: self.waveforms here is populated. But on return to
+            % the external function, it is not unless you do
+            % cobj=cobj.addwaveforms().
         end
     end
     
