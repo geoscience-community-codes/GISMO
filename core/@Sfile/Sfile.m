@@ -83,7 +83,7 @@ classdef Sfile
             magnum = 0;
             s.ontime = Sfile.filename2datenum([dfile,dext]);
             
-            fileContents
+            fileContents;
 
             % Read lines into cell array
             lines = strread(fileContents, '%s', 'delimiter', sprintf('\n'));
@@ -202,7 +202,7 @@ classdef Sfile
                 % This will read all wavfile strings into a cell array               
                 if lineend == '6'
                     arrival_lines_on = false;
-                    tline(22:24)
+                    %tline(22:24)
                     %if strcmp(tline(22:24),'MVO')  % DATE AND TIME OF THE EVENT
                     if ~strfind(tline,'___')
                         s.etime = datenum(sprintf('%s %s:%s:%s',tline(2:11),tline(13:14), tline(15:16), tline(18:19)));
@@ -212,7 +212,7 @@ classdef Sfile
                         % add relative path from top of Seisan DB
                         for wavfilenum=1:numel(s.wavfiles)
                             % look for aeffiles too
-                            aeffile = fullfile(s.topdir, 'AEF', s.reldir, [s.wavfiles{wavfilenum},'.aef'])
+                            aeffile = fullfile(s.topdir, 'AEF', s.reldir, [s.wavfiles{wavfilenum},'.aef']);
                             if exist(aeffile,'file')
                                 % we want to read this file too
                                 [aef, aeflinenum, bbdur, spdur] = Sfile.readaeffile(aeffile, aef, aeflinenum, s.bbdur, s.spdur);
@@ -231,7 +231,7 @@ classdef Sfile
                 if lineend == '7'
                     arrival_lines_on = true;
                     arrivalnum=0;
-                    arrivals = []
+                    arrivals = [];
                     clear arr
                     ymd = floor(s.ontime);
                     continue
@@ -306,9 +306,9 @@ classdef Sfile
                         arr.sta{arrivalnum}=sta;
                         %eori = tline(10);
                         arr.iphase(arrivalnum) = tline(11);
-                        hh0=str2num(tline(19:20))
-                        mi0=str2num(tline(21:22))
-                        ss0=str2num(tline(24:28/media/sdd1/seismo))
+                        hh0=str2num(tline(19:20));
+                        mi0=str2num(tline(21:22));
+                        ss0=str2num(tline(24:28));
                         arr.tres(arrivalnum)=str2num(tline(65:70));
                         %dis=str2num(tline(75));
                         %caz=str2num(tline(77:79));
@@ -452,15 +452,15 @@ classdef Sfile
             % events.
 
             aeflinenum = aeflinenum + 1;
-            tline(1:4)
+            tline(1:4);
             if strfind(tline(1:5),'VOLC')
-                thissta = strtrim(tline(7:10))
-                thischan = strtrim(tline(12:15))
+                thissta = strtrim(tline(7:10));
+                thischan = strtrim(tline(12:15));
                 aef.ctag(aeflinenum) = ChannelTag('', thissta, '', thischan);
                 findamp = strfind(tline(15:20),'A')+14;
-                aef.amp(aeflinenum)=str2num(tline(findamp+1:findamp+8))
+                aef.amp(aeflinenum)=str2num(tline(findamp+1:findamp+8));
                 findeng = strfind(tline(findamp+7:findamp+17),'E')+findamp+6;
-                aef.eng(aeflinenum)=str2num(tline(findeng+1:findeng+8))
+                aef.eng(aeflinenum)=str2num(tline(findeng+1:findeng+8));
                 findfft = strfind(tline(findeng+7:findeng+10),'F')+findeng+6;
                 for i = 1:12
                     startindex = findfft + 1 + (i-1)*3;
@@ -480,7 +480,7 @@ classdef Sfile
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
         function [aef, aeflinenum, bbdur, spdur] = readaeffile(aeffile, aef, aeflinenum, bbdur, spdur)
-            aeffile
+            aeffile;
             if exist('aeffile','var')
                 if exist(aeffile, 'file')
                     fileContents = fileread(aeffile);
@@ -498,7 +498,7 @@ classdef Sfile
     %         aef = struct();
     %         aeflinenum = 0;
 
-            fileContents
+            fileContents;
 
             % Read lines into cell array
             lines = strread(fileContents, '%s', 'delimiter', sprintf('\n'));

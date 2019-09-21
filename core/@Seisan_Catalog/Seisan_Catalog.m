@@ -83,6 +83,7 @@ classdef Seisan_Catalog < Catalog
             w=[];
             for eventnum=1:self.numberOfEvents
                 thesewavfiles = cellstr(self.wavfilepath{eventnum});
+                disp(sprintf('addwaveforms: Event %d, #wavs=%d',eventnum,numel(thesewavfiles)))
                 w0 = [];
                 for wfnum=1:numel(thesewavfiles)
                     thiswavfile = [self.topdir{eventnum},thesewavfiles{wfnum}];
@@ -101,7 +102,7 @@ classdef Seisan_Catalog < Catalog
                     w{eventnum} = w0;
                 end
             end
-            self.waveforms = w; 
+            self.waveforms = w;
             % SCAFFOLD: self.waveforms here is populated. But on return to
             % the external function, it is not unless you do
             % cobj=cobj.addwaveforms().
