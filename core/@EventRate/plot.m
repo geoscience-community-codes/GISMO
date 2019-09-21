@@ -131,7 +131,9 @@ function plot(obj, varargin)
                     %% graph 2
                     set(h2, 'LineWidth', 3, 'Color', colors{2});
                     datetick(ax(2), 'x','keeplimits');
-                    ylabel(ax(2),labels{2}, 'Color', colors{2}, 'FontSize', fontsize)
+                    if numel(labels)>1
+                        ylabel(ax(2),labels{2}, 'Color', colors{2}, 'FontSize', fontsize)
+                    end
                     ylims = get(ax(2), 'YLim');
                     set(ax(2), 'YColor', colors{2}, 'YLim', [0 max([ylims(2) 1])], 'XLim', [t(1) t(end)]);
                     xticklabels = get(ax(2), 'XTickLabel');

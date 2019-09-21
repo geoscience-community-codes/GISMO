@@ -32,7 +32,10 @@ function cobj = addwaveforms(cobj, varargin)
     pretriggerSecs = 0;
     posttriggerSecs = 0;
     if all(isnan(cobj.ontime)) || all(isnan(cobj.offtime))
-        error('Your ontime and offtime values for each event in your Catalog object are set to NaN. Set these to event start and end times before trying again')
+        cobj.ontime = cobj.otime;
+        cobj.offtime = cobj.otime;
+        disp('Your ontime and offtime values for each event in your Catalog object are set to NaN')
+        disp('Setting these to origin time')
     end
     if nargin>1
             
