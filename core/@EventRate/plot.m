@@ -84,6 +84,10 @@ function plot(obj, varargin)
         else
             longname = Catalog.subclass2longname('*');
         end
+        size(fh)
+        c
+        size(obj)
+        size(obj(c).time)
         set(fh(c),'Color', [1 1 1], 'Name', sprintf('%s activity beginning %s',longname, datestr(obj(c).time(1),29) ) );
         for cc = 1: numsubplots % number of metrics to plot
             data = obj(c).(metric{cc});

@@ -38,6 +38,7 @@ classdef Sfile
     
     methods
         function s = Sfile(sfilepath,fileContents)
+            disp(sfilepath)
 		%Sfile Constructor for Sfile
         % s = Sfile(SfileContents)
         % Example: Read a Seisan S-file from a local file:
@@ -178,9 +179,10 @@ classdef Sfile
                         if strfind(tline,'MAIN')  % This identifies the volcanic type 
                             s.subclass=tline(12);
                         else % A TYPE 3 LINE LIKE "VOLC STA"  
-                            [aef, aeflinenum, bbdur, spdur] = Sfile.readaefline(tline, aef, aeflinenum, bbdur, spdur);
+                            [aef, aeflinenum, bbdur, spdur] = Sfile.readaefline(tline, aef, aeflinenum, s.bbdur, s.spdur);
                             s.bbdur = bbdur;
                             s.spdur = spdur;
+                       
                         end
                     elseif findstr(tline,'trig') 
                         [bbdur spdur] = Sfile.read_trigger_window_line(tline, bbdur, spdur);
@@ -299,28 +301,33 @@ classdef Sfile
                 end  
                 
                 % arrival lines?
-                if arrival_lines_on & lineend == ' '
+                if arrival_lines_on & lineend == ' ' 
                     sta = strtrim(tline(2:5));
-                    if length(sta)>2
-                        arrivalnum=arrivalnum+1;
-                        arr.sta{arrivalnum}=sta;
-                        %eori = tline(10);
-                        arr.iphase(arrivalnum) = tline(11);
-                        hh0=str2num(tline(19:20));
-                        mi0=str2num(tline(21:22));
-                        ss0=str2num(tline(24:28));
-                        arr.tres(arrivalnum)=str2num(tline(65:70));
-                        %dis=str2num(tline(75));
-                        %caz=str2num(tline(77:79));
-                        arr.atime(arrivalnum) = ymd+hh0/24+mi0/1440+ss0/86400;
-                        %arr.traveltime(arrivalnum) = (atime - s.otime) * 86400;
+                    if ~isempty(sta)
+                        if length(sta)>2
+                            arrivalnum=arrivalnum+1;
+                            arr.sta{arrivalnum}=sta;
+                            %eori = tline(10);
+                            arr.iphase(arrivalnum) = tline(11);
+                            hh0=str2num(tline(19:20));
+                            mi0=str2num(tline(21:22));
+                            ss0=str2num(tline(24:28));
+                            arr.tres(arrivalnum)=str2num(tline(65:70));
+                            %dis=str2num(tline(75));
+                            %caz=str2num(tline(77:79));
+                            arr.atime(arrivalnum) = ymd+hh0/24+mi0/1440+ss0/86400;
+                            %arr.traveltime(arrivalnum) = (atime - s.otime) * 86400;
+                        end
+                    else
+                        disp('blank line?')
                     end
                 end                
             end
             
             s.aef = aef;
+            
             %s.arrivals = arrivals;
-            if ~exist('arrivalnum','var') | arrivalnum>0
+            if exist('arr','var') & (~exist('arrivalnum','var') | arrivalnum>0 )
                 s.arrivals = Arrival(cellstr(arr.sta), ...
                             cellstr(''), arr.atime, cellstr(arr.iphase), ...
                             'timeres', arr.tres);   
@@ -450,7 +457,6 @@ classdef Sfile
             % real-time magnitude scale that could be
             % applied to all events, not just located
             % events.
-
             aeflinenum = aeflinenum + 1;
             tline(1:4);
             if strfind(tline(1:5),'VOLC')
@@ -480,10 +486,10 @@ classdef Sfile
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
         function [aef, aeflinenum, bbdur, spdur] = readaeffile(aeffile, aef, aeflinenum, bbdur, spdur)
-            aeffile;
+            aeffile
             if exist('aeffile','var')
                 if exist(aeffile, 'file')
-                    fileContents = fileread(aeffile);
+                    fileContents = fileread(aeffile)
                 else
                     warning(sprintf('AEFfile %s not found. quitting.',aeffile))
                     return
