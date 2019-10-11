@@ -83,8 +83,10 @@ classdef Sfile
             aeflinenum = 0;
             magnum = 0;
             s.ontime = Sfile.filename2datenum([dfile,dext]);
-            
-            fileContents;
+            if debug.get_debug()>0
+                disp(fileContents)
+                stop
+            end
 
             % Read lines into cell array
             lines = strread(fileContents, '%s', 'delimiter', sprintf('\n'));
@@ -312,7 +314,11 @@ classdef Sfile
                             hh0=str2num(tline(19:20));
                             mi0=str2num(tline(21:22));
                             ss0=str2num(tline(24:28));
-                            arr.tres(arrivalnum)=str2num(tline(65:70));
+                            
+                            str_tres = strtrim(tline(65:70));
+                            if ~isempty(str_tres)
+                                arr.tres(arrivalnum)=str2num(str_tres);
+                            end
                             %dis=str2num(tline(75));
                             %caz=str2num(tline(77:79));
                             arr.atime(arrivalnum) = ymd+hh0/24+mi0/1440+ss0/86400;
