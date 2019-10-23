@@ -105,7 +105,8 @@ classdef Sfile
                 tline = pad(tline, 80, 'left');
                 linelength=length(tline);
                 if ischar(tline) & linelength <= 80
-                    lineend = tline(end);
+                    lineend = tline(end)
+                    tline
                 else
                     continue
                 end
@@ -315,10 +316,18 @@ classdef Sfile
                             mi0=str2num(tline(21:22));
                             ss0=str2num(tline(24:28));
                             
-                            str_tres = strtrim(tline(65:70));
+                            str_tres = strtrim(tline(65:68))
                             if ~isempty(str_tres)
                                 arr.tres(arrivalnum)=str2num(str_tres);
+                            else
+                                arr.tres(arrivalnum) = NaN;
                             end
+                            str_weight = strtrim(tline(69:70))
+                            if ~isempty(str_weight)
+                                arr.weight(arrivalnum)=str2num(str_weight);
+                            else
+                                arr.weight(arrivalnum) = NaN;
+                            end                           
                             %dis=str2num(tline(75));
                             %caz=str2num(tline(77:79));
                             arr.atime(arrivalnum) = ymd+hh0/24+mi0/1440+ss0/86400;
