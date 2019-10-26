@@ -1,6 +1,10 @@
 function makespectrogramthumbnails(spectrogramFilename, spectrogramFraction)
 debug.printfunctionstack('>');
 
+if ~exist('spectrogramFraction', 'var')
+    spectrogramFraction = 0.75;
+end
+
 % figure 1 should be a large spectrogram with traces, cropped nicely. Now remove labels and maximise panels.
 
 ax=get(gcf, 'Children');

@@ -53,6 +53,7 @@ function origins = dbgetorigins(dbpath, subset_expression)
     
     debug.print_debug(0, sprintf('Loading data from %s',dbpath));
     ORIGIN_TABLE_PRESENT = antelope.dbtable_present(dbpath, 'origin');
+    dbpath
     if (ORIGIN_TABLE_PRESENT)
         db = dblookup_table(dbopen(dbpath, 'r'), 'origin');
         numorigins = dbquery(db,'dbRECORD_COUNT');

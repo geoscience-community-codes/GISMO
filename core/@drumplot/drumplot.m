@@ -1,6 +1,9 @@
 %DRUMPLOT the blueprint for drumplot objects in GISMO
 % A drumplot object is for making helicorder plots
 % optionally detected events can be superimposed from a catalog object
+% Usage:
+%    for usage, do:
+%       help drumplot/drumplot
 classdef drumplot
 
     properties
@@ -49,12 +52,16 @@ classdef drumplot
             %     EXAMPLE: h = drumplot(w,'catalog',cobj) where w is a 1x2 waveform object
             %        cobj is a Catalog object
             %     DEFAULT = [] (No events)
-
+            %
             %  'trace_color'-->(Trace Color)
             %     If wave contains only one wavefrom object, 'trace_color' can be 
             %     entered as a 1x3 array of RGB values (between 0 and 1). For wave
             %     arguments longer than 1, 'trace_color' should be entered as a 1xN
             %     cell array, each containing a 1x3 array of RGB values.
+            %
+            %  'scale'-->Amplitude scale. Default is 1. This means largest
+            %      signal will touch 1 line above/below. A higher number
+            %      will allow smaller signals to be seen.
             %
             %INPUTS: wave     - a waveform object to be plotted on multiple drumplot
             %                   trace lines

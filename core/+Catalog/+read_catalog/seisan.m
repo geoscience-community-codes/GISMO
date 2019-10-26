@@ -11,16 +11,28 @@ function self = seisan(varargin)
     p.addParameter('dbpath', '', @isstr);
     p.addParameter('startTime', -Inf);  
     p.addParameter('endTime', Inf);
-    p.addParameter('minimumMagnitude', -Inf, @isnumeric);
-    p.addParameter('maximumMagnitude', Inf, @isnumeric);
-    p.addParameter('minimumLatitude', -90., @isnumeric);
-    p.addParameter('maximumLatitude', 90., @isnumeric);
-    p.addParameter('minimumLongitude', -180., @isnumeric);
-    p.addParameter('maximumLongitude', 180., @isnumeric);  
-    p.addParameter('minimumDepth', -12, @isnumeric);
-    p.addParameter('maximumDepth', 6400., @isnumeric); 
-    p.addParameter('minimumRadius', 0., @isnumeric);
-    p.addParameter('maximumRadius', deg2km(180.0), @isnumeric);     
+%     p.addParameter('minimumMagnitude', -Inf, @isnumeric);
+%     p.addParameter('maximumMagnitude', Inf, @isnumeric);
+%     p.addParameter('minimumLatitude', -90., @isnumeric);
+%     p.addParameter('maximumLatitude', 90., @isnumeric);
+%     p.addParameter('minimumLongitude', -180., @isnumeric);
+%     p.addParameter('maximumLongitude', 180., @isnumeric);  
+%     p.addParameter('minimumDepth', -12, @isnumeric);
+%     p.addParameter('maximumDepth', 6400., @isnumeric); 
+%     p.addParameter('minimumRadius', 0., @isnumeric);
+%     p.addParameter('maximumRadius', deg2km(180.0), @isnumeric); 
+%     p.addParameter('boxcoordinates', [], @isnumeric);    %[minLat, maxLat, minLon, maxLon]   % use NaN as a wildcard
+%     p.addParameter('radialcoordinates', [], @isnumeric); % [Lat, Lon, MaxRadius, MinRadius]   % MinRadius is optional
+    p.addParameter('minimumMagnitude', NaN, @isnumeric);
+    p.addParameter('maximumMagnitude', NaN, @isnumeric);
+    p.addParameter('minimumLatitude', NaN, @isnumeric);
+    p.addParameter('maximumLatitude', NaN, @isnumeric);
+    p.addParameter('minimumLongitude', NaN, @isnumeric);
+    p.addParameter('maximumLongitude', NaN, @isnumeric);  
+    p.addParameter('minimumDepth', NaN, @isnumeric);
+    p.addParameter('maximumDepth', NaN, @isnumeric); 
+    p.addParameter('minimumRadius', NaN, @isnumeric);
+    p.addParameter('maximumRadius', NaN, @isnumeric); 
     p.addParameter('boxcoordinates', [], @isnumeric);    %[minLat, maxLat, minLon, maxLon]   % use NaN as a wildcard
     p.addParameter('radialcoordinates', [], @isnumeric); % [Lat, Lon, MaxRadius, MinRadius]   % MinRadius is optional
     p.addParameter('addarrivals', false, @islogical);
@@ -37,28 +49,8 @@ function self = seisan(varargin)
         eval(sprintf('%s = val;',field));
     end 
     
-    self.request.dbpath = dbpath;
-    self.request.startTime = startTime;
-    self.request.endTime = endTime;
     
-%     % SCAFFOLD: might have deleted something here. These 2 lines might not
-%     % be correct
-%     self.request.minimumMagnitude = minimumMagnitude;
-%     p.addParameter('minimumMagnitude', [], @isnumeric);
-%     
-%     p.addParameter('maximumMagnitude', [], @isnumeric);
-%     p.addParameter('minimumLatitude', [], @isnumeric);
-%     p.addParameter('maximumLatitude', [], @isnumeric);
-%     p.addParameter('minimumLongitude', [], @isnumeric);
-%     p.addParameter('maximumLongitude', [], @isnumeric);  
-%     p.addParameter('minimumDepth', [], @isnumeric);
-%     p.addParameter('maximumDepth', [], @isnumeric); 
-%     p.addParameter('minimumRadius', [], @isnumeric);
-%     p.addParameter('maximumRadius', [], @isnumeric);     
-%     p.addParameter('boxcoordinates', @isnumeric);    %[minLat, maxLat, minLon, maxLon]   % use NaN as a wildcard
-%     p.addParameter('radialcoordinates', @isnumeric); % [Lat, Lon, MaxRadius, MinRadius]   % MinRadius is optional
-%     p.addParameter('addarrivals', false, @islogical);
-    
+           
     if numel(boxcoordinates)==4
         minimumLatitude = boxcoordinates(1);
         maximumLatitude = boxcoordinates(2);
@@ -76,7 +68,8 @@ function self = seisan(varargin)
     % Check start & end times
     snum = Catalog.read_catalog.ensure_dateformat(startTime);
     enum = Catalog.read_catalog.ensure_dateformat(endTime);
-    
+    request.startTime = snum;
+    request.endTime = enum;
     if ~exist(dbpath, 'dir')
         fprintf('Directory %s not found\n',dbpath);
         self = struct;
@@ -85,55 +78,114 @@ function self = seisan(varargin)
     
     % get dir list of matching sfilesSfile.list_sfiles
     sfiles = Sfile.list_sfiles(dbpath, snum, enum);
+    numsfiles = numel(sfiles);
     
     % loop over sfiles
-    for i=1:length(sfiles)
+    tic
+    for i=1:numsfiles
         % read 
-        fprintf('Processing %s\n',fullfile(sfiles(i).dir, sfiles(i).name));
-        thiss = Sfile(fileread(fullfile(sfiles(i).dir, sfiles(i).name)));
-        try
-            s(i)=thiss;
-        catch
-            s(i)
+        thissfilepath = fullfile(sfiles(i).dir, sfiles(i).name);
+        fprintf('Reading %4d of %4d: %s\n',i,numsfiles,thissfilepath);
+        if i>1
+            tav = toc/(i-1);
+            tremain = (numsfiles-i)*tav;
+            fprintf('Time remaining %.1f s\n',tremain);
+        end
+        %thiss = Sfile(thissfilepath);
+        thiss = Sfile(thissfilepath, fileread(thissfilepath));
+        if debug.get_debug>0
             thiss
-            error('Wrong number of fields?')
+            thiss.magnitude
         end
 
         % add to catalog
-        dnum(i)  = s(i).otime;
-        etype{i} = s(i).subclass;
-        lat(i) = s(i).latitude;
-        lon(i) = s(i).longitude;
-        depth(i) = s(i).depth;
+        dnum(i)  = thiss.otime;
+        etype{i} = thiss.subclass;
+        lat(i) = thiss.latitude;
+        lon(i) = thiss.longitude;
+        depth(i) = thiss.depth;
+        wavfiles{i} = cellstr(thiss.wavfiles);
+        ontime(i) = thiss.ontime;
+        offtime(i) = thiss.offtime;
+        sfilepath{i} = thiss.sfilepath;
+        topdir{i} = thiss.topdir;
+        reldir{i} = thiss.reldir;  
+        aef{i} = thiss.aef;
+        arrivals{i} = thiss.arrivals;
         
         % SCAFFOLD
         mag(i) = NaN;
-        try
-            sfile_mags = [s(i).magnitude.value];
+        magtype{i} = 'u';
+        try % only events with a magnitude will have this field filled out
+            sfile_mags = [thiss.magnitude.value];
             if ~isempty(sfile_mags)
-                disp('**************** ********************')
-                mag(i) = max(sfile_mags);
+                [maxmag,maxmagpos]=max(sfile_mags);
+                mag(i) = maxmag;
+                magtype{i} = thiss.magnitude(maxmagpos).type;
             end
         end
 
-        % SCAFFOLD also use durations (bbdur) and ampengfft info
-        % Compute a magnitude from amp & eng, but need to know where
-        % stations are. I can save these as MA and ME, to distinguish from
-        % Ml, Ms, Mb, Mw if those exist
     end
-    magtype = {};
     
-    % save request
-    fields = fieldnames(p.Results);
-    for i=1:length(fields)
-        field=fields{i};
-        eval(sprintf('request.%s = eval(field);',field));
-    end 
-    
-    % create Catalog object
-    self = Catalog(dnum', lon', lat', depth', mag', magtype', etype', 'request', request);
-    request.startTime = snum;
-    request.endTime = enum;
+    if numsfiles>0
+        % save request
+        fields = fieldnames(p.Results);
+        for i=1:length(fields)
+            field=fields{i};
+            eval(sprintf('request.%s = eval(field);',field));
+        end 
+
+        % create Catalog object
+        self = Seisan_Catalog(dnum', lon', lat', depth', mag', magtype', etype', 'request', request, 'ontime', ontime', 'offtime', offtime');
+        self.aef = aef;
+        self.sfilepath = sfilepath;
+        self.wavfilepath = wavfiles;
+        self.topdir = topdir;
+        self.reldir = reldir;
+        self.arrivals = arrivals;
+
+        filteredout = [];
+        filteredin = 1:self.numberOfEvents;
+        if ~isnan(request.minimumDepth)
+            %filteredout = unique([find(depth<request.minimumDepth) filteredout]);
+            filteredin = find(depth>=request.minimumDepth);
+        end
+        if ~isnan(request.maximumDepth)
+            %filteredout = unique([find(depth>request.maximumDepth) filteredout]);
+            filteredin = find(depth<=request.maximumDepth);
+        end
+        if ~isnan(request.minimumMagnitude)
+            %filteredout = unique([find(mag<request.minimumMagnitude) filteredout]);
+            filteredin = find(mag>=request.minimumMagnitude);
+        end
+        if ~isnan(request.maximumMagnitude)
+            %filteredout = unique([find(mag>request.maximumMagnitude) filteredout]);   
+            filteredin = find(mag<=request.maximumMagnitude);
+        end
+        if ~isnan(request.minimumLatitude)
+            %filteredout = unique([find(lat<request.minimumLatitude) filteredout]);
+            filteredin = find(lat>=request.minimumLatitude);
+        end
+        if ~isnan(request.maximumLatitude)
+            %filteredout = unique([find(lat>request.maximumLatitude) filteredout]);
+            filteredin = find(lat<=request.minimumLatitude);
+        end
+        if ~isnan(request.minimumLongitude)
+            %filteredout = unique([find(lon<request.minimumLongitude) filteredout]);
+            filteredin = find(lon>=request.minimumLongitude);
+        end
+        if ~isnan(request.maximumLongitude)
+            %filteredout = unique([find(lon>request.maximumLongitude) filteredout]);
+            filteredin = find(lon<=request.maximumLatitude);
+        end
+        %filteredin2 = find(~ismember(1:self.numberOfEvents,filteredout));
+        self=self.subset('indices', filteredin);
+        disp('min/max radius and radial coordinates not supported by Seisan reader');
+    else
+        self=Catalog();
+        
+    end
+    request.dbpath = dbpath;
     self.request = request;
     debug.printfunctionstack('<')
 end

@@ -1,6 +1,6 @@
-function handlePlot = plot(rsam_vector, varargin)
-    % RSAM/PLOT plot rsam data
-    % handle = plot(rsam_vector, varargin)
+function handlePlot = plot_panels(rsam_vector, include_labels)
+    % RSAM/PLOT_PANELS plot rsam data
+    % handle = plot_panels(rsam_vector, varargin)
     % Properties include:
     %   yaxistype, h, addgrid, addlegend, fillbelow, plotspikes, plottransients, plottremor
     % to change where the legend plots set the global variable legend_ypos
@@ -16,7 +16,11 @@ function handlePlot = plot(rsam_vector, varargin)
     % % GTHO 2009/10/26 Changed legend position to -0.2
     
     w = rsam2waveform(rsam_vector);
-    plot_panels(w);
+    if exist('include_labels','var') & include_labels
+        plot_panels(w);
+    else
+        plot_panels(w,'labels',{})
+    end
     
     % xticks currently in seconds 
     xtick_interval_seconds = 1;

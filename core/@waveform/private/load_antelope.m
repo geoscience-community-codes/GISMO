@@ -190,9 +190,13 @@ function outputWaveforms = load_antelope(request, specificDatabase)
               end
           end
       end
+      % Glenn added 2019/04/09
+      expr = strrep(expr, '&& chan=~//', '');
+      expr = strrep(expr, 'sta=~// &&', '');
          
       % Glenn 2016/05/12 Get the trace objects
       [w, database, fdb] = get_traces(startDatenums, endDatenums, expr, database, combineWaves);
+      w
       if iscell(w)
           w=w{:};
       end
@@ -372,6 +376,7 @@ function [w, rawDb, filteredDb] =  get_traces(startDatenum, endDatenum, expr, da
    %subset the database based on the station/channel expression
    debug.print_debug(1,sprintf('\nSubsetting wfdisc table with the following sta-chan subset expression:\n\t%s\n\n',expr));
    mydb = dbsubset(mydb,expr);
+   
    if safe_dbnrecs(mydb) == 0
       cleanUpFail('Waveform:load_antelope:dataNotFound', 'No records found for criteria [%s].', expr);
       return;

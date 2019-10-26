@@ -23,6 +23,11 @@ function [ w ] = pad( w, snum, enum, padvalue )
 		y = get(thisw,'data');
 		fs = get(thisw,'freq');
 		[wsnum wenum] = gettimerange(thisw);
+        if isnan(wsnum) || isnan(wenum)
+            warning(sprintf('%s: start or end time is undefined. cannot pad',mfilename));
+            w(waveform_num)=thisw;
+            continue;
+        end
 
         if wsnum~=snum | wenum~=enum
 	

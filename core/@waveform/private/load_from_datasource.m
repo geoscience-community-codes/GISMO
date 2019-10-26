@@ -31,7 +31,7 @@ function w = load_from_datasource(ds, chans, startt, endt, combine_waves, usewka
          myEndTime = endt(j);
          
          % grab all files for date range, discarding duplicates
-         fn = getfilename(ds, chans,subdivide_files_by_date(ds,myStartTime, myEndTime));
+         fn = getfilename(ds, chans,subdivide_files_by_date(ds,myStartTime, myEndTime))
          fn = unique(fn);
          
          %load all waveforms for these files

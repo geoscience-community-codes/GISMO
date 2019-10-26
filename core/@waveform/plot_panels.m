@@ -8,8 +8,16 @@ function plot_panels(w, varargin)
 %   PLOT_PANELS(w, 'alignWaveforms', true) will align the waveforms on their start times.
 %   PLOT_PANELS(w, 'arrivals', ArrivalObject) will superimpose arrival
 %                                             times on the waveforms.
+%   PLOT_PANELS(w, 'detections', DetectionObject) will superimpose
+%                                         detection times on the waveforms.
 %   PLOT_PANELS(w, 'visible', 'off') will prevent the plot showing on the
 %                                    screen.
+%   By default, plot_panels(..) will show 3 text labels for each waveform
+%   trace. On the left, the start time. In the middle, the mean. On the
+%   right, the maximum amplitude of the waveform. This is equivalent to
+%   PLOT_PANELS(w, 'labels', {'time';'mean';'amplitude'}). To prevent any
+%   of these showing up, use:
+%   PLOT_PANELS(w, 'labels', {}).
 %
 % Along the top of each trace are displayed 3 numbers in different colors:
 %   blue - the mean offset of the trace
@@ -29,12 +37,17 @@ function plot_panels(w, varargin)
     p = inputParser;
     p.addParameter('alignWaveforms', false, @isnumeric); % optional name-param pairs
     p.addParameter('visible', 'on', @isstr)
+    p.addParameter('labels', {'time';'mean';'amplitude'}, @iscell)
     p.addParameter('arrivals', [])
+    p.addParameter('detections', [])
     p.parse(varargin{:});
     alignWaveforms = p.Results.alignWaveforms;
     visibility = p.Results.visible;
     if isa(p.Results.arrivals, 'Arrival')
         arrivalobj = p.Results.arrivals;
+    end
+    if isa(p.Results.detections, 'Detection')
+        detectionobj = p.Results.detections;
     end
     
     % get the first start time and last end time
@@ -93,6 +106,25 @@ function plot_panels(w, varargin)
             %hold off
         end
         
+        % detections
+        if exist('detectionobj','var')
+            disp('- adding detections to panel plot')
+            hold on
+            thisctag = strrep(string(get(w(wavnum),'ChannelTag')),'-','')
+            Index = find(ismember(detectionobj.channelinfo, thisctag))
+            for detnum=1:numel(Index)
+                dettime = detectionobj.time(Index(detnum));
+                if alignWaveforms
+                    reldettime = (dettime-min(dnum))*SECSPERDAY;
+                else
+                    reldettime = (dettime-snum)*SECSPERDAY;
+                end
+                reldettime
+                plot([reldettime reldettime], [min(y) max(y)],'r', 'LineWidth',3);
+            end
+            %hold off
+        end        
+        
         % metrics
         try 
             m = get(w(wavnum),'metrics');
@@ -116,6 +148,7 @@ function plot_panels(w, varargin)
             plot((dnum-snum)*SECSPERDAY, y,'-k');
             set(gca, 'XLim', [0 enum-snum]*SECSPERDAY);
         end
+            set(ax(wavnum),'XTickMode','auto')
 %         xlim = get(gca, 'XLim');
 %         set(gca,'XTick', linspace(xlim(1), xlim(2), 11));
 
@@ -138,9 +171,16 @@ function plot_panels(w, varargin)
         if strcmp(ustr,'null')
             ustr = '';
         end
-        text(0.5,0.85, sprintf('%4.2e %s',offset,ustr),'FontSize',6,'Color','b','units','normalized');
-        text(0.02,0.85,sprintf('%s',datestr(starttimes(wavnum),'yyyy-mm-dd HH:MM:SS.FFF')),'FontSize',8,'Color','g','units','normalized');
-        text(0.85,0.85,sprintf('%4.2e %s',tracemax,ustr),'FontSize',8,'Color','r','units','normalized');
+        
+        if any(strcmp(p.Results.labels,'mean'))
+            text(0.5,0.85, sprintf('%4.2e %s',offset,ustr),'FontSize',6,'Color','b','units','normalized');
+        end
+        if any(strcmp(p.Results.labels,'time'))
+            text(0.02,0.85,sprintf('%s',datestr(starttimes(wavnum),'yyyy-mm-dd HH:MM:SS.FFF')),'FontSize',8,'Color','g','units','normalized');
+        end
+        if any(strcmp(p.Results.labels,'amplitude'))
+            text(0.85,0.85,sprintf('%4.2e %s',tracemax,ustr),'FontSize',8,'Color','r','units','normalized');
+        end
         
 
 %         if exist('arrivalobj','var')
@@ -167,9 +207,9 @@ function plot_panels(w, varargin)
         linkaxes(ax,'x');
         
         % enable update x tick labels after zoom
-%         h = zoom(gcf);
-%         set(h,'ActionPostCallback',{@myzoomcallback,ax});
-%         set(h,'Enable','on');
+            h = zoom(gcf);
+            set(h,'ActionPostCallback',{@myzoomcallback,ax});
+            set(h,'Enable','on');
 
     end
 
@@ -177,8 +217,8 @@ function plot_panels(w, varargin)
     originalXticks = get(gca,'XTickLabel');
     
     f = uimenu('Label','X-Ticks');
-%     uimenu(f,'Label','seconds since start time','Callback',{@secondssince, originalXticks});
-%     uimenu(f,'Label','absolute time','Callback',{@datetickplot, snum, SECSPERDAY});
+        uimenu(f,'Label','seconds since start time','Callback',{@secondssince, originalXticks});
+        uimenu(f,'Label','absolute time','Callback',{@datetickplot, snum, SECSPERDAY});
     uimenu(f,'Label','time range','Callback',{@daterange, snum, SECSPERDAY});
     uimenu(f,'Label','quit','Callback','disp(''exit'')',... 
            'Separator','on','Accelerator','Q');

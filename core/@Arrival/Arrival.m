@@ -31,6 +31,7 @@ classdef Arrival
         traveltime
         depth
         waveforms
+        offtime
     end
     methods
         function obj = Arrival(sta, chan, time, iphase, varargin)

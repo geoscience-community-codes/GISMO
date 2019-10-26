@@ -157,7 +157,7 @@ function ds = datasource(whichsource, varargin)
             % end special cases ------------------------------------
             
          otherwise
-            error('Current valid datasources are: ANTELOPE, SAC, FILE, WINSTON, SEISAN, OBSPY, or a function handle to an interpeter function');
+            error('Current valid datasources are: ANTELOPE, SAC, MINISEED, FILE, WINSTON, SEISAN, OBSPY, or a function handle to an interpeter function');
       end
    end
 end

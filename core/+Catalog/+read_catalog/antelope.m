@@ -138,7 +138,7 @@ function self = antelope(varargin)
     % Loop over databases
     for dbpathitem = dbpathlist
         % Load vectors
-        origins = antelope.dbgetorigins(dbpath, subset_expression);
+        origins = antelope.dbgetorigins(dbpath, subset_expression)
         if length(origins.lon) == length(origins.mag)
             % Concatentate vectors
             time  = cat(1, time,  origins.time);           

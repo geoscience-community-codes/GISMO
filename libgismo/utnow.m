@@ -14,33 +14,41 @@ function utdnum=utnow()
 %    See also datenum, now
 
 %    Author: Glenn Thompson
-    persistent hour_adjust; % assumes time zone is UTC  i.e. GMT
-    if isempty(hour_adjust) % look up first time only
-        atomtime = get_atomic_time();
-        [status, unixnowstr] = system('date +"%Y-%m-%d %H:%M:%S"');
-        unixnow = datenum(unixnowstr);
-        hour_adjust = round(24 * (unixnow - atomtime));
-    end
 
-    if isunix
-        [status, unixnowstr] = system('date +"%Y-%m-%d %H:%M:%S"');
-        unixnow = datenum(unixnowstr);
-        [status, unixnowTZ] = system('date +"%Z"'); 
-        unixnowTZ = unixnowTZ(1:end-1); % chomp
-        switch unixnowTZ
-%             case 'BST'
-%                 utdnum = unixnow - 1/24;
-            case 'AKDT'
-                utdnum = unixnow + 8/24;
-            case 'AKST'
-                utdnum = unixnow + 9/24;
-            otherwise
-                utdnum = unixnow + hour_adjust;
+% The following code added on 14-Dec-2018 to take advantage of
+% the datetime class
+    try
+        utdnum = datenum(datetime('now','TimeZone','UTC'));
+    catch
+
+        persistent hour_adjust; % assumes time zone is UTC  i.e. GMT
+        if isempty(hour_adjust) % look up first time only
+            atomtime = get_atomic_time();
+            [status, unixnowstr] = system('date +"%Y-%m-%d %H:%M:%S"');
+            unixnow = datenum(unixnowstr);
+            hour_adjust = round(24 * (unixnow - atomtime));
         end
-    else
-        disp('utnow: Sorry, your system does not support the Unix date command.')
-    end
 
+        if isunix
+            [status, unixnowstr] = system('date +"%Y-%m-%d %H:%M:%S"');
+            unixnow = datenum(unixnowstr);
+            [status, unixnowTZ] = system('date +"%Z"'); 
+            unixnowTZ = unixnowTZ(1:end-1); % chomp
+            switch unixnowTZ
+    %             case 'BST'
+    %                 utdnum = unixnow - 1/24;
+                case 'AKDT'
+                    utdnum = unixnow + 8/24;
+                case 'AKST'
+                    utdnum = unixnow + 9/24;
+                otherwise
+                    utdnum = unixnow + hour_adjust;
+            end
+        else
+            disp('utnow: Sorry, your system does not support the Unix date command.')
+        end
+
+    end
 end
 
 

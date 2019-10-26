@@ -20,13 +20,12 @@ function erobj=eventrate(catalogObject, varargin)
     stepsize = p.Results.stepsize;
     snum = p.Results.snum;
     enum = p.Results.enum;
-    if snum>0 && enum>0
+    if snum>0 && enum>0 % subsetting the catalog object for date range?
         for c=1:numel(catalogObject)
             indices = find(catalogObject(c).otime >= snum & catalogObject(c).otime <= enum);
             catalogObject(c) = catalogObject(c).subset(indices);
         end
     end
-    
     
         
 
@@ -56,7 +55,9 @@ function erobj=eventrate(catalogObject, varargin)
             % Find out how many event types we have
             etypes = unique(catalogObject(i).etype);      
 
-            % bin the data
+            % bin the data 
+            % SCAFFOLD - THIS NO LONGER SEEMS TO BE BINNING DATA
+            % GET EMPTY OUTPUT WHEN TESTING WITH SEISAN_CATALOG
             [time, counts, energy, smallest_energy, ...
                 biggest_energy, median_energy, stdev, median_time_interval] = ...
                 Catalog.binning.bin_irregular(catalogObject(i).otime, ...

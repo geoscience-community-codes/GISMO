@@ -84,6 +84,10 @@ function plot(obj, varargin)
         else
             longname = Catalog.subclass2longname('*');
         end
+        size(fh)
+        c
+        size(obj)
+        size(obj(c).time)
         set(fh(c),'Color', [1 1 1], 'Name', sprintf('%s activity beginning %s',longname, datestr(obj(c).time(1),29) ) );
         for cc = 1: numsubplots % number of metrics to plot
             data = obj(c).(metric{cc});
@@ -131,7 +135,9 @@ function plot(obj, varargin)
                     %% graph 2
                     set(h2, 'LineWidth', 3, 'Color', colors{2});
                     datetick(ax(2), 'x','keeplimits');
-                    ylabel(ax(2),labels{2}, 'Color', colors{2}, 'FontSize', fontsize)
+                    if numel(labels)>1
+                        ylabel(ax(2),labels{2}, 'Color', colors{2}, 'FontSize', fontsize)
+                    end
                     ylims = get(ax(2), 'YLim');
                     set(ax(2), 'YColor', colors{2}, 'YLim', [0 max([ylims(2) 1])], 'XLim', [t(1) t(end)]);
                     xticklabels = get(ax(2), 'XTickLabel');

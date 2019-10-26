@@ -13,17 +13,18 @@ end
 if isa(tablename,'cell')
     tablename = tablename{1};
 end
-tablepath = sprintf('%s.%s',dbpath,tablename);
+tablepath = sprintf('%s.%s',dbpath,tablename)
 if exist(dbpath, 'file') || exist(tablepath, 'file')
 
    try
      db = dbopen(dbpath, 'r');
+     debug.print_debug(1, 'Opened database');
    catch
      debug.print_debug(0, 'Failure: database exists but dbopen fails');
      return;
    end
    try
-       db = dblookup_table(db, tablename);
+       db = dblookup_table(db, tablename)
        numrows = dbquery(db, 'dbRECORD_COUNT');
        if numrows > 0
           present = numrows;

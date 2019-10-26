@@ -13,209 +13,235 @@ function write(catalogObject, outformat, outpath, varargin)
 
     switch outformat
         case {'text';'csv';'xls'} % help table.write for more info
-            write(catalogObject.table(), outpath); % add a table method to Catalog after changing Catalog so it no longer uses a table internally
+            writetable(catalogObject.table(), outpath); % similar to UW/PNSN format used in REDpy
 
         case 'antelope'
-
-
-            if admin.antelope_exists
-
-                dbpath = outpath;
-
-                % create new db
-                if ~exist('schema','var')
-                    schema='css3.0';
-                end
-                antelope.dbcreate(dbpath, schema);
-
-                % remove the following tables if they exist and mode is
-                % "overwrite"
-                if nargin==4 & strcmp(varargin{1},'overwrite')
-                    tableNames = {'arrival';'assoc';'netmag';'stamag';'origin';'event';'wfmeas'};
-                    for tablenum = 1 : numel(tableNames)
-                        thisTable = sprintf('%s.%s',dbpath,tableNames{tablenum});
-                        if exist(thisTable, 'file')
-                            if nargin>=4
-                                if strcmp(varargin{1},'overwrite')
-                                    fprintf('Overwrite mode: Removing %s\n',thisTable);
-                                    delete(thisTable);
-                                else
-                                    % for 'append' mode, nothing to do
-                                    fprintf('Append mode: You will append to %s\n',thisTable);
-                                end
-                            else
-                                % nothing specified, so force user to
-                                % choose, as we never want to mess up
-                                % existing tables or delete them without
-                                % user input
-                                choice = input(sprintf('delete %s (y/n)',thisTable),'s');
-                                if lower(choice(1)=='y')
-                                    fprintf('Overwrite mode: Removing %s\n',thisTable);
-                                    delete(thisTable);
-                                end
-                            end
-                        end
-                    end
-                end
-%                 system(sprintf('touch %s.event',dbpath));
-%                 system(sprintf('touch %s.origin',dbpath));
-                
-
-                disp('Writing new rows...');
-
-                % open db
-                db = dbopen(dbpath, 'r+');
-                dbe = dblookup_table(db,'event');
-                dbo = dblookup_table(db,'origin');
-                dbn = dblookup_table(db,'netmag');
-                dbas = dblookup_table(db,'assoc');
-                dbar = dblookup_table(db,'arrival');
-                dbs = dblookup_table(db,'stamag');
-                dbwm = dblookup_table(db,'wfmeas');
-                
-                % write event to event and origin tables
-                if numel(catalogObject.otime)>0
-                    for eventidx = 1:numel(catalogObject.otime)
-                        event.evid = dbnextid(dbe,'evid');
-                        origin.orid = dbnextid(dbo,'orid');
-                        origin.time = datenum2epoch(catalogObject.otime(eventidx));
-                        origin.lon = catalogObject.lon(eventidx);
-                        origin.lat = catalogObject.lat(eventidx);
-                        origin.depth = catalogObject.depth(eventidx);
-                        origin.etype = catalogObject.etype{eventidx};
-%                         if isnan(origin.lat)
-%                             origin.lat = %%% ad dfeault
-
-                        % Antelope etype can only be two characters
-                        % Antelope uses 'eq' where IRIS use
-                        % 'earthquake'
-                        if strcmp(origin.etype,'earthquake')
-                            origin.etype = 'eq';
-                        else
-                            if length(origin.etype)>2
-                                origin.etype=origin.etype(1:2);
-                            end
-                        end
-
-                        netmag.magid = dbnextid(dbn,'magid');
-                        netmag.magtype = catalogObject.magtype{eventidx};
-                        netmag.magnitude = catalogObject.mag(eventidx);
-
-                        % Add new record to event table & write to
-                        % it
-                        dbe.record = dbaddnull(dbe);
-                        dbputv(dbe, 'evid', event.evid, ...
-                            'prefor', origin.orid);
-
-                        % Add new record to origin table & write to
-                        dbo.record = dbaddnull(dbo);
-                        if isnan(origin.lat)
-                            origin.lat = -999.0;
-                        end
-                        if isnan(origin.lon)
-                            origin.lon = -999.0;
-                        end     
-                        if isnan(origin.depth)
-                            origin.depth = -999.0;
-                        end  
-%                         if strcmp(origin.etype,'')
-%                             origin.etype = '-';
-%                         end                        
-                        dbputv(dbo, 'lat', origin.lat, ...
-                            'lon', origin.lon, ...
-                            'depth', origin.depth, ...
-                            'time', origin.time, ...
-                            'orid', origin.orid, ...
-                            'evid', event.evid, ...
-                            'etype', origin.etype );
-
-                        % Add new record to netmag table & write to
-                        % it
-                        if isnumeric(netmag.magnitude) & netmag.magnitude > -999
-                            dbn.record = dbaddnull(dbn);
-                            dbputv(dbn, 'magid', netmag.magid, ...
-                                'orid', origin.orid, ...
-                                'evid', event.evid, ...
-                                'magtype', netmag.magtype, ...
-                                'magnitude', netmag.magnitude );      
-                        end
-                        
-                        % Add wfmeas rows for each event waveform metric
-                        if numel(catalogObject.waveforms) >= eventidx
-                            ew = catalogObject.waveforms{eventidx};
-                            N_ew = numel(ew);
-                            for ewavnum=1:N_ew
-                                thisEW = ew(ewavnum);
-                                waveform2wfmeas(dbwm, thisEW);
-                            end
-                        end
-                            
-
-                        % Add new record to arrival table & write to
-                        % it
-                        if numel(catalogObject.arrivals) >= eventidx
-                            thisA = catalogObject.arrivals{eventidx};
-                            N = numel(thisA.time);
-                            
-                            % check if we have 1 waveform per arrival
-                            w = thisA.waveforms;
-                            Nw = numel(w);
-                            bool_add_waveform_metrics = (N == Nw);
-                            
-                            if N>0
-                                for arrnum = 1:N
-                                    ctag = ChannelTag(thisA.channelinfo{arrnum});
-                                    asta = ctag.station;
-                                    atime = datenum2epoch(thisA.time(arrnum));    
-                                    aarid = dbnextid(dbar,'arid');
-                                    achan = ctag.channel;
-                                    aiphase = thisA.iphase{arrnum}; 
-                                    aamp = -1.0; aper = -1.0; asnr = -1;
-                                    try
-                                        aamp = thisA.amp(arrnum);
-                                    end
-                                    try
-                                        asnr = thisA.signal2noise(arrnum);  
-                                    end
-                                    try
-                                        aper = thisA.per(arrnum);
-                                    end
-                                    
-                                    % add arrival row
-                                    dbar.record = dbaddnull(dbar);
-                                    dbputv(dbar, 'sta', asta, ...
-                                        'time', atime, ...
-                                        'arid', aarid, ...
-                                        'chan', achan, ...
-                                        'iphase', aiphase, ...
-                                        'amp', aamp, ...);
-                                        'per', aper, ...
-                                        'snr', asnr);
-                                    
-                                    % add assoc row
-                                    dbas.record = dbaddnull(dbas);
-                                    dbputv(dbas, 'arid', aarid, ...
-                                        'orid', origin.orid, ...
-                                        'sta', asta, ...
-                                        'phase', aiphase); 
-                                
-                                
-                                    if bool_add_waveform_metrics
-                                        % add wfmeas row for each waveform metric
-                                        thisW = w(arrnum);
-                                        waveform2wfmeas(dbwm, thisW, aarid, asta, achan);
-                                    end
-                                end
-                            end
-                        end                    
-                    end
-                end
-                dbclose(db);
-                disp('(Complete)');
+            writemode='';
+            if nargin==4
+                writemode=varargin{1}; #'overwrite' or 'append';
+            else
+                writemode='append';
             end
+            write_antelope(catalogObject, outpath, writemode); 
+        case 'seisan'
+            write_seisan(catalogObject, seisandbpath);
         otherwise,
             warning('format not supported yet')
     end % end switch
+
+end
+
+function write_seisan(catalogObject, seisandbpath)
+% for each event in the Catalog, write an Sfile, and write any waveform objects as Miniseed or SAC
+    for eventidx=1:catalogObject.numberOfEvents
+        origin.dnum = catalogObject.otime(eventidx);
+        origin.lon = catalogObject.lon(eventidx);
+        origin.lat = catalogObject.lat(eventidx);
+        origin.depth = catalogObject.depth(eventidx);
+        origin.etype = catalogObject.etype{eventidx};
+        origin.magtype = catalogObject.magtype{eventidx};
+        origin.magnitude = catalogObject.mag(eventidx);
+        % now figure out how to write this origin to Seisan S-file
+        sfilepath = fullfile(seisandbpath, datestr(origin.dnum,'%Y'), datestr(origin.dnum,'%m')) 
+        sfilename = sprintf(datestr(origin.dnum, '%d'),'-',datestr(origin.dnum,'%H%M'), '-', datestr(origin.dnum,'%S'), 'S.L', datestr(origin.dnum('%Y%m'))
+        if ~exist(sfilepath, 'dir')
+            mkdir(sfilepath)
+        end
+        % format the S-file
+    end
+        
+end
+
+
+function write_antelope(catalogObject, dbpath, writemode)
+    % write_antelope(catalogObject, dbpath, writemode)
+    % where writemode = 'overwrite' or 'append' to existing tables (if they exist). If not specified, error.
+    if ~admin.antelope_exists
+        error('Sorry, you need ANTELOPE installed to write a Catalog object to CSS3.0 tables')
+    end
+    if isempty(writemode)
+        help(mfilename)
+        error('no value given for writemode')
+    end
+    dbpath = outpath;
+
+    if ~exist('schema','var')
+        schema='css3.0';
+    end
+    if ~exist(dbpath, 'file')
+        antelope.dbcreate(dbpath, schema);
+    end
+
+    if strcmp(writemode,'overwrite')
+        tableNames = {'arrival';'assoc';'netmag';'stamag';'origin';'event';'wfmeas'};
+        for tablenum = 1 : numel(tableNames)
+            thisTable = sprintf('%s.%s',dbpath,tableNames{tablenum});
+            if exist(thisTable, 'file')
+                fprintf('Overwrite mode: Removing %s\n',thisTable);
+                delete(thisTable);
+            else
+                % for 'append' mode, nothing to do
+                fprintf('Append mode: You will append to %s\n',thisTable);
+            end
+%            system(sprintf('touch %s',thistable));
+         end
+    end
+
+    disp('Writing new rows...');
+
+    % open db
+    db = dbopen(dbpath, 'r+');
+    dbe = dblookup_table(db,'event');
+    dbo = dblookup_table(db,'origin');
+    dbn = dblookup_table(db,'netmag');
+    dbas = dblookup_table(db,'assoc');
+    dbar = dblookup_table(db,'arrival');
+    dbs = dblookup_table(db,'stamag');
+    dbwm = dblookup_table(db,'wfmeas');
+                
+    % write event to event and origin tables
+    if numel(catalogObject.otime)>0
+        for eventidx = 1:numel(catalogObject.otime)
+            event.evid = dbnextid(dbe,'evid');
+            origin.orid = dbnextid(dbo,'orid');
+            origin.time = datenum2epoch(catalogObject.otime(eventidx));
+            origin.lon = catalogObject.lon(eventidx);
+            origin.lat = catalogObject.lat(eventidx);
+            origin.depth = catalogObject.depth(eventidx);
+            origin.etype = catalogObject.etype{eventidx};
+
+            % Antelope etype can only be two characters
+            % Antelope uses 'eq' where IRIS use
+            % 'earthquake'
+            if strcmp(origin.etype,'earthquake')
+                origin.etype = 'eq';
+            else
+                if length(origin.etype)>2
+                    origin.etype=origin.etype(1:2);
+                end
+            end
+
+            netmag.magid = dbnextid(dbn,'magid');
+            netmag.magtype = catalogObject.magtype{eventidx};
+            netmag.magnitude = catalogObject.mag(eventidx);
+
+            % Add new record to event table & write to
+            % it
+            dbe.record = dbaddnull(dbe);
+            dbputv(dbe, 'evid', event.evid, ...
+                  'prefor', origin.orid);
+
+            % Add new record to origin table & write to
+            dbo.record = dbaddnull(dbo);
+            if isnan(origin.lat)
+                origin.lat = -999.0;
+            end
+            if isnan(origin.lon)
+                origin.lon = -999.0;
+            end     
+            if isnan(origin.depth)
+                origin.depth = -999.0;
+            end  
+            if strcmp(origin.etype,'')
+                origin.etype = '-';
+            end                        
+            dbputv(dbo, 'lat', origin.lat, ...
+                  'lon', origin.lon, ...
+                  'depth', origin.depth, ...
+                  'time', origin.time, ...
+                  'orid', origin.orid, ...
+                  'evid', event.evid, ...
+                  'etype', origin.etype );
+
+            % Add new record to netmag table & write to
+            % it
+            if isnumeric(netmag.magnitude) & netmag.magnitude > -999
+                dbn.record = dbaddnull(dbn);
+                dbputv(dbn, 'magid', netmag.magid, ...
+                      'orid', origin.orid, ...
+                      'evid', event.evid, ...
+                      'magtype', netmag.magtype, ...
+                      'magnitude', netmag.magnitude );      
+            end
+                       
+            % Add wfmeas rows for each event waveform metric
+            if numel(catalogObject.waveforms) >= eventidx
+                ew = catalogObject.waveforms{eventidx};
+                N_ew = numel(ew);
+                for ewavnum=1:N_ew
+                    thisEW = ew(ewavnum);
+                    waveform2wfmeas(dbwm, thisEW);
+                end
+            end
+                           
+            % Add new record to arrival table & write to
+            % it
+            if numel(catalogObject.arrivals) >= eventidx
+                thisA = catalogObject.arrivals{eventidx};
+                N = numel(thisA.time);
+                        
+                % check if we have 1 waveform per arrival
+                w = thisA.waveforms;
+                Nw = numel(w);
+                bool_add_waveform_metrics = (N == Nw);
+                         
+                if N>0
+                    for arrnum = 1:N
+                        try
+                            ctag = ChannelTag(thisA.channelinfo{arrnum});
+                        catch
+                            if arrnum==1
+                                ctag = ChannelTag(thisA.channelinfo);
+                            end
+                        end
+                        asta = ctag.station;
+                        atime = datenum2epoch(thisA.time(arrnum));    
+                        aarid = dbnextid(dbar,'arid');
+                        achan = ctag.channel;
+                        aiphase = thisA.iphase{arrnum}; 
+                        aamp = -1.0; aper = -1.0; asnr = -1;
+                        try
+                            aamp = thisA.amp(arrnum);
+                        end
+                        try
+                            asnr = thisA.signal2noise(arrnum);  
+                        end
+                        try
+                            aper = thisA.per(arrnum);
+                        end
+                               
+                        % add arrival row
+                        dbar.record = dbaddnull(dbar);
+                        dbputv(dbar, 'sta', asta, ...
+                              'time', atime, ...
+                              'arid', aarid, ...
+                              'chan', achan, ...
+                              'iphase', aiphase, ...
+                              'amp', aamp, ...
+                              'per', aper, ...
+                              'snr', asnr);
+                                    
+                        % add assoc row
+                        dbas.record = dbaddnull(dbas);
+                        dbputv(dbas, 'arid', aarid, ...
+                              'orid', origin.orid, ...
+                              'sta', asta, ...
+                              'phase', aiphase); 
+                           
+                                
+                        if bool_add_waveform_metrics
+                            % add wfmeas row for each waveform metric
+                            thisW = w(arrnum);
+                            waveform2wfmeas(dbwm, thisW, aarid, asta, achan);
+                        end
+                    end
+                 end
+             end                    
+         end
+     end
+     dbclose(db);
+     disp('(Complete)');
+
 end % function
 
 
@@ -226,7 +252,7 @@ function waveform2wfmeas(dbwm, thisW, aarid, asta, achan)
     wstartepoch = datenum2epoch(wsnum);
     wendepoch = datenum2epoch(wenum);
     u = get(thisW,'units');
-     try 
+    try 
         m = get(thisW, 'metrics'); % will error if metrics not defined
         if ~isnan(m.maxAmp)
             % add minTime maxTime minAmp maxAmp

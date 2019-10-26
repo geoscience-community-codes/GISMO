@@ -27,9 +27,11 @@ classdef Catalog
 %         request.maximumRadius = Inf;
 %         request.minimumMagnitude = -Inf;
 %         request.maximumMagnitude = Inf;
+        detections = {};
         arrivals = {};
 %         magnitudes = {};
         waveforms = {}; % cell array with one vector waveform objects per event
+%        aef = {}; % amplitude, energy, frequency information from Seisan - this should really be in an extended class definition of Catalog
     end
     
     properties(Dependent)
@@ -43,10 +45,10 @@ classdef Catalog
 
     methods
 
-        %function obj = Catalog(otime, lon, lat, depth, mag, magtype, etype, varargin)
+        %function obj = 
         function obj = Catalog(varargin)
             %Catalog.Catalog constructor for Catalog object
-            % catalogObject = Catalog(lat, lon, depth, time, mag, etype, varargin)
+            % catalogObject = Catalog(otime, lon, lat, depth, mag, magtype, etype, varargin)
             
             % Blank constructor
             if nargin==0
@@ -245,17 +247,30 @@ classdef Catalog
             cobj3.arrivals = [cobj1.arrivals; cobj2.arrivals];
             cobj3.waveforms = [cobj1.waveforms; cobj2.waveforms];    
         end
-            
+        
+        function t=table(cobj) % similar to UW/PNSN format used in REDpy
+            % this is almost compatible with the catfill.py program in
+            % REDpy - see mshcat.csv for an example
+            evid = 1:numel(cobj.otime);
+            epochtime = datenum2epoch(cobj.otime);
+            timeutc = cellstr(datestr(cobj.otime, 'yyyy/mm/dd HH:MM:SS'));
+            disp('converting catalog object -> table')
+            t=table(evid', cobj.mag, epochtime, timeutc, cobj.lat, cobj.lon, cobj.depth, 'VariableNames', {'Evid', 'Magnitude', 'Epoch_UTC','Time_UTC', 'Lat', 'Lon', 'Depth_Km'});
+        end
           
         % Prototypes
-        gr = bvalue(catalogObject, mcType)     
+        gr = bvalue_old(catalogObject, mcType, runmode) 
+        gr = bvalue(catalogObject, runmode)
+        [a,b,Mc,berror] = bvaluetimeseries(cobj, N, stepsize)
+        [swarminess, magstd] = swarminess(cobj, N)
+        clusteriness = spatial_density(cobj)
         catalogObject = addwaveforms(catalogObject, varargin);
         catalogObject = combine(catalogObject1, catalogObject2)
         catalogObject2 = subset(catalogObject, varargin)
-        catalogObjects=subclassify(catalogObject, subclasses)         
+        catalogObjects = subclassify(catalogObject, subclasses)         
         disp(catalogObject)
         eev(obj, eventnum)
-        erobj=eventrate(catalogObject, varargin)
+        erobj = eventrate(catalogObject, varargin)
         hist(catalogObject)
         list_waveform_metrics(catalogObject);
         plot(catalogObject, varargin)
@@ -267,7 +282,7 @@ classdef Catalog
         webmap(catalogObject)
         write(catalogObject, outformat, outpath, schema)
         arrivals_per_event(catalogObject)
-        
+        %t=table(catalogObject)
     end
 %% ---------------------------------------------------
     methods (Access=protected, Hidden=true)

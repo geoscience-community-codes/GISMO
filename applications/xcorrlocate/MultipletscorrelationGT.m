@@ -372,6 +372,23 @@ plot_panels(WHS4, 'alignWaveform', 1)
 
 end
 
+function Multipletscorrelation()
+
+MULTIPLETS_TOP_DIR='~/Desktop/Multiplets';
+PEAKMATCH_OUTPUT_FILE='M-2012-05-11-edit2.dat';
+
+
+
+end 
+
+
+
+
+
+
+
+
+
 function stack_onset_time = manually_pick_onset_time(stacked_waveform);
     plot(stacked_waveform)
     [t,y]=ginput(1);
