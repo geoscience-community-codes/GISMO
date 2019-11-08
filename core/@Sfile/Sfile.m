@@ -482,13 +482,23 @@ classdef Sfile
                 aef.amp(aeflinenum)=str2num(tline(findamp+1:findamp+8));
                 findeng = strfind(tline(findamp+7:findamp+17),'E')+findamp+6;
                 aef.eng(aeflinenum)=str2num(tline(findeng+1:findeng+8));
-                findfft = strfind(tline(findeng+7:findeng+10),'F')+findeng+6;
-                for i = 1:12
-                    startindex = findfft + 1 + (i-1)*3;
-                    ssam(i) = str2num(tline(startindex:startindex+1));
+                % check whether it is a line with no information by trying
+                % to load findfft
+                try
+                    findfft = strfind(tline(findeng+7:findeng+10),'F')+findeng+6;
+                catch
+                    fprintf('No AEF information from %s station, %s channel', thissta, thischan);
                 end
-                aef.ssam{aeflinenum} = ssam;
-                aef.pkf(aeflinenum)=str2num(tline(73:78));  % Peak frequency (Frequency of the largest peak
+                % skip the rest of the loop if findfft does not exist
+                if exist('findfft','var')
+                    for i = 1:12
+                        startindex = findfft + 1 + (i-1)*3;
+                        ssam(i) = str2num(tline(startindex:startindex+1));
+                    end
+                    aef.ssam{aeflinenum} = ssam;
+                    aef.pkf(aeflinenum)=str2num(tline(73:78));  % Peak frequency (Frequency of the largest peak
+                else
+                end
             else
                 % might be a line like:
                 % {'trigger window = 105.7 s                                                      3'}
