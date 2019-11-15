@@ -474,7 +474,7 @@ classdef Sfile
             % events.
             aeflinenum = aeflinenum + 1;
             tline(1:4);
-            if strfind(tline(1:5),'VOLC')
+            if strfind(tline(1:5),'VOLC') && isempty(str2num(tline(75:79)))==0
                 thissta = strtrim(tline(7:10));
                 thischan = strtrim(tline(12:15));
                 aef.ctag(aeflinenum) = ChannelTag('', thissta, '', thischan);
@@ -482,13 +482,7 @@ classdef Sfile
                 aef.amp(aeflinenum)=str2num(tline(findamp+1:findamp+8));
                 findeng = strfind(tline(findamp+7:findamp+17),'E')+findamp+6;
                 aef.eng(aeflinenum)=str2num(tline(findeng+1:findeng+8));
-                % check whether it is a line with no information by trying
-                % to load findfft
-                try
-                    findfft = strfind(tline(findeng+7:findeng+10),'F')+findeng+6;
-                catch
-                    fprintf('No AEF information from %s station, %s channel', thissta, thischan);
-                end
+                findfft = strfind(tline(findeng+7:findeng+10),'F')+findeng+6;
                 % skip the rest of the loop if findfft does not exist
                 if exist('findfft','var')
                     for i = 1:12
@@ -505,8 +499,6 @@ classdef Sfile
                 [bbdur spdur] = Sfile.read_trigger_window_line(tline, bbdur, spdur);
             end
            
-
-
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
