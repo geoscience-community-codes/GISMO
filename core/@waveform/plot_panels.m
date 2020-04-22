@@ -1,4 +1,4 @@
-function plot_panels(w, varargin)
+function ax = plot_panels(w, varargin)
 %PLOT_PANELS Plot multiple waveform objects as separate linked panels
 %   PLOT_PANELS(w, varargin) 
 %   where:
@@ -110,8 +110,8 @@ function plot_panels(w, varargin)
         if exist('detectionobj','var')
             disp('- adding detections to panel plot')
             hold on
-            thisctag = strrep(string(get(w(wavnum),'ChannelTag')),'-','')
-            Index = find(ismember(detectionobj.channelinfo, thisctag))
+            thisctag = strrep(string(get(w(wavnum),'ChannelTag')),'-','');
+            Index = find(ismember(detectionobj.channelinfo, thisctag));
             for detnum=1:numel(Index)
                 dettime = detectionobj.time(Index(detnum));
                 if alignWaveforms
@@ -119,7 +119,7 @@ function plot_panels(w, varargin)
                 else
                     reldettime = (dettime-snum)*SECSPERDAY;
                 end
-                reldettime
+                reldettime;
                 plot([reldettime reldettime], [min(y) max(y)],'r', 'LineWidth',3);
             end
             %hold off

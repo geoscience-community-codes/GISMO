@@ -20,7 +20,8 @@ function self=read_bob_file(filepattern, varargin)
 %                 'SSSS' replaced with sta
 %                 'CCC' replaced with chan
 %                 'MMMM' replaced with measure
-%                 'YYYY' replaced with year (from snum:enum)
+%                 'YYYY' replaced with 4-digit year (from snum:enum)
+%                 'YY' replace with 2-digit year
 %                 These allow looping over many year files
 %     snum        % the start datenum
 %     enum        % the end   datenum
@@ -75,7 +76,13 @@ function self=read_bob_file(filepattern, varargin)
         for filenum = 1:numel(self.files)
             f = self.files(filenum);
             if f.found
-                self = self.load(f);
+                selfbackup = self;
+                %try
+                    self = self.load(f);
+                %catch
+                    %fprintf('%s: caught error\n',mfilename)
+                    %self = selfbackup;
+                %end
             end
         end
     end
@@ -121,7 +128,11 @@ function self = findfiles(self, file, snum, enum)
         end   
 
         % Substitute for year        
-        files(filenum).file = regexprep(files(filenum).file, 'YYYY', sprintf('%04d',yyyy) );
+        if strfind(files(filenum).file, 'YYYY')
+            files(filenum).file = regexprep(files(filenum).file, 'YYYY', sprintf('%04d',yyyy) );
+        elseif strfind(files(filenum).file, 'YY')
+            files(filenum).file = regexprep(files(filenum).file, 'YY', sprintf('%02d',mod(yyyy,100) ) );
+        end
         fprintf('Looking for file: %s',files(filenum).file);
 
         if exist(files(filenum).file, 'file')

@@ -20,6 +20,7 @@ function plot(rsam_vector, varargin)
     p.addParameter('addgrid',false);
     p.addParameter('addlegend', true);
     p.addParameter('fillbelow', false);
+    p.addParameter('existence', false);
     p.addParameter('yaxistype','linear'); % or log
     p.addParameter('symbol','-'); % or log
     p.addParameter('h', []);
@@ -28,6 +29,7 @@ function plot(rsam_vector, varargin)
     addlegend = p.Results.addlegend;
     fillbelow = p.Results.fillbelow;
     yaxistype = p.Results.yaxistype;
+    existence = p.Results.existence;
     symbol = p.Results.symbol;
     h = p.Results.h;
     legend_ypos = -0.2;
@@ -63,7 +65,9 @@ function plot(rsam_vector, varargin)
         if length(y)>0        
             %figure
             %if strcmp(rsam_vector(c).units, 'Hz')
-
+            if existence
+                y=cumsum(y>1)/numel(y);
+            end
             if strcmp(yaxistype,'linear')
 
                 % plot on a linear axis, with station name as a y label

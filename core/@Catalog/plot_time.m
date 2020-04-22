@@ -12,10 +12,14 @@ function plot_time(catalogObject)
     if all(isnan(catalogObject.depth))
         warning('No depth data to plot');
     else
-        figure;
+        if ~exist('fh','var')
+            figure;
+        else
+            figure(fh)
+        end
         set(gcf,'Color', [1 1 1]);
         subplot(2,1,1);
-        scatter(catalogObject.otime, catalogObject.depth, symsize);
+        scatter(catalogObject.otime, catalogObject.depth, symsize,'k');
         set(gca, 'XLim', xlims);
         datetick('x');
         xlabel('Date');
@@ -29,7 +33,7 @@ function plot_time(catalogObject)
     if all(isnan(catalogObject.mag))
         warning('No magnitude data to plot');
     else
-        scatter(catalogObject.otime, catalogObject.mag, symsize);
+        scatter(catalogObject.otime, catalogObject.mag, symsize,'k');
         %stem(catalogObject.otime, catalogObject.mag);
         set(gca, 'XLim', xlims);
         datetick('x');

@@ -126,6 +126,7 @@ classdef Catalog
                 if isempty(offtime)  % 'u' for unknown
                     offtime = NaN(s2,s1);
                 end   
+
                lon = reshape(lon, [s2 s1]);
                lat = reshape(lat, [s2 s1]);
                depth = reshape(depth, [s2 s1]);
@@ -285,7 +286,7 @@ classdef Catalog
         %t=table(catalogObject)
     end
 %% ---------------------------------------------------
-    methods (Access=protected, Hidden=true)
+    methods (Access=public, Hidden=true) % changed access from protected for plot_asn_hypocenter_data.m
         region = get_region(catalogObject, nsigma)
         symsize = get_symsize(catalogObject)
     end
