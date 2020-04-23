@@ -196,8 +196,10 @@ function w = waveform(varargin)
                 switch lower(filetype)
                     case 'sac',
                         w = load_sac(filename);
-                    case {'seed','miniseed'},
+                    case 'miniseed',
                         w = load_miniseed(filename);
+                    case 'seed',
+                        w = rdmseed2waveform(filename);
                     case 'seisan',
                         w = load_seisan(filename);
                     otherwise
