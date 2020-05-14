@@ -1,4 +1,7 @@
-%POSIITON the blueprint for Position objects in GISMO
+%POSITION the blueprint for Position objects in GISMO
+% Create with p=Position(lat, lon, elev)
+% Properties are latitude, longitude and elevation, e.g.
+%   lat = p.latitude;
 classdef Position
 
     properties
