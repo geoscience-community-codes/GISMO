@@ -12,6 +12,7 @@ classdef Seisan_Catalog < Catalog
         function self = Seisan_Catalog(varargin)
             % Blank constructor
             if nargin==0
+                % find out what used to be here
                 %return
             end
             % Call Catalog constructor
