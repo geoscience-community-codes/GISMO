@@ -79,7 +79,7 @@ function self = retrieve(dataformat, varargin)
         case 'zmap'
             self = Catalog.read_catalog.zmap(varargin{:});
         case 'comcat'
-            self = Catalog.read_catalog.COMCAT(varargin{:});            
+            [self, CAT] = Catalog.read_catalog.COMCAT(varargin{:});            
         otherwise
             self = NaN;
             fprintf('format %s unknown\n\n',data_source);
