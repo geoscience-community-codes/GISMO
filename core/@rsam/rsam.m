@@ -167,6 +167,7 @@ classdef rsam
         s=extract(self, snum, enum)
         self = medfilt1(self, nsamples_to_average_over)
         handlePlot = plot(rsam_vector, varargin)
+        handlePlot = plot_existence(rsam_vector, varargin)
         plot_panels(self);
         w = rsam2waveform(self);
         save_to_bob_file(self, filepattern)

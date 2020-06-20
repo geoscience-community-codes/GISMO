@@ -13,7 +13,6 @@ calibCentaurTrillium = 1/trillium * 1000 * 1/centaurnormal; % 3.33 nm/s/count (1
 calibInfraBSUTrilliumHigh = 1/infraBSU * 1/centaurhighgain; % 0.0014 Pa/count
 calibInfraBSUTrilliumLow = 1/infraBSU * 1/centaurnormal; % 0.0543 Pa/count
 calibL22RT130 = 1/l22 * 1000 * 1/rt130x32; % 0.9659 nm/s/count
-
 calibObjects = repmat(Calibration(),numel(ChannelTagList), 1);
 
 for count=1:numel(ChannelTagList)

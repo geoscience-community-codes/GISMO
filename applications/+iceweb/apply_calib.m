@@ -17,7 +17,7 @@ function w = apply_calib(w, calibObjects)
             addfield(w(c), 'calib', calib);
             calibunits = cellstr(calibObjects(j).units);
             if strcmp(get(w(c),'Units'), 'Counts') | strcmp(get(w(c),'Units'), 'null')
-                debug.print_debug(1,'%s: Applying calib of %d %s for %s\n',mfilename, calib, calibunits, wchantag);
+                debug.print_debug(1,'%s: Applying calib of %d %s for %s\n',mfilename, calib, calibunits{1}, wchantag);
                 if (calib ~= 0)
                     if strcmp(calibunits{1}, 'Pa') % not sure about this - 
                         % probably needed if use same dbRange for seismic
@@ -29,7 +29,8 @@ function w = apply_calib(w, calibObjects)
                     w(c) = w(c) * calib;
                     w(c) = set(w(c), 'units', calibunits{1});
                 end
-                %fprintf('%s: Max corrected amplitude for %s.%s = %e nm/s\n',mfilename: thissta, thischan, rawmax);
+                rawmax = max(abs(get(w(c), 'data')));
+                debug.print_debug(10,'%s: Max corrected amplitude for %s = %e %s\n',mfilename: wchantag.string(), rawmax, calibunits{1});
             end
         end
     end

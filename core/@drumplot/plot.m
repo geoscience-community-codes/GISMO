@@ -123,10 +123,16 @@ drawnow
     B.scale=drumplotobj.scale/(B.number_of_lines*max_amplitude);
 
     %% PLOT DRUMPLOT TRACES WITH EVENT OVERLAY
+    colors = 'kbgr';
     for n = 1:B.number_of_lines 
       B.line_offset(n) = (B.number_of_lines-n+0.5)/B.number_of_lines; % Trace offset from bottom
       B.line_waveform_continuous(n) = B.line_waveform_continuous(n) * B.scale + B.line_offset(n);
-      plot(B.line_waveform_continuous(n), 'color', drumplotobj.trace_color, 'xunit', 'minutes', 'axeshandle', B.ax);
+      if isempty(B.line_waveform_events) % alternate line colors
+         thiscolor = colors(mod(n,length(colors))+1);
+         plot(B.line_waveform_continuous(n), 'color', thiscolor, 'xunit', 'minutes', 'axeshandle', B.ax);
+      else
+         plot(B.line_waveform_continuous(n), 'color', drumplotobj.trace_color, 'xunit', 'minutes', 'axeshandle', B.ax); 
+      end
       hold on;
       if ~isempty(B.line_waveform_events)
           B.line_waveform_events(n) = B.line_waveform_events(n) * B.scale + B.line_offset(n);

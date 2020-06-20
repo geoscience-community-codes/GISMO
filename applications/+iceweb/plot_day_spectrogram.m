@@ -67,11 +67,11 @@ function plot_day_spectrogram(s, filepattern, ctags, startTime, endTime, varargi
 
     for c=1:numel(ctags)
         [T,Y,F] = iceweb.read_spectraldata_file(filepattern,startTime,endTime, ctags(c));
-
-%         disp('sizeY sizeF')
-%         size(Y)
-%         size(F)
-
+        % test plot the loaded spectral data
+%         if debug.get_debug()>10
+%             iceweb.spdatatestplot(T,F,Y);
+%         end
+                        
         if numel(F)==0
             warning(sprintf('No data found for %s',ctags(c).string()));
             continue;

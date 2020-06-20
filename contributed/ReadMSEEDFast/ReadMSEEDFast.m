@@ -109,14 +109,20 @@ function [signalStruct] = ReadMSEEDFast(fileName)
     BLOCK_RECORD_SIZE=firstHeader.dataRecordLength;
   
     % Reshaping linear data to matrix form
-    rawPacketMatrix = reshape(typecast(uint8(raw),'uint8'),BLOCK_RECORD_SIZE,[])';
+    try
+        rawPacketMatrix = reshape(typecast(uint8(raw),'uint8'),BLOCK_RECORD_SIZE,[])';
+    catch ME
+        warning(ME.message)
+        return
+    end
+    
     rawPacketMatrixSize = size(rawPacketMatrix);
 
     % Reading all headers of the file at once
     [headerInfo] = ReadHeaders(rawPacketMatrix,isLittleEndian);
 
     ENCODING=headerInfo.encoding(1);
-    
+
     % Decoding data for every unique station and channel on the record
     [stations uniqueStationsIndex]=unique(headerInfo.stationCode{1});
     [channels uniqueChannelsIndex]=unique(headerInfo.channelId{1});
@@ -124,43 +130,46 @@ function [signalStruct] = ReadMSEEDFast(fileName)
     stations=flipud(stations);
     uniqueChannelsIndex=flipud(uniqueChannelsIndex);
     uniqueStationsIndex=flipud(uniqueStationsIndex);
-    
+
     for h=1:numel(stations)
 
         for k=1:numel(channels)
+                try
+                    sameChannelRows=find((strcmp(headerInfo.channelId{1},channels(k)) & strcmp(headerInfo.stationCode{1},stations(h))));
+                    encodedSignalMatrix = rawPacketMatrix(sameChannelRows,headerInfo.dataBeginOffset(1)+1:rawPacketMatrixSize(2));
+                    signalMatrix=DecodeSignal(encodedSignalMatrix,ENCODING,isLittleEndian,BLOCK_RECORD_SIZE);
 
-                sameChannelRows=find((strcmp(headerInfo.channelId{1},channels(k)) & strcmp(headerInfo.stationCode{1},stations(h))));
-                encodedSignalMatrix = rawPacketMatrix(sameChannelRows,headerInfo.dataBeginOffset(1)+1:rawPacketMatrixSize(2));
-                signalMatrix=DecodeSignal(encodedSignalMatrix,ENCODING,isLittleEndian,BLOCK_RECORD_SIZE);
-                
-                %uci - unique channel index
-                uci = 1;
-                switch k
-                    case 1
+                    %uci - unique channel index
                     uci = 1;
-                    otherwise
-                    uci = uniqueChannelsIndex(k-1)+1;
-                end
+                    switch k
+                        case 1
+                        uci = 1;
+                        otherwise
+                        uci = uniqueChannelsIndex(k-1)+1;
+                    end
 
-                [dtStruct, dtString, unixTimeStamp]=ConstructDateTime(headerInfo.startTime(uci,:));               
-                %Data type of the file
-                sampleType = 'i';
-                
-                switch(ENCODING)
-                    case 4
-                        %Float sample type
-                        sampleType = 'f';
-                    case 5
-                        %Double sample type
-                        sampleType = 'd';
-                    otherwise
-                        %Integer sample type
-                        sampleType = 'i';
-                end
-               
-                % Prepare result struct
-                signalStruct=[signalStruct;struct('network',headerInfo.networkCode{1}(sameChannelRows(1)),'station',headerInfo.stationCode{1}(sameChannelRows(1)),'location',headerInfo.locationCode{1}(sameChannelRows(1)),'channel',headerInfo.channelId{1}(sameChannelRows(1)),'dataquality','','type','','startTime',unixTimeStamp,'endTime',0,'sampleRate',double(headerInfo.sampleRate(sameChannelRows(1))),'sampleCount',size(signalMatrix,1),'numberOfSamples',size(signalMatrix,1),'sampleType',sampleType,'data',signalMatrix(:),'dateTime',dtStruct,'dateTimeString',dtString)];
+                    [dtStruct, dtString, unixTimeStamp]=ConstructDateTime(headerInfo.startTime(uci,:));               
+                    %Data type of the file
+                    sampleType = 'i';
 
+                    switch(ENCODING)
+                        case 4
+                            %Float sample type
+                            sampleType = 'f';
+                        case 5
+                            %Double sample type
+                            sampleType = 'd';
+                        otherwise
+                            %Integer sample type
+                            sampleType = 'i';
+                    end
+
+                    % Prepare result struct
+                    signalStruct=[signalStruct;struct('network',headerInfo.networkCode{1}(sameChannelRows(1)),'station',headerInfo.stationCode{1}(sameChannelRows(1)),'location',headerInfo.locationCode{1}(sameChannelRows(1)),'channel',headerInfo.channelId{1}(sameChannelRows(1)),'dataquality','','type','','startTime',unixTimeStamp,'endTime',0,'sampleRate',double(headerInfo.sampleRate(sameChannelRows(1))),'sampleCount',size(signalMatrix,1),'numberOfSamples',size(signalMatrix,1),'sampleType',sampleType,'data',signalMatrix(:),'dateTime',dtStruct,'dateTimeString',dtString)];
+                catch ME
+                    warning(ME.message)
+                    
+                end
         end
         
     end
@@ -427,7 +436,7 @@ function [encoding,wordOrder,dataRecordLength] = ReadBlockets(raw,nFolowingBlock
         end
         
     end
-    
+
     encoding=EncodingFormat;
     wordOrder=WordOrder;
     dataRecordLength=DataRecordLength;
