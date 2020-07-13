@@ -55,8 +55,8 @@ if isfield(products,'level')
         % and mean RSAM, we superimpose metrics on spectrograms, add sound
         % files, and plot reduced displacement (not yet enabled)
         products.rsam.samplingIntervalSeconds = [1 60]; % add 1 second RSAM too
-        products.rsam.measures = {'max';'mean';'median'}; % create more types of RSAM
-        products.spectrograms.plot_metrics = true; % superimpose metrics on spectrograms
+        products.rsam.measures = {'rsem';'median'}; % create more types of RSAM
+        products.spectrograms.plot_metrics = false; % superimpose metrics on spectrograms
         products.soundfiles.doit = true;
         products.reduced.doit = true;   % though it probably does nothing     
         products.daily.reduced = true; % does nothing yet

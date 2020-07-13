@@ -4,7 +4,8 @@ function plot_day_spectrogram(s, filepattern, ctags, startTime, endTime, varargi
 % function
 %
 % Usage:
-% 	plot_day_spectrogram(s, w, 'colormap', mycolormap, 'plot_metrics', 0)
+%   plot_day_spectrogram(s, filepattern, ctags, startTime, endTime)
+% 	
 %
 % Inputs:
 %   s - a spectralobject (default, if left empty becomes that used for
@@ -24,90 +25,112 @@ function plot_day_spectrogram(s, filepattern, ctags, startTime, endTime, varargi
 %
 % AUTHOR: Glenn Thompson, University of Alaska Fairbanks
 
+% plot_day_spectrogram(s, w, 'colormap', mycolormap, 'plot_metrics', 0)
+
     debug.printfunctionstack('>');
 
     if isempty(s)
         nfft = 1024;
         overlap = 924;
-        fmax = 10;
-        dbLims = [60 120];
-        s = spectralobject(nfft, overlap, fmax, dbLims);
+        fmax = 25;
+        dBlims = [60 120];
+        s = spectralobject(nfft, overlap, fmax, dBlims);
+    else
+        nfft = round(get(s,'nfft'));
+        overlap = floor(get(s, 'over'));
+        dBlims = get(s, 'dBlims');
+        fmax = get(s, 'freqmax');
     end
 
-
     p = inputParser;
-    p.addParameter('spectrogramFraction', 1, @isnumeric);
+    p.addParameter('spectrogramFraction', 0.75, @isnumeric);
     p.addParameter('colormap', iceweb.extended_spectralobject_colormap, @isnumeric);
     p.addParameter('plot_metrics', false, @islogical);
+    p.addParameter('plot_spectrum', false, @islogical);
+    p.addParameter('plot_SSAM', false, @islogical);
     p.parse(varargin{:});
     spectrogramFraction = p.Results.spectrogramFraction;
 
     debug.print_debug(2, sprintf('%d ChannelTag objects',numel(ctags)));
 
-    % % Default colormap is JET. Override that here.
-    % if exist('mycolormap', 'var')
-    %         setmap(s, mycolormap);      
-    % end
-
     setmap(s, p.Results.colormap);
+    
 
     % To get a colorbar, stop the function here and set colorbar option to vert
 
     % Reset axes position & squeeze in the trace panels
-
-    nfft = round(get(s,'nfft'));
-    overlap = floor(get(s, 'over'));
-    dBlims = get(s, 'dBlims');
-    fmax = get(s, 'freqmax');
-    fsamp = 200;
-    
+    DAYS = round(endTime-startTime);
     wt.start = startTime;
     wt.stop = endTime;
     [Xtickmarks,XTickLabel]=findMinuteMarks(wt);
-
+    
     for c=1:numel(ctags)
-        [T,Y,F] = iceweb.read_spectraldata_file(filepattern,startTime,endTime, ctags(c));
-        % test plot the loaded spectral data
-%         if debug.get_debug()>10
-%             iceweb.spdatatestplot(T,F,Y);
-%         end
-                        
-        if numel(F)==0
-            warning(sprintf('No data found for %s',ctags(c).string()));
-            continue;
-        end
-        
-        if all(isnan(Y))
-            warning(sprintf('All data are zeros for %s',ctags(c).string()));
-            continue;
-        end
-        
-        if F(1)==0,
-            F(1)=0.001;
-        end
+        debug.print_debug(10,ctags(c).string())
+        debug.print_debug(sprintf('%s\n',datestr(startTime)))
+        T_all = [];
+        Y_all = [];
+        F = [];
 
-    %     index = find(F <= fmax);
-    %     T = wt.start + T/86400;
-    %     Y = Y(1:max(index),:);
+        for dnum=startTime:floor(endTime)
 
+            [T,Y,F0] = iceweb.read_spectraldata_file(filepattern,floor(dnum), floor(dnum)+1-1/86400, ctags(c));
+            size(T)
+            size(Y)
+            size(F0)
+            if ~isempty(F0)
+                F=F0;
+            end
+            
+            T_all = [T_all T];
+
+            if numel(F)==0
+                warning(sprintf('No data found for %s',ctags(c).string()));
+                continue;
+            end
+
+            if all(isnan(Y))
+                warning(sprintf('All data are zeros for %s',ctags(c).string()));
+                continue;
+            end
+            
+            if isempty(Y)
+                Y_all = Y';
+            else
+                Y_all = [Y_all; Y'];
+            end
+
+            if F(1)==0,
+                F(1)=0.001;
+            end
+
+        end
 
         [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numel(ctags), c, spectrogramFraction, 0.12, 0.05, 0.80, 0.9);
         axes('position', spectrogramPosition);
+
+        index = find(F <= fmax);
+        Fplot = F(1:max(index));
+        Yplot = Y_all(:,1:max(index));
+        Splot{c} = power(10,Yplot/20);
+
+        
+       
+%         if DAYS>2
+%             Yplot = movmax(Yplot, 10); %DAYS);
+%         end
+        % if we are plotting energy rather than amplitude
+        if strfind(filepattern, 'energy')
+            Yplot = sqrt(Yplot/60);
+        end
+
         if isempty(dBlims)
-        % plot spectrogram
-            %imagesc(T,F,abs(S));
-            imagesc(T,F,Y);
+            % plot spectrogram
+            imagesc(T_all,Fplot,Yplot');
         else
-            imagesc(T,F,Y,dBlims);
+            imagesc(T_all,Fplot,Yplot',dBlims);
         end
         axis xy;
         colormap(p.Results.colormap);
-
-    %     %% superimpose graphs of frequency metrics?
-    %     if p.Results.plot_metrics
-    %         hold on; plot(T,smooth(meanF{c}),'k','LineWidth',.5);
-    %         hold on; plot(T,smooth(peakF{c}),'w','LineWidth',.5);
-    %     end        
 
         % Change Y-Labels to 'sta.chan'
         thissta = ctags(c).station();
@@ -116,77 +139,108 @@ function plot_day_spectrogram(s, filepattern, ctags, startTime, endTime, varargi
         xlabel('')
         title('')
         set(gca,'XLim', [startTime endTime]);
+        
+        % loop over XTickLabel and replace '00:00' with day
+        XTickLabel=cellstr(XTickLabel);
+        for xtlnum=1:numel(XTickLabel)
+            if strcmp(XTickLabel{xtlnum},'00:00')
+                XTickLabel{xtlnum} = datestr(Xtickmarks(xtlnum),'mm/dd');
+            end
+        end
+        
         if c==numel(ctags)
             set(gca, 'XTick', Xtickmarks, 'XTickLabel', XTickLabel,  'FontSize', 8); % time labels only on bottom spectrogram
+            xtickangle(45);
         else
             set(gca, 'XTick', Xtickmarks, 'XTickLabel', {});
         end
-
-    %     if spectrogramFraction < 1
-    %         plotTrace(tracePosition, get(w(c),'data'), get(w(c),'freq'), Xtickmarks, wt, p.Results.colormap, s, thissta, thischan);
-    %         set(gca,'XLim', [wt.start wt.stop]); % added 20111214 to align trace with spectrogram when data missing (prevent trace being stretched out)
-    % 
-    %         % change the trace background color if we want to identify
-    %         % broadband stations
-    % % 		if (regexp(thischan, '[BH]H.'))
-    % % 			set(gca, 'Color', [.8 .8 .8]);
-    % %         end[30 100
-    % 
-    %     end
-
-
     end
+
+    % add RSAM panels
+    if spectrogramFraction < 1
+        rsamfilepattern = fullfile(fileparts(fileparts(filepattern)),'SSSS.CCC.YYYY.MMMM.060.bob');
+        for c=1:numel(ctags)
+            [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numel(ctags), c, spectrogramFraction, 0.12, 0.05, 0.80, 0.9);
+            r = rsam.read_bob_file(rsamfilepattern, 'snum', startTime, 'enum', endTime, 'sta', ctags(c).station, 'chan', ctags(c).channel, 'measure', 'median');
+            r = r.medfilt1(DAYS);
+            plotTrace(tracePosition, r, Xtickmarks, wt, p.Results.colormap, s, ctags(c).station, ctags(c).channel);
+            set(gca,'XLim', [wt.start wt.stop]); % added 20111214 to align trace with spectrogram when data missing (prevent trace being stretched out)
+        end
+    end
+    
+    % plot daily spectra
+    if p.Results.plot_spectrum
+        figure();
+        for c=1:numel(ctags)
+            subplot(numel(ctags),1,c)
+            try
+                disp(datestr(startTime))
+                disp(datestr(endTime))
+                plot(Fplot, nansum(Splot{c})/numel(T_all));
+                xlabel('Frequency (Hz)')
+                ylabel('Spectral amplitude')
+                title(ctags(c).string());
+            catch
+                size(Fplot)
+                size(Splot{c})
+                size(T_all)
+                size(nansum(Splot{c}))
+            end
+        end
+    end
+    
+    % plot SSAM in different frequency bands
+    if p.Results.plot_SSAM
+        figure();
+        fLow = [1 5 10];
+        fHigh = [5 10 20];
+        ymin=0;
+        ymax=0;
+        for c=1:numel(ctags)
+            for fband = 1:numel(fLow)
+                index = find(F <= fHigh(fband) & F >= fLow(fband));
+                S = Splot{c};
+                S2 = S(:,1:max(index));
+                S3 = nanmean(S2,2);
+                S3 = medfilt1(S3,DAYS)/numel(T_all);
+                subplot(numel(ctags),1,c)
+                hold on
+                plot(T_all, S3);
+                ymax = nanmax([prctile(S3, 99.9) ymax]);
+                ymin = nanmin([prctile(S3, 0.01) ymin]);    
+            end
+            if ~isempty(ymax) & ~isnan(ymax(1))
+                set(gca,'YLim',[ymin ymax]);
+            end  
+            datetick('x');
+            xlabel('Date')
+            ylabel('SSAM')
+            title(ctags(c).string());
+            legend({'1-5 Hz';'5-10 Hz';'10-20 Hz'},'Location','best')
+        end
+    end
+
 
 debug.printfunctionstack('<');
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function plotTrace(tracePosition, data, freqSamp, Xtickmarks, timewindow, mycolormap, s, thissta, thischan);
+function plotTrace(tracePosition, r, Xtickmarks, timewindow, mycolormap, s, thissta, thischan);
 debug.printfunctionstack('>');
 startTime =timewindow.start;
 
 % set axes position
 axes('position',tracePosition);
 
-% trace time vector - bins are ~0.01 s apart (not 5 s as for spectrogram time)
-% not really worthwhile plotting more than 1000 points on the screen
-dnum = ((1:length(data))./freqSamp)/86400 + startTime;
-
 % plot seismogram - assuming data cleaned already with
-% w=detrend(fillgaps(w,'interp'))
-traceHandle = plot(dnum, data);
+t=r.dnum;
+y=r.data;
+area(t,y,'FaceColor',[0.5 0.5 0.5],'LineStyle','none')
+set(gca,'XTick',[], 'YAxisLocation', 'right')
 
-% blow up trace detail so it almost fills frame
-maxAmpl = max(abs(data));
-if (maxAmpl == 0) % make sure that max_ampl is not zero
-	maxAmpl = 1;
-end
+set(gca, 'XTick', Xtickmarks, 'XTickLabel', '', 'XLim', [timewindow.start timewindow.stop]); %, 'Ytick',[],'YTickLabel',['']);
 
-% set properties - here we set trace color according to amplitude
-%rgb = amplitude2tracecolor(maxAmpl, mycolormap, s);
-%set (traceHandle,'LineWidth',[0.01],'Color',rgb)
-% or we can use this...
-set (traceHandle,'LineWidth',[0.01],'Color',[0 0 0])
-
-set(gca, 'XTick', Xtickmarks, 'XTickLabel', '', 'XLim', [timewindow.start timewindow.stop], 'Ytick',[],'YTickLabel',['']);
-
-if ~isnan(maxAmpl) % make sure it is not NaN else will crash
-	traceRange = [dnum(1) dnum(end) -maxAmpl*1.1 maxAmpl*1.1];
-	decibels = 20 * log10(maxAmpl) + eps;
-	%fprintf('%s: %s.%s: Max amplitude %.1e (%d dB)\n',mfilename, thissta, thischan, maxAmpl,round(decibels)); 
-	axis(traceRange);
-end
 debug.printfunctionstack('<');
-end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function rgb = amplitude2tracecolor(maxAmpl, mycolormap, s);
-debug.printfunctionstack('>');
-a = 20 * log10(maxAmpl) + eps;
-dBlims = get(s, 'dBlims');
-index = round( ( (a - dBlims(1)) / (dBlims(2) - dBlims(1)) ) * (length(mycolormap)-1) ) + 1;
-index=max([index 1]);
-index=min([index length(mycolormap)]);
-rgb = mycolormap(index, :);
-debug.printfunctionstack('<');
+
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -200,7 +254,7 @@ endTime = floorminute(timewindow.stop);
 
 % Number of minute marks should be no greater than 20
 numMins = (endTime - startTime) * 1440;
-stepMinOptions = [1 2 3 5 10 15 20 30 60 120 180 240 360 480 720 1440];
+stepMinOptions = [1 2 3 5 10 15 20 30 60 120 180 240 360 480 720 1440 1440*2 1440*3 1440*7 1440*30];
 c = 1;
 while (numMins / stepMinOptions(c) > 12)
 	c = c + 1;

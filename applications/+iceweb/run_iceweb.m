@@ -57,10 +57,7 @@ function run_iceweb(PRODUCTS_TOP_DIR, subnetName, ds, ChannelTagList, ...
 
     end
     disp('IceWeb loop over 10-minute timewindows is complete');
-    
-    % make daily summary plots
-    disp('Making day plots');
-    iceweb.make_dayplots(products, subnetName, snum, enum, ChannelTagList)
+
 
     %%
     disp('IceWeb completed run');

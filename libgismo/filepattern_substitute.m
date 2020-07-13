@@ -51,9 +51,9 @@ function files_=filepattern_substitute(filepattern,ctag,dnum)
     [eyyy em ed]=datevec(enum);
 
     if regexp(file,'DD')
-        debug.print_debug(10,'Have to bother with days')
+        debug.print_debug(10,'Have to bother with days');
         if ~(   (regexp(file,'YYYY')) & (regexp(file,'MM'))  )
-            error('Cannot span multiple days unless YYYY and MM also in file pattern')
+            error('Cannot span multiple days unless YYYY and MM also in file pattern');
         else
             N=1;
             for thisdaynum = floor(snum):floor(enum)
@@ -74,9 +74,9 @@ function files_=filepattern_substitute(filepattern,ctag,dnum)
         end
 
     elseif regexp(file,'MM')
-        debug.print_debug(10,'Have to bother with months')
+        debug.print_debug(10,'Have to bother with months');
         if ~regexp(file,'YYYY')
-            error('Cannot span multiple months unless YYYY also in file pattern')
+            error('Cannot span multiple months unless YYYY also in file pattern');
         else
             N=1;
             thisyyyy=syyy;
@@ -97,6 +97,7 @@ function files_=filepattern_substitute(filepattern,ctag,dnum)
                 N=N+1;
             end
         end
+        
     elseif regexp(file,'YYYY')
         debug.print_debug(10,'Have to bother with years')
         N=1;
@@ -111,6 +112,7 @@ function files_=filepattern_substitute(filepattern,ctag,dnum)
             files_(N).found = exist(f,'file');
             N=N+1;
         end
+        
     end
     debug.printfunctionstack('<');
 end

@@ -34,15 +34,15 @@ function process_timewindow(networkName, subnetName, ...
     end
     
     if exist(wavcleanmat)
-        fprintf('Waveform file %s already exists\n',wavcleanmat);
+        debug.print_debug(1,'Waveform file %s already exists\n',wavcleanmat);
         load(wavcleanmat);
         % keep waveform?
         if products.removeWaveformFiles
             delete(wavcleanmat);    
         end 
     elseif exist(wavrawmat)
-        fprintf('Waveform file %s not found\n',wavcleanmat);
-        fprintf('but %s already exists\n',wavrawmat);
+        debug.print_debug(1,'Waveform file %s not found\n',wavcleanmat);
+        debug.print_debug(1,'but %s already exists\n',wavrawmat);
         load(wavrawmat);
         % keep waveform?
         if products.removeWaveformFiles
@@ -50,8 +50,8 @@ function process_timewindow(networkName, subnetName, ...
         end 
     else
         %% Get waveform data
-        fprintf('Waveform file %s not found\n',wavcleanmat);
-        fprintf('Waveform file %s not found\n',wavrawmat);
+        debug.print_debug(1,'Waveform file %s not found\n',wavcleanmat);
+        debug.print_debug(1,'Waveform file %s not found\n',wavrawmat);
         w = iceweb.waveform_wrapper(ds, ChannelTagList, snum, enum);
         wavdir = fileparts(wavrawmat);
         if ~exist(wavdir,'dir')
@@ -114,7 +114,7 @@ function process_timewindow(networkName, subnetName, ...
         fname = fullfile(products.subnetdir, filedate, sprintf('%s_%s_wfplot.png',subnetName,filetime));      
         if ~exist(fname,'file')
             close all
-            plot_panels(w, 'visible', 'off')
+            plot_panels(w, 'visible', 'off');
             orient tall;
             iceweb.saveImageFile(fname, 72); % this should make directory tree too
             close all
@@ -122,7 +122,7 @@ function process_timewindow(networkName, subnetName, ...
     end
     
     % RSAM
-    rsamDoneFilename = fullfile(products.subnetdir, filedate, sprintf('%s_%s_rsamDone.png',subnetName, filetime) );
+    rsamDoneFilename = fullfile(products.subnetdir, filedate, sprintf('%s_%s_rsamDone.txt',subnetName, filetime) );
     if ~exist(rsamDoneFilename, 'file')      
         if products.rsam.doit
             for measureNum = 1:numel(products.rsam.measures)
@@ -130,17 +130,21 @@ function process_timewindow(networkName, subnetName, ...
                 for sinum = 1:numel(products.rsam.samplingIntervalSeconds)
                     samplingInterval = products.rsam.samplingIntervalSeconds(sinum);
                     rsamobj = waveform2rsam(w, measure, samplingInterval);
-                    %rsamobj.plot_panels()
                     rsamobj.save_to_bob_file(fullfile(products.subnetdir, sprintf('SSSS.CCC.YYYY.MMMM.%03d.bob',samplingInterval) ));
                 end
             end
+            % touch this file now we have successfully saved
+            % the rsam data
+            rfptr = fopen(rsamDoneFilename,'a+');
+            fprintf(rfptr,'%s\n',datestr(now));
+            fclose(rfptr);
         end
     end
-
-    
+   
     % COMPUTE SPECTROGRAMS
     spectrogramFilename = fullfile(products.subnetdir, filedate, sprintf('%s_%s.png',subnetName, filetime) );
-    if ~exist(spectrogramFilename, 'file') 
+    spectralProductsDoneFilename = fullfile(products.subnetdir, filedate, sprintf('%s_%s_SpectralDataDone.txt',subnetName, filetime) );
+    if ~exist(spectrogramFilename, 'file') || ~exist(spectralProductsDoneFilename,'file')
         if products.spectral_data.doit || products.spectrograms.doit
             if products.spectrograms.doit
                 % filepath is compatible with Pensive, except iceweb names by
@@ -185,116 +189,110 @@ function process_timewindow(networkName, subnetName, ...
 
                         % make thumbnails
                         iceweb.makespectrogramthumbnails(spectrogramFilename);
+                        
                     end
                 end
+                
                 % save spectral data
-                if products.spectral_data.doit
-                    debug.print_debug(1, sprintf('Saving spectral data'))
-                    frequency_index_divider = 5.0; % Hz
-                    for spi = 1:numel(Fcell)
-                        thisY = Ycell{spi};
+                if products.spectral_data.doit && ~exist(spectralProductsDoneFilename,'file')
+                    debug.print_debug(1, sprintf('Saving spectral data'));
+                    for spi = 1:numel(Fcell) % loop over channels
+                        thisY = Ycell{spi}; % Y is in dB
+                        thisS = power(10,thisY/20); % S is the true amplitude
                         thisF = Fcell{spi};
                         thisT = Tcell{spi};
                         thisCtag = get(w(spi),'ChannelTag');
 
-                        % peakF and meanF for each spectrogram window
-                        [Ymax,imax] = max(thisY);
-                        PEAK_F = thisF(imax);
-                        MEAN_F = (thisF' * thisY)./sum(thisY);
+                        % peakF and meanF for each spectrogram window but
+                        % using a 1.0-20.0 Hz window
+                        idx = find(thisF >= 1.0 & thisF <= 20.0);
+                        thatF = thisF(idx);
+                        thatS = thisS(idx,:);
+                        [Smax,imax] = max(thatS);
+                        PEAK_F = thatF(imax);
+                        MEAN_F = (thatF' * thatS)./sum(thatS);
 
-                        % frequency index for each spectrogram window
-                        fUpperIndices = find(thisF > frequency_index_divider);
-                        fLowerIndices = find(thisF < frequency_index_divider);                    
-                        fupper = sum(thisY(fUpperIndices,:));
-                        flower = sum(thisY(fLowerIndices,:));
-                        F_INDEX = log2(fupper ./ flower);
-                        F_RATIO = fupper ./ flower;
-
+                        % frequency index for each spectrogram window Buurman and West (2010)
+                        % log10 with 10-20 Hz and 1-2 Hz bands
+                        fUpperIndices = find(thisF >= 10.0 & thisF <= 20.0);
+                        fLowerIndices = find(thisF <= 2.0 & thisF >= 1.0);                    
+                        fupper = mean(thisS(fUpperIndices,:));
+                        flower = mean(thisS(fLowerIndices,:));
+                        F_INDEX = log10(fupper ./ flower); 
+                        
+                        % frequency ratio Rodgers et al. (2015) JVGR 290, 63-74, https://doi.org/10.1016/j.jvolgeores.2014.11.012
+                        % uses log2 of 1-6 and 6-11 Hz
+                        fUpperIndices2 = find(thisF >= 6.0 & thisF <= 11.0);
+                        fLowerIndices2 = find(thisF <= 6.0 & thisF >= 1.0);                    
+                        fupper2 = mean(thisS(fUpperIndices2,:));
+                        flower2 = mean(thisS(fLowerIndices2,:));
+                        F_RATIO = log2(fupper2 ./ flower2); % 
                         % Peak spectral value in each frequency bin - or in
                         % each minute?
 
                         % Now downsample to 1 sample per minute
                         dnum = unique(floorminute(thisT));
-                        for k=1:length(dnum)
+                        for k=1:length(dnum) % loop over minutes
                             p = find(floorminute(thisT) == dnum(k));
                             downsampled_peakf(k) = nanmean(PEAK_F(p));
                             downsampled_meanf(k) = nanmean(MEAN_F(p));  
                             downsampled_findex(k) = nanmean(F_INDEX(p));
                             downsampled_fratio(k) = nanmean(F_RATIO(p));
-                            suby = thisY(:,p);
-                            max_in_each_freq_band(:,k) = nanmax(suby');
-                            median_in_each_freq_band(:,k) = nanmedian(suby');
+                            
+                            % For spectral data to make daily spectrograms,
+                            % we use thisY, which is in dB, and represents
+                            % all frequencies, not just 1-20 Hz
+                            subY = thisY(:,p);
+%                             size(subY)
+                            median_in_each_freq_band(:, k) = nanmedian(subY');
+%                             size(median_in_each_freq_band)
+%                             size(nanmedian(subY'))
+%                             size(subY.*subY)
+%                             size(sum(subY.*subY,2)')
+                            energy_in_each_freq_band(:, k) = sum(subY.*subY,2)';
+%                             stop
                         end
 
                         % Save 1-minute spectral data
                         r1 = rsam(dnum, downsampled_peakf, 'ChannelTag', thisCtag, ...
                             'measure', 'peakf', ...
                             'units', 'Hz');
-                        close all
-                        r1.plot()
-                        ylabel('peakf')
-%                         anykey=input('press any key to continue')
                         r1.save_to_bob_file(fullfile(products.subnetdir, 'SSSS.CCC.YYYY.peakf.bob'))
 
                         r2 = rsam(dnum, downsampled_meanf, 'ChannelTag', thisCtag, ...
                             'measure', 'meanf', ...
                             'units', 'Hz');
-                        close all
-                        r2.plot()
-                        ylabel('meanf')
-%                         anykey=input('press any key to continue')
                         r2.save_to_bob_file(fullfile(products.subnetdir,  'SSSS.CCC.YYYY.meanf.bob'))
 
                         r3 = rsam(dnum, downsampled_findex, 'ChannelTag', thisCtag, ...
                             'measure', 'findex', ...
-                            'units', 'none');
-                        close all
-                        r3.plot()
-                        ylabel('findex')
-%                         anykey=input('press any key to continue')                        
+                            'units', 'none');                      
                         r3.save_to_bob_file(fullfile(products.subnetdir,   'SSSS.CCC.YYYY.findex.bob'))
 
                         r4 = rsam(dnum, downsampled_fratio, 'ChannelTag', thisCtag, ...
                             'measure', 'fratio', ...
-                            'units', 'none');
-                        close all
-                        r4.plot()
-                        ylabel('fratio')
-%                         anykey=input('press any key to continue')                        
+                            'units', 'none');                      
                         r4.save_to_bob_file(fullfile(products.subnetdir,   'SSSS.CCC.YYYY.fratio.bob'))                        
-
-                        % median
-                        spdatafilepattern = fullfile(products.subnetdir, 'YYYY-MM-DD', 'spdata.NSLC.YYYY.MM.DD.median');
-                        close all
-%                         imagesc(thisF, 1:numel(dnum), median_in_each_freq_band)
-%                         xlabel('Frequency')
-%                         ylabel('time')
-%                         title(datestr(dnum,30))
-%                         min(min(median_in_each_freq_band))
-%                         max(max(median_in_each_freq_band))
-%                         median(median(median_in_each_freq_band))          
-%                         anykey=input('press any key to continue')                         
+                        % median spectral amplitude by minute
+                        spdatafilepattern = fullfile(products.subnetdir, 'YYYY-MM-DD', 'spdata.NSLC.YYYY.MM.DD.amplitude');                      
                         iceweb.save_to_spectral_data_file(spdatafilepattern, dnum, ...
                             thisF, median_in_each_freq_band, ...
                             products.spectral_data.samplingIntervalSeconds, ...
-                            thisCtag)
-
-                        % max
-                        spdatafilepattern = fullfile(products.subnetdir, 'YYYY-MM-DD', 'spdata.NSLC.YYYY.MM.DD.max');
-%                         close all
-%                         imagesc(thisF, 1:numel(dnum), max_in_each_freq_band)
-%                         xlabel('Frequency')
-%                         ylabel('time')
-%                         title(datestr(dnum,30))                 
-%                         min(min(max_in_each_freq_band))
-%                         max(max(max_in_each_freq_band))
-%                         anykey=input('press any key to continue')                        
-                        close all
+                            thisCtag);
+                        
+                        % energy in each spectral amplitude by minute
+                        spdatafilepattern = fullfile(products.subnetdir, 'YYYY-MM-DD', 'spdata.NSLC.YYYY.MM.DD.energy');
                         iceweb.save_to_spectral_data_file(spdatafilepattern, dnum, ...
-                            thisF, max_in_each_freq_band, ...
+                            thisF, energy_in_each_freq_band, ...
                             products.spectral_data.samplingIntervalSeconds, ...
-                            thisCtag)
-
+                            thisCtag)    ; 
+                       
+                        % touch this file now we have successfully saved
+                        % the spectral data
+                        spfptr = fopen(spectralProductsDoneFilename,'a+');
+                        fprintf(spfptr,'%s\n',datestr(now));
+                        fclose(spfptr);
+                        
                         clear r1 r2 r3 k p   downsampled_peakf downsampled_meanf ...
                             downsampled_findex fUpperIndices fLowerIndices flower ...
                             fupper F_INDEX PEAK_F MEAN_F Ymax imax thisY thisF thisT ...
@@ -306,25 +304,27 @@ function process_timewindow(networkName, subnetName, ...
         end
     end
 
-%     % SOUND FILES
-%     soundfilelist = fullfile(soundfileroot, sprintf('%s.sound',datestr(snum,30)));
-%     if ~exist(soundfilelist,'file')
-%         if products.soundfiles.doit
-% 
-%             % 20120221 Added a "sound file" like 201202211259.sound which simply records order of stachans in waveform object so
-%             % php script can match spectrogram panel with appropriate wav file 
-%             [dname, bnameroot, bnameext] = fileparts(soundfileroot);
-%             fsound = fopen(soundfilelist,'a');
-%             for c=1:length(w)
-%                 soundfilename = fullfile(soundfileroot, sprintf('%s_%s_%s.wav',datestr(snum,30), get(w(c),'station'), get(w(c), 'channel')  ) );
-%                 fprintf(fsound,'%s\n', soundfilename);  
-%                 debug.print_debug(0, sprintf('Writing to %s',soundfilename)); 
-%                 isSuccessful = waveform2sound(w(c), 60, soundfilename)
-%             end
-%             fclose(fsound);
-%         end
-%     end
-%     
+    % SOUND FILES
+    soundfilelist = sprintf('%s_sound.txt',spectrogramFilename(1:end-4) );
+    if ~exist(soundfilelist,'file')
+        if products.soundfiles.doit
+
+            % 20120221 Added a "sound file" like 201202211259_sound.txt which simply records order of stachans in waveform object so
+            % php script can match spectrogram panel with appropriate wav file 
+            [dname, bnameroot, bnameext] = fileparts(spectrogramFilename);
+            fsound = fopen(soundfilelist,'a');
+            for c=1:length(w)
+                soundfilename = fullfile(dname, sprintf('%s_%s_%s.wav',bnameroot, get(w(c),'station'), get(w(c), 'channel')  ) );
+                pathparts = strsplit(soundfilename, filesep);
+                soundfileurl = fullfile(pathparts{end-3:end});
+                fprintf(fsound,'%s\n', soundfileurl);  
+                debug.print_debug(1, sprintf('Writing to %s',soundfilename)); 
+                isSuccessful = waveform2sound(w(c), 60, soundfilename);
+            end
+            fclose(fsound);
+        end
+    end
+    
 %     % CREATE & SAVE HELICORDER PLOT
 %     if products.helicorders.doit 
 %         close all

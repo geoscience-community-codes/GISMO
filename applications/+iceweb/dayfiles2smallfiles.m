@@ -17,14 +17,14 @@ function dayfiles2smallfiles(networkName, subnetName, ...
     wavdaymat = fullfile(products.subnetdir, filedate, sprintf('%s_%s_day.mat',subnetName,filedate));
     wavdaylock = fullfile(products.subnetdir, filedate, sprintf('%s_%s_day.lock',subnetName,filedate));
     system(sprintf('touch %s',wavdaylock));
-    fprintf('Creating lock file %s\n',wavdaylock);
+    debug.print_debug(1,'Creating lock file %s\n',wavdaylock);
     %anykey=input('Any key to continue')
     if exist(wavdaymat)
-        fprintf('Day waveform file %s already exists\n',wavdaymat);
+        debug.print_debug(1,'Day waveform file %s already exists\n',wavdaymat);
         load(wavdaymat);
     else
         %% Get waveform data
-        fprintf('Waveform file %s not found\n',wavdaymat);
+        debug.print_debug(1,'Waveform file %s not found\n',wavdaymat);
         w = iceweb.waveform_wrapper(ds, ChannelTagList, snum, enum);
         wavdir = fileparts(wavdaymat);
         if ~exist(wavdir,'dir')
@@ -42,26 +42,26 @@ function dayfiles2smallfiles(networkName, subnetName, ...
     %% make sure we got 1 day of data & rename to wday
     if exist('w','var')
         if isempty(w)
-            disp('No data in waveform object. Keeping day lock in place')
+            debug.print_debug(1,'No data in waveform object. Keeping day lock in place')
             return
         end
 
             
     else
-        disp('No waveform object. Keeping day lock in place')
+        debug.print_debug(1,'No waveform object. Keeping day lock in place')
         return
     end  
     
     % we got at least some data. so remove the lock file
     system(sprintf('rm %s',wavdaylock));
-    fprintf('Removinglock file %s\n',wavdaylock);
+    debug.print_debug(1,'Removinglock file %s\n',wavdaylock);
     
     % if we didn't get something close to 1 day of data, we probably do not
     % have miniseed files one day long, so return
     [wsnum, wenum] = gettimerange(w);
     if median(wenum) < median(wsnum) + 0.99
         % we did not get 1 day of data
-        disp('Less than 1 day of data in each file. Returning')
+        debug.print_debug(1,'Less than 1 day of data in each file. Returning')
         return
     end    
     
@@ -81,8 +81,8 @@ function dayfiles2smallfiles(networkName, subnetName, ...
         % Save the cleaned waveform data to MAT file
         if ~exist(wavcleanmat,'file')
             if exist('wday','var')
-                fprintf('Waveform file %s not found\n',wavcleanmat);
-                fprintf('but day waveform object already in memory and stored at %s\n',wavdaymat);
+                debug.print_debug(1,'Waveform file %s not found\n',wavcleanmat);
+                debug.print_debug(1,'but day waveform object already in memory and stored at %s\n',wavdaymat);
                 w = extract(wday, 'time',timewindows.start(count), timewindows.stop(count)); 
                 
                 % Eliminate empty waveform objects
@@ -120,7 +120,7 @@ function dayfiles2smallfiles(networkName, subnetName, ...
                 error('Something went wrong')
             end
         else
-            fprintf('%s already exists\n',wavcleanmat);
+            debug.print_debug(1,'%s already exists\n',wavcleanmat);
         end
     end
 

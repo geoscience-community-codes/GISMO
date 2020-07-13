@@ -51,11 +51,15 @@ end
 if isempty(s)
     nfft = 1024;
     overlap = 924;
-    freqmax = 10;
-    dbLims = [60 120];
-    s = spectralobject(nfft, overlap, freqmax, dbLims);
+    fmax = 25;
+    dBlims = [60 120];
+    s = spectralobject(nfft, overlap, fmax, dBlims);
+else
+    nfft = round(get(s,'nfft'));
+    overlap = floor(get(s, 'over'));
+    dBlims = get(s, 'dBlims');
+    fmax = get(s, 'freqmax');
 end
-
 
 p = inputParser;
 p.addParameter('spectrogramFraction', 0.75, @isnumeric);
@@ -86,10 +90,6 @@ setmap(s, p.Results.colormap);
 
 % Reset axes position & squeeze in the trace panels
 
-nfft = round(get(s,'nfft'));
-overlap = floor(get(s, 'over'));
-dBlims = get(s, 'dBlims');
-fmax = get(s, 'freqmax');
 
 % Set appropriate date ticks
 if p.Results.relative_time

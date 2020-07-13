@@ -37,7 +37,7 @@ function save_to_spectral_data_file(filepattern, dnum, F, spdata, samplingInterv
         if ~exist(this.file,'file')
                 debug.print_debug(2, ['Creating ',this.file]);
                 days = this.enum - this.snum;
-                iceweb.make_spectral_data_file(this.file, days, MINUTES_PER_DAY, F, HEADER_BYTES)
+                iceweb.make_spectral_data_file(this.file, days, MINUTES_PER_DAY, F, HEADER_BYTES);
         end            
 
         % subset for current file
