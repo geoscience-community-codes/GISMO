@@ -77,3 +77,6 @@ record length is 4096 bytes (this may be changed using input argument).
 
 ## Documentation
 Type "doc rdmseed" or "doc mkmseed" for detailed usage.
+
+## Other repository
+Source code available also at MathWorks File Exchange: [![View RDMSEED and MKMSEED: Read and write miniSEED files on File Exchange](https://www.mathworks.com/matlabcentral/images/matlab-file-exchange.svg)](https://fr.mathworks.com/matlabcentral/fileexchange/28803-rdmseed-and-mkmseed-read-and-write-miniseed-files) with user comments and rating.

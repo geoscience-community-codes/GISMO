@@ -97,12 +97,15 @@ function varargout = rdmseed(varargin)
 %	Author: François Beauducel <beauducel@ipgp.fr>
 %		Institut de Physique du Globe de Paris
 %	Created: 2010-09-17
-%	Updated: 2015-01-05
+%	Updated: 2020-12-25
 %
 %	Acknowledgments:
 %		Ljupco Jordanovski, Jean-Marie Saurel, Mohamed Boubacar, Jonathan Berger,
 %		Shahid Ullah, Wayne Crawford, Constanza Pardo, Sylvie Barbier,
-%		Robert Chase, Arnaud Lemarchand, Alexandre Nercessian.
+%		Robert Chase, Arnaud Lemarchand, Alexandre Nercessian, Sagynbek Orunbaev.
+%
+%		Special thanks to Martin Mityska who also inspired me with his ingenious
+%		ReadMSEEDFast.m function.
 %
 %	References:
 %		IRIS (2010), SEED Reference Manual: SEED Format Version 2.4, May 2010,
@@ -111,6 +114,13 @@ function varargout = rdmseed(varargin)
 %		Steim J.M. (1994), 'Steim' Compression, Quanterra Inc.
 
 %	History:
+%
+%		[2020-12-25]
+%			- fixes a bug with little-endian encoding (corrupted data)
+%		[2018-08-09]
+%			- MAJOR CODE UPDATE: now processes the binary data in memory 
+%			  after a global file reading.
+%			- removes all global variables.
 %		[2017-11-21]
 %			- adds option 'nullhead' to bypass null bytes header.
 %		[2015-01-05]
@@ -175,7 +185,7 @@ function varargout = rdmseed(varargin)
 %			  input arguments (like Seismic Handler output files).
 %			- Uses warning() function instead of fprintf().
 %
-%	Copyright (c) 2017, François Beauducel, covered by BSD License.
+%	Copyright (c) 2018, François Beauducel, covered by BSD License.
 %	All rights reserved.
 %
 %	Redistribution and use in source and binary forms, with or without 
@@ -203,9 +213,6 @@ function varargout = rdmseed(varargin)
 if nargin > 6
 	error('Too many input arguments.')
 end
-
-% global variables shared with sub-functions
-global f fid offset le ef wo rl forcebe verbose notc force
 
 % default input arguments
 makeplot = 0;	% make plot flag
@@ -251,7 +258,7 @@ end
 
 if nargin > (2 + nargs)
 	wo = varargin{3};
-	if ~isnumeric(wo) || (wo ~= 0 && wo ~= 1)
+	if ~isnumeric(wo) || ~any(wo==[0,1])
 		error('Argument WORDORDER must be 0 or 1.');
 	end
 end
@@ -314,8 +321,9 @@ end
 
 i = 1;
 
+% --- main loop that reads data records until the end of the file
 while offset >= 0
-	X(i) = read_data_record;
+	[X(i),offset,le] = read_data_record(f,fid,offset,le,ef,wo,rl,forcebe,verbose,notc,force);
 	i = i + 1;
 end
 
@@ -450,11 +458,10 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function D = read_data_record
-% read_data_record uses global variables f, fid, offset, le, ef, wo, rl, 
-%	and verbose. It reads a data record and returns a structure D.
+function [D,offset,le] = read_data_record(f,fid,offset,le,ef,wo,rl,forcebe,verbose,notc,force)
+% read_data_record reads a data record and returns a structure D and
+% current binary offset of the file.
 
-global f fid offset le ef wo rl verbose notc force
 
 fseek(fid,offset,'bof');
 
@@ -471,7 +478,7 @@ D.ChannelFullName = sprintf('%s:%s:%s:%s',deblank(D.NetworkCode), ...
 	deblank(D.ChannelIdentifier));
 
 % Start Time decoding
-[D.RecordStartTime,swapflag] = readbtime;
+[D.RecordStartTime,swapflag] = readbtime(fid,forcebe);
 D.RecordStartTimeISO = sprintf('%4d-%03d %02d:%02d:%07.4f',D.RecordStartTime);
 
 if swapflag
@@ -559,7 +566,7 @@ for i = 1:D.NumberBlockettesFollow
 			% BLOCKETTE 500 = Timing (200 bytes)
 			OffsetNextBlockette = fread(fid,1,'uint16');
 			D.BLOCKETTES.B500.VCOCorrection = fread(fid,1,'float32');
-			D.BLOCKETTES.B500.TimeOfException = readbtime;
+			D.BLOCKETTES.B500.TimeOfException = readbtime(fid,forcebe);
 			D.BLOCKETTES.B500.MicroSec = fread(fid,1,'int8');
 			D.BLOCKETTES.B500.ReceptionQuality = fread(fid,1,'uint8');
 			D.BLOCKETTES.B500.ExceptionCount = fread(fid,1,'uint16');
@@ -723,7 +730,7 @@ switch EncodingFormat
 			
 		case 1
 			% STEIM-1: 3 cases following the nibbles
-			ddd = NaN*ones(4,numel(frame32));	% initiates array with NaN
+			ddd = nan(4,numel(frame32));	% initiates array with NaN
 			k = find(nibbles == 1);			% nibble = 1 : four 8-bit differences
 			if ~isempty(k)
 				ddd(1:4,k) = bitsplit(frame32(k),32,8);
@@ -739,7 +746,7 @@ switch EncodingFormat
 
 		case 2	
 			% STEIM-2: 7 cases following the nibbles and dnib
-			ddd = NaN*ones(7,numel(frame32));	% initiates array with NaN
+			ddd = nan(7,numel(frame32));	% initiates array with NaN
 			k = find(nibbles == 1);			% nibble = 1 : four 8-bit differences
 			if ~isempty(k)
 				ddd(1:4,k) = bitsplit(frame32(k),32,8);
@@ -779,7 +786,7 @@ switch EncodingFormat
 			
 		case 3	% *** STEIM-3 DECODING IS ALPHA AND UNTESTED ***
 			% STEIM-3: 7 cases following the nibbles
-			ddd = NaN*ones(9,numel(frame32));	% initiates array with NaN
+			ddd = nan(9,numel(frame32));	% initiates array with NaN
 			k = find(nibbles == 0);				% nibble = 0 : two 16-bit differences
 			if ~isempty(k)
 				ddd(1:2,k) = bitsplit(frame32(k),32,16);
@@ -821,7 +828,7 @@ switch EncodingFormat
 		end
 		
 		% Little-endian coding: needs to swap bytes
-		if ~WordOrder
+		if ~WordOrder % ??? why not xor(~WordOrder,le) here ???
 			ddd = flipud(ddd);
 		end
 		dd = ddd(~isnan(ddd));		% reduces initial array ddd: dd is non-NaN values of ddd
@@ -960,16 +967,15 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function c = splitfield(s,d)
 % splitfield(S) splits string S of D-character separated field names
+
 C = textscan(s,'%s','Delimiter',d);
 c = C{1};
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [d,swapflag] = readbtime
+function [d,swapflag] = readbtime(fid,forcebe)
 % readbtime reads BTIME structure from current opened file and returns
 %	D = [YEAR,DAY,HOUR,MINUTE,SECONDS]
-
-global fid forcebe
 
 Year		= fread(fid,1,'*uint16');
 DayOfYear	= fread(fid,1,'*uint16');

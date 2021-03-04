@@ -10,8 +10,9 @@ function mksac(f,d,varargin)
 %	MKSAC(FILENAME,D,T0,'HEADER1',header1,'HEADER2',header2, ...) is an 
 %	alternative to define the header fields.
 %
-%	MKSAC(FILENAME,D,T,...) where T is a time vector of same size as D,
-%	will define DELTA sampling value from the time interval median.
+%	MKSAC(FILENAME,D,T,...) where T is a time vector of same size as D, in
+%	datenum format, will define DELTA sampling value from the time interval
+%	median but will be overwritten by header field DELTA if specified.
 %
 %	MKSAC will produce a SAC file in any case, using default values for 
 %	any missing header field. But we strongly suggest to define at least 
@@ -25,6 +26,7 @@ function mksac(f,d,varargin)
 %	be overwritten in order to keep the file consistency:
 %	- NPTS, DEPMIN, DEPMAX, DEPMEN are inferred from data D
 %	- NZYEAR, NZJDAY, NZHOUR, NZMIN, NZSEC, NZMSEC are defined from time T0
+%	  rounded to the closest millisecond.
 %	- B is forced to 0, E to the last sample relative time (in seconds)
 %	- NVHDR is forced to 6 (header version number)
 %
@@ -36,14 +38,19 @@ function mksac(f,d,varargin)
 %
 %	Author: F. Beauducel <beauducel@ipgp.fr>
 %	Created: 2015-11-12
-%	Updated: 2016-03-05
+%	Updated: 2020-11-11
 
 %	Release history:
+%	[2020-11-11] v1.3
+%		- fix an issue in origin time NZMSEC (thanks to Randall Plate)
+%	[2020-01-15] v1.2
+%		- fix a missing DELTA setting from T vector (thanks to Randall
+%		  Plate comment)
 %	[2016-03-05] v1.1
 %		- fix a problem with date of origin time
 %	[2015-11-12] v1.0
 %
-%	Copyright (c) 2016, François Beauducel, covered by BSD License.
+%	Copyright (c) 2020, François Beauducel, covered by BSD License.
 %	All rights reserved.
 %
 %	Redistribution and use in source and binary forms, with or without 
@@ -77,8 +84,6 @@ if nargin < 3
 	t0 = now;
 else
 	t0 = varargin{1};
-	if length(t0) > 1
-	end
 end
 
 if nargin > 3 && isstruct(varargin{2})
@@ -97,6 +102,15 @@ if nargin > 4
 	end
 end
 
+% header sampling rate
+if numel(t0) > 1 && (~exist('H','var') || ~isfield(H,'DELTA'))
+	dt = 86400*median(diff(t0));
+	if dt > 0
+		H.DELTA = dt;
+	end
+end
+
+
 % header default values
 H0 = struct('DELTA',1,'NVHDR',6,'IFTYPE',1,'LEVEN',1);
 for h = fieldnames(H0)'
@@ -106,7 +120,8 @@ for h = fieldnames(H0)'
 end
 
 % header origin time values
-tv = datevec(t0(1));
+msinday = 24*60*60*1000; % milliseconds in a day
+tv = datevec(round(t0(1)*msinday)/msinday); % rounds to the closest ms
 H.NZYEAR = tv(1);
 H.NZJDAY = datenum(tv(1:3)) - datenum(tv(1),1,1) + 1;
 H.NZHOUR = tv(4);
