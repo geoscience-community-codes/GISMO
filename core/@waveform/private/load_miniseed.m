@@ -89,6 +89,7 @@ function w = mseedfilename2waveform(thisfilename, snum, enum)
     w(1)=waveform();
     if exist(thisfilename)
         debug.print_debug(1,'%s: Found %s',mfilename,thisfilename);
+        disp('Calling ReadMSEEDFast')
         s = ReadMSEEDFast(thisfilename); % written by Martin Mityska
        
          for c=1:numel(s)
