@@ -69,7 +69,7 @@ end
 
 
 function fullsgram(products, snum, enum, ChannelTagList)
-    sgrampng = fullfile(products.subnetdir,sprintf('spectrogram_%s_%s.png',datestr(snum,'yyyy-mm-dd'),datestr(enum,'yyyy-mm-dd')));
+    sgrampng = fullfile(products.subnetdir,sprintf('SGRAM_%s_%s.png',datestr(snum,'yyyy-mm-dd'),datestr(enum,'yyyy-mm-dd')));
     if ~exist(sgrampng, 'file')
         close all
         flptrn = fullfile(products.subnetdir,'YYYY-MM-DD','spdata.NSLC.YYYY.MM.DD.amplitude');

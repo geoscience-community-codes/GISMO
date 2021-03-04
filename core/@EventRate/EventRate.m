@@ -151,9 +151,9 @@ classdef EventRate
             self.enum = enum;
             self.binsize = binsize;
             self.stepsize = stepsize;
-            if (enum-snum) < binsize
-                error('binsize cannot be bigger than data time range');
-            end
+%             if (enum-snum) < binsize
+%                 error('binsize cannot be bigger than data time range');
+%             end
         end
         
         %% ----------------------------------------------

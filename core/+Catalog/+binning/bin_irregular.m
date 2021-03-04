@@ -40,29 +40,33 @@ median_time_interval = [];
 
 if (l1==l2) 
     dnum_bin = snum+binsize/2 : stepsize : enum-binsize/2; % centres of the bins
-    for c=1:length(dnum_bin)
-	binstart = dnum_bin(c) - binsize/2; % start of this bin
-	binend = dnum_bin(c) + binsize/2;   % end of this bin
-	i = find(dnum >= binstart & dnum < binend);
-	if length(i)>0
-		d = data(i);
-		thisdnum = dnum(i);
-		counts_per_bin(c) = length(d);
-		sum_per_bin(c)=nansum(d);
-		median_per_bin(c)=nanmedian(d);
-		std_per_bin(c) = std(d);
-        	smallest_per_bin(c)=min(d);
-        	biggest_per_bin(c)=max(d);
-		median_time_interval(c)=median(thisdnum(2:end)-thisdnum(1:end-1));
-	else
-		counts_per_bin(c) = 0;
-		sum_per_bin(c) = 0;
-		std_per_bin(c) = 0;
-		median_per_bin(c) = NaN;
-		smallest_per_bin(c)=NaN;
-		biggest_per_bin(c)=NaN;
-	end
+    if numel(dnum_bin)==0
+        dnum_bin = dnum(1); % - binsize/2;
     end
+    for c=1:length(dnum_bin)
+        binstart = dnum_bin(c) - binsize/2; % start of this bin
+        binend = dnum_bin(c) + binsize/2;   % end of this bin
+        i = find(dnum >= binstart & dnum < binend);
+        if length(i)>0
+            d = data(i);
+            thisdnum = dnum(i);
+            counts_per_bin(c) = length(d);
+            sum_per_bin(c)=nansum(d);
+            median_per_bin(c)=nanmedian(d);
+            std_per_bin(c) = std(d);
+            smallest_per_bin(c)=min(d);
+            biggest_per_bin(c)=max(d);
+            median_time_interval(c)=median(thisdnum(2:end)-thisdnum(1:end-1));
+        else
+            counts_per_bin(c) = 0;
+            sum_per_bin(c) = 0;
+            std_per_bin(c) = 0;
+            median_per_bin(c) = NaN;
+            smallest_per_bin(c)=NaN;
+            biggest_per_bin(c)=NaN;
+        end
+    end
+
 else
     disp('Could not bin - vector lengths dont match');
 end

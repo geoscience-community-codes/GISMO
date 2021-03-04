@@ -283,6 +283,8 @@ classdef Catalog
         webmap(catalogObject)
         write(catalogObject, outformat, outpath, schema)
         arrivals_per_event(catalogObject)
+        bool = isempty(catalogObject);
+        n=numel(catalogObject);
         %t=table(catalogObject)
     end
 %% ---------------------------------------------------

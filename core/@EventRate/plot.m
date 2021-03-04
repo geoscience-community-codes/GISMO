@@ -154,9 +154,8 @@ function plot(obj, varargin)
                     set(ax(2), 'XTickLabel', xticklabels, 'FontSize', fontsize); 
                     yticklabels = get(ax(2), 'YTickLabel');
                     set(ax(2), 'YTickLabel', yticklabels, 'FontSize', fontsize); 
-
-                    linkaxes(ax, 'x');
-                    
+                    % do not link axes, it will screw up and isn't needed
+                    % anyway
                     text(0.02, 0.95, obj(objectnum).etype{1}, 'units','normalized');
 
                 else

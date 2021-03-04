@@ -32,8 +32,8 @@ function plot_day_spectrogram(s, filepattern, ctags, startTime, endTime, varargi
     if isempty(s)
         nfft = 1024;
         overlap = 924;
-        fmax = 25;
-        dBlims = [60 120];
+        fmax = 15;
+        dBlims = [60 120]; % 60 dB, not 80 dB as I say in WI report. 
         s = spectralobject(nfft, overlap, fmax, dBlims);
     else
         nfft = round(get(s,'nfft'));
@@ -111,13 +111,28 @@ function plot_day_spectrogram(s, filepattern, ctags, startTime, endTime, varargi
         index = find(F <= fmax);
         Fplot = F(1:max(index));
         Yplot = Y_all(:,1:max(index));
+        thisS = power(10,Yplot/20);
         Splot{c} = power(10,Yplot/20);
-
         
-       
-%         if DAYS>2
-%             Yplot = movmax(Yplot, 10); %DAYS);
-%         end
+        % white island
+        gainWIZ = 5.04365e8; % counts per m/s % only for 2016/09/13 and thereafter
+        gainWSRZ = 8.38861e8; % counts per m/s
+        if strcmp(ctags(c).station, 'WIZ')
+            disp('Correcting WIZ data')
+            ind = find(T_all < datenum(2016,5,8)); % we think same as WSRZ gain here
+            ind2 = find(T_all >= datenum(2016,5,8)); % modern WIZ gain
+            thisS(ind) = thisS(ind) / gainWSRZ * 1e9; % nm/s
+            thisS(ind2) = thisS(ind2) / gainWIZ * 1e9; % nm/s
+            Splot{c} = thisS;
+            Yplot = 20 * log10(thisS);
+        elseif strcmp(ctags(c).station, 'WSRZ')
+            disp('Correcting WSRZ data')
+            thisS = thisS / gainWSRZ * 1e9; % nm/s
+            Splot{c} = thisS;
+            Yplot = 20 * log10(thisS);            
+        end
+
+
         % if we are plotting energy rather than amplitude
         if strfind(filepattern, 'energy')
             Yplot = sqrt(Yplot/60);
@@ -157,14 +172,56 @@ function plot_day_spectrogram(s, filepattern, ctags, startTime, endTime, varargi
     end
 
     % add RSAM panels
+%     if spectrogramFraction < 1
+%         rsamfilepattern = fullfile(fileparts(fileparts(filepattern)),'SSSS.CCC.YYYY.MMMM.060.bob');
+%         for c=1:numel(ctags)
+%             [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numel(ctags), c, spectrogramFraction, 0.12, 0.05, 0.80, 0.9);
+%             r = rsam.read_bob_file(rsamfilepattern, 'snum', startTime, 'enum', endTime, 'sta', ctags(c).station, 'chan', ctags(c).channel, 'measure', 'median');
+%             r = r.medfilt1(DAYS);
+%             plotTrace(tracePosition, r, Xtickmarks, wt, p.Results.colormap, s, ctags(c).station, ctags(c).channel);
+%             set(gca,'XLim', [wt.start wt.stop]); % added 20111214 to align trace with spectrogram when data missing (prevent trace being stretched out)
+%         end
+%     end
+    
+%     if spectrogramFraction < 1
+%         fLow = [2];
+%         fHigh = [5];
+%         ymin=0;
+%         ymax=0;
+%         for c=1:numel(ctags)
+%             [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numel(ctags), c, spectrogramFraction, 0.12, 0.05, 0.80, 0.9);
+%             index = find(F <= fHigh & F >= fLow);
+%             S = Splot{c};
+%             S2 = S(:,1:max(index));
+%             S3 = nanmean(S2,2);
+%             S3 = medfilt1(S3,DAYS)/numel(T_all);
+%             r.dnum = T_all;
+%             r.data = S3;
+%             plotTrace(tracePosition, r, Xtickmarks, wt, p.Results.colormap, s, ctags(c).station, ctags(c).channel);
+%             set(gca,'XLim', [wt.start wt.stop]); % added 20111214 to align trace with spectrogram when data missing (prevent trace being stretched out)
+%         end
+%     end
     if spectrogramFraction < 1
-        rsamfilepattern = fullfile(fileparts(fileparts(filepattern)),'SSSS.CCC.YYYY.MMMM.060.bob');
-        for c=1:numel(ctags)
-            [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numel(ctags), c, spectrogramFraction, 0.12, 0.05, 0.80, 0.9);
-            r = rsam.read_bob_file(rsamfilepattern, 'snum', startTime, 'enum', endTime, 'sta', ctags(c).station, 'chan', ctags(c).channel, 'measure', 'median');
-            r = r.medfilt1(DAYS);
-            plotTrace(tracePosition, r, Xtickmarks, wt, p.Results.colormap, s, ctags(c).station, ctags(c).channel);
+
+        load ~/Dropbox/WhiteIsland2019Project/data/seismic/rsam/GNSrsam.mat
+        gainWIZ = 5.04365e8; % counts per m/s % only for 2016/09/13 and thereafter
+        gainWSRZ = 8.38861e8; % counts per m/s
+        r = rsamvector.extract(startTime, endTime);
+        for cc=1:numel(r)
+            if strcmp(r(cc).sta, 'WIZ')
+                disp('Correcting WIZ data')
+                ind = find(r(cc).dnum < datenum(2016,5,8)); % we think same as WSRZ gain here
+                ind2 = find(r(cc).dnum >= datenum(2016,5,8)); % modern WIZ gain
+                r(cc).data(ind) = r(cc).data(ind) / gainWSRZ;
+                r(cc).data(ind2) = r(cc).data(ind2) / gainWIZ;
+            elseif strcmp(r(cc).sta, 'WSRZ')
+                disp('Correcting WSRZ data')
+                r(cc).data = r(cc).data / gainWSRZ;
+            end
+            [spectrogramPosition, tracePosition] = iceweb.calculatePanelPositions(numel(ctags), cc, spectrogramFraction, 0.12, 0.05, 0.80, 0.9);
+            plotTrace(tracePosition, r(cc), Xtickmarks, wt, p.Results.colormap, s, ctags(cc).station, ctags(cc).channel);
             set(gca,'XLim', [wt.start wt.stop]); % added 20111214 to align trace with spectrogram when data missing (prevent trace being stretched out)
+             set(gca,'YLim', [0 1.5e-5])
         end
     end
     
@@ -180,6 +237,8 @@ function plot_day_spectrogram(s, filepattern, ctags, startTime, endTime, varargi
                 xlabel('Frequency (Hz)')
                 ylabel('Spectral amplitude')
                 title(ctags(c).string());
+                set(gca,'XTick',[0:1:15]);
+                grid on
             catch
                 size(Fplot)
                 size(Splot{c})
@@ -192,8 +251,8 @@ function plot_day_spectrogram(s, filepattern, ctags, startTime, endTime, varargi
     % plot SSAM in different frequency bands
     if p.Results.plot_SSAM
         figure();
-        fLow = [1 5 10];
-        fHigh = [5 10 20];
+        fLow = [0 2 6];
+        fHigh = [1 5 fmax];
         ymin=0;
         ymax=0;
         for c=1:numel(ctags)
@@ -216,7 +275,7 @@ function plot_day_spectrogram(s, filepattern, ctags, startTime, endTime, varargi
             xlabel('Date')
             ylabel('SSAM')
             title(ctags(c).string());
-            legend({'1-5 Hz';'5-10 Hz';'10-20 Hz'},'Location','best')
+            legend({'0-1 Hz';'2-5 Hz';'6-15 Hz'},'Location','best')
         end
     end
 
