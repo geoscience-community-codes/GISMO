@@ -32,6 +32,7 @@ function value = print_debug(level, varargin)
 % to read function.
 % Glenn Thompson 2015: restored order of verboseness (increasing numbers =
 % more verbose). Implemented workarounds for set_debug and get_debug.
+
     value = [];
     persistent Lev
 

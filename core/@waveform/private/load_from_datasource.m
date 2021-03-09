@@ -13,6 +13,7 @@ function w = load_from_datasource(ds, chans, startt, endt, combine_waves, usewka
    %w = getter(request, combine_waves);
    w = getter(request);
    
+   
    % TODO: Trim waveform to request
    % maybe we're already done?
    return

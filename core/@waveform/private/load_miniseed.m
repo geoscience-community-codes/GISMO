@@ -1,9 +1,14 @@
-function w = load_miniseed(request)
+function w = load_miniseed(request, functiontouse)
 %LOAD_MINISEED loads a waveform from MINISEED files
 % combineWaves isn't currently used!
 
 % Glenn Thompson 2016/05/25 based on load_sac
 % request.combineWaves is ignored
+% to use rdmseed, pass request datasource/thisSource as 'rdmseed',
+% otherwise 'readmseedfast' is used.
+    if ~exist('functiontouse','var')
+        functiontouse = 'rdmseed';
+    end
 
     if isstruct(request)
         [thisSource, chanInfo, startTime, endTime, ~] = unpackDataRequest(request);
@@ -37,8 +42,7 @@ function w = load_miniseed(request)
         for c=1:numel(filenamelist)
             for cc=1:numel(filenamelist{c})
                 wtmp = [];
-                %wtmp = mseedfilename2waveform(thisfilename{1}, startTime, endTime);
-                wtmp = mseedfilename2waveform(filenamelist{c}{cc}, startTime, endTime);
+                wtmp = mseedfilename2waveform(functiontouse, filenamelist{c}{cc}, startTime, endTime);
                 if ~isempty(wtmp)
                     wtmp = reshape(wtmp, [1 numel(wtmp)]);
                     wfiles = [wfiles wtmp];
@@ -48,19 +52,7 @@ function w = load_miniseed(request)
 
         if ~isempty(wfiles)
             w = combine(wfiles);
-    %         if debug.get_debug()>1
-    %             disp('Combined')
-    %             w % disp diagnostic info - has combine flipped things?
-    %         end        
-            % Extract based on time
-            %if ~isnan(get(w,'start'))
             w = extract(w, 'time', startTime, endTime);
-    %         if debug.get_debug()>1
-    %             disp('Extracted')
-    %             w % disp diagnostic info - has combine flipped things?
-    %             stop
-    %         end
-
 
             % Pad GT added 20181120
             w = pad(w, startTime, endTime, 0);
@@ -68,34 +60,44 @@ function w = load_miniseed(request)
             w=[];
         end
 
-        % Extract based on ChannelTag
-        %w = matchChannelTag(w);
-
     else
         %request should be a filename
         thisFilename = request;
         if exist(thisFilename, 'file')
-            w = mseedfilename2waveform(thisFilename);
+            w = mseedfilename2waveform(functiontouse, thisFilename);
         else
             w = waveform();
             warning(sprintf('%s: File %s does not exist',mfilename,thisFilename));
         end
     end
+
+    w = combine(w);
+
 end
 
 %%
-function w = mseedfilename2waveform(thisfilename, snum, enum)
-    debug.print_debug(1,'Trying to load %s',thisfilename);
-    w(1)=waveform();
+function w = mseedfilename2waveform(functiontouse, thisfilename, snum, enum)
+    debug.print_debug(5,'Trying to load %s',thisfilename);
     if exist(thisfilename)
-        debug.print_debug(1,'%s: Found %s',mfilename,thisfilename);
-        disp('Calling ReadMSEEDFast')
-        s = ReadMSEEDFast(thisfilename); % written by Martin Mityska
-       
-         for c=1:numel(s)
-            w(c) = waveform(ChannelTag(s(c).network, s(c).station, s(c).location, s(c).channel), ...
-                s(c).sampleRate, epoch2datenum(s(c).startTime), s(c).data);
-         end
+        debug.print_debug(5,'%s: Found %s',mfilename,thisfilename);
+        
+        if strfind(lower(functiontouse), 'fast')  
+            debug.print_debug(1,'%s: Using %s',mfilename,'readmseedfast');
+            s = ReadMSEEDFast(thisfilename); % written by Martin Mityska
+            for c=1:numel(s)
+                debug.print_debug(10, sprintf('Got segment %d of %d', c, numel(s)) );
+                w(c) = waveform(ChannelTag(s(c).network, s(c).station, s(c).location, s(c).channel), ...
+                    s(c).sampleRate, epoch2datenum(s(c).startTime), s(c).data);
+            end
+        else  
+            debug.print_debug(1,'%s: Using %s',mfilename,'rdmseed');
+            s = rdmseed(thisfilename); % written by Francois Beuducel
+            for c=1:numel(s)
+                debug.print_debug(10,sprintf('Got segment %d of %d', c, numel(s) ) );
+                w(c) = waveform(ChannelTag(s(c).NetworkCode, s(c).StationIdentifierCode, s(c).LocationIdentifier, s(c).ChannelIdentifier), ...
+                    s(c).SampleRate, s(c).RecordStartTimeMATLAB, s(c).d);
+            end
+        end
     else
         debug.print_debug(1,'%s: Not found %s',mfilename,thisfilename);
         w=[];

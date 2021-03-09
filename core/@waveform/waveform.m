@@ -79,7 +79,13 @@ function w = waveform(varargin)
 %       % the easy way is like this:
 %
 %       mseedfile = 'SEEDDATA/PN7A.BDF.2007.240';
-%	w = waveform(mseedfile, 'miniseed')
+%	    w = waveform(mseedfile, 'miniseed')
+%
+%       % in both cases, Francois Beauducel's rdmseed is used to load each
+%       Miniseed file. If you are dealing with large quantities of data,
+%       you may wish to try Martin Mityska's ReadMSEEDFast instead. You can
+%       do this by using the argument 'miniseedfast' in place of 'miniseed'
+%       in either of the examples above.
 %
 %    
 %    (2) SAC file:
@@ -97,7 +103,11 @@ function w = waveform(varargin)
 %       % the easy way is like this:
 %
 %       sacfile = 'SACDATA/PN7A.BDF.2007-08-28T00:00:00.000000Z.sac';
-%	w = waveform(sacfile, 'sac')
+%	    w = waveform(sacfile, 'sac')
+%
+%       % This uses a function based on original code by Mike Thorne. If
+%       this does not work for you, check out rdsac which is contributed by
+%       Francois Beauducel.
 %    
 %    
 %    (3) IRIS DMC web services:
@@ -158,7 +168,7 @@ function w = waveform(varargin)
 %    
 %    considerations when changing the internals:
 %     when replacing scnl with ChannelTag, affects loadobj!
-   
+
    global WaveformNamespaceIsLoaded
    if isempty(WaveformNamespaceIsLoaded)
       WaveformNamespaceIsLoaded = loadGlobalNamespace();
@@ -175,13 +185,13 @@ function w = waveform(varargin)
    argCount = numel(varargin);
    
    updateWarningID = 'Waveform:waveform:oldUsage';
-   
+
    switch argCount
       case 0
          w = genericWaveform();
       case 2 
          if isa(varargin{1}, 'char')
-            filename = varargin{1}
+            filename = varargin{1};
 
             % Glenn Thompson 20180703: added to deal with files downloaded from web addresses
             if strfind(filename,'http')
@@ -196,10 +206,10 @@ function w = waveform(varargin)
                 switch lower(filetype)
                     case 'sac',
                         w = load_sac(filename);
-                    case 'miniseed',
+                    case {'miniseed','seed','rdmseed','mseed'}
                         w = load_miniseed(filename);
-                    case 'seed',
-                        w = rdmseed2waveform(filename);
+                     case {'miniseedfast','seedfast','mseedfast','readmseedfast'},
+                         w = load_miniseedfast(filename);
                     case 'seisan',
                         w = load_seisan(filename);
                     otherwise
@@ -250,8 +260,13 @@ function w = waveform(varargin)
             '   w = WAVEFORM(filename, file_format)\n', ...
             '   w = WAVEFORM(datasource, ChannelTag, starttimes, endtimes)\n',...
             '   w = WAVEFORM(ChannelTag, samplefreq, starttime, data, units)\n']);
+
    end
-   
+ 
+  
+%end  
+  
+  %%
    function w = genericWaveform()
       persistent blankW
       persistent wCreated
@@ -277,6 +292,7 @@ function w = waveform(varargin)
    end
    
    function w = waveformFromParts(chaTag, freq, starttime, data, units)
+ 
       w = genericWaveform();
       w.cha_tag = chaTag;%(DEFAULT_STATION,DEFAULT_CHAN);
       w.Fs = freq;
@@ -286,6 +302,7 @@ function w = waveform(varargin)
       w.version = waveformversion; %version of waveform object (internal)
       w.misc_fields = {}; %add'l fields, such as "comments", or "trig"
       w.misc_values = {}; %values for these fields
+
    end
    
    function w = waveformFromDatasource(ds, chans, startt, endt)

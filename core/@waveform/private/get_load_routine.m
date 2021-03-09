@@ -23,10 +23,10 @@ function myLoadRoutine = get_load_routine(ds, use_wkaround)
          myLoadRoutine = @load_seisan;
       case 'ah'
          myLoadRoutine = @load_ah;
-       case 'miniseed' % added by Glenn 2016/05/25
+       case {'miniseed','seed','rdmseed','mseed'} % added by Glenn 2016/05/25
            myLoadRoutine = @load_miniseed;
-       case 'seed' % added by Glenn 2016/05/25
-           myLoadRoutine = @rdmseed2waveform;           
+       case {'miniseedfast','seedfast','readmseedfast','mseedfast'} % added by Glenn 2016/05/25, but now included in above
+           myLoadRoutine = @load_miniseedfast;           
       otherwise
             error('Waveform:waveform:noDatasourceInterpreter',...
                'user defined datasources should be associated with an interpreter');
