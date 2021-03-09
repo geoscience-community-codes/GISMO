@@ -58,19 +58,40 @@ function combined_waveforms = combine (waveformlist)
         Fs(j)=get(w(j),'freq');
         Secs(j)=(get(w(j),'end') - get(w(j),'start')) * 86400;
         thisdnum = get(w(j),'timevector');
+        % find values of thisdnum not already in dnumall. we only add
+        % these, so we do not include repeat values in the interpolation,
+        % as that makes it fail.
+        [newdnums, indicesToAdd] = setdiff(thisdnum, dnumall, 'stable');
         thisdata = get(w(j),'data');
-        dnumall = [dnumall; thisdnum];
-        dataall = [dataall; thisdata];
+        dnumall = [dnumall; thisdnum(indicesToAdd)];
+        dataall = [dataall; thisdata(indicesToAdd)];
     end
-    meanFs = sum(Fs.*Secs)/sum(Secs);    
-    dnumnew = dnumall(1):(1/meanFs)/86400:dnumall(end);
-    datanew = interp1(dnumall, dataall, dnumnew);
+    
+    meanFs = sum(Fs.*Secs)/sum(Secs);  % resample at this frequency
+    
+    % make sure there are no values of datenum equal to 0 in here
+    i1 = find(dnumall>0);
+    dnumall=dnumall(i1);
+    dataall=dataall(i1);
+    
+    % sort the dnumall and dataall vectors
+    [dnumall, i2] = sort(dnumall);
+    dataall = dataall(i2);
+    
+    dnumnew = dnumall(1):(1/meanFs)/86400:dnumall(end); % the new sample times
+    
+    % interpolate to get new data values
+    datanew = interp1(dnumall, dataall, dnumnew, 'nearest');
+
+    % could add a step in here to set to NaN any gaps of more than 2
+    % samples, as nearest-neighbor interpolation creates odd looking steps
+    % or maybe only for gaps more than 1-second?
+    
+    % create a waveform object from dnumnew and datanum
     neww = w(1);
     neww = set(neww, 'data', datanew, 'start', dnumall(1), 'freq', meanFs);
     combined_waveforms(i) = neww;
 
-        
-      
    end
 end
 
