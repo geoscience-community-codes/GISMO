@@ -1,7 +1,8 @@
 # GISMO
 A seismic data analysis toolbox for MATLAB. It can be useful for research, monitoring and education.
 
-doi://doi.org/10.5281/zenodo.1404723
+[![DOI](https://zenodo.org/badge/365883125.svg)](https://doi.org/10.5281/zenodo.1404723)
+
 
 Steps:
 <ol>
