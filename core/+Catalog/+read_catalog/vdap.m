@@ -1,4 +1,4 @@
-function self=vdap(filename)
+function self=vdap(phafilename)
 %readEvents.vdap read Hypoellipse summary files and PHA pickfiles
 %   based on Montserrat analog network
 %   cObject = read_vdap(filename) will read the catalog file, and create a
@@ -27,7 +27,7 @@ function self=vdap(filename)
     fid = fopen(phafilename);
     tline = fgetl(fid);
     while ischar(tline)
-        tline = fgetl(fid);
+        if length
         stacode = tline(1:4);
         p_eori = tline(5);
         p = tline(6);
@@ -37,6 +37,7 @@ function self=vdap(filename)
         s_datetime = tline(31:35);
         s = tline(37);
         s_qual = tline(39);
+        tline = fgetl(fid);
     end
     fclose(fid);
 

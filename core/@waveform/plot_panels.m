@@ -110,6 +110,7 @@ function plot_panels(w, varargin)
         if exist('detectionobj','var')
             disp('- adding detections to panel plot')
             hold on
+            detectionobj.channelinfo
             thisctag = strrep(string(get(w(wavnum),'ChannelTag')),'-','')
             Index = find(ismember(detectionobj.channelinfo, thisctag))
             for detnum=1:numel(Index)
