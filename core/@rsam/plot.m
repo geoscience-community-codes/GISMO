@@ -1,4 +1,4 @@
-function plot(rsam_vector, varargin)
+function newh=plot(rsam_vector, varargin)
     % RSAM/PLOT plot rsam data
     % handle = plot(rsam_vector, varargin)
     % Properties include:
@@ -20,6 +20,7 @@ function plot(rsam_vector, varargin)
     p.addParameter('addgrid',false);
     p.addParameter('addlegend', true);
     p.addParameter('fillbelow', false);
+    p.addParameter('existence', false);
     p.addParameter('yaxistype','linear'); % or log
     p.addParameter('symbol','-'); % or log
     p.addParameter('h', []);
@@ -28,6 +29,7 @@ function plot(rsam_vector, varargin)
     addlegend = p.Results.addlegend;
     fillbelow = p.Results.fillbelow;
     yaxistype = p.Results.yaxistype;
+    existence = p.Results.existence;
     symbol = p.Results.symbol;
     h = p.Results.h;
     legend_ypos = -0.2;
@@ -40,40 +42,56 @@ function plot(rsam_vector, varargin)
     unique_units = unique(units);
     %previousfignum = get(gcf,'Number');
     previousfignum = get_highest_figure_number();
-
+    floory=1e9; ceily = 0; % default values to be updated in log plots
     % Plot the data graphs
+    if numel(h) == 0
+        figure();
+        newh = [];
+    else
+        newh=h;
+    end
     for c = 1:length(rsam_vector)
-        self = rsam_vector(c);
-%         thisfignum = find(ismember(unique_units, self.units)) + previousfignum;
-%         figure(thisfignum);
-        try
-            figure(previousfignum + c);
-        catch
-            figure;
-        end
-        
-        hold on; 
+        self = rsam_vector(c); 
         t = self.dnum;
         y = self.data;
-        
-
-
+       
         debug.print_debug(10,sprintf('Data length: %d',length(y)));
         
-        if length(y)>0        
+        if length(y)>0  
+            if numel(h) > 0
+                if numel(h)==numel(rsam_vector)
+                    thishandle = h(c);
+                else
+                    thishandle = h(1);
+                end
+            else
+                thishandle = subplot(numel(rsam_vector),1,c);
+                newh = [newh thishandle];
+            end
+        
             %figure
             %if strcmp(rsam_vector(c).units, 'Hz')
-
+            if existence
+                y=cumsum(y>1)/numel(y);
+            end
             if strcmp(yaxistype,'linear')
-
+%                 if c==1 | p.Results.fillbelow
+%                     try
+%                         figure(previousfignum + c);
+%                     catch
+%                         figure;
+%                     end
+%                 else
+%                     hold on
+%                 end
                 % plot on a linear axis, with station name as a y label
                 % datetick too, add measure as title, fiddle with the YTick's and add max(y) in top left corner
                 if ~p.Results.fillbelow
                     %handlePlot = plot(t, y, symbol, 'Color', lineColour{c});
-                    handlePlot = plot(t, y, symbol, 'Color', lineColour{1});
+                    scatter(thishandle,t, y, 5, lineColour{c});
                 else
                     %handlePlot = fill([min(t) t max(t)], [min([y 0]) y min([y 0])], lineColour{c});
-                    handlePlot = fill([min(t) t max(t)], [min([y 0]) y min([y 0])], lineColour{1});
+                    fill(thishandle,[min(t) t max(t)], [min([y 0]) y min([y 0])], lineColour{1});
                 end
 
                 % if c ~= numel(rsam_vector)
@@ -95,20 +113,23 @@ function plot(rsam_vector, varargin)
                 datetick('x')
                 set(gca,'XLim',[a(1) a(2)]);
                 xlabel('Date/Time');
-                if addlegend
-                    legend();
-                end
-
+%                 if addlegend
+%                     legend();
+%                 end
+                legendstr{c} = self.ChannelTag.string();
             else
 
                 % make a logarithmic plot, with a marker size and add the station name below the x-axis like a legend
                 y = log10(y);  % use log plots
-
-                %                 handlePlot = plot(t, y, symbol, 'Color', lineColour{c},...
-                %                    'MarkerSize', 1.0);
-                handlePlot = plot(t, y, symbol, 'Color', lineColour{1},...
-                   'MarkerSize', 1.0);
+                try
+                    figure(previousfignum + 1);
+                catch
+                    figure(gcf);
+                end                
+                hold on;                
                 if strfind(self.measure, 'dr')
+                    
+                    handlePlot = plot(t, y, symbol, 'Color', lineColour{c}, 'MarkerSize', 1.0);
                     %ylabel(sprintf('%s (cm^2)',self(c).measure));
                     %ylabel(sprintf('D_R (cm^2)',self(c).measure));
                     Yticks = [0.01 0.02 0.05 0.1 0.2 0.5 1 2 5 10 20 50 ];
@@ -118,16 +139,40 @@ function plot(rsam_vector, varargin)
                     end
                     set(gca, 'YLim', [min(Ytickmarks) max(Ytickmarks)],...
                        'YTick',Ytickmarks,'YTickLabel',Yticklabels);
+                    grid on;
+                else
+                    %handlePlot = semilogy(t, y, symbol, 'Color', lineColour{1}, 'MarkerSize', 1.0);
+                    %handlePlot = plot(t, y, symbol, 'Color', lineColour{1}, 'MarkerSize', 1.0);
+                    scatter(thishandle, t, y, 1, lineColour{c});
+                    floory = min([floor(nanmin(y)) floory]);
+                    ceily = max([ceil(nanmax(y)) ceily]);
+                    Ytickmarks = floory:ceily;
+                    Yticks = 10.^Ytickmarks;
+                    Ytickmarks = log10(Yticks);
+                    if length(Yticks)==0
+                        continue
+                    end
+                    for count = 1:length(Yticks)
+                        Yticklabels{count}=num2str(Yticks(count),3);
+                    end
+                    set(gca, 'YLim', [min(Ytickmarks) max(Ytickmarks)],...
+                       'YTick',Ytickmarks,'YTickLabel',Yticklabels);
+                    grid on; 
+                    ylabel('RSAM counts');
                 end
-                axis tight
-                a = axis;
-                %datetick('x')
-                %fileexchange.datetickzoom('x')
-                datetick2('x')
-                set(gca,'XLim',[a(1) a(2)]);
+                legendstr{c} = self.ChannelTag.string();
+                legend(legendstr{c}, 'Location', 'best')
+                
+                
+%                  axis tight
+%                  a = axis;
+%                 %datetick('x')
+%                 %fileexchange.datetickzoom('x')
+%                 datetick('x')
+%                 set(gca,'XLim',[a(1) a(2)]);
     %
                 xlabel(sprintf('Date/Time starting at %s',datestr(self.snum)))
-                ylabel(sprintf('log(%s)',self.units))
+%                 ylabel(sprintf('log(%s)',self.units))
 
             end
 
@@ -141,12 +186,20 @@ function plot(rsam_vector, varargin)
             end
 
             datetick('x','keeplimits')
-            if ~strcmp(self.ChannelTag.string(), '...')
-                tstr = sprintf('%s %s\n%s %.0f s',self.ChannelTag.string(), datestr(t(1)), self.measure, round(self.sampling_interval) );
-            else
-                tstr = sprintf('%s\n%s %.0f s',self.files.file, datestr(a(1)), round(self.sampling_interval) );
+%             if ~strcmp(self.ChannelTag.string(), '...')
+%                 tstr = sprintf('%s %s\n%s %.0f s',self.ChannelTag.string(), datestr(t(1)), self.measure, round(self.sampling_interval) );
+%             else
+%                 tstr = sprintf('%s\n%s %.0f s',self.files.file, datestr(a(1)), round(self.sampling_interval) );
+%             end
+%             legend
+%             title(tstr)
+        end
+        if exist('legendstr','var') & numel(newh)==1
+            try
+                legend(legendstr, 'Location','best')%'southwest')
+            catch ME
+                warning(ME.message)
             end
-            title(tstr)
         end
     end
 end

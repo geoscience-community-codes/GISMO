@@ -18,7 +18,7 @@ function write(catalogObject, outformat, outpath, varargin)
         case 'antelope'
             writemode='';
             if nargin==4
-                writemode=varargin{1}; #'overwrite' or 'append';
+                writemode=varargin{1}; %'overwrite' or 'append';
             else
                 writemode='append';
             end
@@ -43,7 +43,7 @@ function write_seisan(catalogObject, seisandbpath)
         origin.magnitude = catalogObject.mag(eventidx);
         % now figure out how to write this origin to Seisan S-file
         sfilepath = fullfile(seisandbpath, datestr(origin.dnum,'%Y'), datestr(origin.dnum,'%m')) 
-        sfilename = sprintf(datestr(origin.dnum, '%d'),'-',datestr(origin.dnum,'%H%M'), '-', datestr(origin.dnum,'%S'), 'S.L', datestr(origin.dnum('%Y%m'))
+        sfilename = sprintf(datestr(origin.dnum, '%d'),'-',datestr(origin.dnum,'%H%M'), '-', datestr(origin.dnum,'%S'), 'S.L', datestr(origin.dnum('%Y%m')))
         if ~exist(sfilepath, 'dir')
             mkdir(sfilepath)
         end
@@ -63,7 +63,7 @@ function write_antelope(catalogObject, dbpath, writemode)
         help(mfilename)
         error('no value given for writemode')
     end
-    dbpath = outpath;
+    %dbpath = outpath;
 
     if ~exist('schema','var')
         schema='css3.0';

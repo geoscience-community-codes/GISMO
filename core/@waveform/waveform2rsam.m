@@ -17,6 +17,7 @@ function s = waveform2rsam(w, measure, samplingIntervalSeconds)
 %           'mean': average value (Default)
 %           'median' : mean value
 %           'rms' : rms value (added 2011/06/01)
+%           'rsem' : square each sample in the interval and sum
 %
 %       samplingIntervalSeconds : the number of seconds between samples (Default:
 %       60s)
@@ -51,16 +52,28 @@ for i = 1:numel(w)
         % either set to whatever samplingIntervalSeconds seconds of data are, or the
         % length of data if less
         crunchfactor = min([round(samplingIntervalSeconds / WsamplingIntervalSeconds) numel(get(w(i),'data'))]);
-        wabs = set(w(i), 'data', abs(get(w(i),'data')) );
-        wresamp = resample(wabs, measure, crunchfactor);
-        s(i) = rsam(get(wresamp,'timevector')', get(wresamp,'data')', ...
-            'ChannelTag', get(wresamp, 'ChannelTag'), ...
-            'measure', measure, ...
-            'units', get(wresamp, 'units'));
+        if strcmp(measure, 'rsem') % RSEM data
+            y2 = power(get(w(i),'data'),2); % square each sample & divide by samples per second
+            % the energy is now the sum in any time interval
+            wenergy = set(w(i), 'data', y2 );
+            wresamp = resample(wenergy, 'mean', crunchfactor); % this takes the average squared-sample level at say 60-second intervals.
+            wresamp = wresamp * samplingIntervalSeconds; % multiplying the average squared-sample by the sampling interval is same as
+            s(i) = rsam(get(wresamp,'timevector')', get(wresamp,'data')', ...
+                'ChannelTag', get(wresamp, 'ChannelTag'), ...
+                'measure', 'rsem', ...
+                'units', get(wresamp, 'units'));
+        else
+            wabs = set(w(i), 'data', abs(get(w(i),'data')) );
+            wresamp = resample(wabs, measure, crunchfactor);
+            s(i) = rsam(get(wresamp,'timevector')', get(wresamp,'data')', ...
+                'ChannelTag', get(wresamp, 'ChannelTag'), ...
+                'measure', measure, ...
+                'units', get(wresamp, 'units'));
+        end
     else
         s(i) = rsam([], [], ...
             'ChannelTag', get(w(i), 'ChannelTag'), ...
             'measure', measure, ...
-            'units', get(w(i), 'units'));        
+            'units', get(w(i), 'units'));
     end
 end

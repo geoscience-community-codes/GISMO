@@ -1,3 +1,4 @@
+function calibObjects = usf_calibrations(ChannelTagList)
 %% Define calibration information
 infraBSU = 46; % microV/Pa for 0.5" infraBSU
 trillium = 750; % V/(m/s) for Trillium = 750 uV/(um/s) = 0.75 uV/(nm/s)
@@ -12,6 +13,7 @@ calibCentaurTrillium = 1/trillium * 1000 * 1/centaurnormal; % 3.33 nm/s/count (1
 calibInfraBSUTrilliumHigh = 1/infraBSU * 1/centaurhighgain; % 0.0014 Pa/count
 calibInfraBSUTrilliumLow = 1/infraBSU * 1/centaurnormal; % 0.0543 Pa/count
 calibL22RT130 = 1/l22 * 1000 * 1/rt130x32; % 0.9659 nm/s/count
+calibObjects = repmat(Calibration(),numel(ChannelTagList), 1);
 
 for count=1:numel(ChannelTagList)
     chan = ChannelTagList(count).channel;
@@ -24,5 +26,7 @@ for count=1:numel(ChannelTagList)
     elseif chan(2)=='D'
             calibObjects(count) = Calibration(ChannelTagList(count), ...
                 calibInfraBSUTrilliumHigh, 'Pa');
+    else
+        warning(sprintf('No calibration information for %s',ChannelTagList(count).string()));
     end
 end

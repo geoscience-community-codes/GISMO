@@ -64,33 +64,43 @@ function plot(obj, varargin)
 
     % plot each etype on a separate figure, each metric as a
     % subplot
-
-    fh = [];
-    for c = 1 : numel(obj)
-        binsize_str = Catalog.binning.binsizelabel(obj(c).binsize);
+    if strcmp(plotmode,'panels')
+        numfigs = numMetrics;
+        numsubplots = numel(obj);
+    else
+        numfigs = numel(obj)
         numsubplots = numMetrics;
+    end     
+    fh = [];
+    fontsize = 13-numsubplots;
+%     switch numsubplots
+%         case 1, fontsize = 12-num;
+%         case 2, fontsize = 10;
+%         otherwise, fontsize = 8;
+%     end
+    set(0, 'defaultTextFontSize',fontsize);
+    for fignum = 1 : numfigs
+        
+        fh(fignum) = figure;
 
-        switch numsubplots
-            case 1, fontsize = 12;
-            case 2, fontsize = 8;
-            otherwise, fontsize = 6;
-        end
-        set(0, 'defaultTextFontSize',fontsize);
-
-        fh(c) = figure;
-        unique_subclasses = unique(char([obj(c).etype{:}])');
-        if length(unique_subclasses)==1
-            longname = Catalog.subclass2longname(unique_subclasses);
-        else
-            longname = Catalog.subclass2longname('*');
-        end
-        size(fh)
-        c
-        size(obj)
-        size(obj(c).time)
-        set(fh(c),'Color', [1 1 1], 'Name', sprintf('%s activity beginning %s',longname, datestr(obj(c).time(1),29) ) );
-        for cc = 1: numsubplots % number of metrics to plot
-            data = obj(c).(metric{cc});
+        for subplotnum = 1: numsubplots % number of metrics to plot
+            if strcmp(plotmode,'panels')
+                metricNum = fignum;
+                objectnum = subplotnum;
+            else
+                metricNum = subplotnum;
+                objectnum = fignum;
+            end
+            data = obj(objectnum).(metric{metricNum});
+            unique_subclasses = unique(char([obj(objectnum).etype{:}])');
+            if length(unique_subclasses)==1
+                longname = Catalog.subclass2longname(unique_subclasses);
+            else
+                longname = Catalog.subclass2longname('*');
+            end
+            if ~strcmp(plotmode,'panels')
+                set(fh(fignum),'Color', [1 1 1], 'Name', sprintf('%s activity beginning %s',longname, datestr(obj(objectnum).time(1),29) ) );
+            end
             if numel(data)>0 & ~all(isinf(data)) & ~all(isnan(data))
                 % replace -Inf values as they mess up plots
                 y = data; % ydata is the data we will plot, but we keep data for cumulative energy etc.
@@ -98,21 +108,21 @@ function plot(obj, varargin)
                     y = smooth(y, smoothbins);
                 end
                 y(isinf(y))=NaN;
-                mindata = nanmin(y); 
+                mindata = nanmin(y);
                 y(isnan(y))=mindata; % we replace NaNs and Infs in data with nanmin(data) in ydata
                 
-                labels = metric2label(metric{cc}, obj(c).binsize);
-                t = [ obj(c).time - obj(c).binsize/2 ]; t = [t t(end)+obj(c).binsize];
+                labels = metric2label(metric{metricNum}, obj(objectnum).binsize);
+                t = [ obj(objectnum).time - obj(objectnum).binsize/2 ]; t = [t t(end)+obj(objectnum).binsize];
                 y = [y y(end)];
                 clear ax h1 h2               
 
                 % We will only use plotyy to plot 2 axis when we have a metric that can be cumulated
                 % So the metric must be counts, energy or cumulative magnitude
                 % and the bins must be non-overlapping      
-                if (obj(c).binsize == obj(c).stepsize) & ( strcmp(metric{cc}, 'counts') | strcmp(metric{cc}, 'energy') | strcmp(metric{cc}, 'cum_mag') )
+                if (obj(objectnum).binsize == obj(objectnum).stepsize) & ( strcmp(metric{metricNum}, 'counts') | strcmp(metric{metricNum}, 'energy') | strcmp(metric{metricNum}, 'cum_mag') )
 
                     cumy = cumsum(data); cumy = [cumy cumy(end)];
-                    subplot(numsubplots,1,cc), [ax, h1, h2] = plotyy(t, y, t, cumy, @stairs, @stairs );
+                    subplot(numsubplots,1,subplotnum), [ax, h1, h2] = plotyy(t, y, t, cumy, @stairs, @stairs );
 
                     % with plotyy the right hand label
                     % was off the page, so fix this
@@ -144,8 +154,9 @@ function plot(obj, varargin)
                     set(ax(2), 'XTickLabel', xticklabels, 'FontSize', fontsize); 
                     yticklabels = get(ax(2), 'YTickLabel');
                     set(ax(2), 'YTickLabel', yticklabels, 'FontSize', fontsize); 
-
-                    linkaxes(ax, 'x');
+                    % do not link axes, it will screw up and isn't needed
+                    % anyway
+                    text(0.02, 0.95, obj(objectnum).etype{1}, 'units','normalized');
 
                 else
                     
@@ -155,12 +166,12 @@ function plot(obj, varargin)
 
 
                     %% graph 1 (there is only 1 in this case)
-                    if strfind(metric{cc}, 'mag')           
+                    if strfind(metric{metricNum}, 'mag')           
                         %subplot(numsubplots,1,cc), stairs(obj(c).time, data, 'Color', colors{1});
-                        subplot(numsubplots,1,cc), ax(1)=stairs(t, y, 'Color', colors{1});
+                        subplot(numsubplots,1,metricNum), ax(1)=stairs(t, y, 'Color', colors{1});
                     else
                         %subplot(numsubplots,1,cc), bar(obj(c).time, data, 1, 'FaceColor', colors{1}, 'EdgeColor', colors{1}, 'BarWidth', 1, 'LineWidth', 0.1);
-                        subplot(numsubplots,1,cc), ax(1)=bar(t, y, 1, 'FaceColor', colors{1}, 'EdgeColor', colors{1}, 'BarWidth', 1, 'LineWidth', 0.1);
+                        subplot(numsubplots,1,metricNum), ax(1)=bar(t, y, 1, 'FaceColor', colors{1}, 'EdgeColor', colors{1}, 'BarWidth', 1, 'LineWidth', 0.1);
                         %subplot(numsubplots,1,cc), stairs(obj(c).time, ydata, 'Color', colors{1});
                     end
 

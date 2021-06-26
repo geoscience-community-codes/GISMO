@@ -28,14 +28,16 @@ function disp(obj, showall)
             end
             if numel(obj) == 1
                 disp_title(obj);
+                N = obj(c).numberOfEvents;
                 %if obj(c).numberOfEvents <= 50 || showall
-                    rows_to_show = obj(c).numberOfEvents;
+                    rows_to_show = unique([1:5 N-4:N]);
+                    rows_to_show = rows_to_show(rows_to_show > 0 & rows_to_show < N);
                 %else
                 %    rows_to_show = 50;
                 %    disp('* Only showing first 50 rows/events - to see all rows/events use:')
                 %    disp('*      catalogObject.disp(true)')
                 %end
-                for eventnum=1:rows_to_show
+                for eventnum=rows_to_show
                     disp_event(obj(c), eventnum);
                 end
 

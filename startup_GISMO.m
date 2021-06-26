@@ -55,14 +55,21 @@ if numel(d) == 1
         disp(['Failed to add path: ', f]);
     end
 end
-f = fullfile(gismopath,'core','swarm.jar');
+f = fullfile(gismopath,'contributed','USGS','swarm.jar');
 try 
     javaaddpath(f);
     disp(['Adding path: ', f]);
 catch
     disp(['Failed to add path: ', f]);
 end
-f = fullfile(gismopath,'core','wwsclient-1.3.1.jar');
+f = fullfile(gismopath,'contributed', 'USGS','wwsclient-1.3.1.jar');
+try 
+    javaaddpath(f);
+    disp(['Adding path: ', f]);
+catch
+    disp(['Failed to add path: ', f]);
+end
+f = fullfile(gismopath,'contributed', 'USGS','pensive-1.6.0.jar');
 try 
     javaaddpath(f);
     disp(['Adding path: ', f]);

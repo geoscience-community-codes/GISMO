@@ -53,7 +53,7 @@ function erobj=eventrate(catalogObject, varargin)
             end 
 
             % Find out how many event types we have
-            etypes = unique(catalogObject(i).etype);      
+            etypes = unique(catalogObject(i).etype); 
 
             % bin the data 
             % SCAFFOLD - THIS NO LONGER SEEMS TO BE BINNING DATA

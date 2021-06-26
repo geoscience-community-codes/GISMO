@@ -26,34 +26,44 @@ classdef Detection
                 return
             end
             
-            % Parse required, optional and param-value pair arguments,
-            % set default values, and add validation conditions          
-            p = inputParser;
-            p.addRequired('sta', @iscell);
-            p.addRequired('chan', @iscell);
-            %p.addRequired('time', @(t) t>0 & t<now+1);
-            p.addRequired('time', @isnumeric);
-            p.addOptional('state', {}, @iscell);
-            p.addOptional('filterString', {}, @iscell);
-            p.addOptional('signal2noise', [], @isnumeric);
-            
-            % Missed several properties out here just because of laziness.
-            % Add them as needed.
-            p.parse(sta, chan, time, state, filterString, signal2noise);
-            if numel(split(sta,'.'))>1
-                p.Results.sta
-                ctag = ChannelTag.array(p.Results.sta);
+            if strcmp(class(sta),'ChannelTag')
+                % Parse required, optional and param-value pair arguments,
+                % set default values, and add validation conditions          
+                p = inputParser;
+                ctag = sta;
+                %p.addRequired('time', @(t) t>0 & t<now+1);
+                p.addRequired('time', @isnumeric);
+                p.addOptional('state', {}, @iscell);
+                p.addOptional('filterString', {}, @iscell);
+                p.addOptional('signal2noise', [], @isnumeric);   
+                % Missed several properties out here just because of laziness.
+                % Add them as needed.
+                p.parse(time, state, filterString, signal2noise);                
             else
-                
-                ctag = ChannelTag.array('',p.Results.sta,'',p.Results.chan)'; 
+                % Parse required, optional and param-value pair arguments,
+                % set default values, and add validation conditions          
+                p = inputParser;
+                p.addRequired('sta', @iscell);
+                p.addRequired('chan', @iscell);
+                %p.addRequired('time', @(t) t>0 & t<now+1);
+                p.addRequired('time', @isnumeric);
+                p.addOptional('state', {}, @iscell);
+                p.addOptional('filterString', {}, @iscell);
+                p.addOptional('signal2noise', [], @isnumeric);
+
+                % Missed several properties out here just because of laziness.
+                % Add them as needed.
+                p.parse(sta, chan, time, state, filterString, signal2noise);
+                ctag = ChannelTag.array('',p.Results.sta,'',p.Results.chan)';     
             end
             obj.channelinfo = ctag.string();
+            obj.channelinfo;
             obj.time = p.Results.time;
             obj.state = p.Results.state;  
             obj.filterString = p.Results.filterString; 
             obj.signal2noise = p.Results.signal2noise; 
             N = numel(obj.time);
-            fprintf('\nGot %d detections\n',N);
+            %fprintf('\nGot %d detections\n',N);
             if numel(obj.state) == 0
                 obj.state = repmat({''},1,N);
             end
@@ -114,7 +124,7 @@ classdef Detection
                hold on
                t = obj.time(indexes);
                y = cumsum(ones(size(t)));
-plot(t,y,'LineWidth',5);
+               plot(t,y,'LineWidth',5);
                %ylabel(ctaguniq{c});
                ylabel(sprintf('Cumulative #\nDetections'))
                xlabel('Date/Time')
@@ -221,8 +231,8 @@ plot(x,100-cumsum(n)/sum(n)*100,'LineWidth',5);
         function self = append(self1, self2)
             disp('Appending...')
             [newtime, indices] = sort([self1.time self2.time]);
-            size(cellstr(self1.channelinfo))
-            size(cellstr(self2.channelinfo))
+            %size(cellstr(self1.channelinfo))
+            %size(cellstr(self2.channelinfo))
             newchannelinfo = [cellstr(self1.channelinfo); cellstr(self2.channelinfo)];
             newchannelinfo = newchannelinfo(indices);
             newstate = [cellstr(self1.state); cellstr(self2.state)];
@@ -239,12 +249,13 @@ plot(x,100-cumsum(n)/sum(n)*100,'LineWidth',5);
 %                 newstate, ...
 %                 [newfs], ...
 %                 newsnr)
-            self = Detection(newchannelinfo, ...
+            self = Detection(ctags, ...
                 [get(ctags,'channel')], ...
                 newtime, ...
                 newstate, ...
                 [newfs], ...
                 newsnr)
+        %end            
         end
         
         function self = addnetwork(self,networkcode)

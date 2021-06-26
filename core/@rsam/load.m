@@ -27,7 +27,7 @@ function self = load(self, f)
          elseif (ddir.bytes/367) == round(ddir.bytes/367)
              day_recs = 367;
          else
-             error('cannot work out how many day records in RSAM file'); % no idea what this file is
+             day_recs = round(ddir.bytes/1440)/4;             
          end
     else
         day_recs = NaN;
@@ -39,7 +39,10 @@ function self = load(self, f)
         % no header day rec
         header_rec = true;
     else
-        error('cannot work out if there is a header in RSAM file');
+        disp(f.file)
+        fprintf('days=%f, day_recs=%f\n',days,day_recs)
+        warning('cannot work out if there is a header in RSAM file');
+        return %self
     end
         
     % How many samples per day?

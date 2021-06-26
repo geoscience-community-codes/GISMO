@@ -26,8 +26,8 @@ function self = reduce(self, waveType, sourcelat, sourcelon, stationlat, station
 %   UNITS:  the units of the data, e.g. nm / sec.
 %   USE: use this rsam object in plots?   
     p = inputParser;
-    p.addParameter('waveSpeed', 2000);
-    p.addParamter('f', 2.0);
+    p.addParameter('waveSpeed', 2000); % m/s
+    p.addParamter('f', 2.0); % Hz
     p.parse(varargin{:});
 
     self.reduced.waveSpeed = p.Results.waveSpeed;

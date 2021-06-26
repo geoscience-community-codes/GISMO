@@ -35,12 +35,12 @@ classdef rsam
 %
 % Example 2:
 %     dp = 'INETER_DATA/RSAM/MOMN2015.DAT';
-%     s = rsam.read_bob_file('file', dp, 'snum', datenum(2015,1,1), ...
+%     s = rsam.read_bob_file(dp, 'snum', datenum(2015,1,1), ...
 %           'enum', datenum(2015,2,1), 'sta', 'MOMN', 'units', 'Counts')
 %
 % Example 3:
 %     dp = 'INETER_DATA/RSAM/SSSSYYYY.DAT';
-%     s = rsam.read_bob_file('file', dp, 'snum', datenum(2015,1,1), ...
+%     s = rsam.read_bob_file(dp, 'snum', datenum(2015,1,1), ...
 %           'enum', datenum(2015,2,1), 'sta', 'MOMN', 'units', 'Counts')
 %
 
@@ -167,6 +167,7 @@ classdef rsam
         s=extract(self, snum, enum)
         self = medfilt1(self, nsamples_to_average_over)
         handlePlot = plot(rsam_vector, varargin)
+        handlePlot = plot_existence(rsam_vector, varargin)
         plot_panels(self);
         w = rsam2waveform(self);
         save_to_bob_file(self, filepattern)

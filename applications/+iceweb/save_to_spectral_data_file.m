@@ -37,7 +37,7 @@ function save_to_spectral_data_file(filepattern, dnum, F, spdata, samplingInterv
         if ~exist(this.file,'file')
                 debug.print_debug(2, ['Creating ',this.file]);
                 days = this.enum - this.snum;
-                iceweb.make_spectral_data_file(this.file, days, MINUTES_PER_DAY, F, HEADER_BYTES)
+                iceweb.make_spectral_data_file(this.file, days, MINUTES_PER_DAY, F, HEADER_BYTES);
         end            
 
         % subset for current file
@@ -49,6 +49,15 @@ function save_to_spectral_data_file(filepattern, dnum, F, spdata, samplingInterv
         i = find(diff > 1.5/MINUTES_PER_DAY | diff < 0.5/MINUTES_PER_DAY);        
 
         debug.print_debug(1,sprintf('Saving to %s',this.file));
+        % how many days in this year?
+        daysperyear = 365;
+        dv=datevec(this.snum);
+        yyyy=dv(1);
+        if (mod(yyyy,4)==0)
+                daysperyear = 366;
+        end        
+        
+        %save savetospectraldatafile.mat
 
         if length(i)>0
             % slow mode

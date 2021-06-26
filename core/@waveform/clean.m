@@ -28,6 +28,9 @@ function w = clean(w, f)
             % highpass data at 20s - to remove non-linear trends
             fobj = filterobject('h',f,2);
             w(c) = filtfilt(fobj,w(c));
+            
+            % detrend again
+            w(c) = detrend(w(c));
         
         end
     end

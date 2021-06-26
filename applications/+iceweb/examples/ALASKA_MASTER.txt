@@ -1,0 +1,95 @@
+###############################################################
+############# LIST OF SUBNETS TO USE ##################
+###############################################################
+subnets &Tbl{
+#subnet_label	lat	lon		radius	alive?		
+#					(km)	(1=yes)	
+#
+# AVO volcano subnetworks here
+Wrangell	62.0057	-144.0194	30	0
+Spurr		61.2989	-152.2539	30	1
+Redoubt		60.4852	-152.7438	30	1
+Iliamna		60.0319	-153.0918	30	1
+Augustine	59.3626	-153.4350	30	1
+Fourpeaked	58.7703	-153.6738	30	1
+# Deselected Snowy, Katmai and Martin in favour of new KatmaiRegion subnet label
+KatmaiRegion	58.2790	-154.9533	100	1
+Snowy		58.3336	-154.6859	30	0
+Katmai		58.2790	-154.9533	30	0
+Martin		58.1692	-155.3566	30	0
+# Peulik dead
+Peulik		57.7510	-156.3680	30	1
+Aniakchak	56.8815	-158.1546	30	1
+Veniaminof	56.1979	-159.3931	30	1
+Pavlof		55.4173	-161.8937	30	1
+Dutton		55.1867	-162.2744	30	1
+Shishaldin	54.7554	-163.9711	30	1
+Westdahl	54.5171	-164.6476	30	1
+Akutan		54.1331	-165.9856	30	1
+Makushin	53.8899	-166.9250	30	1
+Okmok		53.3970	-168.1660	30	1
+Korovin		52.3817	-174.1653	30	1
+GreatSitkin	52.0765	-176.1109	30	1
+Kanaga		51.9242	-177.1623	30	1
+Tanaga		51.8840	-178.1430	30	1
+Gareloi		51.7892	-178.7960	30	1
+Semisopochnoi	51.9288	179.5977	30	1	
+LittleSitkin	51.9531	178.5356	30	1
+#
+# AEIC regional subnetworks here
+Kantishna	63.4000	-151.2000	160	1
+Susitna		62.8295	-148.5509	160	1
+PrinceWmSnd	61.0400	-147.7300	160	1
+IcyBay		60.0463	-141.3353	160	1
+}
+
+# Maximum number of scnls to display in a spectrogram
+max_number_scnls	8
+
+# Select channels for each subnet matching this mask
+# (Use this to select on broadbands, or only verticals etc).
+channel_mask	[BES]HZ
+
+##############################################################
+########### WHERE TO GET WAVEFORM DATA #######################
+##############################################################
+datasources &Tbl{
+# type...path...port
+#antelope /avort/oprun/db/archive 0
+antelope db/archive 0
+winston	churchill.giseis.alaska.edu 16022
+}
+archive_datasources &Tbl{
+# type...path...port
+antelope /aerun/op/db/archive/archive_YYYY/archive_YYYY_MM_DD 0
+}
+# use archive_datasources after this number of days, rather than datasources
+switch_to_archive_after_days	7
+
+###############################################################
+############# FILTER TO APPLY TO WAVEFORM DATA ##################
+###############################################################
+lowcut	0.5	
+highcut	15.0
+npoles	2
+
+###############################################################
+############# SPECTROGRAMS                   ##################
+###############################################################
+nfft		1024	# must be a power of 2, number of samples to use for fft in spectrogram calculation
+overlap		924 # number of samples to overlap the sliding window for spectrogram calculation
+blue		40 # decibels for bottom end of colorbar(blue) (Note: colorbar bottoms out with white, but ignore this)
+red         120 # decibels for top end of colorbar (red) (Note: colorbar now tops out with pink)
+max_freq	10.0 # highest frequency to display in spectrogram images
+
+###############################################################
+############# DERIVED DATA MEASUREMENTS      ##################
+###############################################################
+surfaceWaveSpeed	2000
+df                  0.09765625
+
+###############################################################
+############# ALARM SYSTEM                   ##################
+###############################################################
+triggersForAlarmFraction	0.5       
+
