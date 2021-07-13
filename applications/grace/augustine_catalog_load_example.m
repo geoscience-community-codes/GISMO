@@ -1,5 +1,6 @@
 clear all, clc, close all
-dbpath='gdrive/data/AUGUSTINE_2005/db';
+%dbpath='gdrive/data/AUGUSTINE_2005/db';
+dbpath='/media/data/antelope/Alaska/AUGUSTINE_2005/AUGUSTINE_2005_AVO';
 augcatobj = Catalog.retrieve('antelope', 'dbpath', dbpath,'startTime',datenum(2005,1,1),'endTime',datenum(2007,1,1));
 augerobj = augcatobj.eventrate()
 augerobj.plot('metric', {'counts';'energy'})
