@@ -33,7 +33,7 @@ if filename(end-3:end)=='.PHA'
     fid = fopen(filename);
     tline = fgetl(fid);
     while ischar(tline)
-        tline = fgetl(fid);
+        if length
         stacode = tline(1:4);
         p_eori = tline(5);
         p = tline(6);
@@ -43,6 +43,7 @@ if filename(end-3:end)=='.PHA'
         s_datetime = tline(31:35);
         s = tline(37);
         s_qual = tline(39);
+        tline = fgetl(fid);
     end
     fclose(fid);
 else
