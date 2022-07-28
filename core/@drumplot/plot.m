@@ -97,10 +97,8 @@ drawnow
         end
         w = [temp_cobj.waveforms{1,:}];
     end
-w(1)
-w(2)
      
-     if ~isempty(w)
+    if ~isempty(w)
         % go through w and check the channeltag is same as drumplotobj.wave
         mainctag = get(drumplotobj.wave,'ChannelTag');
         w2=[];
