@@ -11,34 +11,42 @@ function erobj=eventrate(catalogObject, varargin)
     %   erobj = catalogObject.eventrate(..., 'stepsize',1/24) 
 
     p = inputParser;
+    Mc_default = -1.0;
     p.addParamValue('binsize', 0, @isnumeric);
     p.addParamValue('stepsize', 0, @isnumeric);
     p.addParamValue('snum', 0, @isnumeric);
     p.addParamValue('enum', 0, @isnumeric);
+    p.addParameter('Mc', Mc_default, @isnumeric);
     p.parse(varargin{:});
     binsize = p.Results.binsize;
     stepsize = p.Results.stepsize;
     snum = p.Results.snum;
     enum = p.Results.enum;
-    if snum>0 && enum>0 % subsetting the catalog object for date range?
+    Mc = p.Results.Mc;
+    if Mc>Mc_default
+        for c=1:numel(catalogObject)
+            indices = find(catalogObject(c).mag >= Mc);
+            catalogObject(c) = catalogObject(c).subset('indices', indices);
+        end        
+    end
+    if snum>0 & enum>0
         for c=1:numel(catalogObject)
             indices = find(catalogObject(c).otime >= snum & catalogObject(c).otime <= enum);
-            catalogObject(c) = catalogObject(c).subset(indices);
+            catalogObject(c) = catalogObject(c).subset('indices', indices);
         end
     end
     
-        
-
     for i=1:numel(catalogObject)
         if catalogObject(i).numberOfEvents > 0
-
-            try
-                snum = catalogObject(i).request.startTime;
-                enum = catalogObject(i).request.endTime;
-            catch
-               timerange = catalogObject(i).gettimerange();
-               snum=timerange(1);
-               enum=timerange(2);                
+            if snum==0 & enum==0
+                try
+                    snum = catalogObject(i).request.startTime;
+                    enum = catalogObject(i).request.endTime;
+                catch
+                   timerange = catalogObject(i).gettimerange();
+                   snum=timerange(1);
+                   enum=timerange(2);                
+                end
             end
            
             if ~(binsize>0)

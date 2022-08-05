@@ -56,7 +56,16 @@ tohoku_events.summary()
 % Save this dataset so you can use it again later:
 save('tohoku_events.mat', 'tohoku_events')
 
-%% Readings events from an Antelope database
+%% Download test data
+TESTDATA = './gismotestdata';
+if ~exist(TESTDATA)
+    mkdir(TESTDATA)
+    chdir(TESTDATA)
+    unzip('http://geoscience-community-codes.github.io/GISMO/testdata/testdata.zip')
+    chdir('..')
+end
+
+%% Reading events from an Antelope database
 % To load event data from an Antelope/Datascope CSS3.0 database you will 
 % need to have Antelope (<http://www.brtt.com/software.html>) installed, 
 % including the Antelope toolbox for MATLAB  (ATM). To see if ATM is
@@ -89,32 +98,35 @@ end
 %%
 % Both catalog segments are included in the "demo" directory. 
 % We will now load the official AVO catalog into an Events object:
-dbpath = fullfile(TESTDATA, 'css3.0', 'avodb200903')
-avocatalog = Catalog.retrieve('antelope', 'dbpath', dbpath);
+if admin.antelope_exists()
+    dbpath = fullfile(TESTDATA, 'css3.0', 'avodb200903')
+    avocatalog = Catalog.retrieve('antelope', 'dbpath', dbpath);
+end
 
 %%
 % This should load 1441 events. What if we only want events within 20km of 
 % Redoubt volcano? There are two ways to do this. The first is the use the
 % radialcoordinates parameter:
-redoubtLon = -152.7431; 
-redoubtLat = 60.4853;
-maxR = km2deg(20.0);
-redoubt_events = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
-    'radialcoordinates', [redoubtLat redoubtLon maxR])
+if admin.antelope_exists()
+    redoubtLon = -152.7431; 
+    redoubtLat = 60.4853;
+    maxR = km2deg(20.0);
+    redoubt_events = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
+        'radialcoordinates', [redoubtLat redoubtLon maxR])
 
 %%
 % Anyone familiar with Antelope will know that it subsets databases by
 % using a dbeval subset expression, and the command above does this
 % internally. You can also specify a subset expression directly. The
 % following example is completely equivalent to that above:
-expr = sprintf('distance(lat, lon, %f, %f) < %f',redoubtLat, redoubtLon,maxR)
-redoubt_events = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
-    'subset_expression', expr)
+    expr = sprintf('distance(lat, lon, %f, %f) < %f',redoubtLat, redoubtLon,maxR)
+    redoubt_events = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
+        'subset_expression', expr)
 
 %%
-% Save this dataset so you can use it again later:
-save('redoubt_events.mat', 'redoubt_events')
-
+    % Save this dataset so you can use it again later:
+    save('redoubt_events.mat', 'redoubt_events')
+end
 
 %% Reading events from a Seisan database
 % Here we load events from a Seisan catalog. A Seisan "Sfile" contains all
@@ -294,12 +306,13 @@ greatquakes.write('antelope', 'greatquakes_db', 'css3.0')
 
 %% 
 % This database can be reloaded with:
-greatquakes2 = Catalog.retrieve('antelope', 'dbpath', 'greatquakes_db')
+if admin.antelope_exists()
+    greatquakes2 = Catalog.retrieve('antelope', 'dbpath', 'greatquakes_db')
 
 %%
-% Compare:
-greatquakes
-
+    % Compare:
+    greatquakes
+end
 %%
 % This concludes the Catalog cookbook/tutorial.
 

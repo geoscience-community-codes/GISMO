@@ -5,6 +5,7 @@ function arrivalObj = antelope(dbname, subset_expr)
 ARRIVAL_TABLE_PRESENT = antelope.dbtable_present(dbname, 'arrival');
 ASSOC_TABLE_PRESENT = antelope.dbtable_present(dbname, 'assoc'); 
 ORIGIN_TABLE_PRESENT = antelope.dbtable_present(dbname, 'origin'); 
+EVENT_TABLE_PRESENT = antelope.dbtable_present(dbname, 'event'); 
     if ~ARRIVAL_TABLE_PRESENT
         fprintf('No arrival table belonging to %s\n',dbname);
         return
@@ -49,7 +50,13 @@ ORIGIN_TABLE_PRESENT = antelope.dbtable_present(dbname, 'origin');
             if ORIGIN_TABLE_PRESENT
                 db3 = dblookup_table( db , 'origin');
                 db = dbjoin(db, db3);
-                [evid,otime,depth] = dbgetv(db,'evid','time','depth');
+                if EVENT_TABLE_PRESENT
+                    db4 = dblookup_table( db , 'event');
+                    db = dbjoin(db, db4)
+                    % force subset on prefor
+                    db = dbsubset(db,'origin.orid==event.prefor');
+                end
+                [evid,otime,depth] = dbgetv(db,'evid','origin.time','depth');
             end
         end
         

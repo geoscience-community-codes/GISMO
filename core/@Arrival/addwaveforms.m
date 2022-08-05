@@ -26,17 +26,35 @@ function arrivalobj = addwaveforms(arrivalobj, datasourceobj, pretrigsecs, postt
         ctag = ChannelTag(arrivalobj.channelinfo(c));
         snum = arrivalobj.time(c) - pretrigsecs/86400;
         enum = arrivalobj.time(c) + posttrigsecs/86400;
+        fprintf('Loading data for %s from %s to %s', ctag.string(), datestr(snum), datestr(enum))
+
         if strcmp(class(datasourceobj),'waveform')
             index = match_channel(ctag, get(datasourceobj,'channelinfo') );
-            neww = extract(datasourceobj(index),'time',snum,enum);
+            try
+                neww = extract(datasourceobj(index),'time',snum,enum);
+                fprintf(' - succeeded\n');
+            catch
+                fprintf(' - failed\n');
+            end
+            
         else
-%         try
-            neww = waveform(datasourceobj, ctag, snum, enum);
+            try
+                %datasourceobj
+                %ctag
+                %datestr(snum)
+                %datestr(enum)
+                neww = waveform(datasourceobj, ctag, snum, enum);
+                fprintf(' - succeeded\n');
+            catch
+                fprintf(' - failed\n')
+            end
+                
         end
         
         if isempty(neww)
             error('Blank waveform')
         end
+        
         w = [w neww];
         fprintf('.');
         numsuccess = numsuccess + 1;

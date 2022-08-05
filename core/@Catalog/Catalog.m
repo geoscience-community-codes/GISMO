@@ -45,7 +45,6 @@ classdef Catalog
 
     methods
 
-        %function obj = 
         function obj = Catalog(varargin)
             %Catalog.Catalog constructor for Catalog object
             % catalogObject = Catalog(otime, lon, lat, depth, mag, magtype, etype, varargin)
@@ -274,9 +273,9 @@ classdef Catalog
         erobj = eventrate(catalogObject, varargin)
         hist(catalogObject)
         list_waveform_metrics(catalogObject);
-        plot(catalogObject, varargin)
+        [axs latlims lonlims]=plot(catalogObject, varargin)
         plot3(catalogObject, varargin)
-        plot_time(catalogObject)
+        plot_time(catalogObject, varargin)
         plot_waveform_metrics(catalogObject);
         plotprmm(catalogObject)
         summary(catalogObject)
@@ -286,6 +285,7 @@ classdef Catalog
         bool = isempty(catalogObject);
         n=numel(catalogObject);
         %t=table(catalogObject)
+        
     end
 %% ---------------------------------------------------
     methods (Access=public, Hidden=true) % changed access from protected for plot_asn_hypocenter_data.m
@@ -295,5 +295,6 @@ classdef Catalog
 
     methods(Static)
         self = retrieve(dataformat, varargin)
+        cookbook()
     end
 end

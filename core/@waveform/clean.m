@@ -17,7 +17,7 @@ function w = clean(w, f)
         if ~isempty(w(c))
             
             % remove spikes of length 1
-            w(c) = medfilt1(w(c), 3); 
+            %w(c) = medfilt1(w(c), 3); 
 
             % smart detrend
             w(c) = detrend(w(c));
