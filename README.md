@@ -12,8 +12,8 @@ Steps:
 <li><a href="http://github.com/geoscience-community-codes/GISMO/wiki/Tutorials">... especially the tutorials</a></li>
 <li><a href="http://geoscience-community-codes.github.io/GISMO/">Visit the GISMO website</a></li>
 <li><a href="https://github.com/geoscience-community-codes/GISMO/wiki/Reporting-errors%2C-bugs%2C-issues">Get help with GISMO</a></li>
-<li><a href="https://github.com/geoscience-community-codes/GISMO/wiki/help-us---SUGGESTED-CITATION">and please cite GISMO in your work</a></li>  
+<li><a href="https://github.com/geoscience-community-codes/GISMO/wiki/SUGGESTED-CITATION">and please cite GISMO in your work</a></li>  
 </ol>
 
 **
-Last updated: Glenn Thompson 2019/04/27
+Last updated: Glenn Thompson 2023/04/13
