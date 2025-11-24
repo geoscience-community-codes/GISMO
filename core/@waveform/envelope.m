@@ -1,15 +1,26 @@
+<<<<<<< Updated upstream
 function [wupper, wlower] = envelope(w,smoothingseconds)
 % ENVELOPE Create envelopes of waveform objects.
 %   [wupper, wlower] = envelope(w, smoothingseconds) Runs the built-in MATLAB 
 %      envelope function on a waveform object. The default smoothing
 %      interval is 1-second. The upper and lower bounds of the waveform 
+=======
+function [wupper, wlower] = envelope(w,varargin)
+% ENVELOPE Create envelopes of waveform objects.
+%   [wupper, wlower] = envelope(w, varargin) Runs the built-in MATLAB 
+%      envelope function on a waveform object. For other arguments, please 
+%      type 'help envelope'. The upper and lower bounds of the waveform 
+>>>>>>> Stashed changes
 %      object are returned as the waveform objects 'wupper' and 'wlower'. 
 %
 %   If input w is a vector/array of waveform objects, then the wupper and
 %   wlower returned will be of the same dimension.
 
 % Glenn Thompson 2018/05/11
+<<<<<<< Updated upstream
 % Modified 2020/06/24 to use number of seconds (no more varargin)
+=======
+>>>>>>> Stashed changes
 
     if strcmp(class(w),'waveform')
         s = size(w);
@@ -17,6 +28,7 @@ function [wupper, wlower] = envelope(w,smoothingseconds)
         wupper = repmat(waveform(), s(1), s(2));
         wlower = repmat(waveform(), s(1), s(2));
         for c=1:n
+<<<<<<< Updated upstream
             if exist('smoothingseconds','var')
                 smoothingsamples = get(w(c),'freq') * smoothingseconds;
             else
@@ -24,6 +36,9 @@ function [wupper, wlower] = envelope(w,smoothingseconds)
             end
             %[yupper, ylower] = envelope(get(w(c),'data'),varargin{:});
             [yupper, ylower] = envelope(get(w(c),'data'),smoothingsamples,'rms');
+=======
+            [yupper, ylower] = envelope(get(w(c),'data'),varargin{:});
+>>>>>>> Stashed changes
             wupper(c) = set(w(c),'data',yupper);
             wlower(c) = set(w(c),'data',ylower);
         end
