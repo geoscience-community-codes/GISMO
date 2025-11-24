@@ -1,40 +1,84 @@
-% irisfetch_test
-% Just a script to test if GISMO/waveform can retrieve data from IRIS DMC
-% webservices. This wraps iris_fetch.m. If GISMO fails to retrieve data,
-% iris_fetch is tested directly to see if the problem is with waveform or
-% with iris_fetch. 
-% Glenn Thompson 2019/12/14
-close all, clc, clear all
+function irisfetch_test()
+% IRISFETCH_TEST
+% Tests whether GISMO's waveform() and irisFetch.Traces() can
+% retrieve data from IRIS DMC webservices.
+%
+% This version:
+%   • avoids stray continuation markers
+#   • handles network failures cleanly
+%   • provides structured test results
+%   • plots only when successful
+%
+% Glenn Thompson + ChatGPT, 2025
 
-%% input parameters
-net = 'AV';
-sta = 'REF';
-loc = '*';
-chan = 'EHZ';
-startTime = '2009-03-22 06:30:00';
-endTime = '2009-03-22 10:30:00';
+clc; close all;
 
-%% GISMO waveform
-ds = datasource('irisdmcws');
-chantags = ChannelTag(net, sta, loc, chan);
+%% -----------------------------
+%  1. Test parameters
+% ------------------------------
+params.net  = 'AV';
+params.sta  = 'REF';
+params.loc  = '*';
+params.chan = 'EHZ';
+params.t1   = '2009-03-22 06:30:00';
+params.t2   = '2009-03-22 10:30:00';
+
+fprintf('\nRunning irisfetch_test.m …\n');
+
+results = struct();
+results.gismo_success = false;
+results.iris_success  = false;
+results.error_gismo   = '';
+results.error_iris    = '';
+
+%% -----------------------------
+%  2. Test GISMO waveform()
+% ------------------------------
 try
-    w = waveform(ds, chantags, startTime, endTime);
-    w = w * get(w,'calib');
-    figure
-    plot(w)
-    disp('GISMO/waveform can get data from IRIS DMC web services')
-catch
-    disp('no waveform data from IRIS DMC web services')
-    disp('will now check if iris_fetch works')
-    %% iris_fetch
-    try
-        traces = irisFetch.Traces(net, sta, loc, chan, startTime, endTime);
-        figure
-        plot(traces.data);
-        disp('iris_fetch succeeded. Problem must be with waveform.')
-    catch
-        disp('iris_fetch failed. Problem must be with iris_fetch');
-    end
+    ds = datasource('irisdmcws');
+    CT = ChannelTag(params.net, params.sta, params.loc, params.chan);
+    w  = waveform(ds, CT, params.t1, params.t2);
+
+    % Optionally apply calibration
+    if hasfield(get(w,'calib')), w = w * get(w,'calib'); end
+
+    figure; plot(w); title('GISMO waveform()');
+
+    fprintf('✔ GISMO waveform() succeeded.\n');
+    results.gismo_success = true;
+
+catch ME
+    fprintf('✖ GISMO waveform() failed.\n    %s\n', ME.message);
+    results.error_gismo = ME.message;
 end
-disp(sprintf('%s done',mfilename));
+
+%% -----------------------------
+%  3. Test irisFetch.Traces()
+% ------------------------------
+try
+    traces = irisFetch.Traces(params.net, params.sta, params.loc, ...
+                              params.chan, params.t1, params.t2);
+
+    if ~isempty(traces) && isfield(traces, 'data')
+        figure; plot(traces.data); title('irisFetch.Traces');
+        fprintf('✔ irisFetch.Traces() succeeded.\n');
+        results.iris_success = true;
+    else
+        error('irisFetch returned empty data');
+    end
+
+catch ME
+    fprintf('✖ irisFetch.Traces() failed.\n    %s\n', ME.message);
+    results.error_iris = ME.message;
+end
+
+%% -----------------------------
+%  4. Summary
+% ------------------------------
+disp('--------------------------------------');
+disp('IRISFETCH_TEST RESULTS:');
+disp(results);
+disp('--------------------------------------');
+
+end
 

@@ -3,32 +3,59 @@
 % (e.g. Seisan, Antelope) and data sources (e.g. IRIS DMC) using the
 % Catalog.retrieve() method.
 
+% -------------------------------------------------------------------------
+% Housekeeping / locate bundled demo data
+% -------------------------------------------------------------------------
+gismopath = fileparts(which('startup_GISMO'));
+TESTDATA  = fullfile(gismopath, 'testdata');  % legacy convention in GISMO
+
+if ~exist(TESTDATA, 'dir')
+    warning(['TESTDATA directory not found at %s.\n' ...
+             'Some demo-based sections may be skipped.'], TESTDATA);
+end
+
 %% Reading events from IRIS DMC
-% To load events into a Catalog object we use the Catalog.retrieve method. 
-% The first argument is the data source/format - when this is given as 
-% 'iris', retrieve uses the irisFetch.m program to retrieve event data 
-% via the IRIS webservices. To narrow down our data search we can give 
+% To load events into a Catalog object we use the Catalog.retrieve method.
+% The first argument is the data source/format - when this is given as
+% 'iris', retrieve uses the irisFetch.m program to retrieve event data
+% via the IRIS webservices. To narrow down our data search we can give
 % retrieve any name-value parameter pairs supported by irisFetch.
 %
-% In this example we will use retrieve to retrieve all events at IRIS DMC 
+% In this example we will use retrieve to retrieve all events at IRIS DMC
 % with a magnitude of at least 8.0 from year 2000 to 2014 (inclusive):
-greatquakes = Catalog.retrieve('iris', 'minimumMagnitude', 8.0, ...
-    'starttime', '2000-01-01', 'endtime', '2015-01-01')
 
-%%
-% To access any particular property we can use dot notation, as if the 
+try
+    greatquakes = Catalog.retrieve('iris', 'minimumMagnitude', 8.0, ...
+        'starttime', '2000-01-01', 'endtime', '2015-01-01');
+    disp(greatquakes)
+catch ME
+    warning('IRIS retrieval failed (internet? irisFetch?). %s', ME.message);
+    greatquakes = Catalog(); %#ok<NASGU>
+end
+
+%% 
+% To access any particular property we can use dot notation, as if the
 % object were a structure, e.g.:
-greatquakes.mag
+try
+    greatquakes.mag
+catch
+end
 
 %%
 % greatquakes is a Catalog object, an instance of the Catalog class. To see
 % a list of functions ("methods" in object-oriented speak) we can apply to
 % a Catalog object, use the methods command:
-methods(greatquakes)
+try
+    methods(greatquakes)
+catch
+end
 
 %%
 % Save this dataset so you can use it again later:
-save('great_earthquakes.mat', 'greatquakes')
+try
+    save('great_earthquakes.mat', 'greatquakes')
+catch
+end
 
 %%
 % Now we'll do another example - we will get events within 200 km of the 
@@ -39,26 +66,31 @@ save('great_earthquakes.mat', 'greatquakes')
 %     Longitude:  142.372
 %     Latitude:   38.297
 %     Depth:      30 km
- 
+
 %%
 % We will limit our search to 1 day before and after the earthquake:
-mainshocktime = datenum('2011/03/11 05:46:24');
-tohoku_events = Catalog.retrieve('iris', ...
-            'radialcoordinates', [38.297 142.372 km2deg(200)], ...
-            'starttime', mainshocktime - 1, ...
-            'endtime', mainshocktime + 1);
+try
+    mainshocktime = datenum('2011/03/11 05:46:24');
+    tohoku_events = Catalog.retrieve('iris', ...
+        'radialcoordinates', [38.297 142.372 km2deg(200)], ...
+        'starttime', mainshocktime - 1, ...
+        'endtime', mainshocktime + 1);
 
-%%
-% This returns 1136 earthquakes. Let's get a summary:
-tohoku_events.summary()
+    %%
+    % This returns 1136 earthquakes. Let's get a summary:
+    tohoku_events.summary()
 
-%%
-% Save this dataset so you can use it again later:
-save('tohoku_events.mat', 'tohoku_events')
+    %%
+    % Save this dataset so you can use it again later:
+    save('tohoku_events.mat', 'tohoku_events')
+catch ME
+    warning('Tohoku/IRIS example failed. %s', ME.message);
+    tohoku_events = Catalog(); %#ok<NASGU>
+end
 
 %% Readings events from an Antelope database
-% To load event data from an Antelope/Datascope CSS3.0 database you will 
-% need to have Antelope (<http://www.brtt.com/software.html>) installed, 
+% To load event data from an Antelope/Datascope CSS3.0 database you will
+% need to have Antelope (<http://www.brtt.com/software.html>) installed,
 % including the Antelope toolbox for MATLAB  (ATM). To see if ATM is
 % installed, use the admin.antelope_exists() command, e.g.
 if admin.antelope_exists()
@@ -75,74 +107,84 @@ end
 %
 % and an empty Catalog object will be returned.
 
-% 
-%%
-% For the purpose of this exercise we will be using data from Redoubt 
-% volcano from 2009/03/20 to 2009/03/23. We will use snippets from two 
-% catalogs that are provided with GISMO in Antelope format:
- 
-%%
 %
+%%
+% For the purpose of this exercise we will be using data from Redoubt
+% volcano from 2009/03/20 to 2009/03/23. We will use snippets from two
+% catalogs that are provided with GISMO in Antelope format:
+%
+%%
 % * The real-time catalog (rtdb200903).
 % * The analyst-reviewed offical AVO catalog (avodb200903).
-
+%
 %%
-% Both catalog segments are included in the "demo" directory. 
+% Both catalog segments are included in the "demo" directory.
 % We will now load the official AVO catalog into an Events object:
-dbpath = fullfile(TESTDATA, 'css3.0', 'avodb200903')
-avocatalog = Catalog.retrieve('antelope', 'dbpath', dbpath);
 
-%%
-% This should load 1441 events. What if we only want events within 20km of 
-% Redoubt volcano? There are two ways to do this. The first is the use the
-% radialcoordinates parameter:
-redoubtLon = -152.7431; 
-redoubtLat = 60.4853;
-maxR = km2deg(20.0);
-redoubt_events = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
-    'radialcoordinates', [redoubtLat redoubtLon maxR])
+try
+    dbpath = fullfile(TESTDATA, 'css3.0', 'avodb200903');
+    avocatalog = Catalog.retrieve('antelope', 'dbpath', dbpath);
 
-%%
-% Anyone familiar with Antelope will know that it subsets databases by
-% using a dbeval subset expression, and the command above does this
-% internally. You can also specify a subset expression directly. The
-% following example is completely equivalent to that above:
-expr = sprintf('distance(lat, lon, %f, %f) < %f',redoubtLat, redoubtLon,maxR)
-redoubt_events = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
-    'subset_expression', expr)
+    %%
+    % This should load 1441 events. What if we only want events within 20km of
+    % Redoubt volcano? There are two ways to do this. The first is the use the
+    % radialcoordinates parameter:
+    redoubtLon = -152.7431;
+    redoubtLat = 60.4853;
+    maxR = km2deg(20.0);
+    redoubt_events = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
+        'radialcoordinates', [redoubtLat redoubtLon maxR]);
 
-%%
-% Save this dataset so you can use it again later:
-save('redoubt_events.mat', 'redoubt_events')
+    %%
+    % Anyone familiar with Antelope will know that it subsets databases by
+    % using a dbeval subset expression, and the command above does this
+    % internally. You can also specify a subset expression directly. The
+    % following example is completely equivalent to that above:
+    expr = sprintf('distance(lat, lon, %f, %f) < %f', ...
+        redoubtLat, redoubtLon, maxR);
+    redoubt_events = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
+        'subset_expression', expr);
 
+    %%
+    % Save this dataset so you can use it again later:
+    save('redoubt_events.mat', 'redoubt_events')
+catch ME
+    warning('Antelope example skipped/failed. %s', ME.message);
+    redoubt_events = Catalog(); %#ok<NASGU>
+end
 
 %% Reading events from a Seisan database
 % Here we load events from a Seisan catalog. A Seisan "Sfile" contains all
 % the metadata for 1 event. These Sfiles are stored in a flat-file database
-% structure the path to which is: $SEISAN_TOP/REA/databaseName. Sfiles are 
+% structure the path to which is: $SEISAN_TOP/REA/databaseName. Sfiles are
 % organized in year/month subdirectories under this path.
 %
 % *SCAFFOLD: INCLUDE DEMO DATASET FROM MVOE*
 
 %%
-% The following will navigate this where in this case 
-% $SEISAN_TOP = '/raid/data/seisan' and the databaseName is MVOE_ which 
-% stands for the Montserrat Volcano Observatory Event database. 
+% The following will navigate this where in this case
+% $SEISAN_TOP = '/raid/data/seisan' and the databaseName is MVOE_ which
+% stands for the Montserrat Volcano Observatory Event database.
 % (In Seisan, databaseName is limited to exactly 5 characters).
 %
-% This example will load Sfiles from 4 hours on 1st Nov, 1996. This is a slow 
+% This example will load Sfiles from 4 hours on 1st Nov, 1996. This is a slow
 % function to run as MATLAB is slow at parsing text files, and there are
 % many events per day in this particular database.
-%demodir = Catalog.demo.demo_path();
-demodir = fullfile(TESTDATA, 'seisan', 'REA', 'MVOE_');
-montserrat_events = Catalog.retrieve('seisan', ...
-    'dbpath', demodir, ...
-	'startTime', '1996/11/01 11:00:00', ....
-	'endTime', '1996/11/01 15:00:00')
 
-%%
-% Save this dataset so you can use it again later:
-save('montserrat_events.mat', 'montserrat_events')
+try
+    demodir = fullfile(TESTDATA, 'seisan', 'REA', 'MVOE_');
+    montserrat_events = Catalog.retrieve('seisan', ...
+        'dbpath', demodir, ...
+        'startTime', '1996/11/01 11:00:00', ...
+        'endTime',   '1996/11/01 15:00:00');
+
+    %%
+    % Save this dataset so you can use it again later:
+    save('montserrat_events.mat', 'montserrat_events')
+catch ME
+    warning('Seisan example skipped/failed. %s', ME.message);
+    montserrat_events = Catalog(); %#ok<NASGU>
+end
 
 %%
 % Only a few of these earthquakes have been located and even fewer have
@@ -161,60 +203,79 @@ save('montserrat_events.mat', 'montserrat_events')
 
 %%
 % Reload the Tohoku dataset
-load tohoku_events.mat
+try
+    load tohoku_events.mat
+catch
+end
 
 %%
 % *Map view & cross-sections*
-tohoku_events.plot()
+try
+    tohoku_events.plot()
+catch
+end
 
 %%
 % *3D-Hypocenters*
-tohoku_events.plot3()
+try
+    tohoku_events.plot3()
+catch
+end
 
 %%
 % *web map*
-%%
-% 
+%
 %   tohoku_events.webmap()
-tohoku_events.webmap()
-wmzoom(7)
+try
+    tohoku_events.webmap()
+    wmzoom(7)
+catch ME
+    warning('webmap skipped (Mapping Toolbox/internet?) %s', ME.message);
+end
 
 %% Plotting time series of events
 % *Magnitude-time plot*
-tohoku_events.plot_time()
+try
+    tohoku_events.plot_time()
+catch
+end
 
 %%
 % *Earthquake event counts (number of events per unit time)*
 % A plot of seismic catalog per day is often called an "event counts" plot.
-% In GISMO, we call this an "event rate plot" and the first step is to 
+% In GISMO, we call this an "event rate plot" and the first step is to
 % generate an EventRate object. Here our binsize is 1/24 days, i.e. 1 hour.
+try
+    eventrateObject = tohoku_events.eventrate('binsize', 1/24);
 
-eventrateObject = tohoku_events.eventrate('binsize', 1/24)
-
-%%
-% Now plot the EventRate object:
-eventrateObject.plot()
+    %%
+    % Now plot the EventRate object:
+    eventrateObject.plot()
+catch
+end
 
 %%
 % We can do the same thing for another dataset, e.g. redoubt_events
-redoubt_events.plot_time()
-erobj_red = redoubt_events.eventrate('binsize', 1/24)
-erobj_red.plot()
+try
+    redoubt_events.plot_time()
+    erobj_red = redoubt_events.eventrate('binsize', 1/24);
+    erobj_red.plot()
+catch
+end
 
 %%
 % To see more of the things we can do with EventRate objects see the
 % EventRate cookbook <EventRate.html>
 
-
-
 %% Analysis
 % *Peak event rate (PR) and maximum magnitude*
 % A common type of analysis is to identify the peak rate in an earthquake
-% sequence such as this preshock-mainshock-aftershock sequence or an 
+% sequence such as this preshock-mainshock-aftershock sequence or an
 % earthquake swarm. This can be done with:
-
-tohoku_events.plotprmm()
-
+try
+    tohoku_events.plotprmm()
+catch
+end
 
 %%
 % In the command window this returns:
@@ -225,25 +286,28 @@ tohoku_events.plotprmm()
 
 %%
 % Now with the Redoubt dataset
-redoubt_events.plotprmm()
+try
+    redoubt_events.plotprmm()
+catch
+end
 
 %%
 % *b-value and magnitude of completeness*
-% Code from "ZMap" (written by Stefan Wiemer and others) has been added to 
-% Catalog to compute and plot b-values and the magnitude of completeness. 
+% Code from "ZMap" (written by Stefan Wiemer and others) has been added to
+% Catalog to compute and plot b-values and the magnitude of completeness.
 
 %%
 % Definitions:
 %
-% * b-value: the slope of a plot of the logarithm of the cumulative number of events against magnitude. A measure of the number of small earthquakes to larger earthquakes.
-% * magnitude of completeness (Mc): all events with magnitude>=Mc are in the catalog. Below Mc, not all events are detected, and below the magnitude detection threshold, no events are captured.
+% * b-value: the slope of a plot of the logarithm of the cumulative number of events against magnitude.
+% * magnitude of completeness (Mc): all events with magnitude>=Mc are in the catalog.
 
 %%
 % Just calling the bvalue method, i.e.
 %
-%   catalogObject.bvalue() 
+%   catalogObject.bvalue(mcType)
 %
-% displays a menu of techniques available to compute b-value (b) and 
+% displays a menu of techniques available to compute b-value (b) and
 % magnitude of completeness (Mc):
 %
 %     --------------------------------------------------------
@@ -255,51 +319,58 @@ redoubt_events.plotprmm()
 %     3: Mc90 (90% probability)
 %     4: Mc95 (95% probability)
 %     5: Best combination (Mc95 - Mc90 - maximum curvature)
-% 
+%
 % We will use the first menu option:
-
-tohoku_events.bvalue(1)
+try
+    tohoku_events.bvalue(1)
+catch
+end
 
 %%
-% In this particular example, the b-value is 0.6 and the magnitude of 
+% In this particular example, the b-value is 0.6 and the magnitude of
 % completeness is 4.2.
 
 %%
 % Now for the Redoubt events:
-
-redoubt_events.bvalue(1)
+try
+    redoubt_events.bvalue(1)
+catch
+end
 
 %% Saving Catalog objects to disk
 % *Writing to a MAT file*
 % We've already seen how to do this, the general syntax is:
+%
 %    save('myfilename.mat', 'myCatalogObject')
-
-%%
+%
 % This can simply be loaded again with:
+%
 %    load('myfilename.mat')
 
-%% 
+%%
 % *Writing to an Antelope CSS3.0 database*
-% This method requires the Antelope toolbox for MATLAB and writes the 
+% This method requires the Antelope toolbox for MATLAB and writes the
 % Catalog as a CSS3.0 flat-file database:
+try
+    %%
+    % First make sure there is no database with this name already - else we
+    % will be appending to it:
+    delete greatquakes_db*
 
-%%
-% First make sure there is no database with this name already - else we
-% will be appending to it:
-delete greatquakes_db*
+    %%
+    % Now write to the database
+    greatquakes.write('antelope', 'greatquakes_db', 'css3.0')
 
-%%
-% Now write to the database
-greatquakes.write('antelope', 'greatquakes_db', 'css3.0')
+    %%
+    % This database can be reloaded with:
+    greatquakes2 = Catalog.retrieve('antelope', 'dbpath', 'greatquakes_db')
 
-%% 
-% This database can be reloaded with:
-greatquakes2 = Catalog.retrieve('antelope', 'dbpath', 'greatquakes_db')
-
-%%
-% Compare:
-greatquakes
+    %%
+    % Compare:
+    greatquakes
+catch ME
+    warning('Skipping database write: %s', ME.message);
+end
 
 %%
 % This concludes the Catalog cookbook/tutorial.
-
