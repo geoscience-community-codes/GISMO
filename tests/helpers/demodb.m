@@ -1,16 +1,17 @@
 function dbpath = demodb(name)
-% DEMODB  Return the path to a demo CSS3.0 or Antelope database for tests.
+% DEMODB  Locate bundled GISMO demo databases for automated testing.
 %
-%   dbpath = DEMODB('avo')
-%   dbpath = DEMODB('rt')
-%   dbpath = DEMODB('antelope')
+%   dbpath = demodb('avo')
+%   dbpath = demodb('rt')
+%   dbpath = demodb('antelope')
+%
+% This function is a TEST FIXTURE used by the GISMO automated test suite.
+% It does NOT download data and does NOT access the network.
 %
 % Behavior:
 %   • If Antelope is installed and name='antelope', return the Antelope demo DB.
 %   • Otherwise return the CSS3.0 demo DB inside GISMODATAPATH/test_data.
-%   • If paths cannot be constructed, return [] with a warning.
-%
-% This function is for **tests only** and does not access the network.
+%   • If paths cannot be constructed, return [] with a warning
 
     arguments
         name (1,:) char

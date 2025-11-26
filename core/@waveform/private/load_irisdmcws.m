@@ -8,15 +8,45 @@ function wavef = load_irisdmcws(request)
    %
    % See also javaaddpath waveform
    % request.combineWaves is ignored
-   
+   %
    % Based on work by: Rich Karstens & Celso Reyes IRIS DMC, December 2011
    % 20170105 Glenn Thompson - now returns a blank waveform object if no data found
    % 20170105 Glenn Thompson - unrecognized errors from irisfetch are
    % recast as warnings
+   %
+   % irisFetch MATLAB Client
+   %     Source: https://github.com/iris-edu/irisFetch-matlab
+   %     EarthScope Deprecation Notice: August 2024
+   %     MATLAB >= R2023a is NOT supported due to JVM changes.
+   % -------------------------------------------------------------------------
+   % IRISFETCH LEGACY NOTICE (EarthScope Aug 2024)
+   %
+   % This function relies on the IRIS Java Web Services library via irisFetch.
+   % Due to JVM changes in MATLAB R2023a and later, this library is NO LONGER
+   % COMPATIBLE with MATLAB >= R2023a.
+   %
+   % Supported MATLAB versions: R2022b and earlier ONLY.
+   % Source: https://github.com/iris-edu/irisFetch-matlab
+   %
+   % If you need modern access to FDSN services, use ObsPy or REST APIs.
+   % -------------------------------------------------------------------------
+
+   v = ver('MATLAB');
+   release = regexp(v.Release,'\d\d\d\d[a|b]','match','once');
+
+   if str2double(release(1:4)) >= 2023
+      error('IRISFETCH:UnsupportedMATLAB', ...
+         ['\n\nirisFetch / IRIS-WS is not compatible with MATLAB %s.\n' ...
+         'EarthScope deprecated irisFetch for MATLAB R2023a+ (Aug 2024).\n' ...
+         'Use MATLAB R2022b or earlier, or switch to ObsPy / REST APIs.\n' ...
+         'Source: https://github.com/iris-edu/irisFetch-matlab\n'], ...
+         release);
+   end
    
    a = warning;
    warning_status = a.state;
    warning on;
+   wavef = waveform();
    
    [~, allChanInfo, sTime, eTime, ~] = unpackDataRequest(request);
    disp('Requesting Data from the DMC...');
@@ -63,6 +93,13 @@ function ts = irisFetchTraces( network, station, location, channel, startDateStr
    %   based on standard waveform criteria
    
    % % Load up that jar if necessary
+
+   if ~exist('edu.iris.dmc.extensions.fetch.TraceData','class')
+    error('IRISFETCH:JavaLibraryMissing', ...
+        ['The IRIS Java Web Services library is not on the Java path.\n', ...
+         'Install IRIS-WS and add it using javaaddpath.\n', ...
+         'Source: https://github.com/iris-edu/irisFetch-matlab']);
+   end
    
    if ~exist('verbosity', 'var')
       verbosity = false;
@@ -101,13 +138,17 @@ function ts = irisFetchTraces( network, station, location, channel, startDateStr
             else
                disp(je.identifier)
                msgText = getReport(je);
-               warning(msgText)
+               warning('IRISFETCH:NoData', '%s', msgText);
+               ts = waveform(); 
+               return
                %rethrow(je);
             end
          otherwise
             disp(je.identifier)
             msgText = getReport(je);
-            warning(msgText)
+            warning('IRISFETCH:NoData', '%s', msgText);
+            ts = waveform(); 
+            return
             %rethrow(je);
       end
    end

@@ -1,7 +1,18 @@
 function dmc_cookbook
-
-
-disp('UNDER CONSTRUCTION ...');
+%% DMC COOKBOOK (LEGACY)
+%
+% This cookbook demonstrates legacy IRIS DMC access using irisFetch.m
+% and the Java IRIS-WS library.
+%
+% IMPORTANT (EarthScope Aug 2024):
+%   irisFetch and IRIS-WS DO NOT WORK on MATLAB R2023a or newer.
+%   This cookbook is supported ONLY on MATLAB R2022b and earlier.
+%
+% For modern FDSN access, use:
+%   - ObsPy (Python)
+%   - Direct FDSN REST APIs
+%
+% This file is retained for reproducibility of legacy GISMO workflows.
 
 
 % CREATE WAVEFORMS

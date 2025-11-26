@@ -1,105 +1,99 @@
-%% The SCNLOBJECT cookbook
-% This cookbook is designed to familiarize yourself with the scnlobjects used within waveform. There's not really all that much to them, so there'll not be much to this, either.
-
-%% Properties
-% Scnlobjects are comprised of only four fields:
-%%
+%% SCNLOBJECT Cookbook
+% This cookbook introduces the SCNLOBJECT class, which represents
+% station–channel identifiers used throughout GISMO for waveform and
+% datasource queries.
 %
-% * Station
-% * Channel
-% * Network
-% * Location
-
-%%
-% STATION and CHANNEL are not optional, while NETWORK and LOCATION are.
-
-%%
-% Create a series of scnls for seismic stations on Redoubt volcano
-    red = scnlobject('RED','EHZ','AV','--') % full declaration
-    rso = scnlobject('RSO','EHZ','AV')      % leaving out location
-
-%%
-% 3-component station, this creates rdbw as a 1x3 scnlobject
-    rdbw = scnlobject('RDBW',{'BHZ','BHE','BHN'},'AV')
- 
-
-%% Using SET to modify a SCNLOBJECT
-% use SET to create another 3 component broadband using rdbw as a template...
-    rdjh = set(rdbw,'station','RDJH');
-
-%% Grouping SCNLOBJECTS through concatenation% and finally, create something that will parse through all stations
-
-    redstas = [red rso rdbw rdjh]
-%%
-% Create a couple scnls with wildcard values
-% The value '*' can be entered in place of a field, so that searches can be made.
-
-    anyehz = scnlobject('*','EHZ','*','*') % this one prints as an example...
-    anybroadband = scnlobject('*',{'BHZ','BHE','BHN'},'*','*');
-    anyNorthComponent = scnlobject('*',{'EHN','SHN','BHN'},'*','*');
- 
-%%
-% Let's display all the variables we've got, thus far
-
-    whos            
-
-%% Methods
-% Find out what manipulations can be done with scnlobjects
-
-    methods(redstas)  
-
-%%    
-% I could have typed "methods(scnlobject)", instead      
-
-%% using ISMEMBER to see if a particular locale (SCNLOBJECT) is represented
-% Ismember will not only tell you if a scnlobject exists, but is also capable of telling WHERE
-
-    [IsInList, whereInList] = ismember(rso,redstas)
-
-
-%%
-% ismember is sensitive to the order in which you place the scnlobjects. The size of the returned values match the size of the first argument. The previous example asks '' where can RSO be found in REDSTAS? '', while the following example essentially asks '' which REDSTAS can be found in RSO (and where)?''
-
-    [IsInList, whereInList] = ismember(redstas,rso)
-
-%% using ISMEMBER with wildcards
-% The ismember function looks for a scnlobject in an array of scnlobjects. Lets grab the EHZ component stations using a search, then display each one
-
-    stationsOfInterest = redstas(ismember(redstas,anyehz)) %should get 2
-
-    for n = 1 : numel(stationsOfInterest);
-        display(stationsOfInterest(n));
-    end
-    
-    
-    
-    
-%%
-% repeat the exercise for broadband and stations... there should be 6
-
-    mybroadbands = redstas(ismember(redstas,anybroadband));
-    size(mybroadbands)
-
-%% Use GET to see which stations we have...
-% Get can also retrieve CHANNEL, NETWORK, and LOCATION information.
-
-    get(mybroadbands,'station')
-
-%%
-% There are 3 of each because there are three components to each.
-
-    strcat(get(mybroadbands,'station'),'|',get(mybroadbands,'channel'))
-
-%%
-% to get a vertical list, I could transpose mybroadbands using (')
-
-    strcat( get(mybroadbands', 'station') , '|' , get(mybroadbands', 'channel') )
-
-%% Using UNIQUE to whittle down a bunch of scnlobjects
-% Assume that for some reason, you have a list of scnlobjects with some members being repeated. This may happen when you retrieve scnlobjects from a group of waveforms. You'd like to know which station/channels are actually being represented within your data set. Here's how:
+% A SCNLOBJECT contains four fields:
+%   • Network
+%   • Station
+%   • Location
+%   • Channel
 %
-% set up the situation as listed:
-    manyscnls = [redstas, red, rso, red, redstas]
-%%
-% Find out which ones we have:
-    unique(manyscnls)
+% Station and Channel are required.
+% Network and Location are optional.
+
+%% Basic Construction
+
+% Full NSLC specification
+red = scnlobject('RED','EHZ','AV','--');
+
+% Without location
+rso = scnlobject('RSO','EHZ','AV');
+
+% From dot-delimited string
+ref = scnlobject('AV.REF.--.EHZ');
+
+%% Multi-Component Stations
+
+% 3-component broadband station
+rdbw = scnlobject('RDBW',{'BHZ','BHE','BHN'},'AV');
+
+%% Modifying Existing Objects with SET
+
+% Duplicate template and change station name
+rdjh = set(rdbw,'station','RDJH');
+
+%% Grouping SCNL Objects
+
+redstas = [red rso rdbw rdjh];
+
+%% Wildcards
+
+% Wildcards allow flexible querying
+anyEHZ = scnlobject('*','EHZ','*','*');
+anyBroadband = scnlobject('*',{'BHZ','BHE','BHN'},'*','*');
+anyNorth = scnlobject('*',{'EHN','SHN','BHN'},'*','*');
+
+%% Finding Matches with ISMEMBER
+
+% Does RSO exist in the group?
+[tf, idx] = ismember(rso, redstas);
+
+% Reverse lookup
+[tf2, idx2] = ismember(redstas, rso);
+
+%% Wildcard Matching
+
+stationsOfInterest = redstas(ismember(redstas, anyEHZ));
+
+for k = 1:numel(stationsOfInterest)
+    disp(stationsOfInterest(k))
+end
+
+%% Broadband Selection
+
+myBroadbands = redstas(ismember(redstas, anyBroadband));
+size(myBroadbands)
+
+%% Retrieving Fields with GET
+
+get(myBroadbands,'station')
+strcat(get(myBroadbands,'station'),'|',get(myBroadbands,'channel'))
+
+%% Vertical Formatting
+
+strcat( ...
+    get(myBroadbands','station'), ...
+    "|", ...
+    get(myBroadbands','channel') )
+
+%% Removing Duplicates with UNIQUE
+
+manyscnls = [redstas red rso red redstas];
+unique(manyscnls)
+
+%% Relationship to ChannelTag
+% SCNLOBJECT and ChannelTag are interoperable in many GISMO functions.
+%
+% ChannelTag:
+%   Network.Station.Location.Channel
+%
+% SCNLOBJECT:
+%   Network, Station, Location, Channel (same fields, legacy ordering)
+
+ct = ChannelTag('AV.REF.--.EHZ');
+sc = scnlobject(ct.string());
+
+%% Method Summary
+
+methods(scnlobject)

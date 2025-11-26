@@ -1,6 +1,6 @@
 ---
 title: "GISMO: A MATLAB Toolbox for Seismic and Infrasound Data Analysis"
-version: "1.20b"
+version: "1.3.0"
 tags:
   - MATLAB
   - seismology
@@ -18,10 +18,10 @@ authors:
     orcid: 0000-0002-0034-8889
     affiliation: "2"
   - name: Michael E. West
-    orcid: 0000-0000-0000-0000   # Update if Mike provides one
+    orcid: 0000-0000-0000-0000  # Update if Mike provides one
     affiliation: "3"
   - name: Dane Morrow Ketner
-    orcid: 0000-0002-1610-0773   # Placeholder until confirmed
+    orcid: 0000-0002-1610-0773  # Placeholder until confirmed
     affiliation: "4"
 affiliations:
   - name: University of South Florida
@@ -36,108 +36,99 @@ date: 2025-12-01
 bibliography: paper.bib
 ---
 
-# Summary
+## Summary
 
 **GISMO is an open-source MATLAB toolbox for analyzing seismic and infrasound waveform data**, providing an extensible object-oriented framework designed to support earthquake seismology, volcano monitoring, microseismic analysis, and related geophysical investigations.
 
 Developed since 2008, GISMO integrates three major components:
 
-1. **The Waveform Suite** (Reyes)  
-2. **The Correlation Suite** (West)  
-3. **The Catalog Suite** (Thompson)
+- **The Waveform Suite** (Reyes)  
+- **The Correlation Suite** (West)  
+- **The Catalog & Event-Rate Suite** (Thompson)  
 
 GISMO has been adopted by volcano observatories, national seismic networks, university research groups, and seismology teaching programs worldwide. It has been used to prototype real-time monitoring tools, analyze waveform similarity, and explore complex volcanic signals such as tremor, swarms, and pyroclastic flows.
 
-GISMO is hosted on GitHub
-(https://github.com/geoscience-community-codes/GISMO)
-with documentation on the GISMO website
+GISMO is hosted on GitHub  
+(https://github.com/geoscience-community-codes/GISMO)  
+with documentation on the GISMO website  
 (https://geoscience-community-codes.github.io/GISMO/).
 
-# Statement of Need
+GISMO remains one of the most widely used MATLAB-based seismic analysis environments for both research and operational monitoring applications.
+
+## Statement of Need
 
 MATLAB has been heavily used within the seismological community, both for research workflows and prototyping real-time monitoring tools, leveraging MATLAB's numerical environment, mature toolboxes, and ease of prototyping. However, **prior to GISMO, MATLAB lacked a coherent object-oriented infrastructure for seismic data**, requiring researchers to repeatedly solve the same fundamental problems:
 
-- read diverse seismic waveform data and catalog formats,
-- attach and manage waveform metadata,
-- process and visualize continuous waveforms,
-- write STA/LTA detectors,
-- correlate waveforms or perform template matching,
-- export results to formats compatible with operational systems.
+- Reading a variety of seismic waveform and catalog formats  
+- Managing waveform metadata (station, channel, instrument response, time tags)  
+- Processing and visualizing continuous waveforms  
+- Implementing STA/LTA detectors, RSAM, event-rate analysis, and spectral analysis  
+- Performing waveform correlation and template matching across large datasets  
+- Exporting results in formats compatible with operational systems  
 
-**GISMO provides these capabilities through a unified class-based architecture**, in much the same way that ObsPy provides a foundational ecosystem for Python seismology (Krischer et al., 2015). GISMO slightly predates ObsPy and remains the principal MATLAB-based toolkit offering:
+**GISMO provides these capabilities through a unified class-based architecture**, in much the same spirit as what non-MATLAB libraries (e.g. in Python) offer. GISMO slightly predates the widespread adoption of those tools, and remains the principal MATLAB-based toolkit offering:
 
-- fully object-oriented support for waveforms and instrument metadata,
-- automatic integration with FDSNWS, Antelope/CSS3.0, Earthworm, SAC, SEISAN, and MiniSEED,
-- tools for catalog generation, event rates, cumulative energy release, RSAM, and reduced displacement
-- robust correlation and clustering tools,
-- high-level visualizations including drumplots, multistation spectrograms, and catalog and event rate plots.
+- fully object-oriented support for waveforms and instrument metadata,  
+- automatic integration with FDSNWS, Antelope/CSS3.0, Earthworm, SAC, SEISAN, and MiniSEED,  
+- tools for catalog generation, event rates, cumulative energy release, RSAM, and reduced displacement,  
+- robust correlation and clustering tools,  
+- high-level visualizations including drumplots, multistation spectrograms, and catalog/event-rate plots.  
+
+While modern Python tools such as ObsPy now dominate cloud-based and large-scale seismic data services, a substantial body of operational monitoring systems, teaching laboratories, and historical observatory workflows remain MATLAB-based. GISMO continues to serve this community by providing a stable, object-oriented seismic analysis environment for MATLAB users, particularly in contexts where **legacy telemetry systems, historical datasets, or long-standing MATLAB workflows** must be maintained for reproducibility and operational continuity.
 
 By providing this foundation, GISMO dramatically reduces the development effort required to build new seismic data workflows, prototype algorithms, or integrate legacy MATLAB systems with modern formats such as FDSN web services, StationXML, and QuakeML.
 
-# Features
+## What GISMO Provides
 
-### Waveform Handling
-- Object-oriented `waveform` class    
-- Metadata-aware detrending, tapering, resampling, windowing  
-- Instrument response removal and deconvolution tools
+Though full software documentation and API references are maintained in the GitHub repository and online wiki, a summary of major GISMO capabilities includes:
 
-### Signal Processing
+### - Waveform Handling  
+- Object-oriented `waveform` class  
+- Metadata-aware detrending, tapering, resampling, windowing, and instrument response removal  
+- Support for a wide range of input/output formats: SAC, MiniSEED/SEED, SEISAN, Antelope/CSS3.0, Earthworm/Winston, FDSNWS (irisFetch, when used with compatible MATLAB versions)  
+
+### - Signal Processing & Analysis  
 - STA/LTA and amplitude-duration detectors  
-- Bandpass, highpass, lowpass, and notch filters  
-- FFT and spectral analysis  
-- Multi-station spectrograms  
-- RSAM/SSAM generation and plotting
+- Broad-band, bandpass, high-pass, low-pass, and notch filtering  
+- FFT and spectral analysis, amplitude spectra and spectrograms  
+- Multi-station spectrograms and helicorder (drumplot) visualizations  
+- RSAM/SSAM generation and plotting  
+- Reduced-displacement (cumulative energy) computation and event-rate analysis  
 
-### Catalog and Event Tools
-- Tools for reading SEISAN and Antelope catalogs  
-- Detection and arrival objects  
-- Catalog combination, filtering, declustering  
-- Event rate, Gutenberg–Richter, and cumulative energy plots
+### - Catalog and Event-Rate Tools  
+- Reading and writing SEISAN, Antelope, and other catalog formats  
+- Filtering, declustering, catalog combination/import/export  
+- Event-rate computation, Gutenberg–Richter statistics, cumulative energy plots, and related event-rate visualizations  
 
-### Correlation and Template Matching
-- Cross-correlation  
-- Similarity matrices and clustering  
-- Template matching for tremor, repetitive earthquakes, and volcanic drumbeats
+### - Correlation and Template Matching  
+- Cross-correlation of large waveform datasets (tens to thousands of events)  
+- Similarity matrices, clustering, hierarchical tree analysis  
+- Template-matching, stacking, residual extraction  
+- Tools optimized for tremor detection, volcanoes, repeating earthquakes, and microseismicity  
 
-### Polarization analysis
-- Rotation and polarization analysis for 3-component stations
+### - Polarization & Three-Component Analysis  
+- Support for 3-component (3C) waveform data  
+- Rotation, polarization, and beamforming analyses  
 
-### Data Import and Export
-- Read/write support for Antelope/CSS3.0 databases 
-- Earthworm/Winston waveserver  
-- SEISAN waveform and catalog (REA/Nordic) support  
-- MiniSEED import/export  
-- FDSNWS waveform and event/station metadata downloaders
+### - Data Import/Export & Metadata Management  
+- Reading/writing continuous seismic data, catalog data, and RSAM data  
+- Auto-handling of metadata: station, network, channel, instrument response, sample rate, start time, units  
+- Conversion to standard formats where needed  
+- Built-in support for legacy telemetry and older observatory formats  
 
-### Visualization
-- Interactive waveform browsing  
-- Drumplots
-- Spectrograms  
-- Catalog summary plots  
-- Event rate plots
+### - Visualization & Interactivity  
+- Time-series plotting, overplotting multiple waveforms  
+- Spectrograms, amplitude spectra  
+- Drumplots / helicorder plots (multi-day / high-resolution)  
+- Catalog summary and event-rate plots  
+- Integration with typical MATLAB workflows and figure tools  
 
-### Documentation and Tutorials
-- Extensive GitHub wiki with Getting Started Guide  
-- Teaching examples for computational seismology  
-- Historical notes on GISMO’s development  
+### - Documentation, Tests, and Tutorials  
+- Extensive GitHub wiki with “Getting Started” guide, usage examples, cookbooks (tutorial scripts)  
+- Full suite of unit tests (developed over many years) to ensure functionality and regression safety  
+- Demonstrations, example data, and reproducible workflows for teaching and research  
 
-# Community and Impact
-
-GISMO has been used by:
-
-- Alaska Volcano Observatory  
-- Universities in the U.S., U.K., Europe, Latin America, and Japan  
-
-Usage metrics include:
-
-- **~400 members** in the GISMO Users Group  
-- **~6,500 downloads** from MATLAB File Exchange  
-- **>11,000 downloads** for the earlier Waveform Suite  
-- Numerous untracked GitHub clones and release downloads  
-
-GISMO has supported research on volcanic earthquakes and tremor, pyroclastic flows, tectonic earthquakes, mining blasts, infrasound sources, and rocket launches.
-
-# Example
+## Example Usage
 
 ```matlab
 % Load a MiniSEED file
@@ -149,13 +140,17 @@ db = datasource('antelope', '/opt/antelope/data/db/demo');
 w = waveform(db, 'STATION', 'BHZ', '2025-01-01', '2025-01-02');
 plot(w);
 
-% Load from IRIS/EarthScope FDSNWS
-ds = datasource('irisdmcws');
-ctag = ChannelTag('AV', 'RSO', '--', 'EHZ');
-w = waveform(ds, ctag, '2009/03/21', '2009/03/22');
-plot(w);
+% Legacy FDSN download via irisFetch (MATLAB R2022b and earlier only)
+v = ver('MATLAB'); 
+yr = str2double(v.Release(2:5));
 
-% Process
+if yr <= 2022
+    ds = datasource('irisdmcws');
+    ctag = ChannelTag('AV', 'RSO', '--', 'EHZ');
+    w = waveform(ds, ctag, '2009/03/21', '2009/03/22');
+end
+
+% Process the waveform
 w2 = fillgaps(w, 'interp');
 w3 = detrend(w2);
 w_filt = filfilt(filterobject('h', 0.5, 2), w3);
@@ -169,8 +164,8 @@ rsamobj.plot();
 s = spectrogram(w_filt, 'wlen', 256, 'overlap', 128);
 plot(s);
 
-% Catalog
-mainshocktime = datenum('2011/03/11 05:46:24');
+% Catalog example (e.g. tsunami aftershock region)
+mainshocktime = datenum('2011-03-11 05:46:24');
 tohoku_events = Catalog.retrieve('iris', ...
             'radialcoordinates', [38.297 142.372 km2deg(200)], ...
             'starttime', mainshocktime - 1, ...
@@ -184,12 +179,16 @@ eventrateObject.plot();
 ```
 
 # Installation
-GISMO requires MATLAB R2016b or later.
+GISMO is developed and tested on MATLAB version R2022b, with the Signal Processing toolbox installed. 
+IRIS Web Services via irisFetch.m rely on a Java library that is incompatible with MATLAB R2023a and later due to changes in MathWorks’ JVM.
 ```bash
 git clone https://github.com/geoscience-community-codes/GISMO.git
 ```
+Certain legacy data-access components (specifically IRIS/EarthScope waveform retrieval via irisFetch.m) rely on the IRIS Java Web Services library, which is not compatible with MATLAB R2023a and later due to JVM changes introduced by MathWorks. EarthScope formally deprecated irisFetch for MATLAB ≥ R2023a in August 2024 \cite{irisfetch2024}.
 
-Full installation instructions and tutorials are provided on the GitHub Wiki.
+Users requiring modern FDSN web service access from newer MATLAB releases are encouraged to use Python-based tools such as ObsPy.
+
+Full installation instructions, platform notes, and tutorials are provided on the GISMO GitHub Wiki.
 
 # Acknowledgements
 

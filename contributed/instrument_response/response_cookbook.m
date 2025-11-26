@@ -1,3 +1,26 @@
+%% INSTRUMENT RESPONSE COOKBOOK (LEGACY / DEPRECATED)
+%
+% This cookbook demonstrates the original GISMO instrument response
+% handling workflow using:
+%   • Antelope databases
+%   • pole-zero response definitions
+%   • internal response structures
+%
+% IMPORTANT:
+%   • This workflow depends on external Antelope databases and demo data.
+%   • It is retained for historical reproducibility only.
+%   • It is NOT part of the modern supported GISMO API.
+%   • It is NOT suitable for automated CI or modern production workflows.
+%
+% Modern users should prefer:
+%   • StationXML-based workflows
+%   • ObsPy response removal
+%   • Modern FDSN Station services
+%
+% This file is preserved for:
+%   • Reproducibility of early GISMO research
+%   • Documentation of legacy processing methods
+
 %% Instrument response cookbook
 % The goal of this toolbox is to provide a rapid way to apply instrument
 % response corrections to seismic data. The response toolbox has routines

@@ -1,4 +1,4 @@
-classdef test_Correlation < matlab.unittest.TestCase
+classdef test_correlation < matlab.unittest.TestCase
     % TEST_CORRELATION
     % Unified correlation test suite combining:
     %   - Constructor diagnostics (formerly correlation_diagnostics.m)

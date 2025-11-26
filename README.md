@@ -15,5 +15,8 @@ Steps:
 <li><a href="https://github.com/geoscience-community-codes/GISMO/wiki/SUGGESTED-CITATION">and please cite GISMO in your work</a></li>  
 </ol>
 
+# MATLAB Compatibility Note
+GISMO is fully supported on MATLAB R2022b and earlier. Some legacy data-access functionality (e.g., IRIS/irisFetch) is not compatible with MATLAB R2023a and later due to JVM changes introduced by MathWorks. Users on newer MATLAB releases should use Python/ObsPy for FDSN data access.
+
 **
-Last updated: Glenn Thompson 2023/04/13
+Last updated: Glenn Thompson 2025/11/26

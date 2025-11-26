@@ -28,7 +28,7 @@ classdef irisFetch
    %  for more details, click on 'connectToJar' above.
    %
    %  For additional guidance, type help <method>, use irisFetch.runExamples, or check out
-   %  the online manual http://ds.iris.edu/dms/nodes/dmc/software/downloads/irisFetch.m/
+   %  the online manual https://ds.iris.edu/dms/nodes/dmc/software/downloads/irisFetch.m/
    %
    %see also JAVAADDPATH
 
@@ -59,7 +59,7 @@ classdef irisFetch
    %}
 
    properties (Constant = true)
-     VERSION           = '2.0.10';  % irisFetch version number
+     VERSION           = '2.0.12';  % irisFetch version number
      DATE_FORMATTER    = 'yyyy-mm-dd HH:MM:SS.FFF'; %default data format, in ms
      MIN_JAR_VERSION   = '2.0.15'; % minimum version of IRIS-WS jar required for compatibility
 
@@ -90,7 +90,7 @@ classdef irisFetch
       recursionAssert   = false; %check for recursions while parsing java into structs
       FEDERATOR_TRIGGER = 'FEDERATED';
       FEDERATOR_BASEURL = 'http://service.iris.edu/irisws/fedcatalog/1/';
-      FEDERATOR_LABELS = {'DATACENTER','RESPSERVICE','EVENTSERVICE','STATIONSERVICE','DATASELECTSERVICE','SACPZSERVICE'};
+      FEDERATOR_LABELS = {'DATACENTER','RESPSERVICE','EVENTSERVICE','STATIONSERVICE','DATASELECTSERVICE','SACPZSERVICE','AVAILABILITYSERVICE'};
    end %hidden constant properties
 
    methods(Static)
@@ -223,7 +223,7 @@ classdef irisFetch
          %        http://service.iris.edu/irisws/fedcatalog/1/
          %    which returns matches at three datacenters:
          %       3 matches at BGR (http://eida.bgr.de)
-         %       9 matches at IRISDMC (http://ds.iris.edu)
+         %       9 matches at IRISDMC (http://service.iris.edu)
          %       4 matches at RESIF (http://www.resif.fr)
          %    it then retrieves each trace, one after the other. Placing
          %    them into a final structure which contains the data that was
@@ -260,7 +260,7 @@ classdef irisFetch
          %      ts = irisFetch.Traces('IU','ANMO,ANTO,YSS','00','*','2010-02-27 06:30:00','2010-02-27 10:30:00')
          %
          %  SEE ALSO datestr
-         
+                  
          if ~exist('edu.iris.dmc.extensions.fetch.TraceData','class')
             irisFetch.connectToJar()
          end
@@ -290,11 +290,11 @@ classdef irisFetch
 
          % Set specific service URLs if specified
          if ~isempty(opts.dataselectURL)
-             tracedata.setWAVEFORM_URL(opts.dataselectURL)
+             tracedata.setWAVEFORM_URL(opts.dataselectURL);
              dbPrint('Using dataselect service at: %s\n', opts.dataselectURL);
          end
          if ~isempty(opts.stationURL)
-             tracedata.setSTATION_URL(opts.stationURL)
+             tracedata.setSTATION_URL(opts.stationURL);
              dbPrint('Using station service at: %s\n', opts.stationURL);
          end
 
@@ -337,7 +337,7 @@ classdef irisFetch
                network, station, location, channel, stD, edD);
             fullquery = [irisFetch.FEDERATOR_BASEURL, 'query?',  q];
             dbPrint('Fetching federator catalog results :: ');
-            fedResults = urlread(fullquery);
+            fedResults = webread(fullquery);
             dbPrint('%d Bytes\n',numel(fedResults));
             dbPrint(fedResults)
             assignin('base','fedResults',fedResults);
@@ -360,11 +360,15 @@ classdef irisFetch
                   end
                   switch svc
                       case 'DATASELECTSERVICE'
-                         tracedata.setWAVEFORM_URL(url)
-%                       case 'SACPZSERVICE' %
-%                          tracedata.setSACPZ_URL(url)
+                         tracedata.setWAVEFORM_URL(url);
+                      case 'SACPZSERVICE'
+                          % setting SACPZ url service will not work until
+                          % library is patched. Currently, setSACPZ_URL
+                          % method will always append "/irisws/sacpz/1/"
+                          %   tracedata.setSACPZ_URL(url)
+                        sacpz_svc_incl = 1;
                       case 'STATIONSERVICE'
-                         tracedata.setSTATION_URL(url)
+                         tracedata.setSTATION_URL(url);
                   end
                   dbPrint('[%s] : %-10s > %s\n',currDataCenter, svc, url);
                else
@@ -374,6 +378,14 @@ classdef irisFetch
                   channel = chas{row};
                   startDateStr = web2strdate(stts{row});
                   endDateStr = web2strdate(edts{row});
+
+                  % Check if datacenter includes a sacpz web service, edit
+                  % opts.sacpz field if no service available.
+                  if exist('sacpz_svc_incl','var')
+                      opts.getsacpz = 1;
+                  else
+                      opts.getsacpz = 0;
+                  end
 
                   dbPrint('query : %s\n', q);
                   tmp = getTheTraces(network, station, location, channel, startDateStr, endDateStr, opts);
@@ -430,14 +442,17 @@ classdef irisFetch
                         otherwise
 
                            if length(param)>7 && strcmpi(param(1:7),'http://')
-                              % set the bases
+                              % set service base
                               opts.newbase = param;
+                           elseif length(param)>8 && strcmpi(param(1:8),'https://')
+                               % set service base
+                               opts.newbase = param;
                            elseif length(param) > 13 && strcmpi(param(1:13),'DATASELECTURL')
                               % expecting 'DATASELECTURL:http://host/path/to/dataselect'
-                              opts.dataselectURL = param(15:end)
+                              opts.dataselectURL = param(15:end);
                            elseif length(param) > 10 && strcmpi(param(1:10),'STATIONURL')
                               % expecting 'STATIONURL:http://host/path/to/station'
-                              opts.stationURL = param(12:end)
+                              opts.stationURL = param(12:end);
                            elseif length(param) >= 8 && strcmpi(param(1:8),'WRITESAC')
                               % expecting 'WRITESAC' or
                               % 'WRITESAC:full/directory/path'
@@ -489,21 +504,25 @@ classdef irisFetch
 
                switch je.identifier
                   case 'MATLAB:Java:GenericException'
-                     if any(strfind(je.message,'URLNotFoundException'));
+                     if any(strfind(je.message,'URLNotFoundException'))
                         error('IRISFETCH:Trace:URLNotFoundException',...
                            'Trace found no requested data and returned the following error:\n%s',...
                            je.message);
                      end
-                     if any(strfind(je.message,'java.io.IOException: edu.iris.dmc.service.UnauthorizedAccessException'));
-                        error('IRISFETCH:Trace:UnauthorizedAccessException',...
-                           'Invalid Username and Password combination\n');
+                     if any(strfind(je.message,'java.io.IOException: edu.iris.dmc.service.UnauthorizedAccessException'))
+                         error('IRISFETCH:Trace:UnauthorizedAccessException',...
+                             'Invalid Username and Password combination\n');
                      end
-                     if any(strfind(je.message,'NoDataFoundException'));
-                        if opts.verbosity
-                           warning('IRISFETCH:Trace:URLNotFoundException',...
-                              'Trace found no requested data and returned the following error:\n%s',...
-                              je.message);
-                        end
+                     if any(strfind(je.message,'parseMetadata'))
+                         error('IRISFETCH:Trace:Metadata',...
+                             'Incomplete metadata detected. Please contact ws-issues@iris.washington.edu with details about your request\n');
+                     end
+                     if any(strfind(je.message,'NoDataFoundException'))
+                         if opts.verbosity
+                             warning('IRISFETCH:Trace:URLNotFoundException',...
+                                 'Trace found no requested data and returned the following error:\n%s',...
+                                 je.message);
+                         end
                      end
                   otherwise
                      fprintf('Exception occured in IRIS Web Services Library: %s\n', je.message);
@@ -936,7 +955,7 @@ classdef irisFetch
          %  irisFetch requires version 2.0.15 or greater of the IRIS Web Services Library,
          %  available from:
          %
-         %  http://github.com/iris-edu/iris-ws/releases/latest
+         %  https://ds.iris.edu/files/IRIS-WS/2/IRIS-WS-2.0-latest.jar
          %
          %  This jar file must be added to your MATLAB path, which may be done
          %  in a variety of ways.  One common way is to include a javaaddpath
@@ -955,11 +974,13 @@ classdef irisFetch
          
          % ~~~ IRIS DOWNLOAD ~~~
          if ~isSilent
-             disp('Retrieving latest version of IRIS-WS java library...');
+             disp('Retrieving latest version of IRIS-WS Java library...');
+             % DO NOT use https for URL as javaaddpath will not work using
+             % https protocol
              latest_jar = 'http://ds.iris.edu/files/IRIS-WS/2/IRIS-WS-2.0-latest.jar';
              javaaddpath(latest_jar);
              if exist('edu.iris.dmc.extensions.fetch.TraceData','class')
-                 disp('IRIS-WS java library has been added to your Matlab java path.');
+                 disp('IRIS-WS java library has been added to your dynamic Java path.');
              else
                 disp('Latest version of IRIS-WS Java library cannot be automatically determined.')
                 disp('Please download the latest version of the .jar file from this link:')
@@ -1221,7 +1242,7 @@ classdef irisFetch
                datestr(irisFetch.jdate2mdate(javadateTime),irisFetch.DATE_FORMATTER);
             %urlString         = char(criteria.toUrlParams().get(0));
             urlString         = crit.toUrlParams().get(0).toCharArray()';
-            if ~(all(reconvertedMatlabTime == matlabTimeString));
+            if ~(all(reconvertedMatlabTime == matlabTimeString))
                disp(s-fix(s));
                if datenum(reconvertedMatlabTime) > datenum(t)
                   fprintf('^ ');
@@ -1626,6 +1647,7 @@ classdef irisFetch
                   'edu.iris.dmc.fdsn.station.model.LongitudeBaseType'
                   'edu.iris.dmc.fdsn.station.model.LatitudeBaseType'
                   'edu.iris.dmc.fdsn.station.model.Float'
+                  'edu.iris.dmc.fdsn.station.model.Coefficient'
                   }
                s                  = value.getValue();
                % unused get routines: getUnit, getPlusError,getMinusError
@@ -1656,13 +1678,12 @@ classdef irisFetch
                s.FrequencyStart          = double(value.getFrequencyStart());
                s.FrequencyEnd            = double(value.getFrequencyEnd());
                s.FrequencyDBVariation    = double(value.getFrequencyDBVariation());
-               s.Value                   = value.getValue();
-               s.Frequency               = value.getFrequency();
+               s.Value                   = str2double(value.getValue());
+               s.Frequency               = str2double(value.getFrequency());
                s.InputUnits = irisFetch.addUnits(value.getInputUnits);
                s.OutputUnits = irisFetch.addUnits(value.getOutputUnits);
                % s.OutputUnitsName         = char(value.getOutputUnits().getName); % get edu.iris.dmc.fdsn.station.model.Units
                % s.OutputUnitsDescription  = char(value.getOutputUnits().getDescription); % get edu.iris.dmc.fdsn.station.model.Units
-
 
             case {'edu.iris.dmc.fdsn.station.model.Polynomial'}
                s.ApproximationType       = char(value.getApproximationType());
@@ -1682,7 +1703,6 @@ classdef irisFetch
                s.values = irisFetch.parseAnArray(value.values());
                s.name                    = char(value.name());
                s.ordinal                 = value.ordinal();
-
 
             case {'edu.iris.dmc.fdsn.station.model.package-info'}
 
@@ -1718,7 +1738,6 @@ classdef irisFetch
                s.Decimation              = irisFetch.parse(value.getDecimation());  % get edu.iris.dmc.fdsn.station.model.Decimation
                s.StageGain               = irisFetch.parse(value.getStageGain());   % get edu.iris.dmc.fdsn.station.model.Gain
 
-
             case {'edu.iris.dmc.fdsn.station.model.SampleRateRatioType'}
                s.NumberSamples           = double(value.getNumberSamples());
                s.NumberSeconds           = double(value.getNumberSeconds());
@@ -1741,7 +1760,6 @@ classdef irisFetch
                s.FloatData               = irisFetch.parseAnArray(value.getFloatData());
                s.IntData                 = irisFetch.parseAnArray(value.getIntData());
                s.ExpectedNextSampleTime  = irisFetch.parse(value.getExpectedNextSampleTime()); % get java.sql.Timestamp
-
 
             case {'edu.iris.dmc.fdsn.station.model.PhoneNumberType'}
                s.Phone = sprintf('%s: [+%d] %03d %s',... % desc: [+country] area phonenum
@@ -1814,7 +1832,6 @@ classdef irisFetch
             case {'edu.iris.dmc.fdsn.station.model.DataAvailabilityExtent'}
                s.End                     = irisFetch.jdate2mdate(value.getEnd());
                s.Start                   = irisFetch.jdate2mdate(value.getStart());
-
 
             case {'edu.iris.dmc.fdsn.station.model.Coefficients'}
                s.CfTransferFunctionType  = char(value.getCfTransferFunctionType());
@@ -1958,12 +1975,10 @@ classdef irisFetch
                s.name                    = char(value.name());
                s.ordinal                 = value.ordinal();
 
-
             case {'edu.iris.dmc.fdsn.station.model.Response'}
                s.InstrumentSensitivity   = irisFetch.parse(value.getInstrumentSensitivity()); % get edu.iris.dmc.fdsn.station.model.Sensitivity
                s.Stage = irisFetch.parseAnArray(value.getStage());
                s.InstrumentPolynomial    = irisFetch.parse(value.getInstrumentPolynomial()); % get edu.iris.dmc.fdsn.station.model.Polynomial
-
 
             case {'edu.iris.dmc.fdsn.station.model.Station$Operator'}
                s.Agency = irisFetch.parseAnArray(value.getAgency());
@@ -1985,7 +2000,7 @@ classdef irisFetch
                s.Phone = irisFetch.parseAnArray(value.getPhone());
 
             case {'edu.iris.dmc.fdsn.station.model.BaseNodeType'}
-               assert('did not expect to get here');
+               error('did not expect to get here');
                s.Comment = irisFetch.parseAnArray(value.getComment());
                s.Code                    = char(value.getCode());
                s.Description             = char(value.getDescription());
@@ -1995,7 +2010,6 @@ classdef irisFetch
                s.RestrictedStatus        = char(value.getRestrictedStatus());
                s.AlternateCode           = char(value.getAlternateCode());
                s.HistoricalCode          = char(value.getHistoricalCode());
-
 
             case {'edu.iris.dmc.fdsn.station.model.Channel'}
                s.ChannelCode             = char(value.getCode());
@@ -2082,7 +2096,6 @@ classdef irisFetch
                s.RestrictedStatus        = char(value.getRestrictedStatus());
                % s.AlternateCode           = char(value.getAlternateCode());
                % s.HistoricalCode          = char(value.getHistoricalCode());
-
 
             case {'edu.iris.dmc.sacpz.model.Sacpz'}
                s.Location                = char(value.getLocation());
@@ -2704,7 +2717,7 @@ classdef irisFetch
                   end
             end
             fieldpos = field_offset(sacfield);
-            if ftell(fid) == fieldpos || fseek(fid, fieldpos, 'bof') ~= -1;
+            if ftell(fid) == fieldpos || fseek(fid, fieldpos, 'bof') ~= -1
                %TODO make sure fseek successful!
                fwrite(fid, value, thisField.outClass);
             else

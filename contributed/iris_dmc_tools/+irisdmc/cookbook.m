@@ -1,13 +1,20 @@
 function cookbook
-
-%COOKBOOK example program using the IRIS DMC web services
-% COOKBOOK This is a simple example designed to demonstrate how the 
-% IRIS DMC web services mechanism can be used to grab seismic metadata 
-% from within Matlab. This example fetches basic station metadata.
+%% IRISDMC COOKBOOK (LEGACY / DEPRECATED)
 %
-% For more information about the IRIS DMC Web Services, see:
-%    http://www.iris.edu/ws
-
+% This cookbook demonstrates legacy IRIS DMC station metadata retrieval
+% using the irisdmc package and the Java IRIS-WS library.
+%
+% IMPORTANT (EarthScope Aug 2024):
+%   • This code relies on the legacy IRIS Java Web Services library.
+%   • MATLAB R2023a and later are NOT supported due to JVM changes.
+%   • Supported MATLAB versions: R2022b and earlier ONLY.
+%
+% This file is retained for historical reproducibility of earlier GISMO
+% workflows and is NOT part of the modern supported API.
+%
+% For modern station metadata access use:
+%   • ObsPy (Python)
+%   • FDSN Station REST services
 
 % CREATE WAVEFORMS
 % These waveforms are empty but contain network_station_channel info

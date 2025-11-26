@@ -1,42 +1,33 @@
-function tests = antelope2waveform_test()
-% ANTELOPE2WAVEFORM_TEST
-% Unit tests for the antelope2waveform() reader.
+function tests = test_antelope2waveform()
+% TEST_ANTELOPE2WAVEFORM
+% Integration test for the Antelope → waveform reader.
 %
-% This test will gracefully skip if:
-%   • Antelope MATLAB toolbox is NOT installed
-%   • the bundled demo test database is missing
+% This test is automatically SKIPPED if:
+%   • Antelope MATLAB toolbox is not installed
+%   • The bundled demo Antelope database is missing
 %
-% Glenn + ChatGPT (2025)
+% Glenn Thompson + ChatGPT (2025)
 
 tests = functiontests(localfunctions);
 end
 
 %% ------------------------------------------------------------------------
-%  Test: load waveform(s) from demo Antelope database
-% -------------------------------------------------------------------------
 function testAntelopeRead(testCase)
 
-% --- Check Antelope availability -----------------------------------------
-if ~exist('+antelope', 'dir')
-    testCase.verifyFail(['Antelope MATLAB toolbox not found. ' ...
-        'Skipping Antelope reader tests.']);
-    return;
+% --- Skip if Antelope not available --------------------------------------
+if ~(exist('dbopen','file') == 3)
+    testCase.assumeFail('Antelope dbopen() not found — skipping test.');
 end
-
-% OR use:
-% if exist('dbopen','file') ~= 3  % compiled mex
-%     testCase.verifyFail('Antelope dbopen() not found – skipping test.');
-% end
 
 % --- Locate test database ------------------------------------------------
 gismopath = fileparts(which('startup_GISMO'));
 dbpath = fullfile(gismopath, 'tests', 'test_data', 'antelope2waveform_testdb');
 
-testCase.verifyTrue(exist(dbpath,'dir') == 7, ...
+testCase.assumeTrue(exist(dbpath,'dir') == 7, ...
     sprintf('Antelope test database not found: %s', dbpath));
 
 % --- Query parameters ----------------------------------------------------
-sta  = '.*';          % wildcard everything
+sta  = '.*';
 chan = 'HHZ.*';
 starttime = datenum2epoch(datenum('16-Nov-2011 16:29:00'));
 endtime   = datenum2epoch(datenum('16-Nov-2011 16:43:24'));
@@ -48,18 +39,17 @@ w = antelope.antelope2waveform(dbpath, sta, chan, starttime, endtime);
 testCase.verifyClass(w, 'waveform');
 testCase.verifyGreaterThan(numel(w), 0, 'No waveforms returned.');
 
-% Check waveform metadata looks sane
+% Sampling rates must be positive
 testCase.verifyTrue(~any(get(w,'freq') <= 0), ...
     'Waveforms have non-positive sampling frequency.');
 
+% All waveforms must contain data
 testCase.verifyTrue(all(arrayfun(@(x) ~isempty(get(x,'data')), w)), ...
     'Some returned waveforms contain no data.');
 
 end
 
 %% ------------------------------------------------------------------------
-% Fixtures
-% -------------------------------------------------------------------------
 function setup(testCase)
 close all;
 end

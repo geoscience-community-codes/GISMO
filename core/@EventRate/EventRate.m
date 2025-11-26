@@ -1,184 +1,223 @@
 classdef EventRate
-%EventRate Event Rate class constructor.
-% 
-%    EventRate is a class that has been developed around plotting earthquake
-%    counts - i.e. the rate of events per unit time. It has evolved to compute
-%    other metrics such the hourly mean event rate, median event rate, mean 
-%    magnitude and cumulative magnitude, which are important metrics for an AVO
-%    swarm tracking system.
+%EventRate Event rate and magnitude summary per time window.
 %
-%    EventRate can import information from:
-%    (1) a Catalog object. 
-%    (2) a Datascope database written in the "swarms1.0" schema, defined at AVO. 
-%        This is the format used by the swarm tracking system (Thompson &
-%        West, 2010).
+%    EventRate is a helper class for summarizing seismic catalogs in time.
+%    It was originally developed for AVO swarm tracking and has since been
+%    generalized within GISMO. An EventRate object stores:
 %
-%    ER = EventRate(Catalog_OBJECT, 'binsize', BINSIZE) creates an eventrate object
-%    from a Catalog object using non-overlapping bins of BINSIZE days. 
+%      • the time coordinate of each bin (DATENUM),
+%      • the number of events in each bin (counts),
+%      • time–normalized rates (mean_rate, median_rate),
+%      • magnitude-based metrics per bin (cum_mag, mean_mag, median_mag),
+%      • simple summary statistics (min_mag, max_mag, total_counts, total_mag).
 %
-%    ER = EventRate(Catalog_OBJECT, 'binsize', BINSIZE, 'stepsize', STEPSIZE) creates an eventrate object
-%    using overlapping bins. If omitted STEPSIZE==BINSIZE.
+%    In modern GISMO workflows, EventRate objects are almost always
+%    constructed via the Catalog method:
 %
-%%   EXAMPLES:
+%        ER = C.eventrate('binsize', BINSIZE, 'stepsize', STEPSIZE)
 %
-%       First create a catalog object from the demo database:
-%           dbpath = demodb('avo')
-%           catalogObject = readEvents('datascope', 'dbpath', dbpath, ...
-%                  'dbeval', ...
-%                  'deg2km(distance(lat, lon, 60.4853, -152.7431))<15.0' ...
-%                  );
+%    where:
+%        • C        is a Catalog object
+%        • BINSIZE  is the bin size in days
+%        • STEPSIZE is the step size in days (for overlapping/sliding windows)
 %
-%       (1) Create an eventrate object using a binsize of 1 day:
-%           erobj = catalogObject.eventrate('binsize', 1);
+%    If STEPSIZE is omitted it defaults to BINSIZE, giving non-overlapping
+%    bins.
 %
-%       (2) Create an eventrate object using a binsize of 1 hour:
-%           erobj = catalogObject.eventrate('binsize', 1/24);
+%    Examples (recommended usage):
 %
-%       (3) Create an eventrate object using a binsize of 1 hour but a stepsize of 5 minutes:
-%           erobj = catalogObject.eventrate('binsize', 1/24, 'stepsize', 5/1440);
+%        % Hourly event counts
+%        ER = C.eventrate('binsize', 1/24);
 %
-%%   PROPERTIES
+%        % 1-hour sliding window every 5 minutes
+%        ER = C.eventrate('binsize', 1/24, 'stepsize', 5/1440);
 %
-%    For a list of all properties type properties(EventRate)
+%        % Quick visualization of multiple metrics
+%        ER.plot('metric', {'counts','mean_rate','cum_mag'});
 %
-%    time                % (array) time of the center of each bin as a DATENUM
+%        % Swarm-style plots
+%        ER.helenaplot();
+%        ER.pythonplot();
 %
-%    METRICS:
-%        counts 		     % (array) number of events in each bin
-%        mean_rate           % (array) number of events per hour in each bin
-%        median_rate	     % (array) reciprocal of the median time interval between events. Represented as an hourly rate.
-%        cum_mag		     % (array) total sum of energy in each bin, represented as a magnitude.
-%        mean_mag		     % (array) mean magnitude of events in each bin 
-%        median_mag          % (array) median magnitude of events in each bin
-%        min_mag             % (array) smallest magnitude in each bin
-%        max_mag             % (array) largest magnitude in each bin
+% -------------------------------------------------------------------------
+%   PROPERTIES (summary)
+% -------------------------------------------------------------------------
+%    time                (Nx1 double) center of each time bin (DATENUM)
 %
-%    SUMMARY DATA:
-%        numbins             % (scalar) number of bins used for grouping
-%                                events
-%        total_counts        % (scalar) sum of counts
-%        total_mag           % (scalar) total sum of energy of all catalogObjects, represented as a magnitude
+%   METRICS (per bin):
+%    counts              (Nx1 double) number of events in each bin
+%    mean_rate           (Nx1 double) mean event rate [events/hour]
+%    median_rate         (Nx1 double) median-based rate [events/hour]
+%                        (see notes below)
+%    energy              (Nx1 double) total energy per bin (linear units)
+%    cum_mag             (Nx1 double) cumulative magnitude of energy
+%    mean_mag            (Nx1 double) mean magnitude in each bin
+%    median_mag          (Nx1 double) median magnitude in each bin
+%    min_mag             (Nx1 double) smallest magnitude in each bin
+%    max_mag             (Nx1 double) largest magnitude in each bin
 %
-%    METADATA:
-%        etype               % event type/classification. 
-%        snum                % (scalar) start date/time in DATENUM format
-%        enum                % (scalar) end date/time in DATENUM format
-%        binsize             % (scalar) bin size in days
-%        stepsize            % (scalar) step size in days
-%        region              % (4-element vector) [minlon maxlon minlat maxlat]
-%        minmag              % (scalar) magnitudes smaller than this were eliminated
-%        dbroot              % path to the original data on disk
-%        archiveformat       % indicates if the source is a flat file, or
-%                              'daily' or 'monthly' volumes
-%        auth                % auth of the events
+%   SUMMARY DATA:
+%    numbins             (scalar) number of bins
+%    total_counts        (scalar) total number of events (sum(counts))
+%    total_mag           (scalar) total energy of all events, expressed
+%                              as a single magnitude
 %
-%%   METHODS
+%   METADATA:
+%    etype               (char) event type/classification (legacy)
+%    snum                (scalar) start time (DATENUM)
+%    enum                (scalar) end time (DATENUM)
+%    binsize             (scalar) bin size in days
+%    stepsize            (scalar) step size in days
+%    misc_fields         (cell)  additional metadata field names (optional)
+%    misc_values         (cell)  additional metadata values (optional)
 %
-%    For a list of all methods type methods EventRate 
+% -------------------------------------------------------------------------
+%   NOTES ON RATES AND MAGNITUDES
+% -------------------------------------------------------------------------
+%   • Bins are defined in units of days. A bin of length BINSIZE therefore
+%     spans BINSIZE*24 hours.
 %
+%   • mean_rate is defined as:
 %
-%%   See also Catalog, Catalog_lite
+%         mean_rate = counts / (24 * binsize);
 %
-%% AUTHOR: Glenn Thompson
-
+%     giving units of events/hour.
+%
+%   • median_rate is derived from the median time interval between events
+%     in each bin (converted to hours) and then compared with the simple
+%     mean_rate. The constructor enforces:
+%
+%         median_rate = max( mean_rate, median_rate_from_intervals );
+%
+%     so that the median-based rate never falls below the simple average.
+%
+%   • energy is stored in linear units; cum_mag, mean_mag, median_mag and
+%     total_mag are computed dynamically via magnitude.eng2mag().
+%
+% -------------------------------------------------------------------------
+%   LEGACY USAGE (NOT RECOMMENDED)
+% -------------------------------------------------------------------------
+%    Older AVO workflows constructed EventRate directly from a Datascope
+%    database in a custom "swarms1.0" schema (Thompson & West, 2010), and
+%    also used the now-deprecated 'etypes' option to build vectors of
+%    EventRate objects by event type. That interface is not guaranteed to
+%    work in current GISMO and is no longer maintained.
+%
+%    For new code, always construct EventRate via:
+%
+%        ER = Catalog.eventrate(...)
+%
+% -------------------------------------------------------------------------
+%   SEE ALSO
+% -------------------------------------------------------------------------
+%    Catalog, Catalog/eventrate, EventRate.cookbook
+%
+% AUTHOR: Glenn Thompson
+%
 % $Date: 2014-05-06 14:52:40 -0800 (Tue, 06 May 2014) $
 % $Revision: 404 $
 
-
-% I don't think these parts work anymore
-%       (4) Create a vector of eventrate objects subclassified using event types 'r', 'e', 'l', 'h', 't':
-%               erobj = eventrate(catalogObject, 1, 'etypes', 'relht');
-%           To plot counts on separate figures:
-%               erobj.plot()
-%           To plot counts and energy panels, each event type as a separate figure:
-%               erobj.plot('metric', {'counts';'energy'});
-%           To plot counts and energy panels on separate figures, each event type as panels:
-%               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'panels'); 
-%           To plot counts and energy panels on separate figures, each event type stacked:
-%               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');
-%
-%       (5) A full example:
-%               catalogObject = catalog(fullfile(MVO_DATA, 'mbwh_catalog'), 'seisan', 'snum', datenum(1996,10,1), 'enum', datenum(2004,3,1), 'region', 'Montserrat')
-%               erobj = eventrate(catalogObject, 365/12, 'stepsize', 1, 'etypes', 'thlr');
-%               erobj.plot('metric', {'counts';'energy'}, 'plotmode', 'stacked');
-%
-
-%% PROPERTIES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+    %% PROPERTIES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     properties(GetAccess = 'public', SetAccess = 'public')
         time = [];          % (array) in datenum format
-        counts = []; 		% (array) number of events in each bin
-		mean_rate = [];      % (array) number of events per hour in each bin
-		median_rate = [];	% (array) reciprocal of the median time interval between events. Represented as an hourly rate.
-		cum_mag = [];		% (array) total sum of energy in each bin, represented as a magnitude.
-		mean_mag = [];		% (array)   
-        median_mag = [];     % (array)
-        energy = [];
-        total_counts = [];   % (scalar) sum of counts
-		total_mag = [];      % (scalar) total sum of energy of all catalogObjects, represented as a magnitude	
-        numbins = [];        % (scalar)
-        min_mag = [];
-        max_mag = [];
-        etype = '*';
-        snum = 0;
-        enum = now;
-        binsize = 1;
-        stepsize = 1;
-        misc_fields = {};
-        misc_values = {};
+        counts = [];        % (array) number of events in each bin
+        mean_rate = [];     % (array) events per hour in each bin
+        median_rate = [];   % (array) median-based rate [events/hour]
+        cum_mag = [];       % (array) total sum of energy per bin (mag)
+        mean_mag = [];      % (array) mean magnitude per bin
+        median_mag = [];    % (array) median magnitude per bin
+        energy = [];        % (array) total energy per bin (linear units)
+        total_counts = [];  % (scalar) sum of counts
+        total_mag = [];     % (scalar) total energy of all events (mag)
+        numbins = [];       % (scalar) number of bins
+        min_mag = [];       % (array) smallest magnitude in each bin
+        max_mag = [];       % (array) largest magnitude in each bin
+        etype = '*';        % (char) legacy event-type label
+        snum = 0;           % (scalar) start time (DATENUM)
+        enum = now;         % (scalar) end time (DATENUM)
+        binsize = 1;        % (scalar) bin size in days
+        stepsize = 1;       % (scalar) step size in days
+        misc_fields = {};   % (cell) additional metadata field names
+        misc_values = {};   % (cell) additional metadata values
     end
-    
- %% PUBLIC METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
-	methods
+
+    %% PUBLIC METHODS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    methods
         %% CONSTRUCTOR
         function self = EventRate(time, counts, energy, median_energy, ...
-                smallest_energy, biggest_energy, median_time_interval, total_counts, ...
-                snum, enum, etypes, binsize, stepsize, numbins)
-            self.time = time;
-            self.counts = counts;          
-            self.median_rate = 1 ./ (median_time_interval * 24); 
-            self.median_rate(counts<10) = 0;
-            self.median_rate = max([self.counts / (24 * binsize); self.median_rate]);      
-            self.median_mag = magnitude.eng2mag(median_energy);
-            self.energy = energy;
-            self.total_counts = total_counts;  	
+                smallest_energy, biggest_energy, median_time_interval, ...
+                total_counts, snum, enum, etypes, binsize, stepsize, numbins)
+            % EventRate constructor (normally called via Catalog.eventrate).
+            %
+            % TIME                center of each bin (DATENUM)
+            % COUNTS              events per bin
+            % ENERGY              total energy per bin (linear units)
+            % MEDIAN_ENERGY       median energy per bin (linear units)
+            % SMALLEST_ENERGY     minimum energy per bin
+            % BIGGEST_ENERGY      maximum energy per bin
+            % MEDIAN_TIME_INTERVAL median inter-event time within each bin (days)
+            % TOTAL_COUNTS        sum(COUNTS)
+            % SNUM, ENUM          overall time range (DATENUM)
+            % ETYPES              event-type label (legacy/optional)
+            % BINSIZE, STEPSIZE   bin and step size (days)
+            % NUMBINS             number of bins
+
+            self.time    = time;
+            self.counts  = counts;
+            self.energy  = energy;
+            self.total_counts = total_counts;
             self.numbins = numbins;
-            self.min_mag = magnitude.eng2mag(smallest_energy);
-            self.max_mag = magnitude.eng2mag(biggest_energy);
-            self.etype = etypes;
-            self.snum = snum;
-            self.enum = enum;
-            self.binsize = binsize;
+
+            % Median-based event rate [events/hour].
+            self.median_rate = 1 ./ (median_time_interval * 24);
+            self.median_rate(counts < 10) = 0;
+
+            % Enforce median_rate >= simple mean_rate
+            simple_mean_rate = self.counts / (24 * binsize);
+            self.median_rate = max([simple_mean_rate; self.median_rate]);
+
+            % Magnitude statistics
+            self.median_mag = magnitude.eng2mag(median_energy);
+            self.min_mag    = magnitude.eng2mag(smallest_energy);
+            self.max_mag    = magnitude.eng2mag(biggest_energy);
+
+            % Metadata
+            self.etype    = etypes;
+            self.snum     = snum;
+            self.enum     = enum;
+            self.binsize  = binsize;
             self.stepsize = stepsize;
-%             if (enum-snum) < binsize
-%                 error('binsize cannot be bigger than data time range');
-%             end
+
+            % If needed, further validation could go here, e.g.:
+            % if (enum - snum) < binsize
+            %     error('EventRate:InvalidBinsize', ...
+            %           'binsize cannot exceed total data time range.');
+            % end
         end
-        
-        %% ----------------------------------------------
-        %% GETTERS
+
+        %% DERIVED PROPERTIES (GETTERS) -----------------------------------
         function cum_mag = get.cum_mag(erobj)
+            % Cumulative magnitude per bin
             cum_mag = magnitude.eng2mag(erobj.energy);
         end
+
         function mean_mag = get.mean_mag(erobj)
-            mean_mag = magnitude.eng2mag(erobj.energy./erobj.counts);
+            % Mean magnitude per bin
+            mean_mag = magnitude.eng2mag(erobj.energy ./ erobj.counts);
         end
+
         function mean_rate = get.mean_rate(erobj)
+            % Simple mean rate [events/hour] based on counts and binsize
             mean_rate = erobj.counts / (24 * erobj.binsize);
         end
+
         function total_mag = get.total_mag(erobj)
+            % Total magnitude corresponding to sum of all bin energies
             total_mag = magnitude.eng2mag(sum(erobj.energy));
         end
-         
-    end % methods 
-   
+    end
+
     methods(Static)
         cookbook()
     end
-
 end
-
-
-
-
