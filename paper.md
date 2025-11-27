@@ -1,6 +1,6 @@
 ---
 title: "GISMO: A MATLAB Toolbox for Seismic and Infrasound Data Analysis"
-version: "1.3.0"
+version: "v1.21.0"
 tags:
   - MATLAB
   - seismology
@@ -19,19 +19,12 @@ authors:
     affiliation: "2"
   - name: Michael E. West
     orcid: 0000-0000-0000-0000  # Update if Mike provides one
-    affiliation: "3"
-  - name: Dane Morrow Ketner
-    orcid: 0000-0002-1610-0773  # Placeholder until confirmed
-    affiliation: "4"
+    affiliation: "2"
 affiliations:
   - name: University of South Florida
     index: 1
-  - name: Roche Diagnostics, Switzerland
-    index: 2
   - name: University of Alaska Fairbanks
-    index: 3
-  - name: U.S. Geological Survey — Alaska Volcano Observatory
-    index: 4
+    index: 2
 date: 2025-12-01
 bibliography: paper.bib
 ---
@@ -53,7 +46,7 @@ GISMO is hosted on GitHub
 with documentation on the GISMO website  
 (https://geoscience-community-codes.github.io/GISMO/).
 
-GISMO remains one of the most widely used MATLAB-based seismic analysis environments for both research and operational monitoring applications.
+GISMO remains a widely used MATLAB-based seismic analysis environment for both research and operational monitoring applications.
 
 ## Statement of Need
 
@@ -70,13 +63,15 @@ MATLAB has been heavily used within the seismological community, both for resear
 
 - fully object-oriented support for waveforms and instrument metadata,  
 - automatic integration with FDSNWS, Antelope/CSS3.0, Earthworm, SAC, SEISAN, and MiniSEED,  
-- tools for catalog generation, event rates, cumulative energy release, RSAM, and reduced displacement,  
+- tools for catalog generation, event rates, cumulative energy plots, RSAM, and reduced displacement,  
 - robust correlation and clustering tools,  
 - high-level visualizations including drumplots, multistation spectrograms, and catalog/event-rate plots.  
 
 While modern Python tools such as ObsPy now dominate cloud-based and large-scale seismic data services, a substantial body of operational monitoring systems, teaching laboratories, and historical observatory workflows remain MATLAB-based. GISMO continues to serve this community by providing a stable, object-oriented seismic analysis environment for MATLAB users, particularly in contexts where **legacy telemetry systems, historical datasets, or long-standing MATLAB workflows** must be maintained for reproducibility and operational continuity.
 
 By providing this foundation, GISMO dramatically reduces the development effort required to build new seismic data workflows, prototype algorithms, or integrate legacy MATLAB systems with modern formats such as FDSN web services, StationXML, and QuakeML.
+
+In addition to supporting contemporary research and teaching, GISMO plays a critical role in enabling the reproducible re-analysis of historical seismic datasets that were originally processed using MATLAB-based observatory workflows. This includes legacy volcano-monitoring archives, early digital telemetry systems, and long-term seismic catalogs that remain operationally relevant today.
 
 ## What GISMO Provides
 
@@ -127,6 +122,7 @@ Though full software documentation and API references are maintained in the GitH
 - Extensive GitHub wiki with “Getting Started” guide, usage examples, cookbooks (tutorial scripts)  
 - Full suite of unit tests (developed over many years) to ensure functionality and regression safety  
 - Demonstrations, example data, and reproducible workflows for teaching and research  
+- A fully documented **testing, documentation, and release workflow** ensuring reproducibility, regression safety, web documentation generation, and archival via Zenodo  
 
 ## Example Usage
 
@@ -190,9 +186,26 @@ Users requiring modern FDSN web service access from newer MATLAB releases are en
 
 Full installation instructions, platform notes, and tutorials are provided on the GISMO GitHub Wiki.
 
-# Acknowledgements
+## Software Testing, Documentation, and Archival
+
+GISMO includes a comprehensive and continuously evolving suite of:
+	•	Unit tests
+	•	Cookbook-based executable tutorials
+	•	End-to-end training workflows
+
+These components are integrated into a structured release pipeline that:
+	1.	Executes all tests, cookbooks, and training scripts
+	2.	Regenerates the full web documentation using m2html
+	3.	Publishes updated documentation to the gh-pages branch
+	4.	Creates tagged software releases on GitHub
+	5.	Archives each release with a versioned DOI on Zenodo
+
+The full reproducible workflow is documented in
+RELEASE_AND_DOCUMENTATION_WORKFLOW.md in the GISMO repository.
+
+## Acknowledgements
 
 We thank:
-	•	Martin Mityska for ReadMSEEDFast.m and François Beauducel for rdmseed.m, on which the former is based.
-	•	Colleagues at UAF and USGS AVO who contributed early ideas and feedback
-	•	The many users who reported issues, contributed patches, and helped refine the toolbox
+•	Martin Mityska for ReadMSEEDFast.m and François Beauducel for rdmseed.m, on which the former is based.
+•	Colleagues at UAF and USGS AVO who contributed early ideas and feedback
+•	The many users who reported issues, contributed patches, and helped refine the toolbox
