@@ -26,9 +26,6 @@ end
 % ADD PATH TO CORE
 addpath(fullfile(gismopath,'core'));
 
-% ADD PATH TO PREVIOUS CORE
-%addpath(fullfile(gismopath,'core','deprecated'));
-
 % ADD A PATH TO EACH DIRCTORY IN CONTRIBUTED
 addContributed(gismopath,'contributed');
 
@@ -44,38 +41,36 @@ addContributed(gismopath,'uaf_internal');
 addpath(genpath(fullfile(gismopath,'applications')));
 
 % ADD A PATH TO JAR FILES
-f = fullfile(gismopath,'contributed','iris_dmc_tools','IRIS-WS-*');
-d = dir(f);
-if numel(d) == 1
-    f = fullfile(d.folder, d.name);
-    try 
-        javaaddpath(f);
-        disp(['Adding path: ', f]);
-    catch
-        disp(['Failed to add path: ', f]);
-    end
-end
-f = fullfile(gismopath,'contributed','USGS','swarm.jar');
+f = fullfile(gismopath,'contributed','jar_files','swarm.jar');
 try 
     javaaddpath(f);
     disp(['Adding path: ', f]);
 catch
     disp(['Failed to add path: ', f]);
 end
-f = fullfile(gismopath,'contributed', 'USGS','wwsclient-1.3.1.jar');
+f = fullfile(gismopath,'contributed', 'jar_files','wwsclient-1.3.7.jar');
 try 
     javaaddpath(f);
     disp(['Adding path: ', f]);
 catch
     disp(['Failed to add path: ', f]);
 end
-f = fullfile(gismopath,'contributed', 'USGS','pensive-1.6.0.jar');
+f = fullfile(gismopath,'contributed', 'jar_files','pensive-1.7.1.jar');
 try 
     javaaddpath(f);
     disp(['Adding path: ', f]);
 catch
     disp(['Failed to add path: ', f]);
 end
+f = fullfile(gismopath,'contributed', 'jar_files','IRIS-WS-2.20.1.jar');
+
+try 
+    javaaddpath(f);
+    disp(['Adding path: ', f]);
+catch
+    disp(['Failed to add path: ', f]);
+end
+
 % ADD PATH TO GISMO LIBRARY FUNCTIONS
 disp('Adding path: libgismo')
 addpath(fullfile(gismopath, 'libgismo'));
@@ -84,9 +79,9 @@ addpath(fullfile(gismopath, 'libgismo'));
 disp('Adding path: tests')
 addpath(fullfile(gismopath, 'tests'));
 
-% ADD PATH TO COOKBOOKS
-disp('Adding path: cookbooks')
-addpath(fullfile(gismopath, 'cookbooks'));
+% ADD PATH TO TRAININGS
+disp('Adding path: training')
+addpath(fullfile(gismopath, 'training'));
 
 %%
 function addContributed(gismopath, contribDir)
