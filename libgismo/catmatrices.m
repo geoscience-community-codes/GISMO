@@ -1,45 +1,50 @@
-function cmatrix=catmatrices(matrix2,matrix1);
-% CATMATRICES - concatenate 2D matrices of arbitrary size
-%    Sometimes it is rather tedious when reading in data
-%    to work out how to concatenate matrices.
-%    catmatrices is different to the inbuilt function cat,
-%    in that it works out in what what the dimensions are
-%    compatible, whereas cat expects the programmer to know.
+function C = catmatrices(A, B)
+% CATMATRICES  Concatenate two matrices using matching dimensions
 %
-%    Usage:
-%      outmatrix=catmatrices(matrix2,matrix1);
+%   C = CATMATRICES(A,B) concatenates A and B along the dimension that
+%   matches automatically:
 %
-%    INPUT:
-%      matrix2         - the matrix to be appended
-%      matrix1         - the primary matrix, to append matrix2 to
+%   • If size(A,1) == size(B,1) → horizontal concat   [A B]
+%   • If size(A,2) == size(B,2) → vertical concat     [A; B]
+%   • If size(A,1) == size(B,2) → horizontal with B'  [A B']
+%   • If size(A,2) == size(B,1) → vertical with B'    [A; B']
 %
-%    OUPUT:
-%      cmatrix         - the concatenated matrix
+%   This is intended for dynamically growing matrices when orientation
+%   is not known in advance (e.g., streaming waveform features).
 %
-%    See also cat
+%   Glenn Thompson
+%
+%   See also: CAT, HORZCAT, VERTCAT, rsam/read_bob_file, rsam/load 
 
-% AUTHOR: Glenn Thompson
-% $Date$
-% $Revision$
-
-if size(matrix1)~=[0 0]
-    s1=size(matrix1);
-    s2=size(matrix2);
-    if s1(1)==s2(1)
-        cmatrix=[matrix1 matrix2];
-    elseif s1(1)==s2(2)
-        cmatrix=[matrix1 matrix2'];
-    elseif s1(2)==s2(1)
-        cmatrix=[matrix1;matrix2'];
-    elseif s1(2)==s2(2)
-        cmatrix=[matrix1;matrix2];
-    else
-	size(matrix2)
-	size(matrix1)
-        error('matrix dimensions are incompatible');
-
+    % Handle empty primary matrix
+    if isempty(A)
+        C = B;
+        return
     end
-else
-    cmatrix=matrix2;
+
+    sA = size(A);
+    sB = size(B);
+
+    if sA(1) == sB(1)
+        % Same number of rows → horizontal concat
+        C = [A B];
+
+    elseif sA(2) == sB(2)
+        % Same number of columns → vertical concat
+        C = [A; B];
+
+    elseif sA(1) == sB(2)
+        % Transposed B matches rows
+        C = [A B'];
+
+    elseif sA(2) == sB(1)
+        % Transposed B matches columns
+        C = [A; B'];
+
+    else
+        error('smartcat:DimensionMismatch', ...
+            'Cannot concatenate: size(A) = [%d %d], size(B) = [%d %d]', ...
+            sA(1), sA(2), sB(1), sB(2));
+    end
 end
 

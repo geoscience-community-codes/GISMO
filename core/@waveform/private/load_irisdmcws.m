@@ -1,6 +1,7 @@
 function wavef = load_irisdmcws(request)
    
    % LOAD_IRISDMCWS loads waveforms using the IRIS Web Services Java Library
+   % STATUS: LEGACY (EarthScope Java client deprecated Aug 2024)
    % For more information about the IRIS Web Services Library for Java,
    % check out
    %

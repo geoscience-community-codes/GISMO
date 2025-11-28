@@ -14,6 +14,15 @@
 %   • Local MiniSEED if present
 %   • Otherwise IRIS DMC (if internet is available)
 %
+%% NOTE:
+% This training prefers local MiniSEED.
+% If local data are absent, it optionally falls back to IRIS and therefore
+% requires:
+%   • MATLAB R2022b or earlier
+%   • irisFetch + IRIS Java libraries
+%   • Active internet connection
+% The script will automatically skip if these are unavailable.
+%
 % ------------------------------------------------------------
 
 clc;
@@ -34,11 +43,33 @@ if exist('training_05_local.mseed','file')
     endTime   = datenum(2009,3,23,7,0,0);
 else
     disp('Local data not found. Testing IRIS availability...');
+
+    % --- MATLAB version guard
+    v = ver('MATLAB');
+    rel = regexp(v.Release,'\d{4}[ab]','match','once');
+    if str2double(rel(1:4)) >= 2023
+        warning('Training 05 skipped: irisFetch incompatible with MATLAB R2023a+');
+        return
+    end
+
+    % --- Java IRIS library guard
+    if exist('edu.iris.dmc.extensions.fetch.TraceData','class') ~= 8
+        warning('Training 05 skipped: IRIS Java library not on classpath');
+        return
+    end
+
+    % --- irisFetch availability
+    if exist('irisFetch','file') ~= 2
+        warning('Training 05 skipped: irisFetch not on path');
+        return
+    end
+
+    % --- Internet / IRIS service guard
     try
         irisFetch.Networks('limit',1);
         useIRIS = true;
     catch
-        warning('No waveform data available. Skipping Training 05.');
+        warning('Training 05 skipped: IRIS not reachable');
         return
     end
 end

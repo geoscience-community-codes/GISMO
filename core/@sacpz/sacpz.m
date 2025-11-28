@@ -1,362 +1,230 @@
-%SACPZ Class for reading SAC pole-zero files downloaded from IRIS
 classdef sacpz
-	properties
-		z = [];
-		p = [];
-		k = [];
-      created = NaN;
-        starttime = NaN;
-        endtime = NaN;
-        network = '';
-        station = '';
-        location = '';
-        channel = '';
-        latitude = NaN;
-        longitude = NaN;
-        depth = NaN;
-        elevation = NaN;
-        dip = NaN;
-        azimuth = NaN;
-        samplerate = NaN;
-        description = '';
-        inputunit = '';
-        outputunit = '';
-        instrumenttype = '';
-        instrumentgain = '';
-        instrumentgainunits = '';
-        comment = '';
-        sensitivity = '';
-        sensitivityunits = '';
-        a0 = NaN;
-	end
-	methods
-      function s = sacpz(filename)
-         %sacpz.sacpz Constructor for sacpz
-         % pz = sacpz(fileContents)
-         % pz = sacpz(webpage)  %defined by 'http://...'
-         % pz = sacpz(file)
-         %
-         % will return one sacpz object for each epoch in file
-         
-         % Examples:
-         % 1. Read a sacpz file:
-         %     pz = sacpz(fileread('SACPZ.IU.COLA.BHZ'))
-         % 2. Read from a webservices URL (SCAFFOLD: code can only handle 1 time period / channel currently)
-         %     pz = sacpz(webread('http://service.iris.edu/irisws/sacpz/1/query?net=AV&sta=OKSO&loc=--&cha=BHZ&starttime=2011-03-21T00:00:00'))
-         
-         if nargin == 0
-            return;
-         end
-         % read file into variable for later processing
-         if length(filename)>7 && strncmpi(filename,'http://',7)
-            fcontents = webread(filename);
-         elseif exist(filename,'file')
-            fcontents = fileread(filename);
-         else
-            fcontents = filename;
-         end
-         
-         if isempty(fcontents)
-            return;
-         end
-         
-         s = s.new_readroutine(fcontents);
-         
-      end
-      
-      function obj = new_readroutine(obj, fileContents)
-         persistent fieldmap
-         if isempty(fieldmap)
-            fieldmap = getFieldmap();
-         end
-         
-         % SACPZ file may contain multiple epochs
-         epochs = splitEpochs(fileContents);
-         
-         for N = 1 : numel(epochs)
-            [obj(N).p, obj(N).z, obj(N).k] = parsePZC(responsePart(epochs(N)));
-            
-            H = getHeaderLines(epochs(N));
-            
-            [hFields, hValues] = cellfun(@parseHeaderLine, H, 'UniformOutput', false);
-            
-            for M = 1:numel(hFields)
-               f = hFields{M};
-               % convert
-               switch f
-                  case {'START','END', 'CREATED'}
-                     v = datenum(hValues{M},'yyyy-mm-ddTHH:MM:SS');
-                     
-                  case {'LONGITUDE','LATITUDE','ELEVATION',...
-                        'DEPTH','DIP','AZIMUTH','SAMPLE RATE','A0'}
-                     v = str2double(hValues{M});
-                     
-                  case {'INSTGAIN', 'SENSITIVITY'}
-                     [v, units] = splitOffUnits(hValues{M});
-                     unitfield = [f, 'UNITS'];
-                     obj(N).(fieldmap(unitfield)) = units;
-                     
-                  otherwise
-                     v = hValues{M};
-               end
-               
-               if fieldmap.isKey(f)
-                  obj(N).(fieldmap(f)) = v;
-               else
-                  error('%s is not a known key', f);
-               end
-            end
-         end
-         
-         function [val, unit] = splitOffUnits(val)
-            % splitOffUnits    adds units field in obj and returns numeric measurement
-            % For use in sacpz lines such as:
-            %  SENSITIVITY       : 8.485070e+08 (M/S)
-            if isempty(val)
-               unit = '';
-               return;
-            end
-            tmp = textscan(val,'%f %s');
-            val = tmp{1};
-            if ~isempty(tmp{2})
-               unit = tmp{2}{1};
-            else
-               unit = '';
-            end
-         end
-         
-         function  X = splitEpochs(multipleEpochs)
-            % splitEpochs   returns cell for each epoch
-            % divisions between epochs are represented in the SACPZ file as
-            % multiple blank lines.
-            % Each epoch starts with a line of asterisks
-            % '* **********[...]'
-            X = strsplit(multipleEpochs,'\n\n\n');
-            X(cellfun(@isempty,X)) = [];
-            isLikelyEpoch = cellfun(@(x) strncmp('* **',x,4'),X);
-            X(~isLikelyEpoch) = [];
-         end
-         
-         function PZC = responsePart(t)
-            % the response follows the last asterisk in the epoch.
-            splitPoint = find(t{1}=='*',1, 'last');
-            PZC = t{1}(splitPoint+1:end);
-         end
-            
-         function tLines = getHeaderLines(t)
-            % getHeaderLines   returns header as cell of 1 line/variable
-            
-            % grab only header
-            splitPoint = find(t{1}=='*',1, 'last');
-            t = t{1}(1:splitPoint);
-            
-            % remove extraneous asterisks
-            t(t=='*') = '';
-            
-            % split header into individual lines
-            tLines = textscan(t,'%s','delimiter','\n');
-            
-            %tidy up
-            tLines = strtrim(tLines{:});
-            tLines(cellfun(@isempty,tLines)) = [];
-         end
-                     
-         function [field, val] = parseHeaderLine(t)
-            % expects FIELDNAME   (maybesomething) :  VALUE
-            colLoc = find(t==':',1,'first');
-            if colLoc
-               field = t(1:colLoc-1);
-               val = strtrim(t(colLoc+1:end));
-            else
-               field=''; val = ''; %error parsing!
-            end
-            parenLoc = find(field =='(',1,'first');
-            if parenLoc
-               field = field(1:parenLoc-1);
-            end
-            field = strtrim(field);
-         end
-         
-         function [p, z, c] = parsePZC(t)
-            lines = textscan(t,'%s','delimiter','\n');
-            lines = lines{:};
-            
-            z = getComplex('ZEROS', lines);
-            p = getComplex('POLES', lines);
-            
-            ConstHeader= strncmp('CONSTANT',lines,8);
-            
-            if any(ConstHeader)
-               c = str2double(lines{ConstHeader}(9:end));
-            else
-               c = NaN;
-            end
-         end
-         
-         function x = getComplex(fName, lines)
-            x = [];
-            fLen = length(fName);
-            header = find(strncmp(fName, lines, fLen));
-            if ~isempty(header)
-               nValues = str2double(lines{header}((fLen+1):end));
-               for q = 1 : nValues
-                  vals = str2num(lines{header + q});
-                  x(q,1) = vals(1) + vals(2) * 1i;
-               end
-            end
-         end
-         
-         function M = getFieldmap()
-            % getFieldmap  maps SACPZ text headers to sacpz object fields
-            M = containers.Map('KeyType', 'char', 'ValueType', 'char') ;
-            M('NETWORK') = 'network';
-            M('STATION') = 'station';
-            M('LOCATION') = 'location';
-            M('CHANNEL') = 'channel';
-            M('CREATED') = 'created';
-            M('START') = 'starttime';
-            M('END')='endtime';
-            M('DESCRIPTION') = 'description';
-            M('LATITUDE') = 'latitude';
-            M('LONGITUDE') = 'longitude';
-            M('ELEVATION') = 'elevation';
-            M('DEPTH') = 'depth';
-            M('DIP') = 'dip';
-            M('AZIMUTH') = 'azimuth';
-            M('SAMPLE RATE') = 'samplerate';
-            M('INPUT UNIT') = 'inputunit';
-            M('OUTPUT UNIT') = 'outputunit';
-            M('INSTTYPE') = 'instrumenttype';
-            M('INSTGAIN') = 'instrumentgain';
-            M('INSTGAINUNITS') = 'instrumentgainunits';
-            M('SENSITIVITY') = 'sensitivity';
-            M('SENSITIVITYUNITS') = 'sensitivityunits';
-            M('COMMENT') = 'comment';
-            M('A0') = 'a0';
-         end
-      end
+%SACPZ Canonical pole-zero instrument response class for GISMO
+%
+%   This class is the single authoritative representation of all
+%   pole-zero based instrument responses in GISMO.
+%
+%   Supported sources:
+%       • SACPZ text files
+%       • IRIS web SACPZ services
+%       • Antelope databases (static loader)
+%
+%   All legacy polezero structs and response_get_from_polezero() are
+%   deprecated and replaced by this class.
 
+    properties
+        % Core pole-zero model
+        z = complex([]);         % Zeros
+        p = complex([]);         % Poles
+        k = NaN;                 % Overall gain
 
-        %% -----------------------------------------------
-		function plot(obj)
-            %sacpz.plot() Plot poles & zeros, impulse response & frequency
-            %response
-            
-            % Poles (x) & zeros (o) plot with unit circle
-            figure(1)
-            zplane(obj.z, obj.p)
-            
-            % Impulse response 
-            figure(2)
-            sos = zp2sos(obj.z, obj.p, obj.k);
-            impz(sos)
-            
-            % Frequency response
-            figure(3)
-            freqz(sos)
-            
-            % Filter visualization GUI
-            %fvtool(sos)
+        % Validity times
+        created   = NaN
+        starttime = NaN
+        endtime   = NaN
+
+        % Channel metadata
+        network   = ''
+        station   = ''
+        location  = ''
+        channel   = ''
+
+        % Geometry
+        latitude  = NaN
+        longitude = NaN
+        elevation = NaN
+        depth     = NaN
+        dip       = NaN
+        azimuth   = NaN
+
+        % Sampling + units
+        samplerate = NaN
+        inputunit  = ''
+        outputunit = ''
+
+        % Instrument info
+        instrumenttype = ''
+        instrumentgain = ''
+        instrumentgainunits = ''
+        sensitivity = ''
+        sensitivityunits = ''
+        description = ''
+        comment = ''
+        a0 = NaN
+    end
+
+    %======================================================================
+    % CONSTRUCTOR
+    %======================================================================
+    methods
+        function obj = sacpz(source)
+            %SACPZ Construct from:
+            %   • File path
+            %   • Raw SACPZ text
+            %   • IRIS URL
+
+            if nargin == 0
+                return
+            end
+
+            if ischar(source) || isstring(source)
+                source = char(source);
+
+                if strncmpi(source,'http',4)
+                    txt = webread(source);
+                elseif exist(source,'file')
+                    txt = fileread(source);
+                else
+                    txt = source;   % assume raw text
+                end
+
+                obj = obj.parse_sacpz_text(txt);
+            end
         end
-        
+    end
+
+    %======================================================================
+    % HIGH-LEVEL OPERATIONS
+    %======================================================================
+    methods
         function [num,den] = transfer(obj)
-            % sacpz.transfer Compute the numerator and denominator of the
-            % transfer function with the zeros and poles given in a sacpz
-            % object.
+            %TRANSFER Return continuous-time transfer function
             [num,den] = zp2tf(obj.z, obj.p, obj.k);
         end
-            
-        %% -----------------------------------------------
+
         function response = to_response_structure(obj, frequencies)
-            %sacpz.to_response_structure(frequencies) Create response
-            %structure from sacpz object
-        
-            % INITIALIZE THE OUTPUT ARGUMENT
-            response.scnl = scnlobject(obj.station,obj.channel,obj.network,obj.location);
-            response.time = obj.starttime;
-            response.frequencies = reshape(frequencies,numel(frequencies),1);
-            response.values = [];
-            response.calib = NaN;
-            response.units = obj.outputunit;
-            response.sampleRate = obj.samplerate;
-            response.source = 'FUNCTION: RESPONSE_GET_FROM_POLEZERO';
-            response.status = [];
+            %TO_RESPONSE_STRUCTURE Create legacy GISMO response struct
 
+            response.scnl = scnlobject( ...
+                obj.station, obj.channel, obj.network, obj.location);
 
-            % Pole/zeros can be normalized with the following if not already normalized:
-            normalization = 1/abs(polyval(poly(obj.z),2*pi*1j)/polyval(poly(obj.p),2*pi*1j));
+            response.time        = obj.starttime;
+            response.frequencies = frequencies(:);
+            response.calib       = obj.k;
+            response.units       = obj.outputunit;
+            response.sampleRate  = obj.samplerate;
+            response.source      = 'SACPZ';
+            response.status      = '';
 
+            ws = 2*pi*response.frequencies;
+            num = poly(obj.z);
+            den = poly(obj.p);
+            scale = obj.k;
 
-            % CALCULATE COMPLEX RESPONSE AT SPECIFIED FREQUENCIES USING
-            % LAPLACE TRANSFORM FUNCTION freqs
-            ws = (2*pi) .* response.frequencies;
-            response.values = freqs(normalization*poly(obj.z),poly(obj.p),ws);
-
+            response.values = scale * freqs(num, den, ws);
         end
-	end
+
+        function plot(obj)
+            %PLOT Poles, impulse response, and frequency response
+
+            figure, zplane(obj.z, obj.p)
+            title('Poles and Zeros')
+
+            sos = zp2sos(obj.z, obj.p, obj.k);
+
+            figure, impz(sos)
+            title('Impulse Response')
+
+            figure, freqz(sos)
+            title('Frequency Response')
+        end
+    end
+
+    %======================================================================
+    % STATIC LOADERS
+    %======================================================================
+    methods (Static)
+        function obj = from_antelope(sta, chan, time, dbName)
+            %FROM_ANTELOPE Load response from Antelope database
+            %
+            %   pz = sacpz.from_antelope('OKSO','BHZ',datenum(...),dbName)
+            %
+            % Requires Antelope MATLAB toolbox.
+
+            db = dbopen(dbName,'r');
+            dbs = dblookup_table(db,'sensor');
+            t = datenum2epoch(time);
+
+            dbs = dbsubset(dbs, ...
+                sprintf('sta=="%s" && chan=="%s" && time<=%f && endtime>=%f', ...
+                        sta, chan, t, t));
+
+            dbi = dblookup_table(dbs,'instrument');
+            dbc = dblookup_table(dbi,'calibration');
+
+            dbj = dbjoin(dbs,dbi);
+            dbj = dbjoin(dbj,dbc);
+
+            dbj.record = 0;
+            [samprate, calib, dir, dfile] = ...
+                dbgetv(dbj,'samprate','calib','dir','dfile');
+
+            respfile = fullfile(dir,dfile);
+            ro = dbresponse(respfile);
+
+            [p,z,k] = response_to_pzk(ro);
+            free_response(ro);
+            dbclose(db);
+
+            obj = sacpz();
+            obj.p = p(:);
+            obj.z = z(:);
+            obj.k = k * calib;
+            obj.station = sta;
+            obj.channel = chan;
+            obj.starttime = time;
+            obj.samplerate = samprate;
+        end
+    end
+
+    %======================================================================
+    % INTERNAL PARSING
+    %======================================================================
+    methods (Access=private)
+
+        function obj = parse_sacpz_text(obj, txt)
+            epochs = strsplit(txt,'\n\n\n');
+            epochs = epochs(~cellfun(@isempty,epochs));
+
+            block = epochs{1};
+
+            % Headers
+            hdr = regexp(block,'\*([^\n]+)','tokens');
+            for i = 1:numel(hdr)
+                kv = strsplit(strtrim(hdr{i}{1}),':');
+                if numel(kv) < 2, continue, end
+                key = strtrim(kv{1});
+                val = strtrim(kv{2});
+
+                switch upper(key)
+                    case 'NETWORK';   obj.network = val;
+                    case 'STATION';   obj.station = val;
+                    case 'CHANNEL';   obj.channel = val;
+                    case 'LOCATION';  obj.location = val;
+                    case 'START';     obj.starttime = datenum(val,'yyyy-mm-ddTHH:MM:SS');
+                    case 'END';       obj.endtime   = datenum(val,'yyyy-mm-ddTHH:MM:SS');
+                    case 'LATITUDE';  obj.latitude  = str2double(val);
+                    case 'LONGITUDE'; obj.longitude = str2double(val);
+                    case 'ELEVATION'; obj.elevation = str2double(val);
+                    case 'SAMPLE RATE'; obj.samplerate = str2double(val);
+                    case 'INPUT UNIT';  obj.inputunit  = val;
+                    case 'OUTPUT UNIT'; obj.outputunit = val;
+                end
+            end
+
+            % Poles/zeros/constant
+            Z = regexp(block,'ZEROS\s+\d+([\s\S]*?)POLES','tokens','once');
+            P = regexp(block,'POLES\s+\d+([\s\S]*?)CONSTANT','tokens','once');
+            C = regexp(block,'CONSTANT\s+([eE\d\+\-\.]+)','tokens','once');
+
+            obj.z = parse_complex_lines(Z{1});
+            obj.p = parse_complex_lines(P{1});
+            obj.k = str2double(C{1});
+
+            function x = parse_complex_lines(txtblock)
+                L = textscan(txtblock,'%f %f');
+                x = complex(L{1},L{2});
+            end
+        end
+    end
 end
-
-
-
-%{
-Notes about the format of a SACPZ file:
-- header information surrounded by lines of '*'
-- Each header field starts with '*'
-- Some header fields include a second variable name eg. '(KNETWK)'
-  + these fields are surrounded by parenthesis 
-- Header values follow ':'
-- INSTGAIN and SENSITIVITY have (or may not have) 2 value & unit
-- CREATED, START, END all are dates
-
-- Header is followed by list of Poles, Zeros, and Constant.
-  + Number of values for Poles & Zeros is listed on first line
-  + Poles & Zeros are complex numbers
-  + CONSTANT may or may not appear.
-
-- Each epoch is separated by multiple spaces
-%}
-
-%{
-<SAMPLE SACPZ FILE follows>
-* **********************************
-* NETWORK   (KNETWK): IU
-* STATION    (KSTNM): ANMO
-* LOCATION   (KHOLE): 00
-* CHANNEL   (KCMPNM): BH1
-* CREATED           : 2016-01-04T11:50:14
-* START             : 1998-10-26T20:00:00
-* END               : 2000-10-19T16:00:00
-* DESCRIPTION       : Albuquerque, New Mexico, USA
-* LATITUDE          : 34.945900
-* LONGITUDE         : -106.457200
-* ELEVATION         : 1700.0
-* DEPTH             : 150.0
-* DIP               : 90.0
-* AZIMUTH           : 280.0
-* SAMPLE RATE       : 20.0
-* INPUT UNIT        : M
-* OUTPUT UNIT       : COUNTS
-* INSTTYPE          : Geotech KS-54000 Borehole Seismometer
-* INSTGAIN          : 2.023580e+03 (M/S)
-* COMMENT           : orientation changed 1997,099
-* SENSITIVITY       : 8.485070e+08 (M/S)
-* A0                : 8.608300e+04
-* **********************************
-ZEROS	3
-	+0.000000e+00	+0.000000e+00	
-	+0.000000e+00	+0.000000e+00	
-	+0.000000e+00	+0.000000e+00	
-POLES	5
-	-5.943130e+01	+0.000000e+00	
-	-2.271210e+01	+2.710650e+01	
-	-2.271210e+01	-2.710650e+01	
-	-4.800400e-03	+0.000000e+00	
-	-7.319900e-02	+0.000000e+00	
-CONSTANT	7.304203e+13
-
-
-* **********************************
-* NETWORK   (KNETWK): IU
-<ETC>
-%}
-

@@ -14,6 +14,12 @@
 %
 % If IRIS is unreachable, the script automatically skips execution.
 %
+% IMPORTANT:
+% This training requires:
+%   • MATLAB R2022b or earlier
+%   • Active internet connection
+%   • irisFetch + IRIS Java libraries
+% It will automatically SKIP on unsupported systems.
 % ------------------------------------------------------------
 
 clc;
@@ -24,6 +30,21 @@ disp('--- GISMO Training 04: IRIS Events & Waveforms ---');
 
 %% 1. Test IRIS Availability --------------------------------------------
 
+% --- MATLAB version guard
+v = ver('MATLAB');
+rel = regexp(v.Release,'\d{4}[ab]','match','once');
+if str2double(rel(1:4)) >= 2023
+    warning('Training 04 skipped: irisFetch incompatible with MATLAB R2023a+');
+    return
+end
+
+% --- Java IRIS library guard
+if exist('edu.iris.dmc.extensions.fetch.TraceData','class') ~= 8
+    warning('Training 04 skipped: IRIS Java library not on classpath');
+    return
+end
+
+% --- Internet / IRIS service guard
 try
     irisFetch.Networks('limit',1);
     irisAvailable = true;

@@ -40,6 +40,97 @@ This workflow is designed to ensure:
 
 ---
 
+## Optional MATLAB Toolboxes & External Dependencies
+
+GISMO is designed to run with **core MATLAB only**, but several advanced
+analysis, visualization, and data-access features require additional
+toolboxes or third-party software. All such functionality is **optional**
+and automatically disabled when dependencies are not present.
+
+### MATLAB Toolboxes (Optional)
+
+The following MathWorks toolboxes are required for specific feature sets:
+
+#### Signal Processing Toolbox (Recommended)
+Required for:
+- Digital filtering (Butterworth, `filtfilt`)
+- Spectral analysis
+- Spectrograms
+- RSAM / amplitude spectrum workflows
+- Correlation and waveform filtering utilities
+
+Used by:
+- RSAM
+- Drumplot
+- Three-component processing
+- Correlation analysis
+- Instrument response deconvolution post-filtering
+
+#### Statistics & Machine Learning Toolbox (Optional)
+Required for:
+- Advanced correlation metrics
+- Regression-based utilities
+- Some similarity / distance measures
+
+Used by:
+- Master correlation tools
+- Correlation clustering utilities
+
+### Antelope Toolbox (Optional, External)
+
+Some GISMO functionality supports **Antelope databases** via the
+Antelope MATLAB Toolbox provided by **BRTT, Inc.**
+
+Required for:
+- Loading waveforms from Antelope databases
+- Retrieving instrument responses from Antelope
+- `test_antelope2waveform`
+- Optional response loading via `sacpz.from_antelope()`
+
+Antelope is **not required** for core GISMO operation.
+
+Available from:
+https://brtt.com
+
+> Note: Antelope support is automatically skipped if Antelope is not installed.
+
+### IRIS / EarthScope Data Access (Legacy)
+
+GISMO supports legacy **IRIS DMC waveform retrieval** via `irisFetch`
+for MATLAB **R2022b and earlier only**.
+
+Required for:
+- `+irisdmc` package
+- `test_irisfetch`
+- `test_irisdmc_cookbook`
+
+Limitations:
+- MATLAB R2023a+ no longer supports the required Java IRIS-WS libraries
+- These features are automatically skipped in newer MATLAB versions
+
+### Continuous Integration & Testing
+
+GISMO unit tests automatically detect:
+- Missing toolboxes
+- Missing Antelope installations
+- Unsupported MATLAB versions
+- Missing Java / internet connectivity
+
+and **gracefully skip tests** when required dependencies are unavailable.
+This ensures that GISMO remains CI-safe and portable across systems.
+
+### Quick Dependency Summary
+
+| Feature | Required Dependency |
+|--------|----------------------|
+| Basic waveform processing | None (MATLAB only) |
+| Filtering, spectra, RSAM | Signal Processing Toolbox |
+| Correlation & clustering | Signal + Statistics Toolboxes |
+| Antelope database access | Antelope Toolbox (BRTT) |
+| IRIS / EarthScope downloads | `irisFetch` + Java (≤ R2022b) |
+
+---
+
 ## MATLAB Compatibility Note
 
 GISMO is fully supported on **MATLAB R2022b and earlier**.  

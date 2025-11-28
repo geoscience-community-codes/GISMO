@@ -1,59 +1,67 @@
-function examine_miniseed(thisfilename)
-%EXAMINE_MINISEED Analyze all segments within a MiniSEED file
-%   MiniSEED files can continue multiple segments, separated by changes in
-%   sampling interval. EXAMINE_MINISEED uses RDMSEED to load the file and
-%   then EXAMINE_MINISEED plots various statistics.
+function stats = examine_miniseed(thisfilename)
+%EXAMINE_MINISEED Inspect internal segments of a MiniSEED file using RDMSEED
+%
+% stats = examine_miniseed(filename)
+%
+% Returns a struct of sampling statistics and generates diagnostic plots.
+%
+% Requires rdmseed.m (Beauducel).
 
-s = rdmseed(thisfilename); % written by Francois Beuducel
+assert(isfile(thisfilename), 'File not found.');
+
+s = rdmseed(thisfilename);
+
+nseg = numel(s);
+stats.mean_fs   = nan(1,nseg);
+stats.median_fs = nan(1,nseg);
+stats.max_fs    = nan(1,nseg);
+stats.min_fs    = nan(1,nseg);
+stats.std_fs    = nan(1,nseg);
+stats.given_fs  = nan(1,nseg);
+stats.segment_time = nan(1,nseg);
 
 figure
-for c=1:numel(s)
-    subplot(3,1,1), plot(s(c).t, s(c).d,'.')
-    hold on
+
+for c = 1:nseg
+    subplot(3,1,1)
+    plot(s(c).t, s(c).d, '.'); hold on
     datetick('x')
-    
-    %             w(c) = waveform(ChannelTag(s(c).network, s(c).station, s(c).location, s(c).channel), ...
-    %                 s(c).sampleRate, epoch2datenum(s(c).startTime), s(c).data);
-    %             w(c) = waveform(ChannelTag(s(c).NetworkCode, s(c).StationIdentifierCode, s(c).LocationIdentifier, s(c).ChannelIdentifier), ...
-    %                 s(c).SampleRate, s(c).RecordStartTimeMATLAB, s(c).d);
-    %                 debug.print_debug(1, sprintf('Segment %d of %d\n', c, numel(s)) )
-    tdiff = diff(s(c).t*86400);
+
+    tdiff = diff(s(c).t * 86400);
     real_fs = 1./tdiff;
-    mean_fs(c) = nanmean(real_fs);
-    median_fs(c) = nanmedian(real_fs);
-    max_fs(c) = nanmax(real_fs);
-    min_fs(c) = nanmin(real_fs);
-    std_fs(c) = nanstd(real_fs);
-    given_fs(c) = s(c).SampleRate;
-    segment_time(c) = s(c).t(1);
-    
-    if c>1
-        tjump(c-1) = s(c).t(1) - s(c-1).t(end);
+
+    stats.mean_fs(c)   = nanmean(real_fs);
+    stats.median_fs(c) = nanmedian(real_fs);
+    stats.max_fs(c)    = nanmax(real_fs);
+    stats.min_fs(c)    = nanmin(real_fs);
+    stats.std_fs(c)    = nanstd(real_fs);
+    stats.given_fs(c)  = s(c).SampleRate;
+    stats.segment_time(c) = s(c).t(1);
+
+    if c > 1
+        stats.tjump(c-1) = s(c).t(1) - s(c-1).t(end);
     end
 end
+
 xlabel('Time')
 ylabel('Amplitude')
-title(sprintf('%d segments in MiniSEED file %s', numel(s), thisfilename) )
+title(sprintf('%d segments in MiniSEED file %s', nseg, thisfilename))
 
 subplot(3,1,2)
-plot(segment_time, given_fs, 'o');
-hold on
-errorbar(segment_time, mean_fs, std_fs);
-plot(segment_time, median_fs, '.');
-plot(segment_time, max_fs, '.');
-plot(segment_time, min_fs, '.');
+plot(stats.segment_time, stats.given_fs,'o'); hold on
+errorbar(stats.segment_time, stats.mean_fs, stats.std_fs)
+plot(stats.segment_time, stats.median_fs,'.')
+plot(stats.segment_time, stats.max_fs,'.')
+plot(stats.segment_time, stats.min_fs,'.')
 datetick('x')
-legend({'given';'mean';'median';'max';'min'});
-ylabel('Sampling rate')
-xlabel('Time')
-title('Statistics of sampling rate within each segment')
-
+ylabel('Sampling rate (Hz)')
+title('Sampling Rate Statistics Per Segment')
 
 subplot(3,1,3)
-plot(segment_time(2:end), 1./(tjump*86400), '.');
+plot(stats.segment_time(2:end), 1./(stats.tjump*86400),'.')
 datetick('x')
 xlabel('Time')
-ylabel('Sampling rate')
-title('Instantaneous sample rate between segments (Hz)')
+ylabel('Effective Fs (Hz)')
+title('Inter-segment Sample Rate')
 
 end

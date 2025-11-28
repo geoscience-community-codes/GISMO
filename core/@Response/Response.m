@@ -1,205 +1,178 @@
 classdef Response
-    % RESPONSE  Instrument response object (modern GISMO OOP wrapper)
+    % RESPONSE  High-level instrument response facade
     %
-    % This class encapsulates an instrument response formerly represented
-    % as a loose structure returned by:
-    %   - response_get_from_db
-    %   - response_get_from_polezero
+    % Wraps one of:
+    %   - sacpz object
+    %   - Antelope database reference (lazy)
+    %   - Legacy response struct (compatibility)
     %
-    % Core numerical operations are still performed by:
-    %   - response_apply
-    %   - response_plot
-    %
-    % The class provides:
-    %   • Clean namespace
-    %   • Validation at construction
-    %   • Unified API for load / apply / plot
-    %   • Backward compatibility with legacy struct-based code
-    %
-    % Glenn Thompson & Mike West response system (modernized)
+    % Numerical physics ALWAYS handled by sacpz or legacy struct.
+    % Deconvolution ALWAYS handled by response_apply (external).
     %
 
-    %% -------------------- CORE RESPONSE PROPERTIES --------------------
-    properties
-        type            % 'polezero', 'fap', 'evalresp', etc.
-
-        zeros           % complex zeros
-        poles           % complex poles
-        gain            % dimensionless gain
-        sensitivity     % overall sensitivity
-        scalefreq       % scale frequency (Hz)
-
-        units_in        % e.g., 'M', 'M/S', 'COUNTS'
-        units_out       % e.g., 'COUNTS', 'M/S', 'PA'
-
-        samplerate      % Hz
-
-        network
-        station
-        location
-        channel
-
-        starttime       % datenum
-        endtime         % datenum
-
-        metadata        % struct for provenance / DB info
+    properties (Access=private)
+        mode   % 'sacpz' | 'antelope' | 'structure'
+        source % sacpz object | dbName | response struct
+        tag    % ChannelTag (for Antelope)
+        time   % datenum     (for Antelope)
     end
 
-    %% -------------------- CONSTRUCTOR --------------------
     methods
-        function obj = Response(varargin)
-            % RESPONSE constructor
-            %
-            % Supported inputs:
-            %   Response()                     → empty shell
-            %   Response(struct)               → from legacy response struct
-            %   Response('polezero', file)    → from pole-zero file
-            %   Response('db', ds, tag, time) → from database
+        function obj = Response()
+        end
 
-            if nargin == 0
-                obj.metadata = struct();
-                return
+        function H = evaluate(obj, frequencies)
+            switch obj.mode
+                case 'sacpz'
+                    resp = obj.source.to_response_structure(frequencies);
+                    H = resp.values;
+
+                case 'antelope'
+                    pz = sacpz.from_antelope( ...
+                        obj.tag.station, ...
+                        obj.tag.channel, ...
+                        obj.time, ...
+                        obj.source);
+                    resp = pz.to_response_structure(frequencies);
+                    H = resp.values;
+
+                case 'structure'
+                    H = interp1( ...
+                        obj.source.frequencies, ...
+                        obj.source.values, ...
+                        frequencies, ...
+                        #'linear','extrap');
+                        'spline','extrap');
+
+                otherwise
+                    error('Invalid response mode');
+            end
+        end
+
+        function wOut = apply(obj, wIn, filterObj)
+        % APPLY  Remove instrument response using FFT deconvolution
+
+            wOut = repmat(wIn, size(wIn));
+
+            for n = 1:numel(wIn)
+                wOut(n) = obj.apply_one(wIn(n), filterObj);
+            end
+        end
+
+        function plot(obj, xLimits)
+
+            if nargin < 2
+                xLimits = [];
             end
 
-            % --- Construct from legacy struct ---
-            if nargin == 1 && isstruct(varargin{1})
-                obj = obj.fromStruct(varargin{1});
-                return
-            end
+            f = logspace(-3,2,600);
+            H = obj.evaluate(f);
 
-            % --- Tag-value constructor ---
-            if ischar(varargin{1}) || isstring(varargin{1})
-                mode = lower(string(varargin{1}));
+            figure('Color','w');
+            set(gcf,'DefaultAxesFontSize',14);
+            set(gcf,'DefaultLineLineWidth',2);
 
-                switch mode
-                    case "polezero"
-                        pzfile = varargin{2};
-                        S = response_get_from_polezero(pzfile);
-                        obj = obj.fromStruct(S);
+            subplot(2,1,1);
+            semilogx(f, angle(H)*180/pi, 'k');
+            grid on; box on;
+            ylabel('Phase (degrees)');
+            ylim([-180 180]);
+            set(gca,'YTick',[-180 -135 -90 -45 0 45 90 135 180]);
+            if ~isempty(xLimits), xlim(xLimits); end
 
-                    case "db"
-                        ds   = varargin{2};
-                        tag  = varargin{3};
-                        time = varargin{4};
-                        S = response_get_from_db(ds, tag, time);
-                        obj = obj.fromStruct(S);
+            subplot(2,1,2);
+            semilogx(f, abs(H), 'k');
+            set(gca,'YScale','log');
+            grid on; box on;
+            ylabel('Amplitude');
+            xlabel('Frequency (Hz)');
+            if ~isempty(xLimits), xlim(xLimits); end
 
-                    otherwise
-                        error("Response:UnknownConstructorMode", ...
-                            "Unknown constructor mode: %s", mode);
-                end
-            end
         end
     end
 
-    %% -------------------- CORE USER METHODS --------------------
-    methods
-        function y = apply(obj, x, varargin)
-            % APPLY  Apply instrument correction
-            %
-            % y = obj.apply(x)
-            % y = obj.apply(x, 'causal', true)
-            %
-            if isempty(obj.samplerate)
-                error("Response:MissingSampleRate", ...
-                    "samplerate must be defined before apply().");
-            end
+    methods (Access=private)
 
-            S = obj.toStruct();
-            y = response_apply(x, obj.samplerate, S, varargin{:});
-        end
+    function wOut = apply_one(obj, wIn, filt)
 
-        function plot(obj, varargin)
-            % PLOT  Plot instrument response
-            %
-            % obj.plot()
-            %
-            if isempty(obj.samplerate)
-                error("Response:MissingSampleRate", ...
-                    "samplerate must be defined before plot().");
-            end
+        raw = double(wIn);
+        fs  = get(wIn,'FREQ');
+        N   = numel(raw);
+        nyq = fs/2;
 
-            S = obj.toStruct();
-            response_plot(S, obj.samplerate, varargin{:});
-        end
+        raw = raw(:)';
+        X   = fft(raw);
+        f   = (0:N-1) * fs / N;
 
-        function disp(obj)
-            fprintf("Response object:\n");
-            fprintf("  %s.%s.%s.%s\n", ...
-                string(obj.network), ...
-                string(obj.station), ...
-                string(obj.location), ...
-                string(obj.channel));
+        % --- Evaluate response ---
+        H = obj.evaluate(f);
 
-            fprintf("  Type: %s\n", string(obj.type));
-            fprintf("  In → Out: %s → %s\n", ...
-                string(obj.units_in), string(obj.units_out));
+        H(abs(H) < 1e-12) = 1e-12;
+        Hinv = 1 ./ H;
 
-            if ~isempty(obj.starttime)
-                fprintf("  Valid: %s to %s\n", ...
-                    datestr(obj.starttime), ...
-                    datestr(obj.endtime));
-            end
-        end
+        % --- Deconvolution ---
+        Y = X .* Hinv;
+        y = real(ifft(Y));
+
+        % --- Post-filter ---
+        fc = get(filt,'CUTOFF') ./ nyq;
+        [z,p] = butter(get(filt,'POLES'), fc);
+        y = filtfilt(z,p,y);
+
+        % --- Output waveform ---
+        wOut = set(wIn,'DATA',y(:));
+        wOut = addhistory(wOut,'Instrument response removed (FFT)');
+        wOut = addhistory(wOut,'Post-filter applied');
+
+        % --- Store metadata ---
+        resp.scnl = get(wIn,'SCNL');
+        resp.frequencies = f(:);
+        resp.values = H(:);
+
+        wOut = addfield(wOut,'RESPONSE',resp);
+        wOut = addfield(wOut,'FILTER',filt);
+
     end
+    end    
 
-    %% -------------------- CONVERSION METHODS --------------------
-    methods
-        function S = toStruct(obj)
-            % Convert class to legacy struct used by backend functions
-
-            S = struct();
-
-            S.type        = obj.type;
-            S.zeros       = obj.zeros;
-            S.poles       = obj.poles;
-            S.gain        = obj.gain;
-            S.sensitivity = obj.sensitivity;
-            S.scalefreq   = obj.scalefreq;
-
-            S.units_in  = obj.units_in;
-            S.units_out = obj.units_out;
-
-            S.samplerate = obj.samplerate;
-
-            S.network  = obj.network;
-            S.station  = obj.station;
-            S.location = obj.location;
-            S.channel  = obj.channel;
-
-            S.starttime = obj.starttime;
-            S.endtime   = obj.endtime;
-
-            S.metadata = obj.metadata;
-        end
-
-        function obj = fromStruct(obj, S)
-            % Populate class from legacy response struct
-
-            fields = fieldnames(S);
-            for k = 1:numel(fields)
-                f = fields{k};
-                if isprop(obj, f)
-                    obj.(f) = S.(f);
-                end
-            end
-
-            if ~isfield(S, 'metadata')
-                obj.metadata = struct();
-            end
-        end
-    end
-
-    %% -------------------- STATIC FACTORIES --------------------
+    %% --- Static constructors ---
     methods (Static)
-        function R = fromPoleZero(pzfile)
-            S = response_get_from_polezero(pzfile);
-            R = Response(S);
+        function R = from_sacpz(pz)
+            R = Response;
+            R.mode = 'sacpz';
+            R.source = pz;
         end
 
-        function R = fromDatabase(ds, tag, time)
-            S = response_get_from_db(ds, tag, time);
-            R = Response(S);
+        function R = from_antelope(sta, chan, time, db)
+            R = Response;
+            R.mode   = 'antelope';
+            R.source = db;
+            R.tag    = scnlobject(sta,chan,'','');
+            R.time   = time;
+        end
+
+        function R = from_struct(S)
+            R = Response;
+            R.mode = 'structure';
+            R.source = S;
+        end
+
+        function R = fromSacpzFile(filename)
+            %FROMSACPZFILE Create Response from a SACPZ file or URL
+            %
+            %   R = Response.fromSacpzFile(filename)
+            %
+            %   filename may be:
+            %       - Local SACPZ file path
+            %       - Raw SACPZ text
+            %       - IRIS SACPZ URL
+            %
+            %   Internally constructs a sacpz object and wraps it
+            %   inside a Response facade.
+            %
+
+            pz = sacpz(filename);
+            R  = Response.from_sacpz(pz);
         end
     end
 end
