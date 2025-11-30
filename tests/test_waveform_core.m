@@ -81,7 +81,7 @@ function testSetGetBasics(testCase)
 w = testCase.TestData.wf;
 
 % Station/channel/tag retrieval
-verifyEqual(testCase, get(w,'channelinfo'), testCase.TestData.ctag);
+verifyEqual(testCase, get(w,'channelinfo'), string(testCase.TestData.ctag));
 
 % Data length
 n = numel(testCase.TestData.Dt);
@@ -150,7 +150,8 @@ verifyEqual(testCase, get(dw,'units'), expectedUnits);
 
 % integrate (compare cumsum default)
 d = sin(1:0.01:1000) .* 100;
-d = d(:) + randn(size(d));
+d = d(:);                      % ensure column
+d = d + randn(size(d));        % matching shape, no huge expansion
 w2 = waveform('NW.STA.LO.CHA', fs, fix(now), d, 'Counts');
 
 verifyEqual(testCase, double(integrate(w2)), cumsum(d)./fs);
@@ -159,6 +160,7 @@ verifyEqual(testCase, get(integrate(w2),'units'), 'Counts * sec');
 verifyEqual(testCase, double(integrate(w2,'cumsum')), cumsum(d)./fs);
 verifyEqual(testCase, double(integrate(w2,'trapz')), cumtrapz(d)./fs);
 end
+
 
 %% ------------------------------------------------------------------------
 function testStatisticalMath(testCase)

@@ -100,7 +100,15 @@ classdef ChannelTag
                [obj.network, obj.station, obj.location, obj.channel] = deal(varargin{:});
             case 1
                inObj = varargin{1};
+
+               % ---- FIX: support MATLAB string scalars ----
+               if isstring(inObj)
+                  inObj = char(inObj);
+               end
+               % -------------------------------------------
+
                switch class(inObj)
+
                   case 'ChannelTag'
                      obj = inObj;
                   case {'char','struct'}
@@ -304,11 +312,10 @@ classdef ChannelTag
             end
          end
       end
-            
-      
+ 
       function c = char(obj)
-         %char   convert a ChannelTag to its string representation
-         c = obj.string([],'nocell');
+         %char   convert a ChannelTag to its char string representation
+         c = char(obj.string([],'nocell'));
       end
          
       function s = string(obj, delim, option)
@@ -330,7 +337,8 @@ classdef ChannelTag
             delim = '.';
          end
          if numel(obj) == 1
-            s = getDelimitedString(obj, delim);
+            s = string(getDelimitedString(obj, delim));
+
          else
             if exist('option','var') && strcmpi(option,'nocell')
                s = '';

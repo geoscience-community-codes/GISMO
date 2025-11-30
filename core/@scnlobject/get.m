@@ -10,8 +10,8 @@ function stuff = get(scnl, prop_name)
    
    lower_prop_name = lower(prop_name);
    if ~strcmp(lower_prop_name,prop_name)
-      warning('SCNLOBJECT:get:propertyWarning',...
-              'Use lowercase ''%s'' property name for consistency',lower(prop_name));
+      %warning('SCNLOBJECT:get:propertyWarning',...
+      %        'Use lowercase ''%s'' property name for consistency',lower(prop_name));
       prop_name = lower_prop_name;
    end
    

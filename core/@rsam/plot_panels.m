@@ -55,7 +55,12 @@ function handlePlot = plot_panels(rsam_vector, include_labels)
         r = stepsize(xticks);
         xticks = xticks(1:r:end);
         xticklabels = xticks/xtick_interval_seconds;
-        set(hfc(2:end),'XTick',xticks,'XTickLabels',xticklabels);     
+        for k = 2:numel(hfc)
+            if isa(hfc(k),'matlab.graphics.axis.Axes')
+                set(hfc(k),'XTick',xticks,'XTickLabels',xticklabels);
+            end
+        end
+    
     end
 end
 

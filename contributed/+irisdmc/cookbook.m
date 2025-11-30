@@ -20,8 +20,8 @@ function cookbook
 % These waveforms are empty but contain network_station_channel info
 stas = {'CKN' 'CGL' 'CRP' 'CRP' 'CRP' 'CRP' 'SPU' 'CKL' 'CKT' 'BGL' 'NCG' 'JUNK'};
 chanTags = ChannelTag.array('AV', stas,'','EHZ'); 
-for n = numel(scnl) : -1 : 1
-   w(n) = set(waveform,'channelifno',chanTags(n));
+for n = numel(chanTags) : -1 : 1
+   w(n) = set(waveform,'channelinfo',chanTags(n));
    w(n) = set(w(n),'DATA',rand(1)*sin(2*pi*rand(1):.05:100));
    w(n) = set(w(n),'FREQ',20);
    w(n) = set(w(n),'START',randi([datenum('2008/01/01') datenum('2011/01/01')]));

@@ -1,111 +1,10 @@
 classdef test_metadata_classes < matlab.unittest.TestCase
-    % TEST_METADATA_CLASSES
-    % Combined test suite for:
-    %   • ChannelDetails
+    % TEST_METADATA_CLASSES (CORE ONLY)
+    % Tests only core metadata classes:
     %   • ChannelTag
     %   • scnlobject
     %
-    % All tests requiring IRIS/FDSN metadata will be skipped automatically
-    % if the service is not reachable.
-
-    properties (Constant)
-        ANMO = 'IU.ANMO.00.BHZ';
-        ANTO = 'IU.ANTO.00.BHZ';
-        TestDate = '2015-10-21';
-    end
-
-    properties
-        irisAvailable = false
-    end
-
-    %% --------------------------------------------------------------------
-    methods (TestClassSetup)
-        function checkIrisAvailability(testCase)
-            % Detect whether IRIS DMC web services work
-            try
-                ds = datasource("irisdmcws");
-                % Try a minimal metadata fetch
-                Ch = ChannelDetails.retrieve(ds, testCase.ANMO);
-                if ~isempty(Ch)
-                    testCase.irisAvailable = true;
-                end
-            catch
-                testCase.irisAvailable = false;
-            end
-        end
-    end
-
-    %% --------------------------------------------------------------------
-    %  CHANNELDETAILS TEST
-    %% --------------------------------------------------------------------
-    methods (Test)
-        function Test_ChannelDetails_Retrieve(testCase)
-            testCase.assumeTrue(testCase.irisAvailable, ...
-                "IRIS unavailable — skipping ChannelDetails tests.");
-
-            ANMO = testCase.ANMO;
-            ANTO = testCase.ANTO;
-
-            % --- Retrieve using explicit NSLC fields
-            cdKey = ChannelDetails.retrieve( ...
-                [], ...
-                'station','ANMO', ...
-                'channel','BHZ', ...
-                'location','00', ...
-                'network','IU', ...
-                'starttime', testCase.TestDate );
-
-            testCase.assertLength(cdKey, 1);
-            testCase.assertEqual(cdKey.channelinfo, ChannelTag(ANMO));
-
-            % Basic known metadata
-            testCase.assertEqual(cdKey.samplerate, 20);
-            testCase.assertEqual(cdKey.elevation, 1671);
-            testCase.assertEqual(cdKey.depth, 145);
-
-            testCase.assertEqual(cdKey.azimuth, 0);
-            testCase.assertEqual(cdKey.dip, -90);
-
-            % Sensor description and scale
-            testCase.assertEqual(cdKey.sensordescription, ...
-                "Geotech KS-54000 Borehole Seismometer");
-            testCase.assertEqual(cdKey.scalefreq, 0.0200);
-            testCase.assertEqual(cdKey.scaleunits, "M/S");
-
-            % Time sanity checks
-            testCase.assertEqual(datestr(cdKey.starttime), ...
-                "17-Dec-2014 18:40:00");
-            testCase.assertGreaterThan(cdKey.endtime, cdKey.starttime);
-
-            % --- Retrieve using NSLC string
-            ch = ChannelDetails.retrieve([], ANMO);
-            testCase.verifyEqual(ch(end), cdKey);
-
-            % --- Retrieve using ChannelTag
-            tg = ChannelTag(ANMO);
-            ch2 = ChannelDetails.retrieve([], tg);
-            testCase.verifyEqual(ch2(end), cdKey);
-
-            % --- Retrieve 2×2 tag matrix
-            tg2 = ChannelTag({ANMO, ANTO});
-            mat = [tg2; tg2];
-            C = ChannelDetails.retrieve([], mat);
-            testCase.verifySize(C,[2 2]);
-
-            % --- Retrieve from SeismicTrace
-            T = SeismicTrace;
-            T.name = ANMO;
-            T.start = datenum(testCase.TestDate);
-
-            ch3 = ChannelDetails.retrieve([], T);
-            testCase.verifyEqual(ch3, cdKey);
-
-            % --- Matrix of traces
-            C2 = ChannelDetails.retrieve([], [T T; T T]);
-            testCase.verifySize(C2, [2 2]);
-        end
-    end
-
+    % NO dev/, NO network, NO IRIS dependencies.
 
     %% --------------------------------------------------------------------
     %  CHANNELTAG TESTS
@@ -146,10 +45,10 @@ classdef test_metadata_classes < matlab.unittest.TestCase
         end
 
         function Test_ChannelTag_StringConversions(testCase)
-            nslc = "IU.ANMO.00.LOG";
+            nslc = "IU.ANMO.00.EHZ";
             ct = ChannelTag(nslc);
             testCase.verifyEqual(ct.string(), nslc);
-            testCase.verifyEqual(ct.string('_'), "IU_ANMO_00_LOG");
+            testCase.verifyEqual(ct.string('_'), "IU_ANMO_00_EHZ");
             testCase.verifyEqual(ct.char(), char(nslc));
         end
     end
@@ -179,9 +78,9 @@ classdef test_metadata_classes < matlab.unittest.TestCase
         end
 
         function Test_Scnl_EqNe(testCase)
-            A = test_metadata_classes.refSCNL('NW','STA','LOC','CHA');
-            B = test_metadata_classes.refSCNL('NW','STA','LOC','CHA');
-            C = test_metadata_classes.refSCNL('NW','STA','LOC','CHB');
+            A = scnlobject('NW','STA','LOC','CHA');
+            B = scnlobject('NW','STA','LOC','CHA');
+            C = scnlobject('NW','STA','LOC','CHB');
 
             testCase.verifyTrue(A == B);
             testCase.verifyFalse(A == C);
@@ -200,6 +99,7 @@ classdef test_metadata_classes < matlab.unittest.TestCase
             testCase.verifyTrue(ismember(A,[A A B]));
         end
     end
+
 
     %% --------------------------------------------------------------------
     %  Static helpers

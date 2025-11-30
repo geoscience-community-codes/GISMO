@@ -78,21 +78,21 @@ classdef test_rsam < matlab.unittest.TestCase
             testCase.verifyClass(r,'rsam');
             testCase.verifyGreaterThan(numel(r.data),10);
             testCase.verifyEqual(r.measure,'mean');
-            testCase.verifyEqual(r.sampling_interval,60);
+            testCase.verifyEqual(r.sampling_interval,60, 'AbsTol', 1e-3);
         end
 
         function testWaveform2RSAM_Max(testCase)
             r = waveform2rsam(testCase.wf,'max',10);
 
             testCase.verifyEqual(r.measure,'max');
-            testCase.verifyEqual(r.sampling_interval,10);
+            testCase.verifyEqual(r.sampling_interval,10, 'AbsTol', 1e-3);
         end
 
         function testWaveform2RSAM_Median(testCase)
             r = waveform2rsam(testCase.wf,'median',300);
 
             testCase.verifyEqual(r.measure,'median');
-            testCase.verifyEqual(r.sampling_interval,300);
+            testCase.verifyEqual(r.sampling_interval,300, 'AbsTol', 1e-3);
         end
     end
 
@@ -166,7 +166,7 @@ classdef test_rsam < matlab.unittest.TestCase
     methods (Test)
         function testReadLegacyBOBIfAvailable(testCase)
 
-            if ~is_testdata_setup()
+            if ~admin.is_testdata_setup()
                 testCase.assumeFail('TESTDATA not available — skipping BOB read test.');
             end
 

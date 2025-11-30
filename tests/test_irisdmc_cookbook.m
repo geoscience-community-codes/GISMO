@@ -17,9 +17,13 @@ classdef test_irisdmc_cookbook < matlab.unittest.TestCase
             end
 
             % --- Package existence --------------------------------
-            if ~exist('+irisdmc','dir')
+            % --- Package existence (PACKAGE-SAFE, RELIABLE) --------------------------
+            cbfun = which('irisdmc.station_meta');
+            if isempty(cbfun)
                 testCase.assumeFail('Skipping: irisdmc package not on path.');
             end
+
+
 
             % --- irisFetch presence --------------------------------
             if exist('irisFetch','file') ~= 2
@@ -27,13 +31,13 @@ classdef test_irisdmc_cookbook < matlab.unittest.TestCase
             end
 
             % --- Cookbook existence --------------------------------
-            cb = which('irisdmc.cookbook');
-            testCase.assertNotEmpty(cb, 'irisdmc.cookbook not found');
+            cbfun = which('irisdmc.cookbook');
+            testCase.assertNotEmpty(cbfun, 'irisdmc.cookbook not found');
 
-            % --- Run safely ----------------------------------------
             try
                 close all;
-                run(cb);
+                irisdmc.cookbook();   % ✅ correct invocation
+
             catch ME
                 warning('irisdmc cookbook failed:\n%s', ME.message);
                 testCase.verifyFail(ME.message);

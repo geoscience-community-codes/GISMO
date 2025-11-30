@@ -23,7 +23,7 @@ function erobj=eventrate(catalogObject, varargin)
     if snum>0 && enum>0 % subsetting the catalog object for date range?
         for c=1:numel(catalogObject)
             indices = find(catalogObject(c).otime >= snum & catalogObject(c).otime <= enum);
-            catalogObject(c) = catalogObject(c).subset(indices);
+            catalogObject(c) = catalogObject(c).subset('indices', indices);
         end
     end
     

@@ -46,7 +46,13 @@ testCase.verifyGreaterThan(numel(w), 0, 'No waveforms returned.');
 freqs = get(w,'freq');
 testCase.verifyTrue(all(freqs > 0), 'Invalid sampling frequencies.');
 
-dataOK = arrayfun(@(x) ~isempty(get(x,'data')), w);
+
+dataOK = false(size(w));
+for i = 1:numel(w)
+    d = get(w(i),'data');
+    dataOK(i) = ~isempty(d);
+end
+
 testCase.verifyTrue(all(dataOK), 'Some traces contain no data.');
 
 end

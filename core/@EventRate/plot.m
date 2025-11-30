@@ -113,7 +113,7 @@ function plot(obj, varargin)
                 
                 labels = metric2label(metric{metricNum}, obj(objectnum).binsize);
                 t = [ obj(objectnum).time - obj(objectnum).binsize/2 ]; t = [t t(end)+obj(objectnum).binsize];
-                y = [y y(end)];
+                y = [y; y(end)];
                 clear ax h1 h2               
 
                 % We will only use plotyy to plot 2 axis when we have a metric that can be cumulated
@@ -121,7 +121,7 @@ function plot(obj, varargin)
                 % and the bins must be non-overlapping      
                 if (obj(objectnum).binsize == obj(objectnum).stepsize) & ( strcmp(metric{metricNum}, 'counts') | strcmp(metric{metricNum}, 'energy') | strcmp(metric{metricNum}, 'cum_mag') )
 
-                    cumy = cumsum(data); cumy = [cumy cumy(end)];
+                    cumy = cumsum(data); cumy = [cumy; cumy(end)];
                     subplot(numsubplots,1,subplotnum), [ax, h1, h2] = plotyy(t, y, t, cumy, @stairs, @stairs );
 
                     % with plotyy the right hand label

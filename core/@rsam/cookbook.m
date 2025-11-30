@@ -36,7 +36,7 @@ close all
 %
 % Prefer TESTDATA if available; otherwise fall back to synthetic waveform.
 
-if is_testdata_setup()
+if admin.is_testdata_setup()
     fprintf('Using TESTDATA waveform example.\n');
 
     filepath = fullfile(TESTDATA, 'waveform_data', 'REF.EHZ.2009.081');
@@ -114,7 +114,7 @@ rsam_vec.save_to_bob_file(fullfile(tmpdir,'SSSS.CCC.YYYY.MMMM.bob'));
 %% ------------------------------------------------------------------------
 %% 7. Load RSAM from Legacy BOB Files (if available)
 
-if is_testdata_setup()
+if admin.is_testdata_setup()
 
     dp = fullfile(TESTDATA,'rsam','MCPZ1996.DAT');
 

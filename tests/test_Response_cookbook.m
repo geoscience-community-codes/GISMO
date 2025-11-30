@@ -16,9 +16,14 @@ classdef test_Response_cookbook < matlab.unittest.TestCase
         function test_runResponseCookbook(testCase)
 
             % --- Locate cookbook -----------------------------------------
-            cb = which('Response.cookbook');
-            testCase.assertNotEmpty(cb, ...
-                '@Response/cookbook.m not found on path');
+
+            mc = meta.class.fromName('Response');
+            testCase.assertNotEmpty(mc, 'Response class not found on path');
+
+            methodNames = {mc.MethodList.Name};
+            testCase.assertTrue(ismember('cookbook', methodNames), ...
+                'Response.cookbook method not found');
+
 
             % --- Clean graphics state ------------------------------------
             close all force;

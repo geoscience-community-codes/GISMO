@@ -27,7 +27,7 @@ function ax = plot_panels(w, varargin)
 % Glenn Thompson 2014/11/05, generalized after a function written in 2000
 % to operate on Seisan files only
 
-    w = iceweb.waveform_remove_empty(w);
+    w = remove_empty(w);
 
     if numel(w)==0 || isempty(w)
         warning('no waveforms to plot')

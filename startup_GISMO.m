@@ -1,107 +1,147 @@
 function startup_GISMO(gismopath)
-% STARTUP_GISMO recursively adds paths for contributed codes that build on
-% the GISMO suite. If the Antelope toolbox is already in the Matlab path,
-% then the codes with Antelope dependencies are added as well.
+% STARTUP_GISMO  Initialize GISMO environment safely and reproducibly.
 %
-% To add new paths to the contributed archives please
-% read 'contributed_style_guide.txt' in the GISMO directory.
+% Adds core, contributed, applications, libraries, tests, training,
+% and Java dependencies to the MATLAB path.
+%
+% Package directories (+pkg) are handled correctly by adding ONLY their
+% parent folders, per MATLAB package rules.
+%
+% Author: Michael West (original), Glenn Thompson (2012+)
+% Rewrite & modernization: Glenn Thompson (2025)
 
-% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% Modified: Glenn Thompson Aug 2015 onwards
-
-% CHECK COMPATIBILITY
-% Should consider added a compatibility checkign mechanism at some point. 
-% Not clear how best to do this. But given that GISMO uses features from
-% recent releases and add-on toolboxes, it would be great to give users a
-% heads up about such.
-
-
-% GET PATHS TO DIRECTORIES IN GISMO
-if ~exist('gismopath', 'var')
-	%gismofile = which('GISMO/startup_GISMO');
-	gismofile = which('startup_GISMO');
-	gismopath = fileparts(gismofile); % first argout is the path
+%% ------------------------------------------------------------------------
+% Resolve GISMO root path
+if ~exist('gismopath', 'var') || isempty(gismopath)
+    gismofile = which('startup_GISMO');
+    if isempty(gismofile)
+        error('startup_GISMO.m not found on MATLAB path.');
+    end
+    gismopath = fileparts(gismofile);
 end
 
-% ADD PATH TO CORE
-addpath(fullfile(gismopath,'core'));
+fprintf('\n--- Initializing GISMO from: %s ---\n', gismopath);
 
-% ADD A PATH TO EACH DIRCTORY IN CONTRIBUTED
-addContributed(gismopath,'contributed');
+%% ------------------------------------------------------------------------
+% Add CORE
+addDir(fullfile(gismopath, 'core'));
 
-% ADD A PATH TO EACH DIRECTORY IN CONTRIBUTED_ANTELOPE
-if exist('dbopen','file') && exist('trload_css','file'); %  test for antelope
-  addContributed(gismopath,'contributed_antelope');
+%% ------------------------------------------------------------------------
+% Add CONTRIBUTED (package-safe)
+addContributedSafe(gismopath, 'contributed');
+
+%% ------------------------------------------------------------------------
+% Add CONTRIBUTED_ANTELOPE (only if Antelope present)
+if exist('dbopen','file') == 2 && exist('trload_css','file') == 2
+    addContributedSafe(gismopath, 'contributed_antelope');
+else
+    disp('Antelope not detected — skipping contributed_antelope');
 end
 
-% ADD A PATH TO EACH DIRCTORY IN UAF_INTERNAL
-addContributed(gismopath,'uaf_internal');
+%% ------------------------------------------------------------------------
+% Add UAF_INTERNAL
+addContributedSafe(gismopath, 'uaf_internal');
 
-% ADD A PATH TO APPLICATIONS e.g. IceWeb
-addpath(genpath(fullfile(gismopath,'applications')));
+%% ------------------------------------------------------------------------
+% Add APPLICATIONS (recursive)
+addDir(genpath(fullfile(gismopath,'applications')));
 
-% ADD A PATH TO JAR FILES
-f = fullfile(gismopath,'contributed','jar_files','swarm.jar');
-try 
-    javaaddpath(f);
-    disp(['Adding path: ', f]);
-catch
-    disp(['Failed to add path: ', f]);
+%% ------------------------------------------------------------------------
+% Add GISMO LIBRARY
+addDir(fullfile(gismopath, 'libgismo'));
+
+%% ------------------------------------------------------------------------
+% Add TESTS
+addDir(fullfile(gismopath, 'tests'));
+
+%% ------------------------------------------------------------------------
+% Add TRAINING
+addDir(fullfile(gismopath, 'training'));
+
+%% ------------------------------------------------------------------------
+% Add JAVA JAR Dependencies
+jarDir = fullfile(gismopath, 'contributed', 'jar_files');
+jarFiles = {
+    'swarm.jar'
+    'wwsclient-1.3.7.jar'
+    'pensive-1.7.1.jar'
+    'IRIS-WS-2.20.1.jar'
+};
+
+for i = 1:numel(jarFiles)
+    jf = fullfile(jarDir, jarFiles{i});
+    if exist(jf,'file')
+        try
+            javaaddpath(jf);
+            disp(['Java added: ' jf]);
+        catch ME
+            warning('Failed to add Java path: %s\n%s', jf, ME.message);
+        end
+    else
+        warning('Missing JAR: %s', jf);
+    end
 end
-f = fullfile(gismopath,'contributed', 'jar_files','wwsclient-1.3.7.jar');
-try 
-    javaaddpath(f);
-    disp(['Adding path: ', f]);
-catch
-    disp(['Failed to add path: ', f]);
-end
-f = fullfile(gismopath,'contributed', 'jar_files','pensive-1.7.1.jar');
-try 
-    javaaddpath(f);
-    disp(['Adding path: ', f]);
-catch
-    disp(['Failed to add path: ', f]);
-end
-f = fullfile(gismopath,'contributed', 'jar_files','IRIS-WS-2.20.1.jar');
 
-try 
-    javaaddpath(f);
-    disp(['Adding path: ', f]);
-catch
-    disp(['Failed to add path: ', f]);
+%% ------------------------------------------------------------------------
+% Final Diagnostics
+fprintf('--- GISMO startup complete ---\n\n');
+
 end
 
-% ADD PATH TO GISMO LIBRARY FUNCTIONS
-disp('Adding path: libgismo')
-addpath(fullfile(gismopath, 'libgismo'));
+%% ========================================================================
+%% Helper Functions
+%% ========================================================================
 
-% ADD PATH TO TESTS
-disp('Adding path: tests')
-addpath(fullfile(gismopath, 'tests'));
+function addContributedSafe(gismopath, contribDir)
+% Add only valid non-package subdirectories AND the parent directory itself.
+% MATLAB automatically resolves +package folders from the parent.
 
-% ADD PATH TO TRAININGS
-disp('Adding path: training')
-addpath(fullfile(gismopath, 'training'));
+root = fullfile(gismopath, contribDir);
 
-%%
-function addContributed(gismopath, contribDir)
-% add each subdirectory within gismopath/contribDir/ to the matlab path
-dirlist = dir(fullfile(gismopath,contribDir,''));
+if ~exist(root,'dir')
+    warning('Missing directory: %s', root);
+    return
+end
+
+% Always add the parent directory (critical for +packages)
+addDir(root);
+
+dirlist = dir(root);
 dirlist = removeHiddenFiles(dirlist);
-addpath(fullfile(gismopath,contribDir));
+
 for n = 1:numel(dirlist)
-  subdir = dirlist(n).name;
-  newpath = fullfile(gismopath,contribDir, subdir,'');
-  if ~isdir(newpath), continue, end  %don't add loose files to the path
-  if subdir(1)=='+', continue, end % don't add package directories
-  addpath(newpath);
-  
-  disp(['Adding path:  ' newpath]);
+    subdir = dirlist(n).name;
+    newpath = fullfile(root, subdir);
+
+    if ~isfolder(newpath)
+        continue
+    end
+
+    % Do NOT add inside +package directories
+    if subdir(1) == '+'
+        fprintf('Package detected: %s (parent already on path)\n', subdir);
+        continue
+    end
+
+    addDir(newpath);
+end
 end
 
+%% ------------------------------------------------------------------------
+
+function addDir(p)
+if isempty(p) || ~ischar(p)
+    return
+end
+if exist(p,'dir')
+    addpath(p);
+    disp(['Adding path: ' p]);
+end
+end
+
+%% ------------------------------------------------------------------------
 
 function directoryList = removeHiddenFiles(directoryList)
-%removes files that start with '.', which also includes '.', and '..'
-startsWithPeriod = strncmp('.',{directoryList.name},1);
+startsWithPeriod = strncmp('.', {directoryList.name}, 1);
 directoryList = directoryList(~startsWithPeriod);
-
+end

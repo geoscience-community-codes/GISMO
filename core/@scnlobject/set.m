@@ -21,10 +21,10 @@ while numel(argin_index) >= 2  % for each property
           val = val{1};
           warning('SCNLOBJECT:tooManyValues','Too many property values, only the first will be used');
         end
-        if ~strcmp(prop_name,lower(prop_name))
-           warning('SCNLOBJECT:set:propertyWarning',...
-              'Use lowercase ''%s'' property name for consistency',lower(prop_name));
-        end
+        %if ~strcmp(prop_name,lower(prop_name))
+        %   warning('SCNLOBJECT:set:propertyWarning',...
+        %      'Use lowercase ''%s'' property name for consistency',lower(prop_name));
+        %end
         scnl(n).tag.(lower(prop_name)) = val;
       otherwise
     error('SCNLOBJECT:set:UnrecognizedProperty',...
