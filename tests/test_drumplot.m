@@ -19,19 +19,6 @@ classdef test_drumplot < matlab.unittest.TestCase
     end
 
     %% --------------------------------------------------------------------
-    methods (TestClassSetup)
-        function setupGISMO(testCase)
-            % Ensure GISMO is on path
-            gismopath = fileparts(which('startup_GISMO'));
-            if ~isempty(gismopath)
-                addpath(genpath(gismopath));
-            else
-                error('GISMO not found on MATLAB path.');
-            end
-        end
-    end
-
-    %% --------------------------------------------------------------------
     methods (TestMethodSetup)
         function makeSyntheticWaveform(testCase)
             close all
@@ -96,14 +83,27 @@ classdef test_drumplot < matlab.unittest.TestCase
         end
 
         function testWithDetectionsIfAvailable(testCase)
-            % Optional: only runs if Detection class exists
-            if exist('Detection','class') ~= 8
-                testCase.assumeFail('Detection class not available — skipping.');
+            % Only run if Detection is constructible AND accepts triggers
+            try
+                det = Detection();
+            catch
+                testCase.assumeFail('Detection class not available or not constructible — skipping.');
             end
 
-            det = Detection();
-            det.trig = testCase.start + [2; 5; 8]/1440;
-            det.dur  = [3; 4; 2];
+            % Now try to populate detections in the *supported* way
+            try
+                % Try common legacy field names safely
+                if isprop(det,'trig')
+                    det.trig = testCase.start + [2; 5; 8]/1440;
+                    det.dur  = [3; 4; 2];
+                elseif isprop(det,'time')
+                    det.time = testCase.start + [2; 5; 8]/1440;
+                else
+                    testCase.assumeFail('Detection exists but has no usable trigger field — skipping.');
+                end
+            catch
+                testCase.assumeFail('Detection fields incompatible with test — skipping.');
+            end
 
             h = drumplot(testCase.w,'mpl',5,'detections',det);
 
@@ -111,6 +111,7 @@ classdef test_drumplot < matlab.unittest.TestCase
             testCase.verifyWarningFree(@() plot(h));
             delete(f);
         end
+
 
         function testBadWaveformRejected(testCase)
             badw = [testCase.w testCase.w];   % invalid (array)

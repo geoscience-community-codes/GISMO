@@ -1,5 +1,5 @@
-function arrivalobj = addwaveforms(arrivalobj, datasourceobj, pretrigsecs, posttrigsecs);
-%addwaveforms Add waveform objects corresponding to arrivals
+function arrivalobj = addwaveforms(arrivalobj, datasourceobj, pretrigsecs, posttrigsecs)
+%ADDWAVEFORMS Add waveform objects corresponding to arrivals
 %   addwaveforms will attempt to add a waveform object corresponding to
 %   each arrival row in an Arrival object. It is added as a field to the
 %   structure misc_fields.

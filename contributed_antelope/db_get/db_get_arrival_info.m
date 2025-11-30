@@ -1,97 +1,150 @@
 function [arrival,assoc,origin,W] = db_get_arrival_info(arid,dbname,varargin)
-% [ARRIVAL, ASSOC, ORIGIN, W] = DB_GET_ARRIVAL_INFO(ARID_LIST, DATABASE_NAME) Returns pertinent 
-% fields from the arrival, assoc and origin tables based on input arrival id numbers (arid);
-% ARRIVAL_LIST must be a vector of arrival id numbers (arid). The returned structures ARRIVAL contains
-% fields pulled from each of the corresponding tables.
+%DB_GET_ARRIVAL_INFO  Retrieve arrival, assoc, and origin info for ARIDs.
 %
-% Unlike db_get_origin_info, there is currently no method for entering arrivals by time. 
-% arid's must be used.
+%   [ARRIVAL, ASSOC, ORIGIN] = DB_GET_ARRIVAL_INFO(ARID, DBNAME)
+%   [ARRIVAL, ASSOC, ORIGIN, W] = DB_GET_ARRIVAL_INFO(ARID, DBNAME, W)
+%
+%   Returns pertinent fields from the CSS3 arrival, assoc, and origin
+%   tables for the given vector of arrival IDs (arid).
+%
+%   If a waveform object W is provided, the origin, arrival, and assoc
+%   metadata are injected into each waveform using addfield().
+%
+%   This is a LEGACY WORKFLOW-LEVEL utility retained for backward
+%   compatibility. Internally, all database access is now routed through
+%   core/+antelope functions:
+%
+%       • antelope.dbgetarrivals
+%       • antelope.dbgetorigins
+%
+%   Unlike db_get_origin_info, arrivals must currently be indexed by ARID
+%   (not by time).
+%
+%   Author: Michael West, GI/UAF
+%   Refactored: G. Thompson (GISMO modernization)
+%
 
-% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date$
-% $Revision$
-
-if isnumeric(arid)
-	arrival.arid = reshape( arid , numel(arid), 1 );
-else
-    error('First input must be either arrival ids (arid)');
+%---------------------------
+% Input validation
+%---------------------------
+if ~isnumeric(arid)
+    error('First input must be arrival ids (arid)');
 end
 
+arrival.arid = reshape(arid, numel(arid), 1);
 
-% Check for waveform
+%---------------------------
+% Optional waveform argument
+%---------------------------
+W = [];
 if numel(varargin) == 1
-	W = varargin{1};
-	if ~isa(W,'waveform')
-		error('Third argument must be a WAVEFORM object');
-	end
+    W = varargin{1};
+    if ~isa(W,'waveform')
+        error('Third argument must be a WAVEFORM object');
+    end
 elseif numel(varargin) > 1
-	error('Too many arguments');
+    error('Too many input arguments');
 end
 
+%==========================================================================
+% 1) GET ARRIVALS (core backend)
+%==========================================================================
 
-% GET ORIGIN TIME
-db = dbopen(dbname,'r');
-db = dblookup_table(db,'arrival');
-nlist = [];
-for n = 1:length(arrival.arid);
-	db1 = dbsubset(db,['arid==' num2str(arrival.arid(n))]);
-	db2 = dblookup_table(db,'assoc');
-	db1 = dbjoin(db1,db2);
-	db2 = dblookup_table(db,'origin');
-	db1 = dbjoin(db1,db2);
-	[ origin.lat(n),origin.lon(n),origin.depth(n),origin.time_epoch(n),origin.ml(n),origin.orid(n)] = dbgetv(db1,'origin.lat','origin.lon','origin.depth','origin.time','origin.ml','origin.orid');
-	[ arrival.sta{n},arrival.chan{n}] = dbgetv(db1,'arrival.sta','arrival.chan');
-	[ arrival.time(n),arrival.iphase(n),arrival.deltim(n)] = dbgetv(db1,'arrival.time','arrival.iphase','arrival.deltim');
-    [ assoc.delta(n),assoc.seaz(n),assoc.esaz(n),assoc.timeres(n) ] = dbgetv(db1,'assoc.delta','assoc.seaz','assoc.esaz','assoc.timeres');
+A = antelope.dbgetarrivals(dbname,'arid',arrival.arid);
+
+% Map arrival fields
+arrival.sta   = reshape({A.sta}.',[],1);
+arrival.chan  = reshape({A.chan}.',[],1);
+arrival.time_epoch = reshape([A.time].',[],1);
+arrival.time_matlab = datenum(strtime(arrival.time_epoch));
+arrival.iphase = reshape({A.iphase}.',[],1);
+arrival.deltim = reshape([A.deltim].',[],1);
+
+%==========================================================================
+% 2) GET ASSOC INFO (via arrivals)
+%==========================================================================
+
+assoc.delta   = reshape([A.delta].',[],1);
+assoc.seaz    = reshape([A.seaz].',[],1);
+assoc.esaz    = reshape([A.esaz].',[],1);
+assoc.timeres = reshape([A.timeres].',[],1);
+
+%==========================================================================
+% 3) GET ORIGINS (core backend)
+%==========================================================================
+
+orids = unique([A.orid]);
+O = antelope.dbgetorigins(dbname,'orid',orids);
+
+% Build map orid → origin struct
+orid_map = containers.Map('KeyType','double','ValueType','any');
+for k = 1:numel(O)
+    orid_map(O(k).orid) = O(k);
 end
-dbclose(db);
-origin.lat = reshape( origin.lat , numel(origin.lat), 1 );
-origin.lon = reshape( origin.lon , numel(origin.lon), 1 );
-origin.depth = reshape( origin.depth , numel(origin.depth), 1 );
-origin.time_epoch = reshape( origin.time_epoch , numel(origin.time_epoch), 1 );
+
+% Resolve per-arrival origins
+n = numel(arrival.arid);
+
+origin.lat        = nan(n,1);
+origin.lon        = nan(n,1);
+origin.depth      = nan(n,1);
+origin.time_epoch = nan(n,1);
+origin.ml         = nan(n,1);
+origin.orid       = nan(n,1);
+
+for i = 1:n
+    this_orid = A(i).orid;
+    if isKey(orid_map,this_orid)
+        o = orid_map(this_orid);
+        origin.lat(i)        = o.lat;
+        origin.lon(i)        = o.lon;
+        origin.depth(i)      = o.depth;
+        origin.time_epoch(i)= o.time;
+        origin.ml(i)         = o.ml;
+        origin.orid(i)       = o.orid;
+    end
+end
+
 origin.time_matlab = datenum(strtime(origin.time_epoch));
-origin.ml = reshape( origin.ml , numel(origin.ml), 1 );
-origin.orid = reshape( origin.orid , numel(origin.orid), 1 );
-%
-arrival.time_epoch = reshape( arrival.time , numel(arrival.time), 1 );
-arrival.time_matlab =  datenum(strtime(arrival.time_epoch));
-arrival.iphase = reshape( arrival.iphase , numel(arrival.iphase), 1 );
-arrival.deltim = reshape( arrival.deltim , numel(arrival.deltim), 1 );
-arrival.sta = reshape( arrival.sta , numel(arrival.sta), 1 );
-arrival.chan = reshape( arrival.chan , numel(arrival.chan), 1 );
 
-%
-assoc.delta = reshape( assoc.delta , numel(assoc.delta), 1 );
-assoc.seaz = reshape( assoc.seaz , numel(assoc.seaz), 1 );
-assoc.esaz = reshape( assoc.esaz , numel(assoc.esaz), 1 );
-assoc.timeres = reshape( assoc.timeres , numel(assoc.timeres), 1 );
+%==========================================================================
+% 4) DERIVED FIELDS
+%==========================================================================
+
 assoc.traveltime = arrival.time_matlab - origin.time_matlab;
 
+%==========================================================================
+% 5) OPTIONAL WAVEFORM ENRICHMENT (LEGACY CONTRACT)
+%==========================================================================
 
-if exist('W')
-	for n = 1:numel(W)
-		disp([ 'Retreiving origin, arrival and assoc info for orid: ' num2str(origin.orid(n)) ' ... '])
-		W(n) = addfield(W(n),'ORIGIN_LAT',origin.lat(n));
-		W(n) = addfield(W(n),'ORIGIN_LON',origin.lon(n));
-		W(n) = addfield(W(n),'ORIGIN_DEPTH',origin.depth(n));
-		W(n) = addfield(W(n),'ORIGIN_TIME_EPOCH',origin.time_epoch(n));
-		W(n) = addfield(W(n),'ORIGIN_ML',origin.ml(n));
-		W(n) = addfield(W(n),'ORIGIN_TIME_MATLAB',origin.time_matlab(n));
-		W(n) = addfield(W(n),'ORIGIN_ORID',origin.orid(n));
-		%
-		W(n) = addfield(W(n),'ARRIVAL_TIME_EPOCH',arrival.time_epoch(n));
-		W(n) = addfield(W(n),'ARRIVAL_TIME_MATLAB',arrival.time_matlab(n));
-		W(n) = addfield(W(n),'ARRIVAL_IPHASE',arrival.iphase(n));
-		W(n) = addfield(W(n),'ARRIVAL_DELTIME',arrival.deltime(n));
-		%
-		W(n) = addfield(W(n),'ASSOC_DELTA',assoc.delta(n));
-		W(n) = addfield(W(n),'ASSOC_SEAZ',assoc.seaz(n));
-		W(n) = addfield(W(n),'ASSOC_ESAZ',assoc.esaz(n));
-		W(n) = addfield(W(n),'ASSOC_TIMERES',assoc.timeres(n));
-	end
+if ~isempty(W)
+    for i = 1:numel(W)
+
+        disp(['Retrieving origin, arrival and assoc info for orid: ' ...
+              num2str(origin.orid(i)) ' ... '])
+
+        % ---- Origin ----
+        W(i) = addfield(W(i),'ORIGIN_LAT',origin.lat(i));
+        W(i) = addfield(W(i),'ORIGIN_LON',origin.lon(i));
+        W(i) = addfield(W(i),'ORIGIN_DEPTH',origin.depth(i));
+        W(i) = addfield(W(i),'ORIGIN_TIME_EPOCH',origin.time_epoch(i));
+        W(i) = addfield(W(i),'ORIGIN_ML',origin.ml(i));
+        W(i) = addfield(W(i),'ORIGIN_TIME_MATLAB',origin.time_matlab(i));
+        W(i) = addfield(W(i),'ORIGIN_ORID',origin.orid(i));
+
+        % ---- Arrival ----
+        W(i) = addfield(W(i),'ARRIVAL_TIME_EPOCH',arrival.time_epoch(i));
+        W(i) = addfield(W(i),'ARRIVAL_TIME_MATLAB',arrival.time_matlab(i));
+        W(i) = addfield(W(i),'ARRIVAL_IPHASE',arrival.iphase{i});
+        W(i) = addfield(W(i),'ARRIVAL_DELTIME',arrival.deltim(i));
+
+        % ---- Assoc ----
+        W(i) = addfield(W(i),'ASSOC_DELTA',assoc.delta(i));
+        W(i) = addfield(W(i),'ASSOC_SEAZ',assoc.seaz(i));
+        W(i) = addfield(W(i),'ASSOC_ESAZ',assoc.esaz(i));
+        W(i) = addfield(W(i),'ASSOC_TIMERES',assoc.timeres(i));
+
+    end
 end
 
-
-
-
-
+end

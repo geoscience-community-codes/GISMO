@@ -18,34 +18,6 @@ classdef test_rsam < matlab.unittest.TestCase
     end
 
     %% --------------------------------------------------------------------
-    methods (TestClassSetup)
-        function setupGISMOPath(testCase)
-            gismopath = fileparts(which('startup_GISMO'));
-            if ~isempty(gismopath)
-                addpath(genpath(gismopath));
-            else
-                error('GISMO not found on MATLAB path.');
-            end
-
-            testCase.tmpdir = fullfile(tempdir, 'gismo_rsam_tests');
-            if ~exist(testCase.tmpdir,'dir')
-                mkdir(testCase.tmpdir);
-            end
-        end
-    end
-
-    methods (TestClassTeardown)
-        function cleanupGISMO(testCase)
-            if exist(testCase.tmpdir,'dir')
-                try
-                    rmdir(testCase.tmpdir,'s');
-                catch
-                end
-            end
-        end
-    end
-
-    %% --------------------------------------------------------------------
     methods (TestMethodSetup)
         function createSyntheticWaveform(testCase)
 

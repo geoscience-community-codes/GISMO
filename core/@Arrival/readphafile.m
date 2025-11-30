@@ -1,74 +1,52 @@
-function self=readphafile(phafilename)
-%READPHAFILE Read a Hypoellipse PHA pickfile
-% ARRIVALS = READPHAFILE(PHAFILENAME) Read a Hypoellipse phase file into a
-% structure.
-%
-% Example: 
-%     gismopath = fileparts(which('startup_GISMO'));
-%     arrivals = READPHAFILE(fullfile(gismopath, 'classes/@Arrival/examplePHAfile.PHA'))
+function self = readphafile(phafilename) %ARRIVAL.READPHAFILE Read a Hypoellipse PHA phase file into an Arrival object fid = fopen(phafilename); if fid < 0 error('Could not open PHA file'); end sta = {}; chan = {}; time = []; phase = {}; amp = []; per = []; while true tline = fgetl(fid); if ~ischar(tline), break; end tline = tline(1:min(50,length(tline))); tline = deblank(tline); if length(tline) >= 24 stacode = tline(1:4); iph = tline(6); ptime = str2datenum(tline(10:19), tline(20:24)); if length(tline) >= 50 aamp = str2double(tline(44:47)); aper = str2double(tline(48:50)); else aamp = NaN; aper = NaN; end sta{end+1,1} = stacode; chan{end+1,1} = ' '; time(end+1,1) = ptime; phase{end+1,1} = iph; amp(end+1,1) = aamp; per(end+1,1) = aper; end end fclose(fid); self = Arrival(sta,chan,time,phase,'amp',amp,'per',per); end end endfunction self = readphafile(phafilename)
+%READPHAFILE Read Hypoellipse PHA file into Arrival object
 
-%   PHA phase file has lines like:
-%   MGHZEP 1 950814071436.76
-%   MSPTIPU0 950814071437.96
-%   MGATEPU0 950814071437.92                                              00011
-%   MLGT PD0 950814071438.09       39.41 S 2
-%   MWHTEPD1 950814071437.61       38.78 S 2                              00009
-%   1-4: sta code
-%   5:   E or I
-%   6:   P (or blank)
-%   7:   U or D
-%   8:   quality 0-4
-%  10-24: YYMMDDhhmmss.ii for P
-%  32-36: ss.ii for S
-%  38:   S (or blank)
-%  40:   quality 0-4
+fid = fopen(phafilename);
 
-self = [];
-c=0;
-     fid = fopen(phafilename);
-     tline = fgetl(fid);
-     while ischar(tline)
-         tline = tline(1:min([50 length(tline)])); % ignore characters after 50th
-         tline = deblank(tline);
-        if length(tline)>=24
-             clear a
-                 a.stacode = tline(1:4);
-                 a.p_eori = tline(5);
-                 a.p_polarity = tline(7);
-                 a.p_quality = str2num(tline(8));
-                 a.p_time = str2datenum(tline(10:19), tline(20:24));
-                 if length(tline)>=40
-                    a.s_time = str2datenum(tline(10:19), tline(32:36));
-                    a.s_quality = str2num(tline(40));
-                 else
-                     [a.s_time, a.s_quality] = deal(0);
-                 end
-                 if length(tline)>=50
-                    a.maxamp = str2num(tline(44:47));
-                    a.period = str2num(tline(48:50));
-                 else
-                     [a.maxamp, a.period] = deal(0);
-                 end
-                 c=c+1;
-                 self = [self a];
+if fid < 0
+    error('Could not open PHA file');
+end
+
+sta  = {};
+chan = {};
+time = [];
+phase = {};
+amp = [];
+per = [];
+
+while true
+
+    tline = fgetl(fid);
+    if ~ischar(tline), break; end
+
+    tline = tline(1:min(50,length(tline)));
+    tline = deblank(tline);
+
+    if length(tline) >= 24
+
+        stacode = tline(1:4);
+        iph = tline(6);
+
+        ptime = str2datenum(tline(10:19), tline(20:24));
+
+        if length(tline) >= 50
+            aamp = str2double(tline(44:47));
+            aper = str2double(tline(48:50));
+        else
+            aamp = NaN;
+            aper = NaN;
         end
-        tline = fgetl(fid);
-     end
-     fclose(fid);
-self = self';
+
+        sta{end+1,1}   = stacode; %#ok<AGROW>
+        chan{end+1,1}  = '  '; %#ok<AGROW>
+        time(end+1,1)  = ptime; %#ok<AGROW>
+        phase{end+1,1} = iph; %#ok<AGROW>
+        amp(end+1,1)   = aamp; %#ok<AGROW>
+        per(end+1,1)   = aper; %#ok<AGROW>
+    end
 end
 
-function dnum = str2datenum(yrmodyhrmn, sec);
-    yr = yrmodyhrmn(1:2);
-    if str2num(yr)<30
-        yyyy = 2000 + str2num(yr);
-    else
-        yyyy = 1900 + str2num(yr);
-    end
-    mo = str2num(yrmodyhrmn(3:4));
-    dy = str2num(yrmodyhrmn(5:6));
-    hh = str2num(yrmodyhrmn(7:8));
-    mi = str2num(yrmodyhrmn(9:10));
-    dnum = datenum(yyyy, mo, dy, hh, mi, str2num(sec));
+fclose(fid);
+
+self = Arrival(sta,chan,time,phase,'amp',amp,'per',per);
 end
-        

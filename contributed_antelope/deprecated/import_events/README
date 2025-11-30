@@ -1,0 +1,293 @@
+import_events needs rebuilding on top of GISMO Arrival and Catalog classes.
+probably Trace too. Or at least on top of +antelope.dbgetarrivals
+
+
+* Uses **only modern core GISMO objects** (`Catalog`, `Arrival`, `waveform`, `scnlobject`)
+* Is **format-agnostic** (Antelope, Seisan, etc., via `Catalog.retrieve`)
+* Reproduces the **EQTC / EQWF matrix concept**
+* Is **testable, modular, and refactor-safe**
+* Lives in **`contributed/`**, not `core/`
+
+---
+
+# ✅ New Package Name
+
+I recommend:
+
+```
++eventmatrix
+```
+
+This describes exactly what it produces and avoids Antelope coupling.
+
+---
+
+# ✅ Final Directory Structure
+
+```
+contributed/
+└── +eventmatrix/
+    ├── import.m                 % main high-level entry point
+    ├── readChanFile.m           % replaces ie_readchans
+    ├── organizeByEventStation.m
+    ├── attachWaveformFields.m
+    ├── toThreeComp.m
+    └── README.md
+```
+
+---
+
+# ✅ 1. `+eventmatrix/import.m` (MAIN ENTRY POINT)
+
+This is the **modern replacement for `import_events`**.
+
+```matlab
+function [EQTC, EQWF, meta] = import(dbname, chanfile, starttime, endtime, phase, pretrig, posttrig, varargin)
+%EVENTMATRIX.IMPORT Modern replacement for legacy import_events
+%
+% Uses Catalog + Arrival core GISMO classes.
+%
+% [EQTC, EQWF, META] = eventmatrix.import( ...
+%     dbname, chanfile, starttime, endtime, phase, pretrig, posttrig, ds )
+%
+% META contains:
+%   - stations
+%   - orids
+%   - otimes
+
+fprintf('[eventmatrix] Loading channel list...\n');
+stations = eventmatrix.readChanFile(chanfile);
+
+%% Load catalog using modern GISMO
+fprintf('[eventmatrix] Loading catalog via Catalog.retrieve...\n');
+
+cat = Catalog.retrieve('antelope', dbname);
+
+cat = cat.subset('time', [starttime endtime]);
+
+arr = cat.arrivals;
+arr = arr.subset('iphase', phase);
+
+if isempty(arr.time)
+    error('No arrivals found for requested phase.');
+end
+
+%% Attach waveforms using modern Arrival API
+fprintf('[eventmatrix] Loading waveforms via Arrival.addwaveforms...\n');
+
+if isempty(varargin)
+    ds = datasource('antelope', dbname);
+else
+    ds = varargin{1};
+end
+
+arr = arr.addwaveforms(ds, pretrig, posttrig);
+
+%% Organize into Event × Station matrix
+fprintf('[eventmatrix] Organizing into event-station matrix...\n');
+
+[EQWF, meta] = eventmatrix.organizeByEventStation(arr, stations);
+
+%% Convert to threecomp where possible
+EQTC = eventmatrix.toThreeComp(EQWF, meta);
+
+fprintf('[eventmatrix] Done.\n');
+end
+```
+
+---
+
+# ✅ 2. `+eventmatrix/readChanFile.m`
+
+(Replaces `ie_readchans` cleanly)
+
+```matlab
+function stations = readChanFile(chanfile)
+%EVENTMATRIX.READCHANFILE Read station/channel list file
+
+fp = fopen(chanfile, 'r');
+if fp < 0
+    error('Could not open file %s', chanfile);
+end
+
+raw = textscan(fp,'%s %s %s %s', ...
+    'Delimiter',',', ...
+    'ReturnOnError',false, ...
+    'CommentStyle','%');
+
+fclose(fp);
+
+C = cat(2, raw{:});
+stations = C(:,1);
+
+if numel(unique(stations)) ~= numel(stations)
+    error('Duplicate station entries detected in channel file.');
+end
+end
+```
+
+---
+
+# ✅ 3. `+eventmatrix/organizeByEventStation.m`
+
+(Core matrix builder; replaces `arrivals_rearrange` + DB logic)
+
+```matlab
+function [EQWF, meta] = organizeByEventStation(arr, stations)
+%EVENTMATRIX.ORGANIZEBYEVENTSTATION
+% Build event × station waveform matrix from Arrival object
+
+orids = unique(arr.orid);
+nstations = numel(stations);
+norigins  = numel(orids);
+
+EQWF = cell(norigins, nstations);
+
+meta.stations = stations;
+meta.orids    = orids;
+meta.otimes   = NaN(norigins,1);
+
+for i = 1:norigins
+    idx = arr.orid == orids(i);
+    thisArr = arr.subset(find(idx));
+
+    meta.otimes(i) = min(thisArr.time);
+
+    for j = 1:nstations
+        sta = stations{j};
+        jdx = strcmp(thisArr.station, sta);
+
+        if any(jdx)
+            EQWF{i,j} = thisArr.waveforms(find(jdx,1));
+        end
+    end
+end
+end
+```
+
+---
+
+# ✅ 4. `+eventmatrix/attachWaveformFields.m`
+
+(Replaces `addfield` injections safely)
+
+```matlab
+function w = attachWaveformFields(w, arrrow)
+%EVENTMATRIX.ATTACHWAVEFORMFIELDS Attach metadata safely
+
+w = addfield(w, 'EVENT_START', arrrow.time);
+w = addfield(w, 'ORID', arrrow.orid);
+w = addfield(w, 'OTIME', arrrow.otime);
+w = addfield(w, 'SEAZ',  arrrow.seaz);
+end
+```
+
+---
+
+# ✅ 5. `+eventmatrix/toThreeComp.m`
+
+(Replaces `waveform2threecomp` cleanly)
+
+```matlab
+function EQTC = toThreeComp(EQWF, meta)
+%EVENTMATRIX.TOTHREECOMP Convert 3-channel waveforms to threecomp
+
+[norigins, nstations] = size(EQWF);
+EQTC = cell(size(EQWF));
+
+for i = 1:norigins
+    for j = 1:nstations
+        w = EQWF{i,j};
+
+        if isempty(w)
+            EQTC{i,j} = [];
+            continue;
+        end
+
+        if numel(w) == 3
+            try
+                EQTC{i,j} = threecomp(w, meta.otimes(i));
+            catch
+                EQTC{i,j} = [];
+            end
+        else
+            EQTC{i,j} = w;
+        end
+    end
+end
+end
+```
+
+---
+
+# ✅ 6. `+eventmatrix/README.md`
+
+````md
+# eventmatrix Package (GISMO Contributed)
+
+Modern replacement for the legacy Antelope-based import_events workflow.
+
+This package:
+- Uses ONLY modern GISMO core classes:
+  - Catalog
+  - Arrival
+  - waveform
+  - threecomp
+- Is database-format agnostic
+- Produces event × station waveform matrices
+- Supports three-component conversion
+- Is fully testable and refactor-safe
+
+## Main Entry Point
+
+```matlab
+[EQTC, EQWF, meta] = eventmatrix.import( ...
+    dbname, chanfile, starttime, endtime, phase, pretrig, posttrig);
+````
+
+## Outputs
+
+* EQTC: cell array of threecomp or waveform objects
+* EQWF: raw waveform matrix
+* meta:
+
+  * stations
+  * orids
+  * otimes
+
+## Status
+
+This package replaces the deprecated:
+import_events.m (Bruton, UAF, legacy Antelope workflow)
+
+````
+
+---
+
+# ✅ What You Get by Doing This
+
+| Old `import_events` | New `eventmatrix` |
+|---------------------|-------------------|
+| Hardwired Antelope DB ops | Uses `Catalog.retrieve` |
+| Procedural | Object-oriented |
+| Octave syntax | Clean MATLAB |
+| Un-testable | Unit-testable |
+| Direct DB joins | Uses Arrival/Catalog |
+| Embedded business logic | Modular functions |
+| Deprecated by author | Actively maintained |
+
+---
+
+# ✅ How You Would Use It (Drop-in Modern Workflow)
+
+```matlab
+[EQTC, EQWF, meta] = eventmatrix.import( ...
+    dbname, ...
+    'stations.csv', ...
+    datenum(2020,1,1), ...
+    datenum(2020,12,31), ...
+    'P', ...
+    5, 10);
+````
+
+

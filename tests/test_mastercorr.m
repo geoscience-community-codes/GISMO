@@ -4,7 +4,7 @@ end
 
 function test_runMastercorrCookbook(~)
 try
-    mastercorr.cookbook;
+    mastercorr.cookbook();
 catch ME
     warning("mastercorr cookbook failed: %s", ME.message);
 end

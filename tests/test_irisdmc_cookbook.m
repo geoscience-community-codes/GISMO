@@ -16,14 +16,11 @@ classdef test_irisdmc_cookbook < matlab.unittest.TestCase
                     'Skipping irisdmc cookbook: not supported on MATLAB >= R2023a');
             end
 
-            % --- Package existence --------------------------------
             % --- Package existence (PACKAGE-SAFE, RELIABLE) --------------------------
             cbfun = which('irisdmc.station_meta');
             if isempty(cbfun)
                 testCase.assumeFail('Skipping: irisdmc package not on path.');
             end
-
-
 
             % --- irisFetch presence --------------------------------
             if exist('irisFetch','file') ~= 2

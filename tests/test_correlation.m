@@ -8,28 +8,6 @@ classdef test_correlation < matlab.unittest.TestCase
     % - For adjusttrig: ensures LAG is populated via xcorr() first.
 
     % ---------------------------------------------------------------------
-    methods (TestClassSetup)
-        function setupGISMO(testCase) %#ok<INUSD>
-            gismopath = fileparts(which('startup_GISMO'));
-            if ~isempty(gismopath)
-                addpath(genpath(gismopath));
-            else
-                error('GISMO not found on MATLAB path.');
-            end
-            rehash;
-        end
-    end
-
-    methods (TestClassTeardown)
-        function teardownGISMO(testCase) %#ok<INUSD>
-            gismopath = fileparts(which('startup_GISMO'));
-            if ~isempty(gismopath)
-                rmpath(genpath(gismopath));
-            end
-        end
-    end
-
-    % ---------------------------------------------------------------------
     %% 1. Constructor Variants
     % ---------------------------------------------------------------------
     methods (Test)

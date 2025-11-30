@@ -1,119 +1,143 @@
 function [origin,W] = db_get_origin_info(INorigin,dbname,varargin)
-
-
-% ORIGIN = DB_GET_ORIGIN_INFO(EVENT,DATABASE_NAME) If EVENT is a vector
-% of origin id numbers (orid) then the returned structure ORIGIN contains
-% fields pulled from the origin table.
+%DB_GET_ORIGIN_INFO  Retrieve origin info by ORID or by time.
 %
-% If EVENT is a vector of string times (one time per row) then the database
-% is searched for the origin occuring closest in time to each element of
-% EVENT (preferred origins only). Using the ORID is a more precise way to
-% pull events from the database, however, orid's have no inherent meaning
-% and may change. Using (approximate) origin times avoids this.
+%   ORIGIN = DB_GET_ORIGIN_INFO(EVENT, DBNAME)
+%   [ORIGIN, W] = DB_GET_ORIGIN_INFO(EVENT, DBNAME, W)
 %
-% [ORIGIN,WAVEFORM] = DB_GET_ORIGIN_INFO(EVENT,DATABASE_NAME,WAVEFORM) Add 
-% origin information as new fields in WAVEFORM object. 
+%   EVENT may be:
+%     • A numeric vector of ORIDs
+%     • A character array of date/time strings (one per row)
+%
+%   If time strings are given, the nearest PREFERRED origin is returned.
+%   Using ORIDs is more precise, since ORIDs may change between catalogs.
+%
+%   If WAVEFORM is supplied, origin metadata are injected into each
+%   waveform object via addfield().
+%
+%   This is a LEGACY WORKFLOW-LEVEL utility, refactored to use:
+%       • antelope.dbgetorigins
+%
+%   Author: Michael West, GI/UAF
+%   Refactored: G. Thompson (GISMO modernization)
+%
 
-% Author: Michael West, Geophysical Institute, Univ. of Alaska Fairbanks
-% $Date$
-% $Revision$
-
-
-
-%  FOR TESTING ONLY
-%dbname = '/home/admin/databases/AU06/wf/au06wf_2006_01';
-%INorigin = [
-%	'1/26/2006 11:58:59'
-%	'1/27/2006 04:10:13'
-%	'1/11/2006 07:01:49'
-%	'1/31/2006 22:02:10'
-%];
-%INorigin = [
-%	31301880
-%	31301918
-%	31300878
-%	31302068
-%];
-
-
+%==================================================================
+% 1) RESOLVE INPUT ORIGINS
+%==================================================================
 
 if isnumeric(INorigin)
-	origin.orid = reshape( INorigin , numel(INorigin), 1 );
+
+    origin.orid = reshape(INorigin, numel(INorigin), 1);
+
 elseif ischar(INorigin)
-	for n = 1:size(INorigin,1)
-		tmp(n) = str2epoch(INorigin(n,:));
-	end
-	tmp = getorids(tmp,dbname);
-	origin.orid = reshape( tmp , numel(tmp), 1 );
+
+    % Convert time strings to epoch
+    nevt = size(INorigin,1);
+    t_epoch = zeros(nevt,1);
+    for n = 1:nevt
+        t_epoch(n) = str2epoch(INorigin(n,:));
+    end
+
+    % Resolve to nearest preferred orid
+    origin.orid = reshape(getorids_refactored(t_epoch,dbname), nevt, 1);
 
 else
-    error('First input must be either origin ids or sting-formatted times');
+    error('First input must be either origin ids or string-formatted times');
 end
 
+%==================================================================
+% 2) OPTIONAL WAVEFORM INPUT
+%==================================================================
 
-% Check for waveform
+W = [];
 if numel(varargin) == 1
-	W = varargin{1};
-	if ~isa(W,'waveform')
-		error('Third argument must be a WAVEFORM object');
-	end
+    W = varargin{1};
+    if ~isa(W,'waveform')
+        error('Third argument must be a WAVEFORM object');
+    end
 elseif numel(varargin) > 1
-	error('Too many arguments');
+    error('Too many arguments');
 end
+
 if nargout==2 && nargin~=3
-	error('Mismatched number of input and/or output arguments');
+    error('Mismatched number of input and/or output arguments');
 end
 
+%==================================================================
+% 3) LOAD ORIGINS (CORE BACKEND)
+%==================================================================
 
-% GET ORIGIN TIME
-db = dbopen(dbname,'r');
-db = dblookup_table(db,'origin');
-nlist = [];
-for n = 1:length(origin.orid);
-	db1 = dbsubset(db,['orid==' num2str(origin.orid(n))]);
-	[ origin.lat(n),origin.lon(n),origin.depth(n),origin.time_epoch(n),origin.ml(n),origin.orid(n)] = dbgetv(db1,'lat','lon','depth','time','ml','orid');
+O = antelope.dbgetorigins(dbname,'orid',origin.orid);
+
+% Build ORID → origin map
+omap = containers.Map('KeyType','double','ValueType','any');
+for k = 1:numel(O)
+    omap(O(k).orid) = O(k);
 end
-dbclose(db);
-origin.lat = reshape( origin.lat , numel(origin.lat), 1 );
-origin.lon = reshape( origin.lon , numel(origin.lon), 1 );
-origin.depth = reshape( origin.depth , numel(origin.depth), 1 );
-origin.time_epoch = reshape( origin.time_epoch , numel(origin.time_epoch), 1 );
-origin.ml = reshape( origin.ml , numel(origin.ml), 1 );
+
+%==================================================================
+% 4) POPULATE OUTPUT STRUCTURE
+%==================================================================
+
+n = numel(origin.orid);
+
+origin.lat        = nan(n,1);
+origin.lon        = nan(n,1);
+origin.depth      = nan(n,1);
+origin.time_epoch = nan(n,1);
+origin.ml         = nan(n,1);
+
+for i = 1:n
+    if isKey(omap,origin.orid(i))
+        o = omap(origin.orid(i));
+        origin.lat(i)        = o.lat;
+        origin.lon(i)        = o.lon;
+        origin.depth(i)      = o.depth;
+        origin.time_epoch(i)= o.time;
+        origin.ml(i)         = o.ml;
+    end
+end
+
 origin.time_matlab = datenum(strtime(origin.time_epoch));
-origin.orid = reshape( origin.orid , numel(origin.orid), 1 );
-if exist('W')
-	for n = 1:numel(W)
-		disp([ 'Retreiving origin info for orid: ' num2str(origin.orid(n)) ' ... '])
-		W(n) = addfield(W(n),'ORIGIN_LAT',origin.lat(n));
-		W(n) = addfield(W(n),'ORIGIN_LON',origin.lon(n));
-		W(n) = addfield(W(n),'ORIGIN_DEPTH',origin.depth(n));
-		W(n) = addfield(W(n),'ORIGIN_TIME_EPOCH',origin.time_epoch(n));
-		W(n) = addfield(W(n),'ORIGIN_ML',origin.ml(n));
-		W(n) = addfield(W(n),'ORIGIN_TIME_MATLAB',origin.time_matlab(n));
-		W(n) = addfield(W(n),'ORIGIN_ORID',origin.orid(n));
-	end
+
+%==================================================================
+% 5) OPTIONAL WAVEFORM ENRICHMENT (LEGACY CONTRACT)
+%==================================================================
+
+if ~isempty(W)
+    for i = 1:numel(W)
+
+        disp(['Retrieving origin info for orid: ' num2str(origin.orid(i)) ' ... '])
+
+        W(i) = addfield(W(i),'ORIGIN_LAT',origin.lat(i));
+        W(i) = addfield(W(i),'ORIGIN_LON',origin.lon(i));
+        W(i) = addfield(W(i),'ORIGIN_DEPTH',origin.depth(i));
+        W(i) = addfield(W(i),'ORIGIN_TIME_EPOCH',origin.time_epoch(i));
+        W(i) = addfield(W(i),'ORIGIN_ML',origin.ml(i));
+        W(i) = addfield(W(i),'ORIGIN_TIME_MATLAB',origin.time_matlab(i));
+        W(i) = addfield(W(i),'ORIGIN_ORID',origin.orid(i));
+
+    end
 end
 
+end
 
+%======================================================================
+% LOCAL UTILITY — RESOLVE NEAREST PREFERRED ORIGIN BY TIME (REFACTORED)
+%======================================================================
+function neworigin = getorids_refactored(origin_epoch, dbname)
 
+% Load preferred origins only
+O = antelope.dbgetorigins(dbname);
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% RETURN ORID FOR EVENT CLOSEST IN TIME TO INPUT
-function neworigin = getorids(origin,dbname);
+orid_all  = [O.orid];
+time_all  = [O.time];   % still in epoch inside core structure
 
-db = dbopen(dbname,'r');
-db = dblookup_table(db,'origin');
-db1 = dblookup_table(db,'event');
-db = dbjoin(db,db1);
-db = dbsubset(db,'orid==prefor');
-nrecords = dbquery(db,'dbRECORD_COUNT');
-%display(['Number of records: ' num2str(nrecords)]);
-[orid,time] = dbgetv(db,'orid','time');
-dbclose(db);
+neworigin = zeros(size(origin_epoch));
 
-for n = 1:length(origin)
-	[tmp,index] = min(abs(origin(n)-time));
-	neworigin(n) = orid(index);
-end;
+for n = 1:numel(origin_epoch)
+    [~,index] = min(abs(origin_epoch(n) - time_all));
+    neworigin(n) = orid_all(index);
+end
 
-
+end
