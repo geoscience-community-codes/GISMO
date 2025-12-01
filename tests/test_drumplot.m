@@ -30,8 +30,8 @@ classdef test_drumplot < matlab.unittest.TestCase
             % Synthetic signal
             x = 0.05 * randn(size(t));
             x = x + sin(2*pi*2*t);
-            x(500:560)  = x(500:560)  + 5*gausswin(61);
-            x(3000:3120)= x(3000:3120)+ 3*gausswin(121);
+            x(500:560)   = x(500:560)   + 5*gausswin(61);
+            x(3000:3120) = x(3000:3120) + 3*gausswin(121);
 
             testCase.start = fix(now);
             testCase.data  = x;
@@ -83,35 +83,25 @@ classdef test_drumplot < matlab.unittest.TestCase
         end
 
         function testWithDetectionsIfAvailable(testCase)
-            % Only run if Detection is constructible AND accepts triggers
+            % Only run if Detection + STA/LTA are available
             try
-                det = Detection();
+                [det, ~, ~, ~] = Detection.sta_lta(testCase.w);
             catch
-                testCase.assumeFail('Detection class not available or not constructible — skipping.');
+                testCase.assumeFail('Detection.sta_lta not available — skipping.');
             end
 
-            % Now try to populate detections in the *supported* way
-            try
-                % Try common legacy field names safely
-                if isprop(det,'trig')
-                    det.trig = testCase.start + [2; 5; 8]/1440;
-                    det.dur  = [3; 4; 2];
-                elseif isprop(det,'time')
-                    det.time = testCase.start + [2; 5; 8]/1440;
-                else
-                    testCase.assumeFail('Detection exists but has no usable trigger field — skipping.');
-                end
-            catch
-                testCase.assumeFail('Detection fields incompatible with test — skipping.');
+            % Require a non-empty Detection object
+            if ~isa(det,'Detection') || det.numel == 0
+                testCase.assumeFail('Detection.sta_lta did not return any detections — skipping.');
             end
 
+            % Pass detections into drumplot in the supported way
             h = drumplot(testCase.w,'mpl',5,'detections',det);
 
             f = figure('Visible','off');
             testCase.verifyWarningFree(@() plot(h));
             delete(f);
         end
-
 
         function testBadWaveformRejected(testCase)
             badw = [testCase.w testCase.w];   % invalid (array)

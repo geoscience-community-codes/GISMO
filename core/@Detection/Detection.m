@@ -38,6 +38,7 @@ function obj = Detection(sta, chan, time, state, filterString, signal2noise)
         return
     end
 
+    % ---------- ChannelTag input ----------
     if isa(sta,'ChannelTag')
 
         ctag = sta;
@@ -48,6 +49,7 @@ function obj = Detection(sta, chan, time, state, filterString, signal2noise)
         p.addOptional('signal2noise', [], @isnumeric);
         p.parse(chan, time, state, filterString);
 
+    % ---------- sta/chan cell input ----------
     else
         p = inputParser;
         p.addRequired('sta',  @iscell);
@@ -83,7 +85,7 @@ function summary(obj, showall)
     fprintf('Number of detections: %d\n',N);
 
     if N <= 50 || showall
-        for k=1:N
+        for k = 1:N
             fprintf('%s  %s  %s  %.2f\n', ...
                 obj.channelinfo{k}, ...
                 datestr(obj.time(k)), ...
@@ -91,7 +93,7 @@ function summary(obj, showall)
                 obj.signal2noise(k));
         end
     else
-        for k=1:50
+        for k = 1:50
             fprintf('%s  %s  %s  %.2f\n', ...
                 obj.channelinfo{k}, ...
                 datestr(obj.time(k)), ...
@@ -104,28 +106,48 @@ end
 
 % ======================= SUBSET ===========================
 function out = subset(obj, columnname, findval)
+    %DETECTION.SUBSET  Safe subsetting by indices or by matching a column.
+    %
+    %   out = subset(obj, idx)
+    %   out = subset(obj, 'state', 'D')
+    %
+    % Returns an empty Detection if:
+    %   • obj is empty
+    %   • idx is empty or out of range
 
+    % ---- If base object is empty, just return empty ----
+    if obj.numel == 0 || isempty(obj.channelinfo)
+        out = Detection();
+        return
+    end
+
+    % ---- Determine idx ----
     if nargin == 2
+        % First arg is an index / logical mask
         idx = columnname;
     else
+        % First arg is column name, second is value to match
         idx = find(strcmp(obj.(columnname), findval));
     end
 
-    % ---- HARD BULLETPROOF SAFETY GUARD ----
+    % ---- Normalize idx ----
+    if islogical(idx)
+        idx = find(idx);
+    end
+    idx = idx(:);                  % column vector
+    idx = idx(~isnan(idx));        % drop NaNs just in case
+
+    % ---- Clamp to valid range ----
+    n = obj.numel;
+    idx = idx(idx >= 1 & idx <= n);
+
+    % ---- If nothing valid, return empty Detection ----
     if isempty(idx)
         out = Detection();
         return
     end
 
-    % >>> THIS IS THE CRITICAL FIX <<<
-    idx = idx(idx >= 1 & idx <= numel(obj.time));
-
-    if isempty(idx)
-        out = Detection();
-        return
-    end
-    % -------------------------------------
-
+    % ---- Apply subsetting safely ----
     out = obj;
     out.channelinfo  = obj.channelinfo(idx);
     out.time         = obj.time(idx);
@@ -135,24 +157,23 @@ function out = subset(obj, columnname, findval)
     out.traveltime   = obj.traveltime(idx);
 end
 
-
 % ======================= APPEND ===========================
 function self = append(a,b)
 
     newTime = [a.time b.time];
     [newTime,idx] = sort(newTime);
 
-    self.channelinfo  = [a.channelinfo b.channelinfo]; self.channelinfo  = self.channelinfo(idx);
-    self.state        = [a.state b.state];             self.state        = self.state(idx);
+    self.channelinfo  = [a.channelinfo b.channelinfo];   self.channelinfo  = self.channelinfo(idx);
+    self.state        = [a.state b.state];               self.state        = self.state(idx);
     self.filterString = [a.filterString b.filterString]; self.filterString = self.filterString(idx);
     self.signal2noise = [a.signal2noise b.signal2noise]; self.signal2noise = self.signal2noise(idx);
-    self.traveltime   = [a.traveltime b.traveltime];   self.traveltime   = self.traveltime(idx);
+    self.traveltime   = [a.traveltime b.traveltime];     self.traveltime   = self.traveltime(idx);
     self.time         = newTime;
 end
 
 % ======================= ADD NETWORK PREFIX ===========================
 function obj = addnetwork(obj, net)
-    for k=1:numel(obj.channelinfo)
+    for k = 1:numel(obj.channelinfo)
         obj.channelinfo{k} = [net obj.channelinfo{k}];
     end
 end
@@ -164,7 +185,7 @@ function plot(obj)
     hf1 = figure; hold on;
     hf2 = figure; hold on;
 
-    for k=1:numel(tags)
+    for k = 1:numel(tags)
         idx = strcmp(obj.channelinfo,tags{k});
         t = obj.time(idx);
         s = obj.signal2noise(idx);
@@ -222,14 +243,12 @@ end
 % ------------------------------
 if ~isempty(opt.StateFilter) && ~isempty(obj.state)
 
-    % Force to column, and size our mask from this explicitly
     statecol = obj.state(:);
     keep = false(size(statecol));
 
     for k = 1:numel(opt.StateFilter)
         cmp = strcmp(statecol, opt.StateFilter{k});
         cmp = cmp(:);                 % ensure column
-        % In case of any weirdness, trim/pad to match
         if numel(cmp) > numel(keep)
             cmp = cmp(1:numel(keep));
         elseif numel(cmp) < numel(keep)
@@ -242,7 +261,6 @@ if ~isempty(opt.StateFilter) && ~isempty(obj.state)
 
     idx = find(keep);
 
-    % If everything gets filtered out, return an empty Catalog
     if isempty(idx)
         catalogobj = Catalog();
         return
@@ -250,7 +268,6 @@ if ~isempty(opt.StateFilter) && ~isempty(obj.state)
 
     obj = obj.subset(idx);
 end
-
 
 % ------------------------------
 % Phase filtering
@@ -283,7 +300,6 @@ if ~isempty(opt.PhaseFilter) && ~isempty(obj.state)
     obj = obj.subset(idx);
 end
 
-
 % ------------------------------
 % Travel-time reduction
 % ------------------------------
@@ -303,14 +319,12 @@ end
 % Sort (by reduced time)
 % ------------------------------
 if obj.numel == 0
-    % Nothing left after filtering – no events to associate
     catalogobj = Catalog();
     return
 end
 
 [~,idx] = sort(obj.time);
 
-% --- guard against illegal zero indices ---
 idx = idx(idx >= 1 & idx <= obj.numel);
 
 if isempty(idx)
@@ -319,7 +333,6 @@ if isempty(idx)
 end
 
 obj = obj.subset(idx);
-
 
 % ------------------------------
 % Sliding window clustering
@@ -350,9 +363,9 @@ end
 % Build Events
 % ------------------------------
 arrivalobj = {};
-firstDet = [];
-lastDet  = [];
-otime    = [];
+firstDet   = [];
+lastDet    = [];
+otime      = [];
 confidence = [];
 
 eventnum = 0;
@@ -419,8 +432,7 @@ if opt.Probabilistic
     catalogobj.confidence = confidence;
 end
 
-end
-
+end % associate
 
 % ======================= WRITE ===========================
 function write(obj,outformat,outpath)
@@ -429,34 +441,33 @@ function write(obj,outformat,outpath)
 switch lower(outformat)
 
 case {'csv','txt','xls'}
-    T=table(obj.channelinfo(:),obj.time(:),obj.state(:),obj.signal2noise(:), ...
-            'VariableNames',{'Channel','Time','State','SNR'});
+    T = table(obj.channelinfo(:),obj.time(:),obj.state(:),obj.signal2noise(:), ...
+              'VariableNames',{'Channel','Time','State','SNR'});
     writetable(T,outpath);
 
 case 'antelope'
     if ~admin.antelope_exists
         error('Antelope not available');
     end
-    db=antelope.dbopen(outpath,'r+');
-    dbdet=dblookup_table(db,'detection');
+    db   = antelope.dbopen(outpath,'r+');
+    dbdet= antelope.dblookup_table(db,'detection');
 
-    for k=1:obj.numel
-        ctag=ChannelTag(obj.channelinfo{k});
-        dbdet.record=dbaddnull(dbdet);
-        dbputv(dbdet, ...
+    for k = 1:obj.numel
+        ctag = ChannelTag(obj.channelinfo{k});
+        dbdet.record = antelope.dbaddnull(dbdet);
+        antelope.dbputv(dbdet, ...
           'sta',ctag.station, ...
           'chan',ctag.channel, ...
           'time',datenum2epoch(obj.time(k)), ...
           'state',obj.state{k}, ...
           'snr',obj.signal2noise(k));
     end
-    dbclose(db);
+    antelope.dbclose(db);
 
 otherwise
     error('Detection.write:UnsupportedFormat','Unknown format.');
 end
 end
-
 
 end % methods
 
@@ -464,7 +475,11 @@ end % methods
 methods (Static)
 
 function [detObj, sta, lta, sta_to_lta] = sta_lta(wave, varargin)
+%DETECTION.STA_LTA  Short-Time-Average / Long-Time-Average event detector
+%
+% See class documentation for full help text (omitted here for brevity).
 
+% Handle waveform arrays
 if numel(wave) > 1
     detObj = Detection();
     for k = 1:numel(wave)
@@ -577,16 +592,15 @@ detObj = Detection( ...
 
 end
 
-
 % ======================= PRIVATE HELPERS ===========================
 function c = defaultCell(v,n)
     if isempty(v), c = repmat({''},1,n);
-    else c=v; end
+    else c = v; end
 end
 
 function x = defaultNum(v,n)
     if isempty(v), x = NaN(1,n);
-    else x=v; end
+    else x = v; end
 end
 
 function arr = detection2arrival(det)
@@ -601,6 +615,3 @@ end
 
 end % static methods
 end % classdef
-
-
-
