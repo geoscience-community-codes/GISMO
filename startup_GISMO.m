@@ -117,13 +117,19 @@ for n = 1:numel(dirlist)
         continue
     end
 
-    % Do NOT add inside +package directories
+    % Do NOT add inside +package or @class directories
     if subdir(1) == '+'
         fprintf('Package detected: %s (parent already on path)\n', subdir);
         continue
     end
 
+    if subdir(1) == '@'
+        fprintf('Class directory detected: %s (parent already on path)\n', subdir);
+        continue
+    end
+
     addDir(newpath);
+   
 end
 end
 

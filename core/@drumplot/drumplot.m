@@ -105,7 +105,8 @@ classdef drumplot
             
             % Validation
             if ~isa(obj.wave, 'waveform') | numel(obj.wave)~=1
-               error('Input waveform must be a single waveform object')
+               error('MATLAB:InputParser:ArgumentFailedValidation', ...
+                    'Input waveform must be a single waveform object')
             end
             
             if ~isa(obj.catalog, 'Catalog') | numel(obj.catalog)~=1

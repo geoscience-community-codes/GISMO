@@ -24,10 +24,10 @@ end
 
 % -------------------------------------------------------------------------
 methods
+
 % ======================= CONSTRUCTOR ===========================
 function obj = Detection(sta, chan, time, state, filterString, signal2noise)
 
-    % ---------- Blank constructor ----------
     if nargin == 0
         obj.channelinfo  = {};
         obj.time         = [];
@@ -38,7 +38,6 @@ function obj = Detection(sta, chan, time, state, filterString, signal2noise)
         return
     end
 
-    % ---------- ChannelTag input ----------
     if isa(sta,'ChannelTag')
 
         ctag = sta;
@@ -49,7 +48,6 @@ function obj = Detection(sta, chan, time, state, filterString, signal2noise)
         p.addOptional('signal2noise', [], @isnumeric);
         p.parse(chan, time, state, filterString);
 
-    % ---------- sta/chan cell input ----------
     else
         p = inputParser;
         p.addRequired('sta',  @iscell);
@@ -65,9 +63,9 @@ function obj = Detection(sta, chan, time, state, filterString, signal2noise)
 
     obj.channelinfo  = ctag.string();
     obj.time         = p.Results.time;
-    obj.state        = defaultCell(p.Results.state, numel(obj.time));
-    obj.filterString = defaultCell(p.Results.filterString, numel(obj.time));
-    obj.signal2noise = defaultNum(p.Results.signal2noise, numel(obj.time));
+    obj.state        = Detection.defaultCell(p.Results.state, numel(obj.time));
+    obj.filterString = Detection.defaultCell(p.Results.filterString, numel(obj.time));
+    obj.signal2noise = Detection.defaultNum(p.Results.signal2noise, numel(obj.time));
     obj.traveltime   = NaN(size(obj.time));
 end
 
@@ -113,6 +111,21 @@ function out = subset(obj, columnname, findval)
         idx = find(strcmp(obj.(columnname), findval));
     end
 
+    % ---- HARD BULLETPROOF SAFETY GUARD ----
+    if isempty(idx)
+        out = Detection();
+        return
+    end
+
+    % >>> THIS IS THE CRITICAL FIX <<<
+    idx = idx(idx >= 1 & idx <= numel(obj.time));
+
+    if isempty(idx)
+        out = Detection();
+        return
+    end
+    % -------------------------------------
+
     out = obj;
     out.channelinfo  = obj.channelinfo(idx);
     out.time         = obj.time(idx);
@@ -121,6 +134,7 @@ function out = subset(obj, columnname, findval)
     out.signal2noise = obj.signal2noise(idx);
     out.traveltime   = obj.traveltime(idx);
 end
+
 
 % ======================= APPEND ===========================
 function self = append(a,b)
@@ -164,43 +178,23 @@ function plot(obj)
     end
 end
 
+% ======================= ASSOCIATE ===========================
 function catalogobj = associate(obj, maxTimeDiff, sites, source, varargin)
 %ASSOCIATE  Associate detections into multi-station events
 %
 %   catalogobj = associate(detobj, maxTimeDiff)
-%
-%   Groups detections into events whenever two or more detections occur
-%   within maxTimeDiff seconds of each other. The earliest detection in
-%   each group becomes the event origin time.
-%
 %   catalogobj = associate(detobj, maxTimeDiff, sites)
-%   Applies differential travel-time correction before association.
-%
 %   catalogobj = associate(detobj, maxTimeDiff, sites, source)
-%   Also populates event latitude/longitude.
 %
-%   catalogobj = associate(..., 'Name',Value,...)
-%
-%   Name–Value Options:
-%     'MinStations'              (default = 2)
-%     'RequireUniqueStations'    (default = false)
-%     'RequireUniqueChannels'    (default = false)
-%     'StateFilter'              (default = {'D','ON'})
-%     'PhaseFilter'              (default = {})
-%     'ClusteringMethod'         (default = 'sliding')
-%     'Probabilistic'            (default = false)
-%
-%   Output Catalog:
-%     • ontime, offtime
-%     • arrivals (Arrival objects)
-%     • lat, lon (optional)
-%     • confidence (optional)
-%
-%   See also: Detection, Arrival, Catalog
+% NAME–VALUE OPTIONS:
+%   'MinStations' (default 2)
+%   'RequireUniqueStations' (false)
+%   'RequireUniqueChannels' (false)
+%   'StateFilter' ({'D','ON'})
+%   'PhaseFilter' ({})
+%   'ClusteringMethod' ('sliding')
+%   'Probabilistic' (false)
 
-% ------------------------------
-% Backward compatibility
-% ------------------------------
 if nargin < 3 || isempty(sites),  sites  = []; end
 if nargin < 4 || isempty(source), source = []; end
 
@@ -218,40 +212,77 @@ p.addParameter('Probabilistic',false,@islogical);
 p.parse(varargin{:});
 opt = p.Results;
 
-% ------------------------------
-% Enforce implemented clustering
-% ------------------------------
 if ~strcmpi(opt.ClusteringMethod,'sliding')
     error('Detection.associate:ClusteringNotImplemented', ...
-          'Only ''sliding'' clustering is currently implemented.');
+          'Only ''sliding'' clustering is implemented.');
 end
 
 % ------------------------------
 % State filtering
 % ------------------------------
-if ~isempty(opt.StateFilter)
-    keep = false(size(obj.time));
+if ~isempty(opt.StateFilter) && ~isempty(obj.state)
+
+    % Force to column, and size our mask from this explicitly
+    statecol = obj.state(:);
+    keep = false(size(statecol));
+
     for k = 1:numel(opt.StateFilter)
-        keep = keep | strcmp(obj.state,opt.StateFilter{k});
+        cmp = strcmp(statecol, opt.StateFilter{k});
+        cmp = cmp(:);                 % ensure column
+        % In case of any weirdness, trim/pad to match
+        if numel(cmp) > numel(keep)
+            cmp = cmp(1:numel(keep));
+        elseif numel(cmp) < numel(keep)
+            tmp = false(size(keep));
+            tmp(1:numel(cmp)) = cmp;
+            cmp = tmp;
+        end
+        keep = keep | cmp;
     end
-    obj = obj.subset(find(keep));
+
+    idx = find(keep);
+
+    % If everything gets filtered out, return an empty Catalog
+    if isempty(idx)
+        catalogobj = Catalog();
+        return
+    end
+
+    obj = obj.subset(idx);
 end
+
 
 % ------------------------------
 % Phase filtering
 % ------------------------------
-if ~isempty(opt.PhaseFilter)
-    keep = false(size(obj.time));
+if ~isempty(opt.PhaseFilter) && ~isempty(obj.state)
+
+    statecol = obj.state(:);
+    keep = false(size(statecol));
+
     for k = 1:numel(opt.PhaseFilter)
-        keep = keep | strcmp(obj.state,opt.PhaseFilter{k});
+        cmp = strcmp(statecol, opt.PhaseFilter{k});
+        cmp = cmp(:);
+        if numel(cmp) > numel(keep)
+            cmp = cmp(1:numel(keep));
+        elseif numel(cmp) < numel(keep)
+            tmp = false(size(keep));
+            tmp(1:numel(cmp)) = cmp;
+            cmp = tmp;
+        end
+        keep = keep | cmp;
     end
-    obj = obj.subset(find(keep));
+
+    idx = find(keep);
+
+    if isempty(idx)
+        catalogobj = Catalog();
+        return
+    end
+
+    obj = obj.subset(idx);
 end
 
-if obj.numel < opt.MinStations
-    catalogobj = Catalog();
-    return
-end
 
 % ------------------------------
 % Travel-time reduction
@@ -269,10 +300,26 @@ else
 end
 
 % ------------------------------
-% Sort by reduced time
+% Sort (by reduced time)
 % ------------------------------
+if obj.numel == 0
+    % Nothing left after filtering – no events to associate
+    catalogobj = Catalog();
+    return
+end
+
 [~,idx] = sort(obj.time);
+
+% --- guard against illegal zero indices ---
+idx = idx(idx >= 1 & idx <= obj.numel);
+
+if isempty(idx)
+    catalogobj = Catalog();
+    return
+end
+
 obj = obj.subset(idx);
+
 
 % ------------------------------
 % Sliding window clustering
@@ -281,8 +328,7 @@ dt = maxTimeDiff / 86400;
 N = obj.numel;
 
 clusters = {};
-i = 1;
-k = 1;
+i = 1; k = 1;
 
 while i <= N
     j = find(obj.time >= obj.time(i) & obj.time <= obj.time(i)+dt);
@@ -305,8 +351,8 @@ end
 % ------------------------------
 arrivalobj = {};
 firstDet = [];
-lastDet = [];
-otime = [];
+lastDet  = [];
+otime    = [];
 confidence = [];
 
 eventnum = 0;
@@ -314,11 +360,8 @@ eventnum = 0;
 for k = 1:numel(clusters)
 
     detset = obj.subset(clusters{k});
-
-    % Undo reduction
     detset.time = detset.time + detset.traveltime/86400;
 
-    % Enforce uniqueness
     ctag = ChannelTag(detset.channelinfo);
     sta  = get(ctag,'station');
     chan = get(ctag,'channel');
@@ -357,9 +400,6 @@ if isempty(otime)
     return
 end
 
-% ------------------------------
-% Create Catalog
-% ------------------------------
 if isempty(source)
     olon = [];
     olat = [];
@@ -369,10 +409,7 @@ else
 end
 
 catalogobj = Catalog( ...
-    otime, ...
-    olon, ...
-    olat, ...
-    [], [], {}, {}, ...
+    otime, olon, olat, [], [], {}, {}, ...
     'ontime', firstDet, ...
     'offtime', lastDet);
 
@@ -385,150 +422,49 @@ end
 end
 
 
-
 % ======================= WRITE ===========================
 function write(obj,outformat,outpath)
-    %DETECTION.WRITE Write a Detection object to disk
-    %
-    % detectionObject.write('antelope', 'mydb', 'css3.0') writes the
-    % detectionObject to a CSS3.0 database called 'mydb' using
-    % Antelope. Requires Antelope and Antelope Toolbox. 
-    % 
-    % Support for other output formats, e.g. Seisan, will be added
-    % later.
+%DETECTION.WRITE Write a Detection object to disk
 
-    % Glenn Thompson, 15 August 2018
-    switch lower(outformat)
+switch lower(outformat)
 
-    case {'csv','txt','xls'}
-        T=table(obj.channelinfo(:),obj.time(:),obj.state(:),obj.signal2noise(:), ...
-                'VariableNames',{'Channel','Time','State','SNR'});
-        writetable(T,outpath);
+case {'csv','txt','xls'}
+    T=table(obj.channelinfo(:),obj.time(:),obj.state(:),obj.signal2noise(:), ...
+            'VariableNames',{'Channel','Time','State','SNR'});
+    writetable(T,outpath);
 
-    case 'antelope'
-        if ~admin.antelope_exists
-            error('Antelope not available');
-        end
-        db=antelope.dbopen(outpath,'r+');
-        dbdet=dblookup_table(db,'detection');
-
-        for k=1:obj.numel
-            ctag=ChannelTag(obj.channelinfo{k});
-            dbdet.record=dbaddnull(dbdet);
-            dbputv(dbdet, ...
-              'sta',ctag.station, ...
-              'chan',ctag.channel, ...
-              'time',datenum2epoch(obj.time(k)), ...
-              'state',obj.state{k}, ...
-              'snr',obj.signal2noise(k));
-        end
-        dbclose(db);
+case 'antelope'
+    if ~admin.antelope_exists
+        error('Antelope not available');
     end
+    db=antelope.dbopen(outpath,'r+');
+    dbdet=dblookup_table(db,'detection');
+
+    for k=1:obj.numel
+        ctag=ChannelTag(obj.channelinfo{k});
+        dbdet.record=dbaddnull(dbdet);
+        dbputv(dbdet, ...
+          'sta',ctag.station, ...
+          'chan',ctag.channel, ...
+          'time',datenum2epoch(obj.time(k)), ...
+          'state',obj.state{k}, ...
+          'snr',obj.signal2noise(k));
+    end
+    dbclose(db);
+
+otherwise
+    error('Detection.write:UnsupportedFormat','Unknown format.');
+end
 end
 
-methods(Static)
+
+end % methods
+
+% ======================= STATIC METHODS ===========================
+methods (Static)
 
 function [detObj, sta, lta, sta_to_lta] = sta_lta(wave, varargin)
-%DETECTION.STA_LTA  Short-Time-Average / Long-Time-Average event detector
-%
-%   detObj = Detection.sta_lta(wave)
-%   detObj = Detection.sta_lta(wave, 'edp', [l_sta l_lta th_on th_off min_dur])
-%   detObj = Detection.sta_lta(wave, 'lta_mode', MODE)
-%
-%   [detObj, sta, lta, sta_to_lta] = Detection.sta_lta(...)
-%
-% DESCRIPTION
-%   Detection.sta_lta applies a classic STA/LTA trigger algorithm to a
-%   waveform object and returns a Detection object containing paired
-%   'ON' and 'OFF' detections for each triggered event. The method supports
-%   waveform arrays and automatically concatenates detections across
-%   multiple channels.
-%
-%   This method is CI-safe (no plotting) and returns an empty Detection
-%   object if no events are detected.
-%
-% INPUTS
-%   wave   - A GISMO waveform object (scalar or array). Gaps are interpolated
-%            and the signal is detrended internally before detection.
-%
-% NAME–VALUE PAIR OPTIONS
-%
-%   'edp'   [l_sta l_lta th_on th_off min_dur]
-%       Event Detection Parameters (numeric 1×5 vector):
-%         l_sta     – STA window length (seconds)
-%         l_lta     – LTA window length (seconds)
-%         th_on     – Trigger ON threshold (STA/LTA ratio)
-%         th_off    – Trigger OFF threshold (STA/LTA ratio)
-%         min_dur   – Minimum event duration (seconds)
-%
-%       Default: [1 8 2.0 1.6 3]
-%
-%   'lta_mode'  (string)
-%       Post-trigger LTA behavior:
-%         'continuous'  – LTA continues updating during events (default)
-%         'frozen'      – LTA is frozen at trigger ON
-%         'grow'        – LTA grows continuously after trigger ON
-%
-% OUTPUTS
-%   detObj        - Detection object containing ON/OFF trigger pairs
-%   sta           - Short-term average time series
-%   lta           - Long-term average time series
-%   sta_to_lta    - STA/LTA ratio time series
-%
-% DETECTION OBJECT CONTENTS
-%   Each detected event produces two rows:
-%     • State = 'ON'  at trigger start time
-%     • State = 'OFF' at trigger end time
-%
-%   Fields populated:
-%     • channelinfo
-%     • time
-%     • state
-%     • signal2noise (STA/LTA ratio at ON and OFF)
-%
-% EXAMPLES
-%
-%   % Basic detection
-%   det = Detection.sta_lta(w);
-%
-%   % Custom STA/LTA parameters
-%   det = Detection.sta_lta(w,'edp',[0.5 10 2.5 1.8 1]);
-%
-%   % Detection on waveform array
-%   det = Detection.sta_lta(waveArray);
-%
-%   % Full pipeline to event Catalog
-%   det = Detection.sta_lta(w);
-%   cat = det.associate(3,'MinStations',2);
-%
-% NOTES
-%   • This detector is amplitude-based only; no frequency or waveform
-%     similarity constraints are applied.
-%   • Without travel-time reduction, closely spaced independent events
-%     may merge into a single associated event.
-%   • For multi-parameter event definition, combine with:
-%         Detection.associate
-%         Arrival
-%         Catalog
-%
-% SEE ALSO
-%   Detection, Detection.associate, Arrival, Catalog, waveform
-%
-% Author:
-%   Glenn Thompson, after contributed code from Dane Ketner (AVO)
-%   Refactored into Detection class, CI-safe, 2025
 
-% ------------------------------
-% Varargin validation
-% ------------------------------
-if rem(numel(varargin),2) ~= 0
-    error('Detection.sta_lta:InvalidArguments', ...
-          'Arguments must be name–value pairs.');
-end
-
-% ------------------------------
-% Handle waveform arrays
-% ------------------------------
 if numel(wave) > 1
     detObj = Detection();
     for k = 1:numel(wave)
@@ -541,9 +477,6 @@ if numel(wave) > 1
     return
 end
 
-% ------------------------------
-% Validate waveform
-% ------------------------------
 if ~isa(wave,'waveform') || isempty(wave)
     error('Detection.sta_lta:InputMustBeWaveform', ...
           'Input must be a non-empty waveform object');
@@ -555,9 +488,6 @@ y    = abs(get(wave,'data'));
 t    = get(wave,'timevector');
 ctag = get(wave,'ChannelTag');
 
-% ------------------------------
-% Defaults
-% ------------------------------
 l_sta = round(1 * Fs);
 l_lta = round(8 * Fs);
 th_on  = 2.0;
@@ -565,9 +495,6 @@ th_off = 1.6;
 min_dur_days = 3/86400;
 lta_mode = 'continuous';
 
-% ------------------------------
-% Parse options
-% ------------------------------
 for p = 1:2:numel(varargin)
     switch lower(varargin{p})
         case 'edp'
@@ -582,9 +509,6 @@ for p = 1:2:numel(varargin)
     end
 end
 
-% ------------------------------
-% Initialize STA/LTA
-% ------------------------------
 N = numel(y);
 sta = zeros(N,1);
 lta = zeros(N,1);
@@ -599,11 +523,7 @@ end
 
 sta_to_lta(1:l_lta) = sta(1:l_lta)./lta(1:l_lta);
 
-% ------------------------------
-% Detection loop
-% ------------------------------
 EVENT_ON = false;
-eventstart = 0;
 trig_array = [];
 snr_val = [];
 eventnum = 0;
@@ -638,9 +558,6 @@ for k = l_lta+1:N
     end
 end
 
-% ------------------------------
-% Build Detection object
-% ------------------------------
 if eventnum == 0
     detObj = Detection();
     return
@@ -661,12 +578,7 @@ detObj = Detection( ...
 end
 
 
-end % Static methods
-
-
-end % classdef
-
-% ======================= LOCAL HELPERS ===========================
+% ======================= PRIVATE HELPERS ===========================
 function c = defaultCell(v,n)
     if isempty(v), c = repmat({''},1,n);
     else c=v; end
@@ -686,5 +598,9 @@ function arr = detection2arrival(det)
         det.state, ...
         'signal2noise',det.signal2noise);
 end
+
+end % static methods
+end % classdef
+
 
 
