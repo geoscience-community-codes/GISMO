@@ -157,4 +157,12 @@ plot(C);
 % namespace-clean, CI-safe cookbook.
 
 disp('mastercorr cookbook completed successfully.');
+
+if exist('C','var')
+    % Return final correlation object for testing
+    return
+else
+    C = [];
 end
+end
+

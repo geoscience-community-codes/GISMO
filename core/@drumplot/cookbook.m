@@ -1,3 +1,4 @@
+function cookbook()
 %% drumplot Cookbook (GISMO)
 % The drumplot class generates helicorder-style plots (multi-line seismic
 % displays) from waveform objects. Optionally, detected events from a
@@ -6,7 +7,7 @@
 % This cookbook is fully CI-safe:
 %   • Uses synthetic waveform data by default
 %   • Does NOT require SAC, Antelope, Winston, or IRIS
-%   • Optional real-data sections are guarded
+%   • Optional real-data sections are guarded by TESTDATA
 %
 % See also:
 %   drumplot, waveform, plot_helicorder, Detection, Catalog
@@ -24,8 +25,8 @@ t  = (0:1/fs:T-1/fs)';   % time vector
 % Synthetic seismic-like signal
 x = 0.1 * randn(size(t));                    % background noise
 x = x + sin(2*pi*2*t);                       % 2 Hz tremor
-x(5000:5100)  = x(5000:5100)  + 10*gausswin(101);
-x(25000:25200)= x(25000:25200)+ 8*gausswin(201);
+x(5000:5100)   = x(5000:5100)   + 10*gausswin(101);
+x(25000:25200) = x(25000:25200) +  8*gausswin(201);
 
 ctag  = ChannelTag('XX.SYN..BHZ');
 start = fix(now);
@@ -64,22 +65,25 @@ figure('Name','Basic drumplot');
 plot(h)
 
 %% ------------------------------------------------------------------------
-%% 5. Add synthetic detections (CI-safe)
+%% 5. Add synthetic detections (CI-safe, Detection API-consistent)
 %% ------------------------------------------------------------------------
 
-% Build a small fake Detection object if class exists
+% Build a small fake Detection object if the class exists
 try
-    trigTimes = start + [5 12 17]/1440;
+    trigTimes = start + [5 12 17]/1440;   % three "events" in minutes
+
     det = Detection();
-    det.trig = trigTimes(:);
-    det.dur  = 5*ones(size(trigTimes(:)));
-    
+    % Use Detection API fields that are actually used by associate()
+    det.time  = trigTimes(:);
+    det.state = repmat({'D'}, numel(trigTimes), 1);  % "D" for "detection"
+
     h2 = drumplot(w2,'mpl',5,'detections',det);
 
-    figure('Name','Drumplot with detections');
+    figure('Name','Drumplot with synthetic detections');
     plot(h2)
-catch
-    disp('Detection class not available — skipping detection overlay demo.');
+catch ME
+    disp(['Detection class not available or incompatible — ' ...
+          'skipping synthetic detection overlay demo. (' ME.message ')']);
 end
 
 %% ------------------------------------------------------------------------
@@ -87,44 +91,48 @@ end
 %% ------------------------------------------------------------------------
 
 try
-    figure('Name','plot\_helicorder wrapper demo');
+    figure('Name','plot_helicorder wrapper demo');
     plot_helicorder(w2,'mpl',5);
-catch
-    disp('plot_helicorder not available — skipping wrapper demo.');
+catch ME
+    disp(['plot_helicorder not available — skipping wrapper demo. (' ...
+          ME.message ')']);
 end
 
 %% ------------------------------------------------------------------------
-%% OPTIONAL REAL-DATA EXAMPLE (SAC)
-%% This is ONLY executed if GISMO TESTDATA exists
+%% 7. OPTIONAL REAL-DATA EXAMPLE (MiniSEED)
+%% This is ONLY executed if TESTDATA is configured
+%%   TESTDATA/miniseed_data/REF.EHZ.2009.081
 %% ------------------------------------------------------------------------
 
-if exist('TESTDATA','var') || ~isempty(getenv('TESTDATA'))
+testdata = getenv('TESTDATA');
+if ~isempty(testdata)
     try
-        testDataPath = getenv('TESTDATA');
-        sacfile = fullfile(testDataPath,'waveform_data','REF.EHZ.2009-03-22.sac');
+        mseedfile = fullfile(testdata,'miniseed_data','REF.EHZ.2009.081');
 
-        if exist(sacfile,'file') == 2
-            ds = datasource('sac',sacfile);
-            ctag = ChannelTag('AV.REF..EHZ');
+        if exist(mseedfile,'file') == 2
+            ds   = datasource('miniseed', mseedfile);
+            ctag = ChannelTag('XX.REF..EHZ');  % generic network
 
-            snum = datenum(2009,3,22);
-            enum = snum + 1;
-
-            wreal = waveform(ds,ctag,snum,enum);
+            wreal = waveform(ds, ctag);
             wreal = fillgaps(wreal,'interp');
             wreal = detrend(wreal);
             wreal = filtfilt(fobj,wreal);
 
-            wshort = extract(wreal,'time',snum,snum+1/24);
+            [snum, enum] = gettimerange(wreal);
+            wshort = extract(wreal,'time',snum,min(snum+1/24,enum));
 
             hreal = drumplot(wshort,'mpl',5);
 
-            figure('Name','Real SAC data drumplot');
+            figure('Name','Real MiniSEED data drumplot');
             plot(hreal)
+        else
+            disp('MiniSEED file REF.EHZ.2009.081 not found in TESTDATA/miniseed_data — skipping real-data demo.');
         end
     catch ME
         warning('Real-data drumplot example skipped: %s',ME.message);
     end
+else
+    disp('TESTDATA not defined — skipping real-data MiniSEED drumplot example.');
 end
 
 %% ------------------------------------------------------------------------
@@ -133,10 +141,11 @@ end
 % This cookbook focuses on visualization and interaction. Automated
 % correctness testing should reside in:
 %
-%   tests/test_drumplot.m   (to be created)
+%   tests/test_drumplot.m
 %
 % This file is intended for:
 %   • human learning
 %   • GitHub tutorial rendering
 %   • classroom teaching
 %   • documentation publication
+end

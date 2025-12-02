@@ -2,16 +2,15 @@
 % Run with:
 %   runtests('tests')
 %
-% This test executes the Catalog.cookbook and verifies that it completes
+% This test executes Catalog.cookbook and verifies that it completes
 % without crashing. Because the cookbook depends on:
-%   • IRIS / EarthScope web services
+%   • External TESTDATA
 %   • Optional Antelope toolbox
 %   • Optional Mapping Toolbox
-%   • Optional GISMO demo datasets
 %
-% this test is designed to:
-%   - NEVER fail due to missing external services
-%   - ONLY fail if the code itself throws an unhandled error
+% this test:
+%   - NEVER fails due to missing external services or toolboxes
+%   - ONLY fails if the code itself throws an unhandled error
 %
 % This makes it safe for:
 %   • Continuous Integration
@@ -34,6 +33,13 @@ function setup(testCase)
     if ~isempty(gismopath)
         addpath(genpath(gismopath));
     end
+
+    % Ensure TESTDATA is configured (non-fatal if user cancels)
+    try
+        admin.is_testdata_setup(true);
+    catch ME
+        warning('TESTDATA setup skipped: %s', ME.message);
+    end
 end
 
 
@@ -45,15 +51,14 @@ end
 
 %% ------------------------------------------------------------------------
 function test_runCatalogCookbook(testCase)
-% This test checks that Catalog.cookbook executes without throwing an
-% unhandled fatal error. Warnings are allowed and expected.
+% Verifies that Catalog.cookbook executes without an unhandled fatal error.
+% Warnings are allowed and expected.
 
     try
         Catalog.cookbook;
         disp('Catalog.cookbook executed without fatal errors.');
     catch ME
-        % We explicitly FAIL only if the cookbook hard-crashes
-        % (not on missing web services, toolboxes, or data).
+        % Hard failure only on unhandled exceptions
         warning('Catalog.cookbook threw an exception:\n%s', ME.message);
         testCase.verifyFail(sprintf( ...
             'Catalog.cookbook crashed: %s', ME.message));
@@ -63,12 +68,10 @@ end
 
 %% ------------------------------------------------------------------------
 function setupOnce(testCase) %#ok<INUSD>
-    % Optional global setup (none required)
     close all
 end
 
 
 function teardownOnce(testCase) %#ok<INUSD>
-    % Optional global teardown (none required)
     close all
 end

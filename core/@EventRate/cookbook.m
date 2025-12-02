@@ -1,188 +1,155 @@
-%% EventRate Cookbook
-% The EventRate class is designed to summarize catalog activity in time,
-% providing:
+%% EventRate Cookbook (GISMO)
+% EventRate summarizes catalog activity in time using:
+%   • Event counts
+%   • Mean and median rates
+%   • Energy and cumulative magnitude
+%   • Sliding-window swarm tracking
 %
-%   * Number of events per unit time ("counts")
-%   * Event rate (counts per day, hour, etc.)
-%   * Cumulative magnitude per time window (cum_mag)
-%   * Mean and median magnitude per time window (mean_mag, median_mag)
-%   * Derived "energy" metrics based on magnitude
+% EventRate objects are always constructed via:
 %
-% EventRate objects are derived from Catalog objects. This cookbook shows:
+%     ER = Catalog.eventrate(...)
 %
-%   1. How to build a synthetic Catalog and compute EventRate from it
-%   2. How to work with different bin sizes and sliding windows
-%   3. How to visualize different metrics with plot(), helenaplot(),
-%      and pythonplot()
-%   4. (Optionally) How to compute EventRate from a real Redoubt 2009
-%      catalog if Antelope + GISMO testdata are available.
+% This cookbook demonstrates:
+%   1. Fully reproducible synthetic example (always runs)
+%   2. Sliding window swarm tracking
+%   3. Multi-metric plotting
+%   4. Optional real Redoubt 2009 swarm via Antelope + TESTDATA
 %
-% This cookbook is written to be robust:
-%   * It does NOT require Antelope or TESTDATA to run.
-%   * All real-data examples are optional and wrapped in try/catch.
+% This file is:
+%   • SAFE for inexperienced users
+%   • SAFE for CI (no hard dependencies)
+%   • SAFE for classroom use
+%   • Scientifically meaningful when Antelope is present
+%
+% Author: Glenn Thompson
+% Refactor & modernization: 2025
 
-%% 1. Synthetic Catalog Example (Always Available)
-% To make this cookbook self-contained, we first construct a synthetic
-% Catalog with:
-%
-%   * Event times spanning 5 days
-%   * Magnitudes that increase slightly over time
-%   * Dummy lat/lon/depth fields
-%
-% This portion of the cookbook will always run, and is suitable for
-% automated tests and basic demos.
+close all
+clc
 
-disp('--- EventRate Cookbook: Synthetic Catalog Example ---');
+disp('======================================================')
+disp('          GISMO EventRate Cookbook')
+disp('======================================================')
 
-% Define a synthetic 5-day interval starting at 2020-01-01
+%% ------------------------------------------------------------------------
+%% 1. SYNTHETIC CATALOG (ALWAYS AVAILABLE)
+%% ------------------------------------------------------------------------
+disp(' ')
+disp('--- 1. Synthetic Catalog Example ---')
+
+% Deterministic RNG for reproducibility
+rng(42);
+
+% Time span: 5 days starting Jan 1, 2020
 t0 = datenum(2020,1,1,0,0,0);
+span_days = 5;
 
-% Create 200 synthetic events over 5 days
+% Number of events
 nEvents = 200;
-times   = t0 + sort(rand(nEvents,1) * 5);      % random times over 5 days
-mags    = 1.0 + 2.5 * rand(nEvents,1);         % magnitudes in [1.0, 3.5]
 
-% Build a minimal Catalog object that EventRate can consume.
-% EventRate uses trigger times (trig) and magnitudes (mag). The other
-% fields are included for completeness but not required.
-syntheticCatalog      = Catalog();
-syntheticCatalog.trig = times;
-syntheticCatalog.mag  = mags;
-syntheticCatalog.lat  = zeros(size(times));
-syntheticCatalog.lon  = zeros(size(times));
-syntheticCatalog.depth= zeros(size(times));
+% Random event times and magnitudes
+times = sort(t0 + span_days * rand(nEvents,1));
+mags  = 1.0 + 2.5 * rand(nEvents,1);
 
+% Build minimal Catalog
+C = Catalog();
+C.otime = times;
+C.ontime = times;
+C.offtime = times;
+C.mag = mags;
+C.lat = zeros(size(times));
+C.lon = zeros(size(times));
+C.depth = zeros(size(times));
+
+disp(sprintf('Synthetic catalog with %d events created.', nEvents))
+
+%% ------------------------------------------------------------------------
 %% 1.1 Hourly Event Counts
-% We now compute an EventRate object with 1-hour bins (1/24 of a day).
-% This corresponds conceptually to "events per hour".
+%% ------------------------------------------------------------------------
+disp('--- Hourly Event Counts ---')
 
-binsize = 1/24;   % 1 hour, in days
-
-eventrateObject = syntheticCatalog.eventrate('binsize', binsize);
-
-figure;
-eventrateObject.plot();  % same as plot(eventrateObject)
-title('Synthetic Catalog: Event counts per hour');
-
-%% 1.2 Smaller Time Bins (20 minutes)
-% We can refine the temporal resolution by using smaller bins.
-% Here we use 20-minute bins, which is 20/1440 days.
-
-binsize_20min = 20/1440;   % 20 minutes
-
-eventrate_20 = syntheticCatalog.eventrate('binsize', binsize_20min);
+binsize = 1/24;   % 1 hour
+ER = C.eventrate('binsize', binsize);
 
 figure;
-plot(eventrate_20);
-title('Synthetic Catalog: Event counts per 20 minutes');
+ER.plot();
+title('Synthetic Catalog: Hourly Event Counts');
 
-%% 1.3 Overlapping (Sliding Window) Event Rates
-% EventRate can also be computed in overlapping windows by specifying a
-% 'stepsize'. For example, 1-hour windows computed every 5 minutes:
-%
-%   binsize  = 1 hour
-%   stepsize = 5 minutes
-%
-% This is useful for tracking the evolution of swarm activity or changing
-% rates in finer detail without losing smoothing.
+%% ------------------------------------------------------------------------
+%% 1.2 20-Minute Bins
+%% ------------------------------------------------------------------------
+disp('--- 20-minute Event Bins ---')
 
-binsize_1hr   = 1/24;     % 1 hour
-stepsize_5min = 5/1440;   % 5 minutes
-
-eventrate_sliding = syntheticCatalog.eventrate( ...
-    'binsize',  binsize_1hr, ...
-    'stepsize', stepsize_5min);
+binsize_20 = 20/1440;
+ER20 = C.eventrate('binsize', binsize_20);
 
 figure;
-eventrate_sliding.plot();
-title('Synthetic Catalog: Sliding 1-hr window every 5 minutes');
+ER20.plot();
+title('Synthetic Catalog: 20-Minute Event Counts');
 
-%% 1.4 Available EventRate Metrics
-% An EventRate object typically includes the following numeric sequences:
-%
-%   * counts      : number of events in each bin
-%   * mean_rate   : counts divided by binsize (events/day)
-%   * median_rate : median rate in the window
-%   * cum_mag     : sum of magnitudes in each bin
-%   * mean_mag    : mean magnitude in each bin
-%   * median_mag  : median magnitude in each bin
-%   * energy      : (optional) derived energy metric from cum_mag/mag
-%
-% Internally, these are stored as properties of the EventRate object and
-% can be accessed directly, e.g.:
-%
-%   eventrateObject.counts
-%   eventrateObject.mean_rate
-%   eventrateObject.cum_mag
-%
-% or visualized using the 'metric' option of plot().
+%% ------------------------------------------------------------------------
+%% 1.3 Sliding 1-Hour Window / 5-Minute Step
+%% ------------------------------------------------------------------------
+disp('--- Sliding Window Event Rate ---')
 
-disp('Available metrics fields include: counts, mean_rate, median_rate, cum_mag, mean_mag, median_mag, energy');
+binsize  = 1/24;      % 1 hour
+stepsize = 5/1440;   % 5 minutes
 
-%% 1.5 Plot Multiple Metrics Together
-% The plot() method can display several metrics on the same axes by
-% passing a cell array of metric names.
+ERslide = C.eventrate( ...
+    'binsize',  binsize, ...
+    'stepsize', stepsize);
 
 figure;
-eventrateObject.plot('metric', ...
-    {'counts'; 'mean_rate'; 'mean_mag'; 'cum_mag'});
-title('Synthetic Catalog: Multiple EventRate metrics');
+ERslide.plot();
+title('Sliding 1-Hour Window, 5-Minute Step');
 
-%% 1.6 Plot Metrics in Separate Windows
-% We can also make one plot per metric, for example:
-
-figure;
-eventrateObject.plot('metric', 'counts');
-title('Synthetic Catalog: Counts per bin');
+%% ------------------------------------------------------------------------
+%% 1.4 Multi-Metric Plotting
+%% ------------------------------------------------------------------------
+disp('--- Multi-Metric Visualization ---')
 
 figure;
-eventrateObject.plot('metric', 'mean_rate');
-title('Synthetic Catalog: Mean event rate');
+ER.plot('metric', {'counts','mean_rate','mean_mag','cum_mag'});
+title('Multiple EventRate Metrics');
+
+%% ------------------------------------------------------------------------
+%% 1.5 Individual Metric Plots
+%% ------------------------------------------------------------------------
+metrics = {'counts','mean_rate','mean_mag','cum_mag'};
+
+for k = 1:numel(metrics)
+    figure;
+    ER.plot('metric', metrics{k});
+    title(['Metric: ', metrics{k}]);
+end
+
+%% ------------------------------------------------------------------------
+%% 1.6 Helena-Style Swarm Plot
+%% ------------------------------------------------------------------------
+disp('--- Helena Swarm Plot ---')
 
 figure;
-eventrateObject.plot('metric', 'mean_mag');
-title('Synthetic Catalog: Mean magnitude per bin');
-
-figure;
-eventrateObject.plot('metric', 'cum_mag');
-title('Synthetic Catalog: Cumulative magnitude per bin');
-
-%% 1.7 Helena-Style Swarm Plot
-% HELENAPLOT provides a compact swarm-plot style visualization, inspired
-% by volcano monitoring applications (e.g., Redoubt 2009).
-
-figure;
-eventrateObject.helenaplot();
+ER.helenaplot();
 title('Synthetic Catalog: helenaplot()');
 
-%% 1.8 Python-Style Scientific Plot
-% PYTHONPLOT offers an alternative, more "modern" scientific style plot.
+%% ------------------------------------------------------------------------
+%% 1.7 Python-Style Scientific Plot
+%% ------------------------------------------------------------------------
+disp('--- Python-Style Plot ---')
 
 figure;
-eventrateObject.pythonplot();
+ER.pythonplot();
 title('Synthetic Catalog: pythonplot()');
 
-%% 2. Optional Real-Data Example: Redoubt 2009 (Antelope + TESTDATA)
-% The original EventRate cookbook was based on the Redoubt 2009 catalog
-% from the Alaska Volcano Observatory (AVO), stored in an Antelope/CSS3.0
-% database distributed with the GISMO test dataset.
-%
-% In keeping with that heritage, this section attempts to:
-%
-%   * locate the GISMO TESTDATA directory,
-%   * open the avodb200903 CSS3.0 database via Antelope,
-%   * extract events within 20 km of Redoubt,
-%   * compute EventRate and make a few plots.
-%
-% This section is completely optional and wrapped in try/catch so that
-% the cookbook will not crash if Antelope, TESTDATA, or the Mapping
-% Toolbox are not available.
-
-disp('--- EventRate Cookbook: Optional Redoubt 2009 Example ---');
+%% ------------------------------------------------------------------------
+%% 2. OPTIONAL REAL DATA EXAMPLE: REDOUBT 2009 (ANTELOPE)
+%% ------------------------------------------------------------------------
+disp(' ')
+disp('--- Optional Redoubt 2009 Swarm Example ---')
 
 haveAntelope = false;
+
 try
-    % Check for Antelope toolbox (admin.antelope_exists is a GISMO helper)
     if exist('admin.antelope_exists','file') == 2 && admin.antelope_exists()
         haveAntelope = true;
     end
@@ -192,78 +159,76 @@ end
 
 if haveAntelope
     try
-        % Locate TESTDATA under GISMO, if present
+        % Resolve TESTDATA directory
         gismopath = fileparts(which('startup_GISMO'));
-        TESTDATA  = fullfile(gismopath, 'testdata');
+        TESTDATA  = fullfile(gismopath,'testdata');
 
-        if ~exist(TESTDATA, 'dir')
+        if ~exist(TESTDATA,'dir')
             warning('EventRate:RedoubtDemo', ...
-                'TESTDATA not found at %s. Skipping Redoubt example.', TESTDATA);
+                'TESTDATA not found. Skipping Redoubt example.');
         else
-            % Path to official AVO catalog demo segment
-            dbpath = fullfile(TESTDATA, 'css3.0', 'avodb200903');
+            dbpath = fullfile(TESTDATA,'css3.0','dbredoubt200903');
+            fprintf('Loading Redoubt database:\n  %s\n',dbpath);
 
-            % Redoubt coordinates
-            redoubtLon = -152.7431;
+            % Redoubt summit coordinates
             redoubtLat = 60.4853;
-            maxRkm     = 20.0;
+            redoubtLon = -152.7431;
+            maxRkm = 20;
 
-            % km2deg may be from Mapping toolbox; guard it
             if exist('km2deg','file')
                 maxRdeg = km2deg(maxRkm);
             else
-                % Fallback: approximate conversion
-                maxRdeg = maxRkm / 111.19;   % ~111.19 km per degree
+                maxRdeg = maxRkm / 111.19;
             end
 
-            % Retrieve events within 20 km of Redoubt from CSS3.0 database
+            % Retrieve events near Redoubt
             redoubt_events = Catalog.retrieve( ...
                 'antelope', ...
                 'dbpath', dbpath, ...
                 'radialcoordinates', [redoubtLat redoubtLon maxRdeg]);
 
-            if isempty(redoubt_events)
+            if isempty(redoubt_events) || isempty(redoubt_events.otime)
                 warning('EventRate:RedoubtDemo', ...
-                    'No events returned from Redoubt demo database.');
+                    'No events returned from Redoubt database.');
             else
-                % Compute hourly EventRate
-                er_red = redoubt_events.eventrate('binsize', 1/24);
+                disp(sprintf('Loaded %d Redoubt events.', ...
+                    numel(redoubt_events.otime)))
+
+                ERred = redoubt_events.eventrate('binsize',1/24);
 
                 figure;
-                er_red.plot('metric','counts');
-                title('Redoubt 2009: Event counts per hour (within 20 km)');
+                ERred.plot('metric','counts');
+                title('Redoubt 2009: Hourly Event Counts');
 
-                % Example helenaplot for the Redoubt swarm
                 figure;
-                er_red.helenaplot();
+                ERred.helenaplot();
                 title('Redoubt 2009: helenaplot()');
 
-                % Example pythonplot
                 figure;
-                er_red.pythonplot();
+                ERred.pythonplot();
                 title('Redoubt 2009: pythonplot()');
 
-                disp('Redoubt 2009 EventRate example completed successfully.');
+                disp('Redoubt 2009 EventRate demo completed successfully.')
             end
         end
-
     catch ME
-        warning('EventRate:RedoubtDemo', ...
-            'Redoubt example failed: %s', ME.message);
+        warning('EventRate:RedoubtDemo', ME.message);
     end
 else
-    disp('Antelope toolbox not available. Skipping Redoubt 2009 example.');
+    disp('Antelope toolbox not available. Skipping Redoubt example.');
 end
 
-%% 3. Notes and References
-% The EventRate metrics, binning strategy, and swarm visualization styles
-% illustrated here are consistent with approaches used operationally at
-% volcano observatories (e.g., for tracking pre-eruptive swarms and
-% aftershock decay sequences).
+%% ------------------------------------------------------------------------
+%% 3. NOTES
+%% ------------------------------------------------------------------------
+% • EventRate windows use DAYS as the fundamental unit.
+% • mean_rate is in EVENTS PER HOUR.
+% • median_rate is enforced >= mean_rate.
+% • Magnitudes are derived dynamically from summed energy.
 %
-% For more examples of Catalog usage (including b-value, magnitude of
-% completeness, and spatial plotting), see:
+% For related cookbooks, see:
+%   • Catalog.cookbook
+%   • Detection.cookbook
+%   • Correlation.cookbook
 %
-%   Catalog.cookbook
-%
-% End of EventRate Cookbook.
+% End of EventRate Cookbook

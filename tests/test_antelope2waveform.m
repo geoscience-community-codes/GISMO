@@ -2,9 +2,12 @@ function tests = test_antelope2waveform()
 % TEST_ANTELOPE2WAVEFORM
 % Integration test for the Antelope → waveform reader.
 %
-% This test is automatically SKIPPED if:
+% Uses real CSS3.0 Antelope database:
+%   testdata/css3.0/dbredoubt200903
+%
+% Automatically SKIPPED if:
 %   • Antelope MATLAB toolbox is not installed
-%   • The bundled demo Antelope database is missing
+%   • GISMO testdata are not configured
 %
 % Glenn Thompson + ChatGPT (2025)
 
@@ -14,23 +17,27 @@ end
 %% ------------------------------------------------------------------------
 function testAntelopeRead(testCase)
 
+% --- Ensure testdata are available --------------------------------------
+admin.is_testdata_setup(true);
+global TESTDATA
+
 % --- Skip if Antelope not available --------------------------------------
 if ~(exist('dbopen','file') == 3)
     testCase.assumeFail('Antelope dbopen() not found — skipping test.');
 end
 
-% --- Locate test database ------------------------------------------------
-gismopath = fileparts(which('startup_GISMO'));
-dbpath = fullfile(gismopath, 'tests', 'test_data', 'antelope2waveform_testdb');
+% --- Locate real test database ------------------------------------------
+dbpath = fullfile(TESTDATA, 'css3.0', 'dbredoubt200903');
 
-testCase.assumeTrue(exist(dbpath,'dir') == 7, ...
+testCase.assumeTrue(isfolder(dbpath), ...
     sprintf('Antelope test database not found: %s', dbpath));
 
 % --- Query parameters ----------------------------------------------------
 sta  = '.*';
-chan = 'HHZ.*';
-starttime = datenum2epoch(datenum('16-Nov-2011 16:29:00'));
-endtime   = datenum2epoch(datenum('16-Nov-2011 16:43:24'));
+chan = '.*Z.*';   % be permissive across vertical channels
+
+starttime = datenum2epoch(datenum('20-Mar-2009 00:00:00'));
+endtime   = datenum2epoch(datenum('25-Mar-2009 00:00:00'));
 
 % --- Perform the read ----------------------------------------------------
 w = antelope.antelope2waveform(dbpath, sta, chan, starttime, endtime);
@@ -50,10 +57,12 @@ testCase.verifyTrue(all(arrayfun(@(x) ~isempty(get(x,'data')), w)), ...
 end
 
 %% ------------------------------------------------------------------------
-function setup(testCase)
+function setup(testCase) %#ok<INUSD>
 close all;
 end
 
-function teardown(testCase)
+function teardown(testCase) %#ok<INUSD>
 close all;
+end
+
 end

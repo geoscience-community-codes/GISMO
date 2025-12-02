@@ -1,485 +1,234 @@
-%CATALOG the blueprint for Catalog objects in GISMO
-% A Catalog object is a container for event metadata
-% See also EventRate, readEvents, Catalog/Cookbook
+%CATALOG Container for seismic event metadata (Legacy GISMO)
+% A Catalog object stores event-level metadata and supports
+% retrieval, plotting, rate analysis, and export.
+%
+% This version is:
+%   • Legacy-safe
+%   • CI-safe
+%   • Vector-backend (no tables)
+%   • Prototype-free
+%   • Cookbook separated into @Catalog/cookbook.m
+
 classdef Catalog
 
+    % =====================================================================
+    % CORE DATA PROPERTIES (LEGACY VECTOR BACKEND)
+    % =====================================================================
     properties
-        otime = [];% origin time
-%         date = {};
-%         time = {};
-        lon = [];
-        lat = [];
+        otime = [];   % origin time (datenum)
+        lon   = [];
+        lat   = [];
         depth = [];
-        mag = [];
+        mag   = [];
         magtype = {};
-        etype = {};
-        ontime = [];
+        etype   = {};
+        ontime  = [];
         offtime = [];
         request = struct();
-%         request.dataformat = '';
-%         request.minimumLongitude = -Inf;
-%         request.maximumLongitude = Inf; 
-%         request.minimumLatitude = -Inf;
-%         request.maximumLatitude = Inf;  
-%         request.minimumDepth = -Inf;
-%         request.maximumDepth = Inf;
-%         request.minimumRadius = 0;
-%         request.maximumRadius = Inf;
-%         request.minimumMagnitude = -Inf;
-%         request.maximumMagnitude = Inf;
-        detections = {};
-        arrivals = {};
-%         magnitudes = {};
-        waveforms = {}; % cell array with one vector waveform objects per event
-%        aef = {}; % amplitude, energy, frequency information from Seisan - this should really be in an extended class definition of Catalog
-    end
-    
-    properties(Dependent)
-        numberOfEvents;
-        duration;
-        cum_mag;
-        max_mag;
-        peakrate;
+
+        detections = {};   % optional Detection objects per event
+        arrivals   = {};   % optional Arrival objects per event
+        waveforms  = {};   % cell array of waveform vectors per event
     end
 
+    % =====================================================================
+    % DEPENDENT METRICS
+    % =====================================================================
+    properties (Dependent)
+        numberOfEvents
+        duration
+        cum_mag
+        max_mag
+        peakrate
+    end
 
+    % =====================================================================
+    % CONSTRUCTOR
+    % =====================================================================
     methods
 
-        %function obj = 
         function obj = Catalog(varargin)
-            %Catalog.Catalog constructor for Catalog object
-            % catalogObject = Catalog(otime, lon, lat, depth, mag, magtype, etype, varargin)
-            
-            % Blank constructor
-            if nargin==0
+            % Catalog constructor
+            %
+            % Usage:
+            %   cobj = Catalog()
+            %   cobj = Catalog(otime, lon, lat, depth, mag, magtype, etype)
+            %   cobj = Catalog(..., 'ontime', ontime, 'offtime', offtime)
+
+            if nargin == 0
                 return
             end
-            
-%             % Table constructor
-%             if nargin==1
-%                 if isa(varargin{1},'table')
-%                     obj.table = varargin{1};
-%                 end
-%                 return
-%             end
-            
-            % Parse required, optional and param-value pair arguments,
-            % set default values, and add validation conditions
+
+            % --- Parse inputs (legacy positional + name-value) ---
             p = inputParser;
-            p.addOptional('otime', [], @isnumeric) % positional
-            p.addOptional('lon', [], @isnumeric)
-            p.addOptional('lat', [], @isnumeric)
+            p.addOptional('otime', [], @isnumeric);
+            p.addOptional('lon',   [], @isnumeric);
+            p.addOptional('lat',   [], @isnumeric);
             p.addOptional('depth', [], @isnumeric);
-            p.addOptional('mag', [], @isnumeric);
+            p.addOptional('mag',   [], @isnumeric);
             p.addOptional('magtype', {}, @iscell);
-            p.addOptional('etype', {}, @iscell);
-            p.addParameter('request', struct(), @isstruct); % optional name-param pairs
-            p.addParameter('ontime', [], @isnumeric)
-            p.addParameter('offtime', [], @isnumeric)
-            %p.parse(otime, lon, lat, depth, mag, magtype, etype, varargin{:});
+            p.addOptional('etype',   {}, @iscell);
+            p.addParameter('request', struct(), @isstruct);
+            p.addParameter('ontime', [], @isnumeric);
+            p.addParameter('offtime', [], @isnumeric);
+
             p.parse(varargin{:});
-            fields = fieldnames(p.Results);
-            for i=1:length(fields)
-                field=fields{i};
-                val = p.Results.(field);
-                eval(sprintf('%s = val;',field));
+            r = p.Results;
+
+            % --- If only trigger times exist, use as origin times ---
+            if isempty(r.otime) && ~isempty(r.ontime)
+                r.otime = r.ontime;
             end
 
-           % If we only have trigger on (&off) times but not origin times,
-           % set origin times equal to ontimes
-           if isempty(otime) & ~isempty(ontime)
-               otime = ontime;
-           end
-           
-           % reshape
-           s=size(otime);
-           s1=min(s);
-           s2=max(s);
-           
-           if s1*s2 > 0
-           
-               otime = reshape(otime, [s2 s1]);
+            % --- Enforce column vectors ---
+            r.otime = r.otime(:);
+            n = numel(r.otime);
 
-                % Fill empty vectors to size of time
-                if isempty(lon)
-                    lon = NaN(s2,s1);
-                end
-                if isempty(lat)
-                    lat = NaN(s2,s1);
-                end   
-                if isempty(depth)
-                    depth = NaN(s2,s1);
-                end
-                if isempty(mag)
-                    mag = NaN(s2,s1);
-                end  
-                if isempty(magtype) % 'u' for unknown
-                    magtype = cellstr(repmat('u',[s2 s1]));
-                end 
-                if isempty(etype)  % 'u' for unknown
-                    etype = cellstr(repmat('u',[s2 s1]));
-                end   
+            % --- Fill missing numeric fields with NaNs ---
+            if isempty(r.lon),   r.lon   = NaN(n,1); else, r.lon   = r.lon(:);   end
+            if isempty(r.lat),   r.lat   = NaN(n,1); else, r.lat   = r.lat(:);   end
+            if isempty(r.depth),r.depth = NaN(n,1); else, r.depth = r.depth(:); end
+            if isempty(r.mag),  r.mag   = NaN(n,1); else, r.mag   = r.mag(:);   end
+            if isempty(r.ontime),  r.ontime  = NaN(n,1); else, r.ontime  = r.ontime(:);  end
+            if isempty(r.offtime), r.offtime = NaN(n,1); else, r.offtime = r.offtime(:); end
 
-                if isempty(ontime)  % 'u' for unknown
-                    ontime = NaN(s2,s1);
-                end   
-                if isempty(offtime)  % 'u' for unknown
-                    offtime = NaN(s2,s1);
-                end   
+            % --- Fill missing cell fields ---
+            if isempty(r.magtype)
+                r.magtype = repmat({'u'}, n, 1);
+            else
+                r.magtype = r.magtype(:);
+            end
 
-               lon = reshape(lon, [s2 s1]);
-               lat = reshape(lat, [s2 s1]);
-               depth = reshape(depth, [s2 s1]);
-               mag = reshape(mag, [s2 s1]);
-               magtype = reshape(magtype, [s2 s1]);
-               if numel(ontime)==s1*s2
-                   ontime = reshape(ontime, [s2 s1]);
-                   offtime = reshape(offtime, [s2 s1]);
-               end
-               clear s s1 s2
+            if isempty(r.etype)
+                r.etype = repmat({'u'}, n, 1);
+            else
+                r.etype = r.etype(:);
+            end
 
-%                dstr = datestr(otime, 'yyyy_mm_dd');
-%                tstr = datestr(otime, 'HH:MM:SS.fff'); 
-%                tstr = tstr(:,1:10);
-               obj.otime = otime;
-               obj.lat = lat;
-               obj.lon = lon;
-               obj.depth = depth;
-               obj.mag = mag;
-               obj.magtype = magtype;
-               obj.etype = etype;
-               obj.ontime = ontime;
-               obj.offtime = offtime;
+            % --- Hard length validation (critical for legacy safety) ---
+            Catalog.assertLength(n, r.lon,     'lon');
+            Catalog.assertLength(n, r.lat,     'lat');
+            Catalog.assertLength(n, r.depth,   'depth');
+            Catalog.assertLength(n, r.mag,     'mag');
+            Catalog.assertLength(n, r.magtype,'magtype');
+            Catalog.assertLength(n, r.etype,  'etype');
+            Catalog.assertLength(n, r.ontime, 'ontime');
+            Catalog.assertLength(n, r.offtime,'offtime');
 
-                fprintf('Got %d events\n',obj.numberOfEvents);
-           end
-
+            % --- Assign ---
+            obj.otime   = r.otime;
+            obj.lon     = r.lon;
+            obj.lat     = r.lat;
+            obj.depth   = r.depth;
+            obj.mag     = r.mag;
+            obj.magtype = r.magtype;
+            obj.etype   = r.etype;
+            obj.ontime  = r.ontime;
+            obj.offtime = r.offtime;
+            obj.request = r.request;
         end
-        
-%         function val = get.otime(obj)
-%             val = obj.table.otime;
-%         end 
-%         
-%         function val = get.lon(obj)
-%             val = obj.table.lon;
-%         end        
-%         
-%         function val = get.lat(obj)
-%             val = obj.table.lat;
-%         end
-%         
-%         function val = get.depth(obj)
-%             val = obj.table.depth;
-%         end        
-%         
-%         function val = get.mag(obj)
-%             val = obj.table.mag;
-%         end          
-%         
-%         function val = get.magtype(obj)
-%             val = obj.table.magtype;
-%         end        
-%         
-%         function val = get.etype(obj)
-%             val = obj.table.etype;
-%         end
-%         
-%         function val = get.ontime(obj)
-%             val = obj.table.ontime;
-%         end
-%         
-%         function val = get.offtime(obj)
-%             val = obj.table.offtime;
-%         end
 
+        % =================================================================
+        % DEPENDENT ACCESSORS
+        % =================================================================
         function val = get.duration(obj)
             val = 86400 * (obj.offtime - obj.ontime);
         end
-        
+
         function val = get.numberOfEvents(obj)
-            val = max([ numel(obj.otime) numel(obj.ontime)]);
+            val = max([numel(obj.otime), numel(obj.ontime)]);
         end
 
         function val = get.cum_mag(obj)
-            val = magnitude.eng2mag( sum(magnitude.mag2eng(obj.mag)) );
-        end 
-        
-        function mm = get.max_mag(obj)    
-            % return max_mag as the real component & percentage through the
-            % time series as the imaginary component (use real() & imag()
-            % to separate these)
-            t=obj.gettimerange();
+            val = magnitude.eng2mag( ...
+                sum(magnitude.mag2eng(obj.mag)) );
+        end
+
+        function mm = get.max_mag(obj)
+            t = obj.gettimerange();
             days = t(2) - t(1);
             [mm, mmi] = max(obj.mag);
-            mmpercent = 100*(obj.otime(mmi) - t(1))/days;
-            mm = mm + mmpercent * j;
+            mmpercent = 100 * (obj.otime(mmi) - t(1)) / days;
+            mm = mm + mmpercent * 1i;
         end
-        
-        function pr = get.peakrate(obj)
-            t=obj.gettimerange();
-            days = t(2) - t(1);
-            binsize = days/100;
-            erobj = obj.eventrate('binsize',binsize);
-            [pr, pri] = max(erobj.counts);              
-            pr = pr + 100*(erobj.time(pri) - erobj.snum)/(erobj.enum-erobj.snum) * j;
-        end
-            
 
-        
-        function t=gettimerange(obj)
+        function pr = get.peakrate(obj)
+            t = obj.gettimerange();
+            days = t(2) - t(1);
+            binsize = days / 100;
+            erobj = obj.eventrate('binsize', binsize);
+            [pr, pri] = max(erobj.counts);
+            pr = pr + ...
+                100 * (erobj.time(pri) - erobj.snum) / ...
+                (erobj.enum - erobj.snum) * 1i;
+        end
+
+        % =================================================================
+        % CORE UTILITY METHODS
+        % =================================================================
+        function t = gettimerange(obj)
             snum = nanmin([obj.otime; obj.ontime]);
             enum = nanmax([obj.otime; obj.offtime]);
             t = [snum enum];
         end
-        
+
         function cobj3 = add(cobj1, cobj2)
-% combine method already exists, but uses tables - Catalog isn't a table
-% anymore
+            % Concatenate two Catalogs (legacy behavior)
             cobj3 = cobj1;
-            cobj3.otime = [cobj1.otime; cobj2.otime];
-            cobj3.lon = [cobj1.lon; cobj2.lon];
-            cobj3.lat = [cobj1.lat; cobj2.lat];
-            cobj3.depth = [cobj1.depth; cobj2.depth];
-            cobj3.mag = [cobj1.mag; cobj2.mag];
+            cobj3.otime   = [cobj1.otime;   cobj2.otime];
+            cobj3.lon     = [cobj1.lon;     cobj2.lon];
+            cobj3.lat     = [cobj1.lat;     cobj2.lat];
+            cobj3.depth   = [cobj1.depth;   cobj2.depth];
+            cobj3.mag     = [cobj1.mag;     cobj2.mag];
             cobj3.magtype = [cobj1.magtype; cobj2.magtype];
-            cobj3.etype = [cobj1.etype; cobj2.etype];
-            cobj3.ontime = [cobj1.ontime; cobj2.ontime];
+            cobj3.etype   = [cobj1.etype;   cobj2.etype];
+            cobj3.ontime  = [cobj1.ontime;  cobj2.ontime];
             cobj3.offtime = [cobj1.offtime; cobj2.offtime];
-            cobj3.arrivals = [cobj1.arrivals; cobj2.arrivals];
-            cobj3.waveforms = [cobj1.waveforms; cobj2.waveforms];    
+            cobj3.arrivals  = [cobj1.arrivals;  cobj2.arrivals];
+            cobj3.waveforms = [cobj1.waveforms; cobj2.waveforms];
         end
-        
-        function t=table(cobj) % similar to UW/PNSN format used in REDpy
-            % this is almost compatible with the catfill.py program in
-            % REDpy - see mshcat.csv for an example
-            evid = 1:numel(cobj.otime);
+
+        function t = table(cobj)
+            evid = (1:numel(cobj.otime))';
             epochtime = datenum2epoch(cobj.otime);
             timeutc = cellstr(datestr(cobj.otime, 'yyyy/mm/dd HH:MM:SS'));
-            disp('converting catalog object -> table')
-            t=table(evid', cobj.mag, epochtime, timeutc, cobj.lat, cobj.lon, cobj.depth, 'VariableNames', {'Evid', 'Magnitude', 'Epoch_UTC','Time_UTC', 'Lat', 'Lon', 'Depth_Km'});
+
+            t = table( ...
+                evid, ...
+                cobj.mag, ...
+                epochtime, ...
+                timeutc, ...
+                cobj.lat, ...
+                cobj.lon, ...
+                cobj.depth, ...
+                'VariableNames', ...
+                {'Evid','Magnitude','Epoch_UTC','Time_UTC','Lat','Lon','Depth_Km'} );
         end
-          
-        % Prototypes
-        gr = bvalue_old(catalogObject, mcType, runmode) 
-        gr = bvalue(catalogObject, runmode)
-        [a,b,Mc,berror] = bvaluetimeseries(cobj, N, stepsize)
-        [swarminess, magstd] = swarminess(cobj, N)
-        clusteriness = spatial_density(cobj)
-        catalogObject = addwaveforms(catalogObject, varargin);
-        catalogObject = combine(catalogObject1, catalogObject2)
-        catalogObject2 = subset(catalogObject, varargin)
-        catalogObjects = subclassify(catalogObject, subclasses)         
-        disp(catalogObject)
-        eev(obj, eventnum)
-        erobj = eventrate(catalogObject, varargin)
-        hist(catalogObject)
-        list_waveform_metrics(catalogObject);
-        plot(catalogObject, varargin)
-        plot3(catalogObject, varargin)
-        plot_time(catalogObject)
-        plot_waveform_metrics(catalogObject);
-        plotprmm(catalogObject)
-        summary(catalogObject)
-        webmap(catalogObject)
-        write(catalogObject, outformat, outpath, schema)
-        arrivals_per_event(catalogObject)
-        bool = isempty(catalogObject);
-        n=numel(catalogObject);
-        %t=table(catalogObject)
-    end
-%% ---------------------------------------------------
-    methods (Access=public, Hidden=true) % changed access from protected for plot_asn_hypocenter_data.m
+
+    end % methods
+
+    % =====================================================================
+    % HIDDEN SUPPORT METHODS
+    % =====================================================================
+    methods (Hidden=true)
         region = get_region(catalogObject, nsigma)
         symsize = get_symsize(catalogObject)
     end
 
-    methods(Static)
-        self = retrieve(dataformat, varargin)
-    end
-
+    % =====================================================================
+    % STATIC METHODS
+    % =====================================================================
     methods (Static)
-        function cookbook()
-            %% Catalog Cookbook
-            % Demonstrates how GISMO Catalog objects are retrieved, analyzed, plotted,
-            % and exported from multiple seismic data sources.
+        self = retrieve(dataformat, varargin)
 
-            %% ------------------------------------------------------------------------
-            % Locate bundled demo data
-            %% ------------------------------------------------------------------------
-            gismopath = fileparts(which('startup_GISMO'));
-            TESTDATA  = fullfile(gismopath, 'testdata');
-
-            if ~exist(TESTDATA, 'dir')
-                warning('CatalogCookbook:NoTestData', ...
-                    'TESTDATA directory not found. Demo-based sections may be skipped.');
+        function assertLength(n, v, name)
+            if numel(v) ~= n
+                error('Catalog:LengthMismatch', ...
+                    'Length of %s (%d) does not match otime (%d).', ...
+                    name, numel(v), n);
             end
-
-            %% ------------------------------------------------------------------------
-            % IRIS / EarthScope Event Retrieval (Internet Required)
-            %% ------------------------------------------------------------------------
-            try
-                greatquakes = Catalog.retrieve('iris', ...
-                    'minimumMagnitude', 8.0, ...
-                    'starttime', '2000-01-01', ...
-                    'endtime',   '2015-01-01');
-
-                disp(greatquakes)
-
-                % Access a property
-                greatquakes.mag;
-
-                % List methods
-                methods(greatquakes);
-
-                % Save
-                save('great_earthquakes.mat', 'greatquakes');
-
-            catch ME
-                warning('CatalogCookbook:IRISUnavailable', ...
-                    'IRIS retrieval skipped: %s', ME.message);
-                greatquakes = Catalog(); %#ok<NASGU>
-            end
-
-            %% ------------------------------------------------------------------------
-            % Tohoku Regional Catalog Example (IRIS)
-            %% ------------------------------------------------------------------------
-            try
-                mainshocktime = datenum('2011/03/11 05:46:24');
-                tohoku_events = Catalog.retrieve('iris', ...
-                    'radialcoordinates', [38.297 142.372 km2deg(200)], ...
-                    'starttime', mainshocktime - 1, ...
-                    'endtime',   mainshocktime + 1);
-
-                tohoku_events.summary();
-                save('tohoku_events.mat', 'tohoku_events');
-
-            catch ME
-                warning('CatalogCookbook:TohokuFailed', ...
-                    'Tohoku IRIS example skipped: %s', ME.message);
-                tohoku_events = Catalog(); %#ok<NASGU>
-            end
-
-            %% ------------------------------------------------------------------------
-            % Antelope CSS3.0 Example (Requires ATM)
-            %% ------------------------------------------------------------------------
-            try
-                if admin.antelope_exists()
-                    dbpath = fullfile(TESTDATA, 'css3.0', 'avodb200903');
-
-                    avocatalog = Catalog.retrieve('antelope', 'dbpath', dbpath);
-
-                    redoubtLon = -152.7431;
-                    redoubtLat = 60.4853;
-                    maxR = km2deg(20.0);
-
-                    redoubt_events = Catalog.retrieve('antelope', 'dbpath', dbpath, ...
-                        'radialcoordinates', [redoubtLat redoubtLon maxR]);
-
-                    save('redoubt_events.mat', 'redoubt_events');
-                else
-                    warning('CatalogCookbook:AntelopeMissing', ...
-                        'Antelope toolbox not found — skipping Antelope examples.');
-                    redoubt_events = Catalog(); %#ok<NASGU>
-                end
-            catch ME
-                warning('CatalogCookbook:AntelopeFailed', ...
-                    'Antelope example failed: %s', ME.message);
-                redoubt_events = Catalog(); %#ok<NASGU>
-            end
-
-            %% ------------------------------------------------------------------------
-            % SEISAN Example (File-based)
-            %% ------------------------------------------------------------------------
-            try
-                demodir = fullfile(TESTDATA, 'seisan', 'REA', 'MVOE_');
-
-                montserrat_events = Catalog.retrieve('seisan', ...
-                    'dbpath', demodir, ...
-                    'startTime', '1996/11/01 11:00:00', ...
-                    'endTime',   '1996/11/01 15:00:00');
-
-                save('montserrat_events.mat', 'montserrat_events');
-
-            catch ME
-                warning('CatalogCookbook:SEISANFailed', ...
-                    'SEISAN example skipped: %s', ME.message);
-            end
-
-            %% ------------------------------------------------------------------------
-            % Hypocenter Plotting (Mapping Toolbox Optional)
-            %% ------------------------------------------------------------------------
-            try
-                load tohoku_events.mat
-                tohoku_events.plot();
-                tohoku_events.plot3();
-            catch
-            end
-
-            try
-                tohoku_events.webmap();
-                wmzoom(7)
-            catch
-                warning('CatalogCookbook:WebmapUnavailable', ...
-                    'webmap skipped (Mapping Toolbox or internet unavailable).');
-            end
-
-            %% ------------------------------------------------------------------------
-            % Event Rate & Time Series Analysis
-            %% ------------------------------------------------------------------------
-            try
-                tohoku_events.plot_time();
-
-                eventrateObject = tohoku_events.eventrate('binsize', 1/24);
-                eventrateObject.plot();
-            catch
-            end
-
-            try
-                redoubt_events.plot_time();
-                erobj_red = redoubt_events.eventrate('binsize', 1/24);
-                erobj_red.plot();
-            catch
-            end
-
-            %% ------------------------------------------------------------------------
-            % Peak Rate & Maximum Magnitude Analysis
-            %% ------------------------------------------------------------------------
-            try
-                tohoku_events.plotprmm();
-            catch
-            end
-
-            try
-                redoubt_events.plotprmm();
-            catch
-            end
-
-            %% ------------------------------------------------------------------------
-            % b-value & Completeness
-            %% ------------------------------------------------------------------------
-            try
-                tohoku_events.bvalue(1);
-            catch
-            end
-
-            try
-                redoubt_events.bvalue(1);
-            catch
-            end
-
-            %% ------------------------------------------------------------------------
-            % Writing Catalogs to Disk
-            %% ------------------------------------------------------------------------
-            try
-                delete greatquakes_db*
-                greatquakes.write('antelope', 'greatquakes_db', 'css3.0');
-                greatquakes2 = Catalog.retrieve('antelope', 'dbpath', 'greatquakes_db');
-                disp(greatquakes2)
-            catch ME
-                warning('CatalogCookbook:WriteSkipped', ME.message);
-            end
-
-            %% End of Catalog Cookbook
         end
     end
+
 end
+

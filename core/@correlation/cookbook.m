@@ -1,6 +1,13 @@
 %% correlation Cookbook (GISMO)
+% Human-facing tutorial for correlation workflows.
+% NOT for CI. NOT for automated testing.
+%
+% Uses either:
+%   • External TESTDATA/matfiles/correlation.mat (if present)
+%   • Built-in DEMO dataset (fallback)
+%
 % The correlation object provides tools for manipulating and analyzing large
-% collections of similar waveform snippets (tens to thousands) including:
+% collections of similar waveform snippets including:
 %
 %   • Cross-correlation
 %   • Time alignment
@@ -9,20 +16,36 @@
 %   • Interferograms
 %   • Occurrence and overlay plots
 %
-% This cookbook demonstrates the core workflow using the built-in DEMO
-% dataset. It does NOT require Antelope, Winston, or external databases.
-
-% Author: Michael West (original), refactored 2025 for modern GISMO
-% Refactor: Glenn Thompson + ChatGPT
+% Author: Michael West (original)
+% Refactor: Glenn Thompson 2025
 
 close all
+clc
 
 %% ------------------------------------------------------------------------
-%% Load built-in DEMO dataset
+%% Resolve data source
 %% ------------------------------------------------------------------------
+useTestData = false;
+c = [];
 
-fprintf('\n--- Loading correlation DEMO dataset ---\n');
-c = correlation('DEMO');
+try
+    admin.is_testdata_setup(false);
+    global TESTDATA
+    matfile = fullfile(TESTDATA,'matfiles','correlation.mat');
+
+    if exist(matfile,'file')
+        load(matfile,'c');
+        useTestData = true;
+        fprintf('\nLoaded correlation object from TESTDATA:\n  %s\n', matfile);
+    end
+catch ME
+    warning('TESTDATA lookup failed: %s', ME.message);
+end
+
+if ~useTestData
+    fprintf('\nLoading built-in correlation DEMO dataset.\n');
+    c = correlation('DEMO');
+end
 
 %% ------------------------------------------------------------------------
 %% Inspect object

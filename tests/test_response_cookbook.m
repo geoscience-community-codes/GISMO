@@ -5,7 +5,7 @@ classdef test_Response_cookbook < matlab.unittest.TestCase
     %
     % This test ensures that:
     %   • @Response/cookbook.m executes fully without error
-    %   • sacpz loading is exercised
+    %   • sacpz loading via TESTDATA is exercised
     %   • Response.apply(), evaluate(), and plot() are called
     %   • Antelope paths are OPTIONAL and auto-skipped
     %
@@ -15,20 +15,28 @@ classdef test_Response_cookbook < matlab.unittest.TestCase
 
         function test_runResponseCookbook(testCase)
 
-            % --- Locate cookbook -----------------------------------------
+            % ---- Ensure TESTDATA is available ---------------------------
+            try
+                admin.is_testdata_setup(false);
+            catch
+                testCase.assumeFail( ...
+                    'TESTDATA not configured — skipping Response cookbook test.');
+            end
+            global TESTDATA %#ok<TLEV>
 
+            % ---- Locate Response class --------------------------------
             mc = meta.class.fromName('Response');
-            testCase.assertNotEmpty(mc, 'Response class not found on path');
+            testCase.assertNotEmpty(mc, ...
+                'Response class not found on path');
 
             methodNames = {mc.MethodList.Name};
             testCase.assertTrue(ismember('cookbook', methodNames), ...
                 'Response.cookbook method not found');
 
-
-            % --- Clean graphics state ------------------------------------
+            % ---- Clean graphics state ---------------------------------
             close all force;
 
-            % --- Execute cookbook safely --------------------------------
+            % ---- Execute cookbook safely ------------------------------
             try
                 Response.cookbook();
             catch ME
@@ -37,19 +45,25 @@ classdef test_Response_cookbook < matlab.unittest.TestCase
                 testCase.verifyFail(ME.message);
             end
 
-            % --- Basic post-conditions ----------------------------------
+            % ---- Basic post-conditions --------------------------------
             figs = get(0,'Children');
             testCase.verifyGreaterThanOrEqual( ...
                 numel(figs), 1, ...
                 'Cookbook ran but produced no figures');
-
         end
 
 
         function test_sacpz_basic_evaluation(testCase)
             % Direct numerical sanity test of sacpz → Response path
 
-            % --- Synthetic poles & zeros --------------------------------
+            % ---- Ensure TESTDATA is available -------------------------
+            try
+                admin.is_testdata_setup(false);
+            catch
+                testCase.assumeFail('TESTDATA not configured — skipping test.');
+            end
+
+            % ---- Synthetic poles & zeros ------------------------------
             pz = sacpz();
             pz.z = [0; 0];
             pz.p = [-2+2i; -2-2i];
@@ -67,7 +81,6 @@ classdef test_Response_cookbook < matlab.unittest.TestCase
             testCase.verifyEqual(numel(H), numel(f));
             testCase.verifyTrue(all(isfinite(H)), ...
                 'Response contains NaNs or Infs');
-
         end
 
 
@@ -78,7 +91,7 @@ classdef test_Response_cookbook < matlab.unittest.TestCase
             t  = (0:fs*10-1)'/fs;
             x  = sin(2*pi*2*t);
 
-            % --- Build synthetic PZ ----------------------------
+            % ---- Build synthetic PZ -----------------------------------
             pz = sacpz();
             pz.z = [0;0];
             pz.p = [-5+5i; -5-5i];

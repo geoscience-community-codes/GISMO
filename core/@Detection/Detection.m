@@ -47,7 +47,8 @@ function obj = Detection(sta, chan, time, state, filterString, signal2noise)
         p.addOptional('state', {}, @iscell);
         p.addOptional('filterString', {}, @iscell);
         p.addOptional('signal2noise', [], @isnumeric);
-        p.parse(chan, time, state, filterString);
+        p.parse(chan, time, state, filterString, signal2noise);
+
 
     % ---------- sta/chan cell input ----------
     else
@@ -474,134 +475,28 @@ end % methods
 % ======================= STATIC METHODS ===========================
 methods (Static)
 
+function cookbook()
+
 function [detObj, sta, lta, sta_to_lta] = sta_lta(wave, varargin)
-%DETECTION.STA_LTA  Short-Time-Average / Long-Time-Average event detector
-%
-% See class documentation for full help text (omitted here for brevity).
-
-% Handle waveform arrays
-if numel(wave) > 1
-    detObj = Detection();
-    for k = 1:numel(wave)
-        d0 = Detection.sta_lta(wave(k),varargin{:});
-        if isa(d0,'Detection') && d0.numel > 0
-            detObj = detObj.append(d0);
-        end
-    end
-    sta = []; lta = []; sta_to_lta = [];
-    return
-end
-
-if ~isa(wave,'waveform') || isempty(wave)
-    error('Detection.sta_lta:InputMustBeWaveform', ...
-          'Input must be a non-empty waveform object');
-end
-
-wave = fillgaps(detrend(wave),'interp');
-Fs   = get(wave,'freq');
-y    = abs(get(wave,'data'));
-t    = get(wave,'timevector');
-ctag = get(wave,'ChannelTag');
-
-l_sta = round(1 * Fs);
-l_lta = round(8 * Fs);
-th_on  = 2.0;
-th_off = 1.6;
-min_dur_days = 3/86400;
-lta_mode = 'continuous';
-
-for p = 1:2:numel(varargin)
-    switch lower(varargin{p})
-        case 'edp'
-            v = varargin{p+1};
-            l_sta = round(v(1)*Fs);
-            l_lta = round(v(2)*Fs);
-            th_on = v(3);
-            th_off = v(4);
-            min_dur_days = v(5)/86400;
-        case 'lta_mode'
-            lta_mode = lower(varargin{p+1});
-    end
-end
-
-N = numel(y);
-sta = zeros(N,1);
-lta = zeros(N,1);
-sta_to_lta = zeros(N,1);
-
-sta(1:l_sta) = cumsum(y(1:l_sta))/l_sta;
-lta(1:l_lta) = cumsum(y(1:l_lta))/l_lta;
-
-for k = l_sta+1:l_lta
-    sta(k) = sta(k-1) + (y(k)-y(k-l_sta))/l_sta;
-end
-
-sta_to_lta(1:l_lta) = sta(1:l_lta)./lta(1:l_lta);
-
-EVENT_ON = false;
-trig_array = [];
-snr_val = [];
-eventnum = 0;
-
-for k = l_lta+1:N
-
-    if EVENT_ON && strcmp(lta_mode,'frozen')
-        lta(k) = lta_freeze_level;
-    else
-        lta(k) = lta(k-1) + (y(k)-y(k-l_lta))/l_lta;
-    end
-
-    sta(k) = sta(k-1) + (y(k)-y(k-l_sta))/l_sta;
-    sta_to_lta(k) = sta(k)/lta(k);
-
-    if ~EVENT_ON && sta_to_lta(k) >= th_on
-        EVENT_ON = true;
-        eventstart = t(k);
-        lta_freeze_level = lta(k);
-        snr_start = sta_to_lta(k);
-    end
-
-    if EVENT_ON && (sta_to_lta(k) <= th_off || k == N)
-        EVENT_ON = false;
-        eventend = t(k);
-
-        if (eventend - eventstart) >= min_dur_days
-            eventnum = eventnum + 1;
-            trig_array(eventnum,:) = [eventstart eventend];
-            snr_val(eventnum*2-1:eventnum*2) = [snr_start sta_to_lta(k)];
-        end
-    end
-end
-
-if eventnum == 0
-    detObj = Detection();
-    return
-end
-
-times   = reshape(trig_array',1,eventnum*2);
-states  = repmat({'ON';'OFF'},eventnum,1);
-filters = repmat({''},eventnum*2,1);
-ctags   = repmat(ctag,eventnum*2,1);
-
-detObj = Detection( ...
-    ctags, ...
-    times, ...
-    states(:), ...
-    filters(:), ...
-    snr_val(:)' );
-
-end
 
 % ======================= PRIVATE HELPERS ===========================
 function c = defaultCell(v,n)
-    if isempty(v), c = repmat({''},1,n);
-    else c = v; end
+    if isempty(v)
+        c = repmat({''},n,1);
+    else
+        c = v(:);
+    end
 end
 
+
 function x = defaultNum(v,n)
-    if isempty(v), x = NaN(1,n);
-    else x = v; end
+    if isempty(v)
+        x = NaN(n,1);
+    else
+        x = v(:);
+    end
 end
+
 
 function arr = detection2arrival(det)
     ctag = ChannelTag(det.channelinfo);

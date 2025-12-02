@@ -4,6 +4,7 @@ classdef Arrival
 % Single-table backend
 % Antelope/CSS compatible
 % Legacy-safe constructor
+% CI-safe, column-consistent, Detection-compatible
 
     properties (Dependent)
         channelinfo
@@ -15,7 +16,7 @@ classdef Arrival
     end
 
     properties
-        waveforms
+        waveforms   % cell array of waveform objects
     end
 
     properties (Hidden)
@@ -38,16 +39,18 @@ classdef Arrival
     methods
         function obj = Arrival(sta, chan, time, iphase, varargin)
 
+            % ---------- Empty constructor ----------
             if nargin == 0
                 obj.table = table();
-                obj.waveforms = [];
+                obj.waveforms = {};
                 return
             end
 
+            % ---------- Parse ----------
             p = inputParser;
-            p.addRequired('sta', @iscell);
-            p.addRequired('chan', @iscell);
-            p.addRequired('time', @isnumeric);
+            p.addRequired('sta',    @iscell);
+            p.addRequired('chan',   @iscell);
+            p.addRequired('time',   @isnumeric);
             p.addRequired('iphase', @iscell);
 
             p.addParameter('amp', NaN, @isnumeric);
@@ -66,9 +69,24 @@ classdef Arrival
             p.parse(sta, chan, time, iphase, varargin{:});
             r = p.Results;
 
+            % ---------- Length consistency ----------
+            n = numel(r.time);
+
+            if numel(r.sta) ~= n || numel(r.chan) ~= n || numel(r.iphase) ~= n
+                error('Arrival:Constructor:LengthMismatch', ...
+                    'sta, chan, time, and iphase must all have the same length.');
+            end
+
+            % ---------- Expand scalar numeric fields ----------
+            r.amp          = Arrival.expandToLength(r.amp,          n);
+            r.per          = Arrival.expandToLength(r.per,          n);
+            r.signal2noise = Arrival.expandToLength(r.signal2noise, n);
+
+            % ---------- ChannelTag handling ----------
             ctag = ChannelTag.array('', r.sta, '', r.chan)';
             chanstr = ctag.string();
 
+            % ---------- Core table ----------
             obj.table = table( ...
                 r.time(:), ...
                 datestr(r.time(:),26), ...
@@ -80,11 +98,15 @@ classdef Arrival
                 r.per(:), ...
                 r.signal2noise(:), ...
                 'VariableNames', ...
-                {'time','date','hour_minute','second','channelinfo','iphase','amp','per','signal2noise'} );
+                {'time','date','hour_minute','second', ...
+                 'channelinfo','iphase','amp','per','signal2noise'} );
 
             obj.table = sortrows(obj.table,'time');
-            obj.waveforms = [];
 
+            % ---------- Waveforms ----------
+            obj.waveforms = {};
+
+            % ---------- Hidden Antelope-style fields ----------
             obj.arid     = r.arid;
             obj.seaz     = r.seaz;
             obj.deltim   = r.deltim;
@@ -95,14 +117,14 @@ classdef Arrival
             obj.timeres  = r.timeres;
             obj.depth    = r.depth;
 
-            fprintf('\nGot %d arrivals\n', height(obj.table));
+            % CI-safe: no fprintf spam
         end
 
 
         %% ===========================
         %  DEPENDENT ACCESSORS
         % ===========================
-    
+
         function v = get.time(obj)
             v = Arrival.safeGet(obj,'time');
         end
@@ -128,17 +150,17 @@ classdef Arrival
         end
 
         function obj = set.amp(obj,v)
-            obj.table.amp = v;
+            obj.table.amp = v(:);
         end
 
         function obj = set.signal2noise(obj,v)
-            obj.table.signal2noise = v;
+            obj.table.signal2noise = v(:);
         end
 
         %% ===========================
         %  CORE UTILITY METHODS
         % ===========================
-    
+
         summary(obj, showall)
         self2 = subset(self, columnname, findval)
         self  = setminmax(self, w, maxTimeDiff, pretrig, posttrig)
@@ -156,9 +178,9 @@ classdef Arrival
         self = readphafile(phafilename)
         self = read_antelope(dbname, subset_expr)
 
+        % ---------- Safe getter ----------
         function v = safeGet(obj, fieldname)
 
-            % Gracefully handle empty Arrival objects
             if isempty(obj) || isempty(obj.table) || width(obj.table) == 0
                 v = [];
                 return
@@ -169,11 +191,22 @@ classdef Arrival
             if ismember(fieldname, vars)
                 v = obj.table.(fieldname);
             else
-                % Maintain backward compatibility but fail loudly if used incorrectly
                 error('Arrival:get:MissingColumn', ...
                     'Arrival.table has no ''%s'' column', fieldname);
             end
         end
 
+        % ---------- Scalar expansion helper ----------
+        function v = expandToLength(v,n)
+            if isempty(v)
+                v = NaN(n,1);
+                return
+            end
+            if isscalar(v)
+                v = repmat(v,n,1);
+            else
+                v = v(:);
+            end
+        end
     end
 end

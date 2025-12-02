@@ -3,8 +3,8 @@ classdef test_drumplot < matlab.unittest.TestCase
     % CI-safe unit tests for the drumplot class.
     %
     % These tests:
-    %   • use synthetic waveform data only
-    %   • do NOT require TESTDATA
+    %   • use synthetic waveform data only (except optional real-data test)
+    %   • do NOT require TESTDATA for core tests
     %   • do NOT require Antelope / IRIS / Winston / SAC
     %   • only verify that construction + plotting do not error
     %
@@ -106,7 +106,46 @@ classdef test_drumplot < matlab.unittest.TestCase
         function testBadWaveformRejected(testCase)
             badw = [testCase.w testCase.w];   % invalid (array)
             testCase.verifyError(@() drumplot(badw), ...
-                'MATLAB:InputParser:ArgumentFailedValidation');
+                'drumplot:InvalidWaveform');
+        end
+
+        function testWithRealMiniSEEDIfAvailable(testCase)
+            % Optional real-data test using TESTDATA/miniseed_data/REF.EHZ.2009.081
+            testdata = getenv('TESTDATA');
+            if isempty(testdata)
+                testCase.assumeFail('TESTDATA not defined — skipping real-data drumplot test.');
+            end
+
+            mseedfile = fullfile(testdata,'miniseed_data','REF.EHZ.2009.081');
+            if exist(mseedfile,'file') ~= 2
+                testCase.assumeFail('MiniSEED test file not found — skipping real-data drumplot test.');
+            end
+
+            try
+                ds   = datasource('miniseed', mseedfile);
+                % Station code may vary depending on how TESTDATA is set up;
+                % XX network keeps things generic.
+                ctag = ChannelTag('XX.REF..EHZ');
+
+                wreal = waveform(ds, ctag);
+
+                % Basic preprocessing to ensure reasonable scaling
+                wreal = fillgaps(wreal,'interp');
+                wreal = detrend(wreal);
+
+                % Extract a short window (e.g., first hour)
+                [snum, enum] = gettimerange(wreal);
+                wshort = extract(wreal, 'time', snum, min(snum+1/24, enum));
+
+                h = drumplot(wshort,'mpl',5);
+
+                f = figure('Visible','off');
+                testCase.verifyWarningFree(@() plot(h));
+                delete(f);
+            catch ME
+                testCase.verifyFail(sprintf( ...
+                    'Real-data drumplot test failed: %s', ME.message));
+            end
         end
     end
 end

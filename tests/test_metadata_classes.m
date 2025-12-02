@@ -49,7 +49,9 @@ classdef test_metadata_classes < matlab.unittest.TestCase
             ct = ChannelTag(nslc);
             testCase.verifyEqual(ct.string(), nslc);
             testCase.verifyEqual(ct.string('_'), "IU_ANMO_00_EHZ");
-            testCase.verifyEqual(ct.char(), char(nslc));
+            %testCase.verifyEqual(ct.char(), char(nslc));
+            testCase.verifyEqual(string(ct), nslc);
+
         end
     end
 

@@ -27,16 +27,62 @@ GISMO enforces **three-tier reproducibility**:
 2. **Executable cookbooks**
 3. **End-to-end training workflows**
 
-The full validation and release procedure is documented here:
+## Test Data (Automatic Download & Configuration)
 
-👉 **[`RELEASE_AND_DOCUMENTATION_WORKFLOW.md`](RELEASE_AND_DOCUMENTATION_WORKFLOW.md)**  
-(How to run tests, cookbooks, training scripts, update the website via `m2html`, create GitHub releases, and obtain Zenodo DOIs.)
+GISMO test data are **not stored inside the main repository**. Instead,
+all unit tests, cookbooks, and training workflows share a **single
+external testdata directory** configured via the global MATLAB variable:
+
+``` matlab
+global TESTDATA
+```
+
+### Automatic Setup (Recommended)
+
+All core runners automatically check and install test data as needed:
+
+``` matlab
+run_all_tests
+run_all_cookbooks
+run_all_training
+```
+
+On first use, GISMO will:
+
+1.  Detect whether `TESTDATA` is defined
+2.  If not, prompt for or select a default testdata location
+3.  Download and unzip the full testdata archive
+4.  Set `global TESTDATA` for the session
+
+This process is **fully automatic and CI-safe** (no GUI is used during
+automated runs).
+
+### Testdata Contents
+
+The testdata archive contains:
+
+-   **CSS 3.0 relational databases** (Antelope format)
+-   **MiniSEED waveform files**
+-   **SAC waveform files**
+-   **SEISAN waveform and catalog databases**
+-   **RSAM time series**
+-   **Poles & Zeros (SACPZ) files**
+-   **MATLAB-native `.mat` datasets** for fast testing
+-   **ObsPy MATLAB interoperability datasets**
+
+The full directory structure is documented on the GISMO website:
+https://geoscience-community-codes.github.io/GISMO/testdata.html
 
 This workflow is designed to ensure:
 - Long-term numerical correctness  
 - Fully executable documentation  
 - Observatory-scale scientific reproducibility  
-- Full compliance with JOSS and FAIR software principles  
+- Full compliance with JOSS and FAIR software principles
+
+The full validation and release procedure is documented here:
+
+👉 **[`RELEASE_AND_DOCUMENTATION_WORKFLOW.md`](RELEASE_AND_DOCUMENTATION_WORKFLOW.md)**  
+(How to run tests, cookbooks, training scripts, update the website via `m2html`, create GitHub releases, and obtain Zenodo DOIs.)
 
 ---
 
@@ -51,7 +97,7 @@ and automatically disabled when dependencies are not present.
 
 The following MathWorks toolboxes are required for specific feature sets:
 
-#### Signal Processing Toolbox (Recommended)
+#### Signal Processing Toolbox (Highly Recommended)
 Required for:
 - Digital filtering (Butterworth, `filtfilt`)
 - Spectral analysis
@@ -76,7 +122,14 @@ Used by:
 - Master correlation tools
 - Correlation clustering utilities
 
-### Antelope Toolbox (Optional, External)
+#### Mapping Toolbox (Optional)
+Required for:
+- event map plots
+
+Used by:
+- Catalog class
+
+#### Antelope Toolbox (Optional, External)
 
 Some GISMO functionality supports **Antelope databases** via the
 Antelope MATLAB Toolbox provided by **BRTT, Inc.**

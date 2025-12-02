@@ -1,88 +1,106 @@
-%% THREECOMP Cookbook
-% This cookbook demonstrates the core functionality of the THREECOMP class,
-% which is used for three-component seismic waveform analysis including:
+function cookbook()
+%% THREECOMP Cookbook (Core GISMO)
 %
+% End-to-end demonstration of the THREECOMP class:
+%
+%   • Construction from 3-component waveform matrices
 %   • Horizontal rotation
 %   • Particle motion analysis
-%   • Rectilinearity and planarity
-%   • Azimuth and inclination estimation
+%   • Trigger-relative extraction
+%   • Particle motion plotting
 %
-% THREECOMP operates on matrices of waveform objects where each row
-% represents a station and the three columns represent Z, N/E, N/S
-% components.
+% This cookbook is:
+%   ✓ CI-safe (no required toolboxes)
+%   ✓ Demo-driven (no TESTDATA dependency)
+%   ✓ Fully validates the THREECOMP processing chain
+%
+% Glenn Thompson / Refactored 2025
 
-%% Load Demo Dataset (CI-Safe)
-% The built-in demo provides:
-%   • w            : Nx3 matrix of waveform objects
-%   • backAzimuth : N×1 backazimuth vector (deg)
-%   • trigger     : N×1 trigger times (datenum)
-%
-% NOTE: If the demo dataset is missing, we gracefully skip all examples.
+close all
+clc
+
+fprintf('\n=== THREECOMP COOKBOOK START ===\n');
+
+%% ------------------------------------------------------------------------
+%% 1. Load Demo Dataset (CI-Safe)
+%% ------------------------------------------------------------------------
+fprintf('\n--- Loading threecomp demo dataset ---\n');
 
 try
     [w, backAzimuth, trigger] = demo(threecomp);
     hasDemo = true;
-catch
+catch ME
     warning('threecomp:DemoUnavailable', ...
-        'Demo dataset not found. threecomp cookbook examples skipped.');
-    hasDemo = false;
-end
-
-if ~hasDemo
+        'Demo dataset not found. threecomp cookbook skipped.');
+    fprintf('%s\n', ME.message);
     return
 end
 
-%% Create a THREECOMP Object
+fprintf('Loaded THREECOMP demo data.\n');
+
+%% ------------------------------------------------------------------------
+%% 2. Construct THREECOMP Object
+%% ------------------------------------------------------------------------
+fprintf('\n--- Constructing THREECOMP object ---\n');
+
 TC = threecomp(w, backAzimuth, trigger);
+disp(TC(1));
 
-%% Inspect Object Properties
-% List available network–station–channel identifiers
-NSCL = get(TC,'NSCL');
+NSCL = get(TC,'NSCL'); %#ok<NASGU>
 
-% Display one element's metadata
-disp(TC(4));
+%% ------------------------------------------------------------------------
+%% 3. Plot Unrotated Traces
+%% ------------------------------------------------------------------------
+fprintf('\n--- Plotting unrotated traces ---\n');
 
-%% Plot Unrotated Traces
-figure('Visible','off');
-plot(TC(4));
+figure('Visible','off','Name','THREECOMP Raw');
+plot(TC(1));
 
-%% Rotate Horizontal Traces into Radial–Transverse Frame
-% Default: rotation into backazimuth frame
+%% ------------------------------------------------------------------------
+%% 4. Rotate Horizontal Traces
+%% ------------------------------------------------------------------------
+fprintf('\n--- Rotating to radial–transverse frame ---\n');
+
 TCr = rotate(TC);
 
-figure('Visible','off');
-plot(TCr(4));
+figure('Visible','off','Name','THREECOMP Rotated');
+plot(TCr(1));
 
-%% Explore Rotation Sensitivity for a Single Station
-% Spin through +/- 180 degrees around the backazimuth
+%% ------------------------------------------------------------------------
+%% 5. Explore Rotation Sensitivity (Spin)
+%% ------------------------------------------------------------------------
+fprintf('\n--- Performing spin test ---\n');
 
-baz = round(TC(13).backAzimuth);
-spin(TC(13), baz-180:10:baz+180);
+baz = round(TC(1).backAzimuth);
+spin(TC(1), baz-180:30:baz+180);
 
-%% Particle Motion Analysis
-% Compute rectilinearity, planarity, azimuth, inclination, and energy
-% using a 2–20 Hz band for particle motion estimation
+%% ------------------------------------------------------------------------
+%% 6. Particle Motion Analysis
+%% ------------------------------------------------------------------------
+fprintf('\n--- Computing particle motion (2–20 Hz) ---\n');
 
 TCpm = particlemotion(TCr, 2, 20);
+disp(TCpm(1));
 
-% Inspect one station
-disp(TCpm(4));
+figure('Visible','off','Name','Particle Motion');
+plotpm(TCpm(1));
 
-% Plot particle motion for one station
-figure('Visible','off');
-plotpm(TCpm(4));
+%% ------------------------------------------------------------------------
+%% 7. Trigger-Relative Extraction
+%% ------------------------------------------------------------------------
+fprintf('\n--- Extracting trigger-relative particle motion ---\n');
 
-%% Extract Mean Particle Motion Around Trigger
-% Extract 30-second window starting at trigger time
-% Apply minimum rectilinearity threshold = 0.7
+pm = extract(TCpm, [0 30], [0.7 0]); %#ok<NASGU>
 
-pm = extract(TCpm, [0 30], [0.7 0]);
+fprintf('Extracted %d particle-motion windows.\n', numel(pm));
 
-%% Optional Mapping of Particle Motion (If Mapping Toolbox Available)
-% This section overlays particle motion azimuths on the demo station map.
-% It is skipped automatically if Mapping Toolbox is unavailable.
-
+%% ------------------------------------------------------------------------
+%% 8. Optional Mapping (Toolbox-Safe Auto-Skip)
+%% ------------------------------------------------------------------------
 if exist('reckon','file') == 2
+
+    fprintf('\n--- Mapping particle motion vectors ---\n');
+
     [~,~,~,staLat,staLon,origLat,origLon] = demo(threecomp);
 
     figure('Color','w','Position',[50 50 400 400]);
@@ -101,14 +119,14 @@ if exist('reckon','file') == 2
     text(origLon, origLat, '  Origin','FontWeight','bold');
     xlabel('Longitude'); ylabel('Latitude');
     legend('Stations','Origin','Particle motion','Location','NorthWest');
+
 else
-    disp('Mapping Toolbox not available — skipping particle motion map overlay.');
+    fprintf('Mapping Toolbox not available — skipping map overlay.\n');
 end
 
-%% Summary of THREECOMP Capabilities
-% THREECOMP supports:
-%   • Multi-station 3C waveform handling
-%   • Backazimuth-aware rotation
-%   • Particle motion parameter estimation
-%   • Trigger-relative extraction
-%   • Visual rotation exploration
+%% ------------------------------------------------------------------------
+%% Final Status
+%% ------------------------------------------------------------------------
+fprintf('\n=== THREECOMP COOKBOOK COMPLETED SUCCESSFULLY ===\n');
+
+end

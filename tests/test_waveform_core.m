@@ -20,12 +20,6 @@ function setup(testCase)
 close all
 testCase.TestData.originalDir = pwd;
 
-% Ensure GISMO is on path (if startup exists)
-gismopath = fileparts(which('startup_GISMO'));
-if ~isempty(gismopath)
-    addpath(genpath(gismopath));
-end
-
 % Reproducible synthetic data for most tests
 rng(0);
 Dt = rand(1,1001) .* 1000 - 500;

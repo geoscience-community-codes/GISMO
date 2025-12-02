@@ -3,9 +3,23 @@ classdef test_correlation < matlab.unittest.TestCase
     % Robust unit tests for the legacy GISMO correlation class.
     %
     % - Uses old-style @correlation class dispatch.
-    % - Avoids external Antelope/Winston DBs.
-    % - Treats some legacy behaviours (errors/warnings) as expected.
-    % - For adjusttrig: ensures LAG is populated via xcorr() first.
+    % - Avoids Antelope, Winston, databases.
+    % - Treats known legacy errors as expected.
+    % - Uses DEMO for CI.
+    % - Optionally tests real waveform data if TESTDATA is available.
+
+    % ---------------------------------------------------------------------
+    %% 0. Optional TESTDATA Setup (non-fatal)
+    % ---------------------------------------------------------------------
+    methods (TestMethodSetup)
+        function setupTestData(~)
+            try
+                admin.is_testdata_setup(false);
+            catch
+                % non-fatal
+            end
+        end
+    end
 
     % ---------------------------------------------------------------------
     %% 1. Constructor Variants
@@ -20,18 +34,9 @@ classdef test_correlation < matlab.unittest.TestCase
             c2 = correlation(5);
             testCase.verifyEqual(get(c2,'TRACES'),5);
 
-            % DEMO dataset (if available through correlation('DEMO'))
-            demoOK = true;
-            try
-                c3 = correlation('DEMO');
-            catch
-                demoOK = false;
-            end
-            if demoOK
-                testCase.verifyInstanceOf(c3,'correlation');
-            else
-                testCase.verifyWarningFree(@() disp('Skipping DEMO – correlation(''DEMO'') failed'));
-            end
+            % DEMO dataset
+            c3 = correlation('DEMO');
+            testCase.verifyInstanceOf(c3,'correlation');
 
             % WAVEFORM constructor (no triggers)
             w = waveform;
@@ -45,92 +50,71 @@ classdef test_correlation < matlab.unittest.TestCase
             c5 = correlation(w,trig);
             testCase.verifyInstanceOf(c5,'correlation');
 
-            % CORAL struct → correlation
+            % CORAL struct
             coralStruct = testCase.createCoralStruct();
             c6 = correlation(coralStruct);
             testCase.verifyInstanceOf(c6,'correlation');
+
+            % -------------------------------
+            % OPTIONAL REAL DATA TEST
+            % -------------------------------
+            global TESTDATA
+            if ~isempty(TESTDATA)
+                matfile = fullfile(TESTDATA,'matfiles','correlation.mat');
+                if exist(matfile,'file')
+                    load(matfile,'c');
+                    testCase.verifyInstanceOf(c,'correlation');
+                end
+            end
         end
     end
 
     methods
         function coralStruct = createCoralStruct(~)
-            % Minimal CORAL struct compatible with convert_coral()
             coralStruct.data         = randn(1,200);
             coralStruct.staCode      = 'ABC';
             coralStruct.staChannel   = 'EHZ';
-            coralStruct.recStartTime = now;          % scalar for datenum()
-            coralStruct.recSampInt   = 1/20;         % 20 Hz
-            coralStruct.pPick        = now + 1/86400; % scalar for datenum()
+            coralStruct.recStartTime = now;
+            coralStruct.recSampInt   = 1/20;
+            coralStruct.pPick        = now + 1/86400;
         end
     end
 
     % ---------------------------------------------------------------------
-    %% 2. adjustTrig Tests (require LAG → use xcorr first)
+    %% 2. adjustTrig Tests (require xcorr first)
     % ---------------------------------------------------------------------
     methods (Test)
         function TestAdjustTrigDefaults(testCase)
-            testCase.assumeTrue(~isempty(which('correlation/adjusttrig')), ...
-                'correlation/adjusttrig.m not found – skipping adjustTrig tests.');
-            testCase.assumeTrue(~isempty(which('correlation/xcorr')), ...
-                'correlation/xcorr.m not found – skipping adjustTrig tests.');
+            testCase.assumeTrue(~isempty(which('correlation/adjusttrig')));
+            testCase.assumeTrue(~isempty(which('correlation/xcorr')));
 
             c = correlation('DEMO');
-            c = xcorr(c);   % REQUIRED: populates C and L
+            c = xcorr(c);
             testCase.verifyWarningFree(@() adjusttrig(c));
         end
 
         function TestAdjustTrigIndex(testCase)
-            testCase.assumeTrue(~isempty(which('correlation/adjusttrig')), ...
-                'correlation/adjusttrig.m not found – skipping adjustTrig tests.');
-            testCase.assumeTrue(~isempty(which('correlation/xcorr')), ...
-                'correlation/xcorr.m not found – skipping adjustTrig tests.');
-
-            c = correlation('DEMO');
-            c = xcorr(c);
+            c = xcorr(correlation('DEMO'));
             testCase.verifyWarningFree(@() adjusttrig(c,'index',10));
         end
 
         function TestAdjustTrigMin(testCase)
-            testCase.assumeTrue(~isempty(which('correlation/adjusttrig')), ...
-                'correlation/adjusttrig.m not found – skipping adjustTrig tests.');
-            testCase.assumeTrue(~isempty(which('correlation/xcorr')), ...
-                'correlation/xcorr.m not found – skipping adjustTrig tests.');
-
-            c = correlation('DEMO');
-            c = xcorr(c);
+            c = xcorr(correlation('DEMO'));
             testCase.verifyWarningFree(@() adjusttrig(c,'min'));
         end
 
         function TestAdjustTrigMedian(testCase)
-            testCase.assumeTrue(~isempty(which('correlation/adjusttrig')), ...
-                'correlation/adjusttrig.m not found – skipping adjustTrig tests.');
-            testCase.assumeTrue(~isempty(which('correlation/xcorr')), ...
-                'correlation/xcorr.m not found – skipping adjustTrig tests.');
-
-            c = correlation('DEMO');
-            c = xcorr(c);
+            c = xcorr(correlation('DEMO'));
             testCase.verifyWarningFree(@() adjusttrig(c,'median'));
         end
 
         function TestAdjustTrigMaxLag(testCase)
-            testCase.assumeTrue(~isempty(which('correlation/adjusttrig')), ...
-                'correlation/adjusttrig.m not found – skipping adjustTrig tests.');
-            testCase.assumeTrue(~isempty(which('correlation/xcorr')), ...
-                'correlation/xcorr.m not found – skipping adjustTrig tests.');
-
-            c = correlation('DEMO');
-            c = xcorr(c);
+            c = xcorr(correlation('DEMO'));
             testCase.verifyWarningFree(@() adjusttrig(c,'min',1));
         end
 
         function TestAdjustTrigLeastSquares(testCase)
-            testCase.assumeTrue(~isempty(which('correlation/adjusttrig')), ...
-                'correlation/adjusttrig.m not found – skipping adjustTrig tests.');
-            testCase.assumeTrue(~isempty(which('correlation/xcorr')), ...
-                'correlation/xcorr.m not found – skipping adjustTrig tests.');
-
-            c = correlation('DEMO');
-            c = xcorr(c);
+            c = xcorr(correlation('DEMO'));
             testCase.verifyWarningFree(@() adjusttrig(c,'lsq'));
         end
     end
@@ -146,28 +130,15 @@ classdef test_correlation < matlab.unittest.TestCase
 
         function TestAlign(testCase)
             c = correlation('DEMO');
-
-            % align.m may emit a benign pragma warning on some MATLAB versions:
-            % "MATLAB:mir_warning_unrecognized_pragma"
-            % We allow either no warning or exactly that warning.
             f = @() align(c);
-            warnID = 'MATLAB:mir_warning_unrecognized_pragma';
-
-            % Use a custom verification: if it warns, it must be that ID.
-            import matlab.unittest.constraints.IssuesNoWarnings
-            import matlab.unittest.constraints.Throws
-
             try
-                testCase.verifyWarning(f, warnID);
+                testCase.verifyWarning(f,'MATLAB:mir_warning_unrecognized_pragma');
             catch
-                % If no warning occurred, that's also fine
                 testCase.verifyWarningFree(f);
             end
         end
 
         function testButter(testCase)
-            % correlation/butter currently errors for some argument combos.
-            % Treat that known error as expected behaviour.
             c = correlation('DEMO');
             testCase.verifyError(@() butter(c,2,[0.1 0.2]), '');
         end
@@ -179,13 +150,10 @@ classdef test_correlation < matlab.unittest.TestCase
 
         function testCheck(testCase)
             c = correlation('DEMO');
-            % check(c,'FREQ') is a documented/valid use
             testCase.verifyWarningFree(@() check(c,'FREQ'));
         end
 
         function testCluster(testCase)
-            % cluster requires LINK field, which is usually produced after xcorr/link.
-            % On raw DEMO it should error with "LINK field must be filled".
             c = correlation('DEMO');
             testCase.verifyError(@() cluster(c,0.7),'');
         end
@@ -206,7 +174,6 @@ classdef test_correlation < matlab.unittest.TestCase
         end
 
         function testDeconv(testCase)
-            % correlation/deconv explicitly says "not yet functional" and errors.
             c = correlation('DEMO');
             testCase.verifyError(@() deconv(c),'');
         end
@@ -227,11 +194,8 @@ classdef test_correlation < matlab.unittest.TestCase
         end
 
         function testFind(testCase)
-            % For find(c,'CORR',0.8) the current implementation throws
-            % "This use of find is not recognized"; treat that as expected.
             c = correlation('DEMO');
             testCase.verifyError(@() find(c,'CORR',0.8),'');
         end
     end
-
 end
