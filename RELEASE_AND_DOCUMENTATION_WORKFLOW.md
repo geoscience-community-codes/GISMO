@@ -243,4 +243,18 @@ This ensures:
 
 ⸻
 
-Last updated: 2025
+## 7. Access Rule (Hard Requirement)
+
+All scripts must access test data using:
+
+``` matlab
+fullfile(TESTDATA, <subdirectory>, <filename>)
+```
+
+Hard-coded paths, relative paths, and GUI file selection are **not
+permitted** inside: - Unit tests - Cookbooks - Training scripts
+
+____
+
+
+Last updated: Dec 1, 2025
