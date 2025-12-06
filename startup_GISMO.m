@@ -12,6 +12,7 @@ function startup_GISMO(gismopath)
 
 %% ------------------------------------------------------------------------
 % Resolve GISMO root path
+clc
 if ~exist('gismopath', 'var') || isempty(gismopath)
     gismofile = which('startup_GISMO');
     if isempty(gismofile)
@@ -31,20 +32,8 @@ addDir(fullfile(gismopath, 'core'));
 addContributedSafe(gismopath, 'contributed');
 
 %% ------------------------------------------------------------------------
-% Add CONTRIBUTED_ANTELOPE (only if Antelope present)
-if exist('dbopen','file') == 2 && exist('trload_css','file') == 2
-    addContributedSafe(gismopath, 'contributed_antelope');
-else
-    disp('Antelope not detected — skipping contributed_antelope');
-end
-
-%% ------------------------------------------------------------------------
-% Add UAF_INTERNAL
-addContributedSafe(gismopath, 'uaf_internal');
-
-%% ------------------------------------------------------------------------
-% Add APPLICATIONS (recursive)
-addDir(genpath(fullfile(gismopath,'applications')));
+% Add UAF_INTERNAL - obsolete as paths have likely changed since 2013
+%addContributedSafe(gismopath, 'uaf_internal');
 
 %% ------------------------------------------------------------------------
 % Add GISMO LIBRARY
@@ -82,6 +71,20 @@ for i = 1:numel(jarFiles)
     end
 end
 
+%% ------------------------------------------------------------------------
+% Environment diagnostics
+% Make globally available (optional but handy)
+global GISMO_ENV
+GISMO_ENV = admin.gismo_guard();
+disp(GISMO_ENV.summary);
+
+fprintf('--------------------------------\n\n');
+
+if GISMO_ENV.Antelope.exists
+    %% ------------------------------------------------------------------------
+    % Add CONTRIBUTED_ANTELOPE (only if Antelope present)
+    addContributedSafe(gismopath, 'contributed_antelope');
+end
 %% ------------------------------------------------------------------------
 % Final Diagnostics
 fprintf('--- GISMO startup complete ---\n\n');
@@ -150,4 +153,8 @@ end
 function directoryList = removeHiddenFiles(directoryList)
 startsWithPeriod = strncmp('.', {directoryList.name}, 1);
 directoryList = directoryList(~startsWithPeriod);
+end
+
+function s = yesno(tf)
+if tf, s = 'yes'; else, s = 'no'; end
 end

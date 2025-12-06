@@ -3,25 +3,38 @@ clc;
 disp('=== RUNNING ALL GISMO UNIT TESTS ===');
 
 % ------------------------------------------------------------
-% Ensure testdata are installed
+% Detect environment
 % ------------------------------------------------------------
-disp('Checking GISMO test data setup...');
+G = gismo_guard();
 
-if ~admin.is_testdata_setup(false)
+% Pretty-print environment summary
+fprintf('\n');
+for k = 1:numel(G.summary)
+    fprintf('%s\n', G.summary{k});
+end
+fprintf('\n');
+
+% ------------------------------------------------------------
+% Enforce TESTDATA availability (hard requirement)
+% ------------------------------------------------------------
+disp('Checking GISMO TESTDATA setup...');
+
+if ~G.TESTDATA.configured
     disp('TESTDATA not configured. Attempting automatic download...');
     try
-        admin.download_testdata
+        admin.download_testdata;
     catch ME
         error('Failed to download GISMO test data:\n%s', ME.message);
     end
 end
 
+% Re-check after download attempt
 if ~admin.is_testdata_setup(false)
     error('TESTDATA is still not correctly configured after download attempt.');
 end
 
 global TESTDATA
-disp(['Using TESTDATA at: ', TESTDATA]);
+fprintf('Using TESTDATA at: %s\n\n', TESTDATA);
 
 % ------------------------------------------------------------
 % Run unit tests
