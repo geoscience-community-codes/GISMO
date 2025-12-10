@@ -2,11 +2,11 @@ classdef test_drumplot < matlab.unittest.TestCase
     %TEST_DRUMPLOT
     % CI-safe unit tests for the drumplot class.
     %
-    % These tests:
-    %   • use synthetic waveform data only (except optional real-data test)
-    %   • do NOT require TESTDATA for core tests
-    %   • do NOT require Antelope / IRIS / Winston / SAC
-    %   • only verify that construction + plotting do not error
+    % Design principles:
+    %   • Core tests use synthetic waveform data only
+    %   • Optional features are guarded and SKIPPED if unavailable
+    %   • No hard dependency on TESTDATA / Antelope / IRIS
+    %   • Plotting tests only verify "does not error"
     %
     % Run with:
     %   runtests('test_drumplot')
@@ -21,7 +21,11 @@ classdef test_drumplot < matlab.unittest.TestCase
     %% --------------------------------------------------------------------
     methods (TestMethodSetup)
         function makeSyntheticWaveform(testCase)
+            % Basic environment sanity check
+            tests.guard(testCase,'basic');
+
             close all
+            set(0,'DefaultFigureVisible','off');
 
             testCase.fs = 100;
             T = 600;                        % 10 minutes
@@ -37,7 +41,8 @@ classdef test_drumplot < matlab.unittest.TestCase
             testCase.data  = x;
 
             ctag = ChannelTag('XX.SYN..BHZ');
-            testCase.w = waveform(ctag, testCase.fs, ...
+            testCase.w = waveform(ctag, ...
+                                   testCase.fs, ...
                                    testCase.start, ...
                                    testCase.data, ...
                                    'Counts');
@@ -46,18 +51,25 @@ classdef test_drumplot < matlab.unittest.TestCase
 
     %% --------------------------------------------------------------------
     methods (Test)
+
         function testConstructorDefault(testCase)
+            tests.guard(testCase,'basic');
+
             h = drumplot();
             testCase.verifyClass(h,'drumplot');
         end
 
         function testConstructorWithWaveform(testCase)
+            tests.guard(testCase,'basic');
+
             h = drumplot(testCase.w);
             testCase.verifyClass(h,'drumplot');
             testCase.verifyEqual(h.wave, testCase.w);
         end
 
         function testConstructorWithParameters(testCase)
+            tests.guard(testCase,'basic');
+
             h = drumplot(testCase.w, ...
                 'mpl', 5, ...
                 'scale', 2, ...
@@ -69,33 +81,36 @@ classdef test_drumplot < matlab.unittest.TestCase
         end
 
         function testPlotDoesNotError(testCase)
-            h = drumplot(testCase.w,'mpl',5);
+            tests.guard(testCase,'basic');
 
+            h = drumplot(testCase.w,'mpl',5);
             f = figure('Visible','off');
+
             testCase.verifyWarningFree(@() plot(h));
+
             delete(f);
         end
 
         function testPlotHelicorderWrapper(testCase)
+            tests.guard(testCase,'basic');
+
             f = figure('Visible','off');
-            testCase.verifyWarningFree(@() plot_helicorder(testCase.w,'mpl',5));
+            testCase.verifyWarningFree(@() ...
+                plot_helicorder(testCase.w,'mpl',5));
             delete(f);
         end
 
         function testWithDetectionsIfAvailable(testCase)
-            % Only run if Detection + STA/LTA are available
-            try
-                [det, ~, ~, ~] = Detection.sta_lta(testCase.w);
-            catch
-                testCase.assumeFail('Detection.sta_lta not available — skipping.');
+            % Requires Signal Processing Toolbox + Detection
+            tests.guard(testCase,'signal');
+
+            [det,~,~,~] = Detection.sta_lta(testCase.w);
+
+            if det.numel == 0
+                testCase.assumeFail( ...
+                    'No detections produced — skipping detection overlay test.');
             end
 
-            % Require a non-empty Detection object
-            if ~isa(det,'Detection') || det.numel == 0
-                testCase.assumeFail('Detection.sta_lta did not return any detections — skipping.');
-            end
-
-            % Pass detections into drumplot in the supported way
             h = drumplot(testCase.w,'mpl',5,'detections',det);
 
             f = figure('Visible','off');
@@ -104,48 +119,52 @@ classdef test_drumplot < matlab.unittest.TestCase
         end
 
         function testBadWaveformRejected(testCase)
-            badw = [testCase.w testCase.w];   % invalid (array)
+            tests.guard(testCase,'basic');
+
+            badw = [testCase.w testCase.w];   % invalid waveform array
+
             testCase.verifyError(@() drumplot(badw), ...
                 'drumplot:InvalidWaveform');
         end
 
         function testWithRealMiniSEEDIfAvailable(testCase)
-            % Optional real-data test using TESTDATA/miniseed_data/REF.EHZ.2009.081
+            % Optional real-data integration test
+            tests.guard(testCase,'basic');
+
+            G = admin.gismo_guard();
+
+            if ~G.TESTDATA.configured
+                testCase.assumeFail( ...
+                    'TESTDATA not configured — skipping real MiniSEED test.');
+            end
+
             testdata = getenv('TESTDATA');
-            if isempty(testdata)
-                testCase.assumeFail('TESTDATA not defined — skipping real-data drumplot test.');
-            end
-
             mseedfile = fullfile(testdata,'miniseed_data','REF.EHZ.2009.081');
+
             if exist(mseedfile,'file') ~= 2
-                testCase.assumeFail('MiniSEED test file not found — skipping real-data drumplot test.');
+                testCase.assumeFail( ...
+                    'MiniSEED file not found — skipping real MiniSEED test.');
             end
 
-            try
-                ds   = datasource('miniseed', mseedfile);
-                % Station code may vary depending on how TESTDATA is set up;
-                % XX network keeps things generic.
-                ctag = ChannelTag('XX.REF..EHZ');
+            ds   = datasource('miniseed', mseedfile);
+            ctag = ChannelTag('XX.REF..EHZ');
 
-                wreal = waveform(ds, ctag);
+            wreal = waveform(ds, ctag);
 
-                % Basic preprocessing to ensure reasonable scaling
-                wreal = fillgaps(wreal,'interp');
-                wreal = detrend(wreal);
+            % Defensive preprocessing
+            wreal = fillgaps(wreal,'interp');
+            wreal = detrend(wreal);
 
-                % Extract a short window (e.g., first hour)
-                [snum, enum] = gettimerange(wreal);
-                wshort = extract(wreal, 'time', snum, min(snum+1/24, enum));
+            [snum, enum] = gettimerange(wreal);
+            wshort = extract(wreal, 'time', ...
+                snum, min(snum + 1/24, enum));   % first hour
 
-                h = drumplot(wshort,'mpl',5);
+            h = drumplot(wshort,'mpl',5);
 
-                f = figure('Visible','off');
-                testCase.verifyWarningFree(@() plot(h));
-                delete(f);
-            catch ME
-                testCase.verifyFail(sprintf( ...
-                    'Real-data drumplot test failed: %s', ME.message));
-            end
+            f = figure('Visible','off');
+            testCase.verifyWarningFree(@() plot(h));
+            delete(f);
         end
+
     end
 end

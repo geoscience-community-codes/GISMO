@@ -38,7 +38,7 @@ function setup(testCase)
     try
         admin.is_testdata_setup(true);
     catch ME
-        warning('TESTDATA setup skipped: %s', ME.message);
+        warning(ME.identifier, 'TESTDATA setup skipped: %s', ME.message);
     end
 end
 
@@ -59,7 +59,7 @@ function test_runCatalogCookbook(testCase)
         disp('Catalog.cookbook executed without fatal errors.');
     catch ME
         % Hard failure only on unhandled exceptions
-        warning('Catalog.cookbook threw an exception:\n%s', ME.message);
+        warning(ME.identifier, 'Catalog.cookbook threw an exception:\n%s', ME.message);
         testCase.verifyFail(sprintf( ...
             'Catalog.cookbook crashed: %s', ME.message));
     end

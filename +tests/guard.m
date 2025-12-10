@@ -19,7 +19,7 @@ end
 
 % ---------------------------------------------------------------------
 % Detect environment (single authoritative source)
-G = gismo_guard();
+G = admin.gismo_guard();
 
 % ---------------------------------------------------------------------
 switch lower(capability)

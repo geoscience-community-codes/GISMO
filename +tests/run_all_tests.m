@@ -5,14 +5,7 @@ disp('=== RUNNING ALL GISMO UNIT TESTS ===');
 % ------------------------------------------------------------
 % Detect environment
 % ------------------------------------------------------------
-G = gismo_guard();
-
-% Pretty-print environment summary
-fprintf('\n');
-for k = 1:numel(G.summary)
-    fprintf('%s\n', G.summary{k});
-end
-fprintf('\n');
+G = admin.gismo_guard();
 
 % ------------------------------------------------------------
 % Enforce TESTDATA availability (hard requirement)

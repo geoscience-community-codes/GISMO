@@ -9,6 +9,7 @@ if exist('dbopen.m','file') == 2 && exist('trload_css.m','file') == 2
     TF = true;
     return
 end
+1
 
 % Require ANTELOPE env var
 ant_env = getenv('ANTELOPE');
@@ -16,13 +17,15 @@ if isempty(ant_env)
     return
 end
 ant_env = char(ant_env);
-fprintf('The ANTELOPE environment variable is set: %s',ant_env)
+fprintf('ANTELOPE=%s',ant_env)
+2
 
 % Ensure folder exists and setup.m is present
 setup_m = fullfile(ant_env,'setup.m');
-fprintf('The Antelope toolbox setup script is: %s', setup_m)
+disp(setup_m)
 if exist(setup_m,'file')
     addpath(ant_env)
+    which setup
     setup()
 
     % Final verification

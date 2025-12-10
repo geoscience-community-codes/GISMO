@@ -64,5 +64,3 @@ end
 function teardown(testCase) %#ok<INUSD>
 close all;
 end
-
-end

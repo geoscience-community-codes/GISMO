@@ -13,9 +13,12 @@ G.MATLAB.Year = str2double(regexp(v.Release,'\d{4}','match','once'));
 %% ------------------------------------------------------------------------
 % Toolboxes
 % ------------------------------------------------------------------------
-G.Toolboxes.SignalProcessing = license('test','Signal_Toolbox');
-G.Toolboxes.Statistics       = license('test','Statistics_Toolbox');
-G.Toolboxes.Mapping          = license('test','Map_Toolbox');
+v = ver;
+toolbox_names = {v.Name};
+
+G.Toolboxes.SignalProcessing = any(strcmp(toolbox_names, 'Signal Processing Toolbox'));
+G.Toolboxes.Statistics       = any(strcmp(toolbox_names, 'Statistics and Machine Learning Toolbox'));
+G.Toolboxes.Mapping          = any(strcmp(toolbox_names, 'Mapping Toolbox'));
 
 %% ------------------------------------------------------------------------
 % Antelope (MATLAB toolbox)

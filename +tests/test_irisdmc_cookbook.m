@@ -90,7 +90,7 @@ classdef test_irisdmc_cookbook < matlab.unittest.TestCase
                 end
 
                 % --- True regression: FAIL ------------------------------
-                warning('irisdmc cookbook failed:\n%s', ME.message);
+                warning(ME.identifier, 'irisdmc cookbook failed:\n%s', ME.message);
                 testCase.verifyFail(ME.message);
             end
 

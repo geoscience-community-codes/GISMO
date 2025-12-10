@@ -475,9 +475,9 @@ end % methods
 % ======================= STATIC METHODS ===========================
 methods (Static)
 
-function cookbook()
+cookbook()
 
-function [detObj, sta, lta, sta_to_lta] = sta_lta(wave, varargin)
+[detObj, sta, lta, sta_to_lta] = sta_lta(wave, varargin)
 
 % ======================= PRIVATE HELPERS ===========================
 function c = defaultCell(v,n)

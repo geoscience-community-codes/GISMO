@@ -25,15 +25,16 @@ result = false;
 % ------------------------------------------------------------
 global TESTDATA
 
+% Try repo-local testdata if global not set
 if isempty(TESTDATA) || (~ischar(TESTDATA) && ~isstring(TESTDATA))
-    if autoDownload
-        try
-            admin.download_testdata
-        catch
-            return
+    % locate repo root from this admin file and check for testdata/
+    adminfile = which('admin.is_testdata_setup');
+    if ~isempty(adminfile)
+        repoRoot = fileparts(fileparts(fileparts(adminfile))); % .../GISMO
+        candidate = fullfile(repoRoot,'testdata');
+        if isfolder(candidate)
+            TESTDATA = candidate;
         end
-    else
-        return
     end
 end
 

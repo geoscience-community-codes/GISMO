@@ -22,7 +22,7 @@ classdef test_Response_cookbook < matlab.unittest.TestCase
                 testCase.assumeFail( ...
                     'TESTDATA not configured — skipping Response cookbook test.');
             end
-            global TESTDATA %#ok<TLEV>
+            global TESTDATA
 
             % ---- Locate Response class --------------------------------
             mc = meta.class.fromName('Response');
