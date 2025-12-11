@@ -12,114 +12,171 @@
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-<style type="text/css">
-.tab { margin-left: 40px; }
-</style>
-<title>Demo data for the GISMO Toolbox</title>
-
+    <style type="text/css">
+      .tab { margin-left: 40px; }
+    </style>
+    <title>Demo data for the GISMO Toolbox</title>
   </head>
 
   <body>
     <header>
       <div class="inner">
         <span><h1>GISMO</h1><h2>demo data</h2></span>
-        <a href="https://github.com/geoscience-community-codes/GISMO" class="button"><small>View project on</small> GitHub</a>
+        <a href="https://github.com/geoscience-community-codes/GISMO" class="button">
+          <small>View project on</small> GitHub
+        </a>
       </div>
     </header>
-
 
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
 
-
 <h1><a name="what">What is GISMO demo data?</a></h1>
-<p>This directory contains sample data in a variety of common seismic formats. These are used in tutorials, longer examples, and for testing GISMO as new features are added to ensure the robustness of each new release. 
-<p/>
+<p>
+This directory contains curated real seismic datasets in multiple industry-standard formats,
+used by GISMO for:
+<ul>
+<li>Unit testing</li>
+<li>Cookbooks and tutorials</li>
+<li>Training workflows</li>
+<li>Regression testing across releases</li>
+</ul>
+All data are now stored externally to the main GISMO repository and accessed via the global MATLAB
+variable <code>TESTDATA</code>.
+</p>
+
 <h2>Directory listing</h2>
 <ul>
-	<li><b>css3.0</b><br/>Databases in Center for Seismic Studies 3.0 schema format. This is the relational database format used by Antelope, and used heavily in nuclear test monitoring and regional earthquake monitoring communities. The most important database tables are origin (which contains event metadata) and wfdisc (which describes the waveform data available). </li>
-	<ul>
-		<li>antelope2waveform_testdb: wfdisc</li>
-		<li>avodb200903: event origin</li>
-		<li>avodb20080712: event origin</li>
-		<li>demodb: wfdisc</li>
-		<li>rtdb200903: event origin</li>
-	</ul>
-	<li><b>MiniSeed</b><br/>waveform data files in MiniSEED format</li>
-	<ul>	
-		Data from Redoubt Volcano, Alaska, build-up to eruption on March 23.
-		<li><b>waveform_data/REF.EHZ.2009.081</b><br/>MiniSEED file for station REF, channel EHZ on day 81 of 2009 (March 22).</li>
-		<li>waveform_data/RSO.EHZ.2009.081</li>
-	</ul>
-	<li><b>RSAM</b><br/>Real-time Seismic Amplitude Measurement files in binary "BOB" format. Each sample represents the average amplitude (in counts) for 1-minute. Each file is for one station channel per year. RSAM has been by volcano observatories since the mid-1980s.</li>
-	<ul>
-		<li><b>rsam/MCPZ1996.DAT</b>: RSAM data for Montserrat Chances Peak vertical component in 1996.</li>
-		<li><b>rsam/MCPZ1997.DAT</b>: RSAM data for Montserrat Chances Peak vertical component in 1997.</li>
-	</ul>
-	<li><b>sac</b><br/>waveform data files in SAC format</li>
-	<ul>
-		<li>example_sacfile.sac</li>
-		<li><b>IU.COLA.10.BHZ.M.2002.307.220803.SAC</b></li>
-		<li><b>REF.EHZ.2009-03-22.sac</b><br/>sac waveform data for station REF, channel EHZ on March 22, 2009.</li>
-	</ul>
-	<li><b>sacpz</b><br/>Pole-zero instrument response files</li>
-	<ul>	
-		<li><b>SACPZ.IU.COLA.10.BHE</b>: sacpz file for the east component of station COLA</li>
-		<li><b>SACPZ.IU.COLA.10.BHN</b>: sacpz file for the north component of station COLA</li>
-		<li><b>SACPZ.IU.COLA.10.BHZ</b>: sacpz file for the vertical component of station COLA</li>
-	</ul>
-	<li><b>seisan</b><br/>Part of the Seisan databases for the Montserrat Volcano Observatory. The two databases are MVOE_ which stands for MVO events, and DSNC_ which stands for digital seismic network continuous. The WAV directory contains waveform data files in Seisan format under a directory structure DATABASENAME/YEAR/MONTH. The REA directory contains event metadata files ("Sfiles" in Seisan terminology) containing information like event time, hypocenter coordinates, magnitude and phase arrivals used etc.</li>
-	<ul>
-		<li><b>REA/MVOE_/1996/11</b><br/>MVO event catalog metadata for Nov 1996. Contains 1084 Sfiles.</li>
-		<li><b>WAV/MVOE_/2001/02</b><br/>Contains 1 segmented waveform file (in Seisan format).</li>
-	</ul>
+
+<li><b>css3.0</b><br/>
+Relational databases in Center for Seismic Studies 3.0 (CSS) schema format, used by Antelope and
+regional/nuclear monitoring systems. Includes realistic event, origin, and waveform descriptor tables.
+<ul>
+  <li>avodb20080712, avodb200903</li>
+  <li>dbredoubt200903</li>
+  <li>dbokmok20080712</li>
+  <li>plutons</li>
+  <li>rtdb200903</li>
+  <li>Associated *.event, *.origin, *.wfdisc, *.snetsta, *.schanloc tables</li>
 </ul>
+</li>
+
+<li><b>matfiles</b><br/>
+Prepackaged MATLAB-native datasets for fast testing and demonstrations.
+<ul>
+  <li><b>Catalog/</b>: great earthquakes, tectonic plates, Redoubt and Tohoku catalogs</li>
+  <li><b>threecomp.mat</b>: three-component waveform tests</li>
+  <li><b>correlation.mat</b>: waveform correlation examples</li>
+  <li><b>mastercorr.mat</b>: master event correlation tests</li>
+  <li><b>augustine_event_waveforms.mat</b>: real volcano event waveforms</li>
+  <li><b>plutons_waveforms.mat</b>: response and waveform examples</li>
+  <li><b>synthetic_waveforms.mat</b>: controlled synthetic test cases</li>
+  <li><b>obspy.stream.*.mat</b>: ObsPy–MATLAB interoperability datasets</li>
+</ul>
+</li>
+
+<li><b>miniseed_data</b><br/>
+Waveform data files in MiniSEED format.
+<ul>
+  <li>Redoubt Volcano, Alaska (2009) pre-eruption examples</li>
+  <li>Stations: REF, RSO, RDN</li>
+  <li>Modern IH/II network MiniSEED examples</li>
+</ul>
+</li>
+
+<li><b>rsam</b><br/>
+Real-time Seismic Amplitude Measurement (RSAM) files in legacy binary format.
+<ul>
+  <li>Montserrat volcano RSAM time series (1996–1997)</li>
+  <li>Additional 2015 RSAM examples</li>
+</ul>
+</li>
+
+<li><b>sac_data</b><br/>
+Waveform data files in SAC format.
+<ul>
+  <li>IU.COLA broadband examples</li>
+  <li>Three-component Hawaii broadband example (POHA)</li>
+  <li>REF volcano waveform (2009)</li>
+</ul>
+</li>
+
+<li><b>sacpz</b><br/>
+Pole-zero instrument response files.
+<ul>
+  <li>SACPZ.IU.COLA.10.BHE</li>
+  <li>SACPZ.IU.COLA.10.BHN</li>
+  <li>SACPZ.IU.COLA.10.BHZ</li>
+</ul>
+</li>
+
+<li><b>seisan_data</b><br/>
+SEISAN observatory databases from the Montserrat Volcano Observatory.
+<ul>
+  <li><b>REA/MVOE_</b>: event metadata ("S-files")</li>
+  <li><b>WAV/MVOE_</b>: waveform files in SEISAN format</li>
+</ul>
+</li>
+
+<li><b>obspy</b><br/>
+Interoperability support for Python ObsPy data exported to MATLAB.
+</li>
+
+</ul>
+
 <h2>Download</h2>
-<a href="testdata/testdata.zip">Download<img src="images/download-icon.png"></a> a zip file containing all the demo data (82 MB).
+<a href="testdata/testdata.zip">
+  Download<img src="images/download-icon.png">
+</a>
+a zip file containing all the GISMO demo/test data.
 
         </section>
 
         <aside id="sidebar">
-	<img src="pics/gismo_logo.gif">
+          <img src="pics/gismo_logo.gif">
           <a href="https://github.com/geoscience-community-codes/GISMO/wiki/Getting-Started" class="button">
-            <small>View</small>
-            Get Started
+            <small>View</small> Get Started
           </a>
           <a href="http://www.mathworks.com/matlabcentral/fileexchange/52707-geoscience-community-codes-gismo" class="button">
             Download
           </a>
           <a href="https://github.com/geoscience-community-codes/GISMO/wiki/Tutorials" class="button">
-            <small>View</small>
-            Tutorials
+            <small>View</small> Tutorials
           </a>
           <a href="https://github.com/geoscience-community-codes/GISMO/wiki" class="button">
-            <small>View</small>
-            Documentation
+            <small>View</small> Documentation
           </a>
-          <p class="repo-owner"><a href="https://github.com/geoscience-community-codes/GISMO">GISMO</a> is maintained by <a href="https://github.com/gthompson">Glenn Thompson</a> &amp; <a href="https://github.com/CelsoReyes">Celso Reyes.</p>
-
+          <p class="repo-owner">
+            <a href="https://github.com/geoscience-community-codes/GISMO">GISMO</a> is maintained by
+            <a href="https://github.com/gthompson">Glenn Thompson</a> &amp;
+            <a href="https://github.com/CelsoReyes">Celso Reyes</a>.
+          </p>
         </aside>
       </div>
     </div>
 
-            <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-66072973-1");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-69880630-1', 'auto');
-  ga('send', 'pageview');
-</script>
+    <script type="text/javascript">
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost +
+      "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+      try {
+        var pageTracker = _gat._getTracker("UA-66072973-1");
+        pageTracker._trackPageview();
+      } catch(err) {}
+    </script>
+    <script>
+      (function(i,s,o,g,r,a,m){
+        i['GoogleAnalyticsObject']=r;
+        i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},
+        i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;
+        m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-69880630-1', 'auto');
+      ga('send', 'pageview');
+    </script>
   </body>
 </html>
