@@ -18,9 +18,25 @@ function webmap(catalogObject)
     end
     mag = catalogObject.mag;
     mag(isnan(mag))=0;
+
     % scale icon color by magnitude
     cm = parula(10);
-    iconColor = cm(ceil(1+9*(mag-minmag)/(maxmag-minmag)),:);
+
+    mag = catalogObject.mag;
+    mag(isnan(mag)) = 0;
+
+    minmag = min(mag);
+    maxmag = max(mag);
+
+    if ~isfinite(minmag) || ~isfinite(maxmag) || (maxmag <= minmag)
+        % No magnitude spread (or no magnitudes at all): use a single colour
+        iconColor = repmat(cm(1,:), numel(mag), 1);
+    else
+        idx = ceil(1 + 9*(mag - minmag)/(maxmag - minmag));
+        idx = max(1, min(10, idx)); % clamp for safety
+        iconColor = cm(idx, :);
+    end
+
     % Convert quakeTable to geopint vector to add as info for each quake
     p = geopoint(catalogObject.lat, catalogObject.lon);
     %h1=webmap('Ocean Basemap')

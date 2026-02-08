@@ -51,14 +51,16 @@ xlabel('Relative Time,(s)','FontSize',8);
 
 % replace dates with station names if stations are different
 if ~check(c,'STA')
-    sta  = get(c,'STA');
-    chan = get(c,'CHAN');
-    
-    for i=1:get(c,'TRACES')
-        labels(i) = strcat( sta(i) , '_' , chan(i) );
+    sta  = get(c(ord),'STA');
+    chan = get(c(ord),'CHAN');
+
+    labels = strings(numel(ord),1); % or cell(numel(ord),1) for older MATLAB
+    for i = 1:numel(ord)
+        labels(i) = strcat(sta(i), '_', chan(i));
     end
-    set( gca , 'YTick' , [1:1:get(c,'TRACES')] );
-    set( gca , 'YTickLabel' , labels );
+
+    set(gca, 'YTick', 1:numel(ord));
+    set(gca, 'YTickLabel', labels);
 end
 
 

@@ -58,7 +58,7 @@ function wiggleplot(c,scale,ord,norm)
    
    xlabel('Relative Time,(s)','FontSize',8);
    
-   maybeReplaceYticksWithStationNames(c,gca)
+   maybeReplaceYticksWithStationNames(c,ord,gca)
    
    %PRINT OUT FIGURE
    set(gcf, 'paperorientation', 'portrait');

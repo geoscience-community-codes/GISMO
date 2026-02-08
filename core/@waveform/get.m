@@ -56,12 +56,19 @@ function val = get(w,prop_name)
    %val = val_CELL;
    usedcell = false;
    singleWave = isscalar(w);
+   forceCell = false; % used for Issue #61 regression test.  See case 'CHANNEL' below.
    switch upper(prop_name)
       
       % IDENTIFICATION PROPERTIES
       case {'STATION','CHANNEL','NETWORK','LOCATION'} %type:CELL
          val = get([w.cha_tag],prop_name);
          usedcell = true;
+
+         % Issue #61: enforce stable type
+         forceCell = true;
+         if ~iscell(val)
+            val = {val};
+         end
          
       case {'COMPONENT'} %type:CELL   GRANDFATHERED IN...
          val = get([w.cha_tag],'channel');
@@ -216,7 +223,7 @@ function val = get(w,prop_name)
    if (numel(val) == numel(w)) %THIS TEST CONDITIONALIZED 4/16/2008
       val = reshape(val,size(w)); %return values in proper shape
    end
-   if usedcell && singleWave
+   if usedcell && singleWave && ~forceCell
       if isa(val,'cell')
          val = val{1}; % return the actual value, not a cell array
       end

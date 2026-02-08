@@ -502,12 +502,19 @@ classdef NewCorrelation
       end
       
       
-      function maybeReplaceYticksWithStationNames(c,ax)
+      function maybeReplaceYticksWithStationNames(c, ord, ax)
          % replace dates with station names if stations are different
          if ~check(c,'STA')
-            labels = strcat(c.stations , '_', c.channels);
-            set( ax , 'YTick' , 1:1:c.ntraces);
-            set( ax , 'YTickLabel' , labels );
+            sta  = get(c(ord),'STA');
+            chan = get(c(ord),'CHAN');
+
+            labels = cell(numel(ord),1);
+            for i = 1:numel(ord)
+               labels{i} = [sta{i} '_' chan{i}];
+            end
+
+            set(ax, 'YTick', 1:numel(ord));
+            set(ax, 'YTickLabel', labels);
          end
       end
       
