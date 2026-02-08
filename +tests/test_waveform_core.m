@@ -275,6 +275,46 @@ delete(f);
 end
 
 %% ------------------------------------------------------------------------
+function testIssue61_ChannelGetterAlwaysCell(testCase)
+% Regression test for GISMO Issue #61:
+% get(w,'Channel') must always return a cell array, regardless of waveform count.
+
+    fs = 100;                 % Hz
+    n  = 1000;
+    t0 = datenum(2010,1,1,0,0,0);
+
+    data1 = randn(n,1);
+    data2 = randn(n,1);
+
+    % Make two distinct SCNLs
+    scnl1 = scnlobject('STA1','BHZ','','');
+    scnl2 = scnlobject('STA2','BHN','','');
+
+    % Construct waveform objects *locally* (no datasource)
+    w1 = waveform(scnl1, t0, data1, fs);
+    w2 = waveform(scnl2, t0, data2, fs);
+
+    % Single-waveform case
+    ch1 = get(w1, 'Channel');
+
+    % Multi-waveform case (waveform array)
+    w12 = [w1 w2];
+    ch12 = get(w12, 'Channel');
+
+    % Assertions: ALWAYS a cell array
+    verifyTrue(testCase, iscell(ch1),  'Issue #61: single waveform returned non-cell Channel');
+    verifyTrue(testCase, iscell(ch12), 'Issue #61: multi waveform returned non-cell Channel');
+
+    % And: shape/content sanity
+    verifyEqual(testCase, numel(ch1),  1);
+    verifyEqual(testCase, numel(ch12), 2);
+
+    verifyEqual(testCase, ch1{1},  'BHZ');
+    verifyEqual(testCase, ch12{1}, 'BHZ');
+    verifyEqual(testCase, ch12{2}, 'BHN');
+end
+
+%% ------------------------------------------------------------------------
 function testSacLoadIfLocalFileExists(testCase)
 % Optional local SAC test if file is bundled in repo.
 gismopath = fileparts(which('startup_GISMO'));

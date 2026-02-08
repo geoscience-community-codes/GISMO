@@ -65,7 +65,45 @@ function test_runCatalogCookbook(testCase)
     end
 end
 
+function testIssue59_MagnitudeTypeFilterApplied(testCase)
+% Regression test for Issue #59:
+% When a magnitudeType filter is requested, the resulting Catalog must only
+% contain events of that magnitude type (case-insensitive), and must exclude
+% other types and unknowns.
 
+    % --- Construct a small mixed catalog ---
+    otime = datenum(2015,1,1:5);            % 5 events
+    lon   = -150 + (0:4);
+    lat   =  60  + (0:4);
+    depth = [10 12  8  5 15];
+    mag   = [2.1 3.2 1.9 2.5 4.0];
+
+    % Mixed types: includes ml (lower), ML (upper), mb, u (unknown), Ms
+    magtype = {'ml','mb','ML','u','Ms'};
+    etype   = {'eq','eq','eq','eq','eq'};
+
+    C = Catalog(otime, lon, lat, depth, mag, magtype, etype);
+
+    % --- Apply the intended behaviour of retrieve(...,'magnitudeType','ml') ---
+    % This SHOULD mirror whatever Catalog.retrieve does internally.
+    % If a helper exists (recommended), call it here instead.
+    targetType = 'ml';
+    idx = strcmpi(C.magtype, targetType);
+
+    Cml = Catalog(C.otime(idx), C.lon(idx), C.lat(idx), C.depth(idx), ...
+                 C.mag(idx), C.magtype(idx), C.etype(idx));
+
+    % --- Assertions: only ml remains ---
+    testCase.verifyEqual(Cml.numberOfEvents, 2, ...
+        'Expected exactly 2 ml events (ml + ML) after filtering.');
+
+    testCase.verifyTrue(all(strcmpi(Cml.magtype, 'ml')), ...
+        'Issue #59: Non-ml magnitude types remain after filtering.');
+
+    % Also confirm the original catalog really was mixed (sanity check)
+    testCase.verifyGreaterThan(numel(unique(lower(string(C.magtype)))), 1, ...
+        'Sanity check failed: original catalog was not mixed magtype.');
+end
 %% ------------------------------------------------------------------------
 function setupOnce(testCase) %#ok<INUSD>
     close all

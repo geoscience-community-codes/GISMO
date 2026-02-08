@@ -1,93 +1,224 @@
-%SACPZ Class for reading SAC pole-zero files (multiple dialects)
-% Supports:
-%  (1) IRIS-style SACPZ with '*' header lines and ISO timestamps
-%  (2) Plain "KEY : VALUE" headers with ISO timestamps + optional 'Z' + fractional seconds
-%  (3) Older SAC-style headers with START/END like "YYYY,DDD,HH:MM:SS.ssss"
+%SACPZ Canonical pole-zero instrument response class for GISMO
 %
-% Also tolerant of:
-%  - END : None
-%  - END : No Ending Time
-%  - COMPONENT used instead of CHANNEL
-%  - RATE (HZ) used instead of SAMPLE RATE
+%   This class is the single authoritative representation of pole-zero based
+%   instrument responses in GISMO.
 %
-% Usage:
-%   pz = sacpz(fileread('SACPZ.IU.COLA.BHZ'))
-%   pz = sacpz('SACPZ.IU.COLA.BHZ')
-%   pz = sacpz(webread('http://...'))  % content string
+%   Supported SACPZ dialects:
+%     (1) IRIS-style SACPZ with '*' header lines and ISO timestamps
+%     (2) Plain "KEY : VALUE" headers with ISO timestamps (optional 'Z' and fractional seconds)
+%     (3) Older SAC-style headers with START/END like "YYYY,DDD,HH:MM:SS.ssss"
 %
-% One sacpz object is returned per epoch if the file contains multiple epochs.
+%   Also tolerant of:
+%     - END : None
+%     - END : No Ending Time
+%     - COMPONENT used instead of CHANNEL
+%     - RATE (HZ) used instead of SAMPLE RATE
+%
+%   Usage:
+%     pz = sacpz(fileread('SACPZ.IU.COLA.BHZ'))
+%     pz = sacpz('SACPZ.IU.COLA.BHZ')
+%     pz = sacpz(webread('http://...'))  % content string
+%
+%   One sacpz object is returned per epoch if the file contains multiple epochs.
 
 classdef sacpz
+
     properties
-        z = [];
-        p = [];
-        k = [];
-        created = NaN;
+        % Core pole-zero model
+        z = complex([]);         % Zeros
+        p = complex([]);         % Poles
+        k = NaN;                 % Overall gain (SAC CONSTANT)
+
+        % Validity times
+        created   = NaN;
         starttime = NaN;
-        endtime = NaN;
-        network = '';
-        station = '';
-        location = '';
-        channel = '';
-        latitude = NaN;
+        endtime   = NaN;
+
+        % Channel metadata
+        network   = '';
+        station   = '';
+        location  = '';
+        channel   = '';
+
+        % Geometry
+        latitude  = NaN;
         longitude = NaN;
-        depth = NaN;
         elevation = NaN;
-        dip = NaN;
-        azimuth = NaN;
+        depth     = NaN;
+        dip       = NaN;
+        azimuth   = NaN;
+
+        % Sampling + units
         samplerate = NaN;
-        description = '';
-        inputunit = '';
+        inputunit  = '';
         outputunit = '';
+
+        % Instrument info
         instrumenttype = '';
         instrumentgain = '';
         instrumentgainunits = '';
-        comment = '';
         sensitivity = '';
         sensitivityunits = '';
+        description = '';
+        comment = '';
         a0 = NaN;
     end
 
+    %======================================================================
+    % CONSTRUCTOR
+    %======================================================================
     methods
-        function s = sacpz(filename)
-            %sacpz.sacpz Constructor for sacpz
-            % pz = sacpz(fileContents)
-            % pz = sacpz(webpage)  % string begins with http:// or https://
-            % pz = sacpz(file)
+        function obj = sacpz(source)
+            %SACPZ Construct from:
+            %   • File path
+            %   • Raw SACPZ text
+            %   • IRIS URL
 
             if nargin == 0
-                return;
+                return
             end
 
-            % Read file/URL/content into a string
-            if ischar(filename) || isstring(filename)
-                filename = char(filename);
+            if ~(ischar(source) || isstring(source))
+                error('sacpz:constructor:invalidInput', ...
+                    'Input must be a filename, URL, or file contents string.');
+            end
+
+            source = char(source);
+
+            if strncmpi(source,'http://',7) || strncmpi(source,'https://',8)
+                txt = webread(source);
+            elseif exist(source,'file')
+                txt = fileread(source);
             else
-                error('sacpz:constructor:invalidInput', 'Input must be a filename, URL, or file contents string.');
+                txt = source; % assume raw text
             end
 
-            if length(filename) > 7 && (strncmpi(filename,'http://',7) || strncmpi(filename,'https://',8))
-                fcontents = webread(filename);
-            elseif exist(filename,'file')
-                fcontents = fileread(filename);
-            else
-                fcontents = filename; % assume it's file contents
+            if isempty(txt)
+                return
             end
 
-            if isempty(fcontents)
-                return;
-            end
+            obj = obj.parse_sacpz_text(txt);
+        end
+    end
 
-            s = s.new_readroutine(fcontents);
+    %======================================================================
+    % HIGH-LEVEL OPERATIONS
+    %======================================================================
+    methods
+        function [num,den] = transfer(obj)
+            %TRANSFER Return continuous-time transfer function
+            [num,den] = zp2tf(obj.z, obj.p, obj.k);
         end
 
-        function obj = new_readroutine(obj, fileContents)
+        function response = to_response(obj, frequencies)
+            %TO_RESPONSE Create GISMO response struct compatible with the
+            %+instrument_response package (e.g., response_apply).
+            %
+            % RESPONSE = obj.to_response(FREQUENCIES) computes complex response
+            % from P/Z/K at FREQUENCIES (Hz). Uses SAC CONSTANT (obj.k) as gain.
+            %
+            % This yields OUTPUT UNIT per INPUT UNIT (often COUNTS per METER or
+            % COUNTS per (M/S), depending on SACPZ).
+
+            if nargin < 2 || isempty(frequencies)
+                error('sacpz:to_response:missingFrequencies', ...
+                    'A frequency vector (Hz) must be provided.');
+            end
+            if ~isfinite(obj.k)
+                error('sacpz:to_response:missingConstant', ...
+                    'SACPZ CONSTANT (obj.k) is missing or invalid.');
+            end
+
+            response.scnl = scnlobject(obj.station, obj.channel, obj.network, obj.location);
+            response.time = obj.starttime;
+            response.frequencies = frequencies(:);
+            response.values = [];
+            response.calib = obj.k;   % keep the gain visible
+            response.units = obj.outputunit;
+            response.sampleRate = obj.samplerate;
+            response.source = 'sacpz.to_response';
+            response.status = [];
+
+            ws = 2*pi*response.frequencies; % rad/s
+            response.values = freqs(obj.k * poly(obj.z), poly(obj.p), ws);
+        end
+
+        function response = to_response_structure(obj, frequencies)
+            %TO_RESPONSE_STRUCTURE Backward-compatible alias for older code
+            response = obj.to_response(frequencies);
+            response.source = 'sacpz.to_response_structure';
+        end
+
+        function plot(obj)
+            %PLOT Poles, impulse response, and frequency response
+            figure, zplane(obj.z, obj.p), title('Poles and Zeros')
+            sos = zp2sos(obj.z, obj.p, obj.k);
+            figure, impz(sos), title('Impulse Response')
+            figure, freqz(sos), title('Frequency Response')
+        end
+    end
+
+    %======================================================================
+    % STATIC LOADERS (OPTIONAL)
+    %======================================================================
+    methods (Static)
+        function obj = from_antelope(sta, chan, time, dbName)
+            %FROM_ANTELOPE Load response from Antelope database
+            %
+            %   pz = sacpz.from_antelope('OKSO','BHZ',datenum(...),dbName)
+            %
+            % Requires Antelope MATLAB toolbox.
+
+            db = dbopen(dbName,'r');
+            dbs = dblookup_table(db,'sensor');
+            t = datenum2epoch(time);
+
+            dbs = dbsubset(dbs, ...
+                sprintf('sta=="%s" && chan=="%s" && time<=%f && endtime>=%f', ...
+                        sta, chan, t, t));
+
+            dbi = dblookup_table(dbs,'instrument');
+            dbc = dblookup_table(dbi,'calibration');
+
+            dbj = dbjoin(dbs,dbi);
+            dbj = dbjoin(dbj,dbc);
+
+            dbj.record = 0;
+            [samprate, calib, dir, dfile] = ...
+                dbgetv(dbj,'samprate','calib','dir','dfile');
+
+            respfile = fullfile(dir,dfile);
+            ro = dbresponse(respfile);
+
+            [p,z,k] = response_to_pzk(ro);
+            free_response(ro);
+            dbclose(db);
+
+            obj = sacpz();
+            obj.p = p(:);
+            obj.z = z(:);
+            obj.k = k * calib;
+            obj.station = sta;
+            obj.channel = chan;
+            obj.starttime = time;
+            obj.samplerate = samprate;
+        end
+    end
+
+    %======================================================================
+    % INTERNAL PARSING
+    %======================================================================
+    methods (Access=private)
+
+        function obj = parse_sacpz_text(obj, txt)
             persistent fieldmap
             if isempty(fieldmap)
                 fieldmap = getFieldmap();
             end
 
-            epochs = splitEpochsFlexible(fileContents);
+            epochs = splitEpochsFlexible(txt);
+
+            obj = repmat(obj, 1, numel(epochs));
 
             for N = 1:numel(epochs)
                 epochText = epochs{N};
@@ -102,22 +233,24 @@ classdef sacpz
                 for M = 1:numel(hFields)
                     f = hFields{M};
                     vRaw = hValues{M};
-
                     if isempty(f)
                         continue
                     end
 
+                    fKey = upper(f);
+
                     % convert by type
-                    switch upper(f)
+                    switch fKey
                         case {'START','END','CREATED'}
                             v = parseDateFlexible(vRaw);
 
-                        case {'LONGITUDE','LATITUDE','ELEVATION','DEPTH','DIP','AZIMUTH','SAMPLE RATE','A0','RATE (HZ)'}
+                        case {'LONGITUDE','LATITUDE','ELEVATION','DEPTH','DIP','AZIMUTH',...
+                              'SAMPLE RATE','A0','RATE (HZ)','RATE'}
                             v = str2double(vRaw);
 
                         case {'INSTGAIN','SENSITIVITY'}
                             [v, units] = splitOffUnits(vRaw);
-                            unitfield = [upper(f), 'UNITS'];
+                            unitfield = [fKey, 'UNITS'];
                             if fieldmap.isKey(unitfield)
                                 obj(N).(fieldmap(unitfield)) = units;
                             end
@@ -125,8 +258,6 @@ classdef sacpz
                         otherwise
                             v = vRaw;
                     end
-
-                    fKey = upper(f);
 
                     if fieldmap.isKey(fKey)
                         obj(N).(fieldmap(fKey)) = v;
@@ -140,11 +271,9 @@ classdef sacpz
             % ------------ nested helpers ------------
 
             function [val, unit] = splitOffUnits(val)
-                % Handles e.g. "381407000.0 (M/S)" or "2.023580e+03 (M/S)" or "123"
+                % Handles "381407000.0 (M/S)" or "2.023580e+03 (M/S)" or "123"
                 unit = '';
-                if isempty(val)
-                    return
-                end
+                if isempty(val), return, end
                 val = strtrim(val);
 
                 tok = regexp(val,'^\s*([+\-]?\d+(\.\d+)?([eE][+\-]?\d+)?)\s*(\(([^)]+)\))?\s*$','tokens','once');
@@ -163,37 +292,34 @@ classdef sacpz
                 end
             end
 
-            function epochs = splitEpochsFlexible(txt)
-                txt = normalizeNewlines(txt);
-
-                % Split on 2+ blank lines (common multi-epoch separator)
-                chunks = regexp(txt, '\n\s*\n\s*\n+', 'split');
+            function epochs = splitEpochsFlexible(t)
+                t = normalizeNewlines(t);
+                chunks = regexp(t, '\n\s*\n\s*\n+', 'split');
                 chunks = chunks(~cellfun(@isempty, strtrim(chunks)));
-
                 if isempty(chunks)
-                    epochs = {txt};
+                    epochs = {t};
                 else
                     epochs = chunks;
                 end
             end
 
-            function [header, resp] = splitHeaderAndResponse(txt)
-                txt = normalizeNewlines(txt);
+            function [header, resp] = splitHeaderAndResponse(t)
+                t = normalizeNewlines(t);
 
-                idxZ = regexpi(txt, '(^|\n)\s*ZEROS\b', 'once');
-                idxP = regexpi(txt, '(^|\n)\s*POLES\b', 'once');
-                idxC = regexpi(txt, '(^|\n)\s*CONSTANT\b', 'once');
+                idxZ = regexpi(t, '(^|\n)\s*ZEROS\b', 'once');
+                idxP = regexpi(t, '(^|\n)\s*POLES\b', 'once');
+                idxC = regexpi(t, '(^|\n)\s*CONSTANT\b', 'once');
 
                 idxs = [idxZ idxP idxC];
                 idxs(idxs==0) = NaN;
                 idx = min(idxs);
 
                 if isempty(idx) || isnan(idx)
-                    header = txt;
+                    header = t;
                     resp = '';
                 else
-                    header = txt(1:idx-1);
-                    resp = txt(idx:end);
+                    header = t(1:idx-1);
+                    resp = t(idx:end);
                 end
             end
 
@@ -242,7 +368,6 @@ classdef sacpz
             function d = parseDateFlexible(s)
                 % Handles:
                 %  "2021-05-29T05:22:04.965997Z"
-                %  "2020-07-06T19:25:06.642000Z"
                 %  "1999,160,20:40:00.0000"
                 %  "None" / "No Ending Time"
                 s = strtrim(s);
@@ -275,7 +400,6 @@ classdef sacpz
                     if ~isempty(tok{6})
                         frac = str2double(tok{6}); % e.g., .0000
                     end
-
                     d0 = datenum(yr,1,1,0,0,0);
                     d  = d0 + (jdy-1) + datenum(0,0,0,hh,mm,ss+frac);
                     return
@@ -307,10 +431,9 @@ classdef sacpz
             end
 
             function x = getComplex(fName, lines)
-                x = [];
-                fNameU = upper(fName);
-
-                header = find(strncmpi(fNameU, upper(lines), length(fNameU)), 1, 'first');
+                % If fewer than nValues are provided, the remainder are 0+0i
+                x = complex([]);
+                header = find(strncmpi(lines, fName, length(fName)), 1, 'first');
                 if isempty(header)
                     return
                 end
@@ -343,8 +466,7 @@ classdef sacpz
 
                     kLine = kLine + 1;
                 end
-
-                % If fewer than nValues were provided, remainder remain 0+0i
+                % Any unfilled entries remain 0+0i
             end
 
             function M = getFieldmap()
@@ -357,7 +479,6 @@ classdef sacpz
                 M('LOCATION')  = 'location';
                 M('CHANNEL')   = 'channel';
                 M('COMPONENT') = 'channel'; % older SAC files
-                M('CHANNELTAG') = 'channel'; %#ok<NASGU> % (unused but harmless)
 
                 % Times
                 M('CREATED') = 'created';
@@ -382,6 +503,7 @@ classdef sacpz
                 % Sample rate
                 M('SAMPLE RATE') = 'samplerate';
                 M('RATE (HZ)')   = 'samplerate';
+                M('RATE')        = 'samplerate'; % because we strip "(HZ)" -> "RATE"
 
                 % Units
                 M('INPUT UNIT')  = 'inputunit';
@@ -392,70 +514,14 @@ classdef sacpz
                 M('INSTRUMENT')   = 'instrumenttype';
 
                 % Gains/sensitivity
-                M('INSTGAIN')        = 'instrumentgain';
-                M('INSTGAINUNITS')   = 'instrumentgainunits';
-                M('SENSITIVITY')     = 'sensitivity';
-                M('SENSITIVITYUNITS')= 'sensitivityunits';
+                M('INSTGAIN')         = 'instrumentgain';
+                M('INSTGAINUNITS')    = 'instrumentgainunits';
+                M('SENSITIVITY')      = 'sensitivity';
+                M('SENSITIVITYUNITS') = 'sensitivityunits';
 
                 % Misc
                 M('A0') = 'a0';
             end
-        end
-
-        %% -----------------------------------------------
-        function plot(obj)
-            %sacpz.plot() Plot poles & zeros, impulse response & frequency response
-
-            figure(1)
-            zplane(obj.z, obj.p)
-
-            figure(2)
-            sos = zp2sos(obj.z, obj.p, obj.k);
-            impz(sos)
-
-            figure(3)
-            freqz(sos)
-        end
-
-        function [num,den] = transfer(obj)
-            %sacpz.transfer Transfer function numerator/denominator from P/Z/K
-            [num,den] = zp2tf(obj.z, obj.p, obj.k);
-        end
-
-        %% -----------------------------------------------
-        function response = to_response(obj, frequencies)
-            %sacpz.to_response  Create GISMO response structure compatible with
-            %the +instrument_response package (e.g., response_apply).
-            %
-            % RESPONSE = obj.to_response(FREQUENCIES) returns a response structure
-            % computed from poles/zeros using SAC CONSTANT (obj.k) as the gain.
-            % This yields OUTPUT UNIT per INPUT UNIT (typically COUNTS per METER
-            % or COUNTS per (M/S), depending on the SACPZ file).
-            %
-            % frequencies: vector in Hz
-
-            if nargin < 2 || isempty(frequencies)
-                error('sacpz:to_response:missingFrequencies', ...
-                    'A frequency vector (Hz) must be provided.');
-            end
-
-            if isempty(obj.k) || ~isfinite(obj.k)
-                error('sacpz:to_response:missingConstant', ...
-                    'SACPZ CONSTANT (obj.k) is missing or invalid.');
-            end
-
-            response.scnl = scnlobject(obj.station,obj.channel,obj.network,obj.location);
-            response.time = obj.starttime;
-            response.frequencies = reshape(frequencies,numel(frequencies),1);
-            response.values = [];
-            response.calib = NaN;
-            response.units = obj.outputunit;
-            response.sampleRate = obj.samplerate;
-            response.source = 'sacpz.to_response';
-            response.status = [];
-
-            ws = (2*pi) .* response.frequencies; % rad/s
-            response.values = freqs(obj.k * poly(obj.z), poly(obj.p), ws);
         end
     end
 end
